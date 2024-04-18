@@ -26,7 +26,6 @@ x64/
 x86/
 build/
 bld/
-[Bb]in/
 [Oo]bj/
 [Oo]ut/
 msbuild.log
@@ -51,5 +50,6 @@ UpgradeLog.htm
 /Thunderstore/Packages/*
 
 # Exclude stuff
+!/bin/CodeRebirth.dll
 !/dlls/LethalLib.dll
 !/Thunderstore/Packages/*.txt

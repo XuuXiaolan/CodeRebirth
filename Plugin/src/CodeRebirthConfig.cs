@@ -7,6 +7,8 @@ namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
+        public ConfigEntry<string> ConfigMoneyRarity { get; private set; }
+        public ConfigEntry<bool> ConfigMoneyScrapEnabled { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
             ConfigWalletEnabled = configFile.Bind("Shop Options",
                                                 "Wallet Item | Enabled",
@@ -16,6 +18,14 @@ namespace CodeRebirth.Configs {
                                                 "Wallet Item | Cost",
                                                 250,
                                                 "Cost of Wallet");
+            ConfigMoneyRarity = configFile.Bind("Scrap Options",
+                                                "Money Scrap | Rarity",
+                                                "Modded@1000,ExperimentationLevel@1000,AssuranceLevel@1000,VowLevel@1000,OffenseLevel@1000,MarchLevel@1000,RendLevel@1000,DineLevel@1000,TitanLevel@1000",
+                                                "Enables/Disables the Wallet showing up in shop");
+            ConfigMoneyScrapEnabled = configFile.Bind("Scrap Options",
+                                                "Scrap | Enabled",
+                                                true,
+                                                "Enables/Disables the Money showing up in the Factory");
             ClearUnusedEntries(configFile);
             Plugin.Logger.LogInfo("Setting up config for CodeRebirth plugin...");
         }

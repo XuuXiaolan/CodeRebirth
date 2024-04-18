@@ -18,6 +18,7 @@ namespace CodeRebirth {
     public class Plugin : BaseUnityPlugin {
         internal static new ManualLogSource Logger;
         public static Item Wallet;
+        public static Item Money;
         internal static IngameKeybinds InputActionsInstance;
         public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
@@ -28,14 +29,21 @@ namespace CodeRebirth {
             ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
 
 
-            // Hammer Item/Scrap + keybinds
+            // Register Keybinds
             InputActionsInstance = new IngameKeybinds();
             
+            // Wallet register
             Wallet = Assets.MainAssetBundle.LoadAsset<Item>("WalletObj");
             Utilities.FixMixerGroups(Wallet.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Wallet.spawnPrefab);
             TerminalNode wTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("wTerminalNode");
             RegisterShopItemWithConfig(ModConfig.ConfigWalletEnabled.Value, false, Wallet, wTerminalNode, ModConfig.ConfigWalletCost.Value, "");
+            
+            Money = Assets.MainAssetBundle.LoadAsset<Item>("MoneyObj");
+            Utilities.FixMixerGroups(Money.spawnPrefab);
+            NetworkPrefabs.RegisterNetworkPrefab(Money.spawnPrefab);
+            RegisterScrapWithConfig(ModConfig.ConfigMoneyScrapEnabled.Value, ModConfig.ConfigMoneyRarity.Value, Money);
+
             InitializeNetworkBehaviours();
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
         }
