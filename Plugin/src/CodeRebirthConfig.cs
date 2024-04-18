@@ -5,27 +5,17 @@ using BepInEx.Configuration;
 
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
-        public ConfigEntry<int> ConfigHammerCost { get; private set; }
-        public ConfigEntry<bool> ConfigHammerEnabled { get; private set; }
-        public ConfigEntry<string> ConfigHammerRarity { get; private set; }
-        public ConfigEntry<bool> ConfigHammerScrapEnabled { get; private set; }   
+        public ConfigEntry<int> ConfigWalletCost { get; private set; }
+        public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
-            ConfigHammerScrapEnabled = configFile.Bind("Scrap Options",
-                                                "Hammer Scrap | Enabled",
+            ConfigWalletEnabled = configFile.Bind("Shop Options",
+                                                "Wallet Item | Enabled",
                                                 true,
-                                                "Enables/Disables the spawning of the scrap (sets rarity to 0 if false on all moons)");
-            ConfigHammerRarity = configFile.Bind("Scrap Options",   
-                                                "Hammer Scrap | Rarity",  
-                                                "Modded@1,ExperimentationLevel@1,AssuranceLevel@1,VowLevel@1,OffenseLevel@1,MarchLevel@1,RendLevel@1,DineLevel@1,TitanLevel@1", 
-                                                "Rarity of Hammer scrap appearing on every moon");
-            ConfigHammerEnabled = configFile.Bind("Shop Options",   
-                                                "Hammer Item | Enabled",  
-                                                true, 
-                                                "Enables/Disables the Hammer showing up in shop");
-            ConfigHammerCost = configFile.Bind("Shop Options",   
-                                                "Hammer Item | Cost",
-                                                60, 
-                                                "Cost of Hammer");     
+                                                "Enables/Disables the Wallet showing up in shop");
+            ConfigWalletCost = configFile.Bind("Shop Options",
+                                                "Wallet Item | Cost",
+                                                250,
+                                                "Cost of Wallet");
             ClearUnusedEntries(configFile);
             Plugin.Logger.LogInfo("Setting up config for CodeRebirth plugin...");
         }

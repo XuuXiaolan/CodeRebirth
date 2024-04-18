@@ -17,7 +17,7 @@ namespace CodeRebirth {
     [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin {
         internal static new ManualLogSource Logger;
-        public static Item Hammer;
+        public static Item Wallet;
         internal static IngameKeybinds InputActionsInstance;
         public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
@@ -30,12 +30,12 @@ namespace CodeRebirth {
 
             // Hammer Item/Scrap + keybinds
             InputActionsInstance = new IngameKeybinds();
-
-            Hammer = Assets.MainAssetBundle.LoadAsset<Item>("HammerObj");
-            Utilities.FixMixerGroups(Hammer.spawnPrefab);
-            NetworkPrefabs.RegisterNetworkPrefab(Hammer.spawnPrefab);
-            TerminalNode cTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("cTerminalNode");
-            RegisterShopItemWithConfig(ModConfig.ConfigHammerEnabled.Value, ModConfig.ConfigHammerScrapEnabled.Value, Hammer, cTerminalNode, ModConfig.ConfigHammerCost.Value, ModConfig.ConfigHammerRarity.Value);
+            
+            Wallet = Assets.MainAssetBundle.LoadAsset<Item>("WalletObj");
+            Utilities.FixMixerGroups(Wallet.spawnPrefab);
+            NetworkPrefabs.RegisterNetworkPrefab(Wallet.spawnPrefab);
+            TerminalNode wTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("wTerminalNode");
+            RegisterShopItemWithConfig(ModConfig.ConfigWalletEnabled.Value, false, Wallet, wTerminalNode, ModConfig.ConfigWalletCost.Value, "");
             InitializeNetworkBehaviours();
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
         }

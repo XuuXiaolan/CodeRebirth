@@ -35,8 +35,8 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
 	  <PackageReference Include="Evaisa.LethalLib" Version="0.15.*" />
 	  <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.3" />
-    
+    <PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.4" />
+    <!-- <PackageReference Include="IAmBatby.LethalLevelLoader" Version="1.2.0" /> -->
     <!-- <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" /> -->
   </ItemGroup>
 
@@ -45,7 +45,7 @@
     <Reference Include="Assembly-CSharp"><HintPath>../dlls/Assembly-CSharp.dll</HintPath></Reference>
     <Reference Include="Unity.Netcode.Runtime"><HintPath>../dlls/Unity.Netcode.Runtime.dll</HintPath></Reference>
 	  <Reference Include="LethalLib"><HintPath>../dlls/LethalLib.dll</HintPath></Reference>
-    <Reference Include="LethalLevelLoader"><HintPath>../dlls/LethalLevelLoader.dll</HintPath></Reference>
+    <!-- <Reference Include="LethalLevelLoader"><HintPath>../dlls/LethalLevelLoader.dll</HintPath></Reference> -->
     <Reference Include="Unity.InputSystem"><HintPath>../dlls/Unity.InputSystem.dll</HintPath></Reference>
   </ItemGroup>  
 
