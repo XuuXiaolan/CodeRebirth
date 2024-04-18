@@ -4,14 +4,14 @@ using BepInEx;
 using LethalLib.Modules;
 using BepInEx.Logging;
 using System.IO;
-using RatchetnClank.Configs;
+using CodeRebirth.Configs;
 using System.Collections.Generic;
 using static LethalLib.Modules.Levels;
 using System.Linq;
 using static LethalLib.Modules.Items;
-using RatchetnClank.Keybinds;
+using CodeRebirth.Keybinds;
 
-namespace RatchetnClank {
+namespace CodeRebirth {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     [BepInDependency(LethalLib.Plugin.ModGUID)] 
     [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
@@ -19,13 +19,13 @@ namespace RatchetnClank {
         internal static new ManualLogSource Logger;
         public static Item Hammer;
         internal static IngameKeybinds InputActionsInstance;
-        public static RatchetnClankConfig ModConfig { get; private set; } // prevent from accidently overriding the config
+        public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
         private void Awake() {
             Logger = base.Logger;
             // This should be ran before Network Prefabs are registered.
             Assets.PopulateAssets();
-            ModConfig = new RatchetnClankConfig(this.Config); // Create the config with the file from here.
+            ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
 
 
             // Hammer Item/Scrap + keybinds
@@ -110,7 +110,7 @@ namespace RatchetnClank {
             public static void PopulateAssets() {
                 string sAssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-                MainAssetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "ratchetnclankasset"));
+                MainAssetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "coderebirthasset"));
                 if (MainAssetBundle == null) {
                     Plugin.Logger.LogError("Failed to load custom assets.");
                     return;

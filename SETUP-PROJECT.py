@@ -221,16 +221,16 @@ userFile = f"""<?xml version="1.0" encoding="utf-8"?>
          Condition="!Exists('$(TestDir)$(AssemblyName)-DEV/')"
       />
       <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(TestDir)$(AssemblyName)-DEV/"/>
-      <!-- We will copy the asset bundle named "ratchetnclankasset" over -->
-      <Copy SourceFiles="../UnityProject/AssetBundles/StandaloneWindows/ratchetnclankasset" DestinationFolder="$(TestDir)$(AssemblyName)-DEV/"/>
+      <!-- We will copy the asset bundle named "coderebirthasset" over -->
+      <Copy SourceFiles="../UnityProject/AssetBundles/StandaloneWindows/coderebirthasset" DestinationFolder="$(TestDir)$(AssemblyName)-DEV/"/>
       <Exec Command="echo '[csproj.user] Mod files copied to $(TestDir)$(AssemblyName)-DEV/'" />
    </Target>
 </Project>"""
 
-fp = open(f'{thisPath}/Plugin/RatchetnClank.csproj.user', 'w')
+fp = open(f'{thisPath}/Plugin/CodeRebirth.csproj.user', 'w')
 fp.write(userFile)
 fp.close()
-print(color.green + f'csproj.user file created at {thisPath}/Plugin/RatchetnClank.csproj.user!')
+print(color.green + f'csproj.user file created at {thisPath}/Plugin/CodeRebirth.csproj.user!')
 
 print(color.lightblue + f'Project Setup Complete!{color.lightcyan}\n> You should now be able to build the C# project, including the Asset Bundle!')
 exitProgram()

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
 
-namespace RatchetnClank.Configs {
-    public class RatchetnClankConfig {
+namespace CodeRebirth.Configs {
+    public class CodeRebirthConfig {
         public ConfigEntry<int> ConfigHammerCost { get; private set; }
         public ConfigEntry<bool> ConfigHammerEnabled { get; private set; }
         public ConfigEntry<string> ConfigHammerRarity { get; private set; }
         public ConfigEntry<bool> ConfigHammerScrapEnabled { get; private set; }   
-        public RatchetnClankConfig(ConfigFile configFile) {
+        public CodeRebirthConfig(ConfigFile configFile) {
             ConfigHammerScrapEnabled = configFile.Bind("Scrap Options",
                                                 "Hammer Scrap | Enabled",
                                                 true,
@@ -27,7 +27,7 @@ namespace RatchetnClank.Configs {
                                                 60, 
                                                 "Cost of Hammer");     
             ClearUnusedEntries(configFile);
-            Plugin.Logger.LogInfo("Setting up config for RatchetnClank plugin...");
+            Plugin.Logger.LogInfo("Setting up config for CodeRebirth plugin...");
         }
         private void ClearUnusedEntries(ConfigFile configFile) {
             // Normally, old unused config entries don't get removed, so we do it with this piece of code. Credit to Kittenji.
