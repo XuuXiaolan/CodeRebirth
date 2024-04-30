@@ -1,8 +1,9 @@
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using CodeRebirth.ScrapStuff;
 
-namespace CodeRebirth.ScrapStuff;
+namespace CodeRebirth.ItemStuff;
 public class Wallet : GrabbableObject {
     private RaycastHit hit;
     public AudioSource WalletPlayer;
