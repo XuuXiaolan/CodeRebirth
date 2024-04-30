@@ -9,7 +9,7 @@ public class Wallet : GrabbableObject {
     public ScanNodeProperties scanNode;
     public override void Start() {
         base.Start();
-        scanNode = GetComponent<ScanNodeProperties>();
+        scanNode = GetComponentInChildren<ScanNodeProperties>();
     }
     public override void Update() {
         base.Update();
@@ -45,6 +45,7 @@ public class Wallet : GrabbableObject {
     private void UpdateScrapValueClientRpc(int newScrapValue) {
         this.scrapValue = newScrapValue;
         scanNode.scrapValue = scrapValue;
+        scanNode.subText = $"Value: {scrapValue}";
     }
 
     [ServerRpc(RequireOwnership = false)]
