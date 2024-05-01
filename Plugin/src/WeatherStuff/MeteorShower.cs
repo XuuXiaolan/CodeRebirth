@@ -10,9 +10,9 @@ namespace CodeRebirth.WeatherStuff;
 public class MeteorShower : MonoBehaviour
 {
     [SerializeField] private LayerMask layersToIgnore = 0;
-    [SerializeField] private int minTimeBetweenSpawns = 20;
-    [SerializeField] private int maxTimeBetweenSpawns = 60;
-    [SerializeField] private int maxToSpawn = 1;
+    [SerializeField] private int minTimeBetweenSpawns = 5;
+    [SerializeField] private int maxTimeBetweenSpawns = 10;
+    [SerializeField] private int maxToSpawn = 50;
     [SerializeField] private int meteorLandRadius = 6;
 
     private Vector2 meteorSpawnDirection;
@@ -96,8 +96,11 @@ public class MeteorShower : MonoBehaviour
             var initialPos = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
             var landLocation = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(initialPos, meteorLandRadius, RoundManager.Instance.navHit, random);
             var spawnLocation = landLocation + meteorSpawnLocationOffset;
-
-            if (Physics.RaycastAll(spawnLocation, landLocation - spawnLocation, Mathf.Infinity, ~layersToIgnore).Any(hit => hit.transform && hit.transform.tag != "Wood"))
+            var raycastHit = Physics.RaycastAll(spawnLocation, landLocation, Mathf.Infinity, ~layersToIgnore);
+#if DEBUG
+                Plugin.Logger.LogDebug($"Casted ray. {raycastHit}, {raycastHit.Length}");
+#endif
+            if (raycastHit.Any(hit => hit.transform && hit.transform.tag == "Wood"))
             {
                 Plugin.Logger.LogInfo("Raycast blocked by an object not tagged 'Wood'");
                 yield return null;
@@ -113,6 +116,8 @@ public class MeteorShower : MonoBehaviour
             var timeAtSpawn = NetworkManager.Singleton.LocalTime.Time + (random.NextDouble() * 10 + 2);
             SendMeteorSpawnInfo(new MeteorSpawnInfo(timeAtSpawn, spawnLocation, landLocation));
             var meteorInstance = Instantiate(meteorPrefab, spawnLocation, Quaternion.identity);
+            var meteorObject = Instantiate(meteorPrefab, new Vector3(0, -1000, 0), Quaternion.identity, Plugin.effectObject.transform);
+            meteorObject.GetComponent<Meteors>().SetParams(spawnLocation, landLocation);
             Plugin.Logger.LogInfo($"Spawning meteor at {spawnLocation}");
 
             result = true;

@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 4886869073590910389}
   - component: {fileID: 737751026385981337}
   - component: {fileID: 1934829363527083061}
+  - component: {fileID: 6132861222601426575}
+  - component: {fileID: 5146194962536676925}
   m_Layer: 2
   m_Name: Meteor
   m_TagString: TemporaryEffect
@@ -83,3 +85,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6132861222601426575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6084561837277731835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1104593504, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 75
+--- !u!114 &5146194962536676925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6084561837277731835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0

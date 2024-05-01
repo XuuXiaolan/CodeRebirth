@@ -196,7 +196,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d2454c5c487df54c8432d3d676ddd1a, type: 3}
---- !u!1001 &935825510
+--- !u!1001 &524191272444743769
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -207,7 +207,7 @@ PrefabInstance:
     - target: {fileID: 1617295209884204337, guid: 3c2a096e9ac4cee41ba59730f4481924,
         type: 3}
       propertyPath: m_Name
-      value: StarstruckWeather
+      value: MeteorShowerWeather
       objectReference: {fileID: 0}
     - target: {fileID: 6951137990766535890, guid: 3c2a096e9ac4cee41ba59730f4481924,
         type: 3}
@@ -259,8 +259,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2089150828568309255, guid: 3c2a096e9ac4cee41ba59730f4481924, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -404,8 +403,55 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6084561837277731835, guid: da5c9775f87a64d4db49f680c212f27a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3515825690855004037}
+    - targetCorrespondingSourceObject: {fileID: 6084561837277731835, guid: da5c9775f87a64d4db49f680c212f27a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3515825690855004036}
   m_SourcePrefab: {fileID: 100100000, guid: da5c9775f87a64d4db49f680c212f27a, type: 3}
+--- !u!1 &3515825690855004035 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6084561837277731835, guid: da5c9775f87a64d4db49f680c212f27a,
+    type: 3}
+  m_PrefabInstance: {fileID: 3515825690855004034}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3515825690855004036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3515825690855004035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1611599507
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &3515825690855004037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3515825690855004035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1104593504, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 100
 --- !u!1001 &9014442319634245291
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -487,4 +533,4 @@ SceneRoots:
   - {fileID: 386580549}
   - {fileID: 3497422411515187430}
   - {fileID: 3515825690855004034}
-  - {fileID: 935825510}
+  - {fileID: 524191272444743769}
