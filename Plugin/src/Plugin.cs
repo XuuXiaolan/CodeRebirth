@@ -17,8 +17,12 @@ namespace CodeRebirth {
     [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin {
         internal static new ManualLogSource Logger;
-        public static Item Wallet;
-        public static Item Money;
+        internal static Item Wallet;
+        internal static Item Money;
+        internal static Item Meteorite;
+        internal static Dictionary<string, Item> samplePrefabs = [];
+        internal static GameObject effectObject;
+        internal static GameObject effectPermanentObject;
         internal static IngameKeybinds InputActionsInstance;
         public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
@@ -27,12 +31,41 @@ namespace CodeRebirth {
             // This should be ran before Network Prefabs are registered.
             Assets.PopulateAssets();
             ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
-
-
             // Register Keybinds
             InputActionsInstance = new IngameKeybinds();
-            
-            // Wallet register
+            CodeRebirthWeather();
+            CodeRebirthScrap();
+
+            InitializeNetworkBehaviours();
+            Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+        }
+        private void CodeRebirthWeather() {
+            // Instantiate the weather effect objects
+            Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("Meteorite");
+            samplePrefabs.Add("MeteoriteContainer", Meteorite);
+            effectObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("StarstruckMeteorContainer"), Vector3.zero, Quaternion.identity);
+            effectObject.hideFlags = HideFlags.HideAndDontSave;
+            DontDestroyOnLoad(effectObject);
+
+            effectPermanentObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("StarstruckWeather"), Vector3.zero, Quaternion.identity);
+            effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
+            DontDestroyOnLoad(effectPermanentObject);
+
+            // Create a new WeatherEffect instance
+            var meteorShower = new WeatherEffect()
+            {
+                name = "MeteorShower",
+                effectObject = effectObject,
+                effectPermanentObject = effectPermanentObject,
+                lerpPosition = false,
+                sunAnimatorBool = "",
+                transitioning = false
+            };
+                
+            Weathers.RegisterWeather("MeteorShower", meteorShower, Levels.LevelTypes.All, 0, 0);
+        }
+        private void CodeRebirthScrap() {
+            // Wallet+Coin register
             Wallet = Assets.MainAssetBundle.LoadAsset<Item>("WalletObj");
             Utilities.FixMixerGroups(Wallet.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Wallet.spawnPrefab);
@@ -43,9 +76,6 @@ namespace CodeRebirth {
             Utilities.FixMixerGroups(Money.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Money.spawnPrefab);
             RegisterScrapWithConfig(ModConfig.ConfigMoneyScrapEnabled.Value, ModConfig.ConfigMoneyRarity.Value, Money);
-
-            InitializeNetworkBehaviours();
-            Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
         }
         private void RegisterScrapWithConfig(bool enabled, string configMoonRarity, Item scrap) {
             if (enabled) { 

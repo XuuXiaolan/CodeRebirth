@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1390307825
+CRC: 3597441890
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1df4cf174dfc5cffee7fc51a52611352
+    Hash: 1452c2ec4358e7812180bf9db8d22f36
   TypeTreeHash:
     serializedVersion: 2
-    Hash: af0f412999e82b20ace3520fff8dcfa7
+    Hash: d75c5d281a893a7dd96aa5457cc89c9c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 1df4cf174dfc5cffee7fc51a52611352
+    Hash: 1452c2ec4358e7812180bf9db8d22f36
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -19,6 +19,8 @@ ClassTypes:
 - Class: 21
   Script: {instanceID: 0}
 - Class: 23
+  Script: {instanceID: 0}
+- Class: 28
   Script: {instanceID: 0}
 - Class: 33
   Script: {instanceID: 0}
@@ -37,6 +39,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 3d0cf24d2ccc3b7eab72048d0f57c437, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
@@ -47,6 +51,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 790000112, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
+  Script: {instanceID: 0}
+- Class: 213
   Script: {instanceID: 0}
 - Class: 241
   Script: {instanceID: 0}
@@ -60,9 +66,11 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: CompatibleNoun
 Assets:
-- Assets/CodeRebirth/Scrap/Wallet/Obj/WalletObj.asset
-- Assets/CodeRebirth/Scrap/Wallet/Prefab/Wallet.prefab
-- Assets/CodeRebirth/Scrap/Wallet/TerminalNode/wTerminalNode.asset
+- Assets/CodeRebirth/Items/Wallet/Obj/WalletObj.asset
+- Assets/CodeRebirth/Weathers/MeteorShower/MeteoriteObj.asset
+- Assets/CodeRebirth/Items/Wallet/Prefab/Wallet.prefab
+- Assets/CodeRebirth/Items/Wallet/TerminalNode/wTerminalNode.asset
 - Assets/CodeRebirth/Scrap/Money/Prefab/Money.prefab
+- Assets/CodeRebirth/Weathers/MeteorShower/Meteorite.prefab
 - Assets/CodeRebirth/Scrap/Money/Obj/MoneyObj.asset
 Dependencies: []
