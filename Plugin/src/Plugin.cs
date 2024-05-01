@@ -20,6 +20,7 @@ namespace CodeRebirth {
         internal static Item Wallet;
         internal static Item Money;
         internal static Item Meteorite;
+        internal static GameObject Meteor;
         internal static Dictionary<string, Item> samplePrefabs = [];
         internal static GameObject effectObject;
         internal static GameObject effectPermanentObject;
@@ -41,6 +42,10 @@ namespace CodeRebirth {
         }
         private void CodeRebirthWeather() {
             // Instantiate the weather effect objects
+            Meteor = Assets.MainAssetBundle.LoadAsset<GameObject>("Meteor");
+            if (Meteor == null) {
+                Logger.LogError("Failed to load meteor prefab");
+            }
             Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
             Utilities.FixMixerGroups(Meteorite.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Meteorite.spawnPrefab);

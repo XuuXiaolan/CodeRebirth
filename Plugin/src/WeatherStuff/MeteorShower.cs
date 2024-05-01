@@ -28,7 +28,12 @@ public class MeteorShower : MonoBehaviour
     private void OnEnable()
     {
         if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)) return;
-        
+        meteorPrefab = Plugin.Meteor;
+        if (meteorPrefab == null)
+        {
+            Plugin.Logger.LogInfo("Failed to load meteor prefab.");
+            return;
+        }
         random = new System.Random(StartOfRound.Instance.randomMapSeed + RandomSeedOffset);
         TimeOfDay.Instance.onTimeSync.AddListener(OnGlobalTimeSync);
 
@@ -43,7 +48,7 @@ public class MeteorShower : MonoBehaviour
         var spawnDirection = (float)random.NextDouble() * 2 * Mathf.PI;
         meteorSpawnDirection = new Vector2(Mathf.Sin(spawnDirection), Mathf.Cos(spawnDirection));
         meteorSpawnLocationOffset = new Vector3(meteorSpawnDirection.x * random.Next(540, 1200), 350,
-            meteorSpawnDirection.y * random.Next(540, 1200));
+        meteorSpawnDirection.y * random.Next(540, 1200));
 
         StartCoroutine(PlanMeteor(6, false, result =>
         {
@@ -83,15 +88,18 @@ public class MeteorShower : MonoBehaviour
 
     private IEnumerator PlanMeteor(int maxAttempts = 4, bool spawn = true, Action<bool> callback = null)
     {
+        Plugin.Logger.LogInfo("Starting PlanMeteor coroutine.");
         bool result = false;
         for (var i = 0; i < maxAttempts; i++)
         {
+            Plugin.Logger.LogInfo($"Attempt {i+1}/{maxAttempts}");
             var initialPos = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
             var landLocation = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(initialPos, meteorLandRadius, RoundManager.Instance.navHit, random);
             var spawnLocation = landLocation + meteorSpawnLocationOffset;
 
             if (Physics.RaycastAll(spawnLocation, landLocation - spawnLocation, Mathf.Infinity, ~layersToIgnore).Any(hit => hit.transform && hit.transform.tag != "Wood"))
             {
+                Plugin.Logger.LogInfo("Raycast blocked by an object not tagged 'Wood'");
                 yield return null;
                 continue;
             }
@@ -104,13 +112,15 @@ public class MeteorShower : MonoBehaviour
 
             var timeAtSpawn = NetworkManager.Singleton.LocalTime.Time + (random.NextDouble() * 10 + 2);
             SendMeteorSpawnInfo(new MeteorSpawnInfo(timeAtSpawn, spawnLocation, landLocation));
+            var meteorInstance = Instantiate(meteorPrefab, spawnLocation, Quaternion.identity);
+            Plugin.Logger.LogInfo($"Spawning meteor at {spawnLocation}");
 
             result = true;
             break;
         }
-        
         callback?.Invoke(result);
     }
+
 
     private void SendMeteorSpawnInfo(MeteorSpawnInfo info)
     {
