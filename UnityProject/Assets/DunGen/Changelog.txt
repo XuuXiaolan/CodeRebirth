@@ -1,0 +1,449 @@
+2.16
+ENHANCEMENTS
+- Most lists now support dragging and dropping to add new elements (including archetypes, tile sets, props, and doorway connectors/blockers)
+- All lists now support undo/redo when adding or deleting elements
+- Prop processing is now significantly faster on complex dungeons with many GameObjects
+- Empty GameObject entries in the LocalPropSet or RandomPrefab components will no longer be ignored and can now be used to signal that no prop should be spawned
+- Added a validation rule that warns when a terrain is being used in a tile that allows rotation (Unity terrains cannot be rotated)
+- Selected doorways are now checked for valid placement in the editor:
+	- The doorway will be colour-coded (green = valid, orange = not placed on the edge of the tile, red = not axis-aligned)
+	- A red line will be drawn from the doorway to the nearest valid location
+	- For doorways that are incorrectly placed, there will be a button in the inspector to attempt to fix the placement issues
+- The dungeon validator will now warn when a doorway is not placed on the edge of the tile bounding box
+- Unity NavMesh Adapter improvements
+	- Added a new option to automatically calculate the start and end points of navigation links per-doorway instead of just using a pre-determined distance on either side of the doorway
+	- When using the "Full Dungeon Bake" mode, any existing navmesh surfaces in the dungeons will now be disabled to avoid overlapping navigation meshes
+- TileConnectionRule supports a new 'ConnectionDelegate' which contains more information for more complex custom connection rules. The old delegate has been marked as obsolete but will continue to function for now
+- Tags are now available on tile and doorway proxy objects for easier access when writing custom connection rules in code
+
+BUG FIXES
+- Fixed an issue where too much time was being attributed to the branch generation step. New steps for branch pruning and instantiating tile prefabs have been added for more accurate analysis
+- Fixed and issue causing the 'Cull Each Child' option to not work properly with newer versions of SECTR (requires re-exporting SECTR_VIS integration package)
+- Fixed a NullReferenceException when using an empty entry in the RandomPrefab component
+- Fixed an issue causing the dungeon validator to incorrectly warn about doorways facing the wrong way in a tile containing a terrain
+- Fixed an issue causing keys to sometimes not be able to spawn in the same room as the lock
+- Key spawn points will now correctly only be used once
+- Fixed an issue causing a doorway's 'LockID' to not be assigned
+- Fixed a NullReferenceException caused when no valid locks could be found
+- Fixed a NullReferenceException when trying to copy tags from a tile that has none assigned
+- Fixed a bug causing DunGen to generate too few branches when the branch mode is set to 'Global'
+
+
+2.15.1
+ENHANCEMENTS
+- The built-in Unity nav mesh adapter now supports providing a layer mask for any surfaces that need to be added at runtime. Existing surfaces are unaffected by this setting
+- The DungeonGenerator class now contains a static event 'OnAnyDungeonGenerationStatusChanged' which can be used without a direct reference to a given generator instance
+
+
+BUG FIXES
+- Fixed an issue causing injected tiles to sometimes have their locks not spawn on the entrance doorway
+- Fixed an issue resulting in an uneven distribution of branches when using the 'Global' branch mode
+- Fixed an issue causing the 'Global' branch mode to sometimes result in more than the maximum number of branches being created
+- Fixed an issue causing the DungenCharacter component to not correctly track the current tile if the player only partially stepped into a new tile before returning to the original
+- Fixed an error caused by the DungenCharacter component re-checking tiles when a dungeon is generated in the editor
+- Dungeon information (tiles, connections, tile bounds, etc) should now be properly saved when generating a dungeon in the editor
+
+2.15
+FEATURES
+- Injected tiles can now optionally have a locked door using the standard Lock & Key system
+- The dungeon flow now has an option for pruning branches based on tile tags
+	> A tile at the end of a branch will be deleted based on whether it has one of the tags in the "Branch Prune Tags" list in the dungeon flow settings
+	> This setting ignores any injected tiles marked as required
+- Added a new IDungeonCompleteReceiver interface which can be implemented on any script inside a dungeon to receive a callback when the dungeon generation is complete
+
+ENHANCEMENTS
+- Doorways now have a set of tags that can be used for custom connection logic in code using DoorwayPairFinder.CustomConnectionRules
+
+BUG FIXES
+- Doorways connected by the dungeon flow's random connection chance setting should now properly respect custom connection rules
+- It should now once again be possible to select a different 'Count Mode' in the local prop set inspector
+- Fixed an issue causing changes to sometimes not be saved when modifying the tags on a Tile component
+
+2.14
+FEATURES
+- Added user-defined tags that can be applied to individual tiles
+	> The dungeon flow now has a "Tile Connection Rules" section that can be used to customise which tiles are allowed to connect based on their tags
+	> Tags can be accessed through code to apply more complex logic
+- Added a new method for applying custom logic through code to allow/disallow connections between tiles (see DoorwayPairFinder.CustomConnectionRules)
+	> Supports making decisions based on doorways and tiles instead of just two doorway sockets
+	> Can be assigned priorities and chained together
+- Added a new navmesh adapter for 2D dungeons
+	> Can be found in 'DunGen/Integration/Unity NavMesh.unitypackage'
+	> Requires 2017.2 or higher
+	> Currently supports SpriteRenderer meshes (not colliders) and Tilemaps sprite meshes (also not colliders)
+
+ENHANCEMENTS
+- AdjacentRoomCulling component Improvements
+	> Added IsTileVisible method and TileVisibilityChanged event
+	> Can now optionally ignore components that are disabled from the start
+	> Many methods are now marked as virtual for easier extension
+	> Now also culls reflection probes
+
+2.13.4
+BUG FIXES
+- Fixed a compilation error in the Playmaker integration package
+- Fixed an issue that allowed designated exits to be used as an entrance to the tile
+
+2.13.3
+WARNING: Breaking changes. All references to System.Random have been replaced with a new type DunGen.RandomStream. Any user code that references the random number generator will need to be updated.
+
+ENHANCEMENTS
+- The dungeon generator should now produce identical results when using the same seed even across different .NET versions
+
+2.13.2
+BUG FIXES
+- Fixed an error when trying to process child props that have been removed by a prop script
+- When doing a full dungeon bake using Unity's NavMesh system, the old navmesh is now correctly cleared first
+
+2.13.1
+BUG FIXES
+- Removed deprecated components from sample scenes to avoid warnings in Unity 2020.1
+- The 'Adjacent Room Culling (Multi-Camera)' component should now work when using scriptable render pipelines, provided the project is Unity 2019.1 or higher
+- The 'Adjacent Room Culling' component (non-multi-camera) now also has a 'Target Override' property to match its multi-camera counterpart, allowing it
+  to be used in games where you want to cull around the character, not the camera (e.g. third-person or 2D)
+- Fixed an issue in the Dungeon Crawler Sample that caused the NavMesh to persist between scenes
+- Fixed an issue with SECTR portal culling integration that caused rooms to not be culled initially when 'Multi Camera Culling' was turned off
+- Fixed an issue causing 'Doorway Connection Chance' to do nothing
+
+2.13
+ENHANCEMENTS
+- Tile prefabs are now only instantiated after the entire dungeon layout is generated, resulting in much faster generation times. Tiles will still be spawned individually when generating asynchronously with a 'Pause Between Rooms' greater than zero to allow for visual debugging.
+- Local Prop Set and Random Prefab props can now be nested properly. Global props should still not have other props nested inside them, but can be nested inside others.
+- Archetypes can now be be marked as unique. DunGen will try to ensure that unique archetypes are only used once throughout the dungeon.
+- When using the 'Full Dungeon Bake' mode with the built-in Unity NavMesh adapter, it's now possible to use your own surfaces for more control over settings by unchecking the 'Auto-Generate Surfaces' checkbox.
+- The Door component now contains a 'DontCullBehind' property to allow doors to be closed without culling rooms behind it. This works for the built-in culling and the SECTR VIS integration.
+- Doorway connector & blocker prefabs can now all be assigned weights for more control over how frequently certain objects spawn.
+
+BUG FIXES
+- Local prop sets now correctly work with objects attached to door connectors & blockers
+- The SECTR VIS integration will no longer throw an error if a door already has a SECTR_MEMBER component
+
+
+2.12.1
+BUG FIXES
+- Dungeon generator settings should now properly work with the new prefab workflow in Unity
+- Fixed an issue causing the phase of a post-process step to be ignored
+- Connector prefab instances now correctly have their local position reset after being parented to the doorway
+
+
+2.12
+WARNING: This version includes breaking changes if upgrading from an older version, please delete the old version from your project first. Doorways must have their sockets re-assigned using the new system. Up-direction must be re-assigned in dungeon generator settings.
+
+FEATURES
+- Dungeon Crawler Sample (Extract from "DunGen/Samples/DungeonCrawler.unitypackage"). Requires Unity 2019.1 or higher
+- Doorway sockets are no longer hard-coded and are instead assets that can be added without modifying DunGen's source code
+	> Doorway size is now part of the new DoorwaySocket asset instead of being applied to each doorway instance
+- Doorway socket connection logic can be overridden by providing your own function to DoorwaySocket.CustomSocketConnectionDelegate
+- Added a new constraint in generator settings to enforce a minimum padding distance between unconnected tiles
+- Added a new constraint in generator settings to disallow overhangs (so rooms cannot spawn above other rooms)
+
+ENHANCEMENTS
+- Door prefabs are now parented to their doorway objects, rather than the dungeon root
+- Added a new icon for doorways
+- The maximum overlap between two connected tiles can be tweaked in the dungeon generator settings
+- Simplified up-vector selection
+- If no socket is specified for an entry in a TileSet's locked door prefab list, the locked door can be assigned to any socket
+
+BUG FIXES
+- Assigning a prefab to a key is now optional
+- Disabled doorways are no longer considered when connecting tiles together or when calculating tile bounds
+
+
+2.11.9
+FEATURES
+- Added a new built-in culling component "AdjacentRoomCulling"
+- Added "Full Dungeon Bake" mode to Unity NavMesh integration which allows the entire dungeon to be baked as a single surface when generated
+
+ENHANCEMENTS
+- Improvements to built-in basic culling camera
+	> Improved performance by ~60% (3.19ms -> 1.29ms in test case)
+	> Now optionally supports culling light sources
+	> Now supports culling doors
+- Some improved inspector tooltips
+
+
+2.11.8
+FEATURES
+- Added an option to override the global "Doorway Connection Chance" on a per-tile basis
+- Added an option to restrict connecting overlapping doorways to only tiles that occupy the same segment of the dungeon flow graph. This should help to prevent unintended shortcuts from appearing when this feature is used
+
+ENHANCEMENTS
+- The documentation has been updated to include some recent features which had mistakenly been omitted. The documentation also includes a previously missing step when setting up the Lock & Key system
+- An error is now logged whenever a tiles automatically calculated bounds are invalid (have a negative or zero size)
+
+BUGFIXES
+- Automatic bounds calculation will now work properly with newer versions of ProBuilder
+
+2.11.7
+FEATURES
+- A more comprehensive validation tool has been added to help find any errors when setting up a dungeon. This can be accessed using the "Validate" button in the DungeonFlow asset inspector
+- Added a 'Branch Mode' option to the dungeon flow allowing users to optionally specify the number of branches that should appear globally across the entire dungeon, rather than locally per-tile
+
+ENHANCEMENTS
+- BasicRoomCullingCamera now has an option to also cull in the editor scene view
+- Improved performance of BasicRoomCullingCamera in scenes with a lot of renderers
+- Foldout labels can now be clicked to expand the foldout
+- The old dungeon validation is now only run inside the editor for a minor performance improvement in packaged builds
+- Doorways now also draw their expected up-vector to make it clearer which way they should be facing
+- Adapters (such as integration for SECTR VIS and Unity's NavMesh) will no longer fail silently if attached to a GameObject without a RuntimeDungeon component
+- Creating a new DunGen asset will now allow the user to specify a file name
+- Some improvements for the DungeonFlow inspector
+
+2.11.6
+BUGFIXES
+- Fixed an issue preventing the dungeon generating from working until the scene/editor is restarted after finding an issue with the dungeon layout
+- SECTR VIS integration will now correctly use the already calculated tile bounds instead of its own. This should prevent any gaps from forming between sectors (resulting in incorrect culling)
+- Fixed an issue causing some DunGen components to not save correctly when edited in the new prefab editor in Unity 2018.3
+- Undo/redo should now work consistently
+
+CHANGES
+- Most DunGen components now support editing multiple selected objects
+- All inspector lists are now re-orderable
+- Added some in-editor tooltips to properties that didn't already have them
+- The Tile and RuntimeDungeon components now also allow for editing bounds in the scene view
+- There is now the option to disallow any tile repetition. This can be done on a per-tile basis or overridden globally in the dungeon generator
+
+2.11.5
+BUGFIXES
+- Fixed an issue preventing the basic culling camera from culling rooms behind a closed door
+- The Basic Culling Camera will now no longer incorrectly refresh the visible set of tiles every frame - this could increase performance greatly
+- Fixed an issue causing the integrated basic culling to not work if the camera was spawned through code
+
+CHANGES
+- [BREAKING CHANGE] A* Pathfinding Project Pro integration updated to version 4.0+. If you're using an older version, you'll need to add ASTAR_PATHFINDING_VERSION_3 to your "Scripting Define Symbols" in the Unity project settings
+- Updated to work with the new prefab system in Unity 2018.3
+- Moved demo scripts to their own namespace to avoid naming conflicts
+- Small update to the 2D demo scene to include a controllable player character
+
+2.11.4
+BUGFIXES
+- The start tile should now correctly respect the transform of its root game object
+- The integration for A* Pathfinding Project Pro should work correctly in Unity 5 or higher
+- Off-mesh links produced for Unity's NavMesh system will now take the agent's radius into account
+
+2.11.3
+CHANGES
+- Auto-calculated bounds should now ignore particle systems
+
+BUGFIXES
+- Large tiles should no longer overlap a small amount
+- The per-tile "Allow Rotation" and "Allow Immediate Repeats" options should work correctly again
+- DunGen now supports setting Physics.autoSyncTransforms (new in Unity 2017.2) to false
+- Lock & key placement should now correctly be done after props are processed
+
+2.11.2
+CHANGES
+- The "Basic Room Culling Camera" component can now optionally be provided with a TargetOverride transform for third-person games
+- The ArchetypeValidator will now report a warning when a TileSet contains an entry with an unassigned tile and will no longer throw an unhandled exception
+
+BUGFIXES
+- Tiles will now correctly never appear in the dungeon layout when they have a tile weight of zero
+
+2.11.1
+FEATURES
+- Tiles can now optionally designate entrance and exit doorways (available by manually adding a Tile component to your tile)
+
+CHANGES
+- Door prefabs will now always take on the transform of the Doorway that spawned it
+- "Allow Immediate Repeats" now defaults to true to avoid confusion when testing DunGen with a setup that has only one tile. It's still possible to override this behaviour both globally and on a per-tile basis
+- The DungeonGenerator class has a new "Retrying" event that is fired whenever DunGen has to retry the entire dungeon layout
+
+BUGFIXES
+- JIT errors should no longer be thrown on platforms that require AoT compilation (such as Xbox One & iOS)
+- Fixed an error preventing use of the PlayMaker integration
+- Fixed a rare issue that caused rooms with vertical doorways to sometimes be flipped upside-down
+- Fixed an issue that caused the dungeon generator to incorrectly revisit certain statuses (Branching, PostProcessing, Complete), thus making multiple calls to the OnGenerationStatusChanged event
+- Fixed multiple errors with the dungeon flow editor window
+- Fixed an OutOfMemoryException that could occur when a tile had a weight of zero
+
+2.11
+WARNINGS
+- There have been some drastic changes in this new version of DunGen. Be sure to back up your project before trying the new beta build.
+- DunGen is now only packaged with Unity 5.0, instead of 4.3.3 and 5.0 - it should still work with Unity 4.5+ but I'll only be targeting 5.0+ from now on so things might break in the future if you're still using Unity 4
+
+FEATURES
+- Added API to DungeonGenerator for registering post-process callbacks: RegisterPostProcessStep() & UnregisterPostProcessStep()
+	> Callbacks are invoked during DunGen's Post-Process step in order of phase (before or after built-in post-processing), then priority (highest to lowest)
+	> The base NavMeshAdapter class has been changed to use this method to ensure that the NavMesh is build before DunGen reports that the generation is complete when using the OnGenerationStatusChanged event
+- Added an adapter for Unity's new NavMesh system (5.6 beta)
+- Added an adapter for built-in simple culling for use in interior first-person games; works best with auto-closing doors on each doorway 
+- Dungeon generation can now be performed asynchronously so as to avoid blocking Unity's main thread, allowing for things like animated loading screens to play while the dungeon is being generated
+	> There are some new settings for runtime dungeons to control this behaviour
+	> The new "Pause Between Rooms" settings allows you to pause the generation for a number of seconds after a room is placed to visualise the generation process
+
+CHANGES
+- Drastically changed the way DunGen appends tiles internally - it should now generate faster most of the time and practically never fail
+- Culling adapters now use the same method as NavMesh adapters, they are added as components to the GameObject containing the RuntimeDungeon; moved culling code out of DungeonGenerator class
+- Documentation has been completely re-written to be more modular, easier to follow, and to include features that may have been skipped over in previous versions. The documentation is now front-loaded with information to get started quickly, more advanced topics come later
+- Improved the inspector for the Doorway component & changed some of the terminology; it should be much easier to understand now
+- The option to use the legacy weighting system has been removed, there was no reason to use it and it's no longer possible with the new generation method anyway
+- Added tooltips to all dungeon generator settings
+- Code Cleanup
+	> Removed experimental GenerateAppended() method. It was never fully supported and never would have been
+	> Removed orphaned code for dungeon analysis window. RuntimeAnalyzer has always been the way to analyse dungeon generation
+	> Removed code used to generate a main path without allowing backtracking - it wasn't even exposed as an option and allowing backtracking is objectively better
+	> Removed visibility code from the base Tile class; visibility should be handled by culling adapters
+	> Removed TypeUtil & AnalysisWindow
+	
+BUGFIXES
+- Fixed an issue with the generation failing due to not finding matching doorways in a tile when using a custom IsMatchingSocket() method
+- Disallowing repeated tiles should now work as intended and will now also consider branches
+- Fixed a collision issue when using manually overriden tile bounds
+- Fixed an issue with injected tiles on the main path marked as "required" not appearing occasionally
+- Unused tiles deleted during the generation process should no longer contribute to the NavMesh when generating synchronously
+
+
+2.10.1
+- Tiles created with ProBuilder should now have their bounds calculated properly and should no longer overlap
+- All Renderer component bounds will be taken into account when calculating tile bounds now, not just MeshRenderers and (optionally) SpriteRenderers
+- It's now possible to override DunGen's automatically generated tile bounds by attaching a Tile component to the room prefab and checking the "Override Automatic Tile Bounds" box
+- Tile prefab's scale is now correctly handled
+
+2.10
+- Fixed an issue with the 2D demo scene which caused tiles to overlap
+- "Ignore Sprite Bounds" in the dungeon generation settings is now unchecked by default
+- Doorways now have a priority for deciding which doorway's "Door Prefab" should be chosen
+- Added an option to specify which layer the tile trigger volume is placed on (Defaults to "Ignore Raycasts", only effective if "Place Tile Triggers" is checked)
+- "Avoid Door Prefab Rotation?" for doorways should now be set properly
+- Door prefabs should now always be cleaned up correctly
+- Auto-placed trigger volumes for tiles no longer sometimes have negative sizes
+- Fixed an issue with the SECTR VIS integration that was causing door states to not correctly update
+- Fixed an error that occurred when trying to place a lock on a doorway that was already locked
+- Added a DungeonFlowBuilder helper class to assist with creating a dungeon flow graph through code
+- Added a new "count mode" to the local prop set script which allows the number of props to change based on the tile's position in the dungeon layout
+- Fixed an issue that was incorrectly allowing assets to be selected in the LocalPropSet component
+
+2.9.1
+- Fixed an error causing the "Allow Tile Rotation" override to not work properly
+- Dungeon generation will fail much less frequently, especially when imposing constraints such as fixed tile rotations
+- In the event DunGen does fail (editor only; at runtime, DunGen will keep trying indefinitely), points-of-failure will be listed to give a better idea of the cause
+- Fixed an issue causing nodes in the Dungeon Flow to be unselectable if placed over the top of the Start or Goal nodes
+- Fixed an issue causing doorways from a previous dungeon to be considered when trying to connect overlapping doorways
+- Fixed an ambiguous reference to TooltipAttribute when using PlayMaker integration with newer versions of Unity
+- There are now options to avoid rotating Door and Blocker prefabs placed by the Doorway component
+
+2.9
+- Reverted the ProBuilder support changes made in 2.8.0 - these are no longer necessary
+- The Dungeon class now has a Bounds variable which gives the bounding box of the entire dungeon layout
+- Fixed an error in the runtime analyser
+- A root GameObject can now be chosen when using the RuntimeDungeon component. If none is specified, it will default to the old behaviour of creating a new root named "Dungeon"
+- RandomPrefab props now have options for keeping the spawned prefab's position or rotation as an offset. Previously, spawned prefabs always snapped into position and ignored the prefab's transform (this is still the default behaviour)
+- Added integration for generating navigation meshes with both RAIN and A* Pathfinding Project Pro
+- The utility function UnityUtil.CalculateObjectBounds() now ignores trigger colliders by default. Room bounds should no longer encompass any trigger colliders
+- Fixed errors when using custom doorway socket connection logic
+- Moved TypeUtil class to the editor folder as it was causing issues when trying to build for Windows Store (and possibly other platforms)
+- Added an option to disable the trigger volumes DunGen places around each tile. If disabled, the DungenCharacter component won't receive events when moving between rooms
+
+2.8
+- DunGen will no longer throw an ArgumentOutOfRangeException if a GameObject containing a Doorway component is disabled
+- Tiles will now maintain their proper weights across multiple TileSets. The old behavior can be reactivated using the "Use Legacy Weighting" option in the dungeon generator settings
+- Fixed an error when trying to build a project with SECTR integration
+- Fixed a stack overflow exception that occurred when no Tile matched the requirements for the next room in the layout
+- The scale of Tile prefabs will no longer be reset before being placed by the generator
+- DunGen now supports tiles made with ProBuilder
+
+2.7
+- Injected tiles can now be marked as required. If a required tile is not present at the end of the branch path stage, the generation will fail (and retry until the layout is successfully generated or until the maximum number of failed attempts is reached)
+- Added a new "Length Multiplier" option to the dungeon generator. The main path length of the output dungeon will be multiplied by this number. Allows for dungeon length to be altered dynamically at runtime
+- Added support for PlayMaker actions for generating and clearing dungeon layouts
+- Fixed an issue that was causing dungeons to not generate properly when Generate() was called from a physics trigger/contact
+- The dungeon generator will now wait one frame before changing its status to "Complete" to ensure all unused GameObjects are properly destroyed first
+- Fixed an error that caused DunGen to try to place locks & keys using a DungeonFlow without a KeyManager assigned
+- Tiled placed using the tile injection system should now correctly make use of their full range of possible spawn locations
+- Injected tiles should no longer occassionally overwrite tiles placed by a node in the DungeonFlow
+- SECTR VIS culling is now easier to enable. Just unpack "DunGen/Integration/SECTR_VIS.unitypackage" and select "SECTR VIS" from the list of portal culling solutions in the dungeon generator settings. It's now also much easier to integrate your own portal culling solution; just derive a new type from PortalCullingAdapter and implement it's abstract methods.
+- Portal culling will now also automatically handle doors placed by DunGen so that rooms are culled when the connecting door is closed - as a result, door objects are now parented to the dungeon root rather than their doorway. There is now a Door component which will automatically be added to door prefabs placed by DunGen. This component includes information about which doorways and tiles it is connected to and has a IsOpen property which is used to turn portals on or off when used with portal culling
+- As a result of the new culling changes, door objects are now parented to the dungeon root, rather than their doorway
+- Doors placed by the Lock & Key system are now considered the same as a door prefab and so will also benefit from the above
+
+2.6
+- Tiles can now be "injected" into DunGen before randomization occurs. Injection delegates can be added to the generator's TileInjectionMethods property
+- Tile injection for simple cases can be done through the DungeonFlow inspector. No code required.
+- Fixed an issue that sometimes caused tiles to not be cleaned up correctly in editor-built dungeons, resulting in what looked like overlapping tiles
+- There's now a "Overwrite Existing?" option when generating dungeons in the editor
+- Doorways now have a "Hide Conditional Objects?" option which hides all GameObjects in the "Add when in use" and "Add when NOT in use" lists. For the purpose of reducing clutter at design-time - has no effect on the runtime results
+- All object lists now report how many objects they contain
+- Doorways now have a "Blocker Prefabs" list which works similarly to the existing "Door Prefabs" list, except with doorways that are not in use. Allows you to define blocking objects without placing them in the tile first, if that's your preferred workflow
+
+2.5.5
+- "Allow Immediate Repeats" can now be specified per-tile and is now set to false by default
+- Both "Allow Immediate Repeats" and "Allow Tile Rotation" now have optional global overrides that can be set in the dungeon generator
+- Fixed an issue causing Tile trigger volumes to sometimes be incorrectly oriented
+- Fixed a bug which lead to SECTR portals not being removed when calling the Generate() function multiple times (like when using the analyzer)
+- Fixed some camera related bugs in the demo scene
+
+2.5.4
+- DunGen is using a new method for socketing doorways together which is more robust. Doorways can now be aligned vertically (for stairwells, for example)
+- The DungeonGenerator class now has a DetachDungeon method allowing you to "tear-off" the dungeon from the generator so that it is not overwritten next time Generate() is called
+- [EXPERIMENTAL] The DungeonGenerator class now has a GenerateAppended method which will generate a new dungeon appended to a previous dungeon that you specify. NOTE: This is entirely experimental and NOT supported functionality; dungeons generated in this manner will likely overlap or fail depending on whether allowIntersection is set. You'll have to decide how/if this is handled when it occurs. This is mostly in place as a starting point for those of you who want to implement infinite dungeons - but it needs additional logic (likely game-specific) to work as a complete solution.
+- Doorway components now have a ConnectedDoorway variable
+- Tiles now have some methods of getting/checking adjacent Tiles
+- Tiles now contain a BoxCollider trigger component. There's a new DungenCharacter component which handles information about which Tile it's currently in (with events fired when switching tiles)
+- The Lock & Key system will correctly also place locks on doorways that don't have a prefab applied to them
+
+2.5.3
+- DunGen should no longer try to apply a lock to the same door twice, causing an exception to be thrown
+- Doorways with no possible "locked door prefab" will no longer be considered when adding locks
+- In-editor dungeons will once again generate correctly
+- Dungeons should now be generated in the local coordinate space of it's root GameObject, rather than at the world-space origin
+- The Doorway class is now properly defined under the namespace "DunGen" which should help with any nameing conflicts
+- Minor changes to make the demo scene compatible with Unity 5.0
+- Fixed an issue causing a branch tile's NormalizedPathDepth to be calculated incorrectly, resulting in errors in Unity 5
+
+2.5.2
+- Users should notice a large improvement in success rate when generating dungeons.
+- DunGen will keep trying until it succeeds when the project is built (can still fail in the editor as a safety net to prevent infinite loops for invalid dungeons)
+- Fixed an issue causing bounding boxes to sometimes be calculated incorrectly
+- Doorways should no longer have multiple door prefabs assigned to them if the doorways were connected by overlapping
+- Added a Straighten slider to the DungeonArchetype that controls the likelihood that the main path generated will be a straight line (thanks to Binary42)
+- Doorways with different sockets will no longer be connected when overlapping
+- Multiple keys can now be spawned for a single lock. In the KeyManager asset, each key has a "Keys per Lock" value
+- DunGen should now retry to place a Tile when none of those in the TileSet have a socket of the correct type
+- Users should notice a further large improvement in success rate when generating dungeons; in addition to shorter generation times (thanks to ashwinFEC)
+- DunGen should now correctly try to add the specified number of locked doors to a dungeon segment. NOTE: This still rarely produces desired results
+
+2.5.1
+- Fixed an issue causing RandomPrefabs to not inherit their parent's rotation
+- RandomPrefabs will now correctly be added when nested inside another RandomPrefab
+- Door prefabs will now correctly be added to open doorways
+
+2.5
+- Added an option to reduce the frequency that duplicate rooms are being placed right next to each other. Un-checking "Allow Immediate Repeats" in the dungeon generator settings will enable this behaviour.
+- Added a button to the Local Prop Set inspector that allows for all currently selected GameObjects to be added to the list at once.
+- Fixed a bug causing the bounding box of some rooms to be incorrect once rotated by DunGen.
+- Fixed a bug causing the ChosenSeed variable to be set incorrectly after a failed generation attempt.
+
+2.4.2
+- Doorways no longer have to be on the very edge of a room's bounds. DunGen will calculate the bounds as usual, then collapse them to fit the doorways where necessary.
+
+2.4.1
+- Fixed a bug preventing the seed from being set manually
+- Fixed a bug causing branching depth to not behave as expected
+
+2.4
+- Added preliminary support for 2D dungeons. It's now possible to change the up-axis for dungeon generation inside the dungeon generator settings. 2D support hasn't been thoroughly tested yet but it is feature-complete.
+
+2.3.1
+- DunGen now supports SECTR portal culling. If you have the SECTR VIS extension, you will have automatic portal culling applied to your runtime and in-editor dungeons with minimal setup.
+- Added door prefabs
+
+2.2
+- Fixed an issue that caused the timings returned by the generation stats to be inaccurate when the dungeon fails to generate the first time
+- It's no longer a requirement to make sure the prefab's position is set to (0,0,0) - not doing so will no longer cause the tile's position to be offset in the dungeon
+- Added a new analysis tool that generates a set number of copies of a dungeon and presents detailed results such as success rate, average generation time, etc
+
+2.1
+- Lock Key system
+- You can tell DunGen to connect doorways that overlap but were otherwise not connected during the generation process
+
+2.0
+- This is a complete re-write from version 1.x, a lot of things have changed in the code
+- Implemented the dungeon flow editor. You can now control the flow of your procedural dungeons including the ability to add specific rooms at points on the main path
+- Introduced two new types of asset: Dungeon Archetype and Tile Set which should allow for far more control when building a dungeon
+- Homogonized object weights. Weights for all objects (tiles/rooms and all prop types) now contain a main path weight, a branch path weight, and a depth scale curve
+- A lot of terminology and naming was changed, there's less ambiguity now when it comes to identifying key components of DunGen
+- Cleaned up the UI a lot
+
+1.0.1
+- Added some height-varying rooms to the demo project to demonstrate multi-floor dungeons
+- Added the option to generate a dungeon in the editor instead of at runtime

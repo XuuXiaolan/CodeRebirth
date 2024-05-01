@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e228b45736a8cf4ea000616e628a4dd, type: 3}
+  m_Name: Basic Sample Dungeon
+  m_EditorClassIdentifier: 
+  globalPropGroupID_obsolete: 
+  globalPropRanges_obsolete: []
+  Length:
+    Min: 10
+    Max: 20
+  BranchMode: 0
+  BranchCount:
+    Min: 1
+    Max: 5
+  GlobalProps:
+  - ID: 0
+    Count:
+      Min: 0
+      Max: 1
+  KeyManager: {fileID: 11400000, guid: 9f569828028e8114d9cfc0b4a2f895dc, type: 2}
+  DoorwayConnectionChance: 0
+  RestrictConnectionToSameSection: 0
+  TileInjectionRules:
+  - TileSet: {fileID: 11400000, guid: 0ed294a566ed0214098259a8da3071fa, type: 2}
+    NormalizedPathDepth:
+      Min: 0.5
+      Max: 1
+    NormalizedBranchDepth:
+      Min: 1
+      Max: 1
+    CanAppearOnMainPath: 0
+    CanAppearOnBranchPath: 1
+    IsRequired: 1
+    IsLocked: 0
+    LockID: 0
+  TileTagConnectionMode: 0
+  TileConnectionTags: []
+  BranchTagPruneMode: 1
+  BranchPruneTags: []
+  Nodes:
+  - Graph: {fileID: 11400000}
+    TileSets:
+    - {fileID: 11400000, guid: 7d1a4355e404338428349a370803fb53, type: 2}
+    NodeType: 1
+    Position: 0
+    Label: Start
+    Keys: []
+    Locks: []
+    LockPlacement: 1
+  - Graph: {fileID: 11400000}
+    TileSets:
+    - {fileID: 11400000, guid: a79f34864b8431748aa2b5721781663c, type: 2}
+    NodeType: 2
+    Position: 1
+    Label: Goal
+    Keys: []
+    Locks:
+    - ID: 2
+      Range:
+        Min: 0
+        Max: 1
+    LockPlacement: 1
+  - Graph: {fileID: 11400000}
+    TileSets:
+    - {fileID: 11400000, guid: eba38cb505b2c274fb9bcfab93cb095c, type: 2}
+    NodeType: 0
+    Position: 0.416122
+    Label: Mini-Boss
+    Keys: []
+    Locks: []
+    LockPlacement: 1
+  - Graph: {fileID: 11400000}
+    TileSets:
+    - {fileID: 11400000, guid: 5867a3b713c060e419b7ee3d128262bf, type: 2}
+    NodeType: 0
+    Position: 0.96949893
+    Label: Boss
+    Keys:
+    - ID: 2
+      Range:
+        Min: 0
+        Max: 1
+    Locks:
+    - ID: 0
+      Range:
+        Min: 0
+        Max: 1
+    LockPlacement: 1
+  Lines:
+  - Graph: {fileID: 11400000}
+    DungeonArchetypes:
+    - {fileID: 11400000, guid: f78d6b5f8940bb54ab0c30f13081521f, type: 2}
+    Position: 0
+    Length: 0.49045345
+    Keys:
+    - ID: 1
+      Range:
+        Min: 0
+        Max: 1
+    Locks:
+    - ID: 1
+      Range:
+        Min: 0
+        Max: 1
+  - Graph: {fileID: 11400000}
+    DungeonArchetypes:
+    - {fileID: 11400000, guid: 143f069e9daf5c649963416894858348, type: 2}
+    Position: 0.49045345
+    Length: 0.5095465
+    Keys:
+    - ID: 0
+      Range:
+        Min: 0
+        Max: 1
+    Locks: []
+  currentFileVersion: 1
