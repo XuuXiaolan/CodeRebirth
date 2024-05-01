@@ -41,13 +41,15 @@ namespace CodeRebirth {
         }
         private void CodeRebirthWeather() {
             // Instantiate the weather effect objects
-            Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("Meteorite");
+            Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
+            Utilities.FixMixerGroups(Meteorite.spawnPrefab);
+            NetworkPrefabs.RegisterNetworkPrefab(Meteorite.spawnPrefab);
             samplePrefabs.Add("MeteoriteContainer", Meteorite);
-            effectObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("StarstruckMeteorContainer"), Vector3.zero, Quaternion.identity);
+            effectObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("MeteoriteContainer"), Vector3.zero, Quaternion.identity);
             effectObject.hideFlags = HideFlags.HideAndDontSave;
             DontDestroyOnLoad(effectObject);
 
-            effectPermanentObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("StarstruckWeather"), Vector3.zero, Quaternion.identity);
+            effectPermanentObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("MeteorShowerWeather"), Vector3.zero, Quaternion.identity);
             effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
             DontDestroyOnLoad(effectPermanentObject);
 

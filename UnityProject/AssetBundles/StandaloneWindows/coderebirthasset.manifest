@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3597441890
+CRC: 2691937577
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1452c2ec4358e7812180bf9db8d22f36
+    Hash: 12530ebee40b1a891f347d91fe6ab789
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d75c5d281a893a7dd96aa5457cc89c9c
+    Hash: 9c0e28d0853134189c44289c07f8a2af
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 1452c2ec4358e7812180bf9db8d22f36
+    Hash: 12530ebee40b1a891f347d91fe6ab789
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -47,6 +47,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
 - Class: 114
+  Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
   Script: {fileID: -173093103, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: 790000112, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
@@ -67,8 +69,10 @@ SerializeReferenceClassIdentifiers:
   ClassName: CompatibleNoun
 Assets:
 - Assets/CodeRebirth/Items/Wallet/Obj/WalletObj.asset
+- Assets/CodeRebirth/Weathers/MeteorShower/MeteorShowerWeather.prefab
 - Assets/CodeRebirth/Weathers/MeteorShower/MeteoriteObj.asset
 - Assets/CodeRebirth/Items/Wallet/Prefab/Wallet.prefab
+- Assets/CodeRebirth/Weathers/MeteorShower/MeteorContainer.prefab
 - Assets/CodeRebirth/Items/Wallet/TerminalNode/wTerminalNode.asset
 - Assets/CodeRebirth/Scrap/Money/Prefab/Money.prefab
 - Assets/CodeRebirth/Weathers/MeteorShower/Meteorite.prefab
