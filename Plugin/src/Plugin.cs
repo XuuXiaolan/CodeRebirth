@@ -44,8 +44,8 @@ namespace CodeRebirth {
             Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
             Utilities.FixMixerGroups(Meteorite.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Meteorite.spawnPrefab);
-            samplePrefabs.Add("MeteoriteContainer", Meteorite);
-            effectObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("MeteoriteContainer"), Vector3.zero, Quaternion.identity);
+            samplePrefabs.Add("Meteorite", Meteorite);
+            effectObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("MeteorContainer"), Vector3.zero, Quaternion.identity);
             effectObject.hideFlags = HideFlags.HideAndDontSave;
             DontDestroyOnLoad(effectObject);
 

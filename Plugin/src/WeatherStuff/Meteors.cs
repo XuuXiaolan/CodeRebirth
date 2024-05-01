@@ -58,7 +58,7 @@ public class Meteors : NetworkBehaviour {
 
     private void TrySpawnScrap() {
         if (IsHost) {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("MeteoriteContainer", landLocation);
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", landLocation);
         }
     }
 
