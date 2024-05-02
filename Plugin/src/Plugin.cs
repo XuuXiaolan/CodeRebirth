@@ -10,6 +10,8 @@ using static LethalLib.Modules.Levels;
 using System.Linq;
 using static LethalLib.Modules.Items;
 using CodeRebirth.Keybinds;
+using HarmonyLib;
+using CodeRebirth.src;
 
 namespace CodeRebirth {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -17,9 +19,11 @@ namespace CodeRebirth {
     [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin {
         internal static new ManualLogSource Logger;
+        private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
         internal static Item Wallet;
         internal static Item Money;
         internal static Item Meteorite;
+        internal static WeatherEffect meteorShower;
         internal static GameObject Meteor;
         internal static Dictionary<string, Item> samplePrefabs = [];
         internal static GameObject effectObject;
@@ -29,6 +33,7 @@ namespace CodeRebirth {
 
         private void Awake() {
             Logger = base.Logger;
+            _harmony.PatchAll(typeof(StartOfRoundPatcher));
             // This should be ran before Network Prefabs are registered.
             Assets.PopulateAssets();
             ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
@@ -50,6 +55,8 @@ namespace CodeRebirth {
             Utilities.FixMixerGroups(Meteorite.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Meteorite.spawnPrefab);
             samplePrefabs.Add("Meteorite", Meteorite);
+            RegisterScrap(Meteorite, 0, LevelTypes.All);
+
             effectObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("MeteorContainer"), Vector3.zero, Quaternion.identity);
             effectObject.hideFlags = HideFlags.HideAndDontSave;
             DontDestroyOnLoad(effectObject);
@@ -59,7 +66,7 @@ namespace CodeRebirth {
             DontDestroyOnLoad(effectPermanentObject);
 
             // Create a new WeatherEffect instance
-            var meteorShower = new WeatherEffect()
+            meteorShower = new WeatherEffect()
             {
                 name = "MeteorShower",
                 effectObject = effectObject,
