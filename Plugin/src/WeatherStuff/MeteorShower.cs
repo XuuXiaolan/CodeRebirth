@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Collections;
+using GameNetcodeStuff;
 
 namespace CodeRebirth.WeatherStuff;
 
@@ -82,6 +83,8 @@ public class MeteorShower : MonoBehaviour
         
         for (var i = 0; i < amountToSpawn; i++)
         {
+            Plugin.Logger.LogInfo(amountToSpawn.ToString());
+            Plugin.Logger.LogInfo("starting plan meteor");
             StartCoroutine(PlanMeteor());
         }
     }
@@ -93,8 +96,8 @@ public class MeteorShower : MonoBehaviour
         for (var i = 0; i < maxAttempts; i++)
         {
             Plugin.Logger.LogInfo($"Attempt {i+1}/{maxAttempts}");
-            var initialPos = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
-            var landLocation = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(initialPos, meteorLandRadius, RoundManager.Instance.navHit, random);
+            // var initialPos = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+            var landLocation = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
             var spawnLocation = landLocation + meteorSpawnLocationOffset;
             var raycastHit = Physics.RaycastAll(spawnLocation, landLocation, Mathf.Infinity, ~layersToIgnore);
             Plugin.Logger.LogDebug($"Casted ray. {raycastHit}, {raycastHit.Length}");
@@ -112,11 +115,11 @@ public class MeteorShower : MonoBehaviour
             }
 
             var timeAtSpawn = NetworkManager.Singleton.LocalTime.Time + (random.NextDouble() * 10 + 2);
-            SendMeteorSpawnInfo(new MeteorSpawnInfo(timeAtSpawn, spawnLocation, landLocation));
-            var meteorInstance = Instantiate(meteorPrefab, spawnLocation, Quaternion.identity);
-            var meteorObject = Instantiate(meteorPrefab, new Vector3(0, -1000, 0), Quaternion.identity, Plugin.effectObject.transform);
-            meteorObject.GetComponent<Meteors>().SetParams(spawnLocation, landLocation);
-            Plugin.Logger.LogInfo($"Spawning meteor at {spawnLocation}");
+            var meteorInstance = Instantiate(meteorPrefab, spawnLocation, Quaternion.identity, Plugin.effectObject.transform);
+            meteorInstance.GetComponent<NetworkObject>().Spawn(false);
+            yield return new WaitUntil(() => meteorInstance.GetComponent<Meteors>().IsSpawned);
+            meteorInstance.GetComponent<Meteors>().SetParams(spawnLocation, landLocation);
+            Plugin.Logger.LogInfo($"Spawning meteor at {spawnLocation} and landing at {landLocation}");
 
             result = true;
             break;
@@ -125,21 +128,6 @@ public class MeteorShower : MonoBehaviour
     }
 
 
-    private void SendMeteorSpawnInfo(MeteorSpawnInfo info)
-    {
-        var writer = new FastBufferWriter(24 + 2 * 12, Allocator.Temp); // Double size + two Vector3 sizes
-        using (writer)
-        {
-            writer.WriteValueSafe(info.timeToSpawnAt);
-            writer.WriteValueSafe(info.spawnLocation.x);
-            writer.WriteValueSafe(info.spawnLocation.y);
-            writer.WriteValueSafe(info.spawnLocation.z);
-            writer.WriteValueSafe(info.landLocation.x);
-            writer.WriteValueSafe(info.landLocation.y);
-            writer.WriteValueSafe(info.landLocation.z);
-            NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage("MeteorSpawn", NetworkManager.Singleton.ConnectedClientsIds, writer, NetworkDelivery.ReliableFragmentedSequenced);
-        }
-    }
 
     [Serializable]
     public struct MeteorSpawnInfo

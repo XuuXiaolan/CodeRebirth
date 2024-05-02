@@ -25,8 +25,6 @@ public class Meteors : NetworkBehaviour {
     }
 
     private void Update() {
-        if (!IsOwner) return;
-
         if (timeRemaining.Value > 0) {
             UpdatePosition();
         } else {
@@ -35,13 +33,14 @@ public class Meteors : NetworkBehaviour {
     }
 
     private void UpdatePosition() {
+        if (!IsOwner) return;
         transform.position = Vector3.Lerp(landLocation, spawnLocation, timeRemaining.Value);
         timeRemaining.Value -= Time.deltaTime / timeToLand;
     }
 
     private void CheckLanding() {
         Plugin.Logger.LogInfo($"Attempting landing, Distance: {Vector3.Distance(transform.position, landLocation)}");
-        if (Vector3.Distance(transform.position, landLocation) < 5) {
+        if (Vector3.Distance(transform.position, landLocation) < 5 && IsOwner) {
             HandleLandingServerRpc();
         }
     }
@@ -49,12 +48,12 @@ public class Meteors : NetworkBehaviour {
     [ServerRpc]
     private void HandleLandingServerRpc() {
         Explode();
+        TrySpawnScrap();
         DestroyNetworkObjectServerRpc();
     }
 
     private void Explode() {
         Landmine.SpawnExplosion(landLocation, true, 0f, 1f, 10, 25);
-        TrySpawnScrap();
     }
 
     private void TrySpawnScrap() {
