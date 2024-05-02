@@ -40,6 +40,7 @@ public class Meteors : NetworkBehaviour {
     }
 
     private void CheckLanding() {
+        Plugin.Logger.LogInfo($"Attempting landing, Distance: {Vector3.Distance(transform.position, landLocation)}");
         if (Vector3.Distance(transform.position, landLocation) < 5) {
             HandleLandingServerRpc();
         }

@@ -97,9 +97,7 @@ public class MeteorShower : MonoBehaviour
             var landLocation = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(initialPos, meteorLandRadius, RoundManager.Instance.navHit, random);
             var spawnLocation = landLocation + meteorSpawnLocationOffset;
             var raycastHit = Physics.RaycastAll(spawnLocation, landLocation, Mathf.Infinity, ~layersToIgnore);
-#if DEBUG
-                Plugin.Logger.LogDebug($"Casted ray. {raycastHit}, {raycastHit.Length}");
-#endif
+            Plugin.Logger.LogDebug($"Casted ray. {raycastHit}, {raycastHit.Length}");
             if (raycastHit.Any(hit => hit.transform && hit.transform.tag == "Wood"))
             {
                 Plugin.Logger.LogInfo("Raycast blocked by an object not tagged 'Wood'");
