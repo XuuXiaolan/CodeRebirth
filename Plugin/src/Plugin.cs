@@ -20,6 +20,7 @@ namespace CodeRebirth {
     public class Plugin : BaseUnityPlugin {
         internal static new ManualLogSource Logger;
         private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+        internal static GameObject BigExplosion;
         internal static Item Wallet;
         internal static Item Money;
         internal static Item Meteorite;
@@ -51,6 +52,7 @@ namespace CodeRebirth {
             if (Meteor == null) {
                 Logger.LogError("Failed to load meteor prefab");
             }
+            BigExplosion = Assets.MainAssetBundle.LoadAsset<GameObject>("BigExplosion");
             Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
             Utilities.FixMixerGroups(Meteorite.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Meteorite.spawnPrefab);
