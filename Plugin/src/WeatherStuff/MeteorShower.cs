@@ -10,12 +10,12 @@ namespace CodeRebirth.WeatherStuff;
 
 public class MeteorShower : MonoBehaviour
 {
+    #pragma warning disable CS0649
     [SerializeField] private LayerMask layersToIgnore;
     [SerializeField] private int minTimeBetweenSpawns;
     [SerializeField] private int maxTimeBetweenSpawns;
     [SerializeField] private int maxToSpawn;
     [SerializeField] private int meteorLandRadius;
-
     private Vector2 meteorSpawnDirection;
     private Vector3 meteorSpawnLocationOffset;
 

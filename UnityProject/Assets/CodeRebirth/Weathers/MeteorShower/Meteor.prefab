@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6084561837277731835}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.883338, y: -11.474141, z: -27.832636}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 50
+  craterPrefab: {fileID: 5029260392184255356, guid: f7db9f9e3912cfe449f972548d0f4412,
+    type: 3}
 --- !u!114 &5146194962536676925
 MonoBehaviour:
   m_ObjectHideFlags: 0

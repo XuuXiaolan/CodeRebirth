@@ -13,9 +13,9 @@ public class Meteors : NetworkBehaviour {
     private Vector3 landLocation;
     private float timeToLand;
     private System.Random random;
+    [SerializeField] public GameObject craterPrefab;
     private NetworkVariable<float> timeRemaining = new NetworkVariable<float>();
-
-    public void SetParams(Vector3 spawnLocation, Vector3 landLocation) {
+    public void SetParams(Vector3 spawnLocation, Vector3 landLocation) {        
         this.random = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
         this.speed += random.Next(100, 400);
         this.spawnLocation = spawnLocation;
@@ -49,6 +49,15 @@ public class Meteors : NetworkBehaviour {
     }
     [ServerRpc]
     private void HandleLandingServerRpc() {
+        GameObject craterInstance = Instantiate(craterPrefab, landLocation, Quaternion.identity);
+        CraterController craterController = craterInstance.GetComponent<CraterController>();
+
+        if (craterController != null) {
+            Plugin.Logger.LogInfo("CraterController instantiated successfully.");
+            craterController.ShowCrater(landLocation);
+        } else {
+            Plugin.Logger.LogError("Failed to get CraterController from instantiated prefab.");
+        }
         Explode();
         TrySpawnScrap();
         DestroyNetworkObjectServerRpc();
@@ -69,5 +78,32 @@ public class Meteors : NetworkBehaviour {
         if (IsServer) {
             Destroy(gameObject);
         }
+    }
+}
+
+public class CraterController : MonoBehaviour
+{
+    // Assign the crater mesh in the Inspector to hide or show it!
+    public GameObject craterMesh;
+    private bool craterVisible = false;
+
+    public void Awake()
+    {
+        craterMesh.SetActive(false); // Initially hide the crater
+    }
+
+    // Method to show the crater at the specified impact location
+    public void ShowCrater(Vector3 impactLocation)
+    {
+        transform.position = impactLocation; // Position the crater at the impact location
+        craterMesh.SetActive(true);
+        craterVisible = true;
+    }
+
+    // Optionally, a method to hide the crater if needed for game logic.
+    public void HideCrater()
+    {
+        craterVisible = false; 
+        craterMesh.SetActive(false); // Hide the crater
     }
 }
