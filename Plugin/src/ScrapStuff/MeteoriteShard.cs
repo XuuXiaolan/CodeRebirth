@@ -37,5 +37,10 @@ public class MeteoriteShard : GrabbableObject {
     public override void PocketItem() {
         base.PocketItem();
         HandleParticles();
+        this.transform.GetComponentInChildren<Light>().enabled = false;
+    }
+    public override void EquipItem() {
+        base.EquipItem();
+        this.transform.GetComponentInChildren<Light>().enabled = true;
     }
 }
