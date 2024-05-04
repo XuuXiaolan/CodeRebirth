@@ -123,8 +123,7 @@ public class MeteorShower : MonoBehaviour
         }
 
         return true;
-    }
-
+    } //todo, fix meteors spawning at the very start of the weather that dont move.
 
     private Vector3 CalculateSpawnLocation(out GameObject landNode)
     {
