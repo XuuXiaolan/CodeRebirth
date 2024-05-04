@@ -20,7 +20,7 @@ namespace CodeRebirth.Configs {
                                                 "Cost of Wallet");
             ConfigMoneyRarity = configFile.Bind("Scrap Options",
                                                 "Money Scrap | Rarity",
-                                                "Modded@1000,ExperimentationLevel@1000,AssuranceLevel@1000,VowLevel@1000,OffenseLevel@1000,MarchLevel@1000,RendLevel@1000,DineLevel@1000,TitanLevel@1000",
+                                                "Modded@0,ExperimentationLevel@0,AssuranceLevel@0,VowLevel@0,OffenseLevel@0,MarchLevel@0,RendLevel@0,DineLevel@0,TitanLevel@0",
                                                 "Enables/Disables the Wallet showing up in shop");
             ConfigMoneyScrapEnabled = configFile.Bind("Scrap Options",
                                                 "Scrap | Enabled",

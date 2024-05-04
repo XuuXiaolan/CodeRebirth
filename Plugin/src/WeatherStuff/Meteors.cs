@@ -8,19 +8,22 @@ namespace CodeRebirth.WeatherStuff;
 public class Meteors : NetworkBehaviour {
     #pragma warning disable CS0649
     [SerializeField] private float speed;
+    [SerializeField] private int chanceToSpawnScrap = 100;
     private Vector3 spawnLocation;
     private Vector3 landLocation;
     private float timeToLand;
     private ParticleSystem fireParticles;
+    private int randomInt;
     [SerializeField] public GameObject craterPrefab;
     private NetworkVariable<float> timeRemaining = new NetworkVariable<float>();
-    public void SetParams(Vector3 spawnLocation, Vector3 landLocation) {        
+    public void SetParams(Vector3 spawnLocation, Vector3 landLocation, int randomInt) {        
         this.speed += speed;
         this.spawnLocation = spawnLocation;
         this.landLocation = landLocation;
         timeToLand = Vector3.Distance(spawnLocation, landLocation) / speed;
         timeRemaining.Value = 1; // Initialize remaining time to 1 for Lerp calculation
         fireParticles = this.GetComponentInChildren<ParticleSystem>();
+        this.randomInt = randomInt;
         if (IsServer) {
             Plugin.Logger.LogInfo($"Actual Time to Land: {timeToLand}");
         }
@@ -64,11 +67,12 @@ public class Meteors : NetworkBehaviour {
 
     private void Explode() {
         fireParticles.Stop();
-        Landmine.SpawnExplosion(landLocation, true, 0f, 1f, 10, 25, Plugin.BigExplosion);
+        Landmine.SpawnExplosion(landLocation, true, 0f, 5f, 25, 50, Plugin.BigExplosion);
     }
 
     private void TrySpawnScrap() {
-        if (IsHost) {
+        Plugin.Logger.LogInfo(randomInt);
+        if (IsHost && randomInt >= (100-chanceToSpawnScrap)) {
             CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", landLocation);
         }
     }

@@ -12,23 +12,25 @@ namespace CodeRebirth.WeatherStuff;
 public class MeteorShower : MonoBehaviour
 {
     #pragma warning disable CS0649
-    [SerializeField] private LayerMask layersToIgnore;
     [SerializeField] private int minTimeBetweenSpawns;
     [SerializeField] private int maxTimeBetweenSpawns;
     [SerializeField] private int maxToSpawn;
-    [SerializeField] private int meteorLandRadius;
+    private GameObject[] nodesAlreadyVisited;
+    private List<GameObject> nodesAlreadyVisitedList = new List<GameObject>();
     private GameObject[] possibleLandNodes;
     private Vector2 meteorSpawnDirection;
     private Vector3 meteorSpawnLocationOffset;
     private float lastTimeUsed;
     private float currentTimeOffset;
     private System.Random random;
+    private int randomInt;
     private const int RandomSeedOffset = -53;
 
     private void OnEnable()
     {
         if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)) return;
         random = new System.Random(StartOfRound.Instance.randomMapSeed + RandomSeedOffset);
+        nodesAlreadyVisited = new GameObject[0];
         TimeOfDay.Instance.onTimeSync.AddListener(OnGlobalTimeSync);
         // Wait 12-18 seconds before spawning first batch.
         currentTimeOffset = random.Next(12, 18);
@@ -175,13 +177,22 @@ public class MeteorShower : MonoBehaviour
             meteorSpawnLocationOffset = new Vector3(meteorSpawnDirection.x * spawnRadius, heightVariation, meteorSpawnDirection.y * spawnRadius);
 
             // Determine spawn location
-            var landLocation = possibleLandNodes[random.Next(0, possibleLandNodes.Length)].transform.position;
+            var nodeForLandLocation = possibleLandNodes[random.Next(0, possibleLandNodes.Length)];
+            var landLocation = nodeForLandLocation.transform.position;
+            
+            if (nodesAlreadyVisited.Contains(nodeForLandLocation)) {
+                randomInt = -1;
+            } else {
+                nodesAlreadyVisitedList.Add(nodeForLandLocation);
+                nodesAlreadyVisited = nodesAlreadyVisitedList.ToArray();
+                randomInt = random.Next(100)+1;
+            }
             var spawnLocation = landLocation + meteorSpawnLocationOffset;
 
             var meteorInstance = Instantiate(Plugin.Meteor, spawnLocation, Quaternion.identity, Plugin.meteorShower.effectObject.transform);
             meteorInstance.GetComponent<NetworkObject>().Spawn(true);
             yield return new WaitUntil(() => meteorInstance.GetComponent<Meteors>().IsSpawned);
-            meteorInstance.GetComponent<Meteors>().SetParams(spawnLocation, landLocation);
+            meteorInstance.GetComponent<Meteors>().SetParams(spawnLocation, landLocation, randomInt);
             Plugin.Logger.LogInfo($"Spawning meteor at {spawnLocation} and landing at {landLocation}");
 
             result = true;
