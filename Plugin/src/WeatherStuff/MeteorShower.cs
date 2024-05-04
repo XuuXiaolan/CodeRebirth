@@ -63,7 +63,7 @@ public class MeteorShower : MonoBehaviour
 
         if (cullDoors)
         {
-            var entrances = FindObjectsOfType<EntranceTeleport>().Where(t => t.isEntranceToBuilding).ToList();
+            var entrances = FindObjectsOfType<EntranceTeleport>().ToList();
             nodeList.RemoveAll(n => entrances.Any(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
         }
 
@@ -108,16 +108,23 @@ public class MeteorShower : MonoBehaviour
         {
             randomInt = -1;
         } else {
-            randomInt = random.Next(-1, 100)+1;
+            nodesAlreadyVisited.Add(landNode);
+            randomInt = random.Next(-1, 100) + 1; // Adjusted to ensure randomness is applied correctly.
         }
 
         GameObject meteor = Instantiate(Plugin.Meteor, spawnLocation, Quaternion.identity, Plugin.meteorShower.effectObject.transform);
         meteor.GetComponent<NetworkObject>().Spawn();
-        meteor.GetComponent<Meteors>().SetParams(spawnLocation, landNode.transform.position, randomInt); // Assuming SetParams exists and sets necessary parameters
-        
-        nodesAlreadyVisited.Add(landNode);
+
+        // Ensure parameters are set right after spawning and before any updates occur.
+        Meteors meteorComponent = meteor.GetComponent<Meteors>();
+        if (meteorComponent != null)
+        {
+            meteorComponent.SetParams(spawnLocation, landNode.transform.position, randomInt);
+        }
+
         return true;
     }
+
 
     private Vector3 CalculateSpawnLocation(out GameObject landNode)
     {

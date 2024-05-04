@@ -3,23 +3,39 @@ using UnityEngine;
 namespace CodeRebirth.ScrapStuff;
 public class MeteoriteShard : GrabbableObject {
     private ParticleSystem[] particles; 
-    private int count;
+    private bool particlesOn;
     public override void Start() {
         base.Start();
         particles = GetComponentsInChildren<ParticleSystem>();
     }
-    public override void ItemActivate(bool used, bool buttonDown = true) {
-        base.ItemActivate(used, buttonDown);
-        if (count%2 == 0) {
+    public void HandleParticles() {
+        if (particlesOn || isPocketed) {
             foreach (ParticleSystem particle in particles) {
                 particle.Stop();
                 particle.Clear();
+                this.transform.Find("MagicFire").GetComponentInChildren<ParticleSystem>().Stop();
+                this.transform.Find("MagicFireBlue").GetComponentInChildren<ParticleSystem>().Stop();
+                this.transform.Find("MagicFire").GetComponentInChildren<ParticleSystem>().Clear();
+                this.transform.Find("MagicFireBlue").GetComponentInChildren<ParticleSystem>().Clear();
             }
+            particlesOn = false;
         } else {
             foreach (ParticleSystem particle in particles) {
                 particle.Play();
+                if (particle.transform.parent.name == "MagicFire" || particle.transform.parent.name == "MagicFireBlue") {
+                    this.transform.Find("MagicFire").GetComponentInChildren<ParticleSystem>().Play();
+                    this.transform.Find("MagicFireBlue").GetComponentInChildren<ParticleSystem>().Play();
+                }
             }
+            particlesOn = true;
         }
-        count++;
+    }
+    public override void ItemActivate(bool used, bool buttonDown = true) {
+        base.ItemActivate(used, buttonDown);
+        HandleParticles();
+    }
+    public override void PocketItem() {
+        base.PocketItem();
+        HandleParticles();
     }
 }
