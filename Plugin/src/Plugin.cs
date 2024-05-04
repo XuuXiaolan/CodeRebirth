@@ -78,7 +78,7 @@ namespace CodeRebirth {
                 transitioning = false
             };
                 
-            Weathers.RegisterWeather("MeteorShower", meteorShower, Levels.LevelTypes.All, 0, 0);
+            Weathers.RegisterWeather("Meteor Shower", meteorShower, Levels.LevelTypes.All, 0, 0);
         }
         private void CodeRebirthScrap() {
             // Wallet+Coin register

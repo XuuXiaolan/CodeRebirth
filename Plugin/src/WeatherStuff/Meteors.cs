@@ -1,14 +1,18 @@
 using System;
+using System.Collections;
 using System.Linq;
 using CodeRebirth.src;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using CodeRebirth.Collisions;
 
 namespace CodeRebirth.WeatherStuff;
 public class Meteors : NetworkBehaviour {
     #pragma warning disable CS0649
     [SerializeField] private float speed;
-    [SerializeField] private int chanceToSpawnScrap = 100;
+    [SerializeField] private int chanceToSpawnScrap;
     private Vector3 spawnLocation;
     private Vector3 landLocation;
     private float timeToLand;
@@ -67,7 +71,7 @@ public class Meteors : NetworkBehaviour {
 
     private void Explode() {
         fireParticles.Stop();
-        Landmine.SpawnExplosion(landLocation, true, 0f, 5f, 25, 50, Plugin.BigExplosion);
+        Landmine.SpawnExplosion(landLocation, true, 0f, 10f, 25, 75, Plugin.BigExplosion);
     }
 
     private void TrySpawnScrap() {
@@ -85,30 +89,31 @@ public class Meteors : NetworkBehaviour {
         }
     }
 }
-
 public class CraterController : MonoBehaviour
 {
-    // Assign the crater mesh in the Inspector to hide or show it!
     public GameObject craterMesh;
     private bool craterVisible = false;
+    private ColliderIdentifier fireCollider;
 
-    public void Awake()
+    private void Awake()
     {
         craterMesh.SetActive(false); // Initially hide the crater
+        fireCollider = this.transform.Find("WildFire").GetComponent<ColliderIdentifier>();
+        fireCollider.enabled = false; // Make sure it's disabled on start
     }
 
-    // Method to show the crater at the specified impact location
     public void ShowCrater(Vector3 impactLocation)
     {
         transform.position = impactLocation; // Position the crater at the impact location
         craterMesh.SetActive(true);
         craterVisible = true;
+        fireCollider.enabled = true; // Enable the ColliderIdentifier
     }
 
-    // Optionally, a method to hide the crater if needed for game logic.
     public void HideCrater()
     {
-        craterVisible = false; 
-        craterMesh.SetActive(false); // Hide the crater
+        craterVisible = false;
+        craterMesh.SetActive(false);
+        fireCollider.enabled = false; // Ensure the ColliderIdentifier is disabled when the crater is hidden
     }
 }

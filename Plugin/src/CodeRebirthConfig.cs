@@ -9,7 +9,12 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
         public ConfigEntry<string> ConfigMoneyRarity { get; private set; }
         public ConfigEntry<bool> ConfigMoneyScrapEnabled { get; private set; }
+        public ConfigEntry<string> ConfigMeteorShowerMoonList { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigMeteorShowerMoonList = configFile.Bind("Weather Options",
+                                                "Meteor Shower | List",
+                                                "Modded, Vanilla",
+                                                "List of moons with the Meteor Shower Weather (Vanilla moons need Level at the end of their name, but modded do not).");
             ConfigWalletEnabled = configFile.Bind("Shop Options",
                                                 "Wallet Item | Enabled",
                                                 true,

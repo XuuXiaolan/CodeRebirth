@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2206544976
+CRC: 150662815
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3302fae161c9ecae3008a148f49bc96a
+    Hash: 0001d0eab9af896d5ee84cde380f4e34
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ec504a943abc2a0d8c0096b975cb43f7
+    Hash: 19d0f1dac297f5d8df6c0b32767f95f1
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 3302fae161c9ecae3008a148f49bc96a
+    Hash: 0001d0eab9af896d5ee84cde380f4e34
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -39,13 +39,13 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 3d0cf24d2ccc3b7eab72048d0f57c437, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
 - Class: 114
@@ -60,6 +60,10 @@ ClassTypes:
   Script: {fileID: -173093103, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1360061190, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: -888966442, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 198
@@ -79,6 +83,10 @@ SerializeReferenceClassIdentifiers:
   ClassName: Battery
 - AssemblyName: Assembly-CSharp
   ClassName: CompatibleNoun
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.BoolScalableSettingValue
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
 Assets:
 - Assets/CodeRebirth/Items/Wallet/Obj/WalletObj.asset
 - Assets/CodeRebirth/Weathers/MeteorShower/MeteorShowerWeather.prefab
@@ -88,6 +96,5 @@ Assets:
 - Assets/CodeRebirth/Items/Wallet/TerminalNode/wTerminalNode.asset
 - Assets/UnityTechnologies/ParticlePack/EffectExamples/Fire & Explosion Effects/Prefabs/BigExplosion.prefab
 - Assets/CodeRebirth/Scrap/Money/Prefab/Money.prefab
-- Assets/CodeRebirth/Weathers/MeteorShower/Meteorite.prefab
 - Assets/CodeRebirth/Scrap/Money/Obj/MoneyObj.asset
 Dependencies: []
