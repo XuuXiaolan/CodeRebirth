@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1148608879
+CRC: 774508466
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d44680e0041f739bd9a4cbeb6848f36a
+    Hash: a6676978e956774058f4a2808772f0bf
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 54ad4abe3ef698e221cd2f8a79f059b0
+    Hash: 54518d57be9f77a4979c51d049c60738
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: d44680e0041f739bd9a4cbeb6848f36a
+    Hash: a6676978e956774058f4a2808772f0bf
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -37,9 +37,25 @@ ClassTypes:
 - Class: 108
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: -1478546698, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
   Script: {fileID: 1360061190, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
+- Class: 114
+  Script: {fileID: -1478546698, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: -2053257211, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
@@ -47,25 +63,9 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -1104593504, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
-  Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
   Script: {fileID: -173093103, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
@@ -93,16 +93,16 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
 Assets:
 - Assets/CodeRebirth/Items/Wallet/WalletObj.asset
-- Assets/CodeRebirth/Weathers/MeteorShower/MeteorShowerWeather.prefab
+- Assets/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorShowerWeather.prefab
 - Assets/CodeRebirth/Items/Money/Material/MoneyMaterial.mat
 - Assets/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_MaskMap.png
 - Assets/CodeRebirth/Items/Wallet/Material/WalletMaterial.mat
 - Assets/CodeRebirth/Items/Wallet/Model/Wallet.fbx
-- Assets/CodeRebirth/Weathers/MeteorShower/MeteoriteObj.asset
+- Assets/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteoriteObj.asset
 - Assets/CodeRebirth/Items/Money/Textures/Coin_Coin_Normal.png
-- Assets/CodeRebirth/Weathers/MeteorShower/Meteor.prefab
+- Assets/CodeRebirth/Weathers/MeteorShower/Prefabs/Meteor.prefab
 - Assets/CodeRebirth/Items/Money/Money-Icon.png
-- Assets/CodeRebirth/Weathers/MeteorShower/MeteorContainer.prefab
+- Assets/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorContainer.prefab
 - Assets/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_BaseMap.png
 - Assets/CodeRebirth/Items/Wallet/TerminalNode/wTerminalNode.asset
 - Assets/CodeRebirth/Items/Wallet/Wallet-Icon.png
