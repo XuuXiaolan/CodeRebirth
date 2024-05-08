@@ -43,7 +43,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
         GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up, Quaternion.identity);
         int value = random.Next(minValue: item.minValue, maxValue: item.maxValue);
-        var scanNode = go.gameObject.GetComponentInChildren<ScanNodeProperties>();
+        var scanNode = go.GetComponentInChildren<ScanNodeProperties>();
         scanNode.scrapValue = value;
         scanNode.subText = $"Value: ${value}";
         go.GetComponent<GrabbableObject>().scrapValue = value;

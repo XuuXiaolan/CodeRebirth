@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2277650175
+CRC: 1148608879
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e7d153bd268de69b7d95bbd0f0e4d048
+    Hash: d44680e0041f739bd9a4cbeb6848f36a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: b275afc1dd9d0aaa64b3b44256a2e093
+    Hash: 54ad4abe3ef698e221cd2f8a79f059b0
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: e7d153bd268de69b7d95bbd0f0e4d048
+    Hash: d44680e0041f739bd9a4cbeb6848f36a
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -37,6 +37,22 @@ ClassTypes:
 - Class: 108
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: -1478546698, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1360061190, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: -2053257211, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: -888966442, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: -1104593504, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: -173093103, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
@@ -50,16 +66,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
-- Class: 114
-  Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
-  Script: {fileID: -888966442, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
-  Script: {fileID: -1104593504, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
-  Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
-  Script: {fileID: -173093103, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
@@ -105,5 +111,6 @@ Assets:
 - Assets/CodeRebirth/Items/Money/MoneyObj.asset
 - Assets/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_Normal.png
 - Assets/CodeRebirth/Items/Money/Textures/Coin_Coin_BaseMap.png
+- Assets/CodeRebirth/CodeRebirthUtils.prefab
 - Assets/CodeRebirth/Items/Money/Textures/Coin_Coin_MaskMap.png
 Dependencies: []

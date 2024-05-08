@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Assertions;
+using CodeRebirth;
 
 namespace CodeRebirth.src;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -42,14 +43,7 @@ internal static class StartOfRoundPatcher {
         {
             if (CodeRebirthUtils.Instance == null)
             {
-                GameObject go = new("CodeRebirthUtils")
-                {
-                    hideFlags = HideFlags.HideAndDontSave
-                };
-                go.AddComponent<CodeRebirthUtils>();
-                go.AddComponent<NetworkObject>();
-                go.GetComponent<NetworkObject>().GlobalObjectIdHash = 3003411660;
-                go.GetComponent<NetworkObject>().Spawn(false);
+                Plugin.CRUtils.GetComponent<NetworkObject>().Spawn(false);
                 Plugin.Logger.LogInfo("Created CodeRebirthUtils.");
             } else {
                 Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");

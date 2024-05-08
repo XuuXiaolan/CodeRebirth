@@ -21,6 +21,7 @@ namespace CodeRebirth {
         internal static new ManualLogSource Logger;
         private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
         internal static GameObject BigExplosion;
+        internal static GameObject CRUtils;
         internal static Item Wallet;
         internal static Item Money;
         internal static Item Meteorite;
@@ -37,6 +38,8 @@ namespace CodeRebirth {
             _harmony.PatchAll(typeof(StartOfRoundPatcher));
             // This should be ran before Network Prefabs are registered.
             Assets.PopulateAssets();
+            
+            CRUtils = Assets.MainAssetBundle.LoadAsset<GameObject>("CodeRebirthUtils");
             ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
             // Register Keybinds
             InputActionsInstance = new IngameKeybinds();
@@ -77,7 +80,6 @@ namespace CodeRebirth {
                 sunAnimatorBool = "",
                 transitioning = false
             };
-                
             Weathers.RegisterWeather("Meteor Shower", meteorShower, Levels.LevelTypes.All, 0, 0);
         }
         private void CodeRebirthScrap() {
