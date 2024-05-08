@@ -12,6 +12,9 @@ using static LethalLib.Modules.Items;
 using CodeRebirth.Keybinds;
 using HarmonyLib;
 using CodeRebirth.src;
+using LethalLib.Extras;
+using CodeRebirth.Misc;
+using CodeRebirth.ScrapStuff;
 
 namespace CodeRebirth {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -23,7 +26,6 @@ namespace CodeRebirth {
         internal static GameObject BigExplosion;
         internal static GameObject CRUtils;
         internal static Item Wallet;
-        internal static Item Money;
         internal static Item Meteorite;
         internal static WeatherEffect meteorShower;
         internal static GameObject Meteor;
@@ -31,6 +33,7 @@ namespace CodeRebirth {
         internal static GameObject effectObject;
         internal static GameObject effectPermanentObject;
         internal static IngameKeybinds InputActionsInstance;
+        internal static int maxCoins;
         public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
         private void Awake() {
@@ -39,15 +42,34 @@ namespace CodeRebirth {
             // This should be ran before Network Prefabs are registered.
             Assets.PopulateAssets();
             
+            InitializeNetworkBehaviours();
+
             CRUtils = Assets.MainAssetBundle.LoadAsset<GameObject>("CodeRebirthUtils");
+            NetworkPrefabs.RegisterNetworkPrefab(CRUtils);
+            maxCoins = 99;
             ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
             // Register Keybinds
             InputActionsInstance = new IngameKeybinds();
             CodeRebirthWeather();
             CodeRebirthScrap();
-
-            InitializeNetworkBehaviours();
+            CodeRebirthMapObjects();
+            
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+        }
+        private void CodeRebirthMapObjects() {
+            // Coin MapObject
+            Item money = Assets.MainAssetBundle.LoadAsset<Item>("MoneyObj");
+            money.spawnPrefab.AddComponent<ScrapValueSyncer>();
+            Utilities.FixMixerGroups(money.spawnPrefab);
+            NetworkPrefabs.RegisterNetworkPrefab(money.spawnPrefab);
+            var valueRandom = new System.Random(44);
+            int value = valueRandom.Next(money.minValue, money.maxValue);
+            money.spawnPrefab.GetComponent<Money>().SetScrapValue(value);
+            SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
+            mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
+            mapObjDefBug.spawnableMapObject.prefabToSpawn = money.spawnPrefab;
+            MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, maxCoins), new Keyframe(1, maxCoins)));
+
         }
         private void CodeRebirthWeather() {
             // Instantiate the weather effect objects
@@ -83,17 +105,12 @@ namespace CodeRebirth {
             Weathers.RegisterWeather("Meteor Shower", meteorShower, Levels.LevelTypes.All, 0, 0);
         }
         private void CodeRebirthScrap() {
-            // Wallet+Coin register
+            // Wallet register
             Wallet = Assets.MainAssetBundle.LoadAsset<Item>("WalletObj");
             Utilities.FixMixerGroups(Wallet.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Wallet.spawnPrefab);
             TerminalNode wTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("wTerminalNode");
             RegisterShopItemWithConfig(ModConfig.ConfigWalletEnabled.Value, false, Wallet, wTerminalNode, ModConfig.ConfigWalletCost.Value, "");
-            
-            Money = Assets.MainAssetBundle.LoadAsset<Item>("MoneyObj");
-            Utilities.FixMixerGroups(Money.spawnPrefab);
-            NetworkPrefabs.RegisterNetworkPrefab(Money.spawnPrefab);
-            RegisterScrapWithConfig(ModConfig.ConfigMoneyScrapEnabled.Value, ModConfig.ConfigMoneyRarity.Value, Money);
         }
         private void RegisterScrapWithConfig(bool enabled, string configMoonRarity, Item scrap) {
             if (enabled) { 
