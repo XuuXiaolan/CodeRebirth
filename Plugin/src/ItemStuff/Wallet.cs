@@ -6,36 +6,29 @@ using CodeRebirth.ScrapStuff;
 namespace CodeRebirth.ItemStuff;
 public class Wallet : GrabbableObject {
     private RaycastHit hit;
-    public AudioSource WalletPlayer;
     public ScanNodeProperties scanNode;
+
     public override void Start() {
         base.Start();
         scanNode = GetComponentInChildren<ScanNodeProperties>();
     }
-    public override void Update() {
-        base.Update();
+
+    public override void ItemActivate(bool used, bool buttonDown = true) {
         if (!playerHeldBy) return;
         var interactRay = new Ray(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
-        if (Physics.Raycast(interactRay, out hit, playerHeldBy.grabDistance, playerHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8) {
-            if (hit.collider.transform.gameObject.GetComponent<Money>()) {
+        if (Physics.Raycast(interactRay, out hit, playerHeldBy.grabDistance, playerHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8)
+        {
+            if (hit.collider.transform.gameObject.GetComponent<Money>())
+            {
                 Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
-                DetectUseKey(coin);
+                UpdateScrapValueServerRpc(coin.scrapValue);
+                NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
+                Plugin.Logger.LogInfo($"Scrap: {scrapValue}");
+                DestroyObjectServerRpc(obj);
             }
         }
     }
 
-    public override void ItemActivate(bool used, bool buttonDown = true) {
-        base.ItemActivate(used, buttonDown);
-    }
-    
-    public void DetectUseKey(Money coin) {
-        if (Plugin.InputActionsInstance.UseWallet.triggered) { // Keybind is in CodeRebirthInputs.cs
-            UpdateScrapValueServerRpc(coin.scrapValue);
-            NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
-            Plugin.Logger.LogInfo($"Scrap: {scrapValue}" );
-            DestroyObjectServerRpc(obj);
-        }
-    }
     [ServerRpc(RequireOwnership = false)]
     public void UpdateScrapValueServerRpc(int valueToAdd) {
         this.scrapValue += valueToAdd;
