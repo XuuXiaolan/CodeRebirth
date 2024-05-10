@@ -6,10 +6,23 @@ using CodeRebirth.ScrapStuff;
 namespace CodeRebirth.ItemStuff;
 public class Wallet : GrabbableObject {
     private RaycastHit hit;
-    public ScanNodeProperties scanNode;
+    private ScanNodeProperties scanNode;
+    private SkinnedMeshRenderer skinnedMeshRenderer;
+    private System.Random materialRandom;
 
     public override void Start() {
         base.Start();
+        try {
+            materialRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 666);
+        } catch {
+            materialRandom = new System.Random(666);
+            Plugin.Logger.LogInfo("No seed found, using 666 as seed");
+        }
+        string chosenMaterial = "WalletMaterial" + materialRandom.Next(1, 11).ToString();
+        Plugin.Logger.LogInfo($"Chosen Material: {chosenMaterial}");
+        Material walletColour = Plugin.Assets.MainAssetBundle.LoadAsset<Material>(chosenMaterial);
+        skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
+        // skinnedMeshRenderer.SetMaterial(walletColour); doesn't work
         scanNode = GetComponentInChildren<ScanNodeProperties>();
     }
 
@@ -24,7 +37,7 @@ public class Wallet : GrabbableObject {
                 UpdateScrapValueServerRpc(coin.scrapValue);
                 NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
                 Plugin.Logger.LogInfo($"Scrap: {scrapValue}");
-                this.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, this.GetComponent<SkinnedMeshRenderer>().GetBlendShapeWeight(0)+10f);
+                skinnedMeshRenderer.SetBlendShapeWeight(0, skinnedMeshRenderer.GetBlendShapeWeight(0)+10f);
                 DestroyObjectServerRpc(obj);
             }
         }
