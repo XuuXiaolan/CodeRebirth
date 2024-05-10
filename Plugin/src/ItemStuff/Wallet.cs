@@ -24,6 +24,7 @@ public class Wallet : GrabbableObject {
         skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
         // skinnedMeshRenderer.SetMaterial(walletColour); doesn't work
         scanNode = GetComponentInChildren<ScanNodeProperties>();
+        Plugin.Logger.LogInfo(RoundManager.Instance.currentLevel.PlanetName);
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true) {

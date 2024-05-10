@@ -5,12 +5,14 @@
       <!-- Define fallback directories -->
       <TestDir1>C:\Users\Moh\AppData\Roaming\Thunderstore Mod Manager\DataFolder\LethalCompany\profiles\coderebirth\BepInEx\plugins/</TestDir1>
       <TestDir2>F:\AppData\Thunderstore Mod Manager\DataFolder\LethalCompany\profiles\CodeRebirth\BepInEx\plugins</TestDir2> <!-- Change this to your second choice -->
+      <TestDir3>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\</TestDir3>
    </PropertyGroup>
 
    <!-- Determine which directory to use -->
    <PropertyGroup>
       <TestDir Condition="Exists('$(TestDir1)')">$(TestDir1)</TestDir>
       <TestDir Condition="!Exists('$(TestDir)') and Exists('$(TestDir2)')">$(TestDir2)</TestDir>
+      <TestDir Condition="!Exists('$(TestDir)') and !Exists('$(TestDir2)') and Exists('$(TestDir3)')">$(TestDir3)</TestDir>
    </PropertyGroup>
    
    <!-- Our mod files get copied over after NetcodePatcher has processed our DLL -->
