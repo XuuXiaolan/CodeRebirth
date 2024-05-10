@@ -1,7 +1,9 @@
+using CodeRebirth.Misc;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Profiling;
 using static System.Net.Mime.MediaTypeNames;
+using Random = System.Random;
 
 namespace CodeRebirth.src;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -9,13 +11,12 @@ internal class CodeRebirthUtils : NetworkBehaviour
     static int seed = 0;
     static System.Random random;
     internal static CodeRebirthUtils Instance { get; private set; }
-
+    
     void Awake()
     {
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
-
+    
     [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(string itemName, Vector3 position) {
         Plugin.Logger.LogInfo("yippee3!");

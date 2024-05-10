@@ -64,7 +64,7 @@ namespace CodeRebirth {
             NetworkPrefabs.RegisterNetworkPrefab(money.spawnPrefab);
             var valueRandom = new System.Random(44);
             int value = valueRandom.Next(money.minValue, money.maxValue);
-            money.spawnPrefab.GetComponent<Money>().SetScrapValue(value);
+            money.spawnPrefab.GetComponent<Money>().SetScrapValue(-1);
             SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
             mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
             mapObjDefBug.spawnableMapObject.prefabToSpawn = money.spawnPrefab;
