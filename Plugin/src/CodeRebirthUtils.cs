@@ -8,7 +8,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 {
     static int seed = 0;
     static System.Random random;
-    internal static CodeRebirthUtils Instance { get; set; }
+    internal static CodeRebirthUtils Instance { get; private set; }
 
     void Awake()
     {

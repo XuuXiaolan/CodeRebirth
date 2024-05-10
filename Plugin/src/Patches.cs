@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Assertions;
 using CodeRebirth;
+using UnityEngine.SceneManagement;
 
 namespace CodeRebirth.src;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -38,13 +39,13 @@ internal static class StartOfRoundPatcher {
 
     private static void CreateNetworkManager(StartOfRound __instance)
     {
-        Plugin.Logger.LogInfo($"IsServer: {__instance.IsServer}");
-        if (__instance.IsServer)
+        if (__instance.IsServer || __instance.IsHost)
         {
-            if (CodeRebirthUtils.Instance == null)
-            {
-                Plugin.CRUtils.GetComponent<NetworkObject>().Spawn(false);
-                Plugin.Logger.LogInfo("Created CodeRebirthUtils.");
+            if (CodeRebirthUtils.Instance == null) {
+                GameObject utilsInstance = GameObject.Instantiate(Plugin.CRUtils);
+                SceneManager.MoveGameObjectToScene(utilsInstance, __instance.gameObject.scene);
+                utilsInstance.GetComponent<NetworkObject>().Spawn();
+                Plugin.Logger.LogInfo($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
             } else {
                 Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");
             }
