@@ -19,7 +19,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     
     [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(string itemName, Vector3 position) {
-        Plugin.Logger.LogInfo("yippee3!");
         if (StartOfRound.Instance == null)
         {
             Plugin.Logger.LogInfo("StartOfRound null");

@@ -18,6 +18,7 @@ public class MeteorShower : MonoBehaviour
     private float lastTimeUsed;
     private float currentTimeOffset;
     private int randomInt;
+    private bool canStart = false;
     private const int RandomSeedOffset = -53;
 
     private void OnEnable()
@@ -25,12 +26,16 @@ public class MeteorShower : MonoBehaviour
         InitializeMeteorShower();
         if (IsServerOrHost())
         {
+            StartCoroutine(StartCooldown());
             lastTimeUsed = TimeOfDay.Instance.globalTime;
             currentTimeOffset = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns); // Initial random delay
             TimeOfDay.Instance.onTimeSync.AddListener(OnGlobalTimeSync);
         }
     }
-
+    private IEnumerator StartCooldown() {
+        yield return new WaitForSeconds(5f);
+        canStart = true;
+    } 
     private void OnDisable()
     {
         if (IsServerOrHost())
@@ -59,7 +64,23 @@ public class MeteorShower : MonoBehaviour
     private IEnumerable<GameObject> CullNodesByProximity(GameObject[] nodes, float minDistance, bool cullDoors = false)
     {
         var nodeList = new List<GameObject>(nodes);
-        nodeList.RemoveAll(n => nodes.Any(m => n != m && Vector3.Distance(n.transform.position, m.transform.position) < minDistance));
+        var toCull = new HashSet<GameObject>();
+
+        // Compare each node with every other node
+        for (int i = 0; i < nodeList.Count; i++)
+        {
+            for (int j = i + 1; j < nodeList.Count; j++)
+            {
+                if (Vector3.Distance(nodeList[i].transform.position, nodeList[j].transform.position) < minDistance)
+                {
+                    // Mark the second node in each pair for culling
+                    toCull.Add(nodeList[j]);
+                }
+            }
+        }
+
+        // Remove the marked nodes
+        nodeList.RemoveAll(n => toCull.Contains(n));
 
         if (cullDoors)
         {
@@ -73,7 +94,7 @@ public class MeteorShower : MonoBehaviour
     private void OnGlobalTimeSync()
     {
         float currentTime = TimeOfDay.Instance.globalTime;
-        if (currentTime > lastTimeUsed + currentTimeOffset)
+        if (currentTime > lastTimeUsed + currentTimeOffset && canStart)
         {
             lastTimeUsed = currentTime;
             currentTimeOffset = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns); // Reset delay for next spawn
