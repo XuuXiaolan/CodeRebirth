@@ -1,9 +1,44 @@
 # Code:Rebirth
 Overhaul mod for Lethal Company
+## Working-On List:
+### Enemies
+
+### Moons
+
+### Scrap/Items
+#### Snow Globe
+- **Items:** Snow Globe + some variant insides
+- **Description:** Cute looking Snow Globe that you can shake and plays some cute dropship music.
+
+#### Wallet
+- **Items:** Wallet + some variant colours
+- **Description:** Stores coins.
+
+#### Coins
+- **Items:** Coins
+- **Description:** Gets stored by a wallet, its value transferred.
+
+#### Meteorite Shard
+- **Items:** Gems and Crystals
+- **Description:** Dropped from Meteors during Meteor Shower weather at a low low chance, glows and looks pwetty. 
+
+### Weathers
+#### Meteor Shower
+- **Availability:** All worlds
+- **Effects:** Randomly, Meteors will spawn way up in the sky and fall down, causing a small-ish crater with a small 5% chance to spawning a meteorite shard for scrap.
+
+### Misc
 
 ## TODO List:
 
 ### Enemies
+#### Concept: CatSnail
+##### Description
+##### Behaviour
+##### Vulnerability and Defense
+##### Spawn Behaviour
+##### Additional Characteristics
+
 #### Concept: The Nesting Bug - Advanced Looter
 ##### Description
 The Nesting Bug is a formidable new foe resembling a fusion of a dragonfly and a centipede, characterized by its large size and unsettling appearance. It primarily inhabits forested and temperate moons, where it adopts behaviors akin to those of the tulip snake and loot bug.
