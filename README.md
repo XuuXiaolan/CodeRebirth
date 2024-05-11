@@ -147,6 +147,36 @@ Activated by over 90 pounds of weight stationary above them, orienting towards v
 ##### Fauna: None.
 ##### History: 363-Scrimmage, once used as a site to mine explosive minerals, underwent a rapid chain reaction which created a shockwave that ripped the atmosphere clean off the surface of this moon. Its parent planet, Nighthawk, causes strong earthquakes which occasionally stir awake the automatic mining facilities' defense mechanisms, in the form of aptly-named "Nuggets", miniaturized sentry turrets scattered randomly underground that rise from the soil upon detecting heavy activity above.
 
+#### 599-Potential
+##### Population: Monstrous.
+##### Conditions: Very humid and somewhat cold, constant snowfall. Terrain is flattened by its recent ice age.
+##### Fauna: Home to many types of usually-peaceful wildlife.
+##### History: The twin moon to 363-Scrimmage, 509-Potential was the site of major refineries for the minerals that were extracted. After exposure to volatile compounds and biohazards, a plague spread across the population, corrupting many into the monsters we see today, and killing off the rest. Though 509-Potential is home to immense riches due to its status as a mineral refinery, it is incredibly dangerous.
+
+#### 729-Empathy
+##### Population: Unmoving.
+##### Conditions: Very humid. Warm, with constant gentle rainfall. Craggy terrain formed by intense river activity.
+##### Fauna: Terrain supports a few types of territorial wildlife.
+##### History: Once used for mining natural gas and oil, 729-Empathy's proximity to gas giant Broken Window caused immense tidal stress on its surface, disrupting mining operations and settlements. The danger was amplified even further when the moon came under attack with multiple biological conversion agents, petrifying the settlers and workers permanently.
+
+#### 46-Concave
+##### Population: Captured.
+##### Conditions: No water in any form. Warm, and very dusty. Terrain is incredibly difficult to traverse, often riddled with holes, caves, and tight passages.
+##### Fauna: Ecosystem centers around the planet's few apex predators.
+##### History: Once used for weapons testing, when a rogue artificial intelligence awoke, it swiftly captured the settlers of the planet, subjecting them to experiments of its own. After a century and a half of operation, the AI shut down permanently, and its facility fell into disarray.
+
+#### 766-Redemption
+##### Population: Abandoned.
+##### Conditions: Very dry, and somewhat cool, mostly covered in glaciers, making it quite hard to find your way into the facility.
+##### Fauna: Home to a few types of aggressive wildlife.
+##### History: This moon, once used as a site for subglacial organism studies, came under attack during the last Great War, and the ensuing nuclear winter plunged the moon into an ice age, wiping out all but the hardiest of its wildlife, though the ecosystem continues to recover to this day.
+
+#### 99-Serenity
+##### Population: Evacuated.
+##### Conditions: Covered in a worldwide taiga forest, with rugged terrain beneath it.
+##### Fauna: Thriving ecosystem encourages unique behaviors. Badly infested with wildlife.
+##### History: 99-Serenity was a standard colony moon, home to over 800 million people at its peak. Orbiting the gas giant Maybe Man, it served as a center of commerce for multiple centuries, until the last Great War, when a biological weapon caused rapid artificially-induced evolution in the wildlife of the moon. Forests quickly began to propagate across every square inch of the surface, and creatures quickly overran the colonies, causing an evacuation order to be put in place. Nearly 600 million people successfully escaped the moon, with the other 200 million succumbing to the rapidly-spreading environment.
+
 ### Scrap/Items
 #### Beach Items on 2229-Postage
 - **Items:** Beach balls, umbrellas, beach towels
