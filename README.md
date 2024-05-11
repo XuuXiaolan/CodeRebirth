@@ -105,6 +105,12 @@ Activated by over 90 pounds of weight stationary above them, orienting towards v
 - More of a strategic nuisance than a threat, requiring mindful player movement.
 
 ### Moons
+#### ???-Yield
+#### Population: ????
+#### Conditions: ????
+#### Fauna: ????
+#### History: ????
+![YieldMoon](./ImageStorage/YieldMoon.png)
 #### 58-Heart
 ##### Population: Haunted
 ##### Conditions: Humid, cool, thick atmosphere, craggy terrain
