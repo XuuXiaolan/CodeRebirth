@@ -247,7 +247,7 @@ Activated by over 90 pounds of weight stationary above them, orienting towards v
 
 #### Blood Moon
 - **Availability:** Any moon that has an entry fee above a certain threshold
-- **Effects:** Increases enemy spawn rate and power level both inside and outside the facility. The environment becomes dark all day with a blood-red sun, making it more challenging than typical eclipsed conditions.
+- **Effects:** Increases enemy spawn rate and power level both inside and outside the facility. The environment becomes dark all day with a blood-red eclipsed sun, making it more challenging than typical eclipsed conditions.
 
 ##### Impact on Gameplay
 [How this weather affects player strategies, enemy behavior, or game environment.]
