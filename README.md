@@ -105,47 +105,47 @@ Activated by over 90 pounds of weight stationary above them, orienting towards v
 - More of a strategic nuisance than a threat, requiring mindful player movement.
 
 ### Moons
-#### ???-Yield
-#### Population: ????
-#### Conditions: ????
-#### Fauna: ????
-#### History: ????
+#### 204-Yield
+#### Population: Slaughtered.
+#### Conditions: High winds, arid, and with constantly shifting sand dunes.
+#### Fauna: Ecosystem supports territorial behavior, and is primarily subterranean.
+#### History: 204-Yield distantly orbits the red giant star Rightside. 204-Yield itself used to harbor advanced civilization, but it is hypothesized that roaming anomalous creatures devoured most of the population, the remaining individuals fleeing the planet permanently.
 ![YieldMoon](./ImageStorage/YieldMoon.png)
 #### 58-Heart
-##### Population: Haunted
-##### Conditions: Humid, cool, thick atmosphere, craggy terrain
-##### Fauna: Aggressively infested with wildlife
-##### History: Previously a research site, now littered with failed life-creation experiments. Orbits a smoldering brown dwarf.
+##### Population: Haunted.
+##### Conditions: Humid. Cool, with a thick atmosphere. Craggy, tectonically-uplifted terrain.
+##### Fauna: Badly infested with aggressive wildlife.
+##### History: This planet appears to have been used for research, and it lies in a close orbit around a smoldering brown dwarf. Its surface is littered with failed experiments, attempting to create life, always failing in some way or another.
 ![HeartMoon](./ImageStorage/HeartMoon.png)
 #### 2229-Postage
-##### Population: Declining
-##### Conditions: Humid, warm, slowly-escaping atmosphere, jagged terrain
-##### Fauna: Home to territorial wildlife
-##### History: Once a luxury retreat, now suffering from radiation poisoning due to its sun, causing a sharp population decline.
+##### Population: Declining.
+##### Conditions: Humid. Warm, with a slowly-escaping atmosphere. Jagged, river-cut terrain.
+##### Fauna: Home to many types of territorial wildlife.
+##### History: Formerly used for recreational purposes, most likely a getaway location for particularly rich individuals, 2229-Postage orbits known gas planet Step Up. Its inhabitants have begun to show signs of radiation poisoning due to the system's brilliant white-blue sun, leading to a major decline in population in the last century.
 ![PostageMoon](./ImageStorage/PostageMoon.png)
 #### 848-Warning
-##### Population: Desiccated
-##### Conditions: Somewhat dry, cool, thin atmosphere, sand-swept terrain
-##### Fauna: Few peaceful wildlife species
-##### History: Former research site and tourist hotspot, now devastated by climate disruption from tourism and dried oceans.
+##### Population: Desiccated.
+##### Conditions: Somewhat dry. Cool, with a thin atmosphere. Craggy, sand-swept terrain.
+##### Fauna: Home to a few types of peaceful wildlife.
+##### History: Originally used to research its binary suns, 848-Warning quickly became a popular tourist destination for its proximity to the famous Icicle Nebula, leading to disruption of the planet's climate. Its population faced a resource crisis and swiftly perished as the planet's oceans dried up.
 
 #### 2-Hestia
-##### Population: Raptured
-##### Conditions: Very humid, warm, thick steamy atmosphere, rolling terrain
-##### Fauna: Manageable wildlife
-##### History: Active weapons testing site with frequent bombardments and sirens, designated risk level X.
+##### Population: Raptured.
+##### Conditions: Very humid. Warm, with a thick, steamy atmosphere. Smooth, rolling terrain.
+##### Fauna: Overrun with somewhat manageable wildlife.
+##### History: This planet continues to actively be used for weapons testing. It regularly undergoes barrages of Old Bird drops and missile bombardments, making recovery of scrap incredibly difficult, but incredibly profitable. Bombardments tend to come every few hours, largely at random, only signified by the blaring sirens. This is one of the few moons designated with the risk level of X.
 
 #### 132-Concept
-##### Population: Prowling
-##### Conditions: Humid, hot, constant boiling rain, weathered plains
-##### Fauna: No outdoor survival
-##### History: Moon transformed by military incendiary tests, with a hidden population in underground bunkers.
+##### Population: Prowling.
+##### Conditions: Humid. Hot, with consistent boiling rainfall. Weathered-down plains make up most of its terrain.
+##### Fauna: No life survives outdoors.
+##### History: This moon's harsh conditions are the result of military testing over the last multiple centuries. Incendiary weaponry has been utilized repeatedly across the whole moon's surface, in an attempt to vanquish any loose genetic experiments- this failed, however, as the now-transformed population of this moon simply fled indoors, into the bunker system beneath the surface.
 
 #### 363-Scrimmage
-##### Population: Fading
-##### Conditions: Dry, extremely cold, stripped atmosphere
-##### Fauna: None
-##### History: Former mining site for explosive minerals, now with no atmosphere due to a catastrophic chain reaction. Occasional earthquakes activate underground miniaturized turrets known as "Nuggets."
+##### Population: Fading.
+##### Conditions: Dry and extremely cold, having been stripped of its atmosphere centuries ago.
+##### Fauna: None.
+##### History: 363-Scrimmage, once used as a site to mine explosive minerals, underwent a rapid chain reaction which created a shockwave that ripped the atmosphere clean off the surface of this moon. Its parent planet, Nighthawk, causes strong earthquakes which occasionally stir awake the automatic mining facilities' defense mechanisms, in the form of aptly-named "Nuggets", miniaturized sentry turrets scattered randomly underground that rise from the soil upon detecting heavy activity above.
 
 ### Scrap/Items
 #### Beach Items on 2229-Postage
