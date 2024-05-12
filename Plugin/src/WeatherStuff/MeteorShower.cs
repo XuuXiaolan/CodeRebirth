@@ -35,7 +35,7 @@ public class MeteorShower : MonoBehaviour
     private IEnumerator StartCooldown() {
         yield return new WaitForSeconds(5f);
         canStart = true;
-    } 
+    }
     private void OnDisable()
     {
         if (IsServerOrHost())
@@ -133,7 +133,7 @@ public class MeteorShower : MonoBehaviour
             randomInt = random.Next(-1, 100) + 1; // Adjusted to ensure randomness is applied correctly.
         }
 
-        GameObject meteor = Instantiate(Plugin.Meteor, spawnLocation, Quaternion.identity, Plugin.meteorShower.effectObject.transform);
+        GameObject meteor = Instantiate(Plugin.Meteor, spawnLocation, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
         meteor.GetComponent<NetworkObject>().Spawn();
 
         // Ensure parameters are set right after spawning and before any updates occur.

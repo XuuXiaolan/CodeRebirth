@@ -19,6 +19,10 @@ public class Meteors : NetworkBehaviour {
     private ParticleSystem fireParticles;
     private int randomInt;
     [SerializeField] public GameObject craterPrefab;
+    public AudioSource meteorImpact;
+    public AudioSource meteorTravel;
+    public AudioSource meteorCloseTravel;
+    private bool landed = false;
     private NetworkVariable<float> timeRemaining = new NetworkVariable<float>();
     public void SetParams(Vector3 spawnLocation, Vector3 landLocation, int randomInt) {        
         this.speed += speed;
@@ -34,6 +38,21 @@ public class Meteors : NetworkBehaviour {
     }
 
     private void Update() {
+        if (NetworkObject.IsSpawned == false) return;
+        if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) {
+            meteorImpact.volume = 0f;
+            meteorTravel.volume = 0f;
+            meteorCloseTravel.volume = 0f;
+        } else {
+            meteorImpact.volume = 1f;
+            meteorTravel.volume = 1f;
+            meteorCloseTravel.volume = 1f;
+        }
+        if (timeToLand*timeRemaining.Value <= 4.106f && !meteorCloseTravel.enabled && meteorTravel.enabled) {
+            meteorTravel.enabled = false;
+            meteorCloseTravel.enabled = true;
+            Plugin.Logger.LogInfo("enabled close sounds");
+        }
         this.transform.LookAt(landLocation);
         if (timeRemaining.Value > 0) {
             UpdatePosition();
@@ -49,8 +68,11 @@ public class Meteors : NetworkBehaviour {
     }
 
     private void CheckLanding() {
-        if (IsOwner && Physics.OverlapSphere(transform.position, 5).Any(x => x.gameObject.layer == LayerMask.NameToLayer("Terrain") || x.gameObject.layer == LayerMask.NameToLayer("Room"))) { 
+        if (!landed && IsOwner && Physics.OverlapSphere(transform.position, 5).Any(x => x.gameObject.layer == LayerMask.NameToLayer("Terrain") || x.gameObject.layer == LayerMask.NameToLayer("Room"))) { 
             HandleLandingServerRpc();
+            meteorTravel.enabled = false;
+            meteorImpact.enabled = true;
+            // play impact audio?
         }
     }
     [ServerRpc]
@@ -59,6 +81,7 @@ public class Meteors : NetworkBehaviour {
         CraterController craterController = craterInstance.GetComponent<CraterController>();
 
         if (craterController != null) {
+            landed = true;
             Plugin.Logger.LogInfo("CraterController instantiated successfully.");
             craterController.ShowCrater(landLocation);
         } else {
@@ -83,7 +106,16 @@ public class Meteors : NetworkBehaviour {
     [ServerRpc]
     private void DestroyNetworkObjectServerRpc() {
         if (IsServer) {
+            GetComponent<MeshFilter>().mesh = null;
+            GetComponentInChildren<ParticleSystem>().Stop();
+            this.transform.Find("FlameStream").GetComponentInChildren<ParticleSystem>().Stop();
+            StartCoroutine(DestroyDelay());
+        }
+    }
 
+    private IEnumerator DestroyDelay() {
+        yield return new WaitForSeconds(10f);
+        if (IsServer) {
             Destroy(gameObject);
         }
     }
