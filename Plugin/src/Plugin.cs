@@ -93,7 +93,7 @@ namespace CodeRebirth {
             effectPermanentObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("MeteorShowerWeather"), Vector3.zero, Quaternion.identity);
             effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
             DontDestroyOnLoad(effectPermanentObject);
-
+            
             // Create a new WeatherEffect instance
             meteorShower = new WeatherEffect()
             {
@@ -105,7 +105,6 @@ namespace CodeRebirth {
                 transitioning = false
             };
             Weathers.RegisterWeather("Meteor Shower", meteorShower, Levels.LevelTypes.All, 0, 0);
-            Weathers.RemoveWeather("Weather", LevelTypes.None, ["MarchLevel"]);
         }
         private void CodeRebirthScrap() {
             // Wallet register

@@ -28,10 +28,84 @@ public class MeteorShower : MonoBehaviour
         {
             StartCoroutine(StartCooldown());
             lastTimeUsed = TimeOfDay.Instance.globalTime;
-            currentTimeOffset = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns); // Initial random delay
+            currentTimeOffset = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
             TimeOfDay.Instance.onTimeSync.AddListener(OnGlobalTimeSync);
+            SpawnInitialMeteorCluster();
         }
     }
+    private void SpawnInitialMeteorCluster()
+    {
+        Vector3 averageLocation = CalculateAverageLandNodePosition();
+        Vector3 centralLocation = averageLocation + new Vector3(0, random.Next(250, 300), 0);
+
+        GameObject largeMeteor = Instantiate(Plugin.Meteor, centralLocation, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
+        largeMeteor.transform.localScale *= 50; // Scale up for the large central meteor
+        DisableParticles(largeMeteor);
+        AddRandomMovement(largeMeteor, 3f); // Smaller speed for larger meteor
+
+        int smallMeteorsCount = random.Next(15, 45); // Random number of smaller meteors
+        for (int i = 0; i < smallMeteorsCount; i++)
+        {
+            Vector3 randomOffset = new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175));
+            GameObject smallMeteor = Instantiate(Plugin.Meteor, centralLocation + randomOffset, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
+            smallMeteor.transform.localScale *= ((float)random.NextDouble() * 6f) + 2f; // Random smaller scale
+            DisableParticles(smallMeteor);
+            AddRandomMovement(smallMeteor, 4f); // Slightly higher speed for smaller meteors
+        }
+    }
+
+    private Vector3 CalculateAverageLandNodePosition()
+    {
+        Vector3 sumPosition = Vector3.zero;
+        int count = 0;
+
+        foreach (GameObject node in possibleLandNodes)
+        {
+            sumPosition += node.transform.position;
+            count++;
+        }
+
+        if (count > 0)
+            return sumPosition / count;
+        else
+            return Vector3.zero; // Return a default position if no nodes are found
+    }
+
+    private void DisableParticles(GameObject meteor)
+    {
+        meteor.transform.Find("FlameStream").Find("FireEmbers").GetComponent<ParticleSystem>().Stop();
+        meteor.transform.Find("FlameStream").Find("FireEmbers").GetComponent<ParticleSystem>().Clear();
+        meteor.GetComponentInChildren<ParticleSystem>().Stop();
+        meteor.GetComponentInChildren<ParticleSystem>().Clear();
+    }
+
+    private void AddRandomMovement(GameObject meteor, float speed)
+    {
+        var rb = meteor.GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = meteor.AddComponent<Rigidbody>();
+            rb.mass = 1000f; // A high mass to minimize environmental impact while still allowing movement
+            rb.useGravity = false; // Ensure the meteor doesn't fall due to gravity
+            rb.isKinematic = false; // The Rigidbody will respond to physics but isn't subject to gravity
+        }
+
+        // Initial direction setup to mostly avoid downward movement
+        Vector3 initialDirection = new Vector3(
+            (float)random.NextDouble() * 2 - 1,  // X-axis: Full random
+            Mathf.Max(0.5f, (float)random.NextDouble()),  // Y-axis: Strong upward bias
+            (float)random.NextDouble() * 2 - 1   // Z-axis: Full random
+        );
+        rb.velocity = initialDirection.normalized * speed;
+
+        // Limit rotation to Y-axis to minimize influence on velocity direction
+        rb.angularVelocity = new Vector3(0, (float)random.NextDouble() * 100 - 50, 0);
+
+        // Continuously adjust direction to ensure stability if necessary
+        meteor.AddComponent<StabilizeMovement>().Initialize(rb, initialDirection.normalized * speed);
+    }
+
+
     private IEnumerator StartCooldown() {
         yield return new WaitForSeconds(5f);
         canStart = true;
@@ -156,5 +230,21 @@ public class MeteorShower : MonoBehaviour
 
         landNode = possibleLandNodes[random.Next(possibleLandNodes.Length)];
         return landNode.transform.position + meteorSpawnLocationOffset;
+    }
+}
+public class StabilizeMovement : MonoBehaviour
+{
+    private Rigidbody rb;
+    private Vector3 targetVelocity;
+
+    public void Initialize(Rigidbody rigidbody, Vector3 velocity)
+    {
+        rb = rigidbody;
+        targetVelocity = velocity;
+    }
+
+    void FixedUpdate()
+    {
+        rb.velocity = targetVelocity; // Continuously reset velocity to the intended direction
     }
 }

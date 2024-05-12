@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 6132861222601426575}
   - component: {fileID: 5146194962536676925}
   - component: {fileID: 8809455756808450498}
-  - component: {fileID: 3247830670571673211}
+  - component: {fileID: 1367161335378675329}
   m_Layer: 2
   m_Name: Meteor
   m_TagString: TemporaryEffect
@@ -658,8 +658,8 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!65 &3247830670571673211
-BoxCollider:
+--- !u!64 &1367161335378675329
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -676,9 +676,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.022944208, y: 0.022243764, z: 0.021275736}
-  m_Center: {x: 0.0006042844, y: 0.0007872171, z: 0.00067695783}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 289301614986012343, guid: 274e37efcd228e2458576a0d84be832a, type: 3}
 --- !u!1001 &7743454806531981933
 PrefabInstance:
   m_ObjectHideFlags: 0
