@@ -109,6 +109,7 @@ public class Meteors : NetworkBehaviour {
             GetComponent<MeshFilter>().mesh = null;
             GetComponentInChildren<ParticleSystem>().Stop();
             this.transform.Find("FlameStream").GetComponentInChildren<ParticleSystem>().Stop();
+            this.GetComponent<MeshCollider>().enabled = false;
             StartCoroutine(DestroyDelay());
         }
     }
@@ -136,6 +137,39 @@ public class CraterController : MonoBehaviour
     public void ShowCrater(Vector3 impactLocation)
     {
         transform.position = impactLocation; // Position the crater at the impact location
+        
+        // Perform a raycast downward from a position slightly above the impact location
+        RaycastHit hit;
+        float raycastDistance = 50f; // Max distance the raycast will check for terrain
+        Vector3 raycastOrigin = impactLocation; // Start the raycast 5 units above the impact location
+
+        // Ensure the crater has a unique material instance to modify
+        Renderer craterRenderer = craterMesh.GetComponent<Renderer>();
+        if (craterRenderer != null) {
+            craterRenderer.material = new Material(craterRenderer.material); // Create a new instance of the material
+            craterRenderer.material.color = Color.blue;
+            // Cast the ray to detect terrain
+            if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance, LayerMask.GetMask("Room"))) {
+                // Check if the object hit is tagged as "Terrain"
+                if (hit.collider.gameObject.tag == "Grass") {
+                    // Additional logic for when the terrain is correctly tagged
+                    craterRenderer.material.color = new Color(0.043f, 0.141f, 0.043f);
+                    Plugin.Logger.LogInfo("Found Grass!");
+                } else if (hit.collider.gameObject.tag == "Snow"){
+                    craterRenderer.material.color = new Color(0.925f, 0.929f, 1f);
+                    Plugin.Logger.LogInfo("Found Snow!");
+                } else if (hit.collider.gameObject.tag == "Gravel"){
+                    craterRenderer.material.color = new Color(0.851f, 0.851f, 0.851f);
+                    Plugin.Logger.LogInfo("Found Gravel!");
+                } else {
+                    Debug.LogWarning("The hit object is not tagged as 'Terrain'.");
+                }
+            } else {
+                Debug.LogWarning("Terrain not found below the impact point.");
+            }
+        } else {
+            Debug.LogWarning("Renderer component not found on the crater object.");
+        }
         craterMesh.SetActive(true);
         craterVisible = true;
         fireCollider.enabled = true; // Enable the ColliderIdentifier

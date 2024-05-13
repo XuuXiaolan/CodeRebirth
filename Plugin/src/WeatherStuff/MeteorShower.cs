@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
+using CodeRebirth.Misc;
 
 namespace CodeRebirth.WeatherStuff;
 
@@ -22,7 +23,8 @@ public class MeteorShower : MonoBehaviour
     private const int RandomSeedOffset = -53;
 
     private void OnEnable()
-    {
+    {           
+        Plugin.Logger.LogInfo("Enabling Meteor Shower");
         InitializeMeteorShower();
         if (IsServerOrHost())
         {
@@ -112,8 +114,12 @@ public class MeteorShower : MonoBehaviour
     }
     private void OnDisable()
     {
+        Plugin.Logger.LogInfo("Disabling Meteor Shower");
+        canStart = false;
+        nodesAlreadyVisited = new HashSet<GameObject>();
         if (IsServerOrHost())
         {
+            ExtensionMethods.KillAllChildren(this.transform);
             TimeOfDay.Instance.onTimeSync.RemoveListener(OnGlobalTimeSync);
         }
     }
