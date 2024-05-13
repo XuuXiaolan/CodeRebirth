@@ -29,6 +29,7 @@ namespace CodeRebirth {
         internal static GameObject CRUtils;
         internal static Item Wallet;
         internal static Item Meteorite;
+        internal static GameObject BetterCrater;
         internal static WeatherEffect meteorShower;
         internal static GameObject Meteor;
         internal static Dictionary<string, Item> samplePrefabs = [];
@@ -48,7 +49,7 @@ namespace CodeRebirth {
 
             CRUtils = Assets.MainAssetBundle.LoadAsset<GameObject>("CodeRebirthUtils");
             NetworkPrefabs.RegisterNetworkPrefab(CRUtils);
-            maxCoins = 99;
+            maxCoins = 9;
             ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
             // Register Keybinds
             InputActionsInstance = new IngameKeybinds();
@@ -78,7 +79,10 @@ namespace CodeRebirth {
             Meteor = Assets.MainAssetBundle.LoadAsset<GameObject>("Meteor");
             if (Meteor == null) {
                 Logger.LogError("Failed to load meteor prefab");
+            } else {
+                NetworkPrefabs.RegisterNetworkPrefab(Meteor);
             }
+            BetterCrater = Assets.MainAssetBundle.LoadAsset<GameObject>("BetterCrater");
             BigExplosion = Assets.MainAssetBundle.LoadAsset<GameObject>("BigExplosion");
             Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
             Utilities.FixMixerGroups(Meteorite.spawnPrefab);

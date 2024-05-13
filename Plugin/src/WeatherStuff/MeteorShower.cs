@@ -26,14 +26,11 @@ public class MeteorShower : MonoBehaviour
     {           
         Plugin.Logger.LogInfo("Enabling Meteor Shower");
         InitializeMeteorShower();
-        if (IsServerOrHost())
-        {
-            StartCoroutine(StartCooldown());
-            lastTimeUsed = TimeOfDay.Instance.globalTime;
-            currentTimeOffset = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
-            TimeOfDay.Instance.onTimeSync.AddListener(OnGlobalTimeSync);
-            SpawnInitialMeteorCluster();
-        }
+        StartCoroutine(StartCooldown());
+        lastTimeUsed = TimeOfDay.Instance.globalTime;
+        currentTimeOffset = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
+        SpawnInitialMeteorCluster();
+        TimeOfDay.Instance.onTimeSync.AddListener(OnGlobalTimeSync);
     }
     private void SpawnInitialMeteorCluster()
     {
@@ -117,10 +114,10 @@ public class MeteorShower : MonoBehaviour
         Plugin.Logger.LogInfo("Disabling Meteor Shower");
         canStart = false;
         nodesAlreadyVisited = new HashSet<GameObject>();
+        TimeOfDay.Instance.onTimeSync.RemoveListener(OnGlobalTimeSync);
         if (IsServerOrHost())
         {
             ExtensionMethods.KillAllChildren(this.transform);
-            TimeOfDay.Instance.onTimeSync.RemoveListener(OnGlobalTimeSync);
         }
     }
 
@@ -214,8 +211,9 @@ public class MeteorShower : MonoBehaviour
         }
 
         GameObject meteor = Instantiate(Plugin.Meteor, spawnLocation, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
-        meteor.GetComponent<NetworkObject>().Spawn();
-
+        if (IsServerOrHost()) {
+            meteor.GetComponent<NetworkObject>().Spawn();
+        }
         // Ensure parameters are set right after spawning and before any updates occur.
         Meteors meteorComponent = meteor.GetComponent<Meteors>();
         if (meteorComponent != null)
@@ -224,7 +222,7 @@ public class MeteorShower : MonoBehaviour
         }
 
         return true;
-    } //todo, fix meteors spawning at the very start of the weather that dont move.
+    }
 
     private Vector3 CalculateSpawnLocation(out GameObject landNode)
     {
