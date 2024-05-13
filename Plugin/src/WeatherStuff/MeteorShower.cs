@@ -42,12 +42,13 @@ public class MeteorShower : MonoBehaviour
         DisableParticles(largeMeteor);
         AddRandomMovement(largeMeteor, 3f); // Smaller speed for larger meteor
 
-        int smallMeteorsCount = random.Next(15, 45); // Random number of smaller meteors
+        int smallMeteorsCount = random.Next(25, 50); // Random number of smaller meteors
         for (int i = 0; i < smallMeteorsCount; i++)
         {
             Vector3 randomOffset = new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175));
             GameObject smallMeteor = Instantiate(Plugin.Meteor, centralLocation + randomOffset, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
-            smallMeteor.transform.localScale *= ((float)random.NextDouble() * 6f) + 2f; // Random smaller scale
+            
+            smallMeteor.transform.localScale *= ((float)random.NextDouble() * 8f) + 2f; // Random smaller scale
             DisableParticles(smallMeteor);
             AddRandomMovement(smallMeteor, 4f); // Slightly higher speed for smaller meteors
         }
@@ -69,7 +70,6 @@ public class MeteorShower : MonoBehaviour
         else
             return Vector3.zero; // Return a default position if no nodes are found
     }
-
     private void DisableParticles(GameObject meteor)
     {
         meteor.transform.Find("FlameStream").Find("FireEmbers").GetComponent<ParticleSystem>().Stop();
@@ -77,7 +77,6 @@ public class MeteorShower : MonoBehaviour
         meteor.GetComponentInChildren<ParticleSystem>().Stop();
         meteor.GetComponentInChildren<ParticleSystem>().Clear();
     }
-
     private void AddRandomMovement(GameObject meteor, float speed)
     {
         var rb = meteor.GetComponent<Rigidbody>();
@@ -123,7 +122,11 @@ public class MeteorShower : MonoBehaviour
     [ClientRpc]
 	public void KillAllChildrenClientRpc() {
         for(int i = Plugin.meteorShower.effectPermanentObject.transform.childCount - 1; i >= 0; i--) {
-            GameObject.Destroy(Plugin.meteorShower.effectPermanentObject.transform.GetChild(i).gameObject);
+            if (Plugin.meteorShower.effectPermanentObject.transform.GetChild(i).gameObject.TryGetComponent<NetworkObject>(out var networkObject) && networkObject.IsSpawned) {
+                networkObject.Despawn(true);
+            } else {
+                GameObject.Destroy(Plugin.meteorShower.effectPermanentObject.transform.GetChild(i).gameObject);
+            }
         }
     }
     private void InitializeMeteorShower()
@@ -206,6 +209,7 @@ public class MeteorShower : MonoBehaviour
 
     private bool TrySpawnMeteor()
     {
+        if (!IsServerOrHost()) return false;
         Vector3 spawnLocation = CalculateSpawnLocation(out GameObject landNode);
         if (nodesAlreadyVisited.Contains(landNode))
         {
@@ -217,7 +221,7 @@ public class MeteorShower : MonoBehaviour
 
         GameObject meteor = Instantiate(Plugin.Meteor, spawnLocation, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
         if (IsServerOrHost()) {
-            meteor.GetComponent<NetworkObject>().Spawn(true);
+            meteor.GetComponent<NetworkObject>().Spawn();
         }
         // Ensure parameters are set right after spawning and before any updates occur.
         Meteors meteorComponent = meteor.GetComponent<Meteors>();

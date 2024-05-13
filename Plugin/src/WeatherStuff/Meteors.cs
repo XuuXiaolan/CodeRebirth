@@ -125,7 +125,7 @@ public class Meteors : NetworkBehaviour {
     private IEnumerator DestroyDelay() {
         yield return new WaitForSeconds(10f);
         if (IsServer) {
-            this.GetComponent<NetworkObject>().Despawn();
+            this.GetComponent<NetworkObject>().Despawn(true);
         }
     }
 }
