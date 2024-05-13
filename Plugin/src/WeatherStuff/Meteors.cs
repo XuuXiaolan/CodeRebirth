@@ -24,17 +24,23 @@ public class Meteors : NetworkBehaviour {
     public AudioSource meteorCloseTravel;
     private bool landed = false;
     private NetworkVariable<float> timeRemaining = new NetworkVariable<float>();
-    public void SetParams(Vector3 spawnLocation, Vector3 landLocation, int randomInt) {        
+    public void SetParams(Vector3 spawnLocation, Vector3 landLocation, int randomInt) {
+        SetParamsStuffClientRpc(spawnLocation, landLocation, randomInt);
+        if (IsServer) {
+            timeRemaining.Value = 1; // Initialize remaining time to 1 for Lerp calculation
+        }      
+        if (IsServer) {
+            Plugin.Logger.LogInfo($"Actual Time to Land: {timeToLand}");
+        }
+    }
+    [ClientRpc]
+    public void SetParamsStuffClientRpc(Vector3 spawnLocation, Vector3 landLocation, int randomInt) {
+        fireParticles = this.GetComponentInChildren<ParticleSystem>();
+        this.randomInt = randomInt;
         this.speed += speed;
         this.spawnLocation = spawnLocation;
         this.landLocation = landLocation;
         timeToLand = Vector3.Distance(spawnLocation, landLocation) / speed;
-        timeRemaining.Value = 1; // Initialize remaining time to 1 for Lerp calculation
-        fireParticles = this.GetComponentInChildren<ParticleSystem>();
-        this.randomInt = randomInt;
-        if (IsServer) {
-            Plugin.Logger.LogInfo($"Actual Time to Land: {timeToLand}");
-        }
     }
 
     private void Update() {
@@ -68,18 +74,26 @@ public class Meteors : NetworkBehaviour {
     }
 
     private void CheckLanding() {
-        if (!landed && IsOwner && Physics.OverlapSphere(transform.position, 5).Any(x => x.gameObject.layer == LayerMask.NameToLayer("Terrain") || x.gameObject.layer == LayerMask.NameToLayer("Room"))) { 
-            HandleLandingServerRpc();
+        if (!landed && Physics.OverlapSphere(transform.position, 5).Any(x => x.gameObject.layer == LayerMask.NameToLayer("Terrain") || x.gameObject.layer == LayerMask.NameToLayer("Room"))) { 
+            HandleLanding();
             meteorTravel.enabled = false;
             meteorImpact.enabled = true;
             // play impact audio?
         }
     }
-    [ServerRpc]
-    private void HandleLandingServerRpc() {
-        GameObject craterInstance = Instantiate(craterPrefab, landLocation, Quaternion.identity);
-        CraterController craterController = craterInstance.GetComponent<CraterController>();
 
+    private void HandleLanding() {
+        if (IsServer) {
+            CreateCraterClientRpc(landLocation);
+            TrySpawnScrap();
+            DestroyNetworkObjectServerRpc();
+        }
+    }
+    [ClientRpc]
+    private void CreateCraterClientRpc(Vector3 rockLandedPosition) {
+        Explode();
+        GameObject craterInstance = Instantiate(Plugin.BetterCrater, rockLandedPosition, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
+        CraterController craterController = craterInstance.GetComponent<CraterController>();
         if (craterController != null) {
             landed = true;
             Plugin.Logger.LogInfo("CraterController instantiated successfully.");
@@ -87,11 +101,9 @@ public class Meteors : NetworkBehaviour {
         } else {
             Plugin.Logger.LogError("Failed to get CraterController from instantiated prefab.");
         }
-        Explode();
-        TrySpawnScrap();
-        DestroyNetworkObjectServerRpc();
+        GetComponentInChildren<ParticleSystem>().Stop();
+        this.transform.Find("FlameStream").GetComponentInChildren<ParticleSystem>().Stop();
     }
-
     private void Explode() {
         fireParticles.Stop();
         Landmine.SpawnExplosion(landLocation, true, 0f, 10f, 25, 75, Plugin.BigExplosion);
@@ -99,17 +111,13 @@ public class Meteors : NetworkBehaviour {
 
     private void TrySpawnScrap() {
         if ((IsHost || IsServer) && randomInt >= (100-chanceToSpawnScrap)) {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", landLocation + new Vector3(0, -0.6f, 0));
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", this.transform.position + new Vector3(0, -0.6f, 0));
         }
     }
 
     [ServerRpc]
     private void DestroyNetworkObjectServerRpc() {
         if (IsServer) {
-            GetComponent<MeshFilter>().mesh = null;
-            GetComponentInChildren<ParticleSystem>().Stop();
-            this.transform.Find("FlameStream").GetComponentInChildren<ParticleSystem>().Stop();
-            this.GetComponent<MeshCollider>().enabled = false;
             StartCoroutine(DestroyDelay());
         }
     }
@@ -117,7 +125,7 @@ public class Meteors : NetworkBehaviour {
     private IEnumerator DestroyDelay() {
         yield return new WaitForSeconds(10f);
         if (IsServer) {
-            Destroy(gameObject);
+            this.GetComponent<NetworkObject>().Despawn(true);
         }
     }
 }
