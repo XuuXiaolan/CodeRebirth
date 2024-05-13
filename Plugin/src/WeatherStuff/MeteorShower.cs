@@ -117,10 +117,15 @@ public class MeteorShower : MonoBehaviour
         TimeOfDay.Instance.onTimeSync.RemoveListener(OnGlobalTimeSync);
         if (IsServerOrHost())
         {
-            ExtensionMethods.KillAllChildren(this.transform);
+            KillAllChildrenClientRpc();
         }
     }
-
+    [ClientRpc]
+	public void KillAllChildrenClientRpc() {
+        for(int i = Plugin.meteorShower.effectPermanentObject.transform.childCount - 1; i >= 0; i--) {
+            GameObject.Destroy(Plugin.meteorShower.effectPermanentObject.transform.GetChild(i).gameObject);
+        }
+    }
     private void InitializeMeteorShower()
     {
         random = new System.Random(StartOfRound.Instance.randomMapSeed + RandomSeedOffset);
@@ -212,7 +217,7 @@ public class MeteorShower : MonoBehaviour
 
         GameObject meteor = Instantiate(Plugin.Meteor, spawnLocation, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
         if (IsServerOrHost()) {
-            meteor.GetComponent<NetworkObject>().Spawn();
+            meteor.GetComponent<NetworkObject>().Spawn(true);
         }
         // Ensure parameters are set right after spawning and before any updates occur.
         Meteors meteorComponent = meteor.GetComponent<Meteors>();

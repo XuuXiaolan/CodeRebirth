@@ -19,10 +19,4 @@ public static class ExtensionMethods {
 	public static void OnSpawn(this NetworkObject networkObject, Action action) {
 		networkObject.StartCoroutine(RunActionAfterSpawned(networkObject, action));
 	}
-	
-	public static void KillAllChildren(this Transform transform) {
-        for(int i = transform.childCount - 1; i >= 0; i--) {
-            GameObject.Destroy(transform.GetChild(i).gameObject);
-        }
-    }
 }

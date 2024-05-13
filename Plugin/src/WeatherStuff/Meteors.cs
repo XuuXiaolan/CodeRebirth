@@ -92,7 +92,7 @@ public class Meteors : NetworkBehaviour {
     [ClientRpc]
     private void CreateCraterClientRpc(Vector3 rockLandedPosition) {
         Explode();
-        GameObject craterInstance = Instantiate(Plugin.BetterCrater, rockLandedPosition, Quaternion.identity);
+        GameObject craterInstance = Instantiate(Plugin.BetterCrater, rockLandedPosition, Quaternion.identity, Plugin.meteorShower.effectPermanentObject.transform);
         CraterController craterController = craterInstance.GetComponent<CraterController>();
         if (craterController != null) {
             landed = true;
