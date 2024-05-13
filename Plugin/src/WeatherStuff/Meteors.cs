@@ -99,7 +99,7 @@ public class Meteors : NetworkBehaviour {
 
     private void TrySpawnScrap() {
         if ((IsHost || IsServer) && randomInt >= (100-chanceToSpawnScrap)) {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", landLocation + new Vector3(0, -0.35f, 0));
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", landLocation + new Vector3(0, -0.6f, 0));
         }
     }
 

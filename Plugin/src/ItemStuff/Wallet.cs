@@ -38,7 +38,8 @@ public class Wallet : GrabbableObject {
                 UpdateScrapValueServerRpc(coin.scrapValue);
                 NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
                 Plugin.Logger.LogInfo($"Scrap: {scrapValue}");
-                skinnedMeshRenderer.SetBlendShapeWeight(0, skinnedMeshRenderer.GetBlendShapeWeight(0)+10f);
+                float newblendShapeWeight = Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0)+10f, 0, 300);
+                skinnedMeshRenderer.SetBlendShapeWeight(0, newblendShapeWeight);
                 DestroyObjectServerRpc(obj);
             }
         }
