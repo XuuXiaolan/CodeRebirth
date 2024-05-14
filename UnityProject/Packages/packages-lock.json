@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.nomnom.unity-lc-project-patcher": {
+      "version": "https://github.com/nomnomab/unity-lc-project-patcher.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "cc2c63a2095a190893da81e1bc42090da31b599f"
+    },
     "com.nomnom.unity-project-patcher": {
       "version": "https://github.com/nomnomab/unity-project-patcher.git",
       "depth": 0,
@@ -7,7 +14,14 @@
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "2.0.0"
       },
-      "hash": "2bf2876998159427e2b939fa0bd3ea042f9b6e3e"
+      "hash": "b995ec875c464e5f464ec69ba9be9c804193598f"
+    },
+    "com.nomnom.unity-project-patcher-bepinex": {
+      "version": "https://github.com/nomnomab/unity-project-patcher-bepinex.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "97da4615216afc1619ea7cf607e7e4a324c47760"
     },
     "com.unity.ai.navigation": {
       "version": "1.1.5",
@@ -45,7 +59,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.2.0",
+      "version": "2.3.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -53,7 +67,7 @@
     },
     "com.unity.collections": {
       "version": "1.2.4",
-      "depth": 2,
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.burst": "1.6.6",
@@ -115,7 +129,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.7.0",
+      "version": "1.8.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -161,12 +175,14 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.postprocessing": {
-      "version": "3.2.2",
+    "com.unity.probuilder": {
+      "version": "5.1.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.physics": "1.0.0"
+        "com.unity.settings-manager": "1.0.3",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -215,7 +231,7 @@
     },
     "com.unity.settings-manager": {
       "version": "2.0.1",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -293,7 +309,7 @@
     },
     "com.unity.visualeffectgraph": {
       "version": "14.0.8",
-      "depth": 1,
+      "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.shadergraph": "14.0.8",
