@@ -23,7 +23,8 @@ public class MeteorShower : MonoBehaviour
     private const int RandomSeedOffset = -53;
 
     private void OnEnable()
-    {           
+    {   
+        random = new System.Random(StartOfRound.Instance.randomMapSeed + RandomSeedOffset);
         Plugin.Logger.LogInfo("Enabling Meteor Shower");
         InitializeMeteorShower();
         StartCoroutine(StartCooldown());
@@ -179,6 +180,7 @@ public class MeteorShower : MonoBehaviour
     private void OnGlobalTimeSync()
     {
         float currentTime = TimeOfDay.Instance.globalTime;
+        Plugin.Logger.LogInfo("currenttime: " +currentTime.ToString() + "lasttimeused: "+ lastTimeUsed.ToString() + "currenttimeoffset: " + currentTimeOffset.ToString());
         if (currentTime > lastTimeUsed + currentTimeOffset && canStart)
         {
             lastTimeUsed = currentTime;
