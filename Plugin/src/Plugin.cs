@@ -84,6 +84,7 @@ namespace CodeRebirth {
             BetterCrater = Assets.MainAssetBundle.LoadAsset<GameObject>("BetterCrater");
             BigExplosion = Assets.MainAssetBundle.LoadAsset<GameObject>("BigExplosion");
             Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
+            Meteorite.spawnPrefab.AddComponent<ScrapValueSyncer>();
             Utilities.FixMixerGroups(Meteorite.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Meteorite.spawnPrefab);
             samplePrefabs.Add("Meteorite", Meteorite);
