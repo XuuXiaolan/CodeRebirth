@@ -62,7 +62,7 @@ public class Plugin : BaseUnityPlugin {
     }
     private void CodeRebirthEnemies() {
         // CutieFly Enemy
-        CutieFly = Assets.MainAssetBundle.LoadAsset<EnemyType>("CutieFlyObj");
+        CutieFly = Assets.MainAssetBundle.LoadAsset<EnemyType>("ButterflyObj");
         TerminalNode cfTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("CutieFlyTN");
         TerminalKeyword cfTerminalKeyword = Assets.MainAssetBundle.LoadAsset<TerminalKeyword>("CutieFlyTK");
         NetworkPrefabs.RegisterNetworkPrefab(CutieFly.enemyPrefab);

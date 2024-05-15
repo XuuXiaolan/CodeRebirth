@@ -191,7 +191,7 @@ AudioSource:
   m_GameObject: {fileID: 8594509980011735093}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300008, guid: cb9fb87df5ca10840a2a5b2dc5a4284c,
+  OutputAudioMixerGroup: {fileID: 24300008, guid: 98a8e80a192ecc14eb10e35e53877912,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 061f5363e7fd69340896b8bbbb96e33c, type: 3}
   m_PlayOnAwake: 0
@@ -309,13 +309,13 @@ MonoBehaviour:
   isInElevator: 0
   isInShipRoom: 0
   isInFactory: 1
-  useCooldown: 1
+  useCooldown: 0
   currentUseCooldown: 0
   itemProperties: {fileID: 11400000, guid: 898a73a4bf90b14458ef85254d9af264, type: 2}
   insertedBattery:
     empty: 0
     charge: 0
-  customGrabTooltip: You need a wallet. (Shop Item)
+  customGrabTooltip: 
   propBody: {fileID: 0}
   propColliders: []
   originalScale: {x: 0, y: 0, z: 0}
@@ -326,6 +326,7 @@ MonoBehaviour:
   radarIcon: {fileID: 0}
   reachedFloorTarget: 0
   grabbableToEnemies: 1
+  hasBeenHeld: 0
 --- !u!65 &1724521645361981057
 BoxCollider:
   m_ObjectHideFlags: 0

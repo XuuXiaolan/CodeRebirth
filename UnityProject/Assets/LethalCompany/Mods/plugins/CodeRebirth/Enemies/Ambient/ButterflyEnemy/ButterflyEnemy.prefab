@@ -486,6 +486,7 @@ Transform:
   - {fileID: 1389397966392379878}
   - {fileID: 8474811384819680626}
   - {fileID: 5347371450432554666}
+  - {fileID: 6592426474296331384}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-4499367113007761919
@@ -527,7 +528,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 4
-  m_BaseOffset: 4
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &2660043095881456530
@@ -586,6 +587,7 @@ MonoBehaviour:
     boolValue: 0
   currentBehaviourStateIndex: 0
   previousBehaviourStateIndex: 0
+  currentOwnershipOnThisClient: -1
   isInsidePlayerShip: 0
   AIIntervalTime: 0.2
   inSpecialAnimation: 0
@@ -610,11 +612,11 @@ MonoBehaviour:
   addPlayerVelocityToDestination: 0
   syncMovementSpeed: 0.22
   timeSinceSpawn: 0
-  exitVentAnimationTime: 0
+  exitVentAnimationTime: 1
   ventAnimationFinished: 0
   isEnemyDead: 0
   daytimeEnemyLeaving: 0
-  enemyHP: 999
+  enemyHP: 99
   openDoorSpeedMultiplier: 1
   useSecondaryAudiosOnAnimatedObjects: 0
   currentSearch:
@@ -624,21 +626,22 @@ MonoBehaviour:
     waitingForTargetNode: 0
     choseTargetNode: 0
     currentSearchStartPosition: {x: 0, y: 0, z: 0}
-    loopSearch: 0
+    loopSearch: 1
     timesFinishingSearch: 0
     nodesEliminatedInCurrentSearch: 0
     inProgress: 0
     calculatingNodeInSearch: 0
-    searchWidth: 0
-    searchPrecision: 0
+    searchWidth: 200
+    searchPrecision: 5
     randomized: 0
+    onlySearchNodesInLOS: 0
   DebugEnemy: 0
   stunnedIndefinitely: 0
   stunNormalizedTimer: 0
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
-  isOutside: 0
+  isOutside: 1
   flying: 0
   lastIdleCycle: 0
 --- !u!65 &5140048232079319750
@@ -661,6 +664,80 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.7, z: 0.8}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6487746265803145649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6592426474296331384}
+  - component: {fileID: 5916974969978134361}
+  - component: {fileID: 983309740577969343}
+  m_Layer: 0
+  m_Name: ScanNode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6592426474296331384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6487746265803145649}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.055, y: -0.24813926, z: 0.077}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7905533684427097838}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5916974969978134361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6487746265803145649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRange: 13
+  minRange: 0
+  requiresLineOfSight: 1
+  headerText: Cutiefly
+  subText: 
+  scrapValue: 0
+  creatureScanID: -1
+  nodeType: 2
+--- !u!65 &983309740577969343
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6487746265803145649}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4332660956768542481
 PrefabInstance:

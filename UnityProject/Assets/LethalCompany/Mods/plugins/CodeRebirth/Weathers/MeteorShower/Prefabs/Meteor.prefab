@@ -41,7 +41,7 @@ AudioSource:
   m_GameObject: {fileID: 316187782853730097}
   m_Enabled: 0
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300008, guid: cb9fb87df5ca10840a2a5b2dc5a4284c,
+  OutputAudioMixerGroup: {fileID: 24300008, guid: 98a8e80a192ecc14eb10e35e53877912,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 67f859c11e1321444bb2e021a7fd9309, type: 3}
   m_PlayOnAwake: 1
@@ -262,7 +262,7 @@ AudioSource:
   m_GameObject: {fileID: 4108210168370387682}
   m_Enabled: 0
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300008, guid: cb9fb87df5ca10840a2a5b2dc5a4284c,
+  OutputAudioMixerGroup: {fileID: 24300008, guid: 98a8e80a192ecc14eb10e35e53877912,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 7a2e05494fba4f8408b3f8e56ace58da, type: 3}
   m_PlayOnAwake: 1
@@ -391,7 +391,7 @@ AudioSource:
   m_GameObject: {fileID: 4367919611619459505}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300008, guid: cb9fb87df5ca10840a2a5b2dc5a4284c,
+  OutputAudioMixerGroup: {fileID: 24300008, guid: 98a8e80a192ecc14eb10e35e53877912,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 67f859c11e1321444bb2e021a7fd9309, type: 3}
   m_PlayOnAwake: 1
@@ -743,6 +743,56 @@ PrefabInstance:
     - target: {fileID: 4317874184272834, guid: bccc7a794e75b2a44a4b0dac69160b7b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startSize.maxCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startSize.minCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startSizeY.maxCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startSizeY.minCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startSizeZ.maxCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startSizeZ.minCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.maxCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.minCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.maxCurve.m_RotationOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.minCurve.m_RotationOrder
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 198421077076039884, guid: bccc7a794e75b2a44a4b0dac69160b7b,
         type: 3}

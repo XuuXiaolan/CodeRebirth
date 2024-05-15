@@ -868,8 +868,8 @@ MonoBehaviour:
   isBeingUsed: 0
   isInElevator: 0
   isInShipRoom: 0
-  isInFactory: 0
-  useCooldown: 1
+  isInFactory: 1
+  useCooldown: 0
   currentUseCooldown: 0
   itemProperties: {fileID: 11400000, guid: 105d21902ff67094382d1daa2aa53c6e, type: 2}
   insertedBattery:
@@ -880,12 +880,13 @@ MonoBehaviour:
   propColliders: []
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
-  mainObjectRenderer: {fileID: 2977024103856665001}
+  mainObjectRenderer: {fileID: 0}
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}
   reachedFloorTarget: 0
   grabbableToEnemies: 1
+  hasBeenHeld: 0
 --- !u!1 &6916385990592862347
 GameObject:
   m_ObjectHideFlags: 0
