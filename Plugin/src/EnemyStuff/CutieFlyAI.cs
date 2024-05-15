@@ -45,25 +45,50 @@ public class CutieFlyAI : EnemyAI
         switch(currentBehaviourStateIndex) {
             case (int)State.Wandering:
                 agent.speed = 3f;
-                // start wandering by slowly increasing navmesh offset to 4 then randomly decide to start perching after like 20 seconds or smthn
-                lastIdleCycle += Time.deltaTime;
+                // Increase the NavMeshAgent's height offset over time to simulate flying
+                agent.baseOffset = Mathf.Min(agent.baseOffset + Time.deltaTime * 0.2f, 4f);
+
+                // After 20 seconds, switch to Perching state
+                if (Time.time - lastIdleCycle > 20f) {
+                    lastIdleCycle = Time.time;
+                    currentBehaviourStateIndex = (int)State.Perching;
+                    LogIfDebugBuild("Switching to Perching State.");
+                }
                 break;
 
             case (int)State.Perching:
                 agent.speed = 1f;
-                // start perching by slowly decreasing navmesh offset to 0, once 0, start idle
+                // Decrease the NavMeshAgent's height offset over time to simulate descending
+                agent.baseOffset = Mathf.Max(agent.baseOffset - Time.deltaTime * 0.2f, 0f);
+
+                // Once fully descended, switch to Idle state
+                if (agent.baseOffset == 0f) {
+                    currentBehaviourStateIndex = (int)State.Idle;
+                    lastIdleCycle = Time.time;
+                    LogIfDebugBuild("Switching to Idle State.");
+                }
                 break;
 
             case (int)State.Idle:
                 agent.speed = 0f;
-                // set blend shape weight to 100 and after 5 seconds go back to wandering
+                // Set blend shape weight to 100 (assuming blend shape index 0 is for wings folded in idle position)
+                SyncBlendShapeWeightClientRpc(100f);
+
+                // After 5 seconds, switch back to Wandering state
+                if (Time.time - lastIdleCycle > 5f) {
+                    currentBehaviourStateIndex = (int)State.Wandering;
+                    LogIfDebugBuild("Switching to Wandering State.");
+                    // Set blend shape weight back to 0 (wings unfolded for wandering)
+                    SyncBlendShapeWeightClientRpc(0f);
+                }
                 break;
-                
+
             default:
                 LogIfDebugBuild("This Behavior State doesn't exist!");
                 break;
         }
     }
+
     [ClientRpc]
     public void SyncBlendShapeWeightClientRpc(float currentBlendShapeWeight) {
         skinnedMeshRenderer.SetBlendShapeWeight(0, currentBlendShapeWeight);

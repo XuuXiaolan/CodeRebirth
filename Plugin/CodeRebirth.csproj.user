@@ -23,7 +23,7 @@
       />
       <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(TestDir)$(AssemblyName)-DEV/"/>
       <!-- We will copy the asset bundle named "coderebirthasset" over -->
-      <Copy SourceFiles="../UnityProject/AssetBundles/StandaloneWindows/coderebirthasset" DestinationFolder="$(TestDir)$(AssemblyName)-DEV/"/>
+      <Copy SourceFiles="../UnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/coderebirthasset" DestinationFolder="$(TestDir)$(AssemblyName)-DEV/"/>
       <Exec Command="echo '[csproj.user] Mod files copied to $(TestDir)$(AssemblyName)-DEV/'" />
    </Target>
 </Project>
