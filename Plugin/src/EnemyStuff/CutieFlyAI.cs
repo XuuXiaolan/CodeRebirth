@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Diagnostics;
 using GameNetcodeStuff;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,9 +13,9 @@ public class CutieFlyAI : EnemyAI
     private SkinnedMeshRenderer skinnedMeshRenderer;
     private float lastIdleCycle = 0f;
     private float blendShapeWeight = 0f;
-    private float blendShapeDirection = 1f; // 1 for increasing, -1 for decreasing
-    private const float blendShapeSpeed = 1000f; // Speed of blend shape change
-    private const float initialHeight = 5f; // Initial height to start flying
+    private float blendShapeDirection = 1f;
+    private const float blendShapeSpeed = 1000f;
+    private bool climbing = true;
 
     enum State {
         Wandering,
@@ -30,19 +32,27 @@ public class CutieFlyAI : EnemyAI
         base.Start();
         LogIfDebugBuild("CutieFly Spawned.");
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        transform.position = new Vector3(transform.position.x, initialHeight, transform.position.z);
+        lastIdleCycle = Time.time;
+        StartSearch(transform.position);
         SwitchToBehaviourClientRpc((int)State.Wandering);
     }
 
     public override void Update() {
         base.Update();
         if (isEnemyDead) return;
-
         UpdateBlendShapeWeight();
-        UpdateVerticalPosition();
     }
 
     private void UpdateBlendShapeWeight() {
+        if (currentBehaviourStateIndex == (int)State.Idle) {
+            blendShapeWeight += blendShapeDirection * blendShapeSpeed * Time.deltaTime;
+            if (blendShapeWeight > 100f || blendShapeWeight < 90f) {
+                blendShapeDirection *= -1f;
+                blendShapeWeight = Mathf.Clamp(blendShapeWeight, 0f, 100f);
+            }
+            skinnedMeshRenderer.SetBlendShapeWeight(0, blendShapeWeight);
+            return;
+        };
         blendShapeWeight += blendShapeDirection * blendShapeSpeed * Time.deltaTime;
         if (blendShapeWeight > 100f || blendShapeWeight < 0f) {
             blendShapeDirection *= -1f;
@@ -51,52 +61,49 @@ public class CutieFlyAI : EnemyAI
         skinnedMeshRenderer.SetBlendShapeWeight(0, blendShapeWeight);
     }
 
-    private void UpdateVerticalPosition() {
-        // Update vertical position to match NavMesh baseOffset
-        transform.position = new Vector3(transform.position.x, initialHeight + agent.baseOffset, transform.position.z);
-    }
-
     public override void DoAIInterval() {
         base.DoAIInterval();
-        if (isEnemyDead || StartOfRound.Instance.allPlayersDead) {
-            return;
-        };
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+
+        float timeSinceLastStateChange = Time.time - lastIdleCycle;
 
         switch(currentBehaviourStateIndex) {
             case (int)State.Wandering:
                 agent.speed = 3f;
-                agent.baseOffset = Mathf.Min(agent.baseOffset + Time.deltaTime * 0.2f, 4f);
+                agent.baseOffset = Mathf.Lerp(agent.baseOffset, climbing ? 4f : 2f, Time.deltaTime * 5f);
+                if (agent.baseOffset >= 3.5f) climbing = false;
+                if (agent.baseOffset <= 2.5f) climbing = true;
                 LogIfDebugBuild($"Wandering at Height: {agent.baseOffset}");
-                StartSearchIfNotActive();
 
-                if (Time.time - lastIdleCycle > 20f) {
-                    lastIdleCycle = Time.time;
-                    currentBehaviourStateIndex = (int)State.Perching;
+                if (timeSinceLastStateChange > 20f) {
+                    SwitchToBehaviourClientRpc((int)State.Perching);
                     LogIfDebugBuild("Switching to Perching State.");
+                    lastIdleCycle = Time.time;
                 }
                 break;
 
             case (int)State.Perching:
                 agent.speed = 1f;
-                agent.baseOffset = Mathf.Max(agent.baseOffset - Time.deltaTime * 0.2f, 0f);
+                agent.baseOffset = Mathf.Lerp(agent.baseOffset, 0f, Time.deltaTime * 6f);
                 LogIfDebugBuild($"Descending to Height: {agent.baseOffset}");
-                StopSearchIfActive();
 
-                if (agent.baseOffset == 0f) {
-                    currentBehaviourStateIndex = (int)State.Idle;
-                    lastIdleCycle = Time.time;
+                if (agent.baseOffset <= 0.1f) {
+                    StopSearch(currentSearch);
+                    SyncBlendShapeWeightClientRpc(100f);
+                    SwitchToBehaviourClientRpc((int)State.Idle);
                     LogIfDebugBuild("Switching to Idle State.");
+                    lastIdleCycle = Time.time;
                 }
                 break;
 
             case (int)State.Idle:
                 agent.speed = 0f;
                 LogIfDebugBuild("Idle State - No Movement");
-                StopSearchIfActive();
-                
-                if (Time.time - lastIdleCycle > 5f) {
-                    currentBehaviourStateIndex = (int)State.Wandering;
+                if (timeSinceLastStateChange > 5f) {
+                    StartSearch(transform.position);
+                    SwitchToBehaviourClientRpc((int)State.Wandering);
                     LogIfDebugBuild("Switching to Wandering State.");
+                    lastIdleCycle = Time.time;
                 }
                 break;
 
@@ -104,16 +111,6 @@ public class CutieFlyAI : EnemyAI
                 LogIfDebugBuild("This Behavior State doesn't exist!");
                 break;
         }
-    }
-
-    private void StartSearchIfNotActive() {
-            StartSearch(transform.position);
-            LogIfDebugBuild("Search Started");
-    }
-
-    private void StopSearchIfActive() {
-            StopSearch(currentSearch);
-            LogIfDebugBuild("Search Stopped");
     }
 
     [ClientRpc]
