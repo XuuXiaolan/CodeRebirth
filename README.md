@@ -1,7 +1,26 @@
 # Code:Rebirth
 Overhaul mod for Lethal Company
+
+- Make a fresh rip using nomnom's LC-Patcher tool
+- Copy the Code: Rebirth file in CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth
+
 ## Working-On List:
 ### Enemies
+#### Concept: The Cutiefly - Ambient Butterfly
+##### Description
+The Cutiefly is an ambient butterfly that spawns in the daytime and is known to fly and flutter around.
+
+##### Behavior
+- None as of yet.
+
+##### Vulnerability and Defense
+- None as of yet.
+
+##### Spawn Behavior
+- **Location:** Spawns Daytime on forest-y moons.
+
+##### Additional Characteristics
+- None as of yet.
 
 ### Moons
 
