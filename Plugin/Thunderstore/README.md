@@ -1,4 +1,3 @@
 # CodeRebirth
 
-Beta-Release ish of code rebirth
-adds a wallet + coin shop item and map object combo, and also a uhh new custom weather with its own scrap, yippee.
+## Currently adds 1 Ambient Daytime Enemy, 1 Custom Weather, 1 Scrap and 1 Shop item.
