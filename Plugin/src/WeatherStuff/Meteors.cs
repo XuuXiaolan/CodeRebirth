@@ -1,0 +1,199 @@
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Linq;
+using CodeRebirth.src;
+using GameNetcodeStuff;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.PlayerLoop;
+using CodeRebirth.Collisions;
+using CodeRebirth.Misc;
+using UnityEngine.Serialization;
+using Random = System.Random;
+
+namespace CodeRebirth.WeatherStuff;
+public class Meteors : NetworkBehaviour {
+    #pragma warning disable CS0649    
+    [SerializeField] private float initialSpeed = 50f;
+
+    [Header("Audio")]
+    [SerializeField]
+    AudioSource ImpactAudio;
+
+    [SerializeField]
+    AudioSource NormalTravelAudio, InsideTravelAudio;
+
+    [Header("Graphics")]
+    [SerializeField]
+    ParticleSystem FireTrail;
+
+    [SerializeField]
+    Renderer MainMeteorRenderer;
+    
+    Vector3 origin, target;
+
+    float timeInAir, travelTime;
+    bool isMoving, visualAndLooping;
+    
+    public float Progress => timeInAir / travelTime;
+
+    [ClientRpc]
+    public void SetupMeteorClientRpc(Vector3 origin, Vector3 target) {
+        this.origin = origin;
+        this.target = target;
+        float distance = Vector3.Distance(origin, target);
+        travelTime = Mathf.Sqrt(2 * distance / initialSpeed);  // Time to reach the target, adjusted for acceleration
+        isMoving = true;
+
+        transform.LookAt(target);
+        UpdateAudio(); // Make sure audio works correctly on the first frame.
+        FireTrail.Play();
+    }
+
+    public void SetupAsLooping() {
+        isMoving = false;
+        visualAndLooping = true;
+    }
+    
+    void Awake() {
+        MeteorShower.Instance.meteors.Add(this);
+        FireTrail.Stop();
+    }
+    void OnDisable() {
+    }
+
+    void Update() {
+        UpdateAudio();
+        if (!isMoving) return;
+        
+        float acceleration = initialSpeed / travelTime; // Constant acceleration to reach twice the initial speed
+        float currentSpeed = Mathf.Min(initialSpeed + acceleration * timeInAir, 2 * initialSpeed);
+        float distanceTraveled = 0.5f * acceleration * Mathf.Pow(timeInAir, 2); // Distance = 1/2 * a * t^2
+        Vector3 nextPosition = Vector3.Lerp(origin, target, distanceTraveled / Vector3.Distance(origin, target));
+
+        if (distanceTraveled >= Vector3.Distance(origin, target)) {
+            transform.position = target;
+            StartCoroutine(Impact());
+            return;
+        }
+
+        if (visualAndLooping)
+            Gizmos.color = Color.green;
+        else
+            Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(origin, target);
+
+        timeInAir += Time.deltaTime;
+        transform.position = nextPosition;
+    }
+
+    void UpdateAudio() {
+        if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) {
+            NormalTravelAudio.volume = 0;
+            InsideTravelAudio.volume = 0;
+            ImpactAudio.volume = 0.05f; // make it still audible but not as loud
+        } else {
+            NormalTravelAudio.volume = 1;
+            InsideTravelAudio.volume = 1;
+            ImpactAudio.volume = 1;
+        }
+        if ((1-Progress*travelTime) <= 4.106f && !InsideTravelAudio.enabled && NormalTravelAudio.enabled) {
+            NormalTravelAudio.enabled = false;
+            InsideTravelAudio.enabled = true;
+        }
+    }
+
+    IEnumerator Impact() {
+        Plugin.Logger.LogInfo("IMPACT!!!");
+        isMoving = false;
+        MainMeteorRenderer.enabled = false;
+
+        ImpactAudio.enabled = true;
+            
+        if (IsHost) {
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", transform.position + new Vector3(0, -0.6f, 0));
+        }
+            
+        GameObject craterInstance = Instantiate(Plugin.BetterCrater, transform.position, Quaternion.identity);
+        CraterController craterController = craterInstance.GetComponent<CraterController>();
+        if (craterController != null) {
+            craterController.ShowCrater(transform.position);
+        }
+        
+        FireTrail.Stop();
+            
+        Landmine.SpawnExplosion(transform.position, true, 0f, 10f, 25, 75, Plugin.BigExplosion);
+
+        yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit.
+        if(IsHost)
+            Destroy(gameObject);
+        MeteorShower.Instance.meteors.Remove(this);
+    }
+}
+public class CraterController : MonoBehaviour
+{
+    public GameObject craterMesh;
+    private bool craterVisible = false;
+    private ColliderIdentifier fireCollider;
+
+    private void Awake()
+    {
+        craterMesh.SetActive(false); // Initially hide the crater
+        fireCollider = this.transform.Find("WildFire").GetComponent<ColliderIdentifier>();
+        fireCollider.enabled = false; // Make sure it's disabled on start
+        MeteorShower.Instance.craters.Add(this);
+    }
+
+    void OnDisable() {
+        MeteorShower.Instance.craters.Remove(this);
+    }
+
+    public void ShowCrater(Vector3 impactLocation)
+    {
+        transform.position = impactLocation; // Position the crater at the impact location
+        
+        // Perform a raycast downward from a position slightly above the impact location
+        RaycastHit hit;
+        float raycastDistance = 50f; // Max distance the raycast will check for terrain
+        Vector3 raycastOrigin = impactLocation; // Start the raycast 5 units above the impact location
+
+        // Ensure the crater has a unique material instance to modify
+        Renderer craterRenderer = craterMesh.GetComponent<Renderer>();
+        if (craterRenderer != null) {
+            craterRenderer.material = new Material(craterRenderer.material); // Create a new instance of the material
+            craterRenderer.material.color = Color.blue;
+            // Cast the ray to detect terrain
+            if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance, LayerMask.GetMask("Room"))) {
+                // Check if the object hit is tagged as "Terrain"
+                if (hit.collider.gameObject.tag == "Grass") {
+                    // Additional logic for when the terrain is correctly tagged
+                    craterRenderer.material.color = new Color(0.043f, 0.141f, 0.043f);
+                    Plugin.Logger.LogInfo("Found Grass!");
+                } else if (hit.collider.gameObject.tag == "Snow"){
+                    craterRenderer.material.color = new Color(0.925f, 0.929f, 1f);
+                    Plugin.Logger.LogInfo("Found Snow!");
+                } else if (hit.collider.gameObject.tag == "Gravel"){
+                    craterRenderer.material.color = new Color(0.851f, 0.851f, 0.851f);
+                    Plugin.Logger.LogInfo("Found Gravel!");
+                } else {
+                    Debug.LogWarning("The hit object is not tagged as 'Terrain'.");
+                }
+            } else {
+                Debug.LogWarning("Terrain not found below the impact point.");
+            }
+        } else {
+            Debug.LogWarning("Renderer component not found on the crater object.");
+        }
+        craterMesh.SetActive(true);
+        craterVisible = true;
+        fireCollider.enabled = true; // Enable the ColliderIdentifier
+    }
+
+    public void HideCrater()
+    {
+        craterVisible = false;
+        craterMesh.SetActive(false);
+        fireCollider.enabled = false; // Ensure the ColliderIdentifier is disabled when the crater is hidden
+    }
+}
