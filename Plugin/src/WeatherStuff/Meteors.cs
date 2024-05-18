@@ -60,15 +60,15 @@ public class Meteors : NetworkBehaviour {
         visualAndLooping = true;
     }
     
-    void Awake() {
+    private void Awake() {
         MeteorShower.Instance.meteors.Add(this);
         NormalTravelAudio.Play();
         FireTrail.Stop();
     }
-    void OnDisable() {
+    private void OnDisable() {
     }
 
-    void Update() {
+    private void Update() {
         UpdateAudio();
         if (!isMoving) return;
 
@@ -85,7 +85,7 @@ public class Meteors : NetworkBehaviour {
         transform.position = nextPosition;
     }
 
-    void UpdateAudio() {
+    private void UpdateAudio() {
         if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) {
             NormalTravelAudio.volume = 0;
             InsideTravelAudio.volume = 0;
@@ -101,7 +101,7 @@ public class Meteors : NetworkBehaviour {
         }
     }
 
-    IEnumerator Impact() {
+    private IEnumerator Impact() {
         Plugin.Logger.LogInfo("IMPACT!!!");
         isMoving = false;
 
@@ -141,7 +141,7 @@ public class CraterController : MonoBehaviour
         MeteorShower.Instance.craters.Add(this);
     }
 
-    void OnDisable() {
+    private void OnDisable() {
     }
 
     public void ShowCrater(Vector3 impactLocation)

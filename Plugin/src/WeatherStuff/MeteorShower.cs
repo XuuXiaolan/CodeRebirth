@@ -77,7 +77,7 @@ public class MeteorShower : MonoBehaviour {
         else
             return Vector3.zero; // Return a default position if no nodes are found
     }
-	void SpawnOverheadVisualMeteors(int amount = 50) {
+	private void SpawnOverheadVisualMeteors(int amount = 50) {
         Vector3 averageLocation = CalculateAverageLandNodePosition();
         Vector3 centralLocation = averageLocation + new Vector3(0, random.Next(250, 300), 0);
 		for (int i = 0; i < amount; i++) {
@@ -95,7 +95,7 @@ public class MeteorShower : MonoBehaviour {
         }
 	}
 
-	IEnumerator MeteorSpawnerHandler() {
+	private IEnumerator MeteorSpawnerHandler() {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get meteors before theyve inited everything.
 		Plugin.Logger.LogInfo("Began spawning meteors.");
 		while (true) { // this is fine because it gets stopped in OnDisable.
@@ -111,7 +111,7 @@ public class MeteorShower : MonoBehaviour {
 		}
 	}
 
-	void SpawnMeteor(Vector3 target) {
+	private void SpawnMeteor(Vector3 target) {
 		Vector3 origin = target + new Vector3(
 			random.NextFloat(250, 500) * random.NextSign(), 
 			random.NextFloat(500, 800), 
@@ -157,7 +157,7 @@ public class MeteorShower : MonoBehaviour {
 		return nodeList;
 	}
 
-	Vector3 GetRandomTargetPosition() {
+	private Vector3 GetRandomTargetPosition() {
 		try {
 			Vector3 position = random.NextItem(nodes).transform.position;
 			position += new Vector3(random.NextFloat(-2, 2), random.NextFloat(-5, 5), random.NextFloat(-2, 2));
@@ -169,7 +169,7 @@ public class MeteorShower : MonoBehaviour {
 		}
 	}
 
-	bool IsAuthority() {
+	private bool IsAuthority() {
 		return NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
 	}
     private void AddRandomMovement(Meteors meteor, float speed)
