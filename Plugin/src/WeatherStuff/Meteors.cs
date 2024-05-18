@@ -172,7 +172,7 @@ public class CraterController : MonoBehaviour
                     craterRenderer.material.color = Color.grey;
                     Plugin.Logger.LogInfo("Found Rock!");
                 } else if (hit.collider.gameObject.tag == "Gravel"){
-                    craterRenderer.material.color = new Color(0.91f, 0.737f, 0.196f);
+                    craterRenderer.material.color = new Color(0.761f, 0.576f, 0f);
                     Plugin.Logger.LogInfo("Found Sand!");
                 } else {
                     Debug.LogWarning("The hit object is not tagged as 'Terrain'.");

@@ -41,21 +41,25 @@ public class MeteorShower : MonoBehaviour {
 	}
 
 	private void OnDisable() { // clean up weather
-		Plugin.Logger.LogDebug("Cleaning up Weather.");
-		foreach (Meteors meteor in meteors) {
-			if(!meteor.NetworkObject.IsSpawned || IsAuthority())
-			Destroy(meteor.gameObject);
-		}
-		foreach (CraterController crater in craters) {
-			Destroy(crater.gameObject);
-		}
+		try {
+			Plugin.Logger.LogDebug("Cleaning up Weather.");
+			foreach (Meteors meteor in meteors) {
+				if(!meteor.NetworkObject.IsSpawned || IsAuthority())
+				Destroy(meteor.gameObject);
+			}
+			foreach (CraterController crater in craters) {
+				Destroy(crater.gameObject);
+			}
 
-		meteors = [];
-		craters = [];
-		Instance = null;
+			meteors = [];
+			craters = [];
+			Instance = null;
 
-		if(!IsAuthority()) return; // Only run on the host.
-		StopCoroutine(spawnHandler);
+			if(!IsAuthority()) return; // Only run on the host.
+			StopCoroutine(spawnHandler);
+		} catch {
+			Plugin.Logger.LogFatal("Dont mind me~ - Xu");
+		}
 	}
     private Vector3 CalculateAverageLandNodePosition()
     {
@@ -154,10 +158,15 @@ public class MeteorShower : MonoBehaviour {
 	}
 
 	Vector3 GetRandomTargetPosition() {
-		Vector3 position = random.NextItem(nodes).transform.position;
-		position += new Vector3(random.NextFloat(-2, 2), random.NextFloat(-5, 5), random.NextFloat(-2, 2));
-		position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 25, default, random, -1);
+		try {
+			Vector3 position = random.NextItem(nodes).transform.position;
+			position += new Vector3(random.NextFloat(-2, 2), random.NextFloat(-5, 5), random.NextFloat(-2, 2));
+			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 25, default, random, -1);
 		return position;
+		} catch {
+			Plugin.Logger.LogFatal("Did the colour scare you? it's so fancy right? - Xu");
+			return new Vector3(0,0,0);
+		}
 	}
 
 	bool IsAuthority() {
