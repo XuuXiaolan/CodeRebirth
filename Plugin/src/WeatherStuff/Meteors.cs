@@ -29,6 +29,8 @@ public class Meteors : NetworkBehaviour {
     [Header("Graphics")]
     [SerializeField]
     ParticleSystem FireTrail;
+    [SerializeField]
+    AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
 
     [SerializeField]
     Renderer MainMeteorRenderer;
@@ -72,7 +74,7 @@ public class Meteors : NetworkBehaviour {
         float acceleration = initialSpeed / travelTime; // Constant acceleration to reach twice the initial speed
         float currentSpeed = Mathf.Min(initialSpeed + acceleration * timeInAir, 2 * initialSpeed);
         float distanceTraveled = 0.5f * acceleration * Mathf.Pow(timeInAir, 2); // Distance = 1/2 * a * t^2
-        Vector3 nextPosition = Vector3.Lerp(origin, target, distanceTraveled / Vector3.Distance(origin, target));
+        Vector3 nextPosition = Vector3.Lerp(origin, target, animationCurve.Evaluate(Progress));
 
         if (distanceTraveled >= Vector3.Distance(origin, target)) {
             transform.position = target;
