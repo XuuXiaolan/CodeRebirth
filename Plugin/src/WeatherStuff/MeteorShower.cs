@@ -83,7 +83,7 @@ public class MeteorShower : MonoBehaviour {
             AddRandomMovement(SmallMeteor, 4f);
 			SmallMeteor.SetupAsLooping();
 		}
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             Meteors LargeMeteor = Instantiate(Plugin.Meteor, centralLocation, Quaternion.identity).GetComponent<Meteors>();
             LargeMeteor.transform.localScale *= random.Next(40,60);
             AddRandomMovement(LargeMeteor, 3f);

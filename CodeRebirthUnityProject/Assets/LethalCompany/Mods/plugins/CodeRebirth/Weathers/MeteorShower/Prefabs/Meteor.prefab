@@ -39,21 +39,21 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 316187782853730097}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 98a8e80a192ecc14eb10e35e53877912,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 67f859c11e1321444bb2e021a7fd9309, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: fcd6a398def788c41a3e0a304b39ee14, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 256
+  Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0
   MaxDistance: 300
   Pan2D: 0
   rolloffMode: 2
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRange: 20
+  maxRange: 100
   minRange: 0
   requiresLineOfSight: 0
   headerText: Meteawah
@@ -260,12 +260,12 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4108210168370387682}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 98a8e80a192ecc14eb10e35e53877912,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 7a2e05494fba4f8408b3f8e56ace58da, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -394,16 +394,16 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300008, guid: 98a8e80a192ecc14eb10e35e53877912,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 67f859c11e1321444bb2e021a7fd9309, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0
   MaxDistance: 300
   Pan2D: 0
   rolloffMode: 2
@@ -600,7 +600,7 @@ MonoBehaviour:
   m_Script: {fileID: -1104593504, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialSpeed: 50
+  initialSpeed: 35
   chanceToSpawnScrap: 1
   ImpactAudio: {fileID: 1029774656660226041}
   NormalTravelAudio: {fileID: 4710230063907462938}
@@ -612,44 +612,17 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0.116908506
-      outSlope: 0.116908506
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.27230743
-    - serializedVersion: 3
-      time: 0.49081117
-      value: 1
-      inSlope: 4.1146584
-      outSlope: -1.81379
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.07234045
-      outWeight: 0.28319725
-    - serializedVersion: 3
-      time: 0.7587703
-      value: 1
-      inSlope: 1.4123471
-      outSlope: -1.3678839
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.31997186
-      outWeight: 0.56917864
-    - serializedVersion: 3
-      time: 0.9393898
-      value: 1
-      inSlope: 0.82654804
-      outSlope: -0.029021755
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.53747445
-      outWeight: 1
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0

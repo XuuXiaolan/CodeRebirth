@@ -62,6 +62,7 @@ public class Meteors : NetworkBehaviour {
     
     void Awake() {
         MeteorShower.Instance.meteors.Add(this);
+        NormalTravelAudio.Play();
         FireTrail.Stop();
     }
     void OnDisable() {
@@ -70,25 +71,17 @@ public class Meteors : NetworkBehaviour {
     void Update() {
         UpdateAudio();
         if (!isMoving) return;
-        
-        float acceleration = initialSpeed / travelTime; // Constant acceleration to reach twice the initial speed
-        float currentSpeed = Mathf.Min(initialSpeed + acceleration * timeInAir, 2 * initialSpeed);
-        float distanceTraveled = 0.5f * acceleration * Mathf.Pow(timeInAir, 2); // Distance = 1/2 * a * t^2
-        Vector3 nextPosition = Vector3.Lerp(origin, target, animationCurve.Evaluate(Progress));
-
-        if (distanceTraveled >= Vector3.Distance(origin, target)) {
-            transform.position = target;
-            StartCoroutine(Impact());
-            return;
-        }
-
-        if (visualAndLooping)
-            Gizmos.color = Color.green;
-        else
-            Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(origin, target);
 
         timeInAir += Time.deltaTime;
+        float progress = timeInAir / travelTime;
+
+        if (progress >= 1.0f) { // Checks if the progress is 100% or more
+            transform.position = target; // Ensures the meteor position is set to the target at impact
+            StartCoroutine(Impact()); // Start the impact effects
+            return; // Exit to prevent further execution in this update
+        }
+
+        Vector3 nextPosition = Vector3.Lerp(origin, target, animationCurve.Evaluate(progress));
         transform.position = nextPosition;
     }
 
@@ -102,21 +95,20 @@ public class Meteors : NetworkBehaviour {
             InsideTravelAudio.volume = 1;
             ImpactAudio.volume = 1;
         }
-        if ((1-Progress*travelTime) <= 4.106f && !InsideTravelAudio.enabled && NormalTravelAudio.enabled) {
-            NormalTravelAudio.enabled = false;
-            InsideTravelAudio.enabled = true;
+        if (((1-Progress)*travelTime) <= 4.106f && !InsideTravelAudio.isPlaying) {
+            NormalTravelAudio.Stop();
+            InsideTravelAudio.Play();
         }
     }
 
     IEnumerator Impact() {
         Plugin.Logger.LogInfo("IMPACT!!!");
         isMoving = false;
-        MainMeteorRenderer.enabled = false;
 
-        ImpactAudio.enabled = true;
+        ImpactAudio.Play();
             
         if (IsHost && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap) {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", transform.position + new Vector3(0, -0.6f, 0));
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", transform.position + new Vector3(0, -1f, 0));
         }
             
         GameObject craterInstance = Instantiate(Plugin.BetterCrater, transform.position, Quaternion.identity);
@@ -165,7 +157,7 @@ public class CraterController : MonoBehaviour
         Renderer craterRenderer = craterMesh.GetComponent<Renderer>();
         if (craterRenderer != null) {
             craterRenderer.material = new Material(craterRenderer.material); // Create a new instance of the material
-            craterRenderer.material.color = Color.blue;
+            craterRenderer.material.color = Color.grey;
             // Cast the ray to detect terrain
             if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance, LayerMask.GetMask("Room"))) {
                 // Check if the object hit is tagged as "Terrain"
@@ -176,9 +168,12 @@ public class CraterController : MonoBehaviour
                 } else if (hit.collider.gameObject.tag == "Snow"){
                     craterRenderer.material.color = new Color(0.925f, 0.929f, 1f);
                     Plugin.Logger.LogInfo("Found Snow!");
+                } else if (hit.collider.gameObject.tag == "Rock"){
+                    craterRenderer.material.color = Color.grey;
+                    Plugin.Logger.LogInfo("Found Rock!");
                 } else if (hit.collider.gameObject.tag == "Gravel"){
-                    craterRenderer.material.color = new Color(0.851f, 0.851f, 0.851f);
-                    Plugin.Logger.LogInfo("Found Gravel!");
+                    craterRenderer.material.color = new Color(0.91f, 0.737f, 0.196f);
+                    Plugin.Logger.LogInfo("Found Sand!");
                 } else {
                     Debug.LogWarning("The hit object is not tagged as 'Terrain'.");
                 }

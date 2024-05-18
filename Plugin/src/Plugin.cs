@@ -89,6 +89,7 @@ public class Plugin : BaseUnityPlugin {
         if (Meteor == null) {
             Logger.LogError("Failed to load meteor prefab");
         } else {
+            Utilities.FixMixerGroups(Meteor);
             NetworkPrefabs.RegisterNetworkPrefab(Meteor);
         }
         BetterCrater = Assets.MainAssetBundle.LoadAsset<GameObject>("BetterCrater");
