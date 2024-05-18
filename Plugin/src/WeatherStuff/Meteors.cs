@@ -15,7 +15,9 @@ using Random = System.Random;
 namespace CodeRebirth.WeatherStuff;
 public class Meteors : NetworkBehaviour {
     #pragma warning disable CS0649    
+    [Header("Properties")]
     [SerializeField] private float initialSpeed = 50f;
+    [SerializeField] private int chanceToSpawnScrap;
 
     [Header("Audio")]
     [SerializeField]
@@ -111,7 +113,7 @@ public class Meteors : NetworkBehaviour {
 
         ImpactAudio.enabled = true;
             
-        if (IsHost) {
+        if (IsHost && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap) {
             CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", transform.position + new Vector3(0, -0.6f, 0));
         }
             
@@ -146,7 +148,6 @@ public class CraterController : MonoBehaviour
     }
 
     void OnDisable() {
-        MeteorShower.Instance.craters.Remove(this);
     }
 
     public void ShowCrater(Vector3 impactLocation)

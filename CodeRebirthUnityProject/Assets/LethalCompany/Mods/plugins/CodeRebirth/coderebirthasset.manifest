@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1842874543
+CRC: 874207158
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 80f4f80a278a4df81c99f0d196194a0e
+    Hash: bf7970dbf4a667d6e3cde6f819427f92
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 53e1a7b43ed1ebd370c5e8bc02a0e966
+    Hash: b24a1c006ff06afbddb60870a92e3436
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 80f4f80a278a4df81c99f0d196194a0e
+    Hash: bf7970dbf4a667d6e3cde6f819427f92
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -39,10 +39,6 @@ ClassTypes:
 - Class: 108
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
-  Script: {fileID: 1360061190, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
@@ -59,6 +55,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -1478546698, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
+  Script: {fileID: 1360061190, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
   Script: {fileID: -2053257211, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: -1135948407, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
@@ -66,6 +64,8 @@ ClassTypes:
   Script: {fileID: -888966442, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: -1104593504, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: -173093103, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
@@ -107,6 +107,7 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialBlue.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorShowerWeather.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Material/MoneyMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_MaskMap.png
@@ -120,6 +121,7 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/MapDotRed.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Meteor.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Money-Icon.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialGreen.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorContainer.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_BaseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/TerminalNode/wTerminalNode.asset

@@ -42,18 +42,20 @@ public class MeteorShower : MonoBehaviour {
 
 	private void OnDisable() { // clean up weather
 		Plugin.Logger.LogDebug("Cleaning up Weather.");
-		if(!IsAuthority()) return; // Only run on the host.
-		StopCoroutine(spawnHandler);
-
 		foreach (Meteors meteor in meteors) {
+			if(!meteor.NetworkObject.IsSpawned || IsAuthority())
 			Destroy(meteor.gameObject);
 		}
 		foreach (CraterController crater in craters) {
 			Destroy(crater.gameObject);
 		}
-        meteors = [];
-        craters = [];
+
+		meteors = [];
+		craters = [];
 		Instance = null;
+
+		if(!IsAuthority()) return; // Only run on the host.
+		StopCoroutine(spawnHandler);
 	}
     private Vector3 CalculateAverageLandNodePosition()
     {

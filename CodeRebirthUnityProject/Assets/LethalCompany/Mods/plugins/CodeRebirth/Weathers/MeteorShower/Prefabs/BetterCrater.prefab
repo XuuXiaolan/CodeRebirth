@@ -4920,7 +4920,6 @@ GameObject:
   - component: {fileID: 5874532642910200072}
   - component: {fileID: 6503270565137115912}
   - component: {fileID: 267618469275582930}
-  - component: {fileID: 4439178516892844766}
   m_Layer: 0
   m_Name: BetterCrater
   m_TagString: Untagged
@@ -5030,26 +5029,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   craterMesh: {fileID: 5370107288029151453}
---- !u!114 &4439178516892844766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5370107288029151453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
 --- !u!1 &7035878915914880985
 GameObject:
   m_ObjectHideFlags: 0
