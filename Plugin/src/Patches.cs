@@ -8,6 +8,7 @@ using System.Collections;
 using UnityEngine.Assertions;
 using CodeRebirth;
 using CodeRebirth.Misc;
+using CodeRebirth.WeatherStuff;
 using UnityEngine.SceneManagement;
 
 namespace CodeRebirth.src;
@@ -29,6 +30,15 @@ internal static class StartOfRoundPatcher {
         __instance.NetworkObject.OnSpawn(CreateNetworkManager);
     }
 
+    [HarmonyPatch(nameof(StartOfRound.OnDisable))]
+    [HarmonyPrefix]
+    public static void DisableWetahersPatch() {
+        if (MeteorShower.Active) { // patch to fix OnDisable not being triggered as its not actually in the scene.
+            Plugin.effectObject.SetActive(false);
+            Plugin.effectPermanentObject.SetActive(false);
+        }
+    }
+    
     private static IEnumerator WaitForNetworkObject(StartOfRound __instance, Action<StartOfRound> action)
     {
         while (__instance.NetworkObject.IsSpawned == false)
