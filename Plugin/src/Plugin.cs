@@ -26,10 +26,8 @@ public class Plugin : BaseUnityPlugin {
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
     internal static GameObject BigExplosion;
     internal static GameObject CRUtils;
-    internal static Item Wallet;
     internal static Item Meteorite;
     internal static GameObject BetterCrater;
-    internal static WeatherEffect meteorShower;
     internal static GameObject Meteor;
     internal static Dictionary<string, Item> samplePrefabs = [];
     internal static GameObject effectObject;
@@ -116,7 +114,7 @@ public class Plugin : BaseUnityPlugin {
         DontDestroyOnLoad(effectPermanentObject);
         
         // Create a new WeatherEffect instance
-        meteorShower = new WeatherEffect()
+        WeatherEffect meteorShower = new WeatherEffect()
         {
             name = "MeteorShower",
             effectObject = effectObject,
@@ -126,14 +124,32 @@ public class Plugin : BaseUnityPlugin {
             transitioning = false
         };
         Weathers.RegisterWeather("Meteor Shower", meteorShower, Levels.LevelTypes.All, 0, 0);
+
+        // Create a new WeatherEffect instance
+        /*WeatherEffect apocalypse = new WeatherEffect()
+        {
+            name = "Apocalypse",
+            effectObject = effectObject,
+            effectPermanentObject = effectPermanentObject,
+            lerpPosition = false,
+            sunAnimatorBool = "eclipse",
+            transitioning = false
+        };
+        Weathers.RegisterWeather("Apocalypse", apocalypse, Levels.LevelTypes.All, 0, 0);*/
     }
     private void CodeRebirthScrap() {
         // Wallet register
-        Wallet = Assets.MainAssetBundle.LoadAsset<Item>("WalletObj");
+        Item Wallet = Assets.MainAssetBundle.LoadAsset<Item>("WalletObj");
         Utilities.FixMixerGroups(Wallet.spawnPrefab);
         NetworkPrefabs.RegisterNetworkPrefab(Wallet.spawnPrefab);
         TerminalNode wTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("wTerminalNode");
         RegisterShopItemWithConfig(ModConfig.ConfigWalletEnabled.Value, false, Wallet, wTerminalNode, ModConfig.ConfigWalletCost.Value, "");
+
+        // Epic Axe Register
+        Item EpicAxe = Assets.MainAssetBundle.LoadAsset<Item>("EpicAxeObj");
+        Utilities.FixMixerGroups(EpicAxe.spawnPrefab);
+        NetworkPrefabs.RegisterNetworkPrefab(EpicAxe.spawnPrefab);
+        RegisterScrapWithConfig(ModConfig.ConfigEpicAxeScrapEnabled.Value, "Modded:100,Vanilla:100", EpicAxe);
     }
     private void RegisterEnemyWithConfig(bool enabled, string configMoonRarity, EnemyType enemy, TerminalNode terminalNode, TerminalKeyword terminalKeyword) {
         if (enabled) { 

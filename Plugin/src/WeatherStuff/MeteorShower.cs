@@ -120,7 +120,7 @@ public class MeteorShower : MonoBehaviour {
             
 		Meteors meteor = Instantiate(Plugin.Meteor, origin, Quaternion.identity).GetComponent<Meteors>();
 		meteor.NetworkObject.OnSpawn(() => {
-			meteor.SetupMeteorClientRpc(origin, target);
+			meteor.SetupMeteorClientRpc(origin, target, false);
 		});
 		meteor.NetworkObject.Spawn();
 	}

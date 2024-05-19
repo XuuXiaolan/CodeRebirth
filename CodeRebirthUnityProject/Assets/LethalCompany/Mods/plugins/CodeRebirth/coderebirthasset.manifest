@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3696398242
+CRC: 2641089379
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 281a99d89d97ed5b1f38530475e07d78
+    Hash: 3e28ae56144fb3c2cd351a2bd3b098d0
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 427cacbdcd6ea5d222d5443540913c84
+    Hash: 900eb330a4edd7dd65a9421a54b1ce4e
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 281a99d89d97ed5b1f38530475e07d78
+    Hash: 3e28ae56144fb3c2cd351a2bd3b098d0
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -45,6 +45,8 @@ ClassTypes:
 - Class: 108
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 11500000, guid: c7b430c469db0421764b70ff9c06bc0d, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
@@ -78,6 +80,8 @@ ClassTypes:
   Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: 357969861, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1792574803, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 136
@@ -116,6 +120,7 @@ SerializeReferenceClassIdentifiers:
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/SnailCatEnemy.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Material/MoneyMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/SnailCatObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Bestiary/SnailCatTN.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Bestiary/CutieFlyTK.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_Normal.png
@@ -123,6 +128,7 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/BodyMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/ButterflyEnemy.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Material/SnailCat1.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Weapons/EpicAxe/EpicAxeObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_BaseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Audio/wing-flap-1-6434.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/SnailCatAnimController.controller
@@ -131,6 +137,7 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Wallet-Icon.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Model/Coin.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/ButterflyMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Apocalypse/ApocalypseWeather.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Prefab/Money.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/MoneyObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Material/Walking.anim
@@ -158,5 +165,5 @@ Assets:
   1.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Bestiary/CutieFlyTN.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_MaskMap.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/SnailCatObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Apocalypse/ApocalypseContainer.prefab
 Dependencies: []

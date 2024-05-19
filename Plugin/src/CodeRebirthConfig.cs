@@ -9,6 +9,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
         public ConfigEntry<string> ConfigMoneyRarity { get; private set; }
         public ConfigEntry<bool> ConfigMoneyScrapEnabled { get; private set; }
+        public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
         public ConfigEntry<string> ConfigMeteorShowerMoonList { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
             ConfigMeteorShowerMoonList = configFile.Bind("Weather Options",
@@ -18,19 +19,15 @@ namespace CodeRebirth.Configs {
             ConfigWalletEnabled = configFile.Bind("Shop Options",
                                                 "Wallet Item | Enabled",
                                                 true,
-                                                "Enables/Disables the Wallet showing up in shop");
+                                                "Enables/Disables the Wallet from showing up in shop");
             ConfigWalletCost = configFile.Bind("Shop Options",
                                                 "Wallet Item | Cost",
                                                 250,
                                                 "Cost of Wallet");
-            ConfigMoneyRarity = configFile.Bind("Scrap Options",
-                                                "Money Scrap | Rarity",
-                                                "Modded@0,ExperimentationLevel@0,AssuranceLevel@0,VowLevel@0,OffenseLevel@0,MarchLevel@0,RendLevel@0,DineLevel@0,TitanLevel@0",
-                                                "Enables/Disables the Wallet showing up in shop");
-            ConfigMoneyScrapEnabled = configFile.Bind("Scrap Options",
-                                                "Scrap | Enabled",
+            ConfigEpicAxeScrapEnabled = configFile.Bind("Scrap Options",
+                                                "Epic Axe Scrap | Enabled",
                                                 true,
-                                                "Enables/Disables the Money showing up in the Factory");
+                                                "Enables/Disables the Epic Axe from showing up in the Factory");
             ClearUnusedEntries(configFile);
             Plugin.Logger.LogInfo("Setting up config for CodeRebirth plugin...");
         }
