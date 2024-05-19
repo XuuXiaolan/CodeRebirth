@@ -129,19 +129,19 @@ Activated by over 90 pounds of weight stationary above them, orienting towards v
 #### Conditions: High winds, arid, and with constantly shifting sand dunes.
 #### Fauna: Ecosystem supports territorial behavior, and is primarily subterranean.
 #### History: 204-Yield distantly orbits the red giant star Rightside. 204-Yield itself used to harbor advanced civilization, but it is hypothesized that roaming anomalous creatures devoured most of the population, the remaining individuals fleeing the planet permanently.
-![YieldMoon](../ImageStorage/YieldMoon.png)
+![YieldMoon](ImageStorage/YieldMoon.png)
 #### 58-Heart
 ##### Population: Haunted.
 ##### Conditions: Humid. Cool, with a thick atmosphere. Craggy, tectonically-uplifted terrain.
 ##### Fauna: Badly infested with aggressive wildlife.
 ##### History: This planet appears to have been used for research, and it lies in a close orbit around a smoldering brown dwarf. Its surface is littered with failed experiments, attempting to create life, always failing in some way or another.
-![HeartMoon](../ImageStorage/HeartMoon.png)
+![HeartMoon](ImageStorage/HeartMoon.png)
 #### 2229-Postage
 ##### Population: Declining.
 ##### Conditions: Humid. Warm, with a slowly-escaping atmosphere. Jagged, river-cut terrain.
 ##### Fauna: Home to many types of territorial wildlife.
 ##### History: Formerly used for recreational purposes, most likely a getaway location for particularly rich individuals, 2229-Postage orbits known gas planet Step Up. Its inhabitants have begun to show signs of radiation poisoning due to the system's brilliant white-blue sun, leading to a major decline in population in the last century.
-![PostageMoon](../ImageStorage/PostageMoon.png)
+![PostageMoon](ImageStorage/PostageMoon.png)
 #### 848-Warning
 ##### Population: Desiccated.
 ##### Conditions: Somewhat dry. Cool, with a thin atmosphere. Craggy, sand-swept terrain.
