@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2389438336
+CRC: 3696398242
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8c87039a3a2c71bb075a99677771cbbe
+    Hash: 281a99d89d97ed5b1f38530475e07d78
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4443c3cca720f35ea79eb8d5c15147ae
+    Hash: 427cacbdcd6ea5d222d5443540913c84
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 8c87039a3a2c71bb075a99677771cbbe
+    Hash: 281a99d89d97ed5b1f38530475e07d78
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -32,9 +32,15 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 65
   Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
 - Class: 82
   Script: {instanceID: 0}
 - Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
   Script: {instanceID: 0}
 - Class: 108
   Script: {instanceID: 0}
@@ -70,6 +76,8 @@ ClassTypes:
   Script: {fileID: -173093103, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 357969861, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 136
@@ -106,40 +114,49 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
   ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
 Assets:
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletObj.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialBlue.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorShowerWeather.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/SnailCatEnemy.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Material/MoneyMaterial.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_MaskMap.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterial.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Model/Wallet.fbx
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteoriteObj.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_Normal.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Bestiary/SnailCatTN.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Bestiary/CutieFlyTK.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/ButterflyEnemy.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_Normal.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Model/Wallet.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/BodyMaterial.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/MapDotRed.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Meteor.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Money-Icon.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialGreen.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorContainer.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/ButterflyEnemy.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Material/SnailCat1.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_BaseMap.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/TerminalNode/wTerminalNode.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Audio/wing-flap-1-6434.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/ButterflyObj.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/BetterCrater.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/SnailCatAnimController.controller
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/Butterfly3.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Audio/CatWalk.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Wallet-Icon.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Model/Coin.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/ButterflyMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Prefab/Money.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/butterflything.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/MoneyObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Material/Walking.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/CodeRebirthUtils.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialBlue.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorShowerWeather.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_MaskMap.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteoriteObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/MapDotRed.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Meteor.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Money-Icon.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Material/SnailCat.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialGreen.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorContainer.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Bestiary/SnailCatTK.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/TerminalNode/wTerminalNode.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/ButterflyObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/BetterCrater.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/butterflything.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_Normal.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_BaseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/butterflything
   1.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/CodeRebirthUtils.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_MaskMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Bestiary/CutieFlyTN.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_MaskMap.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/SnailCatObj.asset
 Dependencies: []

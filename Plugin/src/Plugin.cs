@@ -25,7 +25,6 @@ public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
     internal static GameObject BigExplosion;
-    internal static EnemyType CutieFly;
     internal static GameObject CRUtils;
     internal static Item Wallet;
     internal static Item Meteorite;
@@ -62,11 +61,18 @@ public class Plugin : BaseUnityPlugin {
     }
     private void CodeRebirthEnemies() {
         // CutieFly Enemy
-        CutieFly = Assets.MainAssetBundle.LoadAsset<EnemyType>("ButterflyObj");
+        EnemyType CutieFly = Assets.MainAssetBundle.LoadAsset<EnemyType>("ButterflyObj");
         TerminalNode cfTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("CutieFlyTN");
         TerminalKeyword cfTerminalKeyword = Assets.MainAssetBundle.LoadAsset<TerminalKeyword>("CutieFlyTK");
         NetworkPrefabs.RegisterNetworkPrefab(CutieFly.enemyPrefab);
-        RegisterEnemyWithConfig(true, "All:9999", CutieFly, cfTerminalNode, cfTerminalKeyword);
+        Enemies.RegisterEnemy(CutieFly, 100, LevelTypes.All, cfTerminalNode, cfTerminalKeyword);
+
+        // SnailCat Enemy
+        EnemyType SnailCat = Assets.MainAssetBundle.LoadAsset<EnemyType>("SnailCatObj");
+        TerminalNode scTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("SnailCatTN");
+        TerminalKeyword scTerminalKeyword = Assets.MainAssetBundle.LoadAsset<TerminalKeyword>("SnailCatTK");
+        NetworkPrefabs.RegisterNetworkPrefab(SnailCat.enemyPrefab);
+        Enemies.RegisterEnemy(SnailCat, 100, LevelTypes.All, scTerminalNode, scTerminalKeyword);
     }
     private void CodeRebirthMapObjects() {
         // Coin MapObject

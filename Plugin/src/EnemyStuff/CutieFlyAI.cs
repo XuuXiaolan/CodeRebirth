@@ -44,15 +44,7 @@ public class CutieFlyAI : EnemyAI
     }
 
     private void UpdateBlendShapeWeight() {
-        if (currentBehaviourStateIndex == (int)State.Idle) {
-            blendShapeWeight += blendShapeDirection * blendShapeSpeed * Time.deltaTime;
-            if (blendShapeWeight > 100f || blendShapeWeight < 90f) {
-                blendShapeDirection *= -1f;
-                blendShapeWeight = Mathf.Clamp(blendShapeWeight, 0f, 100f);
-            }
-            skinnedMeshRenderer.SetBlendShapeWeight(0, blendShapeWeight);
-            return;
-        };
+        if (currentBehaviourStateIndex == (int)State.Idle) return;
         blendShapeWeight += blendShapeDirection * blendShapeSpeed * Time.deltaTime;
         if (blendShapeWeight > 100f || blendShapeWeight < 0f) {
             blendShapeDirection *= -1f;
@@ -73,8 +65,6 @@ public class CutieFlyAI : EnemyAI
                 agent.baseOffset = Mathf.Lerp(agent.baseOffset, climbing ? 4f : 2f, Time.deltaTime * 5f);
                 if (agent.baseOffset >= 3.5f) climbing = false;
                 if (agent.baseOffset <= 2.5f) climbing = true;
-                LogIfDebugBuild($"Wandering at Height: {agent.baseOffset}");
-
                 if (timeSinceLastStateChange > 20f) {
                     SwitchToBehaviourClientRpc((int)State.Perching);
                     LogIfDebugBuild("Switching to Perching State.");
@@ -85,12 +75,13 @@ public class CutieFlyAI : EnemyAI
             case (int)State.Perching:
                 agent.speed = 1f;
                 agent.baseOffset = Mathf.Lerp(agent.baseOffset, 0f, Time.deltaTime * 6f);
-                LogIfDebugBuild($"Descending to Height: {agent.baseOffset}");
 
                 if (agent.baseOffset <= 0.1f) {
                     StopSearch(currentSearch);
-                    SyncBlendShapeWeightClientRpc(100f);
+                    creatureSFX.enabled = false;
+                    creatureVoice.enabled = false;
                     SwitchToBehaviourClientRpc((int)State.Idle);
+                    SyncBlendShapeWeightClientRpc(100f);
                     LogIfDebugBuild("Switching to Idle State.");
                     lastIdleCycle = Time.time;
                 }
@@ -98,9 +89,10 @@ public class CutieFlyAI : EnemyAI
 
             case (int)State.Idle:
                 agent.speed = 0f;
-                LogIfDebugBuild("Idle State - No Movement");
                 if (timeSinceLastStateChange > 5f) {
                     StartSearch(transform.position);
+                    creatureSFX.enabled = true;
+                    creatureVoice.enabled = true;
                     SwitchToBehaviourClientRpc((int)State.Wandering);
                     LogIfDebugBuild("Switching to Wandering State.");
                     lastIdleCycle = Time.time;
