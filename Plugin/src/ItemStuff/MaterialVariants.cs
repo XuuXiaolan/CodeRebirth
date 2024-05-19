@@ -13,7 +13,7 @@ public class MaterialVariants : NetworkBehaviour {
 
     [Space(5f)]
     [Tooltip("The mesh renderers to change the material of. This will use the first material in the array.")]
-    public MeshRenderer[] meshRenderers;
+    public Renderer[] renderers;
 
     [FormerlySerializedAs("ChangeScanNodeText")]
     [Space(5f)]
@@ -44,7 +44,7 @@ public class MaterialVariants : NetworkBehaviour {
 
     [ClientRpc]
     private void SetRendererClientRpc(int materialVariant) {
-        foreach (var renderer in meshRenderers) {
+        foreach (var renderer in renderers) {
             renderer.material = itemData.materialVariants[materialVariant];
 
             if (!changeScanNodeText)
