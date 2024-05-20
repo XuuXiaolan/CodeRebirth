@@ -21,7 +21,7 @@ public class Wallet : GrabbableObject {
         string chosenMaterial = "WalletMaterial" + materialRandom.Next(1, 11).ToString();
         Plugin.Logger.LogInfo($"Chosen Material: {chosenMaterial}");
         Material walletColour = Plugin.Assets.MainAssetBundle.LoadAsset<Material>(chosenMaterial);
-        skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
+        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         // skinnedMeshRenderer.SetMaterial(walletColour); doesn't work
         scanNode = GetComponentInChildren<ScanNodeProperties>();
         Plugin.Logger.LogInfo(RoundManager.Instance.currentLevel.PlanetName);

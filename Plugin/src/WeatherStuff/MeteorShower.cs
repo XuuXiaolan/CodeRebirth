@@ -58,7 +58,7 @@ public class MeteorShower : MonoBehaviour {
 			if(!IsAuthority()) return; // Only run on the host.
 			StopCoroutine(spawnHandler);
 		} catch {
-			Plugin.Logger.LogFatal("Dont mind me~ - Xu");
+			Plugin.Logger.LogFatal("Cleaning up Weather failed.");
 		}
 	}
     private Vector3 CalculateAverageLandNodePosition()
@@ -164,7 +164,7 @@ public class MeteorShower : MonoBehaviour {
 			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 25, default, random, -1);
 		return position;
 		} catch {
-			Plugin.Logger.LogFatal("Did the colour scare you? it's so fancy right? - Xu");
+			Plugin.Logger.LogFatal("Selecting random position failed.");
 			return new Vector3(0,0,0);
 		}
 	}
