@@ -25,16 +25,14 @@ namespace CodeRebirth;
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+    internal static GameObject effectObject;
+    internal static GameObject effectPermanentObject;
     internal static GameObject BigExplosion;
     internal static GameObject CRUtils;
-    internal static Item Meteorite;
     internal static GameObject BetterCrater;
     internal static GameObject Meteor;
     internal static Dictionary<string, Item> samplePrefabs = [];
-    internal static GameObject effectObject;
-    internal static GameObject effectPermanentObject;
     internal static IngameKeybinds InputActionsInstance;
-    internal static int maxCoins;
     public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
     private void Awake() {
@@ -47,7 +45,6 @@ public class Plugin : BaseUnityPlugin {
 
         CRUtils = Assets.MainAssetBundle.LoadAsset<GameObject>("CodeRebirthUtils");
         NetworkPrefabs.RegisterNetworkPrefab(CRUtils);
-        maxCoins = 9;
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         // Register Keybinds
         InputActionsInstance = new IngameKeybinds();
@@ -64,14 +61,14 @@ public class Plugin : BaseUnityPlugin {
         TerminalNode cfTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("CutieFlyTN");
         TerminalKeyword cfTerminalKeyword = Assets.MainAssetBundle.LoadAsset<TerminalKeyword>("CutieFlyTK");
         NetworkPrefabs.RegisterNetworkPrefab(CutieFly.enemyPrefab);
-        Enemies.RegisterEnemy(CutieFly, 100, LevelTypes.All, cfTerminalNode, cfTerminalKeyword);
+        RegisterEnemyWithConfig(true, ModConfig.ConfigCutieFlySpawnWeights.Value, CutieFly, cfTerminalNode, cfTerminalKeyword);
 
         // SnailCat Enemy
         EnemyType SnailCat = Assets.MainAssetBundle.LoadAsset<EnemyType>("SnailCatObj");
         TerminalNode scTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("SnailCatTN");
         TerminalKeyword scTerminalKeyword = Assets.MainAssetBundle.LoadAsset<TerminalKeyword>("SnailCatTK");
         NetworkPrefabs.RegisterNetworkPrefab(SnailCat.enemyPrefab);
-        Enemies.RegisterEnemy(SnailCat, 100, LevelTypes.All, scTerminalNode, scTerminalKeyword);
+        RegisterEnemyWithConfig(true, ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat, scTerminalNode, scTerminalKeyword);
     }
     private void CodeRebirthMapObjects() {
         // Coin MapObject
@@ -79,13 +76,11 @@ public class Plugin : BaseUnityPlugin {
         money.spawnPrefab.AddComponent<ScrapValueSyncer>();
         Utilities.FixMixerGroups(money.spawnPrefab);
         NetworkPrefabs.RegisterNetworkPrefab(money.spawnPrefab);
-        var valueRandom = new System.Random(44);
-        int value = valueRandom.Next(money.minValue, money.maxValue);
         money.spawnPrefab.GetComponent<Money>().SetScrapValue(-1);
         SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
         mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
         mapObjDefBug.spawnableMapObject.prefabToSpawn = money.spawnPrefab;
-        MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, maxCoins), new Keyframe(1, maxCoins)));
+        MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, ModConfig.ConfigMoneyAbundance.Value), new Keyframe(1, ModConfig.ConfigMoneyAbundance.Value)));
 
     }
     private void CodeRebirthWeather() {
@@ -99,7 +94,7 @@ public class Plugin : BaseUnityPlugin {
         }
         BetterCrater = Assets.MainAssetBundle.LoadAsset<GameObject>("BetterCrater");
         BigExplosion = Assets.MainAssetBundle.LoadAsset<GameObject>("BigExplosion");
-        Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
+        Item Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
         Meteorite.spawnPrefab.AddComponent<ScrapValueSyncer>();
         Utilities.FixMixerGroups(Meteorite.spawnPrefab);
         NetworkPrefabs.RegisterNetworkPrefab(Meteorite.spawnPrefab);
@@ -150,7 +145,7 @@ public class Plugin : BaseUnityPlugin {
         Item EpicAxe = Assets.MainAssetBundle.LoadAsset<Item>("EpicAxeObj");
         Utilities.FixMixerGroups(EpicAxe.spawnPrefab);
         NetworkPrefabs.RegisterNetworkPrefab(EpicAxe.spawnPrefab);
-        RegisterScrapWithConfig(ModConfig.ConfigEpicAxeScrapEnabled.Value, "Modded:100,Vanilla:100", EpicAxe);
+        RegisterScrapWithConfig(ModConfig.ConfigEpicAxeScrapEnabled.Value, ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, EpicAxe);
     }
     private void RegisterEnemyWithConfig(bool enabled, string configMoonRarity, EnemyType enemy, TerminalNode terminalNode, TerminalKeyword terminalKeyword) {
         if (enabled) { 

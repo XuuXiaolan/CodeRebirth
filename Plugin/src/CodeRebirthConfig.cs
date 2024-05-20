@@ -5,21 +5,35 @@ using BepInEx.Configuration;
 
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
+        public ConfigEntry<string> ConfigSnailCatSpawnWeights { get; private set; }
+        public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
-        public ConfigEntry<string> ConfigMoneyRarity { get; private set; }
-        public ConfigEntry<bool> ConfigMoneyScrapEnabled { get; private set; }
+        public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
         public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
+        public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigMeteorShowerMoonList { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
             ConfigMeteorShowerMoonList = configFile.Bind("Weather Options",
                                                 "Meteor Shower | List",
                                                 "Modded, Vanilla",
-                                                "List of moons with the Meteor Shower Weather (Vanilla moons need Level at the end of their name, but modded do not).");
+                                                "(Currently does not work) List of moons with the Meteor Shower Weather (Vanilla moons need Level at the end of their name, but modded do not).");
             ConfigWalletEnabled = configFile.Bind("Shop Options",
                                                 "Wallet Item | Enabled",
                                                 true,
                                                 "Enables/Disables the Wallet from showing up in shop");
+            ConfigEpicAxeScrapSpawnWeights = configFile.Bind("Scrap Options",
+                                                "Epic Axe Scrap | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "SpawnWeight of the axe in moons");
+            ConfigCutieFlySpawnWeights = configFile.Bind("Enemy Options",
+                                                "CutieFly Enemy | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "SpawnWeight of the CutieFly in moons");
+            ConfigSnailCatSpawnWeights = configFile.Bind("Enemy Options",
+                                                "SnailCat Enemy | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "SpawnWeight of the SnailCat in moons");
             ConfigWalletCost = configFile.Bind("Shop Options",
                                                 "Wallet Item | Cost",
                                                 250,
@@ -28,6 +42,10 @@ namespace CodeRebirth.Configs {
                                                 "Epic Axe Scrap | Enabled",
                                                 true,
                                                 "Enables/Disables the Epic Axe from showing up in the Factory");
+            ConfigMoneyAbundance = configFile.Bind("Scrap Options",
+                                                "Money Scrap | Abundance",
+                                                10,
+                                                "Overall Abundance of Money in the level.");
             ClearUnusedEntries(configFile);
             Plugin.Logger.LogInfo("Setting up config for CodeRebirth plugin...");
         }
