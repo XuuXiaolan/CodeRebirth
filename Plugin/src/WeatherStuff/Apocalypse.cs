@@ -71,7 +71,7 @@ public class Apocalypse : MonoBehaviour {
 	private void SpawnMeteor(Vector3 target) {
 		Vector3 origin = target + new Vector3(0, random.NextFloat(500, 800), 0);
             
-		Meteors meteor = Instantiate(Plugin.Meteor, origin, Quaternion.identity).GetComponent<Meteors>();
+		Meteors meteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
         meteor.transform.localScale *= random.Next(40,60);
 		meteor.NetworkObject.OnSpawn(() => {
 			meteor.SetupMeteorClientRpc(origin, target, true);

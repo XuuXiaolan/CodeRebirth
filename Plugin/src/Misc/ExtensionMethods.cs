@@ -1,6 +1,8 @@
 ﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using MonoMod.Cil;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -21,6 +23,18 @@ public static class ExtensionMethods {
 	
 	public static void OnSpawn(this NetworkObject networkObject, Action action) {
 		networkObject.StartCoroutine(RunActionAfterSpawned(networkObject, action));
+	}
+	
+	internal static IEnumerable<Type> GetLoadableTypes(this Assembly assembly) {
+		if(assembly == null) {
+			throw new ArgumentNullException(nameof(assembly));
+		}
+
+		try {
+			return assembly.GetTypes();
+		} catch(ReflectionTypeLoadException ex) {
+			return ex.Types.Where(t => t != null);
+		}
 	}
 	
 	public static T NextEnum<T>(this Random random) where T : struct, Enum

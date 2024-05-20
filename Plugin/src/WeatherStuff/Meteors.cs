@@ -114,7 +114,7 @@ public class Meteors : NetworkBehaviour {
             CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", transform.position + new Vector3(0, -1f, 0));
         }
             
-        GameObject craterInstance = Instantiate(Plugin.BetterCrater, transform.position, Quaternion.identity);
+        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Assets.CraterPrefab, transform.position, Quaternion.identity);
         CraterController craterController = craterInstance.GetComponent<CraterController>();
         if (craterController != null) {
             craterController.ShowCrater(transform.position);
@@ -122,7 +122,7 @@ public class Meteors : NetworkBehaviour {
         
         FireTrail.Stop();
             
-        Landmine.SpawnExplosion(transform.position, true, 0f, 10f, 25, 75, Plugin.BigExplosion);
+        Landmine.SpawnExplosion(transform.position, true, 0f, 10f, 25, 75); // WeatherHandler.Instance.Assets.ExplosionPrefab
 
         yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit.
         if(IsHost)

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using UnityEngine;
 using BepInEx;
 using LethalLib.Modules;
@@ -15,6 +16,9 @@ using CodeRebirth.src;
 using LethalLib.Extras;
 using CodeRebirth.Misc;
 using CodeRebirth.ScrapStuff;
+using CodeRebirth.Util;
+using CodeRebirth.Util.AssetLoading;
+using CodeRebirth.WeatherStuff;
 using LethalLib;
 
 namespace CodeRebirth;
@@ -25,191 +29,60 @@ namespace CodeRebirth;
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+    
+    internal static Dictionary<string, AssetBundle> LoadedBundles = [];
+    
+    internal static Dictionary<string, Item> samplePrefabs = [];
     internal static GameObject effectObject;
     internal static GameObject effectPermanentObject;
-    internal static GameObject BigExplosion;
-    internal static GameObject CRUtils;
-    internal static GameObject BetterCrater;
-    internal static GameObject Meteor;
-    internal static Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance;
+    internal static int maxCoins;
     public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
+    internal static MainAssets Assets { get; private set; }
+    internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName) {
+        [LoadFromBundle("CodeRebirthUtils.prefab")]
+        public GameObject UtilsPrefab { get; private set; }
+    }
+    
     private void Awake() {
         Logger = base.Logger;
         _harmony.PatchAll(typeof(StartOfRoundPatcher));
         // This should be ran before Network Prefabs are registered.
-        Assets.PopulateAssets();
+
+        Assets = new MainAssets("coderebirthasset");
         
         InitializeNetworkBehaviours();
 
-        CRUtils = Assets.MainAssetBundle.LoadAsset<GameObject>("CodeRebirthUtils");
-        NetworkPrefabs.RegisterNetworkPrefab(CRUtils);
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         // Register Keybinds
         InputActionsInstance = new IngameKeybinds();
-        CodeRebirthWeather();
-        CodeRebirthScrap();
-        CodeRebirthMapObjects();
-        CodeRebirthEnemies();
+        
+        Logger.LogInfo("Registering content.");
+        List<Type> creatureHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
+            x.BaseType != null
+            && x.BaseType.IsGenericType
+            && x.BaseType.GetGenericTypeDefinition() == typeof(ContentHandler<>)
+        ).ToList();
+        
+        foreach(Type type in creatureHandlers) {
+            Logger.LogDebug($"Invoking {type.Name}");
+            type.GetConstructor([]).Invoke([]);
+        }
         
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
     }
-    private void CodeRebirthEnemies() {
-        // CutieFly Enemy
-        EnemyType CutieFly = Assets.MainAssetBundle.LoadAsset<EnemyType>("ButterflyObj");
-        TerminalNode cfTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("CutieFlyTN");
-        TerminalKeyword cfTerminalKeyword = Assets.MainAssetBundle.LoadAsset<TerminalKeyword>("CutieFlyTK");
-        NetworkPrefabs.RegisterNetworkPrefab(CutieFly.enemyPrefab);
-        RegisterEnemyWithConfig(true, ModConfig.ConfigCutieFlySpawnWeights.Value, CutieFly, cfTerminalNode, cfTerminalKeyword);
 
-        // SnailCat Enemy
-        EnemyType SnailCat = Assets.MainAssetBundle.LoadAsset<EnemyType>("SnailCatObj");
-        TerminalNode scTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("SnailCatTN");
-        TerminalKeyword scTerminalKeyword = Assets.MainAssetBundle.LoadAsset<TerminalKeyword>("SnailCatTK");
-        NetworkPrefabs.RegisterNetworkPrefab(SnailCat.enemyPrefab);
-        RegisterEnemyWithConfig(true, ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat, scTerminalNode, scTerminalKeyword);
-    }
-    private void CodeRebirthMapObjects() {
-        // Coin MapObject
-        Item money = Assets.MainAssetBundle.LoadAsset<Item>("MoneyObj");
-        money.spawnPrefab.AddComponent<ScrapValueSyncer>();
-        Utilities.FixMixerGroups(money.spawnPrefab);
-        NetworkPrefabs.RegisterNetworkPrefab(money.spawnPrefab);
-        money.spawnPrefab.GetComponent<Money>().SetScrapValue(-1);
-        SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
-        mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
-        mapObjDefBug.spawnableMapObject.prefabToSpawn = money.spawnPrefab;
-        MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, ModConfig.ConfigMoneyAbundance.Value), new Keyframe(1, ModConfig.ConfigMoneyAbundance.Value)));
-
-    }
-    private void CodeRebirthWeather() {
-        // Instantiate the weather effect objects
-        Meteor = Assets.MainAssetBundle.LoadAsset<GameObject>("Meteor");
-        if (Meteor == null) {
-            Logger.LogError("Failed to load meteor prefab");
-        } else {
-            Utilities.FixMixerGroups(Meteor);
-            NetworkPrefabs.RegisterNetworkPrefab(Meteor);
+    void OnDisable() {
+        foreach (AssetBundle bundle in LoadedBundles.Values) {
+            bundle.Unload(false);
         }
-        BetterCrater = Assets.MainAssetBundle.LoadAsset<GameObject>("BetterCrater");
-        BigExplosion = Assets.MainAssetBundle.LoadAsset<GameObject>("BigExplosion");
-        Item Meteorite = Assets.MainAssetBundle.LoadAsset<Item>("MeteoriteObj");
-        Meteorite.spawnPrefab.AddComponent<ScrapValueSyncer>();
-        Utilities.FixMixerGroups(Meteorite.spawnPrefab);
-        NetworkPrefabs.RegisterNetworkPrefab(Meteorite.spawnPrefab);
-        samplePrefabs.Add("Meteorite", Meteorite);
-        RegisterScrap(Meteorite, 0, LevelTypes.All);
-
-        effectObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("MeteorContainer"), Vector3.zero, Quaternion.identity);
-        effectObject.hideFlags = HideFlags.HideAndDontSave;
-        DontDestroyOnLoad(effectObject);
-
-        effectPermanentObject = Instantiate(Assets.MainAssetBundle.LoadAsset<GameObject>("MeteorShowerWeather"), Vector3.zero, Quaternion.identity);
-        effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
-        DontDestroyOnLoad(effectPermanentObject);
-        
-        // Create a new WeatherEffect instance
-        WeatherEffect meteorShower = new WeatherEffect()
-        {
-            name = "MeteorShower",
-            effectObject = effectObject,
-            effectPermanentObject = effectPermanentObject,
-            lerpPosition = false,
-            sunAnimatorBool = "eclipse",
-            transitioning = false
-        };
-        Weathers.RegisterWeather("Meteor Shower", meteorShower, Levels.LevelTypes.All, 0, 0);
-
-        // Create a new WeatherEffect instance
-        /*WeatherEffect apocalypse = new WeatherEffect()
-        {
-            name = "Apocalypse",
-            effectObject = effectObject,
-            effectPermanentObject = effectPermanentObject,
-            lerpPosition = false,
-            sunAnimatorBool = "eclipse",
-            transitioning = false
-        };
-        Weathers.RegisterWeather("Apocalypse", apocalypse, Levels.LevelTypes.All, 0, 0);*/
+        Logger.LogDebug("Unloaded assetbundles.");
+        LoadedBundles = [];
     }
-    private void CodeRebirthScrap() {
-        // Wallet register
-        Item Wallet = Assets.MainAssetBundle.LoadAsset<Item>("WalletObj");
-        Utilities.FixMixerGroups(Wallet.spawnPrefab);
-        NetworkPrefabs.RegisterNetworkPrefab(Wallet.spawnPrefab);
-        TerminalNode wTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("wTerminalNode");
-        RegisterShopItemWithConfig(ModConfig.ConfigWalletEnabled.Value, false, Wallet, wTerminalNode, ModConfig.ConfigWalletCost.Value, "");
 
-        // Epic Axe Register
-        Item EpicAxe = Assets.MainAssetBundle.LoadAsset<Item>("EpicAxeObj");
-        Utilities.FixMixerGroups(EpicAxe.spawnPrefab);
-        NetworkPrefabs.RegisterNetworkPrefab(EpicAxe.spawnPrefab);
-        RegisterScrapWithConfig(ModConfig.ConfigEpicAxeScrapEnabled.Value, ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, EpicAxe);
-    }
-    private void RegisterEnemyWithConfig(bool enabled, string configMoonRarity, EnemyType enemy, TerminalNode terminalNode, TerminalKeyword terminalKeyword) {
-        if (enabled) { 
-            (Dictionary<LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
-            Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
-            return;
-        } else {
-            Enemies.RegisterEnemy(enemy, 0, LevelTypes.All, terminalNode, terminalKeyword);
-            return;
-        }
-    }
-    private void RegisterScrapWithConfig(bool enabled, string configMoonRarity, Item scrap) {
-        if (enabled) { 
-            (Dictionary<LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
-            RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
-        } else {
-            RegisterScrap(scrap, 0, LevelTypes.All);
-        }
-        return;
-    }
-    private void RegisterShopItemWithConfig(bool enabledShopItem, bool enabledScrap, Item item, TerminalNode terminalNode, int itemCost, string configMoonRarity) {
-        if (enabledShopItem) { 
-            RegisterShopItem(item, null, null, terminalNode, itemCost);
-        }
-        if (enabledScrap) {
-            RegisterScrapWithConfig(true, configMoonRarity, item);
-        }
-        return;
-    }
-    private (Dictionary<LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) ConfigParsing(string configMoonRarity) {
-        Dictionary<LevelTypes, int> spawnRateByLevelType = new Dictionary<LevelTypes, int>();
-        Dictionary<string, int> spawnRateByCustomLevelType = new Dictionary<string, int>();
-
-        foreach (string entry in configMoonRarity.Split(',').Select(s => s.Trim())) {
-            string[] entryParts = entry.Split('@');
-
-            if (entryParts.Length != 2)
-            {
-                continue;
-            }
-
-            string name = entryParts[0];
-            int spawnrate;
-
-            if (!int.TryParse(entryParts[1], out spawnrate))
-            {
-                continue;
-            }
-
-            if (System.Enum.TryParse<LevelTypes>(name, true, out LevelTypes levelType))
-            {
-                spawnRateByLevelType[levelType] = spawnrate;
-                Plugin.Logger.LogInfo($"Registered spawn rate for level type {levelType} to {spawnrate}");
-            }
-            else
-            {
-                spawnRateByCustomLevelType[name] = spawnrate;
-                Plugin.Logger.LogInfo($"Registered spawn rate for custom level type {name} to {spawnrate}");
-            }
-        }
-        return (spawnRateByLevelType, spawnRateByCustomLevelType);
-    }
     private void InitializeNetworkBehaviours() {
-        var types = Assembly.GetExecutingAssembly().GetTypes();
+        var types = Assembly.GetExecutingAssembly().GetLoadableTypes();
         foreach (var type in types)
         {
             var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
@@ -220,18 +93,6 @@ public class Plugin : BaseUnityPlugin {
                 {
                     method.Invoke(null, null);
                 }
-            }
-        }
-    }
-    public static class Assets {
-        public static AssetBundle MainAssetBundle = null;
-        public static void PopulateAssets() {
-            string sAssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            MainAssetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "coderebirthasset"));
-            if (MainAssetBundle == null) {
-                Plugin.Logger.LogError("Failed to load custom assets.");
-                return;
             }
         }
     }

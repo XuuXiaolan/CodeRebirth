@@ -82,13 +82,13 @@ public class MeteorShower : MonoBehaviour {
         Vector3 centralLocation = averageLocation + new Vector3(0, random.Next(250, 300), 0);
 		for (int i = 0; i < amount; i++) {
             Vector3 randomOffset = new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175));
-			Meteors SmallMeteor = Instantiate(Plugin.Meteor, centralLocation + randomOffset, Quaternion.identity).GetComponent<Meteors>();
+			Meteors SmallMeteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation + randomOffset, Quaternion.identity).GetComponent<Meteors>();
             SmallMeteor.transform.localScale *= (float)random.NextDouble()*8f+2f;
             AddRandomMovement(SmallMeteor, 4f);
 			SmallMeteor.SetupAsLooping();
 		}
         for (int i = 0; i < 1; i++) {
-            Meteors LargeMeteor = Instantiate(Plugin.Meteor, centralLocation, Quaternion.identity).GetComponent<Meteors>();
+            Meteors LargeMeteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation, Quaternion.identity).GetComponent<Meteors>();
             LargeMeteor.transform.localScale *= random.Next(40,60);
             AddRandomMovement(LargeMeteor, 3f);
             LargeMeteor.SetupAsLooping();
@@ -118,7 +118,7 @@ public class MeteorShower : MonoBehaviour {
 			random.NextFloat(250, 500) * random.NextSign()
 		);
             
-		Meteors meteor = Instantiate(Plugin.Meteor, origin, Quaternion.identity).GetComponent<Meteors>();
+		Meteors meteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
 		meteor.NetworkObject.OnSpawn(() => {
 			meteor.SetupMeteorClientRpc(origin, target, false);
 		});

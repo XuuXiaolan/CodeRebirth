@@ -1,3 +1,4 @@
+using CodeRebirth.Misc;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -18,10 +19,8 @@ public class Wallet : GrabbableObject {
             materialRandom = new System.Random(666);
             Plugin.Logger.LogInfo("No seed found, using 666 as seed");
         }
-        string chosenMaterial = "WalletMaterial" + materialRandom.Next(1, 11).ToString();
-        Plugin.Logger.LogInfo($"Chosen Material: {chosenMaterial}");
-        Material walletColour = Plugin.Assets.MainAssetBundle.LoadAsset<Material>(chosenMaterial);
-        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        Material walletColour = materialRandom.NextItem(ItemHandler.Instance.Assets.WalletMaterials);
+        skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
         // skinnedMeshRenderer.SetMaterial(walletColour); doesn't work
         scanNode = GetComponentInChildren<ScanNodeProperties>();
         Plugin.Logger.LogInfo(RoundManager.Instance.currentLevel.PlanetName);

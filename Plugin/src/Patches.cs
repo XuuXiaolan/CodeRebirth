@@ -34,8 +34,8 @@ internal static class StartOfRoundPatcher {
     [HarmonyPrefix]
     public static void DisableWetahersPatch() {
         if (MeteorShower.Active) { // patch to fix OnDisable not being triggered as its not actually in the scene.
-            Plugin.effectObject.SetActive(false);
-            Plugin.effectPermanentObject.SetActive(false);
+            WeatherHandler.Instance.MeteorShowerWeather.effectObject.SetActive(false);
+            WeatherHandler.Instance.MeteorShowerWeather.effectPermanentObject.SetActive(false);
         }
     }
     
@@ -53,7 +53,7 @@ internal static class StartOfRoundPatcher {
         if (StartOfRound.Instance.IsServer || StartOfRound.Instance.IsHost)
         {
             if (CodeRebirthUtils.Instance == null) {
-                GameObject utilsInstance = GameObject.Instantiate(Plugin.CRUtils);
+                GameObject utilsInstance = GameObject.Instantiate(Plugin.Assets.UtilsPrefab);
                 SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
                 utilsInstance.GetComponent<NetworkObject>().Spawn();
                 Plugin.Logger.LogInfo($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
