@@ -1,3 +1,110 @@
 # CodeRebirth
 
-## Currently adds 2 Ambient Daytime Enemy, 1 Custom Weather, 1 Scrap, 1 Shop item and 1 weapon.
+Code Rebirth is a general content mod expanding on all parts of the game.
+
+If you're interested in helping with the development of the mod, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on discord!
+
+Current Additions:
+
+- 2 Ambient Enemies
+- 1 Weather event
+- 1 Shop Item
+- 3 Scrap
+
+## Preview (Spoilers ahead!)
+
+</details>
+
+<details>
+  <summary><strong style="font-size: 1.4em;">Weathers</strong></summary>
+
+### Meteor Shower
+
+![](https://i.postimg.cc/RFJzM5yL/image-removebg-preview-1.png)
+
+```
+World-ending weather where the world will slowly crumble as time goes on, but with the potential for rare crystals to spawn.
+```
+
+</details>
+
+<details>
+  <summary><strong style="font-size: 1.4em;">Ambient Enemies</strong></summary>
+
+### Cutiefly
+
+![](https://i.postimg.cc/zvmYv21Z/image-207-removebg-preview.png)
+
+```
+Flys around occasionally resting on the ground. (harmless)
+```
+
+### Snailcat
+
+![](https://i.postimg.cc/qMzFFhzh/imawadge-removebg-preview.png)
+
+```
+Roams the land slowly (harmless)
+```
+
+</details>
+
+<details>
+  <summary><strong style="font-size: 1.4em;">Shop Items</strong></summary>
+
+### Wallet
+
+![](https://i.postimg.cc/wMBrg32r/imwadadage-removebg-preview.png)
+
+```
+Shop Item to get some extra cash for the quota can pick up coins.
+```
+
+</details>
+
+<details>
+  <summary><strong style="font-size: 1.4em;">Scraps</strong></summary>
+
+### Meteorite
+
+![](https://i.postimg.cc/nVg8pG8Y/imawdawdaage-removebg-preview.png)
+
+```
+Valuable rare Scrap found from the remaining debris of some Meteors.
+```
+
+### Epic Axe
+
+![](https://i.postimg.cc/wxWPFcTY/imwadaage-removebg-preview.png)
+
+```
+Cool glowy Axe that deals twice the damage of the shovel.
+```
+
+### Coin
+
+![](https://i.postimg.cc/cC5bHZ5L/imagwadae-removebg-preview.png)
+
+```
+Scrap to get some extra cash for the quota, Coin doesn't affect normal-level scrap spawn rates and is not included in the pool normally.
+```
+
+</details>
+
+## Credits - CodeRebirth Team!
+
+Coding:
+- Xu, Bongo and TestAccount666
+
+Modeling/Designs:
+- S1ckboy, Solid, Codding Cat and IntegrityChaos
+
+Sounds:
+- Oof Bubble
+
+Ideas/Lore:
+- halley/serene/falin
+- Alli/Basil
+
+Concept Art:
+- Flameburnt
