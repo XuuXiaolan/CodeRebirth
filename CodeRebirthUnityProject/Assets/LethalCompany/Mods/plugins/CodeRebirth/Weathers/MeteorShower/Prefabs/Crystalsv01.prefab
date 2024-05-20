@@ -668,6 +668,7 @@ GameObject:
   - component: {fileID: 3472238623434576884}
   - component: {fileID: 3875974252651499979}
   - component: {fileID: 3005448218061629536}
+  - component: {fileID: 6126037469943945543}
   m_Layer: 6
   m_Name: Crystalsv01
   m_TagString: PhysicsProp
@@ -887,6 +888,18 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
+--- !u!114 &6126037469943945543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6514764329158425929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1067628483, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6916385990592862347
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,19 +9,10 @@ public class Wallet : GrabbableObject {
     private RaycastHit hit;
     private ScanNodeProperties scanNode;
     private SkinnedMeshRenderer skinnedMeshRenderer;
-    private System.Random materialRandom;
-
     public override void Start() {
         base.Start();
-        try {
-            materialRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 666);
-        } catch {
-            materialRandom = new System.Random(666);
-            Plugin.Logger.LogInfo("No seed found, using 666 as seed");
-        }
-        Material walletColour = materialRandom.NextItem(ItemHandler.Instance.Assets.WalletMaterials);
         skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
-        // skinnedMeshRenderer.SetMaterial(walletColour); doesn't work
+
         scanNode = GetComponentInChildren<ScanNodeProperties>();
         Plugin.Logger.LogInfo(RoundManager.Instance.currentLevel.PlanetName);
     }

@@ -20,9 +20,6 @@ public class ItemHandler : ContentHandler<ItemHandler> {
 		public Item EpicAxeItem { get; private set; }
 
 		public ItemAssets(string bundleName) : base(bundleName) {
-			for (int i = 1; i <= 11; i++) {
-				WalletMaterials.Add(bundle.LoadAsset<Material>("WalletMaterial" + i));
-			}
 		}
 	}
 
@@ -32,6 +29,6 @@ public class ItemHandler : ContentHandler<ItemHandler> {
 		Assets = new ItemAssets("coderebirthasset");
         
 		RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, false, Assets.WalletItem, Assets.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
-		RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, "Modded:100,Vanilla:100", Assets.EpicAxeItem);
+		RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, Assets.EpicAxeItem);
 	}
 }

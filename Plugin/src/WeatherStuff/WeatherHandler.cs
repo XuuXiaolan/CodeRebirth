@@ -14,8 +14,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		[LoadFromBundle("BetterCrater.prefab")]
 		public GameObject CraterPrefab { get; private set; }
 		
-		//[LoadFromBundle("BigExplosion.prefab")]
-		//public GameObject ExplosionPrefab { get; private set; }
+		[LoadFromBundle("BigExplosion.prefab")]
+		public GameObject ExplosionPrefab { get; private set; }
 		
 		[LoadFromBundle("MeteoriteObj")]
 		public Item MeteoriteItem { get; private set; }
@@ -37,7 +37,6 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 	}
 
 	void RegisterMeteorShower() {
-		Assets.MeteoriteItem.spawnPrefab.AddComponent<ScrapValueSyncer>(); // FIXME: this really shouldn't be done here. this should just be on the prefab already lol
 		Plugin.samplePrefabs.Add("Meteorite", Assets.MeteoriteItem);
 
 		GameObject effectObject = GameObject.Instantiate(Assets.MeteorEffectPrefab);

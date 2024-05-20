@@ -31,7 +31,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 	public EnemyHandler() {
 		Assets = new EnemyAssets("coderebirthasset");
 		
-		Enemies.RegisterEnemy(Assets.ButterflyEnemyType, 100, Levels.LevelTypes.All, Assets.ButterflyTerminalNode, Assets.ButterflyTerminalKeyword);
-		Enemies.RegisterEnemy(Assets.SnailCatEnemyType, 100, Levels.LevelTypes.All, Assets.SnailCatTerminalNode, Assets.SnailCatTerminalKeyword);
+        RegisterEnemyWithConfig(true, Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Assets.ButterflyEnemyType, Assets.ButterflyTerminalNode, Assets.ButterflyTerminalKeyword);
+        RegisterEnemyWithConfig(true, Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, Assets.SnailCatEnemyType, Assets.SnailCatTerminalNode, Assets.SnailCatTerminalKeyword);
 	}
 }
