@@ -13,6 +13,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
         public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigMeteorShowerMoonList { get; private set; }
+        public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
             ConfigMeteorShowerMoonList = configFile.Bind("Weather Options",
                                                 "Meteor Shower | List",
@@ -46,6 +47,10 @@ namespace CodeRebirth.Configs {
                                                 "Money Scrap | Abundance",
                                                 10,
                                                 "Overall Abundance of Money in the level.");
+            ConfigAverageCoinValue = configFile.Bind("Scrap Options",
+                                                "Money Scrap | Average Value",
+                                                15,
+                                                "Average value of Money in the level. (so 5 and 25 are lower and upper limits here)");
             ClearUnusedEntries(configFile);
             Plugin.Logger.LogInfo("Setting up config for CodeRebirth plugin...");
         }
