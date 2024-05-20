@@ -31,7 +31,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             random = new System.Random(seed + 85);
         }
 
-        if (itemName.Length == 0)
+        if (itemName == string.Empty)
         {
             Plugin.Logger.LogInfo("itemName is empty");
             return;
