@@ -17,6 +17,7 @@ public class MeteorShower : MonoBehaviour {
     public int maxTimeBetweenSpawns;
     public int maxMeteorsPerSpawn;
     public int minMeteorsPerSpawn;
+	private List<GameObject> alreadyUsedNodes;
 
 	public List<Meteors> meteors = new List<Meteors>(); // Proper initialization
 	public List<CraterController> craters = new List<CraterController>(); // Similarly for craters
@@ -30,6 +31,7 @@ public class MeteorShower : MonoBehaviour {
 		Plugin.Logger.LogInfo("Initing Meteor Shower Weather.");
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
+		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
 		nodes = CullNodesByProximity(nodes, 5.0f, 50, true).ToList();
 		SpawnOverheadVisualMeteors(random.Next(15, 45));
@@ -84,13 +86,13 @@ public class MeteorShower : MonoBehaviour {
             Vector3 randomOffset = new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175));
 			Meteors SmallMeteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation + randomOffset, Quaternion.identity).GetComponent<Meteors>();
             SmallMeteor.transform.localScale *= (float)random.NextDouble()*8f+2f;
-            AddRandomMovement(SmallMeteor, 4f);
+            AddRandomMovement(SmallMeteor, 2f);
 			SmallMeteor.SetupAsLooping();
 		}
         for (int i = 0; i < 1; i++) {
             Meteors LargeMeteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation, Quaternion.identity).GetComponent<Meteors>();
             LargeMeteor.transform.localScale *= random.Next(40,60);
-            AddRandomMovement(LargeMeteor, 3f);
+            AddRandomMovement(LargeMeteor, 1.5f);
             LargeMeteor.SetupAsLooping();
         }
 	}
@@ -159,9 +161,13 @@ public class MeteorShower : MonoBehaviour {
 
 	private Vector3 GetRandomTargetPosition() {
 		try {
-			Vector3 position = random.NextItem(nodes).transform.position;
-			position += new Vector3(random.NextFloat(-2, 2), random.NextFloat(-5, 5), random.NextFloat(-2, 2));
-			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 25, default, random, -1);
+			var nextNode = random.NextItem(nodes);
+			Vector3 position = nextNode.transform.position;
+			if (!alreadyUsedNodes.Contains(nextNode)) {
+				alreadyUsedNodes.Add(nextNode);
+			}
+			position += new Vector3(random.NextFloat(-2, 2), random.NextFloat(-5, 5), random.NextFloat(-2, 2)); // Gonna be using decals so should be okay!
+			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 2, default, random, -1);
 		return position;
 		} catch {
 			Plugin.Logger.LogFatal("Selecting random position failed.");

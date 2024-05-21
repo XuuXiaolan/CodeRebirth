@@ -44,7 +44,7 @@ public class ContentHandler<T> where T: ContentHandler<T> {
         Dictionary<string, int> spawnRateByCustomLevelType = new Dictionary<string, int>();
 
         foreach (string entry in configMoonRarity.Split(',').Select(s => s.Trim())) {
-            string[] entryParts = entry.Split('@');
+            string[] entryParts = entry.Split(':');
 
             if (entryParts.Length != 2)
             {
