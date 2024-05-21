@@ -38,6 +38,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 
 	void RegisterMeteorShower() {
 		Plugin.samplePrefabs.Add("Meteorite", Assets.MeteoriteItem);
+		
 
 		GameObject effectObject = GameObject.Instantiate(Assets.MeteorEffectPrefab);
 		effectObject.hideFlags = HideFlags.HideAndDontSave;

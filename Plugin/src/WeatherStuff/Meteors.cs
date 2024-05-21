@@ -122,7 +122,7 @@ public class Meteors : NetworkBehaviour {
         
         FireTrail.Stop();
             
-        Landmine.SpawnExplosion(transform.position, true, 0f, 10f, 25, 75, WeatherHandler.Instance.Assets.ExplosionPrefab);
+        Landmine.SpawnExplosion(transform.position, true, 4f, 20f, 50, 200, WeatherHandler.Instance.Assets.ExplosionPrefab);
 
         yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit. <-- Actually i think the meteor just looks cool staying on the ground for an extra 10 seconds.
         if(IsHost)
