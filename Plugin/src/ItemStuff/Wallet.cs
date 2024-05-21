@@ -24,6 +24,7 @@ public class Wallet : GrabbableObject {
         {
             if (hit.collider.transform.gameObject.GetComponent<Money>())
             {
+                GetComponent<AudioSource>().Play();
                 Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
                 UpdateScrapValueServerRpc(coin.scrapValue);
                 NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();

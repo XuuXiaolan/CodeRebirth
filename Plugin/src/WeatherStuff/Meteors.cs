@@ -24,7 +24,7 @@ public class Meteors : NetworkBehaviour {
     AudioSource ImpactAudio;
 
     [SerializeField]
-    AudioSource NormalTravelAudio, InsideTravelAudio;
+    AudioSource NormalTravelAudio, CloseTravelAudio;
 
     [Header("Graphics")]
     [SerializeField]
@@ -91,16 +91,16 @@ public class Meteors : NetworkBehaviour {
     private void UpdateAudio() {
         if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) {
             NormalTravelAudio.volume = 0;
-            InsideTravelAudio.volume = 0;
+            CloseTravelAudio.volume = 0;
             ImpactAudio.volume = 0.05f; // make it still audible but not as loud
         } else {
             NormalTravelAudio.volume = 1;
-            InsideTravelAudio.volume = 1;
+            CloseTravelAudio.volume = 1;
             ImpactAudio.volume = 1;
         }
-        if (((1-Progress)*travelTime) <= 4.106f && !InsideTravelAudio.isPlaying) {
-            NormalTravelAudio.Stop();
-            InsideTravelAudio.Play();
+        if (((1-Progress)*travelTime) <= 4.106f && !CloseTravelAudio.isPlaying) {
+            NormalTravelAudio.volume = 0.5f;
+            CloseTravelAudio.Play();
         }
     }
 
