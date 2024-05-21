@@ -92,13 +92,13 @@ public class MeteorShower : MonoBehaviour {
 		for (int i = 0; i < amount; i++) {
             Vector3 randomOffset = new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175));
 			Meteors SmallMeteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation + randomOffset, Quaternion.identity).GetComponent<Meteors>();
-            SmallMeteor.transform.localScale *= (float)random.NextDouble()*8f+2f;
+            SmallMeteor.transform.localScale *= (float)random.NextDouble()*12f+2f;
             AddRandomMovement(SmallMeteor, 2f);
 			SmallMeteor.SetupAsLooping();
 		}
         for (int i = 0; i < 1; i++) {
             Meteors LargeMeteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation, Quaternion.identity).GetComponent<Meteors>();
-            LargeMeteor.transform.localScale *= random.Next(40,60);
+            LargeMeteor.transform.localScale *= random.Next(30,50);
             AddRandomMovement(LargeMeteor, 1.5f);
             LargeMeteor.SetupAsLooping();
         }
