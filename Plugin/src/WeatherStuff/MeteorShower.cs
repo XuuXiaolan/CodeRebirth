@@ -16,14 +16,27 @@ public class MeteorShower : MonoBehaviour {
 	Coroutine spawnHandler;
 
 	List<GameObject> nodes;
-    public int minTimeBetweenSpawns;
-    public int maxTimeBetweenSpawns;
-    public int maxMeteorsPerSpawn;
-    public int minMeteorsPerSpawn;
-	private List<GameObject> alreadyUsedNodes;
+    [Space(5f)]
+    [Header("Time between Meteor Spawns")]
+	[SerializeField]
+	[Tooltip("Minimum Time between Meteor Spawns")]
+    int minTimeBetweenSpawns;
+    [Space(5f)]
+    [SerializeField]
+    [Tooltip("Maximum Time between Meteor Spawns")]
+    int maxTimeBetweenSpawns;
+    [Space(5f)]
+    [SerializeField]
+    [Tooltip("Minimum Amount of Meteors per Spawn")]
+    int minMeteorsPerSpawn;
+    [Space(5f)]
+    [SerializeField]
+    [Tooltip("Maximum Amount of Meteors per Spawn")]
+    int maxMeteorsPerSpawn;
+    private List<GameObject> alreadyUsedNodes;
 
-	List<Meteors> meteors = new List<Meteors>(); // Proper initialization
-	List<CraterController> craters = new List<CraterController>(); // Similarly for craters
+	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
+	readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
 	
 	Random random;
 	
@@ -36,7 +49,7 @@ public class MeteorShower : MonoBehaviour {
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
-		nodes = CullNodesByProximity(nodes, 5.0f, 50, true).ToList();
+		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
 		SpawnOverheadVisualMeteors(random.Next(15, 45));
 		
 		if(!IsAuthority()) return; // Only run on the host.
@@ -152,7 +165,7 @@ public class MeteorShower : MonoBehaviour {
 		meteor.NetworkObject.Spawn();
 	}
 	
-	private IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, float minShipDistance = 50f, bool cullDoors = false)
+	private IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, bool cullDoors = false)
 	{
 		var nodeList = new List<GameObject>(nodes);
 		var toCull = new HashSet<GameObject>();
@@ -177,7 +190,7 @@ public class MeteorShower : MonoBehaviour {
 		if (cullDoors)
 		{
 			var entrances = FindObjectsOfType<EntranceTeleport>().ToList();
-			nodeList.RemoveAll(n => entrances.Any(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
+			nodeList.RemoveAll(n => entrances.Exists(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
 		}
 
 		return nodeList;

@@ -31,14 +31,11 @@ public class Meteors : NetworkBehaviour {
     ParticleSystem FireTrail;
     [SerializeField]
     AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
-
-    [SerializeField]
-    Renderer MainMeteorRenderer;
     
     Vector3 origin, target;
 
     float timeInAir, travelTime;
-    bool isMoving, visualAndLooping;
+    bool isMoving;
     
     public float Progress => timeInAir / travelTime;
 
@@ -58,7 +55,6 @@ public class Meteors : NetworkBehaviour {
 
     public void SetupAsLooping() {
         isMoving = false;
-        visualAndLooping = true;
     }
     
     private void Awake() {
@@ -77,8 +73,7 @@ public class Meteors : NetworkBehaviour {
 
     void MoveMeteor()
     {
-        float progress = timeInAir / travelTime;
-
+        float progress = Progress;
         if (progress >= 1.0f)
         { // Checks if the progress is 100% or more
             transform.position = target; // Ensures the meteor position is set to the target at impact
@@ -134,8 +129,8 @@ public class Meteors : NetworkBehaviour {
 }
 public class CraterController : MonoBehaviour // Change this to use decals!!
 {
-    public GameObject craterMesh;
-    private ColliderIdentifier fireCollider;
+    GameObject craterMesh;
+    ColliderIdentifier fireCollider;
 
     private void Awake()
     {
@@ -143,17 +138,11 @@ public class CraterController : MonoBehaviour // Change this to use decals!!
         ToggleCrater(false);
         MeteorShower.Instance.AddCrater(this);
     }
-
-    static readonly Color GRASS_IMPACT_COLOUR = new Color(0.043f, 0.141f, 0.043f);
-    static readonly Color SNOW_IMPACT_COLOUR = new Color(0.925f, 0.929f, 1f);
-    static readonly Color ROCK_IMPACT_COLOUR = Color.gray;
-    static readonly Color SAND_IMPACT_COLOUR = new Color(0.761f, 0.576f, 0f);
     public void ShowCrater(Vector3 impactLocation)
     {
         transform.position = impactLocation + new Vector3(0, 3f, 0); // Position the crater at the impact location
     
         craterMesh.SetActive(true);
-        craterVisible = true;
         fireCollider.enabled = true; // Enable the ColliderIdentifier
     }
 

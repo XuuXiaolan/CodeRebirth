@@ -42,7 +42,7 @@ internal static class StartOfRoundPatcher {
     
     private static IEnumerator WaitForNetworkObject(StartOfRound __instance, Action<StartOfRound> action)
     {
-        while (__instance.NetworkObject.IsSpawned == false)
+        while (!__instance.NetworkObject.IsSpawned)
         {
             yield return null;
         }

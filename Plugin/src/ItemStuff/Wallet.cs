@@ -21,19 +21,17 @@ public class Wallet : GrabbableObject {
         var interactRay = new Ray(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
         if (Physics.Raycast(interactRay, out hit, playerHeldBy.grabDistance, playerHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8)
         {
-            if (hit.collider.transform.gameObject.GetComponent<Money>())
-            {
-                GetComponent<AudioSource>().Play();
-                Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
-                UpdateScrapValueServerRpc(coin.scrapValue);
-                NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
-                Plugin.Logger.LogInfo($"Scrap: {scrapValue}");
-                float newblendShapeWeight = Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0)+10f, 0, 300);
-                if (playerHeldBy) {
-                    IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
-                }
-                DestroyObjectServerRpc(obj);
+            Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
+            if (coin == null) return;
+            GetComponent<AudioSource>().Play();
+            UpdateScrapValueServerRpc(coin.scrapValue);
+            NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
+            Plugin.Logger.LogInfo($"Scrap: {scrapValue}");
+            float newblendShapeWeight = Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0)+10f, 0, 300);
+            if (playerHeldBy) {
+                IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
             }
+            DestroyObjectServerRpc(obj);
         }
     }
 
