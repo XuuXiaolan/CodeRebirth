@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.Misc;
+using Newtonsoft.Json.Serialization;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -18,6 +20,7 @@ public class MeteorShower : MonoBehaviour {
     public int maxTimeBetweenSpawns;
     public int maxMeteorsPerSpawn;
     public int minMeteorsPerSpawn;
+	private List<GameObject> alreadyUsedNodes;
 
 	List<Meteors> meteors = new List<Meteors>(); // Proper initialization
 	List<CraterController> craters = new List<CraterController>(); // Similarly for craters
@@ -28,9 +31,10 @@ public class MeteorShower : MonoBehaviour {
 	public static bool Active => Instance != null;
 	
 	private void OnEnable() { // init weather
-		Plugin.Logger.LogInfo("Initing Meteor Shower Weather.");
+		Plugin.Logger.LogInfo("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
+		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
 		nodes = CullNodesByProximity(nodes, 5.0f, 50, true).ToList();
 		SpawnOverheadVisualMeteors(random.Next(15, 45));
@@ -51,14 +55,16 @@ public class MeteorShower : MonoBehaviour {
 
 			if(!IsAuthority()) return; // Only run on the host.
 			StopCoroutine(spawnHandler);
-		} catch {
-			Plugin.Logger.LogFatal("Cleaning up Weather failed.");
+		} catch (Exception e) {
+			Plugin.Logger.LogFatal("Cleaning up Weather failed." + e.Message);
 		}
 	}
 	void ClearMeteorites()
 	{
         foreach (Meteors meteor in meteors)
         {
+			Plugin.Logger.LogInfo($"Destroying Meteor: {meteor}");
+			if (meteor == null) continue;
             if (!meteor.NetworkObject.IsSpawned || IsAuthority())
                 Destroy(meteor.gameObject);
         }
@@ -68,6 +74,8 @@ public class MeteorShower : MonoBehaviour {
 	{
         foreach (CraterController crater in craters)
         {
+			Plugin.Logger.LogInfo($"Destroying Crater: {crater}");
+			if (crater == null) continue;
             Destroy(crater.gameObject);
         }
         craters.Clear();
@@ -92,7 +100,7 @@ public class MeteorShower : MonoBehaviour {
 			SpawnVisualMeteors(
 				centralLocation: centralLocation,
 				offset: new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175)),
-				speed: 4f,
+				speed: 2f,
 				sizeMultiplier: (float)random.NextDouble() * 8f + 2f);
 
         }
@@ -100,7 +108,7 @@ public class MeteorShower : MonoBehaviour {
 			SpawnVisualMeteors(
 				centralLocation: centralLocation,
 				offset: Vector3.zero,
-				speed: 3f,
+				speed: 1.5f,
 				sizeMultiplier: random.Next(40, 60)
 				);
         }
@@ -177,7 +185,11 @@ public class MeteorShower : MonoBehaviour {
 
 	private Vector3 GetRandomTargetPosition(float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
 		try {
-			Vector3 position = random.NextItem(nodes).transform.position;
+			var nextNode = random.NextItem(nodes);
+			Vector3 position = nextNode.transform.position;
+			if (!alreadyUsedNodes.Contains(nextNode)) {
+				alreadyUsedNodes.Add(nextNode);
+			}
 			position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
 			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
 		return position;

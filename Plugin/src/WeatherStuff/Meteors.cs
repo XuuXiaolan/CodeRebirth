@@ -24,7 +24,7 @@ public class Meteors : NetworkBehaviour {
     AudioSource ImpactAudio;
 
     [SerializeField]
-    AudioSource NormalTravelAudio, InsideTravelAudio;
+    AudioSource NormalTravelAudio, CloseTravelAudio;
 
     [Header("Graphics")]
     [SerializeField]
@@ -49,7 +49,7 @@ public class Meteors : NetworkBehaviour {
         float distance = Vector3.Distance(origin, target);
         travelTime = Mathf.Sqrt(2 * distance / initialSpeed);  // Time to reach the target, adjusted for acceleration
         isMoving = true;
-
+        transform.localScale *= 3f;
         transform.LookAt(target);
         UpdateAudio(); // Make sure audio works correctly on the first frame.
         FireTrail.Play();
@@ -93,16 +93,16 @@ public class Meteors : NetworkBehaviour {
     private void UpdateAudio() {
         if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) {
             NormalTravelAudio.volume = 0;
-            InsideTravelAudio.volume = 0;
-            ImpactAudio.volume = 0.05f; // make it still audible but not as loud
+            CloseTravelAudio.volume = 0;
+            ImpactAudio.volume = 0.05f;
         } else {
-            NormalTravelAudio.volume = 1;
-            InsideTravelAudio.volume = 1;
-            ImpactAudio.volume = 1;
+            NormalTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+            CloseTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+            ImpactAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
         }
-        if (((1-Progress)*travelTime) <= 4.106f && !InsideTravelAudio.isPlaying) {
-            NormalTravelAudio.Stop();
-            InsideTravelAudio.Play();
+        if (((1-Progress)*travelTime) <= 4.106f && !CloseTravelAudio.isPlaying) {
+            NormalTravelAudio.volume = Mathf.Clamp01(0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+            CloseTravelAudio.Play();
         }
     }
 
@@ -132,7 +132,7 @@ public class Meteors : NetworkBehaviour {
         MeteorShower.Instance.RemoveMeteor(this);
     }
 }
-public class CraterController : MonoBehaviour
+public class CraterController : MonoBehaviour // Change this to use decals!!
 {
     public GameObject craterMesh;
     private ColliderIdentifier fireCollider;

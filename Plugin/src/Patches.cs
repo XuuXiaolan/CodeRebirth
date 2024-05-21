@@ -28,11 +28,12 @@ internal static class StartOfRoundPatcher {
     public static void StartOfRound_Start(ref StartOfRound __instance)
     {
         __instance.NetworkObject.OnSpawn(CreateNetworkManager);
+        LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", LethalLib.Modules.Levels.LevelTypes.None, [Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value]);
     }
 
     [HarmonyPatch(nameof(StartOfRound.OnDisable))]
     [HarmonyPrefix]
-    public static void DisableWetahersPatch() {
+    public static void DisableWeathersPatch() {
         if (MeteorShower.Active) { // patch to fix OnDisable not being triggered as its not actually in the scene.
             WeatherHandler.Instance.MeteorShowerWeather.effectObject.SetActive(false);
             WeatherHandler.Instance.MeteorShowerWeather.effectPermanentObject.SetActive(false);
@@ -63,3 +64,4 @@ internal static class StartOfRoundPatcher {
         }
     }
 }
+

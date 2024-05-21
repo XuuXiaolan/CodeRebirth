@@ -11,10 +11,9 @@ public class Wallet : GrabbableObject {
     private SkinnedMeshRenderer skinnedMeshRenderer;
     public override void Start() {
         base.Start();
-        skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
+        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
 
         scanNode = GetComponentInChildren<ScanNodeProperties>();
-        Plugin.Logger.LogInfo(RoundManager.Instance.currentLevel.PlanetName);
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true) {
@@ -24,6 +23,7 @@ public class Wallet : GrabbableObject {
         {
             if (hit.collider.transform.gameObject.GetComponent<Money>())
             {
+                GetComponent<AudioSource>().Play();
                 Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
                 UpdateScrapValueServerRpc(coin.scrapValue);
                 NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();

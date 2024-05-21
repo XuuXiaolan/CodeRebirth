@@ -24,6 +24,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
 		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
 		mapObjDefBug.spawnableMapObject.prefabToSpawn = Assets.MoneyItem.spawnPrefab;
-		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, Plugin.ModConfig.ConfigMoneyAbundance.Value), new Keyframe(1, Plugin.ModConfig.ConfigMoneyAbundance.Value)));
+		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Plugin.ModConfig.ConfigMoneyAbundance.Value)));
 	}
 }

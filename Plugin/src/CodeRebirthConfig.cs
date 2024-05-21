@@ -14,11 +14,17 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigMeteorShowerMoonList { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
+        public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
+        public ConfigEntry<string> ConfigMeteorShowerMoonsBlacklist { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
-            ConfigMeteorShowerMoonList = configFile.Bind("Weather Options",
-                                                "Meteor Shower | List",
-                                                "Modded, Vanilla",
-                                                "(Currently does not work) List of moons with the Meteor Shower Weather (Vanilla moons need Level at the end of their name, but modded do not).");
+            ConfigMeteorShowerMoonsBlacklist = configFile.Bind("Weather Options",
+                                                "Meteor Shower | Blacklist",
+                                                "CompanyBuildingLevel",
+                                                "List of moons TO REMOVE the Meteor Shower Weather from (Vanilla moons need Level at the end of their name, but modded do not) (Remove CompanyBuildingLevel at your own risk).");
+            ConfigMeteorsDefaultVolume = configFile.Bind("Weather Options",
+                                                "Meteors | Default Volume",
+                                                0.5f,
+                                                "Default Volume of Meteors (between 0 and 1).");
             ConfigWalletEnabled = configFile.Bind("Shop Options",
                                                 "Wallet Item | Enabled",
                                                 true,
