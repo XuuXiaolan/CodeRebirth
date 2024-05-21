@@ -46,15 +46,17 @@ public class MeteorShower : MonoBehaviour {
 
 	private void OnDisable() { // clean up weather
 		try {
-			Plugin.Logger.LogDebug("Cleaning up Weather.");
+			Plugin.Logger.LogInfo("Cleaning up Weather.");
 			foreach (Meteors meteor in meteors) {
-				Plugin.Logger.LogDebug($"Destroying Meteor: {meteor}");
+				Plugin.Logger.LogInfo($"Destroying Meteor: {meteor}");
+				if (meteor == null) continue;
 				if (!meteor.NetworkObject.IsSpawned || IsAuthority()) {
 					Destroy(meteor.gameObject);
 				}
 			}
 			foreach (CraterController crater in craters) {
-				Plugin.Logger.LogDebug($"Destroying Crater: {crater}");
+				Plugin.Logger.LogInfo($"Destroying Crater: {crater}");
+				if (crater == null) continue;
 				Destroy(crater.gameObject);
 			}
 
