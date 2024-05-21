@@ -111,13 +111,13 @@ public class Meteors : NetworkBehaviour {
         ImpactAudio.Play();
             
         if (IsHost && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap) {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", transform.position + new Vector3(0, -1f, 0));
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", target);
         }
             
-        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Assets.CraterPrefab, transform.position, Quaternion.identity);
+        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Assets.CraterPrefab, target, Quaternion.identity);
         CraterController craterController = craterInstance.GetComponent<CraterController>();
         if (craterController != null) {
-            craterController.ShowCrater(transform.position);
+            craterController.ShowCrater(target);
         }
         
         FireTrail.Stop();
@@ -149,43 +149,8 @@ public class CraterController : MonoBehaviour // Change this to use decals!!
 
     public void ShowCrater(Vector3 impactLocation)
     {
-        transform.position = impactLocation; // Position the crater at the impact location
-        
-        // Perform a raycast downward from a position slightly above the impact location
-        RaycastHit hit;
-        float raycastDistance = 50f; // Max distance the raycast will check for terrain
-        Vector3 raycastOrigin = impactLocation; // Start the raycast 5 units above the impact location
-
-        // Ensure the crater has a unique material instance to modify
-        Renderer craterRenderer = craterMesh.GetComponent<Renderer>();
-        if (craterRenderer != null) {
-            craterRenderer.material = new Material(craterRenderer.material); // Create a new instance of the material
-            craterRenderer.material.color = Color.grey;
-            // Cast the ray to detect terrain
-            if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance, LayerMask.GetMask("Room"))) {
-                // Check if the object hit is tagged as "Terrain"
-                if (hit.collider.gameObject.tag == "Grass") {
-                    // Additional logic for when the terrain is correctly tagged
-                    craterRenderer.material.color = new Color(0.043f, 0.141f, 0.043f);
-                    Plugin.Logger.LogInfo("Found Grass!");
-                } else if (hit.collider.gameObject.tag == "Snow"){
-                    craterRenderer.material.color = new Color(0.925f, 0.929f, 1f);
-                    Plugin.Logger.LogInfo("Found Snow!");
-                } else if (hit.collider.gameObject.tag == "Rock"){
-                    craterRenderer.material.color = Color.grey;
-                    Plugin.Logger.LogInfo("Found Rock!");
-                } else if (hit.collider.gameObject.tag == "Gravel"){
-                    craterRenderer.material.color = new Color(0.761f, 0.576f, 0f);
-                    Plugin.Logger.LogInfo("Found Sand!");
-                } else {
-                    Debug.LogWarning("The hit object is not tagged as 'Terrain'.");
-                }
-            } else {
-                Debug.LogWarning("Terrain not found below the impact point.");
-            }
-        } else {
-            Debug.LogWarning("Renderer component not found on the crater object.");
-        }
+        transform.position = impactLocation + new Vector3(0, 3f, 0); // Position the crater at the impact location
+    
         craterMesh.SetActive(true);
         craterVisible = true;
         fireCollider.enabled = true; // Enable the ColliderIdentifier
