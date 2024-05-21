@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.Misc;
+using Newtonsoft.Json.Serialization;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -46,10 +48,13 @@ public class MeteorShower : MonoBehaviour {
 		try {
 			Plugin.Logger.LogDebug("Cleaning up Weather.");
 			foreach (Meteors meteor in meteors) {
-				if(!meteor.NetworkObject.IsSpawned || IsAuthority())
-				Destroy(meteor.gameObject);
+				Plugin.Logger.LogDebug($"Destroying Meteor: {meteor}");
+				if (!meteor.NetworkObject.IsSpawned || IsAuthority()) {
+					Destroy(meteor.gameObject);
+				}
 			}
 			foreach (CraterController crater in craters) {
+				Plugin.Logger.LogDebug($"Destroying Crater: {crater}");
 				Destroy(crater.gameObject);
 			}
 
@@ -59,8 +64,8 @@ public class MeteorShower : MonoBehaviour {
 
 			if(!IsAuthority()) return; // Only run on the host.
 			StopCoroutine(spawnHandler);
-		} catch {
-			Plugin.Logger.LogFatal("Cleaning up Weather failed.");
+		} catch (Exception e) {
+			Plugin.Logger.LogFatal("Cleaning up Weather failed." + e.Message);
 		}
 	}
     private Vector3 CalculateAverageLandNodePosition()
