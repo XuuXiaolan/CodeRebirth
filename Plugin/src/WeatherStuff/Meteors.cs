@@ -113,18 +113,18 @@ public class Meteors : NetworkBehaviour {
         ImpactAudio.Play();
             
         if (IsHost && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap) {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", transform.position + new Vector3(0, -1f, 0));
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", target);
         }
             
-        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Assets.CraterPrefab, transform.position, Quaternion.identity);
+        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Assets.CraterPrefab, target, Quaternion.identity);
         CraterController craterController = craterInstance.GetComponent<CraterController>();
         if (craterController != null) {
-            craterController.ShowCrater(transform.position);
+            craterController.ShowCrater(target);
         }
         
         FireTrail.Stop();
             
-        Landmine.SpawnExplosion(transform.position, true, 0f, 10f, 25, 75, WeatherHandler.Instance.Assets.ExplosionPrefab);
+        Landmine.SpawnExplosion(transform.position, true, 4f, 20f, 50, 200, WeatherHandler.Instance.Assets.ExplosionPrefab);
 
         yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit. <-- Actually i think the meteor just looks cool staying on the ground for an extra 10 seconds.
         if(IsHost)
@@ -150,60 +150,11 @@ public class CraterController : MonoBehaviour // Change this to use decals!!
     static readonly Color SAND_IMPACT_COLOUR = new Color(0.761f, 0.576f, 0f);
     public void ShowCrater(Vector3 impactLocation)
     {
-        transform.position = impactLocation; // Position the crater at the impact location
-        
-        // Perform a raycast downward from a position slightly above the impact location
-        RaycastHit hit;
-        float raycastDistance = 50f; // Max distance the raycast will check for terrain
-        Vector3 raycastOrigin = impactLocation; // Start the raycast 5 units above the impact location
-
-        ToggleCrater(true);
-
-        // Ensure the crater has a unique material instance to modify
-        Renderer craterRenderer = craterMesh.GetComponent<Renderer>();
-        if (craterRenderer == null)
-        {
-            Debug.LogWarning("Renderer component not found on the crater object.");
-            return;
-        }
-
-        craterRenderer.material = new Material(craterRenderer.material); // Create a new instance of the material
-        craterRenderer.material.color = Color.grey;
-        // Cast the ray to detect terrain
-        if (!Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance, LayerMask.GetMask("Room")))
-        {
-            Debug.LogWarning("Terrain not found below the impact point.");
-            return;
-        }
-        // Check if the object hit is tagged as "Terrain"
-        switch (hit.collider.gameObject.tag)
-        {   
-            case "Grass":
-                {
-                    craterRenderer.material.color = GRASS_IMPACT_COLOUR;
-                    Plugin.Logger.LogInfo("Found Grass!");
-                    break;
-                }
-            case "Snow":
-                {
-                    craterRenderer.material.color = SNOW_IMPACT_COLOUR;
-                    Plugin.Logger.LogInfo("Found Snow!");
-                    break;
-                }
-            case "Rock":
-                {
-                    craterRenderer.material.color = ROCK_IMPACT_COLOUR;
-                    Plugin.Logger.LogInfo("Found Rock!");
-                    break;
-                }
-            case "Gravel":
-                {
-                    craterRenderer.material.color = SAND_IMPACT_COLOUR;
-                    Plugin.Logger.LogInfo("Found Sand!");
-                    break;
-                }
-            default: Debug.LogWarning("The hit object is not tagged as 'Terrain'."); break;
-        }
+        transform.position = impactLocation + new Vector3(0, 3f, 0); // Position the crater at the impact location
+    
+        craterMesh.SetActive(true);
+        craterVisible = true;
+        fireCollider.enabled = true; // Enable the ColliderIdentifier
     }
 
     void ToggleCrater(bool enable)
