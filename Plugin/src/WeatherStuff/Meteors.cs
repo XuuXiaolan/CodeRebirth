@@ -92,14 +92,14 @@ public class Meteors : NetworkBehaviour {
         if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) {
             NormalTravelAudio.volume = 0;
             CloseTravelAudio.volume = 0;
-            ImpactAudio.volume = 0.05f; // make it still audible but not as loud
+            ImpactAudio.volume = 0.05f;
         } else {
-            NormalTravelAudio.volume = 1;
-            CloseTravelAudio.volume = 1;
-            ImpactAudio.volume = 1;
+            NormalTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+            CloseTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+            ImpactAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
         }
         if (((1-Progress)*travelTime) <= 4.106f && !CloseTravelAudio.isPlaying) {
-            NormalTravelAudio.volume = 0.5f;
+            NormalTravelAudio.volume = Mathf.Clamp01(0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
             CloseTravelAudio.Play();
         }
     }

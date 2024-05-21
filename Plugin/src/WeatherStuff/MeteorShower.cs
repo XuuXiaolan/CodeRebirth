@@ -28,7 +28,7 @@ public class MeteorShower : MonoBehaviour {
 	public static bool Active => Instance != null;
 	
 	private void OnEnable() { // init weather
-		Plugin.Logger.LogInfo("Initing Meteor Shower Weather.");
+		Plugin.Logger.LogInfo("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
