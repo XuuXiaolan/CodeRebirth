@@ -42,15 +42,12 @@ public class ContentHandler<T> where T: ContentHandler<T> {
         foreach (string entry in configMoonRarity.Split(',').Select(s => s.Trim())) {
             string[] entryParts = entry.Split(':');
 
-            if (entryParts.Length != 2)
-            {
-                continue;
-            }
+            if (entryParts.Length != 2) continue;
 
             string name = entryParts[0];
             int spawnrate;
 
-            if (!int.TryParse(entryParts[1], out spawnrate))continue;
+            if (!int.TryParse(entryParts[1], out spawnrate)) continue;
 
             if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
             {

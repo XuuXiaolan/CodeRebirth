@@ -95,7 +95,7 @@ Scrap to get some extra cash for the quota, Coin doesn't affect normal-level scr
 ## Credits - CodeRebirth Team!
 
 Coding:
-- Xu, Bongo and TestAccount666
+- Xu, Bongo, TestAccount666 and WhiteSpike
 
 Modeling/Designs:
 - S1ckboy, Solid, Codding Cat and IntegrityChaos

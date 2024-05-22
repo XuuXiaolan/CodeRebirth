@@ -126,7 +126,6 @@ public class MeteorShower : MonoBehaviour {
 				);
         }
 	}
-
 	private void SpawnVisualMeteors(Vector3 centralLocation, Vector3 offset = default, float speed = 0f, float sizeMultiplier = 1f, GameObject overridePrefab = null)
     {
         Meteors meteor = Instantiate(overridePrefab != null ? overridePrefab : WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
@@ -134,7 +133,6 @@ public class MeteorShower : MonoBehaviour {
         AddRandomMovement(meteor, speed);
         meteor.SetupAsLooping();
     }
-
 	private IEnumerator MeteorSpawnerHandler() {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get meteors before theyve inited everything.
 		Plugin.Logger.LogInfo("Began spawning meteors.");
@@ -211,7 +209,6 @@ public class MeteorShower : MonoBehaviour {
 			return new Vector3(0,0,0);
 		}
 	}
-
     private void AddRandomMovement(Meteors meteor, float speed)
     {
         var rb = meteor.GetComponent<Rigidbody>();

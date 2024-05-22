@@ -8,6 +8,7 @@ namespace CodeRebirth.ItemStuff;
 
 [AddComponentMenu("TestAccount666/Code Rebirth/Material Variants")]
 public class MaterialVariants : NetworkBehaviour {
+    [SerializeField]
     [Tooltip("The item data of the scrap.")]
     [SerializeField]
     Item itemData;
@@ -20,7 +21,6 @@ public class MaterialVariants : NetworkBehaviour {
     [FormerlySerializedAs("ChangeScanNodeText")]
     [Space(5f)]
     bool changeScanNodeText;
-
     [SerializeField]
     [Tooltip("The text to change to when the material is changed.")]
     string[] scanNodeText;

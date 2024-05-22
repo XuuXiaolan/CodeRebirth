@@ -129,8 +129,10 @@ public class Meteors : NetworkBehaviour {
 }
 public class CraterController : MonoBehaviour // Change this to use decals!!
 {
+    [SerializeField]
+    [Tooltip("The GameObject that will be spawned when the meteor hits the ground.")]
     GameObject craterMesh;
-    ColliderIdentifier fireCollider;
+    private ColliderIdentifier fireCollider;
 
     private void Awake()
     {
@@ -145,7 +147,6 @@ public class CraterController : MonoBehaviour // Change this to use decals!!
         craterMesh.SetActive(true);
         fireCollider.enabled = true; // Enable the ColliderIdentifier
     }
-
     void ToggleCrater(bool enable)
     {
         craterMesh.SetActive(enable);

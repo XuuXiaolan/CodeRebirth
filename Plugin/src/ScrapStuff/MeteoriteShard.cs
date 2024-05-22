@@ -3,11 +3,13 @@ using UnityEngine;
 
 namespace CodeRebirth.ScrapStuff;
 public class MeteoriteShard : GrabbableObject {
-    private ParticleSystem[] particles; 
-    private bool particlesOn;
+    ParticleSystem[] particles; 
+    bool particlesOn;
+    Light emittingLight;
     public override void Start() {
         base.Start();
         particles = GetComponentsInChildren<ParticleSystem>();
+        emittingLight = GetComponentInChildren<Light>();
 
         GetComponent<ScrapValueSyncer>().SetScrapValue(scrapValue);
     }
@@ -16,19 +18,11 @@ public class MeteoriteShard : GrabbableObject {
             foreach (ParticleSystem particle in particles) {
                 particle.Stop();
                 particle.Clear();
-                this.transform.Find("MagicFire").GetComponentInChildren<ParticleSystem>().Stop();
-                this.transform.Find("MagicFireBlue").GetComponentInChildren<ParticleSystem>().Stop();
-                this.transform.Find("MagicFire").GetComponentInChildren<ParticleSystem>().Clear();
-                this.transform.Find("MagicFireBlue").GetComponentInChildren<ParticleSystem>().Clear();
             }
             particlesOn = false;
         } else {
             foreach (ParticleSystem particle in particles) {
                 particle.Play();
-                if (particle.transform.parent.name == "MagicFire" || particle.transform.parent.name == "MagicFireBlue") {
-                    this.transform.Find("MagicFire").GetComponentInChildren<ParticleSystem>().Play();
-                    this.transform.Find("MagicFireBlue").GetComponentInChildren<ParticleSystem>().Play();
-                }
             }
             particlesOn = true;
         }
@@ -40,10 +34,15 @@ public class MeteoriteShard : GrabbableObject {
     public override void PocketItem() {
         base.PocketItem();
         HandleParticles();
-        this.transform.GetComponentInChildren<Light>().enabled = false;
+        ToggleEmittingLight(false);
     }
     public override void EquipItem() {
         base.EquipItem();
-        this.transform.GetComponentInChildren<Light>().enabled = true;
+        ToggleEmittingLight(true);
+    }
+
+    void ToggleEmittingLight(bool toggle)
+    {
+        emittingLight.enabled = toggle;
     }
 }
