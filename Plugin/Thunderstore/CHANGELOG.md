@@ -9,6 +9,7 @@
 - Improved crater fire.
 - Got rid of crater and replaced it with a better texture on the ground.
 - Fixed issues with desync'd items.
+- Improved a lot on meteors by increasing size, messing with the particle system, please report any fps drops.
 
 ## v0.0.2
 - Fixed weather not turning off when heading to main menu/other reasons.
