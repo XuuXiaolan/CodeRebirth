@@ -1,17 +1,12 @@
-using System;
-using System.Collections;
 using System.Diagnostics;
-using GameNetcodeStuff;
-using Unity.Mathematics;
+using CodeRebirth.Misc;
 using Unity.Netcode;
-using UnityEngine;
-using UnityEngine.AI;
 
 namespace CodeRebirth.EnemyStuff;
 public class SnailCatAI : EnemyAI
 {
 
-    enum State {
+    public enum State {
         Wandering,
     }
 
@@ -24,12 +19,7 @@ public class SnailCatAI : EnemyAI
         base.Start();
         LogIfDebugBuild("SnailCat Spawned.");
         StartSearch(transform.position);
-        SwitchToBehaviourClientRpc((int)State.Wandering);
-    }
-
-    public override void Update() {
-        base.Update();
-        if (isEnemyDead) return;
+        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
     }
 
     public override void DoAIInterval() {

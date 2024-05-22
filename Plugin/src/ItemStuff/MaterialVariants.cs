@@ -10,7 +10,6 @@ namespace CodeRebirth.ItemStuff;
 public class MaterialVariants : NetworkBehaviour {
     [SerializeField]
     [Tooltip("The item data of the scrap.")]
-    [SerializeField]
     Item itemData;
         
     [Space(5f)]

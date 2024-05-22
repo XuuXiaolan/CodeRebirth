@@ -18,7 +18,7 @@ public class CutieFlyAI : EnemyAI
     const float blendShapeSpeed = 1000f;
     bool climbing = true;
 
-    enum State {
+    public enum State {
         Wandering,
         Perching,
         Idle,
@@ -35,7 +35,7 @@ public class CutieFlyAI : EnemyAI
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         lastIdleCycle = Time.time;
         StartSearch(transform.position);
-        SwitchToBehaviourClientRpc((int)State.Wandering);
+        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
     }
 
     public override void Update() {
@@ -61,8 +61,7 @@ public class CutieFlyAI : EnemyAI
         if (agent.baseOffset <= 2.5f) climbing = true;
         if (timeSinceLastStateChange > 20f)
         {
-            SwitchToBehaviourClientRpc((int)State.Perching);
-            LogIfDebugBuild("Switching to Perching State.");
+            this.SwitchToBehaviourStateOnLocalClient(State.Perching);
             lastIdleCycle = Time.time;
         }
     }
@@ -75,11 +74,9 @@ public class CutieFlyAI : EnemyAI
         if (agent.baseOffset <= 0.1f)
         {
             StopSearch(currentSearch);
-            creatureSFX.enabled = false;
-            creatureVoice.enabled = false;
-            SwitchToBehaviourClientRpc((int)State.Idle);
-            SyncBlendShapeWeightClientRpc(100f);
-            LogIfDebugBuild("Switching to Idle State.");
+            this.ToggleEnemySounds(false);
+            this.SwitchToBehaviourStateOnLocalClient(State.Idle);
+            SyncBlendShapeWeightOnLocalClient(100f);
             lastIdleCycle = Time.time;
         }
     }
@@ -90,10 +87,8 @@ public class CutieFlyAI : EnemyAI
         if (timeSinceLastStateChange > 5f)
         {
             StartSearch(transform.position);
-            creatureSFX.enabled = true;
-            creatureVoice.enabled = true;
-            SwitchToBehaviourClientRpc((int)State.Wandering);
-            LogIfDebugBuild("Switching to Wandering State.");
+            this.ToggleEnemySounds(true);
+            this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
             lastIdleCycle = Time.time;
         }
     }
@@ -124,6 +119,11 @@ public class CutieFlyAI : EnemyAI
 
     [ClientRpc]
     public void SyncBlendShapeWeightClientRpc(float currentBlendShapeWeight) {
+        SyncBlendShapeWeightOnLocalClient(currentBlendShapeWeight);
+    }
+
+    public void SyncBlendShapeWeightOnLocalClient(float currentBlendShapeWeight)
+    {
         skinnedMeshRenderer.SetBlendShapeWeight(0, currentBlendShapeWeight);
     }
 }

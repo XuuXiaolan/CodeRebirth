@@ -1,8 +1,10 @@
 ﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using CodeRebirth.EnemyStuff;
 using MonoMod.Cil;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -11,8 +13,14 @@ using Random = System.Random;
 
 namespace CodeRebirth.Misc;
 
-public static class ExtensionMethods {
-	public static IEnumerator WaitUntilSpawned(this NetworkObject networkObject) {
+public static class ExtensionMethods
+{
+    [Conditional("DEBUG")]
+    static void LogIfDebugBuild(string text)
+    {
+        Plugin.Logger.LogInfo(text);
+    }
+    public static IEnumerator WaitUntilSpawned(this NetworkObject networkObject) {
 		yield return new WaitUntil(() => networkObject.IsSpawned);
 	}
 
@@ -68,4 +76,21 @@ public static class ExtensionMethods {
 	public static Quaternion NextQuaternion(this Random random) {
 		return quaternion.Euler(random.NextFloat(0f, 360f),random.NextFloat(0f, 360f),random.NextFloat(0f, 360f));
 	}
+
+	public static void ToggleEnemySounds(this EnemyAI enemyAI, bool toggle)
+	{
+		enemyAI.creatureSFX.enabled = toggle;
+		enemyAI.creatureVoice.enabled = toggle;
+    }
+    public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, SnailCatAI.State state)
+    {
+        enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
+        LogIfDebugBuild($"Switching to {state} State.");
+    }
+
+    public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, CutieFlyAI.State state)
+	{
+		enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
+        LogIfDebugBuild($"Switching to {state} State.");
+    }
 }
