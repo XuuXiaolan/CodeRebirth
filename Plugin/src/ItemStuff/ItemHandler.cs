@@ -19,7 +19,10 @@ public class ItemHandler : ContentHandler<ItemHandler> {
 		[LoadFromBundle("EpicAxeObj.asset")]
 		public Item EpicAxeItem { get; private set; }
 
-		public ItemAssets(string bundleName) : base(bundleName) {
+        [LoadFromBundle("SnowGlobeObj.asset")]
+        public Item SnowGlobeItem { get; private set; }
+
+        public ItemAssets(string bundleName) : base(bundleName) {
 		}
 	}
 
@@ -30,5 +33,6 @@ public class ItemHandler : ContentHandler<ItemHandler> {
         
 		RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, false, Assets.WalletItem, Assets.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
 		RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, Assets.EpicAxeItem);
+		RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, Assets.SnowGlobeItem);
 	}
 }
