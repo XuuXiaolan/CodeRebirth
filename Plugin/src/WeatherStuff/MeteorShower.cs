@@ -15,14 +15,27 @@ public class MeteorShower : MonoBehaviour {
 	Coroutine spawnHandler;
 
 	List<GameObject> nodes;
-    public int minTimeBetweenSpawns;
-    public int maxTimeBetweenSpawns;
-    public int maxMeteorsPerSpawn;
-    public int minMeteorsPerSpawn;
-	private List<GameObject> alreadyUsedNodes;
+    [Space(5f)]
+    [Header("Time between Meteor Spawns")]
+	[SerializeField]
+	[Tooltip("Minimum Time between Meteor Spawns")]
+    int minTimeBetweenSpawns;
+    [Space(5f)]
+    [SerializeField]
+    [Tooltip("Maximum Time between Meteor Spawns")]
+    int maxTimeBetweenSpawns;
+    [Space(5f)]
+    [SerializeField]
+    [Tooltip("Minimum Amount of Meteors per Spawn")]
+    int minMeteorsPerSpawn;
+    [Space(5f)]
+    [SerializeField]
+    [Tooltip("Maximum Amount of Meteors per Spawn")]
+    int maxMeteorsPerSpawn;
+    private List<GameObject> alreadyUsedNodes;
 
-	public List<Meteors> meteors = new List<Meteors>(); // Proper initialization
-	public List<CraterController> craters = new List<CraterController>(); // Similarly for craters
+	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
+	readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
 	
 	Random random;
 	
@@ -35,7 +48,7 @@ public class MeteorShower : MonoBehaviour {
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
-		nodes = CullNodesByProximity(nodes, 5.0f, 50, true).ToList();
+		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
 		SpawnOverheadVisualMeteors(random.Next(15, 45));
 		
 		if(!IsAuthority()) return; // Only run on the host.
@@ -46,22 +59,9 @@ public class MeteorShower : MonoBehaviour {
 
 	private void OnDisable() { // clean up weather
 		try {
-			Plugin.Logger.LogInfo("Cleaning up Weather.");
-			foreach (Meteors meteor in meteors) {
-				Plugin.Logger.LogInfo($"Destroying Meteor: {meteor}");
-				if (meteor == null) continue;
-				if (!meteor.NetworkObject.IsSpawned || IsAuthority()) {
-					Destroy(meteor.gameObject);
-				}
-			}
-			foreach (CraterController crater in craters) {
-				Plugin.Logger.LogInfo($"Destroying Crater: {crater}");
-				if (crater == null) continue;
-				Destroy(crater.gameObject);
-			}
-
-			meteors = [];
-			craters = [];
+			Plugin.Logger.LogDebug("Cleaning up Weather.");
+			ClearMeteorites();
+			ClearCraters();
 			Instance = null;
 
 			if(!IsAuthority()) return; // Only run on the host.
@@ -70,6 +70,27 @@ public class MeteorShower : MonoBehaviour {
 			Plugin.Logger.LogFatal("Cleaning up Weather failed." + e.Message);
 		}
 	}
+	void ClearMeteorites()
+	{
+        foreach (Meteors meteor in meteors)
+        {
+			Plugin.Logger.LogInfo($"Destroying Meteor: {meteor}");
+			if (meteor == null) continue;
+            if (!meteor.NetworkObject.IsSpawned || IsAuthority())
+                Destroy(meteor.gameObject);
+        }
+        meteors.Clear();
+    }
+	void ClearCraters()
+	{
+        foreach (CraterController crater in craters)
+        {
+			Plugin.Logger.LogInfo($"Destroying Crater: {crater}");
+			if (crater == null) continue;
+            Destroy(crater.gameObject);
+        }
+        craters.Clear();
+    }
     private Vector3 CalculateAverageLandNodePosition()
     {
         Vector3 sumPosition = Vector3.zero;
@@ -81,29 +102,34 @@ public class MeteorShower : MonoBehaviour {
             count++;
         }
 
-        if (count > 0)
-            return sumPosition / count;
-        else
-            return Vector3.zero; // Return a default position if no nodes are found
+        return count > 0 ? sumPosition / count : Vector3.zero;
     }
 	private void SpawnOverheadVisualMeteors(int amount = 50) {
         Vector3 averageLocation = CalculateAverageLandNodePosition();
         Vector3 centralLocation = averageLocation + new Vector3(0, random.Next(250, 300), 0);
 		for (int i = 0; i < amount; i++) {
-            Vector3 randomOffset = new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175));
-			Meteors SmallMeteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation + randomOffset, Quaternion.identity).GetComponent<Meteors>();
-            SmallMeteor.transform.localScale *= (float)random.NextDouble()*12f+2f;
-            AddRandomMovement(SmallMeteor, 2f);
-			SmallMeteor.SetupAsLooping();
+			SpawnVisualMeteors(
+				centralLocation: centralLocation,
+				offset: new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175)),
+				speed: 2f,
+				sizeMultiplier: (float)random.NextDouble() * 12f + 2f);
 		}
         for (int i = 0; i < 1; i++) {
-            Meteors LargeMeteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation, Quaternion.identity).GetComponent<Meteors>();
-            LargeMeteor.transform.localScale *= random.Next(30,50);
-            AddRandomMovement(LargeMeteor, 1.5f);
-            LargeMeteor.SetupAsLooping();
+			SpawnVisualMeteors(
+				centralLocation: centralLocation,
+				offset: Vector3.zero,
+				speed: 1.5f,
+				sizeMultiplier: random.Next(30, 50)
+				);
         }
 	}
-
+	private void SpawnVisualMeteors(Vector3 centralLocation, Vector3 offset = default, float speed = 0f, float sizeMultiplier = 1f, GameObject overridePrefab = null)
+    {
+        Meteors meteor = Instantiate(overridePrefab != null ? overridePrefab : WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
+        meteor.transform.localScale *= sizeMultiplier;
+        AddRandomMovement(meteor, speed);
+        meteor.SetupAsLooping();
+    }
 	private IEnumerator MeteorSpawnerHandler() {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get meteors before theyve inited everything.
 		Plugin.Logger.LogInfo("Began spawning meteors.");
@@ -111,7 +137,7 @@ public class MeteorShower : MonoBehaviour {
 			Plugin.Logger.LogDebug("Spawning Meteor.");
 
 			for (int i = 0; i < random.Next(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++) {
-				SpawnMeteor(GetRandomTargetPosition());
+				SpawnMeteor(GetRandomTargetPosition(minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
 			}
 			int delay = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
@@ -134,7 +160,7 @@ public class MeteorShower : MonoBehaviour {
 		meteor.NetworkObject.Spawn();
 	}
 	
-	private IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, float minShipDistance = 50f, bool cullDoors = false)
+	private IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, bool cullDoors = false)
 	{
 		var nodeList = new List<GameObject>(nodes);
 		var toCull = new HashSet<GameObject>();
@@ -160,30 +186,26 @@ public class MeteorShower : MonoBehaviour {
 		if (cullDoors)
 		{
 			var entrances = FindObjectsOfType<EntranceTeleport>().ToList();
-			nodeList.RemoveAll(n => entrances.Any(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
+			nodeList.RemoveAll(n => entrances.Exists(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
 		}
 
 		return nodeList;
 	}
 
-	private Vector3 GetRandomTargetPosition() {
+	private Vector3 GetRandomTargetPosition(float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
 		try {
 			var nextNode = random.NextItem(nodes);
 			Vector3 position = nextNode.transform.position;
 			if (!alreadyUsedNodes.Contains(nextNode)) {
 				alreadyUsedNodes.Add(nextNode);
 			}
-			position += new Vector3(random.NextFloat(-2, 2), random.NextFloat(-5, 5), random.NextFloat(-2, 2)); // Gonna be using decals so should be okay!
-			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 2, default, random, -1);
+			position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
+			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
 		return position;
 		} catch {
 			Plugin.Logger.LogFatal("Selecting random position failed.");
 			return new Vector3(0,0,0);
 		}
-	}
-
-	private bool IsAuthority() {
-		return NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
 	}
     private void AddRandomMovement(Meteors meteor, float speed)
     {
@@ -210,6 +232,30 @@ public class MeteorShower : MonoBehaviour {
         // Continuously adjust direction to ensure stability if necessary
         meteor.gameObject.AddComponent<StabilizeMovement>().Initialize(rb, initialDirection.normalized * speed);
     }
+	private bool IsAuthority()
+    {
+        return NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
+    }
+
+	public void AddMeteor(Meteors meteor)
+	{
+		meteors.Add(meteor);
+	}
+
+	public void RemoveMeteor(Meteors meteor)
+	{
+		meteors.Remove(meteor);
+	}
+
+	public void AddCrater(CraterController crater)
+	{
+		craters.Add(crater);
+	}
+
+	public void RemoveCrater(CraterController crater)
+	{
+		craters.Remove(crater);
+	}
 }
 
 public class StabilizeMovement : MonoBehaviour

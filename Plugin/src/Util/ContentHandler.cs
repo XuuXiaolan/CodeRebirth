@@ -15,10 +15,8 @@ public class ContentHandler<T> where T: ContentHandler<T> {
         if (enabled) { 
             (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
             Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
-            return;
         } else {
             Enemies.RegisterEnemy(enemy, 0, Levels.LevelTypes.All, terminalNode, terminalKeyword);
-            return;
         }
     }
     protected void RegisterScrapWithConfig(bool enabled, string configMoonRarity, Item scrap) {
@@ -28,7 +26,6 @@ public class ContentHandler<T> where T: ContentHandler<T> {
         } else {
             Items.RegisterScrap(scrap, 0, Levels.LevelTypes.All);
         }
-        return;
     }
     protected void RegisterShopItemWithConfig(bool enabledShopItem, bool enabledScrap, Item item, TerminalNode terminalNode, int itemCost, string configMoonRarity) {
         if (enabledShopItem) { 
@@ -37,7 +34,6 @@ public class ContentHandler<T> where T: ContentHandler<T> {
         if (enabledScrap) {
             RegisterScrapWithConfig(true, configMoonRarity, item);
         }
-        return;
     }
     protected (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) ConfigParsing(string configMoonRarity) {
         Dictionary<Levels.LevelTypes, int> spawnRateByLevelType = new Dictionary<Levels.LevelTypes, int>();
@@ -46,20 +42,14 @@ public class ContentHandler<T> where T: ContentHandler<T> {
         foreach (string entry in configMoonRarity.Split(',').Select(s => s.Trim())) {
             string[] entryParts = entry.Split(':');
 
-            if (entryParts.Length != 2)
-            {
-                continue;
-            }
+            if (entryParts.Length != 2) continue;
 
             string name = entryParts[0];
             int spawnrate;
 
-            if (!int.TryParse(entryParts[1], out spawnrate))
-            {
-                continue;
-            }
+            if (!int.TryParse(entryParts[1], out spawnrate)) continue;
 
-            if (System.Enum.TryParse<Levels.LevelTypes>(name, true, out Levels.LevelTypes levelType))
+            if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
             {
                 spawnRateByLevelType[levelType] = spawnrate;
                 Plugin.Logger.LogInfo($"Registered spawn rate for level type {levelType} to {spawnrate}");

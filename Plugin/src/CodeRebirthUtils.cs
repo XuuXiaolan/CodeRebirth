@@ -1,15 +1,11 @@
-using CodeRebirth.Misc;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Profiling;
-using static System.Net.Mime.MediaTypeNames;
 using Random = System.Random;
 
 namespace CodeRebirth.src;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
-    static int seed = 0;
-    static System.Random random;
+    static Random random;
     internal static CodeRebirthUtils Instance { get; private set; }
     
     void Awake()
@@ -27,11 +23,10 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (random == null)
         {
             Plugin.Logger.LogInfo("Initializing random");
-            seed = StartOfRound.Instance.randomMapSeed;
-            random = new System.Random(seed + 85);
+            random = new Random(StartOfRound.Instance.randomMapSeed + 85);
         }
 
-        if (itemName.Length == 0)
+        if (itemName == string.Empty)
         {
             Plugin.Logger.LogInfo("itemName is empty");
             return;

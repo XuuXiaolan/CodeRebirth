@@ -12,7 +12,6 @@ namespace CodeRebirth.WeatherStuff;
 public class Apocalypse : MonoBehaviour {
 	Coroutine spawnHandler;
 	List<GameObject> nodes;
-	public List<Meteors> meteors = new List<Meteors>(); // Proper initialization
 	Random random;
 	public static Apocalypse Instance { get; private set; }
 	public static bool Active => Instance != null;
@@ -31,12 +30,6 @@ public class Apocalypse : MonoBehaviour {
 	private void OnDisable() { // clean up weather
 		try {
 			Plugin.Logger.LogDebug("Cleaning up Weather.");
-			foreach (Meteors meteor in meteors) {
-				if(!meteor.NetworkObject.IsSpawned || IsAuthority())
-				Destroy(meteor.gameObject);
-			}
-
-			meteors = [];
 			Instance = null;
 
 			if(!IsAuthority()) return; // Only run on the host.

@@ -20,6 +20,7 @@ using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using CodeRebirth.WeatherStuff;
 using LethalLib;
+using System.Collections.ObjectModel;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -30,13 +31,10 @@ public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
     
-    internal static Dictionary<string, AssetBundle> LoadedBundles = [];
+    internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
     
-    internal static Dictionary<string, Item> samplePrefabs = [];
-    internal static GameObject effectObject;
-    internal static GameObject effectPermanentObject;
+    internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance;
-    internal static int maxCoins;
     public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
     internal static MainAssets Assets { get; private set; }
@@ -78,7 +76,7 @@ public class Plugin : BaseUnityPlugin {
             bundle.Unload(false);
         }
         Logger.LogDebug("Unloaded assetbundles.");
-        LoadedBundles = [];
+        LoadedBundles.Clear();
     }
 
     private void InitializeNetworkBehaviours() {

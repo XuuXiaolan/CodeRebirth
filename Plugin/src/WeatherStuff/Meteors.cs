@@ -31,14 +31,11 @@ public class Meteors : NetworkBehaviour {
     ParticleSystem FireTrail;
     [SerializeField]
     AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
-
-    [SerializeField]
-    Renderer MainMeteorRenderer;
     
     Vector3 origin, target;
 
     float timeInAir, travelTime;
-    bool isMoving, visualAndLooping;
+    bool isMoving;
     
     public float Progress => timeInAir / travelTime;
 
@@ -53,22 +50,17 @@ public class Meteors : NetworkBehaviour {
         transform.LookAt(target);
         UpdateAudio(); // Make sure audio works correctly on the first frame.
         FireTrail.Play();
-        if (apocalypse == true) {
-            travelTime = 500f;
-        }
+        if (apocalypse) travelTime = 500f;
     }
 
     public void SetupAsLooping() {
         isMoving = false;
-        visualAndLooping = true;
     }
     
     private void Awake() {
-        MeteorShower.Instance.meteors.Add(this);
+        MeteorShower.Instance.AddMeteor(this);
         NormalTravelAudio.Play();
         FireTrail.Stop();
-    }
-    private void OnDisable() {
     }
 
     private void Update() {
@@ -76,9 +68,13 @@ public class Meteors : NetworkBehaviour {
         if (!isMoving) return;
 
         timeInAir += Time.deltaTime;
-        float progress = timeInAir / travelTime;
+        MoveMeteor();
+    }
 
-        if (progress >= 1.0f) { // Checks if the progress is 100% or more
+    private void MoveMeteor() {
+        float progress = Progress;
+        if (progress >= 1.0f) 
+        { // Checks if the progress is 100% or more
             transform.position = target; // Ensures the meteor position is set to the target at impact
             StartCoroutine(Impact()); // Start the impact effects
             return; // Exit to prevent further execution in this update
@@ -127,39 +123,34 @@ public class Meteors : NetworkBehaviour {
         yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit. <-- Actually i think the meteor just looks cool staying on the ground for an extra 10 seconds.
         if(IsHost)
             Destroy(gameObject);
-        MeteorShower.Instance.meteors.Remove(this);
+        MeteorShower.Instance.RemoveMeteor(this);
     }
 }
 public class CraterController : MonoBehaviour // Change this to use decals!!
 {
     public GameObject craterMesh;
-    private bool craterVisible = false;
-    private ColliderIdentifier fireCollider;
+    ColliderIdentifier fireCollider;
 
     private void Awake()
     {
-        craterMesh.SetActive(false); // Initially hide the crater
         fireCollider = this.transform.Find("WildFire").GetComponent<ColliderIdentifier>();
-        fireCollider.enabled = false; // Make sure it's disabled on start
-        MeteorShower.Instance.craters.Add(this);
+        ToggleCrater(false);
+        MeteorShower.Instance.AddCrater(this);
     }
-
-    private void OnDisable() {
-    }
-
     public void ShowCrater(Vector3 impactLocation)
     {
         transform.position = impactLocation + new Vector3(0, 3f, 0); // Position the crater at the impact location
     
         craterMesh.SetActive(true);
-        craterVisible = true;
         fireCollider.enabled = true; // Enable the ColliderIdentifier
     }
-
+    void ToggleCrater(bool enable)
+    {
+        craterMesh.SetActive(enable);
+        fireCollider.enabled = enable;
+    }
     public void HideCrater()
     {
-        craterVisible = false;
-        craterMesh.SetActive(false);
-        fireCollider.enabled = false; // Ensure the ColliderIdentifier is disabled when the crater is hidden
+        ToggleCrater(false);
     }
 }

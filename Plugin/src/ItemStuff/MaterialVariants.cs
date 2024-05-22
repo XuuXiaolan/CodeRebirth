@@ -8,27 +8,32 @@ namespace CodeRebirth.ItemStuff;
 
 [AddComponentMenu("TestAccount666/Code Rebirth/Material Variants")]
 public class MaterialVariants : NetworkBehaviour {
+    [SerializeField]
     [Tooltip("The item data of the scrap.")]
-    public Item itemData;
+    Item itemData;
 
     [Space(5f)]
+    [SerializeField]
     [Tooltip("The mesh renderers to change the material of. This will use the first material in the array.")]
-    public Renderer[] renderers;
+    Renderer[] renderers;
 
     [FormerlySerializedAs("ChangeScanNodeText")]
     [Space(5f)]
-    public bool changeScanNodeText;
-
+    bool changeScanNodeText;
+    
+    [SerializeField]
     [Tooltip("The text to change to when the material is changed.")]
-    public string[] scanNodeText;
+    string[] scanNodeText;
 
     [Space(5f)]
+    [SerializeField]
     [Tooltip("The scan node properties to change the text of.")]
-    public ScanNodeProperties scanNodeProperties;
+    ScanNodeProperties scanNodeProperties;
 
     [Space(5f)]
+    [SerializeField]
     [Tooltip("The currently saved material variant.")]
-    public int savedMaterialVariant = -1;
+    int savedMaterialVariant = -1;
 
     public override void OnNetworkSpawn() =>
         SetRendererServerRpc();
