@@ -7,7 +7,7 @@ Overhaul mod for Lethal Company
 - Move the fresh asset-ripped project into the root files (same root as the README.md), replacing the original CodeRebirthUnityProject with this one.
 - Done!
 
-- To make the CodeRebirth.csproj.user work properly, rename the template version by getting rid of the `.template` at the end. simple!
+- To make the CodeRebirth.csproj.user work properly, COPY the template version and get rid of the `.template` at the end in the copy. simple!
 
 ## Working-On List:
 ### Enemies
