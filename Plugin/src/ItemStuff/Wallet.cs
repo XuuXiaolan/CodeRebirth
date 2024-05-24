@@ -12,7 +12,6 @@ public class Wallet : GrabbableObject {
     public override void Start() {
         base.Start();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-
         scanNode = GetComponentInChildren<ScanNodeProperties>();
     }
 

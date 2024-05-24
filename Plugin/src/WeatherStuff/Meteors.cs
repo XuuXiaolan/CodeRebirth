@@ -46,7 +46,6 @@ public class Meteors : NetworkBehaviour {
         float distance = Vector3.Distance(origin, target);
         travelTime = Mathf.Sqrt(2 * distance / initialSpeed);  // Time to reach the target, adjusted for acceleration
         isMoving = true;
-        transform.localScale *= 3f;
         transform.LookAt(target);
         UpdateAudio(); // Make sure audio works correctly on the first frame.
         FireTrail.Play();

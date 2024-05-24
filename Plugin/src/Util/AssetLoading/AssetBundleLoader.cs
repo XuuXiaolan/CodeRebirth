@@ -33,8 +33,10 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T> {
 		}
 
 		foreach(GameObject gameObject in bundle.LoadAllAssets<GameObject>()) {
-			if(fixMixerGroups)
+			if(fixMixerGroups) {
 				Utilities.FixMixerGroups(gameObject);
+				Plugin.Logger.LogInfo($"[AssetBundle Loading] Fixed Mixer Groups: {gameObject.name}");
+			}
 			if(!registerNetworkPrefabs || gameObject.GetComponent<NetworkObject>() == null) continue;
 			NetworkPrefabs.RegisterNetworkPrefab(gameObject);
 			Plugin.Logger.LogInfo($"[AssetBundle Loading] Registered Network Prefab: {gameObject.name}");
