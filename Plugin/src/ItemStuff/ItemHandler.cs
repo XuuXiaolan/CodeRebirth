@@ -13,9 +13,6 @@ public class ItemHandler : ContentHandler<ItemHandler> {
 		[LoadFromBundle("wTerminalNode.asset")]
 		public TerminalNode WalletTerminalNode { get; private set; }
 
-		// Because there's no LoadFromBundle on this one it gets handled here.
-		public List<Material> WalletMaterials { get; private set; } = [];
-        
 		[LoadFromBundle("EpicAxeObj.asset")]
 		public Item EpicAxeItem { get; private set; }
 

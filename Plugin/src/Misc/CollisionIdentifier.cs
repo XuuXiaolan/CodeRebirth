@@ -49,7 +49,9 @@ public class ColliderIdentifier : MonoBehaviour
             }
         }
     }
-
+    private void OnParticleCollisionEvent(ParticleCollisionEvent particleCollisionEvent) {
+        // Maybe use this at some point?
+    }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
