@@ -93,4 +93,14 @@ public static class ExtensionMethods
 		enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
         LogIfDebugBuild($"Switching to {state} State.");
     }
+
+	public static SnailCatAI.State ToSnailState(this int index)
+	{
+		return (SnailCatAI.State)index;
+	}
+
+	public static CutieFlyAI.State ToCutieState(this int index)
+	{
+		return (CutieFlyAI.State)index;
+	}
 }

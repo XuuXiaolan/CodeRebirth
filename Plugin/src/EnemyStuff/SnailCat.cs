@@ -26,8 +26,8 @@ public class SnailCatAI : EnemyAI
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
 
-        switch(currentBehaviourStateIndex) {
-            case (int)State.Wandering:
+        switch(currentBehaviourStateIndex.ToSnailState()) {
+            case State.Wandering:
                 agent.speed = 4f;
                 break;
             default:

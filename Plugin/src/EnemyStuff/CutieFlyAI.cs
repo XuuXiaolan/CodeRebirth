@@ -18,6 +18,18 @@ public class CutieFlyAI : EnemyAI
     const float blendShapeSpeed = 1000f;
     bool climbing = true;
 
+    const float WANDER_SPEED = 3f;
+    const float PERCH_SPEED = 1f;
+    const float IDLE_SPEED = 0f;
+
+    const float MAXIMUM_CLIMBING_OFFSET = 3.5f;
+    const float MINIMUM_CLIMBING_OFFSET = 2.5f;
+
+    const float LAND_OFFSET = 0.1f;
+
+    const float IDLE_MAXIMUM_TIME = 5f;
+    const float WANDERING_MAXIMUM_TIME = 20f;
+
     public enum State {
         Wandering,
         Perching,
@@ -55,11 +67,10 @@ public class CutieFlyAI : EnemyAI
     }
     void WanderAround(float timeSinceLastStateChange)
     {
-        agent.speed = 3f;
+        agent.speed = WANDER_SPEED;
         agent.baseOffset = Mathf.Lerp(agent.baseOffset, climbing ? 4f : 2f, Time.deltaTime * 5f);
-        if (agent.baseOffset >= 3.5f) climbing = false;
-        if (agent.baseOffset <= 2.5f) climbing = true;
-        if (timeSinceLastStateChange > 20f)
+        climbing = agent.baseOffset <= MINIMUM_CLIMBING_OFFSET && agent.baseOffset < MAXIMUM_CLIMBING_OFFSET;
+        if (timeSinceLastStateChange > WANDERING_MAXIMUM_TIME)
         {
             this.SwitchToBehaviourStateOnLocalClient(State.Perching);
             lastIdleCycle = Time.time;
@@ -68,10 +79,10 @@ public class CutieFlyAI : EnemyAI
 
     void Perch()
     {
-        agent.speed = 1f;
+        agent.speed = PERCH_SPEED;
         agent.baseOffset = Mathf.Lerp(agent.baseOffset, 0f, Time.deltaTime * 6f);
 
-        if (agent.baseOffset <= 0.1f)
+        if (agent.baseOffset <= LAND_OFFSET)
         {
             StopSearch(currentSearch);
             this.ToggleEnemySounds(false);
@@ -83,8 +94,8 @@ public class CutieFlyAI : EnemyAI
 
     void Idling(float timeSinceLastStateChange)
     {
-        agent.speed = 0f;
-        if (timeSinceLastStateChange > 5f)
+        agent.speed = IDLE_SPEED;
+        if (timeSinceLastStateChange > IDLE_MAXIMUM_TIME)
         {
             StartSearch(transform.position);
             this.ToggleEnemySounds(true);
@@ -98,16 +109,16 @@ public class CutieFlyAI : EnemyAI
 
         float timeSinceLastStateChange = Time.time - lastIdleCycle;
 
-        switch(currentBehaviourStateIndex) {
-            case (int)State.Wandering:
+        switch(currentBehaviourStateIndex.ToCutieState()) {
+            case State.Wandering:
                 WanderAround(timeSinceLastStateChange);
                 break;
 
-            case (int)State.Perching:
+            case State.Perching:
                 Perch();
                 break;
 
-            case (int)State.Idle:
+            case State.Idle:
                 Idling(timeSinceLastStateChange);
                 break;
 
