@@ -1,18 +1,14 @@
 using System.Diagnostics;
 using CodeRebirth.Misc;
+using CodeRebirth.src.EnemyStuff;
 using Unity.Netcode;
 
 namespace CodeRebirth.EnemyStuff;
-public class SnailCatAI : EnemyAI
+public class SnailCatAI : CodeRebirthEnemyAI
 {
 
     public enum State {
         Wandering,
-    }
-
-    [Conditional("DEBUG")]
-    void LogIfDebugBuild(string text) {
-        Plugin.Logger.LogInfo(text);
     }
 
     public override void Start() {
@@ -34,10 +30,5 @@ public class SnailCatAI : EnemyAI
                 LogIfDebugBuild("This Behavior State doesn't exist!");
                 break;
         }
-    }
-    [ClientRpc]
-    private void DoAnimationClientRpc(string animationName) {
-        LogIfDebugBuild(animationName);
-        creatureAnimator.SetTrigger(animationName);
     }
 }

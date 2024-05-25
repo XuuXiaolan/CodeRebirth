@@ -77,11 +77,11 @@ public static class ExtensionMethods
 		return quaternion.Euler(random.NextFloat(0f, 360f),random.NextFloat(0f, 360f),random.NextFloat(0f, 360f));
 	}
 
-	public static void ToggleEnemySounds(this EnemyAI enemyAI, bool toggle)
+	public static string ToAnimationName(this Duck.Animations animation)
 	{
-		enemyAI.creatureSFX.enabled = toggle;
-		enemyAI.creatureVoice.enabled = toggle;
-    }
+		return nameof(animation);
+	}
+
     public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, SnailCatAI.State state)
     {
         enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
@@ -94,7 +94,18 @@ public static class ExtensionMethods
         LogIfDebugBuild($"Switching to {state} State.");
     }
 
-	public static SnailCatAI.State ToSnailState(this int index)
+    public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, Duck.State state)
+    {
+        enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
+        LogIfDebugBuild($"Switching to {state} State.");
+    }
+    public static void SwitchToBehaviourClientRpc(this EnemyAI enemyAI, Duck.State state)
+    {
+        enemyAI.SwitchToBehaviourClientRpc((int)state);
+        LogIfDebugBuild($"Switching to {state} State.");
+    }
+
+    public static SnailCatAI.State ToSnailState(this int index)
 	{
 		return (SnailCatAI.State)index;
 	}
@@ -102,5 +113,10 @@ public static class ExtensionMethods
 	public static CutieFlyAI.State ToCutieState(this int index)
 	{
 		return (CutieFlyAI.State)index;
+	}
+
+	public static Duck.State ToDuckState(this int index)
+	{
+		return (Duck.State)index;
 	}
 }

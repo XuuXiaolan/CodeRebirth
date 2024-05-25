@@ -7,9 +7,10 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using CodeRebirth.Misc;
+using CodeRebirth.src.EnemyStuff;
 
 namespace CodeRebirth.EnemyStuff;
-public class CutieFlyAI : EnemyAI
+public class CutieFlyAI : CodeRebirthEnemyAI
 {
     SkinnedMeshRenderer skinnedMeshRenderer;
     float lastIdleCycle = 0f;
@@ -34,11 +35,6 @@ public class CutieFlyAI : EnemyAI
         Wandering,
         Perching,
         Idle,
-    }
-
-    [Conditional("DEBUG")]
-    void LogIfDebugBuild(string text) {
-        Plugin.Logger.LogInfo(text);
     }
 
     public override void Start() {
