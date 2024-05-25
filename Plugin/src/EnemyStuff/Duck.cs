@@ -30,25 +30,10 @@ public class Duck : CodeRebirthEnemyAI
     private bool questStarted = false;
     private float questLength = 120f;
     private float range = 20f;
-    [NonSerialized]
-    private NetworkVariable<NetworkBehaviourReference> _playerNetVar = new();
     public PlayerControllerB DuckTargetPlayer
     {
-        get
-        {
-            return (PlayerControllerB)_playerNetVar.Value;
-        }
-        set 
-        {
-            if (value == null)
-            {
-                _playerNetVar.Value = null;
-            }
-            else
-            {
-                _playerNetVar.Value = new NetworkBehaviourReference(value);
-            }
-        }
+        get;
+        set;
     }
     public enum State {
         Spawning,
@@ -81,7 +66,7 @@ public class Duck : CodeRebirthEnemyAI
         ChangeSpeedClientRpc(1f);
         DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
         StartCoroutine(DoSpawning());
-        this.SwitchToBehaviourClientRpc(State.Spawning);
+        this.SwitchToBehaviourClientRpc((int)State.Spawning);
     }
 
     private IEnumerator DoSpawning() {
@@ -91,7 +76,7 @@ public class Duck : CodeRebirthEnemyAI
         StartSearch(transform.position);
         ChangeSpeedClientRpc(3f);
         DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
-        this.SwitchToBehaviourClientRpc(State.Wandering);
+        this.SwitchToBehaviourClientRpc((int)State.Wandering);
         // play a sound for wandering
     }
 
@@ -101,7 +86,7 @@ public class Duck : CodeRebirthEnemyAI
         DoAnimationClientRpc(Animations.startApproach.ToAnimationName());
         ChangeSpeedClientRpc(6f);
         StopSearch(currentSearch); // might have to rpc this?
-        this.SwitchToBehaviourClientRpc(State.Approaching);
+        this.SwitchToBehaviourClientRpc((int)State.Approaching);
         // play a sound for approaching
     }
 
@@ -117,14 +102,14 @@ public class Duck : CodeRebirthEnemyAI
 
     private IEnumerator DoGiveQuest() {
         // Finishes approaching the target player and gives a quest
-        yield return new WaitForSeconds(120f); // don't got a questGiveClip length
+        yield return new WaitForSeconds(5f); // don't got a questGiveClip length
         DoAnimationClientRpc(Animations.startQuest.ToAnimationName());
         questStarted = true;
         ChangeSpeedClientRpc(6f);
         // pick a vent and get it's position and infront of the vent.
         CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", RoundManager.Instance.allEnemyVents[UnityEngine.Random.Range(0, RoundManager.Instance.allEnemyVents.Length)].transform.position + transform.forward * 5f); // I don't have a grape scrap yet so spawn meteorite.
         StartCoroutine(QuestTimer());
-        this.SwitchToBehaviourStateOnLocalClient(State.OngoingQuest);
+        this.SwitchToBehaviourClientRpc((int)State.OngoingQuest);
     }
     private IEnumerator QuestTimer() {
         yield return new WaitForSeconds(questLength);
@@ -139,7 +124,7 @@ public class Duck : CodeRebirthEnemyAI
         if (questTimedOut) {
             DoCompleteQuest(QuestCompletion.TimedOut);
         }
-        if (DuckTargetPlayer.currentlyHeldObject.itemProperties.itemName == "Grape") {
+        if (DuckTargetPlayer.currentlyHeldObject != null && DuckTargetPlayer.currentlyHeldObject.itemProperties.itemName == "Grape") {
             DoCompleteQuest(QuestCompletion.Completed);
         }
         SetDestinationToPosition(DuckTargetPlayer.transform.position); // might have to rpc this?
@@ -172,12 +157,12 @@ public class Duck : CodeRebirthEnemyAI
         if (UnityEngine.Random.Range(0, 100) < 10 && IsHost && reason == QuestCompletion.Completed) {
             questStarted = false;
             questTimedOut = false;
-            this.SwitchToBehaviourClientRpc(State.Wandering);
+            this.SwitchToBehaviourClientRpc((int)State.Wandering);
             DoAnimationClientRpc("startWalk");
             return;
         }
         ChangeSpeedClientRpc(4f);
-        this.SwitchToBehaviourClientRpc(State.Docile);
+        this.SwitchToBehaviourClientRpc((int)State.Docile);
         StartSearch(transform.position); // might have to rpc this?
         DoAnimationClientRpc("startWalk");
     }
@@ -243,14 +228,5 @@ public class Duck : CodeRebirthEnemyAI
 
         Vector3 to = pos - eye.position;
         return Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
-    }
-    [ClientRpc]
-    private void ChangeSpeedClientRpc(float speed) {
-        agent.speed = speed;
-    }
-    [ClientRpc]
-    private void DoAnimationClientRpc(string animationName) {
-        LogIfDebugBuild(animationName);
-        creatureAnimator.SetTrigger(animationName);
     }
 }

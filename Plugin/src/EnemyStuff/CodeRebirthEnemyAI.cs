@@ -28,5 +28,10 @@ namespace CodeRebirth.src.EnemyStuff
             creatureSFX.enabled = toggle;
             creatureVoice.enabled = toggle;
         }
+        [ClientRpc]
+        public void ChangeSpeedClientRpc(float speed)
+        {
+            agent.speed = speed;
+        }
     }
 }

@@ -79,7 +79,7 @@ public static class ExtensionMethods
 
 	public static string ToAnimationName(this Duck.Animations animation)
 	{
-		return nameof(animation);
+		return animation.ToString();
 	}
 
     public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, SnailCatAI.State state)
