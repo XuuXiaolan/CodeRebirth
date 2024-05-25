@@ -16,6 +16,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         public ConfigEntry<string> ConfigMeteorShowerMoonsBlacklist { get; private set; }
+        public ConfigEntry<string> ConfigDuckSpawnWeights { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
             ConfigMeteorShowerMoonsBlacklist = configFile.Bind("Weather Options",
                                                 "Meteor Shower | Blacklist",
@@ -57,6 +58,10 @@ namespace CodeRebirth.Configs {
                                                 "Money Scrap | Average Value",
                                                 15,
                                                 "Average value of Money in the level. (so 5 and 25 are lower and upper limits here)");
+            ConfigDuckSpawnWeights = configFile.Bind("Enemy Options",
+                                                "Duck Enemy | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "SpawnWeight of the Duck in moons");
             ClearUnusedEntries(configFile);
             Plugin.Logger.LogInfo("Setting up config for CodeRebirth plugin...");
         }
