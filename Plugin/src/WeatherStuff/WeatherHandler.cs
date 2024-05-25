@@ -3,6 +3,7 @@ using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using LethalLib.Modules;
 using UnityEngine;
+using WeatherAPI;
 
 namespace CodeRebirth.WeatherStuff;
 
@@ -47,15 +48,19 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		GameObject effectPermanentObject = GameObject.Instantiate(Assets.MeteorPermanentEffectPrefab);
 		effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
 		GameObject.DontDestroyOnLoad(effectPermanentObject);
-
-		MeteorShowerWeather = new WeatherEffect() {
+		
+		WeatherApiEffect weatherEffect = new WeatherApiEffect(effectObject, effectPermanentObject){
 			name = "MeteorShower",
-			effectObject = effectObject,
-			effectPermanentObject = effectPermanentObject,
-			lerpPosition = false,
-			sunAnimatorBool = "eclipse",
-			transitioning = false
+			SunAnimatorBool = "eclipse",
+			DefaultVariable1= 0,
+			DefaultVariable2= 0,
 		};
-		Weathers.RegisterWeather("Meteor Shower", MeteorShowerWeather, Levels.LevelTypes.All, 0, 0);
+
+		Weather MeteorShowerWeather = new("Meteor Shower", weatherEffect){
+			Color = new Color(0.5f, 0.5f, 0.5f),
+			DefaultWeight = 60,
+			ScrapAmountMultiplier = 2,
+			ScrapValueMultiplier = 1,
+		};
 	}
 }

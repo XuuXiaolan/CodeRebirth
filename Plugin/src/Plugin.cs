@@ -27,6 +27,7 @@ namespace CodeRebirth;
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(CustomStoryLogs.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency("WeatherAPI", BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
@@ -45,14 +46,13 @@ public class Plugin : BaseUnityPlugin {
     
     private void Awake() {
         Logger = base.Logger;
+        ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         _harmony.PatchAll(typeof(StartOfRoundPatcher));
         // This should be ran before Network Prefabs are registered.
 
         Assets = new MainAssets("coderebirthasset");
         
         InitializeNetworkBehaviours();
-
-        ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         // Register Keybinds
         InputActionsInstance = new IngameKeybinds();
         
@@ -67,7 +67,6 @@ public class Plugin : BaseUnityPlugin {
             Logger.LogDebug($"Invoking {type.Name}");
             type.GetConstructor([]).Invoke([]);
         }
-        
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
     }
 

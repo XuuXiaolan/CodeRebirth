@@ -32,17 +32,17 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 		
 		[LoadFromBundle("DuckTK.asset")]
 		public TerminalKeyword DuckTerminalKeyword { get; private set; }
-		[LoadFromBundle("GrapeObj")]
-		public Item GrapeItem { get; private set; }
+		//[LoadFromBundle("GrapeObj")]
+		//public Item GrapeItem { get; private set; }
 	}
 
 	public EnemyAssets Assets { get; private set; }
 
 	public EnemyHandler() {
 		Assets = new EnemyAssets("coderebirthasset");
-		Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
+		// Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
-		RegisterEnemyWithConfig(true, Plugin.ModConfig.ConfigDuckSpawnWeights.Value, Assets.DuckEnemyType, Assets.DuckTerminalNode, Assets.DuckTerminalKeyword);
+		// RegisterEnemyWithConfig(true, Plugin.ModConfig.ConfigDuckSpawnWeights.Value, Assets.DuckEnemyType, Assets.DuckTerminalNode, Assets.DuckTerminalKeyword);
         RegisterEnemyWithConfig(true, Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Assets.ButterflyEnemyType, Assets.ButterflyTerminalNode, Assets.ButterflyTerminalKeyword);
         RegisterEnemyWithConfig(true, Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, Assets.SnailCatEnemyType, Assets.SnailCatTerminalNode, Assets.SnailCatTerminalKeyword);
 	}
