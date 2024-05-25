@@ -74,23 +74,24 @@ public class Duck : CodeRebirthEnemyAI
         startQuest,
     }
 
-    public override void Start() {
+    public override void Start() { // Animations and sounds arent here yet so you might get bugs probably lol.
         base.Start();
+        if (!IsHost) return;
         LogIfDebugBuild("Duck Spawned.");
-        agent.speed = 1f;
+        ChangeSpeedClientRpc(1f);
         DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
-        DoSpawning();
-        this.SwitchToBehaviourStateOnLocalClient(State.Spawning);
+        StartCoroutine(DoSpawning());
+        this.SwitchToBehaviourClientRpc(State.Spawning);
     }
 
     private IEnumerator DoSpawning() {
         // Play spawning sound on the audio source's awake
         creatureUltraVoice.Play();
-        yield return new WaitForSeconds(spawnAnimation.length);
+        yield return new WaitForSeconds(2f); // I dont have a spawn animation embedded yet.
         StartSearch(transform.position);
+        ChangeSpeedClientRpc(3f);
         DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
-        agent.speed = 3f;
-        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+        this.SwitchToBehaviourClientRpc(State.Wandering);
         // play a sound for wandering
     }
 
@@ -98,8 +99,9 @@ public class Duck : CodeRebirthEnemyAI
         // Play the ambient karaoke song version
         if (!FindClosestPlayerInRange(range)) return;
         DoAnimationClientRpc(Animations.startApproach.ToAnimationName());
-        agent.speed = 6f;
-        this.SwitchToBehaviourStateOnLocalClient(State.Approaching);
+        ChangeSpeedClientRpc(6f);
+        StopSearch(currentSearch); // might have to rpc this?
+        this.SwitchToBehaviourClientRpc(State.Approaching);
         // play a sound for approaching
     }
 
@@ -109,24 +111,24 @@ public class Duck : CodeRebirthEnemyAI
             DoAnimationClientRpc(Animations.startGiveQuest.ToAnimationName());
             StartCoroutine(DoGiveQuest());
         }
-        SetDestinationToPosition(DuckTargetPlayer.transform.position);
+        SetDestinationToPosition(DuckTargetPlayer.transform.position); // might have to rpc this?
         // approach and keep up with the player
     }
 
     private IEnumerator DoGiveQuest() {
         // Finishes approaching the target player and gives a quest
-        yield return new WaitForSeconds(questGiveClip.length);
+        yield return new WaitForSeconds(120f); // don't got a questGiveClip length
         DoAnimationClientRpc(Animations.startQuest.ToAnimationName());
         questStarted = true;
-        agent.speed = 6f;
+        ChangeSpeedClientRpc(6f);
         // pick a vent and get it's position and infront of the vent.
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc("Grape", RoundManager.Instance.allEnemyVents[UnityEngine.Random.Range(0, RoundManager.Instance.allEnemyVents.Length)].transform.position + transform.forward * 5f);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", RoundManager.Instance.allEnemyVents[UnityEngine.Random.Range(0, RoundManager.Instance.allEnemyVents.Length)].transform.position + transform.forward * 5f); // I don't have a grape scrap yet so spawn meteorite.
         StartCoroutine(QuestTimer());
         this.SwitchToBehaviourStateOnLocalClient(State.OngoingQuest);
     }
     private IEnumerator QuestTimer() {
         yield return new WaitForSeconds(questLength);
-        questTimedOut = true;
+        questTimedOut = true; // won't have to rpc this
     }
     private void DoOngoingQuest() {
         // Chase the player around as they try to find the grape/scrap that was spawned.
@@ -140,7 +142,7 @@ public class Duck : CodeRebirthEnemyAI
         if (DuckTargetPlayer.currentlyHeldObject.itemProperties.itemName == "Grape") {
             DoCompleteQuest(QuestCompletion.Completed);
         }
-        SetDestinationToPosition(DuckTargetPlayer.transform.position);
+        SetDestinationToPosition(DuckTargetPlayer.transform.position); // might have to rpc this?
     }
 
     private void DoCompleteQuest(QuestCompletion reason) {
@@ -171,19 +173,23 @@ public class Duck : CodeRebirthEnemyAI
             questStarted = false;
             questTimedOut = false;
             this.SwitchToBehaviourClientRpc(State.Wandering);
+            DoAnimationClientRpc("startWalk");
             return;
         }
-        agent.speed = 4f;
+        ChangeSpeedClientRpc(4f);
         this.SwitchToBehaviourClientRpc(State.Docile);
+        StartSearch(transform.position); // might have to rpc this?
+        DoAnimationClientRpc("startWalk");
     }
 
     private void DoDocile() {
-        // Completely docile, plays the song in the background kinda quieter etc.
+        // Completely docile, plays the song in the background kinda quieter and just does the same as wandering but without targetting a player.
 
     }
     public override void DoAIInterval() {
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+        if (!IsHost) return;
 
         switch(currentBehaviourStateIndex.ToDuckState()) {
             case State.Spawning:
@@ -237,5 +243,14 @@ public class Duck : CodeRebirthEnemyAI
 
         Vector3 to = pos - eye.position;
         return Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
+    }
+    [ClientRpc]
+    private void ChangeSpeedClientRpc(float speed) {
+        agent.speed = speed;
+    }
+    [ClientRpc]
+    private void DoAnimationClientRpc(string animationName) {
+        LogIfDebugBuild(animationName);
+        creatureAnimator.SetTrigger(animationName);
     }
 }
