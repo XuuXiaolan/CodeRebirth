@@ -19,6 +19,11 @@ namespace CodeRebirth.src.EnemyStuff
         [ClientRpc]
         public void DoAnimationClientRpc(string triggerName)
         {
+            DoAnimationOnLocalClient(triggerName);
+        }
+
+        public void DoAnimationOnLocalClient(string triggerName)
+        {
             LogIfDebugBuild(triggerName);
             creatureAnimator.SetTrigger(triggerName);
         }
@@ -30,6 +35,11 @@ namespace CodeRebirth.src.EnemyStuff
         }
         [ClientRpc]
         public void ChangeSpeedClientRpc(float speed)
+        {
+            ChangeSpeedOnLocalClient(speed);
+        }
+
+        public void ChangeSpeedOnLocalClient(float speed)
         {
             agent.speed = speed;
         }

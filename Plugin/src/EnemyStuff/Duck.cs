@@ -66,7 +66,7 @@ public class Duck : CodeRebirthEnemyAI
         ChangeSpeedClientRpc(1f);
         DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
         StartCoroutine(DoSpawning());
-        this.SwitchToBehaviourClientRpc((int)State.Spawning);
+        SwitchToBehaviourClientRpc((int)State.Spawning);
     }
 
     private IEnumerator DoSpawning() {
@@ -76,7 +76,7 @@ public class Duck : CodeRebirthEnemyAI
         StartSearch(transform.position);
         ChangeSpeedClientRpc(3f);
         DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
-        this.SwitchToBehaviourClientRpc((int)State.Wandering);
+        SwitchToBehaviourClientRpc((int)State.Wandering);
         // play a sound for wandering
     }
 
@@ -86,7 +86,7 @@ public class Duck : CodeRebirthEnemyAI
         DoAnimationClientRpc(Animations.startApproach.ToAnimationName());
         ChangeSpeedClientRpc(6f);
         StopSearch(currentSearch); // might have to rpc this?
-        this.SwitchToBehaviourClientRpc((int)State.Approaching);
+        SwitchToBehaviourClientRpc((int)State.Approaching);
         // play a sound for approaching
     }
 
@@ -109,7 +109,7 @@ public class Duck : CodeRebirthEnemyAI
         // pick a vent and get it's position and infront of the vent.
         CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", RoundManager.Instance.allEnemyVents[UnityEngine.Random.Range(0, RoundManager.Instance.allEnemyVents.Length)].transform.position + transform.forward * 5f); // I don't have a grape scrap yet so spawn meteorite.
         StartCoroutine(QuestTimer());
-        this.SwitchToBehaviourClientRpc((int)State.OngoingQuest);
+        SwitchToBehaviourClientRpc((int)State.OngoingQuest);
     }
     private IEnumerator QuestTimer() {
         yield return new WaitForSeconds(questLength);
@@ -157,12 +157,12 @@ public class Duck : CodeRebirthEnemyAI
         if (UnityEngine.Random.Range(0, 100) < 10 && IsHost && reason == QuestCompletion.Completed) {
             questStarted = false;
             questTimedOut = false;
-            this.SwitchToBehaviourClientRpc((int)State.Wandering);
+            SwitchToBehaviourClientRpc((int)State.Wandering);
             DoAnimationClientRpc("startWalk");
             return;
         }
         ChangeSpeedClientRpc(4f);
-        this.SwitchToBehaviourClientRpc((int)State.Docile);
+        SwitchToBehaviourClientRpc((int)State.Docile);
         StartSearch(transform.position); // might have to rpc this?
         DoAnimationClientRpc("startWalk");
     }
@@ -202,19 +202,20 @@ public class Duck : CodeRebirthEnemyAI
         float minDistance = float.MaxValue;
 
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
-            if (player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom && DuckHasLineOfSightToPosition(player.transform.position, 45f, range)) {
-                float distance = Vector3.Distance(transform.position, player.transform.position);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestPlayer = player;
-                }
-            }
+            bool onSight = player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom && DuckHasLineOfSightToPosition(player.transform.position, 45f, range);
+            if (!onSight) continue;
+
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            bool closer = distance < minDistance;
+            if (!closer) continue;
+
+            minDistance = distance;
+            closestPlayer = player;
         }
-        if (closestPlayer != null) {
-            DuckTargetPlayer = closestPlayer;
-            return true;
-        }
-        return false;
+        if (closestPlayer == null) return false;
+
+        DuckTargetPlayer = closestPlayer;
+        return true;
     }
 
     private bool DuckHasLineOfSightToPosition(Vector3 pos, float width = 60f, float range = 20f, float proximityAwareness = 3f) {
