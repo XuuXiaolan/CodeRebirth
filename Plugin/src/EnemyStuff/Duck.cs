@@ -61,14 +61,14 @@ public class Duck : EnemyAI
         Plugin.Logger.LogInfo(text);
     }
 
-    public override void Start() {
+    public override void Start() { // Animations and sounds arent here yet so you might get bugs probably lol.
         base.Start();
         if (!IsHost) return;
         LogIfDebugBuild("Duck Spawned.");
         ChangeSpeedClientRpc(1f);
         DoAnimationClientRpc("startSpawn");
         SwitchToBehaviourClientRpc((int)State.Spawning);
-        DoSpawning();
+        StartCoroutine(DoSpawning());
     }
 
     public override void Update() {
@@ -79,9 +79,9 @@ public class Duck : EnemyAI
 
     private IEnumerator DoSpawning() {
         // Play spawning sound on the audio source's awake
-        // creatureUltraVoice.Play();
-        yield return new WaitForSeconds(spawnAnimation.length);
-        StartSearch(transform.position);
+        creatureUltraVoice.Play(); // might have to rpc this?
+        yield return new WaitForSeconds(2f); // I dont have a spawn animation embedded yet.
+        StartSearch(transform.position); // might have to rpc this?
         ChangeSpeedClientRpc(3f);
         DoAnimationClientRpc("startWalk");
         SwitchToBehaviourClientRpc((int)State.Wandering);
@@ -111,12 +111,12 @@ public class Duck : EnemyAI
 
     private IEnumerator DoGiveQuest() {
         // Finishes approaching the target player and gives a quest
-        yield return new WaitForSeconds(questGiveClip.length);
+        yield return new WaitForSeconds(120f); // don't got a questGiveClip length
         DoAnimationClientRpc("startQuest");
         questStarted = true; // won't have to rpc this
         ChangeSpeedClientRpc(6f);
         // pick a vent and get it's position and infront of the vent.
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc("Grape", RoundManager.Instance.allEnemyVents[UnityEngine.Random.Range(0, RoundManager.Instance.allEnemyVents.Length)].transform.position + transform.forward * 5f);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", RoundManager.Instance.allEnemyVents[UnityEngine.Random.Range(0, RoundManager.Instance.allEnemyVents.Length)].transform.position + transform.forward * 5f); // I don't have a grape scrap yet so spawn meteorite.
         StartCoroutine(QuestTimer());
         SwitchToBehaviourClientRpc((int)State.OngoingQuest);
     }
