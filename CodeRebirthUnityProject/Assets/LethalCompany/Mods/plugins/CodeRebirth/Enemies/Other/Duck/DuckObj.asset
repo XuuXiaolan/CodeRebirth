@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
   m_Name: DuckObj
   m_EditorClassIdentifier: 
-  enemyName: BlobBoss
+  enemyName: Duck
   probabilityCurve:
     serializedVersion: 2
     m_Curve:
@@ -47,15 +47,15 @@ MonoBehaviour:
   useNumberSpawnedFalloff: 0
   spawnInGroupsOf: 0
   requireNestObjectsToSpawn: 0
-  enemyPrefab: {fileID: 2984345086716998709, guid: 1db672619e634324fbe9838381d21e18,
+  enemyPrefab: {fileID: 8752229204695655941, guid: fd32d0c626e293842af2e72bd0e23d32,
     type: 3}
-  PowerLevel: 1
-  MaxCount: 10
+  PowerLevel: 0
+  MaxCount: 1
   numberSpawned: 0
   nestsSpawned: 0
   isOutsideEnemy: 0
-  isDaytimeEnemy: 1
-  normalizedTimeInDayToLeave: 1
+  isDaytimeEnemy: 0
+  normalizedTimeInDayToLeave: 0
   stunTimeMultiplier: 0
   doorSpeedMultiplier: 1
   stunGameDifficultyMultiplier: 0
