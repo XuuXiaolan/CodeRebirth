@@ -107,6 +107,10 @@ public class Duck : CodeRebirthEnemyAI
         questStarted = true;
         ChangeSpeedClientRpc(6f);
         // pick a vent and get it's position and infront of the vent.
+        if (RoundManager.Instance.allEnemyVents.Length == 0) {
+            DoCompleteQuest(QuestCompletion.Null);
+            yield break;
+        }
         CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", RoundManager.Instance.allEnemyVents[UnityEngine.Random.Range(0, RoundManager.Instance.allEnemyVents.Length)].transform.position + transform.forward * 5f); // I don't have a grape scrap yet so spawn meteorite.
         StartCoroutine(QuestTimer());
         SwitchToBehaviourClientRpc((int)State.OngoingQuest);
@@ -146,7 +150,7 @@ public class Duck : CodeRebirthEnemyAI
                 }
             case QuestCompletion.Null:
                 {
-                    LogIfDebugBuild("Target Player is null?");
+                    LogIfDebugBuild("Target Player or Enemy vents is null?");
                     // play confused audio on where the player went.
                     break;
                 }
