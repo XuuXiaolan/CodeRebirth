@@ -7,9 +7,10 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using CodeRebirth.Misc;
+using CodeRebirth.src.EnemyStuff;
 
 namespace CodeRebirth.EnemyStuff;
-public class CutieFlyAI : EnemyAI
+public class CutieFlyAI : CodeRebirthEnemyAI
 {
     SkinnedMeshRenderer skinnedMeshRenderer;
     float lastIdleCycle = 0f;
@@ -18,15 +19,22 @@ public class CutieFlyAI : EnemyAI
     const float blendShapeSpeed = 1000f;
     bool climbing = true;
 
-    enum State {
+    const float WANDER_SPEED = 3f;
+    const float PERCH_SPEED = 1f;
+    const float IDLE_SPEED = 0f;
+
+    const float MAXIMUM_CLIMBING_OFFSET = 3.5f;
+    const float MINIMUM_CLIMBING_OFFSET = 2.5f;
+
+    const float LAND_OFFSET = 0.1f;
+
+    const float IDLE_MAXIMUM_TIME = 5f;
+    const float WANDERING_MAXIMUM_TIME = 20f;
+
+    public enum State {
         Wandering,
         Perching,
         Idle,
-    }
-
-    [Conditional("DEBUG")]
-    void LogIfDebugBuild(string text) {
-        Plugin.Logger.LogInfo(text);
     }
 
     public override void Start() {
@@ -35,7 +43,7 @@ public class CutieFlyAI : EnemyAI
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         lastIdleCycle = Time.time;
         StartSearch(transform.position);
-        SwitchToBehaviourClientRpc((int)State.Wandering);
+        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
     }
 
     public override void Update() {
@@ -53,47 +61,41 @@ public class CutieFlyAI : EnemyAI
         }
         skinnedMeshRenderer.SetBlendShapeWeight(0, blendShapeWeight);
     }
-     void WanderAround(float timeSinceLastStateChange)
+    void WanderAround(float timeSinceLastStateChange)
     {
-        agent.speed = 3f;
+        agent.speed = WANDER_SPEED;
         agent.baseOffset = Mathf.Lerp(agent.baseOffset, climbing ? 4f : 2f, Time.deltaTime * 5f);
-        if (agent.baseOffset >= 3.5f) climbing = false;
-        if (agent.baseOffset <= 2.5f) climbing = true;
-        if (timeSinceLastStateChange > 20f)
+        climbing = agent.baseOffset <= MINIMUM_CLIMBING_OFFSET && agent.baseOffset < MAXIMUM_CLIMBING_OFFSET;
+        if (timeSinceLastStateChange > WANDERING_MAXIMUM_TIME)
         {
-            SwitchToBehaviourClientRpc((int)State.Perching);
-            LogIfDebugBuild("Switching to Perching State.");
+            this.SwitchToBehaviourStateOnLocalClient(State.Perching);
             lastIdleCycle = Time.time;
         }
     }
 
     void Perch()
     {
-        agent.speed = 1f;
+        agent.speed = PERCH_SPEED;
         agent.baseOffset = Mathf.Lerp(agent.baseOffset, 0f, Time.deltaTime * 6f);
 
-        if (agent.baseOffset <= 0.1f)
+        if (agent.baseOffset <= LAND_OFFSET)
         {
             StopSearch(currentSearch);
-            creatureSFX.enabled = false;
-            creatureVoice.enabled = false;
-            SwitchToBehaviourClientRpc((int)State.Idle);
-            SyncBlendShapeWeightClientRpc(100f);
-            LogIfDebugBuild("Switching to Idle State.");
+            this.ToggleEnemySounds(false);
+            this.SwitchToBehaviourStateOnLocalClient(State.Idle);
+            SyncBlendShapeWeightOnLocalClient(100f);
             lastIdleCycle = Time.time;
         }
     }
 
     void Idling(float timeSinceLastStateChange)
     {
-        agent.speed = 0f;
-        if (timeSinceLastStateChange > 5f)
+        agent.speed = IDLE_SPEED;
+        if (timeSinceLastStateChange > IDLE_MAXIMUM_TIME)
         {
             StartSearch(transform.position);
-            creatureSFX.enabled = true;
-            creatureVoice.enabled = true;
-            SwitchToBehaviourClientRpc((int)State.Wandering);
-            LogIfDebugBuild("Switching to Wandering State.");
+            this.ToggleEnemySounds(true);
+            this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
             lastIdleCycle = Time.time;
         }
     }
@@ -103,16 +105,16 @@ public class CutieFlyAI : EnemyAI
 
         float timeSinceLastStateChange = Time.time - lastIdleCycle;
 
-        switch(currentBehaviourStateIndex) {
-            case (int)State.Wandering:
+        switch(currentBehaviourStateIndex.ToCutieState()) {
+            case State.Wandering:
                 WanderAround(timeSinceLastStateChange);
                 break;
 
-            case (int)State.Perching:
+            case State.Perching:
                 Perch();
                 break;
 
-            case (int)State.Idle:
+            case State.Idle:
                 Idling(timeSinceLastStateChange);
                 break;
 
@@ -124,6 +126,11 @@ public class CutieFlyAI : EnemyAI
 
     [ClientRpc]
     public void SyncBlendShapeWeightClientRpc(float currentBlendShapeWeight) {
+        SyncBlendShapeWeightOnLocalClient(currentBlendShapeWeight);
+    }
+
+    public void SyncBlendShapeWeightOnLocalClient(float currentBlendShapeWeight)
+    {
         skinnedMeshRenderer.SetBlendShapeWeight(0, currentBlendShapeWeight);
     }
 }
