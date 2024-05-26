@@ -84,7 +84,7 @@ public class Duck : CodeRebirthEnemyAI
         // Play the ambient karaoke song version
         if (!FindClosestPlayerInRange(range)) return;
         DoAnimationClientRpc(Animations.startApproach.ToAnimationName());
-        ChangeSpeedClientRpc(6f);
+        ChangeSpeedClientRpc(10f);
         StopSearch(currentSearch); // might have to rpc this?
         SwitchToBehaviourClientRpc((int)State.Approaching);
         // play a sound for approaching
@@ -105,13 +105,13 @@ public class Duck : CodeRebirthEnemyAI
         yield return new WaitForSeconds(5f); // don't got a questGiveClip length
         DoAnimationClientRpc(Animations.startQuest.ToAnimationName());
         questStarted = true;
-        ChangeSpeedClientRpc(6f);
+        ChangeSpeedClientRpc(10f);
         // pick a vent and get it's position and infront of the vent.
         if (RoundManager.Instance.allEnemyVents.Length == 0) {
             DoCompleteQuest(QuestCompletion.Null);
             yield break;
         }
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", RoundManager.Instance.allEnemyVents[UnityEngine.Random.Range(0, RoundManager.Instance.allEnemyVents.Length)].transform.position + transform.forward * 5f); // I don't have a grape scrap yet so spawn meteorite.
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position); // I don't have a grape scrap yet so spawn meteorite.
         StartCoroutine(QuestTimer());
         SwitchToBehaviourClientRpc((int)State.OngoingQuest);
     }
@@ -121,17 +121,25 @@ public class Duck : CodeRebirthEnemyAI
     }
     private void DoOngoingQuest() {
         // Chase the player around as they try to find the grape/scrap that was spawned.
+        LogIfDebugBuild(DuckTargetPlayer != null);
+        LogIfDebugBuild(!DuckTargetPlayer.isPlayerDead);
+        LogIfDebugBuild(!DuckTargetPlayer.IsSpawned);
+        LogIfDebugBuild(!DuckTargetPlayer.isPlayerControlled);
         if (DuckTargetPlayer == null || DuckTargetPlayer.isPlayerDead || !DuckTargetPlayer.IsSpawned || !DuckTargetPlayer.isPlayerControlled) {
             DoCompleteQuest(QuestCompletion.Null);
             return;
         }
         if (questTimedOut) {
             DoCompleteQuest(QuestCompletion.TimedOut);
+            return;
         }
-        if (DuckTargetPlayer.currentlyHeldObject != null && DuckTargetPlayer.currentlyHeldObject.itemProperties.itemName == "Grape") {
+        if (DuckTargetPlayer.currentlyHeldObjectServer != null && DuckTargetPlayer.currentlyHeldObjectServer.itemProperties.itemName == "Meteorite") {
+            LogIfDebugBuild("completed!");
+            DuckTargetPlayer.DespawnHeldObject();
             DoCompleteQuest(QuestCompletion.Completed);
+            return;
         }
-        SetDestinationToPosition(DuckTargetPlayer.transform.position); // might have to rpc this?
+        SetDestinationToPosition(DuckTargetPlayer.transform.position, true); // might have to rpc this?
     }
 
     private void DoCompleteQuest(QuestCompletion reason) {
@@ -141,7 +149,7 @@ public class Duck : CodeRebirthEnemyAI
             case QuestCompletion.TimedOut:
                 {
                     DuckTargetPlayer.DamagePlayer(500, true, true, CauseOfDeath.Strangulation, 0, false, default);
-                    return;
+                    break;
                 }
             case QuestCompletion.Completed: // Means quest was successful
                 {
@@ -234,4 +242,7 @@ public class Duck : CodeRebirthEnemyAI
         Vector3 to = pos - eye.position;
         return Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
     }
+}
+
+public class QuestItem {
 }
