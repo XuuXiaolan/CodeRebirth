@@ -40,10 +40,14 @@ public class Duck : CodeRebirthEnemyAI
     private AudioClip questFailClip;
     [SerializeField]
     private AudioClip questGiveAgainClip;
+    [SerializeField]
+    private AudioClip questAfterFailClip;
     
+    private int currentQuestOrder = 0;
     private bool questTimedOut = false;
     private bool questCompleted = false;
     private bool questStarted = false;
+    private int questOrder = 0;
     private float range = 20f;
     public enum State {
         Spawning,
@@ -67,27 +71,26 @@ public class Duck : CodeRebirthEnemyAI
         startApproach,
         startGiveQuest,
         startQuest,
+        startFailQuest,
+        startSucceedQuest,
     }
 
     public override void Start() { // Animations and sounds arent here yet so you might get bugs probably lol.
         base.Start();
         if (!IsHost) return;
         LogIfDebugBuild(this.enemyType.enemyName + " Spawned.");
+        creatureVoice.volume = 0.5f;
         ChangeSpeedClientRpc(1f);
-        DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
         StartCoroutine(DoSpawning());
         this.SwitchToBehaviourStateOnLocalClient(State.Spawning);
     }
 
     private IEnumerator DoSpawning() {
-
         creatureUltraVoice.Play();
         yield return new WaitForSeconds(spawnAnimation.length);
         StartSearch(transform.position);
         ChangeSpeedClientRpc(3f);
         DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
-        creatureVoice.volume = 0.5f;
-        creatureVoice.Play();
         this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
     }
 
@@ -121,7 +124,9 @@ public class Duck : CodeRebirthEnemyAI
             DoCompleteQuest(QuestCompletion.Null);
             yield break;
         }
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(questItems[UnityEngine.Random.Range(0, questItems.Length)], RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(questItems[Math.Clamp(questOrder, 0, questItems.Length - 1)], RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position);
+        currentQuestOrder = Math.Clamp(questOrder, 0, questItems.Length - 1);
+        questOrder++;
         StartCoroutine(QuestTimer());
         this.SwitchToBehaviourStateOnLocalClient(State.OngoingQuest);
     }
@@ -138,7 +143,7 @@ public class Duck : CodeRebirthEnemyAI
             DoCompleteQuest(QuestCompletion.TimedOut);
             return;
         }
-        if (targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == "Meteorite") {
+        if (targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder]) {
             LogIfDebugBuild("completed!");
             targetPlayer.DespawnHeldObject();
             DoCompleteQuest(QuestCompletion.Completed);
@@ -153,12 +158,13 @@ public class Duck : CodeRebirthEnemyAI
             case QuestCompletion.TimedOut:
                 {
                     creatureSFX.PlayOneShot(questFailClip);
-                    targetPlayer.DamagePlayer(500, true, true, CauseOfDeath.Strangulation, 0, false, default);
+                    StartCoroutine(QuestFailSequence(targetPlayer));
                     break;
                 }
             case QuestCompletion.Completed:
                 {
                     creatureSFX.PlayOneShot(questSucceedClip);
+                    StartCoroutine(QuestSucceedSequence());
                     break;
                 }
             case QuestCompletion.Null:
@@ -167,24 +173,32 @@ public class Duck : CodeRebirthEnemyAI
                     break;
                 }
         }
-        DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
         if (IsHost && UnityEngine.Random.Range(0, 100) < 100 && reason == QuestCompletion.Completed && !questCompleted) {
             questStarted = false;
             questTimedOut = false;
             questCompleted = true;
             this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
-            DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
+
             return;
         }
         questCompleted = true;
         ChangeSpeedClientRpc(4f);
         this.SwitchToBehaviourStateOnLocalClient(State.Docile);
         creatureVoice.volume = 0.25f;
-        creatureVoice.Play();
         StartSearch(transform.position);
-        DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
     }
-
+    private IEnumerator QuestSucceedSequence() {
+        yield return new WaitUntil(() => creatureSFX.isPlaying == false);
+        DoAnimationClientRpc(Animations.startSucceedQuest.ToAnimationName());
+        yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(0).IsName("Walking Animation"));
+    }
+    private IEnumerator QuestFailSequence(PlayerControllerB failure) {
+        yield return new WaitUntil(() => creatureSFX.isPlaying == false);
+        DoAnimationClientRpc(Animations.startFailQuest.ToAnimationName());
+        yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(0).IsName("Walking Animation"));
+        failure.DamagePlayer(500, true, true, CauseOfDeath.Strangulation, 0, false, default);
+        creatureSFX.PlayOneShot(questAfterFailClip);
+    }
     private void DoDocile() {
     }
     public override void DoAIInterval() {

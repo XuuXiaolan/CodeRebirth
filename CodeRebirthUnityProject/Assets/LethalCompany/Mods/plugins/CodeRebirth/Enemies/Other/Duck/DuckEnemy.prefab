@@ -392,11 +392,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 39e1736b51c7a6847a7293773efbcd0b,
     type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: 12bf9096aa8c75f4a8b5aeba8abac1c1, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -585,10 +585,10 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300008, guid: 39e1736b51c7a6847a7293773efbcd0b,
     type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -898,7 +898,7 @@ MonoBehaviour:
   maxRange: 13
   minRange: 0
   requiresLineOfSight: 1
-  headerText: Cutiefly
+  headerText: Duck
   subText: 
   scrapValue: 0
   creatureScanID: -1
@@ -1223,9 +1223,18 @@ MonoBehaviour:
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
   isOutside: 0
-  spawnAnimation: {fileID: 0}
+  questTimer: 120
+  questItems:
+  - Grape
+  - Grape
+  questName: Duck Quest
+  spawnAnimation: {fileID: 7400000, guid: 03eba788df8f90844ab538168f55fba6, type: 2}
   creatureUltraVoice: {fileID: 3041539220418152922}
-  questGiveClip: {fileID: 0}
+  questGiveClip: {fileID: 8300000, guid: 4ad058a02f18c8242bbf2e06e0d25642, type: 3}
+  questSucceedClip: {fileID: 8300000, guid: 1afdb5759221c334fb3807fdd4c26d60, type: 3}
+  questFailClip: {fileID: 8300000, guid: a5c7d2ad009bb4b42b65101d0c628f65, type: 3}
+  questGiveAgainClip: {fileID: 8300000, guid: 7dea0379952e5084389809bfa4f28afd, type: 3}
+  questAfterFailClip: {fileID: 8300000, guid: 1233b3be3c76008459db5441fdf5e090, type: 3}
 --- !u!114 &6607607558369177806
 MonoBehaviour:
   m_ObjectHideFlags: 0
