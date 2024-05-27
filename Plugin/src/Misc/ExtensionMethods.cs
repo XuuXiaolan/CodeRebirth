@@ -53,7 +53,6 @@ public static class ExtensionMethods
 
 	public static T NextItem<T>(this Random random, List<T> collection) {
 		int index = random.Next(collection.Count);
-		Plugin.Logger.LogDebug($"indexing randomly at {index}");
 		return collection[index];
 	}
 

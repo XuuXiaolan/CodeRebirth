@@ -74,7 +74,6 @@ public class MeteorShower : MonoBehaviour {
 	{
         foreach (Meteors meteor in meteors)
         {
-			Plugin.Logger.LogInfo($"Destroying Meteor: {meteor}");
 			if (meteor == null) continue;
             if (!meteor.NetworkObject.IsSpawned || IsAuthority())
                 Destroy(meteor.gameObject);
@@ -85,7 +84,6 @@ public class MeteorShower : MonoBehaviour {
 	{
         foreach (CraterController crater in craters)
         {
-			Plugin.Logger.LogInfo($"Destroying Crater: {crater}");
 			if (crater == null) continue;
             Destroy(crater.gameObject);
         }
@@ -132,16 +130,13 @@ public class MeteorShower : MonoBehaviour {
     }
 	private IEnumerator MeteorSpawnerHandler() {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get meteors before theyve inited everything.
-		Plugin.Logger.LogInfo("Began spawning meteors.");
 		while (true) { // this is fine because it gets stopped in OnDisable.
-			Plugin.Logger.LogDebug("Spawning Meteor.");
 
 			for (int i = 0; i < random.Next(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++) {
 				SpawnMeteor(GetRandomTargetPosition(minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
 			}
 			int delay = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
-			Plugin.Logger.LogDebug($"Next meteor in {delay} seconds.");
 			yield return new WaitForSeconds(delay);
 		}
 	}

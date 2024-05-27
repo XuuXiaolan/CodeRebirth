@@ -62,7 +62,6 @@ namespace CodeRebirth.Configs {
                                                 "Modded:50,Vanilla:50",
                                                 "SpawnWeight of the Duck in moons");
             ClearUnusedEntries(configFile);
-            Plugin.Logger.LogInfo("Setting up config for CodeRebirth plugin...");
         }
         private void ClearUnusedEntries(ConfigFile configFile) {
             // Normally, old unused config entries don't get removed, so we do it with this piece of code. Credit to Kittenji.

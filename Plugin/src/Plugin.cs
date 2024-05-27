@@ -46,7 +46,6 @@ public class Plugin : BaseUnityPlugin {
         // Register Keybinds
         InputActionsInstance = new IngameKeybinds();
         
-        Logger.LogInfo("Registering content.");
         List<Type> creatureHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
@@ -54,7 +53,6 @@ public class Plugin : BaseUnityPlugin {
         ).ToList();
         
         foreach(Type type in creatureHandlers) {
-            Logger.LogDebug($"Invoking {type.Name}");
             type.GetConstructor([]).Invoke([]);
         }
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");

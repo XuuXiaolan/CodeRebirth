@@ -128,9 +128,10 @@ public class Duck : CodeRebirthEnemyAI
         currentQuestOrder = Math.Clamp(questOrder, 0, questItems.Length - 1);
         questOrder++;
         StartCoroutine(QuestTimer());
-        this.SwitchToBehaviourStateOnLocalClient(State.OngoingQuest);
     }
     private IEnumerator QuestTimer() {
+        yield return new WaitForSeconds(5f);
+        this.SwitchToBehaviourStateOnLocalClient(State.OngoingQuest);
         yield return new WaitForSeconds(questTimer);
         questTimedOut = true;
     }
@@ -143,7 +144,7 @@ public class Duck : CodeRebirthEnemyAI
             DoCompleteQuest(QuestCompletion.TimedOut);
             return;
         }
-        if (targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder]) {
+        if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder]) {
             LogIfDebugBuild("completed!");
             targetPlayer.DespawnHeldObject();
             DoCompleteQuest(QuestCompletion.Completed);
@@ -173,7 +174,7 @@ public class Duck : CodeRebirthEnemyAI
                     break;
                 }
         }
-        if (IsHost && UnityEngine.Random.Range(0, 100) < 100 && reason == QuestCompletion.Completed && !questCompleted) {
+        if (IsHost && UnityEngine.Random.Range(0, 100) < 10 && reason == QuestCompletion.Completed && !questCompleted) {
             questStarted = false;
             questTimedOut = false;
             questCompleted = true;
@@ -262,5 +263,6 @@ public class Duck : CodeRebirthEnemyAI
     }
 }
 
-public class QuestItem {
+public class QuestItem : MonoBehaviour
+{
 }

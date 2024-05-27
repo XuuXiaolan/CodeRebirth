@@ -40,7 +40,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 
 	public EnemyHandler() {
 		Assets = new EnemyAssets("coderebirthasset");
-		Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
+		Plugin.samplePrefabs.Add("QuestGrape", Assets.GrapeItem);
 
 		RegisterEnemyWithConfig(true, Plugin.ModConfig.ConfigDuckSpawnWeights.Value, Assets.DuckEnemyType, Assets.DuckTerminalNode, Assets.DuckTerminalKeyword);
         RegisterEnemyWithConfig(true, Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Assets.ButterflyEnemyType, Assets.ButterflyTerminalNode, Assets.ButterflyTerminalKeyword);
