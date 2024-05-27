@@ -101,7 +101,6 @@ public class Meteors : NetworkBehaviour {
     }
 
     private IEnumerator Impact() {
-        Plugin.Logger.LogInfo("IMPACT!!!");
         isMoving = false;
 
         ImpactAudio.Play();

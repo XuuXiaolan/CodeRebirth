@@ -53,7 +53,6 @@ public static class ExtensionMethods
 
 	public static T NextItem<T>(this Random random, List<T> collection) {
 		int index = random.Next(collection.Count);
-		Plugin.Logger.LogDebug($"indexing randomly at {index}");
 		return collection[index];
 	}
 
@@ -97,11 +96,6 @@ public static class ExtensionMethods
     public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, Duck.State state)
     {
         enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
-        LogIfDebugBuild($"Switching to {state} State.");
-    }
-    public static void SwitchToBehaviourClientRpc(this EnemyAI enemyAI, Duck.State state)
-    {
-        enemyAI.SwitchToBehaviourClientRpc((int)state);
         LogIfDebugBuild($"Switching to {state} State.");
     }
 

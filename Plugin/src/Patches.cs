@@ -10,6 +10,7 @@ using CodeRebirth;
 using CodeRebirth.Misc;
 using CodeRebirth.WeatherStuff;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 namespace CodeRebirth.src;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -28,7 +29,11 @@ internal static class StartOfRoundPatcher {
     public static void StartOfRound_Start(ref StartOfRound __instance)
     {
         __instance.NetworkObject.OnSpawn(CreateNetworkManager);
-        LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", LethalLib.Modules.Levels.LevelTypes.None, [Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value]);
+
+        string[] levelOverrides = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value.Split(',')
+                                    .Select(name => name.Trim())
+                                    .ToArray();
+        LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", levelOverrides: levelOverrides);
     }
 
     [HarmonyPatch(nameof(StartOfRound.OnDisable))]

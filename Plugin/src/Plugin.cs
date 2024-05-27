@@ -2,32 +2,22 @@
 using System.Reflection;
 using UnityEngine;
 using BepInEx;
-using LethalLib.Modules;
 using BepInEx.Logging;
-using System.IO;
 using CodeRebirth.Configs;
 using System.Collections.Generic;
-using static LethalLib.Modules.Levels;
 using System.Linq;
-using static LethalLib.Modules.Items;
 using CodeRebirth.Keybinds;
 using HarmonyLib;
 using CodeRebirth.src;
-using LethalLib.Extras;
 using CodeRebirth.Misc;
-using CodeRebirth.ScrapStuff;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
-using CodeRebirth.WeatherStuff;
-using LethalLib;
-using System.Collections.ObjectModel;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(CustomStoryLogs.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency("WeatherAPI", BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
@@ -56,7 +46,6 @@ public class Plugin : BaseUnityPlugin {
         // Register Keybinds
         InputActionsInstance = new IngameKeybinds();
         
-        Logger.LogInfo("Registering content.");
         List<Type> creatureHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
@@ -64,7 +53,6 @@ public class Plugin : BaseUnityPlugin {
         ).ToList();
         
         foreach(Type type in creatureHandlers) {
-            Logger.LogDebug($"Invoking {type.Name}");
             type.GetConstructor([]).Invoke([]);
         }
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
