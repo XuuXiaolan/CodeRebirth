@@ -110,14 +110,14 @@ public class MeteorShower : MonoBehaviour {
 				centralLocation: centralLocation,
 				offset: new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175)),
 				speed: 2f,
-				sizeMultiplier: (float)random.NextDouble() * 12f + 2f);
+				sizeMultiplier: (float)random.NextDouble() * 3f + 2f);
 		}
         for (int i = 0; i < 1; i++) {
 			SpawnVisualMeteors(
 				centralLocation: centralLocation,
 				offset: Vector3.zero,
 				speed: 1.5f,
-				sizeMultiplier: random.Next(30, 50)
+				sizeMultiplier: random.Next(10, 25)
 				);
         }
 	}

@@ -262,6 +262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: -8679921383154817045}
+  - component: {fileID: 3978738448012435436}
   m_Layer: 0
   m_Name: DuckSongRe
   m_TagString: Untagged
@@ -286,6 +287,27 @@ Transform:
   - {fileID: 5016991696502898323}
   m_Father: {fileID: 5363147478031748054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &3978738448012435436
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149155446097}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4a049f9bf5e7508439b1ec1f4d381d8e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1128177758416167760
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,7 +617,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 8
+  MaxDistance: 16
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -1066,7 +1088,6 @@ GameObject:
   - component: {fileID: 6607607558369177806}
   - component: {fileID: 6339478799976304860}
   - component: {fileID: 2435144523524250237}
-  - component: {fileID: 5209249568784130759}
   m_Layer: 19
   m_Name: DuckEnemy
   m_TagString: Enemy
@@ -1111,7 +1132,7 @@ MonoBehaviour:
   enemyType: {fileID: 11400000, guid: 191e88b614dcb5144835fad35d9d53ca, type: 2}
   skinnedMeshRenderers: []
   meshRenderers: []
-  creatureAnimator: {fileID: 5209249568784130759}
+  creatureAnimator: {fileID: 3978738448012435436}
   creatureVoice: {fileID: 1920902777120810730}
   creatureSFX: {fileID: 4368493401648577250}
   eye: {fileID: 4428226017204804084}
@@ -1298,24 +1319,3 @@ NavMeshAgent:
   m_BaseOffset: 0.82
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!95 &5209249568784130759
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8752229204695655941}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4a049f9bf5e7508439b1ec1f4d381d8e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
