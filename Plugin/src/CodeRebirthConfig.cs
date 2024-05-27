@@ -12,7 +12,6 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
         public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
         public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
-        public ConfigEntry<string> ConfigMeteorShowerMoonList { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         public ConfigEntry<string> ConfigMeteorShowerMoonsBlacklist { get; private set; }
@@ -21,7 +20,7 @@ namespace CodeRebirth.Configs {
             ConfigMeteorShowerMoonsBlacklist = configFile.Bind("Weather Options",
                                                 "Meteor Shower | Blacklist",
                                                 "CompanyBuildingLevel",
-                                                "List of moons TO REMOVE the Meteor Shower Weather from (Vanilla moons need Level at the end of their name, but modded do not) (Remove CompanyBuildingLevel at your own risk).");
+                                                "Example: (CompanyBuildingLevelList,OffenseLevel). \nList of moons TO REMOVE the Meteor Shower Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
             ConfigMeteorsDefaultVolume = configFile.Bind("Weather Options",
                                                 "Meteors | Default Volume",
                                                 0.5f,

@@ -15,26 +15,36 @@ using UnityEngine.Yoga;
 namespace CodeRebirth.EnemyStuff;
 public class Duck : CodeRebirthEnemyAI
 {
+    [Tooltip("Quest Variables")]
+    [SerializeField]
+    private float questTimer = 120f;
+    [SerializeField]
+    private string[] questItems;
+    [SerializeField]
+    private string questName;
+    [Space(5f)]
+
     [Tooltip("Animations")]
     [SerializeField]
     private AnimationClip spawnAnimation;
+    [Space(5f)]
 
     [Tooltip("Audio")]
     [SerializeField]
     private AudioSource creatureUltraVoice;
     [SerializeField]
     private AudioClip questGiveClip;
+    [SerializeField]
+    private AudioClip questSucceedClip;
+    [SerializeField]
+    private AudioClip questFailClip;
+    [SerializeField]
+    private AudioClip questGiveAgainClip;
     
     private bool questTimedOut = false;
     private bool questCompleted = false;
     private bool questStarted = false;
-    private float questLength = 120f;
     private float range = 20f;
-    public PlayerControllerB DuckTargetPlayer
-    {
-        get;
-        set;
-    }
     public enum State {
         Spawning,
         Wandering,
@@ -62,66 +72,65 @@ public class Duck : CodeRebirthEnemyAI
     public override void Start() { // Animations and sounds arent here yet so you might get bugs probably lol.
         base.Start();
         if (!IsHost) return;
-        LogIfDebugBuild("Duck Spawned.");
+        LogIfDebugBuild(this.enemyType.enemyName + " Spawned.");
         ChangeSpeedClientRpc(1f);
         DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
         StartCoroutine(DoSpawning());
-        SwitchToBehaviourClientRpc((int)State.Spawning);
+        this.SwitchToBehaviourStateOnLocalClient(State.Spawning);
     }
 
     private IEnumerator DoSpawning() {
-        // Play spawning sound on the audio source's awake
+
         creatureUltraVoice.Play();
-        yield return new WaitForSeconds(2f); // I dont have a spawn animation embedded yet.
+        yield return new WaitForSeconds(spawnAnimation.length);
         StartSearch(transform.position);
         ChangeSpeedClientRpc(3f);
         DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
-        SwitchToBehaviourClientRpc((int)State.Wandering);
-        // play a sound for wandering
+        creatureVoice.volume = 0.5f;
+        creatureVoice.Play();
+        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
     }
 
     private void DoWandering() {
-        // Play the ambient karaoke song version
         if (!FindClosestPlayerInRange(range)) return;
         DoAnimationClientRpc(Animations.startApproach.ToAnimationName());
-        ChangeSpeedClientRpc(10f);
-        StopSearch(currentSearch); // might have to rpc this?
-        SwitchToBehaviourClientRpc((int)State.Approaching);
-        // play a sound for approaching
+        ChangeSpeedClientRpc(8f);
+        StopSearch(currentSearch);
+        this.SwitchToBehaviourStateOnLocalClient(State.Approaching);
     }
 
     private void DoApproaching() {
-        if (Vector3.Distance(transform.position, DuckTargetPlayer.transform.position) < 3f && !questStarted) {
+        if (Vector3.Distance(transform.position, targetPlayer.transform.position) < 3f && !questStarted) {
             questStarted = true;
             DoAnimationClientRpc(Animations.startGiveQuest.ToAnimationName());
             StartCoroutine(DoGiveQuest());
         }
-        SetDestinationToPosition(DuckTargetPlayer.transform.position); // might have to rpc this?
-        // approach and keep up with the player
+        SetDestinationToPosition(targetPlayer.transform.position);
+
     }
 
     private IEnumerator DoGiveQuest() {
-        // Finishes approaching the target player and gives a quest
-        yield return new WaitForSeconds(5f); // don't got a questGiveClip length
+        LogIfDebugBuild("Starting Quest: " + questName);
+        if (!questCompleted) creatureSFX.PlayOneShot(questGiveClip);
+        if (questCompleted) creatureSFX.PlayOneShot(questGiveAgainClip);
+        yield return new WaitUntil(() => creatureSFX.isPlaying == false);
         DoAnimationClientRpc(Animations.startQuest.ToAnimationName());
         questStarted = true;
-        ChangeSpeedClientRpc(10f);
-        // pick a vent and get it's position and infront of the vent.
+        ChangeSpeedClientRpc(8f);
         if (RoundManager.Instance.allEnemyVents.Length == 0) {
             DoCompleteQuest(QuestCompletion.Null);
             yield break;
         }
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position); // I don't have a grape scrap yet so spawn meteorite.
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(questItems[UnityEngine.Random.Range(0, questItems.Length)], RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position);
         StartCoroutine(QuestTimer());
-        SwitchToBehaviourClientRpc((int)State.OngoingQuest);
+        this.SwitchToBehaviourStateOnLocalClient(State.OngoingQuest);
     }
     private IEnumerator QuestTimer() {
-        yield return new WaitForSeconds(questLength);
-        questTimedOut = true; // won't have to rpc this
+        yield return new WaitForSeconds(questTimer);
+        questTimedOut = true;
     }
     private void DoOngoingQuest() {
-        // Chase the player around as they try to find the grape/scrap that was spawned.
-        if (DuckTargetPlayer == null || DuckTargetPlayer.isPlayerDead || !DuckTargetPlayer.IsSpawned || !DuckTargetPlayer.isPlayerControlled) {
+        if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.IsSpawned || !targetPlayer.isPlayerControlled) {
             DoCompleteQuest(QuestCompletion.Null);
             return;
         }
@@ -129,55 +138,54 @@ public class Duck : CodeRebirthEnemyAI
             DoCompleteQuest(QuestCompletion.TimedOut);
             return;
         }
-        if (DuckTargetPlayer.currentlyHeldObjectServer != null && DuckTargetPlayer.currentlyHeldObjectServer.itemProperties.itemName == "Meteorite") {
+        if (targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == "Meteorite") {
             LogIfDebugBuild("completed!");
-            DuckTargetPlayer.DespawnHeldObject();
+            targetPlayer.DespawnHeldObject();
             DoCompleteQuest(QuestCompletion.Completed);
             return;
         }
-        SetDestinationToPosition(DuckTargetPlayer.transform.position, true); // might have to rpc this?
+        SetDestinationToPosition(targetPlayer.transform.position, true);
     }
 
     private void DoCompleteQuest(QuestCompletion reason) {
-        // Decide if quest was completed correctly and Decide whether to end the quest for grape or 10% chance to keep going once more for lemonade.
         switch(reason)
         {
             case QuestCompletion.TimedOut:
                 {
-                    DuckTargetPlayer.DamagePlayer(500, true, true, CauseOfDeath.Strangulation, 0, false, default);
+                    creatureSFX.PlayOneShot(questFailClip);
+                    targetPlayer.DamagePlayer(500, true, true, CauseOfDeath.Strangulation, 0, false, default);
                     break;
                 }
-            case QuestCompletion.Completed: // Means quest was successful
+            case QuestCompletion.Completed:
                 {
-                    // Play the audio for success
+                    creatureSFX.PlayOneShot(questSucceedClip);
                     break;
                 }
             case QuestCompletion.Null:
                 {
                     LogIfDebugBuild("Target Player or Enemy vents is null?");
-                    // play confused audio on where the player went.
                     break;
                 }
         }
-        questCompleted = true;
         DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
-
-        if (UnityEngine.Random.Range(0, 100) < 10 && IsHost && reason == QuestCompletion.Completed) {
+        if (IsHost && UnityEngine.Random.Range(0, 100) < 100 && reason == QuestCompletion.Completed && !questCompleted) {
             questStarted = false;
             questTimedOut = false;
-            SwitchToBehaviourClientRpc((int)State.Wandering);
-            DoAnimationClientRpc("startWalk");
+            questCompleted = true;
+            this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+            DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
             return;
         }
+        questCompleted = true;
         ChangeSpeedClientRpc(4f);
-        SwitchToBehaviourClientRpc((int)State.Docile);
-        StartSearch(transform.position); // might have to rpc this?
-        DoAnimationClientRpc("startWalk");
+        this.SwitchToBehaviourStateOnLocalClient(State.Docile);
+        creatureVoice.volume = 0.25f;
+        creatureVoice.Play();
+        StartSearch(transform.position);
+        DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
     }
 
     private void DoDocile() {
-        // Completely docile, plays the song in the background kinda quieter and just does the same as wandering but without targetting a player.
-
     }
     public override void DoAIInterval() {
         base.DoAIInterval();
@@ -210,7 +218,7 @@ public class Duck : CodeRebirthEnemyAI
         float minDistance = float.MaxValue;
 
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
-            bool onSight = player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom && DuckHasLineOfSightToPosition(player.transform.position, 45f, range);
+            bool onSight = player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom && EnemyHasLineOfSightToPosition(player.transform.position, 60f, range);
             if (!onSight) continue;
 
             float distance = Vector3.Distance(transform.position, player.transform.position);
@@ -222,11 +230,11 @@ public class Duck : CodeRebirthEnemyAI
         }
         if (closestPlayer == null) return false;
 
-        DuckTargetPlayer = closestPlayer;
+        targetPlayer = closestPlayer;
         return true;
     }
 
-    private bool DuckHasLineOfSightToPosition(Vector3 pos, float width = 60f, float range = 20f, float proximityAwareness = 3f) {
+    private bool EnemyHasLineOfSightToPosition(Vector3 pos, float width = 60f, float range = 20f, float proximityAwareness = 5f) {
         if (eye == null) {
             _ = transform;
         } else {
