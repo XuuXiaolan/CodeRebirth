@@ -104,7 +104,7 @@ public class SnowGlobe : GrabbableObject
     {
         ToggleParticles(toggle);
         ToggleMusic(toggle);
-        if (toggle) StartCoroutine(RotateLights());
+        //if (toggle) StartCoroutine(RotateLights());
         shipAnimator.SetBool("doorsActivated", toggle);
         yield return new WaitForSeconds(delay);
         mainLightGameObject.SetActive(toggle);

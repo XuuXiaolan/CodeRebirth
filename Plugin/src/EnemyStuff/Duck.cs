@@ -121,10 +121,6 @@ public class Duck : CodeRebirthEnemyAI
     }
     private void DoOngoingQuest() {
         // Chase the player around as they try to find the grape/scrap that was spawned.
-        LogIfDebugBuild(DuckTargetPlayer != null);
-        LogIfDebugBuild(!DuckTargetPlayer.isPlayerDead);
-        LogIfDebugBuild(!DuckTargetPlayer.IsSpawned);
-        LogIfDebugBuild(!DuckTargetPlayer.isPlayerControlled);
         if (DuckTargetPlayer == null || DuckTargetPlayer.isPlayerDead || !DuckTargetPlayer.IsSpawned || !DuckTargetPlayer.isPlayerControlled) {
             DoCompleteQuest(QuestCompletion.Null);
             return;
