@@ -1,7 +1,5 @@
-using System.Diagnostics;
 using CodeRebirth.Misc;
 using CodeRebirth.src.EnemyStuff;
-using Unity.Netcode;
 
 namespace CodeRebirth.EnemyStuff;
 public class SnailCatAI : CodeRebirthEnemyAI

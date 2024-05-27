@@ -95,7 +95,7 @@ public class SnowGlobe : GrabbableObject
     {
         yield return new WaitForEndOfFrame();
         yield return ToggleSnowGlobeCoroutine(true);
-        yield return new WaitUntil(() => musicAS.isPlaying == false);
+        yield return new WaitUntil(() => !musicAS.isPlaying);
         yield return ToggleSnowGlobeCoroutine(false);
         yield return new WaitForSeconds(2f);
         activated = false;

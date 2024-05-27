@@ -6,30 +6,29 @@ using CodeRebirth.src;
 using CodeRebirth.src.EnemyStuff;
 using GameNetcodeStuff;
 using Unity.Mathematics;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.UIElements;
-using UnityEngine.Yoga;
 
 namespace CodeRebirth.EnemyStuff;
 public class Duck : CodeRebirthEnemyAI
 {
-    [Tooltip("Quest Variables")]
+    [Header("Quest Variables")]
+    [Tooltip("How long a player has to complete the assigned quest")]
     [SerializeField]
     private float questTimer = 120f;
+    [Tooltip("List of items' names the player needs to collect to complete the quest")]
     [SerializeField]
     private string[] questItems;
+    [Tooltip("Name of the given quest")]
     [SerializeField]
     private string questName;
     [Space(5f)]
 
-    [Tooltip("Animations")]
+    [Header("Animations")]
     [SerializeField]
     private AnimationClip spawnAnimation;
     [Space(5f)]
 
-    [Tooltip("Audio")]
+    [Header("Audio")]
     [SerializeField]
     private AudioSource creatureUltraVoice;
     [SerializeField]
@@ -42,13 +41,16 @@ public class Duck : CodeRebirthEnemyAI
     private AudioClip questGiveAgainClip;
     [SerializeField]
     private AudioClip questAfterFailClip;
-    
+    [Header("Behaviour")]
+    [Tooltip("Detection Range")]
+    [SerializeField]
+    private float range = 20f;
+
     private int currentQuestOrder = 0;
     private bool questTimedOut = false;
     private bool questCompleted = false;
     private bool questStarted = false;
     private int questOrder = 0;
-    private float range = 20f;
     public enum State {
         Spawning,
         Wandering,
@@ -117,7 +119,7 @@ public class Duck : CodeRebirthEnemyAI
         LogIfDebugBuild("Starting Quest: " + questName);
         if (!questCompleted) creatureSFX.PlayOneShot(questGiveClip);
         if (questCompleted) creatureSFX.PlayOneShot(questGiveAgainClip);
-        yield return new WaitUntil(() => creatureSFX.isPlaying == false);
+        yield return new WaitUntil(() => !creatureSFX.isPlaying);
         DoAnimationClientRpc(Animations.startQuest.ToAnimationName());
         questStarted = true;
         ChangeSpeedClientRpc(8f);
@@ -190,16 +192,20 @@ public class Duck : CodeRebirthEnemyAI
         StartSearch(transform.position);
     }
     private IEnumerator QuestSucceedSequence() {
-        yield return new WaitUntil(() => creatureSFX.isPlaying == false);
-        DoAnimationClientRpc(Animations.startSucceedQuest.ToAnimationName());
-        yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(0).IsName("Walking Animation"));
+        yield return StartAnimation(Animations.startSucceedQuest);
     }
-    private IEnumerator QuestFailSequence(PlayerControllerB failure) {
-        yield return new WaitUntil(() => creatureSFX.isPlaying == false);
-        DoAnimationClientRpc(Animations.startFailQuest.ToAnimationName());
-        yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(0).IsName("Walking Animation"));
+    private IEnumerator QuestFailSequence(PlayerControllerB failure)
+    {
+        yield return StartAnimation(Animations.startFailQuest);
         failure.DamagePlayer(500, true, true, CauseOfDeath.Strangulation, 0, false, default);
         creatureSFX.PlayOneShot(questAfterFailClip);
+    }
+
+    IEnumerator StartAnimation(Animations animation, int layerIndex = 0, string stateName = "Walking Animation")
+    {
+        yield return new WaitUntil(() => !creatureSFX.isPlaying);
+        DoAnimationClientRpc(animation.ToAnimationName());
+        yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName));
     }
     private void DoDocile() {
     }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using static CodeRebirth.EnemyStuff.Duck;
-using Unity.Netcode;
-using CodeRebirth.Misc;
+﻿using Unity.Netcode;
 using System.Diagnostics;
 
 namespace CodeRebirth.src.EnemyStuff
