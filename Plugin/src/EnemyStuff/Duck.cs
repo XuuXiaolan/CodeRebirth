@@ -81,6 +81,7 @@ public class Duck : CodeRebirthEnemyAI
         LogIfDebugBuild(this.enemyType.enemyName + " Spawned.");
         creatureVoice.volume = 0.5f;
         ChangeSpeedClientRpc(1f);
+        DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
         StartCoroutine(DoSpawning());
         this.SwitchToBehaviourStateOnLocalClient(State.Spawning);
     }

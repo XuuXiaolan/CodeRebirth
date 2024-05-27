@@ -98,11 +98,6 @@ public static class ExtensionMethods
         enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
         LogIfDebugBuild($"Switching to {state} State.");
     }
-    public static void SwitchToBehaviourClientRpc(this EnemyAI enemyAI, Duck.State state)
-    {
-        enemyAI.SwitchToBehaviourClientRpc((int)state);
-        LogIfDebugBuild($"Switching to {state} State.");
-    }
 
     public static SnailCatAI.State ToSnailState(this int index)
 	{
