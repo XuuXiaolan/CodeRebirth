@@ -12,6 +12,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 	public class MapObjectAssets(string bundleName) : AssetBundleLoader<MapObjectAssets>(bundleName) {
 		[LoadFromBundle("MoneyObj.asset")]
 		public Item MoneyItem { get; private set; }
+		
+		[LoadFromBundle("Crate")]
+		public GameObject ItemCratePrefab { get; private set; }
 	}
 
 	public MapObjectAssets Assets { get; private set; }

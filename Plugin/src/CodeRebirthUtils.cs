@@ -1,5 +1,7 @@
+using CodeRebirth.MapStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = System.Random;
 
 namespace CodeRebirth.src;
@@ -24,6 +26,10 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             Plugin.Logger.LogInfo("Initializing random");
             random = new Random(StartOfRound.Instance.randomMapSeed + 85);
+        }
+
+        if (Keyboard.current.oKey.wasPressedThisFrame) {
+            Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, GameNetworkManager.Instance.localPlayerController.transform.position, Quaternion.identity).GetComponent<NetworkObject>().Spawn();
         }
 
         if (itemName == string.Empty)
