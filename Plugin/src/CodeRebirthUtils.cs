@@ -1,3 +1,4 @@
+using System;
 using CodeRebirth.MapStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -14,6 +15,17 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         Instance = this;
     }
+
+#if DEBUG
+    
+
+    void Update() {
+        if (Keyboard.current.oKey.wasPressedThisFrame) {
+            Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, GameNetworkManager.Instance.localPlayerController.transform.position, Quaternion.identity).GetComponent<NetworkObject>().Spawn();
+        }
+    }
+
+#endif
     
     [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(string itemName, Vector3 position) {
@@ -28,9 +40,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             random = new Random(StartOfRound.Instance.randomMapSeed + 85);
         }
 
-        if (Keyboard.current.oKey.wasPressedThisFrame) {
-            Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, GameNetworkManager.Instance.localPlayerController.transform.position, Quaternion.identity).GetComponent<NetworkObject>().Spawn();
-        }
+        
 
         if (itemName == string.Empty)
         {
