@@ -11,7 +11,6 @@ public class SnailCatAI : CodeRebirthEnemyAI
 
     public override void Start() {
         base.Start();
-        LogIfDebugBuild("SnailCat Spawned.");
         StartSearch(transform.position);
         this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
     }

@@ -9,7 +9,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 namespace CodeRebirth.EnemyStuff;
-public class QuestMasterAI : CodeRebirthEnemyAI
+public abstract class QuestMasterAI : CodeRebirthEnemyAI
 {
     [Header("Quest Variables")]
     [Tooltip("How long a player has to complete the assigned quest")]
@@ -24,6 +24,9 @@ public class QuestMasterAI : CodeRebirthEnemyAI
     [Tooltip("Chance of the player receiving another quest after completing the current one")]
     [SerializeField]
     public float questRepeatChance = 10f;
+    [Tooltip("Number of possible quest repeats")]
+    [SerializeField]
+    public int questRepeats = 1;
     [Space(5f)]
 
     [Header("Animations")]
@@ -102,6 +105,171 @@ public class QuestMasterAI : CodeRebirthEnemyAI
         startQuest,
         startFailQuest,
         startSucceedQuest,
+    }
+    public override void Start()
+    { // Animations and sounds arent here yet so you might get bugs probably lol.
+        base.Start();
+        if (!IsHost) return;
+        ChangeSpeedClientRpc(spawnSpeed);
+        DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
+        StartCoroutine(DoSpawning());
+        this.SwitchToBehaviourStateOnLocalClient(State.Spawning);
+    }
+    protected virtual IEnumerator DoSpawning()
+    {
+        creatureUltraVoice.Play();
+        yield return new WaitForSeconds(spawnAnimation.length);
+        StartSearch(transform.position);
+        ChangeSpeedClientRpc(walkSpeed);
+        DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
+        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+    }
+    protected virtual void DoWandering()
+    {
+        if (!FindClosestPlayerInRange(range)) return;
+        DoAnimationClientRpc(Animations.startApproach.ToAnimationName());
+        ChangeSpeedClientRpc(approachSpeed);
+        StopSearch(currentSearch);
+        this.SwitchToBehaviourStateOnLocalClient(State.Approaching);
+    }
+    protected virtual void DoApproaching()
+    {
+        if (Vector3.Distance(transform.position, targetPlayer.transform.position) < 3f && !questStarted)
+        {
+            questStarted = true;
+            DoAnimationClientRpc(Animations.startGiveQuest.ToAnimationName());
+            StartCoroutine(DoGiveQuest());
+        }
+        SetDestinationToPosition(targetPlayer.transform.position);
+    }
+    protected virtual IEnumerator DoGiveQuest()
+    {
+        LogIfDebugBuild("Starting Quest: " + questName);
+        if (!questCompleted) creatureSFX.PlayOneShot(questGiveClip);
+        if (questCompleted) creatureSFX.PlayOneShot(questGiveAgainClip);
+        yield return new WaitUntil(() => !creatureSFX.isPlaying);
+        DoAnimationClientRpc(Animations.startQuest.ToAnimationName());
+        questStarted = true;
+        ChangeSpeedClientRpc(questSpeed);
+        if (RoundManager.Instance.allEnemyVents.Length == 0)
+        {
+            DoCompleteQuest(QuestCompletion.Null);
+            yield break;
+        }
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(questItems[Math.Clamp(questOrder, 0, questItems.Length - 1)], RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position);
+        currentQuestOrder = Math.Clamp(questOrder, 0, questItems.Length - 1);
+        questOrder++;
+        StartCoroutine(QuestTimer());
+    }
+    protected virtual IEnumerator QuestTimer(float delay = 5f)
+    {
+        yield return new WaitForSeconds(delay);
+        this.SwitchToBehaviourStateOnLocalClient(State.OngoingQuest);
+        yield return new WaitForSeconds(questTimer);
+        questTimedOut = true;
+    }
+    protected virtual void DoOngoingQuest()
+    {
+        if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.IsSpawned || !targetPlayer.isPlayerControlled)
+        {
+            DoCompleteQuest(QuestCompletion.Null);
+            return;
+        }
+        if (questTimedOut)
+        {
+            DoCompleteQuest(QuestCompletion.TimedOut);
+            return;
+        }
+        if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder])
+        {
+            LogIfDebugBuild("completed!");
+            targetPlayer.DespawnHeldObject();
+            DoCompleteQuest(QuestCompletion.Completed);
+            return;
+        }
+        SetDestinationToPosition(targetPlayer.transform.position, true);
+    }
+    protected virtual void DoCompleteQuest(QuestCompletion reason)
+    {
+        switch (reason)
+        {
+            case QuestCompletion.TimedOut:
+                {
+                    creatureSFX.PlayOneShot(questFailClip);
+                    StartCoroutine(QuestFailSequence(targetPlayer));
+                    break;
+                }
+            case QuestCompletion.Completed:
+                {
+                    creatureSFX.PlayOneShot(questSucceedClip);
+                    StartCoroutine(QuestSucceedSequence());
+                    questCompletionTimes++;
+                    break;
+                }
+            case QuestCompletion.Null:
+                {
+                    LogIfDebugBuild("Target Player or Enemy vents is null?");
+                    break;
+                }
+        }
+        if (IsHost && UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes <= questRepeats)
+        {
+            questStarted = false;
+            questTimedOut = false;
+            this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+            return;
+        }
+        questCompleted = true;
+        ChangeSpeedClientRpc(docileSpeed);
+        this.SwitchToBehaviourStateOnLocalClient(State.Docile);
+        StartSearch(transform.position);
+    }
+    protected virtual IEnumerator QuestSucceedSequence()
+    {
+        yield return StartAnimation(Animations.startSucceedQuest);
+    }
+    protected virtual IEnumerator QuestFailSequence(PlayerControllerB failure)
+    {
+        yield return StartAnimation(Animations.startFailQuest);
+        failure.DamagePlayer(500, true, true, CauseOfDeath.Strangulation, 0, false, default);
+        creatureSFX.PlayOneShot(questAfterFailClip);
+    }
+    protected IEnumerator StartAnimation(Animations animation, int layerIndex = 0, string stateName = "Walking Animation")
+    {
+        yield return new WaitUntil(() => !creatureSFX.isPlaying);
+        DoAnimationClientRpc(animation.ToAnimationName());
+        yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName));
+    }
+    protected virtual void DoDocile()
+    {
+        // Generic behaviour stuff for any type of quest giver when docile
+    }
+    public override void DoAIInterval()
+    {
+        base.DoAIInterval();
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+        if (!IsHost) return;
+
+        switch (currentBehaviourStateIndex.ToQuestMasterAIState())
+        {
+            case State.Spawning:
+                break;
+            case State.Wandering:
+                DoWandering();
+                break;
+            case State.Approaching:
+                DoApproaching();
+                break;
+            case State.OngoingQuest:
+                DoOngoingQuest();
+                break;
+            case State.Docile:
+                DoDocile();
+                break;
+            default:
+                LogIfDebugBuild("This Behavior State doesn't exist!");
+                break;
+        }
     }
 }
 public class QuestItem : MonoBehaviour
