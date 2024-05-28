@@ -2,7 +2,7 @@
 - Added new item, SnowGlobe.
 - Added configs for SnowGlobe.
 - Improved Weather performance
-- Added warning for 
+- Added warning for CentralConfig being in the same pack.
 - Added new enemy "ScrapMaster"
 - Added new outside object that can spawn in sometimes.
 - Updated Icons for items.
