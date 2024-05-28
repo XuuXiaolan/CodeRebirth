@@ -3,7 +3,7 @@ Overhaul mod for Lethal Company
 
 - [Make a fresh rip using nomnom's Unity LC Patcher tool and name it CodeRebirthUnityProject](https://github.com/nomnomab/unity-lc-project-patcher)
 - Copy the CodeRebirth folder in CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth <--
-- Paste it into that Unity Project's `Mods` folder
+- Paste it into that Unity Project's `plugins` folder
 - Move the fresh asset-ripped project into the root files (same root as the README.md), replacing the original CodeRebirthUnityProject with this one.
 - Done!
 
@@ -11,52 +11,19 @@ Overhaul mod for Lethal Company
 
 ## Working-On List:
 ### Enemies
-#### Concept: The Cutiefly - Ambient Butterfly
-##### Description
-The Cutiefly is an ambient butterfly that spawns in the daytime and is known to fly and flutter around.
-
-##### Behavior
-- None as of yet.
-
-##### Vulnerability and Defense
-- None as of yet.
-
-##### Spawn Behavior
-- **Location:** Spawns Daytime on forest-y moons.
-
-##### Additional Characteristics
-- None as of yet.
 
 ### Moons
 
 ### Scrap/Items
-#### Snow Globe
-- **Items:** Snow Globe + some variant insides
-- **Description:** Cute looking Snow Globe that you can shake and plays some cute dropship music.
-
-#### Wallet
-- **Items:** Wallet + some variant colours
-- **Description:** Stores coins.
-
-#### Coins
-- **Items:** Coins
-- **Description:** Gets stored by a wallet, its value transferred.
-
-#### Meteorite Shard
-- **Items:** Gems and Crystals
-- **Description:** Dropped from Meteors during Meteor Shower weather at a low low chance, glows and looks pwetty. 
 
 ### Weathers
-#### Meteor Shower
-- **Availability:** All worlds
-- **Effects:** Randomly, Meteors will spawn way up in the sky and fall down, causing a small-ish crater with a small 5% chance to spawning a meteorite shard for scrap.
 
 ### Misc
 
 ## TODO List:
 
 ### Enemies
-#### Concept: CatSnail
+#### Concept:
 ##### Description
 ##### Behaviour
 ##### Vulnerability and Defense
@@ -81,6 +48,7 @@ The Nesting Bug is a formidable new foe resembling a fusion of a dragonfly and a
 
 ##### Additional Characteristics
 - The presence of the Nesting Bug introduces a new dynamic to resource management and player strategy, particularly in how players secure their belongings and navigate the moon's terrain.
+![Nesting Bug](ImageStorage/NestingBug.png)
 
 #### Concept: The Guardsman - Nutcracker Variant
 ##### Description
@@ -103,6 +71,7 @@ Upon spotting movement, the Guardsman emits a charging horn sound and aggressive
 
 ##### Additional Characteristics
 - The Guardsman adds a layer of tactical challenge to forested moons or those with large structures, like Titan or Artifice.
+![Guardsman](ImageStorage/Guardsman.png)
 
 #### Concept: The Nuggets - Semi-Mobile Turrets
 ##### Description
@@ -127,6 +96,7 @@ Activated by over 90 pounds of weight stationary above them, orienting towards v
 
 ##### Strategic Implications
 - More of a strategic nuisance than a threat, requiring mindful player movement.
+![The Nuggets](ImageStorage/TheNuggets.png)
 
 ### Moons
 #### 204-Yield
