@@ -11,7 +11,9 @@ using CodeRebirth.ItemStuff;
 using CodeRebirth.MapStuff;
 using CodeRebirth.Misc;
 using CodeRebirth.WeatherStuff;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace CodeRebirth.src;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -53,6 +55,18 @@ internal static class StartOfRoundPatcher {
                 pickable.Unlock();
                 __instance.playerHeldBy.DespawnHeldObject();
             }
+        }
+    }
+    
+    [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
+    public static void SpawnOutsideMapObjects() {
+        if(!RoundManager.Instance.IsHost) return;
+        System.Random random = new();
+        for (int i = 0; i < random.Next(30, 50); i++) {
+            Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+            Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 30f, default, random, -1) + Vector3.up;
+            GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, vector, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            spawnedCrate.GetComponent<NetworkObject>().Spawn();
         }
     }
 
