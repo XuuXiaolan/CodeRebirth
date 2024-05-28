@@ -9,49 +9,9 @@ using Unity.Mathematics;
 using UnityEngine;
 
 namespace CodeRebirth.EnemyStuff;
-public class Duck : CodeRebirthEnemyAI
+public class Duck : QuestMasterAI
 {
-    [Header("Quest Variables")]
-    [Tooltip("How long a player has to complete the assigned quest")]
-    [SerializeField]
-    private float questTimer = 120f;
-    [Tooltip("List of items' names the player needs to collect to complete the quest")]
-    [SerializeField]
-    private string[] questItems;
-    [Tooltip("Name of the given quest")]
-    [SerializeField]
-    private string questName;
-    [Space(5f)]
-
-    [Header("Animations")]
-    [SerializeField]
-    private AnimationClip spawnAnimation;
-    [Space(5f)]
-
-    [Header("Audio")]
-    [SerializeField]
-    private AudioSource creatureUltraVoice;
-    [SerializeField]
-    private AudioClip questGiveClip;
-    [SerializeField]
-    private AudioClip questSucceedClip;
-    [SerializeField]
-    private AudioClip questFailClip;
-    [SerializeField]
-    private AudioClip questGiveAgainClip;
-    [SerializeField]
-    private AudioClip questAfterFailClip;
-    [Header("Behaviour")]
-    [Tooltip("Detection Range")]
-    [SerializeField]
-    private float range = 20f;
-
-    private int currentQuestOrder = 0;
-    private bool questTimedOut = false;
-    private bool questCompleted = false;
-    private bool questStarted = false;
-    private int questOrder = 0;
-    public enum State {
+    public new enum State {
         Spawning,
         Wandering,
         Approaching,
@@ -59,14 +19,14 @@ public class Duck : CodeRebirthEnemyAI
         Docile,
     }
 
-    public enum QuestCompletion
+    public new enum QuestCompletion
     {
         TimedOut,
         Completed,
         Null,
     }
 
-    public enum Animations
+    public new enum Animations
     {
         startSpawn,
         startWalk,
@@ -82,7 +42,7 @@ public class Duck : CodeRebirthEnemyAI
         if (!IsHost) return;
         LogIfDebugBuild(this.enemyType.enemyName + " Spawned.");
         creatureVoice.volume = 0.5f;
-        ChangeSpeedClientRpc(1f);
+        ChangeSpeedClientRpc(spawnSpeed);
         DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
         StartCoroutine(DoSpawning());
         this.SwitchToBehaviourStateOnLocalClient(State.Spawning);
@@ -92,7 +52,7 @@ public class Duck : CodeRebirthEnemyAI
         creatureUltraVoice.Play();
         yield return new WaitForSeconds(spawnAnimation.length);
         StartSearch(transform.position);
-        ChangeSpeedClientRpc(3f);
+        ChangeSpeedClientRpc(walkSpeed);
         DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
         this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
     }
@@ -100,7 +60,7 @@ public class Duck : CodeRebirthEnemyAI
     private void DoWandering() {
         if (!FindClosestPlayerInRange(range)) return;
         DoAnimationClientRpc(Animations.startApproach.ToAnimationName());
-        ChangeSpeedClientRpc(8f);
+        ChangeSpeedClientRpc(approachSpeed);
         StopSearch(currentSearch);
         this.SwitchToBehaviourStateOnLocalClient(State.Approaching);
     }
@@ -122,7 +82,7 @@ public class Duck : CodeRebirthEnemyAI
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
         DoAnimationClientRpc(Animations.startQuest.ToAnimationName());
         questStarted = true;
-        ChangeSpeedClientRpc(8f);
+        ChangeSpeedClientRpc(questSpeed);
         if (RoundManager.Instance.allEnemyVents.Length == 0) {
             DoCompleteQuest(QuestCompletion.Null);
             yield break;
@@ -169,6 +129,7 @@ public class Duck : CodeRebirthEnemyAI
                 {
                     creatureSFX.PlayOneShot(questSucceedClip);
                     StartCoroutine(QuestSucceedSequence());
+                    questCompletionTimes++;
                     break;
                 }
             case QuestCompletion.Null:
@@ -177,16 +138,14 @@ public class Duck : CodeRebirthEnemyAI
                     break;
                 }
         }
-        if (IsHost && UnityEngine.Random.Range(0, 100) < 10 && reason == QuestCompletion.Completed && !questCompleted) {
+        if (IsHost && UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes <= 1) {
             questStarted = false;
             questTimedOut = false;
-            questCompleted = true;
             this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
-
             return;
         }
         questCompleted = true;
-        ChangeSpeedClientRpc(4f);
+        ChangeSpeedClientRpc(docileSpeed);
         this.SwitchToBehaviourStateOnLocalClient(State.Docile);
         creatureVoice.volume = 0.25f;
         StartSearch(transform.position);
@@ -255,21 +214,4 @@ public class Duck : CodeRebirthEnemyAI
         targetPlayer = closestPlayer;
         return true;
     }
-
-    private bool EnemyHasLineOfSightToPosition(Vector3 pos, float width = 60f, float range = 20f, float proximityAwareness = 5f) {
-        if (eye == null) {
-            _ = transform;
-        } else {
-            _ = eye;
-        }
-
-        if (Vector3.Distance(eye.position, pos) >= range || Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) return false;
-
-        Vector3 to = pos - eye.position;
-        return Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
-    }
-}
-
-public class QuestItem : MonoBehaviour
-{
 }

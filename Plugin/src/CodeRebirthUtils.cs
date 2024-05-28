@@ -1,6 +1,9 @@
+using System;
+using CodeRebirth.MapStuff;
 using CodeRebirth.EnemyStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = System.Random;
 
 namespace CodeRebirth.src;
@@ -15,7 +18,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
     
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnScrapServerRpc(string itemName, Vector3 position) {
+    public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false) {
         if (StartOfRound.Instance == null)
         {
             return;
@@ -24,6 +27,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             random = new Random(StartOfRound.Instance.randomMapSeed + 85);
         }
+
+        
 
         if (itemName == string.Empty)
         {
@@ -42,7 +47,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         scanNode.subText = $"Value: ${value}";
         go.GetComponent<GrabbableObject>().scrapValue = value;
         UpdateScanNodeClientRpc(new NetworkObjectReference(go), value);
-        if (item.itemName.Contains("Quest")) go.AddComponent<QuestItem>();
+        if (isQuest) go.AddComponent<QuestItem>();
     }
 
     [ClientRpc]

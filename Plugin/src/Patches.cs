@@ -7,9 +7,13 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Assertions;
 using CodeRebirth;
+using CodeRebirth.ItemStuff;
+using CodeRebirth.MapStuff;
 using CodeRebirth.Misc;
 using CodeRebirth.WeatherStuff;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 using System.Linq;
 
 namespace CodeRebirth.src;
@@ -44,14 +48,31 @@ internal static class StartOfRoundPatcher {
             WeatherHandler.Instance.MeteorShowerWeather.effectPermanentObject.SetActive(false);
         }
     }
-    
-    private static IEnumerator WaitForNetworkObject(StartOfRound __instance, Action<StartOfRound> action)
-    {
-        while (!__instance.NetworkObject.IsSpawned)
-        {
-            yield return null;
+
+    [HarmonyPatch(typeof(KeyItem), nameof(KeyItem.ItemActivate)), HarmonyPostfix]
+    public static void CustomPickableObjects(KeyItem __instance) {
+        if (__instance.playerHeldBy == null || !__instance.IsOwner) {
+            return;
         }
-        action(__instance);
+        if (Physics.Raycast(new Ray(__instance.playerHeldBy.gameplayCamera.transform.position, __instance.playerHeldBy.gameplayCamera.transform.forward), out RaycastHit raycastHit, 3f, 2816))
+        {
+            if (raycastHit.transform.TryGetComponent(out Pickable pickable) && pickable.IsLocked) {
+                pickable.Unlock();
+                __instance.playerHeldBy.DespawnHeldObject();
+            }
+        }
+    }
+    
+    [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
+    public static void SpawnOutsideMapObjects() {
+        if(!RoundManager.Instance.IsHost) return;
+        System.Random random = new();
+        for (int i = 0; i < random.Next(30, 50); i++) {
+            Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+            Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 30f, default, random, -1) + Vector3.up;
+            GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, vector, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            spawnedCrate.GetComponent<NetworkObject>().Spawn();
+        }
     }
 
     private static void CreateNetworkManager()
