@@ -66,6 +66,13 @@ Shop Item to get some extra cash for the quota can pick up coins.
 <details>
   <summary><strong style="font-size: 1.4em;">Scraps</strong></summary>
 
+### Snow Globe
+
+![]()
+
+```
+Cracked, rare and unique. This Snow Globe is found deep inside of abandoned moons, made for children but loved by all. (Includes custom animations and sounds)
+```
 ### Meteorite
 
 ![](https://i.postimg.cc/nVg8pG8Y/imawdawdaage-removebg-preview.png)
