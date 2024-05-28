@@ -7,6 +7,11 @@ namespace CodeRebirth.src.EnemyStuff
 {
     public abstract class CodeRebirthEnemyAI : EnemyAI
     {
+        public override void Start()
+        {
+            base.Start();
+            LogIfDebugBuild(enemyType.enemyName + " Spawned.");
+        }
         [Conditional("DEBUG")]
         public void LogIfDebugBuild(object text)
         {

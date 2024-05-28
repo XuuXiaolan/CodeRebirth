@@ -33,7 +33,6 @@ public class CutieFlyAI : CodeRebirthEnemyAI
 
     public override void Start() {
         base.Start();
-        LogIfDebugBuild("CutieFly Spawned.");
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         lastIdleCycle = Time.time;
         StartSearch(transform.position);

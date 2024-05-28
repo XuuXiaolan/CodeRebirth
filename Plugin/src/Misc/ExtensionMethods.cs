@@ -76,11 +76,6 @@ public static class ExtensionMethods
 		return quaternion.Euler(random.NextFloat(0f, 360f),random.NextFloat(0f, 360f),random.NextFloat(0f, 360f));
 	}
 
-	public static string ToAnimationName(this Duck.Animations animation)
-	{
-		return animation.ToString();
-	}
-
 	public static string ToAnimationName(this QuestMasterAI.Animations animation)
 	{
 		return animation.ToString();
@@ -94,12 +89,6 @@ public static class ExtensionMethods
     public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, CutieFlyAI.State state)
 	{
 		enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
-        LogIfDebugBuild($"Switching to {state} State.");
-    }
-
-    public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, Duck.State state)
-    {
-        enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
         LogIfDebugBuild($"Switching to {state} State.");
     }
 
