@@ -13,13 +13,15 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T> {
 	protected AssetBundle bundle;
 
 	protected AssetBundleLoader(string filePath, bool registerNetworkPrefabs = true, bool fixMixerGroups = true) {
-		if (!Plugin.LoadedBundles.TryGetValue(filePath, out bundle)) {
+		bool usingCached = Plugin.LoadedBundles.TryGetValue(filePath, out bundle); // fix for registering network objects multiple times, not the best but oh well
+		if (!usingCached) {
 			bundle = AssetBundle.LoadFromFile(
 				Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filePath));
 			Plugin.LoadedBundles.Add(filePath, bundle);
 			Plugin.Logger.LogDebug(
 				$"[AssetBundle Loading] {filePath} contains these objects: {string.Join(",", bundle.GetAllAssetNames())}");
 		} else {
+			usingCached = true;
 			Plugin.Logger.LogDebug($"[AssetBundle Loading] Used cached {filePath}");
 		}
 
@@ -32,6 +34,11 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T> {
 			property.SetValue(this, LoadAsset(bundle, loadInstruction.BundleFile));
 		}
 
+		if (usingCached) {
+			Plugin.Logger.LogDebug("Skipping registering stuff as this bundle has already been loaded");
+			return;
+		}
+		
 		foreach(GameObject gameObject in bundle.LoadAllAssets<GameObject>()) {
 			if(fixMixerGroups) {
 				Utilities.FixMixerGroups(gameObject);
