@@ -99,6 +99,19 @@ Scrap to get some extra cash for the quota, Coin doesn't affect normal-level scr
 
 </details>
 
+<details>
+  <summary><strong style="font-size: 1.4em;">Miscellaneous</strong></summary>
+
+### Item Crate
+
+![](https://media1.tenor.com/m/Mrgv5PCMiBUAAAAd/cat-thumbs-up-cat.gif)
+
+```
+Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
+```
+
+</details>
+
 ## Credits - CodeRebirth Team!
 
 Coding:
