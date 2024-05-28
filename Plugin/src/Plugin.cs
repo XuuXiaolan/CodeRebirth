@@ -64,6 +64,7 @@ public class Plugin : BaseUnityPlugin {
         }
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
     }
 
     private void InitializeNetworkBehaviours() {

@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Diagnostics;
-using GameNetcodeStuff;
-using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 using CodeRebirth.Misc;
 using CodeRebirth.src.EnemyStuff;
 
@@ -81,7 +75,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         if (agent.baseOffset <= LAND_OFFSET)
         {
             StopSearch(currentSearch);
-            this.ToggleEnemySounds(false);
+            ToggleEnemySounds(false);
             this.SwitchToBehaviourStateOnLocalClient(State.Idle);
             SyncBlendShapeWeightOnLocalClient(100f);
             lastIdleCycle = Time.time;
@@ -94,7 +88,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         if (timeSinceLastStateChange > IDLE_MAXIMUM_TIME)
         {
             StartSearch(transform.position);
-            this.ToggleEnemySounds(true);
+            ToggleEnemySounds(true);
             this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
             lastIdleCycle = Time.time;
         }
