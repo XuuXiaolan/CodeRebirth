@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using CodeRebirth.ItemStuff;
 using CodeRebirth.Misc;
+using GameNetcodeStuff;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
@@ -37,7 +38,10 @@ public class ItemCrate : NetworkBehaviour {
 	void Awake() {
 		trigger = GetComponent<InteractTrigger>();
 		pickable = GetComponent <Pickable>();
-	}
+		trigger.onInteractEarly.AddListener(OnInteractEarly);
+        trigger.onInteract.AddListener(OnInteract);
+        trigger.onStopInteract.AddListener(OnInteractCancel);
+    }
 
 	void Update() {
 		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName ==
@@ -46,31 +50,48 @@ public class ItemCrate : NetworkBehaviour {
 		} else {
 			trigger.hoverTip = regularHoverTip;
 		}
-		
-		if(trigger.isBeingHeldByPlayer && !slowlyOpeningSFX.isPlaying) slowlyOpeningSFX.Play();
-		if(!trigger.isBeingHeldByPlayer && slowlyOpeningSFX.isPlaying) slowlyOpeningSFX.Stop();
+	}
+
+	void OnInteractEarly(PlayerControllerB playerController)
+	{
+        slowlyOpeningSFX.Play();
+    }
+    void OnInteract(PlayerControllerB playerController)
+    {
+		Open();
+        slowlyOpeningSFX.Stop();
+    }
+
+    void OnInteractCancel(PlayerControllerB playerController)
+	{
+		slowlyOpeningSFX.Stop();
 	}
 
 	public void Open() {
-		OpenCrateLocally();
-		OpenCrateServerRPC();
+		if (!IsHost) OpenCrateServerRPC();
+		else OpenCrate();
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	void OpenCrateServerRPC() {
-		OpenCrateClientRPC();
-		
-		Random random = new();
-		
-		Item chosenItem = random.NextItem(StartOfRound.Instance.allItemsList.itemsList.Where(item => item.isScrap).ToList());
-		GameObject spawned = Instantiate(chosenItem.spawnPrefab, transform.position, Quaternion.Euler(chosenItem.restingRotation),
-			RoundManager.Instance.spawnedScrapContainer);
+	void OpenCrateServerRPC()
+    {
+        OpenCrate();
+    }
 
-		spawned.GetComponent<GrabbableObject>().SetScrapValue((int)(random.Next(chosenItem.minValue, chosenItem.maxValue) * RoundManager.Instance.scrapValueMultiplier));
-		spawned.GetComponent<NetworkObject>().Spawn(false);
+	void OpenCrate()
+	{
+        Random random = new();
 
-		StartCoroutine(DestoryAfterSound());
-	}
+        Item chosenItem = random.NextItem(StartOfRound.Instance.allItemsList.itemsList.Where(item => item.isScrap).ToList());
+        GameObject spawned = Instantiate(chosenItem.spawnPrefab, transform.position, Quaternion.Euler(chosenItem.restingRotation),
+            RoundManager.Instance.spawnedScrapContainer);
+
+        spawned.GetComponent<GrabbableObject>().SetScrapValue((int)(random.Next(chosenItem.minValue, chosenItem.maxValue) * RoundManager.Instance.scrapValueMultiplier));
+        spawned.GetComponent<NetworkObject>().Spawn(false);
+
+        StartCoroutine(DestoryAfterSound());
+        OpenCrateClientRPC();
+    }
 
 	[ClientRpc]
 	void OpenCrateClientRPC() {
@@ -78,7 +99,6 @@ public class ItemCrate : NetworkBehaviour {
 	}
 
 	void OpenCrateLocally() {
-		if(opened) return;
 		
 		pickable.IsLocked = false;
 		openSFX.Play();
