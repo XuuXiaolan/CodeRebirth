@@ -6,6 +6,7 @@
 - Added new enemy "ScrapMaster"
 - Added new outside object that can spawn in sometimes.
 - Updated Icons for items.
+- Removed collision from snailcat.
 
 ## v0.0.3
 - Added moon blacklist config for the weather.

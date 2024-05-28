@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 953713423
+CRC: 1349786554
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1cf48e9cccd2f9470a811dd5594cf40a
+    Hash: 536d551e028bb958883773230f362818
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6e7aa24badb5daa5fdf28540b0278217
+    Hash: 7d996689146ec4f2eabc8c35f6b4bb90
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 1cf48e9cccd2f9470a811dd5594cf40a
+    Hash: 536d551e028bb958883773230f362818
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -45,8 +45,6 @@ ClassTypes:
 - Class: 108
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 1792574803, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
-- Class: 114
   Script: {fileID: 1608947979, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: 1360061190, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
@@ -58,6 +56,8 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: c5a15fd86cfe211173eb68d9b08fcff2, type: 3}
 - Class: 114
@@ -96,6 +96,10 @@ ClassTypes:
   Script: {fileID: 1390535004, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1328139491, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: -642691663, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 135
@@ -130,13 +134,21 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: EnemyBehaviourState
 - AssemblyName: Assembly-CSharp
+  ClassName: InteractEvent
+- AssemblyName: Assembly-CSharp
+  ClassName: InteractEventFloat
+- AssemblyName: Assembly-CSharp
   ClassName: NavSizeLimit
 - AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
   ClassName: UnityEngine.Rendering.HighDefinition.BoolScalableSettingValue
 - AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
   ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
 - AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.ArgumentCache
+- AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentListenerMode
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.UnityEvent
 Assets:
@@ -153,13 +165,15 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/BodyMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Animations/Waddle.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/Questgiving.mp3
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/ItemCrate/Crate.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Material/DuckSong.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/PocketFlashlight.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_BaseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Weapons/EpicAxe/Material/Axe1H_Epic.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/QuestFail.mp3
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/ButterflyMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoContainer.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Weapons/EpicAxe/Textures/Axe1H_Epic_MetallicSmoothness.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/ButterflyMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/Bryant_Oden_-_The_Duck_Song_Karaoke_Version.mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/GrapeObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Animations/HoldSnowGlobe.anim
@@ -212,7 +226,6 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Model/Coin.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Audio/NearImpact.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Bestiary/DuckTN.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Apocalypse/ApocalypseWeather.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Prefab/Money.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/MoneyObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Material/Glass.mat
@@ -232,13 +245,13 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Animations/Idle.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/GrapeMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Animations/Playersuccess.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/DropCardboardBox.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoWeather.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/butterflything.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/DropCardboardBox.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Weapons/EpicAxe/Textures/Axe1H_Epic_Emission.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_BaseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/butterflything
   1.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Grapes.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Bestiary/CutieFlyTN.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Apocalypse/ApocalypseContainer.prefab
 Dependencies: []
