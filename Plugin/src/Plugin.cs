@@ -2,20 +2,14 @@
 using System.Reflection;
 using UnityEngine;
 using BepInEx;
-using LethalLib.Modules;
 using BepInEx.Logging;
-using System.IO;
 using CodeRebirth.Configs;
 using System.Collections.Generic;
-using static LethalLib.Modules.Levels;
 using System.Linq;
-using static LethalLib.Modules.Items;
 using CodeRebirth.Keybinds;
 using HarmonyLib;
 using CodeRebirth.src;
-using LethalLib.Extras;
 using CodeRebirth.Misc;
-using CodeRebirth.ScrapStuff;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using CodeRebirth.WeatherStuff;
@@ -28,7 +22,6 @@ namespace CodeRebirth;
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(CustomStoryLogs.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency("WeatherAPI", BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
@@ -58,7 +51,7 @@ public class Plugin : BaseUnityPlugin {
         InputActionsInstance = new IngameKeybinds();
         
         Logger.LogInfo("Registering content.");
-        
+
         List<Type> creatureHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
@@ -66,7 +59,6 @@ public class Plugin : BaseUnityPlugin {
         ).ToList();
         
         foreach(Type type in creatureHandlers) {
-            Logger.LogDebug($"Invoking {type.Name}");
             type.GetConstructor([]).Invoke([]);
         }
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
@@ -78,6 +70,7 @@ public class Plugin : BaseUnityPlugin {
         }
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
     }
 
     private void InitializeNetworkBehaviours() {

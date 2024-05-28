@@ -52,12 +52,10 @@ public class ContentHandler<T> where T: ContentHandler<T> {
             if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
             {
                 spawnRateByLevelType[levelType] = spawnrate;
-                Plugin.Logger.LogInfo($"Registered spawn rate for level type {levelType} to {spawnrate}");
             }
             else
             {
                 spawnRateByCustomLevelType[name] = spawnrate;
-                Plugin.Logger.LogInfo($"Registered spawn rate for custom level type {name} to {spawnrate}");
             }
         }
         return (spawnRateByLevelType, spawnRateByCustomLevelType);

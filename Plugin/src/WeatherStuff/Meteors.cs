@@ -40,7 +40,7 @@ public class Meteors : NetworkBehaviour {
     public float Progress => timeInAir / travelTime;
 
     [ClientRpc]
-    public void SetupMeteorClientRpc(Vector3 origin, Vector3 target, bool apocalypse) {
+    public void SetupMeteorClientRpc(Vector3 origin, Vector3 target) {
         this.origin = origin;
         this.target = target;
         float distance = Vector3.Distance(origin, target);
@@ -49,7 +49,6 @@ public class Meteors : NetworkBehaviour {
         transform.LookAt(target);
         UpdateAudio(); // Make sure audio works correctly on the first frame.
         FireTrail.Play();
-        if (apocalypse) travelTime = 500f;
     }
 
     public void SetupAsLooping() {
@@ -100,7 +99,6 @@ public class Meteors : NetworkBehaviour {
     }
 
     private IEnumerator Impact() {
-        Plugin.Logger.LogInfo("IMPACT!!!");
         isMoving = false;
 
         ImpactAudio.Play();

@@ -11,7 +11,7 @@ using Random = System.Random;
 
 namespace CodeRebirth.WeatherStuff;
 
-public class MeteorShower : MonoBehaviour {
+public class MeteorShower : CodeRebirthWeathers {
 	Coroutine spawnHandler;
 
 	List<GameObject> nodes;
@@ -74,7 +74,6 @@ public class MeteorShower : MonoBehaviour {
 	{
         foreach (Meteors meteor in meteors)
         {
-			Plugin.Logger.LogInfo($"Destroying Meteor: {meteor}");
 			if (meteor == null) continue;
             if (!meteor.NetworkObject.IsSpawned || IsAuthority())
                 Destroy(meteor.gameObject);
@@ -85,41 +84,27 @@ public class MeteorShower : MonoBehaviour {
 	{
         foreach (CraterController crater in craters)
         {
-			Plugin.Logger.LogInfo($"Destroying Crater: {crater}");
 			if (crater == null) continue;
             Destroy(crater.gameObject);
         }
         craters.Clear();
     }
-    private Vector3 CalculateAverageLandNodePosition()
-    {
-        Vector3 sumPosition = Vector3.zero;
-        int count = 0;
-
-        foreach (GameObject node in nodes)
-        {
-            sumPosition += node.transform.position;
-            count++;
-        }
-
-        return count > 0 ? sumPosition / count : Vector3.zero;
-    }
 	private void SpawnOverheadVisualMeteors(int amount = 50) {
-        Vector3 averageLocation = CalculateAverageLandNodePosition();
+        Vector3 averageLocation = CalculateAverageLandNodePosition(nodes);
         Vector3 centralLocation = averageLocation + new Vector3(0, random.Next(250, 300), 0);
 		for (int i = 0; i < amount; i++) {
 			SpawnVisualMeteors(
 				centralLocation: centralLocation,
 				offset: new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175)),
 				speed: 2f,
-				sizeMultiplier: (float)random.NextDouble() * 12f + 2f);
+				sizeMultiplier: (float)random.NextDouble() * 3f + 2f);
 		}
         for (int i = 0; i < 1; i++) {
 			SpawnVisualMeteors(
 				centralLocation: centralLocation,
 				offset: Vector3.zero,
 				speed: 1.5f,
-				sizeMultiplier: random.Next(30, 50)
+				sizeMultiplier: random.Next(10, 25)
 				);
         }
 	}
@@ -132,16 +117,13 @@ public class MeteorShower : MonoBehaviour {
     }
 	private IEnumerator MeteorSpawnerHandler() {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get meteors before theyve inited everything.
-		Plugin.Logger.LogInfo("Began spawning meteors.");
 		while (true) { // this is fine because it gets stopped in OnDisable.
-			Plugin.Logger.LogDebug("Spawning Meteor.");
 
 			for (int i = 0; i < random.Next(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++) {
 				SpawnMeteor(GetRandomTargetPosition(minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
 			}
 			int delay = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
-			Plugin.Logger.LogDebug($"Next meteor in {delay} seconds.");
 			yield return new WaitForSeconds(delay);
 		}
 	}
@@ -155,41 +137,9 @@ public class MeteorShower : MonoBehaviour {
             
 		Meteors meteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
 		meteor.NetworkObject.OnSpawn(() => {
-			meteor.SetupMeteorClientRpc(origin, target, false);
+			meteor.SetupMeteorClientRpc(origin, target);
 		});
 		meteor.NetworkObject.Spawn();
-	}
-	
-	private IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, bool cullDoors = false)
-	{
-		var nodeList = new List<GameObject>(nodes);
-		var toCull = new HashSet<GameObject>();
-        Transform shipBoundaries = StartOfRound.Instance.shipBounds.transform;
-
-		// Compare each node with every other node
-		for (int i = 0; i < nodeList.Count; i++)
-		{
-			
-			for (int j = i + 1; j < nodeList.Count; j++)
-			{
-				if (Vector3.Distance(nodeList[i].transform.position, nodeList[j].transform.position) < minDistance)
-				{
-					// Mark the second node in each pair for culling
-					toCull.Add(nodeList[j]);
-				}
-			}
-		}
-
-		// Remove the marked nodes
-		nodeList.RemoveAll(n => toCull.Contains(n));
-
-		if (cullDoors)
-		{
-			var entrances = FindObjectsOfType<EntranceTeleport>().ToList();
-			nodeList.RemoveAll(n => entrances.Exists(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
-		}
-
-		return nodeList;
 	}
 
 	private Vector3 GetRandomTargetPosition(float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
@@ -231,10 +181,6 @@ public class MeteorShower : MonoBehaviour {
 
         // Continuously adjust direction to ensure stability if necessary
         meteor.gameObject.AddComponent<StabilizeMovement>().Initialize(rb, initialDirection.normalized * speed);
-    }
-	private bool IsAuthority()
-    {
-        return NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
     }
 
 	public void AddMeteor(Meteors meteor)

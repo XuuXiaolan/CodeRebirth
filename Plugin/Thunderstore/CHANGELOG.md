@@ -1,3 +1,12 @@
+## v0.0.4
+- Added new item, SnowGlobe.
+- Added configs for SnowGlobe.
+- Improved Weather performance
+- Added warning for 
+- Added new enemy "ScrapMaster"
+- Added new outside object that can spawn in sometimes.
+- Updated Icons for items.
+
 ## v0.0.3
 - Added moon blacklist config for the weather.
 - Added Volume config for the weather.
