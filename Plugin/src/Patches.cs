@@ -56,12 +56,6 @@ internal static class StartOfRoundPatcher {
         }
     }
 
-    [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OpenShipDoors)), HarmonyPostfix]
-    public static void Temp_SpawnItemCrates() {
-        Plugin.Logger.LogInfo("Spawning ItemCrate.");
-        GameObject.Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab).GetComponent<NetworkObject>().Spawn();
-    }
-
     private static void CreateNetworkManager()
     {
         if (StartOfRound.Instance.IsServer || StartOfRound.Instance.IsHost)

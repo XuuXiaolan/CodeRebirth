@@ -21,6 +21,7 @@ using CodeRebirth.Util.AssetLoading;
 using CodeRebirth.WeatherStuff;
 using LethalLib;
 using System.Collections.ObjectModel;
+using CodeRebirth.MapStuff;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -57,6 +58,7 @@ public class Plugin : BaseUnityPlugin {
         InputActionsInstance = new IngameKeybinds();
         
         Logger.LogInfo("Registering content.");
+        
         List<Type> creatureHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
