@@ -81,6 +81,10 @@ public static class ExtensionMethods
 		return animation.ToString();
 	}
 
+	public static string ToAnimationName(this QuestMasterAI.Animations animation)
+	{
+		return animation.ToString();
+	}
     public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, SnailCatAI.State state)
     {
         enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
@@ -99,6 +103,11 @@ public static class ExtensionMethods
         LogIfDebugBuild($"Switching to {state} State.");
     }
 
+	public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, QuestMasterAI.State state)
+    {
+        enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
+        LogIfDebugBuild($"Switching to {state} State.");
+    }
     public static SnailCatAI.State ToSnailState(this int index)
 	{
 		return (SnailCatAI.State)index;
@@ -112,5 +121,10 @@ public static class ExtensionMethods
 	public static Duck.State ToDuckState(this int index)
 	{
 		return (Duck.State)index;
+	}
+
+	public static QuestMasterAI.State ToQuestMasterAIState(this int index)
+	{
+		return (QuestMasterAI.State)index;
 	}
 }

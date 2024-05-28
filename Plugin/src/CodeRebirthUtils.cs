@@ -15,7 +15,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
     
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnScrapServerRpc(string itemName, Vector3 position) {
+    public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false) {
         if (StartOfRound.Instance == null)
         {
             return;
@@ -42,7 +42,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         scanNode.subText = $"Value: ${value}";
         go.GetComponent<GrabbableObject>().scrapValue = value;
         UpdateScanNodeClientRpc(new NetworkObjectReference(go), value);
-        if (item.itemName.Contains("Quest")) go.AddComponent<QuestItem>();
+        if (isQuest) go.AddComponent<QuestItem>();
     }
 
     [ClientRpc]
