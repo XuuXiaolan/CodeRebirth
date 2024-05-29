@@ -57,6 +57,21 @@ public class CodeRebirthWeathers : MonoBehaviour {
 
 		return nodeList;
 	}
+	public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, List<GameObject> alreadyUsedNodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
+		try {
+			var nextNode = random.NextItem(nodes);
+			Vector3 position = nextNode.transform.position;
+			if (!alreadyUsedNodes.Contains(nextNode)) {
+				alreadyUsedNodes.Add(nextNode);
+			}
+			position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
+			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
+		return position;
+		} catch {
+			Plugin.Logger.LogFatal("Selecting random position failed.");
+			return new Vector3(0,0,0);
+		}
+	}
 	public bool IsAuthority()
     {
         return NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;

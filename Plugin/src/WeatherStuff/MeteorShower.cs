@@ -120,7 +120,7 @@ public class MeteorShower : CodeRebirthWeathers {
 		while (true) { // this is fine because it gets stopped in OnDisable.
 
 			for (int i = 0; i < random.Next(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++) {
-				SpawnMeteor(GetRandomTargetPosition(minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
+				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
 			}
 			int delay = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
@@ -142,21 +142,6 @@ public class MeteorShower : CodeRebirthWeathers {
 		meteor.NetworkObject.Spawn();
 	}
 
-	private Vector3 GetRandomTargetPosition(float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
-		try {
-			var nextNode = random.NextItem(nodes);
-			Vector3 position = nextNode.transform.position;
-			if (!alreadyUsedNodes.Contains(nextNode)) {
-				alreadyUsedNodes.Add(nextNode);
-			}
-			position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
-			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
-		return position;
-		} catch {
-			Plugin.Logger.LogFatal("Selecting random position failed.");
-			return new Vector3(0,0,0);
-		}
-	}
     private void AddRandomMovement(Meteors meteor, float speed)
     {
         var rb = meteor.GetComponent<Rigidbody>();
