@@ -30,6 +30,6 @@ public class ItemHandler : ContentHandler<ItemHandler> {
         
 		RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, false, Assets.WalletItem, Assets.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
 		RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, Assets.EpicAxeItem);
-		RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, Assets.SnowGlobeItem);
+		RegisterScrapWithConfig(Plugin.ModConfig.ConfigSnowGlobeEnabled.Value, Plugin.ModConfig.ConfigSnowGlobeSpawnWeights.Value, Assets.SnowGlobeItem);
 	}
 }

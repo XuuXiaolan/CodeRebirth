@@ -98,32 +98,6 @@ public class TornadoWeather : CodeRebirthWeathers {
 		tornado.NetworkObject.Spawn();
 	}
 
-    private void AddRandomMovement(Meteors meteor, float speed)
-    {
-        var rb = meteor.GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = meteor.gameObject.AddComponent<Rigidbody>();
-            rb.mass = 1000f; // A high mass to minimize environmental impact while still allowing movement
-            rb.useGravity = false; // Ensure the meteor doesn't fall due to gravity
-            rb.isKinematic = false; // The Rigidbody will respond to physics but isn't subject to gravity
-        }
-
-        // Initial direction setup to mostly avoid downward movement
-        Vector3 initialDirection = new Vector3(
-            (float)random.NextDouble() * 2 - 1,  // X-axis: Full random
-            Mathf.Max(0.5f, (float)random.NextDouble()),  // Y-axis: Strong upward bias
-            (float)random.NextDouble() * 2 - 1   // Z-axis: Full random
-        );
-        rb.velocity = initialDirection.normalized * speed;
-
-        // Limit rotation to Y-axis to minimize influence on velocity direction
-        rb.angularVelocity = new Vector3(0, (float)random.NextDouble() * 100 - 50, 0);
-
-        // Continuously adjust direction to ensure stability if necessary
-        meteor.gameObject.AddComponent<StabilizeMovement>().Initialize(rb, initialDirection.normalized * speed);
-    }
-
 	public void AddTornado(Tornados meteor)
 	{
 		tornados.Add(meteor);

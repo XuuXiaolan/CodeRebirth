@@ -9,7 +9,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 namespace CodeRebirth.EnemyStuff;
-public class Duck : QuestMasterAI
+public class ScrapMasterAI : QuestMasterAI
 {
     public override void Start() { // Animations and sounds arent here yet so you might get bugs probably lol.
         base.Start();
