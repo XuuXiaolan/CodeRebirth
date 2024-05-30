@@ -56,9 +56,10 @@ public class Tornados : NetworkBehaviour {
     public TornadoType tornadoType = TornadoType.Random;
 
     [ClientRpc]
-    public void SetupTornadoClientRpc(Vector3 origin, int typeIndex, List<GameObject> outsideNodes) {
+    public void SetupTornadoClientRpc(Vector3 origin, int typeIndex) {
+
+        this.outsideNodes = RoundManager.Instance.outsideAINodes.ToList(); // would travel between these nodes using a search routine.
         this.origin = origin;
-        this.outsideNodes = outsideNodes;
         this.tornadoType = (TornadoType) typeIndex; // I'm like pretty sure this doesn't do what i think it does but im pretty tired rn
         // Need to make the fields editor friendly too later.
         // Might need to add more stuff in relation to agents and moving around but doubt it?

@@ -87,7 +87,7 @@ public class TornadoWeather : CodeRebirthWeathers {
             
 		Tornados tornado = Instantiate(WeatherHandler.Instance.Assets.TornadoPrefab, origin, Quaternion.identity).GetComponent<Tornados>();
 		tornado.NetworkObject.OnSpawn(() => {
-			tornado.SetupTornadoClientRpc(origin, tornadoTypeIndex, nodes);
+			tornado.SetupTornadoClientRpc(origin, tornadoTypeIndex);
 		});
 		tornado.NetworkObject.Spawn();
 	}
