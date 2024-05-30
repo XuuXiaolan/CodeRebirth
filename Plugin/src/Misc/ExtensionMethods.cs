@@ -97,6 +97,11 @@ public static class ExtensionMethods
         enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
         LogIfDebugBuild($"Switching to {state} State.");
     }
+	public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, SymbioteAI.State state) 
+	{
+        enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
+        LogIfDebugBuild($"Switching to {state} State.");
+	}
     public static SnailCatAI.State ToSnailState(this int index)
 	{
 		return (SnailCatAI.State)index;
@@ -107,13 +112,12 @@ public static class ExtensionMethods
 		return (CutieFlyAI.State)index;
 	}
 
-	public static Duck.State ToDuckState(this int index)
-	{
-		return (Duck.State)index;
-	}
-
 	public static QuestMasterAI.State ToQuestMasterAIState(this int index)
 	{
 		return (QuestMasterAI.State)index;
 	}
+	public static SymbioteAI.State ToSymbioteState(this int index) 
+	{
+		return (SymbioteAI.State)index;
+	} 
 }
