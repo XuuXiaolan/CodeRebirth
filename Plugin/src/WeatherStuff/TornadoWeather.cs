@@ -13,15 +13,14 @@ namespace CodeRebirth.WeatherStuff;
 
 public class TornadoWeather : CodeRebirthWeathers {
 	Coroutine spawnHandler;
-
 	List<GameObject> nodes;
     [Space(5f)]
     [SerializeField]
     [Tooltip("Minimum Amount of Tornados per Spawn")]
-    int minTornadosToSpawn;
+    private int minTornadosToSpawn;
     [SerializeField]
     [Tooltip("Maximum Amount of Tornados per Spawn")]
-    int maxTornadosToSpawn;
+    private int maxTornadosToSpawn;
     private List<GameObject> alreadyUsedNodes;
 
 	readonly List<Tornados> tornados = new List<Tornados>(); // Proper initialization
@@ -30,13 +29,7 @@ public class TornadoWeather : CodeRebirthWeathers {
 	
 	public static TornadoWeather Instance { get; private set; }
 	public static bool Active => Instance != null;
-
-    public enum TornadoType
-    {
-        Water,
-        Fire,
-        Sand
-    }
+	public int tornadoTypeIndex = 0;
 	
 	private void OnEnable() { // init weather
 		Plugin.Logger.LogInfo("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name);
@@ -49,6 +42,7 @@ public class TornadoWeather : CodeRebirthWeathers {
 		if(!IsAuthority()) return; // Only run on the host.
         
 		random = new Random();
+		tornadoTypeIndex = random.Next(0, 3);
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}
 
@@ -93,7 +87,7 @@ public class TornadoWeather : CodeRebirthWeathers {
             
 		Tornados tornado = Instantiate(WeatherHandler.Instance.Assets.TornadoPrefab, origin, Quaternion.identity).GetComponent<Tornados>();
 		tornado.NetworkObject.OnSpawn(() => {
-			tornado.SetupTornadoClientRpc(origin);
+			tornado.SetupTornadoClientRpc(origin, tornadoTypeIndex, nodes);
 		});
 		tornado.NetworkObject.Spawn();
 	}
