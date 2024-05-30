@@ -24,13 +24,13 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 		
 		[LoadFromBundle("SnailCatTK.asset")]
 		public TerminalKeyword SnailCatTerminalKeyword { get; private set; }
-		[LoadFromBundle("ScrapMasterObj.asset")]
+		//[LoadFromBundle("ScrapMasterObj.asset")]
 		public EnemyType ScrapMasterEnemyType { get; private set; }
 		
-		[LoadFromBundle("ScrapMasterTN.asset")]
+		//[LoadFromBundle("ScrapMasterTN.asset")]
 		public TerminalNode ScrapMasterTerminalNode { get; private set; }
 		
-		[LoadFromBundle("ScrapMasterTK.asset")]
+		// [LoadFromBundle("ScrapMasterTK.asset")]
 		public TerminalKeyword ScrapMasterTerminalKeyword { get; private set; }
 		[LoadFromBundle("GrapeObj")]
 		public Item GrapeItem { get; private set; }

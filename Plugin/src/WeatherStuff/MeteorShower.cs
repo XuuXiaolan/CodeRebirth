@@ -33,7 +33,14 @@ public class MeteorShower : CodeRebirthWeathers {
     [Tooltip("Maximum Amount of Meteors per Spawn")]
     int maxMeteorsPerSpawn;
     private List<GameObject> alreadyUsedNodes;
-
+	private enum Direction {
+		Random,
+		East,
+		West,
+		North,
+		South
+	}
+	private Direction direction = Direction.Random;
 	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
 	readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
 	
@@ -52,8 +59,12 @@ public class MeteorShower : CodeRebirthWeathers {
 		SpawnOverheadVisualMeteors(random.Next(15, 45));
 		
 		if(!IsAuthority()) return; // Only run on the host.
-        
 		random = new Random();
+
+		Direction[] directions = { Direction.Random, Direction.East, Direction.West, Direction.North, Direction.South };
+        int index = random.Next(directions.Length);
+        direction = directions[index];
+
 		spawnHandler = StartCoroutine(MeteorSpawnerHandler());
 	}
 
@@ -127,13 +138,43 @@ public class MeteorShower : CodeRebirthWeathers {
 			yield return new WaitForSeconds(delay);
 		}
 	}
+    public Vector3 CalculateVector(Vector3 target) {
+        float x = 0, z = 0;
+        float distanceX = random.Next(250, 500);
+        float distanceZ = random.Next(250, 500);
 
+        switch (direction) {
+            case Direction.East:
+                x = distanceX;  // Move east
+                break;
+            case Direction.West:
+                x = -distanceX; // Move west
+                break;
+            case Direction.North:
+                z = distanceZ;  // Move north
+                break;
+            case Direction.South:
+                z = -distanceZ; // Move south
+                break;
+        }
+
+        // Assume y is upwards and we want to keep it within a certain range
+        float y = random.NextFloat(500, 800); // Fixed vertical range
+
+        return target + new Vector3(x, y, z);
+    }
 	private void SpawnMeteor(Vector3 target) {
-		Vector3 origin = target + new Vector3(
-			random.NextFloat(250, 500) * random.NextSign(), 
-			random.NextFloat(500, 800), 
-			random.NextFloat(250, 500) * random.NextSign()
-		);
+		Plugin.Logger.LogInfo(direction.ToString());
+		Vector3 origin = new Vector3();
+		if (direction == Direction.Random) {
+			origin = target + new Vector3(
+				random.NextFloat(250, 500) * random.NextSign(), 
+				random.NextFloat(500, 800), 
+				random.NextFloat(250, 500) * random.NextSign()
+			);
+		} else {
+			origin = CalculateVector(target);
+		}
             
 		Meteors meteor = Instantiate(WeatherHandler.Instance.Assets.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
 		meteor.NetworkObject.OnSpawn(() => {

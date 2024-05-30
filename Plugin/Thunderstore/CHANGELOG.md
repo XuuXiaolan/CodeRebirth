@@ -6,6 +6,7 @@
 - Added warning for CentralConfig being in the same pack.
 - Added new outside object that can spawn in sometimes.
 - Removed collision from snailcat.
+- Improved meteor spawning location.
 
 ## v0.0.3
 - Added moon blacklist config for the weather.
@@ -30,7 +31,6 @@
 - Initial release
 
 ## TODO:
-- Make meteors come from one direction rather than randomly from all directions
 - Add Tornado
 - Add ScrapMaster
 - Updated Icons for items

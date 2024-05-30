@@ -30,6 +30,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 	public void RegisterOutsideCrates() {
 		SpawnableOutsideObjectDef outsideObjDefBug = ScriptableObject.CreateInstance<SpawnableOutsideObjectDef>();
 		outsideObjDefBug.spawnableMapObject = new SpawnableOutsideObjectWithRarity();
+		outsideObjDefBug.spawnableMapObject.spawnableObject = ScriptableObject.CreateInstance<SpawnableOutsideObject>();
 		outsideObjDefBug.spawnableMapObject.spawnableObject.prefabToSpawn = Assets.ItemCratePrefab;
 		MapObjects.RegisterOutsideObject(outsideObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, 0, 1000))));
 	}
