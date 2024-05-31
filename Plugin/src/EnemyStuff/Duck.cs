@@ -11,14 +11,13 @@ using UnityEngine;
 namespace CodeRebirth.EnemyStuff;
 public class Duck : QuestMasterAI
 {
-    // Overrides of QuestMasterAI methods are either completely replacing the logic of it or additional effects after it was executed.
     public override void Start() { // Animations and sounds arent here yet so you might get bugs probably lol.
         base.Start();
         if (!IsHost) return;
         creatureVoice.volume = 0.5f;
     }
-    protected override void DoCompleteQuest(QuestCompletion reason)
-    {
+
+    protected override void DoCompleteQuest(QuestCompletion reason) {
         base.DoCompleteQuest(reason);
         creatureVoice.volume = 0.25f;
     }

@@ -34,10 +34,14 @@ internal static class StartOfRoundPatcher {
     {
         __instance.NetworkObject.OnSpawn(CreateNetworkManager);
 
-        string[] levelOverrides = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value.Split(',')
+        string[] meteorLevelOverrides = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value.Split(',')
                                     .Select(name => name.Trim())
                                     .ToArray();
-        LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", levelOverrides: levelOverrides);
+        string[] tornadoLevelOverrides = Plugin.ModConfig.ConfigTornadoMoonsBlacklist.Value.Split(',')
+                                    .Select(name => name.Trim())
+                                    .ToArray();
+        LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", levelOverrides: meteorLevelOverrides);
+        LethalLib.Modules.Weathers.RemoveWeather("Tornados", levelOverrides: tornadoLevelOverrides);
     }
 
     [HarmonyPatch(nameof(StartOfRound.OnDisable))]
@@ -63,7 +67,7 @@ internal static class StartOfRoundPatcher {
         }
     }
     
-    [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
+    /*[HarmonyPatch(typeof(RoundManager), nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
     public static void SpawnOutsideMapObjects() {
         if(!RoundManager.Instance.IsHost) return;
         System.Random random = new();
@@ -73,7 +77,7 @@ internal static class StartOfRoundPatcher {
             GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, vector, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedCrate.GetComponent<NetworkObject>().Spawn();
         }
-    }
+    }*/
 
     private static void CreateNetworkManager()
     {

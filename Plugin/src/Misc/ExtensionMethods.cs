@@ -107,13 +107,8 @@ public static class ExtensionMethods
 		return (CutieFlyAI.State)index;
 	}
 
-	public static Duck.State ToDuckState(this int index)
-	{
-		return (Duck.State)index;
-	}
-
 	public static QuestMasterAI.State ToQuestMasterAIState(this int index)
 	{
 		return (QuestMasterAI.State)index;
-	}
+	} 
 }

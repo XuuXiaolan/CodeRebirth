@@ -1,11 +1,12 @@
 ## v0.0.4
 - Added new item, SnowGlobe.
 - Added configs for SnowGlobe.
+- Added a loooooot of configs.
 - Improved Weather performance
 - Added warning for CentralConfig being in the same pack.
-- Added new enemy "ScrapMaster"
 - Added new outside object that can spawn in sometimes.
-- Updated Icons for items.
+- Removed collision from snailcat.
+- Improved meteor spawning location.
 
 ## v0.0.3
 - Added moon blacklist config for the weather.
@@ -30,4 +31,6 @@
 - Initial release
 
 ## TODO:
-- Make meteors come from one direction rather than randomly from all directions
+- Add Tornado
+- Add ScrapMaster
+- Updated Icons for items

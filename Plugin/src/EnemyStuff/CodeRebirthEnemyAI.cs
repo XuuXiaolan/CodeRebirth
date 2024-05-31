@@ -12,6 +12,7 @@ namespace CodeRebirth.src.EnemyStuff
             base.Start();
             LogIfDebugBuild(enemyType.enemyName + " Spawned.");
         }
+        
         [Conditional("DEBUG")]
         public void LogIfDebugBuild(object text)
         {

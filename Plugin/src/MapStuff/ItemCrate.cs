@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections;
 using System.Linq;
 using CodeRebirth.ItemStuff;
@@ -44,8 +44,7 @@ public class ItemCrate : NetworkBehaviour {
     }
 
 	void Update() {
-		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName ==
-			"Key") {
+		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
 			trigger.hoverTip = keyHoverTip;
 		} else {
 			trigger.hoverTip = regularHoverTip;
@@ -83,8 +82,7 @@ public class ItemCrate : NetworkBehaviour {
         Random random = new();
 
         Item chosenItem = random.NextItem(StartOfRound.Instance.allItemsList.itemsList.Where(item => item.isScrap).ToList());
-        GameObject spawned = Instantiate(chosenItem.spawnPrefab, transform.position, Quaternion.Euler(chosenItem.restingRotation),
-            RoundManager.Instance.spawnedScrapContainer);
+        GameObject spawned = Instantiate(chosenItem.spawnPrefab, transform.position, Quaternion.Euler(chosenItem.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
         spawned.GetComponent<GrabbableObject>().SetScrapValue((int)(random.Next(chosenItem.minValue, chosenItem.maxValue) * RoundManager.Instance.scrapValueMultiplier));
         spawned.GetComponent<NetworkObject>().Spawn(false);

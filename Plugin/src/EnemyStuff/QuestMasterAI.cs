@@ -24,6 +24,9 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     [Tooltip("Chance of the player receiving another quest after completing the current one")]
     [SerializeField]
     public float questRepeatChance = 10f;
+    [Tooltip("Number of possible quest repeats")]
+    [SerializeField]
+    public int questRepeats = 1;
     [Space(5f)]
 
     [Header("Animations")]
@@ -209,7 +212,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
                     break;
                 }
         }
-        if (IsHost && UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes <= 1)
+        if (IsHost && UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes <= questRepeats)
         {
             questStarted = false;
             questTimedOut = false;
