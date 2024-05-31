@@ -244,6 +244,10 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         // Generic behaviour stuff for any type of quest giver when docile
     }
+    protected virtual void OnDisable() {
+        if (!IsHost) return;
+        // delete all the items with the Quest component
+    }
     public override void DoAIInterval()
     {
         base.DoAIInterval();
