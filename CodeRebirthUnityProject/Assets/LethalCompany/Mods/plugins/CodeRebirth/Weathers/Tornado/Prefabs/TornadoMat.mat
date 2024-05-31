@@ -157,15 +157,16 @@ Material:
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
-    - _AlphaDstBlend: 1
+    - _AlphaDstBlend: 10
     - _AlphaRemapMax: 1
     - _AlphaRemapMin: 0
     - _AlphaSrcBlend: 1
     - _Anisotropy: 0
-    - _BlendMode: 1
+    - _BlendMode: 0
+    - _CellSize: 5
     - _CoatMask: 0
     - _ConservativeDepthOffsetEnable: 0
-    - _Coverage: 0.46
+    - _Coverage: 0.201
     - _CullMode: 0
     - _CullModeForward: 0
     - _Cutoff: 0.5
@@ -181,20 +182,20 @@ Material:
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
-    - _DstBlend: 1
+    - _DstBlend: 10
     - _Emissive: 1
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveHeight: 10
-    - _EmissiveIntensity: 1
+    - _EmissiveIntensity: 3428.41
     - _EmissiveIntensityUnit: 0
-    - _EnableBlendModePreserveSpecularLighting: 1
+    - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
-    - _Fill: 0.55
+    - _Fill: 1
     - _Float: 0
-    - _GradientContrast: 2
+    - _GradientContrast: 1
     - _HardEdge: 1
     - _HeightAmplitude: 0.02
     - _HeightCenter: 0.5
@@ -216,9 +217,10 @@ Material:
     - _MetallicRemapMin: 0
     - _NormalMapSpace: 0
     - _NormalScale: 1
+    - _ObjectHeight: 0
     - _ObjectSpaceUVMapping: 0
     - _ObjectSpaceUVMappingEmissive: 0
-    - _OffsetPoint: 10
+    - _OffsetPoint: 9
     - _OpaqueCullMode: 2
     - _PPDLodThreshold: 5
     - _PPDMaxSamples: 15
@@ -235,7 +237,7 @@ Material:
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
     - _SoftNoiseContract: 2
-    - _SoftNoiseContrast: 3
+    - _SoftNoiseContrast: 1.2
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
     - _SpecularOcclusionMode: 1
@@ -286,13 +288,13 @@ Material:
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 1, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
-    - _Gradient: {r: 2, g: 0.5, b: 0, a: 0}
+    - _Gradient: {r: 4, g: 0.1, b: 0, a: 0}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Speed: {r: -2, g: -4, b: 0, a: 0}
+    - _Speed: {r: -1, g: -2, b: 0, a: 0}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _Tiling: {r: 2, g: 8, b: 0, a: 0}
+    - _Tiling: {r: 1, g: 4, b: 0, a: 0}
     - _TransitionHeights: {r: 0, g: 9, b: 0, a: 0}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}

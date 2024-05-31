@@ -166,12 +166,12 @@ Material:
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
-    - _AlphaDstBlend: 10
+    - _AlphaDstBlend: 1
     - _AlphaRemapMax: 1
     - _AlphaRemapMin: 0
     - _AlphaSrcBlend: 1
     - _Anisotropy: 0
-    - _BlendMode: 0
+    - _BlendMode: 1
     - _BlendOp: 0
     - _BumpScale: 1
     - _CameraFadingEnabled: 0
@@ -180,7 +180,7 @@ Material:
     - _CoatMask: 0
     - _ColorMode: 0
     - _ConservativeDepthOffsetEnable: 0
-    - _Coverage: 0.5
+    - _Coverage: 0.355
     - _Cull: 0
     - _CullMode: 0
     - _CullModeForward: 0
@@ -201,22 +201,22 @@ Material:
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
-    - _DstBlend: 10
+    - _DstBlend: 1
     - _EmissionEnabled: 0
-    - _Emissive: 0
+    - _Emissive: 1
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveHeight: 0
-    - _EmissiveIntensity: 1
+    - _EmissiveIntensity: 83.17
     - _EmissiveIntensityUnit: 0
-    - _EnableBlendModePreserveSpecularLighting: 1
+    - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
-    - _Fill: 0.5
+    - _Fill: 1
     - _FlipbookMode: 0
     - _Float: 0
-    - _GradientContrast: 1
+    - _GradientContrast: 3
     - _HardEdge: 1
     - _HeightAmplitude: 0.02
     - _HeightCenter: 0.5
@@ -240,6 +240,7 @@ Material:
     - _Mode: 3
     - _NormalMapSpace: 0
     - _NormalScale: 1
+    - _ObjectHeight: 0
     - _ObjectSpaceUVMapping: 0
     - _ObjectSpaceUVMappingEmissive: 0
     - _OffsetPoint: 0
@@ -305,7 +306,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
-    - _Base_Color: {r: 0, g: 0.61193836, b: 0.6415094, a: 0}
+    - _Base_Color: {r: 1, g: 0.41093177, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _Color: {r: 1, g: 0.12869695, b: 0, a: 1}
     - _ColorAddSubDiff: {r: -1, g: 1, b: 0, a: 0}
@@ -313,16 +314,16 @@ Material:
         a: 4.64615e-35}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissiveColor: {r: 7.4642644, g: 1.3856877, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
-    - _Gradient: {r: 1, g: 0, b: 0, a: 0}
+    - _Gradient: {r: 1, g: 0.5, b: 0, a: 0}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Speed: {r: -1, g: -2, b: 0, a: 0}
+    - _Speed: {r: 0, g: -1, b: 0, a: 0}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _Tiling: {r: 2, g: 2, b: 0, a: 0}
+    - _Tiling: {r: 1, g: 4, b: 0, a: 0}
     - _TransitionHeights: {r: 6, g: 9, b: 0, a: 0}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
