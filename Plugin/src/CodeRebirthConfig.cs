@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
         // Enables/Disables
+        public ConfigEntry<bool> ConfigWesleyModeEnabled { get; private set; }
         public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
         public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
         public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
@@ -42,6 +43,10 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Wesley Mode",
+                                                false,
+                                                "Enables/Disables the Wesley Mode (this is a meme, not recommended lol).");
             ConfigHoverboardEnabled = configFile.Bind("Hoverboard Options",
                                                 "Hoverboard | Enabled",
                                                 true,

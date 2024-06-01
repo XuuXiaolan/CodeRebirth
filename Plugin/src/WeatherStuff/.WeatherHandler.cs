@@ -17,6 +17,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		
 		[LoadFromBundle("MeteoriteObj")]
 		public Item MeteoriteItem { get; private set; }
+		[LoadFromBundle("WesleyCubeMeteor.prefab")]
+		public GameObject WesleyModePrefab { get; private set; }
 		[LoadFromBundle("Meteor.prefab")]
 		public GameObject MeteorPrefab { get; private set; }
 		
