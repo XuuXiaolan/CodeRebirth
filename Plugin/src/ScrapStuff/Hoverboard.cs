@@ -22,14 +22,14 @@ public class Hoverboard : GrabbableObject
     public void FixedUpdate()
     {
         for (int i = 0; i < 4; i++)
-            ApplyFforce(anchors[i], hits[i]);
+            ApplyForce(anchors[i], hits[i]);
 
         //hb.AddForce(Input.GetAxis("Vertical") * moveForce * transform.forward);
         //hb.AddTorque(Input.GetAxis("Horizontal") * turnTorque * transform.up);
 
     }
 
-    public void ApplyFforce(Transform anchor, RaycastHit hit)
+    public void ApplyForce(Transform anchor, RaycastHit hit)
     {
         if (Physics.Raycast(anchor.position, -anchor.up, out hit))
         {
