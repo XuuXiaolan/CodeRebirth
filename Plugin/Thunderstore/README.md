@@ -68,7 +68,7 @@ Shop Item to get some extra cash for the quota can pick up coins.
 
 ### Snow Globe
 
-![]()
+![](https://i.postimg.cc/NfBS0qgy/snowglobe-icon.png)
 
 ```
 Cracked, rare and unique. This Snow Globe is found deep inside of abandoned moons, made for children but loved by all. (Includes custom animations and sounds)

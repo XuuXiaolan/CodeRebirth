@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
         // Enables/Disables
+        public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
         public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
         public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
         public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
@@ -17,6 +18,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigSnowGlobeEnabled { get; private set; }
         public ConfigEntry<bool> ConfigMoneyEnabled { get; private set; }
         // Spawn Weights
+        public ConfigEntry<string> ConfigHoverboardSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigSnailCatSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
         public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
@@ -40,6 +42,14 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigHoverboardEnabled = configFile.Bind("Hoverboard Options",
+                                                "Hoverboard | Enabled",
+                                                true,
+                                                "Enables/Disables the Hoverboard from spawning.");
+            ConfigHoverboardSpawnWeights = configFile.Bind("Hoverboard Options",
+                                                "Hoverboard | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "Spawn Weight of the Hoverboard in moons.");
             ConfigTornadoType = configFile.Bind("Tornados Options",
                                                 "Tornados | Tornado Type",
                                                 "Random",
