@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 5028405236410879590}
   - component: {fileID: 8533391341079198761}
   - component: {fileID: 8717358285821045099}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hoverboard
-  m_TagString: PhysicsProp
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,7 +122,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 100
   m_Drag: 2
-  m_AngularDrag: 2.1
+  m_AngularDrag: 2
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -171,43 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 958465998, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabbable: 0
-  isHeld: 0
-  isHeldByEnemy: 0
-  deactivated: 0
-  parentObject: {fileID: 0}
-  targetFloorPosition: {x: 0, y: 0, z: 0}
-  startFallingPosition: {x: 0, y: 0, z: 0}
-  floorYRot: 0
-  fallTime: 0
-  hasHitGround: 0
-  scrapValue: 0
-  itemUsedUp: 0
-  playerHeldBy: {fileID: 0}
-  isPocketed: 0
-  isBeingUsed: 0
-  isInElevator: 0
-  isInShipRoom: 0
-  isInFactory: 1
-  useCooldown: 0
-  currentUseCooldown: 0
-  itemProperties: {fileID: 11400000, guid: 2333ed25d0741c74b95f03f8a466329c, type: 2}
-  insertedBattery:
-    empty: 0
-    charge: 0
-  customGrabTooltip: 
-  propBody: {fileID: 0}
-  propColliders: []
-  originalScale: {x: 0, y: 0, z: 0}
-  wasOwnerLastFrame: 0
-  mainObjectRenderer: {fileID: 7450758226265477654}
-  scrapPersistedThroughRounds: 0
-  heldByPlayerOnServer: 0
-  radarIcon: {fileID: 0}
-  reachedFloorTarget: 0
-  grabbableToEnemies: 0
-  hasBeenHeld: 0
-  mult: 2.5
+  mult: 6
   moveForce: 0
   turnTorque: 0
   anchors:
@@ -240,7 +204,7 @@ Transform:
   m_GameObject: {fileID: 3838477118135253551}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: -0.55, y: 0.5, z: 0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -271,7 +235,7 @@ Transform:
   m_GameObject: {fileID: 4274395297523375086}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: -0.5}
+  m_LocalPosition: {x: 0.55, y: 0.5, z: -0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -302,7 +266,7 @@ Transform:
   m_GameObject: {fileID: 4793592469632574592}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0.55, y: 0.5, z: 0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -333,7 +297,7 @@ Transform:
   m_GameObject: {fileID: 6833668831725548463}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0.5, z: -0.5}
+  m_LocalPosition: {x: -0.55, y: 0.5, z: -0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

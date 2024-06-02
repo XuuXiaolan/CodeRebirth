@@ -12,7 +12,6 @@ public class Hoverboard : GrabbableObject
     
     public override void Start()
     {
-        base.Start();
         hb = GetComponent<Rigidbody>();
     }
 
@@ -21,6 +20,7 @@ public class Hoverboard : GrabbableObject
 
     public void FixedUpdate()
     {
+        this.hasHitGround = true;
         for (int i = 0; i < 4; i++)
             ApplyForce(anchors[i], hits[i]);
 
@@ -31,9 +31,11 @@ public class Hoverboard : GrabbableObject
 
     public void ApplyForce(Transform anchor, RaycastHit hit)
     {
-        if (Physics.Raycast(anchor.position, -anchor.up, out hit))
+        LayerMask mask = LayerMask.GetMask("Room");
+        if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000, mask))
         {
             float force = 0;
+            Plugin.Logger.LogInfo("hit room");
             force = Mathf.Abs(1 / (hit.point.y - anchor.position.y));
             hb.AddForceAtPosition(transform.up * force * mult, anchor.position, ForceMode.Acceleration);
         }
