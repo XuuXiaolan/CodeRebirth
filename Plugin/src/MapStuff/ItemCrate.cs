@@ -15,44 +15,56 @@ namespace CodeRebirth.MapStuff;
 public class ItemCrate : NetworkBehaviour, IHittable {
 
 	[SerializeField]
-	MeshRenderer mainRenderer;
-    
+	public SkinnedMeshRenderer mainRenderer;
+
 	[SerializeField]
 	[Header("Hover Tooltips")]
-	string regularHoverTip = "Hold : [E]";
+	public string regularHoverTip = "Hold : [E]";
 	[SerializeField]
-	string keyHoverTip = "Open : [LMB]";
+	public string keyHoverTip = "Open : [LMB]";
 
 	[Header("Audio")]
 	[SerializeField]
-	AudioSource slowlyOpeningSFX;
+	public AudioSource slowlyOpeningSFX;
 
 	[SerializeField]
-	AudioSource openSFX;
+	public AudioSource openSFX;
 	
-	InteractTrigger trigger;
+	public InteractTrigger trigger;
 	
-	Pickable pickable;
+	public Pickable pickable;
 
-	bool opened;
-	float digProgress;
+	public bool opened;
+	public float digProgress;
 
-	Vector3 originalPosition;
-    Random random = new();
+	public Vector3 originalPosition;
+    public Random random = new();
+	public enum CrateType {
+		Wooden,
+		Metal,
+		Golden,
+	}
+	public CrateType crateType;
 	
-	void Awake() {
+	public void Awake() {
+		if (crateType == CrateType.Wooden) {
+			// mainRenderer.GetComponent<SkinnedMeshRenderer>().materials[0] = Assets.WoodenCrateMaterial;
+			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.WoodenCrateMesh;
+		} else if (crateType == CrateType.Metal) {
+			
+		}
 		trigger = GetComponent<InteractTrigger>();
 		pickable = GetComponent <Pickable>();
 		trigger.onInteractEarly.AddListener(OnInteractEarly);
         trigger.onInteract.AddListener(OnInteract);
         trigger.onStopInteract.AddListener(OnInteractCancel);
 
-		digProgress = random.NextFloat(0.15f, 0.3f);
+		digProgress = random.NextFloat(0.01f, 0.3f);
 		originalPosition = transform.position;
 		transform.position = originalPosition + (transform.up * digProgress * .5f);
 	}
 
-	void Update() {
+	public void Update() {
 		trigger.interactable = digProgress == 1;
 		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
 			trigger.hoverTip = keyHoverTip;
@@ -61,17 +73,17 @@ public class ItemCrate : NetworkBehaviour, IHittable {
 		}
 	}
 
-	void OnInteractEarly(PlayerControllerB playerController)
+	public void OnInteractEarly(PlayerControllerB playerController)
 	{
         slowlyOpeningSFX.Play();
     }
-    void OnInteract(PlayerControllerB playerController)
+    public void OnInteract(PlayerControllerB playerController)
     {
 		Open();
         slowlyOpeningSFX.Stop();
     }
 
-    void OnInteractCancel(PlayerControllerB playerController)
+    public void OnInteractCancel(PlayerControllerB playerController)
 	{
 		slowlyOpeningSFX.Stop();
 	}
@@ -83,17 +95,18 @@ public class ItemCrate : NetworkBehaviour, IHittable {
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	void OpenCrateServerRPC()
+	public void OpenCrateServerRPC()
     {
         OpenCrate();
     }
 
-	void OpenCrate()
+	public void OpenCrate()
 	{
-        Item chosenItem = random.NextItem(StartOfRound.Instance.allItemsList.itemsList.Where(item => item.isScrap).ToList());
-        GameObject spawned = Instantiate(chosenItem.spawnPrefab, transform.position, Quaternion.Euler(chosenItem.restingRotation), RoundManager.Instance.spawnedScrapContainer);
+        SpawnableItemWithRarity chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
+		Item item = chosenItemWithRarity.spawnableItem;
+        GameObject spawned = Instantiate(item.spawnPrefab, transform.position, Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
-        spawned.GetComponent<GrabbableObject>().SetScrapValue((int)(random.Next(chosenItem.minValue, chosenItem.maxValue) * RoundManager.Instance.scrapValueMultiplier));
+        spawned.GetComponent<GrabbableObject>().SetScrapValue((int)(random.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier));
         spawned.GetComponent<NetworkObject>().Spawn(false);
 
         StartCoroutine(DestoryAfterSound());
@@ -101,11 +114,11 @@ public class ItemCrate : NetworkBehaviour, IHittable {
     }
 
 	[ClientRpc]
-	void OpenCrateClientRPC() {
+	public void OpenCrateClientRPC() {
 		OpenCrateLocally();
 	}
 
-	void OpenCrateLocally() {
+	public void OpenCrateLocally() {
 		pickable.IsLocked = false;
 		openSFX.Play();
 		trigger.enabled = false;
@@ -114,14 +127,14 @@ public class ItemCrate : NetworkBehaviour, IHittable {
 		opened = true;
 	}
 
-	IEnumerator DestoryAfterSound() {
+	public IEnumerator DestoryAfterSound() {
 		yield return new WaitForSeconds(1);
 		yield return new WaitUntil(() => !openSFX.isPlaying);
-		Destroy(gameObject);
+		if (crateType == CrateType.Wooden) Destroy(gameObject);
 	}
 
 	public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
-		float progressChange = random.NextFloat(0.25f, 0.33f);
+		float progressChange = random.NextFloat(0.15f, 0.25f);
 		digProgress = Mathf.Min(digProgress + progressChange, 1);
 		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {digProgress}");
 		transform.position = originalPosition + (transform.up * digProgress * .5f);
