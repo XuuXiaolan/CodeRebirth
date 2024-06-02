@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using CodeRebirth.ItemStuff;
 using CodeRebirth.Misc;
+using CodeRebirth.Util.Extensions;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Unity.Netcode;
