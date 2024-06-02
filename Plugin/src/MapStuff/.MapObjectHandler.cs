@@ -25,7 +25,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		Assets = new MapObjectAssets("coderebirthasset");
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
-		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) RegisterOutsideCrates();
+		// if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) RegisterOutsideCrates();
 	}
 	public void RegisterOutsideCrates() {
 		SpawnableOutsideObjectDef outsideObjDefBug = ScriptableObject.CreateInstance<SpawnableOutsideObjectDef>();

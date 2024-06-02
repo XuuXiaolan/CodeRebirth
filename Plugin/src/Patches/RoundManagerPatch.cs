@@ -12,7 +12,8 @@ static class RoundManagerPatch {
 		if(!RoundManager.Instance.IsHost) return;
 		if(!Plugin.ModConfig.ConfigItemCrateEnabled.Value) return;
 		System.Random random = new();
-		for (int i = 0; i < random.Next(0, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, 0, 1000)); i++) {
+		int minValue = 0;
+		for (int i = 0; i < random.Next(minValue, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, minValue, 1000)); i++) {
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 

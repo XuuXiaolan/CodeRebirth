@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: 0
   itemName: Hoverboard
   spawnPositionTypes: []
-  twoHanded: 0
+  twoHanded: 1
   twoHandedAnimation: 0
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
   requiresBattery: 0
   batteryUsage: 0
   automaticallySetUsingPower: 0
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: ad4641deff92d9b439f063928e057fb8, type: 3}
   grabAnim: 
   useAnim: 
   pocketAnim: 
@@ -45,16 +45,16 @@ MonoBehaviour:
   dropSFX: {fileID: 0}
   pocketSFX: {fileID: 0}
   throwSFX: {fileID: 0}
-  syncGrabFunction: 0
-  syncUseFunction: 0
-  syncDiscardFunction: 0
-  syncInteractLRFunction: 0
+  syncGrabFunction: 1
+  syncUseFunction: 1
+  syncDiscardFunction: 1
+  syncInteractLRFunction: 1
   saveItemVariable: 0
   isDefensiveWeapon: 0
   toolTips: []
   verticalOffset: 0
   floorYOffset: 0
-  allowDroppingAheadOfPlayer: 1
+  allowDroppingAheadOfPlayer: 0
   restingRotation: {x: 0, y: 0, z: 0}
   rotationOffset: {x: 0, y: 0, z: 0}
   positionOffset: {x: 0, y: 0, z: 0}
