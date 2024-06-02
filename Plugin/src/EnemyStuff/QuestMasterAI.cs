@@ -180,7 +180,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             DoCompleteQuest(QuestCompletion.TimedOut);
             return;
         }
-        if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder])
+        if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder] && targetPlayer.currentlyHeldObjectServer.TryGetComponent<QuestItem>(out QuestItem questItem))
         {
             LogIfDebugBuild("completed!");
             targetPlayer.DespawnHeldObject();

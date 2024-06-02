@@ -25,7 +25,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		Assets = new MapObjectAssets("coderebirthasset");
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
-		//if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) RegisterOutsideCrates(); / registering via lethallib doesn't really work
+		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) RegisterOutsideCrates();
 	}
 	public void RegisterOutsideCrates() {
 		SpawnableOutsideObjectDef outsideObjDefBug = ScriptableObject.CreateInstance<SpawnableOutsideObjectDef>();
@@ -39,6 +39,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
 		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
 		mapObjDefBug.spawnableMapObject.prefabToSpawn = Assets.MoneyItem.spawnPrefab;
-		//if (Plugin.ModConfig.ConfigWalletEnabled.Value) MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigMoneyAbundance.Value, 0, 1000))));
+		if (Plugin.ModConfig.ConfigWalletEnabled.Value) MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigMoneyAbundance.Value, 0, 1000))));
 	}
 }
