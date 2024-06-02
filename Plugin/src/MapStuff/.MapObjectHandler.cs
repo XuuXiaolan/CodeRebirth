@@ -25,20 +25,20 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		Assets = new MapObjectAssets("coderebirthasset");
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
-		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) RegisterOutsideCrates();
+		//if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) RegisterOutsideCrates(); / registering via lethallib doesn't really work
 	}
 	public void RegisterOutsideCrates() {
 		SpawnableOutsideObjectDef outsideObjDefBug = ScriptableObject.CreateInstance<SpawnableOutsideObjectDef>();
 		outsideObjDefBug.spawnableMapObject = new SpawnableOutsideObjectWithRarity();
 		outsideObjDefBug.spawnableMapObject.spawnableObject = ScriptableObject.CreateInstance<SpawnableOutsideObject>();
 		outsideObjDefBug.spawnableMapObject.spawnableObject.prefabToSpawn = Assets.ItemCratePrefab;
-		MapObjects.RegisterOutsideObject(outsideObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, 0, 1000))));
+		MapObjects.RegisterOutsideObject(outsideObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, 5), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, 0, 1000))));
 	}
 	public void RegisterInsideMoney() {
 		Assets.MoneyItem.spawnPrefab.GetComponent<Money>().SetScrapValue(-1);
 		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
 		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
 		mapObjDefBug.spawnableMapObject.prefabToSpawn = Assets.MoneyItem.spawnPrefab;
-		if (Plugin.ModConfig.ConfigWalletEnabled.Value) MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigMoneyAbundance.Value, 0, 1000))));
+		//if (Plugin.ModConfig.ConfigWalletEnabled.Value) MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigMoneyAbundance.Value, 0, 1000))));
 	}
 }

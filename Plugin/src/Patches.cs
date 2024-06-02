@@ -67,18 +67,28 @@ internal static class StartOfRoundPatcher {
         }
     }
     
-    /*[HarmonyPatch(typeof(RoundManager), nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
+    [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
     public static void SpawnOutsideMapObjects() {
         if(!RoundManager.Instance.IsHost) return;
+        if(!Plugin.ModConfig.ConfigItemCrateEnabled.Value) return;
         System.Random random = new();
-        for (int i = 0; i < random.Next(1, 3); i++) {
+        for (int i = 0; i < random.Next(10, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, 0, 1000)); i++) {
             Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
-            Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + Vector3.up;
-            GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, vector, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
+
+            Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100);
+            
+            GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            spawnedCrate.transform.up = hit.normal;
             spawnedCrate.GetComponent<NetworkObject>().Spawn();
         }
-    }*/
+    }
 
+    [HarmonyPatch(typeof(Shovel), nameof(Shovel.HitShovel)), HarmonyPrefix]
+    public static void RemoveShovelLayerLimitation(Shovel __instance) { // formely known as GoofyAhhShovelPatch
+        __instance.shovelMask = -1;
+    }
+    
     private static void CreateNetworkManager()
     {
         if (StartOfRound.Instance.IsServer || StartOfRound.Instance.IsHost)

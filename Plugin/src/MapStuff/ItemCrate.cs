@@ -11,7 +11,7 @@ using Random = System.Random;
 
 namespace CodeRebirth.MapStuff;
 
-public class ItemCrate : NetworkBehaviour {
+public class ItemCrate : NetworkBehaviour, IHittable {
 
 	[SerializeField]
 	MeshRenderer mainRenderer;
@@ -34,6 +34,10 @@ public class ItemCrate : NetworkBehaviour {
 	Pickable pickable;
 
 	bool opened;
+	float digProgress;
+
+	Vector3 originalPosition;
+    Random random = new();
 	
 	void Awake() {
 		trigger = GetComponent<InteractTrigger>();
@@ -41,9 +45,14 @@ public class ItemCrate : NetworkBehaviour {
 		trigger.onInteractEarly.AddListener(OnInteractEarly);
         trigger.onInteract.AddListener(OnInteract);
         trigger.onStopInteract.AddListener(OnInteractCancel);
-    }
+
+		digProgress = random.NextFloat(0.15f, 0.3f);
+		originalPosition = transform.position;
+		transform.position = originalPosition + (transform.up * digProgress * .5f);
+	}
 
 	void Update() {
+		trigger.interactable = digProgress == 1;
 		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
 			trigger.hoverTip = keyHoverTip;
 		} else {
@@ -67,6 +76,7 @@ public class ItemCrate : NetworkBehaviour {
 	}
 
 	public void Open() {
+		
 		if (!IsHost) OpenCrateServerRPC();
 		else OpenCrate();
 	}
@@ -79,8 +89,6 @@ public class ItemCrate : NetworkBehaviour {
 
 	void OpenCrate()
 	{
-        Random random = new();
-
         Item chosenItem = random.NextItem(StartOfRound.Instance.allItemsList.itemsList.Where(item => item.isScrap).ToList());
         GameObject spawned = Instantiate(chosenItem.spawnPrefab, transform.position, Quaternion.Euler(chosenItem.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
@@ -97,7 +105,6 @@ public class ItemCrate : NetworkBehaviour {
 	}
 
 	void OpenCrateLocally() {
-		
 		pickable.IsLocked = false;
 		openSFX.Play();
 		trigger.enabled = false;
@@ -107,7 +114,17 @@ public class ItemCrate : NetworkBehaviour {
 	}
 
 	IEnumerator DestoryAfterSound() {
+		yield return new WaitForSeconds(1);
 		yield return new WaitUntil(() => !openSFX.isPlaying);
 		Destroy(gameObject);
+	}
+
+	public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
+		float progressChange = random.NextFloat(0.25f, 0.33f);
+		digProgress = Mathf.Min(digProgress + progressChange, 1);
+		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {digProgress}");
+		transform.position = originalPosition + (transform.up * digProgress * .5f);
+        
+		return true; // this bool literally doesn't get used. i have no clue.
 	}
 }
