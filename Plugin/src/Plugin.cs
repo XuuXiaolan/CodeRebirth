@@ -41,7 +41,7 @@ public class Plugin : BaseUnityPlugin {
     private void Awake() {
         Logger = base.Logger;
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
-        _harmony.PatchAll(typeof(StartOfRoundPatcher));
+        _harmony.PatchAll(Assembly.GetExecutingAssembly());
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");
