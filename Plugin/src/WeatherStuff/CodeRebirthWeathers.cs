@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.Misc;
+using CodeRebirth.Util.Extensions;
 using Newtonsoft.Json.Serialization;
 using Unity.Netcode;
 using UnityEngine;

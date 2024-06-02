@@ -16,6 +16,7 @@ using CodeRebirth.WeatherStuff;
 using LethalLib;
 using System.Collections.ObjectModel;
 using CodeRebirth.MapStuff;
+using CodeRebirth.Util.Extensions;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
