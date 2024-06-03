@@ -51,7 +51,8 @@ public class ItemCrate : NetworkBehaviour, IHittable {
 			// mainRenderer.GetComponent<SkinnedMeshRenderer>().materials[0] = Assets.WoodenCrateMaterial;
 			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.WoodenCrateMesh;
 		} else if (crateType == CrateType.Metal) {
-			
+			// mainRenderer.GetComponent<SkinnedMeshRenderer>().materials[0] = Assets.MetalCrateMaterial;
+			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.MetalCrateMesh;
 		}
 		trigger = GetComponent<InteractTrigger>();
 		pickable = GetComponent <Pickable>();
