@@ -14,4 +14,13 @@ public class IngameKeybinds : LcInputActions {
 
     [InputAction("<Keyboard>/d", Name = "HoverRight")]
     public InputAction HoverRight { get; set; }
+
+    [InputAction("<Keyboard>/space", Name = "HoverUp")]
+    public InputAction HoverUp { get; set; }
+
+    [InputAction("<Keyboard>/leftShift", Name = "DropHoverboard")]
+    public InputAction DropHoverboard { get; set; }
+
+    [InputAction("<Keyboard>/o", Name = "TurnOnHoverboard")]
+    public InputAction TurnOnHoverboard { get; set; }
 }
