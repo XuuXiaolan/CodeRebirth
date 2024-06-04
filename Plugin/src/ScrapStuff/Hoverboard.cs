@@ -13,8 +13,8 @@ public class Hoverboard : GrabbableObject, IHittable
     public InteractTrigger trigger;
     private bool turnedOn = false;
     public float mult;
-    public float moveForce = 10f;
     public float turnTorque;
+    public GameObject hoverboardSeat;
     public PlayerControllerB playerControlling;
     public enum HoverboardTypes {
         Regular
@@ -39,8 +39,11 @@ public class Hoverboard : GrabbableObject, IHittable
         for (int i = 0; i < 4; i++)
             ApplyForce(anchors[i], hits[i]);
         HandleMovement();
-        if (playerControlling != null)
-            playerControlling.transform.position = transform.position + (transform.up * 1.5f);
+        if (playerControlling == null) return;    
+        playerControlling.transform.position = transform.position + (transform.up * 1.5f);
+        Quaternion playerRotation = playerControlling.transform.rotation;
+        Quaternion rotationOffset = Quaternion.Euler(0, -90, 0); // 90 degrees to the left around the y-axis
+        this.transform.rotation = playerRotation * rotationOffset;
     }
 
     public override void Update()
@@ -52,15 +55,16 @@ public class Hoverboard : GrabbableObject, IHittable
             return;
         }
         HandleDropping();
-        HandleTurningOn();
+        HandleTurningOnOrOff();
     }
-    public void HandleTurningOn() {
+
+    public void HandleTurningOnOrOff() {
         if (!Plugin.InputActionsInstance.TurnOnHoverboard.triggered) return;
-        turnedOn = true;
+        turnedOn = !turnedOn;
     }
     public void HandleDropping() {
         if (!Plugin.InputActionsInstance.DropHoverboard.triggered) return;
-        DropHoverboard(true, true);
+        DropHoverboard(turnedOn, true);
     }
     public void DropHoverboard(bool keepOn = true, bool stillWorks = true) {
         if (!IsHost) SetTargetServerRpc(-1);
@@ -69,27 +73,38 @@ public class Hoverboard : GrabbableObject, IHittable
         trigger.interactable = stillWorks;
     }
     public override void LateUpdate() {
-        return;
+        base.LateUpdate();
+        if (playerControlling == null) return;
+        playerControlling.transform.position = hoverboardSeat.transform.position;
+        playerControlling.ResetFallGravity();
     }
-    private void HandleMovement()
+    private void HandleMovement() // the reason these transform.forward and transform.right seemingly don't match with the buttons is because the exported hoverboard is kinda fucked... oh well.
     {
+        if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         Vector3 forceDirection = Vector3.zero;
-
-        if (Plugin.InputActionsInstance.HoverForward.triggered)
-            forceDirection += transform.forward;
-
-        if (Plugin.InputActionsInstance.HoverBackward.triggered)
-            forceDirection -= transform.forward;
-
-        if (Plugin.InputActionsInstance.HoverRight.triggered)
-            forceDirection += transform.right;
+        float moveForce = 200f;
 
         if (Plugin.InputActionsInstance.HoverLeft.triggered)
+            forceDirection += transform.forward;
+
+        if (Plugin.InputActionsInstance.HoverRight.triggered)
+            forceDirection -= transform.forward;
+
+        if (Plugin.InputActionsInstance.HoverForward.triggered)
+            forceDirection += transform.right;
+
+        if (Plugin.InputActionsInstance.HoverBackward.triggered)
             forceDirection -= transform.right;
 
-        if (Plugin.InputActionsInstance.HoverUp.triggered)
+        if (Plugin.InputActionsInstance.HoverUp.triggered) {
             forceDirection += transform.up;
-        hb.AddForce(forceDirection.normalized * moveForce, ForceMode.Acceleration);
+            moveForce = 1000f;
+        }
+
+        if (forceDirection == Vector3.zero) return;
+        Plugin.Logger.LogInfo("moveForce: " + moveForce);
+        Plugin.Logger.LogInfo("forceDirection: " + forceDirection);
+        hb.AddForce(forceDirection * moveForce, ForceMode.Acceleration);
     }
 
     public override void FallWithCurve() {
@@ -102,7 +117,6 @@ public class Hoverboard : GrabbableObject, IHittable
         if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000, mask))
         {
             float force = Mathf.Abs(1 / (hit.point.y - anchor.position.y));
-            Plugin.Logger.LogInfo("hit room");
             hb.AddForceAtPosition(transform.up * force * mult, anchor.position, ForceMode.Acceleration);
         }
     }
