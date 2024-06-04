@@ -146,7 +146,6 @@ Transform:
   - {fileID: 5233703069717380059}
   - {fileID: 8264313796980061740}
   - {fileID: 181645710088761370}
-  - {fileID: 4505602599313748989}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &5028405236410879590
@@ -248,7 +247,7 @@ MonoBehaviour:
   mult: 6
   turnTorque: 0
   hoverboardSeat: {fileID: 6068824060356499357}
-  playerRidingCollider: {fileID: 2584756728393149801}
+  playerRidingCollider: {fileID: 0}
   playerControlling: {fileID: 0}
   anchors:
   - {fileID: 4180286282294528675}
@@ -515,7 +514,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8264313796980061740}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Seat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -568,56 +567,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1803937241562486501}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7174229983642377426
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4505602599313748989}
-  - component: {fileID: 2584756728393149801}
-  m_Layer: 9
-  m_Name: PlayerRidingCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4505602599313748989
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7174229983642377426}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1803937241562486501}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2584756728393149801
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7174229983642377426}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.9997125, y: 1.7024896, z: 1}
-  m_Center: {x: 0.33119777, y: 1.091745, z: 0}

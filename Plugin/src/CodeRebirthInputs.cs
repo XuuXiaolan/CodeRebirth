@@ -21,6 +21,9 @@ public class IngameKeybinds : LcInputActions {
     [InputAction("<Keyboard>/leftShift", Name = "DropHoverboard")]
     public InputAction DropHoverboard { get; set; }
 
-    [InputAction("<Keyboard>/o", Name = "TurnOnHoverboard")]
+    [InputAction("<Keyboard>/p", Name = "TurnOnHoverboard")]
     public InputAction TurnOnHoverboard { get; set; }
+
+    [InputAction("<Keyboard>/f", Name = "SwitchMode")]
+    public InputAction SwitchMode { get; set; }
 }

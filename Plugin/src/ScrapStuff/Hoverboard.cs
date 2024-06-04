@@ -31,7 +31,6 @@ public class Hoverboard : GrabbableObject, IHittable
     }
     public override void Start()
     {
-        playerRidingCollider.enabled = false;
         Plugin.InputActionsInstance.HoverForward.performed += OnHoverForward;
         Plugin.InputActionsInstance.HoverForward.canceled += OnHoverForward;
         Plugin.InputActionsInstance.HoverLeft.performed += MovementHandler;
@@ -39,13 +38,25 @@ public class Hoverboard : GrabbableObject, IHittable
         Plugin.InputActionsInstance.HoverBackward.performed += MovementHandler;
         Plugin.InputActionsInstance.HoverForward.performed += MovementHandler;
         Plugin.InputActionsInstance.HoverUp.performed += MovementHandler;
+        Plugin.InputActionsInstance.SwitchMode.performed += ModeHandler;
 
         hb = GetComponent<Rigidbody>();
         trigger = GetComponent<InteractTrigger>();
         trigger.onInteract.AddListener(OnInteract);
     }
-
+    public void ModeHandler(InputAction.CallbackContext context) {
+        var btn = (ButtonControl)context.control;
+        if (btn.wasPressedThisFrame)
+        {
+            trigger.interactable = !trigger.interactable;
+            trigger.holdInteraction = trigger.interactable;
+        }
+    }
     public void OnInteract(PlayerControllerB player) {
+        if (trigger.holdInteraction) {
+            StartCoroutine(HandleGrabbing(this, player));
+            return;
+        }
         if (!IsHost) SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         else SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         trigger.interactable = false;
@@ -65,6 +76,27 @@ public class Hoverboard : GrabbableObject, IHittable
             _isHoverForwardHeld = false;
         }
     }
+
+    public IEnumerator HandleGrabbing(GrabbableObject _obj, PlayerControllerB player) {
+        yield return new WaitForEndOfFrame();
+        trigger.interactable = false;
+        trigger.holdInteraction = false;
+        trigger.enabled = false;
+        _obj.InteractItem();
+        if(GameNetworkManager.Instance.localPlayerController.FirstEmptyItemSlot() == -1){
+            Plugin.Logger.LogInfo("GiveItemToPlayer: Could not grab item, inventory full!");
+            yield break;
+        }
+        player.twoHanded = _obj.itemProperties.twoHanded;
+        player.carryWeight += Mathf.Clamp(_obj.itemProperties.weight - 1f, 0f, 10f);
+        player.grabbedObjectValidated = true;
+        player.GrabObjectServerRpc(_obj.NetworkObject);
+        _obj.GrabItemOnClient();
+        _obj.parentObject = player.localItemHolder;
+        player.isHoldingObject = true;
+        _obj.hasBeenHeld = true;
+        _obj.EnablePhysics(false);
+    }
     public void MovementHandler(InputAction.CallbackContext context) {
         var btn = (ButtonControl)context.control;
         if (btn.wasPressedThisFrame)
@@ -72,17 +104,20 @@ public class Hoverboard : GrabbableObject, IHittable
             HandleMovement();
         }
     }
+    public override void DiscardItem() {
+        base.DiscardItem();
+        this.transform.position = playerHeldBy.transform.position + transform.forward * 1.5f;
+        trigger.enabled = true;
+        trigger.interactable = true;
+    }
     public void FixedUpdate()
     {
         if (playerControlling != null) {
-            playerRidingCollider.enabled = true;
             playerControlling.transform.position = hoverboardSeat.transform.position;
             Quaternion playerRotation = playerControlling.transform.rotation;
             Quaternion rotationOffset = Quaternion.Euler(0, -90, 0); // 90 degrees to the left around the y-axis
             this.transform.rotation = playerRotation * rotationOffset;
             playerControlling.ResetFallGravity();
-        } else {
-            playerRidingCollider.enabled = false;
         }
         if (_isHoverForwardHeld && playerControlling == GameNetworkManager.Instance.localPlayerController)
             hb.AddForce(Vector3.zero + transform.right * 40f * (turnedOn ? 1f : 0.1f), ForceMode.Acceleration);
@@ -160,7 +195,7 @@ public class Hoverboard : GrabbableObject, IHittable
     public override void FallWithCurve() {
         return;
     }
-
+    
     public void ApplyForce(Transform anchor, RaycastHit hit)
     {
         LayerMask mask = LayerMask.GetMask("Room");
@@ -171,14 +206,9 @@ public class Hoverboard : GrabbableObject, IHittable
         }
     }
 
-    public override void EquipItem()
-    {
-        if (turnedOn) return;
-        base.EquipItem();
-    }
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
         // Move the hoverboard when hit.
-        hb.AddForce(hitDirection.normalized * force, ForceMode.Impulse);
+        hb.AddForce(hitDirection.normalized * force * 100, ForceMode.Impulse);
 
 		return true; // this bool literally doesn't get used. i have no idea.
 	}
@@ -190,6 +220,7 @@ public class Hoverboard : GrabbableObject, IHittable
     internal void SetTargetClientRpc(int PlayerID) {
         if (PlayerID == -1) {
             playerControlling = null;
+            // playerRidingCollider.enabled = false;
             Plugin.Logger.LogInfo($"Clearing target on {this}");
             return;
         }
@@ -198,6 +229,7 @@ public class Hoverboard : GrabbableObject, IHittable
             return;
         }
         playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
+        // playerRidingCollider.enabled = true;
         Plugin.Logger.LogInfo($"{this} setting target to: {playerControlling.playerUsername}");
     }
 }
