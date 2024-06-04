@@ -5,6 +5,10 @@ using UnityEngine;
 using CodeRebirth.Keybinds;
 using Unity.Netcode;
 using System;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
+using System.Linq;
 
 namespace CodeRebirth.ScrapStuff;
 public class Hoverboard : GrabbableObject, IHittable
@@ -15,35 +19,76 @@ public class Hoverboard : GrabbableObject, IHittable
     public float mult;
     public float turnTorque;
     public GameObject hoverboardSeat;
+    public BoxCollider playerRidingCollider;
     public PlayerControllerB playerControlling;
+    public Transform[] anchors = new Transform[4];
+    public RaycastHit[] hits = new RaycastHit[4];
+    private bool _isHoverForwardHeld = false;
+    private bool jumpCooldown = true;
+
     public enum HoverboardTypes {
         Regular
     }
     public override void Start()
     {
+        playerRidingCollider.enabled = false;
+        Plugin.InputActionsInstance.HoverForward.performed += OnHoverForward;
+        Plugin.InputActionsInstance.HoverForward.canceled += OnHoverForward;
+        Plugin.InputActionsInstance.HoverLeft.performed += MovementHandler;
+        Plugin.InputActionsInstance.HoverRight.performed += MovementHandler;
+        Plugin.InputActionsInstance.HoverBackward.performed += MovementHandler;
+        Plugin.InputActionsInstance.HoverForward.performed += MovementHandler;
+        Plugin.InputActionsInstance.HoverUp.performed += MovementHandler;
+
         hb = GetComponent<Rigidbody>();
         trigger = GetComponent<InteractTrigger>();
         trigger.onInteract.AddListener(OnInteract);
     }
-    public Transform[] anchors = new Transform[4];
-    public RaycastHit[] hits = new RaycastHit[4];
+
     public void OnInteract(PlayerControllerB player) {
         if (!IsHost) SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         else SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         trigger.interactable = false;
     }
 
+    public void OnHoverForward(InputAction.CallbackContext context) {
+        var btn = (ButtonControl)context.control;
+        if (btn.wasPressedThisFrame)
+        {
+            // Button has started being held
+            _isHoverForwardHeld = true;
+        }
+
+        if (btn.wasReleasedThisFrame)
+        {
+            // Button was released
+            _isHoverForwardHeld = false;
+        }
+    }
+    public void MovementHandler(InputAction.CallbackContext context) {
+        var btn = (ButtonControl)context.control;
+        if (btn.wasPressedThisFrame)
+        {
+            HandleMovement();
+        }
+    }
     public void FixedUpdate()
     {
+        if (playerControlling != null) {
+            playerRidingCollider.enabled = true;
+            playerControlling.transform.position = hoverboardSeat.transform.position;
+            Quaternion playerRotation = playerControlling.transform.rotation;
+            Quaternion rotationOffset = Quaternion.Euler(0, -90, 0); // 90 degrees to the left around the y-axis
+            this.transform.rotation = playerRotation * rotationOffset;
+            playerControlling.ResetFallGravity();
+        } else {
+            playerRidingCollider.enabled = false;
+        }
+        if (_isHoverForwardHeld && playerControlling == GameNetworkManager.Instance.localPlayerController)
+            hb.AddForce(Vector3.zero + transform.right * 40f * (turnedOn ? 1f : 0.1f), ForceMode.Acceleration);
         if (!turnedOn) return;
         for (int i = 0; i < 4; i++)
             ApplyForce(anchors[i], hits[i]);
-        HandleMovement();
-        if (playerControlling == null) return;    
-        playerControlling.transform.position = transform.position + (transform.up * 1.5f);
-        Quaternion playerRotation = playerControlling.transform.rotation;
-        Quaternion rotationOffset = Quaternion.Euler(0, -90, 0); // 90 degrees to the left around the y-axis
-        this.transform.rotation = playerRotation * rotationOffset;
     }
 
     public override void Update()
@@ -74,39 +119,44 @@ public class Hoverboard : GrabbableObject, IHittable
     }
     public override void LateUpdate() {
         base.LateUpdate();
-        if (playerControlling == null) return;
-        playerControlling.transform.position = hoverboardSeat.transform.position;
-        playerControlling.ResetFallGravity();
     }
     private void HandleMovement() // the reason these transform.forward and transform.right seemingly don't match with the buttons is because the exported hoverboard is kinda fucked... oh well.
     {
+        if (playerControlling == null) return;
         if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         Vector3 forceDirection = Vector3.zero;
-        float moveForce = 200f;
+        float moveForce = 100f;
 
-        if (Plugin.InputActionsInstance.HoverLeft.triggered)
+        if (Plugin.InputActionsInstance.HoverLeft.WasPressedThisFrame())
             forceDirection += transform.forward;
 
-        if (Plugin.InputActionsInstance.HoverRight.triggered)
+        if (Plugin.InputActionsInstance.HoverRight.WasPressedThisFrame())
             forceDirection -= transform.forward;
 
-        if (Plugin.InputActionsInstance.HoverForward.triggered)
-            forceDirection += transform.right;
-
-        if (Plugin.InputActionsInstance.HoverBackward.triggered)
+        if (Plugin.InputActionsInstance.HoverBackward.WasPressedThisFrame())
             forceDirection -= transform.right;
 
-        if (Plugin.InputActionsInstance.HoverUp.triggered) {
+        if (Plugin.InputActionsInstance.HoverForward.WasPressedThisFrame())
+            forceDirection += transform.right;
+
+        if (Plugin.InputActionsInstance.HoverUp.WasPressedThisFrame() && turnedOn && jumpCooldown) {
+            jumpCooldown = false;
             forceDirection += transform.up;
             moveForce = 1000f;
+            StartCoroutine(JumpTimerStart());
         }
 
         if (forceDirection == Vector3.zero) return;
         Plugin.Logger.LogInfo("moveForce: " + moveForce);
         Plugin.Logger.LogInfo("forceDirection: " + forceDirection);
+        if (!turnedOn) 
+            moveForce *= 0.1f;
         hb.AddForce(forceDirection * moveForce, ForceMode.Acceleration);
     }
-
+    public IEnumerator JumpTimerStart() {
+        yield return new WaitForSeconds(2f);
+        jumpCooldown = true;
+    }
     public override void FallWithCurve() {
         return;
     }
@@ -121,6 +171,11 @@ public class Hoverboard : GrabbableObject, IHittable
         }
     }
 
+    public override void EquipItem()
+    {
+        if (turnedOn) return;
+        base.EquipItem();
+    }
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
         // Move the hoverboard when hit.
         hb.AddForce(hitDirection.normalized * force, ForceMode.Impulse);
