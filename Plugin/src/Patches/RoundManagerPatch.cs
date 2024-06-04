@@ -9,8 +9,8 @@ namespace CodeRebirth.Patches;
 static class RoundManagerPatch {
 	[HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
 	public static void SpawnOutsideMapObjects() {
-		if(!RoundManager.Instance.IsHost) return;
-		if(!Plugin.ModConfig.ConfigItemCrateEnabled.Value) return;
+		if (!RoundManager.Instance.IsHost) return;
+		if (!Plugin.ModConfig.ConfigItemCrateEnabled.Value) return;
 		System.Random random = new();
 		int minValue = 0;
 		for (int i = 0; i < random.Next(minValue, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, minValue, 1000)); i++) {
