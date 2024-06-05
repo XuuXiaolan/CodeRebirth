@@ -2,6 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using CodeRebirth.Misc;
 using CodeRebirth.src.EnemyStuff;
+using CodeRebirth.Util.Extensions;
 
 namespace CodeRebirth.EnemyStuff;
 public class CutieFlyAI : CodeRebirthEnemyAI

@@ -1246,9 +1246,11 @@ MonoBehaviour:
   isOutside: 0
   questTimer: 120
   questItems:
-  - QuestGrape
-  - QuestGrape
+  - Grape
+  - Grape
   questName: Duck Quest
+  questRepeatChance: 10
+  questRepeats: 1
   spawnAnimation: {fileID: 7400000, guid: 03eba788df8f90844ab538168f55fba6, type: 2}
   creatureUltraVoice: {fileID: 3041539220418152922}
   questGiveClip: {fileID: 8300000, guid: 4ad058a02f18c8242bbf2e06e0d25642, type: 3}
@@ -1256,6 +1258,18 @@ MonoBehaviour:
   questFailClip: {fileID: 8300000, guid: a5c7d2ad009bb4b42b65101d0c628f65, type: 3}
   questGiveAgainClip: {fileID: 8300000, guid: 7dea0379952e5084389809bfa4f28afd, type: 3}
   questAfterFailClip: {fileID: 8300000, guid: 1233b3be3c76008459db5441fdf5e090, type: 3}
+  range: 20
+  spawnSpeed: 3
+  walkSpeed: 5
+  approachSpeed: 6
+  questSpeed: 7
+  docileSpeed: 3
+  questCompletionTimes: 0
+  currentQuestOrder: 0
+  questTimedOut: 0
+  questCompleted: 0
+  questStarted: 0
+  questOrder: 0
 --- !u!114 &6607607558369177806
 MonoBehaviour:
   m_ObjectHideFlags: 0

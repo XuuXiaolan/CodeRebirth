@@ -6,6 +6,7 @@ using CodeRebirth.src;
 using CodeRebirth.src.EnemyStuff;
 using GameNetcodeStuff;
 using Unity.Mathematics;
+using CodeRebirth.Util.Extensions;
 using UnityEngine;
 
 namespace CodeRebirth.EnemyStuff;
@@ -104,8 +105,9 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         startGiveQuest,
         startQuest,
         startFailQuest,
-        startSucceedQuest,
+        startSucceedQuest
     }
+    
     public override void Start()
     { // Animations and sounds arent here yet so you might get bugs probably lol.
         base.Start();
@@ -180,7 +182,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             DoCompleteQuest(QuestCompletion.TimedOut);
             return;
         }
-        if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder])
+        if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder] && targetPlayer.currentlyHeldObjectServer.TryGetComponent<QuestItem>(out QuestItem questItem))
         {
             LogIfDebugBuild("completed!");
             targetPlayer.DespawnHeldObject();
@@ -244,6 +246,10 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         // Generic behaviour stuff for any type of quest giver when docile
     }
+    protected virtual void OnDisable() {
+        if (!IsHost) return;
+        // delete all the items with the Quest component
+    }
     public override void DoAIInterval()
     {
         base.DoAIInterval();
@@ -274,4 +280,10 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 }
 public class QuestItem : MonoBehaviour
 {
+}
+
+public static class AnimationsMethods { // this is so cooked, why does c# not have proper enum mehotds
+    public static string ToAnimationName(this QuestMasterAI.Animations animation) {
+        return animation.ToString();
+    }
 }
