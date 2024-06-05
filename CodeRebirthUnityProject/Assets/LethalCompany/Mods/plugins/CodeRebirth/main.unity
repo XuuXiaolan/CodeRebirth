@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2738.9905, g: 2736.2815, b: 3823.149, a: 1}
+  m_IndirectSpecularColor: {r: 2738.9905, g: 2736.2815, b: 3823.1177, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -905,6 +905,11 @@ PrefabInstance:
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 32612369
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717358285821045099, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: playerRidingCollider
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
