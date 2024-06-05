@@ -161,9 +161,13 @@ public class Hoverboard : GrabbableObject, IHittable
     {
         base.Update();
         if (Vector3.Distance(this.transform.position, StartOfRound.Instance.shipBounds.transform.position) < 8 && playerControlling != null && !isInShipRoom) {
-            isInShipRoom = true;
-            isInFactory = false;
-            this.transform.SetParent(playerControlling.playersManager.elevatorTransform, true);
+			playerControlling.SetItemInElevator(playerControlling.isInHangarShipRoom, this.isInElevator, this);
+			this.parentObject = null;
+			this.transform.SetParent(parentObject, true);
+			this.startFallingPosition = this.transform.localPosition;
+			this.transform.localScale = this.originalScale;
+			this.transform.localPosition = this.transform.localPosition;
+			this.OnPlaceObject();
         }
         if (playerControlling == null) return;
         if (playerControlling.inAnimationWithEnemy || playerControlling.inSpecialInteractAnimation || playerControlling.isClimbingLadder) {
