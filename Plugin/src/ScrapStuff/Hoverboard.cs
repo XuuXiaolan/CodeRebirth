@@ -126,6 +126,8 @@ public class Hoverboard : GrabbableObject, IHittable
     }
     public void OnInteract(PlayerControllerB player) {
         if (hoverboardMode == HoverboardMode.None) {
+            Plugin.InputActionsInstance.IncreaseHover.performed += MovementHandler;
+            Plugin.InputActionsInstance.DecreaseHover.performed += MovementHandler;
             Plugin.InputActionsInstance.HoverForward.performed += OnHoverForward;
             Plugin.InputActionsInstance.HoverForward.canceled += OnHoverForward;
             Plugin.InputActionsInstance.HoverLeft.performed += MovementHandler;
@@ -258,9 +260,12 @@ public class Hoverboard : GrabbableObject, IHittable
         float moveForce = 100f;
         if (Plugin.InputActionsInstance.IncreaseHover.WasPressedThisFrame())
             mult += 0.2f;
+
         if (Plugin.InputActionsInstance.DecreaseHover.WasPressedThisFrame())
             mult -= 0.2f;
-        Mathf.Clamp(mult, 0f, 999f);
+        Plugin.Logger.LogInfo("mult: " + mult);
+        mult = Mathf.Clamp(mult, 0f, 999f);
+        
         if (Plugin.InputActionsInstance.HoverLeft.WasPressedThisFrame())
             forceDirection += transform.forward;
 
