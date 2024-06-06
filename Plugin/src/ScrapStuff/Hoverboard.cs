@@ -287,8 +287,6 @@ public class Hoverboard : GrabbableObject, IHittable
         }
 
         if (forceDirection == Vector3.zero) return;
-        Plugin.Logger.LogInfo("moveForce: " + moveForce);
-        Plugin.Logger.LogInfo("forceDirection: " + forceDirection);
         hb.AddForce(forceDirection * moveForce, ForceMode.Acceleration);
     }
     public IEnumerator JumpTimerStart() {
