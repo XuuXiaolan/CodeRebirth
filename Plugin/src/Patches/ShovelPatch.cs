@@ -7,7 +7,6 @@ namespace CodeRebirth.Patches;
 
 [HarmonyPatch(typeof(Shovel))]
 static class ShovelPatch {
-	public static int defaultForce;
 	public static System.Random random;
 	[HarmonyPatch(nameof(Shovel.HitShovel)), HarmonyPrefix]
 	public static void RemoveShovelLayerLimitation(Shovel __instance) {
@@ -16,7 +15,7 @@ static class ShovelPatch {
 	
 	[HarmonyPatch(nameof(CodeRebirthWeapons.HitShovel)), HarmonyPrefix]
 	public static void CritHitShovelPre(CodeRebirthWeapons __instance) {
-		defaultForce = __instance.shovelHitForce;
+		__instance.defaultForce = __instance.shovelHitForce;
 		if (random == null) {
 			if (StartOfRound.Instance != null) {
 				random = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
@@ -35,7 +34,7 @@ static class ShovelPatch {
 	[HarmonyPatch(nameof(CodeRebirthWeapons.HitShovel)), HarmonyPostfix]
 	public static void CritHitShovelPost(EpicAxe __instance) {
 		Plugin.Logger.LogInfo($"Shovel Hit: {__instance.shovelHitForce}");
-		__instance.shovelHitForce = defaultForce;
+		__instance.shovelHitForce = __instance.defaultForce;
 		Plugin.Logger.LogInfo($"Shovel Hit: {__instance.shovelHitForce}");
 	}
 }
