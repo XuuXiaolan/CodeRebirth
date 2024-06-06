@@ -25,7 +25,7 @@ static class ShovelPatch {
 		}
 		Plugin.Logger.LogInfo(__instance.critPossible.ToString());
 		Plugin.Logger.LogInfo(__instance.critChance.ToString());
-		if (__instance.critPossible) {
+		if (__instance.critPossible && Plugin.ModConfig.ConfigAllowCrits.Value) {
 			__instance.shovelHitForce = ShovelExtensions.CriticalHit(__instance.shovelHitForce, random, __instance.critChance);
 			Plugin.Logger.LogInfo("crit possible");
 		}

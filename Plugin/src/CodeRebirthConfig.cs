@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
         // Enables/Disables
+        public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
         public ConfigEntry<bool> ConfigWesleyModeEnabled { get; private set; }
         public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
         public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
@@ -43,6 +44,10 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigAllowCrits = configFile.Bind("Weapon Options",
+                                                "Weapons | Crits",
+                                                true,
+                                                "Enables/Disables crits in the game for code rebirth weapons.");
             ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Wesley Mode",
                                                 false,
