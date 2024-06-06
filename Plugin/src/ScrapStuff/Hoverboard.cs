@@ -19,8 +19,7 @@ public class Hoverboard : GrabbableObject, IHittable
     public float mult;
     public float turnTorque;
     public GameObject hoverboardSeat;
-    public GameObject InteractTriggerGameObject;
-    public PlayerControllerB playerControlling;
+    private PlayerControllerB playerControlling;
     public Transform[] anchors = new Transform[4];
     public RaycastHit[] hits = new RaycastHit[4];
     private PlayerControllerB previousPlayerHeldBy;
@@ -45,6 +44,46 @@ public class Hoverboard : GrabbableObject, IHittable
     }
     public override void Start()
     {
+        this.propColliders = base.gameObject.GetComponentsInChildren<Collider>();
+		this.originalScale = base.transform.localScale;
+		if (this.itemProperties.itemSpawnsOnGround)
+		{
+			this.startFallingPosition = base.transform.position;
+			if (base.transform.parent != null)
+			{
+				this.startFallingPosition = base.transform.parent.InverseTransformPoint(this.startFallingPosition);
+			}
+			this.FallToGround(false);
+		}
+		else
+		{
+			this.hasHitGround = true;
+			this.reachedFloorTarget = true;
+			this.targetFloorPosition = base.transform.localPosition;
+		}
+		if (this.itemProperties.isScrap)
+		{
+			this.hasHitGround = true;
+		}
+		if (this.itemProperties.isScrap && RoundManager.Instance.mapPropsContainer != null)
+		{
+			this.radarIcon = Instantiate<GameObject>(StartOfRound.Instance.itemRadarIconPrefab, RoundManager.Instance.mapPropsContainer.transform).transform;
+		}
+		if (!this.itemProperties.isScrap)
+		{
+			HoarderBugAI.grabbableObjectsInMap.Add(base.gameObject);
+		}
+		MeshRenderer[] componentsInChildren = base.gameObject.GetComponentsInChildren<MeshRenderer>();
+		for (int i = 0; i < componentsInChildren.Length; i++)
+		{
+			componentsInChildren[i].renderingLayerMask = 1U;
+		}
+		SkinnedMeshRenderer[] componentsInChildren2 = base.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+		for (int j = 0; j < componentsInChildren2.Length; j++)
+		{
+			componentsInChildren2[j].renderingLayerMask = 1U;
+		}
+        
         trigger = GetComponent<InteractTrigger>();
         hb = GetComponent<Rigidbody>();
         trigger.onInteract.AddListener(OnInteract);
@@ -62,7 +101,7 @@ public class Hoverboard : GrabbableObject, IHittable
                 Plugin.InputActionsInstance.HoverBackward.performed -= MovementHandler;
                 Plugin.InputActionsInstance.HoverForward.performed -= MovementHandler;
                 Plugin.InputActionsInstance.HoverUp.performed -= MovementHandler;
-                Plugin.InputActionsInstance.SwitchMode.performed -= ModeHandler;
+                Plugin.InputActionsInstance.SwitchMode.performed += ModeHandler;
                 turnedOn = false;
                 hb.useGravity = false;
                 hb.isKinematic = true;
@@ -160,17 +199,18 @@ public class Hoverboard : GrabbableObject, IHittable
     public override void Update()
     {
         base.Update();
-        if (Vector3.Distance(this.transform.position, StartOfRound.Instance.shipBounds.transform.position) < 8 && playerControlling != null && !isInShipRoom) {
-			playerControlling.SetItemInElevator(playerControlling.isInHangarShipRoom, this.isInElevator, this);
-			this.parentObject = null;
-			this.transform.SetParent(parentObject, true);
-			this.startFallingPosition = this.transform.localPosition;
-			this.transform.localScale = this.originalScale;
-			this.transform.localPosition = this.transform.localPosition;
-			this.OnPlaceObject();
+        PlayerControllerB livePlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(x => x.isPlayerControlled);
+        if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) < 15 && !isInShipRoom) {
+            this.transform.SetParent(livePlayer.playersManager.elevatorTransform, true);
+            isInShipRoom = true;
+            isInElevator = true;
+        } else if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) >= 15 && isInShipRoom) {
+            this.transform.SetParent(livePlayer.playersManager.propsContainer, true);
+            isInShipRoom = false;
+            isInElevator = false;
         }
         if (playerControlling == null) return;
-        if (playerControlling.inAnimationWithEnemy || playerControlling.inSpecialInteractAnimation || playerControlling.isClimbingLadder) {
+        if (playerControlling.inAnimationWithEnemy || playerControlling.inSpecialInteractAnimation || (hoverboardMode == HoverboardMode.Mounted && playerControlling.isClimbingLadder)) {
             DropHoverboard(false, true);
             return;
         }
