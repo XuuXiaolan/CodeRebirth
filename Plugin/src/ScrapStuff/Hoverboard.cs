@@ -218,6 +218,7 @@ public class Hoverboard : GrabbableObject, IHittable
             return;
         }
         HandleDropping();
+        HandleToolTips();
     }
 
     public void HandleToolTips() {
@@ -225,7 +226,7 @@ public class Hoverboard : GrabbableObject, IHittable
         if (hoverboardMode == HoverboardMode.Mounted) {
             HUDManager.Instance.ChangeControlTipMultiple([
                 $"Dismount Hoverboard : [{Plugin.InputActionsInstance.DropHoverboard.GetBindingDisplayString().Split(" ")[0]}]",
-                $"Move Hoverboard : [{Plugin.InputActionsInstance.HoverForward.GetBindingDisplayString().Split(" ")[0]}] [{Plugin.InputActionsInstance.HoverLeft.GetBindingDisplayString().Split(" ")[0]}] [{Plugin.InputActionsInstance.HoverBackward.GetBindingDisplayString().Split(" ")[0]}] [{Plugin.InputActionsInstance.HoverRight.GetBindingDisplayString().Split(" ")[0]}]",
+                $"Move Hoverboard : [{Plugin.InputActionsInstance.HoverForward.GetBindingDisplayString().Split(" ")[0]}][{Plugin.InputActionsInstance.HoverLeft.GetBindingDisplayString().Split(" ")[0]}][{Plugin.InputActionsInstance.HoverBackward.GetBindingDisplayString().Split(" ")[0]}][{Plugin.InputActionsInstance.HoverRight.GetBindingDisplayString().Split(" ")[0]}]",
                 $"Up Boost : [{Plugin.InputActionsInstance.HoverUp.GetBindingDisplayString().Split(" ")[0]}]",
                 $"Switch Mode (Mounted) : [{Plugin.InputActionsInstance.SwitchMode.GetBindingDisplayString().Split(" ")[0]}]",
             ]);
@@ -234,6 +235,8 @@ public class Hoverboard : GrabbableObject, IHittable
                 $"Drop Hoverboard : [{Plugin.InputActionsInstance.DropHoverboard.GetBindingDisplayString().Split(" ")[0]}]",
                 $"Switch Mode (Held) : [{Plugin.InputActionsInstance.SwitchMode.GetBindingDisplayString().Split(" ")[0]}]",
             ]);
+        } else if (hoverboardMode == HoverboardMode.None && playerControlling != null && playerControlling.currentlyHeldObjectServer != null) {
+            // somehow go to this item's tooltips
         }
     }
 
