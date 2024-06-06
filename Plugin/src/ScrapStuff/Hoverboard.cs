@@ -94,6 +94,8 @@ public class Hoverboard : GrabbableObject, IHittable
         {
             if (hoverboardMode == HoverboardMode.Mounted) {
                 hoverboardMode = HoverboardMode.Held;
+                Plugin.InputActionsInstance.IncreaseHover.performed -= MovementHandler;
+                Plugin.InputActionsInstance.DecreaseHover.performed -= MovementHandler;
                 Plugin.InputActionsInstance.HoverForward.performed -= OnHoverForward;
                 Plugin.InputActionsInstance.HoverForward.canceled -= OnHoverForward;
                 Plugin.InputActionsInstance.HoverLeft.performed -= MovementHandler;
@@ -107,6 +109,8 @@ public class Hoverboard : GrabbableObject, IHittable
                 hb.isKinematic = true;
             } else if (hoverboardMode == HoverboardMode.Held) {
                 hoverboardMode = HoverboardMode.Mounted;
+                Plugin.InputActionsInstance.IncreaseHover.performed += MovementHandler;
+                Plugin.InputActionsInstance.DecreaseHover.performed += MovementHandler;
                 Plugin.InputActionsInstance.HoverForward.performed += OnHoverForward;
                 Plugin.InputActionsInstance.HoverForward.canceled += OnHoverForward;
                 Plugin.InputActionsInstance.HoverLeft.performed += MovementHandler;
@@ -232,6 +236,8 @@ public class Hoverboard : GrabbableObject, IHittable
         hb.useGravity = true;
         hb.isKinematic = false;
         hoverboardMode = HoverboardMode.None;
+        Plugin.InputActionsInstance.IncreaseHover.performed -= MovementHandler;
+        Plugin.InputActionsInstance.DecreaseHover.performed -= MovementHandler;
         Plugin.InputActionsInstance.HoverForward.performed -= OnHoverForward;
         Plugin.InputActionsInstance.HoverForward.canceled -= OnHoverForward;
         Plugin.InputActionsInstance.HoverLeft.performed -= MovementHandler;
@@ -250,7 +256,11 @@ public class Hoverboard : GrabbableObject, IHittable
         if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         Vector3 forceDirection = Vector3.zero;
         float moveForce = 100f;
-
+        if (Plugin.InputActionsInstance.IncreaseHover.WasPressedThisFrame())
+            mult += 0.2f;
+        if (Plugin.InputActionsInstance.DecreaseHover.WasPressedThisFrame())
+            mult -= 0.2f;
+        Mathf.Clamp(mult, 0f, 999f);
         if (Plugin.InputActionsInstance.HoverLeft.WasPressedThisFrame())
             forceDirection += transform.forward;
 

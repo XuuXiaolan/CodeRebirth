@@ -19,7 +19,6 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigSnowGlobeEnabled { get; private set; }
         public ConfigEntry<bool> ConfigMoneyEnabled { get; private set; }
         // Spawn Weights
-        public ConfigEntry<string> ConfigHoverboardSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigSnailCatSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
         public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
@@ -40,6 +39,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<string> ConfigTornadoType { get; private set; }
         public ConfigEntry<string> ConfigTornadoMoonsBlacklist { get; private set; }
         // Misc
+        public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
@@ -51,10 +51,10 @@ namespace CodeRebirth.Configs {
                                                 "Hoverboard | Enabled",
                                                 true,
                                                 "Enables/Disables the Hoverboard from spawning.");
-            ConfigHoverboardSpawnWeights = configFile.Bind("Hoverboard Options",
-                                                "Hoverboard | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
-                                                "Spawn Weight of the Hoverboard in moons.");
+            ConfigHoverboardCost = configFile.Bind("Hoverboard Options",
+                                                "Hoverboard | Cost",
+                                                500,
+                                                "Cost of Hoverboard.");
             ConfigTornadoType = configFile.Bind("Tornados Options",
                                                 "Tornados | Tornado Type",
                                                 "Random",
