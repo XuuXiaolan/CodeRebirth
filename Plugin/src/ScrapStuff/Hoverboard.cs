@@ -140,6 +140,7 @@ public class Hoverboard : GrabbableObject, IHittable
             else SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
             trigger.interactable = false;
             hoverboardMode = HoverboardMode.Mounted;
+            HandleToolTips();
         }
     }
 
@@ -224,9 +225,29 @@ public class Hoverboard : GrabbableObject, IHittable
         HandleTurningOnOrOff();
     }
 
+    void HandleToolTips() {
+        HUDManager.Instance.ClearControlTips();
+        if (turnedOn) {
+            HUDManager.Instance.ChangeControlTipMultiple([
+                $"Turn Off Hoverboard : [{Plugin.InputActionsInstance.TurnOnHoverboard.GetBindingDisplayString().Split(" ")[0]}]",
+                $"Dismount Hoverboard : [{Plugin.InputActionsInstance.DropHoverboard.GetBindingDisplayString().Split(" ")[0]}]",
+                $"Move Hoverboard : [{Plugin.InputActionsInstance.HoverForward.GetBindingDisplayString().Split(" ")[0]}]",
+                $"Switch Mode : [{Plugin.InputActionsInstance.SwitchMode.GetBindingDisplayString().Split(" ")[0]}]",
+                $"Change Hover Height : [{Plugin.InputActionsInstance.IncreaseHover.GetBindingDisplayString().Split(" ")[0]}] [{Plugin.InputActionsInstance.DecreaseHover.GetBindingDisplayString().Split(" ")[0]}]",
+            ]);
+        } else {
+            HUDManager.Instance.ChangeControlTipMultiple([
+                $"Turn On Hoverboard : [{Plugin.InputActionsInstance.TurnOnHoverboard.GetBindingDisplayString().Split(" ")[0]}]",
+                $"Dismount Hoverboard : [{Plugin.InputActionsInstance.DropHoverboard.GetBindingDisplayString().Split(" ")[0]}]",
+            ]);
+        }
+    }
+
     public void HandleTurningOnOrOff() {
         if (!Plugin.InputActionsInstance.TurnOnHoverboard.triggered) return;
         turnedOn = !turnedOn;
+
+        HandleToolTips();
     }
     public void HandleDropping() {
         if (!Plugin.InputActionsInstance.DropHoverboard.triggered) return;
@@ -250,6 +271,7 @@ public class Hoverboard : GrabbableObject, IHittable
         Plugin.InputActionsInstance.SwitchMode.performed -= ModeHandler;
         turnedOn = keepOn;
         trigger.interactable = stillWorks;
+        HUDManager.Instance.ClearControlTips();
     }
 
     private void HandleMovement() // the reason these transform.forward and transform.right seemingly don't match with the buttons is because the exported hoverboard is kinda fucked... oh well.
