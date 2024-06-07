@@ -29,7 +29,7 @@ static class ShovelPatch {
 	}
 
 	[HarmonyPatch(nameof(CodeRebirthWeapons.HitShovel)), HarmonyPostfix]
-	public static void CritHitShovelPost(EpicAxe __instance) {
+	public static void CritHitShovelPost(CodeRebirthWeapons __instance) {
 		__instance.shovelHitForce = __instance.defaultForce;
 	}
 }

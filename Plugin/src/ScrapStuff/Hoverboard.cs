@@ -17,15 +17,12 @@ public class Hoverboard : GrabbableObject, IHittable
     private InteractTrigger trigger;
     private bool turnedOn = false;
     public float mult;
-    public float turnTorque;
     public GameObject hoverboardSeat;
     public Transform[] anchors = new Transform[4];
     private PlayerControllerB playerControlling;
     private RaycastHit[] hits = new RaycastHit[4];
     private bool _isHoverForwardHeld = false;
     private bool jumpCooldown = true;
-    private Quaternion targetRotation;
-    private bool isAdjusting = false;
     public enum HoverboardMode {
         None,
         Held,
@@ -213,10 +210,6 @@ public class Hoverboard : GrabbableObject, IHittable
                 ApplyForce(anchors[i], hits[i]);
             }
         }
-        if (!isAdjusting && hoverboardMode != HoverboardMode.Held) {
-            Plugin.Logger.LogInfo("Here6!");
-            CheckIfUpsideDown();
-        }
     }
 
     public override void Update()
@@ -347,34 +340,6 @@ public class Hoverboard : GrabbableObject, IHittable
 
 		return true; // this bool literally doesn't get used. i have no idea.
 	}
-    private void CheckIfUpsideDown()
-    {
-        // Check if the hoverboard's up vector is pointing down
-        if (Vector3.Dot(transform.up, Vector3.down) > 0)
-        {
-            // If upside down, start the adjustment process
-            targetRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
-            StartCoroutine(AdjustOrientation());
-        }
-    }
-
-    private IEnumerator AdjustOrientation()
-    {
-        isAdjusting = true;
-        float duration = 1f;
-        float elapsed = 0f;
-        Quaternion initialRotation = transform.rotation;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            transform.rotation = Quaternion.Lerp(initialRotation, targetRotation, elapsed / duration);
-            yield return null;
-        }
-
-        transform.rotation = targetRotation;
-        isAdjusting = false;
-    }
     [ServerRpc(RequireOwnership = false)]
     internal void SetTargetServerRpc(int PlayerID) {
         SetTargetClientRpc(PlayerID);
