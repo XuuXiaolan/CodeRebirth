@@ -13,15 +13,15 @@ using System.Linq;
 namespace CodeRebirth.ScrapStuff;
 public class Hoverboard : GrabbableObject, IHittable
 {
-    Rigidbody hb;
-    public InteractTrigger trigger;
+    private Rigidbody hb;
+    private InteractTrigger trigger;
     private bool turnedOn = false;
     public float mult;
     public float turnTorque;
     public GameObject hoverboardSeat;
-    private PlayerControllerB playerControlling;
     public Transform[] anchors = new Transform[4];
-    public RaycastHit[] hits = new RaycastHit[4];
+    private PlayerControllerB playerControlling;
+    private RaycastHit[] hits = new RaycastHit[4];
     private bool _isHoverForwardHeld = false;
     private bool jumpCooldown = true;
     private Quaternion targetRotation;
@@ -35,7 +35,7 @@ public class Hoverboard : GrabbableObject, IHittable
         Regular
         // Eventually wanna make other types of hoverboards
     }
-    private HoverboardMode hoverboardMode = HoverboardMode.None;
+    private HoverboardMode hoverboardMode;
     public void Awake() {
         if (isInShipRoom) {
             this.transform.position = StartOfRound.Instance.shipBounds.transform.position;
@@ -83,6 +83,11 @@ public class Hoverboard : GrabbableObject, IHittable
 			componentsInChildren2[j].renderingLayerMask = 1U;
 		}
         
+        if (IsHost) {
+            SetHoverboardStateClientRpc(0);
+        } else {
+            SetHoverboardStateServerRpc(0);
+        }
         trigger = GetComponent<InteractTrigger>();
         hb = GetComponent<Rigidbody>();
         trigger.onInteract.AddListener(OnInteract);
@@ -92,7 +97,11 @@ public class Hoverboard : GrabbableObject, IHittable
         if (btn.wasPressedThisFrame)
         {
             if (hoverboardMode == HoverboardMode.Mounted) {
-                hoverboardMode = HoverboardMode.Held;
+                if (IsHost) {
+                    SetHoverboardStateClientRpc(1);
+                } else {
+                    SetHoverboardStateServerRpc(1);
+                }
                 HandleToolTips();
                 Plugin.InputActionsInstance.HoverForward.performed -= OnHoverForward;
                 Plugin.InputActionsInstance.HoverForward.canceled -= OnHoverForward;
@@ -106,7 +115,11 @@ public class Hoverboard : GrabbableObject, IHittable
                 hb.useGravity = false;
                 hb.isKinematic = true;
             } else if (hoverboardMode == HoverboardMode.Held) {
-                hoverboardMode = HoverboardMode.Mounted;
+                if (IsHost) {
+                    SetHoverboardStateClientRpc(2);
+                } else {
+                    SetHoverboardStateServerRpc(2);
+                }
                 HandleToolTips();
                 Plugin.InputActionsInstance.HoverForward.performed += OnHoverForward;
                 Plugin.InputActionsInstance.HoverForward.canceled += OnHoverForward;
@@ -132,16 +145,24 @@ public class Hoverboard : GrabbableObject, IHittable
             Plugin.InputActionsInstance.HoverForward.performed += MovementHandler;
             Plugin.InputActionsInstance.HoverUp.performed += MovementHandler;
             Plugin.InputActionsInstance.SwitchMode.performed += ModeHandler;
-            if (!IsHost) SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
-            else SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+            if (!IsHost) {
+                SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+            } else {
+                SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+            }
             trigger.interactable = false;
             turnedOn = true;
-            hoverboardMode = HoverboardMode.Mounted;
+            if (IsHost) {
+                SetHoverboardStateClientRpc(2);
+            } else {
+                SetHoverboardStateServerRpc(2);
+            }
             HandleToolTips();
         }
     }
 
     public void OnHoverForward(InputAction.CallbackContext context) {
+        if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         var btn = (ButtonControl)context.control;
         if (btn.wasPressedThisFrame)
         {
@@ -171,16 +192,7 @@ public class Hoverboard : GrabbableObject, IHittable
     {
         if (playerControlling != null && hoverboardMode == HoverboardMode.Mounted && Vector3.Distance(transform.position, playerControlling.transform.position) > 5f) {
             DropHoverboard(false, true);
-            return;
-        }
-        if (hoverboardMode == HoverboardMode.Held) {
-            // Position the hoverboard to the right side of the player
-            this.transform.position = playerControlling.transform.position + playerControlling.transform.right * 0.7f + playerControlling.transform.up * 1f;
-
-            // Make the hoverboard face upwards with its up vector pointing to the player's right hand
-            Quaternion playerRotation = playerControlling.transform.rotation;
-            Quaternion rotationOffset = Quaternion.Euler(180, 180, -90); // Adjust to match correct facing direction
-            this.transform.rotation = playerRotation * rotationOffset;
+            Plugin.Logger.LogInfo("Here!");
             return;
         }
         if (playerControlling != null && hoverboardMode == HoverboardMode.Mounted) {
@@ -189,26 +201,35 @@ public class Hoverboard : GrabbableObject, IHittable
             Quaternion rotationOffset = Quaternion.Euler(0, -90, 0); // 90 degrees to the left around the y-axis
             this.transform.rotation = playerRotation * rotationOffset;
             playerControlling.ResetFallGravity();
+            Plugin.Logger.LogInfo("Here3!");
         }
-        if (_isHoverForwardHeld && playerControlling == GameNetworkManager.Instance.localPlayerController)
+        if (_isHoverForwardHeld && playerControlling == GameNetworkManager.Instance.localPlayerController && hoverboardMode == HoverboardMode.Mounted) {
             hb.AddForce(Vector3.zero + transform.right * 40f, ForceMode.Acceleration);
-        if (turnedOn)
-            for (int i = 0; i < 4; i++)
+        }
+        if (turnedOn && hoverboardMode == HoverboardMode.Mounted) {
+            Plugin.Logger.LogInfo("Here4!");
+            for (int i = 0; i < 4; i++) {
+                Plugin.Logger.LogInfo("Here5!");
                 ApplyForce(anchors[i], hits[i]);
-        if (!isAdjusting)
+            }
+        }
+        if (!isAdjusting && hoverboardMode != HoverboardMode.Held) {
+            Plugin.Logger.LogInfo("Here6!");
             CheckIfUpsideDown();
+        }
     }
 
     public override void Update()
     {
         base.Update();
-        PlayerControllerB livePlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(x => x.isPlayerControlled);
-        if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) < 15 && !isInShipRoom) {
-            this.transform.SetParent(livePlayer.playersManager.elevatorTransform, true);
+        HandleDropping();
+        PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(x => x.isPlayerControlled);
+        if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) < 15 && !isInShipRoom && IsHost) {
+            this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
             isInShipRoom = true;
             isInElevator = true;
-        } else if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) >= 15 && isInShipRoom) {
-            this.transform.SetParent(livePlayer.playersManager.propsContainer, true);
+        } else if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) >= 15 && isInShipRoom && IsHost) {
+            this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             isInShipRoom = false;
             isInElevator = false;
         }
@@ -217,11 +238,17 @@ public class Hoverboard : GrabbableObject, IHittable
             DropHoverboard(false, true);
             return;
         }
-        HandleDropping();
+        if (hoverboardMode == HoverboardMode.Held && IsHost) {
+            SetHoverboardPositionForHeldClientRpc();
+        } else if (hoverboardMode == HoverboardMode.Held && !IsHost) {
+            SetHoverboardPositionForHeldServerRpc();
+        }
         HandleToolTips();
     }
 
     public void HandleToolTips() {
+        if (playerControlling == null) return;
+        if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         HUDManager.Instance.ClearControlTips();
         if (hoverboardMode == HoverboardMode.Mounted) {
             HUDManager.Instance.ChangeControlTipMultiple([
@@ -235,8 +262,6 @@ public class Hoverboard : GrabbableObject, IHittable
                 $"Drop Hoverboard : [{Plugin.InputActionsInstance.DropHoverboard.GetBindingDisplayString().Split(" ")[0]}]",
                 $"Switch Mode (Held) : [{Plugin.InputActionsInstance.SwitchMode.GetBindingDisplayString().Split(" ")[0]}]",
             ]);
-        } else if (hoverboardMode == HoverboardMode.None && playerControlling != null && playerControlling.currentlyHeldObjectServer != null) {
-            // somehow go to this item's tooltips
         }
     }
 
@@ -245,11 +270,18 @@ public class Hoverboard : GrabbableObject, IHittable
         DropHoverboard(false, true);
     }
     public void DropHoverboard(bool keepOn = true, bool stillWorks = true) {
-        if (!IsHost) SetTargetServerRpc(-1);
-        else SetTargetClientRpc(-1);
+        if (IsHost) {
+            SetHoverboardStateClientRpc(0);
+        } else {
+            SetHoverboardStateServerRpc(0);
+        }
+        if (!IsHost) {
+            SetTargetServerRpc(-1);
+        } else {
+            SetTargetClientRpc(-1);
+        }
         hb.useGravity = true;
         hb.isKinematic = false;
-        hoverboardMode = HoverboardMode.None;
         HandleToolTips();
         Plugin.InputActionsInstance.HoverForward.performed -= OnHoverForward;
         Plugin.InputActionsInstance.HoverForward.canceled -= OnHoverForward;
@@ -265,8 +297,7 @@ public class Hoverboard : GrabbableObject, IHittable
 
     private void HandleMovement() // the reason these transform.forward and transform.right seemingly don't match with the buttons is because the exported hoverboard is kinda fucked... oh well.
     {
-        if (playerControlling == null) return;
-        if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
+        if (playerControlling == null || GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         Vector3 forceDirection = Vector3.zero;
         float moveForce = 100f;
         
@@ -316,27 +347,6 @@ public class Hoverboard : GrabbableObject, IHittable
 
 		return true; // this bool literally doesn't get used. i have no idea.
 	}
-    [ServerRpc(RequireOwnership = false)]
-    internal void SetTargetServerRpc(int PlayerID) {
-        SetTargetClientRpc(PlayerID);
-    }
-    [ClientRpc]
-    internal void SetTargetClientRpc(int PlayerID) {
-        if (PlayerID == -1) {
-            playerControlling = null;
-            // playerRidingCollider.enabled = false;
-            Plugin.Logger.LogInfo($"Clearing target on {this}");
-            return;
-        }
-        if (StartOfRound.Instance.allPlayerScripts[PlayerID] == null) {
-            Plugin.Logger.LogInfo($"Index invalid! {this}");
-            return;
-        }
-        playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
-        // playerRidingCollider.enabled = true;
-        Plugin.Logger.LogInfo($"{this} setting target to: {playerControlling.playerUsername}");
-    }
-    // New Methods
     private void CheckIfUpsideDown()
     {
         // Check if the hoverboard's up vector is pointing down
@@ -364,5 +374,63 @@ public class Hoverboard : GrabbableObject, IHittable
 
         transform.rotation = targetRotation;
         isAdjusting = false;
+    }
+    [ServerRpc(RequireOwnership = false)]
+    internal void SetTargetServerRpc(int PlayerID) {
+        SetTargetClientRpc(PlayerID);
+    }
+    [ClientRpc]
+    internal void SetTargetClientRpc(int PlayerID) {
+        if (PlayerID == -1) {
+            playerControlling = null;
+            // playerRidingCollider.enabled = false;
+            Plugin.Logger.LogInfo($"Clearing target on {this}");
+            return;
+        }
+        if (StartOfRound.Instance.allPlayerScripts[PlayerID] == null) {
+            Plugin.Logger.LogInfo($"Index invalid! {this}");
+            return;
+        }
+        playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
+        // playerRidingCollider.enabled = true;
+        Plugin.Logger.LogInfo($"{this} setting target to: {playerControlling.playerUsername}");
+    }
+    [ServerRpc(RequireOwnership = false)]
+    internal void SetHoverboardPositionForHeldServerRpc() {
+        SetHoverboardPositionForHeldClientRpc();
+    }
+    [ClientRpc]
+    internal void SetHoverboardPositionForHeldClientRpc() {
+        if (playerControlling == null) return;
+        // Position the hoverboard to the right side of the player
+        this.transform.position = playerControlling.transform.position + playerControlling.transform.right * 0.7f + playerControlling.transform.up * 1f;
+
+        // Make the hoverboard face upwards with its up vector pointing to the player's right hand
+        Quaternion playerRotation = playerControlling.transform.rotation;
+        Quaternion rotationOffset = Quaternion.Euler(180, 180, -90); // Adjust to match correct facing direction
+        this.transform.rotation = playerRotation * rotationOffset;
+        Plugin.Logger.LogInfo("Here2!");
+    }
+    [ServerRpc(RequireOwnership = false)]
+    internal void SetHoverboardStateServerRpc(int state) {
+        SetHoverboardStateClientRpc(state);
+    }
+    [ClientRpc]
+    internal void SetHoverboardStateClientRpc(int state) {
+        switch(state) {
+            case 0:
+                hoverboardMode = HoverboardMode.None;
+                break;
+            case 1:
+                hoverboardMode = HoverboardMode.Held;
+                break;
+            case 2:
+                hoverboardMode = HoverboardMode.Mounted;
+                break;
+            default:
+                hoverboardMode = HoverboardMode.None;
+                Plugin.Logger.LogInfo("Invalid state!");
+                break;
+        }
     }
 }
