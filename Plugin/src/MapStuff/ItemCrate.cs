@@ -12,7 +12,7 @@ using Random = System.Random;
 
 namespace CodeRebirth.MapStuff;
 
-public class ItemCrate : NetworkBehaviour, IHittable {
+public class ItemCrate : CRHittable {
 
 	[SerializeField]
 	public SkinnedMeshRenderer mainRenderer;
@@ -134,7 +134,7 @@ public class ItemCrate : NetworkBehaviour, IHittable {
 		if (crateType == CrateType.Wooden) Destroy(gameObject);
 	}
 
-	public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
+	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
 		float progressChange = random.NextFloat(0.15f, 0.25f);
 		digProgress = Mathf.Min(digProgress + progressChange, 1);
 		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {digProgress}");

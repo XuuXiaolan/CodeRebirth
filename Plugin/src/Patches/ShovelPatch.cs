@@ -8,10 +8,6 @@ namespace CodeRebirth.Patches;
 [HarmonyPatch(typeof(Shovel))]
 static class ShovelPatch {
 	public static System.Random random;
-	[HarmonyPatch(nameof(Shovel.HitShovel)), HarmonyPrefix]
-	public static void RemoveShovelLayerLimitation(Shovel __instance) {
-		__instance.shovelMask = -1;
-	}
 	
 	[HarmonyPatch(nameof(CodeRebirthWeapons.HitShovel)), HarmonyPrefix]
 	public static void CritHitShovelPre(CodeRebirthWeapons __instance) {
