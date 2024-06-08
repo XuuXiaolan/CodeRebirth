@@ -120,8 +120,8 @@ GameObject:
   - component: {fileID: 5402950346543851815}
   - component: {fileID: 29027257532327866}
   - component: {fileID: 6408075936971939079}
-  - component: {fileID: 3957691287844390662}
-  - component: {fileID: 8101079327259513809}
+  - component: {fileID: 4003283590168824211}
+  - component: {fileID: 1139107539189736392}
   m_Layer: 9
   m_Name: Hoverboard
   m_TagString: InteractTrigger
@@ -246,9 +246,9 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
+  hb: {fileID: 5028405236410879590}
   trigger: {fileID: 29027257532327866}
   mult: 6
-  turnTorque: 0
   hoverboardSeat: {fileID: 6068824060356499357}
   anchors:
   - {fileID: 4180286282294528675}
@@ -436,7 +436,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3957691287844390662
+--- !u!114 &4003283590168824211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -466,7 +466,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &8101079327259513809
+--- !u!114 &1139107539189736392
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
