@@ -7,6 +7,8 @@
 - Added new outside object that can spawn in sometimes.
 - Removed collision from snailcat.
 - Improved meteor spawning location.
+- Added new shop item, hoverboard.
+- Added config and chance for critical hit from code rebirth weapons.
 
 ## v0.0.3
 - Added moon blacklist config for the weather.

@@ -15,6 +15,9 @@ public class ItemHandler : ContentHandler<ItemHandler> {
 		[LoadFromBundle("HoverboardObj.asset")]
 		public Item HoverboardItem { get; private set; }
 
+		[LoadFromBundle("HoverboardTerminalNode.asset")]
+		public TerminalNode HoverboardTerminalNode { get; private set; }
+
 		[LoadFromBundle("EpicAxeObj.asset")]
 		public Item EpicAxeItem { get; private set; }
 
@@ -30,7 +33,7 @@ public class ItemHandler : ContentHandler<ItemHandler> {
 	public ItemHandler() {
 		Assets = new ItemAssets("coderebirthasset");
         
-		RegisterScrapWithConfig(Plugin.ModConfig.ConfigHoverboardEnabled.Value, Plugin.ModConfig.ConfigHoverboardSpawnWeights.Value, Assets.HoverboardItem);
+		RegisterShopItemWithConfig(Plugin.ModConfig.ConfigHoverboardEnabled.Value, false, Assets.HoverboardItem, Assets.HoverboardTerminalNode, Plugin.ModConfig.ConfigHoverboardCost.Value, "");
 		RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, false, Assets.WalletItem, Assets.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
 		RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, Assets.EpicAxeItem);
 		RegisterScrapWithConfig(Plugin.ModConfig.ConfigSnowGlobeEnabled.Value, Plugin.ModConfig.ConfigSnowGlobeSpawnWeights.Value, Assets.SnowGlobeItem);
