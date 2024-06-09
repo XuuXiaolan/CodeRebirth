@@ -3,16 +3,16 @@ using UnityEngine.InputSystem;
 
 namespace CodeRebirth.Keybinds;
 public class IngameKeybinds : LcInputActions {
-    [InputAction("<Keyboard>/w", Name = "HoverForward")]
+    [InputAction("<Keyboard>/y", Name = "HoverForward")]
     public InputAction HoverForward { get; set; }
 
-    [InputAction("<Keyboard>/a", Name = "HoverLeft")]
+    [InputAction("<Keyboard>/g", Name = "HoverLeft")]
     public InputAction HoverLeft { get; set; }
 
-    [InputAction("<Keyboard>/s", Name = "HoverBackward")]
+    [InputAction("<Keyboard>/h", Name = "HoverBackward")]
     public InputAction HoverBackward { get; set; }
 
-    [InputAction("<Keyboard>/d", Name = "HoverRight")]
+    [InputAction("<Keyboard>/j", Name = "HoverRight")]
     public InputAction HoverRight { get; set; }
 
     [InputAction("<Keyboard>/space", Name = "HoverUp")]

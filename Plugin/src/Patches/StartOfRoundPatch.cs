@@ -29,11 +29,11 @@ static class StartOfRoundPatch {
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
 
 		string[] meteorLevelOverrides = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value.Split(',')
-											  .Select(name => name.Trim())
-											  .ToArray();
+											    .Select(name => name.Trim())
+											    .ToArray();
 		string[] tornadoLevelOverrides = Plugin.ModConfig.ConfigTornadoMoonsBlacklist.Value.Split(',')
-											   .Select(name => name.Trim())
-											   .ToArray();
+											    .Select(name => name.Trim())
+											    .ToArray();
 		LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", levelOverrides: meteorLevelOverrides);
 		LethalLib.Modules.Weathers.RemoveWeather("Tornados", levelOverrides: tornadoLevelOverrides);
 	}
