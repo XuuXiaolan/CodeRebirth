@@ -41,9 +41,9 @@ static class StartOfRoundPatch {
 	[HarmonyPatch(nameof(StartOfRound.OnDisable))]
 	[HarmonyPrefix]
 	public static void DisableWeathersPatch() {
-		if (MeteorShower.Active) { // patch to fix OnDisable not being triggered as its not actually in the scene.
-			WeatherHandler.Instance.MeteorShowerWeather.effectObject.SetActive(false);
-			WeatherHandler.Instance.MeteorShowerWeather.effectPermanentObject.SetActive(false);
+		if (MeteorShower.Active) { 
+			// patch to fix OnDisable not being triggered as its not actually in the scene.
+			WeatherHandler.Instance.MeteorShowerWeather.Effect.DisableEffect();
 		}
 	}
 	
