@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CodeRebirth.Misc;
 using CodeRebirth.src;
 using CodeRebirth.Util.Extensions;
@@ -27,15 +28,6 @@ static class StartOfRoundPatch {
 	public static void StartOfRound_Start(ref StartOfRound __instance)
 	{
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
-
-		string[] meteorLevelOverrides = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value.Split(',')
-											  .Select(name => name.Trim())
-											  .ToArray();
-		string[] tornadoLevelOverrides = Plugin.ModConfig.ConfigTornadoMoonsBlacklist.Value.Split(',')
-											   .Select(name => name.Trim())
-											   .ToArray();
-		LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", levelOverrides: meteorLevelOverrides);
-		LethalLib.Modules.Weathers.RemoveWeather("Tornados", levelOverrides: tornadoLevelOverrides);
 	}
 	
 	[HarmonyPatch(nameof(StartOfRound.OnDisable))]

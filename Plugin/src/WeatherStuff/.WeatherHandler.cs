@@ -1,4 +1,8 @@
-﻿using CodeRebirth.Misc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BepInEx.Configuration;
+using CodeRebirth.Misc;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using LethalLib.Modules;
@@ -40,12 +44,16 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 	public WeatherAssets Assets { get; private set; }
 	public Weather MeteorShowerWeather { get; private set; }
 	public Weather TornadoesWeather { get; private set; }
+
+	private Dictionary<Weather, ConfigEntry<string>> WeatherBlacklist = new();
 	
 	public WeatherHandler() {
 		Assets = new WeatherAssets("coderebirthasset");
 
 		RegisterMeteorShower();
 		// RegisterTornadoWeather();
+
+		WeatherRegistry.EventManager.setupFinished.AddListener(RemoveWeathersFromMoons);
 	}
 
 	void RegisterTornadoWeather() {
@@ -63,7 +71,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		
 		TornadoesWeather = new Weather("Tornadoes", tornadoEffect) {};
 
-		// Weathers.RegisterWeather("Tornados", TornadosWeather, Levels.LevelTypes.All, 0, 0);
+		WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
+		WeatherBlacklist[MeteorShowerWeather] = Plugin.ModConfig.ConfigTornadoMoonsBlacklist;
 	}
 
 	void RegisterMeteorShower() {
@@ -82,6 +91,20 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		};
 
 		MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {};
-		// Weathers.RegisterWeather("Meteor Shower", MeteorShowerWeather, Levels.LevelTypes.All, 0, 0);
+
+		WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
+		WeatherBlacklist[MeteorShowerWeather] = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist;
+	}
+
+	void RemoveWeathersFromMoons() {
+
+		foreach (var weather in WeatherBlacklist.Keys) {
+			string[] levelOverrides = WeatherBlacklist[weather].Value.Split(',').Select(name => name.Trim()).ToArray();
+
+			Plugin.Logger.LogWarning($"Removing {weather.Name} from moons: {String.Join(", ", levelOverrides)}");
+												
+			weather.RemoveFromMoon(String.Join(";", levelOverrides));
+		}
+
 	}
 }
