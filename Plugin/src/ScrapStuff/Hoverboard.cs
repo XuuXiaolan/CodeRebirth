@@ -127,7 +127,7 @@ public class Hoverboard : GrabbableObject, IHittable
             this.transform.position = playerControlling.transform.position + playerControlling.transform.right * 0.7f + playerControlling.transform.up * 1f;
             // Make the hoverboard face upwards with its up vector pointing to the player's right hand
             Quaternion rotationOffset = Quaternion.Euler(180, 180, -90); // Adjust to match correct facing direction
-            this.transform.rotation = playerControlling.transform.rotation * rotationOffset;
+            this.transform.Find("HoverboardChild").rotation = playerControlling.transform.rotation * rotationOffset;
         }
         if (hoverboardMode == HoverboardMode.Mounted) {
             if (turnedOn) {
@@ -136,10 +136,10 @@ public class Hoverboard : GrabbableObject, IHittable
                 }
             }
             if (_isHoverForwardHeld) {
-                hb.AddForce(Vector3.zero + transform.right * 15f, ForceMode.Acceleration);
+                hb.AddForce(Vector3.zero - transform.right * 15f, ForceMode.Acceleration);
             }
             Quaternion rotationOffset = Quaternion.Euler(0, -90, 0); // 90 degrees to the left around the y-axis
-            this.transform.rotation = playerControlling.transform.rotation * rotationOffset;
+            this.transform.Find("HoverboardChild").rotation = playerControlling.transform.rotation * rotationOffset;
             playerControlling.ResetFallGravity();
         }
         UpdatePositionsForClientsClientRpc(this.transform.position, this.transform.rotation, playerControlling.transform.position, playerControlling.transform.rotation);
@@ -190,16 +190,16 @@ public class Hoverboard : GrabbableObject, IHittable
         float moveForce = 50f;
         
         if (Plugin.InputActionsInstance.HoverLeft.WasPressedThisFrame())
-            forceDirection += transform.forward;
-
-        if (Plugin.InputActionsInstance.HoverRight.WasPressedThisFrame())
             forceDirection -= transform.forward;
 
+        if (Plugin.InputActionsInstance.HoverRight.WasPressedThisFrame())
+            forceDirection += transform.forward;
+
         if (Plugin.InputActionsInstance.HoverBackward.WasPressedThisFrame())
-            forceDirection -= transform.right;
+            forceDirection += transform.right;
 
         if (Plugin.InputActionsInstance.HoverForward.WasPressedThisFrame())
-            forceDirection += transform.right;
+            forceDirection -= transform.right;
 
         if (Plugin.InputActionsInstance.HoverUp.WasPressedThisFrame() && jumpCooldown) {
             jumpCooldown = false;
@@ -274,7 +274,7 @@ public class Hoverboard : GrabbableObject, IHittable
     internal void SetTargetClientRpc(int PlayerID) {
         if (PlayerID == -1) {
             playerControlling.transform.rotation = Quaternion.identity;
-            playerControlling.transform.SetParent(oldParent, true);
+            playerControlling.transform.SetParent(null, true);
             playerControlling = null;
             // playerRidingCollider.enabled = false;
             Plugin.Logger.LogInfo($"Clearing target on {this}");
@@ -290,9 +290,9 @@ public class Hoverboard : GrabbableObject, IHittable
         }
         playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
         if (IsHost) {
-            this.transform.Find("HoverboardChild").Find("PlayerOffsetGameObject").transform.position = Vector3.zero;
+            this.transform.Find("PlayerOffsetGameObject").transform.position = Vector3.zero;
             oldParent = playerControlling.transform.GetParent();
-            playerControlling.transform.SetParent(this.transform.Find("HoverboardChild").Find("PlayerOffsetGameObject"), true);
+            playerControlling.transform.SetParent(this.transform.Find("PlayerOffsetGameObject"), true);
         }
         playerControlling.transform.position = hoverboardSeat.transform.position;
         // playerRidingCollider.enabled = true;
