@@ -68,6 +68,11 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		TornadoesWeather = new Weather("Tornadoes", tornadoEffect) {
 			DefaultLevelFilters = ["Gordion"],
 			LevelFilteringOption = FilteringOption.Exclude,
+			// TODO
+			// Color = 
+			// ScrapAmountMultiplier = 
+			// ScrapValueMultiplier = 
+			// DefaultWeight = 
 		};
 
 		WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
@@ -91,6 +96,11 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {
 			DefaultLevelFilters = ["Gordion"],
 			LevelFilteringOption = FilteringOption.Exclude,
+			// TODO
+			// Color = 
+			// ScrapAmountMultiplier = 
+			// ScrapValueMultiplier = 
+			// DefaultWeight = 
 		};
 
 		WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
