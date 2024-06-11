@@ -44,16 +44,12 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 	public WeatherAssets Assets { get; private set; }
 	public Weather MeteorShowerWeather { get; private set; }
 	public Weather TornadoesWeather { get; private set; }
-
-	private Dictionary<Weather, ConfigEntry<string>> WeatherBlacklist = new();
 	
 	public WeatherHandler() {
 		Assets = new WeatherAssets("coderebirthasset");
 
 		RegisterMeteorShower();
 		// RegisterTornadoWeather();
-
-		WeatherRegistry.EventManager.setupFinished.AddListener(RemoveWeathersFromMoons);
 	}
 
 	void RegisterTornadoWeather() {
@@ -69,10 +65,12 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 			SunAnimatorBool = "eclipse",
 		};
 		
-		TornadoesWeather = new Weather("Tornadoes", tornadoEffect) {};
+		TornadoesWeather = new Weather("Tornadoes", tornadoEffect) {
+			DefaultLevelFilters = ["Gordion"],
+			LevelFilteringOption = FilteringOption.Exclude,
+		};
 
 		WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
-		WeatherBlacklist[MeteorShowerWeather] = Plugin.ModConfig.ConfigTornadoMoonsBlacklist;
 	}
 
 	void RegisterMeteorShower() {
@@ -90,21 +88,11 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 			SunAnimatorBool = "eclipse",
 		};
 
-		MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {};
+		MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {
+			DefaultLevelFilters = ["Gordion"],
+			LevelFilteringOption = FilteringOption.Exclude,
+		};
 
 		WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
-		WeatherBlacklist[MeteorShowerWeather] = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist;
-	}
-
-	void RemoveWeathersFromMoons() {
-
-		foreach (var weather in WeatherBlacklist.Keys) {
-			string[] levelOverrides = WeatherBlacklist[weather].Value.Split(',').Select(name => name.Trim()).ToArray();
-
-			Plugin.Logger.LogWarning($"Removing {weather.Name} from moons: {String.Join(", ", levelOverrides)}");
-												
-			weather.RemoveFromMoon(String.Join(";", levelOverrides));
-		}
-
 	}
 }

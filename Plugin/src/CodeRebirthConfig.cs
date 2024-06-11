@@ -135,7 +135,7 @@ namespace CodeRebirth.Configs {
             ConfigMeteorShowerMoonsBlacklist = configFile.Bind("MeteorShower Options",
                                                 "Meteor Shower | Blacklist",
                                                 "CompanyBuildingLevel",
-                                                "Example: (CompanyBuildingLevelList,OffenseLevel). \nList of moons TO REMOVE the Meteor Shower Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
+                                                "This setting is unused - change the moons in WeatherRegistry config.");
             ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Default Volume",
                                                 0.25f,
