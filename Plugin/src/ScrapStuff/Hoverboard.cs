@@ -128,10 +128,16 @@ public class Hoverboard : GrabbableObject, IHittable
             HandleMovement();
         }
     }
-
+    public void FixedUpdate() {
+        if (playerControlling == null && GameNetworkManager.Instance.localPlayerController != playerControlling) return;
+    }
     public override void Update()
     {
         base.Update();
+        for (int i = 0; i < 4; i++)
+        {
+            ApplyForce(anchors[i], hits[i]);
+        }
         if (HandleDropping()) return;
         if (playerControlling == null || !IsHost) return;
         if (hoverboardMode == HoverboardMode.Mounted && playerControlling.transform.GetParent() != hoverboardChild) {
@@ -142,22 +148,14 @@ public class Hoverboard : GrabbableObject, IHittable
             DropHoverboard();
             return;
         }
-        #region Physics
-        // maybe i should have this be in fixed update
-
         if (hoverboardMode == HoverboardMode.Mounted)
         {
-            if (turnedOn)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    ApplyForce(anchors[i], hits[i]);
-                }
+            if (Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 1f) {
+                playerControlling.transform.position = Vector3.Lerp(playerControlling.transform.position, hoverboardChild.position, Time.deltaTime * 10f);
             }
-
             if (_isHoverForwardHeld)
             {
-                hb.AddForce(Vector3.zero + hoverboardChild.right * 15f * (playerControlling.isSprinting ? 1.5f : 1f), ForceMode.Acceleration);
+                hb.AddForce(Vector3.zero + hoverboardChild.right * 25f * (playerControlling.isSprinting ? 1.6f : 1f), ForceMode.Acceleration);
             }
 
             Vector2 currentMouseDelta = Plugin.InputActionsInstance.MouseDelta.ReadValue<Vector2>();
@@ -173,22 +171,10 @@ public class Hoverboard : GrabbableObject, IHittable
             hoverboardChild.Rotate(Vector3.up, turnAmount);
             if (!isAdjusting)
                 CheckIfUpsideDown();
-            playerControlling.transform.position = hoverboardSeat.transform.position;
             playerControlling.ResetFallGravity();
         }
-        UpdatePositionsForClientsClientRpc(this.transform.position, this.transform.rotation, hoverboardChild.position, hoverboardChild.rotation, playerControlling.transform.position, playerControlling.transform.rotation);
-        #endregion
     }
-    [ClientRpc]
-    public void UpdatePositionsForClientsClientRpc(Vector3 position, Quaternion rotation, Vector3 childPosition, Quaternion childRotation, Vector3 playerPosition, Quaternion playerRotation) {
-        if (IsHost) return;
-        this.transform.position = position;
-        this.transform.rotation = rotation;
-        hoverboardChild.position = childPosition;
-        hoverboardChild.rotation = childRotation;
-        playerControlling.transform.position = playerPosition;
-        playerControlling.transform.rotation = playerRotation;
-    }
+    
     public override void LateUpdate() {
         base.LateUpdate();
         if (!IsHost) return;
@@ -269,7 +255,7 @@ public class Hoverboard : GrabbableObject, IHittable
         {
             if (IsPointOnNavMesh(hit.point, 6.0f)) // Adjust maxDistance as needed
             {
-                float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 1f : 5f);
+                float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 2.5f : 5f);
                 
                 hb.AddForceAtPosition(transform.up * force * mult, anchor.position, ForceMode.Acceleration);
             }
@@ -310,7 +296,11 @@ public class Hoverboard : GrabbableObject, IHittable
             playerControlling.playerActions.Movement.Look.Enable();
             playerControlling.movementSpeed = playerMovementSpeed;
             if (IsHost) {
-                playerControlling.transform.SetParent(null, true);
+                if (playerControlling.isInHangarShipRoom) {
+                    playerControlling.transform.SetParent(playerControlling.playersManager.elevatorTransform.transform, true);
+                } else {
+                    playerControlling.transform.SetParent(playerControlling.playersManager.playersContainer, true);
+                }
             }
             playerControlling = null;
             // playerRidingCollider.enabled = false;
@@ -353,7 +343,12 @@ public class Hoverboard : GrabbableObject, IHittable
             case 0:
                 hoverboardMode = HoverboardMode.None;
                 if (IsHost) {
-                    this.transform.SetParent(null, true);
+                    PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
+                    if (isInShipRoom) {
+                        this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
+                    } else{
+                        this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
+                    }
                 }
                 turnedOn = false;
                 _isHoverForwardHeld = false;
@@ -363,7 +358,11 @@ public class Hoverboard : GrabbableObject, IHittable
                 break;
             case 1:
                 if (IsHost) {
-                    playerControlling.transform.SetParent(null, true);
+                    if (playerControlling.isInHangarShipRoom) {
+                        playerControlling.transform.SetParent(playerControlling.playersManager.elevatorTransform.transform, true);
+                    } else {
+                        playerControlling.transform.SetParent(playerControlling.playersManager.playersContainer, true);
+                    }
                     this.transform.SetParent(playerControlling.transform, true);
                 }
                 hoverboardMode = HoverboardMode.Held;
@@ -398,8 +397,10 @@ public class Hoverboard : GrabbableObject, IHittable
                 break;
             default:
                 hoverboardMode = HoverboardMode.None;
-                if (IsHost) {
-                    this.transform.SetParent(null, true);
+                if (playerControlling.isInHangarShipRoom) {
+                    playerControlling.transform.SetParent(playerControlling.playersManager.elevatorTransform.transform, true);
+                } else {
+                    playerControlling.transform.SetParent(playerControlling.playersManager.playersContainer, true);
                 }
                 _isHoverForwardHeld = false;
                 turnedOn = false;
