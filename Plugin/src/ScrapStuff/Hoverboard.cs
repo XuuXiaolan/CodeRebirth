@@ -27,25 +27,44 @@ public class Hoverboard : GrabbableObject, IHittable
     private RaycastHit[] hits = new RaycastHit[4];
     private bool _isHoverForwardHeld = false;
     private bool jumpCooldown = true;
-    private Transform oldParent;
     private Transform hoverboardChild;
+    private HoverboardTypes hoverboardType = HoverboardTypes.Regular;
+    private float playerMovementSpeed = 0f;
     public enum HoverboardMode {
         None,
         Held,
         Mounted,
     }
     public enum HoverboardTypes {
-        Regular
+        Regular,
         // Eventually wanna make other types of hoverboards
     }
     private HoverboardMode hoverboardMode;
-    private Vector2 previousMousePosition;
+    private Quaternion resetChildRotation;
+    private bool isAdjusting = false;
+    private Quaternion targetRotation;
 
     public override void Start()
     {
         StartBaseImportant();
+        System.Random random = new System.Random();
+        int hoverboardTypeIndex =random.Next(0, 3);
+        switch (hoverboardTypeIndex) {
+            case 0:
+                hoverboardType = HoverboardTypes.Regular;
+                break;
+            default:
+                break;
+        }
+        switch (hoverboardType) {
+            case HoverboardTypes.Regular:
+                break;
+            default:
+                break;
+        }
         SwitchModeExtension(true);
         hoverboardChild = transform.Find("HoverboardChild");
+        resetChildRotation = hoverboardChild.rotation;
         if (!IsHost) return;
         SetHoverboardStateClientRpc(0);
     }
@@ -115,62 +134,58 @@ public class Hoverboard : GrabbableObject, IHittable
         base.Update();
         if (HandleDropping()) return;
         if (playerControlling == null || !IsHost) return;
-        if (hoverboardMode == HoverboardMode.Mounted && playerControlling.transform.GetParent() != hoverboardChild.Find("Seat")) {
-            playerControlling.transform.SetParent(hoverboardChild.Find("Seat"), true);
-            Plugin.Logger.LogInfo($"Setting parent of {playerControlling} to {playerControlling.transform.GetParent().name}");
+        if (hoverboardMode == HoverboardMode.Mounted && playerControlling.transform.GetParent() != hoverboardChild) {
+            playerControlling.transform.SetParent(hoverboardChild.transform, true);
+            Plugin.Logger.LogInfo($"Setting parent of {playerControlling} to {playerControlling.transform.GetParent()}");
         }
-        if (Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 5f || playerControlling.inAnimationWithEnemy || playerControlling.inSpecialInteractAnimation || (hoverboardMode == HoverboardMode.Mounted && playerControlling.isClimbingLadder)) {
+        if (Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 5f || playerControlling.inAnimationWithEnemy || playerControlling.isClimbingLadder || (hoverboardMode == HoverboardMode.Mounted && playerControlling.isClimbingLadder)) {
             DropHoverboard();
             return;
         }
-        #region stuff gets weird
+        #region Physics
         // maybe i should have this be in fixed update
 
         if (hoverboardMode == HoverboardMode.Mounted)
         {
-            playerControlling.moveInputVector = Vector2.zero;
             if (turnedOn)
             {
                 for (int i = 0; i < 4; i++)
-                { // use navmesh
+                {
                     ApplyForce(anchors[i], hits[i]);
                 }
             }
 
             if (_isHoverForwardHeld)
             {
-                hb.AddForce(Vector3.zero + hoverboardChild.right * 15f, ForceMode.Acceleration);
+                hb.AddForce(Vector3.zero + hoverboardChild.right * 15f * (playerControlling.isSprinting ? 1.5f : 1f), ForceMode.Acceleration);
             }
 
-            // Read the current mouse position
             Vector2 currentMouseDelta = Plugin.InputActionsInstance.MouseDelta.ReadValue<Vector2>();
 
-            // Determine the amount and direction of rotation based on mouse movement
             float turnSpeed = 0.1f; // Adjust the turn speed as needed
             float turnAmount = currentMouseDelta.x * turnSpeed;
 
             float turnAmountY = currentMouseDelta.y * turnSpeed * 0.8f;
-            Plugin.Logger.LogInfo($"{turnAmountY}");
-            // Apply the rotation to the hoverboard child
+            Vector2 inputVector = new Vector2(0, turnAmountY);
+
+            // Call CalculateSmoothLookingInput to handle the camera rotation
+            CalculateVerticalLookingInput(inputVector);
             hoverboardChild.Rotate(Vector3.up, turnAmount);
-            
-            // playerControlling.transform.Rotate(Vector3.up, -turnAmount);
-            // Log the hoverboard child's rotation for debugging
-            Plugin.Logger.LogInfo($"{hoverboardChild.rotation.x} + {hoverboardChild.rotation.y} + {hoverboardChild.rotation.z} + {hoverboardChild.rotation.w}");
-
-            // Reset the player's fall gravity (if necessary)
+            if (!isAdjusting)
+                CheckIfUpsideDown();
+            playerControlling.transform.position = hoverboardSeat.transform.position;
             playerControlling.ResetFallGravity();
-
-            // Update the previous mouse position
         }
-        //UpdatePositionsForClientsClientRpc(this.transform.position, this.transform.rotation, playerControlling.transform.position, playerControlling.transform.rotation);
+        UpdatePositionsForClientsClientRpc(this.transform.position, this.transform.rotation, hoverboardChild.position, hoverboardChild.rotation, playerControlling.transform.position, playerControlling.transform.rotation);
         #endregion
     }
     [ClientRpc]
-    public void UpdatePositionsForClientsClientRpc(Vector3 position, Quaternion rotation, Vector3 playerPosition, Quaternion playerRotation) {
+    public void UpdatePositionsForClientsClientRpc(Vector3 position, Quaternion rotation, Vector3 childPosition, Quaternion childRotation, Vector3 playerPosition, Quaternion playerRotation) {
         if (IsHost) return;
         this.transform.position = position;
         this.transform.rotation = rotation;
+        hoverboardChild.position = childPosition;
+        hoverboardChild.rotation = childRotation;
         playerControlling.transform.position = playerPosition;
         playerControlling.transform.rotation = playerRotation;
     }
@@ -178,11 +193,11 @@ public class Hoverboard : GrabbableObject, IHittable
         base.LateUpdate();
         if (!IsHost) return;
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-        if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) < 15 && !isInShipRoom) {
+        if (Vector3.Distance(hoverboardChild.position, StartOfRound.Instance.shipBounds.transform.position) < 12 && !isInShipRoom) {
             this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
             isInShipRoom = true;
             isInElevator = true;
-        } else if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) >= 15 && isInShipRoom) {
+        } else if (Vector3.Distance(hoverboardChild.position, StartOfRound.Instance.shipBounds.transform.position) >= 12 && isInShipRoom) {
             this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             isInShipRoom = false;
             isInElevator = false;
@@ -250,11 +265,12 @@ public class Hoverboard : GrabbableObject, IHittable
     public void ApplyForce(Transform anchor, RaycastHit hit)
     {
         LayerMask mask = LayerMask.GetMask("Room");
-        if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000, mask))
+        if (Physics.Raycast(anchor.position, -anchor.up, out hit, this.isInShipRoom ? 2.5f : 6f, mask))
         {
             if (IsPointOnNavMesh(hit.point, 6.0f)) // Adjust maxDistance as needed
             {
-                float force = Mathf.Abs(1 / (hit.point.y - anchor.position.y));
+                float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 1f : 5f);
+                
                 hb.AddForceAtPosition(transform.up * force * mult, anchor.position, ForceMode.Acceleration);
             }
         }
@@ -272,41 +288,27 @@ public class Hoverboard : GrabbableObject, IHittable
 	}
 
     [ServerRpc(RequireOwnership = false)]
-    internal void HbAddForceServerRpc(Vector3 forceDirection, float moveForce, bool impulse) {
+    public void HbAddForceServerRpc(Vector3 forceDirection, float moveForce, bool impulse) {
         HbAddForceClientRpc(forceDirection, moveForce, impulse);
     }
 
     [ClientRpc]
-    internal void HbAddForceClientRpc(Vector3 forceDirection, float moveForce, bool impulse) {
+    public void HbAddForceClientRpc(Vector3 forceDirection, float moveForce, bool impulse) {
         if (!impulse) hb.AddForce(forceDirection * moveForce, ForceMode.Acceleration);
         else hb.AddForce(forceDirection * moveForce, ForceMode.Impulse);
+        Plugin.Logger.LogInfo($"Force applied to {this}");
+
     }
     [ServerRpc(RequireOwnership = false)]
-    internal void SetTargetServerRpc(int PlayerID) {
+    public void SetTargetServerRpc(int PlayerID) {
         SetTargetClientRpc(PlayerID);
     }
-    /*[ClientRpc]
-    internal void ApplyForcesForHoverboardClientRpc() {
-        if (Vector3.Distance(transform.position, playerControlling.transform.position) > 5f) {
-            DropHoverboard(true);
-            return;
-        }
-        if (_isHoverForwardHeld && playerControlling == GameNetworkManager.Instance.localPlayerController) {
-            hb.AddForce(Vector3.zero + transform.right * 40f, ForceMode.Acceleration);
-        }
-        if (turnedOn) {
-            for (int i = 0; i < 4; i++) {
-                ApplyForce(anchors[i], hits[i]);
-            }
-        }
-    }*/
     [ClientRpc]
-    internal void SetTargetClientRpc(int PlayerID) {
+    public void SetTargetClientRpc(int PlayerID) {
         if (PlayerID == -1) {
-            // playerControlling.transform.rotation = Quaternion.identity;
             playerControlling.playerActions.Movement.Jump.Enable();
             playerControlling.playerActions.Movement.Look.Enable();
-            playerControlling.quickMenuManager.isMenuOpen = false;
+            playerControlling.movementSpeed = playerMovementSpeed;
             if (IsHost) {
                 playerControlling.transform.SetParent(null, true);
             }
@@ -324,41 +326,12 @@ public class Hoverboard : GrabbableObject, IHittable
             return;
         }
         playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
-        if (IsHost) {
-            //this.transform.Find("PlayerOffsetGameObject").transform.position = Vector3.zero;
-            oldParent = playerControlling.transform.GetParent();
-            Transform parentToUse = hoverboardSeat.transform.GetParent();
-            playerControlling.transform.SetParent(parentToUse, true);
-        }
-        playerControlling.playerActions.Movement.Look.Disable();
-        playerControlling.playerActions.Movement.Jump.Disable();
         playerControlling.transform.position = hoverboardSeat.transform.position;
         playerControlling.transform.rotation = hoverboardSeat.transform.rotation * Quaternion.Euler(0, 90, 0);
         
         // playerRidingCollider.enabled = true;
         Plugin.Logger.LogInfo($"{this} setting target to: {playerControlling.playerUsername}");
     }
-    /*[ClientRpc]
-    internal void SetHoverboardPositionClientRpc() {
-        Quaternion playerRotation = playerControlling.transform.rotation;
-        Quaternion rotationOffset;
-        if (hoverboardMode == HoverboardMode.Held) {
-            // Position the hoverboard to the right side of the player
-            this.transform.position = playerControlling.transform.position + playerControlling.transform.right * 0.7f + playerControlling.transform.up * 1f;
-
-            // Make the hoverboard face upwards with its up vector pointing to the player's right hand
-            rotationOffset = Quaternion.Euler(180, 180, -90); // Adjust to match correct facing direction
-            this.transform.rotation = playerRotation * rotationOffset;
-            return;
-        }
-
-        if (hoverboardMode == HoverboardMode.Mounted) {
-            playerControlling.transform.position = hoverboardSeat.transform.position;
-            rotationOffset = Quaternion.Euler(0, -90, 0); // 90 degrees to the left around the y-axis
-            this.transform.rotation = playerRotation * rotationOffset;
-            playerControlling.ResetFallGravity();
-        }
-    }*/
     [ServerRpc(RequireOwnership = false)]
     internal void SetHoverboardHeldServerRpc(bool held) {
         SetHoverboardHeldClientRpc(held);
@@ -373,12 +346,15 @@ public class Hoverboard : GrabbableObject, IHittable
     }
     [ClientRpc]
     internal void SetHoverboardStateClientRpc(int state) {
-        if (playerControlling == null) {
+        if (playerControlling == null && hoverboardMode != HoverboardMode.None) {
             Plugin.Logger.LogInfo($"Player controlling is null for me...");
         }
         switch(state) {
             case 0:
                 hoverboardMode = HoverboardMode.None;
+                if (IsHost) {
+                    this.transform.SetParent(null, true);
+                }
                 turnedOn = false;
                 _isHoverForwardHeld = false;
                 hb.useGravity = true;
@@ -386,15 +362,35 @@ public class Hoverboard : GrabbableObject, IHittable
                 trigger.interactable = true;
                 break;
             case 1:
+                if (IsHost) {
+                    playerControlling.transform.SetParent(null, true);
+                    this.transform.SetParent(playerControlling.transform, true);
+                }
                 hoverboardMode = HoverboardMode.Held;
+                playerControlling.playerActions.Movement.Look.Enable();
+                playerControlling.playerActions.Movement.Jump.Enable();
+                playerControlling.movementSpeed = playerMovementSpeed;
+                hoverboardChild.position = playerControlling.transform.position + playerControlling.transform.right * 0.7f + playerControlling.transform.up * 1f;
+                // Make the hoverboard face upwards with its up vector pointing to the player's right hand
+                Quaternion rotationOffset = Quaternion.Euler(180, 180, -90); // Adjust to match correct facing direction
+                hoverboardChild.rotation = playerControlling.transform.rotation * rotationOffset;
                 _isHoverForwardHeld = false;
                 turnedOn = false;
                 hb.useGravity = false;
                 hb.isKinematic = true;
                 break;
             case 2:
+                if (IsHost) {
+                    playerControlling.transform.SetParent(hoverboardChild.transform, true);
+                }
                 hoverboardMode = HoverboardMode.Mounted;
-                turnedOn = true;
+                playerControlling.playerActions.Movement.Look.Disable();
+                playerControlling.playerActions.Movement.Jump.Disable();
+                playerMovementSpeed = playerControlling.movementSpeed;
+                playerControlling.movementSpeed = 0f;
+                hoverboardChild.rotation = resetChildRotation;
+                StartCoroutine(TurnOnHoverboard());
+                hoverboardChild.position += Vector3.up * 0.1f;
                 hb.useGravity = true;
                 hb.isKinematic = false;
                 trigger.interactable = false;
@@ -402,6 +398,9 @@ public class Hoverboard : GrabbableObject, IHittable
                 break;
             default:
                 hoverboardMode = HoverboardMode.None;
+                if (IsHost) {
+                    this.transform.SetParent(null, true);
+                }
                 _isHoverForwardHeld = false;
                 turnedOn = false;
                 hb.useGravity = true;
@@ -412,6 +411,11 @@ public class Hoverboard : GrabbableObject, IHittable
                 break;
         }
         HandleToolTips();
+    }
+    public IEnumerator TurnOnHoverboard() {
+        yield return new WaitForSeconds(0.5f);
+        if (hoverboardMode != HoverboardMode.Mounted) yield break;
+        turnedOn = true;
     }
     public override void FallWithCurve() {
         return;
@@ -495,5 +499,47 @@ public class Hoverboard : GrabbableObject, IHittable
                 $"Switch Mode (Held) : [{Plugin.InputActionsInstance.SwitchMode.GetBindingDisplayString().Split(" ")[0]}]",
             ]);
         }
+    }
+    private void CalculateVerticalLookingInput(Vector2 inputVector)
+    {
+        if (!playerControlling.smoothLookEnabledLastFrame)
+        {
+            playerControlling.smoothLookEnabledLastFrame = true;
+            playerControlling.smoothLookTurnCompass.rotation = playerControlling.gameplayCamera.transform.rotation;
+            playerControlling.smoothLookTurnCompass.SetParent(null);
+        }
+        
+        playerControlling.cameraUp -= inputVector.y;
+        playerControlling.cameraUp = Mathf.Clamp(playerControlling.cameraUp, -80f, 60f);
+        playerControlling.smoothLookTurnCompass.localEulerAngles = new Vector3(playerControlling.cameraUp, playerControlling.smoothLookTurnCompass.localEulerAngles.y, playerControlling.smoothLookTurnCompass.localEulerAngles.z);
+        playerControlling.gameplayCamera.transform.localEulerAngles = new Vector3(Mathf.LerpAngle(playerControlling.gameplayCamera.transform.localEulerAngles.x, playerControlling.cameraUp, playerControlling.smoothLookMultiplier * Time.deltaTime), playerControlling.gameplayCamera.transform.localEulerAngles.y, playerControlling.gameplayCamera.transform.localEulerAngles.z);
+    }
+
+    private void CheckIfUpsideDown()
+    {
+        // Check if the hoverboard's up vector is pointing down
+        if (Vector3.Dot(hoverboardChild.up, Vector3.down) > 0)
+        {
+            // If upside down, start the adjustment process
+            targetRotation = Quaternion.LookRotation(hoverboardChild.forward, Vector3.up);
+            StartCoroutine(AdjustOrientation());
+        }
+    }
+    private IEnumerator AdjustOrientation()
+    {
+        isAdjusting = true;
+        float duration = 1f;
+        float elapsed = 0f;
+        Quaternion initialRotation = hoverboardChild.rotation;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            hoverboardChild.rotation = Quaternion.Lerp(initialRotation, targetRotation, elapsed / duration);
+            yield return null;
+        }
+
+        hoverboardChild.rotation = targetRotation;
+        isAdjusting = false;
     }
 }
