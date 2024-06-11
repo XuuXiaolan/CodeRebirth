@@ -35,6 +35,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigScrapMasterPowerLevel { get; private set; }
         // Weather Specific
+        public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         public ConfigEntry<string> ConfigMeteorShowerMoonsBlacklist { get; private set; }
         public ConfigEntry<string> ConfigTornadoType { get; private set; }
@@ -44,6 +45,10 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Meteor Strikes Ship",
+                                                true,
+                                                "Chance of hitting the ship with a meteor.");
             ConfigAllowCrits = configFile.Bind("Weapon Options",
                                                 "Weapons | Crits",
                                                 true,

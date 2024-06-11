@@ -25,7 +25,7 @@ static class StartOfRoundPatch {
 	
 	[HarmonyPatch(nameof(StartOfRound.Awake))]
 	[HarmonyPostfix]
-	public static void StartOfRound_Start(ref StartOfRound __instance)
+	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
 	}

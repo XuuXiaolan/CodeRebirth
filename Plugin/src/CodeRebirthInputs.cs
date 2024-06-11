@@ -1,4 +1,5 @@
 using LethalCompanyInputUtils.Api;
+using LethalCompanyInputUtils.BindingPathEnums;
 using UnityEngine.InputSystem;
 
 namespace CodeRebirth.Keybinds;
@@ -23,4 +24,7 @@ public class IngameKeybinds : LcInputActions {
 
     [InputAction("<Keyboard>/f", Name = "SwitchMode")]
     public InputAction SwitchMode { get; set; }
+
+    [InputAction(MouseControl.Delta, Name = "MouseDelta")]
+    public InputAction MouseDelta { get; set; }
 }
