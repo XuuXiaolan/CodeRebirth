@@ -5,7 +5,7 @@ using UnityEngine;
 using CodeRebirth.ScrapStuff;
 
 namespace CodeRebirth.ItemStuff;
-public class Wallet : GrabbableObject {
+public class Wallet : GrabbableObject { // default value: takes a lot money, takes up a slot 
     private RaycastHit hit;
     private ScanNodeProperties scanNode;
     private SkinnedMeshRenderer skinnedMeshRenderer;

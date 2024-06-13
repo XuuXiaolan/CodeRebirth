@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 290633720612609035}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0, z: -0.5}
+  m_LocalPosition: {x: -1, y: -0.1, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 1699817361000750367}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.33, y: 0, z: 0.5}
+  m_LocalPosition: {x: 1.33, y: -0.1, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -75,8 +75,8 @@ GameObject:
   - component: {fileID: 6873435658981610133}
   - component: {fileID: 8455382249001226961}
   - component: {fileID: 1923293930707144410}
-  - component: {fileID: 1182913378324994228}
-  - component: {fileID: 4918301245646654944}
+  - component: {fileID: 1641907640691722984}
+  - component: {fileID: 7481496084726876323}
   m_Layer: 9
   m_Name: HoverboardChild
   m_TagString: InteractTrigger
@@ -125,7 +125,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 147319470
+    m_Bits: 1039662783
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
@@ -146,14 +146,14 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 147319470
+    m_Bits: 1039662783
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.492408, y: 0.4, z: 1.1}
-  m_Center: {x: 0.1462043, y: 0, z: 0}
+  m_Size: {x: 2.492408, y: 0.5571507, z: 1.1}
+  m_Center: {x: 0.14620435, y: -0.15011281, z: 0}
 --- !u!114 &8455382249001226961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,7 +314,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1182913378324994228
+--- !u!114 &1641907640691722984
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3244500461203868027}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1986756608, guid: 0c966d9ef2bdddf4a953d6e0bab28932, type: 3}
+  m_Script: {fileID: -1553406892, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1
@@ -344,7 +344,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 0
   SlerpPosition: 0
---- !u!114 &4918301245646654944
+--- !u!114 &7481496084726876323
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -381,7 +381,7 @@ Transform:
   m_GameObject: {fileID: 3399338272138284559}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.251, y: 0.112999976, z: 0}
+  m_LocalPosition: {x: 0.251, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -608,7 +608,7 @@ Transform:
   m_GameObject: {fileID: 6291100969286811692}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.33, y: 0, z: -0.5}
+  m_LocalPosition: {x: 1.33, y: -0.1, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -639,7 +639,7 @@ Transform:
   m_GameObject: {fileID: 6314028827297847542}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0, z: 0.5}
+  m_LocalPosition: {x: -1, y: -0.1, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -742,11 +742,11 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 684190382
+    m_Bits: 1039662783
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3306556, y: 1.0005364, z: 0.3073099}
-  m_Center: {x: 0.16510992, y: -0.00027990437, z: 0.0040439814}
+  m_Size: {x: 2.3306556, y: 1.0005364, z: 0.32445186}
+  m_Center: {x: 0.16510992, y: -0.00027984433, z: -0.24779184}
