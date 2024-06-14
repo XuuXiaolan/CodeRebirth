@@ -157,8 +157,12 @@ public class Hoverboard : GrabbableObject, IHittable {
         base.Update();
         if (HandleDropping()) return;
         if (playerControlling == null) return;
-        if (Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 5) {
-            DropHoverboard();
+        if (playerControlling == GameNetworkManager.Instance.localPlayerController && Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 5) {
+            if (IsHost) {
+                SetHoverboardStateClientRpc(1);
+            } else {
+                SetHoverboardStateServerRpc(1);
+            }
             return;
         }
         if (playerControlling == GameNetworkManager.Instance.localPlayerController && hoverboardMode == HoverboardMode.Mounted) {

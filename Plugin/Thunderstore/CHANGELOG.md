@@ -1,4 +1,4 @@
-## v0.0.4
+## v0.1.0
 - Added new item, SnowGlobe.
 - Added configs for SnowGlobe.
 - Added a loooooot of configs.
@@ -9,6 +9,10 @@
 - Improved meteor spawning location.
 - Added new shop item, hoverboard.
 - Added config and chance for critical hit from code rebirth weapons.
+- Added tornado.
+- Updated readme.
+- Updated all icons.
+- Updated meteorite Crystals
 
 ## v0.0.3
 - Added moon blacklist config for the weather.
