@@ -25,7 +25,7 @@ public class Wallet : GrabbableObject { // default value: takes a lot money, tak
             GetComponent<AudioSource>().Play();
             UpdateScrapValueServerRpc(coin.scrapValue);
             NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
-            float newblendShapeWeight = Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0)+10f, 0, 300);
+            float newblendShapeWeight = Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0)+20f, 0, 300);
             if (playerHeldBy) {
                 IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
             }
