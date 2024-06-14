@@ -274,6 +274,8 @@ public class Hoverboard : GrabbableObject, IHittable {
     public void ApplyForce(Transform anchor, RaycastHit hit) {
         LayerMask mask = LayerMask.GetMask("Room");
         if (Physics.Raycast(anchor.position, -anchor.up, out hit, this.isInShipRoom ? 2.5f : 20f, mask)) {
+            float dotProduct = Vector3.Dot(hit.normal, Vector3.up);
+            if (dotProduct <= 0.3f) return;
             if (IsPointOnNavMesh(hit.point, 6.0f)) // Adjust maxDistance as needed
             {
                 float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 2.5f : 20f);
@@ -375,8 +377,19 @@ public class Hoverboard : GrabbableObject, IHittable {
     public void SwitchToMounted() {
         if (hoverboardMode == HoverboardMode.Held) {
             hoverboardChild.position = playerControlling.transform.position;
+            PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
+            if (IsServer) {
+                if (isInShipRoom) {
+                    this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
+                } else {
+                    this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
+                }
+            }      
         }
         hoverboardChild.rotation = resetChildRotation;
+        if (hoverboardMode == HoverboardMode.Held) {
+            hoverboardChild.rotation = playerControlling.transform.rotation * Quaternion.Euler(0, -90, 0);
+        }
         hoverboardChild.position += Vector3.up * 0.3f;
         playerControlling.transform.SetParent(hoverboardSeat.transform, true);
         if (GameNetworkManager.Instance.localPlayerController == playerControlling) {
@@ -395,14 +408,13 @@ public class Hoverboard : GrabbableObject, IHittable {
     }
     public void SwitchToHeld() {
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-        realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
         if (IsHost) {
             if (playerControlling.isInHangarShipRoom) {
                 playerControlling.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
             } else {
                 playerControlling.transform.SetParent(realPlayer.playersManager.playersContainer, true);
             }
-        }
+        } // this might not be good, this host check
         if (IsServer) {
             this.transform.SetParent(playerControlling.transform, true);
         }
