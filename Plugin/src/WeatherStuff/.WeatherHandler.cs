@@ -27,12 +27,12 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		
 		[LoadFromBundle("MeteorShowerWeather.prefab")]
 		public GameObject MeteorPermanentEffectPrefab { get; private set; }
-		[LoadFromBundle("Meteor.prefab")]
+		[LoadFromBundle("TornadoMain.prefab")]
 		public GameObject TornadoPrefab { get; private set; }
-		[LoadFromBundle("MeteorContainer.prefab")]
+		[LoadFromBundle("TornadoContainer.prefab")]
 		public GameObject TornadoEffectPrefab { get; private set; }
 		
-		[LoadFromBundle("MeteorShowerWeather.prefab")]
+		[LoadFromBundle("TornadoWeather.prefab")]
 		public GameObject TornadoPermanentEffectPrefab { get; private set; }
 	}
 
@@ -44,7 +44,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		Assets = new WeatherAssets("coderebirthasset");
 
 		RegisterMeteorShower();
-		// RegisterTornadoWeather();
+		RegisterTornadoWeather();
 	}
 
 	void RegisterTornadoWeather() {
@@ -56,14 +56,14 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
 		GameObject.DontDestroyOnLoad(effectPermanentObject);
 		TornadosWeather = new WeatherEffect() {
-			name = "Tornados",
+			name = "Windy",
 			effectObject = effectObject,
 			effectPermanentObject = effectPermanentObject,
 			lerpPosition = false,
-			sunAnimatorBool = "eclipse",
+			sunAnimatorBool = "",
 			transitioning = false
 			};
-		Weathers.RegisterWeather("Tornados", TornadosWeather, Levels.LevelTypes.All, 0, 0);
+		Weathers.RegisterWeather("Windy", TornadosWeather, Levels.LevelTypes.All, 0, 0);
 	}
 	void RegisterMeteorShower() {
 		Plugin.samplePrefabs.Add("Meteorite", Assets.MeteoriteItem);

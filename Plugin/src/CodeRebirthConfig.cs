@@ -35,6 +35,8 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigScrapMasterPowerLevel { get; private set; }
         // Weather Specific
+        public ConfigEntry<float> ConfigMeteorShowerMeteoriteSpawnChance { get; private set; }
+        public ConfigEntry<float> ConfigMeteorShowerInShipVolume { get; private set; }
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         public ConfigEntry<string> ConfigMeteorShowerMoonsBlacklist { get; private set; }
@@ -45,6 +47,14 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Meteorite Spawn Chance",
+                                                1f,
+                                                "Chance of spawning a meteorite when a meteor is spawned (0 to 100 decimals included).");
+            ConfigMeteorShowerInShipVolume = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Meteor Volume",
+                                                1f,
+                                                "Multiplier of the meteors' volume for when the player is in the ship and the ship door is closed.");
             ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteor Strikes Ship",
                                                 true,

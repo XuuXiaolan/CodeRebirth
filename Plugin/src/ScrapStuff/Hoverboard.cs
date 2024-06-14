@@ -12,7 +12,7 @@ using UnityEngine.AI;
 using CodeRebirth.Patches;
 
 namespace CodeRebirth.ScrapStuff;
-public class Hoverboard : GrabbableObject, IHittable {
+public class Hoverboard : GrabbableObject {
     public Rigidbody hb;
     public InteractTrigger trigger;
     private bool turnedOn = false;
@@ -144,7 +144,7 @@ public class Hoverboard : GrabbableObject, IHittable {
 
     public void FixedUpdate() {
         if (playerControlling == null) return;
-        if (IsServer) {
+        if (GameNetworkManager.Instance.localPlayerController == playerControlling) {
             if (hoverboardMode != HoverboardMode.Held && turnedOn) {
                 for (int i = 0; i < 4; i++) {
                     ApplyForce(anchors[i], hits[i]);
@@ -273,24 +273,10 @@ public class Hoverboard : GrabbableObject, IHittable {
 
     public void ApplyForce(Transform anchor, RaycastHit hit) {
         LayerMask mask = LayerMask.GetMask("Room");
-        if (Physics.Raycast(anchor.position, -anchor.up, out hit, this.isInShipRoom ? 2.5f : 20f, mask)) {
-            float dotProduct = Vector3.Dot(hit.normal, Vector3.up);
-            if (dotProduct <= 0.3f) return;
-            if (IsPointOnNavMesh(hit.point, 6.0f)) // Adjust maxDistance as needed
-            {
-                float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 2.5f : 20f);
-                hb.AddForceAtPosition(transform.up * force * mult, anchor.position, ForceMode.Acceleration);
-            }
+        if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000f, mask)) {
+            float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 3f : 100f);
+            hb.AddForceAtPosition(transform.up * force * mult, anchor.position, ForceMode.Acceleration);
         }
-    }
-
-    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
-        if (IsHost) {
-            hb.AddForce(hitDirection.normalized * force * 100, ForceMode.Impulse);
-        } else {
-            HbAddForceServerRpc(hitDirection.normalized, force * 100, true);
-        }
-        return true;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -377,14 +363,14 @@ public class Hoverboard : GrabbableObject, IHittable {
     public void SwitchToMounted() {
         if (hoverboardMode == HoverboardMode.Held) {
             hoverboardChild.position = playerControlling.transform.position;
-            PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
             if (IsServer) {
+                PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
                 if (isInShipRoom) {
                     this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
                 } else {
                     this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
                 }
-            }      
+            }
         }
         hoverboardChild.rotation = resetChildRotation;
         if (hoverboardMode == HoverboardMode.Held) {
@@ -400,7 +386,9 @@ public class Hoverboard : GrabbableObject, IHittable {
         playerControlling.playerActions.Movement.Jump.Disable();
         playerMovementSpeed = playerControlling.movementSpeed;
         playerControlling.movementSpeed = 0f;
-        if (playerControlling == GameNetworkManager.Instance.localPlayerController) StartCoroutine(TurnOnHoverboard());
+        if (playerControlling == GameNetworkManager.Instance.localPlayerController) {
+            StartCoroutine(TurnOnHoverboard());
+        }
         hb.useGravity = true;
         hb.isKinematic = false;
         trigger.interactable = false;
@@ -408,13 +396,11 @@ public class Hoverboard : GrabbableObject, IHittable {
     }
     public void SwitchToHeld() {
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-        if (IsHost) {
-            if (playerControlling.isInHangarShipRoom) {
-                playerControlling.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
-            } else {
-                playerControlling.transform.SetParent(realPlayer.playersManager.playersContainer, true);
-            }
-        } // this might not be good, this host check
+        if (playerControlling.isInHangarShipRoom) {
+            playerControlling.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
+        } else {
+            playerControlling.transform.SetParent(realPlayer.playersManager.playersContainer, true);
+        }
         if (IsServer) {
             this.transform.SetParent(playerControlling.transform, true);
         }
@@ -434,7 +420,6 @@ public class Hoverboard : GrabbableObject, IHittable {
     public void SwitchToNothing() {
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
         hoverboardMode = HoverboardMode.None;
-        realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
         if (IsServer) {
             if (isInShipRoom) {
                 this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);

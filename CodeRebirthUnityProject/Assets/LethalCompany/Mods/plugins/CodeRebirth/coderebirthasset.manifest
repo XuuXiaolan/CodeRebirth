@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 461181054
+CRC: 107391931
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5bf150b84b92553567ce68900b4253ed
+    Hash: 93a0d0623f7c6bb7af3f9d95227b869a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 0017ae4c26681ed42f23f9b5e5962c3b
+    Hash: 8c33623db8e4c44ddc539c88f7bdf048
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 5bf150b84b92553567ce68900b4253ed
+    Hash: 93a0d0623f7c6bb7af3f9d95227b869a
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -61,6 +61,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: c5a15fd86cfe211173eb68d9b08fcff2, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3d0cf24d2ccc3b7eab72048d0f57c437, type: 3}
@@ -74,6 +76,8 @@ ClassTypes:
   Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
+- Class: 114
+  Script: {fileID: -1553406892, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: -1478546698, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
@@ -107,9 +111,11 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 1390535004, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
-  Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  Script: {fileID: -2005933097, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
-  Script: {fileID: -1553406892, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  Script: {fileID: -1794557871, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 134
@@ -176,10 +182,10 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/QuestFail.mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/WesleyCubeMeteor.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Weapons/EpicAxe/Textures/Axe1H_Epic_MetallicSmoothness.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoContainer.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/TornadoShaderVersion/Prefabs/TornadoContainer.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ScrapMaster/Bestiary/ScrapMasterTK.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Animations/HoldSnowGlobe.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Hoverboard/TerminalNode/HoverboardTerminalNode.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Animations/HoldSnowGlobe.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/DuckSpawn
   (1).mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Textures/SnowGlobe_BaseMap.png
@@ -193,6 +199,7 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/ButterflyObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Animations/SnowGlobeShipAnimator.controller
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/DuckEnemy.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoContainer.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/DuckSongRe.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Hoverboard/HoverboardObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_MaskMap.png
@@ -225,9 +232,9 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Disco_Ball_001_normal.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Textures/SnowGlobe_MaskMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Bestiary/SnailCatTN.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Bestiary/CutieFlyTK.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Weapons/EpicAxe/Prefab/Axe1H_Epic.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/BodyMaterial.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Bestiary/CutieFlyTK.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/Questgiving.mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/ItemCrate/Crate.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/PocketFlashlight.ogg
@@ -239,8 +246,8 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/SnailCatEnemy/Material/Walking.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Animations/GotAny.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_MaskMap.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ScrapMaster/ScrapMasterAnimController.controller
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Meteor.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Money-Icon.png
@@ -265,6 +272,7 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Material/Base.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Audio/AfterQuestFail.mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/CodeRebirthUtils.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoMain.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialBlue.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorShowerWeather.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/SnowGlobe/Textures/particle-snow.png
@@ -277,7 +285,8 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/GrapeMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/Duck/Animations/Playersuccess.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ScrapMaster/Bestiary/ScrapMasterTN.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoWeather.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/TornadoShaderVersion/Prefabs/TornadoWeather.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Ambient/ButterflyEnemy/Material/butterflything.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Money/Textures/Coin_Coin_BaseMap.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoWeather.prefab
 Dependencies: []
