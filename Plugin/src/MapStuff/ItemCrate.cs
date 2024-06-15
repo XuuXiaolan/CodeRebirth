@@ -34,6 +34,8 @@ public class ItemCrate : CRHittable {
 	
 	public Pickable pickable;
 
+	Animator animator;
+    
 	public bool opened;
 	public float digProgress;
 
@@ -55,7 +57,8 @@ public class ItemCrate : CRHittable {
 			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.MetalCrateMesh;
 		}
 		trigger = GetComponent<InteractTrigger>();
-		pickable = GetComponent <Pickable>();
+		pickable = GetComponent<Pickable>();
+		animator = GetComponent<Animator>();
 		trigger.onInteractEarly.AddListener(OnInteractEarly);
         trigger.onInteract.AddListener(OnInteract);
         trigger.onStopInteract.AddListener(OnInteractCancel);
@@ -123,9 +126,9 @@ public class ItemCrate : CRHittable {
 		pickable.IsLocked = false;
 		openSFX.Play();
 		trigger.enabled = false;
-		mainRenderer.enabled = false;
 		GetComponent<Collider>().enabled = false;
 		opened = true;
+		animator.SetBool("opened", true);
 	}
 
 	public IEnumerator DestoryAfterSound() {
@@ -134,6 +137,10 @@ public class ItemCrate : CRHittable {
 		if (crateType == CrateType.Wooden) Destroy(gameObject);
 	}
 
+	public void OpenAnimationFinished() {
+		mainRenderer.enabled = false;
+	}
+    
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
 		float progressChange = random.NextFloat(0.15f, 0.25f);
 		digProgress = Mathf.Min(digProgress + progressChange, 1);
