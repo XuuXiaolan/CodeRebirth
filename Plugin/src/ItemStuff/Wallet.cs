@@ -15,9 +15,6 @@ public class Wallet : GrabbableObject { // default value: takes a lot money, tak
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         scanNode = GetComponentInChildren<ScanNodeProperties>();
     }
-    public override void FallWithCurve() {
-        return;
-    }
     public void StartBaseImportant() {
         this.propColliders = base.gameObject.GetComponentsInChildren<Collider>();
         this.originalScale = base.transform.localScale;

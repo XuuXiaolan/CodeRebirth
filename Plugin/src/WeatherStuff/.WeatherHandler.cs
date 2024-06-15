@@ -60,7 +60,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 			effectObject = effectObject,
 			effectPermanentObject = effectPermanentObject,
 			lerpPosition = false,
-			sunAnimatorBool = "",
+			sunAnimatorBool = "eclipse",
 			transitioning = false
 			};
 		Weathers.RegisterWeather("Windy", TornadosWeather, Levels.LevelTypes.All, 0, 0);
