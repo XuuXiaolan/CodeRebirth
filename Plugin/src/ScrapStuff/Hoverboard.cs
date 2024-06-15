@@ -62,11 +62,11 @@ public class Hoverboard : GrabbableObject {
         resetChildRotation = hoverboardChild.rotation;
         if (IsServer) {
             PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-            if (Vector3.Distance(hoverboardChild.position, StartOfRound.Instance.shipBounds.transform.position) < 12 && !isInShipRoom) {
+            if (StartOfRound.Instance.shipBounds.bounds.Contains(this.hoverboardChild.position) && !isInShipRoom) {
                 this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
                 isInShipRoom = true;
                 isInElevator = true;
-            } else if (Vector3.Distance(hoverboardChild.position, StartOfRound.Instance.shipBounds.transform.position) >= 12 && isInShipRoom) {
+            } else if (!StartOfRound.Instance.shipBounds.bounds.Contains(this.hoverboardChild.position) && isInShipRoom) {
                 this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
                 isInShipRoom = false;
                 isInElevator = false;
@@ -206,13 +206,13 @@ public class Hoverboard : GrabbableObject {
 
     public override void LateUpdate() {
         base.LateUpdate();
-        if (!IsServer || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving) return;
+        if (!IsServer || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving && hoverboardMode != HoverboardMode.Held) return;
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-        if (Vector3.Distance(hoverboardChild.position, StartOfRound.Instance.shipBounds.transform.position) < 12 && !isInShipRoom) {
+        if (StartOfRound.Instance.shipBounds.bounds.Contains(this.hoverboardChild.position) && !isInShipRoom) {
             this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
             isInShipRoom = true;
             isInElevator = true;
-        } else if (Vector3.Distance(hoverboardChild.position, StartOfRound.Instance.shipBounds.transform.position) >= 12 && isInShipRoom) {
+        } else if (!StartOfRound.Instance.shipBounds.bounds.Contains(this.hoverboardChild.position) && isInShipRoom) {
             this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             isInShipRoom = false;
             isInElevator = false;
@@ -301,7 +301,7 @@ public class Hoverboard : GrabbableObject {
             playerControlling.playerActions.Movement.Jump.Enable();
             playerControlling.playerActions.Movement.Look.Enable();
             playerControlling.movementSpeed = playerMovementSpeed;
-            if (playerControlling.isInHangarShipRoom || Vector3.Distance(playerControlling.transform.position, StartOfRound.Instance.shipBounds.transform.position) > 12f) {
+            if (playerControlling.isInHangarShipRoom || StartOfRound.Instance.shipBounds.bounds.Contains(this.playerControlling.transform.position)) {
                 playerControlling.transform.SetParent(playerControlling.playersManager.elevatorTransform, true);
             } else {
                 playerControlling.transform.SetParent(playerControlling.playersManager.playersContainer, true);

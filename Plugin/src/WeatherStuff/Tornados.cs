@@ -81,7 +81,7 @@ public class Tornados : NetworkBehaviour
         }
     }
     private void FixedUpdate() {
-        if (!(GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom || GameNetworkManager.Instance.localPlayerController.isInsideFactory) && Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) < 100f) {
+        if (!(StartOfRound.Instance.shipBounds.bounds.Contains(GameNetworkManager.Instance.localPlayerController.transform.position) || GameNetworkManager.Instance.localPlayerController.isInsideFactory) && Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) < 100f) {
             Vector3 directionToCenter = (transform.position - GameNetworkManager.Instance.localPlayerController.transform.position).normalized;
             float forceStrength = CalculatePullStrength(Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position));
             GameNetworkManager.Instance.localPlayerController.externalForces += directionToCenter * forceStrength;
