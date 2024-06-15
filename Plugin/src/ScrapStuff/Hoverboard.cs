@@ -156,6 +156,10 @@ public class Hoverboard : GrabbableObject {
     public override void Update() {
         base.Update();
         if (HandleDropping()) return;
+        if ((hoverboardMode == HoverboardMode.Held || hoverboardMode == HoverboardMode.Mounted) && playerControlling == null) {
+            DropHoverboard();
+            return;
+        }
         if (playerControlling == null) return;
         if (playerControlling == GameNetworkManager.Instance.localPlayerController && Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 5) {
             if (IsHost) {
