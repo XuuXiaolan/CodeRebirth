@@ -35,7 +35,7 @@ static class StartOfRoundPatch {
 											    .Select(name => name.Trim())
 											    .ToArray();
 		LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", levelOverrides: meteorLevelOverrides);
-		LethalLib.Modules.Weathers.RemoveWeather("Tornados", levelOverrides: tornadoLevelOverrides);
+		LethalLib.Modules.Weathers.RemoveWeather("Windy", levelOverrides: tornadoLevelOverrides);
 	}
 	
 	[HarmonyPatch(nameof(StartOfRound.OnDisable))]

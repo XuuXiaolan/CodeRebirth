@@ -3,6 +3,10 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using CodeRebirth.ScrapStuff;
+using System;
+using System.Collections;
+using System.Linq;
+using UnityEngine.InputSystem;
 
 namespace CodeRebirth.ItemStuff;
 public class Wallet : GrabbableObject { // default value: takes a lot money, takes up a slot
@@ -10,7 +14,13 @@ public class Wallet : GrabbableObject { // default value: takes a lot money, tak
     private RaycastHit hit;
     private ScanNodeProperties scanNode;
     private SkinnedMeshRenderer skinnedMeshRenderer;
-    public override void Start() { // you'll need to do stuff like giving the wallet a client network transform if the position isn't sync'ing properly, then you'd do stuff with changing ownership, see hoverboard for how i do it, its simple
+    public Transform WalletChild;
+    public enum WalletModes {
+        Held,
+        None,
+    }
+    private WalletModes walletMode = WalletModes.None;
+    public override void Start() {
         StartBaseImportant();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         scanNode = GetComponentInChildren<ScanNodeProperties>();
@@ -49,27 +59,44 @@ public class Wallet : GrabbableObject { // default value: takes a lot money, tak
         trigger.onInteract.AddListener(OnInteract);
     }
     public void OnInteract(PlayerControllerB player) {
-        playerHeldBy = player; // rpc this probably
-        // parent wallet to player and position it to their right pocket or smthn
+        if (GameNetworkManager.Instance.localPlayerController != player) return;
+        StartCoroutine(OnInteractCoroutine(player));
+    }
+    public IEnumerator OnInteractCoroutine(PlayerControllerB player) {
+        if (IsHost) {
+            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+            yield return new WaitUntil(() => playerHeldBy == player);
+        } else {
+            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+            yield return new WaitUntil(() => playerHeldBy == player);
+        }
     }
     public override void Update() {
         base.Update();
         if (playerHeldBy == null || GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
+        Plugin.Logger.LogDebug($"playerHeldBy: {playerHeldBy}");
         HandleItemActivate();
         HandleItemDrop();
         HandleItemSell();
     }
     public void HandleItemSell() {
         if (!Plugin.InputActionsInstance.WalletSell.triggered) return;
-        // basically check if the player's screen's tooltips thing says smthn about selling to company moon when holding over the counter or some raycast of some sort
+        // place wallet in company counter
     }
     public void HandleItemDrop() {
         if (!Plugin.InputActionsInstance.WalletDrop.triggered) return;
-        // make a couple rpc's, switch a few booleans
-        // drop the wallet infront of the player onto the ground or smthn
+        DropWallet();
+    }
+    public void DropWallet() {
+        if (IsHost) {
+            SetTargetClientRpc(-1);
+        } else {
+            SetTargetServerRpc(-1);
+        }
     }
     public void HandleItemActivate() {
         if (!Plugin.InputActionsInstance.WalletActivate.triggered) return;
+        UpdateToolTips();
         var interactRay = new Ray(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
         if (Physics.Raycast(interactRay, out hit, playerHeldBy.grabDistance, playerHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8)
         {
@@ -120,5 +147,71 @@ public class Wallet : GrabbableObject { // default value: takes a lot money, tak
 
     public void DestroyObject(NetworkObject netObj) {
         if(netObj.IsOwnedByServer && netObj.IsSpawned && netObj.IsOwner) netObj.Despawn();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetTargetServerRpc(int PlayerID) {
+        SetTargetClientRpc(PlayerID);
+    }
+
+    public override void LateUpdate() {
+        base.LateUpdate();
+        if (!IsServer || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving) return;
+        PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
+        if (Vector3.Distance(WalletChild.position, StartOfRound.Instance.shipBounds.transform.position) < 12 && !isInShipRoom) {
+            this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
+            isInShipRoom = true;
+            isInElevator = true;
+        } else if (Vector3.Distance(WalletChild.position, StartOfRound.Instance.shipBounds.transform.position) >= 12 && isInShipRoom) {
+            this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
+            isInShipRoom = false;
+            isInElevator = false;
+        }
+    }
+    [ClientRpc]
+    public void SetTargetClientRpc(int PlayerID) {
+        if (PlayerID == -1) {
+            PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
+            walletMode = WalletModes.None;
+            if (IsServer) {
+                if (isInShipRoom) {
+                    this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
+                } else {
+                    this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
+                }
+            }
+            Plugin.Logger.LogInfo($"Clearing target on {this}");
+            playerHeldBy = null;
+            isHeld = false;
+            trigger.interactable = true;
+            return;
+        }
+
+        PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[PlayerID];
+        if (player == null) {
+            Plugin.Logger.LogInfo($"Invalid player index: {PlayerID}");
+            return;
+        }
+        walletMode = WalletModes.Held;
+        trigger.interactable = false;
+        playerHeldBy = player;
+        isHeld = true;
+        this.transform.SetParent(playerHeldBy.transform, true);
+        this.WalletChild.position = playerHeldBy.transform.position;
+        if (IsServer) {
+            GetComponent<NetworkObject>().ChangeOwnership(player.actualClientId);
+        }
+        UpdateToolTips();
+    }
+    public void UpdateToolTips() {
+        if (playerHeldBy == null || GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
+        HUDManager.Instance.ClearControlTips();
+        if (walletMode == WalletModes.Held) {
+            HUDManager.Instance.ChangeControlTipMultiple(new string[] {
+                $"Use Wallet : [{Plugin.InputActionsInstance.WalletActivate.GetBindingDisplayString().Split(' ')[0]}]",
+                $"Drop Wallet : [{Plugin.InputActionsInstance.WalletDrop.GetBindingDisplayString().Split(' ')[0]}]",
+                $"Sell Wallet : [{Plugin.InputActionsInstance.WalletSell.GetBindingDisplayString().Split(' ')[0]}]"
+            });
+        }
     }
 }
