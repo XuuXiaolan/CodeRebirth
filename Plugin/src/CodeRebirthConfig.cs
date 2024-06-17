@@ -93,10 +93,6 @@ namespace CodeRebirth.Configs {
                                                 "SnailCat Enemy | Max Spawn Count",
                                                 5,
                                                 "How many SnailCats can spawn at once.");
-            ConfigScrapMasterMaxSpawnCount = configFile.Bind("ScrapMaster Options",
-                                                "Scrap Master | Max Spawn Count",
-                                                1,
-                                                "How many Scrap Masters can spawn at once.");
             ConfigCutieFlyPowerLevel = configFile.Bind("CutieFly Options",
                                                 "CutieFly Enemy | Power Level",
                                                 1.0f,
@@ -105,10 +101,6 @@ namespace CodeRebirth.Configs {
                                                 "SnailCat Enemy | Power Level",
                                                 1.0f,
                                                 "Power level of the SnailCat enemy.");
-            ConfigScrapMasterPowerLevel = configFile.Bind("ScrapMaster Options",
-                                                "Scrap Master | Power Level",
-                                                1.0f,
-                                                "Power level of the Scrap Master enemy.");
             ConfigMoneyEnabled = configFile.Bind("Money Options",
                                                 "Money | Enabled",
                                                 true,
@@ -120,15 +112,11 @@ namespace CodeRebirth.Configs {
             ConfigSnowGlobeSpawnWeights = configFile.Bind("SnowGlobe Options",
                                                 "Snow Globe | Spawn Weights",
                                                 "Modded:50,Vanilla:50",
-                                                "Spawn Weight of the epic axe in moons.");
+                                                "Spawn Weight of the Snow Globe in moons.");
             ConfigItemCrateEnabled = configFile.Bind("Crate Options",
                                                 "Item Crate | Enabled",
                                                 true,
                                                 "Enables/Disables the Item Crate from spawning.");
-            ConfigScrapMasterEnabled = configFile.Bind("ScrapMaster Options",
-                                                "Scrap Master | Enabled",
-                                                true,
-                                                "Enables/Disables the Scrap Master enemy");
             ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",
                                                 "CutieFly Enemy | Enabled",
                                                 true,
@@ -177,10 +165,6 @@ namespace CodeRebirth.Configs {
                                                 "Money Scrap | Average Value",
                                                 15,
                                                 "Average value of Money in the level. (so 5 and 25 are lower and upper limits here).");
-            ConfigScrapMasterSpawnWeights = configFile.Bind("ScrapMaster Options",
-                                                "Scrap Master Enemy | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
-                                                "SpawnWeight of the Scrap Master in moons.");
             ClearUnusedEntries(configFile);
         }
         private void ClearUnusedEntries(ConfigFile configFile) {

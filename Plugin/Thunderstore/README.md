@@ -8,9 +8,10 @@ If you're interested in helping with the development of the mod, feel free to re
 Current Additions:
 
 - 2 Ambient Enemies
-- 1 Weather event
-- 1 Shop Item
-- 3 Scrap
+- 2 Weather event
+- 2 Shop Item
+- 4 Scrap
+- Outside Hazard
 
 ## Preview (Spoilers ahead!)
 

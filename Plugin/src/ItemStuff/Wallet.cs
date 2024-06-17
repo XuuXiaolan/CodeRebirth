@@ -142,11 +142,11 @@ public class Wallet : GrabbableObject {
             UpdateToolTips();
             DestroyObjectServerRpc(obj);
         }
-        Plugin.Logger.LogInfo($"Scrap Value: {scrapValue}");
     }
 
     [ClientRpc]
     public void IncreaseBlendShapeWeightClientRpc(float newblendShapeWeight) {
+        this.itemProperties.weight += 0.01f;
         skinnedMeshRenderer.SetBlendShapeWeight(0, newblendShapeWeight);
     }
 
@@ -230,6 +230,7 @@ public class Wallet : GrabbableObject {
                 }
                 trigger.interactable = true;
             }
+            walletHeldBy.carryWeight -= this.itemProperties.weight;
             walletMode = WalletModes.None;
             walletHeldBy = null;
             return;
@@ -244,7 +245,7 @@ public class Wallet : GrabbableObject {
         trigger.interactable = false;
         walletHeldBy = player;
         this.transform.position = player.transform.position + player.transform.up * 1f + player.transform.right * 0.25f + player.transform.forward * 0.05f;
-
+        walletHeldBy.carryWeight += this.itemProperties.weight;
         // Apply the rotations
         Quaternion rotationLeft = Quaternion.Euler(0, 180, 0);
         Quaternion rotationForward = Quaternion.Euler(15, 0, 0);
