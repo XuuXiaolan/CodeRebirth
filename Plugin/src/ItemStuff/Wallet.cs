@@ -11,13 +11,12 @@ namespace CodeRebirth.ItemStuff;
 public class Wallet : GrabbableObject { 
     public InteractTrigger trigger;
     private RaycastHit hit;
-    public float rightMult;
-    public float upMult;
     private ScanNodeProperties scanNode;
     private SkinnedMeshRenderer skinnedMeshRenderer;
     public enum WalletModes {
         Held,
         None,
+        Sold,
     }
     private WalletModes walletMode = WalletModes.None;
     private PlayerControllerB walletHeldBy;
@@ -65,9 +64,9 @@ public class Wallet : GrabbableObject {
     public void OnInteract(PlayerControllerB player) {
         if (GameNetworkManager.Instance.localPlayerController != player) return;
         if (IsHost) {
-            SetTargetClientRpc(System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), true);
+            SetTargetClientRpc(System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         } else {
-            SetTargetServerRpc(System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), true);
+            SetTargetServerRpc(System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }
     }
 
@@ -105,8 +104,9 @@ public class Wallet : GrabbableObject {
                 if (GameNetworkManager.Instance != null && walletHeldBy == GameNetworkManager.Instance.localPlayerController)
                 {
                     depositItemsDesk.AddObjectToDeskServerRpc(this.GetComponent<NetworkObject>());
-                    DropWallet(true);
-                    this.transform.position = new Vector3(-29.3048f, -0.7182f, -31.4077f);
+                    walletMode = WalletModes.Sold;
+                    DropWallet();
+                    this.transform.position = new Vector3(-29.3048f, -1.4182f, -31.4077f);
                 }
                 return;
             }
@@ -115,14 +115,14 @@ public class Wallet : GrabbableObject {
 
     public void HandleItemDrop() {
         if (!Plugin.InputActionsInstance.WalletDrop.triggered) return;
-        DropWallet(false);
+        DropWallet();
     }
 
-    public void DropWallet(bool sold) {
+    public void DropWallet() {
         if (IsHost) {
-            SetTargetClientRpc(-1, sold);
+            SetTargetClientRpc(-1);
         } else {
-            SetTargetServerRpc(-1, sold);
+            SetTargetServerRpc(-1);
         }
     }
 
@@ -182,8 +182,8 @@ public class Wallet : GrabbableObject {
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetTargetServerRpc(int PlayerID, bool sold) {
-        SetTargetClientRpc(PlayerID, sold);
+    public void SetTargetServerRpc(int PlayerID) {
+        SetTargetClientRpc(PlayerID);
     }
 
     public override void LateUpdate() {
@@ -204,7 +204,7 @@ public class Wallet : GrabbableObject {
 
 
     [ClientRpc]
-    public void SetTargetClientRpc(int PlayerID, bool sold) {
+    public void SetTargetClientRpc(int PlayerID) {
         if (PlayerID == -1) {
             PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
             walletMode = WalletModes.None;
@@ -218,7 +218,7 @@ public class Wallet : GrabbableObject {
             }
             Plugin.Logger.LogInfo($"Clearing target on {this}");
             isHeld = false;
-            if (sold) {
+            if (walletMode == WalletModes.Sold) {
                 trigger.interactable = false;
             } else {
                 // Perform a raycast from the camera to find the drop position
