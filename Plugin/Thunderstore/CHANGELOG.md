@@ -12,7 +12,8 @@
 - Added tornado.
 - Updated readme.
 - Updated all icons.
-- Updated meteorite Crystals
+- Updated meteorite Crystals.
+- Improved how wallet works, it's a player upgrade now.
 
 ## v0.0.3
 - Added moon blacklist config for the weather.
@@ -37,6 +38,4 @@
 - Initial release
 
 ## TODO:
-- Add Tornado
-- Add ScrapMaster
 - Updated Icons for items

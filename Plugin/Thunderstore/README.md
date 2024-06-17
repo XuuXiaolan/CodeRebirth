@@ -19,6 +19,14 @@ Current Additions:
 <details>
   <summary><strong style="font-size: 1.4em;">Weathers</strong></summary>
 
+### Windy
+
+![](https://i.postimg.cc/x81dKbhc/tornado.png)
+
+```
+Disastrous weather where the player is pulled and ripped apart by different types of tornados (currently only blood tornado available).
+```
+
 ### Meteor Shower
 
 ![](https://i.postimg.cc/RFJzM5yL/image-removebg-preview-1.png)
@@ -52,6 +60,14 @@ Roams the land slowly (harmless)
 
 <details>
   <summary><strong style="font-size: 1.4em;">Shop Items</strong></summary>
+
+### Hoverboard
+
+![](https://i.postimg.cc/wj6mw7Nc/hoverboard.png)
+
+```
+Shop Item that allows you to drift around the world, should be faster than walking speed and allows a boost using sprint.
+```
 
 ### Wallet
 
@@ -104,7 +120,7 @@ Scrap to get some extra cash for the quota, Coin doesn't affect normal-level scr
 
 ### Item Crate
 
-![](https://media1.tenor.com/m/Mrgv5PCMiBUAAAAd/cat-thumbs-up-cat.gif)
+![](https://i.postimg.cc/jqg2RD0j/itemcrate.png)
 
 ```
 Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
