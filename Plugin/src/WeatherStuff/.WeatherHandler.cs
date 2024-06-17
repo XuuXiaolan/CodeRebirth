@@ -65,14 +65,10 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 			SunAnimatorBool = "eclipse",
 		};
 		
-		TornadoesWeather = new Weather("Tornadoes", tornadoEffect) {
+		TornadoesWeather = new Weather("Windy", tornadoEffect) {
 			DefaultLevelFilters = ["Gordion"],
 			LevelFilteringOption = FilteringOption.Exclude,
-			// TODO
-			// Color = 
-			// ScrapAmountMultiplier = 
-			// ScrapValueMultiplier = 
-			// DefaultWeight = 
+			Color = UnityEngine.Color.gray,
 		};
 
 		WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
@@ -96,11 +92,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {
 			DefaultLevelFilters = ["Gordion"],
 			LevelFilteringOption = FilteringOption.Exclude,
-			// TODO
-			// Color = 
-			// ScrapAmountMultiplier = 
-			// ScrapValueMultiplier = 
-			// DefaultWeight = 
+			Color = new Color(0.5f, 0f,0f, 1f),
 		};
 
 		WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
