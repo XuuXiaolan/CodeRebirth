@@ -33,6 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4492178942496473946}
+  - {fileID: 2043339414943163616}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1982050740415643064
@@ -136,6 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2043339414943163616}
   - component: {fileID: 5967244827687194067}
+  - component: {fileID: 2325750744923300847}
   m_Layer: 22
   m_Name: ScanNode
   m_TagString: Untagged
@@ -156,7 +158,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4492178942496473946}
+  m_Father: {fileID: 5004144375484723467}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5967244827687194067
 MonoBehaviour:
@@ -178,6 +180,27 @@ MonoBehaviour:
   scrapValue: 0
   creatureScanID: -1
   nodeType: 2
+--- !u!65 &2325750744923300847
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5902236826406273354}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6394186145556875039
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +234,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2043339414943163616}
   - {fileID: 5102468166736309596}
   m_Father: {fileID: 5004144375484723467}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

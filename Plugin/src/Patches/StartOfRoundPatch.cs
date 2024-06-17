@@ -37,6 +37,9 @@ static class StartOfRoundPatch {
 			// patch to fix OnDisable not being triggered as its not actually in the scene.
 			WeatherHandler.Instance.MeteorShowerWeather.Effect.DisableEffect();
 		}
+		if (TornadoWeather.Active) {
+			WeatherHandler.Instance.TornadoesWeather.Effect.DisableEffect();
+		}
 	}
 	
 	private static void CreateNetworkManager()

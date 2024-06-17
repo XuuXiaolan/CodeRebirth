@@ -76,23 +76,41 @@ public class Tornados : NetworkBehaviour
         this.outsideNodes = RoundManager.Instance.outsideAINodes.ToList(); // would travel between these nodes using a search routine.
         agent = GetComponent<NavMeshAgent>();
         agent.speed = initialSpeed;
+        StartCoroutine(TornadoUpdate());
         if (IsHost) {
             StartAISearchRoutine(outsideNodes);
         }
     }
     private void FixedUpdate() {
-        if (!(StartOfRound.Instance.shipBounds.bounds.Contains(GameNetworkManager.Instance.localPlayerController.transform.position) || GameNetworkManager.Instance.localPlayerController.isInsideFactory) && Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) < 100f) {
-            Vector3 directionToCenter = (transform.position - GameNetworkManager.Instance.localPlayerController.transform.position).normalized;
-            float forceStrength = CalculatePullStrength(Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position));
-            GameNetworkManager.Instance.localPlayerController.externalForces += directionToCenter * forceStrength;
-        }
         UpdateAudio();
     }
+    private IEnumerator TornadoUpdate() {
+        WaitForSeconds wait = new WaitForSeconds(0.05f); // Execute every 0.05 seconds
+        while (true) {
+            yield return wait; // Reduced frequency of execution
 
+            var localPlayerController = GameNetworkManager.Instance.localPlayerController;
+            if (localPlayerController == null) {
+                continue; // Skip if localPlayerController is not set
+            }
+
+            // Check if player is inside the ship bounds or factory
+            if (!(StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) || localPlayerController.isInsideFactory)) {
+                float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
+
+                // Check if player is within 100 units of the tornado
+                if (distanceToTornado < 100f) {
+                    Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
+                    float forceStrength = CalculatePullStrength(distanceToTornado);
+                    localPlayerController.externalForces += directionToCenter * forceStrength;
+                }
+            }
+        }
+    }
     private float CalculatePullStrength(float distance) {
         float maxDistance = 100f;
-        float minStrength = 0.1f;
-        float maxStrength = 20f;
+        float minStrength = 0.25f;
+        float maxStrength = 50f;
 
         // Calculate exponential strength based on distance
         float normalizedDistance = (maxDistance - distance) / maxDistance;
@@ -101,7 +119,7 @@ public class Tornados : NetworkBehaviour
             StartCoroutine(DamageTimer());
             GameNetworkManager.Instance.localPlayerController.DamagePlayer(5);
         }
-        return Mathf.Lerp(minStrength, maxStrength, normalizedDistance * normalizedDistance);
+        return Mathf.Clamp(Mathf.Lerp(minStrength, maxStrength, normalizedDistance * normalizedDistance), minStrength, maxStrength);
     }
 
     private IEnumerator DamageTimer() {

@@ -128,7 +128,6 @@ public class Wallet : GrabbableObject {
 
     public void HandleItemActivate() {
         if (!Plugin.InputActionsInstance.WalletActivate.triggered) return;
-        UpdateToolTips();
         var interactRay = new Ray(walletHeldBy.gameplayCamera.transform.position, walletHeldBy.gameplayCamera.transform.forward);
         if (Physics.Raycast(interactRay, out hit, walletHeldBy.grabDistance, walletHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8) {
             Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
@@ -140,6 +139,7 @@ public class Wallet : GrabbableObject {
             if (walletHeldBy) {
                 IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
             }
+            UpdateToolTips();
             DestroyObjectServerRpc(obj);
         }
         Plugin.Logger.LogInfo($"Scrap Value: {scrapValue}");
