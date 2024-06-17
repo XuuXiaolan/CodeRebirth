@@ -201,6 +201,8 @@ public class Wallet : GrabbableObject {
         }
     }
 
+
+
     [ClientRpc]
     public void SetTargetClientRpc(int PlayerID, bool sold) {
         if (PlayerID == -1) {
@@ -221,24 +223,12 @@ public class Wallet : GrabbableObject {
             } else {
                 // Perform a raycast from the camera to find the drop position
                 var interactRay = new Ray(walletHeldBy.gameplayCamera.transform.position, walletHeldBy.gameplayCamera.transform.forward);
-                if (Physics.Raycast(interactRay, out RaycastHit hit, walletHeldBy.grabDistance + 2f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
+                if (Physics.Raycast(interactRay, out RaycastHit hit, walletHeldBy.grabDistance + 3f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
                     // Set the wallet's position to the hit point with an offset away from the surface
                     this.transform.position = hit.point + hit.normal * 0.1f;
-
-                    // Check if there is anything below the hit point within 4f
-                    if (!CheckBelowWallet()) {
-                        // If nothing is below, simulate a fall
-                        StartCoroutine(SimulateFall());
-                    }
+                    this.transform.position += Vector3.down * 0.05f;
                 } else {
-                    // If no valid drop position is found, drop wallet from under player
-                    this.transform.position = walletHeldBy.transform.position + walletHeldBy.transform.forward * 0.1f;
-
-                    // Check if there is anything below the player's position within 4f
-                    if (!CheckBelowWallet()) {
-                        // If nothing is below, simulate a fall
-                        StartCoroutine(SimulateFall());
-                    }
+                    this.transform.position = walletHeldBy.transform.position + walletHeldBy.transform.forward * 0.3f;
                 }
                 trigger.interactable = true;
             }
@@ -254,84 +244,21 @@ public class Wallet : GrabbableObject {
         walletMode = WalletModes.Held;
         trigger.interactable = false;
         walletHeldBy = player;
-        this.transform.position = player.transform.position + player.transform.up * upMult + player.transform.right * rightMult;
-        this.transform.rotation = Quaternion.identity;
+        this.transform.position = player.transform.position + player.transform.up * 1f + player.transform.right * 0.25f + player.transform.forward * 0.05f;
+
+        // Apply the rotations
+        Quaternion rotationLeft = Quaternion.Euler(0, 180, 0);
+        Quaternion rotationForward = Quaternion.Euler(15, 0, 0);
+
+        // Combine the rotations: rotate 180 degrees left first, then rotate forward by 15 degrees
+        this.transform.rotation = rotationLeft * rotationForward;
+
         isHeld = true;
         this.transform.SetParent(walletHeldBy.transform, true);
-        this.transform.position = walletHeldBy.transform.position;
         if (IsServer) {
             GetComponent<NetworkObject>().ChangeOwnership(player.actualClientId);
         }
         UpdateToolTips();
-    }
-
-    private bool CheckBelowWallet() {
-        BoxCollider boxCollider = this.transform.Find("WalletChild").GetComponentInChildren<BoxCollider>();
-        Vector3[] corners = GetBoundingBoxCorners(boxCollider);
-
-        foreach (Vector3 corner in corners) {
-            if (Physics.Raycast(corner, Vector3.down, out RaycastHit downHit, 4f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private IEnumerator SimulateFall() {
-        float fallSpeed = 2f;
-        float maxFallDistance = 4f;
-        float distanceFallen = 0f;
-
-        BoxCollider boxCollider = this.transform.Find("WalletChild").GetComponentInChildren<BoxCollider>();
-        Vector3[] corners = GetBoundingBoxCorners(boxCollider);
-
-        while (distanceFallen < maxFallDistance) {
-            bool hitDetected = false;
-
-            foreach (Vector3 corner in corners) {
-                if (Physics.Raycast(corner, Vector3.down, out RaycastHit downHit, 0.1f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
-                    // If we hit something below, adjust the position and stop falling
-                    this.transform.position = downHit.point + Vector3.up * 0.05f;
-                    hitDetected = true;
-                    break;
-                }
-            }
-
-            if (hitDetected) {
-                yield break;
-            }
-
-            // Move the wallet down
-            this.transform.position += Vector3.down * fallSpeed * Time.deltaTime;
-            distanceFallen += fallSpeed * Time.deltaTime;
-
-            // Update the corners
-            corners = GetBoundingBoxCorners(boxCollider);
-
-            yield return null;
-        }
-
-        // If we've fallen the maximum distance and still not hit anything, leave the wallet at its last position
-        if (distanceFallen >= maxFallDistance) {
-            Plugin.Logger.LogInfo($"Wallet has fallen the maximum distance without hitting anything.");
-        }
-    }
-
-    private Vector3[] GetBoundingBoxCorners(BoxCollider boxCollider) {
-        Vector3 center = boxCollider.center;
-        Vector3 extents = boxCollider.size / 2;
-
-        Vector3[] corners = new Vector3[8];
-        corners[0] = this.transform.TransformPoint(center + new Vector3(-extents.x, -extents.y, -extents.z));
-        corners[1] = this.transform.TransformPoint(center + new Vector3(extents.x, -extents.y, -extents.z));
-        corners[2] = this.transform.TransformPoint(center + new Vector3(extents.x, -extents.y, extents.z));
-        corners[3] = this.transform.TransformPoint(center + new Vector3(-extents.x, -extents.y, extents.z));
-        corners[4] = this.transform.TransformPoint(center + new Vector3(-extents.x, extents.y, -extents.z));
-        corners[5] = this.transform.TransformPoint(center + new Vector3(extents.x, extents.y, -extents.z));
-        corners[6] = this.transform.TransformPoint(center + new Vector3(extents.x, extents.y, extents.z));
-        corners[7] = this.transform.TransformPoint(center + new Vector3(-extents.x, extents.y, extents.z));
-
-        return corners;
     }
 
     public void UpdateToolTips() {
