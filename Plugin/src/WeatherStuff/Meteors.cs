@@ -17,7 +17,7 @@ public class Meteors : NetworkBehaviour {
     #pragma warning disable CS0649    
     [Header("Properties")]
     [SerializeField] private float initialSpeed = 50f;
-    [SerializeField] private int chanceToSpawnScrap;
+    [SerializeField] private float chanceToSpawnScrap;
 
     [Header("Audio")]
     [SerializeField]
@@ -59,6 +59,7 @@ public class Meteors : NetworkBehaviour {
         MeteorShower.Instance.AddMeteor(this);
         NormalTravelAudio.Play();
         FireTrail.Stop();
+        chanceToSpawnScrap = Plugin.ModConfig.ConfigMeteorShowerMeteoriteSpawnChance.Value;
     }
 
     private void Update() {
@@ -92,6 +93,11 @@ public class Meteors : NetworkBehaviour {
             CloseTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
             ImpactAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
         }
+        if (GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed) {
+            NormalTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value) * Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+            CloseTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value) * Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+            ImpactAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value) * Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+        }
         if (((1-Progress)*travelTime) <= 4.106f && !CloseTravelAudio.isPlaying) {
             NormalTravelAudio.volume = Mathf.Clamp01(0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
             CloseTravelAudio.Play();
@@ -103,7 +109,7 @@ public class Meteors : NetworkBehaviour {
 
         ImpactAudio.Play();
             
-        if (IsHost && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap) {
+        if (IsHost && UnityEngine.Random.Range(0, 10000) < (int)chanceToSpawnScrap*100) {
             CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", target);
         }
             

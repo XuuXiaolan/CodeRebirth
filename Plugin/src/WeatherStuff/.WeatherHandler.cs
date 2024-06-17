@@ -32,12 +32,12 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		
 		[LoadFromBundle("MeteorShowerWeather.prefab")]
 		public GameObject MeteorPermanentEffectPrefab { get; private set; }
-		[LoadFromBundle("Meteor.prefab")]
+		[LoadFromBundle("TornadoMain.prefab")]
 		public GameObject TornadoPrefab { get; private set; }
-		[LoadFromBundle("MeteorContainer.prefab")]
+		[LoadFromBundle("TornadoContainer.prefab")]
 		public GameObject TornadoEffectPrefab { get; private set; }
 		
-		[LoadFromBundle("MeteorShowerWeather.prefab")]
+		[LoadFromBundle("TornadoWeather.prefab")]
 		public GameObject TornadoPermanentEffectPrefab { get; private set; }
 	}
 
@@ -49,7 +49,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		Assets = new WeatherAssets("coderebirthasset");
 
 		RegisterMeteorShower();
-		// RegisterTornadoWeather();
+		RegisterTornadoWeather();
 	}
 
 	void RegisterTornadoWeather() {

@@ -11,7 +11,6 @@ using UnityEngine.AI;
 using Random = System.Random;
 
 namespace CodeRebirth.WeatherStuff;
-
 public class TornadoWeather : CodeRebirthWeathers {
 	Coroutine spawnHandler;
 	List<GameObject> nodes;
@@ -24,7 +23,7 @@ public class TornadoWeather : CodeRebirthWeathers {
     private int maxTornadosToSpawn;
     private List<GameObject> alreadyUsedNodes;
 
-	readonly List<Tornados> tornados = new List<Tornados>(); // Proper initialization
+	private List<Tornados> tornados = new List<Tornados>(); // Proper initialization
 	
 	Random random;
 	
@@ -43,7 +42,7 @@ public class TornadoWeather : CodeRebirthWeathers {
 		if(!IsAuthority()) return; // Only run on the host.
         
 		random = new Random();
-		tornadoTypeIndex = random.Next(0, 3);
+		tornadoTypeIndex = random.Next(0, 4);
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}
 
@@ -93,13 +92,13 @@ public class TornadoWeather : CodeRebirthWeathers {
 		tornado.NetworkObject.Spawn();
 	}
 
-	public void AddTornado(Tornados meteor)
+	public void AddTornado(Tornados tornado)
 	{
-		tornados.Add(meteor);
+		tornados.Add(tornado);
 	}
 
-	public void RemoveTornado(Tornados meteor)
+	public void RemoveTornado(Tornados tornado)
 	{
-		tornados.Remove(meteor);
+		tornados.Remove(tornado);
 	}
 }

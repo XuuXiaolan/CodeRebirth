@@ -9,7 +9,7 @@ public class ColliderIdentifier : MonoBehaviour
 {
     [SerializeField]
     private float damageDuration = 16.0f; // Duration for which the damage should be active
-    private float damageInterval = 1.0f;
+    private float damageInterval = 0.25f;
     private float timeSinceLastDamage = 0.0f;
     private List<PlayerControllerB> playersInTrigger = new List<PlayerControllerB>();
 

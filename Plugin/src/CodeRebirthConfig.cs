@@ -35,16 +35,24 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigScrapMasterPowerLevel { get; private set; }
         // Weather Specific
+        public ConfigEntry<float> ConfigMeteorShowerMeteoriteSpawnChance { get; private set; }
+        public ConfigEntry<float> ConfigMeteorShowerInShipVolume { get; private set; }
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
-        public ConfigEntry<string> ConfigMeteorShowerMoonsBlacklist { get; private set; }
         public ConfigEntry<string> ConfigTornadoType { get; private set; }
-        public ConfigEntry<string> ConfigTornadoMoonsBlacklist { get; private set; }
         // Misc
         public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Meteorite Spawn Chance",
+                                                1f,
+                                                "Chance of spawning a meteorite when a meteor is spawned (0 to 100 decimals included).");
+            ConfigMeteorShowerInShipVolume = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Meteor Volume",
+                                                1f,
+                                                "Multiplier of the meteors' volume for when the player is in the ship and the ship door is closed.");
             ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteor Strikes Ship",
                                                 true,
@@ -77,10 +85,6 @@ namespace CodeRebirth.Configs {
                                                 "Tornados | Enabled",
                                                 true,
                                                 "Enables/Disables the Tornados from popping up into moons.");
-            ConfigTornadoMoonsBlacklist = configFile.Bind("Tornados Options",
-                                                "Tornados | Moons Blacklist",
-                                                "CompanyLevelBuilding",
-                                                "Example: (CompanyBuildingLevelList,OffenseLevel). \nList of moons TO REMOVE the Tornados Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
             ConfigCutieFlyMaxSpawnCount = configFile.Bind("CutieFly Options",
                                                 "CutieFly Enemy | Max Spawn Count",
                                                 5,
@@ -137,10 +141,6 @@ namespace CodeRebirth.Configs {
                                                 "Crate | Abundance",
                                                 3,
                                                 "Abundance of crates that spawn outside (between 0 and your number).");
-            ConfigMeteorShowerMoonsBlacklist = configFile.Bind("MeteorShower Options",
-                                                "Meteor Shower | Blacklist",
-                                                "CompanyBuildingLevel",
-                                                "This setting is unused - change the moons in WeatherRegistry config.");
             ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Default Volume",
                                                 0.25f,
