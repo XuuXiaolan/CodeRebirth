@@ -40,6 +40,8 @@
     <PackageReference Include="LethalCompany.GameLibs.Steam" Version="50.0.0-ngd.0" PrivateAssets="all" />
     <!-- <PackageReference Include="IAmBatby.LethalLevelLoader" Version="1.2.0" /> -->
     <!-- <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" /> -->
+
+    <Reference Include="WeatherRegistry"><HintPath>../dlls/WeatherRegistry.dll</HintPath></Reference>
   </ItemGroup>
 
   <ItemGroup>
