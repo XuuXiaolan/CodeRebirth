@@ -106,7 +106,7 @@ public class Wallet : GrabbableObject {
                     depositItemsDesk.AddObjectToDeskServerRpc(this.GetComponent<NetworkObject>());
                     walletMode = WalletModes.Sold;
                     DropWallet();
-                    this.transform.position = new Vector3(-29.3048f, -1.4182f, -31.4077f);
+                    this.transform.position = new Vector3(-29.3048f, -1.2182f, -31.4077f);
                 }
                 return;
             }
@@ -114,7 +114,7 @@ public class Wallet : GrabbableObject {
     }
 
     public void HandleItemDrop() {
-        if (!Plugin.InputActionsInstance.WalletDrop.triggered) return;
+        if (!Plugin.InputActionsInstance.WalletDrop.triggered || walletHeldBy == null || walletHeldBy.inTerminalMenu) return;
         DropWallet();
     }
 
@@ -230,7 +230,7 @@ public class Wallet : GrabbableObject {
                 }
                 trigger.interactable = true;
             }
-            walletHeldBy.carryWeight -= this.itemProperties.weight;
+            walletHeldBy.carryWeight -= (this.itemProperties.weight - 1);
             walletMode = WalletModes.None;
             walletHeldBy = null;
             return;
@@ -245,7 +245,7 @@ public class Wallet : GrabbableObject {
         trigger.interactable = false;
         walletHeldBy = player;
         this.transform.position = player.transform.position + player.transform.up * 1f + player.transform.right * 0.25f + player.transform.forward * 0.05f;
-        walletHeldBy.carryWeight += this.itemProperties.weight;
+        walletHeldBy.carryWeight += (this.itemProperties.weight - 1f);
         // Apply the rotations
         Quaternion rotationLeft = Quaternion.Euler(0, 180, 0);
         Quaternion rotationForward = Quaternion.Euler(15, 0, 0);
@@ -270,6 +270,12 @@ public class Wallet : GrabbableObject {
                 $"Drop Wallet : [{Plugin.InputActionsInstance.WalletDrop.GetBindingDisplayString().Split(' ')[0]}]",
                 $"Sell Wallet : [{Plugin.InputActionsInstance.WalletSell.GetBindingDisplayString().Split(' ')[0]}]"
             });
+        }
+    }
+    public void OnDisable() {
+        if (isHeld) {
+            if (!IsHost) return;
+            SetTargetClientRpc(-1);
         }
     }
 }

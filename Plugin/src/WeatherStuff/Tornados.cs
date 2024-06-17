@@ -17,9 +17,6 @@ using System.Collections.Generic;
 namespace CodeRebirth.WeatherStuff;
 public class Tornados : NetworkBehaviour
 {
-    #pragma warning disable 0414
-    #pragma warning disable 0169
-    #pragma warning disable 0649
     private float walkingSpeed = 4f;
     private float runningSpeed = 8f;
     private float timeBeforeNextMove = 1f;
@@ -40,9 +37,6 @@ public class Tornados : NetworkBehaviour
     [Header("Graphics")]
     [SerializeField]
     private ParticleSystem[] tornadoParticles;
-    #pragma warning restore 0649
-    #pragma warning restore 0414
-    #pragma warning restore 0169
 
     private List<GameObject> outsideNodes = new List<GameObject>();
     private Vector3 origin;
@@ -57,6 +51,7 @@ public class Tornados : NetworkBehaviour
     }
     public TornadoType tornadoType = TornadoType.Random;
     private bool damageTimer = true;
+    public Transform eye;
 
     [ClientRpc]
     public void SetupTornadoClientRpc(Vector3 origin, int typeIndex) {
@@ -91,20 +86,12 @@ public class Tornados : NetworkBehaviour
             yield return wait; // Reduced frequency of execution
 
             var localPlayerController = GameNetworkManager.Instance.localPlayerController;
-            if (localPlayerController == null) {
-                continue; // Skip if localPlayerController is not set
-            }
-            // Check if local player raycast from StartOfRound.Instance.collidersAndRoomMaskAndDefault from tornado to player doesnt reach, then dont pull the player
-            if (!StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && Physics.Raycast(transform.position, localPlayerController.transform.position - transform.position, out var hit, Vector3.Distance(transform.position, localPlayerController.transform.position), StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
-                if (hit.collider.gameObject == localPlayerController.gameObject) {
-                    float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
-                    // Check if player is within 75 units of the tornado
-                    if (distanceToTornado < 75) {
-                        Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
-                        float forceStrength = CalculatePullStrength(distanceToTornado);
-                        localPlayerController.externalForces += directionToCenter * forceStrength;
-                    }
-                }
+            if (!StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && TornadoHasLineOfSightToPosition(this.transform.position)) {
+                float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
+                // Check if player is within 75 units of the tornado
+                Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
+                float forceStrength = CalculatePullStrength(distanceToTornado);
+                localPlayerController.externalForces += directionToCenter * forceStrength;
             }
             i++;
             if (i > 1440) {
@@ -146,6 +133,7 @@ public class Tornados : NetworkBehaviour
 
     private IEnumerator AISearchRoutine(List<GameObject> nodes) {
         while (true) {
+            yield return new WaitForSeconds(2f);
             if (nodes.Count == 0) yield break;
 
             List<GameObject> nearbyNodes = nodes.Where(node => Vector3.Distance(node.transform.position, transform.position) < 20f).ToList();
@@ -159,5 +147,16 @@ public class Tornados : NetworkBehaviour
                 yield return null;
             }
         }
+    }
+
+    public bool TornadoHasLineOfSightToPosition(Vector3 pos, float width = 360f, int range = 75, float proximityAwareness = 3f) {
+
+        if (Vector3.Distance(eye.position, pos) < (float)range && !Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
+            Vector3 to = pos - eye.position;
+            if (Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness) {
+                return true;
+            }
+        }
+        return false;
     }
 }

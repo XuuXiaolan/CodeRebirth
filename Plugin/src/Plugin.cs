@@ -73,6 +73,7 @@ public class Plugin : BaseUnityPlugin {
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
         if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Piggy.PiggyVarietyMod")) Logger.LogFatal("You are using a mod (Piggy's Variety mod) that breaks the player animator and the snow globe will not work properly with this mod, you have been warned.");
     }
 
     private void InitializeNetworkBehaviours() {
