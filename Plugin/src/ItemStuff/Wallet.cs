@@ -207,8 +207,6 @@ public class Wallet : GrabbableObject {
     public void SetTargetClientRpc(int PlayerID) {
         if (PlayerID == -1) {
             PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-            walletMode = WalletModes.None;
-
             if (IsServer) {
                 if (isInShipRoom) {
                     this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
@@ -232,6 +230,7 @@ public class Wallet : GrabbableObject {
                 }
                 trigger.interactable = true;
             }
+            walletMode = WalletModes.None;
             walletHeldBy = null;
             return;
         }
