@@ -71,7 +71,9 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 			Color = UnityEngine.Color.gray,
 		};
 
-		WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
+		if(Plugin.ModConfig.ConfigTornadosEnabled.Value) {
+			WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
+		}
 	}
 
 	void RegisterMeteorShower() {
@@ -95,6 +97,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 			Color = new Color(0.5f, 0f,0f, 1f),
 		};
 
-		WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
+		if(Plugin.ModConfig.ConfigMeteorShowerEnabled.Value){
+			WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
+		}
 	}
 }
