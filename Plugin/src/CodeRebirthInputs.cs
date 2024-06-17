@@ -28,7 +28,7 @@ public class IngameKeybinds : LcInputActions {
     [InputAction(MouseControl.Delta, Name = "MouseDelta")]
     public InputAction MouseDelta { get; set; }
 
-    [InputAction("<keyboard>/LMB", Name = "WalletActivate")]
+    [InputAction(MouseControl.LeftButton, Name = "WalletActivate")]
     public InputAction WalletActivate { get; set; }
 
     [InputAction("<keyboard>/l", Name = "WalletDrop")]

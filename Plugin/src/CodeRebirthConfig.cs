@@ -89,8 +89,8 @@ namespace CodeRebirth.Configs {
                                                 "Enables/Disables the Tornados from popping up into moons.");
             ConfigTornadoMoonsBlacklist = configFile.Bind("Tornados Options",
                                                 "Tornados | Moons Blacklist",
-                                                "CompanyLevelBuilding",
-                                                "Example: (CompanyBuildingLevelList,OffenseLevel). \nList of moons TO REMOVE the Tornados Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
+                                                "CompanyBuildingLevel",
+                                                "Example: (CompanyBuildingLevel,OffenseLevel). \nList of moons TO REMOVE the Tornados Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
             ConfigCutieFlyMaxSpawnCount = configFile.Bind("CutieFly Options",
                                                 "CutieFly Enemy | Max Spawn Count",
                                                 5,
@@ -150,7 +150,7 @@ namespace CodeRebirth.Configs {
             ConfigMeteorShowerMoonsBlacklist = configFile.Bind("MeteorShower Options",
                                                 "Meteor Shower | Blacklist",
                                                 "CompanyBuildingLevel",
-                                                "Example: (CompanyBuildingLevelList,OffenseLevel). \nList of moons TO REMOVE the Meteor Shower Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
+                                                "Example: (CompanyBuildingLevel,OffenseLevel). \nList of moons TO REMOVE the Meteor Shower Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
             ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Default Volume",
                                                 0.25f,
