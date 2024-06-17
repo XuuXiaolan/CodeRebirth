@@ -39,9 +39,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigMeteorShowerInShipVolume { get; private set; }
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
-        public ConfigEntry<string> ConfigMeteorShowerMoonsBlacklist { get; private set; }
         public ConfigEntry<string> ConfigTornadoType { get; private set; }
-        public ConfigEntry<string> ConfigTornadoMoonsBlacklist { get; private set; }
         // Misc
         public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
@@ -87,10 +85,6 @@ namespace CodeRebirth.Configs {
                                                 "Tornados | Enabled",
                                                 true,
                                                 "Enables/Disables the Tornados from popping up into moons.");
-            ConfigTornadoMoonsBlacklist = configFile.Bind("Tornados Options",
-                                                "Tornados | Moons Blacklist",
-                                                "CompanyBuildingLevel",
-                                                "Example: (CompanyBuildingLevel,OffenseLevel). \nList of moons TO REMOVE the Tornados Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
             ConfigCutieFlyMaxSpawnCount = configFile.Bind("CutieFly Options",
                                                 "CutieFly Enemy | Max Spawn Count",
                                                 5,
@@ -147,10 +141,6 @@ namespace CodeRebirth.Configs {
                                                 "Crate | Abundance",
                                                 3,
                                                 "Abundance of crates that spawn outside (between 0 and your number).");
-            ConfigMeteorShowerMoonsBlacklist = configFile.Bind("MeteorShower Options",
-                                                "Meteor Shower | Blacklist",
-                                                "CompanyBuildingLevel",
-                                                "Example: (CompanyBuildingLevel,OffenseLevel). \nList of moons TO REMOVE the Meteor Shower Weather from (Vanilla moons need Level at the end of their name, but modded do not). \n Remove CompanyBuildingLevel at your own risk.");
             ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Default Volume",
                                                 0.25f,

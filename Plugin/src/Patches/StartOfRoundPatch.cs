@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CodeRebirth.Misc;
 using CodeRebirth.src;
 using CodeRebirth.Util.Extensions;
@@ -27,23 +28,14 @@ static class StartOfRoundPatch {
 	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
-
-		string[] meteorLevelOverrides = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value.Split(',')
-											    .Select(name => name.Trim())
-											    .ToArray();
-		string[] tornadoLevelOverrides = Plugin.ModConfig.ConfigTornadoMoonsBlacklist.Value.Split(',')
-											    .Select(name => name.Trim())
-											    .ToArray();
-		LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", levelOverrides: meteorLevelOverrides);
-		LethalLib.Modules.Weathers.RemoveWeather("Windy", levelOverrides: tornadoLevelOverrides);
 	}
 	
 	[HarmonyPatch(nameof(StartOfRound.OnDisable))]
 	[HarmonyPrefix]
 	public static void DisableWeathersPatch() {
-		if (MeteorShower.Active) { // patch to fix OnDisable not being triggered as its not actually in the scene.
-			WeatherHandler.Instance.MeteorShowerWeather.effectObject.SetActive(false);
-			WeatherHandler.Instance.MeteorShowerWeather.effectPermanentObject.SetActive(false);
+		if (MeteorShower.Active) { 
+			// patch to fix OnDisable not being triggered as its not actually in the scene.
+			WeatherHandler.Instance.MeteorShowerWeather.Effect.DisableEffect();
 		}
 	}
 	

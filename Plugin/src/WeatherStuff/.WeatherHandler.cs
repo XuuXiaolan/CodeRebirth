@@ -1,8 +1,13 @@
-﻿using CodeRebirth.Misc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BepInEx.Configuration;
+using CodeRebirth.Misc;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using LethalLib.Modules;
 using UnityEngine;
+using WeatherRegistry;
 
 namespace CodeRebirth.WeatherStuff;
 
@@ -37,8 +42,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 	}
 
 	public WeatherAssets Assets { get; private set; }
-	public WeatherEffect MeteorShowerWeather { get; private set; }
-	public WeatherEffect TornadosWeather { get; private set; }
+	public Weather MeteorShowerWeather { get; private set; }
+	public Weather TornadoesWeather { get; private set; }
 	
 	public WeatherHandler() {
 		Assets = new WeatherAssets("coderebirthasset");
@@ -55,20 +60,23 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		GameObject effectPermanentObject = GameObject.Instantiate(Assets.TornadoPermanentEffectPrefab);
 		effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
 		GameObject.DontDestroyOnLoad(effectPermanentObject);
-		TornadosWeather = new WeatherEffect() {
-			name = "Windy",
-			effectObject = effectObject,
-			effectPermanentObject = effectPermanentObject,
-			lerpPosition = false,
-			sunAnimatorBool = "eclipse",
-			transitioning = false
-			};
-		Weathers.RegisterWeather("Windy", TornadosWeather, Levels.LevelTypes.All, 0, 0);
+
+		ImprovedWeatherEffect tornadoEffect = new(effectObject, effectPermanentObject){
+			SunAnimatorBool = "eclipse",
+		};
+		
+		TornadoesWeather = new Weather("Windy", tornadoEffect) {
+			DefaultLevelFilters = ["Gordion"],
+			LevelFilteringOption = FilteringOption.Exclude,
+			Color = UnityEngine.Color.gray,
+		};
+
+		WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
 	}
+
 	void RegisterMeteorShower() {
 		Plugin.samplePrefabs.Add("Meteorite", Assets.MeteoriteItem);
 		
-
 		GameObject effectObject = GameObject.Instantiate(Assets.MeteorEffectPrefab);
 		effectObject.hideFlags = HideFlags.HideAndDontSave;
 		GameObject.DontDestroyOnLoad(effectObject);
@@ -76,14 +84,17 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		GameObject effectPermanentObject = GameObject.Instantiate(Assets.MeteorPermanentEffectPrefab);
 		effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
 		GameObject.DontDestroyOnLoad(effectPermanentObject);
-		MeteorShowerWeather = new WeatherEffect() {
-			name = "MeteorShower",
-			effectObject = effectObject,
-			effectPermanentObject = effectPermanentObject,
-			lerpPosition = false,
-			sunAnimatorBool = "eclipse",
-			transitioning = false
-			};
-		Weathers.RegisterWeather("Meteor Shower", MeteorShowerWeather, Levels.LevelTypes.All, 0, 0);
+
+		ImprovedWeatherEffect meteorEffect = new(effectObject, effectPermanentObject){
+			SunAnimatorBool = "eclipse",
+		};
+
+		MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {
+			DefaultLevelFilters = ["Gordion"],
+			LevelFilteringOption = FilteringOption.Exclude,
+			Color = new Color(0.5f, 0f,0f, 1f),
+		};
+
+		WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
 	}
 }
