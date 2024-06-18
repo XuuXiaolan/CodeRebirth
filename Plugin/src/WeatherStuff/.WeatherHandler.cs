@@ -48,11 +48,11 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 	public WeatherHandler() {
 		Assets = new WeatherAssets("coderebirthasset");
 
-		RegisterMeteorShower();
-		RegisterTornadoWeather();
+		if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
+		if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
 	}
 
-	void RegisterTornadoWeather() {
+	private void RegisterTornadoWeather() {
 		GameObject effectObject = GameObject.Instantiate(Assets.TornadoEffectPrefab);
 		effectObject.hideFlags = HideFlags.HideAndDontSave;
 		GameObject.DontDestroyOnLoad(effectObject);
@@ -71,12 +71,10 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 			Color = UnityEngine.Color.gray,
 		};
 
-		if(Plugin.ModConfig.ConfigTornadosEnabled.Value) {
-			WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
-		}
+		WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
 	}
 
-	void RegisterMeteorShower() {
+	private void RegisterMeteorShower() {
 		Plugin.samplePrefabs.Add("Meteorite", Assets.MeteoriteItem);
 		
 		GameObject effectObject = GameObject.Instantiate(Assets.MeteorEffectPrefab);
@@ -97,8 +95,6 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 			Color = new Color(0.5f, 0f,0f, 1f),
 		};
 
-		if(Plugin.ModConfig.ConfigMeteorShowerEnabled.Value){
-			WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
-		}
+		WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
 	}
 }

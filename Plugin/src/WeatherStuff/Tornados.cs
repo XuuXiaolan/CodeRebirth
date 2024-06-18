@@ -87,7 +87,8 @@ public class Tornados : NetworkBehaviour
             yield return wait; // Reduced frequency of execution
 
             var localPlayerController = GameNetworkManager.Instance.localPlayerController;
-            if (!StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory) {
+            bool doesTornadoAffectPlayer = !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController != null && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
+            if (doesTornadoAffectPlayer) {
                 float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
                 bool hasLineOfSight = TornadoHasLineOfSightToPosition(localPlayerController.transform.position);
                 // Check if player is within 75 units of the tornado
@@ -105,15 +106,21 @@ public class Tornados : NetworkBehaviour
 
     private float CalculatePullStrength(float distance, bool hasLineOfSight) {
         float maxDistance = 100f;
-        float minStrength = 0.15f;
-        float maxStrength = hasLineOfSight ? 35f : 3.5f; // Reduce max strength to 10% if no line of sight
+        float minStrength = 0.1f;
+        float maxStrength = hasLineOfSight ? 30f : 3f; // Reduce max strength to 10% if no line of sight
 
         // Calculate exponential strength based on distance
         float normalizedDistance = (maxDistance - distance) / maxDistance;
         if (distance <= 2.5f && damageTimer) {
             damageTimer = false;
             StartCoroutine(DamageTimer());
-            GameNetworkManager.Instance.localPlayerController.DamagePlayer(2);
+            if (GameNetworkManager.Instance.localPlayerController.health < 60 && GameNetworkManager.Instance.localPlayerController.health > 30) {
+                GameNetworkManager.Instance.localPlayerController.DamagePlayer(-1);
+            } else if (GameNetworkManager.Instance.localPlayerController.health < 30) {
+                GameNetworkManager.Instance.localPlayerController.DamagePlayer(-2);
+            } else if (GameNetworkManager.Instance.localPlayerController.health > 60 && GameNetworkManager.Instance.localPlayerController.health < 101) {
+                GameNetworkManager.Instance.localPlayerController.DamagePlayer(4);
+            }
         }
         return Mathf.Clamp(Mathf.Lerp(minStrength, maxStrength, normalizedDistance * normalizedDistance), minStrength, maxStrength);
     }

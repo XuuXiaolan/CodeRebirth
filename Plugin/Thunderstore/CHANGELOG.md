@@ -1,3 +1,10 @@
+## v0.1.2
+- Fixed Snow Globe not having a value.
+- Allowed you to use ladders and special animations while tornado is around.
+- Reverted funny visuals with meteor craters.
+- Fixed item crate sound being global.
+- Made blood tornado do some weird stuff with damaging and healing player.
+
 ## v0.1.1
 - Fixed wallet dropping while using terminal.
 - Fixed item crates not disappearing after opening.
