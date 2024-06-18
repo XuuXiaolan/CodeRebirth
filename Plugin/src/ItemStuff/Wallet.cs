@@ -25,6 +25,8 @@ public class Wallet : GrabbableObject {
         StartBaseImportant();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         scanNode = GetComponentInChildren<ScanNodeProperties>();
+        this.grabbable = false;
+        this.grabbableToEnemies = false;
     }
 
     public void StartBaseImportant() {
