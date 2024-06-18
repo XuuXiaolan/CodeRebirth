@@ -6,6 +6,7 @@
 - Heavily nerfed how strong the windy weather is.
 - Fixed hoverboard dragging itself to a specific position sometimes.
 - Allowed cover to exist for windy weather
+- windy and meteors can now be disabled in config
 
 ## v0.1.0
 - Added new item, SnowGlobe.

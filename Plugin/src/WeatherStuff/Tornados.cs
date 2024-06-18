@@ -79,6 +79,7 @@ public class Tornados : NetworkBehaviour
     private void FixedUpdate() {
         UpdateAudio();
     }
+
     private IEnumerator TornadoUpdate() {
         int i = 0;
         WaitForSeconds wait = new WaitForSeconds(0.05f); // Execute every 0.05 seconds
@@ -86,24 +87,26 @@ public class Tornados : NetworkBehaviour
             yield return wait; // Reduced frequency of execution
 
             var localPlayerController = GameNetworkManager.Instance.localPlayerController;
-            if (!StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && TornadoHasLineOfSightToPosition(this.transform.position)) {
+            if (!StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory) {
                 float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
+                bool hasLineOfSight = TornadoHasLineOfSightToPosition(localPlayerController.transform.position);
                 // Check if player is within 75 units of the tornado
                 Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
-                float forceStrength = CalculatePullStrength(distanceToTornado);
+                float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight);
                 localPlayerController.externalForces += directionToCenter * forceStrength;
             }
             i++;
             if (i > 14400) {
-                Plugin.Logger.LogFatal("This loop ran a fuckton for some reason");
+                Plugin.Logger.LogFatal("This loop ran a lot of iterations.");
                 yield break;
             }
         }
     }
-    private float CalculatePullStrength(float distance) {
+
+    private float CalculatePullStrength(float distance, bool hasLineOfSight) {
         float maxDistance = 100f;
         float minStrength = 0.15f;
-        float maxStrength = 35f;
+        float maxStrength = hasLineOfSight ? 35f : 3.5f; // Reduce max strength to 10% if no line of sight
 
         // Calculate exponential strength based on distance
         float normalizedDistance = (maxDistance - distance) / maxDistance;
@@ -119,6 +122,7 @@ public class Tornados : NetworkBehaviour
         yield return new WaitForSeconds(0.5f);
         damageTimer = true;
     }
+
     private void UpdateAudio() {
         if (GameNetworkManager.Instance.localPlayerController.isInsideFactory)
         {
@@ -149,12 +153,13 @@ public class Tornados : NetworkBehaviour
         }
     }
 
-    public bool TornadoHasLineOfSightToPosition(Vector3 pos, float width = 360f, int range = 75, float proximityAwareness = 3f) {
-
-        if (Vector3.Distance(eye.position, pos) < (float)range && !Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
-            Vector3 to = pos - eye.position;
-            if (Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness) {
-                return true;
+    public bool TornadoHasLineOfSightToPosition(Vector3 pos, float width = 360, int range = 75, float proximityAwareness = 3f) {
+        if (Vector3.Distance(eye.position, pos) < range) {
+            if (!Physics.Raycast(eye.position, (pos - eye.position).normalized, Vector3.Distance(eye.position, pos), StartOfRound.Instance.collidersAndRoomMaskAndPlayers)) {
+                Vector3 to = pos - eye.position;
+                if (Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness) {
+                    return true;
+                }
             }
         }
         return false;
