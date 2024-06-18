@@ -11,6 +11,7 @@ static class RoundManagerPatch {
 	public static void SpawnOutsideMapObjects() {
 		if (!RoundManager.Instance.IsHost) return;
 		if (!Plugin.ModConfig.ConfigItemCrateEnabled.Value) return;
+		Plugin.Logger.LogDebug("Spawning crates!!!");
 		System.Random random = new();
 		int minValue = 0;
 		for (int i = 0; i < random.Next(minValue, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, minValue, 1000)); i++) {
@@ -22,6 +23,13 @@ static class RoundManagerPatch {
 			GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 			spawnedCrate.transform.up = hit.normal;
 			spawnedCrate.GetComponent<NetworkObject>().Spawn();
+		}
+	}
+
+	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
+	static void PatchFix_DespawnOldCrates() {
+		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>()) {
+			crate.NetworkObject.Despawn();
 		}
 	}
 }
