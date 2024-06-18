@@ -94,14 +94,14 @@ public class Tornados : NetworkBehaviour
                 localPlayerController.externalForces += directionToCenter * forceStrength;
             }
             i++;
-            if (i > 1440) {
+            if (i > 14400) {
                 Plugin.Logger.LogFatal("This loop ran a fuckton for some reason");
                 yield break;
             }
         }
     }
     private float CalculatePullStrength(float distance) {
-        float maxDistance = 75f;
+        float maxDistance = 100f;
         float minStrength = 0.15f;
         float maxStrength = 35f;
 
@@ -133,7 +133,7 @@ public class Tornados : NetworkBehaviour
 
     private IEnumerator AISearchRoutine(List<GameObject> nodes) {
         while (true) {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(0.5f);
             if (nodes.Count == 0) yield break;
 
             List<GameObject> nearbyNodes = nodes.Where(node => Vector3.Distance(node.transform.position, transform.position) < 20f).ToList();

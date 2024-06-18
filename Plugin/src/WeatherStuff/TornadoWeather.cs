@@ -71,7 +71,7 @@ public class TornadoWeather : CodeRebirthWeathers {
 
 	private IEnumerator TornadoSpawnerHandler() {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get Tornados before theyve inited everything.
-		for (int i = 0; i < random.Next(minTornadosToSpawn, maxTornadosToSpawn); i++) {
+		for (int i = 0; i < random.Next(1, 1); i++) {
 			SpawnTornado(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 		}
 		int delay = random.Next(700, 1000);
