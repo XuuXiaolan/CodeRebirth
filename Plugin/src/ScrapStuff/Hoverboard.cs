@@ -12,7 +12,7 @@ using UnityEngine.AI;
 using CodeRebirth.Patches;
 
 namespace CodeRebirth.ScrapStuff;
-public class Hoverboard : GrabbableObject {
+public class Hoverboard : GrabbableObject, IHittable {
     public Rigidbody hb;
     public InteractTrigger trigger;
     private bool turnedOn = false;
@@ -39,6 +39,9 @@ public class Hoverboard : GrabbableObject {
     private Quaternion resetChildRotation;
     private bool isAdjusting = false;
     private Quaternion targetRotation;
+    // Variables to store initial anchor positions and rotations
+    private Vector3[] initialAnchorPositions = new Vector3[4];
+    private Quaternion[] initialAnchorRotations = new Quaternion[4];
 
     public override void Start() {
         StartBaseImportant();
@@ -72,6 +75,12 @@ public class Hoverboard : GrabbableObject {
                 isInElevator = false;
             }
         }
+        // Save initial positions and rotations of the anchors
+        for (int i = 0; i < anchors.Length; i++) {
+            initialAnchorPositions[i] = anchors[i].localPosition;
+            initialAnchorRotations[i] = anchors[i].localRotation;
+        }
+        
         if (!IsHost) return;
         SetHoverboardStateClientRpc(0);
     }
@@ -275,18 +284,14 @@ public class Hoverboard : GrabbableObject {
         jumpCooldown = true;
     }
 
+    // ApplyForce method with added debug logs
     public void ApplyForce(Transform anchor, RaycastHit hit) {
         LayerMask mask = LayerMask.GetMask("Room");
         if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000f, mask)) {
             float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 3f : 100f);
-            hb.AddForceAtPosition(transform.up * force * mult, anchor.position, ForceMode.Acceleration);
+            // Debug log for force and anchor positions
+            hb.AddForceAtPosition(hoverboardChild.up * force * mult, anchor.position, ForceMode.Acceleration);
         }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void HbAddForceServerRpc(Vector3 forceDirection, float moveForce, bool impulse) {
-        if (!impulse) hb.AddForce(forceDirection * moveForce, ForceMode.Acceleration);
-        else hb.AddForce(forceDirection * moveForce, ForceMode.Impulse);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -376,11 +381,17 @@ public class Hoverboard : GrabbableObject {
                 }
             }
         }
+        // Reset hoverboardChild's rotation and position
         hoverboardChild.rotation = resetChildRotation;
         if (hoverboardMode == HoverboardMode.Held) {
             hoverboardChild.rotation = playerControlling.transform.rotation * Quaternion.Euler(0, -90, 0);
         }
         hoverboardChild.position += Vector3.up * 0.3f;
+        for (int i = 0; i < anchors.Length; i++) {
+            anchors[i].localPosition = initialAnchorPositions[i];
+            anchors[i].localRotation = initialAnchorRotations[i];
+        }
+        // Debug log for position and rotation
         playerControlling.transform.SetParent(hoverboardSeat.transform, true);
         if (GameNetworkManager.Instance.localPlayerController == playerControlling) {
             PlayerControllerBPatch.mountedPlayer = true;
@@ -572,4 +583,10 @@ public class Hoverboard : GrabbableObject {
         hoverboardChild.rotation = targetRotation;
         isAdjusting = false;
     }
+
+    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
+        // Move the hoverboard when hit.
+        hb.AddForce(hitDirection * force, ForceMode.Impulse);
+		return true; // this bool literally doesn't get used. i have no idea.
+	}
 }

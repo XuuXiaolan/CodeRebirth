@@ -106,7 +106,7 @@ public class ItemCrate : CRHittable {
 	public void OpenCrate() {
 		SpawnableItemWithRarity chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
 		Item item = chosenItemWithRarity.spawnableItem;
-		GameObject spawned = Instantiate(item.spawnPrefab, transform.position + transform.up*0.3f, Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
+		GameObject spawned = Instantiate(item.spawnPrefab, transform.position + transform.up*0.6f, Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
 		spawned.GetComponent<GrabbableObject>().SetScrapValue((int)(random.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier));
 		spawned.GetComponent<NetworkObject>().Spawn(false);
@@ -125,7 +125,7 @@ public class ItemCrate : CRHittable {
 		trigger.enabled = false;
 		GetComponent<Collider>().enabled = false;
 		opened = true;
-		animator.SetBool("opened", opened);
+		animator.SetTrigger("opened");
 	}
 	
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {

@@ -53,8 +53,6 @@ public class Tornados : NetworkBehaviour
     private bool damageTimer = true;
     public Transform eye;
 
-    float updateTimer = 0;
-    
     [ClientRpc]
     public void SetupTornadoClientRpc(Vector3 origin, int typeIndex) {
         this.origin = origin;
@@ -73,31 +71,33 @@ public class Tornados : NetworkBehaviour
         this.outsideNodes = RoundManager.Instance.outsideAINodes.ToList(); // would travel between these nodes using a search routine.
         agent = GetComponent<NavMeshAgent>();
         agent.speed = initialSpeed;
+        StartCoroutine(TornadoUpdate());
         if (IsHost) {
             StartAISearchRoutine(outsideNodes);
         }
     }
-
-    void Update() {
-        updateTimer += Time.deltaTime;
-    }
-
     private void FixedUpdate() {
         UpdateAudio();
-
-        if (updateTimer > 0.05f) {
-            Step();
-            updateTimer = 0;
-        }
     }
-    private void Step() {
-        var localPlayerController = GameNetworkManager.Instance.localPlayerController;
-        if (!StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && TornadoHasLineOfSightToPosition(this.transform.position)) {
-            float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
-            // Check if player is within 75 units of the tornado
-            Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
-            float forceStrength = CalculatePullStrength(distanceToTornado);
-            localPlayerController.externalForces += directionToCenter * forceStrength;
+    private IEnumerator TornadoUpdate() {
+        int i = 0;
+        WaitForSeconds wait = new WaitForSeconds(0.05f); // Execute every 0.05 seconds
+        while (true) {
+            yield return wait; // Reduced frequency of execution
+
+            var localPlayerController = GameNetworkManager.Instance.localPlayerController;
+            if (!StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && TornadoHasLineOfSightToPosition(this.transform.position)) {
+                float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
+                // Check if player is within 75 units of the tornado
+                Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
+                float forceStrength = CalculatePullStrength(distanceToTornado);
+                localPlayerController.externalForces += directionToCenter * forceStrength;
+            }
+            i++;
+            if (i > 1440) {
+                Plugin.Logger.LogFatal("This loop ran a fuckton for some reason");
+                yield break;
+            }
         }
     }
     private float CalculatePullStrength(float distance) {
@@ -149,7 +149,14 @@ public class Tornados : NetworkBehaviour
         }
     }
 
-    public bool TornadoHasLineOfSightToPosition(Vector3 pos, float range = 75) {
-        return Vector3.Distance(eye.position, pos) < range && !Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+    public bool TornadoHasLineOfSightToPosition(Vector3 pos, float width = 360f, int range = 75, float proximityAwareness = 3f) {
+
+        if (Vector3.Distance(eye.position, pos) < (float)range && !Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
+            Vector3 to = pos - eye.position;
+            if (Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness) {
+                return true;
+            }
+        }
+        return false;
     }
 }

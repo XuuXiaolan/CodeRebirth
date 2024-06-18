@@ -1,3 +1,12 @@
+## v0.1.1
+- Fixed wallet dropping while using terminal.
+- Fixed item crates not disappearing after opening.
+- Updated item crate scannode.
+- Added compatibility warning with piggy's variety mod (their animator overrides every mod's so it ruins the snow globe).
+- Heavily nerfed how strong the windy weather is.
+- Fixed hoverboard dragging itself to a specific position sometimes.
+- Allowed cover to exist for windy weather
+
 ## v0.1.0
 - Added new item, SnowGlobe.
 - Added configs for SnowGlobe.
