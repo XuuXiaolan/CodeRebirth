@@ -46,9 +46,9 @@ public class Tornados : NetworkBehaviour
     {
         Random,
         Fire,
-        Electric,
+        Blood,
         Windy,
-        Blood
+        Smoke,
     }
     public TornadoType tornadoType = TornadoType.Random;
     private bool damageTimer = true;
@@ -59,7 +59,9 @@ public class Tornados : NetworkBehaviour
         this.origin = origin;
         this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: origin, radius: 10f, randomSeed: new Random(30));
         this.transform.position = this.origin;
-        // this.tornadoType = (TornadoType)typeIndex;
+        this.tornadoType = (TornadoType)typeIndex;
+        Plugin.Logger.LogInfo($"Setting up tornado of type: {tornadoType} at {origin}");
+        SetupTornadoType();
         Init();
         UpdateAudio(); // Make sure audio works correctly on the first frame.
     }
@@ -68,6 +70,45 @@ public class Tornados : NetworkBehaviour
         TornadoWeather.Instance.AddTornado(this);
     }
 
+    private void SetupTornadoType() {
+        switch (tornadoType) {
+            case TornadoType.Random:
+                foreach (ParticleSystem particleSystem in tornadoParticles) {
+                    if (particleSystem.gameObject.name.Contains("Fire")) {
+                        particleSystem.gameObject.SetActive(true);   
+                    }
+                }
+                break;
+            case TornadoType.Fire:
+                foreach (ParticleSystem particleSystem in tornadoParticles) {
+                    if (particleSystem.gameObject.name.Contains("Fire")) {
+                        particleSystem.gameObject.SetActive(true);   
+                    }
+                }
+                break;
+            case TornadoType.Blood:
+                foreach (ParticleSystem particleSystem in tornadoParticles) {
+                    if (particleSystem.gameObject.name.Contains("Blood")) {
+                        particleSystem.gameObject.SetActive(true);   
+                    }
+                }
+                break;
+            case TornadoType.Windy:
+                foreach (ParticleSystem particleSystem in tornadoParticles) {
+                    if (particleSystem.gameObject.name.Contains("Wind")) {
+                        particleSystem.gameObject.SetActive(true);   
+                    }
+                }
+                break;
+            case TornadoType.Smoke:
+                foreach (ParticleSystem particleSystem in tornadoParticles) {
+                    if (particleSystem.gameObject.name.Contains("Smoke")) {
+                        particleSystem.gameObject.SetActive(true);   
+                    }
+                }
+                break;
+        }
+    }
     private void Init() {
         this.outsideNodes = RoundManager.Instance.outsideAINodes.ToList(); // would travel between these nodes using a search routine.
         agent = GetComponent<NavMeshAgent>();
