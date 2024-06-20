@@ -24,7 +24,6 @@ namespace CodeRebirth;
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency(CustomStoryLogs.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
@@ -65,11 +64,6 @@ public class Plugin : BaseUnityPlugin {
             type.GetConstructor([]).Invoke([]);
         }
 
-        if (OtherModCompatibility.enabled)
-        {
-            OtherModCompatibility.SomeMethodThatRequireTheDependencyToBeHere();
-            Logger.LogInfo("Compatibility with custom story logs initialized.");
-        }
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
     }
 
@@ -97,25 +91,5 @@ public class Plugin : BaseUnityPlugin {
                 }
             }
         }
-    }
-}
-
-public static class OtherModCompatibility
-{
-    private static bool? _enabled;
-
-    public static bool enabled {
-        get {
-            if (_enabled == null) {
-                _enabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.chen.othermod");
-            }
-            return (bool)_enabled;
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    public static void SomeMethodThatRequireTheDependencyToBeHere()
-    {
-      // stuff that require the dependency to be loaded
     }
 }
