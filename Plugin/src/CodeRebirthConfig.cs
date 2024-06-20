@@ -35,16 +35,20 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigScrapMasterPowerLevel { get; private set; }
         // Weather Specific
+        public ConfigEntry<int> ConfigTornadoWeatherType { get; private set; }
         public ConfigEntry<float> ConfigMeteorShowerMeteoriteSpawnChance { get; private set; }
         public ConfigEntry<float> ConfigMeteorShowerInShipVolume { get; private set; }
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
-        public ConfigEntry<string> ConfigTornadoType { get; private set; }
         // Misc
         public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigTornadoWeatherType = configFile.Bind("Weather Options",
+                                                "Weather | Tornado Type",
+                                                0,
+                                                "Type of tornado to spawn. 0 = Random, 1 = Fire, 2 = Blood, 3 = Wind, 4 = Smoke, 5 = Water");
             ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteorite Spawn Chance",
                                                 1f,
@@ -73,10 +77,6 @@ namespace CodeRebirth.Configs {
                                                 "Hoverboard | Cost",
                                                 500,
                                                 "Cost of Hoverboard.");
-            ConfigTornadoType = configFile.Bind("Tornados Options",
-                                                "Tornados | Tornado Type",
-                                                "Random",
-                                                "Type of tornado that could spawn: Random, Fire, Electric, Windy");
             ConfigMeteorShowerEnabled = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Enabled",
                                                 true,

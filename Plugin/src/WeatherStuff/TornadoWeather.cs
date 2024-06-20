@@ -42,7 +42,26 @@ public class TornadoWeather : CodeRebirthWeathers {
 		if(!IsAuthority()) return; // Only run on the host.
         
 		random = new Random();
-		tornadoTypeIndex = random.Next(0, 4);
+		switch (Plugin.ModConfig.ConfigTornadoWeatherType.Value) {
+			case 0:
+				tornadoTypeIndex = random.Next(0, 6);
+				break;
+			case 1:
+				tornadoTypeIndex = 1;
+				break;
+			case 2:
+				tornadoTypeIndex = 2;
+				break;
+			case 3:
+				tornadoTypeIndex = 3;
+				break;
+			case 4:
+				tornadoTypeIndex = 4;
+				break;
+			case 5:
+				tornadoTypeIndex = 5;
+				break;
+		}
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}
 
