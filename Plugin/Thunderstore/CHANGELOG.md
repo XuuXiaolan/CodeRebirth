@@ -1,3 +1,8 @@
+## v0.1.3
+- Fixed crater textures being weird.
+- Added subtypes for the tornado that don't currently do anything differently special.
+- Removed dependency on custom story logs temporarily until i figure out soft dependencies.
+
 ## v0.1.2
 - Fixed Snow Globe not having a value.
 - Allowed you to use ladders and special animations while tornado is around.

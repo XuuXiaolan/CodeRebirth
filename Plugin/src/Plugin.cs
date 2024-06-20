@@ -17,13 +17,14 @@ using LethalLib;
 using System.Collections.ObjectModel;
 using CodeRebirth.MapStuff;
 using CodeRebirth.Util.Extensions;
+using System.Runtime.CompilerServices;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency(CustomStoryLogs.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(CustomStoryLogs.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
@@ -63,6 +64,12 @@ public class Plugin : BaseUnityPlugin {
         foreach(Type type in creatureHandlers) {
             type.GetConstructor([]).Invoke([]);
         }
+
+        if (OtherModCompatibility.enabled)
+        {
+            OtherModCompatibility.SomeMethodThatRequireTheDependencyToBeHere();
+            Logger.LogInfo("Compatibility with custom story logs initialized.");
+        }
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
     }
 
@@ -72,7 +79,7 @@ public class Plugin : BaseUnityPlugin {
         }
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
-        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
         if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Piggy.PiggyVarietyMod")) Logger.LogFatal("You are using a mod (Piggy's Variety mod) that breaks the player animator and the snow globe will not work properly with this mod, you have been warned.");
     }
 
@@ -90,5 +97,25 @@ public class Plugin : BaseUnityPlugin {
                 }
             }
         }
+    }
+}
+
+public static class OtherModCompatibility
+{
+    private static bool? _enabled;
+
+    public static bool enabled {
+        get {
+            if (_enabled == null) {
+                _enabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.chen.othermod");
+            }
+            return (bool)_enabled;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    public static void SomeMethodThatRequireTheDependencyToBeHere()
+    {
+      // stuff that require the dependency to be loaded
     }
 }

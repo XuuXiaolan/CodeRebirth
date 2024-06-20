@@ -49,6 +49,7 @@ public class Tornados : NetworkBehaviour
         Blood,
         Windy,
         Smoke,
+        Water,
     }
     public TornadoType tornadoType = TornadoType.Random;
     private bool damageTimer = true;
@@ -103,6 +104,13 @@ public class Tornados : NetworkBehaviour
             case TornadoType.Smoke:
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Smoke")) {
+                        particleSystem.gameObject.SetActive(true);   
+                    }
+                }
+                break;
+            case TornadoType.Water:
+                foreach (ParticleSystem particleSystem in tornadoParticles) {
+                    if (particleSystem.gameObject.name.Contains("Water")) {
                         particleSystem.gameObject.SetActive(true);   
                     }
                 }
