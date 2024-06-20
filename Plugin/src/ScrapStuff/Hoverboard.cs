@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 using System.Linq;
 using UnityEngine.AI;
 using CodeRebirth.Patches;
+using CodeRebirth.Util.PlayerManager;
 
 namespace CodeRebirth.ScrapStuff;
 public class Hoverboard : GrabbableObject, IHittable {
@@ -393,9 +394,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         // Debug log for position and rotation
         playerControlling.transform.SetParent(hoverboardSeat.transform, true);
-        if (GameNetworkManager.Instance.localPlayerController == playerControlling) {
-            PlayerControllerBPatch.mountedPlayer = true;
-        }
+        playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = true;
         hoverboardMode = HoverboardMode.Mounted;
         playerControlling.playerActions.Movement.Look.Disable();
         playerControlling.playerActions.Movement.Jump.Disable();
@@ -419,7 +418,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (IsServer) {
             this.transform.SetParent(playerControlling.transform, true);
         }
-        PlayerControllerBPatch.mountedPlayer = false;
+        playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = false;
         hoverboardMode = HoverboardMode.Held;
         playerControlling.playerActions.Movement.Look.Enable();
         playerControlling.playerActions.Movement.Jump.Enable();
@@ -442,7 +441,7 @@ public class Hoverboard : GrabbableObject, IHittable {
                 this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             }
         }
-        PlayerControllerBPatch.mountedPlayer = false;
+        if (playerControlling != null) playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = false;
         turnedOn = false;
         _isHoverForwardHeld = false;
         hb.useGravity = true;

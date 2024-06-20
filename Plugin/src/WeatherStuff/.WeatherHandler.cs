@@ -62,7 +62,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 		GameObject.DontDestroyOnLoad(effectPermanentObject);
 
 		ImprovedWeatherEffect tornadoEffect = new(effectObject, effectPermanentObject){
-			SunAnimatorBool = "eclipse",
+			SunAnimatorBool = "overcast",
 		};
 		
 		TornadoesWeather = new Weather("Windy", tornadoEffect) {

@@ -2,12 +2,12 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using CodeRebirth.Misc;
-using CodeRebirth.src;
 using CodeRebirth.src.EnemyStuff;
 using GameNetcodeStuff;
 using Unity.Mathematics;
 using CodeRebirth.Util.Extensions;
 using UnityEngine;
+using CodeRebirth.Util.Spawning;
 
 namespace CodeRebirth.EnemyStuff;
 public abstract class QuestMasterAI : CodeRebirthEnemyAI

@@ -11,6 +11,7 @@ using CodeRebirth.Collisions;
 using CodeRebirth.Misc;
 using UnityEngine.Serialization;
 using Random = System.Random;
+using CodeRebirth.Util.Spawning;
 
 namespace CodeRebirth.WeatherStuff;
 public class Meteors : NetworkBehaviour {

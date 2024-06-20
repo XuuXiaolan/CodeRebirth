@@ -4,6 +4,7 @@
 - Reverted funny visuals with meteor craters.
 - Fixed item crate sound being global.
 - Made blood tornado do some weird stuff with damaging and healing player.
+- Potentially fixed a wallet bug.
 
 ## v0.1.1
 - Fixed wallet dropping while using terminal.

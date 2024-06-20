@@ -105,7 +105,7 @@ public class Wallet : GrabbableObject {
                 }
                 if (GameNetworkManager.Instance != null && walletHeldBy == GameNetworkManager.Instance.localPlayerController)
                 {
-                    depositItemsDesk.AddObjectToDeskServerRpc(this.GetComponent<NetworkObject>());
+                    depositItemsDesk.AddObjectToDeskServerRpc(GetComponent<NetworkObject>());
                     walletMode = WalletModes.Sold;
                     DropWallet();
                     this.transform.position = new Vector3(-29.3048f, -1.2182f, -31.4077f);

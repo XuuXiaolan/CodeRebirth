@@ -13,6 +13,7 @@ using UnityEngine.Serialization;
 using Random = System.Random;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using CodeRebirth.Util.PlayerManager;
 
 namespace CodeRebirth.WeatherStuff;
 public class Tornados : NetworkBehaviour
@@ -83,11 +84,11 @@ public class Tornados : NetworkBehaviour
     private IEnumerator TornadoUpdate() {
         int i = 0;
         WaitForSeconds wait = new WaitForSeconds(0.05f); // Execute every 0.05 seconds
+        var localPlayerController = GameNetworkManager.Instance.localPlayerController;
+        CodeRebirthPlayerManager localPlayerManager = localPlayerController.gameObject.GetComponent<CodeRebirthPlayerManager>();
         while (true) {
             yield return wait; // Reduced frequency of execution
-
-            var localPlayerController = GameNetworkManager.Instance.localPlayerController;
-            bool doesTornadoAffectPlayer = !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController != null && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
+            bool doesTornadoAffectPlayer = !localPlayerManager.ridingHoverboard && !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController != null && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
             if (doesTornadoAffectPlayer) {
                 float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
                 bool hasLineOfSight = TornadoHasLineOfSightToPosition(localPlayerController.transform.position);

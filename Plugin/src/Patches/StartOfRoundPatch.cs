@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq;
 using CodeRebirth.Misc;
-using CodeRebirth.src;
+using CodeRebirth.Util.Spawning;
 using CodeRebirth.Util.Extensions;
 using CodeRebirth.WeatherStuff;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using LethalLib.Modules;
+using GameNetcodeStuff;
+using CodeRebirth.Util.PlayerManager;
 
 namespace CodeRebirth.Patches;
 
@@ -28,6 +31,9 @@ static class StartOfRoundPatch {
 	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
+		foreach (PlayerControllerB player in __instance.allPlayerScripts) {
+			player.gameObject.AddComponent<CodeRebirthPlayerManager>();
+		}
 	}
 	
 	[HarmonyPatch(nameof(StartOfRound.OnDisable))]
