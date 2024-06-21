@@ -11,6 +11,10 @@ public enum CodeRebirthStatusEffects
 public class CodeRebirthPlayerManager : MonoBehaviour
 {
     public bool ridingHoverboard = false;
+    public bool hinderedByWaterTornado = false;
+    public bool hinderedByElectricTornado = false;
+    public bool hinderedBySmokeyTornado = false;
+    public bool hinderedByFireTornado = false;
     public Dictionary<CodeRebirthStatusEffects, bool> statusEffects = new Dictionary<CodeRebirthStatusEffects, bool>();
 
 }

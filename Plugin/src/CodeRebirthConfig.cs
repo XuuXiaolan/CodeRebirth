@@ -45,10 +45,10 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
-            ConfigTornadoWeatherType = configFile.Bind("Weather Options",
-                                                "Weather | Tornado Type",
+            ConfigTornadoWeatherType = configFile.Bind("Tornado Options",
+                                                "Tornados | Tornado Type",
                                                 0,
-                                                "Type of tornado to spawn. 0 = Random, 1 = Fire, 2 = Blood, 3 = Wind, 4 = Smoke, 5 = Water");
+                                                "Type of tornado to spawn. 0 = Random, 1 = Fire, 2 = Blood, 3 = Wind, 4 = Smoke, 5 = Water, 6 = Electric");
             ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteorite Spawn Chance",
                                                 1f,
@@ -81,7 +81,7 @@ namespace CodeRebirth.Configs {
                                                 "MeteorShower | Enabled",
                                                 true,
                                                 "Enables/Disables the MeteorShower from popping up into moons.");
-            ConfigTornadosEnabled = configFile.Bind("Tornados Options",
+            ConfigTornadosEnabled = configFile.Bind("Tornado Options",
                                                 "Tornados | Enabled",
                                                 true,
                                                 "Enables/Disables the Tornados from popping up into moons.");
