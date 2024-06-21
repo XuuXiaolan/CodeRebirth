@@ -395,13 +395,13 @@ Transform:
   m_GameObject: {fileID: 5214804311035148287}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.591, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 47.200817, y: 47.200813, z: 47.200813}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7892994024034952544}
   m_Father: {fileID: 5806937922113743738}
-  m_LocalEulerAnglesHint: {x: -89.98021, y: 6.252114e-31, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: 8.59299e-31, z: 0}
 --- !u!1 &5441877127953216816
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,6 +417,7 @@ GameObject:
   - component: {fileID: 7939740615921497438}
   - component: {fileID: 3130199350534052301}
   - component: {fileID: 419265790758884863}
+  - component: {fileID: 6883792194934513127}
   m_Layer: 9
   m_Name: Crate
   m_TagString: InteractTrigger
@@ -624,6 +625,36 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6883792194934513127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5441877127953216816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &6587025629217655398
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,7 +769,7 @@ Transform:
   m_Children:
   - {fileID: 8970309924909109971}
   m_Father: {fileID: 2432321858317169397}
-  m_LocalEulerAnglesHint: {x: 89.98022, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.98021, y: 0, z: 0}
 --- !u!1 &7455125063554250490
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,7 +888,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7892994024034952544}
-  m_LocalEulerAnglesHint: {x: 0.0000029623675, y: 0.000007951057, z: -30.531109}
+  m_LocalEulerAnglesHint: {x: -0.0000043257114, y: -6.1066647e-13, z: 90.00001}
 --- !u!1 &8649099834703569487
 GameObject:
   m_ObjectHideFlags: 0

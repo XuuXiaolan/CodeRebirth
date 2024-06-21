@@ -8,6 +8,7 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Random = System.Random;
 
 namespace CodeRebirth.MapStuff;
@@ -39,7 +40,8 @@ public class ItemCrate : CRHittable {
 	public AnimationClip openClip;
 
 	public bool opened;
-	public float digProgress;
+	
+	public NetworkVariable<float> digProgress = new(writePerm: NetworkVariableWritePermission.Owner);
 
 	public Vector3 originalPosition;
 	public Random random = new();
@@ -65,13 +67,29 @@ public class ItemCrate : CRHittable {
 		trigger.onInteract.AddListener(OnInteract);
 		trigger.onStopInteract.AddListener(OnInteractCancel);
 
-		digProgress = random.NextFloat(0.01f, 0.3f);
+		digProgress.OnValueChanged += UpdateDigPosition;
+		
+		
 		originalPosition = transform.position;
-		transform.position = originalPosition + (transform.up * digProgress * .5f);
+		UpdateDigPosition(0, 0);
+	}
+
+	public override void OnNetworkSpawn() {
+		if(IsOwner)
+			digProgress.Value = random.NextFloat(0.01f, 0.3f);
+	}
+	
+	void UpdateDigPosition(float old, float newValue) {
+		if(IsOwner) // :wharg:
+			transform.position = originalPosition + (transform.up * newValue * .5f);
+		
+		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {newValue}");
+		trigger.interactable = newValue >= 1;
+		pickable.enabled = trigger.interactable;
 	}
 
 	public void Update() {
-		trigger.interactable = digProgress == 1;
+		
 		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
 			trigger.hoverTip = keyHoverTip;
 		} else {
@@ -127,13 +145,21 @@ public class ItemCrate : CRHittable {
 		opened = true;
 		animator.SetTrigger("opened");
 	}
+
+	[ServerRpc(RequireOwnership = false)]
+	void SetNewDigProgressServerRPC(float newDigProgress) {
+		digProgress.Value = Mathf.Clamp01(newDigProgress);
+	}
 	
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
-		if (digProgress < 1) {
+		if (digProgress.Value < 1) {
 			float progressChange = random.NextFloat(0.15f, 0.25f);
-			digProgress = Mathf.Min(digProgress + progressChange, 1);
-			Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {digProgress}");
-			transform.position = originalPosition + (transform.up * digProgress * .5f);
+			if (IsOwner) {
+				digProgress.Value += progressChange;
+			} else {
+				SetNewDigProgressServerRPC(digProgress.Value + progressChange);
+			}
+			
 		}
 		return true; // this bool literally doesn't get used. i have no clue.
 	}
