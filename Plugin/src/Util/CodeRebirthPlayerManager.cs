@@ -5,16 +5,23 @@ namespace CodeRebirth.Util.PlayerManager;
 public enum CodeRebirthStatusEffects
 {
     None,
-    Windy,
+    Water,
+    Electric,
+    Fire,
+    Smokey,
     // Add other status effects here
 }
 public class CodeRebirthPlayerManager : MonoBehaviour
 {
     public bool ridingHoverboard = false;
-    public bool hinderedByWaterTornado = false;
-    public bool hinderedByElectricTornado = false;
-    public bool hinderedBySmokeyTornado = false;
-    public bool hinderedByFireTornado = false;
     public Dictionary<CodeRebirthStatusEffects, bool> statusEffects = new Dictionary<CodeRebirthStatusEffects, bool>();
+    public ParticleSystem playerParticles;
 
+    public CodeRebirthPlayerManager() {
+        statusEffects.Add(CodeRebirthStatusEffects.None, false);
+        statusEffects.Add(CodeRebirthStatusEffects.Water, false);
+        statusEffects.Add(CodeRebirthStatusEffects.Electric, false);
+        statusEffects.Add(CodeRebirthStatusEffects.Fire, false);
+        statusEffects.Add(CodeRebirthStatusEffects.Smokey, false);
+    }
 }

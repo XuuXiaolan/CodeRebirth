@@ -49,7 +49,11 @@ public class LightningStrikeScript {
         AudioSource audioSource = Object.Instantiate(stormy.targetedStrikeAudio);
         audioSource.transform.position = strikePosition + Vector3.up * 0.5f;
         audioSource.enabled = true;
-        audioSource.volume /= 4.0f;
+        if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) {
+            audioSource.volume = 0f;
+        } else {
+            audioSource.volume = 0.20f;
+        }
         stormy.PlayThunderEffects(strikePosition, audioSource);
     }
 }

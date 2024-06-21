@@ -164,12 +164,12 @@ public class Tornados : NetworkBehaviour
             case TornadoType.Smoke:
                 break;
             case TornadoType.Water:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.hinderedByWaterTornado) {
-                    localPlayerManager.hinderedByWaterTornado = true;
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = true;
                     localPlayerController.isMovementHindered++;
 			        localPlayerController.hinderedMultiplier *= 3f;  
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.hinderedByWaterTornado) {
-                    localPlayerManager.hinderedByWaterTornado = false;
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = false;
                     localPlayerController.isMovementHindered = Mathf.Clamp(localPlayerController.isMovementHindered - 1, 0, 1000);
 			        localPlayerController.hinderedMultiplier /= 3f;
                 }
@@ -181,19 +181,19 @@ public class Tornados : NetworkBehaviour
                     Vector3 strikePosition = GetRandomTargetPosition(random, outsideNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25);
                     LightningStrikeScript.SpawnLightningBolt(strikePosition);
                 }
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.hinderedByElectricTornado) {
-                    localPlayerManager.hinderedByElectricTornado = true;
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric] = true;
                     originalPlayerSpeed = localPlayerController.movementSpeed;
                     localPlayerController.movementSpeed *= 1.3f;
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.hinderedByElectricTornado) {
-                    localPlayerManager.hinderedByElectricTornado = false;
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric] = false;
                     localPlayerController.movementSpeed = originalPlayerSpeed;
                 }
                 break;
         }
     }
     private IEnumerator LightningBoltTimer() {
-        yield return new WaitForSeconds(random.NextFloat(0f, 1f) * 3);
+        yield return new WaitForSeconds(random.NextFloat(0f, 1f) * 8);
         lightningBoltTimer = true;
     }
     private float CalculatePullStrength(float distance, bool hasLineOfSight) {
