@@ -61,6 +61,9 @@ public class TornadoWeather : CodeRebirthWeathers {
 			case 5:
 				tornadoTypeIndex = 5;
 				break;
+			default:
+				tornadoTypeIndex = random.Next(0, 6);
+				break;
 		}
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}

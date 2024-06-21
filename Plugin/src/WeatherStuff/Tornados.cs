@@ -44,14 +44,14 @@ public class Tornados : NetworkBehaviour
 
     public enum TornadoType
     {
-        Random,
         Fire,
         Blood,
         Windy,
         Smoke,
         Water,
+        Electric,
     }
-    public TornadoType tornadoType = TornadoType.Random;
+    private TornadoType tornadoType = TornadoType.Fire;
     private bool damageTimer = true;
     public Transform eye;
 
@@ -73,13 +73,6 @@ public class Tornados : NetworkBehaviour
 
     private void SetupTornadoType() {
         switch (tornadoType) {
-            case TornadoType.Random:
-                foreach (ParticleSystem particleSystem in tornadoParticles) {
-                    if (particleSystem.gameObject.name.Contains("Fire")) {
-                        particleSystem.gameObject.SetActive(true);   
-                    }
-                }
-                break;
             case TornadoType.Fire:
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Fire")) {
@@ -111,6 +104,13 @@ public class Tornados : NetworkBehaviour
             case TornadoType.Water:
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Water")) {
+                        particleSystem.gameObject.SetActive(true);   
+                    }
+                }
+                break;
+            case TornadoType.Electric:
+                foreach (ParticleSystem particleSystem in tornadoParticles) {
+                    if (particleSystem.gameObject.name.Contains("Electric")) {
                         particleSystem.gameObject.SetActive(true);   
                     }
                 }
