@@ -19,19 +19,15 @@ internal class CodeRebirthUtils : NetworkBehaviour
     
     [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false) {
-        if (StartOfRound.Instance == null)
-        {
+        if (StartOfRound.Instance == null) {
             return;
         }
-        if (random == null)
-        {
+        
+        if (random == null) {
             random = new Random(StartOfRound.Instance.randomMapSeed + 85);
         }
 
-        
-
-        if (itemName == string.Empty)
-        {
+        if (itemName == string.Empty) {
             return;
         }
         Plugin.samplePrefabs.TryGetValue(itemName, out Item item);

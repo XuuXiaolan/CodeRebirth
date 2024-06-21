@@ -32,6 +32,7 @@ public class Tornados : NetworkBehaviour
     [SerializeField]
     private ParticleSystem[] tornadoParticles;
 
+
     private List<GameObject> outsideNodes = new List<GameObject>();
     private Vector3 origin;
 
@@ -68,40 +69,51 @@ public class Tornados : NetworkBehaviour
     }
 
     private void SetupTornadoType() {
+        int i = 0;
         switch (tornadoType) {
             case TornadoType.Fire:
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Fire")) {
-                        particleSystem.gameObject.SetActive(true);   
+                        particleSystem.gameObject.SetActive(true);
+                        i++;
                     }
+                    if (i == 7) break;
                 }
                 break;
             case TornadoType.Blood:
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Blood")) {
                         particleSystem.gameObject.SetActive(true);   
+                        i++;
                     }
+                    if (i == 7) break;
                 }
                 break;
             case TornadoType.Windy:
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Wind")) {
                         particleSystem.gameObject.SetActive(true);   
+                        i++;
                     }
+                    if (i == 7) break;
                 }
                 break;
             case TornadoType.Smoke:
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Smoke")) {
                         particleSystem.gameObject.SetActive(true);   
+                        i++;
                     }
+                    if (i == 7) break;
                 }
                 break;
             case TornadoType.Water:
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Water")) {
                         particleSystem.gameObject.SetActive(true);   
+                        i++;
                     }
+                    if (i == 7) break;
                 }
                 initialSpeed /= 2;
                 break;
@@ -109,9 +121,13 @@ public class Tornados : NetworkBehaviour
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Electric")) {
                         particleSystem.gameObject.SetActive(true);   
+                        i++;
+                    }
+                    if (i == 7) {
+                        initialSpeed *= 2;
+                        break;
                     }
                 }
-                initialSpeed *= 2;
                 break;
         }
         Init();
@@ -156,20 +172,50 @@ public class Tornados : NetworkBehaviour
         // All of these should activate some sort of particle effect on the player.
         switch (tornadoType) {
             case TornadoType.Fire:
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 15 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire] = true;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Fire, true);
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 15 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire] = false;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Fire, false);
+                }
                 break;
             case TornadoType.Blood:
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood] = true;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Blood, true);
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood] = false;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Blood, false);
+                }
                 break;
             case TornadoType.Windy:
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy] = true;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Windy, true);
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy] = false;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Windy, false);
+                }
                 break;
             case TornadoType.Smoke:
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke] = true;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Smoke, true);
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
+                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke] = false;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Smoke, false);
+                }
                 break;
             case TornadoType.Water:
                 if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = true;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, true);
                     localPlayerController.isMovementHindered++;
 			        localPlayerController.hinderedMultiplier *= 3f;  
                 } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = false;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, false);
                     localPlayerController.isMovementHindered = Mathf.Clamp(localPlayerController.isMovementHindered - 1, 0, 1000);
 			        localPlayerController.hinderedMultiplier /= 3f;
                 }
@@ -183,10 +229,12 @@ public class Tornados : NetworkBehaviour
                 }
                 if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric] = true;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Electric, true);
                     originalPlayerSpeed = localPlayerController.movementSpeed;
                     localPlayerController.movementSpeed *= 1.3f;
                 } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric] = false;
+                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Electric, false);
                     localPlayerController.movementSpeed = originalPlayerSpeed;
                 }
                 break;

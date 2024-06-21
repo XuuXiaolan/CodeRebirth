@@ -38,6 +38,18 @@ public class Plugin : BaseUnityPlugin {
     internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName) {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
         public GameObject UtilsPrefab { get; private set; }
+        [LoadFromBundle("WaterPlayerParticles.prefab")]
+        public GameObject WaterPlayerParticles { get; private set; }
+        [LoadFromBundle("WindPlayerParticles.prefab")]
+        public GameObject WindPlayerParticles { get; private set; }
+        [LoadFromBundle("SmokePlayerParticles.prefab")]
+        public GameObject SmokePlayerParticles { get; private set; }
+        [LoadFromBundle("FirePlayerParticles.prefab")]
+        public GameObject FirePlayerParticles { get; private set; }
+        [LoadFromBundle("ElectricPlayerParticles.prefab")]
+        public GameObject ElectricPlayerParticles { get; private set; }
+        [LoadFromBundle("BloodPlayerParticles.prefab")]
+        public GameObject BloodPlayerParticles { get; private set; }
     }
     
     private void Awake() {
