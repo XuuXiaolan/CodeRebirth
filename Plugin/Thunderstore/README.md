@@ -138,7 +138,7 @@ Modeling/Designs:
 - S1ckboy, Solid, Codding Cat and IntegrityChaos
 
 Sounds:
-- Oof Bubble
+- Oof Bubble, Moroxide
 
 Ideas/Lore:
 - halley/serene/falin

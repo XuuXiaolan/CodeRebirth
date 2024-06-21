@@ -2,6 +2,8 @@
 - Improved electric, water and potentially other tornado types and gave unique mechanics and changes.
 - Potentially fixed snowglobe not working for everyone's animator.
 - Potentially fixed item crate desyncs and exploit that didn't require digging it up.
+- Added sounds to tornados (provided by Moroxide).
+- Added particle effects to players near tornados (will improve in the future).
 
 ## v0.1.3
 - Fixed crater textures being weird.
