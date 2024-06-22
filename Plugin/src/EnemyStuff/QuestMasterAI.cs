@@ -113,7 +113,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         base.Start();
         if (!IsHost) return;
         ChangeSpeedClientRpc(spawnSpeed);
-        DoAnimationClientRpc(Animations.startSpawn.ToAnimationName());
+        TriggerAnimationClientRpc(Animations.startSpawn.ToAnimationName());
         StartCoroutine(DoSpawning());
         this.SwitchToBehaviourStateOnLocalClient(State.Spawning);
     }
@@ -123,13 +123,13 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         yield return new WaitForSeconds(spawnAnimation.length);
         StartSearch(transform.position);
         ChangeSpeedClientRpc(walkSpeed);
-        DoAnimationClientRpc(Animations.startWalk.ToAnimationName());
+        TriggerAnimationClientRpc(Animations.startWalk.ToAnimationName());
         this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
     }
     protected virtual void DoWandering()
     {
         if (!FindClosestPlayerInRange(range)) return;
-        DoAnimationClientRpc(Animations.startApproach.ToAnimationName());
+        TriggerAnimationClientRpc(Animations.startApproach.ToAnimationName());
         ChangeSpeedClientRpc(approachSpeed);
         StopSearch(currentSearch);
         this.SwitchToBehaviourStateOnLocalClient(State.Approaching);
@@ -139,7 +139,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         if (Vector3.Distance(transform.position, targetPlayer.transform.position) < 3f && !questStarted)
         {
             questStarted = true;
-            DoAnimationClientRpc(Animations.startGiveQuest.ToAnimationName());
+            TriggerAnimationClientRpc(Animations.startGiveQuest.ToAnimationName());
             StartCoroutine(DoGiveQuest());
         }
         SetDestinationToPosition(targetPlayer.transform.position);
@@ -150,7 +150,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         if (!questCompleted) creatureSFX.PlayOneShot(questGiveClip);
         if (questCompleted) creatureSFX.PlayOneShot(questGiveAgainClip);
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
-        DoAnimationClientRpc(Animations.startQuest.ToAnimationName());
+        TriggerAnimationClientRpc(Animations.startQuest.ToAnimationName());
         questStarted = true;
         ChangeSpeedClientRpc(questSpeed);
         if (RoundManager.Instance.allEnemyVents.Length == 0)
@@ -239,7 +239,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     protected IEnumerator StartAnimation(Animations animation, int layerIndex = 0, string stateName = "Walking Animation")
     {
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
-        DoAnimationClientRpc(animation.ToAnimationName());
+        TriggerAnimationClientRpc(animation.ToAnimationName());
         yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName));
     }
     protected virtual void DoDocile()

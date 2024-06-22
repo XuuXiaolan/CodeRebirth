@@ -7,6 +7,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 {
     public enum State {
         Wandering,
+        
     }
 
     public override void Start() {
@@ -21,7 +22,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
         switch(currentBehaviourStateIndex.ToPjonkGooseState()) {
             case State.Wandering:
-                agent.speed = 4f;
+                
                 break;
             default:
                 LogIfDebugBuild("This Behavior State doesn't exist!");
