@@ -245,7 +245,7 @@ public class Tornados : NetworkBehaviour
         lightningBoltTimer = true;
     }
     private float CalculatePullStrength(float distance, bool hasLineOfSight) {
-        float maxDistance = 150f + (tornadoType == TornadoType.Windy ? 50f : 0f);
+        float maxDistance = 100f + (tornadoType == TornadoType.Windy ? 50f : 0f);
         float minStrength = 0.1f;
         float maxStrength = (hasLineOfSight ? 30f : 6f) * (tornadoType == TornadoType.Windy ? 1.5f : 1f);
 
@@ -256,7 +256,7 @@ public class Tornados : NetworkBehaviour
             StartCoroutine(DamageTimer());
             HandleTornadoTypeDamage();
         }
-        return Mathf.Clamp(Mathf.Lerp(minStrength, maxStrength, normalizedDistance * normalizedDistance), minStrength, maxStrength);
+        return Mathf.Clamp(Mathf.Lerp(minStrength, maxStrength, normalizedDistance * normalizedDistance), 0, maxStrength);
     }
 
     private void HandleTornadoTypeDamage() {
@@ -305,6 +305,9 @@ public class Tornados : NetworkBehaviour
         {
             normalTravelAudio.volume = 0;
             closeTravelAudio.volume = 0;
+        } else {
+            normalTravelAudio.volume = 1;
+            closeTravelAudio.volume = 1;
         }
     }
 

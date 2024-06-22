@@ -28,7 +28,7 @@ public class CodeRebirthWeathers : MonoBehaviour {
         return count > 0 ? sumPosition / count : Vector3.zero;
     }
 	
-	public IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, bool cullDoors = true)
+	public IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, bool cullDoors = true, bool cullShip = false)
 	{
 		var nodeList = new List<GameObject>(nodes);
 		var toCull = new HashSet<GameObject>();
@@ -55,6 +55,10 @@ public class CodeRebirthWeathers : MonoBehaviour {
 		{
 			var entrances = FindObjectsOfType<EntranceTeleport>().ToList();
 			nodeList.RemoveAll(n => entrances.Exists(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
+		}
+		
+		if (cullShip) {
+			nodeList.RemoveAll(n => Vector3.Distance(n.transform.position, shipBoundaries.position) < 20);
 		}
 
 		return nodeList;

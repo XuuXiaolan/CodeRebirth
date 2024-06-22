@@ -37,7 +37,7 @@ public class TornadoWeather : CodeRebirthWeathers {
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
-		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
+		nodes = CullNodesByProximity(nodes, 5.0f, true, true).ToList();
 		
 		if(!IsAuthority()) return; // Only run on the host.
         

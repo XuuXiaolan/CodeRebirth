@@ -1,3 +1,9 @@
+## v0.1.5
+- Fixed particle effects not working.
+- Fixed unlimited range on tornados.
+- Fixed tornado audio disappearing when entering and leaving interior.
+- Reduced tornado spawning near ship.
+
 ## v0.1.4
 - Improved electric, water and potentially other tornado types and gave unique mechanics and changes.
 - Potentially fixed snowglobe not working for everyone's animator.
