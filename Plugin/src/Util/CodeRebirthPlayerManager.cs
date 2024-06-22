@@ -23,7 +23,7 @@ public class CodeRebirthPlayerManager : MonoBehaviour
 
     public event Action<CodeRebirthStatusEffects, bool> OnStatusEffectChanged;
 
-    public CodeRebirthPlayerManager()
+    public void Awake()
     {
         statusEffects.Add(CodeRebirthStatusEffects.None, false);
         statusEffects.Add(CodeRebirthStatusEffects.Water, false);
