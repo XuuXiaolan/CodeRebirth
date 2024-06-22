@@ -3,7 +3,7 @@
 namespace CodeRebirth.Util.Extensions;
 
 // this is cooked :sob:
-public static class intExtensionMethods {
+public static class IntExtensionMethods {
 	public static SnailCatAI.State ToSnailState(this int index)
 	{
 		return (SnailCatAI.State)index;
@@ -17,5 +17,10 @@ public static class intExtensionMethods {
 	public static QuestMasterAI.State ToQuestMasterAIState(this int index)
 	{
 		return (QuestMasterAI.State)index;
-	} 
+	}
+
+	public static PjonkGooseAI.State ToPjonkGooseState(this int index) 
+	{
+		return (PjonkGooseAI.State)index;
+	}
 }
