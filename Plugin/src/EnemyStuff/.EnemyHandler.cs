@@ -49,7 +49,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 		// Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
 		// RegisterEnemyWithConfig(Plugin.ModConfig.ConfigScrapMasterEnabled.Value, Plugin.ModConfig.ConfigScrapMasterSpawnWeights.Value, Assets.ScrapMasterEnemyType, Assets.ScrapMasterTerminalNode, Assets.ScrapMasterTerminalKeyword, Plugin.ModConfig.ConfigScrapMasterPowerLevel.Value, Plugin.ModConfig.ConfigScrapMasterMaxSpawnCount.Value);
-        RegisterEnemyWithConfig(true, "All:500", Assets.PjonkGooseEnemyType, Assets.PjonkGooseTerminalNode, Assets.PjonkGooseTerminalKeyword, 3, 1);
+        RegisterEnemyWithConfig(true, "All:9999", Assets.PjonkGooseEnemyType, Assets.PjonkGooseTerminalNode, Assets.PjonkGooseTerminalKeyword, 3, 1);
 		RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlyEnabled.Value, Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Assets.ButterflyEnemyType, Assets.ButterflyTerminalNode, Assets.ButterflyTerminalKeyword, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
         RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatEnabled.Value, Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, Assets.SnailCatEnemyType, Assets.SnailCatTerminalNode, Assets.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
 	}
