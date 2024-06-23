@@ -40,12 +40,16 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 		
 		[LoadFromBundle("PjonkGooseTK.asset")]
 		public TerminalKeyword PjonkGooseTerminalKeyword { get; private set; }
+		
+		[LoadFromBundle("PjonkEggObj.asset")]
+		public Item GoldenEggItem { get; private set; }
 	}
 
 	public EnemyAssets Assets { get; private set; }
 
 	public EnemyHandler() {
 		Assets = new EnemyAssets("coderebirthasset");
+		Plugin.samplePrefabs.Add("GoldenEgg", Assets.GoldenEggItem);
 		// Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
 		// RegisterEnemyWithConfig(Plugin.ModConfig.ConfigScrapMasterEnabled.Value, Plugin.ModConfig.ConfigScrapMasterSpawnWeights.Value, Assets.ScrapMasterEnemyType, Assets.ScrapMasterTerminalNode, Assets.ScrapMasterTerminalKeyword, Plugin.ModConfig.ConfigScrapMasterPowerLevel.Value, Plugin.ModConfig.ConfigScrapMasterMaxSpawnCount.Value);

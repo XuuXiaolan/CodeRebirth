@@ -811,7 +811,7 @@ MonoBehaviour:
   ventAnimationFinished: 0
   isEnemyDead: 0
   daytimeEnemyLeaving: 0
-  enemyHP: 7
+  enemyHP: 8
   openDoorSpeedMultiplier: 1
   useSecondaryAudiosOnAnimatedObjects: 0
   currentSearch:
@@ -837,6 +837,11 @@ MonoBehaviour:
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
   isOutside: 0
+  jumpScareSounds: []
+  featherSounds: []
+  hitSounds: []
+  deathSounds: []
+  nest: {fileID: 6181971026089299518, guid: 1c8b175c5ebbc424d8ecfcf12b021161, type: 3}
 --- !u!137 &5625797676714173749 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 1082065439498532975, guid: 902e085662600734e98efd0566360bbb,

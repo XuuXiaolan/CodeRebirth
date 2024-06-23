@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = System.Random;
+using Unity.Mathematics;
 
 namespace CodeRebirth.Util.Spawning;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -35,7 +36,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             return;
         }
-        GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up, Quaternion.identity);
+        GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
         int value = random.Next(minValue: item.minValue, maxValue: item.maxValue);
         var scanNode = go.GetComponentInChildren<ScanNodeProperties>();

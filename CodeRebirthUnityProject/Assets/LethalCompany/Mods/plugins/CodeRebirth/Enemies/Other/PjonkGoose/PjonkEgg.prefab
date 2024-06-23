@@ -295,10 +295,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2391111617594156600}
-  - component: {fileID: 5898201178588673314}
   - component: {fileID: 4714790092475601622}
   - component: {fileID: 6512045855373332961}
   - component: {fileID: 8699889077148776373}
+  - component: {fileID: 7110580426026226913}
   m_Layer: 6
   m_Name: PjonkEgg
   m_TagString: PhysicsProp
@@ -324,54 +324,6 @@ Transform:
   - {fileID: 5202053519788242512}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5898201178588673314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7004732810570983825}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d0cf24d2ccc3b7eab72048d0f57c437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grabbable: 1
-  isHeld: 0
-  isHeldByEnemy: 0
-  deactivated: 0
-  parentObject: {fileID: 0}
-  targetFloorPosition: {x: 0, y: 0, z: 0}
-  startFallingPosition: {x: 0, y: 0, z: 0}
-  floorYRot: 0
-  fallTime: 0
-  hasHitGround: 0
-  scrapValue: 0
-  itemUsedUp: 0
-  playerHeldBy: {fileID: 0}
-  isPocketed: 0
-  isBeingUsed: 0
-  isInElevator: 0
-  isInShipRoom: 0
-  isInFactory: 1
-  useCooldown: 0
-  currentUseCooldown: 0
-  itemProperties: {fileID: 0}
-  insertedBattery:
-    empty: 0
-    charge: 0
-  customGrabTooltip: 
-  propBody: {fileID: 0}
-  propColliders: []
-  originalScale: {x: 0, y: 0, z: 0}
-  wasOwnerLastFrame: 0
-  mainObjectRenderer: {fileID: 2112066349823380008}
-  scrapPersistedThroughRounds: 0
-  heldByPlayerOnServer: 0
-  radarIcon: {fileID: 0}
-  reachedFloorTarget: 0
-  grabbableToEnemies: 1
-  hasBeenHeld: 0
 --- !u!114 &4714790092475601622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,3 +377,51 @@ MonoBehaviour:
   m_Script: {fileID: -1067628483, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7110580426026226913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7004732810570983825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 465811933, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabbable: 1
+  isHeld: 0
+  isHeldByEnemy: 0
+  deactivated: 0
+  parentObject: {fileID: 0}
+  targetFloorPosition: {x: 0, y: 0, z: 0}
+  startFallingPosition: {x: 0, y: 0, z: 0}
+  floorYRot: 0
+  fallTime: 0
+  hasHitGround: 0
+  scrapValue: 0
+  itemUsedUp: 0
+  playerHeldBy: {fileID: 0}
+  isPocketed: 0
+  isBeingUsed: 0
+  isInElevator: 0
+  isInShipRoom: 0
+  isInFactory: 1
+  useCooldown: 0
+  currentUseCooldown: 0
+  itemProperties: {fileID: 11400000, guid: f42e7930ba88ba74a83649453fb44c22, type: 2}
+  insertedBattery:
+    empty: 0
+    charge: 0
+  customGrabTooltip: 
+  propBody: {fileID: 0}
+  propColliders: []
+  originalScale: {x: 0, y: 0, z: 0}
+  wasOwnerLastFrame: 0
+  mainObjectRenderer: {fileID: 2112066349823380008}
+  scrapPersistedThroughRounds: 0
+  heldByPlayerOnServer: 0
+  radarIcon: {fileID: 0}
+  reachedFloorTarget: 0
+  grabbableToEnemies: 1
+  hasBeenHeld: 0
