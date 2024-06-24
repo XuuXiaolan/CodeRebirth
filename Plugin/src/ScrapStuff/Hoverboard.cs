@@ -329,6 +329,16 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (IsServer) {
             networkObject.ChangeOwnership(playerControlling.actualClientId);
         }
+        CodeRebirthPlayerManager localPlayerManager = playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>();
+        if (playerControlling == GameNetworkManager.Instance.localPlayerController && !localPlayerManager.ItemUsages[CodeRebirthItemUsages.Hoverboard]) {
+            DialogueSegment dialogue = new DialogueSegment {
+                    speakerText = "Hoverboard Tooltips",
+                    bodyText = "C to Drop, E to Mount, F to Switch between Held and Mounted mode, Space to Jump, Shift to activate Boost.",
+                    waitTime = 7f
+            };
+            HUDManager.Instance.ReadDialogue([dialogue]);
+        }
+        localPlayerManager.ItemUsages[CodeRebirthItemUsages.Hoverboard] = true;
         playerControlling.transform.position = hoverboardSeat.transform.position;
         playerControlling.transform.rotation = hoverboardSeat.transform.rotation * Quaternion.Euler(0, 90, 0);
         Plugin.Logger.LogInfo($"{this} setting target to: {playerControlling.playerUsername}");

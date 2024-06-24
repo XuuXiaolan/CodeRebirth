@@ -45,27 +45,25 @@ namespace CodeRebirth.EnemyStuff
             base.Start();
             if (!IsHost) return;
             this.SwitchToBehaviourClientRpc((int)State.Spawning);
-            this.ChangeSpeedClientRpc(WALKING_SPEED);
+            this.ChangeSpeedClientRpc(0f);
             this.SetFloatAnimationClientRpc("MoveZ", agent.speed);
-            StartSearch(transform.position);
             StartCoroutine(WaitTimer1());
             SpawnNestClientRpc();
+            SpawnEggInNest();
         }
 
         [ClientRpc]
         public void SpawnNestClientRpc() {
             Object.Instantiate(nest, this.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-            if (IsHost) StartCoroutine(WaitTimer2());
         }
 
-        public IEnumerator WaitTimer2() {
-            yield return new WaitForSeconds(3f);
-            SpawnEggInNest();
-        }
         public IEnumerator WaitTimer1()
         {
             yield return new WaitForSeconds(3f);
             this.SwitchToBehaviourClientRpc((int)State.Wandering);
+            StartSearch(transform.position);
+            ChangeSpeedClientRpc(WALKING_SPEED);
+            this.SetFloatAnimationClientRpc("MoveZ", agent.speed);
         }
 
         public void DoSpawning()
@@ -294,8 +292,8 @@ namespace CodeRebirth.EnemyStuff
 
         public void SpawnEggInNest()
         { // here
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("GoldenEgg", nest.transform.position, false);
-            goldenEgg = FindObjectOfType<GoldenEgg>();
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc("GoldenEgg", this.transform.position, false);
+            goldenEgg = FindObjectsOfType<GoldenEgg>().Where(egg => Vector3.Distance(egg.transform.position, this.transform.position) < 10f).FirstOrDefault();
             LogIfDebugBuild($"Found egg in nest: {goldenEgg.itemProperties.itemName}");
             return;
         }

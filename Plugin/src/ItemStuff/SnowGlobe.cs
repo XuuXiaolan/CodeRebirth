@@ -103,6 +103,11 @@ public class SnowGlobe : GrabbableObject
         base.ItemActivate(used, buttonDown);
         if (!activated)
         {
+            if (Plugin.ModConfig.ConfigSnowGlobeMusic.Value) {
+                musicAS.volume = 1;
+            } else {
+                musicAS.volume = 0;
+            }
             StartCoroutine(ActivateSnowGlobeCoroutine());
             activated = true;
         }

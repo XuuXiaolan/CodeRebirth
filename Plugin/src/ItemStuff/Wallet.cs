@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using CodeRebirth.ScrapStuff;
+using CodeRebirth.Util.PlayerManager;
 
 namespace CodeRebirth.ItemStuff;
 public class Wallet : GrabbableObject { 
@@ -65,6 +66,7 @@ public class Wallet : GrabbableObject {
 
     public void OnInteract(PlayerControllerB player) {
         if (GameNetworkManager.Instance.localPlayerController != player) return;
+        if (player.gameObject.GetComponent<CodeRebirthPlayerManager>().holdingWallet) return;
         if (IsHost) {
             SetTargetClientRpc(System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         } else {
@@ -217,6 +219,7 @@ public class Wallet : GrabbableObject {
                 }
             }
             Plugin.Logger.LogInfo($"Clearing target on {this}");
+            
             isHeld = false;
             if (walletMode == WalletModes.Sold) {
                 trigger.interactable = false;
@@ -233,6 +236,7 @@ public class Wallet : GrabbableObject {
                 trigger.interactable = true;
             }
             walletHeldBy.carryWeight -= (this.itemProperties.weight - 1);
+            walletHeldBy.gameObject.GetComponent<CodeRebirthPlayerManager>().holdingWallet = false;
             walletMode = WalletModes.None;
             walletHeldBy = null;
             return;
@@ -248,6 +252,16 @@ public class Wallet : GrabbableObject {
         walletHeldBy = player;
         this.transform.position = player.transform.position + player.transform.up * 1f + player.transform.right * 0.25f + player.transform.forward * 0.05f;
         walletHeldBy.carryWeight += (this.itemProperties.weight - 1f);
+        CodeRebirthPlayerManager localPlayerManager = walletHeldBy.gameObject.GetComponent<CodeRebirthPlayerManager>();
+        if (walletHeldBy == GameNetworkManager.Instance.localPlayerController && !localPlayerManager.ItemUsages[CodeRebirthItemUsages.Wallet]) {
+            DialogueSegment dialogue = new DialogueSegment {
+                    speakerText = "Wallet Tooltips",
+                    bodyText = "L to Drop, E to Grab, LMB to Grab coins, O at company Counter to sell.",
+                    waitTime = 7f
+            };
+            HUDManager.Instance.ReadDialogue([dialogue]);
+        }
+        localPlayerManager.holdingWallet = true;
         // Apply the rotations
         Quaternion rotationLeft = Quaternion.Euler(0, 180, 0);
         Quaternion rotationForward = Quaternion.Euler(15, 0, 0);

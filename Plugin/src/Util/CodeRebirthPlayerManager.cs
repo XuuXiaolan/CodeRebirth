@@ -15,16 +15,25 @@ public enum CodeRebirthStatusEffects
     // Add other status effects here
 }
 
+public enum CodeRebirthItemUsages {
+    Wallet,
+    Hoverboard,
+}
+
 public class CodeRebirthPlayerManager : MonoBehaviour
 {
     public bool ridingHoverboard = false;
+    public bool holdingWallet = false;
     public Dictionary<CodeRebirthStatusEffects, bool> statusEffects = new Dictionary<CodeRebirthStatusEffects, bool>();
     public GameObject[] playerParticles = new GameObject[6];
+    public Dictionary<CodeRebirthItemUsages, bool> ItemUsages = new Dictionary<CodeRebirthItemUsages, bool>(); //todo, USE THISSS
 
     public event Action<CodeRebirthStatusEffects, bool> OnStatusEffectChanged;
 
     public void Awake()
     {
+        ItemUsages.Add(CodeRebirthItemUsages.Wallet, false);
+        ItemUsages.Add(CodeRebirthItemUsages.Hoverboard, false);
         statusEffects.Add(CodeRebirthStatusEffects.None, false);
         statusEffects.Add(CodeRebirthStatusEffects.Water, false);
         statusEffects.Add(CodeRebirthStatusEffects.Electric, false);

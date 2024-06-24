@@ -1,3 +1,11 @@
+## v0.1.6
+- Buffed item crate by atleast 3 times.
+- Added config to disable snow globe music (client side).
+- Attempted to fix wallet positioning.
+- Stopped you from being able to pick up multiple wallets.
+- Improved tooltips for wallet.
+- Improved tooltips for hoverboard.
+
 ## v0.1.5
 - Fixed particle effects not working.
 - Fixed unlimited range on tornados.

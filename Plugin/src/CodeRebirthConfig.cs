@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
         // Enables/Disables
+        public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
         public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
         public ConfigEntry<bool> ConfigWesleyModeEnabled { get; private set; }
         public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
@@ -45,6 +46,10 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigSnowGlobeMusic = configFile.Bind("SnowGlobe Options",
+                                                "Snow Globe | Music",
+                                                true,
+                                                "Enables/Disables the music in the snow globe.");
             ConfigTornadoWeatherType = configFile.Bind("Tornado Options",
                                                 "Tornados | Tornado Type",
                                                 0,
