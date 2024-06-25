@@ -245,9 +245,9 @@ public class Tornados : NetworkBehaviour
         lightningBoltTimer = true;
     }
     private float CalculatePullStrength(float distance, bool hasLineOfSight) {
-        float maxDistance = 100f + (tornadoType == TornadoType.Windy ? 50f : 0f);
-        float minStrength = 0.1f;
-        float maxStrength = (hasLineOfSight ? 30f : 6f) * (tornadoType == TornadoType.Windy ? 1.5f : 1f);
+        float maxDistance = 75f + (tornadoType == TornadoType.Windy ? 25f : 0f);
+        float minStrength = 0;
+        float maxStrength = (hasLineOfSight ? 30f : 2f) * (tornadoType == TornadoType.Windy ? 1.5f : 1f);
 
         // Calculate exponential strength based on distance
         float normalizedDistance = (maxDistance - distance) / maxDistance;

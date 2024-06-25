@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using CodeRebirth.ScrapStuff;
 using CodeRebirth.Util.PlayerManager;
+using System;
 
 namespace CodeRebirth.ItemStuff;
 public class Wallet : GrabbableObject { 
@@ -92,14 +93,39 @@ public class Wallet : GrabbableObject {
         HandleItemActivate();
         HandleItemDrop();
         HandleItemSell();
+        var playerPocketPosition = GameNetworkManager.Instance.localPlayerController.transform.position + GameNetworkManager.Instance.localPlayerController.transform.up * 1f + GameNetworkManager.Instance.localPlayerController.transform.right * 0.25f + GameNetworkManager.Instance.localPlayerController.transform.forward * 0.05f;
+        if (Vector3.Distance(playerPocketPosition, this.transform.position) > 0.5f) {
+            // Calculate the interpolation factor, ensuring it remains between 0 and 1
+            float step = Mathf.Clamp01(Time.deltaTime * 10f);
+
+            // Update this.transform.position to move towards playerPocketPosition.position
+            this.transform.position = Vector3.Lerp(this.transform.position, playerPocketPosition, step);
+        }
+        // Target rotation is the local player's rotation modified by the specified rotations
+        Quaternion rotationLeft = Quaternion.Euler(0, 90, 0);
+        Quaternion rotationForward = Quaternion.Euler(15, 0, 0);
+        Quaternion combinedRotation = rotationLeft * rotationForward;
+        Quaternion targetRotation = GameNetworkManager.Instance.localPlayerController.transform.rotation * combinedRotation;
+
+        // Current rotation of 'this.transform'
+        Quaternion currentRotation = this.transform.rotation;
+
+        // Calculate the angular difference
+        float angleDifference = Quaternion.Angle(currentRotation, targetRotation);
+
+        // Check if the angular difference is greater than a certain threshold, e.g., 30 degrees
+        if (angleDifference > 30f) {
+            // Apply the new rotation if the condition is met
+            this.transform.rotation = targetRotation;
+        }
     }
 
     public void HandleItemSell() {
         if (!Plugin.InputActionsInstance.WalletSell.triggered) return;
-        if (Object.FindObjectOfType<DepositItemsDesk>() != null && walletHeldBy != null)
+        if (FindObjectOfType<DepositItemsDesk>() != null && walletHeldBy != null)
         {
-            DepositItemsDesk depositItemsDesk = Object.FindObjectOfType<DepositItemsDesk>();
-            if (Vector3.Distance(Object.FindObjectOfType<DepositItemsDesk>().triggerCollider.transform.position, walletHeldBy.transform.position) < 8f || depositItemsDesk.triggerCollider.bounds.Contains(walletHeldBy.transform.position))
+            DepositItemsDesk depositItemsDesk = FindObjectOfType<DepositItemsDesk>();
+            if (Vector3.Distance(FindObjectOfType<DepositItemsDesk>().triggerCollider.transform.position, walletHeldBy.transform.position) < 8f || depositItemsDesk.triggerCollider.bounds.Contains(walletHeldBy.transform.position))
             {
                 if (depositItemsDesk.deskObjectsContainer.GetComponentsInChildren<GrabbableObject>().Length >= 12 || depositItemsDesk.inGrabbingObjectsAnimation)
                 {
@@ -260,6 +286,7 @@ public class Wallet : GrabbableObject {
                     waitTime = 7f
             };
             HUDManager.Instance.ReadDialogue([dialogue]);
+            localPlayerManager.ItemUsages[CodeRebirthItemUsages.Wallet] = true;
         }
         localPlayerManager.holdingWallet = true;
         // Apply the rotations
