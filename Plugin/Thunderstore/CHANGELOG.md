@@ -5,6 +5,7 @@
 - Stopped you from being able to pick up multiple wallets.
 - Improved tooltips for wallet.
 - Improved tooltips for hoverboard.
+- Nerfed Tornado power again.
 
 ## v0.1.5
 - Fixed particle effects not working.

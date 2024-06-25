@@ -8,6 +8,7 @@ using System.Collections.Generic;
 namespace CodeRebirth.src.EnemyStuff;
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
+    public EnemyAI targetEnemy;
     public override void Start()
     {
         base.Start();
@@ -143,7 +144,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     }
     [ClientRpc]
     public void SetTargetClientRpc(int PlayerID) {
-        if(PlayerID == -1) {
+        if (PlayerID == -1) {
             targetPlayer = null;
             LogIfDebugBuild($"Clearing target on {this}");
             return;
@@ -154,6 +155,25 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         }
         targetPlayer = StartOfRound.Instance.allPlayerScripts[PlayerID];
         LogIfDebugBuild($"{this} setting target to: {targetPlayer.playerUsername}");
+    }
+
+    [ServerRpc]
+    public void SetEnemyTargetServerRpc(int enemyID) {
+        SetEnemyTargetClientRpc(enemyID);
+    }
+    [ClientRpc]
+    public void SetEnemyTargetClientRpc(int enemyID) {
+        if (enemyID == -1) {
+            targetEnemy = null;
+            LogIfDebugBuild($"Clearing Enemy target on {this}");
+            return;
+        }
+        if (RoundManager.Instance.SpawnedEnemies[enemyID] == null) {
+            LogIfDebugBuild($"Enemy Index invalid! {this}");
+            return;
+        }
+        targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
+        LogIfDebugBuild($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
 }
 

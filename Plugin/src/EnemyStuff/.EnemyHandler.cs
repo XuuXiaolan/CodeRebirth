@@ -1,4 +1,4 @@
-﻿﻿using CodeRebirth.Util;
+﻿using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using LethalLib.Modules;
 using UnityEngine;

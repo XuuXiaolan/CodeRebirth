@@ -52,7 +52,7 @@ MonoBehaviour:
   subText: 
   scrapValue: 0
   creatureScanID: -1
-  nodeType: 2
+  nodeType: 1
 --- !u!65 &5198817917658878069
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -681,17 +681,17 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 1.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 13
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 230
+  m_StoppingDistance: 0.04
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2.3
   m_BaseOffset: -0.06
-  m_WalkableMask: 1021
-  m_ObstacleAvoidanceType: 3
+  m_WalkableMask: 765
+  m_ObstacleAvoidanceType: 1
 --- !u!114 &6047965137339572951
 MonoBehaviour:
   m_ObjectHideFlags: 0
