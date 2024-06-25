@@ -1,4 +1,5 @@
 using LethalCompanyInputUtils.Api;
+using LethalCompanyInputUtils.BindingPathEnums;
 using UnityEngine.InputSystem;
 
 namespace CodeRebirth.Keybinds;
@@ -23,4 +24,16 @@ public class IngameKeybinds : LcInputActions {
 
     [InputAction("<Keyboard>/f", Name = "SwitchMode")]
     public InputAction SwitchMode { get; set; }
+
+    [InputAction(MouseControl.Delta, Name = "MouseDelta")]
+    public InputAction MouseDelta { get; set; }
+
+    [InputAction(MouseControl.LeftButton, Name = "WalletActivate")]
+    public InputAction WalletActivate { get; set; }
+
+    [InputAction("<keyboard>/l", Name = "WalletDrop")]
+    public InputAction WalletDrop { get; set; }
+
+    [InputAction("<keyboard>/o", Name = "WalletSell")]
+    public InputAction WalletSell { get; set; }
 }

@@ -21,4 +21,10 @@ public static class EnemyAIExtensions {
 		enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
 		Plugin.Logger.LogVerbose($"Switching to {state} State.");
 	}
+	
+	public static void SwitchToBehaviourStateOnLocalClient(this EnemyAI enemyAI, PjonkGooseAI.State state)
+	{
+		enemyAI.SwitchToBehaviourStateOnLocalClient((int)state);
+		Plugin.Logger.LogVerbose($"Switching to {state} State.");
+	}
 }

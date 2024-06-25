@@ -1,12 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CodeRebirth.Misc;
-using CodeRebirth.src;
+using CodeRebirth.Util.Spawning;
 using CodeRebirth.Util.Extensions;
 using CodeRebirth.WeatherStuff;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using LethalLib.Modules;
+using GameNetcodeStuff;
+using CodeRebirth.Util.PlayerManager;
 
 namespace CodeRebirth.Patches;
 
@@ -24,26 +28,23 @@ static class StartOfRoundPatch {
 	
 	[HarmonyPatch(nameof(StartOfRound.Awake))]
 	[HarmonyPostfix]
-	public static void StartOfRound_Start(ref StartOfRound __instance)
+	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
-
-		string[] meteorLevelOverrides = Plugin.ModConfig.ConfigMeteorShowerMoonsBlacklist.Value.Split(',')
-											  .Select(name => name.Trim())
-											  .ToArray();
-		string[] tornadoLevelOverrides = Plugin.ModConfig.ConfigTornadoMoonsBlacklist.Value.Split(',')
-											   .Select(name => name.Trim())
-											   .ToArray();
-		LethalLib.Modules.Weathers.RemoveWeather("Meteor Shower", levelOverrides: meteorLevelOverrides);
-		LethalLib.Modules.Weathers.RemoveWeather("Tornados", levelOverrides: tornadoLevelOverrides);
+		foreach (PlayerControllerB player in __instance.allPlayerScripts) {
+			player.gameObject.AddComponent<CodeRebirthPlayerManager>();
+		}
 	}
 	
 	[HarmonyPatch(nameof(StartOfRound.OnDisable))]
 	[HarmonyPrefix]
 	public static void DisableWeathersPatch() {
-		if (MeteorShower.Active) { // patch to fix OnDisable not being triggered as its not actually in the scene.
-			WeatherHandler.Instance.MeteorShowerWeather.effectObject.SetActive(false);
-			WeatherHandler.Instance.MeteorShowerWeather.effectPermanentObject.SetActive(false);
+		if (MeteorShower.Active) { 
+			// patch to fix OnDisable not being triggered as its not actually in the scene.
+			WeatherHandler.Instance.MeteorShowerWeather.Effect.DisableEffect();
+		}
+		if (TornadoWeather.Active) {
+			WeatherHandler.Instance.TornadoesWeather.Effect.DisableEffect();
 		}
 	}
 	

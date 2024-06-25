@@ -3,6 +3,7 @@ using System.Diagnostics;
 using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 namespace CodeRebirth.src.EnemyStuff;
 public abstract class CodeRebirthEnemyAI : EnemyAI
@@ -20,12 +21,36 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     }
 
     [ClientRpc]
-    public void DoAnimationClientRpc(string triggerName)
+    public void SetFloatAnimationClientRpc(string name, float value)
     {
-        DoAnimationOnLocalClient(triggerName);
+        SetFloatAnimationOnLocalClient(name, value);
     }
 
-    public void DoAnimationOnLocalClient(string triggerName)
+    public void SetFloatAnimationOnLocalClient(string name, float value)
+    {
+        LogIfDebugBuild(name + " " + value);
+        creatureAnimator.SetFloat(name, value);
+    }
+
+    [ClientRpc]
+    public void SetBoolAnimationClientRpc(string name, bool active)
+    {
+        SetBoolAnimationOnLocalClient(name, active);
+    }
+
+    public void SetBoolAnimationOnLocalClient(string name, bool active)
+    {
+        LogIfDebugBuild(name + " " + active);
+        creatureAnimator.SetBool(name, active);
+    }
+
+    [ClientRpc]
+    public void TriggerAnimationClientRpc(string triggerName)
+    {
+        TriggerAnimationOnLocalClient(triggerName);
+    }
+
+    public void TriggerAnimationOnLocalClient(string triggerName)
     {
         LogIfDebugBuild(triggerName);
         creatureAnimator.SetTrigger(triggerName);
@@ -130,4 +155,15 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         targetPlayer = StartOfRound.Instance.allPlayerScripts[PlayerID];
         LogIfDebugBuild($"{this} setting target to: {targetPlayer.playerUsername}");
     }
+}
+
+public class SimpleWanderRoutine
+{
+    public List<GameObject> unvisitedNodes = new List<GameObject>();
+    public GameObject currentTargetNode;
+    public GameObject nextTargetNode;
+    public bool inProgress;
+    public Vector3 NestPosition;
+    public float wanderRadius = 30f;
+    public float searchPrecision = 5f;
 }

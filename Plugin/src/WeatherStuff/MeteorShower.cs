@@ -171,6 +171,10 @@ public class MeteorShower : CodeRebirthWeathers {
         return target + new Vector3(x, y, z);
     }
 	private void SpawnMeteor(Vector3 target, GameObject overridePrefab = null) {
+		if (target == Vector3.zero) {
+			Plugin.Logger.LogInfo("Target is zero, not spawning meteor");
+			return;
+		}
 		Plugin.Logger.LogInfo(direction.ToString());
 		Vector3 origin = new Vector3();
 		if (direction == Direction.Random) {

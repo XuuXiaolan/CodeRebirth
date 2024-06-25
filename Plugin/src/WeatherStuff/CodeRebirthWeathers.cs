@@ -13,6 +13,7 @@ using Random = System.Random;
 namespace CodeRebirth.WeatherStuff;
 
 public class CodeRebirthWeathers : MonoBehaviour {
+
     public Vector3 CalculateAverageLandNodePosition(List<GameObject> nodes)
     {
         Vector3 sumPosition = Vector3.zero;
@@ -27,7 +28,7 @@ public class CodeRebirthWeathers : MonoBehaviour {
         return count > 0 ? sumPosition / count : Vector3.zero;
     }
 	
-	public IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, bool cullDoors = true)
+	public IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, bool cullDoors = true, bool cullShip = false)
 	{
 		var nodeList = new List<GameObject>(nodes);
 		var toCull = new HashSet<GameObject>();
@@ -55,6 +56,10 @@ public class CodeRebirthWeathers : MonoBehaviour {
 			var entrances = FindObjectsOfType<EntranceTeleport>().ToList();
 			nodeList.RemoveAll(n => entrances.Exists(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
 		}
+		
+		if (cullShip) {
+			nodeList.RemoveAll(n => Vector3.Distance(n.transform.position, shipBoundaries.position) < 20);
+		}
 
 		return nodeList;
 	}
@@ -67,6 +72,22 @@ public class CodeRebirthWeathers : MonoBehaviour {
 			}
 			position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
 			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
+			if (!Plugin.ModConfig.ConfigMeteorHitShip.Value && Vector3.Distance(position, StartOfRound.Instance.shipBounds.transform.position) < 13) {
+				for (int i = 0; i < 5; i++) {
+					if (Vector3.Distance(position, StartOfRound.Instance.shipBounds.transform.position) < 13) {
+						nextNode = random.NextItem(nodes);
+						position = nextNode.transform.position;
+						position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
+						position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
+						if (i == 4) {
+							Plugin.Logger.LogWarning("Selecting random position failed.");
+							return Vector3.zero;
+						}
+					} else {
+						break;
+					}
+				}	
+			}
 		return position;
 		} catch {
 			Plugin.Logger.LogFatal("Selecting random position failed.");

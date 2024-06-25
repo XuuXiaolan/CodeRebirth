@@ -17,12 +17,13 @@ using LethalLib;
 using System.Collections.ObjectModel;
 using CodeRebirth.MapStuff;
 using CodeRebirth.Util.Extensions;
+using System.Runtime.CompilerServices;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
+[BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency(CustomStoryLogs.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
@@ -37,6 +38,18 @@ public class Plugin : BaseUnityPlugin {
     internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName) {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
         public GameObject UtilsPrefab { get; private set; }
+        [LoadFromBundle("WaterPlayerParticles.prefab")]
+        public GameObject WaterPlayerParticles { get; private set; }
+        [LoadFromBundle("WindPlayerParticles.prefab")]
+        public GameObject WindPlayerParticles { get; private set; }
+        [LoadFromBundle("SmokePlayerParticles.prefab")]
+        public GameObject SmokePlayerParticles { get; private set; }
+        [LoadFromBundle("FirePlayerParticles.prefab")]
+        public GameObject FirePlayerParticles { get; private set; }
+        [LoadFromBundle("ElectricPlayerParticles.prefab")]
+        public GameObject ElectricPlayerParticles { get; private set; }
+        [LoadFromBundle("BloodPlayerParticles.prefab")]
+        public GameObject BloodPlayerParticles { get; private set; }
     }
     
     private void Awake() {
@@ -62,6 +75,7 @@ public class Plugin : BaseUnityPlugin {
         foreach(Type type in creatureHandlers) {
             type.GetConstructor([]).Invoke([]);
         }
+
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
     }
 
@@ -71,7 +85,8 @@ public class Plugin : BaseUnityPlugin {
         }
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
-        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Piggy.PiggyVarietyMod")) Logger.LogFatal("You are using a mod (Piggy's Variety mod) that breaks the player animator and the snow globe will not work properly with this mod, you have been warned.");
     }
 
     private void InitializeNetworkBehaviours() {

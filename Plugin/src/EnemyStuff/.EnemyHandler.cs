@@ -32,18 +32,29 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 		
 		// [LoadFromBundle("ScrapMasterTK.asset")]
 		public TerminalKeyword ScrapMasterTerminalKeyword { get; private set; }
-		[LoadFromBundle("GrapeObj")]
-		public Item GrapeItem { get; private set; }
+		[LoadFromBundle("PjonkGooseObj.asset")]
+		public EnemyType PjonkGooseEnemyType { get; private set; }
+		
+		[LoadFromBundle("PjonkGooseTN.asset")]
+		public TerminalNode PjonkGooseTerminalNode { get; private set; }
+		
+		[LoadFromBundle("PjonkGooseTK.asset")]
+		public TerminalKeyword PjonkGooseTerminalKeyword { get; private set; }
+		
+		[LoadFromBundle("PjonkEggObj.asset")]
+		public Item GoldenEggItem { get; private set; }
 	}
 
 	public EnemyAssets Assets { get; private set; }
 
 	public EnemyHandler() {
 		Assets = new EnemyAssets("coderebirthasset");
-		Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
+		Plugin.samplePrefabs.Add("GoldenEgg", Assets.GoldenEggItem);
+		// Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
 		// RegisterEnemyWithConfig(Plugin.ModConfig.ConfigScrapMasterEnabled.Value, Plugin.ModConfig.ConfigScrapMasterSpawnWeights.Value, Assets.ScrapMasterEnemyType, Assets.ScrapMasterTerminalNode, Assets.ScrapMasterTerminalKeyword, Plugin.ModConfig.ConfigScrapMasterPowerLevel.Value, Plugin.ModConfig.ConfigScrapMasterMaxSpawnCount.Value);
-        RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlyEnabled.Value, Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Assets.ButterflyEnemyType, Assets.ButterflyTerminalNode, Assets.ButterflyTerminalKeyword, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
+        RegisterEnemyWithConfig(true, "All:9999", Assets.PjonkGooseEnemyType, Assets.PjonkGooseTerminalNode, Assets.PjonkGooseTerminalKeyword, 3, 1);
+		RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlyEnabled.Value, Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Assets.ButterflyEnemyType, Assets.ButterflyTerminalNode, Assets.ButterflyTerminalKeyword, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
         RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatEnabled.Value, Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, Assets.SnailCatEnemyType, Assets.SnailCatTerminalNode, Assets.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
 	}
 }

@@ -43,7 +43,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 39e1736b51c7a6847a7293773efbcd0b,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: fcd6a398def788c41a3e0a304b39ee14, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a25971ee0bb71164ab8664638d20448b, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -264,7 +264,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 39e1736b51c7a6847a7293773efbcd0b,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 7a2e05494fba4f8408b3f8e56ace58da, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 3057ae5212672224f9c827042db35937, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -393,7 +393,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 39e1736b51c7a6847a7293773efbcd0b,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 67f859c11e1321444bb2e021a7fd9309, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6c6ad21d4350f0544acec8ea861d500f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -923,8 +923,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198421077076039884, guid: bccc7a794e75b2a44a4b0dac69160b7b,
         type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 198421077076039884, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
       propertyPath: InitialModule.startSize.minScalar
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 198421077076039884, guid: bccc7a794e75b2a44a4b0dac69160b7b,
         type: 3}

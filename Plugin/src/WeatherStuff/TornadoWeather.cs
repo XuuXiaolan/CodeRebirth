@@ -11,7 +11,6 @@ using UnityEngine.AI;
 using Random = System.Random;
 
 namespace CodeRebirth.WeatherStuff;
-
 public class TornadoWeather : CodeRebirthWeathers {
 	Coroutine spawnHandler;
 	List<GameObject> nodes;
@@ -24,7 +23,7 @@ public class TornadoWeather : CodeRebirthWeathers {
     private int maxTornadosToSpawn;
     private List<GameObject> alreadyUsedNodes;
 
-	readonly List<Tornados> tornados = new List<Tornados>(); // Proper initialization
+	private List<Tornados> tornados = new List<Tornados>(); // Proper initialization
 	
 	Random random;
 	
@@ -38,12 +37,37 @@ public class TornadoWeather : CodeRebirthWeathers {
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
-		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
+		nodes = CullNodesByProximity(nodes, 5.0f, true, true).ToList();
 		
 		if(!IsAuthority()) return; // Only run on the host.
         
 		random = new Random();
-		tornadoTypeIndex = random.Next(0, 3);
+		switch (Plugin.ModConfig.ConfigTornadoWeatherType.Value) {
+			case 0:
+				tornadoTypeIndex = random.Next(0, 6);
+				break;
+			case 1:
+				tornadoTypeIndex = 0;
+				break;
+			case 2:
+				tornadoTypeIndex = 1;
+				break;
+			case 3:
+				tornadoTypeIndex = 2;
+				break;
+			case 4:
+				tornadoTypeIndex = 3;
+				break;
+			case 5:
+				tornadoTypeIndex = 4;
+				break;
+			case 6:
+				tornadoTypeIndex = 5;
+				break;
+			default:
+				tornadoTypeIndex = random.Next(0, 6);
+				break;
+		}
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}
 
@@ -72,14 +96,13 @@ public class TornadoWeather : CodeRebirthWeathers {
 
 	private IEnumerator TornadoSpawnerHandler() {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get Tornados before theyve inited everything.
-		while (true) { // this is fine because it gets stopped in OnDisable.
-
-			for (int i = 0; i < random.Next(minTornadosToSpawn, maxTornadosToSpawn); i++) {
-				SpawnTornado(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
-				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
-			}
-			int delay = random.Next(200, 500);
-			yield return new WaitForSeconds(delay);
+		for (int i = 0; i < random.Next(1, 1); i++) {
+			SpawnTornado(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
+		}
+		int delay = random.Next(700, 1000);
+		yield return new WaitForSeconds(delay);
+		for (int i = 0; i < random.Next(minTornadosToSpawn, maxTornadosToSpawn); i++) {
+			SpawnTornado(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 		}
 	}
 
@@ -93,13 +116,13 @@ public class TornadoWeather : CodeRebirthWeathers {
 		tornado.NetworkObject.Spawn();
 	}
 
-	public void AddTornado(Tornados meteor)
+	public void AddTornado(Tornados tornado)
 	{
-		tornados.Add(meteor);
+		tornados.Add(tornado);
 	}
 
-	public void RemoveTornado(Tornados meteor)
+	public void RemoveTornado(Tornados tornado)
 	{
-		tornados.Remove(meteor);
+		tornados.Remove(tornado);
 	}
 }
