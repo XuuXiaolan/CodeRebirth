@@ -19,7 +19,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
     
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false) {
+    public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false, bool defaultRotation = true) {
         if (StartOfRound.Instance == null) {
             return;
         }
@@ -36,7 +36,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             return;
         }
-        GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, Quaternion.identity);
+        GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, StartOfRound.Instance.propsContainer);
         go.GetComponent<NetworkObject>().Spawn();
         int value = random.Next(minValue: item.minValue, maxValue: item.maxValue);
         var scanNode = go.GetComponentInChildren<ScanNodeProperties>();
