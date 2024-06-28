@@ -176,30 +176,6 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         HoversNearNest();
     }
 
-    public void GoThroughEntrance() {
-        var pathToTeleport = new NavMeshPath();
-        var insideEntrancePosition = RoundManager.FindMainEntrancePosition(true, false);
-        var outsideEntrancePosition = RoundManager.FindMainEntrancePosition(true, true);
-        if (isOutside) {
-            LogIfDebugBuild("outside entrance position: " + outsideEntrancePosition);
-            if (NavMesh.CalculatePath(this.transform.position, outsideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
-                SetDestinationToPosition(outsideEntrancePosition);
-            }
-            if (Vector3.Distance(transform.position, outsideEntrancePosition) < 1f) {
-                this.agent.Warp(insideEntrancePosition);
-                this.SetEnemyOutside(false);
-            }
-        } else {
-            LogIfDebugBuild("inside entrance position: " + insideEntrancePosition);
-            if (NavMesh.CalculatePath(this.transform.position, insideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
-                SetDestinationToPosition(insideEntrancePosition);
-            }
-            if (Vector3.Distance(transform.position, insideEntrancePosition) < 1f) {
-                this.agent.Warp(outsideEntrancePosition);
-                this.SetEnemyOutside(true);
-            }
-        }
-    }
     public void DoChasingPlayer()
     {
         if (targetPlayer == null || !targetPlayer.IsSpawned || targetPlayer.isPlayerDead)
@@ -409,6 +385,31 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
     }
 
+    public void GoThroughEntrance() {
+        var pathToTeleport = new NavMeshPath();
+        var insideEntrancePosition = RoundManager.FindMainEntrancePosition(true, false);
+        var outsideEntrancePosition = RoundManager.FindMainEntrancePosition(true, true);
+        if (isOutside) {
+            LogIfDebugBuild("outside entrance position: " + outsideEntrancePosition);
+            if (NavMesh.CalculatePath(this.transform.position, outsideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
+                SetDestinationToPosition(outsideEntrancePosition);
+            }
+            if (Vector3.Distance(transform.position, outsideEntrancePosition) < 1f) {
+                this.agent.Warp(insideEntrancePosition);
+                this.SetEnemyOutside(false);
+            }
+        } else {
+            LogIfDebugBuild("inside entrance position: " + insideEntrancePosition);
+            if (NavMesh.CalculatePath(this.transform.position, insideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
+                SetDestinationToPosition(insideEntrancePosition);
+            }
+            if (Vector3.Distance(transform.position, insideEntrancePosition) < 1f) {
+                this.agent.Warp(outsideEntrancePosition);
+                this.SetEnemyOutside(true);
+            }
+        }
+    }
+
     public IEnumerator RecentlyDamagedCooldown() {
         recentlyDamaged = true;
         LogIfDebugBuild("Enemy recently damaged");
@@ -416,6 +417,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         LogIfDebugBuild("Enemy not recently damaged");
         recentlyDamaged = false;
     }
+    
     public void PlayerHitEnemy(int force, PlayerControllerB playerWhoStunned = null)
     {
         playerHits += force;
