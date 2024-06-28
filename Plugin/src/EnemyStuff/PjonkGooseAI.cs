@@ -10,6 +10,7 @@ using CodeRebirth.Util.Spawning;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.EnemyStuff;
 public class PjonkGooseAI : CodeRebirthEnemyAI
@@ -175,6 +176,30 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         HoversNearNest();
     }
 
+    public void GoThroughEntrance() {
+        var pathToTeleport = new NavMeshPath();
+        var insideEntrancePosition = RoundManager.FindMainEntrancePosition(true, false);
+        var outsideEntrancePosition = RoundManager.FindMainEntrancePosition(true, true);
+        if (isOutside) {
+            LogIfDebugBuild("outside entrance position: " + outsideEntrancePosition);
+            if (NavMesh.CalculatePath(this.transform.position, outsideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
+                SetDestinationToPosition(outsideEntrancePosition);
+            }
+            if (Vector3.Distance(transform.position, outsideEntrancePosition) < 1f) {
+                this.agent.Warp(insideEntrancePosition);
+                this.SetEnemyOutside(false);
+            }
+        } else {
+            LogIfDebugBuild("inside entrance position: " + insideEntrancePosition);
+            if (NavMesh.CalculatePath(this.transform.position, insideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
+                SetDestinationToPosition(insideEntrancePosition);
+            }
+            if (Vector3.Distance(transform.position, insideEntrancePosition) < 1f) {
+                this.agent.Warp(outsideEntrancePosition);
+                this.SetEnemyOutside(true);
+            }
+        }
+    }
     public void DoChasingPlayer()
     {
         if (targetPlayer == null || !targetPlayer.IsSpawned || targetPlayer.isPlayerDead)
@@ -186,8 +211,17 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
 
         // If the golden egg is held by the player, keep chasing the player until the egg is dropped
-        if (goldenEgg.isHeld)
+        if (goldenEgg != null && goldenEgg.playerHeldBy == targetPlayer)
         {
+            if (this.isOutside && goldenEgg.playerHeldBy.isInsideFactory) {
+                // go inside, path to player
+                GoThroughEntrance();
+            } else if (!this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) {
+                // go outside, path to player
+                GoThroughEntrance();
+            } else if ((this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) || (!this.isOutside && goldenEgg.playerHeldBy.isInsideFactory)) {
+                SetDestinationToPosition(targetPlayer.transform.position, false);
+            }
             SetDestinationToPosition(targetPlayer.transform.position, false);
             if (!goldenEgg.playerHeldBy)
             {
@@ -204,14 +238,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 }
                 return;
             }
-        }
-        else if (recentlyDamaged)
-        {
+        } else if (recentlyDamaged) {
             // If recently hit, chase the player
             SetDestinationToPosition(targetPlayer.transform.position, false);
-        }
-        else
-        {
+        } else {
             // If not recently hit and egg is not held, go to the egg
             SetDestinationToPosition(goldenEgg.transform.position, false);
             if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
