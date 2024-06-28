@@ -172,37 +172,37 @@ public class Tornados : NetworkBehaviour
         // All of these should activate some sort of particle effect on the player.
         switch (tornadoType) {
             case TornadoType.Fire:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 15 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 30 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire] = true;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Fire, true);
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 15 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 30 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire] = false;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Fire, false);
                 }
                 break;
             case TornadoType.Blood:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 20 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood] = true;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Blood, true);
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 20 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood] = false;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Blood, false);
                 }
                 break;
             case TornadoType.Windy:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 20 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy] = true;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Windy, true);
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 20 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy] = false;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Windy, false);
                 }
                 break;
             case TornadoType.Smoke:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
+                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 20 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke] = true;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Smoke, true);
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
+                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 20 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke] = false;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Smoke, false);
                 }
@@ -212,7 +212,7 @@ public class Tornados : NetworkBehaviour
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = true;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, true);
                     localPlayerController.isMovementHindered++;
-			        localPlayerController.hinderedMultiplier *= 3f;  
+			        localPlayerController.hinderedMultiplier *= 3f; 
                 } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
                     localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = false;
                     localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, false);
@@ -240,6 +240,7 @@ public class Tornados : NetworkBehaviour
                 break;
         }
     }
+
     private IEnumerator LightningBoltTimer() {
         yield return new WaitForSeconds(random.NextFloat(0f, 1f) * 8);
         lightningBoltTimer = true;

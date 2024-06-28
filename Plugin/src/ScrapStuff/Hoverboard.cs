@@ -600,7 +600,7 @@ public class Hoverboard : GrabbableObject, IHittable {
 	}
     
     public void SetupCollidersIgnoring() {
-        Collider hbCollider = GetComponent<Collider>();
+        Collider hbCollider = hb.GetComponent<Collider>();
         Collider hoverboardChildCollider = hoverboardChild.GetComponent<Collider>();
         Collider hoverboardChildChildrenCollider = hoverboardChild.GetComponentInChildren<Collider>();
         foreach (var player in StartOfRound.Instance.allPlayerScripts) {

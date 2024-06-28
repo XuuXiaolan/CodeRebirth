@@ -1,3 +1,8 @@
+## v0.1.7
+- Improved hoverboard collisions, I think.
+- Increased range for tornado effects.
+- Tornados will get a bigger update when I'm more free later I promise.
+
 ## v0.1.6
 - Buffed item crate by atleast 3 times.
 - Added config to disable snow globe music (client side).

@@ -90,6 +90,12 @@ public class Wallet : GrabbableObject {
                                         );
         }
         if (walletHeldBy == null || GameNetworkManager.Instance.localPlayerController != walletHeldBy) return;
+        var interactRay = new Ray(walletHeldBy.gameplayCamera.transform.position, walletHeldBy.gameplayCamera.transform.forward);
+        if (Physics.Raycast(interactRay, out hit, walletHeldBy.grabDistance, walletHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8) {
+            Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
+            if (coin == null) return;
+            coin.customGrabTooltip = $"{Plugin.InputActionsInstance.WalletActivate.GetBindingDisplayString().Split(' ')[0]} to Collect!";
+        }
         HandleItemActivate();
         HandleItemDrop();
         HandleItemSell();
@@ -144,7 +150,7 @@ public class Wallet : GrabbableObject {
     }
 
     public void HandleItemDrop() {
-        if (!Plugin.InputActionsInstance.WalletDrop.triggered || walletHeldBy == null || walletHeldBy.inTerminalMenu) return;
+        if (!Plugin.InputActionsInstance.WalletDrop.triggered || walletHeldBy.inTerminalMenu) return;
         DropWallet();
     }
 
@@ -166,14 +172,16 @@ public class Wallet : GrabbableObject {
             UpdateScrapValueServerRpc(coin.scrapValue);
             NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
             float newblendShapeWeight = Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) + 20f, 0, 300);
-            if (walletHeldBy) {
-                IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
-            }
+            IncreaseBlendShapeWeightServerRpc(newblendShapeWeight);
             UpdateToolTips();
             DestroyObjectServerRpc(obj);
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void IncreaseBlendShapeWeightServerRpc(float newblendShapeWeight) {
+        IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
+    }
     [ClientRpc]
     public void IncreaseBlendShapeWeightClientRpc(float newblendShapeWeight) {
         this.itemProperties.weight += 0.01f;
