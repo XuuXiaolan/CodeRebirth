@@ -60,8 +60,16 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         nest = Instantiate(nest, this.transform.position + Vector3.down * 0.02f, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
         if (!isOutside) isNestInside = true;
     }
-    public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding) {
+
+    public IEnumerator DelayedSpeed(float speed) {
+        this.ChangeSpeedClientRpc(0f);
+        yield return new WaitForSeconds(2.317f);
+        LogIfDebugBuild("Delayed Speed");
         this.ChangeSpeedClientRpc(speed);
+    }
+    public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding) {
+        if (state == State.ChasingPlayer || state == State.ChasingEnemy) StartCoroutine(DelayedSpeed(speed));
+        else this.ChangeSpeedClientRpc(speed);
         this.SetFloatAnimationClientRpc("MoveZ", speed);
         this.SetBoolAnimationClientRpc("Running", running);
         this.SetBoolAnimationClientRpc("Guarding", guarding);
@@ -212,25 +220,23 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         } else if (targetPlayer != null && goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
             SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
             return;
-        } else if (recentlyDamaged) {
+        } else if (recentlyDamaged || goldenEgg.playerHeldBy == null) {
             // If recently hit, chase the player
+            if (targetPlayer == null || goldenEgg.playerHeldBy == null) {
+                SetDestinationToPosition(goldenEgg.transform.position, false);
+                if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
+                {
+                    holdingEgg = true;
+                    goldenEgg.isHeldByEnemy = true;
+                    goldenEgg.grabbable = false;
+                    goldenEgg.parentObject = this.transform;
+                    goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
+                    isAggro = false;
+                    ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true);
+                }
+                return;
+            }
             SetDestinationToPosition(targetPlayer.transform.position, false);
-        } else if (goldenEgg.playerHeldBy == null) {
-            // If not recently hit and egg is not held, go to the egg
-            if (targetPlayer != null) {
-                SetTargetClientRpc(-1);
-            }
-            SetDestinationToPosition(goldenEgg.transform.position, false);
-            if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
-            {
-                holdingEgg = true;
-                goldenEgg.isHeldByEnemy = true;
-                goldenEgg.grabbable = false;
-                goldenEgg.parentObject = this.transform;
-                goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
-                isAggro = false;
-                ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true);
-            }
         }
     }
 
@@ -531,6 +537,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (targetPlayer.currentlyHeldObjectServer == goldenEgg)
         {
             targetPlayer.KillPlayer(targetPlayer.velocityLastFrame * 5f, true, CauseOfDeath.Bludgeoning);
+            SetTargetClientRpc(-1);
         } else {
             targetPlayer.DamagePlayer(20, true, true, CauseOfDeath.Mauling, 0, false, this.transform.forward * 3f);
         }
