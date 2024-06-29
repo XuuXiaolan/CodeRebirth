@@ -221,8 +221,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
             return;
         } else if (recentlyDamaged || goldenEgg.playerHeldBy == null) {
-            // If recently hit, chase the player
-            if (targetPlayer == null || goldenEgg.playerHeldBy == null) {
+            // If recently hit or no one's holding the egg, chase the player or chase the egg
+            if (targetPlayer == null && goldenEgg.playerHeldBy == null) {
                 SetDestinationToPosition(goldenEgg.transform.position, false);
                 if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
                 {
@@ -551,7 +551,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         isAggro = true;
         SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned));
         ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, false);
-        this.HitEnemy(0, playerWhoStunned, false, -4);
+        this.HitEnemy(0, playerWhoStunned, false, -1);
     }
 
     public override void OnCollideWithPlayer(Collider other)
