@@ -24,8 +24,48 @@ source = "../bin/Release/netstandard2.1/CodeRebirth.dll"
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]
-source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/coderebirthasset"
-target = "plugins/CodeRebirth/"
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/coderebirthasset"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/tornadoassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/meteorshowerassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/moneyassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/crateassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/snowglobeassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/walletassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/epicaxeassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/hoverboardassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/snailcatassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/cutieflyassets"
+target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]
 source = "./CHANGELOG.md"
