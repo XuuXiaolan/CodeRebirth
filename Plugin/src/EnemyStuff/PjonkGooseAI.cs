@@ -205,7 +205,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             ControlStateSpeedAnimation(WALKING_SPEED, State.Wandering, true, false, false);
             SetTargetClientRpc(-1);
             return;
-        }
+        } // <-- shouldn't happen.
+
         if (targetPlayer != null && goldenEgg.playerHeldBy == targetPlayer)
         {
             if (this.isOutside && goldenEgg.playerHeldBy.isInsideFactory) {
@@ -217,26 +218,37 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             } else if ((this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) || (!this.isOutside && goldenEgg.playerHeldBy.isInsideFactory)) {
                 SetDestinationToPosition(targetPlayer.transform.position, false);
             }
-        } else if (targetPlayer != null && goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
+            return;
+        } else if (goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
             SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
             return;
-        } else if (recentlyDamaged || goldenEgg.playerHeldBy == null) {
-            // If recently hit or no one's holding the egg, chase the player or chase the egg
-            if (targetPlayer == null && goldenEgg.playerHeldBy == null) {
-                SetDestinationToPosition(goldenEgg.transform.position, false);
-                if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
-                {
-                    holdingEgg = true;
-                    goldenEgg.isHeldByEnemy = true;
-                    goldenEgg.grabbable = false;
-                    goldenEgg.parentObject = this.transform;
-                    goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
-                    isAggro = false;
-                    ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true);
-                }
-                return;
+        } else if (recentlyDamaged) {
+            // If recently hit, chase the player
+            if (holdingEgg) {
+                DropEgg();
             }
             SetDestinationToPosition(targetPlayer.transform.position, false);
+            return;
+        } else if (goldenEgg.playerHeldBy == null) {
+            // If not recently hit and egg is not held, go to the egg
+            if (targetPlayer != null) {
+                SetTargetClientRpc(-1);
+            }
+            SetDestinationToPosition(goldenEgg.transform.position, false);
+            if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
+            {
+                holdingEgg = true;
+                goldenEgg.isHeldByEnemy = true;
+                goldenEgg.grabbable = false;
+                goldenEgg.parentObject = this.transform;
+                goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
+                isAggro = false;
+                ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true);
+            }
+            return;
+        }
+        if (!recentlyDamaged && goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
+            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
         }
     }
 
@@ -353,25 +365,29 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         PlayJumpScareSoundClientRpc();
     }
 
+    public void DropEgg() {
+        goldenEgg.parentObject = null;
+        goldenEgg.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+        goldenEgg.EnablePhysics(true);
+        goldenEgg.fallTime = 0f;
+        goldenEgg.startFallingPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.transform.position);
+        goldenEgg.targetFloorPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.GetItemFloorPosition(default(Vector3)));
+        goldenEgg.floorYRot = -1;
+        goldenEgg.DiscardItemFromEnemy();
+        goldenEgg.grabbable = true;
+        goldenEgg.grabbableToEnemies = true;
+        goldenEgg.isHeldByEnemy = false;
+        holdingEgg = false;
+        goldenEgg.transform.rotation = Quaternion.Euler(goldenEgg.itemProperties.restingRotation);
+    }
+
     public override void KillEnemy(bool destroy = false) {
         base.KillEnemy(destroy);
         if (IsHost) {
             TriggerAnimationClientRpc("Death");
             ControlStateSpeedAnimation(0, State.Death, false, false, false);
             if (holdingEgg) {
-                goldenEgg.parentObject = null;
-                goldenEgg.transform.SetParent(StartOfRound.Instance.propsContainer, true);
-                goldenEgg.EnablePhysics(true);
-                goldenEgg.fallTime = 0f;
-                goldenEgg.startFallingPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.transform.position);
-                goldenEgg.targetFloorPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.GetItemFloorPosition(default(Vector3)));
-                goldenEgg.floorYRot = -1;
-                goldenEgg.DiscardItemFromEnemy();
-                goldenEgg.grabbable = true;
-                goldenEgg.grabbableToEnemies = true;
-                goldenEgg.isHeldByEnemy = false;
-                holdingEgg = false;
-                goldenEgg.transform.rotation = Quaternion.Euler(goldenEgg.itemProperties.restingRotation);
+                DropEgg();
             }
         }
         // creatureVoice.PlayOneShot(dieSFX);
@@ -445,19 +461,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             TriggerAnimationClientRpc("Stunned");
             ControlStateSpeedAnimation(0f, State.Stunned, false, false, false);
             if (holdingEgg) {
-                goldenEgg.parentObject = null;
-                goldenEgg.transform.SetParent(StartOfRound.Instance.propsContainer, true);
-                goldenEgg.EnablePhysics(true);
-                goldenEgg.fallTime = 0f;
-                goldenEgg.startFallingPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.transform.position);
-                goldenEgg.targetFloorPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.GetItemFloorPosition(default(Vector3)));
-                goldenEgg.floorYRot = -1;
-                goldenEgg.DiscardItemFromEnemy();
-                goldenEgg.grabbable = true;
-                goldenEgg.grabbableToEnemies = true;
-                goldenEgg.isHeldByEnemy = false;
-                holdingEgg = false;
-                goldenEgg.transform.rotation = Quaternion.Euler(goldenEgg.itemProperties.restingRotation);
+                DropEgg();
             }
             StartCoroutine(StunCooldown(playerWhoStunned));
         }
@@ -506,24 +510,14 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public void HoversNearNest()
     {
         // Logic for hovering near nest
+        if (targetPlayer != null) {
+               this.transform.LookAt(targetPlayer.transform.position);
+        } else {
+            this.transform.LookAt(StartOfRound.Instance.allPlayerScripts.OrderBy(player => Vector3.Distance(player.transform.position, this.transform.position)).First().transform.position);
+        }
         if (Vector3.Distance(this.transform.position, nest.transform.position) < 0.75f)
         {
-            goldenEgg.parentObject = null;
-            goldenEgg.transform.SetParent(StartOfRound.Instance.propsContainer, true);
-            goldenEgg.EnablePhysics(true);
-            goldenEgg.fallTime = 0f;
-            goldenEgg.startFallingPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.transform.position);
-            goldenEgg.targetFloorPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.GetItemFloorPosition(default(Vector3)));
-            goldenEgg.floorYRot = -1;
-            goldenEgg.DiscardItemFromEnemy();
-            goldenEgg.grabbable = true;
-            goldenEgg.grabbableToEnemies = true;
-            goldenEgg.isHeldByEnemy = false;
-            holdingEgg = false;
-            goldenEgg.transform.rotation = Quaternion.Euler(goldenEgg.itemProperties.restingRotation);
-            if (targetPlayer != null) {
-               this.transform.LookAt(targetPlayer.transform.position);
-            }
+            DropEgg();
             ControlStateSpeedAnimation(0f, State.Idle, false, false, true);
             StartCoroutine(SpawnTimer());
         } else {
