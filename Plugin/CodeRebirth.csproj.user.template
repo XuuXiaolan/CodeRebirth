@@ -16,9 +16,21 @@
          Directories="$(TestDir)$(AssemblyName)-DEV/"
          Condition="!Exists('$(TestDir)$(AssemblyName)-DEV/')"
       />
+      <MakeDir
+         Directories="$(TestDir)$(AssemblyName)-DEV/Assets"
+         Condition="!Exists('$(TestDir)$(AssemblyName)-DEV/Assets')"
+      />
       <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(TestDir)$(AssemblyName)-DEV/"/>
-      <!-- We will copy the asset bundle named "coderebirthasset" over -->
-      <Copy SourceFiles="../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/coderebirthasset" DestinationFolder="$(TestDir)$(AssemblyName)-DEV/"/>
+      <!-- We will copy all asset bundles from the specified directory to the Assets folder -->
+      <Copy SourceFiles="@(AssetBundles)"
+            DestinationFolder="$(TestDir)$(AssemblyName)-DEV/Assets/"/>
       <Exec Command="echo '[csproj.user] Mod files copied to $(TestDir)$(AssemblyName)-DEV/'" />
    </Target>
+   
+   <ItemGroup>
+      <AssetBundles Include="../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Assetbundles/*" />
+      <AssetBundles Remove="../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Assetbundles/*.meta" />
+      <AssetBundles Remove="../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Assetbundles/AssetBundles" />
+      <Assetbundles Remove="../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Assetbundles/*.manifest" />
+   </ItemGroup>
 </Project>

@@ -58,7 +58,7 @@ public class MeteorShower : CodeRebirthWeathers {
 		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
 		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
-		meteorOverridePrefab = Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? WeatherHandler.Instance.Assets.WesleyModePrefab : null; // eventually gonna have a config bool to turn on override prefabs and maybe have more prefab options.
+		meteorOverridePrefab = Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? WeatherHandler.Instance.Meteorite.WesleyModePrefab : null; // eventually gonna have a config bool to turn on override prefabs and maybe have more prefab options.
 		SpawnOverheadVisualMeteors(random.Next(15, 45), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
 		
 		if(!IsAuthority()) return; // Only run on the host.
@@ -126,7 +126,7 @@ public class MeteorShower : CodeRebirthWeathers {
 	}
 	private void SpawnVisualMeteors(Vector3 centralLocation, Vector3 offset = default, float speed = 0f, float sizeMultiplier = 1f, GameObject overridePrefab = null)
     {
-        Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
+        Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
 		meteor.transform.localScale *= sizeMultiplier;
         AddRandomMovement(meteor, speed);
         meteor.SetupAsLooping();
@@ -185,7 +185,7 @@ public class MeteorShower : CodeRebirthWeathers {
 			origin = CalculateVector(target);
 		}
             
-		Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Assets.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
+		Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
 		meteor.NetworkObject.OnSpawn(() => {
 			meteor.SetupMeteorClientRpc(origin, target);
 		});

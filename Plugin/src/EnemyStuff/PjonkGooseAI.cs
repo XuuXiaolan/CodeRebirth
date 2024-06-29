@@ -31,6 +31,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public GameObject nest;
     private bool recentlyDamaged = false;
     private bool nestCreated = false;
+    private bool isNestInside = true;
     private Coroutine recentlyDamagedCoroutine;
 
     public enum State
@@ -57,6 +58,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     [ClientRpc]
     public void SpawnNestClientRpc() {
         nest = Instantiate(nest, this.transform.position + Vector3.down * 0.02f, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+        if (!isOutside) isNestInside = true;
     }
     public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding) {
         this.ChangeSpeedClientRpc(speed);
@@ -145,10 +147,6 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         if (!isAggro)
         {
-            if (wanderCoroutine == null)
-            {
-                StartWandering(nest.transform.position);
-            }
             if (goldenEgg.isHeldByEnemy && !holdingEgg) {
                 LogIfDebugBuild("An Enemy grabbed the egg");
                 isAggro = true;
@@ -161,12 +159,26 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                     return;
                 }
                 SetEnemyTargetClientRpc(Array.IndexOf(RoundManager.Instance.SpawnedEnemies.ToArray(), yippeeHoldingEgg));
+                return;
             } else if (goldenEgg.isHeld) {
                 LogIfDebugBuild("Someone grabbed the egg");
                 // maybe honk or some stuff.
                 isAggro = true;
                 ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, true);
                 SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
+                return;
+            }
+            if (wanderCoroutine == null)
+            {
+                if (isOutside && !isNestInside) {
+                    StartWandering(nest.transform.position);
+                } else if (!isOutside && isNestInside) {
+                    StartWandering(nest.transform.position);    
+                } else if (isOutside && isNestInside) {
+                    GoThroughEntrance();
+                } else if (!isOutside && !isNestInside) {
+                    GoThroughEntrance();
+                }
             }
         }
     }
@@ -178,16 +190,15 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public void DoChasingPlayer()
     {
-        if (targetPlayer == null || !targetPlayer.IsSpawned || targetPlayer.isPlayerDead)
-        {
+        // If the golden egg is held by the player, keep chasing the player until the egg is dropped
+        if (goldenEgg == null) {
+            LogIfDebugBuild("Golden egg is null");
             isAggro = false;
             ControlStateSpeedAnimation(WALKING_SPEED, State.Wandering, true, false, false);
             SetTargetClientRpc(-1);
             return;
         }
-
-        // If the golden egg is held by the player, keep chasing the player until the egg is dropped
-        if (goldenEgg != null && goldenEgg.playerHeldBy == targetPlayer)
+        if (targetPlayer != null && goldenEgg.playerHeldBy == targetPlayer)
         {
             if (this.isOutside && goldenEgg.playerHeldBy.isInsideFactory) {
                 // go inside, path to player
@@ -198,27 +209,17 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             } else if ((this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) || (!this.isOutside && goldenEgg.playerHeldBy.isInsideFactory)) {
                 SetDestinationToPosition(targetPlayer.transform.position, false);
             }
-            SetDestinationToPosition(targetPlayer.transform.position, false);
-            if (!goldenEgg.playerHeldBy)
-            {
-                // Player dropped the egg, pick it up
-                if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
-                {
-                    holdingEgg = true;
-                    goldenEgg.isHeldByEnemy = true;
-                    goldenEgg.grabbable = false;
-                    goldenEgg.parentObject = this.transform;
-                    goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
-                    isAggro = false;
-                    ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true);
-                }
-                return;
-            }
+        } else if (targetPlayer != null && goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
+            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
+            return;
         } else if (recentlyDamaged) {
             // If recently hit, chase the player
             SetDestinationToPosition(targetPlayer.transform.position, false);
-        } else {
+        } else if (goldenEgg.playerHeldBy == null) {
             // If not recently hit and egg is not held, go to the egg
+            if (targetPlayer != null) {
+                SetTargetClientRpc(-1);
+            }
             SetDestinationToPosition(goldenEgg.transform.position, false);
             if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
             {
@@ -248,7 +249,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         // Handle stun logic
     }
 
-    public void DoIdle() {
+    public void DoIdle() 
+    {
         // do nothing
     }
 
@@ -303,18 +305,25 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             if (this.currentWander.unvisitedNodes.Count > 0)
             {
                 // Choose a random node within the radius
+                if (!isOutside) {
                 this.currentWander.currentTargetNode = this.currentWander.unvisitedNodes
-                    .Where(node => Vector3.Distance(this.currentWander.NestPosition, node.transform.position) <= this.currentWander.wanderRadius)
-                    .OrderBy(node => UnityEngine.Random.value)
-                    .FirstOrDefault();
-
+                                    .Where(node => Vector3.Distance(this.currentWander.NestPosition, node.transform.position) <= this.currentWander.wanderRadius)
+                                    .OrderBy(node => UnityEngine.Random.value)
+                                    .FirstOrDefault();
+                } else {
+                    this.currentWander.currentTargetNode = this.currentWander.unvisitedNodes
+                                    .Where(node => Vector3.Distance(this.transform.position, node.transform.position) <= this.currentWander.wanderRadius)
+                                    .OrderBy(node => UnityEngine.Random.value)
+                                    .FirstOrDefault();
+                }
+                
                 if (this.currentWander.currentTargetNode != null)
                 {
                     this.SetWanderDestinationToPosition(this.currentWander.currentTargetNode.transform.position, false);
                     this.currentWander.unvisitedNodes.Remove(this.currentWander.currentTargetNode);
 
                     // Wait until reaching the target
-                    yield return new WaitUntil(() => Vector3.Distance(transform.position, this.currentWander.currentTargetNode.transform.position) < this.currentWander.searchPrecision);
+                    yield return new WaitUntil(() => Vector3.Distance(transform.position, this.currentWander.currentTargetNode.transform.position) < this.currentWander.searchPrecision + UnityEngine.Random.Range(-2f, 2f));
                 }
             }
         }
@@ -390,16 +399,19 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         var insideEntrancePosition = RoundManager.FindMainEntrancePosition(true, false);
         var outsideEntrancePosition = RoundManager.FindMainEntrancePosition(true, true);
         if (isOutside) {
-            LogIfDebugBuild("outside entrance position: " + outsideEntrancePosition);
-            if (NavMesh.CalculatePath(this.transform.position, outsideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
-                SetDestinationToPosition(outsideEntrancePosition);
+            NavMesh.CalculatePath(this.transform.position, outsideEntrancePosition, this.agent.areaMask, pathToTeleport);
+            if (pathToTeleport.status != NavMeshPathStatus.PathComplete) {
+                LogIfDebugBuild("Failed to find path to outside entrance");
+                StartWandering(this.transform.position, new SimpleWanderRoutine());
+                return;
             }
+            SetDestinationToPosition(outsideEntrancePosition);
+            
             if (Vector3.Distance(transform.position, outsideEntrancePosition) < 1f) {
                 this.agent.Warp(insideEntrancePosition);
                 this.SetEnemyOutside(false);
             }
         } else {
-            LogIfDebugBuild("inside entrance position: " + insideEntrancePosition);
             if (NavMesh.CalculatePath(this.transform.position, insideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
                 SetDestinationToPosition(insideEntrancePosition);
             }
@@ -412,9 +424,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public IEnumerator RecentlyDamagedCooldown() {
         recentlyDamaged = true;
-        LogIfDebugBuild("Enemy recently damaged");
         yield return new WaitForSeconds(currentBehaviourStateIndex == (int)State.Stunned ? 8f : 5f);
-        LogIfDebugBuild("Enemy not recently damaged");
         recentlyDamaged = false;
     }
     
@@ -521,10 +531,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (targetPlayer.currentlyHeldObjectServer == goldenEgg)
         {
             targetPlayer.KillPlayer(targetPlayer.velocityLastFrame * 5f, true, CauseOfDeath.Bludgeoning);
-            SetTargetClientRpc(-1);
-            // Carry egg back to nest
         } else {
-            targetPlayer.DamagePlayer(30, true, true, CauseOfDeath.Mauling, 0, false, this.transform.forward * 3f);
+            targetPlayer.DamagePlayer(20, true, true, CauseOfDeath.Mauling, 0, false, this.transform.forward * 3f);
         }
     }
 

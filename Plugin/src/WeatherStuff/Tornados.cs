@@ -334,13 +334,10 @@ public class Tornados : NetworkBehaviour
         }
     }
 
-    public bool TornadoHasLineOfSightToPosition(Vector3 pos, float width = 360, int range = 150, float proximityAwareness = 5f) {
+    public bool TornadoHasLineOfSightToPosition(Vector3 pos, int range = 150) {
         if (Vector3.Distance(eye.position, pos) < range) {
-            if (!Physics.Raycast(eye.position, (pos - eye.position).normalized, Vector3.Distance(eye.position, pos), StartOfRound.Instance.collidersAndRoomMaskAndPlayers)) {
-                Vector3 to = pos - eye.position;
-                if (Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness) {
-                    return true;
-                }
+            if (!Physics.Linecast(eye.position, pos, StartOfRound.Instance.playersMask)) {
+                return true;
             }
         }
         return false;

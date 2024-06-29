@@ -20,7 +20,7 @@ static class RoundManagerPatch {
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
             
-			GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Assets.ItemCratePrefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+			GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Crate.ItemCratePrefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 			spawnedCrate.transform.up = hit.normal;
 			spawnedCrate.GetComponent<NetworkObject>().Spawn();
 		}

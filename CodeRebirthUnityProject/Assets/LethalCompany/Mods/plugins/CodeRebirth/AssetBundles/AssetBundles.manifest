@@ -1,0 +1,43 @@
+ManifestFileVersion: 0
+CRC: 3465938243
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: coderebirthasset
+      Dependencies:
+        Dependency_0: tornadoassets
+    Info_1:
+      Name: tornadoassets
+      Dependencies: {}
+    Info_2:
+      Name: crateassets
+      Dependencies: {}
+    Info_3:
+      Name: moneyassets
+      Dependencies: {}
+    Info_4:
+      Name: snowglobeassets
+      Dependencies:
+        Dependency_0: moneyassets
+    Info_5:
+      Name: walletassets
+      Dependencies: {}
+    Info_6:
+      Name: hoverboardassets
+      Dependencies:
+        Dependency_0: walletassets
+    Info_7:
+      Name: epicaxeassets
+      Dependencies: {}
+    Info_8:
+      Name: cutieflyassets
+      Dependencies: {}
+    Info_9:
+      Name: snailcatassets
+      Dependencies: {}
+    Info_10:
+      Name: pjonkgooseassets
+      Dependencies: {}
+    Info_11:
+      Name: meteorshowerassets
+      Dependencies: {}
