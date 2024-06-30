@@ -21,12 +21,15 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private const float SPRINTING_SPEED = 15f;
     private bool isAggro = false;
     private int playerHits = 0;
+    private bool carryingPlayerBody;
+    public DeadBodyInfo bodyBeingCarried;
     public AudioClip[] jumpScareSounds;
     public AudioClip[] featherSounds;
     public AudioClip[] hitSounds;
     public AudioClip[] deathSounds;
 
     private GrabbableObject goldenEgg;
+    private float timeSinceHittingLocalPlayer;
     private bool holdingEgg;
     public GameObject nest;
     private bool recentlyDamaged = false;
@@ -44,11 +47,13 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         Death,
         Stunned,
         Idle,
+        DragPlayerBodyToNest,
     }
 
     public override void Start()
     {
         base.Start();
+        timeSinceHittingLocalPlayer = 0;
         if (!IsHost) return;
         isAggro = false;
         ControlStateSpeedAnimation(0f, State.Spawning, false, false, false);
@@ -108,6 +113,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
+        timeSinceHittingLocalPlayer += Time.deltaTime;
     }
     public override void DoAIInterval()
     {
@@ -140,40 +146,23 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             case State.Idle:
                 DoIdle();
                 break;
+            case State.DragPlayerBodyToNest:
+                DoDragPlayerBodyToNest();
+                break;
             default:
                 LogIfDebugBuild("This Behavior State doesn't exist!");
                 break;
         }
     }
 
-    public void DoSpawning()
-    {
-
+    public void DoSpawning() {
     }
 
     public void DoWandering()
     {
         if (!isAggro)
         {
-            if (goldenEgg.isHeldByEnemy && !holdingEgg) {
-                LogIfDebugBuild("An Enemy grabbed the egg");
-                isAggro = true;
-                ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingEnemy, false, true, true);
-                SetTargetClientRpc(-1);
-                var yippeeHoldingEgg = FindYippeeHoldingEgg();
-                if (yippeeHoldingEgg == null) 
-                {      
-                    LogIfDebugBuild("enemy holding egg could not be found");
-                    return;
-                }
-                SetEnemyTargetClientRpc(Array.IndexOf(RoundManager.Instance.SpawnedEnemies.ToArray(), yippeeHoldingEgg));
-                return;
-            } else if (goldenEgg.isHeld) {
-                LogIfDebugBuild("Someone grabbed the egg");
-                // maybe honk or some stuff.
-                isAggro = true;
-                ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, true);
-                SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
+            if (HandleEnemyOrPlayerGrabbingEgg()) {
                 return;
             }
             if (wanderCoroutine == null)
@@ -189,6 +178,32 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 }
             }
         }
+    }
+
+    private bool HandleEnemyOrPlayerGrabbingEgg()
+    {
+        if (goldenEgg.isHeldByEnemy && !holdingEgg) {
+            LogIfDebugBuild("An Enemy grabbed the egg");
+            isAggro = true;
+            ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingEnemy, false, true, true);
+            SetTargetClientRpc(-1);
+            var yippeeHoldingEgg = FindYippeeHoldingEgg();
+            if (yippeeHoldingEgg == null) 
+            {      
+                LogIfDebugBuild("enemy holding egg could not be found");
+                return false;
+            }
+            SetEnemyTargetClientRpc(Array.IndexOf(RoundManager.Instance.SpawnedEnemies.ToArray(), yippeeHoldingEgg));
+            return true;
+        } else if (goldenEgg.isHeld) {
+            LogIfDebugBuild("Someone grabbed the egg");
+            // maybe honk or some stuff.
+            isAggro = true;
+            ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, true);
+            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
+            return true;
+        }
+        return false;
     }
 
     public void DoGuarding()
@@ -225,7 +240,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         } else if (recentlyDamaged) {
             // If recently hit, chase the player
             if (holdingEgg) {
-                DropEgg();
+                DropEggClientRpc();
+            }
+            if (carryingPlayerBody) {
+                DropPlayerBodyClientRpc();
             }
             SetDestinationToPosition(targetPlayer.transform.position, false);
             return;
@@ -234,17 +252,12 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             if (targetPlayer != null) {
                 SetTargetClientRpc(-1);
             }
-            SetDestinationToPosition(goldenEgg.transform.position, false);
             if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
             {
-                holdingEgg = true;
-                goldenEgg.isHeldByEnemy = true;
-                goldenEgg.grabbable = false;
-                goldenEgg.parentObject = this.transform;
-                goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
-                isAggro = false;
-                ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true);
+                GrabEggClientRpc();
+                return;
             }
+            SetDestinationToPosition(goldenEgg.transform.position, false);
             return;
         }
         if (!recentlyDamaged && goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
@@ -254,22 +267,40 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public void DoChasingEnemy()
     {
+        if (targetEnemy == null) {
+            LogIfDebugBuild("target enemy is null");
+            if (Vector3.Distance(goldenEgg.transform.position, nest.transform.position) >= 0.75f) {
+                if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f) {
+                    holdingEgg = true;
+                    goldenEgg.isHeldByEnemy = true;
+                    goldenEgg.grabbable = false;
+                    goldenEgg.parentObject = this.transform;
+                    goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
+                    isAggro = false;
+                    ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true);
+                    return;
+                }
+                SetDestinationToPosition(goldenEgg.transform.position, false);
+            } else {
+                ControlStateSpeedAnimation(WALKING_SPEED, State.Wandering, true, false, false);
+            }
+            return;
+        } 
         // todo: get a reference to the enemyAI that took the egg and if kill-able, chase them and beat them to death
     }
 
-    public void DoDeath()
-    {
-        // Handle death logic
+    public void DoDeath() {
     }
 
-    public void DoStunned()
-    {
-        // Handle stun logic
+    public void DoStunned() {
     }
 
-    public void DoIdle() 
+    public void DoIdle() {
+    }
+
+    public void DoDragPlayerBodyToNest()
     {
-        // do nothing
+        DragBodiesToNest();
     }
 
     public void StartWandering(Vector3 nestPosition, SimpleWanderRoutine newWander = null)
@@ -351,7 +382,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private void SetWanderDestinationToPosition(Vector3 position, bool stopCurrentPath)
     {
         if (position == Vector3.zero) {
-            Debug.LogWarning("Attempted to set destination to Vector3.zero");
+            LogIfDebugBuild("Attempted to set destination to Vector3.zero");
             return; // Optionally set a default or backup destination
         }
         this.SetDestinationToPosition(position);
@@ -363,6 +394,11 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned));
         ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, false);
         PlayJumpScareSoundClientRpc();
+    }
+
+    [ClientRpc]
+    public void DropEggClientRpc() {
+        DropEgg();
     }
 
     public void DropEgg() {
@@ -387,7 +423,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             TriggerAnimationClientRpc("Death");
             ControlStateSpeedAnimation(0, State.Death, false, false, false);
             if (holdingEgg) {
-                DropEgg();
+                DropEggClientRpc();
+            }
+            if (carryingPlayerBody) {
+                DropPlayerBodyClientRpc();
             }
         }
         // creatureVoice.PlayOneShot(dieSFX);
@@ -396,7 +435,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead || currentBehaviourStateIndex == (int)State.Death) return;
-
+        
         //  creatureVoice.PlayOneShot(hitSounds[UnityEngine.Random.Range(0, hitSounds.Length)]);
         enemyHP -= force;
         if (recentlyDamagedCoroutine != null)
@@ -461,7 +500,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             TriggerAnimationClientRpc("Stunned");
             ControlStateSpeedAnimation(0f, State.Stunned, false, false, false);
             if (holdingEgg) {
-                DropEgg();
+                DropEggClientRpc();
+            }
+            if (carryingPlayerBody) {
+                DropPlayerBodyClientRpc();
             }
             StartCoroutine(StunCooldown(playerWhoStunned));
         }
@@ -485,17 +527,14 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public void DragBodiesToNest()
     {
-        foreach (var body in FindNearbyBodies())
-        {
-            body.transform.position = nest.transform.position;
-            // This is just rudimentry, I should make it keep reference of the bodies it killed, and take those back to the nest by having the egg on it's back and the dead body on it's mouth.
+        // Implement logic to drag bodies to nest
+        SetDestinationToPosition(nest.transform.position, false);
+        if (HandleEnemyOrPlayerGrabbingEgg() && carryingPlayerBody) {
+            DropPlayerBodyClientRpc();
         }
-    }
-
-    private IEnumerable<GameObject> FindNearbyBodies()
-    {
-        // Implement logic to take the dead body it killed and drag back to nest
-        return new List<GameObject>();
+        if (Vector3.Distance(this.transform.position, nest.transform.position) > 1f) {
+            DropPlayerBodyClientRpc();
+        }
     }
 
     public void SpawnEggInNest()
@@ -514,10 +553,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                this.transform.LookAt(targetPlayer.transform.position);
         } else {
             this.transform.LookAt(StartOfRound.Instance.allPlayerScripts.OrderBy(player => Vector3.Distance(player.transform.position, this.transform.position)).First().transform.position);
-        }
+        } // put this in update so that it's sync'd without needing an rpc cuz its just a lookat
         if (Vector3.Distance(this.transform.position, nest.transform.position) < 0.75f)
         {
-            DropEgg();
+            DropEggClientRpc();
             ControlStateSpeedAnimation(0f, State.Idle, false, false, true);
             StartCoroutine(SpawnTimer());
         } else {
@@ -531,12 +570,40 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (targetPlayer.currentlyHeldObjectServer == goldenEgg)
         {
             targetPlayer.KillPlayer(targetPlayer.velocityLastFrame * 5f, true, CauseOfDeath.Bludgeoning);
-            SetTargetClientRpc(-1);
+            if (Vector3.Distance(goldenEgg.transform.position, nest.transform.position) < 0.75f) {
+                ControlStateSpeedAnimation(SPRINTING_SPEED, State.DragPlayerBodyToNest, false, false, true);
+                CarryingDeadPlayerClientRpc();
+            }
         } else {
             targetPlayer.DamagePlayer(20, true, true, CauseOfDeath.Mauling, 0, false, this.transform.forward * 3f);
         }
     }
 
+    [ClientRpc]
+    private void GrabEggClientRpc()
+    {
+        holdingEgg = true;
+        goldenEgg.isHeldByEnemy = true;
+        goldenEgg.grabbable = false;
+        goldenEgg.parentObject = this.transform;
+        goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
+        isAggro = false;
+        ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true);
+    }
+
+    [ClientRpc]
+    public void CarryingDeadPlayerClientRpc()
+    {
+        carryingPlayerBody = true;
+        bodyBeingCarried = targetPlayer.deadBody;
+        targetPlayer = null;
+        LogIfDebugBuild($"Clearing target on {this} body and carrying the deadbody back to nest");
+    }
+
+    [ClientRpc]
+    public void DropPlayerBodyClientRpc() {
+        DropPlayerBody();
+    }
     private IEnumerator StunCooldown(PlayerControllerB playerWhoStunned)
     {
         yield return new WaitUntil(() => this.stunNormalizedTimer <= 0);
@@ -551,18 +618,35 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void OnCollideWithPlayer(Collider other)
     {
         if (isEnemyDead) return;
-        // todo: make it so that the rest of this function only gets used if the enemy's collider's gameobject name that the player collided with is Collisions 
-        if (targetPlayer != null && other.GetComponent<PlayerControllerB>() == targetPlayer && currentBehaviourStateIndex == (int)State.ChasingPlayer)
+        PlayerControllerB playerControllerB = MeetsStandardPlayerCollisionConditions(other);
+        if (targetPlayer != null && playerControllerB == targetPlayer && currentBehaviourStateIndex == (int)State.ChasingPlayer)
         {
             KillPlayerWithEgg();
-        } else if ((int)State.ChasingPlayer == currentBehaviourStateIndex) {
-            other.GetComponent<PlayerControllerB>().DamagePlayer(20);
+        } else if ((int)State.ChasingPlayer == currentBehaviourStateIndex && timeSinceHittingLocalPlayer >= 1f) {
+            timeSinceHittingLocalPlayer = 0;
+            playerControllerB.DamagePlayer(20);
         }
     }
     
+    private void DropPlayerBody()
+	{
+		if (!this.carryingPlayerBody)
+		{
+			return;
+		}
+		this.carryingPlayerBody = false;
+		this.bodyBeingCarried.matchPositionExactly = false;
+		this.bodyBeingCarried.attachedTo = null;
+		this.bodyBeingCarried = null;
+	}
+
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy) {
         if (isEnemyDead) return;
         if (targetEnemy != null && collidedEnemy == targetEnemy && currentBehaviourStateIndex == (int)State.ChasingEnemy) {
+            targetEnemy.HitEnemy(2, null, true, -1);
+            if (targetEnemy.isEnemyDead) {
+                SetEnemyTargetClientRpc(-1);
+            }
             // kill enemy and then take the egg back to the nest
         }
     }
