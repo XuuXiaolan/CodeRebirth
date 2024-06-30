@@ -23,6 +23,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private int playerHits = 0;
     private bool carryingPlayerBody;
     public DeadBodyInfo bodyBeingCarried;
+    public AudioClip[] FootstepSounds;
+    public AudioClip[] ViolentFootstepSounds;
     public AudioClip[] jumpScareSounds;
     public AudioClip[] featherSounds;
     public AudioClip[] hitSounds;
@@ -36,6 +38,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private bool nestCreated = false;
     private bool isNestInside = true;
     private Coroutine recentlyDamagedCoroutine;
+    private Vector3 lastPosition;
+    private float collisionThresholdVelocity = 7f;
 
     public enum State
     {
@@ -53,6 +57,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        LogIfDebugBuild(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount.ToString());
+        LogIfDebugBuild(RoundManager.Instance.currentOutsideEnemyPower.ToString());
         timeSinceHittingLocalPlayer = 0;
         if (!IsHost) return;
         isAggro = false;
@@ -72,9 +78,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         LogIfDebugBuild("Delayed Speed");
         this.ChangeSpeedClientRpc(speed);
     }
-    public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding) {
+    public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding, PlayerControllerB playerWhoStunned = null) {
         if (state == State.ChasingPlayer || state == State.ChasingEnemy) StartCoroutine(DelayedSpeed(speed));
         else this.ChangeSpeedClientRpc(speed);
+        if (state == State.Stunned) SetEnemyStunned(true, 5.317f, playerWhoStunned);
         this.SetFloatAnimationClientRpc("MoveZ", speed);
         this.SetBoolAnimationClientRpc("Running", running);
         this.SetBoolAnimationClientRpc("Guarding", guarding);
@@ -109,16 +116,54 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
         return null;
     }
-
+    
     public override void Update()
     {
         base.Update();
         timeSinceHittingLocalPlayer += Time.deltaTime;
+
         if (targetPlayer != null && currentBehaviourStateIndex == (int)State.Guarding) {
                this.transform.LookAt(targetPlayer.transform.position);
         } else if (currentBehaviourStateIndex == (int)State.Guarding) {
             this.transform.LookAt(StartOfRound.Instance.allPlayerScripts.OrderBy(player => Vector3.Distance(player.transform.position, this.transform.position)).First().transform.position);
         }
+
+        if (!IsHost) return;
+        CheckWallCollision();
+    }
+
+    private void CheckWallCollision()
+    {
+        if (currentBehaviourStateIndex == (int)State.ChasingPlayer || currentBehaviourStateIndex == (int)State.ChasingEnemy)
+        {
+            float velocity = agent.velocity.magnitude;
+
+            if (velocity >= collisionThresholdVelocity)
+            {
+                LogIfDebugBuild("Velocity too high: " + velocity.ToString());
+                // Check for wall collision
+                RaycastHit hit;
+                int layerMask = StartOfRound.Instance.collidersAndRoomMaskAndDefault;
+                if (Physics.Raycast(transform.position, transform.forward, out hit, 1f, layerMask))
+                {
+                    LogIfDebugBuild("Wall collision detected");
+                    StunGoose();
+                }
+            }
+        }
+    }
+
+    private void StunGoose()
+    {
+        TriggerAnimationClientRpc("Stunned");
+        ControlStateSpeedAnimation(0f, State.Stunned, false, false, false, null);
+        if (holdingEgg) {
+            DropEggClientRpc();
+        }
+        if (carryingPlayerBody) {
+            DropPlayerBodyClientRpc();
+        }
+        StartCoroutine(StunCooldown(null));
     }
     public override void DoAIInterval()
     {
@@ -517,11 +562,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         playerHits += force;
         if (playerHits >= 3 && playerWhoStunned != null && currentBehaviourStateIndex != (int)State.Stunned)
         {
-            SetEnemyStunned(true, 5.317f, playerWhoStunned);
             playerHits = 0;
             if (!IsHost) return; 
             TriggerAnimationClientRpc("Stunned");
-            ControlStateSpeedAnimation(0f, State.Stunned, false, false, false);
+            ControlStateSpeedAnimation(0f, State.Stunned, false, false, false, playerWhoStunned);
             if (holdingEgg) {
                 DropEggClientRpc();
             }
