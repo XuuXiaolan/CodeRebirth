@@ -18,7 +18,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private SimpleWanderRoutine currentWander;
     private Coroutine wanderCoroutine;
     private const float WALKING_SPEED = 6f;
-    private const float SPRINTING_SPEED = 15f;
+    private const float SPRINTING_SPEED = 18f;
     private bool isAggro = false;
     private int playerHits = 0;
     private bool carryingPlayerBody;
@@ -38,8 +38,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private bool nestCreated = false;
     private bool isNestInside = true;
     private Coroutine recentlyDamagedCoroutine;
-    private Vector3 lastPosition;
-    private float collisionThresholdVelocity = 7f;
+    private float collisionThresholdVelocity = SPRINTING_SPEED - 2;
 
     public enum State
     {
@@ -78,8 +77,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         LogIfDebugBuild("Delayed Speed");
         this.ChangeSpeedClientRpc(speed);
     }
-    public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding, PlayerControllerB playerWhoStunned = null) {
-        if (state == State.ChasingPlayer || state == State.ChasingEnemy) StartCoroutine(DelayedSpeed(speed));
+    public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding, PlayerControllerB playerWhoStunned = null, bool delaySpeed = true) {
+        if ((state == State.ChasingPlayer || state == State.ChasingEnemy) && delaySpeed) StartCoroutine(DelayedSpeed(speed));
         else this.ChangeSpeedClientRpc(speed);
         if (state == State.Stunned) SetEnemyStunned(true, 5.317f, playerWhoStunned);
         this.SetFloatAnimationClientRpc("MoveZ", speed);
@@ -156,14 +155,14 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private void StunGoose()
     {
         TriggerAnimationClientRpc("Stunned");
-        ControlStateSpeedAnimation(0f, State.Stunned, false, false, false, null);
+        ControlStateSpeedAnimation(0f, State.Stunned, false, false, false, null, false);
         if (holdingEgg) {
             DropEggClientRpc();
         }
         if (carryingPlayerBody) {
             DropPlayerBodyClientRpc();
         }
-        StartCoroutine(StunCooldown(null));
+        StartCoroutine(StunCooldown(null, false));
     }
     public override void DoAIInterval()
     {
@@ -665,14 +664,14 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public void DropPlayerBodyClientRpc() {
         DropPlayerBody();
     }
-    private IEnumerator StunCooldown(PlayerControllerB playerWhoStunned)
+    private IEnumerator StunCooldown(PlayerControllerB playerWhoStunned, bool delaySpeed = true)
     {
         yield return new WaitUntil(() => this.stunNormalizedTimer <= 0);
         if (isEnemyDead) yield break;
 
         isAggro = true;
         SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned));
-        ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, false);
+        ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, false, playerWhoStunned, delaySpeed);
         this.HitEnemy(0, playerWhoStunned, false, -1);
     }
 

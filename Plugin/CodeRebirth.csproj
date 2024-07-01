@@ -36,10 +36,9 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
 	  <PackageReference Include="Evaisa.LethalLib" Version="0.*" />
     <PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.4" />
-    <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>
-    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="55.0.0-beta.0-ngd.0" PrivateAssets="all" />    
+    <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>    
+    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="50.0.1-ngd.0" PrivateAssets="all" />
     <!-- <PackageReference Include="IAmBatby.LethalLevelLoader" Version="1.2.0" /> -->
-    <!-- <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" /> -->
 
     <PackageReference Include="mrov.WeatherRegistry" Version="*" />
   </ItemGroup>
