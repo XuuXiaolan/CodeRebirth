@@ -23,9 +23,15 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private int playerHits = 0;
     private bool carryingPlayerBody;
     public DeadBodyInfo bodyBeingCarried;
+    public AudioClip GuardHyperVentilateClip;
+    public AudioClip[] HonkSounds;
+    public AudioClip StartStunSound;
+    public AudioClip EndStunSound;
+    public AudioClip SpawnSound;
+    public AudioClip HissSound;
+    public AudioClip EnrageSound;
     public AudioClip[] FootstepSounds;
     public AudioClip[] ViolentFootstepSounds;
-    public AudioClip[] jumpScareSounds;
     public AudioClip[] featherSounds;
     public AudioClip[] hitSounds;
     public AudioClip[] deathSounds;
@@ -71,14 +77,11 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (!isOutside) isNestInside = true;
     }
 
-    public IEnumerator DelayedSpeed(float speed) {
-        this.ChangeSpeedClientRpc(0f);
-        yield return new WaitForSeconds(2.317f);
-        LogIfDebugBuild("Delayed Speed");
-        this.ChangeSpeedClientRpc(speed);
+    public void ApplyChasingSpeed() { // Animation Event
+        this.ChangeSpeedOnLocalClient(SPRINTING_SPEED);
     }
     public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding, PlayerControllerB playerWhoStunned = null, bool delaySpeed = true) {
-        if ((state == State.ChasingPlayer || state == State.ChasingEnemy) && delaySpeed) StartCoroutine(DelayedSpeed(speed));
+        if ((state == State.ChasingPlayer || state == State.ChasingEnemy) && delaySpeed) this.ChangeSpeedClientRpc(0);
         else this.ChangeSpeedClientRpc(speed);
         if (state == State.Stunned) SetEnemyStunned(true, 5.317f, playerWhoStunned);
         this.SetFloatAnimationClientRpc("MoveZ", speed);
@@ -514,7 +517,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         LogIfDebugBuild($"Hit with force {force}");
         
         if (playerWhoHit != null && currentBehaviourStateIndex != (int)State.Stunned) {
-            PlayerHitEnemy(force, playerWhoHit);
+            PlayerHitEnemy(playerWhoHit);
         }
 
         if (IsOwner && enemyHP <= 0 && !isEnemyDead) {
@@ -556,10 +559,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         recentlyDamaged = false;
     }
     
-    public void PlayerHitEnemy(int force, PlayerControllerB playerWhoStunned = null)
+    public void PlayerHitEnemy(PlayerControllerB playerWhoStunned = null)
     {
-        playerHits += force;
-        if (playerHits >= 3 && playerWhoStunned != null && currentBehaviourStateIndex != (int)State.Stunned)
+        playerHits += 1;
+        if (playerHits >= 7 && playerWhoStunned != null && currentBehaviourStateIndex != (int)State.Stunned)
         {
             playerHits = 0;
             if (!IsHost) return; 
@@ -571,7 +574,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             if (carryingPlayerBody) {
                 DropPlayerBodyClientRpc();
             }
-            StartCoroutine(StunCooldown(playerWhoStunned));
+            StartCoroutine(StunCooldown(playerWhoStunned, false));
         }
         else if (currentBehaviourStateIndex != (int)State.ChasingPlayer)
         {
