@@ -67,7 +67,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         Plugin.samplePrefabs.Add("GoldenEgg", PjonkGoose.GoldenEggItem);
         // Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
-        RegisterEnemyWithConfig(true, "All:9999", PjonkGoose.PjonkGooseEnemyType, PjonkGoose.PjonkGooseTerminalNode, PjonkGoose.PjonkGooseTerminalKeyword, 3, 1);
+        RegisterEnemyWithConfig(true, "All:500", PjonkGoose.PjonkGooseEnemyType, PjonkGoose.PjonkGooseTerminalNode, PjonkGoose.PjonkGooseTerminalKeyword, 3, 1);
         RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlyEnabled.Value, Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Butterfly.ButterflyEnemyType, Butterfly.ButterflyTerminalNode, Butterfly.ButterflyTerminalKeyword, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
         RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatEnabled.Value, Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
     }
