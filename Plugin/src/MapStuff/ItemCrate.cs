@@ -126,8 +126,10 @@ public class ItemCrate : CRHittable {
 		for (int i = 0; i < 3; i++) {
 			SpawnableItemWithRarity chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
 			Item item = chosenItemWithRarity.spawnableItem;
+			GameObject spawned = Instantiate(item.spawnPrefab, transform.position + transform.up*0.6f + transform.right*random.NextFloat(-0.2f, 0.2f) + transform.forward*random.NextFloat(-0.2f, 0.2f), Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
-			CodeRebirthUtils.Instance.SpawnScrapServerRpc(item.itemName, transform.position + transform.up*0.6f + transform.right*random.NextFloat(-0.2f, 0.2f) + transform.forward*random.NextFloat(-0.2f, 0.2f), false, true, 10);
+			spawned.GetComponent<GrabbableObject>().SetScrapValue((int)(random.Next(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier));
+			spawned.GetComponent<NetworkObject>().Spawn();
 		}
 		OpenCrateClientRPC();
 	}

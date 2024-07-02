@@ -32,9 +32,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
             return;
         }
         Plugin.samplePrefabs.TryGetValue(itemName, out Item item);
-        if (item == null)
-        {
-            return;
+        if (item == null) {
+            // throw for stacktrace
+            throw new NullReferenceException($"'{itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
         }
         Transform parent = null;
         if (parent == null) {
