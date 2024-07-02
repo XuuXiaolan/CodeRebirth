@@ -284,6 +284,11 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     [ClientRpc]
     public void HonkAnimationClientRpc() { // Animation Event
+        if (currentBehaviourStateIndex == (int)State.ChasingPlayer || currentBehaviourStateIndex == (int)State.ChasingEnemy) {
+            creatureVoice.pitch = 0.75f;
+        } else {
+            creatureVoice.pitch = 1f;
+        }
         creatureVoice.PlayOneShot(HonkSounds[enemyRandom.Next(0, HonkSounds.Length)]);
         TriggerAnimationOnLocalClient("Honk");
     }
@@ -294,8 +299,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public void DoChasingPlayer()
     {
-        if (UnityEngine.Random.Range(1, 101) <= 10f) {
-                HonkAnimationClientRpc();
+        if (UnityEngine.Random.Range(1, 101) <= 7f) {
+            HonkAnimationClientRpc();
         }
         // If the golden egg is held by the player, keep chasing the player until the egg is dropped
         if (goldenEgg == null) {
@@ -490,14 +495,6 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         this.SetDestinationToPosition(position);
     }
 
-    public void AggroOnHit(PlayerControllerB playerWhoStunned)
-    {
-        SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned));
-        PlayMiscSoundsClientRpc(2);
-        ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, false, null, true, true);
-        // PlayHonkSoundClientRpc();
-    }
-
     [ClientRpc]
     public void DropEggClientRpc() {
         DropEgg();
@@ -593,18 +590,29 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     
     public void PlayerHitEnemy(PlayerControllerB playerWhoStunned = null)
     {
+        LogIfDebugBuild($"PlayerHitEnemy called. Current hits: {playerHits}, Current State: {currentBehaviourStateIndex}");
         playerHits += 1;
         if (playerHits >= 7 && playerWhoStunned != null && currentBehaviourStateIndex != (int)State.Stunned)
         {
             playerHits = 0;
             if (!IsHost) return; 
+            LogIfDebugBuild("Stunning Goose");
             StunGoose(playerWhoStunned, true);
         }
-        
         else if (currentBehaviourStateIndex != (int)State.ChasingPlayer)
         {
+            LogIfDebugBuild("Aggro on hit");
             AggroOnHit(playerWhoStunned);
         }
+    }
+
+    public void AggroOnHit(PlayerControllerB playerWhoStunned)
+    {
+        LogIfDebugBuild($"AggroOnHit called. Targeting player: {playerWhoStunned}");
+        SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned));
+        PlayMiscSoundsClientRpc(2);
+        ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, false, null, true, true);
+        LogIfDebugBuild("State set to ChasingPlayer");
     }
 
     public void PlayFeatherSound() // Animation Event
@@ -715,21 +723,19 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
         SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned));
         ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, false, playerWhoStunned, delaySpeed, true);
-        this.HitEnemy(0, playerWhoStunned, false, -1);
+        this.HitEnemyClientRpc(0, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned), false, -1);
     }
 
     public override void OnCollideWithPlayer(Collider other)
     {
         if (isEnemyDead) return;
-        PlayerControllerB playerControllerB = MeetsStandardPlayerCollisionConditions(other);
-        if (playerControllerB.isPlayerDead) return;
-        if (targetPlayer != null && playerControllerB == targetPlayer && currentBehaviourStateIndex == (int)State.ChasingPlayer && timeSinceHittingLocalPlayer >= 1f)
+        if (targetPlayer != null && other.GetComponent<PlayerControllerB>() == targetPlayer && currentBehaviourStateIndex == (int)State.ChasingPlayer && timeSinceHittingLocalPlayer >= 1f)
         {
             timeSinceHittingLocalPlayer = 0;
             KillPlayerWithEgg();
         } else if ((int)State.ChasingPlayer == currentBehaviourStateIndex && timeSinceHittingLocalPlayer >= 1f) {
             timeSinceHittingLocalPlayer = 0;
-            playerControllerB.DamagePlayer(20);
+            other.GetComponent<PlayerControllerB>().DamagePlayer(20);
         }
     }
     
@@ -748,7 +754,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy) {
         if (isEnemyDead) return;
         if (targetEnemy != null && collidedEnemy == targetEnemy && currentBehaviourStateIndex == (int)State.ChasingEnemy) {
-            targetEnemy.HitEnemy(2, null, true, -1);
+            targetEnemy.HitEnemyClientRpc(2, -1, true, -1);
             if (targetEnemy.isEnemyDead) {
                 SetEnemyTargetClientRpc(-1);
             }
