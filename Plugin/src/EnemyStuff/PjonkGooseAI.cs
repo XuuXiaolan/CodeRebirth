@@ -512,8 +512,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         goldenEgg.targetFloorPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.GetItemFloorPosition(default(Vector3)));
         goldenEgg.floorYRot = -1;
         goldenEgg.DiscardItemFromEnemy();
-        goldenEgg.grabbable = true;
-        goldenEgg.grabbableToEnemies = true;
+        if (IsServer) goldenEgg.grabbable = true;
+        if (IsServer) goldenEgg.grabbableToEnemies = true;
         goldenEgg.isHeldByEnemy = false;
         holdingEgg = false;
         goldenEgg.transform.rotation = Quaternion.Euler(goldenEgg.itemProperties.restingRotation);
@@ -686,7 +686,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         holdingEgg = true;
         goldenEgg.isHeldByEnemy = true;
-        goldenEgg.grabbable = false;
+        if (IsServer) goldenEgg.grabbable = false;
+        if (IsServer) goldenEgg.grabbableToEnemies = false;
         goldenEgg.parentObject = this.transform;
         goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
         if (!IsHost) return;

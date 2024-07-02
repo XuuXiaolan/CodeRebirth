@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1014946489
+CRC: 3293835812
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1ff4a8bb98b66038497099bad5117067
+    Hash: a62607fcd4387be99b32846e91e2a7be
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 50dc2d6a405ec67b3723c6fc4b8c53fa
+    Hash: 57769c468453662f90e941e1d0cf2d18
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 1ff4a8bb98b66038497099bad5117067
+    Hash: a62607fcd4387be99b32846e91e2a7be
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -91,6 +91,8 @@ SerializeReferenceClassIdentifiers:
   ClassName: EnemyBehaviourState
 - AssemblyName: Assembly-CSharp
   ClassName: NavSizeLimit
+- AssemblyName: Unity.Netcode.Runtime
+  ClassName: Unity.Netcode.NetworkVariable`1[System.Boolean]
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk6SoundClip.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkStunSoundClip.wav

@@ -7,8 +7,11 @@ namespace CodeRebirth.ItemStuff;
 
 public class ItemHandler : ContentHandler<ItemHandler> {
     public class WalletAssets(string bundleName) : AssetBundleLoader<WalletAssets>(bundleName) {
-        [LoadFromBundle("WalletObj.asset")]
-        public Item WalletItem { get; private set; }
+        [LoadFromBundle("WalletNewObj.asset")]
+        public Item WalletItemNew { get; private set; }
+
+        [LoadFromBundle("WalletOldObj.asset")]
+        public Item WalletItemOld { get; private set; }
 
         [LoadFromBundle("wTerminalNode.asset")]
         public TerminalNode WalletTerminalNode { get; private set; }
@@ -44,7 +47,8 @@ public class ItemHandler : ContentHandler<ItemHandler> {
         SnowGlobe = new SnowGlobeAssets("snowglobeassets");
 
         RegisterShopItemWithConfig(Plugin.ModConfig.ConfigHoverboardEnabled.Value, false, Hoverboard.HoverboardItem, Hoverboard.HoverboardTerminalNode, Plugin.ModConfig.ConfigHoverboardCost.Value, "");
-        RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, false, Wallet.WalletItem, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
+        if (Plugin.ModConfig.ConfigWalletMode.Value) RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, false, Wallet.WalletItemOld, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
+        else RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, true, Wallet.WalletItemNew, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
         RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, EpicAxe.EpicAxeItem);
         RegisterScrapWithConfig(Plugin.ModConfig.ConfigSnowGlobeEnabled.Value, Plugin.ModConfig.ConfigSnowGlobeSpawnWeights.Value, SnowGlobe.SnowGlobeItem);
     }

@@ -2,6 +2,9 @@
 - Improved hoverboard collisions, I think.
 - Increased range for tornado effects.
 - Tornados will get a bigger update when I'm more free later I promise.
+- Added config to switch wallet between an actual item to the refactored version.
+- Tried to fix bug where only host could pick up the wallet in the new system.
+- Fixed bug where trails were clientside.
 
 ## v0.1.6
 - Buffed item crate by atleast 3 times.

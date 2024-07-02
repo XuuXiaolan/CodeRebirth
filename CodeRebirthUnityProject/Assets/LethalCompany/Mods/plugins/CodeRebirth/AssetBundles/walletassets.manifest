@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3517564963
+CRC: 1787271235
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 957162ed2f07b5b718c3a37a764507fb
+    Hash: 70229fc8c6233b6ab0b600098fa99360
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 685157e0e886fb7fd3f7e5fa5005cf3c
+    Hash: b9a8580e79998725c39d3cfaf5972840
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 957162ed2f07b5b718c3a37a764507fb
+    Hash: 70229fc8c6233b6ab0b600098fa99360
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -48,6 +48,8 @@ ClassTypes:
   Script: {fileID: 1468056573, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
   Script: {fileID: 1844554130, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+- Class: 114
+  Script: {fileID: -991143320, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
@@ -66,13 +68,15 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
 Assets:
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletNewObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialBlue.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_GreenVariant_Normal.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_MaskMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Model/Wallet.fbx
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Wallet.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletNew.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletOldObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/WalletOld.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Audio/WalletDrop.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Material/WalletMaterialGreen.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Wallet/Textures/Wallet_wallet_GreenVariant_BaseMap.png

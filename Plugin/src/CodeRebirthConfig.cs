@@ -42,10 +42,15 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         // Misc
+        public ConfigEntry<bool> ConfigWalletMode { get; private set; }
         public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+            ConfigWalletMode = configFile.Bind("Wallet Options",
+                                                "Wallet | Mode",
+                                                true,
+                                                "true for old system (item mode), false for newer system (non-held mode).");
             ConfigSnowGlobeMusic = configFile.Bind("SnowGlobe Options",
                                                 "Snow Globe | Music",
                                                 true,
