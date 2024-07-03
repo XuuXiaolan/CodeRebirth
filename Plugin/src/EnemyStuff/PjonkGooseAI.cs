@@ -16,6 +16,7 @@ namespace CodeRebirth.EnemyStuff;
 public class PjonkGooseAI : CodeRebirthEnemyAI
 {
     private SimpleWanderRoutine currentWander;
+    private PlayerControllerB playerWhoLastHit;
     private Coroutine wanderCoroutine;
     private const float WALKING_SPEED = 6f;
     private const float SPRINTING_SPEED = 18f;
@@ -39,7 +40,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private GrabbableObject goldenEgg;
     private float timeSinceHittingLocalPlayer;
     private float timeSinceAction;
-    private bool holdingEgg;
+    private bool holdingEgg = false;
     public GameObject nest;
     private bool recentlyDamaged = false;
     private bool nestCreated = false;
@@ -121,6 +122,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public EnemyAI FindYippeeHoldingEgg() {
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies) {
+            LogIfDebugBuild($"checking enemy: {enemy.enemyType.enemyName}");
             if (enemy.enemyType.enemyName == "HoarderBug") {
                 HoarderBugAI hoarderBugAI = enemy as HoarderBugAI;
                 if (hoarderBugAI.heldItem.itemGrabbableObject == goldenEgg) {
@@ -149,6 +151,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     private void CheckWallCollision()
     {
+        if (targetPlayer == null) return;
         if (currentBehaviourStateIndex == (int)State.ChasingPlayer || currentBehaviourStateIndex == (int)State.ChasingEnemy)
         {
             float velocity = agent.velocity.magnitude;
@@ -162,7 +165,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 if (Physics.Raycast(transform.position, transform.forward, out hit, 1f, layerMask))
                 {
                     LogIfDebugBuild("Wall collision detected");
-                    StunGoose(null, false);
+                    StunGoose(targetPlayer, false);
                 }
             }
         }
@@ -275,8 +278,9 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             return true;
         } else if (goldenEgg.isHeld) {
             LogIfDebugBuild("Someone grabbed the egg");
-            ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, true, null, true, true);
             SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
+            PlayMiscSoundsClientRpc(2);
+            ControlStateSpeedAnimation(SPRINTING_SPEED, State.ChasingPlayer, false, true, true, null, true, true);
             return true;
         }
         return false;
@@ -308,25 +312,13 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             ControlStateSpeedAnimation(WALKING_SPEED, State.Wandering, true, false, false, null, true, false);
             SetTargetClientRpc(-1);
             return;
-        } // <-- shouldn't happen.
-
-        if (targetPlayer != null && goldenEgg.playerHeldBy == targetPlayer)
-        {
-            if (this.isOutside && goldenEgg.playerHeldBy.isInsideFactory) {
-                // go inside, path to player
-                GoThroughEntrance();
-            } else if (!this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) {
-                // go outside, path to player
-                GoThroughEntrance();
-            } else if ((this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) || (!this.isOutside && goldenEgg.playerHeldBy.isInsideFactory)) {
-                SetDestinationToPosition(targetPlayer.transform.position, false);
-            }
-            return;
-        } else if (goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
-            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
-            return;
-        } else if (recentlyDamaged && targetPlayer != null) {
-            // If recently hit, chase the player
+        }
+        if (targetPlayer == null && recentlyDamaged) {
+            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoLastHit));
+        }
+        // Prioritize recently damaged logic
+        if (recentlyDamaged && targetPlayer != null) {
+            LogIfDebugBuild("Chasing player because recently damaged");
             if (holdingEgg) {
                 DropEggClientRpc();
             }
@@ -335,25 +327,38 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             }
             SetDestinationToPosition(targetPlayer.transform.position, false);
             return;
-        } else if (goldenEgg.playerHeldBy == null) {
-            LogIfDebugBuild(recentlyDamaged.ToString());
-            LogIfDebugBuild((targetPlayer == null).ToString());
-            // If not recently hit and egg is not held, go to the egg
-            if (targetPlayer != null) {
-                SetTargetClientRpc(-1);
+        }
+
+        if (targetPlayer != null && goldenEgg.playerHeldBy == targetPlayer) {
+            LogIfDebugBuild("Chasing player holding the egg");
+            if (this.isOutside && goldenEgg.playerHeldBy.isInsideFactory) {
+                GoThroughEntrance();
+            } else if (!this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) {
+                GoThroughEntrance();
+            } else if ((this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) || (!this.isOutside && goldenEgg.playerHeldBy.isInsideFactory)) {
+                SetDestinationToPosition(targetPlayer.transform.position, false);
             }
-            if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f)
-            {
+            return;
+        } else if (goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
+            LogIfDebugBuild("Changing target to player holding the egg");
+            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
+            return;
+        } else if (goldenEgg.playerHeldBy == null) {
+            LogIfDebugBuild("Egg is not held by any player");
+            // If not recently hit and egg is not held, go to the egg
+            if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f) {
                 GrabEggClientRpc();
                 return;
             }
             SetDestinationToPosition(goldenEgg.transform.position, false);
             return;
         }
+
         if (!recentlyDamaged && goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
+            LogIfDebugBuild("Switching to chase player holding the egg");
             SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, goldenEgg.playerHeldBy));
         }
-    }// todo: everywhere i use setdestinationtoposition, i need to make a navmeshpath check to even see if it's possible to go there.
+    } // todo: everywhere i use setdestinationtoposition, i need to make a navmeshpath check to even see if it's possible to go there.
 
     public void DoChasingEnemy()
     {
@@ -536,17 +541,18 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (isEnemyDead || currentBehaviourStateIndex == (int)State.Death) return;
         // creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(0, hitSounds.Length)]);
         enemyHP -= force;
+
+        if (playerWhoHit != null && currentBehaviourStateIndex != (int)State.Stunned) {
+            PlayerHitEnemy(playerWhoHit);
+        }
+        
         if (recentlyDamagedCoroutine != null)
         {
             StopCoroutine(recentlyDamagedCoroutine);
         }
-        recentlyDamagedCoroutine = StartCoroutine(RecentlyDamagedCooldown());
+        recentlyDamagedCoroutine = StartCoroutine(RecentlyDamagedCooldown(playerWhoHit));
         LogIfDebugBuild($"Enemy HP: {enemyHP}");
         LogIfDebugBuild($"Hit with force {force}");
-        
-        if (playerWhoHit != null && currentBehaviourStateIndex != (int)State.Stunned) {
-            PlayerHitEnemy(playerWhoHit);
-        }
 
         if (IsOwner && enemyHP <= 0 && !isEnemyDead) {
             KillEnemyOnOwnerClient();
@@ -581,8 +587,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
     }
 
-    public IEnumerator RecentlyDamagedCooldown() { // this is not properly networked maybe
+    public IEnumerator RecentlyDamagedCooldown(PlayerControllerB playerWhoHit) { // this is not properly networked maybe
         recentlyDamaged = true;
+        playerWhoLastHit = playerWhoHit;
+        SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
         yield return new WaitForSeconds(currentBehaviourStateIndex == (int)State.Stunned ? 15f : 10f);
         PlayMiscSoundsClientRpc(1);
         recentlyDamaged = false;
@@ -680,7 +688,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (targetPlayer == null) return;
         LogIfDebugBuild("Player killed");
         targetPlayer.KillPlayer(targetPlayer.velocityLastFrame * 5f, true, CauseOfDeath.Bludgeoning);
-        if (Vector3.Distance(goldenEgg.transform.position, nest.transform.position) <= 0.75f) {
+        if (Vector3.Distance(goldenEgg.transform.position, nest.transform.position) <= 0.75f && targetPlayer.isPlayerDead) {
             CarryingDeadPlayerClientRpc();
             ControlStateSpeedAnimation(SPRINTING_SPEED, State.DragPlayerBodyToNest, false, false, true, null, true, false);
         } else {
@@ -697,9 +705,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (IsServer) goldenEgg.grabbable = false;
         if (IsServer) goldenEgg.grabbableToEnemies = false;
         goldenEgg.parentObject = this.transform;
-        goldenEgg.transform.position = this.transform.position + transform.up * 0.5f;
+        goldenEgg.transform.position = this.transform.position + transform.up * 4f;
         if (!IsHost) return;
         PlayMiscSoundsClientRpc(0);
+        SetTargetClientRpc(-1);
         ControlStateSpeedAnimation(WALKING_SPEED, State.Guarding, false, false, true, null, true, false);
     }
 
@@ -708,8 +717,9 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         carryingPlayerBody = true;
         bodyBeingCarried = targetPlayer.deadBody;
-        targetPlayer = null;
-        LogIfDebugBuild($"Clearing target on {this} body and carrying the deadbody back to nest");
+        if (IsHost) {
+            SetTargetClientRpc(-1);
+        }
     }
 
     [ClientRpc]
