@@ -13,13 +13,13 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.EnemyStuff;
-public class PjonkGooseAI : CodeRebirthEnemyAI
+public class PjonkGooseAI : CodeRebirthEnemyAI // todo: make a wall stun keep recently damaged to true
 {
     private SimpleWanderRoutine currentWander;
     private PlayerControllerB playerWhoLastHit;
     private Coroutine wanderCoroutine;
-    private const float WALKING_SPEED = 6f;
-    private const float SPRINTING_SPEED = 18f;
+    private const float WALKING_SPEED = 5f;
+    private const float SPRINTING_SPEED = 20f;
     private bool isAggro = false;
     private int playerHits = 0;
     private bool carryingPlayerBody;
@@ -46,7 +46,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private bool nestCreated = false;
     private bool isNestInside = true;
     private Coroutine recentlyDamagedCoroutine;
-    private float collisionThresholdVelocity = SPRINTING_SPEED - 2;
+    private float collisionThresholdVelocity = SPRINTING_SPEED - 1f;
     private System.Random enemyRandom;
 
     public enum State
@@ -65,6 +65,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        creatureVoice.pitch = 1.4f;
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 323);
         LogIfDebugBuild(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount.ToString());
         LogIfDebugBuild(RoundManager.Instance.currentOutsideEnemyPower.ToString());
@@ -139,11 +140,21 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         timeSinceAction += Time.deltaTime;
         timeSinceHittingLocalPlayer += Time.deltaTime;
 
-        if (targetPlayer != null && currentBehaviourStateIndex == (int)State.Guarding) {
-               this.transform.LookAt(targetPlayer.transform.position); // todo: rewrite this so that it doesn't just rotate both horizontally and vertically, and only rotates horizontally
-        } else if (currentBehaviourStateIndex == (int)State.Guarding) { // todo: check if im even checking the right state here, i might need to be in idle
-            this.transform.LookAt(StartOfRound.Instance.allPlayerScripts.OrderBy(player => Vector3.Distance(player.transform.position, this.transform.position)).First().transform.position);
+        if (creatureAnimator.GetBool("Guarding")) {
+            var targetPlayer = StartOfRound.Instance.allPlayerScripts
+                .OrderBy(player => Vector3.Distance(player.transform.position, this.transform.position))
+                .First();
+
+            Vector3 targetPosition = targetPlayer.transform.position;
+            Vector3 direction = (targetPosition - this.transform.position).normalized;
+            direction.y = 0; // Keep the y component zero to prevent vertical rotation
+
+            if (direction != Vector3.zero) {
+                Quaternion lookRotation = Quaternion.LookRotation(direction);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * 5f);
+            }
         }
+
 
         if (!IsHost) return;
         CheckWallCollision();
@@ -166,6 +177,11 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 {
                     LogIfDebugBuild("Wall collision detected");
                     StunGoose(targetPlayer, false);
+                    if (recentlyDamagedCoroutine != null)
+                    {
+                        StopCoroutine(recentlyDamagedCoroutine);
+                    }
+                    recentlyDamagedCoroutine = StartCoroutine(RecentlyDamagedCooldown(targetPlayer));
                 }
             }
         }
@@ -191,7 +207,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
         StartCoroutine(StunCooldown(playerWhoStunned, false));
     }
-    public override void DoAIInterval() // todo: add a random timer to perform the trigger PerformIdleAction if there's no action ongoing in a certain amount of time.
+    public override void DoAIInterval()
     {
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost) return;
@@ -238,7 +254,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         if (!isAggro)
         {
-            if (timeSinceAction >= 15f) {
+            if (timeSinceAction >= UnityEngine.Random.Range(10f, 20f)) {
                 timeSinceAction = 0;
                 ControlStateSpeedAnimation(0f, State.Idle, false, false, false, null, true, false);
                 TriggerAnimationClientRpc("PerformIdleAction");
@@ -288,11 +304,6 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     [ClientRpc]
     public void HonkAnimationClientRpc() { // Animation Event
-        if (currentBehaviourStateIndex == (int)State.ChasingPlayer || currentBehaviourStateIndex == (int)State.ChasingEnemy) {
-            creatureVoice.pitch = 0.75f;
-        } else {
-            creatureVoice.pitch = 1f;
-        }
         creatureVoice.PlayOneShot(HonkSounds[enemyRandom.Next(0, HonkSounds.Length)]);
         TriggerAnimationOnLocalClient("Honk");
     }
@@ -303,7 +314,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public void DoChasingPlayer()
     {
-        if (UnityEngine.Random.Range(1, 101) <= 7f) {
+        if (UnityEngine.Random.Range(1, 101) <= 7f && agent.speed >= 1f) {
             HonkAnimationClientRpc();
         }
         // If the golden egg is held by the player, keep chasing the player until the egg is dropped
@@ -533,6 +544,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 DropPlayerBodyClientRpc();
             }
         }
+        var FeatherPS = this.transform.Find("GooseRig").Find("Root").Find("Torso").Find("Torso.001").Find("Feather PS").GetComponent<ParticleSystem>().main;
+        FeatherPS.loop = false;
         creatureVoice.PlayOneShot(deathSounds[enemyRandom.Next(0, deathSounds.Length)]);
     }
     public override void HitEnemy(int force = 1, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -590,9 +603,9 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public IEnumerator RecentlyDamagedCooldown(PlayerControllerB playerWhoHit) { // this is not properly networked maybe
         recentlyDamaged = true;
         playerWhoLastHit = playerWhoHit;
-        SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
-        yield return new WaitForSeconds(currentBehaviourStateIndex == (int)State.Stunned ? 15f : 10f);
-        PlayMiscSoundsClientRpc(1);
+        if (IsHost) SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
+        yield return new WaitForSeconds(enemyRandom.Next(10, 15));
+        if (!IsHost && !(currentBehaviourStateIndex != (int)State.Death || currentBehaviourStateIndex != (int)State.Stunned)) PlayMiscSoundsClientRpc(1);
         recentlyDamaged = false;
     }
     
