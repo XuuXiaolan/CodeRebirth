@@ -46,8 +46,9 @@ public class PjonkGooseAI : CodeRebirthEnemyAI // todo: make a wall stun keep re
     private bool nestCreated = false;
     private bool isNestInside = true;
     private Coroutine recentlyDamagedCoroutine;
-    private float collisionThresholdVelocity = SPRINTING_SPEED - 1f;
+    private float collisionThresholdVelocity = SPRINTING_SPEED - 3.5f;
     private System.Random enemyRandom;
+    private DoorLock[] doors;
 
     public enum State
     {
@@ -66,6 +67,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI // todo: make a wall stun keep re
     {
         base.Start();
         creatureVoice.pitch = 1.4f;
+        doors = FindObjectsOfType(typeof(DoorLock)) as DoorLock[];
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 323);
         LogIfDebugBuild(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount.ToString());
         LogIfDebugBuild(RoundManager.Instance.currentOutsideEnemyPower.ToString());
@@ -95,7 +97,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI // todo: make a wall stun keep re
         this.ChangeSpeedOnLocalClient(SPRINTING_SPEED);
     }
     public void ControlStateSpeedAnimation(float speed, State state, bool startSearch, bool running, bool guarding, PlayerControllerB playerWhoStunned = null, bool delaySpeed = true, bool _isAggro = false) {
-        if ((state == State.ChasingPlayer || state == State.ChasingEnemy) && delaySpeed) this.ChangeSpeedClientRpc(0);
+        if ((state == State.ChasingPlayer || state == State.ChasingEnemy) && delaySpeed) {
+            this.ChangeSpeedClientRpc(0);
+            this.agent.velocity = Vector3.zero;
+        }
         else this.ChangeSpeedClientRpc(speed);
         if (state == State.Stunned) SetEnemyStunned(true, 5.317f, playerWhoStunned);
         isAggro = _isAggro;
@@ -323,6 +328,21 @@ public class PjonkGooseAI : CodeRebirthEnemyAI // todo: make a wall stun keep re
             ControlStateSpeedAnimation(WALKING_SPEED, State.Wandering, true, false, false, null, true, false);
             SetTargetClientRpc(-1);
             return;
+        }
+        foreach (DoorLock door in doors)
+        {
+            if (door == null) continue;
+            if (door.isDoorOpened) continue;
+            if (!door.GetComponent<Rigidbody>() && Vector3.Distance(door.transform.position, transform.position) < 3f)
+            {
+                ExplodeDoorClientRpc(Array.IndexOf(doors, door));
+                StunGoose(targetPlayer, false);
+                if (recentlyDamagedCoroutine != null)
+                {
+                    StopCoroutine(recentlyDamagedCoroutine);
+                }
+                recentlyDamagedCoroutine = StartCoroutine(RecentlyDamagedCooldown(targetPlayer));
+            }
         }
         if (targetPlayer == null && recentlyDamaged) {
             SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoLastHit));
@@ -600,7 +620,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI // todo: make a wall stun keep re
         }
     }
 
-    public IEnumerator RecentlyDamagedCooldown(PlayerControllerB playerWhoHit) { // this is not properly networked maybe
+    public IEnumerator RecentlyDamagedCooldown(PlayerControllerB playerWhoHit) {
         recentlyDamaged = true;
         playerWhoLastHit = playerWhoHit;
         if (IsHost) SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
@@ -782,5 +802,15 @@ public class PjonkGooseAI : CodeRebirthEnemyAI // todo: make a wall stun keep re
                 SetEnemyTargetClientRpc(-1);
             }
         }
+    }
+
+    [ClientRpc]
+    public void ExplodeDoorClientRpc(int DoorIndex) {
+        LogIfDebugBuild("Exploding door: " + DoorIndex);
+        DoorLock door = doors[DoorIndex];
+        Utilities.CreateExplosion(door.transform.position, true, 25, 0, 4, 0, CauseOfDeath.Blast, null);
+        Destroy(door.transform.parent.gameObject);
+        // remove the door from the array
+        doors = doors.Where((d, i) => i != DoorIndex).ToArray();
     }
 }
