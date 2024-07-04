@@ -5,6 +5,7 @@
 - Added config to switch wallet between an actual item to the refactored version.
 - Tried to fix bug where only host could pick up the wallet in the new system.
 - Fixed bug where trails were clientside.
+- Updated version of the mod to play nice in latest version of the game and backwards.
 
 ## v0.1.6
 - Buffed item crate by atleast 3 times.

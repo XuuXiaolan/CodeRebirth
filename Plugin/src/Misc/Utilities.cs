@@ -111,7 +111,7 @@ namespace CodeRebirth.Misc
             enemy.SyncPositionToClients();
         }
 
-        public static void CreateExplosion(Vector3 explosionPosition, bool spawnExplosionEffect = false, int damage = 20, float minDamageRange = 0f, float maxDamageRange = 1f, int enemyHitForce = 6, CauseOfDeath causeOfDeath = CauseOfDeath.Blast, PlayerControllerB attacker = null)
+        public static void CreateExplosion(Vector3 explosionPosition, bool spawnExplosionEffect = false, int damage = 20, float minDamageRange = 0f, float maxDamageRange = 1f, int enemyHitForce = 6, CauseOfDeath causeOfDeath = CauseOfDeath.Blast, PlayerControllerB attacker = null, GameObject overridePrefab = null)
         {
             Debug.Log("Spawning explosion at pos: {explosionPosition}");
 
@@ -122,9 +122,11 @@ namespace CodeRebirth.Misc
                 holder = RoundManager.Instance.mapPropsContainer.transform;
             }
 
-            if (spawnExplosionEffect)
+            if (spawnExplosionEffect && overridePrefab == null)
             {
                 UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(value: true);
+            } else if (spawnExplosionEffect) {
+                UnityEngine.Object.Instantiate(overridePrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(value: true);
             }
 
             float playerDistanceFromExplosion = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, explosionPosition);

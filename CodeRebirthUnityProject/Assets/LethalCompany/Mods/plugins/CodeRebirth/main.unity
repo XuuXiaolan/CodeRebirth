@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2324.5237, g: 2402.301, b: 3455.7856, a: 1}
+  m_IndirectSpecularColor: {r: 2325.8616, g: 2403.596, b: 3456.6724, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,79 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &144239573
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 900328795706686189, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 775090789
+      objectReference: {fileID: 0}
+    - target: {fileID: 2729552444380287612, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_Name
+      value: PjonkGoose
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.077
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284703906462024029, guid: 1dfacb9cebc61c241a766ed2a48ea344,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1dfacb9cebc61c241a766ed2a48ea344, type: 3}
 --- !u!1 &157207112
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,3 +847,4 @@ SceneRoots:
   - {fileID: 432432461}
   - {fileID: 2013410475}
   - {fileID: 1752473781}
+  - {fileID: 144239573}
