@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 583324048
+CRC: 2456517800
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e8db2eb9ca099ccb8893308db88b8db3
+    Hash: 81e122793e50b125e57d012e14a6f8fd
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 522b248683d7a6b86426043c9c23b8e0
+    Hash: ce3e5f6e24b7386a1543f8ecc9cbe740
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: e8db2eb9ca099ccb8893308db88b8db3
+    Hash: 81e122793e50b125e57d012e14a6f8fd
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -46,6 +46,8 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
 - Class: 114
@@ -95,6 +97,8 @@ SerializeReferenceClassIdentifiers:
   ClassName: EnemyBehaviourState
 - AssemblyName: Assembly-CSharp
   ClassName: NavSizeLimit
+- AssemblyName: Unity.Netcode.Components
+  ClassName: Unity.Netcode.Components.NetworkAnimator/TransitionStateinfo
 - AssemblyName: Unity.Netcode.Runtime
   ClassName: Unity.Netcode.NetworkVariable`1[System.Boolean]
 Assets:

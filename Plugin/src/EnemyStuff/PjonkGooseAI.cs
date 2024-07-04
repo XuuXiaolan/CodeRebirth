@@ -9,6 +9,7 @@ using CodeRebirth.Util.Extensions;
 using CodeRebirth.Util.Spawning;
 using GameNetcodeStuff;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -36,19 +37,24 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public AudioClip[] featherSounds;
     public AudioClip[] hitSounds;
     public AudioClip[] deathSounds;
+    public Transform TopOfBody;
+    public GameObject nest;
+    public ParticleSystem featherHitParticles;
 
     private GrabbableObject goldenEgg;
     private float timeSinceHittingLocalPlayer;
     private float timeSinceAction;
     private bool holdingEgg = false;
-    public GameObject nest;
     private bool recentlyDamaged = false;
     private bool nestCreated = false;
     private bool isNestInside = true;
     private Coroutine recentlyDamagedCoroutine;
-    private float collisionThresholdVelocity = SPRINTING_SPEED - 3.5f;
+    private float collisionThresholdVelocity = SPRINTING_SPEED - 2.0f;
     private System.Random enemyRandom;
     private DoorLock[] doors;
+    private NetworkVariable<bool> IsAggro = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<bool> IsRunning = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<bool> IsGuarding = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public enum State
     {
@@ -79,6 +85,39 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         StartCoroutine(SpawnTimer());
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        IsAggro.OnValueChanged += OnIsAggroChanged;
+        IsRunning.OnValueChanged += OnIsRunningChanged;
+        IsGuarding.OnValueChanged += OnIsGuardingChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        IsAggro.OnValueChanged -= OnIsAggroChanged;
+        IsRunning.OnValueChanged -= OnIsRunningChanged;
+        IsGuarding.OnValueChanged -= OnIsGuardingChanged;
+    }
+
+    private void OnIsAggroChanged(bool oldValue, bool newValue)
+    {
+        isAggro = newValue;
+        creatureAnimator.SetBool("Aggro", isAggro);
+    }
+
+    private void OnIsRunningChanged(bool oldValue, bool newValue)
+    {
+        creatureAnimator.SetBool("Running", newValue);
+    }
+
+    private void OnIsGuardingChanged(bool oldValue, bool newValue)
+    {
+        creatureAnimator.SetBool("Guarding", newValue);
+    }
+
+
     public void PlayFootstepSound() {
         // creatureSFX.PlayOneShot(FootstepSounds[enemyRandom.Next(0, FootstepSounds.Length)]);
     } // Animation Event
@@ -101,26 +140,38 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     }
 
     [ClientRpc]
-    public void ControlStateSpeedAnimationClientRpc(float speed, int state, bool startSearch, bool running, bool guarding, int playerWhoStunnedIndex = -1, bool delaySpeed = true, bool _isAggro = false) {
-        isAggro = _isAggro;
-        if ((state == (int)State.ChasingPlayer || state == (int)State.ChasingEnemy) && delaySpeed) {
+    public void ControlStateSpeedAnimationClientRpc(float speed, int state, bool startSearch, bool running, bool guarding, int playerWhoStunnedIndex = -1, bool delaySpeed = true, bool _isAggro = false)
+    {
+        if (IsHost)
+        {
+            IsAggro.Value = _isAggro;
+            IsRunning.Value = running;
+            IsGuarding.Value = guarding;
+        }
+
+        if ((state == (int)State.ChasingPlayer || state == (int)State.ChasingEnemy) && delaySpeed)
+        {
             this.ChangeSpeedOnLocalClient(0);
-            this.agent.velocity = Vector3.zero; // rpc this
+            this.agent.velocity = Vector3.zero;
         }
         else this.ChangeSpeedOnLocalClient(speed);
-        if (state == (int)State.Stunned) SetEnemyStunned(true, 5.317f, playerWhoStunnedIndex == -1 ? null : StartOfRound.Instance.allPlayerScripts[playerWhoStunnedIndex]); // need to rpc this
+        if (state == (int)State.Stunned) {
+            SetEnemyStunned(true, 5.317f, playerWhoStunnedIndex == -1 ? null : StartOfRound.Instance.allPlayerScripts[playerWhoStunnedIndex]); // need to rpc this
+            this.TriggerAnimationOnLocalClient("Stunned");
+        }
         this.SetFloatAnimationOnLocalClient("MoveZ", speed);
-        this.SetBoolAnimationOnLocalClient("Running", running);
-        this.SetBoolAnimationOnLocalClient("Guarding", guarding);
-        this.SetBoolAnimationOnLocalClient("Aggro", isAggro);
         SwitchToBehaviourStateOnLocalClient((int)state);
         if (!IsHost) return;
-        if (startSearch) {
+        if (startSearch)
+        {
             StartWandering(nest.transform.position);
-        } else {
+        }
+        else
+        {
             StopWandering(this.currentWander);
         }
     }
+
     public IEnumerator SpawnTimer()
     {
         yield return new WaitForSeconds(1f);
@@ -207,7 +258,6 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     private void StunGoose(PlayerControllerB playerWhoStunned = null, bool delaySpeed = true)
     {
-        TriggerAnimationClientRpc("Stunned");
         ControlStateSpeedAnimationClientRpc(0f, (int)State.Stunned, false, false, false, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned), delaySpeed, true);
         if (holdingEgg) {
             DropEggClientRpc();
@@ -564,8 +614,8 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public override void KillEnemy(bool destroy = false) {
         base.KillEnemy(destroy);
+        TriggerAnimationOnLocalClient("Death");
         if (IsHost) {
-            TriggerAnimationClientRpc("Death");
             ControlStateSpeedAnimationClientRpc(0, (int)State.Death, false, false, false, -1, true, false);
             if (holdingEgg) {
                 DropEggClientRpc();
@@ -581,10 +631,11 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+        featherHitParticles.Play();
+        // cause a particle effect with the feathers
         if (isEnemyDead || currentBehaviourStateIndex == (int)State.Death) return;
         // creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(0, hitSounds.Length)]);
         enemyHP -= force;
-
         LogIfDebugBuild($"Player who hit: {playerWhoHit}");
 
         if (playerWhoHit != null && currentBehaviourStateIndex != (int)State.Stunned) {
@@ -704,7 +755,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (HandleEnemyOrPlayerGrabbingEgg() && carryingPlayerBody) {
             DropPlayerBodyClientRpc();
         }
-        if (Vector3.Distance(this.transform.position, nest.transform.position) > 1f) {
+        if (Vector3.Distance(this.transform.position, nest.transform.position) < 1f) {
             DropPlayerBodyClientRpc();
         }
     }
@@ -750,11 +801,11 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         targetPlayer.KillPlayer(targetPlayer.velocityLastFrame * 5f, true, CauseOfDeath.Bludgeoning);
         if (Vector3.Distance(goldenEgg.transform.position, nest.transform.position) <= 0.75f) {
             CarryingDeadPlayerClientRpc();
-            ControlStateSpeedAnimationClientRpc(SPRINTING_SPEED, (int)State.DragPlayerBodyToNest, false, false, true, -1, true, false);
+            ControlStateSpeedAnimationClientRpc(WALKING_SPEED, (int)State.DragPlayerBodyToNest, false, false, true, -1, true, false);
         } else {
-            SetTargetClientRpc(-1);
             SetDestinationToPosition(goldenEgg.transform.position, false);
         }
+        SetTargetClientRpc(-1);
     }
 
     [ClientRpc]
@@ -777,9 +828,9 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         carryingPlayerBody = true;
         bodyBeingCarried = targetPlayer.deadBody;
-        if (IsHost) {
-            SetTargetClientRpc(-1);
-        }
+        bodyBeingCarried.attachedTo = this.TopOfBody;
+        bodyBeingCarried.attachedLimb = this.targetPlayer.deadBody.bodyParts[0];
+        bodyBeingCarried.matchPositionExactly = true;
     }
 
     [ClientRpc]
@@ -799,13 +850,14 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void OnCollideWithPlayer(Collider other)
     {
         if (isEnemyDead) return;
-        if (other.GetComponent<PlayerControllerB>().isPlayerDead) return;
-        if (targetPlayer != null && currentBehaviourStateIndex == (int)State.ChasingPlayer)
+        PlayerControllerB collidedPlayer = MeetsStandardPlayerCollisionConditions(other); 
+        if (collidedPlayer.isPlayerDead) return;
+        if (targetPlayer != null && targetPlayer == collidedPlayer && currentBehaviourStateIndex == (int)State.ChasingPlayer)
         {
             KillPlayerWithEgg();
         } else if ((int)State.ChasingPlayer == currentBehaviourStateIndex && timeSinceHittingLocalPlayer >= 1f) {
             timeSinceHittingLocalPlayer = 0;
-            other.GetComponent<PlayerControllerB>().DamagePlayer(20);
+            collidedPlayer.DamagePlayer(20);
         }
     }
     
