@@ -52,14 +52,12 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     public Weather TornadoesWeather { get; private set; }
 
     public WeatherHandler() {
-        Meteorite = new MeteoriteAssets("meteorshowerassets");
-        Tornado = new TornadoAssets("tornadoassets");
-
         if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
         if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
     }
 
     private void RegisterTornadoWeather() {
+        Tornado = new TornadoAssets("tornadoassets");
         GameObject effectObject = GameObject.Instantiate(Tornado.TornadoEffectPrefab);
         effectObject.hideFlags = HideFlags.HideAndDontSave;
         GameObject.DontDestroyOnLoad(effectObject);
@@ -82,6 +80,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     }
 
     private void RegisterMeteorShower() {
+        Meteorite = new MeteoriteAssets("meteorshowerassets");
         Plugin.samplePrefabs.Add("Meteorite", Meteorite.MeteoriteItem);
 
         GameObject effectObject = GameObject.Instantiate(Meteorite.MeteorEffectPrefab);

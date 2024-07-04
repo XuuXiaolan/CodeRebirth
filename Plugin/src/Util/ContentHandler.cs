@@ -11,30 +11,20 @@ public class ContentHandler<T> where T: ContentHandler<T> {
 		Instance = (T)this;
 	}
 	
-    protected void RegisterEnemyWithConfig(bool enabled, string configMoonRarity, EnemyType enemy, TerminalNode terminalNode, TerminalKeyword terminalKeyword, float powerLevel, int spawnCount) {
+    protected void RegisterEnemyWithConfig(string configMoonRarity, EnemyType enemy, TerminalNode terminalNode, TerminalKeyword terminalKeyword, float powerLevel, int spawnCount) {
         enemy.MaxCount = spawnCount;
         enemy.PowerLevel = powerLevel;
-        if (enabled) { 
-            (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
-            Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
-        } else {
-            Enemies.RegisterEnemy(enemy, 0, Levels.LevelTypes.All, terminalNode, terminalKeyword);
-        }
+        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
+        Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
     }
-    protected void RegisterScrapWithConfig(bool enabled, string configMoonRarity, Item scrap) {
-        if (enabled) { 
-            (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
-            Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
-        } else {
-            Items.RegisterScrap(scrap, 0, Levels.LevelTypes.All);
-        }
+    protected void RegisterScrapWithConfig(string configMoonRarity, Item scrap) {
+        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
+        Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
     }
-    protected void RegisterShopItemWithConfig(bool enabledShopItem, bool enabledScrap, Item item, TerminalNode terminalNode, int itemCost, string configMoonRarity) {
-        if (enabledShopItem) { 
-            Items.RegisterShopItem(item, null, null, terminalNode, itemCost);
-        }
+    protected void RegisterShopItemWithConfig(bool enabledScrap, Item item, TerminalNode terminalNode, int itemCost, string configMoonRarity) {
+        Items.RegisterShopItem(item, null, null, terminalNode, itemCost);
         if (enabledScrap) {
-            RegisterScrapWithConfig(true, configMoonRarity, item);
+            RegisterScrapWithConfig(configMoonRarity, item);
         }
     }
     protected (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) ConfigParsing(string configMoonRarity) {

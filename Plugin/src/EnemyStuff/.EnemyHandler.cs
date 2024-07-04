@@ -59,16 +59,24 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
     public PjonkGooseAssets PjonkGoose { get; private set; }
 
     public EnemyHandler() {
-        Butterfly = new ButterflyAssets("cutieflyassets");
-        SnailCat = new SnailCatAssets("snailcatassets");
         // ScrapMaster = new ScrapMasterAssets("coderebirthasset");
-        PjonkGoose = new PjonkGooseAssets("pjonkgooseassets");
-
-        Plugin.samplePrefabs.Add("GoldenEgg", PjonkGoose.GoldenEggItem);
         // Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
-        RegisterEnemyWithConfig(true, "All:500", PjonkGoose.PjonkGooseEnemyType, PjonkGoose.PjonkGooseTerminalNode, PjonkGoose.PjonkGooseTerminalKeyword, 3, 1);
-        RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlyEnabled.Value, Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Butterfly.ButterflyEnemyType, Butterfly.ButterflyTerminalNode, Butterfly.ButterflyTerminalKeyword, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
-        RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatEnabled.Value, Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
+        if (Plugin.ModConfig.ConfigCutieFlyEnabled.Value) {
+            Butterfly = new ButterflyAssets("cutieflyassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Butterfly.ButterflyEnemyType, Butterfly.ButterflyTerminalNode, Butterfly.ButterflyTerminalKeyword, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
+        }
+
+        if (Plugin.ModConfig.ConfigSnailCatEnabled.Value) {
+            SnailCat = new SnailCatAssets("snailcatassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
+        }
+
+        // TODO: swap out with actual config.
+        if (true) {
+            PjonkGoose = new PjonkGooseAssets("pjonkgooseassets");
+            RegisterEnemyWithConfig("All:500", PjonkGoose.PjonkGooseEnemyType, PjonkGoose.PjonkGooseTerminalNode, PjonkGoose.PjonkGooseTerminalKeyword, 3, 1);
+            Plugin.samplePrefabs.Add("GoldenEgg", PjonkGoose.GoldenEggItem);
+        }
     }
 }

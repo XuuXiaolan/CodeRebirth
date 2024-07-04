@@ -25,13 +25,15 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 	public CrateAssets Crate { get; private set; }
 
 	public MapObjectHandler() {
-		Money = new MoneyAssets("moneyassets");
-		Crate = new CrateAssets("crateassets");
+		
+		if(Plugin.ModConfig.ConfigItemCrateEnabled.Value)
+			Crate = new CrateAssets("crateassets");
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
 	}
 
 	public void RegisterInsideMoney() {
+		Money = new MoneyAssets("moneyassets");
 		Money.MoneyItem.spawnPrefab.GetComponent<Money>().SetScrapValue(-1);
 		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
 		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();

@@ -41,15 +41,26 @@ public class ItemHandler : ContentHandler<ItemHandler> {
     public SnowGlobeAssets SnowGlobe { get; private set; }
 
     public ItemHandler() {
-        Wallet = new WalletAssets("walletassets");
-        Hoverboard = new HoverboardAssets("hoverboardassets");
-        EpicAxe = new EpicAxeAssets("epicaxeassets");
-        SnowGlobe = new SnowGlobeAssets("snowglobeassets");
 
-        RegisterShopItemWithConfig(Plugin.ModConfig.ConfigHoverboardEnabled.Value, false, Hoverboard.HoverboardItem, Hoverboard.HoverboardTerminalNode, Plugin.ModConfig.ConfigHoverboardCost.Value, "");
-        if (Plugin.ModConfig.ConfigWalletMode.Value) RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, false, Wallet.WalletItemOld, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
-        else RegisterShopItemWithConfig(Plugin.ModConfig.ConfigWalletEnabled.Value, true, Wallet.WalletItemNew, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
-        RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, EpicAxe.EpicAxeItem);
-        RegisterScrapWithConfig(Plugin.ModConfig.ConfigSnowGlobeEnabled.Value, Plugin.ModConfig.ConfigSnowGlobeSpawnWeights.Value, SnowGlobe.SnowGlobeItem);
+        if (Plugin.ModConfig.ConfigWalletEnabled.Value) {
+            Wallet = new WalletAssets("walletassets");
+            if (Plugin.ModConfig.ConfigWalletMode.Value) RegisterShopItemWithConfig(false, Wallet.WalletItemOld, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
+            else RegisterShopItemWithConfig(true, Wallet.WalletItemNew, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "");
+        }
+
+        if (Plugin.ModConfig.ConfigHoverboardEnabled.Value) {
+            Hoverboard = new HoverboardAssets("hoverboardassets");
+            RegisterShopItemWithConfig(false, Hoverboard.HoverboardItem, Hoverboard.HoverboardTerminalNode, Plugin.ModConfig.ConfigHoverboardCost.Value, "");
+        }
+
+        if (Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value) {
+            EpicAxe = new EpicAxeAssets("epicaxeassets");
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, EpicAxe.EpicAxeItem);
+        }
+
+        if (Plugin.ModConfig.ConfigSnowGlobeEnabled.Value) {
+            SnowGlobe = new SnowGlobeAssets("snowglobeassets");
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigSnowGlobeSpawnWeights.Value, SnowGlobe.SnowGlobeItem);
+        }
     }
 }
