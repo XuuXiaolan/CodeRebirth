@@ -36,14 +36,15 @@ public class Tornados : NetworkBehaviour
     private List<GameObject> outsideNodes = new List<GameObject>();
     private Vector3 origin;
 
+    [Flags]
     public enum TornadoType
     {
-        Fire,
-        Blood,
-        Windy,
-        Smoke,
-        Water,
-        Electric,
+        Fire = 1,
+        Blood = 2,
+        Windy = 4,
+        Smoke = 8,
+        Water = 16,
+        Electric = 32,
     }
     private TornadoType tornadoType = TornadoType.Fire;
     private bool damageTimer = true;

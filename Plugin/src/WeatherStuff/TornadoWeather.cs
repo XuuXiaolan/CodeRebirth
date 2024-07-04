@@ -42,32 +42,17 @@ public class TornadoWeather : CodeRebirthWeathers {
 		if(!IsAuthority()) return; // Only run on the host.
         
 		random = new Random();
-		switch (Plugin.ModConfig.ConfigTornadoWeatherType.Value) {
-			case 0:
-				tornadoTypeIndex = random.Next(0, 6);
-				break;
-			case 1:
-				tornadoTypeIndex = 0;
-				break;
-			case 2:
-				tornadoTypeIndex = 1;
-				break;
-			case 3:
-				tornadoTypeIndex = 2;
-				break;
-			case 4:
-				tornadoTypeIndex = 3;
-				break;
-			case 5:
-				tornadoTypeIndex = 4;
-				break;
-			case 6:
-				tornadoTypeIndex = 5;
-				break;
-			default:
-				tornadoTypeIndex = random.Next(0, 6);
-				break;
+
+		Tornados.TornadoType[] types = (Tornados.TornadoType[]) Enum.GetValues(typeof(Tornados.TornadoType));
+		List<int> allowedIndexes = [];
+
+		for (int i = 0; i < types.Length; i++) {
+			if(Plugin.ModConfig.ConfigTornadoWeatherType.Value.HasFlag(types[i])) allowedIndexes.Add(i);
 		}
+		Plugin.Logger.LogDebug($"Allowed indexes for tornados: {string.Join(",", allowedIndexes)}");
+		Plugin.Logger.LogDebug($"tornado types: {string.Join(",", types)}");
+
+		tornadoTypeIndex = random.NextItem(allowedIndexes);
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}
 

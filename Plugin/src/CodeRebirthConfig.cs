@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
+using CodeRebirth.WeatherStuff;
 
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
@@ -36,7 +37,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigScrapMasterPowerLevel { get; private set; }
         // Weather Specific
-        public ConfigEntry<int> ConfigTornadoWeatherType { get; private set; }
+        public ConfigEntry<Tornados.TornadoType> ConfigTornadoWeatherType { get; private set; }
         public ConfigEntry<float> ConfigMeteorShowerMeteoriteSpawnChance { get; private set; }
         public ConfigEntry<float> ConfigMeteorShowerInShipVolume { get; private set; }
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
@@ -47,6 +48,8 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
+			configFile.SaveOnConfigSet = false;
+            
             ConfigWalletMode = configFile.Bind("Wallet Options",
                                                 "Wallet | Mode",
                                                 true,
@@ -56,17 +59,25 @@ namespace CodeRebirth.Configs {
                                                 true,
                                                 "Enables/Disables the music in the snow globe.");
             ConfigTornadoWeatherType = configFile.Bind("Tornado Options",
-                                                "Tornados | Tornado Type",
-                                                0,
-                                                "Type of tornado to spawn. 0 = Random, 1 = Fire, 2 = Blood, 3 = Wind, 4 = Smoke, 5 = Water, 6 = Electric");
+                                                "Tornados | Enabled Types",
+												Tornados.TornadoType.Electric | Tornados.TornadoType.Fire | Tornados.TornadoType.Blood | Tornados.TornadoType.Windy | Tornados.TornadoType.Smoke | Tornados.TornadoType.Water,
+												"Types of tornados that are allowed to spawn"
+												);
+			
             ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteorite Spawn Chance",
                                                 1f,
-                                                "Chance of spawning a meteorite when a meteor is spawned (0 to 100 decimals included).");
+												new ConfigDescription(
+													"Chance of spawning a meteorite when a meteor is spawned (0 to 100 decimals included).",
+													new AcceptableValueRange<float>(0, 100f)
+												));
             ConfigMeteorShowerInShipVolume = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteor Volume",
                                                 1f,
-                                                "Multiplier of the meteors' volume for when the player is in the ship and the ship door is closed.");
+												new ConfigDescription(
+													"Multiplier of the meteors' volume for when the player is in the ship and the ship door is closed.", 
+													new AcceptableValueRange<float>(0, 1f)
+												));
             ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteor Strikes Ship",
                                                 true,
@@ -142,7 +153,10 @@ namespace CodeRebirth.Configs {
             ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Default Volume",
                                                 0.25f,
-                                                "Default Volume of Meteors (between 0 and 1).");
+												new ConfigDescription(
+													"Default Volume of Meteors (between 0 and 1).",
+													new AcceptableValueRange<float>(0, 1f)
+												));
             ConfigWalletEnabled = configFile.Bind("Wallet Options",
                                                 "Wallet Item | Enabled",
                                                 true,
@@ -175,8 +189,10 @@ namespace CodeRebirth.Configs {
                                                 "Money Scrap | Average Value",
                                                 15,
                                                 "Average value of Money in the level. (so 5 and 25 are lower and upper limits here).");
-            ClearUnusedEntries(configFile);
+			configFile.SaveOnConfigSet = true;
+			ClearUnusedEntries(configFile);
         }
+        
         private void ClearUnusedEntries(ConfigFile configFile) {
             // Normally, old unused config entries don't get removed, so we do it with this piece of code. Credit to Kittenji.
             PropertyInfo orphanedEntriesProp = configFile.GetType().GetProperty("OrphanedEntries", BindingFlags.NonPublic | BindingFlags.Instance);
