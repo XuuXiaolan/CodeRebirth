@@ -56,6 +56,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
         go.TryGet(out NetworkObject netObj);
         if(netObj != null)
         {
+            if (netObj.TryGetComponent(out GrabbableObject grabbableObject)) {
+                grabbableObject.SetScrapValue(value);
+            }
             var scanNode = netObj.GetComponentInChildren<ScanNodeProperties>();
             scanNode.scrapValue = value;
             scanNode.subText = $"Value: ${value}";
