@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2456517800
+CRC: 2318113656
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 81e122793e50b125e57d012e14a6f8fd
+    Hash: 9663beb4d2f10f14823036fd339bc4dd
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ce3e5f6e24b7386a1543f8ecc9cbe740
+    Hash: 1b3626f1e8d34b6b9d22f795d8d7d201
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 81e122793e50b125e57d012e14a6f8fd
+    Hash: 9663beb4d2f10f14823036fd339bc4dd
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -61,15 +61,17 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
 - Class: 114
-  Script: {fileID: 465811933, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  Script: {fileID: -1430271778, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
 - Class: 114
-  Script: {fileID: 287195199, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  Script: {fileID: 533386820, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
 - Class: 114
-  Script: {fileID: -2002778003, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  Script: {fileID: -867057046, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
 - Class: 114
-  Script: {fileID: 1080638603, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  Script: {fileID: 371278194, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
 - Class: 114
-  Script: {fileID: -1067628483, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  Script: {fileID: -1327396982, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
+- Class: 114
+  Script: {fileID: -320533660, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
@@ -103,16 +105,27 @@ SerializeReferenceClassIdentifiers:
   ClassName: Unity.Netcode.NetworkVariable`1[System.Boolean]
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk6SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkStunSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/light-wing-flap-6143
+  (mp3cut.net) (1).wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk8SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkGoose.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+  Slapping Sound Effect 3827 (mp3cut.net).mp3
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkStunSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+  Slapping Sound Effect 3827 (mp3cut.net) (4).mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Materials/M_GooseBirdieMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkGoose.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkGoose.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk2SoundClip.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/BiteAdditive.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/light-wing-flap-6143
+  (mp3cut.net).wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Chase.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/PjonkGooseUtils.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkDeath2SoundClip.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Stunned.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/light-wing-flap-6143
+  (mp3cut.net) (2).wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk1SoundClip.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkDeath1SoundClip.wav.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Spawn.anim
@@ -121,6 +134,8 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/IdleAction.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/HonkAdditive.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHissSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+  Slapping Sound Effect 3827 (mp3cut.net) (3).mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Bestiary/PjonkGooseTN.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/EasterEggHitGround2.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkNest.fbx
@@ -143,6 +158,8 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Walk.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkEnrageSoundClip.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkEggObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+  Slapping Sound Effect 3827 (mp3cut.net) (1).mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/AnC_PjonkGoose.controller
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkStunRecoverSoundClip.wav
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/HissGuarding.anim
@@ -152,4 +169,6 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Materials/M_GooseWingMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/NonAggroDash.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkSpawnSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+  Slapping Sound Effect 3827 (mp3cut.net) (2).mp3
 Dependencies: []

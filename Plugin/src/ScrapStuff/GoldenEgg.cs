@@ -25,6 +25,5 @@ public class GoldenEgg : GrabbableObject {
         NetworkGrabbable.OnValueChanged += (_, value) => {
             grabbable = value;
         };
-        GetComponent<ScrapValueSyncer>().SetScrapValue(scrapValue);
-    } // for some reason the value of the item isn't being sync'd
+    }
 }

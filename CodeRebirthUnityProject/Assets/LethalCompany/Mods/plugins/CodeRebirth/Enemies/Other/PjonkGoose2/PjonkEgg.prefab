@@ -426,6 +426,10 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
+  NetworkGrabbable:
+    m_InternalValue: 1
+  NetworkGrabbableToEnemies:
+    m_InternalValue: 1
 --- !u!82 &6384411455513525683
 AudioSource:
   m_ObjectHideFlags: 0
