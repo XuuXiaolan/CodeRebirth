@@ -1,3 +1,7 @@
+## v0.1.8
+- Accidently included something not supposed to be there, caused an error.
+- Potentially fixed item crate error.
+
 ## v0.1.7
 - Improved hoverboard collisions, I think.
 - Increased range for tornado effects.
