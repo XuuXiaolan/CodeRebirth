@@ -1,4 +1,5 @@
 using CodeRebirth.Misc;
+using CodeRebirth.Util.Spawning;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -25,5 +26,7 @@ public class GoldenEgg : GrabbableObject {
         NetworkGrabbable.OnValueChanged += (_, value) => {
             grabbable = value;
         };
+
+        CodeRebirthUtils.goldenEggs.Add(this);
     }
 }

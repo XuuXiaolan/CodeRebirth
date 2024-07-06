@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2318113656
+CRC: 4108251588
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9663beb4d2f10f14823036fd339bc4dd
+    Hash: b79e493d8c4a44f41752c43c27df0d4d
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 1b3626f1e8d34b6b9d22f795d8d7d201
+    Hash: 4bbb98c30cff3f074e970b5dee6969be
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 9663beb4d2f10f14823036fd339bc4dd
+    Hash: b79e493d8c4a44f41752c43c27df0d4d
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -47,8 +47,6 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
@@ -61,17 +59,15 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
 - Class: 114
-  Script: {fileID: -1430271778, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
+  Script: {fileID: 465811933, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
-  Script: {fileID: 533386820, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
+  Script: {fileID: -2002778003, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
-  Script: {fileID: -867057046, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
+  Script: {fileID: 1080638603, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
-  Script: {fileID: 371278194, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
+  Script: {fileID: -1067628483, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 114
-  Script: {fileID: -1327396982, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
-- Class: 114
-  Script: {fileID: -320533660, guid: 142372cd7a118124db39b7e7ada5f23a, type: 3}
+  Script: {fileID: -1615614082, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
@@ -99,76 +95,82 @@ SerializeReferenceClassIdentifiers:
   ClassName: EnemyBehaviourState
 - AssemblyName: Assembly-CSharp
   ClassName: NavSizeLimit
-- AssemblyName: Unity.Netcode.Components
-  ClassName: Unity.Netcode.Components.NetworkAnimator/TransitionStateinfo
 - AssemblyName: Unity.Netcode.Runtime
   ClassName: Unity.Netcode.NetworkVariable`1[System.Boolean]
 Assets:
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk6SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/light-wing-flap-6143
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHonk6SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/light-wing-flap-6143
   (mp3cut.net) (1).wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk8SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHonk8SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/Wet
   Slapping Sound Effect 3827 (mp3cut.net).mp3
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkStunSoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkStunSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/Wet
   Slapping Sound Effect 3827 (mp3cut.net) (4).mp3
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Materials/M_GooseBirdieMaterial.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkGoose.fbx
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkGoose.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk2SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/BiteAdditive.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/light-wing-flap-6143
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/M_GooseBirdieMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/PjonkGoose.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/Textures/GooseAlbedo.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/PjonkGoose.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHonk2SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/Textures/GooseWingsNormals.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/BiteAdditive.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/light-wing-flap-6143
   (mp3cut.net).wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Chase.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/PjonkGooseUtils.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkDeath2SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Stunned.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/light-wing-flap-6143
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/Chase.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkDeath2SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/Textures/GooseWingsAlbedo.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/Stunned.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/light-wing-flap-6143
   (mp3cut.net) (2).wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk1SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkDeath1SoundClip.wav.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Spawn.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk5SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkEgg.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/IdleAction.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/HonkAdditive.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHissSoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHonk1SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkDeath1SoundClip.wav.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/Spawn.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/M_WingMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHonk5SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/SG_VertexColorShader.shadergraph
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/PjonkEgg.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/IdleAction.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/EggMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/HonkAdditive.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHissSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/Wet
   Slapping Sound Effect 3827 (mp3cut.net) (3).mp3
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Bestiary/PjonkGooseTN.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/EasterEggHitGround2.ogg
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkNest.fbx
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Materials/M_GooseBody.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/AnC_PjonkStunned.controller
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/SG_GooseBirdieBody.shadergraph
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkNest.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkGooseObj.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Death.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/M_NestGrass.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk4SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/tall-grass-texture-png-20.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/StunnedBirdies.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PJOOOOOOOOOOONK.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Bestiary/PjonkGooseTK.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHyperVentilateSoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk3SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkHonk7SoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Enraged.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Walk.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkEnrageSoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/PjonkEggObj.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Bestiary/PjonkGooseTN.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/EasterEggHitGround2.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/PjonkNest.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/M_GooseBody.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/AnC_PjonkStunned.controller
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/SG_GooseBirdieBody.shadergraph
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/PjonkNest.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/PjonkGooseObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/Death.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/M_NestGrass.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHonk4SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/tall-grass-texture-png-20.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/StunnedBirdies.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PJOOOOOOOOOOONK.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Bestiary/PjonkGooseTK.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHyperVentilateSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHonk3SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkHonk7SoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/Enraged.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/Walk.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/M_VertexColors.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkEnrageSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/PjonkEggObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/Wet
   Slapping Sound Effect 3827 (mp3cut.net) (1).mp3
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/AnC_PjonkGoose.controller
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkStunRecoverSoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/HissGuarding.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Materials/M_GooseBirdieWingMaterial.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/Idle.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/EasterEggHitGround.ogg
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Materials/M_GooseWingMaterial.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Animations/NonAggroDash.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/PjonkSpawnSoundClip.wav
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose2/Audio/Wet
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/AnC_PjonkGoose.controller
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkStunRecoverSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/HissGuarding.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/M_GooseBirdieWingMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/Idle.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/EasterEggHitGround.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/Sphere.001_1.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/M_GooseWingMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Animations/NonAggroDash.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/PjonkSpawnSoundClip.wav
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Audio/Wet
   Slapping Sound Effect 3827 (mp3cut.net) (2).mp3
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/PjonkGoose/Materials/Textures/GooseNorm.png
 Dependencies: []

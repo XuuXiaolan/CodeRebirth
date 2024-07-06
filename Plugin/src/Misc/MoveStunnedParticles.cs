@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace CodeRebirth.Misc;
 public class MoveStunnedParticle : MonoBehaviour
 {
     // Start is called before the first frame update

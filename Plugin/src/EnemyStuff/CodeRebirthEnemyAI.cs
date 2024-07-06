@@ -138,7 +138,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         }
         return (creatureAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
     }
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SetTargetServerRpc(int PlayerID) {
         SetTargetClientRpc(PlayerID);
     }
@@ -157,7 +157,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         LogIfDebugBuild($"{this} setting target to: {targetPlayer.playerUsername}");
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SetEnemyTargetServerRpc(int enemyID) {
         SetEnemyTargetClientRpc(enemyID);
     }
