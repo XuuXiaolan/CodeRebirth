@@ -69,28 +69,15 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        StartCoroutine(StateDebugger());
         creatureVoice.pitch = 1.4f;
         doors = FindObjectsOfType(typeof(DoorLock)) as DoorLock[];
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 323);
-        LogIfDebugBuild(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount.ToString());
-        LogIfDebugBuild(RoundManager.Instance.currentOutsideEnemyPower.ToString());
         timeSinceHittingLocalPlayer = 0;
         timeSinceAction = 0;
         creatureVoice.PlayOneShot(SpawnSound);
         if (!IsHost) return;
         ControlStateSpeedAnimationServerRpc(0f, (int)State.Spawning, false, false, false, -1, true, false);
         StartCoroutine(SpawnTimer()); // 559 state is not transferring when client hits on clients end, constantly clearing target because the egg is not held but it should keep target because recently damaged
-    }
-
-    public IEnumerator StateDebugger() {
-        while (true) {
-            yield return new WaitForSeconds(0.5f);
-            LogIfDebugBuild(currentBehaviourStateIndex);
-            LogIfDebugBuild("RECENTLY DAMAGED: " + recentlyDamaged.ToString());
-            LogIfDebugBuild("SPEED: " + agent.speed);
-            LogIfDebugBuild("VELOCITY: " + agent.velocity.magnitude);
-        }
     }
 
     public void PlayFootstepSound() {
@@ -111,6 +98,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     }
 
     public void ApplyChasingSpeed() { // Animation Event
+        if (isEnemyDead) return;
         this.ChangeSpeedOnLocalClient(SPRINTING_SPEED);
     }
 
@@ -176,6 +164,19 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
+        if (stunNormalizedTimer > 0 && currentBehaviourStateIndex != (int)State.Stunned && IsHost) {
+            if (targetPlayer == null) {
+                if (playerWhoLastHit == null) {
+                    var PlayerToTakeBlame = StartOfRound.Instance.allPlayerScripts.OrderBy(player => Vector3.Distance(player.transform.position, this.transform.position)).First();
+                    StunGoose(PlayerToTakeBlame, false);
+                } else {
+                    StunGoose(playerWhoLastHit, false);
+                }
+            } else {
+                StunGoose(targetPlayer, false);
+            }
+        }
+
         timeSinceAction += Time.deltaTime;
         timeSinceHittingLocalPlayer += Time.deltaTime;
 
@@ -811,17 +812,25 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             player.DamagePlayer(75, true, true, CauseOfDeath.Bludgeoning, 0, false, default);
             if (player.health <= 0) {
                 LogIfDebugBuild("Player is dead");
-                if (Vector3.Distance(goldenEgg.transform.position, nest.transform.position) <= 0.75f) {
-                    CarryingDeadPlayerServerRpc();
-                    ControlStateSpeedAnimationServerRpc(WALKING_SPEED, (int)State.DragPlayerBodyToNest, false, false, true, -1, true, false);
-                } else {
-                    SetDestinationToPosition(goldenEgg.transform.position, false);
-                }
+                HostDecisionAfterDeathServerRpc();
                 SetTargetServerRpc(-1);
             }
         }
     }
     
+
+    [ServerRpc(RequireOwnership = false)]
+    private void HostDecisionAfterDeathServerRpc()
+    {
+        if (Vector3.Distance(goldenEgg.transform.position, nest.transform.position) <= 2f) {
+            LogIfDebugBuild("Carrying dead player");
+            CarryingDeadPlayerClientRpc();
+            ControlStateSpeedAnimationClientRpc(WALKING_SPEED, (int)State.DragPlayerBodyToNest, false, false, true, -1, true, false);
+        } else {
+            SetDestinationToPosition(goldenEgg.transform.position, false);
+        }
+    }
+
     private void DropPlayerBody()
 	{
 		if (!this.carryingPlayerBody)
