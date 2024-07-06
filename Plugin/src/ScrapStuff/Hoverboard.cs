@@ -404,6 +404,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         playerControlling.transform.SetParent(hoverboardSeat.transform, true);
         playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = true;
         hoverboardMode = HoverboardMode.Mounted;
+        if (playerControlling == GameNetworkManager.Instance.localPlayerController) SetupCollidersIgnoringOrIncluding(true);
         playerControlling.playerActions.Movement.Look.Disable();
         playerControlling.playerActions.Movement.Jump.Disable();
         playerMovementSpeed = playerControlling.movementSpeed;
@@ -449,6 +450,7 @@ public class Hoverboard : GrabbableObject, IHittable {
                 this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             }
         }
+        SetupCollidersIgnoringOrIncluding(false);
         if (playerControlling != null) playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = false;
         turnedOn = false;
         _isHoverForwardHeld = false;
@@ -511,7 +513,6 @@ public class Hoverboard : GrabbableObject, IHittable {
             componentsInChildren2[j].renderingLayerMask = 1U;
         }
         
-        SetupCollidersIgnoring();
         trigger.onInteract.AddListener(OnInteract);
     }
 
@@ -599,23 +600,23 @@ public class Hoverboard : GrabbableObject, IHittable {
 		return true; // this bool literally doesn't get used. i have no idea.
 	}
     
-    public void SetupCollidersIgnoring() {
+    public void SetupCollidersIgnoringOrIncluding(bool ignore) {
         Collider hbCollider = hb.GetComponent<Collider>();
         Collider hoverboardChildCollider = hoverboardChild.GetComponent<Collider>();
         Collider hoverboardChildChildrenCollider = hoverboardChild.GetComponentInChildren<Collider>();
         foreach (var player in StartOfRound.Instance.allPlayerScripts) {
-            SimplifyCollidersIgnore(hbCollider, player);
-            SimplifyCollidersIgnore(hoverboardChildCollider, player);
-            SimplifyCollidersIgnore(hoverboardChildChildrenCollider, player);
+            SimplifyCollidersIgnore(hbCollider, player, ignore);
+            SimplifyCollidersIgnore(hoverboardChildCollider, player, ignore);
+            SimplifyCollidersIgnore(hoverboardChildChildrenCollider, player, ignore);
         }
     }
-    public void SimplifyCollidersIgnore(Collider hoverboardCollider, PlayerControllerB player) {
-        Physics.IgnoreCollision(hoverboardCollider, player.playerCollider);
-        Physics.IgnoreCollision(hoverboardCollider, player.playerRigidbody.GetComponent<Collider>());
-        Physics.IgnoreCollision(hoverboardCollider, player.GetComponent<CharacterController>().GetComponent<Collider>());
-        Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("PlayerPhysicsBox").GetComponent<BoxCollider>());
-        Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("PlayerPhysicsBox").GetComponent<Rigidbody>().GetComponent<Collider>());
-        Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("Misc").Find("Cube").GetComponent<BoxCollider>());
-        Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("Misc").Find("Cube").GetComponent<Rigidbody>().GetComponent<BoxCollider>());
+    public void SimplifyCollidersIgnore(Collider hoverboardCollider, PlayerControllerB player, bool ignore) {
+        Physics.IgnoreCollision(hoverboardCollider, player.playerCollider, ignore);
+        Physics.IgnoreCollision(hoverboardCollider, player.playerRigidbody.GetComponent<Collider>(), ignore);
+        Physics.IgnoreCollision(hoverboardCollider, player.GetComponent<CharacterController>().GetComponent<Collider>(), ignore);
+        Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("PlayerPhysicsBox").GetComponent<BoxCollider>(), ignore);
+        Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("PlayerPhysicsBox").GetComponent<Rigidbody>().GetComponent<Collider>(), ignore);
+        Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("Misc").Find("Cube").GetComponent<BoxCollider>(), ignore);
+        Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("Misc").Find("Cube").GetComponent<Rigidbody>().GetComponent<BoxCollider>(), ignore);
     }
 }
