@@ -131,8 +131,8 @@ public class ItemCrate : CRHittable {
 			GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
 			
 			grabbableObject.SetScrapValue((int)(random.Next(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier));
-			CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
 			grabbableObject.NetworkObject.Spawn();
+			CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
 		}
 		OpenCrateClientRPC();
 	}

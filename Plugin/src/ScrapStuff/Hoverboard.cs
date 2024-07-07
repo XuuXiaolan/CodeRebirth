@@ -43,6 +43,7 @@ public class Hoverboard : GrabbableObject, IHittable {
     // Variables to store initial anchor positions and rotations
     private Vector3[] initialAnchorPositions = new Vector3[4];
     private Quaternion[] initialAnchorRotations = new Quaternion[4];
+    private bool collidersIgnored = false;
 
     public override void Start() {
         StartBaseImportant();
@@ -404,7 +405,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         playerControlling.transform.SetParent(hoverboardSeat.transform, true);
         playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = true;
         hoverboardMode = HoverboardMode.Mounted;
-        if (playerControlling == GameNetworkManager.Instance.localPlayerController) SetupCollidersIgnoringOrIncluding(true);
+        if (!collidersIgnored) SetupCollidersIgnoringOrIncluding(true);
         playerControlling.playerActions.Movement.Look.Disable();
         playerControlling.playerActions.Movement.Jump.Disable();
         playerMovementSpeed = playerControlling.movementSpeed;
@@ -450,7 +451,7 @@ public class Hoverboard : GrabbableObject, IHittable {
                 this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             }
         }
-        SetupCollidersIgnoringOrIncluding(false);
+        if (collidersIgnored) SetupCollidersIgnoringOrIncluding(false);
         if (playerControlling != null) playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = false;
         turnedOn = false;
         _isHoverForwardHeld = false;
@@ -601,6 +602,7 @@ public class Hoverboard : GrabbableObject, IHittable {
 	}
     
     public void SetupCollidersIgnoringOrIncluding(bool ignore) {
+        collidersIgnored = ignore;
         Collider hbCollider = hb.GetComponent<Collider>();
         Collider hoverboardChildCollider = hoverboardChild.GetComponent<Collider>();
         Collider hoverboardChildChildrenCollider = hoverboardChild.GetComponentInChildren<Collider>();
