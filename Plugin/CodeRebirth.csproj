@@ -9,7 +9,7 @@
     <!-- Configure description for Thunderstore at ./Thunderstore/thunderstore.toml -->
     <Description>Content mod that adds Custom Weathers, Items and Enemies.</Description>
 		<!-- This is the version of your plugin. This will be used by tcli when building our Thunderstore package. -->
-    <Version>0.1.8</Version>
+    <Version>0.1.9</Version>
 		<!-- This is required for BepInEx to load us properly. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<!-- This allows you to use C#11 features, for the most part. -->
@@ -37,7 +37,7 @@
 	  <PackageReference Include="Evaisa.LethalLib" Version="0.*" />
     <PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.4" />
     <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>    
-    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="56.0.0-beta.0-ngd.0" PrivateAssets="all" />
+    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="56.0.0-beta.1-ngd.0" PrivateAssets="all" />
     <!-- <PackageReference Include="IAmBatby.LethalLevelLoader" Version="1.2.0" /> -->
 
     <PackageReference Include="mrov.WeatherRegistry" Version="*" />

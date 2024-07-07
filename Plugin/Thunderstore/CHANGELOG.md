@@ -1,3 +1,7 @@
+## v0.1.9
+- Fixed being unable to ride truck during tornado.
+- Potentially fixed hoverboard slow issues.
+
 ## v0.1.8
 - Accidently included something not supposed to be there, caused an error.
 - Potentially fixed item crate error.
@@ -95,6 +99,3 @@
 ## v0.0.1
 
 - Initial release
-
-## TODO:
-- Updated Icons for items

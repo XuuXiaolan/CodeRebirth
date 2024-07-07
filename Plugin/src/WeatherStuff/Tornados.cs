@@ -162,7 +162,7 @@ public class Tornados : NetworkBehaviour
         }
     }
     private void HandleTornadoActions(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController) {
-        bool doesTornadoAffectPlayer = !localPlayerManager.ridingHoverboard && !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController != null && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
+        bool doesTornadoAffectPlayer = !localPlayerController.inVehicleAnimation && !localPlayerManager.ridingHoverboard && !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController != null && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
         if (doesTornadoAffectPlayer) {
             float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
             bool hasLineOfSight = TornadoHasLineOfSightToPosition(localPlayerController.transform.position);
