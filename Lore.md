@@ -1,6 +1,7 @@
 LOG NO:1. S.V. 
 LOCATION: 204-YIELD
 |DATE:2105| 4/2
+
 Finally got the new computer working, after 3 years, took a bit, but we can finally document on a permanent source, something that can last longer. So this is where me(Dr. Steve Valentine), Dr. Lynn Mellor, Dr. Keith Dillon, and Dr. George Stuart can log our research.
 
 LOG NO:2. S.V. 
