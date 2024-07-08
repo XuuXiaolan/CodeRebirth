@@ -50,9 +50,13 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private bool nestCreated = false;
     private bool isNestInside = true;
     private Coroutine recentlyDamagedCoroutine;
-    private float collisionThresholdVelocity = SPRINTING_SPEED - 1.5f;
+    private float collisionThresholdVelocity = SPRINTING_SPEED - 3f;
     private System.Random enemyRandom;
     private DoorLock[] doors;
+    private bool goldenEggCreated = false;
+    private Vector3 lastPosition;
+    private float velocity;
+    private float deltaTime = 0.05f; // Adjust this value as necessary for your update rate
 
     public enum State
     {
@@ -69,6 +73,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        agent.acceleration = 20f;
         creatureVoice.pitch = 1.4f;
         doors = FindObjectsOfType(typeof(DoorLock)) as DoorLock[];
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 323);
@@ -76,8 +81,21 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         timeSinceAction = 0;
         creatureVoice.PlayOneShot(SpawnSound);
         if (!IsHost) return;
+        lastPosition = transform.position;
+        StartCoroutine(CalculateVelocity());
         ControlStateSpeedAnimationServerRpc(0f, (int)State.Spawning, false, false, false, -1, true, false);
         StartCoroutine(SpawnTimer()); // 559 state is not transferring when client hits on clients end, constantly clearing target because the egg is not held but it should keep target because recently damaged
+    }
+
+    private IEnumerator CalculateVelocity()
+    {
+        while (true)
+        {
+            Vector3 currentPosition = transform.position;
+            velocity = Vector3.Distance(currentPosition, lastPosition) / deltaTime;
+            lastPosition = currentPosition;
+            yield return new WaitForSeconds(deltaTime);
+        }
     }
 
     public void PlayFootstepSound() {
@@ -90,8 +108,6 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     [ClientRpc]
     public void SpawnNestClientRpc() {
-        if (IsHost) nest = Instantiate(nest, this.transform.position + Vector3.down * 0.0133f, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-        if (IsHost) nest.GetComponent<NetworkObject>().Spawn(true);
         nestCreated = true;
         if (!isOutside) isNestInside = true;
         else isNestInside = false;
@@ -143,7 +159,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         yield return new WaitForSeconds(1f);
         if (!nestCreated) SpawnNestServerRpc();
-        if (goldenEgg == null) SpawnEggInNestServerRpc();
+        if (!goldenEggCreated) SpawnEggInNestServerRpc();
         yield return new WaitForSeconds(2f);
         if (currentBehaviourStateIndex == (int)State.Stunned || currentBehaviourStateIndex == (int)State.ChasingPlayer || currentBehaviourStateIndex == (int)State.Death) yield break;
         ControlStateSpeedAnimationServerRpc(WALKING_SPEED, (int)State.Wandering, true, false, false, -1, true, false);
@@ -153,12 +169,15 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private void SpawnEggInNestServerRpc()
     {
         SpawnEggInNestClientRpc();
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc("GoldenEgg", nest.transform.position, false, true); // todo: for some reason value doesn't sync on clients
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void SpawnNestServerRpc()
     {
         SpawnNestClientRpc();
+        nest = Instantiate(nest, this.transform.position + Vector3.down * 0.0133f, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+        nest.GetComponent<NetworkObject>().Spawn(true);
     }
 
     public override void Update()
@@ -206,7 +225,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         {
             if (door == null) continue;
             if (door.isDoorOpened) continue;
-            if (agent.velocity.magnitude > collisionThresholdVelocity && Vector3.Distance(door.transform.position, transform.position) < 2f && !door.GetComponent<Rigidbody>())
+            if (velocity > collisionThresholdVelocity && Vector3.Distance(door.transform.position, transform.position) < 1f && !door.GetComponent<Rigidbody>())
             {
                 ExplodeDoorClientRpc(Array.IndexOf(doors, door));
                 StunGoose(targetPlayer, false);
@@ -223,9 +242,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (targetPlayer == null) return;
         if (currentBehaviourStateIndex == (int)State.ChasingPlayer)
         {
-            float velocity = agent.velocity.magnitude;
-
-            if (velocity >= collisionThresholdVelocity)
+            if (velocity >= 20)
             {
                 LogIfDebugBuild("Velocity too high: " + velocity.ToString());
                 // Check for wall collision
@@ -233,13 +250,18 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 int layerMask = StartOfRound.Instance.collidersAndRoomMask;
                 if (Physics.Raycast(transform.position, transform.forward, out hit, 1f, layerMask))
                 {
-                    LogIfDebugBuild("Wall collision detected");
-                    StunGoose(targetPlayer, false);
-                    if (recentlyDamagedCoroutine != null)
+                    // Calculate the angle between the surface normal and the up vector
+                    float angle = Vector3.Angle(hit.normal, Vector3.up);
+                    if (angle >= 70f)
                     {
-                        StopCoroutine(recentlyDamagedCoroutine);
+                        LogIfDebugBuild("Wall collision detected with slope >= 70 degrees");
+                        StunGoose(targetPlayer, false);
+                        if (recentlyDamagedCoroutine != null)
+                        {
+                            StopCoroutine(recentlyDamagedCoroutine);
+                        }
+                        recentlyDamagedCoroutine = StartCoroutine(RecentlyDamagedCooldown(targetPlayer));
                     }
-                    recentlyDamagedCoroutine = StartCoroutine(RecentlyDamagedCooldown(targetPlayer));
                 }
             }
         }
@@ -299,11 +321,27 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 StartCoroutine(SpawnTimer());
                 return;
             }
-            if (UnityEngine.Random.Range(1, 101) <= 7.5f) {
+            if (UnityEngine.Random.Range(1, 101) <= 5f) {
                 HonkAnimationClientRpc();
             }
             if (HandleEnemyOrPlayerGrabbingEgg()) {
                 return;
+            }
+            if (Vector3.Distance(goldenEgg.transform.position, nest.transform.position) > 5f) {
+                LogIfDebugBuild("Egg is not near the nest, get egg back.");
+                if (goldenEgg.playerHeldBy == null) {
+                    LogIfDebugBuild("Egg is not held by any player");
+                    if (targetPlayer != null) SetTargetServerRpc(-1);
+                    // If not recently hit and egg is not held, go to the egg
+                    if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f && !holdingEgg) {
+                        GrabEggServerRpc();
+                        PlayMiscSoundsServerRpc(0);
+                        ControlStateSpeedAnimationServerRpc(WALKING_SPEED + 10f, (int)State.Guarding, false, false, true, -1, true, false);
+                        return;
+                    }
+                    SetDestinationToPosition(goldenEgg.transform.position, false);
+                    return;
+                }
             }
             if (wanderCoroutine == null)
             {
@@ -507,12 +545,14 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (IsServer) goldenEgg.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         goldenEgg.EnablePhysics(true);
         goldenEgg.fallTime = 0f;
-        if (IsServer) goldenEgg.startFallingPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.transform.position);
-        if (IsServer) goldenEgg.targetFloorPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.GetItemFloorPosition(default(Vector3)));
+        LogIfDebugBuild("Dropping Egg");
+        LogIfDebugBuild($"Egg Position: {goldenEgg.transform.position}");
+        LogIfDebugBuild($"Egg Parent: {goldenEgg.transform.parent}");
+        goldenEgg.startFallingPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.transform.position);
+        goldenEgg.targetFloorPosition = goldenEgg.transform.parent.InverseTransformPoint(goldenEgg.GetItemFloorPosition(default(Vector3)));
         goldenEgg.floorYRot = -1;
         goldenEgg.DiscardItemFromEnemy();
-        if (IsServer) goldenEgg.grabbable = true;
-        if (IsServer) goldenEgg.grabbableToEnemies = true;
+        goldenEgg.grabbable = true;
         goldenEgg.isHeldByEnemy = false;
         holdingEgg = false;
         goldenEgg.transform.rotation = Quaternion.Euler(goldenEgg.itemProperties.restingRotation);
@@ -552,12 +592,20 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (force == 0) {
             LogIfDebugBuild("Hit with force 0");
             return;
+        } else if (force > 6) {
+            force = 0;
+        } else if (force > 1) {
+            force = 1;
         }
         featherHitParticles.Play();
         creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(0, hitSounds.Length)]);
         if (isEnemyDead || currentBehaviourStateIndex == (int)State.Death) return;
         enemyHP -= force;
         LogIfDebugBuild($"Player who hit: {playerWhoHit}");
+        if (IsOwner && enemyHP <= 0 && !isEnemyDead) {
+            KillEnemyOnOwnerClient();
+            return;
+        }
 
         if (playerWhoHit != null && currentBehaviourStateIndex != (int)State.Stunned) {
             PlayerHitEnemy(playerWhoHit);
@@ -570,10 +618,6 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         recentlyDamagedCoroutine = StartCoroutine(RecentlyDamagedCooldown(playerWhoHit));
         LogIfDebugBuild($"Enemy HP: {enemyHP}");
         LogIfDebugBuild($"Hit with force {force}");
-
-        if (IsOwner && enemyHP <= 0 && !isEnemyDead) {
-            KillEnemyOnOwnerClient();
-        }
     }
 
     public void GoThroughEntrance() {
@@ -694,9 +738,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     [ClientRpc]
     public void SpawnEggInNestClientRpc()
     {
-        if (IsHost) {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("GoldenEgg", nest.transform.position, false, true); // todo: for some reason value doesn't sync on clients
-        }
+        goldenEggCreated = true;
         StartCoroutine(DelayFindingGoldenEgg());
     }
 
@@ -712,6 +754,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public void HoversNearNest()
     {
         // Logic for hovering near nest
+        if (HandleEnemyOrPlayerGrabbingEgg()) {
+            LogIfDebugBuild("Egg was stolen somehow");
+            return;
+        }
         if (Vector3.Distance(this.transform.position, nest.transform.position) < 0.75f)
         {
             DropEggServerRpc();
@@ -755,13 +801,12 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     [ServerRpc(RequireOwnership = false)]
     private void GrabEggServerRpc() {
         GrabEggClientRpc();
-        goldenEgg.grabbable = false;
-        goldenEgg.grabbableToEnemies = false;
     }
     [ClientRpc]
     private void GrabEggClientRpc()
     {
         holdingEgg = true;
+        goldenEgg.grabbable = false;
         goldenEgg.isHeldByEnemy = true;
         goldenEgg.parentObject = this.transform;
         goldenEgg.transform.position = this.transform.position + transform.up * 4f;
