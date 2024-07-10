@@ -4,6 +4,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeRebirth.src.EnemyStuff;
 public abstract class CodeRebirthEnemyAI : EnemyAI
@@ -13,8 +14,43 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     {
         base.Start();
         LogIfDebugBuild(enemyType.enemyName + " Spawned.");
+        GrabEnemyRarity(enemyType.enemyName);
     }
-    
+
+    public void GrabEnemyRarity(string enemyName)
+    {
+        // Search in OutsideEnemies
+        var enemy = RoundManager.Instance.currentLevel.OutsideEnemies
+            .OfType<SpawnableEnemyWithRarity>()
+            .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
+
+        // If not found in OutsideEnemies, search in DaytimeEnemies
+        if (enemy == null)
+        {
+            enemy = RoundManager.Instance.currentLevel.DaytimeEnemies
+                .OfType<SpawnableEnemyWithRarity>()
+                .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
+        }
+
+        // If not found in DaytimeEnemies, search in Enemies
+        if (enemy == null)
+        {
+            enemy = RoundManager.Instance.currentLevel.Enemies
+                .OfType<SpawnableEnemyWithRarity>()
+                .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
+        }
+
+        // Log the result
+        if (enemy != null)
+        {
+            LogIfDebugBuild(enemyName + " has Rarity: " + enemy.rarity.ToString());
+        }
+        else
+        {
+            LogIfDebugBuild("Enemy not found.");
+        }
+    }
+
     [Conditional("DEBUG")]
     public void LogIfDebugBuild(object text)
     {

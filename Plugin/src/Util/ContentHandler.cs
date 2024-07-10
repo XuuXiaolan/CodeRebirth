@@ -47,7 +47,16 @@ public class ContentHandler<T> where T: ContentHandler<T> {
             }
             else
             {
-                spawnRateByCustomLevelType[name] = spawnrate;
+                // Try appending "Level" to the name and re-attempt parsing
+                string modifiedName = name + "Level";
+                if (System.Enum.TryParse(modifiedName, true, out levelType))
+                {
+                    spawnRateByLevelType[levelType] = spawnrate;
+                }
+                else
+                {
+                    spawnRateByCustomLevelType[name] = spawnrate;
+                }
             }
         }
         return (spawnRateByLevelType, spawnRateByCustomLevelType);

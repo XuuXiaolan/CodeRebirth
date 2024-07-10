@@ -1,4 +1,5 @@
 ﻿using CodeRebirth.MapStuff;
+using CodeRebirth.Util.Spawning;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,11 +26,33 @@ static class RoundManagerPatch {
 			spawnedCrate.GetComponent<NetworkObject>().Spawn();
 		}
 	}
-
+	
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	static void PatchFix_DespawnOldCrates() {
 		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>()) {
 			crate.NetworkObject.Despawn();
+		}
+	}
+
+	[HarmonyPatch("LoadNewLevelWait")]
+	[HarmonyPrefix]
+	public static void LoadNewLevelWaitPatch(RoundManager __instance)
+	{
+		if (__instance.currentLevel.levelID == 3)
+		{
+			Plugin.Logger.LogInfo("Spawning Devil deal objects");
+			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.SpawnDevilPropsServerRpc();
+		}
+	}
+
+	[HarmonyPatch("DespawnPropsAtEndOfRound")]
+	[HarmonyPostfix]
+	public static void DespawnPropsAtEndOfRoundPatch(RoundManager __instance)
+	{
+		if (__instance.currentLevel.levelID == 3)
+		{
+			Plugin.Logger.LogInfo("Despawning Devil deal objects");
+			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.DespawnDevilPropsServerRpc();
 		}
 	}
 }
