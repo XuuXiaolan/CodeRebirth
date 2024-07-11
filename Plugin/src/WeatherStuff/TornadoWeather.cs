@@ -48,25 +48,28 @@ public class TornadoWeather : CodeRebirthWeathers {
 		nodes = CullNodesByProximity(nodes, 5.0f, true, true).ToList();
 		
 		if(!IsAuthority()) return; // Only run on the host.
-        Plugin.Logger.LogInfo(Plugin.ModConfig.ConfigTornadoWeatherType.Value.ToString());
-		switch (Plugin.ModConfig.ConfigTornadoWeatherType.Value) {
-			case TornadoWeatherType.Fire:
+        Plugin.Logger.LogInfo(Plugin.ModConfig.ConfigTornadoWeatherType.Value); //convert config type to string with acceptable values
+		switch (Plugin.ModConfig.ConfigTornadoWeatherType.Value.ToLower()) { //convert input to lowercase to avoid mismatch from user input
+			case "fire":
 				tornadoTypeIndex = Tornados.TornadoType.Fire;
 				break;
-			case TornadoWeatherType.Blood:
+			case "blood":
 				tornadoTypeIndex = Tornados.TornadoType.Blood;
 				break;
-			case TornadoWeatherType.Windy:
+			case "windy":
 				tornadoTypeIndex = Tornados.TornadoType.Windy;
 				break;
-			case TornadoWeatherType.Smoke:
+			case "smoke":
 				tornadoTypeIndex = Tornados.TornadoType.Smoke;
 				break;
-			case TornadoWeatherType.Water:
+			case "water":
 				tornadoTypeIndex = Tornados.TornadoType.Water;
 				break;
-			case TornadoWeatherType.Electric:
+			case "electric":
 				tornadoTypeIndex = Tornados.TornadoType.Electric;
+				break;
+			case "random":
+				tornadoTypeIndex = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(random.Next(6));
 				break;
 			default:
 				tornadoTypeIndex = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(random.Next(6));
