@@ -57,8 +57,8 @@ namespace CodeRebirth.Configs {
                                                 "Enables/Disables the music in the snow globe.");
             ConfigTornadoWeatherType = configFile.Bind("Tornado Options",
                                                 "Tornados | Enabled Types",
-												TornadoWeatherType.Fire | TornadoWeatherType.Blood | TornadoWeatherType.Windy | TornadoWeatherType.Smoke | TornadoWeatherType.Water | TornadoWeatherType.Water,
-												"Types of tornados that are allowed to spawn (1 to 6, or 0 for random)"
+												"random",
+												new ConfigDescription("Types of tornados that are allowed to spawn", new AcceptableValueList<string>("fire", "blood", "windy", "smoke", "water", "electric", "random"))
 												);
             ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteorite Spawn Chance",
