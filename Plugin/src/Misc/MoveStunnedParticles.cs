@@ -1,19 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CodeRebirth.Misc;
 public class MoveStunnedParticle : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public GameObject ParticleObject;
-    public GameObject ParticleSocket;
-    void Start()
-    {
-        
-    }
+    public GameObject ParticleObject = null!;
+    public GameObject ParticleSocket = null!;
 
-    // Update is called once per frame
     void Update()
     {
         ParticleObject.transform.position = ParticleSocket.transform.position;

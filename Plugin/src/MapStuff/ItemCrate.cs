@@ -1,15 +1,11 @@
-﻿﻿using System;
-using System.Collections;
-using System.Linq;
+﻿﻿using System.Collections.Generic;
 using CodeRebirth.ItemStuff;
 using CodeRebirth.Misc;
 using CodeRebirth.Util.Extensions;
 using CodeRebirth.Util.Spawning;
 using GameNetcodeStuff;
-using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = System.Random;
 
 namespace CodeRebirth.MapStuff;
@@ -17,7 +13,7 @@ namespace CodeRebirth.MapStuff;
 public class ItemCrate : CRHittable {
 
 	[SerializeField]
-	public SkinnedMeshRenderer mainRenderer;
+	public SkinnedMeshRenderer mainRenderer = null!;
 
 	[SerializeField]
 	[Header("Hover Tooltips")]
@@ -27,23 +23,16 @@ public class ItemCrate : CRHittable {
 
 	[Header("Audio")]
 	[SerializeField]
-	public AudioSource slowlyOpeningSFX;
-
+	public AudioSource slowlyOpeningSFX = null!;
 	[SerializeField]
-	public AudioSource openSFX;
-	
-	public InteractTrigger trigger;
-	public Collider[] colliders;
-	
-	public Pickable pickable;
-
-	Animator animator;
-	public AnimationClip openClip;
-
+	public AudioSource openSFX = null!;
+	public InteractTrigger trigger = null!;
+	public Pickable pickable = null!;
+	private Animator animator = null!;
+	private List<PlayerControllerB> playersOpeningBox = new List<PlayerControllerB>(); // rework so that it's faster if more players are opening etc
+	public AnimationClip openClip = null!;
 	public bool opened;
-	
 	public NetworkVariable<float> digProgress = new(writePerm: NetworkVariableWritePermission.Owner);
-
 	public Vector3 originalPosition;
 	public Random random = new();
 	public enum CrateType {
@@ -54,7 +43,7 @@ public class ItemCrate : CRHittable {
 	public CrateType crateType;
 	
 	public void Awake() {
-		if (crateType == CrateType.Wooden) {
+		if (crateType == CrateType.Wooden) { // switch to a switch instead of an if statement
 			// mainRenderer.GetComponent<SkinnedMeshRenderer>().materials[0] = Assets.WoodenCrateMaterial;
 			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.WoodenCrateMesh;
 		} else if (crateType == CrateType.Metal) {
@@ -156,7 +145,7 @@ public class ItemCrate : CRHittable {
 		digProgress.Value = Mathf.Clamp01(newDigProgress);
 	}
 	
-	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
+	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
 		if (digProgress.Value < 1) {
 			float progressChange = random.NextFloat(0.15f, 0.25f);
 			if (IsOwner) {

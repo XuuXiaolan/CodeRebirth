@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Linq;
-using CodeRebirth.Misc;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,10 +8,10 @@ using CodeRebirth.Util.PlayerManager;
 
 namespace CodeRebirth.ItemStuff;
 public class Wallet : GrabbableObject {  // todo: fix only host being able to pick it up
-    public InteractTrigger trigger;
+    public InteractTrigger trigger = null!;
     private RaycastHit hit;
-    private ScanNodeProperties scanNode;
-    private SkinnedMeshRenderer skinnedMeshRenderer;
+    private ScanNodeProperties scanNode = null!;
+    private SkinnedMeshRenderer skinnedMeshRenderer = null!;
     private NetworkVariable<bool> isInteractable = new NetworkVariable<bool>(true);
     public enum WalletModes {
         Held,
@@ -21,7 +19,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         Sold,
     }
     private WalletModes walletMode = WalletModes.None;
-    private PlayerControllerB walletHeldBy;
+    private PlayerControllerB? walletHeldBy;
 
     public override void Start() {
         StartBaseImportant();
@@ -106,8 +104,8 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
             if (coin == null) return;
             coin.customGrabTooltip = $"{Plugin.InputActionsInstance.WalletActivate.GetBindingDisplayString().Split(' ')[0]} to Collect!";
         }
-        HandleItemActivate();
-        HandleItemDrop();
+        HandleItemActivate(walletHeldBy);
+        HandleItemDrop(walletHeldBy);
         HandleItemSell();
         var playerPocketPosition = GameNetworkManager.Instance.localPlayerController.transform.position + GameNetworkManager.Instance.localPlayerController.transform.up * 1f + GameNetworkManager.Instance.localPlayerController.transform.right * 0.25f + GameNetworkManager.Instance.localPlayerController.transform.forward * 0.05f;
         if (Vector3.Distance(playerPocketPosition, this.transform.position) > 0.5f) {
@@ -159,7 +157,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         }
     }
 
-    public void HandleItemDrop() {
+    public void HandleItemDrop(PlayerControllerB walletHeldBy) {
         if (!Plugin.InputActionsInstance.WalletDrop.triggered || walletHeldBy.inTerminalMenu) return;
         DropWallet();
     }
@@ -172,7 +170,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         }
     }
 
-    public void HandleItemActivate() {
+    public void HandleItemActivate(PlayerControllerB walletHeldBy) {
         if (!Plugin.InputActionsInstance.WalletActivate.triggered) return;
         var interactRay = new Ray(walletHeldBy.gameplayCamera.transform.position, walletHeldBy.gameplayCamera.transform.forward);
         if (Physics.Raycast(interactRay, out hit, walletHeldBy.grabDistance, walletHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8) {
@@ -267,7 +265,8 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
             isHeld = false;
             if (walletMode == WalletModes.Sold) {
                 SetInteractable(false);
-            } else {
+            }
+            if (walletHeldBy != null) {
                 // Perform a raycast from the camera to find the drop position
                 var interactRay = new Ray(walletHeldBy.gameplayCamera.transform.position, walletHeldBy.gameplayCamera.transform.forward);
                 if (Physics.Raycast(interactRay, out RaycastHit hit, walletHeldBy.grabDistance + 3f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
@@ -278,11 +277,11 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
                     this.transform.position = walletHeldBy.transform.position + walletHeldBy.transform.forward * 0.3f;
                 }
                 SetInteractable(true);
+                walletHeldBy.carryWeight -= (this.itemProperties.weight - 1);
+                walletHeldBy.gameObject.GetComponent<CodeRebirthPlayerManager>().holdingWallet = false;
+                walletMode = WalletModes.None;
+                walletHeldBy = null;
             }
-            walletHeldBy.carryWeight -= (this.itemProperties.weight - 1);
-            walletHeldBy.gameObject.GetComponent<CodeRebirthPlayerManager>().holdingWallet = false;
-            walletMode = WalletModes.None;
-            walletHeldBy = null;
             return;
         }
 

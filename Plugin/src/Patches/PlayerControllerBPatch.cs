@@ -1,9 +1,6 @@
-using CodeRebirth.MapStuff;
 using CodeRebirth.Util.PlayerManager;
 using GameNetcodeStuff;
 using HarmonyLib;
-using Unity.Netcode;
-using UnityEngine;
 
 namespace CodeRebirth.Patches;
 

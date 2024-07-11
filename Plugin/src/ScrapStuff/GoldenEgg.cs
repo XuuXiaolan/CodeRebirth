@@ -1,7 +1,5 @@
-using CodeRebirth.Misc;
 using CodeRebirth.Util.Spawning;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace CodeRebirth.ScrapStuff;
 public class GoldenEgg : GrabbableObject {

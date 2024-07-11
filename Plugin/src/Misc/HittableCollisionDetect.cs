@@ -5,9 +5,9 @@ namespace CodeRebirth.Misc;
 
 public class HittableCollisionDetect : MonoBehaviour, IHittable {
 	[SerializeField]
-	CRHittable _mainScript;
+	private CRHittable _mainScript = null!;
 	
-	public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false,
+	public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null!, bool playHitSFX = false,
 					int hitID = -1) {
 		return _mainScript.Hit(force, hitDirection, playerWhoHit, playHitSFX, hitID);
 	}

@@ -1,30 +1,27 @@
 using System.Collections;
-using System.Collections.Generic;
 using GameNetcodeStuff;
 using UnityEngine;
-using CodeRebirth.Keybinds;
 using Unity.Netcode;
 using System;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem;
 using System.Linq;
 using UnityEngine.AI;
-using CodeRebirth.Patches;
 using CodeRebirth.Util.PlayerManager;
 
 namespace CodeRebirth.ScrapStuff;
 public class Hoverboard : GrabbableObject, IHittable {
-    public Rigidbody hb;
-    public InteractTrigger trigger;
+    public Rigidbody hb = null!;
+    public InteractTrigger trigger = null!;
     private bool turnedOn = false;
     public float mult;
-    public GameObject hoverboardSeat;
+    public GameObject hoverboardSeat = null!;
     public Transform[] anchors = new Transform[4];
-    private PlayerControllerB playerControlling;
+    private PlayerControllerB? playerControlling;
     private RaycastHit[] hits = new RaycastHit[4];
     private bool _isHoverForwardHeld = false;
     private bool jumpCooldown = true;
-    public Transform hoverboardChild;
+    public Transform hoverboardChild = null!;
     private HoverboardTypes hoverboardType = HoverboardTypes.Regular;
     private float playerMovementSpeed = 0f;
     public enum HoverboardMode {
@@ -189,7 +186,7 @@ public class Hoverboard : GrabbableObject, IHittable {
             Vector2 inputVector = new Vector2(0, turnAmountY);
 
             // Call CalculateSmoothLookingInput to handle the camera rotation
-            CalculateVerticalLookingInput(inputVector);
+            CalculateVerticalLookingInput(inputVector, playerControlling);
 
             hoverboardChild.Rotate(Vector3.up, turnAmount);
         }
@@ -302,7 +299,7 @@ public class Hoverboard : GrabbableObject, IHittable {
     [ClientRpc]
     public void SetTargetClientRpc(int PlayerID) {
         NetworkObject networkObject = GetComponent<NetworkObject>();
-        if (PlayerID == -1) {
+        if (PlayerID == -1 && playerControlling != null) {
             playerControlling.playerActions.Movement.Jump.Enable();
             playerControlling.playerActions.Movement.Look.Enable();
             playerControlling.movementSpeed = playerMovementSpeed;
@@ -368,10 +365,18 @@ public class Hoverboard : GrabbableObject, IHittable {
                 SwitchToNothing();
                 break;
             case 1:
-                SwitchToHeld();
+                if (playerControlling != null) {
+                    SwitchToHeld(playerControlling);
+                } else {
+                    Plugin.Logger.LogError($"Player controlling is null when switching to held...");
+                }
                 break;
             case 2:
-                SwitchToMounted();
+                if (playerControlling != null) {
+                    SwitchToMounted(playerControlling);
+                } else {
+                    Plugin.Logger.LogError($"Player controlling is null when switching to mounted...");
+                }
                 break;
             default:
                 Plugin.Logger.LogFatal("Invalid Hoverboard state!");
@@ -379,9 +384,9 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         HandleToolTips();
     }
-    public void SwitchToMounted() {
+    public void SwitchToMounted(PlayerControllerB playerCurrentlyControlling) {
         if (hoverboardMode == HoverboardMode.Held) {
-            hoverboardChild.position = playerControlling.transform.position;
+            hoverboardChild.position = playerCurrentlyControlling.transform.position;
             if (IsServer) {
                 PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
                 if (isInShipRoom) {
@@ -394,7 +399,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         // Reset hoverboardChild's rotation and position
         hoverboardChild.rotation = resetChildRotation;
         if (hoverboardMode == HoverboardMode.Held) {
-            hoverboardChild.rotation = playerControlling.transform.rotation * Quaternion.Euler(0, -90, 0);
+            hoverboardChild.rotation = playerCurrentlyControlling.transform.rotation * Quaternion.Euler(0, -90, 0);
         }
         hoverboardChild.position += Vector3.up * 0.3f;
         for (int i = 0; i < anchors.Length; i++) {
@@ -402,15 +407,15 @@ public class Hoverboard : GrabbableObject, IHittable {
             anchors[i].localRotation = initialAnchorRotations[i];
         }
         // Debug log for position and rotation
-        playerControlling.transform.SetParent(hoverboardSeat.transform, true);
-        playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = true;
+        playerCurrentlyControlling.transform.SetParent(hoverboardSeat.transform, true);
+        playerCurrentlyControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = true;
         hoverboardMode = HoverboardMode.Mounted;
         if (!collidersIgnored) SetupCollidersIgnoringOrIncluding(true);
-        playerControlling.playerActions.Movement.Look.Disable();
-        playerControlling.playerActions.Movement.Jump.Disable();
-        playerMovementSpeed = playerControlling.movementSpeed;
-        playerControlling.movementSpeed = 0f;
-        if (playerControlling == GameNetworkManager.Instance.localPlayerController) {
+        playerCurrentlyControlling.playerActions.Movement.Look.Disable();
+        playerCurrentlyControlling.playerActions.Movement.Jump.Disable();
+        playerMovementSpeed = playerCurrentlyControlling.movementSpeed;
+        playerCurrentlyControlling.movementSpeed = 0f;
+        if (playerCurrentlyControlling == GameNetworkManager.Instance.localPlayerController) {
             StartCoroutine(TurnOnHoverboard());
         }
         hb.useGravity = true;
@@ -418,24 +423,24 @@ public class Hoverboard : GrabbableObject, IHittable {
         trigger.interactable = false;
         SwitchModeExtension(false);
     }
-    public void SwitchToHeld() {
+    public void SwitchToHeld(PlayerControllerB playerCurrentlyControlling) {
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-        if (playerControlling.isInHangarShipRoom) {
-            playerControlling.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
+        if (playerCurrentlyControlling.isInHangarShipRoom) {
+            playerCurrentlyControlling.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
         } else {
-            playerControlling.transform.SetParent(realPlayer.playersManager.playersContainer, true);
+            playerCurrentlyControlling.transform.SetParent(realPlayer.playersManager.playersContainer, true);
         }
         if (IsServer) {
-            this.transform.SetParent(playerControlling.transform, true);
+            this.transform.SetParent(playerCurrentlyControlling.transform, true);
         }
-        playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = false;
+        playerCurrentlyControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = false;
         hoverboardMode = HoverboardMode.Held;
-        playerControlling.playerActions.Movement.Look.Enable();
-        playerControlling.playerActions.Movement.Jump.Enable();
-        playerControlling.movementSpeed = playerMovementSpeed;
-        hoverboardChild.position = playerControlling.transform.position + playerControlling.transform.right * 0.7f + playerControlling.transform.up * 1f;
+        playerCurrentlyControlling.playerActions.Movement.Look.Enable();
+        playerCurrentlyControlling.playerActions.Movement.Jump.Enable();
+        playerCurrentlyControlling.movementSpeed = playerMovementSpeed;
+        hoverboardChild.position = playerCurrentlyControlling.transform.position + playerCurrentlyControlling.transform.right * 0.7f + playerCurrentlyControlling.transform.up * 1f;
         Quaternion rotationOffset = Quaternion.Euler(180, 180, -90); // Adjust to match correct facing direction
-        hoverboardChild.rotation = playerControlling.transform.rotation * rotationOffset;
+        hoverboardChild.rotation = playerCurrentlyControlling.transform.rotation * rotationOffset;
         _isHoverForwardHeld = false;
         turnedOn = false;
         hb.useGravity = false;
@@ -557,17 +562,17 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
     }
 
-    private void CalculateVerticalLookingInput(Vector2 inputVector) {
-        if (!playerControlling.smoothLookEnabledLastFrame) {
-            playerControlling.smoothLookEnabledLastFrame = true;
-            playerControlling.smoothLookTurnCompass.rotation = playerControlling.gameplayCamera.transform.rotation;
-            playerControlling.smoothLookTurnCompass.SetParent(null);
+    private void CalculateVerticalLookingInput(Vector2 inputVector, PlayerControllerB playerCurrentlyControlling) {
+        if (!playerCurrentlyControlling.smoothLookEnabledLastFrame) {
+            playerCurrentlyControlling.smoothLookEnabledLastFrame = true;
+            playerCurrentlyControlling.smoothLookTurnCompass.rotation = playerCurrentlyControlling.gameplayCamera.transform.rotation;
+            playerCurrentlyControlling.smoothLookTurnCompass.SetParent(null);
         }
 
-        playerControlling.cameraUp -= inputVector.y;
-        playerControlling.cameraUp = Mathf.Clamp(playerControlling.cameraUp, -80f, 60f);
-        playerControlling.smoothLookTurnCompass.localEulerAngles = new Vector3(playerControlling.cameraUp, playerControlling.smoothLookTurnCompass.localEulerAngles.y, playerControlling.smoothLookTurnCompass.localEulerAngles.z);
-        playerControlling.gameplayCamera.transform.localEulerAngles = new Vector3(Mathf.LerpAngle(playerControlling.gameplayCamera.transform.localEulerAngles.x, playerControlling.cameraUp, playerControlling.smoothLookMultiplier * Time.deltaTime), playerControlling.gameplayCamera.transform.localEulerAngles.y, playerControlling.gameplayCamera.transform.localEulerAngles.z);
+        playerCurrentlyControlling.cameraUp -= inputVector.y;
+        playerCurrentlyControlling.cameraUp = Mathf.Clamp(playerCurrentlyControlling.cameraUp, -80f, 60f);
+        playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles = new Vector3(playerCurrentlyControlling.cameraUp, playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles.y, playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles.z);
+        playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles = new Vector3(Mathf.LerpAngle(playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.x, playerCurrentlyControlling.cameraUp, playerCurrentlyControlling.smoothLookMultiplier * Time.deltaTime), playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.y, playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.z);
     }
 
     private void CheckIfUpsideDown() {
@@ -595,7 +600,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         isAdjusting = false;
     }
 
-    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
+    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
         // Move the hoverboard when hit.
         hb.AddForce(hitDirection * force, ForceMode.Impulse);
 		return true; // this bool literally doesn't get used. i have no idea.

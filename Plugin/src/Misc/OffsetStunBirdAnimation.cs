@@ -1,36 +1,30 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CodeRebirth.Misc;
 public class OffsetStunBirdAnimation : MonoBehaviour
 {
-    Animator animator;
+    private Animator animator = null!;
     public float Offset;
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         animator = GetComponent<Animator>();
     }
 
-    void PlayAnimationWithOffset()
+    public void PlayAnimationWithOffset()
     {
-        animator.Play("StunnedBirds", 0, Offset);
+        animator!.Play("StunnedBirds", 0, Offset);
     }
 
-    void OnEnable()
+    public void OnEnable()
     {
         StartCoroutine(ApplyOffsetNextFrame());
     }
 
-    System.Collections.IEnumerator ApplyOffsetNextFrame()
+    public IEnumerator ApplyOffsetNextFrame()
     {
         yield return new WaitForEndOfFrame();
         PlayAnimationWithOffset();
     }
-    // // Update is called once per frame
-    // void Update()
-    // {
-        
-    // }
 }

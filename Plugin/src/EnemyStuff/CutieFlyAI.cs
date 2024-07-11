@@ -1,15 +1,15 @@
 using Unity.Netcode;
 using UnityEngine;
-using CodeRebirth.Misc;
 using CodeRebirth.src.EnemyStuff;
 using CodeRebirth.Util.Extensions;
 
 namespace CodeRebirth.EnemyStuff;
 public class CutieFlyAI : CodeRebirthEnemyAI
 {
-    SkinnedMeshRenderer skinnedMeshRenderer;
+    private SkinnedMeshRenderer skinnedMeshRenderer = null!;
     float lastIdleCycle = 0f;
     float blendShapeWeight = 0f;
+    
     float blendShapeDirection = 1f;
     const float blendShapeSpeed = 1000f;
     bool climbing = true;

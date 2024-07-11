@@ -1,14 +1,10 @@
-﻿using System;
-using System.Linq;
-using CodeRebirth.Misc;
-using CodeRebirth.Util.Spawning;
+﻿using CodeRebirth.Util.Spawning;
 using CodeRebirth.Util.Extensions;
 using CodeRebirth.WeatherStuff;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using LethalLib.Modules;
 using GameNetcodeStuff;
 using CodeRebirth.Util.PlayerManager;
 

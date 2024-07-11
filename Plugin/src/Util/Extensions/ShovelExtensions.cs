@@ -1,7 +1,4 @@
 using System;
-using System.Diagnostics;
-using BepInEx.Logging;
-using UnityEngine;
 
 namespace CodeRebirth.Util.Extensions;
 

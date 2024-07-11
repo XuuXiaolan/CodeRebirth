@@ -1,44 +1,42 @@
-﻿﻿using System.Collections.Generic;
-using CodeRebirth.Util;
+﻿﻿using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
-using UnityEngine;
 
 namespace CodeRebirth.ItemStuff;
 
 public class ItemHandler : ContentHandler<ItemHandler> {
     public class WalletAssets(string bundleName) : AssetBundleLoader<WalletAssets>(bundleName) {
         [LoadFromBundle("WalletNewObj.asset")]
-        public Item WalletItemNew { get; private set; }
+        public Item WalletItemNew { get; private set; } = null!;
 
         [LoadFromBundle("WalletOldObj.asset")]
-        public Item WalletItemOld { get; private set; }
+        public Item WalletItemOld { get; private set; } = null!;
 
         [LoadFromBundle("wTerminalNode.asset")]
-        public TerminalNode WalletTerminalNode { get; private set; }
+        public TerminalNode WalletTerminalNode { get; private set; } = null!;
     }
 
     public class HoverboardAssets(string bundleName) : AssetBundleLoader<HoverboardAssets>(bundleName) {
         [LoadFromBundle("HoverboardObj.asset")]
-        public Item HoverboardItem { get; private set; }
+        public Item HoverboardItem { get; private set; } = null!;
 
         [LoadFromBundle("HoverboardTerminalNode.asset")]
-        public TerminalNode HoverboardTerminalNode { get; private set; }
+        public TerminalNode HoverboardTerminalNode { get; private set; } = null!;
     }
 
     public class EpicAxeAssets(string bundleName) : AssetBundleLoader<EpicAxeAssets>(bundleName) {
         [LoadFromBundle("EpicAxeObj.asset")]
-        public Item EpicAxeItem { get; private set; }
+        public Item EpicAxeItem { get; private set; } = null!;
     }
 
     public class SnowGlobeAssets(string bundleName) : AssetBundleLoader<SnowGlobeAssets>(bundleName) {
         [LoadFromBundle("SnowGlobeObj.asset")]
-        public Item SnowGlobeItem { get; private set; }
+        public Item SnowGlobeItem { get; private set; } = null!;
     }
 
-    public WalletAssets Wallet { get; private set; }
-    public HoverboardAssets Hoverboard { get; private set; }
-    public EpicAxeAssets EpicAxe { get; private set; }
-    public SnowGlobeAssets SnowGlobe { get; private set; }
+    public WalletAssets Wallet { get; private set; } = null!;
+    public HoverboardAssets Hoverboard { get; private set; } = null!;
+    public EpicAxeAssets EpicAxe { get; private set; } = null!;
+    public SnowGlobeAssets SnowGlobe { get; private set; } = null!;
 
     public ItemHandler() {
 

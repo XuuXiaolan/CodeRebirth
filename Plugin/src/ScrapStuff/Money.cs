@@ -1,9 +1,6 @@
 using System;
-using CodeRebirth.Misc;
-using CodeRebirth.src;
 using CodeRebirth.Util.Extensions;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace CodeRebirth.ScrapStuff;
 public class Money : GrabbableObject {

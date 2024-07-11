@@ -28,7 +28,7 @@ public class CodeRebirthPlayerManager : MonoBehaviour
     public GameObject[] playerParticles = new GameObject[6];
     public Dictionary<CodeRebirthItemUsages, bool> ItemUsages = new Dictionary<CodeRebirthItemUsages, bool>(); //todo, USE THISSS
 
-    public event Action<CodeRebirthStatusEffects, bool> OnStatusEffectChanged;
+    public event Action<CodeRebirthStatusEffects, bool> OnStatusEffectChanged = null!;
 
     public void Awake()
     {

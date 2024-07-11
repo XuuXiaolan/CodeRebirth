@@ -1,12 +1,9 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using CodeRebirth.Misc;
+﻿﻿using System.Collections.Generic;
 using CodeRebirth.ScrapStuff;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using LethalLib.Extras;
 using LethalLib.Modules;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace CodeRebirth.MapStuff;
@@ -14,31 +11,31 @@ namespace CodeRebirth.MapStuff;
 public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 	public class MoneyAssets(string bundleName) : AssetBundleLoader<MoneyAssets>(bundleName) {
 		[LoadFromBundle("MoneyObj.asset")]
-		public Item MoneyItem { get; private set; }
+		public Item MoneyItem { get; private set; } = null!;
 	}
 
 	public class CrateAssets(string bundleName) : AssetBundleLoader<CrateAssets>(bundleName) {
 		[LoadFromBundle("Crate")]
-		public GameObject ItemCratePrefab { get; private set; }
+		public GameObject ItemCratePrefab { get; private set; } = null!;
 	}
 
 	public class DevilDealAssets(string bundleName) : AssetBundleLoader<DevilDealAssets>(bundleName) {
 		[LoadFromBundle("Devil.prefab")]
-		public GameObject DevilPrefab { get; private set; }
+		public GameObject DevilPrefab { get; private set; } = null!;
 
 		[LoadFromBundle("DevilChair.prefab")]
-		public GameObject DevilChairPrefab { get; private set; }
+		public GameObject DevilChairPrefab { get; private set; } = null!;
 
 		[LoadFromBundle("DevilTable.prefab")]
-		public GameObject DevilTablePrefab { get; private set; }
+		public GameObject DevilTablePrefab { get; private set; } = null!;
 
 		[LoadFromBundle("playerChair.prefab")]
-		public GameObject PlayerChairPrefab { get; private set; }
+		public GameObject PlayerChairPrefab { get; private set; } = null!;
 	}
 
-	public MoneyAssets Money { get; private set; }
-	public CrateAssets Crate { get; private set; }
-	public DevilDealAssets DevilDeal { get; private set; }
+	public MoneyAssets Money { get; private set; } = null!;
+	public CrateAssets Crate { get; private set; } = null!;
+	public DevilDealAssets DevilDeal { get; private set; } = null!;
 	public static Dictionary<string, GameObject> DevilDealPrefabs = new Dictionary<string, GameObject>();
 
     public MapObjectHandler() {
@@ -48,7 +45,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
 
-		if (true) RegisterDevilDeal();
+		if (false) RegisterDevilDeal();
 	}
 
 	public void RegisterInsideMoney() {

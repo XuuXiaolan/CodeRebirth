@@ -19,37 +19,36 @@ using CodeRebirth.Util.Extensions;
 namespace CodeRebirth.WeatherStuff;
 public class Tornados : NetworkBehaviour
 {
-    private NavMeshAgent agent;
+    private NavMeshAgent agent = null!;
     [Header("Properties")]
     [SerializeField]
     private float initialSpeed = 5f;
     [Space(5f)]
     [Header("Audio")]
     [SerializeField]
-    AudioSource normalTravelAudio, closeTravelAudio;
+    private AudioSource normalTravelAudio = null!, closeTravelAudio = null!;
     [Space(5f)]
     [Header("Graphics")]
     [SerializeField]
-    private ParticleSystem[] tornadoParticles;
+    private ParticleSystem[] tornadoParticles = null!;
 
 
     private List<GameObject> outsideNodes = new List<GameObject>();
     private Vector3 origin;
 
-    [Flags]
     public enum TornadoType
     {
         Fire = 1,
         Blood = 2,
-        Windy = 4,
-        Smoke = 8,
-        Water = 16,
-        Electric = 32,
+        Windy = 3,
+        Smoke = 4,
+        Water = 5,
+        Electric = 6,
     }
     private TornadoType tornadoType = TornadoType.Fire;
     private bool damageTimer = true;
     private float originalPlayerSpeed = 0;
-    public Transform eye;
+    public Transform eye = null!;
     private bool lightningBoltTimer = true;
     private Random random = new Random();
 
@@ -66,7 +65,7 @@ public class Tornados : NetworkBehaviour
     }
 
     private void Awake() {
-        TornadoWeather.Instance.AddTornado(this);
+        if (TornadoWeather.Instance != null) TornadoWeather.Instance.AddTornado(this);
     }
 
     private void SetupTornadoType() {
@@ -149,9 +148,9 @@ public class Tornados : NetworkBehaviour
     private IEnumerator TornadoUpdate() {
         int i = 0;
         WaitForSeconds wait = new WaitForSeconds(0.05f); // Execute every 0.05 seconds
-        var localPlayerController = GameNetworkManager.Instance.localPlayerController;
+        PlayerControllerB localPlayerController = GameNetworkManager.Instance.localPlayerController;
         CodeRebirthPlayerManager localPlayerManager = localPlayerController.gameObject.GetComponent<CodeRebirthPlayerManager>();
-        while (true) {
+        while (localPlayerController != null && localPlayerManager != null) {
             yield return wait; // Reduced frequency of execution
             HandleTornadoActions(localPlayerManager, localPlayerController);
             i++;
@@ -162,7 +161,7 @@ public class Tornados : NetworkBehaviour
         }
     }
     private void HandleTornadoActions(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController) {
-        bool doesTornadoAffectPlayer = !localPlayerController.inVehicleAnimation && !localPlayerManager.ridingHoverboard && !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController != null && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
+        bool doesTornadoAffectPlayer = !localPlayerController.inVehicleAnimation && !localPlayerManager.ridingHoverboard && !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
         if (doesTornadoAffectPlayer) {
             float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
             bool hasLineOfSight = TornadoHasLineOfSightToPosition(localPlayerController.transform.position);

@@ -1,13 +1,12 @@
 ﻿using CodeRebirth.WeaponStuff;
 using CodeRebirth.Util.Extensions;
 using HarmonyLib;
-using BepInEx.AssemblyPublicizer;
 
 namespace CodeRebirth.Patches;
 
 [HarmonyPatch(typeof(Shovel))]
 static class ShovelPatch {
-	public static System.Random random;
+	public static System.Random? random;
 	
 	[HarmonyPatch(nameof(CodeRebirthWeapons.HitShovel)), HarmonyPrefix]
 	public static void CritHitShovelPre(CodeRebirthWeapons __instance) {

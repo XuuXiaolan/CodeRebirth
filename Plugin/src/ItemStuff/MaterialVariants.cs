@@ -10,25 +10,25 @@ namespace CodeRebirth.ItemStuff;
 public class MaterialVariants : NetworkBehaviour {
     [SerializeField]
     [Tooltip("The item data of the scrap.")]
-    private Item itemData;
+    private Item itemData = null!;
 
     [Space(5f)]
     [SerializeField]
     [Tooltip("The mesh renderers to change the material of. This will use the first material in the array.")]
-    private Renderer[] renderers;
+    private Renderer[] renderers = null!;
 
     [FormerlySerializedAs("ChangeScanNodeText")]
     [Space(5f)]
-    private bool changeScanNodeText;
+    private bool changeScanNodeText = false;
     
     [SerializeField]
     [Tooltip("The text to change to when the material is changed.")]
-    private string[] scanNodeText;
+    private string[] scanNodeText = null!;
 
     [Space(5f)]
     [SerializeField]
     [Tooltip("The scan node properties to change the text of.")]
-    private ScanNodeProperties scanNodeProperties;
+    private ScanNodeProperties scanNodeProperties = null!;
 
     [Space(5f)]
     [SerializeField]

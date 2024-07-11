@@ -1,31 +1,29 @@
 ﻿﻿using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
-using LethalLib.Modules;
-using UnityEngine;
 
 namespace CodeRebirth.EnemyStuff;
 
 public class EnemyHandler : ContentHandler<EnemyHandler> {
     public class ButterflyAssets(string bundleName) : AssetBundleLoader<ButterflyAssets>(bundleName) {
         [LoadFromBundle("ButterflyObj.asset")]
-        public EnemyType ButterflyEnemyType { get; private set; }
+        public EnemyType ButterflyEnemyType { get; private set; } = null!;
 
         [LoadFromBundle("CutieFlyTN.asset")]
-        public TerminalNode ButterflyTerminalNode { get; private set; }
+        public TerminalNode ButterflyTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("CutieFlyTK.asset")]
-        public TerminalKeyword ButterflyTerminalKeyword { get; private set; }
+        public TerminalKeyword ButterflyTerminalKeyword { get; private set; } = null!;
     }
 
     public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName) {
         [LoadFromBundle("SnailCatObj.asset")]
-        public EnemyType SnailCatEnemyType { get; private set; }
+        public EnemyType SnailCatEnemyType { get; private set; } = null!;
 
         [LoadFromBundle("SnailCatTN.asset")]
-        public TerminalNode SnailCatTerminalNode { get; private set; }
+        public TerminalNode SnailCatTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("SnailCatTK.asset")]
-        public TerminalKeyword SnailCatTerminalKeyword { get; private set; }
+        public TerminalKeyword SnailCatTerminalKeyword { get; private set; } = null!;
     }
 
     /*public class ScrapMasterAssets(string bundleName) : AssetBundleLoader<ScrapMasterAssets>(bundleName) {
@@ -41,22 +39,22 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 
     public class PjonkGooseAssets(string bundleName) : AssetBundleLoader<PjonkGooseAssets>(bundleName) {
         [LoadFromBundle("PjonkGooseObj.asset")]
-        public EnemyType PjonkGooseEnemyType { get; private set; }
+        public EnemyType PjonkGooseEnemyType { get; private set; } = null!;
 
         [LoadFromBundle("PjonkGooseTN.asset")]
-        public TerminalNode PjonkGooseTerminalNode { get; private set; }
+        public TerminalNode PjonkGooseTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("PjonkGooseTK.asset")]
-        public TerminalKeyword PjonkGooseTerminalKeyword { get; private set; }
+        public TerminalKeyword PjonkGooseTerminalKeyword { get; private set; } = null!;
         
         [LoadFromBundle("PjonkEggObj.asset")]
-        public Item GoldenEggItem { get; private set; }
+        public Item GoldenEggItem { get; private set; } = null!;
     }
 
-    public ButterflyAssets Butterfly { get; private set; }
-    public SnailCatAssets SnailCat { get; private set; }
+    public ButterflyAssets Butterfly { get; private set; } = null!;
+    public SnailCatAssets SnailCat { get; private set; } = null!;
     // public ScrapMasterAssets ScrapMaster { get; private set; }
-    public PjonkGooseAssets PjonkGoose { get; private set; }
+    public PjonkGooseAssets PjonkGoose { get; private set; } = null!;
 
     public EnemyHandler() {
         // ScrapMaster = new ScrapMasterAssets("coderebirthasset");

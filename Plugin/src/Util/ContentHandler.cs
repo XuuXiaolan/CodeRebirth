@@ -5,7 +5,7 @@ using LethalLib.Modules;
 namespace CodeRebirth.Util;
 
 public class ContentHandler<T> where T: ContentHandler<T> {
-	internal static T Instance { get; private set; }
+	internal static T Instance { get; private set; } = null!;
 
 	internal ContentHandler() {
 		Instance = (T)this;
@@ -22,7 +22,7 @@ public class ContentHandler<T> where T: ContentHandler<T> {
         Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
     }
     protected void RegisterShopItemWithConfig(bool enabledScrap, Item item, TerminalNode terminalNode, int itemCost, string configMoonRarity) {
-        Items.RegisterShopItem(item, null, null, terminalNode, itemCost);
+        Items.RegisterShopItem(item, null!, null!, terminalNode, itemCost);
         if (enabledScrap) {
             RegisterScrapWithConfig(configMoonRarity, item);
         }

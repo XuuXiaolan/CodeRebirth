@@ -1,58 +1,54 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.Misc;
-using CodeRebirth.ScrapStuff;
 using CodeRebirth.src.EnemyStuff;
-using CodeRebirth.Util.Extensions;
 using CodeRebirth.Util.Spawning;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.EnemyStuff;
 public class PjonkGooseAI : CodeRebirthEnemyAI
 {
-    private SimpleWanderRoutine currentWander;
-    private PlayerControllerB playerWhoLastHit;
-    private Coroutine wanderCoroutine;
+    private SimpleWanderRoutine currentWander = null!;
+    private PlayerControllerB? playerWhoLastHit;
+    private Coroutine wanderCoroutine = null!;
     private const float WALKING_SPEED = 5f;
     private const float SPRINTING_SPEED = 20f;
     private bool isAggro = false;
     private int playerHits = 0;
     private bool carryingPlayerBody;
-    private DeadBodyInfo bodyBeingCarried;
-    public AudioClip GuardHyperVentilateClip;
-    public AudioClip[] HonkSounds;
-    public AudioClip StartStunSound;
-    public AudioClip EndStunSound;
-    public AudioClip SpawnSound;
-    public AudioClip HissSound;
-    public AudioClip EnrageSound;
-    public AudioClip[] FootstepSounds;
-    public AudioClip[] ViolentFootstepSounds;
-    public AudioClip[] featherSounds;
-    public AudioClip[] hitSounds;
-    public AudioClip[] deathSounds;
-    public Transform TopOfBody;
-    public GameObject nest;
-    public ParticleSystem featherHitParticles;
-    public AnimationClip stunAnimation;
+    private DeadBodyInfo? bodyBeingCarried;
+    public AudioClip GuardHyperVentilateClip = null!;
+    public AudioClip[] HonkSounds = null!;
+    public AudioClip StartStunSound = null!;
+    public AudioClip EndStunSound = null!;
+    public AudioClip SpawnSound = null!;
+    public AudioClip HissSound = null!;
+    public AudioClip EnrageSound = null!;
+    public AudioClip[] FootstepSounds = null!;
+    public AudioClip[] ViolentFootstepSounds = null!;
+    public AudioClip[] featherSounds = null!;
+    public AudioClip[] hitSounds = null!;
+    public AudioClip[] deathSounds = null!;
+    public Transform TopOfBody = null!;
+    public GameObject nest = null!;
+    public ParticleSystem featherHitParticles = null!;
+    public AnimationClip stunAnimation = null!;
 
-    private GrabbableObject goldenEgg;
+    private GrabbableObject goldenEgg = null!;
     private float timeSinceHittingLocalPlayer;
     private float timeSinceAction;
     private bool holdingEgg = false;
     private bool recentlyDamaged = false;
     private bool nestCreated = false;
     private bool isNestInside = true;
-    private Coroutine recentlyDamagedCoroutine;
+    private Coroutine? recentlyDamagedCoroutine;
     private float collisionThresholdVelocity = SPRINTING_SPEED - 3f;
-    private System.Random enemyRandom;
-    private DoorLock[] doors;
+    private System.Random enemyRandom = null!;
+    private DoorLock[]? doors;
     private bool goldenEggCreated = false;
     private Vector3 lastPosition;
     private float velocity;
@@ -183,6 +179,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
+        if (isEnemyDead) return;
         if (stunNormalizedTimer > 0 && currentBehaviourStateIndex != (int)State.Stunned && IsHost) {
             if (targetPlayer == null) {
                 if (playerWhoLastHit == null) {
@@ -220,7 +217,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     }
 
     private void CheckForCollidingWithDoor() {
-        if (targetPlayer == null || currentBehaviourStateIndex != (int)State.ChasingPlayer) return;
+        if (targetPlayer == null || currentBehaviourStateIndex != (int)State.ChasingPlayer || doors == null) return;
         foreach (DoorLock door in doors)
         {
             if (door == null) continue;
@@ -252,7 +249,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 {
                     // Calculate the angle between the surface normal and the up vector
                     float angle = Vector3.Angle(hit.normal, Vector3.up);
-                    if (angle >= 70f)
+                    if (angle >= 75f)
                     {
                         LogIfDebugBuild("Wall collision detected with slope >= 70 degrees");
                         StunGoose(targetPlayer, false);
@@ -445,7 +442,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         DragBodiesToNest();
     }
 
-    public void StartWandering(Vector3 nestPosition, SimpleWanderRoutine newWander = null)
+    public void StartWandering(Vector3 nestPosition, SimpleWanderRoutine? newWander = null)
     {
         this.StopWandering(this.currentWander, true);
         if (newWander == null)
@@ -586,16 +583,14 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         StartCoroutine(DelayDroppingEgg());
     } // hittingenemyserverrpc and the speed
 
-    public override void HitEnemy(int force = 1, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (force == 0) {
             LogIfDebugBuild("Hit with force 0");
             return;
-        } else if (force > 6) {
-            force = 0;
-        } else if (force > 1) {
-            force = 1;
+        } else if (force > 3) {
+            force /= (int)2;
         }
         featherHitParticles.Play();
         creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(0, hitSounds.Length)]);
@@ -658,7 +653,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public void SetEnemyOutsideClientRpc(bool setOutisde) {
         this.SetEnemyOutside(setOutisde);
     }
-    public IEnumerator RecentlyDamagedCooldown(PlayerControllerB playerWhoHit) {
+    public IEnumerator RecentlyDamagedCooldown(PlayerControllerB? playerWhoHit = null) {
         recentlyDamaged = true;
         playerWhoLastHit = playerWhoHit;
         if (IsHost) SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
@@ -667,7 +662,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         recentlyDamaged = false;
     }
     
-    public void PlayerHitEnemy(PlayerControllerB playerWhoStunned = null)
+    public void PlayerHitEnemy(PlayerControllerB? playerWhoStunned = null)
     {
         playerHits += 1;
         LogIfDebugBuild($"PlayerHitEnemy called. Current hits: {playerHits}, Current State: {currentBehaviourStateIndex}");
@@ -686,7 +681,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
     }
 
-    public void AggroOnHit(PlayerControllerB playerWhoStunned)
+    public void AggroOnHit(PlayerControllerB? playerWhoStunned = null)
     {
         SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned));
         PlayMiscSoundsServerRpc(2);
@@ -837,7 +832,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public override void OnCollideWithPlayer(Collider other)
     {
-        if (timeSinceHittingLocalPlayer < 1f) return;
+        if (timeSinceHittingLocalPlayer < 1f || isEnemyDead) return;
         PlayerControllerB player = MeetsStandardPlayerCollisionConditions(other, false, true);
         if (player == null || player != GameNetworkManager.Instance.localPlayerController && currentBehaviourStateIndex != (int)State.ChasingPlayer) {
             LogIfDebugBuild("Player does not meet standard player conditions");
@@ -878,7 +873,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     private void DropPlayerBody()
 	{
-		if (!this.carryingPlayerBody)
+		if (!this.carryingPlayerBody || this.bodyBeingCarried == null)
 		{
 			return;
 		}
@@ -893,6 +888,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     [ClientRpc]
     public void ExplodeDoorClientRpc(int DoorIndex) {
+        if (doors == null || DoorIndex >= doors.Length) return;
         LogIfDebugBuild("Exploding door: " + DoorIndex);
         DoorLock door = doors[DoorIndex];
         Utilities.CreateExplosion(door.transform.position, true, 25, 0, 4, 0, CauseOfDeath.Blast, null);

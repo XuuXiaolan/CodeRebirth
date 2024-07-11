@@ -1,4 +1,3 @@
-using System.Collections;
 using DigitalRuby.ThunderAndLightning;
 using UnityEngine;
 using Object = UnityEngine.Object;

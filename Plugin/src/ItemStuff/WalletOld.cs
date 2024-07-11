@@ -1,5 +1,3 @@
-using CodeRebirth.Misc;
-using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using CodeRebirth.ScrapStuff;
@@ -7,8 +5,8 @@ using CodeRebirth.ScrapStuff;
 namespace CodeRebirth.ItemStuff;
 public class WalletOld : GrabbableObject {
     private RaycastHit hit;
-    private ScanNodeProperties scanNode;
-    private SkinnedMeshRenderer skinnedMeshRenderer;
+    private ScanNodeProperties scanNode = null!;
+    private SkinnedMeshRenderer skinnedMeshRenderer = null!;
     public override void Start() {
         base.Start();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();

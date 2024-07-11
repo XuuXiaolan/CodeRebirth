@@ -9,13 +9,14 @@
     <!-- Configure description for Thunderstore at ./Thunderstore/thunderstore.toml -->
     <Description>Content mod that adds Custom Weathers, Items and Enemies.</Description>
 		<!-- This is the version of your plugin. This will be used by tcli when building our Thunderstore package. -->
-    <Version>0.1.9</Version>
+    <Version>0.2.0</Version>
 		<!-- This is required for BepInEx to load us properly. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<!-- This allows you to use C#11 features, for the most part. -->
     <LangVersion>latest</LangVersion>
 
     <Configurations>Debug;Release</Configurations>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 	<!-- Embedded Debug (without showing your file structure :3) -->

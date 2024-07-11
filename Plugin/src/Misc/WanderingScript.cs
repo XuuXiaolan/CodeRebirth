@@ -1,7 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 public class WanderingCreatureController : NetworkBehaviour
 {
@@ -18,9 +17,9 @@ public class WanderingCreatureController : NetworkBehaviour
     public bool anchoredWandering = true;
 
     [Header("Audio")]
-    public AudioSource ambientAudioSource;
+    public AudioSource ambientAudioSource = null!;
     [Tooltip("An array of audio clips that can be played randomly at intervals while the creature is wandering.")]
-    public AudioClip[] ambientAudioClips;
+    public AudioClip[] ambientAudioClips = null!;
     [Tooltip("The minimum interval between playing ambient audio clips.")]
     public float minAmbientAudioInterval = 3f;
     [Tooltip("The maximum interval between playing ambient audio clips.")]
@@ -29,9 +28,9 @@ public class WanderingCreatureController : NetworkBehaviour
     [Range(0f, 2f)]
     public float ambientAudioVolume = 1f;
     [Space]
-    public AudioSource walkingAudioSource;
+    public AudioSource walkingAudioSource = null!;
     [Tooltip("An array of audio clips that can be played randomly at intervals while the creature is moving.")]
-    public AudioClip[] walkingAudioClips;
+    public AudioClip[] walkingAudioClips = null!;
     [Tooltip("The interval between playing walking audio clips.")]
     public float walkingAudioInterval = 0.5f;
     [Tooltip("The volume for walking audio.")]
@@ -44,7 +43,7 @@ public class WanderingCreatureController : NetworkBehaviour
     [Tooltip("The distance to cast the ray to detect the surface normal.")]
     public float surfaceNormalRaycastDistance = 2f;
 
-    private NavMeshAgent agent;
+    private NavMeshAgent agent = null!;
     private bool isMoving = false;
     private bool startMovingSignal = false;
     private float waitTimer = 0f;

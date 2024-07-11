@@ -9,7 +9,7 @@ using System.Linq;
 namespace CodeRebirth.src.EnemyStuff;
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
-    public EnemyAI targetEnemy;
+    public EnemyAI? targetEnemy;
     public override void Start()
     {
         base.Start();
@@ -109,7 +109,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         agent.speed = speed;
     }
     public bool FindClosestPlayerInRange(float range) {
-        PlayerControllerB closestPlayer = null;
+        PlayerControllerB? closestPlayer = null;
         float minDistance = float.MaxValue;
 
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
@@ -136,7 +136,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             _ = eye;
         }
 
-        if (Vector3.Distance(eye.position, pos) >= range || Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) return false;
+        if (Vector3.Distance(eye!.position, pos) >= range || Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) return false;
 
         Vector3 to = pos - eye.position;
         return Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
@@ -216,8 +216,8 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 public class SimpleWanderRoutine
 {
     public List<GameObject> unvisitedNodes = new List<GameObject>();
-    public GameObject currentTargetNode;
-    public GameObject nextTargetNode;
+    public GameObject? currentTargetNode;
+    public GameObject? nextTargetNode;
     public bool inProgress;
     public Vector3 NestPosition;
     public float wanderRadius = 30f;

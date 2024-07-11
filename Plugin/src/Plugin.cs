@@ -8,16 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.Keybinds;
 using HarmonyLib;
-using CodeRebirth.src;
-using CodeRebirth.Misc;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
-using CodeRebirth.WeatherStuff;
-using LethalLib;
-using System.Collections.ObjectModel;
-using CodeRebirth.MapStuff;
 using CodeRebirth.Util.Extensions;
-using System.Runtime.CompilerServices;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -25,31 +18,31 @@ namespace CodeRebirth;
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BaseUnityPlugin {
-    internal static new ManualLogSource Logger;
+    internal static new ManualLogSource Logger = null!;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
     
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
     
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
-    internal static IngameKeybinds InputActionsInstance;
-    public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
+    internal static IngameKeybinds InputActionsInstance = null!;
+    public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
 
-    internal static MainAssets Assets { get; private set; }
+    internal static MainAssets Assets { get; private set; } = null!;
     internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName) {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
-        public GameObject UtilsPrefab { get; private set; }
+        public GameObject UtilsPrefab { get; private set; } = null!;
         [LoadFromBundle("WaterPlayerParticles.prefab")]
-        public GameObject WaterPlayerParticles { get; private set; }
+        public GameObject WaterPlayerParticles { get; private set; } = null!;
         [LoadFromBundle("WindPlayerParticles.prefab")]
-        public GameObject WindPlayerParticles { get; private set; }
+        public GameObject WindPlayerParticles { get; private set; } = null!;
         [LoadFromBundle("SmokePlayerParticles.prefab")]
-        public GameObject SmokePlayerParticles { get; private set; }
+        public GameObject SmokePlayerParticles { get; private set; } = null!;
         [LoadFromBundle("FirePlayerParticles.prefab")]
-        public GameObject FirePlayerParticles { get; private set; }
+        public GameObject FirePlayerParticles { get; private set; } = null!;
         [LoadFromBundle("ElectricPlayerParticles.prefab")]
-        public GameObject ElectricPlayerParticles { get; private set; }
+        public GameObject ElectricPlayerParticles { get; private set; } = null!;
         [LoadFromBundle("BloodPlayerParticles.prefab")]
-        public GameObject BloodPlayerParticles { get; private set; }
+        public GameObject BloodPlayerParticles { get; private set; } = null!;
     }
     
     private void Awake() {

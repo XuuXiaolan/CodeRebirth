@@ -14,42 +14,42 @@ namespace CodeRebirth.WeatherStuff;
 public class WeatherHandler : ContentHandler<WeatherHandler> {
     public class MeteoriteAssets(string bundleName) : AssetBundleLoader<MeteoriteAssets>(bundleName) {
         [LoadFromBundle("BetterCrater.prefab")]
-        public GameObject CraterPrefab { get; private set; }
+        public GameObject CraterPrefab { get; private set; } = null!;
         [LoadFromBundle("BigExplosion.prefab")]
-        public GameObject ExplosionPrefab { get; private set; }
+        public GameObject ExplosionPrefab { get; private set; } = null!;
 
     
         [LoadFromBundle("MeteoriteObj")]
-        public Item MeteoriteItem { get; private set; }
+        public Item MeteoriteItem { get; private set; } = null!;
         
         [LoadFromBundle("WesleyCubeMeteor.prefab")]
-        public GameObject WesleyModePrefab { get; private set; }
+        public GameObject WesleyModePrefab { get; private set; } = null!;
         
         [LoadFromBundle("Meteor.prefab")]
-        public GameObject MeteorPrefab { get; private set; }
+        public GameObject MeteorPrefab { get; private set; } = null!;
         
         [LoadFromBundle("MeteorContainer.prefab")]
-        public GameObject MeteorEffectPrefab { get; private set; }
+        public GameObject MeteorEffectPrefab { get; private set; } = null!;
         
         [LoadFromBundle("MeteorShowerWeather.prefab")]
-        public GameObject MeteorPermanentEffectPrefab { get; private set; }
+        public GameObject MeteorPermanentEffectPrefab { get; private set; } = null!;
     }
 
     public class TornadoAssets(string bundleName) : AssetBundleLoader<TornadoAssets>(bundleName) {
         [LoadFromBundle("TornadoMain.prefab")]
-        public GameObject TornadoPrefab { get; private set; }
+        public GameObject TornadoPrefab { get; private set; } = null!;
         
         [LoadFromBundle("TornadoContainer.prefab")]
-        public GameObject TornadoEffectPrefab { get; private set; }
+        public GameObject TornadoEffectPrefab { get; private set; } = null!;
         
         [LoadFromBundle("TornadoWeather.prefab")]
-        public GameObject TornadoPermanentEffectPrefab { get; private set; }
+        public GameObject TornadoPermanentEffectPrefab { get; private set; } = null!;
     }
 
-    public MeteoriteAssets Meteorite { get; private set; }
-    public TornadoAssets Tornado { get; private set; }
-    public Weather MeteorShowerWeather { get; private set; }
-    public Weather TornadoesWeather { get; private set; }
+    public MeteoriteAssets Meteorite { get; private set; } = null!;
+    public TornadoAssets Tornado { get; private set; } = null!;
+    public Weather MeteorShowerWeather { get; private set; } = null!;
+    public Weather TornadoesWeather { get; private set; } = null!;
 
     public WeatherHandler() {
         if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();

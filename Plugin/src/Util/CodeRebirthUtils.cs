@@ -3,16 +3,14 @@ using CodeRebirth.MapStuff;
 using CodeRebirth.EnemyStuff;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Random = System.Random;
-using Unity.Mathematics;
 using System.Collections.Generic;
 
 namespace CodeRebirth.Util.Spawning;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
-    static Random random;
-    internal static CodeRebirthUtils Instance { get; private set; }
+    private static Random random = null!;
+    internal static CodeRebirthUtils Instance { get; private set; } = null!;
     public static List<GrabbableObject> goldenEggs = new List<GrabbableObject>();
     public static Dictionary<string, GameObject> Objects = new Dictionary<string, GameObject>();
 
@@ -39,7 +37,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             // throw for stacktrace
             throw new NullReferenceException($"'{itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
         }
-        Transform parent = null;
+        Transform? parent = null;
         if (parent == null) {
             parent = StartOfRound.Instance.propsContainer;
         }

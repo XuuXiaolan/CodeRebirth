@@ -1,8 +1,4 @@
-using CodeRebirth.Misc;
-using GameNetcodeStuff;
-using Unity.Netcode;
 using UnityEngine;
-using CodeRebirth.ScrapStuff;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,32 +7,29 @@ public class SnowGlobe : GrabbableObject
 {
     [Tooltip("Lights")]
     [SerializeField]
-    private GameObject mainLightGameObject;
+    private GameObject mainLightGameObject = null!;
     [SerializeField]
-    private GameObject[] redLightsGameObject;
+    private GameObject[] redLightsGameObject = null!;
     [SerializeField]
-    private GameObject[] blueLightsGameObject;
+    private GameObject[] blueLightsGameObject = null!;
     [SerializeField]
-    private GameObject[] greenLightsGameObject;
+    private GameObject[] greenLightsGameObject = null!;
     [Space(5)]
 
     [SerializeField]
-    private ScanNodeProperties scanNode;
+    private Animator shipAnimator = null!;
 
     [SerializeField]
-    private Animator shipAnimator;
+    private ParticleSystem snowPS = null!;
 
     [SerializeField]
-    private ParticleSystem snowPS;
+    private ParticleSystemRenderer snowPSR = null!;
 
     [SerializeField]
-    private ParticleSystemRenderer snowPSR;
-
-    [SerializeField]
-    private AudioSource musicAS;
+    private AudioSource musicAS = null!;
 
     private bool activated;
-    public AnimatorOverrideController SnowGlobeOverride;
+    public AnimatorOverrideController SnowGlobeOverride = null!;
 
     // Dictionary to hold animator state helpers for each player
     private Dictionary<ulong, PlayerAnimatorStateHelper> animatorStateHelpers = new Dictionary<ulong, PlayerAnimatorStateHelper>();
@@ -45,7 +38,7 @@ public class SnowGlobe : GrabbableObject
     {
         base.EquipItem();
 
-        if (playerHeldBy != null && playerHeldBy.playerBodyAnimator != null)
+        if (isHeld)
         {
             ulong playerId = playerHeldBy.actualClientId;
             if (!animatorStateHelpers.ContainsKey(playerId))
@@ -65,9 +58,9 @@ public class SnowGlobe : GrabbableObject
 
     public override void PocketItem()
     {
-        if (playerHeldBy != null && playerHeldBy.playerBodyAnimator != null)
+        if (isHeld)
         {
-            ulong playerId = playerHeldBy.OwnerClientId;
+            ulong playerId = playerHeldBy.actualClientId;
             if (animatorStateHelpers.ContainsKey(playerId))
             {
                 var animatorStateHelper = animatorStateHelpers[playerId];
@@ -84,9 +77,9 @@ public class SnowGlobe : GrabbableObject
 
     public override void DiscardItem()
     {
-        if (playerHeldBy != null && playerHeldBy.playerBodyAnimator != null)
+        if (isHeld)
         {
-            ulong playerId = playerHeldBy.OwnerClientId;
+            ulong playerId = playerHeldBy.actualClientId;
             if (animatorStateHelpers.ContainsKey(playerId))
             {
                 var animatorStateHelper = animatorStateHelpers[playerId];

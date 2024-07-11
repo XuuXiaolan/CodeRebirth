@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
-using CodeRebirth.WeatherStuff;
+using static CodeRebirth.WeatherStuff.TornadoWeather;
+
 
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
@@ -15,7 +16,6 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
         public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
         public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
-        public ConfigEntry<bool> ConfigScrapMasterEnabled { get; private set; }
         public ConfigEntry<bool> ConfigCutieFlyEnabled { get; private set; }
         public ConfigEntry<bool> ConfigSnailCatEnabled { get; private set; }
         public ConfigEntry<bool> ConfigItemCrateEnabled { get; private set; }
@@ -28,16 +28,13 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
         public ConfigEntry<int> ConfigCrateAbundance { get; private set; }
         public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
-        public ConfigEntry<string> ConfigScrapMasterSpawnWeights { get; private set; }
         // Enemy Specific
         public ConfigEntry<int> ConfigCutieFlyMaxSpawnCount { get; private set; }
         public ConfigEntry<int> ConfigSnailCatMaxSpawnCount { get; private set; }
-        public ConfigEntry<int> ConfigScrapMasterMaxSpawnCount { get; private set; }
         public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
-        public ConfigEntry<float> ConfigScrapMasterPowerLevel { get; private set; }
         // Weather Specific
-        public ConfigEntry<Tornados.TornadoType> ConfigTornadoWeatherType { get; private set; }
+        public ConfigEntry<TornadoWeatherType> ConfigTornadoWeatherType { get; private set; }
         public ConfigEntry<float> ConfigMeteorShowerMeteoriteSpawnChance { get; private set; }
         public ConfigEntry<float> ConfigMeteorShowerInShipVolume { get; private set; }
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
@@ -60,10 +57,9 @@ namespace CodeRebirth.Configs {
                                                 "Enables/Disables the music in the snow globe.");
             ConfigTornadoWeatherType = configFile.Bind("Tornado Options",
                                                 "Tornados | Enabled Types",
-												Tornados.TornadoType.Electric | Tornados.TornadoType.Fire | Tornados.TornadoType.Blood | Tornados.TornadoType.Windy | Tornados.TornadoType.Smoke | Tornados.TornadoType.Water,
-												"Types of tornados that are allowed to spawn"
+												TornadoWeatherType.Fire | TornadoWeatherType.Blood | TornadoWeatherType.Windy | TornadoWeatherType.Smoke | TornadoWeatherType.Water | TornadoWeatherType.Water,
+												"Types of tornados that are allowed to spawn (1 to 6, or 0 for random)"
 												);
-			
             ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteorite Spawn Chance",
                                                 1f,

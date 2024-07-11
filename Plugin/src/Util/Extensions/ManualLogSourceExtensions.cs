@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using BepInEx.Logging;
-using Debug = UnityEngine.Debug;
 
 namespace CodeRebirth.Util.Extensions;
 

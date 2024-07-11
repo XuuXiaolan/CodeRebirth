@@ -5,16 +5,16 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.Animations;
 
 namespace CodeRebirth.MapStuff;
-public class NetworkInteractable : NetworkBehaviour
+public class Dealer : NetworkBehaviour
 {
-    public Animator animator;
-    public NetworkAnimator networkAnimator;
-    public InteractTrigger trigger;
-    public ParticleSystem[] particles;
-    private PlayerControllerB playerWhoInteracted = null;
+    public Animator animator = null!;
+    public NetworkAnimator networkAnimator = null!;
+    public InteractTrigger trigger = null!;
+    public ParticleSystem mainParticles = null!;
+    public ParticleSystem[] handParticles = null!;
+    private PlayerControllerB? playerWhoInteracted = null;
     private bool dealMade = false;
 
     public void Awake()
@@ -55,17 +55,19 @@ public class NetworkInteractable : NetworkBehaviour
     }
 
     private void InteractAnimationResult() {
-        if (playerWhoInteracted == GameNetworkManager.Instance.localPlayerController) {
-            StartCoroutine(InteractionAnimation());
-        }
-        foreach (ParticleSystem particle in particles) {
-            particle.gameObject.SetActive(true);
-        }
+        StartCoroutine(InteractionAnimation());
         // start fire particles coming out from the devil, with an animation with some sounds and then a buff/debuff is dealt.
     }
 
     private IEnumerator InteractionAnimation() {
-        yield return new WaitUntil(() => dealMade == true);
+        foreach (ParticleSystem particle in handParticles) {
+            particle.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        mainParticles.gameObject.SetActive(true);
+        yield return new WaitUntil(() => mainParticles.isPlaying == false);
+        LogIfDebugBuild("Interaction animation done");
     }
 
     #region Good Deals

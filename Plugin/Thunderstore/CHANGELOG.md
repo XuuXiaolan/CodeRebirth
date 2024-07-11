@@ -1,3 +1,6 @@
+## v0.2.0
+- Fixed tornado not spawning, may need to recreate config.
+
 ## v0.1.9
 - Fixed being unable to ride truck during tornado.
 - Potentially fixed hoverboard slow issues.
