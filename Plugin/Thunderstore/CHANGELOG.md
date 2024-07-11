@@ -1,3 +1,7 @@
+## v0.2.1
+- Fixed company not loading bug.
+- Fixed tornado config -ish.
+
 ## v0.2.0
 - Fixed tornado not spawning, may need to recreate config.
 
