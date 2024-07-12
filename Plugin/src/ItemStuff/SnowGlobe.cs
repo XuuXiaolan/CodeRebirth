@@ -38,19 +38,16 @@ public class SnowGlobe : GrabbableObject
     {
         base.EquipItem();
 
-        if (isHeld)
+        ulong playerId = playerHeldBy.actualClientId;
+        if (!animatorStateHelpers.ContainsKey(playerId))
         {
-            ulong playerId = playerHeldBy.actualClientId;
-            if (!animatorStateHelpers.ContainsKey(playerId))
-            {
-                animatorStateHelpers[playerId] = new PlayerAnimatorStateHelper(playerHeldBy.playerBodyAnimator);
-            }
-
-            var animatorStateHelper = animatorStateHelpers[playerId];
-            animatorStateHelper.SaveAnimatorStates();
-            animatorStateHelper.SetAnimatorOverrideController(SnowGlobeOverride);
-            Debug.Log("Animator override set for player: " + playerHeldBy.playerBodyAnimator.gameObject.name);
+            animatorStateHelpers[playerId] = new PlayerAnimatorStateHelper(playerHeldBy.playerBodyAnimator);
         }
+
+        var animatorStateHelper = animatorStateHelpers[playerId];
+        animatorStateHelper.SaveAnimatorStates();
+        animatorStateHelper.SetAnimatorOverrideController(SnowGlobeOverride);
+        Debug.Log("Animator override set for player: " + playerHeldBy.playerBodyAnimator.gameObject.name);
 
         // Coming from pocketing since this is also called when using inventory
         ToggleParticleRenderer(true);
@@ -77,16 +74,13 @@ public class SnowGlobe : GrabbableObject
 
     public override void DiscardItem()
     {
-        if (isHeld)
+        ulong playerId = playerHeldBy.actualClientId;
+        if (animatorStateHelpers.ContainsKey(playerId))
         {
-            ulong playerId = playerHeldBy.actualClientId;
-            if (animatorStateHelpers.ContainsKey(playerId))
-            {
-                var animatorStateHelper = animatorStateHelpers[playerId];
-                animatorStateHelper.SaveAnimatorStates();
-                animatorStateHelper.RestoreOriginalAnimatorController();
-                Debug.Log("Animator restored for player: " + playerHeldBy.playerBodyAnimator.gameObject.name);
-            }
+            var animatorStateHelper = animatorStateHelpers[playerId];
+            animatorStateHelper.SaveAnimatorStates();
+            animatorStateHelper.RestoreOriginalAnimatorController();
+            Debug.Log("Animator restored for player: " + playerHeldBy.playerBodyAnimator.gameObject.name);
         }
         base.DiscardItem();
     }

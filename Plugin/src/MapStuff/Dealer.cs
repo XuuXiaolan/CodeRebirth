@@ -12,6 +12,8 @@ public class Dealer : NetworkBehaviour
     public Animator animator = null!;
     public NetworkAnimator networkAnimator = null!;
     public InteractTrigger trigger = null!;
+    public InteractTrigger[] cardTriggers = null!;
+    public Renderer[] cardRenderers = null!;
     public ParticleSystem mainParticles = null!;
     public ParticleSystem[] handParticles = null!;
     private PlayerControllerB? playerWhoInteracted = null;
@@ -21,8 +23,15 @@ public class Dealer : NetworkBehaviour
     {
         networkAnimator = GetComponent<NetworkAnimator>();
         animator = GetComponent<Animator>();
-        trigger = GetComponent<InteractTrigger>();
 
+        foreach (Renderer cardRenderer in cardRenderers) {
+            cardRenderer.enabled = true;
+        }
+
+        foreach (InteractTrigger cardTrigger in cardTriggers) {
+            cardTrigger.interactable = false;
+        }
+        
         trigger.onInteract.AddListener(OnInteract);
     }
 
@@ -35,15 +44,52 @@ public class Dealer : NetworkBehaviour
     private void OnInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
+        // enable 3 other card triggers.
+        int index = 0;
+        foreach (InteractTrigger cardTrigger in cardTriggers) {
+            cardTrigger.interactable = true;
+            switch (index) {
+                case 0:
+                    cardTrigger.onInteract.AddListener(Card1InteractionResult);
+                    break;
+                case 1:
+                    cardTrigger.onInteract.AddListener(Card2InteractionResult);
+                    break;
+                case 2:
+                    cardTrigger.onInteract.AddListener(Card3InteractionResult);
+                    break;
+                default:
+                    cardTrigger.onInteract.AddListener(CardInteractionResult);
+                    break;
+            }
+        }
+        foreach (Renderer cardRenderer in cardRenderers) {
+            cardRenderer.enabled = true;
+        }
         StartInteractionAnimationServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
     }
 
+    private void Card1InteractionResult(PlayerControllerB playerThatInteracted) {
+        
+    }
+
+    private void Card2InteractionResult(PlayerControllerB playerThatInteracted) {
+        
+    }
+
+    private void Card3InteractionResult(PlayerControllerB playerThatInteracted) {
+
+    }
+
+    private void CardInteractionResult(PlayerControllerB playerThatInteracted) {
+        // apply effects or smthn here
+    }
     [ServerRpc(RequireOwnership = false)]
     private void StartInteractionAnimationServerRpc(int playerThatInteracted)
     {
         LogIfDebugBuild("Interaction animation");
         SetInteractPlayerClientRpc(playerThatInteracted);
-        animator.SetTrigger("devilInteract");
+        networkAnimator.SetTrigger("devilInteract");
         // Run an animation event.
     }
 
@@ -51,10 +97,11 @@ public class Dealer : NetworkBehaviour
     private void SetInteractPlayerClientRpc(int playerThatInteracted)
     {
         LogIfDebugBuild($"SetInteractPlayerClientRpc: {playerThatInteracted}");
+        trigger.interactable = false;
         playerWhoInteracted = StartOfRound.Instance.allPlayerScripts[playerThatInteracted];
     }
 
-    private void InteractAnimationResult() {
+    private void InteractAnimationResult() { // Animation event
         StartCoroutine(InteractionAnimation());
         // start fire particles coming out from the devil, with an animation with some sounds and then a buff/debuff is dealt.
     }

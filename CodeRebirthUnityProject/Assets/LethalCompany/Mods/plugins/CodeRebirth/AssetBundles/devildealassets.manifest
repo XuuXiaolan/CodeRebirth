@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3409460251
+CRC: 4237087274
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e644e60cf5202afab6cac20f9512efe9
+    Hash: 15dc81dbbf5144ce432a6cf1c0387269
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 1b5aa7e35ea7d7013ec56ee8b126fbce
+    Hash: e4b283a6aafc8db7c968495d37a62ab3
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: e644e60cf5202afab6cac20f9512efe9
+    Hash: 15dc81dbbf5144ce432a6cf1c0387269
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -30,13 +30,33 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 65
   Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
   Script: {instanceID: 0}
-SerializeReferenceClassIdentifiers: []
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: InteractEvent
+- AssemblyName: Assembly-CSharp
+  ClassName: InteractEventFloat
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.BoolScalableSettingValue
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/DealWithTheDevil/Materials/Textures/RAT_Bigparts_Bigparts_Shader_Metallic.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/DealWithTheDevil/Materials/DefaultPlayerSuit.mat
@@ -71,4 +91,5 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/DealWithTheDevil/DevilTable.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/DealWithTheDevil/Materials/Textures/Wood051_2K_Normal.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/DealWithTheDevil/playerChair.prefab
-Dependencies: []
+Dependencies:
+- F:/Ammar Stuff/ModdingProject/CodeRebirthStuff/CodeRebirth-2/CodeRebirth/CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/meteorshowerassets
