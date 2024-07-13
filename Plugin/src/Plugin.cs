@@ -11,18 +11,20 @@ using HarmonyLib;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using CodeRebirth.Util.Extensions;
+using CodeRebirth.Dependency;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(Imperium.PluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger = null!;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
     
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
-    
+    internal static bool ImperiumIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
@@ -47,6 +49,10 @@ public class Plugin : BaseUnityPlugin {
     
     private void Awake() {
         Logger = base.Logger;
+
+        if (ImperiumCompatibilityChecker.Enabled) {
+            ImperiumCompatibilityChecker.Init();
+        }
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
         // This should be ran before Network Prefabs are registered.

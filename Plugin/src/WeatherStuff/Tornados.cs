@@ -15,17 +15,33 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using CodeRebirth.Util.PlayerManager;
 using CodeRebirth.Util.Extensions;
+using AmazingAssets.TerrainToMesh;
+using CodeRebirth.Misc;
+using CodeRebirth.Util.Spawning;
+using Mono.Cecil.Cil;
+using UnityEngine.Rendering.VirtualTexturing;
+using CodeRebirth.src.EnemyStuff;
+using Imperium;
 
 namespace CodeRebirth.WeatherStuff;
 public class Tornados : EnemyAI
 {
+    private SimpleWanderRoutine currentWander = null!;
+    private Coroutine wanderCoroutine = null!;
+
     [Header("Properties")]
     [SerializeField]
     private float initialSpeed = 5f;
+    [SerializeField]
+    private BoxCollider waterDrownCollider = null!;
+
     [Space(5f)]
     [Header("Audio")]
     [SerializeField]
-    private AudioSource normalTravelAudio = null!, closeTravelAudio = null!;
+    private AudioSource normalTravelAudio = null!;
+    [SerializeField]
+    private AudioSource closeTravelAudio = null!;
+    
     [Space(5f)]
     [Header("Graphics")]
     [SerializeField]
@@ -36,7 +52,6 @@ public class Tornados : EnemyAI
     private Vector3 origin;
     private PlayerControllerB? localPlayerController;
     private CodeRebirthPlayerManager? localPlayerManager;
-    private int iterations = 0;
 
     public enum TornadoType
     {
@@ -51,10 +66,15 @@ public class Tornados : EnemyAI
     private bool damageTimer = true;
     private float originalPlayerSpeed = 0;
     private bool lightningBoltTimer = true;
+    [SerializeField]
+    private Material sphereMaterial = null!; // Reference to the material for the sphere (make sure to assign this in the inspector)
+
+    private float debugSphereRadius = 60f; // Radius for the debug sphere
     private Random random = new Random();
 
     [ClientRpc]
     public void SetupTornadoClientRpc(Vector3 origin, int typeIndex) {
+        outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
         this.origin = origin;
         random = new Random(StartOfRound.Instance.randomMapSeed + 325);
         this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: origin, radius: 10f, randomSeed: random);
@@ -65,7 +85,8 @@ public class Tornados : EnemyAI
         UpdateAudio(); // Make sure audio works correctly on the first frame.
     }
 
-    private void Awake() {
+    public override void Start() {
+        base.Start();
         if (TornadoWeather.Instance != null) TornadoWeather.Instance.AddTornado(this);
         localPlayerController = GameNetworkManager.Instance.localPlayerController;
         localPlayerManager = localPlayerController.gameObject.GetComponent<CodeRebirthPlayerManager>();
@@ -141,16 +162,29 @@ public class Tornados : EnemyAI
     }
     private void FixedUpdate() {
         UpdateAudio();
+        Plugin.Logger.LogInfo(isOutside);
     }
 
     public override void DoAIInterval() {
         base.DoAIInterval();
-        if (localPlayerController == null || localPlayerManager == null || isEnemyDead || StartOfRound.Instance.allPlayersDead || iterations > 14400) return;
+        if (localPlayerController == null || localPlayerManager == null || isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
         HandleTornadoActions(localPlayerManager, localPlayerController);
-        iterations++;
     }
+
     private void HandleTornadoActions(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController) {
-        bool doesTornadoAffectPlayer = !localPlayerController.inVehicleAnimation && !localPlayerManager.ridingHoverboard && !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
+        bool doesTornadoAffectPlayer = !localPlayerController.inVehicleAnimation && 
+                                        !localPlayerManager.ridingHoverboard && 
+                                        !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && 
+                                        !localPlayerController.isInsideFactory && 
+                                        localPlayerController.isPlayerControlled && 
+                                        !localPlayerController.isPlayerDead && 
+                                        !localPlayerController.isInHangarShipRoom && 
+                                        !localPlayerController.inAnimationWithEnemy && 
+                                        !localPlayerController.enteringSpecialAnimation && 
+                                        !localPlayerController.isClimbingLadder;
+        if (localPlayerController.currentlyHeldObjectServer != null && localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
+            doesTornadoAffectPlayer = false;
+        }
         if (doesTornadoAffectPlayer) {
             float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
             bool hasLineOfSight = TornadoHasLineOfSightToPosition();
@@ -158,75 +192,115 @@ public class Tornados : EnemyAI
             float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight);
             localPlayerController.externalForces += directionToCenter * forceStrength;
         }
-        // All of these should activate some sort of particle effect on the player.
+
+        HandleStatusEffects(localPlayerManager, localPlayerController);
+    }
+
+    private void HandleStatusEffects(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController) {
+        float closeRange = 10f;
+        float midRange = 20f;
+        float longRange = 30f;
+
         switch (tornadoType) {
             case TornadoType.Fire:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 30 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire] = true;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Fire, true);
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 30 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire] = false;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Fire, false);
-                }
+                ApplyFireStatusEffect(localPlayerManager, localPlayerController, midRange);
                 break;
             case TornadoType.Blood:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 20 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood] = true;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Blood, true);
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 20 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood] = false;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Blood, false);
-                }
+                ApplyBloodStatusEffect(localPlayerManager, localPlayerController, closeRange);
                 break;
             case TornadoType.Windy:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 20 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy] = true;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Windy, true);
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 20 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy] = false;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Windy, false);
-                }
+                ApplyWindyStatusEffect(localPlayerManager, localPlayerController, longRange);
                 break;
             case TornadoType.Smoke:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 20 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke] = true;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Smoke, true);
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 20 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke] = false;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Smoke, false);
-                }
+                ApplySmokeStatusEffect(localPlayerManager, localPlayerController, longRange);
                 break;
             case TornadoType.Water:
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = true;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, true);
-                    localPlayerController.isMovementHindered++;
-			        localPlayerController.hinderedMultiplier *= 3f; 
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = false;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, false);
-                    localPlayerController.isMovementHindered = Mathf.Clamp(localPlayerController.isMovementHindered - 1, 0, 1000);
-			        localPlayerController.hinderedMultiplier /= 3f;
-                }
+                ApplyWaterStatusEffect(localPlayerManager, localPlayerController, closeRange);
                 break;
             case TornadoType.Electric:
-                if (lightningBoltTimer) {
-                    lightningBoltTimer = false;
-                    StartCoroutine(LightningBoltTimer());
-                    Vector3 strikePosition = GetRandomTargetPosition(random, outsideNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25);
-                    LightningStrikeScript.SpawnLightningBolt(strikePosition);
-                }
-                if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10 && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric] = true;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Electric, true);
-                    originalPlayerSpeed = localPlayerController.movementSpeed;
-                    localPlayerController.movementSpeed *= 1.3f;
-                } else if (Vector3.Distance(localPlayerController.transform.position, this.transform.position) >= 10 && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric]) {
-                    localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric] = false;
-                    localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Electric, false);
-                    localPlayerController.movementSpeed = originalPlayerSpeed;
-                }
+                ApplyElectricStatusEffect(localPlayerManager, localPlayerController, midRange);
                 break;
+        }
+    }
+
+    private void ApplyFireStatusEffect(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController, float range) {
+        float distance = Vector3.Distance(localPlayerController.transform.position, this.transform.position);
+        if (distance < range && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire] = true;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Fire, true);
+        } else if (distance >= range && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Fire] = false;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Fire, false);
+        }
+    }
+
+    private void ApplyBloodStatusEffect(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController, float range) {
+        float distance = Vector3.Distance(localPlayerController.transform.position, this.transform.position);
+        if (distance < range && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood] = true;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Blood, true);
+        } else if (distance >= range && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Blood] = false;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Blood, false);
+        }
+    }
+
+    private void ApplyWindyStatusEffect(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController, float range) {
+        float distance = Vector3.Distance(localPlayerController.transform.position, this.transform.position);
+        if (distance < range && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy] = true;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Windy, true);
+        } else if (distance >= range && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Windy] = false;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Windy, false);
+        }
+    }
+
+    private void ApplySmokeStatusEffect(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController, float range) {
+        float distance = Vector3.Distance(localPlayerController.transform.position, this.transform.position);
+        if (distance < range && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke] = true;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Smoke, true);
+        } else if (distance >= range && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Smoke] = false;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Smoke, false);
+        }
+    }
+
+    private void ApplyWaterStatusEffect(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController, float range) {
+        float distance = Vector3.Distance(localPlayerController.transform.position, this.transform.position);
+        if (distance < range && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = true;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, true);
+            localPlayerController.isMovementHindered++;
+            localPlayerController.hinderedMultiplier *= 3f;
+        } else if (distance >= range && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = false;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, false);
+            localPlayerController.isMovementHindered = Mathf.Clamp(localPlayerController.isMovementHindered - 1, 0, 1000);
+            localPlayerController.hinderedMultiplier /= 3f;
+        }
+    }
+
+    private void ApplyElectricStatusEffect(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController, float range) {
+        if (lightningBoltTimer) {
+            lightningBoltTimer = false;
+            StartCoroutine(LightningBoltTimer());
+            Vector3 strikePosition = GetRandomTargetPosition(random, outsideNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25);
+            Misc.Utilities.CreateExplosion(strikePosition, true, 20, 0, 4, 1, CauseOfDeath.Burning, null, null);
+            LightningStrikeScript.SpawnLightningBolt(strikePosition);
+        }
+
+        float distance = Vector3.Distance(localPlayerController.transform.position, this.transform.position);
+        if (distance < range && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric] = true;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Electric, true);
+            originalPlayerSpeed = localPlayerController.movementSpeed;
+            localPlayerController.movementSpeed *= 1.5f;
+        } else if (distance >= range && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric]) {
+            localPlayerManager.statusEffects[CodeRebirthStatusEffects.Electric] = false;
+            localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Electric, false);
+            localPlayerController.movementSpeed = originalPlayerSpeed;
         }
     }
 
@@ -235,9 +309,9 @@ public class Tornados : EnemyAI
         lightningBoltTimer = true;
     }
     private float CalculatePullStrength(float distance, bool hasLineOfSight) {
-        float maxDistance = 75f + (tornadoType == TornadoType.Windy ? 25f : 0f);
+        float maxDistance = 75f + (tornadoType == TornadoType.Smoke ? 25f : 0f);
         float minStrength = 0;
-        float maxStrength = (hasLineOfSight ? 30f : 2f) * (tornadoType == TornadoType.Windy ? 1.5f : 1f);
+        float maxStrength = (hasLineOfSight ? 30f : 5f) * (tornadoType == TornadoType.Smoke ? 1.5f : 1f);
 
         // Calculate exponential strength based on distance
         float normalizedDistance = (maxDistance - distance) / maxDistance;
@@ -305,10 +379,43 @@ public class Tornados : EnemyAI
         }
     }
 
-    public bool TornadoHasLineOfSightToPosition(int range = 100) {
-        return CheckLineOfSightForPlayer(360, range, 5);
+    public override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+        if (eye != null && sphereMaterial != null)
+        {
+            Imperium.API.Visualization.DrawSphere(this.gameObject, this.eye, 60, this.sphereMaterial);
+        }
     }
     
+    public bool TornadoHasLineOfSightToPosition(int range = 100)
+    {
+        // Define the layer mask to use for the sphere overlap and linecast checks
+        LayerMask mask = StartOfRound.Instance.collidersAndRoomMaskAndDefault;
+
+        // Get all colliders within the specified range using a sphere overlap check
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, range, mask);
+
+        // Iterate through all hit colliders to check for players
+        foreach (var hitCollider in hitColliders)
+        {
+            // Check if the hit collider is a player
+            var player = hitCollider.GetComponent<PlayerControllerB>();
+            if (player != null && player.isPlayerControlled)
+            {
+                // Perform a linecast check to see if there is a clear line of sight to the player
+                if (!Physics.Linecast(transform.position, player.transform.position, mask))
+                {
+                    // If there is a clear line of sight to at least one player, return true
+                    return true;
+                }
+            }
+        }
+
+        // If no players were found or there was no clear line of sight to any player, return false
+        return false;
+    }
+
     public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
 		try {
 			var nextNode = random.NextItem(nodes);

@@ -1,3 +1,9 @@
+## v0.2.3
+- Fixed tornado config properly.
+- Added tornado volume in ship config.
+- Added cutiefly flap sound volume config.
+- Fixed Snailcat and Cutiefly flying routes.
+
 ## v0.2.2
 - Fixed Snowglobe animations.
 

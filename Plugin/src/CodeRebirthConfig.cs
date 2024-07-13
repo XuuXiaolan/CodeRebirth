@@ -29,6 +29,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigCrateAbundance { get; private set; }
         public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
         // Enemy Specific
+        public ConfigEntry<float> ConfigCutieFlyFlapWingVolume { get; private set; }
         public ConfigEntry<int> ConfigCutieFlyMaxSpawnCount { get; private set; }
         public ConfigEntry<int> ConfigSnailCatMaxSpawnCount { get; private set; }
         public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
@@ -49,6 +50,13 @@ namespace CodeRebirth.Configs {
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
             
+            ConfigCutieFlyFlapWingVolume = configFile.Bind("CutieFly Options",
+                                                "Cutie Fly | Flap Wing Volume",
+                                                0.75f,
+                                                new ConfigDescription(
+                                                    "Volume of flapping wings.",
+                                                    new AcceptableValueRange<float>(0, 1f)
+                                                ));
             ConfigTornadoDefaultVolume = configFile.Bind("Tornado Options",
                                                 "Tornados | Default Volume",
                                                 1f,
