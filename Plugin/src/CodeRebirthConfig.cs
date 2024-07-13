@@ -34,7 +34,9 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
         // Weather Specific
-        public ConfigEntry<string> ConfigTornadoWeatherType { get; private set; }
+        public ConfigEntry<string> ConfigTornadoWeatherTypes { get; private set; }
+        public ConfigEntry<float> ConfigTornadoInShipVolume { get; private set; }
+        public ConfigEntry<float> ConfigTornadoDefaultVolume { get; private set; }
         public ConfigEntry<float> ConfigMeteorShowerMeteoriteSpawnChance { get; private set; }
         public ConfigEntry<float> ConfigMeteorShowerInShipVolume { get; private set; }
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
@@ -47,6 +49,20 @@ namespace CodeRebirth.Configs {
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
             
+            ConfigTornadoDefaultVolume = configFile.Bind("Tornado Options",
+                                                "Tornados | Default Volume",
+                                                1f,
+                                                new ConfigDescription(
+                                                    "Default volume of tornados.",
+                                                    new AcceptableValueRange<float>(0, 1f)
+                                                ));
+            ConfigTornadoInShipVolume = configFile.Bind("Tornado Options",
+                                                "Tornados | Volume in Ship",
+                                                1f,
+                                                new ConfigDescription(
+                                                    "Volume of tornados in the ship.",
+                                                    new AcceptableValueRange<float>(0, 1f)
+                                                ));
             ConfigWalletMode = configFile.Bind("Wallet Options",
                                                 "Wallet | Mode",
                                                 true,
@@ -55,11 +71,11 @@ namespace CodeRebirth.Configs {
                                                 "Snow Globe | Music",
                                                 true,
                                                 "Enables/Disables the music in the snow globe.");
-            ConfigTornadoWeatherType = configFile.Bind("Tornado Options",
+            ConfigTornadoWeatherTypes = configFile.Bind("Tornado Options",
                                                 "Tornados | Enabled Types",
-												"random",
-												new ConfigDescription("Types of tornados that are allowed to spawn", new AcceptableValueList<string>("fire", "blood", "windy", "smoke", "water", "electric", "random"))
-												);
+                                                "random",
+                                                new ConfigDescription("Types of tornados that are allowed to spawn", new AcceptableValueList<string>("fire", "blood", "windy", "smoke", "water", "electric", "random"))
+                                                );
             ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteorite Spawn Chance",
                                                 1f,

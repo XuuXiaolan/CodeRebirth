@@ -17,9 +17,8 @@ using CodeRebirth.Util.PlayerManager;
 using CodeRebirth.Util.Extensions;
 
 namespace CodeRebirth.WeatherStuff;
-public class Tornados : NetworkBehaviour
+public class Tornados : EnemyAI
 {
-    private NavMeshAgent agent = null!;
     [Header("Properties")]
     [SerializeField]
     private float initialSpeed = 5f;
@@ -35,6 +34,9 @@ public class Tornados : NetworkBehaviour
 
     private List<GameObject> outsideNodes = new List<GameObject>();
     private Vector3 origin;
+    private PlayerControllerB? localPlayerController;
+    private CodeRebirthPlayerManager? localPlayerManager;
+    private int iterations = 0;
 
     public enum TornadoType
     {
@@ -48,24 +50,25 @@ public class Tornados : NetworkBehaviour
     private TornadoType tornadoType = TornadoType.Fire;
     private bool damageTimer = true;
     private float originalPlayerSpeed = 0;
-    public Transform eye = null!;
     private bool lightningBoltTimer = true;
     private Random random = new Random();
 
     [ClientRpc]
     public void SetupTornadoClientRpc(Vector3 origin, int typeIndex) {
         this.origin = origin;
-        this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: origin, radius: 10f, randomSeed: new Random(30));
+        random = new Random(StartOfRound.Instance.randomMapSeed + 325);
+        this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: origin, radius: 10f, randomSeed: random);
         this.transform.position = this.origin;
         this.tornadoType = (TornadoType)typeIndex;
         Plugin.Logger.LogInfo($"Setting up tornado of type: {tornadoType} at {origin}");
-        random = new Random(StartOfRound.Instance.randomMapSeed + 325);
         SetupTornadoType();
         UpdateAudio(); // Make sure audio works correctly on the first frame.
     }
 
     private void Awake() {
         if (TornadoWeather.Instance != null) TornadoWeather.Instance.AddTornado(this);
+        localPlayerController = GameNetworkManager.Instance.localPlayerController;
+        localPlayerManager = localPlayerController.gameObject.GetComponent<CodeRebirthPlayerManager>();
     }
 
     private void SetupTornadoType() {
@@ -133,38 +136,24 @@ public class Tornados : NetworkBehaviour
         Init();
     }
     private void Init() {
-        this.outsideNodes = RoundManager.Instance.outsideAINodes.ToList(); // would travel between these nodes using a search routine.
-        agent = GetComponent<NavMeshAgent>();
+        StartSearch(this.transform.position);
         agent.speed = initialSpeed;
-        StartCoroutine(TornadoUpdate());
-        if (IsHost) {
-            StartAISearchRoutine(outsideNodes);
-        }
     }
     private void FixedUpdate() {
         UpdateAudio();
     }
 
-    private IEnumerator TornadoUpdate() {
-        int i = 0;
-        WaitForSeconds wait = new WaitForSeconds(0.05f); // Execute every 0.05 seconds
-        PlayerControllerB localPlayerController = GameNetworkManager.Instance.localPlayerController;
-        CodeRebirthPlayerManager localPlayerManager = localPlayerController.gameObject.GetComponent<CodeRebirthPlayerManager>();
-        while (localPlayerController != null && localPlayerManager != null) {
-            yield return wait; // Reduced frequency of execution
-            HandleTornadoActions(localPlayerManager, localPlayerController);
-            i++;
-            if (i > 14400) {
-                Plugin.Logger.LogFatal("This tornado loop ran too many iterations.");
-                yield break;
-            }
-        }
+    public override void DoAIInterval() {
+        base.DoAIInterval();
+        if (localPlayerController == null || localPlayerManager == null || isEnemyDead || StartOfRound.Instance.allPlayersDead || iterations > 14400) return;
+        HandleTornadoActions(localPlayerManager, localPlayerController);
+        iterations++;
     }
     private void HandleTornadoActions(CodeRebirthPlayerManager localPlayerManager, PlayerControllerB localPlayerController) {
         bool doesTornadoAffectPlayer = !localPlayerController.inVehicleAnimation && !localPlayerManager.ridingHoverboard && !StartOfRound.Instance.shipBounds.bounds.Contains(localPlayerController.transform.position) && !localPlayerController.isInsideFactory && localPlayerController.isPlayerControlled && !localPlayerController.isPlayerDead && !localPlayerController.isInHangarShipRoom && !localPlayerController.inAnimationWithEnemy && !localPlayerController.enteringSpecialAnimation && !localPlayerController.isClimbingLadder;
         if (doesTornadoAffectPlayer) {
             float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
-            bool hasLineOfSight = TornadoHasLineOfSightToPosition(localPlayerController.transform.position);
+            bool hasLineOfSight = TornadoHasLineOfSightToPosition();
             Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
             float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight);
             localPlayerController.externalForces += directionToCenter * forceStrength;
@@ -296,6 +285,7 @@ public class Tornados : NetworkBehaviour
                 break;
         }
     }
+
     private IEnumerator DamageTimer() {
         yield return new WaitForSeconds(0.5f);
         damageTimer = true;
@@ -306,42 +296,19 @@ public class Tornados : NetworkBehaviour
         {
             normalTravelAudio.volume = 0;
             closeTravelAudio.volume = 0;
+        } else if (GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed) {
+            normalTravelAudio.volume = Plugin.ModConfig.ConfigTornadoDefaultVolume.Value * Plugin.ModConfig.ConfigTornadoInShipVolume.Value;
+            closeTravelAudio.volume = Plugin.ModConfig.ConfigTornadoDefaultVolume.Value * Plugin.ModConfig.ConfigTornadoInShipVolume.Value;
         } else {
-            normalTravelAudio.volume = 1;
-            closeTravelAudio.volume = 1;
+            normalTravelAudio.volume = Plugin.ModConfig.ConfigTornadoDefaultVolume.Value;
+            closeTravelAudio.volume = Plugin.ModConfig.ConfigTornadoDefaultVolume.Value;
         }
     }
 
-    public void StartAISearchRoutine(List<GameObject> nodes) {
-        StartCoroutine(AISearchRoutine(nodes));
+    public bool TornadoHasLineOfSightToPosition(int range = 100) {
+        return CheckLineOfSightForPlayer(360, range, 5);
     }
-
-    private IEnumerator AISearchRoutine(List<GameObject> nodes) {
-        while (true) {
-            yield return new WaitForSeconds(0.5f);
-            if (nodes.Count == 0) yield break;
-
-            List<GameObject> nearbyNodes = nodes.Where(node => Vector3.Distance(node.transform.position, transform.position) < 20f).ToList();
-
-            if (nearbyNodes.Count == 0) yield break;
-
-            GameObject targetNode = nearbyNodes[UnityEngine.Random.Range(0, nearbyNodes.Count)];
-            agent.SetDestination(targetNode.transform.position);
-
-            while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance) {
-                yield return null;
-            }
-        }
-    }
-
-    public bool TornadoHasLineOfSightToPosition(Vector3 pos, int range = 150) {
-        if (Vector3.Distance(eye.position, pos) < range) {
-            if (!Physics.Linecast(eye.position, pos, StartOfRound.Instance.playersMask)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    
     public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
 		try {
 			var nextNode = random.NextItem(nodes);

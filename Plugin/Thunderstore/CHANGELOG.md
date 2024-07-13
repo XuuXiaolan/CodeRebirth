@@ -1,3 +1,6 @@
+## v0.2.2
+- Fixed Snowglobe animations.
+
 ## v0.2.1
 - Fixed company not loading bug.
 - Fixed tornado config -ish.

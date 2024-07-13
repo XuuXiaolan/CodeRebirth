@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2124950645
+CRC: 3791622586
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 915b8cee0cefd82bea082aad31dbd840
+    Hash: 5e70cf35a5ca296db7723261b9277513
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ad2ec42d8064a140f90c6f37ec5a6f27
+    Hash: 5594be46115d3148ef5290d70e508790
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 915b8cee0cefd82bea082aad31dbd840
+    Hash: 5e70cf35a5ca296db7723261b9277513
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -34,8 +34,12 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 90
   Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
 - Class: 95
   Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
 - Class: 114
@@ -52,7 +56,19 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 199
   Script: {instanceID: 0}
-SerializeReferenceClassIdentifiers: []
+- Class: 241
+  Script: {instanceID: 0}
+- Class: 243
+  Script: {instanceID: 0}
+- Class: 245
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: AISearchRoutine
+- AssemblyName: Assembly-CSharp
+  ClassName: EnemyBehaviourState
+- AssemblyName: Assembly-CSharp
+  ClassName: NavSizeLimit
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Fbx/a4.FBX
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoMain.prefab
@@ -75,6 +91,8 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Material/a4.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoContainer.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Fbx/a1.FBX
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/TornadoAnimController.controller
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/TornadoObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Texture/a3.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Texture/a5.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Prefabs/TornadoWeather.prefab
