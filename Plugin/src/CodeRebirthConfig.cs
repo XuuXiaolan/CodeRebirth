@@ -43,6 +43,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         // Misc
+        public ConfigEntry<bool> ConfigEnableImperiumDebugs { get; private set; }
         public ConfigEntry<bool> ConfigWalletMode { get; private set; }
         public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
         public ConfigEntry<int> ConfigWalletCost { get; private set; }
@@ -50,6 +51,10 @@ namespace CodeRebirth.Configs {
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
             
+            ConfigEnableImperiumDebugs = configFile.Bind("Imperium Compatibility", 
+                                                        "Enable Imperium Debugs",
+                                                        false,
+                                                        "Enables the debugs I made using the imperium api for stuff like tornados. (only works while imperium is on)");
             ConfigCutieFlyFlapWingVolume = configFile.Bind("CutieFly Options",
                                                 "Cutie Fly | Flap Wing Volume",
                                                 0.75f,

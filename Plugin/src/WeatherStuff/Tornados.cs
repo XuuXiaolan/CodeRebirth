@@ -162,7 +162,6 @@ public class Tornados : EnemyAI
     }
     private void FixedUpdate() {
         UpdateAudio();
-        Plugin.Logger.LogInfo(isOutside);
     }
 
     public override void DoAIInterval() {
@@ -379,12 +378,14 @@ public class Tornados : EnemyAI
         }
     }
 
-    public override void OnDrawGizmos()
+    public void LateUpdate()
     {
-        base.OnDrawGizmos();
+        if (!Plugin.ImperiumIsOn || !Plugin.ModConfig.ConfigEnableImperiumDebugs.Value || StartOfRound.Instance == null) return;
+        Plugin.Logger.LogInfo("Drawing sphere OLD");
         if (eye != null && sphereMaterial != null)
         {
-            Imperium.API.Visualization.DrawSphere(this.gameObject, this.eye, 60, this.sphereMaterial);
+            Plugin.Logger.LogInfo("Drawing sphere");
+            Imperium.API.Visualization.DrawSphere(this.gameObject, this.eye, 60, this.sphereMaterial, Imperium.API.Visualization.GizmoType.Custom, null, null);
         }
     }
     
