@@ -54,7 +54,7 @@ namespace CodeRebirth.Configs {
             ConfigEnableImperiumDebugs = configFile.Bind("Imperium Compatibility", 
                                                         "Enable Imperium Debugs",
                                                         false,
-                                                        "Enables the debugs I made using the imperium api for stuff like tornados. (only works while imperium is on)");
+                                                        "Enables the debugs I made using the imperium api for stuff like tornados. (currently no work)");
             ConfigCutieFlyFlapWingVolume = configFile.Bind("CutieFly Options",
                                                 "Cutie Fly | Flap Wing Volume",
                                                 0.75f,

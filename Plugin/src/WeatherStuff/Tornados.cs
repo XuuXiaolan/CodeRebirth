@@ -1,33 +1,17 @@
-using System;
 using System.Collections;
-using System.ComponentModel;
 using System.Linq;
-using CodeRebirth.src;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using CodeRebirth.Collisions;
 using CodeRebirth.Misc.LightningScript;
-using UnityEngine.Serialization;
 using Random = System.Random;
-using UnityEngine.AI;
 using System.Collections.Generic;
 using CodeRebirth.Util.PlayerManager;
 using CodeRebirth.Util.Extensions;
-using AmazingAssets.TerrainToMesh;
-using CodeRebirth.Misc;
-using CodeRebirth.Util.Spawning;
-using Mono.Cecil.Cil;
-using UnityEngine.Rendering.VirtualTexturing;
-using CodeRebirth.src.EnemyStuff;
-using Imperium;
 
 namespace CodeRebirth.WeatherStuff;
 public class Tornados : EnemyAI
 {
-    private SimpleWanderRoutine currentWander = null!;
-    private Coroutine wanderCoroutine = null!;
 
     [Header("Properties")]
     [SerializeField]
@@ -52,6 +36,7 @@ public class Tornados : EnemyAI
     private Vector3 origin;
     private PlayerControllerB? localPlayerController;
     private CodeRebirthPlayerManager? localPlayerManager;
+    public Transform[] eyes = null!;
 
     public enum TornadoType
     {
@@ -69,8 +54,8 @@ public class Tornados : EnemyAI
     [SerializeField]
     private Material sphereMaterial = null!; // Reference to the material for the sphere (make sure to assign this in the inspector)
 
-    private float debugSphereRadius = 60f; // Radius for the debug sphere
     private Random random = new Random();
+    private bool isDebugging = false;
 
     [ClientRpc]
     public void SetupTornadoClientRpc(Vector3 origin, int typeIndex) {
@@ -87,6 +72,9 @@ public class Tornados : EnemyAI
 
     public override void Start() {
         base.Start();
+#if DEBUG
+        isDebugging = true;
+#endif
         if (TornadoWeather.Instance != null) TornadoWeather.Instance.AddTornado(this);
         localPlayerController = GameNetworkManager.Instance.localPlayerController;
         localPlayerManager = localPlayerController.gameObject.GetComponent<CodeRebirthPlayerManager>();
@@ -132,6 +120,7 @@ public class Tornados : EnemyAI
                 }
                 break;
             case TornadoType.Water:
+                waterDrownCollider.gameObject.SetActive(true);
                 foreach (ParticleSystem particleSystem in tornadoParticles) {
                     if (particleSystem.gameObject.name.Contains("Water")) {
                         particleSystem.gameObject.SetActive(true);   
@@ -181,14 +170,14 @@ public class Tornados : EnemyAI
                                         !localPlayerController.inAnimationWithEnemy && 
                                         !localPlayerController.enteringSpecialAnimation && 
                                         !localPlayerController.isClimbingLadder;
-        if (localPlayerController.currentlyHeldObjectServer != null && localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
+        if (isDebugging && localPlayerController.currentlyHeldObjectServer != null && localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
             doesTornadoAffectPlayer = false;
         }
         if (doesTornadoAffectPlayer) {
             float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
             bool hasLineOfSight = TornadoHasLineOfSightToPosition();
             Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
-            float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight);
+            float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, localPlayerManager);
             localPlayerController.externalForces += directionToCenter * forceStrength;
         }
 
@@ -271,13 +260,9 @@ public class Tornados : EnemyAI
         if (distance < range && !localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
             localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = true;
             localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, true);
-            localPlayerController.isMovementHindered++;
-            localPlayerController.hinderedMultiplier *= 3f;
         } else if (distance >= range && localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water]) {
             localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] = false;
             localPlayerManager.ChangeActiveStatus(CodeRebirthStatusEffects.Water, false);
-            localPlayerController.isMovementHindered = Mathf.Clamp(localPlayerController.isMovementHindered - 1, 0, 1000);
-            localPlayerController.hinderedMultiplier /= 3f;
         }
     }
 
@@ -307,10 +292,10 @@ public class Tornados : EnemyAI
         yield return new WaitForSeconds(random.NextFloat(0f, 1f) * 8);
         lightningBoltTimer = true;
     }
-    private float CalculatePullStrength(float distance, bool hasLineOfSight) {
+    private float CalculatePullStrength(float distance, bool hasLineOfSight, CodeRebirthPlayerManager localPlayerManager) {
         float maxDistance = 75f + (tornadoType == TornadoType.Smoke ? 25f : 0f);
         float minStrength = 0;
-        float maxStrength = (hasLineOfSight ? 30f : 5f) * (tornadoType == TornadoType.Smoke ? 1.5f : 1f);
+        float maxStrength = (hasLineOfSight ? 30f : 5f) * (tornadoType == TornadoType.Smoke ? 1.5f : 1f) * (localPlayerManager.statusEffects[CodeRebirthStatusEffects.Water] ? 0.7f : 1f);
 
         // Calculate exponential strength based on distance
         float normalizedDistance = (maxDistance - distance) / maxDistance;
@@ -380,43 +365,52 @@ public class Tornados : EnemyAI
 
     public void LateUpdate()
     {
-        if (!Plugin.ImperiumIsOn || !Plugin.ModConfig.ConfigEnableImperiumDebugs.Value || StartOfRound.Instance == null) return;
-        Plugin.Logger.LogInfo("Drawing sphere OLD");
+        if (!Plugin.ImperiumIsOn || !Plugin.ModConfig.ConfigEnableImperiumDebugs.Value) return;
         if (eye != null && sphereMaterial != null)
         {
-            Plugin.Logger.LogInfo("Drawing sphere");
-            Imperium.API.Visualization.DrawSphere(this.gameObject, this.eye, 60, this.sphereMaterial, Imperium.API.Visualization.GizmoType.Custom, null, null);
+            //Imperium.API.Visualization.DrawSphere(this.gameObject, this.eye, 60, this.sphereMaterial, Imperium.API.Visualization.GizmoType.Custom, null, null);
         }
     }
     
     public bool TornadoHasLineOfSightToPosition(int range = 100)
     {
-        // Define the layer mask to use for the sphere overlap and linecast checks
-        LayerMask mask = StartOfRound.Instance.collidersAndRoomMaskAndDefault;
-
         // Get all colliders within the specified range using a sphere overlap check
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, range, mask);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, range, StartOfRound.Instance.playersMask);
 
         // Iterate through all hit colliders to check for players
         foreach (var hitCollider in hitColliders)
         {
-            // Check if the hit collider is a player
-            var player = hitCollider.GetComponent<PlayerControllerB>();
-            if (player != null && player.isPlayerControlled)
-            {
-                // Perform a linecast check to see if there is a clear line of sight to the player
-                if (!Physics.Linecast(transform.position, player.transform.position, mask))
-                {
-                    // If there is a clear line of sight to at least one player, return true
-                    return true;
-                }
-            }
+            return CheckIfAPlayerIsAGivenCollider(hitCollider);
         }
-
         // If no players were found or there was no clear line of sight to any player, return false
         return false;
     }
 
+    private bool CheckIfAPlayerIsAGivenCollider(Collider hitCollider) {
+        // Check if the hit collider is a player by iterating through the list of all player scripts
+        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+        {
+            if (hitCollider.gameObject == player.gameObject && player.isPlayerControlled)
+            {
+                // Perform a linecast check to see if there is a clear line of sight to the player
+                if (CheckIfPlayerSeenByTornado(player)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public bool CheckIfPlayerSeenByTornado(PlayerControllerB player) {
+        foreach (Transform eye in eyes)
+        {
+            if (Physics.Linecast(eye.position, player.gameplayCamera.transform.position, StartOfRound.Instance.playersMask))
+            {
+                // If there is a clear line of sight to at least one player, return true
+                return true;
+            }
+        }
+        return false;
+    }
     public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
 		try {
 			var nextNode = random.NextItem(nodes);
