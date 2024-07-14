@@ -24,6 +24,7 @@ public class CodeRebirthPlayerManager : MonoBehaviour
 {
     public bool ridingHoverboard = false;
     public bool holdingWallet = false;
+    public bool flingingAway = false;
     public Dictionary<CodeRebirthStatusEffects, bool> statusEffects = new Dictionary<CodeRebirthStatusEffects, bool>();
     public GameObject[] playerParticles = new GameObject[6];
     public Dictionary<CodeRebirthItemUsages, bool> ItemUsages = new Dictionary<CodeRebirthItemUsages, bool>(); //todo, USE THISSS
