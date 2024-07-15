@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using CodeRebirth.Util.PlayerManager;
 using CodeRebirth.Util.Extensions;
 using System;
+using CodeRebirth.Patches;
 
 namespace CodeRebirth.WeatherStuff;
 public class Tornados : EnemyAI
@@ -58,6 +59,15 @@ public class Tornados : EnemyAI
     private Random tornadoRandom = new Random();
     private bool isDebugging = false;
     private float timeSinceBeingInsideTornado = 0;
+    public static Tornados? Instance { get; private set; }
+
+    public void OnEnable() {
+        Instance = this;
+    }
+
+    public void OnDisable() {
+        Instance = null!;
+    }
 
     [ClientRpc]
     public void SetupTornadoClientRpc(Vector3 origin, int typeIndex) {
@@ -153,19 +163,35 @@ public class Tornados : EnemyAI
         base.Update();
         if (localPlayerController == null || localPlayerManager == null || isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
         HandleTornadoActions(localPlayerManager, localPlayerController);
-        
-        if (TornadoConditionsAreMet() && Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 15f && !localPlayerManager.flingingAway) {
-            timeSinceBeingInsideTornado += Time.deltaTime;   
+        if (PlayerControllerBPatch.TornadoKinematicPlayerManager != null) Plugin.Logger.LogInfo("Tornado is flinging away: " + PlayerControllerBPatch.TornadoKinematicPlayerManager.flingingAway.ToString());
+        if (PlayerControllerBPatch.TornadoKinematicPlayer != null) Plugin.Logger.LogInfo("Tornado is flinging player: " + PlayerControllerBPatch.TornadoKinematicPlayer);
+        if (PlayerControllerBPatch.TornadoKinematicPlayerManager != null) Plugin.Logger.LogInfo("Tornado is flinging player manager: " + PlayerControllerBPatch.TornadoKinematicPlayerManager);
+        Plugin.Logger.LogInfo("Tornado patch: " + PlayerControllerBPatch.TornadoKinematicPatch);
+        if (PlayerControllerBPatch.TornadoKinematicPatch && PlayerControllerBPatch.TornadoKinematicPlayer != null && PlayerControllerBPatch.TornadoKinematicPlayerManager != null && PlayerControllerBPatch.TornadoKinematicPlayerManager.flingingAway) {
+            Plugin.Logger.LogInfo("Tornado is flinging away");
+            Vector3 directionToCenter = (throwingPoint.position - PlayerControllerBPatch.TornadoKinematicPlayer.transform.position).normalized;
+            float spiralForce = 125f; // Adjust this value to control the spiral intensity
+            Vector3 spiralDirection = Vector3.Cross(directionToCenter, Vector3.up).normalized;
+            Rigidbody playerRigidbody = PlayerControllerBPatch.TornadoKinematicPlayer.playerRigidbody;
+            
+            playerRigidbody.AddForce(spiralDirection * spiralForce + directionToCenter * spiralForce, ForceMode.Acceleration);
+
+            if (PlayerControllerBPatch.TornadoKinematicPlayer.transform.position.y >= throwingPoint.position.y) {
+                playerRigidbody.AddForce(Vector3.up * 150f + Vector3.forward * 150f, ForceMode.VelocityChange);
+                timeSinceBeingInsideTornado = 0f;
+                if (GameNetworkManager.Instance.localPlayerController == PlayerControllerBPatch.TornadoKinematicPlayer) SetPlayerFlingingAwayServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayerController), false);
+                // restore kinematic etc after some point
+            }
+        }
+        if (TornadoConditionsAreMet() && Vector3.Distance(localPlayerController.transform.position, this.transform.position) < 10f && !localPlayerManager.flingingAway) {
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 20f);
         } else if (!localPlayerManager.flingingAway) {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 20f);
         }
 
-        if (timeSinceBeingInsideTornado >= 10f) {
+        if (timeSinceBeingInsideTornado >= 5f) {
             SetPlayerFlingingAwayServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayerController), true);
         }
-
-        Plugin.Logger.LogInfo($"Flinging away: {localPlayerManager.flingingAway}");
-        Plugin.Logger.LogInfo($"Distance from throwing point: {Vector3.Distance(localPlayerController.transform.position, throwingPoint.position)}");
     }
     
     [ServerRpc(RequireOwnership = false)]
@@ -196,20 +222,47 @@ public class Tornados : EnemyAI
             float distanceToTornado = Vector3.Distance(transform.position, localPlayerController.transform.position);
             bool hasLineOfSight = TornadoHasLineOfSightToPosition();
             Vector3 directionToCenter = (transform.position - localPlayerController.transform.position).normalized;
-            if (localPlayerManager.flingingAway) {
-                directionToCenter = (throwingPoint.position - localPlayerController.transform.position).normalized;
-                if (Vector3.Distance(throwingPoint.position, localPlayerController.transform.position) < 2f) {
-                    Plugin.Logger.LogInfo("Flinging away");
-                    localPlayerManager.flingingAway = false;
-                    timeSinceBeingInsideTornado = 0f;
-                    localPlayerController.externalForces += (Vector3.up * 100f + Vector3.forward * 100f).normalized;
-                }
+            if (localPlayerManager.flingingAway && !PlayerControllerBPatch.TornadoKinematicPatch) {
+                HandleFlingingPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayerController));
+            } else if (distanceToTornado <= 75) {
+                float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight);
+                localPlayerController.externalForces += directionToCenter * forceStrength;
             }
-            float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight);
-            localPlayerController.externalForces += directionToCenter * forceStrength;
         }
 
         HandleStatusEffects(localPlayerManager, localPlayerController);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void HandleFlingingPlayerServerRpc(int playerID) {
+        HandleFlingingPlayerClientRpc(playerID);
+    }
+    [ClientRpc]
+    private void HandleFlingingPlayerClientRpc(int playerID) {
+        if (StartOfRound.Instance.allPlayerScripts[playerID] == null) return;
+        PlayerControllerB localPlayerControllerB = StartOfRound.Instance.allPlayerScripts[playerID];
+        Rigidbody playerRigidbody = localPlayerControllerB.playerRigidbody;
+        if (playerRigidbody == null) return;
+
+        playerRigidbody.isKinematic = false;
+        playerRigidbody.AddForce(Vector3.up * 10f, ForceMode.Acceleration);
+        PlayerControllerBPatch.TornadoKinematicPlayer = localPlayerControllerB;
+        PlayerControllerBPatch.TornadoKinematicPlayerManager = localPlayerControllerB.GetComponent<CodeRebirthPlayerManager>();
+        PlayerControllerBPatch.TornadoKinematicPatch = true;
+        // Disable Rigidbody and store mass
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ResetPlayerRigidBodyStuffServerRpc(int playerID) {
+        ResetPlayerRigidBodyStuffClientRpc(playerID);
+    }
+
+    [ClientRpc]
+    public void ResetPlayerRigidBodyStuffClientRpc(int playerID) {
+        StartOfRound.Instance.allPlayerScripts[playerID].GetComponent<CodeRebirthPlayerManager>().flingingAway = false;
+        PlayerControllerBPatch.TornadoKinematicPatch = false;
+        StartOfRound.Instance.allPlayerScripts[playerID].playerRigidbody.isKinematic = true;
+        PlayerControllerBPatch.TornadoKinematicPlayer = null;
     }
 
     public bool TornadoConditionsAreMet() {
@@ -332,19 +385,26 @@ public class Tornados : EnemyAI
         yield return new WaitForSeconds(tornadoRandom.NextFloat(0f, 1f) * 8);
         lightningBoltTimer = true;
     }
+
     private float CalculatePullStrength(float distance, bool hasLineOfSight) {
         float maxDistance = 75f + (tornadoType == TornadoType.Smoke ? 25f : 0f);
         float minStrength = 0;
         float maxStrength = (hasLineOfSight ? 30f : 5f) * (tornadoType == TornadoType.Smoke ? 1.5f : 1f) * (localPlayerManager!.statusEffects[CodeRebirthStatusEffects.Water] ? 0.7f : 1f) * (localPlayerManager.flingingAway ? 5f : 1f);
 
-        // Calculate exponential strength based on distance
-        float normalizedDistance = (maxDistance - distance) / maxDistance;
+        // Calculate the normalized distance and apply an exponential falloff
+        float normalizedDistance = distance / maxDistance;
+        float strengthFalloff = Mathf.Pow(1 - normalizedDistance, 2); // Use an exponential falloff for smoother results
+
+        // Calculate the pull strength based on the falloff
+        float pullStrength = Mathf.Lerp(minStrength, maxStrength, strengthFalloff);
+
         if (distance <= 2.5f && damageTimer) {
             damageTimer = false;
             StartCoroutine(DamageTimer());
             HandleTornadoTypeDamage();
         }
-        return Mathf.Clamp(Mathf.Lerp(minStrength, maxStrength, normalizedDistance * normalizedDistance), 0, maxStrength);
+
+        return Mathf.Clamp(pullStrength, 0, maxStrength);
     }
 
     private void HandleTornadoTypeDamage() {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -19,8 +20,41 @@ public class Dealer : NetworkBehaviour
     private PlayerControllerB? playerWhoInteracted = null;
     private bool dealMade = false;
 
+    public enum CardNumber {
+        One,
+        Two,
+        Three
+    }
+
+    private Dictionary<CardNumber, string> cardValues = new Dictionary<CardNumber, string>();
+
+    private List<string> positiveEffects = new List<string>
+    {
+        "Increase Movement Speed",
+        "Spawn Shotgun with Shells",
+        "Increase Stamina",
+        "Increase Health",
+        "Decrease Moon Prices",
+        "Spawn Gold Bar",
+        "Increase Carry Slot Number"
+    };
+
+    private List<string> negativeEffects = new List<string>
+    {
+        "Decrease Movement Speed",
+        "Steal Credit or Scrap",
+        "Decrease Stamina",
+        "Decrease Health",
+        "Increase Moon Prices",
+        "Decrease Carry Slot Number",
+        "Deal Player Damage"
+    };
+
     public void Awake()
     {
+        cardValues.Add(CardNumber.One, "PlaceholderOne");
+        cardValues.Add(CardNumber.Two, "PlaceholderTwo");
+        cardValues.Add(CardNumber.Three, "PlaceholderThree");
         networkAnimator = GetComponent<NetworkAnimator>();
         animator = GetComponent<Animator>();
 
@@ -50,6 +84,7 @@ public class Dealer : NetworkBehaviour
             cardTrigger.interactable = true;
             switch (index) {
                 case 0:
+                    cardValues[CardNumber.One] = GetStringEffects();
                     cardTrigger.onInteract.AddListener(Card1InteractionResult);
                     break;
                 case 1:
@@ -58,38 +93,40 @@ public class Dealer : NetworkBehaviour
                 case 2:
                     cardTrigger.onInteract.AddListener(Card3InteractionResult);
                     break;
-                default:
-                    cardTrigger.onInteract.AddListener(CardInteractionResult);
-                    break;
             }
+            index++;
         }
         foreach (Renderer cardRenderer in cardRenderers) {
             cardRenderer.enabled = true;
         }
-        StartInteractionAnimationServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
+    }
+
+    public string GetStringEffects() {
+        var random = new System.Random();
+        string positiveEffect = positiveEffects[random.Next(positiveEffects.Count)];
+        string negativeEffect = negativeEffects[random.Next(negativeEffects.Count)];
+        
+        return $"{positiveEffect} and {negativeEffect}";
     }
 
     private void Card1InteractionResult(PlayerControllerB playerThatInteracted) {
-        
+        StartInteractionAnimationServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
     }
 
     private void Card2InteractionResult(PlayerControllerB playerThatInteracted) {
-        
+        StartInteractionAnimationServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
     }
 
     private void Card3InteractionResult(PlayerControllerB playerThatInteracted) {
-
+        StartInteractionAnimationServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
     }
 
-    private void CardInteractionResult(PlayerControllerB playerThatInteracted) {
-        // apply effects or smthn here
-    }
     [ServerRpc(RequireOwnership = false)]
     private void StartInteractionAnimationServerRpc(int playerThatInteracted)
     {
         LogIfDebugBuild("Interaction animation");
         SetInteractPlayerClientRpc(playerThatInteracted);
-        networkAnimator.SetTrigger("devilInteract");
+        networkAnimator.SetTrigger("devilHandsInteract");
         // Run an animation event.
     }
 

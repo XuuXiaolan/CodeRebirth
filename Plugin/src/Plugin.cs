@@ -19,12 +19,14 @@ namespace CodeRebirth;
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(Imperium.PluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("Surfaced", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger = null!;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
     
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
     internal static bool ImperiumIsOn = false;
+    internal static bool SurfacedIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
@@ -53,6 +55,11 @@ public class Plugin : BaseUnityPlugin {
         if (ImperiumCompatibilityChecker.Enabled) {
             ImperiumCompatibilityChecker.Init();
         }
+
+        if (SurfacedCompatibilityChecker.Enabled) {
+            SurfacedCompatibilityChecker.Init();
+        }
+        
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
         // This should be ran before Network Prefabs are registered.
