@@ -79,7 +79,7 @@ public class Dealer : NetworkBehaviour
         animator = GetComponent<Animator>();
 
         foreach (Renderer cardRenderer in cardRenderers) {
-            cardRenderer.enabled = true;
+            cardRenderer.enabled = false;
         }
 
         foreach (InteractTrigger cardTrigger in cardTriggers) {
@@ -106,12 +106,17 @@ public class Dealer : NetworkBehaviour
                 case 0:
                     cardValues[CardNumber.One] = GetStringEffects();
                     cardTrigger.onInteract.AddListener(Card1InteractionResult);
+                    cardTrigger.hoverTip = cardValues[CardNumber.One];
                     break;
                 case 1:
+                    cardValues[CardNumber.Two] = GetStringEffects();
                     cardTrigger.onInteract.AddListener(Card2InteractionResult);
+                    cardTrigger.hoverTip = cardValues[CardNumber.Two];
                     break;
                 case 2:
+                    cardValues[CardNumber.Three] = GetStringEffects();
                     cardTrigger.onInteract.AddListener(Card3InteractionResult);
+                    cardTrigger.hoverTip = cardValues[CardNumber.Three];
                     break;
             }
             index++;
