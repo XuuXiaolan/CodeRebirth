@@ -26,28 +26,48 @@ public class Dealer : NetworkBehaviour
         Three
     }
 
+    public enum PositiveEffect {
+        IncreaseMovementSpeed,
+        SpawnShotgunWithShells,
+        IncreaseStamina,
+        IncreaseHealth,
+        DecreaseMoonPrices,
+        SpawnGoldBar,
+        IncreaseCarrySlotNumber
+    }
+
+    public enum NegativeEffect {
+        DecreaseMovementSpeed,
+        StealCreditOrScrap,
+        DecreaseStamina,
+        DecreaseHealth,
+        IncreaseMoonPrices,
+        DecreaseCarrySlotNumber,
+        DealPlayerDamage
+    }
+
     private Dictionary<CardNumber, string> cardValues = new Dictionary<CardNumber, string>();
 
-    private List<string> positiveEffects = new List<string>
+    private List<PositiveEffect> positiveEffects = new List<PositiveEffect>
     {
-        "Increase Movement Speed",
-        "Spawn Shotgun with Shells",
-        "Increase Stamina",
-        "Increase Health",
-        "Decrease Moon Prices",
-        "Spawn Gold Bar",
-        "Increase Carry Slot Number"
+        PositiveEffect.IncreaseMovementSpeed,
+        PositiveEffect.SpawnShotgunWithShells,
+        PositiveEffect.IncreaseStamina,
+        PositiveEffect.IncreaseHealth,
+        PositiveEffect.DecreaseMoonPrices,
+        PositiveEffect.SpawnGoldBar,
+        PositiveEffect.IncreaseCarrySlotNumber
     };
 
-    private List<string> negativeEffects = new List<string>
+    private List<NegativeEffect> negativeEffects = new List<NegativeEffect>
     {
-        "Decrease Movement Speed",
-        "Steal Credit or Scrap",
-        "Decrease Stamina",
-        "Decrease Health",
-        "Increase Moon Prices",
-        "Decrease Carry Slot Number",
-        "Deal Player Damage"
+        NegativeEffect.DecreaseMovementSpeed,
+        NegativeEffect.StealCreditOrScrap,
+        NegativeEffect.DecreaseStamina,
+        NegativeEffect.DecreaseHealth,
+        NegativeEffect.IncreaseMoonPrices,
+        NegativeEffect.DecreaseCarrySlotNumber,
+        NegativeEffect.DealPlayerDamage
     };
 
     public void Awake()
@@ -103,8 +123,8 @@ public class Dealer : NetworkBehaviour
 
     public string GetStringEffects() {
         var random = new System.Random();
-        string positiveEffect = positiveEffects[random.Next(positiveEffects.Count)];
-        string negativeEffect = negativeEffects[random.Next(negativeEffects.Count)];
+        PositiveEffect positiveEffect = positiveEffects[random.Next(positiveEffects.Count)];
+        NegativeEffect negativeEffect = negativeEffects[random.Next(negativeEffects.Count)];
         
         return $"{positiveEffect} and {negativeEffect}";
     }
@@ -216,4 +236,56 @@ public class Dealer : NetworkBehaviour
         LogIfDebugBuild("DealPlayerDamage");
     }
     #endregion
+
+    private void ExecutePositiveEffect(PositiveEffect effect) {
+        switch (effect) {
+            case PositiveEffect.IncreaseMovementSpeed:
+                IncreaseMovementSpeed();
+                break;
+            case PositiveEffect.SpawnShotgunWithShells:
+                SpawnShotgunWithShellsServerRpc();
+                break;
+            case PositiveEffect.IncreaseStamina:
+                IncreaseStamina();
+                break;
+            case PositiveEffect.IncreaseHealth:
+                IncreaseHealth();
+                break;
+            case PositiveEffect.DecreaseMoonPrices:
+                DecreaseMoonPrices();
+                break;
+            case PositiveEffect.SpawnGoldBar:
+                SpawnGoldbarServerRpc();
+                break;
+            case PositiveEffect.IncreaseCarrySlotNumber:
+                IncreaseCarrySlotNumber();
+                break;
+        }
+    }
+
+    private void ExecuteNegativeEffect(NegativeEffect effect) {
+        switch (effect) {
+            case NegativeEffect.DecreaseMovementSpeed:
+                DecreaseMovementSpeed();
+                break;
+            case NegativeEffect.StealCreditOrScrap:
+                StealCreditOrScrapServerRpc();
+                break;
+            case NegativeEffect.DecreaseStamina:
+                DecreaseStamina();
+                break;
+            case NegativeEffect.DecreaseHealth:
+                DecreaseHealth();
+                break;
+            case NegativeEffect.IncreaseMoonPrices:
+                IncreaseMoonPrices();
+                break;
+            case NegativeEffect.DecreaseCarrySlotNumber:
+                DecreaseCarrySlotNumber();
+                break;
+            case NegativeEffect.DealPlayerDamage:
+                DealPlayerDamage();
+                break;
+        }
+    }
 }
