@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using CodeRebirth.Util.Spawning;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -17,8 +19,9 @@ public class Dealer : NetworkBehaviour
     public Renderer[] cardRenderers = null!;
     public ParticleSystem mainParticles = null!;
     public ParticleSystem[] handParticles = null!;
-    private PlayerControllerB? playerWhoInteracted = null;
     private bool dealMade = false;
+    private bool particlesEnabled = false;
+    private PlayerControllerB? playerWhoCanDoShit = null;
 
     public enum CardNumber {
         One,
@@ -46,7 +49,7 @@ public class Dealer : NetworkBehaviour
         DealPlayerDamage
     }
 
-    private Dictionary<CardNumber, string> cardValues = new Dictionary<CardNumber, string>();
+    private Dictionary<CardNumber, (PositiveEffect positive, NegativeEffect negative)> cardEffects = new Dictionary<CardNumber, (PositiveEffect, NegativeEffect)>();
 
     private List<PositiveEffect> positiveEffects = new List<PositiveEffect>
     {
@@ -70,11 +73,10 @@ public class Dealer : NetworkBehaviour
         NegativeEffect.DealPlayerDamage
     };
 
+    private System.Random random = new System.Random();
     public void Awake()
     {
-        cardValues.Add(CardNumber.One, "PlaceholderOne");
-        cardValues.Add(CardNumber.Two, "PlaceholderTwo");
-        cardValues.Add(CardNumber.Three, "PlaceholderThree");
+        random = new System.Random(StartOfRound.Instance.randomMapSeed);
         networkAnimator = GetComponent<NetworkAnimator>();
         animator = GetComponent<Animator>();
 
@@ -98,85 +100,132 @@ public class Dealer : NetworkBehaviour
     private void OnInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
+
+        HandleInteractionForPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void HandleInteractionForPlayerServerRpc(int playerThatInteracted) {
+        HandleInteractionForPlayerClientRpc(playerThatInteracted);
+    }
+
+    [ClientRpc]
+    public void HandleInteractionForPlayerClientRpc(int playerThatInteracted) {
         // enable 3 other card triggers.
+        playerWhoCanDoShit = StartOfRound.Instance.allPlayerScripts[playerThatInteracted];
         int index = 0;
         foreach (InteractTrigger cardTrigger in cardTriggers) {
             cardTrigger.interactable = true;
             switch (index) {
                 case 0:
-                    cardValues[CardNumber.One] = GetStringEffects();
+                    cardEffects[CardNumber.One] = GetCardEffects();
                     cardTrigger.onInteract.AddListener(Card1InteractionResult);
-                    cardTrigger.hoverTip = cardValues[CardNumber.One];
+                    cardTrigger.hoverTip = $"{cardEffects[CardNumber.One].positive} and {cardEffects[CardNumber.One].negative}";
                     break;
                 case 1:
-                    cardValues[CardNumber.Two] = GetStringEffects();
+                    cardEffects[CardNumber.Two] = GetCardEffects();
                     cardTrigger.onInteract.AddListener(Card2InteractionResult);
-                    cardTrigger.hoverTip = cardValues[CardNumber.Two];
+                    cardTrigger.hoverTip = $"{cardEffects[CardNumber.Two].positive} and {cardEffects[CardNumber.Two].negative}";
                     break;
                 case 2:
-                    cardValues[CardNumber.Three] = GetStringEffects();
+                    cardEffects[CardNumber.Three] = GetCardEffects();
                     cardTrigger.onInteract.AddListener(Card3InteractionResult);
-                    cardTrigger.hoverTip = cardValues[CardNumber.Three];
+                    cardTrigger.hoverTip = $"{cardEffects[CardNumber.Three].positive} and {cardEffects[CardNumber.Three].negative}";
                     break;
             }
             index++;
+            cardTrigger.interactable = true;
         }
         foreach (Renderer cardRenderer in cardRenderers) {
             cardRenderer.enabled = true;
         }
+
+        trigger.gameObject.SetActive(false);
     }
 
-    public string GetStringEffects() {
-        var random = new System.Random();
+
+    public (PositiveEffect positive, NegativeEffect negative) GetCardEffects() {
         PositiveEffect positiveEffect = positiveEffects[random.Next(positiveEffects.Count)];
         NegativeEffect negativeEffect = negativeEffects[random.Next(negativeEffects.Count)];
         
-        return $"{positiveEffect} and {negativeEffect}";
-    }
-
-    private void Card1InteractionResult(PlayerControllerB playerThatInteracted) {
-        StartInteractionAnimationServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
-    }
-
-    private void Card2InteractionResult(PlayerControllerB playerThatInteracted) {
-        StartInteractionAnimationServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
-    }
-
-    private void Card3InteractionResult(PlayerControllerB playerThatInteracted) {
-        StartInteractionAnimationServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
+        return (positiveEffect, negativeEffect);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void StartInteractionAnimationServerRpc(int playerThatInteracted)
-    {
-        LogIfDebugBuild("Interaction animation");
-        SetInteractPlayerClientRpc(playerThatInteracted);
-        networkAnimator.SetTrigger("devilHandsInteract");
-        // Run an animation event.
+    public void ThreeCardInteractionServerRpc(int cardPickedIndex) {
+        ThreeCardInteractionClientRpc(cardPickedIndex);
     }
 
     [ClientRpc]
-    private void SetInteractPlayerClientRpc(int playerThatInteracted)
-    {
-        LogIfDebugBuild($"SetInteractPlayerClientRpc: {playerThatInteracted}");
-        trigger.interactable = false;
-        playerWhoInteracted = StartOfRound.Instance.allPlayerScripts[playerThatInteracted];
-    }
-
-    private void InteractAnimationResult() { // Animation event
-        StartCoroutine(InteractionAnimation());
-        // start fire particles coming out from the devil, with an animation with some sounds and then a buff/debuff is dealt.
-    }
-
-    private IEnumerator InteractionAnimation() {
-        foreach (ParticleSystem particle in handParticles) {
-            particle.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.5f);
+    public void ThreeCardInteractionClientRpc(int cardPickedIndex) {
+        foreach (InteractTrigger cardTrigger in cardTriggers) {
+            cardTrigger.interactable = false;
         }
+        StartCoroutine(ThreeCardInteractionAnimation(cardPickedIndex));
+    }
 
-        mainParticles.gameObject.SetActive(true);
-        yield return new WaitUntil(() => mainParticles.isPlaying == false);
-        LogIfDebugBuild("Interaction animation done");
+    private void Card1InteractionResult(PlayerControllerB playerThatInteracted) {
+        if (playerThatInteracted != playerWhoCanDoShit) return;
+        ThreeCardInteractionServerRpc(0);
+        LogIfDebugBuild("Card1InteractionResult");
+    }
+
+    private void Card2InteractionResult(PlayerControllerB playerThatInteracted) {
+        if (playerThatInteracted != playerWhoCanDoShit) return;
+        ThreeCardInteractionServerRpc(1);
+        LogIfDebugBuild("Card2InteractionResult");
+    }
+
+    private void Card3InteractionResult(PlayerControllerB playerThatInteracted) {
+        if (playerThatInteracted != playerWhoCanDoShit) return;
+        ThreeCardInteractionServerRpc(2);
+        LogIfDebugBuild("Card3InteractionResult");
+    }
+
+    public void Update() {
+        bool withinDistance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) <= 10;
+        
+        if (withinDistance && !particlesEnabled && !dealMade) {
+            foreach (ParticleSystem particle in handParticles) {
+                particle.Play();
+            }
+            LogIfDebugBuild("Enabling hand particles");
+            particlesEnabled = true; // Update the state to enabled
+        } else if ((!withinDistance || dealMade) && particlesEnabled) {
+            foreach (ParticleSystem particle in handParticles) {
+                particle.Stop();
+            }
+            LogIfDebugBuild("Disabling hand particles");
+            particlesEnabled = false; // Update the state to disabled
+        }
+    }
+
+
+    private IEnumerator ThreeCardInteractionAnimation(int cardPickedIndex) {
+        
+        mainParticles.Play();
+
+        foreach (Renderer cardRenderer in cardRenderers) {
+            cardRenderer.material.color = Color.black;
+            cardRenderer.material.mainTexture = null;
+        }
+        yield return new WaitForSeconds(7f);
+        dealMade = true;
+        switch (cardPickedIndex) {
+            case 0:
+                ExecutePositiveEffect(cardEffects[CardNumber.One].positive);
+                ExecuteNegativeEffect(cardEffects[CardNumber.One].negative);
+                break;
+            case 1:
+                ExecutePositiveEffect(cardEffects[CardNumber.Two].positive);
+                ExecuteNegativeEffect(cardEffects[CardNumber.Two].negative);
+                break;
+            case 2:
+                ExecutePositiveEffect(cardEffects[CardNumber.Three].positive);
+                ExecuteNegativeEffect(cardEffects[CardNumber.Three].negative);
+                break;
+        }
+        LogIfDebugBuild("main particles animation done");
     }
 
     #region Good Deals
@@ -186,6 +235,14 @@ public class Dealer : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     public void SpawnShotgunWithShellsServerRpc() {
+        Item Shotgun = StartOfRound.Instance.allItemsList.itemsList.Where(x => x.itemName == "Shotgun").First();
+        GameObject spawned = Instantiate(Shotgun.spawnPrefab, transform.position + transform.up*1f + transform.forward* 1.5f, Quaternion.Euler(Shotgun.restingRotation), RoundManager.Instance.spawnedScrapContainer);
+
+        GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
+        
+        grabbableObject.SetScrapValue((int)(random.Next(Shotgun.minValue, Shotgun.maxValue) * RoundManager.Instance.scrapValueMultiplier));
+        grabbableObject.NetworkObject.Spawn();
+        CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
         LogIfDebugBuild("SpawnShotgunWithShellsServerRpc");
     }
 

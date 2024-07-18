@@ -393,7 +393,7 @@ public class Tornados : EnemyAI
 
         // Calculate the normalized distance and apply an exponential falloff
         float normalizedDistance = distance / maxDistance;
-        float strengthFalloff = Mathf.Pow(1 - normalizedDistance, 2); // Use an exponential falloff for smoother results
+        float strengthFalloff = (1-normalizedDistance)*(1-normalizedDistance); // Use an exponential falloff for smoother results
 
         // Calculate the pull strength based on the falloff
         float pullStrength = Mathf.Lerp(minStrength, maxStrength, strengthFalloff);
