@@ -20,11 +20,11 @@ public class MeteorShower : CodeRebirthWeathers {
     [Header("Time between Meteor Spawns")]
 	[SerializeField]
 	[Tooltip("Minimum Time between Meteor Spawns")]
-    private int minTimeBetweenSpawns = 1;
+    private float minTimeBetweenSpawns = 1;
     [Space(5f)]
     [SerializeField]
     [Tooltip("Maximum Time between Meteor Spawns")]
-    private int maxTimeBetweenSpawns = 3;
+    private float maxTimeBetweenSpawns = 3;
     [Space(5f)]
     [SerializeField]
     [Tooltip("Minimum Amount of Meteors per Spawn")]
@@ -53,6 +53,15 @@ public class MeteorShower : CodeRebirthWeathers {
 	
 	private void OnEnable() { // init weather
 		Plugin.Logger.LogInfo("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
+		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
+		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
+
+		if (minMeteorsPerSpawn > maxMeteorsPerSpawn) {
+			Plugin.Logger.LogWarning("Min Meteor Spawn Count is greater than Max Meteor Spawn Count. Swapping values.");
+			(int, int) temp = (minMeteorsPerSpawn, maxMeteorsPerSpawn);
+			minMeteorsPerSpawn = temp.Item2;
+			maxMeteorsPerSpawn = temp.Item1;
+		}
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
@@ -139,7 +148,7 @@ public class MeteorShower : CodeRebirthWeathers {
 				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
 				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
 			}
-			int delay = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
+			float delay = random.NextFloat(minTimeBetweenSpawns, maxTimeBetweenSpawns);
 			yield return new WaitForSeconds(delay);
 		}
 	}
@@ -173,7 +182,6 @@ public class MeteorShower : CodeRebirthWeathers {
 			Plugin.Logger.LogInfo("Target is zero, not spawning meteor");
 			return;
 		}
-		Plugin.Logger.LogInfo(direction.ToString());
 		Vector3 origin = new Vector3();
 		if (direction == Direction.Random) {
 			origin = target + new Vector3(

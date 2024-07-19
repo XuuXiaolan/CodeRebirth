@@ -35,6 +35,10 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
         // Weather Specific
+        public ConfigEntry<float> ConfigTornadoSpeed { get; private set; }
+        public ConfigEntry<float> ConfigMeteorSpeed { get; private set; }
+        public ConfigEntry<int> ConfigMinMeteorSpawnCount { get; private set; }
+        public ConfigEntry<int> ConfigMaxMeteorSpawnCount { get; private set; }
         public ConfigEntry<string> ConfigTornadoWeatherTypes { get; private set; }
         public ConfigEntry<float> ConfigTornadoInShipVolume { get; private set; }
         public ConfigEntry<float> ConfigTornadoDefaultVolume { get; private set; }
@@ -50,7 +54,35 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
-            
+
+            ConfigMaxMeteorSpawnCount = configFile.Bind("Meteor Options",
+                                                "Meteors | Max Spawn Count",
+                                                5,
+                                                new ConfigDescription(
+                                                    "Maximum number of meteors to spawn at once every spawn cycle.",
+                                                    new AcceptableValueRange<int>(0, 100)
+                                                ));
+            ConfigMinMeteorSpawnCount = configFile.Bind("Meteor Options",
+                                                "Meteors | Min Spawn Count",
+                                                1,
+                                                new ConfigDescription(
+                                                    "Minimum number of meteors to spawn at once every spawn cycle.",
+                                                    new AcceptableValueRange<int>(0, 100)
+                                                ));
+            ConfigMeteorSpeed = configFile.Bind("Meteor Options",
+                                                "Meteors | Speed",
+                                                50f,
+                                                new ConfigDescription(
+                                                    "Speed of meteors.",
+                                                    new AcceptableValueRange<float>(0, 1000f)
+                                                ));
+            ConfigTornadoSpeed = configFile.Bind("Tornado Options",
+                                                "Tornados | Speed",
+                                                5f,
+                                                new ConfigDescription(
+                                                    "Speed of tornados.",
+                                                    new AcceptableValueRange<float>(0, 100f)
+                                                ));
             ConfigEnableImperiumDebugs = configFile.Bind("Imperium Compatibility", 
                                                         "Enable Imperium Debugs",
                                                         false,

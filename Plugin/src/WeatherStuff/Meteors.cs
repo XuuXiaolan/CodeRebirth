@@ -45,6 +45,7 @@ public class Meteors : NetworkBehaviour {
         this.origin = origin;
         this.target = target;
         float distance = Vector3.Distance(origin, target);
+        initialSpeed = Plugin.ModConfig.ConfigMeteorSpeed.Value;
         travelTime = Mathf.Sqrt(2 * distance / initialSpeed);  // Time to reach the target, adjusted for acceleration
         isMoving = true;
         transform.LookAt(target);

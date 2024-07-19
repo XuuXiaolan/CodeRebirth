@@ -87,6 +87,7 @@ public class Tornados : EnemyAI
 #if DEBUG
         isDebugging = true;
 #endif
+        initialSpeed = Plugin.ModConfig.ConfigTornadoSpeed.Value;
         if (TornadoWeather.Instance != null) TornadoWeather.Instance.AddTornado(this);
         timeSinceBeingInsideTornado = 0;
         localPlayerController = GameNetworkManager.Instance.localPlayerController;
