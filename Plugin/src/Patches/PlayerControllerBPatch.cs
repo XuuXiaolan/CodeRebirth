@@ -1,11 +1,8 @@
 using System;
-using CodeRebirth.EnemyStuff;
 using CodeRebirth.Util.PlayerManager;
 using CodeRebirth.WeatherStuff;
 using GameNetcodeStuff;
 using HarmonyLib;
-using Unity.Netcode;
-using UnityEngine;
 
 namespace CodeRebirth.Patches;
 

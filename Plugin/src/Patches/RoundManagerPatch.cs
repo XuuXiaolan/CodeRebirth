@@ -27,7 +27,7 @@ static class RoundManagerPatch {
 		}
 	}
 	
-	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
+	/*[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	static void PatchFix_DespawnOldCrates() {
 		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>()) {
 			crate.NetworkObject.Despawn();
@@ -38,7 +38,7 @@ static class RoundManagerPatch {
 	[HarmonyPrefix]
 	public static void LoadNewLevelWaitPatch(RoundManager __instance)
 	{
-		if (__instance.currentLevel.levelID == 3)
+		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
 		{
 			Plugin.Logger.LogInfo("Spawning Devil deal objects");
 			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.SpawnDevilPropsServerRpc();
@@ -49,10 +49,10 @@ static class RoundManagerPatch {
 	[HarmonyPostfix]
 	public static void DespawnPropsAtEndOfRoundPatch(RoundManager __instance)
 	{
-		if (__instance.currentLevel.levelID == 3)
+		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
 		{
 			Plugin.Logger.LogInfo("Despawning Devil deal objects");
 			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.DespawnDevilPropsServerRpc();
 		}
-	}
+	}*/
 }

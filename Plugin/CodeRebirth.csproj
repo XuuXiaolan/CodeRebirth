@@ -46,7 +46,7 @@
 
   <ItemGroup>
     <Reference Include="giosuel.Imperium"><HintPath>../dlls/giosuel.Imperium.dll</HintPath></Reference>
-    <!-- <Reference Include="LethalLevelLoader"><HintPath>../dlls/LethalLevelLoader.dll</HintPath></Reference> -->
+    <Reference Include="LethalLevelLoader"><HintPath>../dlls/LethalLevelLoader.dll</HintPath></Reference>
   </ItemGroup>  
 
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
