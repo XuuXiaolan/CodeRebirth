@@ -45,7 +45,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
 
-		if (true) RegisterDevilDeal();
+		if (false) RegisterDevilDeal();
 	}
 
 	public void RegisterInsideMoney() {

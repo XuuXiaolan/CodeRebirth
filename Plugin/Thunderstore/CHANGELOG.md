@@ -3,6 +3,10 @@
 - Added tornado volume in ship config.
 - Added cutiefly flap sound volume config.
 - Fixed Snailcat and Cutiefly flying routes.
+- Improved tornado looks.
+- Windy tornado can now throw the player.
+- Added more weapons.
+- Added a... jetpack park in the company.
 
 ## v0.2.2
 - Fixed Snowglobe animations.
