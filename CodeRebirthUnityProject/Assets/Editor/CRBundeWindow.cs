@@ -143,7 +143,7 @@ public class CRBundeWindow : EditorWindow {
         BuildPipeline.BuildAssetBundles(buildOutputPath, bundleBuilds, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
         
         Debug.Log("Performing cleanup.");
-        
+        Refresh();
         string directoryName = Path.GetFileName(buildOutputPath);
         string emptyBundlePath = Path.Combine(buildOutputPath, directoryName);
         if (File.Exists(emptyBundlePath))

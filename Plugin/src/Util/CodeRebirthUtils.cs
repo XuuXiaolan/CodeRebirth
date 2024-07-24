@@ -60,7 +60,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             if (netObj.TryGetComponent(out GrabbableObject grabbableObject)) {
                 grabbableObject.SetScrapValue(value);
             }
-            var scanNode = netObj.GetComponentInChildren<ScanNodeProperties>();
+            var scanNode = netObj.gameObject.GetComponentInChildren<ScanNodeProperties>();
             scanNode.scrapValue = value;
             scanNode.subText = $"Value: ${value}";
         }

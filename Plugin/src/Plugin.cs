@@ -16,18 +16,22 @@ using CodeRebirth.Dependency;
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
-[BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(Imperium.PluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("Surfaced", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("MoreShipUpgrades", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] // todo: soft depend on subtitles api and add support.
+[BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger = null!;
     private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
-    
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
     internal static bool ImperiumIsOn = false;
     internal static bool SurfacedIsOn = false;
+    internal static bool WeatherRegistryIsOn = false;
+    internal static bool LGUIsOn = false;
+    internal static bool SubtitlesAPIIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
@@ -36,18 +40,6 @@ public class Plugin : BaseUnityPlugin {
     internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName) {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
         public GameObject UtilsPrefab { get; private set; } = null!;
-        [LoadFromBundle("WaterPlayerParticles.prefab")]
-        public GameObject WaterPlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("WindPlayerParticles.prefab")]
-        public GameObject WindPlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("SmokePlayerParticles.prefab")]
-        public GameObject SmokePlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("FirePlayerParticles.prefab")]
-        public GameObject FirePlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("ElectricPlayerParticles.prefab")]
-        public GameObject ElectricPlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("BloodPlayerParticles.prefab")]
-        public GameObject BloodPlayerParticles { get; private set; } = null!;
     }
     
     private void Awake() {
@@ -61,6 +53,20 @@ public class Plugin : BaseUnityPlugin {
             SurfacedCompatibilityChecker.Init();
         }
         
+        if (WeatherRegistryCompatibilityChecker.Enabled) {
+            WeatherRegistryCompatibilityChecker.Init();
+        } else {
+            Plugin.Logger.LogWarning("Weather registry not found. Custom Weathers will not be activated.");
+        }
+
+        if (LGUCompatibilityChecker.Enabled) {
+            LGUCompatibilityChecker.Init();
+        }
+
+        if (SubtitlesAPICompatibilityChecker.Enabled) {
+            SubtitlesAPICompatibilityChecker.Init();
+        }
+
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
         // This should be ran before Network Prefabs are registered.
@@ -93,7 +99,6 @@ public class Plugin : BaseUnityPlugin {
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
         if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
-        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Piggy.PiggyVarietyMod")) Logger.LogFatal("You are using a mod (Piggy's Variety mod) that breaks the player animator and the snow globe will not work properly with this mod, you have been warned.");
     }
 
     private void InitializeNetworkBehaviours() {

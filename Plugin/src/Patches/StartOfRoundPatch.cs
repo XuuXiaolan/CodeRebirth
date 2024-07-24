@@ -27,9 +27,7 @@ static class StartOfRoundPatch {
 	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
-		foreach (PlayerControllerB player in __instance.allPlayerScripts) {
-			player.gameObject.AddComponent<CodeRebirthPlayerManager>();
-		}
+		
 	}
 	
 	[HarmonyPatch(nameof(StartOfRound.OnDisable))]
@@ -52,6 +50,7 @@ static class StartOfRoundPatch {
 				GameObject utilsInstance = GameObject.Instantiate(Plugin.Assets.UtilsPrefab);
 				SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
 				utilsInstance.GetComponent<NetworkObject>().Spawn();
+				utilsInstance.AddComponent<CodeRebirthPlayerManager>();
 				Plugin.Logger.LogInfo($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
 			} else {
 				Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");

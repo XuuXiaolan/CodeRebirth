@@ -239,7 +239,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (targetPlayer == null) return;
         if (currentBehaviourStateIndex == (int)State.ChasingPlayer)
         {
-            if (velocity >= 20)
+            if (velocity >= 18)
             {
                 LogIfDebugBuild("Velocity too high: " + velocity.ToString());
                 // Check for wall collision

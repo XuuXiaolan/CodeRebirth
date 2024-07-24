@@ -24,6 +24,9 @@ public class TornadoWeather : CodeRebirthWeathers {
 
 	private void OnEnable() { // init weather
 		Plugin.Logger.LogInfo("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name);
+		RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount -= 3, 0, 999);
+		RoundManager.Instance.currentLevel.maxEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxEnemyPowerCount += 3, 0, 999);
+		RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount -= 3, 0, 999);
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();

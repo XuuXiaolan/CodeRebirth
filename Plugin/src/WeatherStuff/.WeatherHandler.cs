@@ -36,6 +36,19 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     }
 
     public class TornadoAssets(string bundleName) : AssetBundleLoader<TornadoAssets>(bundleName) {
+        [LoadFromBundle("WaterPlayerParticles.prefab")]
+        public GameObject WaterPlayerParticles { get; private set; } = null!;
+        [LoadFromBundle("WindPlayerParticles.prefab")]
+        public GameObject WindPlayerParticles { get; private set; } = null!;
+        [LoadFromBundle("SmokePlayerParticles.prefab")]
+        public GameObject SmokePlayerParticles { get; private set; } = null!;
+        [LoadFromBundle("FirePlayerParticles.prefab")]
+        public GameObject FirePlayerParticles { get; private set; } = null!;
+        [LoadFromBundle("ElectricPlayerParticles.prefab")]
+        public GameObject ElectricPlayerParticles { get; private set; } = null!;
+        [LoadFromBundle("BloodPlayerParticles.prefab")]
+        public GameObject BloodPlayerParticles { get; private set; } = null!;
+        
         [LoadFromBundle("TornadoMain.prefab")]
         public GameObject TornadoPrefab { get; private set; } = null!;
         
@@ -52,8 +65,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     public Weather TornadoesWeather { get; private set; } = null!;
 
     public WeatherHandler() {
-        if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
-        if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
+        if (Plugin.WeatherRegistryIsOn && Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
+        if (Plugin.WeatherRegistryIsOn && Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
     }
 
     private void RegisterTornadoWeather() {

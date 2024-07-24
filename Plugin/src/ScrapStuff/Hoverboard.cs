@@ -252,7 +252,7 @@ public class Hoverboard : GrabbableObject, IHittable {
     private void HandleMovement() {
         if (playerControlling == null) return;
         Vector3 forceDirection = Vector3.zero;
-        float moveForce = 75f;
+        float moveForce = 300f;
 
         if (Plugin.InputActionsInstance.HoverLeft.WasPressedThisFrame())
             forceDirection += hoverboardChild.forward;
@@ -269,7 +269,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (Plugin.InputActionsInstance.HoverUp.WasPressedThisFrame() && jumpCooldown) {
             jumpCooldown = false;
             forceDirection += hoverboardChild.up;
-            moveForce = 1000f;
+            moveForce = 1500f;
             StartCoroutine(JumpTimerStart());
         }
 
@@ -287,7 +287,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
             float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 3f : 100f);
             // Debug log for force and anchor positions
-            hb.AddForceAtPosition(hoverboardChild.up * force * mult, anchor.position, ForceMode.Acceleration);
+            hb.AddForceAtPosition(hoverboardChild.up * force * mult * 2f, anchor.position, ForceMode.Acceleration);
         }
     }
 
@@ -325,8 +325,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (IsServer) {
             networkObject.ChangeOwnership(playerControlling.actualClientId);
         }
-        CodeRebirthPlayerManager localPlayerManager = playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>();
-        if (playerControlling == GameNetworkManager.Instance.localPlayerController && !localPlayerManager.ItemUsages[CodeRebirthItemUsages.Hoverboard]) {
+        if (playerControlling == GameNetworkManager.Instance.localPlayerController && !CodeRebirthPlayerManager.dataForPlayer[playerControlling].ridingHoverboard) {
             DialogueSegment dialogue = new DialogueSegment {
                     speakerText = "Hoverboard Tooltips",
                     bodyText = "C to Drop, E to Mount, F to Switch between Held and Mounted mode, Space to Jump, Shift to activate Boost.",
@@ -334,7 +333,7 @@ public class Hoverboard : GrabbableObject, IHittable {
             };
             HUDManager.Instance.ReadDialogue([dialogue]);
         }
-        localPlayerManager.ItemUsages[CodeRebirthItemUsages.Hoverboard] = true;
+        CodeRebirthPlayerManager.dataForPlayer[playerControlling].ridingHoverboard = true;
         playerControlling.transform.position = hoverboardSeat.transform.position;
         playerControlling.transform.rotation = hoverboardSeat.transform.rotation * Quaternion.Euler(0, 90, 0);
         Plugin.Logger.LogInfo($"{this} setting target to: {playerControlling.playerUsername}");
@@ -408,7 +407,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         // Debug log for position and rotation
         playerCurrentlyControlling.transform.SetParent(hoverboardSeat.transform, true);
-        playerCurrentlyControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = true;
+        CodeRebirthPlayerManager.dataForPlayer[playerCurrentlyControlling].ridingHoverboard = true;
         hoverboardMode = HoverboardMode.Mounted;
         if (!collidersIgnored) SetupCollidersIgnoringOrIncluding(true);
         playerCurrentlyControlling.playerActions.Movement.Look.Disable();
@@ -433,7 +432,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (IsServer) {
             this.transform.SetParent(playerCurrentlyControlling.transform, true);
         }
-        playerCurrentlyControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = false;
+        CodeRebirthPlayerManager.dataForPlayer[playerCurrentlyControlling].ridingHoverboard = false;
         hoverboardMode = HoverboardMode.Held;
         playerCurrentlyControlling.playerActions.Movement.Look.Enable();
         playerCurrentlyControlling.playerActions.Movement.Jump.Enable();
@@ -457,7 +456,7 @@ public class Hoverboard : GrabbableObject, IHittable {
             }
         }
         if (collidersIgnored) SetupCollidersIgnoringOrIncluding(false);
-        if (playerControlling != null) playerControlling.gameObject.GetComponent<CodeRebirthPlayerManager>().ridingHoverboard = false;
+        if (playerControlling != null) CodeRebirthPlayerManager.dataForPlayer[playerControlling].ridingHoverboard = false;
         turnedOn = false;
         _isHoverForwardHeld = false;
         hb.useGravity = true;

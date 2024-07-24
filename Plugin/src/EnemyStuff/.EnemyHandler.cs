@@ -51,15 +51,37 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         public Item GoldenEggItem { get; private set; } = null!;
     }
 
+    public class RedwoodGiantAssets(string bundleName) : AssetBundleLoader<RedwoodGiantAssets>(bundleName) {
+        [LoadFromBundle("RedwoodGiantObj.asset")]
+        public EnemyType RedwoodGiantEnemyType { get; private set; } = null!;
+
+        [LoadFromBundle("RedwoodGiantTN.asset")]
+        public TerminalNode RedwoodGiantTerminalNode { get; private set; } = null!;
+
+        [LoadFromBundle("RedwoodGiantTK.asset")]
+        public TerminalKeyword RedwoodGiantTerminalKeyword { get; private set; } = null!;
+        
+        [LoadFromBundle("RedwoodHeart.asset")]
+        public Item RedwoodHeart { get; private set; } = null!;
+
+        [LoadFromBundle("RedwoodWhistle.asset")]
+        public Item RedwoodWhistle { get; private set; } = null!;
+    }
     public ButterflyAssets Butterfly { get; private set; } = null!;
     public SnailCatAssets SnailCat { get; private set; } = null!;
     // public ScrapMasterAssets ScrapMaster { get; private set; }
     public PjonkGooseAssets PjonkGoose { get; private set; } = null!;
+    public RedwoodGiantAssets RedwoodGiant { get; private set; } = null!;
 
     public EnemyHandler() {
         // ScrapMaster = new ScrapMasterAssets("coderebirthasset");
         // Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
+        if (false) {
+            RedwoodGiant = new RedwoodGiantAssets("redwoodgiantassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodGiant.RedwoodGiantEnemyType, RedwoodGiant.RedwoodGiantTerminalNode, RedwoodGiant.RedwoodGiantTerminalKeyword, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
+            Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodGiant.RedwoodHeart);
+        }
         if (Plugin.ModConfig.ConfigCutieFlyEnabled.Value) {
             Butterfly = new ButterflyAssets("cutieflyassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Butterfly.ButterflyEnemyType, Butterfly.ButterflyTerminalNode, Butterfly.ButterflyTerminalKeyword, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);

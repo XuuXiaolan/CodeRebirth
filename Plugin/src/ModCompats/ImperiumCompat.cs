@@ -9,4 +9,4 @@ public static class ImperiumCompatibilityChecker {
         Plugin.Logger.LogInfo("No way imperium is on?!");
         Plugin.ImperiumIsOn = true;
     }
-}
+} // tbd.

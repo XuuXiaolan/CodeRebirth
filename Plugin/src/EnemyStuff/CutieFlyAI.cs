@@ -43,6 +43,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     public override void Update() {
         base.Update();
         if (isEnemyDead) return;
+        creatureSFX.volume = Plugin.ModConfig.ConfigCutieFlyFlapWingVolume.Value;
         UpdateBlendShapeWeight();
     }
 

@@ -28,6 +28,21 @@ public class ItemHandler : ContentHandler<ItemHandler> {
         public Item EpicAxeItem { get; private set; } = null!;
     }
 
+    public class NaturesMaceAssets(string bundleName) : AssetBundleLoader<NaturesMaceAssets>(bundleName) {
+        [LoadFromBundle("NaturesMaceObj.asset")]
+        public Item NatureMaceItem { get; private set; } = null!;
+    }
+
+    public class IcyHammerAssets(string bundleName) : AssetBundleLoader<IcyHammerAssets>(bundleName) {
+        [LoadFromBundle("IcyHammerObj.asset")]
+        public Item IcyHammerItem { get; private set; } = null!;
+    }
+
+    public class SpikyMaceAssets(string bundleName) : AssetBundleLoader<SpikyMaceAssets>(bundleName) {
+        [LoadFromBundle("SpikyMaceObj.asset")]
+        public Item SpikyMaceItem { get; private set; } = null!;
+    }
+
     public class SnowGlobeAssets(string bundleName) : AssetBundleLoader<SnowGlobeAssets>(bundleName) {
         [LoadFromBundle("SnowGlobeObj.asset")]
         public Item SnowGlobeItem { get; private set; } = null!;
@@ -37,6 +52,9 @@ public class ItemHandler : ContentHandler<ItemHandler> {
     public HoverboardAssets Hoverboard { get; private set; } = null!;
     public EpicAxeAssets EpicAxe { get; private set; } = null!;
     public SnowGlobeAssets SnowGlobe { get; private set; } = null!;
+    public NaturesMaceAssets NaturesMace { get; private set; } = null!;
+    public IcyHammerAssets IcyHammer { get; private set; } = null!;
+    public SpikyMaceAssets SpikyMace { get; private set; } = null!;
 
     public ItemHandler() {
 
@@ -59,6 +77,21 @@ public class ItemHandler : ContentHandler<ItemHandler> {
         if (Plugin.ModConfig.ConfigSnowGlobeEnabled.Value) {
             SnowGlobe = new SnowGlobeAssets("snowglobeassets");
             RegisterScrapWithConfig(Plugin.ModConfig.ConfigSnowGlobeSpawnWeights.Value, SnowGlobe.SnowGlobeItem);
+        }
+
+        if (Plugin.ModConfig.ConfigNaturesMaceScrapEnabled.Value) {
+            NaturesMace = new NaturesMaceAssets("naturesmaceassets");
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigNaturesMaceScrapSpawnWeights.Value, NaturesMace.NatureMaceItem);
+        }
+
+        if (Plugin.ModConfig.ConfigIcyHammerScrapEnabled.Value) {
+            IcyHammer = new IcyHammerAssets("icyhammerassets");
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigIcyHammerScrapSpawnWeights.Value, IcyHammer.IcyHammerItem);
+        }
+
+        if (Plugin.ModConfig.ConfigSpikyMaceScrapEnabled.Value) {
+            SpikyMace = new SpikyMaceAssets("spikymaceassets");
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigSpikyMaceScrapSpawnWeights.Value, SpikyMace.SpikyMaceItem);
         }
     }
 }

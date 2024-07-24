@@ -6,7 +6,25 @@
 - Improved tornado looks.
 - Windy tornado can now throw the player.
 - Added more weapons.
-- Added a... jetpack park in the company.
+- Added compatibility with Surfaced.
+- Fixed hoverboard.
+- Buffed hoverboard.
+- Added compatibility with subtitles API.
+- Added 3 new weapons.
+- Added compatibility with LGU with hunter upgrade.
+- Added redwood and driftwood to coderebirth, revamped, new animations, etc.
+- Added 2 new gems in the meteor shower and made them more common.
+- Water tornado now drowns you.
+- Made weather registry a soft compatibility (required to install but can disable).
+- Hopefully Sync'd some issues with particles when near a tornado.
+- Fixed tornado math pulling you when you're further away.
+- Blood tornado either heals or damages you now randomly.
+- Fire tornado would get weaker when you're on 20 or lower hp.
+- Electric tornado gives a bigger speed boost.
+- Balanced and made tornados weaker overall.
+- Made tornados much faster and properly move around.
+- Tornado weather now decreases total outside power level by 3 and inside by 3.
+- Meteor shower weather now decreases total outside power level by 3 and inside by 3.
 
 ## v0.2.2
 - Fixed Snowglobe animations.

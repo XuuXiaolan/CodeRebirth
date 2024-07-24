@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
-using static CodeRebirth.WeatherStuff.TornadoWeather;
-
 
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
         // Enables/Disables
+        public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
+        public ConfigEntry<bool> ConfigRedwoodEnabled { get; private set; }
         public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
         public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
         public ConfigEntry<bool> ConfigWesleyModeEnabled { get; private set; }
@@ -21,7 +21,14 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigItemCrateEnabled { get; private set; }
         public ConfigEntry<bool> ConfigSnowGlobeEnabled { get; private set; }
         public ConfigEntry<bool> ConfigMoneyEnabled { get; private set; }
+        public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
+        public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
+        public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
         // Spawn Weights
+        public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
+        public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
+        public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
+        public ConfigEntry<string> ConfigRedwoodSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigSnailCatSpawnWeights { get; private set; }
         public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
         public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
@@ -29,12 +36,22 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigCrateAbundance { get; private set; }
         public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
         // Enemy Specific
+        public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
+        public ConfigEntry<float> ConfigRedwoodPowerLevel { get; private set; }
+        public ConfigEntry<int> ConfigRedwoodMaxSpawnCount { get; private set; }
+        public ConfigEntry<float> ConfigRedwoodInShipVolume { get; private set; }
+        public ConfigEntry<float> ConfigRedwoodSpeed { get; private set; }
+        public ConfigEntry<float> ConfigRedwoodShipPadding { get; private set; }
+        public ConfigEntry<float> ConfigRedwoodEyesight { get; private set; }
+        public ConfigEntry<bool> ConfigRedwoodCanEatOldBirds { get; private set; }
         public ConfigEntry<float> ConfigCutieFlyFlapWingVolume { get; private set; }
         public ConfigEntry<int> ConfigCutieFlyMaxSpawnCount { get; private set; }
         public ConfigEntry<int> ConfigSnailCatMaxSpawnCount { get; private set; }
         public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
+
         // Weather Specific
+        public ConfigEntry<string> ConfigTornadoCanFlyYouAwayWeatherTypes { get; private set; }
         public ConfigEntry<float> ConfigTornadoSpeed { get; private set; }
         public ConfigEntry<float> ConfigMeteorSpeed { get; private set; }
         public ConfigEntry<int> ConfigMinMeteorSpawnCount { get; private set; }
@@ -55,6 +72,99 @@ namespace CodeRebirth.Configs {
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
 
+            ConfigTornadoCanFlyYouAwayWeatherTypes = configFile.Bind("Tornado Options",
+                                                "Tornado | Can Fly You Away Weather Types",
+                                                "All",
+                                                "Tornado weather types that can fly you away (All, or specify per weather type like so: Fire,Electric,etc).");
+            ConfigNaturesMaceScrapEnabled = configFile.Bind("NatureMace Options",
+                                                "Natures Mace | Scrap Enabled",
+                                                true,
+                                                "Whether Natures Mace scrap is enabled.");
+            ConfigIcyHammerScrapEnabled = configFile.Bind("Icy Hammer Options",
+                                                "Icy Hammer | Scrap Enabled",
+                                                true,
+                                                "Whether Icy Hammer scrap is enabled.");
+            ConfigSpikyMaceScrapEnabled = configFile.Bind("Spiky Mace Options",
+                                                "Spiky Mace | Scrap Enabled",
+                                                true,
+                                                "Whether Spiky Mace scrap is enabled.");
+            ConfigNaturesMaceScrapSpawnWeights = configFile.Bind("NatureMace Options",
+                                                "Natures Mace | Scrap Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "Natures Mace scrap spawn weights.");
+            ConfigIcyHammerScrapSpawnWeights = configFile.Bind("Icy Hammer Options",
+                                                "Icy Hammer | Scrap Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "Icy Hammer scrap spawn weights.");
+            ConfigSpikyMaceScrapSpawnWeights = configFile.Bind("Spiky Mace Options",
+                                                "Spiky Mace | Scrap Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "Spiky Mace scrap spawn weights.");
+            ConfigRedwoodCanEatOldBirds = configFile.Bind("Redwood Options",
+                                                "Redwood | Can Eat Old Birds",
+                                                true,
+                                                "Whether redwood can eat old birds.");
+            ConfigRedwoodMaxSpawnCount = configFile.Bind("Redwood Options",
+                                                "Redwood | Max Spawn Count",
+                                                5,
+                                                new ConfigDescription(
+                                                    "Redwood max spawn count.",
+                                                    new AcceptableValueRange<int>(0, 99)
+                                                ));
+            ConfigRedwoodPowerLevel = configFile.Bind("Redwood Options",
+                                                "Redwood | Power Level",
+                                                3f,
+                                                new ConfigDescription(
+                                                    "Redwood power level.",
+                                                    new AcceptableValueRange<float>(0, 999f)
+                                                ));
+            ConfigRedwoodShipPadding = configFile.Bind("Redwood Options",
+                                                "Redwood | Ship Padding",
+                                                15f,
+                                                new ConfigDescription(
+                                                    "How far away the redwood usually stays from the ship.",
+                                                    new AcceptableValueRange<float>(0, 999f)
+                                                ));
+            ConfigRedwoodSpawnWeights = configFile.Bind("Redwood Options",
+                                                "Redwood | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "Redwood spawn weights.");
+            ConfigRedwoodSpeed = configFile.Bind("Redwood Options",
+                                                "Redwood | Speed",
+                                                5f,
+                                                new ConfigDescription(
+                                                    "Redwood speed.",
+                                                    new AcceptableValueRange<float>(0, 999f)
+                                                ));
+            ConfigRedwoodEnabled = configFile.Bind("Redwood Options",
+                                                "Redwood | Enabled",
+                                                true,
+                                                "Whether redwood is enabled.");
+            ConfigRedwoodEyesight = configFile.Bind("Redwood Options",
+                                                "Redwood | Eyesight",
+                                                40f,
+                                                new ConfigDescription(
+                                                    "Redwood eyesight.",
+                                                    new AcceptableValueRange<float>(0, 999f)
+                                                ));
+            ConfigRedwoodNormalVolume = configFile.Bind("Redwood Options",
+                                                "Redwood | Normal Volume",
+                                                1f,
+                                                new ConfigDescription(
+                                                    "Redwood Normal volume.",
+                                                    new AcceptableValueRange<float>(0, 1f)
+                                                ));
+            ConfigRedwoodHeartEnabled = configFile.Bind("Redwood Options",
+                                                "Redwood | Heart Enabled",
+                                                true,
+                                                "Whether redwood heart is enabled.");
+            ConfigRedwoodInShipVolume = configFile.Bind("Redwood Options",
+                                                "Redwood | In Ship Volume",
+                                                0.75f,
+                                                new ConfigDescription(
+                                                    "Redwood in ship volume.",
+                                                    new AcceptableValueRange<float>(0, 1f)
+                                                ));
             ConfigMaxMeteorSpawnCount = configFile.Bind("Meteor Options",
                                                 "Meteors | Max Spawn Count",
                                                 5,
@@ -132,7 +242,7 @@ namespace CodeRebirth.Configs {
                                                 "MeteorShower | Meteor Volume",
                                                 1f,
 												new ConfigDescription(
-													"Multiplier of the meteors' volume for when the player is in the ship and the ship door is closed.", 
+													"Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.", 
 													new AcceptableValueRange<float>(0, 1f)
 												));
             ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",

@@ -55,7 +55,9 @@ public class MeteorShower : CodeRebirthWeathers {
 		Plugin.Logger.LogInfo("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
 		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
 		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
-
+		RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount -= 3, 0, 999);
+		RoundManager.Instance.currentLevel.maxEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxEnemyPowerCount += 3, 0, 999);
+		RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount -= 3, 0, 999);
 		if (minMeteorsPerSpawn > maxMeteorsPerSpawn) {
 			Plugin.Logger.LogWarning("Min Meteor Spawn Count is greater than Max Meteor Spawn Count. Swapping values.");
 			(int, int) temp = (minMeteorsPerSpawn, maxMeteorsPerSpawn);
