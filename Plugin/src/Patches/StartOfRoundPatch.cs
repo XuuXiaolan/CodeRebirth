@@ -1,4 +1,5 @@
-﻿using CodeRebirth.Util.Spawning;
+﻿using CodeRebirth.Dependency;
+using CodeRebirth.Util.Spawning;
 using CodeRebirth.Util.Extensions;
 using CodeRebirth.WeatherStuff;
 using HarmonyLib;
@@ -7,6 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using GameNetcodeStuff;
 using CodeRebirth.Util.PlayerManager;
+using WeatherRegistry;
 
 namespace CodeRebirth.Patches;
 
@@ -40,6 +42,11 @@ static class StartOfRoundPatch {
 		if (TornadoWeather.Active) {
 			WeatherHandler.Instance.TornadoesWeather.Effect.DisableEffect();
 		}
+	}
+
+	[HarmonyPatch(nameof(StartOfRound.ArriveAtLevel)), HarmonyPostfix]
+	static void DisplayWindyWarning(StartOfRound __instance) {
+		if(WeatherRegistryCompatibilityChecker.Enabled)	WeatherRegistryCompatibilityChecker.DisplayWindyWarning();
 	}
 	
 	private static void CreateNetworkManager()
