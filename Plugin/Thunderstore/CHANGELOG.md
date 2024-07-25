@@ -9,9 +9,8 @@
 - Added compatibility with Surfaced.
 - Fixed hoverboard.
 - Buffed hoverboard.
-- Added compatibility with subtitles API.
+- Added compatibility with subtitles API (may not work for some reason).
 - Added 3 new weapons.
-- Added compatibility with LGU with hunter upgrade.
 - Added redwood and driftwood to coderebirth, revamped, new animations, etc.
 - Added 2 new gems in the meteor shower and made them more common.
 - Water tornado now drowns you.
@@ -25,6 +24,7 @@
 - Made tornados much faster and properly move around.
 - Tornado weather now decreases total outside power level by 3 and inside by 3.
 - Meteor shower weather now decreases total outside power level by 3 and inside by 3.
+- Made enemies rideable.
 
 ## v0.2.2
 - Fixed Snowglobe animations.

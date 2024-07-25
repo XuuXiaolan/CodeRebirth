@@ -27,14 +27,14 @@ static class RoundManagerPatch {
 		}
 	}
 	
-	/*[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
+	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	static void PatchFix_DespawnOldCrates() {
 		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>()) {
 			crate.NetworkObject.Despawn();
 		}
 	}
 
-	[HarmonyPatch("LoadNewLevelWait")]
+	/*[HarmonyPatch("LoadNewLevelWait")]
 	[HarmonyPrefix]
 	public static void LoadNewLevelWaitPatch(RoundManager __instance)
 	{

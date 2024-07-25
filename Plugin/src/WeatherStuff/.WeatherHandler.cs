@@ -95,6 +95,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     private void RegisterMeteorShower() {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
         Plugin.samplePrefabs.Add("Meteorite", Meteorite.MeteoriteItem);
+        RegisterScrapWithConfig("All:0", Meteorite.MeteoriteItem);
 
         GameObject effectObject = GameObject.Instantiate(Meteorite.MeteorEffectPrefab);
         effectObject.hideFlags = HideFlags.HideAndDontSave;

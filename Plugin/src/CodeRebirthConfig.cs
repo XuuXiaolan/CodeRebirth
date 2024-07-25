@@ -75,7 +75,7 @@ namespace CodeRebirth.Configs {
             ConfigTornadoCanFlyYouAwayWeatherTypes = configFile.Bind("Tornado Options",
                                                 "Tornado | Can Fly You Away Weather Types",
                                                 "All",
-                                                "Tornado weather types that can fly you away (All, or specify per weather type like so: Fire,Electric,etc).");
+                                                "Tornado weather types that can fly you away (All, or specify per weather type like so: Fire,Electric,etc except water!!).");
             ConfigNaturesMaceScrapEnabled = configFile.Bind("NatureMace Options",
                                                 "Natures Mace | Scrap Enabled",
                                                 true,

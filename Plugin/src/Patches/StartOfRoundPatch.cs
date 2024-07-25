@@ -14,16 +14,6 @@ namespace CodeRebirth.Patches;
 
 [HarmonyPatch(typeof(StartOfRound))]
 static class StartOfRoundPatch {
-	[HarmonyPrefix]
-	[HarmonyPatch(nameof(StartOfRound.Start))]
-	static void RegisterScraps() {
-		foreach (var item in Plugin.samplePrefabs.Values) {
-			if (!StartOfRound.Instance.allItemsList.itemsList.Contains(item)) {
-				StartOfRound.Instance.allItemsList.itemsList.Add(item);
-			}
-		}
-	}
-	
 	[HarmonyPatch(nameof(StartOfRound.Awake))]
 	[HarmonyPostfix]
 	public static void StartOfRound_Awake(ref StartOfRound __instance)

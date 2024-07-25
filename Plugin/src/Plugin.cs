@@ -12,6 +12,7 @@ using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
 using CodeRebirth.Util.Extensions;
 using CodeRebirth.Dependency;
+using CodeRebirth.Patches;
 
 namespace CodeRebirth;
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -69,6 +70,7 @@ public class Plugin : BaseUnityPlugin {
 
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
+        PlayerControllerBPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");
@@ -88,6 +90,7 @@ public class Plugin : BaseUnityPlugin {
         foreach(Type type in creatureHandlers) {
             type.GetConstructor([]).Invoke([]);
         }
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
 
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
     }
@@ -98,7 +101,6 @@ public class Plugin : BaseUnityPlugin {
         }
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
-        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
     }
 
     private void InitializeNetworkBehaviours() {
