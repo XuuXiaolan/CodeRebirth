@@ -16,6 +16,7 @@ public class MarkChangedBundles : AssetPostprocessor {
                 if(settings.changedSinceLastBuild) continue;
                 Debug.Log($"Bundle: {settings.BundleName} has unbuilt changes.");
                 settings.changedSinceLastBuild = true;
+                EditorPrefs.SetBool($"{settings.BundleName}_changed", true);
             }
         }
     }

@@ -98,10 +98,7 @@ public class CRBundeWindow : EditorWindow {
             }
 
             EditorGUILayout.LabelField("Total Size", GetReadableFileSize(bundle.totalSize));
-            if(bundle.lastBuildSize != bundle.totalSize)
-                EditorGUILayout.LabelField("Previous Total Size", GetReadableFileSize(bundle.lastBuildSize));
-            else
-                EditorGUILayout.LabelField("Previous Total Size", "N/A");
+            EditorGUILayout.LabelField("Previous Total Size", GetReadableFileSize(bundle.lastBuildSize));
             EditorGUILayout.LabelField("Built Bundle Size", GetReadableFileSize(bundle.builtBundleSize));
             
             if (buildOnlyChanged) GUI.enabled = false;
