@@ -1,3 +1,4 @@
+using CodeRebirth;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -68,7 +69,7 @@ public class WanderingCreatureController : NetworkBehaviour
 
         if (ambientAudioSource == null || walkingAudioSource == null)
         {
-            Debug.LogError("WaderingCreatureController: One or both AudioSource components are not assigned!");
+            // Plugin.Logger.LogDebug("WaderingCreatureController: One or both AudioSource components are not assigned!");
             return;
         }
 

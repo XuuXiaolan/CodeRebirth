@@ -100,7 +100,7 @@ namespace CodeRebirth.Configs {
                                                 "Spiky Mace | Scrap Spawn Weights",
                                                 "Modded:50,Vanilla:50",
                                                 "Spiky Mace scrap spawn weights.");
-            ConfigRedwoodCanEatOldBirds = configFile.Bind("Redwood Options",
+            /*ConfigRedwoodCanEatOldBirds = configFile.Bind("Redwood Options",
                                                 "Redwood | Can Eat Old Birds",
                                                 true,
                                                 "Whether redwood can eat old birds.");
@@ -164,22 +164,22 @@ namespace CodeRebirth.Configs {
                                                 new ConfigDescription(
                                                     "Redwood in ship volume.",
                                                     new AcceptableValueRange<float>(0, 1f)
-                                                ));
-            ConfigMaxMeteorSpawnCount = configFile.Bind("Meteor Options",
+                                                ));*/
+            ConfigMaxMeteorSpawnCount = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Max Spawn Count",
-                                                5,
+                                                3,
                                                 new ConfigDescription(
                                                     "Maximum number of meteors to spawn at once every spawn cycle.",
                                                     new AcceptableValueRange<int>(0, 100)
                                                 ));
-            ConfigMinMeteorSpawnCount = configFile.Bind("Meteor Options",
+            ConfigMinMeteorSpawnCount = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Min Spawn Count",
                                                 1,
                                                 new ConfigDescription(
                                                     "Minimum number of meteors to spawn at once every spawn cycle.",
                                                     new AcceptableValueRange<int>(0, 100)
                                                 ));
-            ConfigMeteorSpeed = configFile.Bind("Meteor Options",
+            ConfigMeteorSpeed = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Speed",
                                                 50f,
                                                 new ConfigDescription(
@@ -233,7 +233,7 @@ namespace CodeRebirth.Configs {
                                                 );
             ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteorite Spawn Chance",
-                                                1f,
+                                                2.5f,
 												new ConfigDescription(
 													"Chance of spawning a meteorite when a meteor is spawned (0 to 100 decimals included).",
 													new AcceptableValueRange<float>(0, 100f)

@@ -10,8 +10,8 @@ Current Additions:
 - 2 Ambient Enemies
 - 2 Weather event
 - 2 Shop Item
-- 4 Scrap
-- Outside Hazard
+- 7 Scrap
+- Custom Outside Objects.
 
 ## Preview (Spoilers ahead!)
 
