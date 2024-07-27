@@ -1,3 +1,10 @@
+## v0.3.0
+- Add slider config for tornado strength.
+- Added yeet SFX in config for tornado (false by default).
+- Randomised a bit more the strength of the tornado throwing and at what point you'd be thrown.
+- Added a bunch of flora.
+- Decreased overall assetbundle size from 32mb~ to 18mb~.
+
 ## v0.2.6
 - Lowered tornado power.
 - Fixed scannodes for the new weapons.

@@ -27,6 +27,8 @@ public class Tornados : EnemyAI
     private AudioSource normalTravelAudio = null!;
     [SerializeField]
     private AudioSource closeTravelAudio = null!;
+    [SerializeField]
+    private AudioSource yeetAudio = null!;
     
     [Space(5f)]
     [Header("Graphics")]
@@ -193,7 +195,7 @@ public class Tornados : EnemyAI
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 20f);
         }
 
-        if (timeSinceBeingInsideTornado >= 5f) {
+        if (timeSinceBeingInsideTornado >= 7f) {
             SetPlayerFlingingServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
         }
 
@@ -226,9 +228,10 @@ public class Tornados : EnemyAI
                 playerRigidbody.AddForce(spiralForce, ForceMode.Impulse);
 
                 if (player.transform.position.y >= throwingPoint.position.y) {
-                    Vector3 verticalForce = CalculateVerticalForce(player.transform.position.y, throwingPoint.position.y, 30f, 10f); // Adjust the last two parameters to control vertical and forward force
+                    Vector3 verticalForce = CalculateVerticalForce(player.transform.position.y, throwingPoint.position.y, (float)tornadoRandom.NextDouble(10f, 50f), (float)tornadoRandom.NextDouble(1f, 20f)); // Adjust the last two parameters to control vertical and forward force
                     playerRigidbody.AddForce(verticalForce, ForceMode.VelocityChange);
                     if (player == GameNetworkManager.Instance.localPlayerController) timeSinceBeingInsideTornado = 0f;
+                    if (Plugin.ModConfig.ConfigTornadoYeetSFX.Value) yeetAudio.Play();
                     CodeRebirthPlayerManager.dataForPlayer[player].flung = true;
                     CodeRebirthPlayerManager.dataForPlayer[player].flingingAway = false;
                 }
@@ -262,10 +265,9 @@ public class Tornados : EnemyAI
                 player.playerRigidbody.AddForce(Vector3.up * 10f, ForceMode.Impulse);
             } else if (distanceToTornado <= 75) {
                 float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, player);
-                player.externalForces += directionToCenter * forceStrength;
+                player.externalForces += directionToCenter * forceStrength * Time.fixedDeltaTime * 100f;
             }
         }
-
         HandleStatusEffects(player);
     }
 
@@ -385,7 +387,7 @@ public class Tornados : EnemyAI
     private float CalculatePullStrength(float distance, bool hasLineOfSight, PlayerControllerB localPlayerController) {
         float maxDistance = 150f;
         float minStrength = 0;
-        float maxStrength = (hasLineOfSight ? 20f : 2.5f) * (tornadoType == TornadoType.Smoke ? 1.25f : 1f) * (CodeRebirthPlayerManager.dataForPlayer[localPlayerController].Water ? 0.25f : 1f) * (tornadoType == TornadoType.Fire && localPlayerController.health <= 20 ? 0.25f : 1f);
+        float maxStrength = (hasLineOfSight ? Plugin.ModConfig.ConfigTornadoPullStrength.Value : 0.125f*Plugin.ModConfig.ConfigTornadoPullStrength.Value) * (tornadoType == TornadoType.Smoke ? 1.25f : 1f) * (CodeRebirthPlayerManager.dataForPlayer[localPlayerController].Water ? 0.25f : 1f) * (tornadoType == TornadoType.Fire && localPlayerController.health <= 20 ? 0.25f : 1f);
 
         // Calculate the normalized distance and apply an exponential falloff
         float normalizedDistance = distance / maxDistance;

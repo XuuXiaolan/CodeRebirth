@@ -84,8 +84,6 @@ target = "plugins/CodeRebirth/Assets/"
 source = "./CHANGELOG.md"
 target = "/"
 
-[publish]
-communities = [ "lethal-company", ]
-[publish.categories]
-# Get the list of categories from https://thunderstore.io/api/experimental/community/lethal-company/category/
-lethal-company = [ "bepinex", "clientside", "serverside", "mods", ]
+[[build.copy]]
+source = "./LICENSE.md"
+target = "/"

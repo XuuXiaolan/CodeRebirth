@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
         // Enables/Disables
+        public ConfigEntry<bool> ConfigFloraEnabled { get; private set; }
         public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
         public ConfigEntry<bool> ConfigRedwoodEnabled { get; private set; }
         public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
@@ -51,6 +52,8 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
 
         // Weather Specific
+        public ConfigEntry<float> ConfigTornadoPullStrength { get; private set; }
+        public ConfigEntry<bool> ConfigTornadoYeetSFX { get; private set; }
         public ConfigEntry<string> ConfigTornadoCanFlyYouAwayWeatherTypes { get; private set; }
         public ConfigEntry<float> ConfigTornadoSpeed { get; private set; }
         public ConfigEntry<float> ConfigMeteorSpeed { get; private set; }
@@ -64,6 +67,8 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         // Misc
+        public ConfigEntry<string> ConfigFloraSpawnPlaces { get; private set; }
+        public ConfigEntry<float> ConfigCritChance { get; private set; }
         public ConfigEntry<bool> ConfigEnableImperiumDebugs { get; private set; }
         public ConfigEntry<bool> ConfigWalletMode { get; private set; }
         public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
@@ -72,34 +77,109 @@ namespace CodeRebirth.Configs {
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
 
+            #region Flora
+            ConfigFloraEnabled = configFile.Bind("Flora Options",
+                                                "Flora | Enabled",
+                                                true,
+                                                "Whether Flora is enabled.");
+            ConfigFloraSpawnPlaces = configFile.Bind("Flora Options",
+                                                "Flora | Spawn Places",
+                                                "All",
+                                                "Flora spawn places e.g. `All,Experimentation,Assurance,Gloom`, can only spawn on top of grass tagged ground!!");
+            #endregion
+            #region Tornado
+            ConfigTornadosEnabled = configFile.Bind("Tornado Options",
+                                                "Tornados | Enabled",
+                                                true,
+                                                "Enables/Disables the Tornados from popping up into moons.");
+            ConfigTornadoWeatherTypes = configFile.Bind("Tornado Options",
+                                                "Tornados | Enabled Types",
+                                                "random",
+                                                new ConfigDescription("Types of tornados that are allowed to spawn", new AcceptableValueList<string>("fire", "blood", "windy", "smoke", "water", "electric", "random"))
+                                                );
             ConfigTornadoCanFlyYouAwayWeatherTypes = configFile.Bind("Tornado Options",
                                                 "Tornado | Can Fly You Away Weather Types",
                                                 "All",
                                                 "Tornado weather types that can fly you away (All, or specify per weather type like so: Fire,Electric,etc except water!!).");
+            ConfigTornadoSpeed = configFile.Bind("Tornado Options",
+                                                "Tornados | Speed",
+                                                5f,
+                                                new ConfigDescription(
+                                                    "Speed of tornados.",
+                                                    new AcceptableValueRange<float>(0, 100f)
+                                                ));
+            ConfigTornadoPullStrength = configFile.Bind("Tornado Options",
+                                                "Tornados | Pull Strength",
+                                                20f,
+                                                new ConfigDescription(
+                                                    "Pull strength of tornados.",
+                                                    new AcceptableValueRange<float>(0f, 100f)
+                                                ));
+            ConfigTornadoDefaultVolume = configFile.Bind("Tornado Options",
+                                                "Tornados | Default Volume",
+                                                1f,
+                                                new ConfigDescription(
+                                                    "Default volume of tornados.",
+                                                    new AcceptableValueRange<float>(0, 1f)
+                                                ));
+            ConfigTornadoInShipVolume = configFile.Bind("Tornado Options",
+                                                "Tornados | Volume in Ship",
+                                                1f,
+                                                new ConfigDescription(
+                                                    "Volume of tornados in the ship.",
+                                                    new AcceptableValueRange<float>(0, 1f)
+                                                ));
+            ConfigTornadoYeetSFX = configFile.Bind("Tornado Options",
+                                                "Tornados | Yeet SFX",
+                                                false,
+                                                "Tornado Yeet SFX");
+            #endregion
+            #region Weapons
+            ConfigAllowCrits = configFile.Bind("Weapon Options",
+                                                "Weapons | Crits",
+                                                true,
+                                                "Enables/Disables crits in the game for code rebirth weapons.");
+            ConfigCritChance = configFile.Bind("Weapon Options",
+                                                "Weapons | Crit Chance",
+                                                25f,
+                                                new ConfigDescription(
+                                                    "Chance of crits in the game for code rebirth weapons.",
+                                                    new AcceptableValueRange<float>(0, 100f)
+                                                ));
             ConfigNaturesMaceScrapEnabled = configFile.Bind("NatureMace Options",
                                                 "Natures Mace | Scrap Enabled",
                                                 true,
                                                 "Whether Natures Mace scrap is enabled.");
+            ConfigNaturesMaceScrapSpawnWeights = configFile.Bind("NatureMace Options",
+                                                "Natures Mace | Scrap Spawn Weights",
+                                                "Modded:25,Vanilla:25",
+                                                "Natures Mace scrap spawn weights.");
             ConfigIcyHammerScrapEnabled = configFile.Bind("Icy Hammer Options",
                                                 "Icy Hammer | Scrap Enabled",
                                                 true,
                                                 "Whether Icy Hammer scrap is enabled.");
+            ConfigIcyHammerScrapSpawnWeights = configFile.Bind("Icy Hammer Options",
+                                                "Icy Hammer | Scrap Spawn Weights",
+                                                "Modded:25,Vanilla:25",
+                                                "Icy Hammer scrap spawn weights.");
             ConfigSpikyMaceScrapEnabled = configFile.Bind("Spiky Mace Options",
                                                 "Spiky Mace | Scrap Enabled",
                                                 true,
                                                 "Whether Spiky Mace scrap is enabled.");
-            ConfigNaturesMaceScrapSpawnWeights = configFile.Bind("NatureMace Options",
-                                                "Natures Mace | Scrap Spawn Weights",
-                                                "Modded:50,Vanilla:50",
-                                                "Natures Mace scrap spawn weights.");
-            ConfigIcyHammerScrapSpawnWeights = configFile.Bind("Icy Hammer Options",
-                                                "Icy Hammer | Scrap Spawn Weights",
-                                                "Modded:50,Vanilla:50",
-                                                "Icy Hammer scrap spawn weights.");
             ConfigSpikyMaceScrapSpawnWeights = configFile.Bind("Spiky Mace Options",
                                                 "Spiky Mace | Scrap Spawn Weights",
-                                                "Modded:50,Vanilla:50",
+                                                "Modded:25,Vanilla:25",
                                                 "Spiky Mace scrap spawn weights.");
+            ConfigEpicAxeScrapEnabled = configFile.Bind("EpicAxe Options",
+                                                "Epic Axe Scrap | Enabled",
+                                                true,
+                                                "Enables/Disables the Epic Axe from showing up in the Factory.");
+            ConfigEpicAxeScrapSpawnWeights = configFile.Bind("EpicAxe Options",
+                                                "Epic Axe Scrap | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "Spawn Weight of the epic axe in moons.");
+            #endregion
+            #region Redwood
             /*ConfigRedwoodCanEatOldBirds = configFile.Bind("Redwood Options",
                                                 "Redwood | Can Eat Old Birds",
                                                 true,
@@ -165,6 +245,12 @@ namespace CodeRebirth.Configs {
                                                     "Redwood in ship volume.",
                                                     new AcceptableValueRange<float>(0, 1f)
                                                 ));*/
+            #endregion
+            #region Meteors
+            ConfigMeteorShowerEnabled = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Enabled",
+                                                true,
+                                                "Enables/Disables the MeteorShower from popping up into moons.");
             ConfigMaxMeteorSpawnCount = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Max Spawn Count",
                                                 3,
@@ -186,57 +272,27 @@ namespace CodeRebirth.Configs {
                                                     "Speed of meteors.",
                                                     new AcceptableValueRange<float>(0, 1000f)
                                                 ));
-            ConfigTornadoSpeed = configFile.Bind("Tornado Options",
-                                                "Tornados | Speed",
-                                                5f,
-                                                new ConfigDescription(
-                                                    "Speed of tornados.",
-                                                    new AcceptableValueRange<float>(0, 100f)
-                                                ));
-            ConfigEnableImperiumDebugs = configFile.Bind("Imperium Compatibility", 
-                                                        "Enable Imperium Debugs",
-                                                        false,
-                                                        "Enables the debugs I made using the imperium api for stuff like tornados. (currently no work)");
-            ConfigCutieFlyFlapWingVolume = configFile.Bind("CutieFly Options",
-                                                "Cutie Fly | Flap Wing Volume",
-                                                0.75f,
-                                                new ConfigDescription(
-                                                    "Volume of flapping wings.",
-                                                    new AcceptableValueRange<float>(0, 1f)
-                                                ));
-            ConfigTornadoDefaultVolume = configFile.Bind("Tornado Options",
-                                                "Tornados | Default Volume",
-                                                1f,
-                                                new ConfigDescription(
-                                                    "Default volume of tornados.",
-                                                    new AcceptableValueRange<float>(0, 1f)
-                                                ));
-            ConfigTornadoInShipVolume = configFile.Bind("Tornado Options",
-                                                "Tornados | Volume in Ship",
-                                                1f,
-                                                new ConfigDescription(
-                                                    "Volume of tornados in the ship.",
-                                                    new AcceptableValueRange<float>(0, 1f)
-                                                ));
-            ConfigWalletMode = configFile.Bind("Wallet Options",
-                                                "Wallet | Mode",
+            ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Meteor Strikes Ship",
                                                 true,
-                                                "true for old system (item mode), false for newer system (non-held mode).");
-            ConfigSnowGlobeMusic = configFile.Bind("SnowGlobe Options",
-                                                "Snow Globe | Music",
-                                                true,
-                                                "Enables/Disables the music in the snow globe.");
-            ConfigTornadoWeatherTypes = configFile.Bind("Tornado Options",
-                                                "Tornados | Enabled Types",
-                                                "random",
-                                                new ConfigDescription("Types of tornados that are allowed to spawn", new AcceptableValueList<string>("fire", "blood", "windy", "smoke", "water", "electric", "random"))
-                                                );
+                                                "Allows striking the ship with a meteor.");
             ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteorite Spawn Chance",
                                                 2.5f,
 												new ConfigDescription(
 													"Chance of spawning a meteorite when a meteor is spawned (0 to 100 decimals included).",
 													new AcceptableValueRange<float>(0, 100f)
+												));
+            ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Wesley Mode",
+                                                false,
+                                                "Enables/Disables the Wesley Mode (this is a meme, not recommended lol).");
+            ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
+                                                "Meteors | Default Volume",
+                                                0.25f,
+												new ConfigDescription(
+													"Default Volume of Meteors (between 0 and 1).",
+													new AcceptableValueRange<float>(0, 1f)
 												));
             ConfigMeteorShowerInShipVolume = configFile.Bind("MeteorShower Options",
                                                 "MeteorShower | Meteor Volume",
@@ -245,18 +301,57 @@ namespace CodeRebirth.Configs {
 													"Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.", 
 													new AcceptableValueRange<float>(0, 1f)
 												));
-            ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",
-                                                "MeteorShower | Meteor Strikes Ship",
+            #endregion
+            #region ModCompat
+            ConfigEnableImperiumDebugs = configFile.Bind("Imperium Compatibility", 
+                                                        "Enable Imperium Debugs",
+                                                        false,
+                                                        "Enables the debugs I made using the imperium api for stuff like tornados. (currently no work)");
+            #endregion
+            #region CutieFly
+            ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",
+                                                "CutieFly Enemy | Enabled",
                                                 true,
-                                                "Chance of hitting the ship with a meteor.");
-            ConfigAllowCrits = configFile.Bind("Weapon Options",
-                                                "Weapons | Crits",
+                                                "Enables/Disables the CutieFly enemy");
+            ConfigCutieFlySpawnWeights = configFile.Bind("CutieFly Options",
+                                                "CutieFly Enemy | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "SpawnWeight of the CutieFly in moons.");
+            ConfigCutieFlyMaxSpawnCount = configFile.Bind("CutieFly Options",
+                                                "CutieFly Enemy | Max Spawn Count",
+                                                5,
+                                                "How many CutieFlies can spawn at once.");
+            ConfigCutieFlyPowerLevel = configFile.Bind("CutieFly Options",
+                                                "CutieFly Enemy | Power Level",
+                                                1.0f,
+                                                "Power level of the CutieFly enemy.");
+            ConfigCutieFlyFlapWingVolume = configFile.Bind("CutieFly Options",
+                                                "Cutie Fly | Flap Wing Volume",
+                                                0.75f,
+                                                new ConfigDescription(
+                                                    "Volume of flapping wings.",
+                                                    new AcceptableValueRange<float>(0, 1f)
+                                                ));
+            #endregion
+            #region SnailCat
+            ConfigSnailCatEnabled = configFile.Bind("SnailCat Options",
+                                                "SnailCat Enemy | Enabled",
                                                 true,
-                                                "Enables/Disables crits in the game for code rebirth weapons.");
-            ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
-                                                "MeteorShower | Wesley Mode",
-                                                false,
-                                                "Enables/Disables the Wesley Mode (this is a meme, not recommended lol).");
+                                                "Enables/Disables the SnailCat enemy");
+            ConfigSnailCatSpawnWeights = configFile.Bind("SnailCat Options",
+                                                "SnailCat Enemy | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "SpawnWeight of the SnailCat in moons.");
+            ConfigSnailCatMaxSpawnCount = configFile.Bind("SnailCat Options",
+                                                "SnailCat Enemy | Max Spawn Count",
+                                                5,
+                                                "How many SnailCats can spawn at once.");
+            ConfigSnailCatPowerLevel = configFile.Bind("SnailCat Options",
+                                                "SnailCat Enemy | Power Level",
+                                                1.0f,
+                                                "Power level of the SnailCat enemy.");
+            #endregion
+            #region Hoverboard
             ConfigHoverboardEnabled = configFile.Bind("Hoverboard Options",
                                                 "Hoverboard | Enabled",
                                                 true,
@@ -265,89 +360,26 @@ namespace CodeRebirth.Configs {
                                                 "Hoverboard | Cost",
                                                 500,
                                                 "Cost of Hoverboard.");
-            ConfigMeteorShowerEnabled = configFile.Bind("MeteorShower Options",
-                                                "MeteorShower | Enabled",
-                                                true,
-                                                "Enables/Disables the MeteorShower from popping up into moons.");
-            ConfigTornadosEnabled = configFile.Bind("Tornado Options",
-                                                "Tornados | Enabled",
-                                                true,
-                                                "Enables/Disables the Tornados from popping up into moons.");
-            ConfigCutieFlyMaxSpawnCount = configFile.Bind("CutieFly Options",
-                                                "CutieFly Enemy | Max Spawn Count",
-                                                5,
-                                                "How many CutieFlies can spawn at once.");
-            ConfigSnailCatMaxSpawnCount = configFile.Bind("SnailCat Options",
-                                                "SnailCat Enemy | Max Spawn Count",
-                                                5,
-                                                "How many SnailCats can spawn at once.");
-            ConfigCutieFlyPowerLevel = configFile.Bind("CutieFly Options",
-                                                "CutieFly Enemy | Power Level",
-                                                1.0f,
-                                                "Power level of the CutieFly enemy.");
-            ConfigSnailCatPowerLevel = configFile.Bind("SnailCat Options",
-                                                "SnailCat Enemy | Power Level",
-                                                1.0f,
-                                                "Power level of the SnailCat enemy.");
-            ConfigMoneyEnabled = configFile.Bind("Money Options",
-                                                "Money | Enabled",
-                                                true,
-                                                "Enables/Disables the Money from spawning.");
-            ConfigSnowGlobeEnabled = configFile.Bind("SnowGlobe Options",
-                                                "Snow Globe | Enabled",
-                                                true,
-                                                "Enables/Disables the Snow Globe from spawning.");
-            ConfigSnowGlobeSpawnWeights = configFile.Bind("SnowGlobe Options",
-                                                "Snow Globe | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
-                                                "Spawn Weight of the Snow Globe in moons.");
-            ConfigItemCrateEnabled = configFile.Bind("Crate Options",
-                                                "Item Crate | Enabled",
-                                                true,
-                                                "Enables/Disables the Item Crate from spawning.");
-            ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",
-                                                "CutieFly Enemy | Enabled",
-                                                true,
-                                                "Enables/Disables the CutieFly enemy");
-            ConfigSnailCatEnabled = configFile.Bind("SnailCat Options",
-                                                "SnailCat Enemy | Enabled",
-                                                true,
-                                                "Enables/Disables the SnailCat enemy");
-            ConfigCrateAbundance = configFile.Bind("Crate Options",
-                                                "Crate | Abundance",
-                                                3,
-                                                "Abundance of crates that spawn outside (between 0 and your number).");
-            ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
-                                                "Meteors | Default Volume",
-                                                0.25f,
-												new ConfigDescription(
-													"Default Volume of Meteors (between 0 and 1).",
-													new AcceptableValueRange<float>(0, 1f)
-												));
+            #endregion
+            #region Wallet
             ConfigWalletEnabled = configFile.Bind("Wallet Options",
                                                 "Wallet Item | Enabled",
                                                 true,
                                                 "Enables/Disables the Wallet from showing up in shop.");
-            ConfigEpicAxeScrapSpawnWeights = configFile.Bind("EpicAxe Options",
-                                                "Epic Axe Scrap | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
-                                                "Spawn Weight of the epic axe in moons.");
-            ConfigCutieFlySpawnWeights = configFile.Bind("CutieFly Options",
-                                                "CutieFly Enemy | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
-                                                "SpawnWeight of the CutieFly in moons.");
-            ConfigSnailCatSpawnWeights = configFile.Bind("SnailCat Options",
-                                                "SnailCat Enemy | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
-                                                "SpawnWeight of the SnailCat in moons.");
+            ConfigWalletMode = configFile.Bind("Wallet Options",
+                                                "Wallet | Mode",
+                                                true,
+                                                "true for old system (item mode), false for newer system (non-held mode).");
             ConfigWalletCost = configFile.Bind("Wallet Options",
                                                 "Wallet Item | Cost",
                                                 250,
                                                 "Cost of Wallet");
-            ConfigEpicAxeScrapEnabled = configFile.Bind("EpicAxe Options",
-                                                "Epic Axe Scrap | Enabled",
+            #endregion
+            #region Money
+            ConfigMoneyEnabled = configFile.Bind("Money Options",
+                                                "Money | Enabled",
                                                 true,
-                                                "Enables/Disables the Epic Axe from showing up in the Factory.");
+                                                "Enables/Disables the Money from spawning.");
             ConfigMoneyAbundance = configFile.Bind("Money Options",
                                                 "Money Scrap | Abundance",
                                                 10,
@@ -356,6 +388,31 @@ namespace CodeRebirth.Configs {
                                                 "Money Scrap | Average Value",
                                                 15,
                                                 "Average value of Money in the level. (so 5 and 25 are lower and upper limits here).");
+            #endregion
+            #region SnowGlobe
+            ConfigSnowGlobeEnabled = configFile.Bind("SnowGlobe Options",
+                                                "Snow Globe | Enabled",
+                                                true,
+                                                "Enables/Disables the Snow Globe from spawning.");
+            ConfigSnowGlobeSpawnWeights = configFile.Bind("SnowGlobe Options",
+                                                "Snow Globe | Spawn Weights",
+                                                "Modded:50,Vanilla:50",
+                                                "Spawn Weight of the Snow Globe in moons.");
+            ConfigSnowGlobeMusic = configFile.Bind("SnowGlobe Options",
+                                                "Snow Globe | Music",
+                                                true,
+                                                "Enables/Disables the music in the snow globe.");
+            #endregion
+            #region ItemCrate
+            ConfigItemCrateEnabled = configFile.Bind("Crate Options",
+                                                "Item Crate | Enabled",
+                                                true,
+                                                "Enables/Disables the Item Crate from spawning.");
+            ConfigCrateAbundance = configFile.Bind("Crate Options",
+                                                "Crate | Abundance",
+                                                3,
+                                                "Abundance of crates that spawn outside (between 0 and your number).");
+            #endregion
 			configFile.SaveOnConfigSet = true;
 			ClearUnusedEntries(configFile);
         }
