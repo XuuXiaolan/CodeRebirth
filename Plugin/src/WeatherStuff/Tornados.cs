@@ -265,7 +265,7 @@ public class Tornados : EnemyAI
                 player.playerRigidbody.AddForce(Vector3.up * 10f, ForceMode.Impulse);
             } else if (distanceToTornado <= 75) {
                 float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, player);
-                player.externalForces += directionToCenter * forceStrength * Time.fixedDeltaTime * 100f;
+                player.externalForces += directionToCenter * forceStrength * Time.fixedDeltaTime * 30f;
             }
         }
         HandleStatusEffects(player);

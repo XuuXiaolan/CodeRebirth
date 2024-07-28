@@ -1,3 +1,8 @@
+## v0.3.1
+- Halved the strength of the pull of the tornado by default.
+- Added 20 more plants
+- Added a metal item crate 
+
 ## v0.3.0
 - Add slider config for tornado strength.
 - Added yeet SFX in config for tornado (false by default).

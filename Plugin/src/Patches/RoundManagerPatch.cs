@@ -25,6 +25,7 @@ static class RoundManagerPatch {
 			GameObject crate = random.NextBool() ? MapObjectHandler.Instance.Crate.MetalCratePrefab : MapObjectHandler.Instance.Crate.ItemCratePrefab;
 			
 			GameObject spawnedCrate = GameObject.Instantiate(crate, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+			Plugin.Logger.LogDebug($"Spawning {crate.name} at {hit.point}");
 			spawnedCrate.transform.up = hit.normal;
 			spawnedCrate.GetComponent<NetworkObject>().Spawn();
 		}

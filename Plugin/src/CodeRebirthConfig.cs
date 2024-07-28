@@ -256,14 +256,14 @@ namespace CodeRebirth.Configs {
                                                 3,
                                                 new ConfigDescription(
                                                     "Maximum number of meteors to spawn at once every spawn cycle.",
-                                                    new AcceptableValueRange<int>(0, 100)
+                                                    new AcceptableValueRange<int>(0, 999)
                                                 ));
             ConfigMinMeteorSpawnCount = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Min Spawn Count",
                                                 1,
                                                 new ConfigDescription(
                                                     "Minimum number of meteors to spawn at once every spawn cycle.",
-                                                    new AcceptableValueRange<int>(0, 100)
+                                                    new AcceptableValueRange<int>(0, 999)
                                                 ));
             ConfigMeteorSpeed = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Speed",

@@ -13,9 +13,6 @@ namespace CodeRebirth.MapStuff;
 public class ItemCrate : CRHittable {
 
 	[SerializeField]
-	public SkinnedMeshRenderer mainRenderer = null!;
-
-	[SerializeField]
 	[Header("Hover Tooltips")]
 	public string regularHoverTip = "Hold : [E]";
 	[SerializeField]
@@ -30,10 +27,9 @@ public class ItemCrate : CRHittable {
 	public Pickable pickable = null!;
 	private Animator animator = null!;
 	private List<PlayerControllerB> playersOpeningBox = new List<PlayerControllerB>(); // rework so that it's faster if more players are opening etc
-	public AnimationClip openClip = null!;
-	public Rigidbody crateLid;
-	public bool opened;
-	public NetworkVariable<float> digProgress = new(writePerm: NetworkVariableWritePermission.Owner);
+	public Rigidbody crateLid = null!;
+	private bool opened = false;
+	private NetworkVariable<float> digProgress = new(writePerm: NetworkVariableWritePermission.Owner);
 	public NetworkVariable<int> health = new(4);
 	public Vector3 originalPosition;
 	public Random random = new();
@@ -76,7 +72,6 @@ public class ItemCrate : CRHittable {
 	}
 
 	public void Update() {
-		
 		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
 			trigger.hoverTip = keyHoverTip;
 		} else {
@@ -131,25 +126,15 @@ public class ItemCrate : CRHittable {
 
 	public void OpenCrateLocally() {
 		pickable.IsLocked = false;
-		openSFX.Play();
 		trigger.enabled = false;
+		openSFX.Play();
 		GetComponent<Collider>().enabled = false;
 		opened = true;
 
-		if (animator != null) {
-			animator.SetTrigger("opened");
-		}
-		if(crateLid != null) {
-			crateLid.isKinematic = false;
-			crateLid.AddForce(crateLid.transform.up, ForceMode.Impulse);
-		}
-
-		if (crateType == CrateType.Metal) {
-			// todo: this is just a debug until unity stops having a moment
-			foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>()) {
-				renderer.enabled = false;
-			}
-		}
+		animator?.SetTrigger("opened");
+		crateLid.isKinematic = false;
+		crateLid.useGravity = true;
+		crateLid.AddForce(crateLid.transform.up * 2000f, ForceMode.Impulse); // during tests this launched the lid not up?
 	}
 
 	[ServerRpc(RequireOwnership = false)]
