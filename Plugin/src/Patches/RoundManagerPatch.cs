@@ -1,4 +1,5 @@
 ﻿using CodeRebirth.MapStuff;
+using CodeRebirth.Util.Extensions;
 using CodeRebirth.Util.Spawning;
 using HarmonyLib;
 using Unity.Netcode;
@@ -20,8 +21,10 @@ static class RoundManagerPatch {
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
-            
-			GameObject spawnedCrate = GameObject.Instantiate(MapObjectHandler.Instance.Crate.ItemCratePrefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+
+			GameObject crate = random.NextBool() ? MapObjectHandler.Instance.Crate.MetalCratePrefab : MapObjectHandler.Instance.Crate.ItemCratePrefab;
+			
+			GameObject spawnedCrate = GameObject.Instantiate(crate, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 			spawnedCrate.transform.up = hit.normal;
 			spawnedCrate.GetComponent<NetworkObject>().Spawn();
 		}

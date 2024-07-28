@@ -512,8 +512,6 @@ MonoBehaviour:
   slowlyOpeningSFX: {fileID: 7401679166512140689}
   openSFX: {fileID: 425542958155706037}
   trigger: {fileID: 7939740615921497438}
-  colliders:
-  - {fileID: 6231895189161968458}
   pickable: {fileID: 8184444134436801629}
   openClip: {fileID: 7400000, guid: 9c7eb4f280b62564c94e10e9a02fcd35, type: 2}
   opened: 0
@@ -556,9 +554,6 @@ MonoBehaviour:
   disableTriggerMesh: 1
   RandomChanceTrigger: 0
   randomChancePercentage: 0
-  onInteractEarlyOtherClients:
-    m_PersistentCalls:
-      m_Calls: []
   onInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -580,13 +575,6 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
-  clampLooking: 0
-  setVehicleAnimation: 0
-  minVerticalClamp: 0
-  maxVerticalClamp: 0
-  horizontalClamp: 0
-  allowUseWhileInAnimation: 0
-  overridePlayerParent: {fileID: 0}
   isLadder: 0
   topOfLadderPosition: {fileID: 0}
   useRaycastToGetTopPosition: 0

@@ -17,6 +17,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 	public class CrateAssets(string bundleName) : AssetBundleLoader<CrateAssets>(bundleName) {
 		[LoadFromBundle("Crate")]
 		public GameObject ItemCratePrefab { get; private set; } = null!;
+		
+		[LoadFromBundle("Metal Crate")]
+		public GameObject MetalCratePrefab { get; private set; } = null!;
 	}
 
 	public class DevilDealAssets(string bundleName) : AssetBundleLoader<DevilDealAssets>(bundleName) {

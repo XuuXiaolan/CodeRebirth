@@ -31,8 +31,10 @@ public class ItemCrate : CRHittable {
 	private Animator animator = null!;
 	private List<PlayerControllerB> playersOpeningBox = new List<PlayerControllerB>(); // rework so that it's faster if more players are opening etc
 	public AnimationClip openClip = null!;
+	public Rigidbody crateLid;
 	public bool opened;
 	public NetworkVariable<float> digProgress = new(writePerm: NetworkVariableWritePermission.Owner);
+	public NetworkVariable<int> health = new(4);
 	public Vector3 originalPosition;
 	public Random random = new();
 	public enum CrateType {
@@ -43,13 +45,6 @@ public class ItemCrate : CRHittable {
 	public CrateType crateType;
 	
 	public void Awake() {
-		if (crateType == CrateType.Wooden) { // switch to a switch instead of an if statement
-			// mainRenderer.GetComponent<SkinnedMeshRenderer>().materials[0] = Assets.WoodenCrateMaterial;
-			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.WoodenCrateMesh;
-		} else if (crateType == CrateType.Metal) {
-			// mainRenderer.GetComponent<SkinnedMeshRenderer>().materials[0] = Assets.MetalCrateMaterial;
-			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.MetalCrateMesh;
-		}
 		trigger = GetComponent<InteractTrigger>();
 		pickable = GetComponent<Pickable>();
 		animator = GetComponent<Animator>();
@@ -74,8 +69,10 @@ public class ItemCrate : CRHittable {
 			transform.position = originalPosition + (transform.up * newValue * .5f);
 		
 		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {newValue}");
-		trigger.interactable = newValue >= 1;
-		pickable.enabled = trigger.interactable;
+		if (crateType == CrateType.Wooden) {
+			trigger.interactable = newValue >= 1;
+			pickable.enabled = trigger.interactable;
+		}
 	}
 
 	public void Update() {
@@ -138,15 +135,39 @@ public class ItemCrate : CRHittable {
 		trigger.enabled = false;
 		GetComponent<Collider>().enabled = false;
 		opened = true;
-		animator.SetTrigger("opened");
+
+		if (animator != null) {
+			animator.SetTrigger("opened");
+		}
+		if(crateLid != null) {
+			crateLid.isKinematic = false;
+			crateLid.AddForce(crateLid.transform.up, ForceMode.Impulse);
+		}
+
+		if (crateType == CrateType.Metal) {
+			// todo: this is just a debug until unity stops having a moment
+			foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>()) {
+				renderer.enabled = false;
+			}
+		}
 	}
 
 	[ServerRpc(RequireOwnership = false)]
 	void SetNewDigProgressServerRPC(float newDigProgress) {
 		digProgress.Value = Mathf.Clamp01(newDigProgress);
 	}
+
+	[ServerRpc(RequireOwnership = false)]
+	void DamageCrateServerRPC(int damage) {
+		health.Value -= damage;
+
+		if (health.Value <= 0) {
+			OpenCrate();
+		}
+	}
 	
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
+		if (opened) return false;
 		if (digProgress.Value < 1) {
 			float progressChange = random.NextFloat(0.15f, 0.25f);
 			if (IsOwner) {
@@ -155,6 +176,8 @@ public class ItemCrate : CRHittable {
 				SetNewDigProgressServerRPC(digProgress.Value + progressChange);
 			}
 			
+		} else {
+			DamageCrateServerRPC(1);
 		}
 		return true; // this bool literally doesn't get used. i have no clue.
 	}
