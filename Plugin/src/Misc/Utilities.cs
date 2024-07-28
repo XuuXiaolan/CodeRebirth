@@ -109,7 +109,7 @@ namespace CodeRebirth.Misc
 
         public static void CreateExplosion(Vector3 explosionPosition = default, bool spawnExplosionEffect = false, int damage = 20, float minDamageRange = 0f, float maxDamageRange = 1f, int enemyHitForce = 6, CauseOfDeath causeOfDeath = CauseOfDeath.Blast, PlayerControllerB? attacker = null, GameObject? overridePrefab = null)
         {
-            Debug.Log("Spawning explosion at pos: {explosionPosition}");
+            // Plugin.Logger.LogDebug($"Spawning explosion at pos: {explosionPosition}");
 
             Transform? holder = null;
 
@@ -165,7 +165,7 @@ namespace CodeRebirth.Misc
                     Landmine componentInChildren = array[i].gameObject.GetComponentInChildren<Landmine>();
                     if (componentInChildren != null && !componentInChildren.hasExploded && distanceOfObjectFromExplosion < 6f)
                     {
-                        Debug.Log("Setting off other mine");
+                        // Plugin.Logger.LogDebug("Setting off other mine");
                         componentInChildren.StartCoroutine(componentInChildren.TriggerOtherMineDelayed(componentInChildren));
                     }
                 }

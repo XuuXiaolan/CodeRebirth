@@ -13,23 +13,18 @@ namespace CodeRebirth.Patches;
 
 [HarmonyPatch(typeof(GameNetcodeStuff.PlayerControllerB))]
 static class PlayerControllerBPatch {
-    public static bool TornadoKinematicPatch = false;
-    public static PlayerControllerB? TornadoKinematicPlayer = null;
-
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]
     public static bool PlayerHitGroundEffects(PlayerControllerB __instance) {
-        if (TornadoKinematicPatch && TornadoKinematicPlayer == __instance) {
-            CodeRebirthPlayerManager.dataForPlayer[__instance].flingingAway = false;
-            TornadoKinematicPatch = false;
+        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && CodeRebirthPlayerManager.dataForPlayer[__instance].flung) {
+            CodeRebirthPlayerManager.dataForPlayer[__instance].flung = false;
             __instance.playerRigidbody.isKinematic = true;
-            TornadoKinematicPlayer = null;
         }
         return true;
     }
 
 	[HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayFootstepSound)), HarmonyPrefix]
 	public static bool PlayFootstepSound(PlayerControllerB __instance) {
-        if (__instance == GameNetworkManager.Instance.localPlayerController && CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && CodeRebirthPlayerManager.dataForPlayer[__instance].ridingHoverboard) {
+        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && CodeRebirthPlayerManager.dataForPlayer[__instance].ridingHoverboard) {
             return false;
         } else {
             return true;

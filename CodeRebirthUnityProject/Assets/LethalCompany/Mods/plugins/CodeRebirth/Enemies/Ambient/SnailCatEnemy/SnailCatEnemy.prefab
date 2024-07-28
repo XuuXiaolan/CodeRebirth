@@ -739,7 +739,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 29c948b0bcb8f4c47bdd6a8df0e1c1fa, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -846,8 +846,8 @@ SkinnedMeshRenderer:
   m_Materials:
   - {fileID: -9103484930961366303, guid: 136a6f6cad02c624c99a5b2164967920, type: 3}
   - {fileID: -326325137724324549, guid: 136a6f6cad02c624c99a5b2164967920, type: 3}
-  - {fileID: -2445353708225864091, guid: 136a6f6cad02c624c99a5b2164967920, type: 3}
-  - {fileID: -876546973899608171, guid: 136a6f6cad02c624c99a5b2164967920, type: 3}
+  - {fileID: 2100000, guid: 72f3232264313884e81b21696d34e04d, type: 2}
+  - {fileID: 2100000, guid: d7520fa7bc18bf24bb8ebac1b26d667f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1456,9 +1456,9 @@ AudioSource:
   m_GameObject: {fileID: 4742846557237262375}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300008, guid: bbd03348fb9dfd64aa8c1716e5854904,
+  OutputAudioMixerGroup: {fileID: 24300008, guid: 0213afe98dbce7c4bb1d7568e33d73c8,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: cd83235b45b5d4c42bae05b49bf93f17, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 69ba1a992ef7fb94c811028ca2d5e9cc, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

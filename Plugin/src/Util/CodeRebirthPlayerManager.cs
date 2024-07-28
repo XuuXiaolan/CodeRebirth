@@ -139,6 +139,7 @@ public class CRPlayerData
     public bool ridingHoverboard;
     public bool holdingWallet;
     public bool flingingAway = false;
+    public bool flung = false;
     public List<Collider>? playerColliders;
     public AnimatorOverrideController? playerOverrideController;
 }

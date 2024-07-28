@@ -105,7 +105,6 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   trigger: {fileID: 4355572840455160731}
-  WalletChild: {fileID: 4492178942496473946}
 --- !u!114 &7262992720387641273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,9 +245,9 @@ AudioSource:
   m_GameObject: {fileID: 6394186145556875039}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300008, guid: bbd03348fb9dfd64aa8c1716e5854904,
+  OutputAudioMixerGroup: {fileID: 24300008, guid: 0213afe98dbce7c4bb1d7568e33d73c8,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 31a4daa5eab3a054394dc9885f2ff938, type: 3}
+  m_audioClip: {fileID: 8300000, guid: ae1d525c9b0173a4f9a3dd20e077631e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -397,7 +396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 21300000, guid: a48ff96a6e0387646b2bba945bc920a8, type: 2}
+  hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: 'Grab [E]:'
   disabledHoverIcon: {fileID: 0}
   disabledHoverTip: 
@@ -420,6 +419,9 @@ MonoBehaviour:
   disableTriggerMesh: 1
   RandomChanceTrigger: 0
   randomChancePercentage: 0
+  onInteractEarlyOtherClients:
+    m_PersistentCalls:
+      m_Calls: []
   onInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -441,6 +443,13 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  clampLooking: 0
+  setVehicleAnimation: 0
+  minVerticalClamp: 0
+  maxVerticalClamp: 0
+  horizontalClamp: 0
+  allowUseWhileInAnimation: 0
+  overridePlayerParent: {fileID: 0}
   isLadder: 0
   topOfLadderPosition: {fileID: 0}
   useRaycastToGetTopPosition: 0

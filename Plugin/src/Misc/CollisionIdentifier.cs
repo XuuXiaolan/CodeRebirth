@@ -71,7 +71,7 @@ public class ColliderIdentifier : MonoBehaviour
             if (player != null && !player.isPlayerDead)
             {
                 player.DamagePlayer(5); // Assuming a method DamagePlayer exists on the player controller
-                Debug.Log("Damage applied to player.");
+                // Plugin.Logger.LogDebug("Damage applied to player.");
             }
         }
     }

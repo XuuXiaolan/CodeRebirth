@@ -1,4 +1,5 @@
 ﻿﻿using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.ScrapStuff;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
@@ -22,6 +23,11 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		public GameObject MetalCratePrefab { get; private set; } = null!;
 	}
 
+	public class FloraAssets(string bundleName) : AssetBundleLoader<FloraAssets>(bundleName) {
+		[LoadFromBundle("AllFlora.prefab")]
+		public GameObject Flora { get; private set; } = null!;
+	}
+
 	public class DevilDealAssets(string bundleName) : AssetBundleLoader<DevilDealAssets>(bundleName) {
 		[LoadFromBundle("Devil.prefab")]
 		public GameObject DevilPrefab { get; private set; } = null!;
@@ -38,13 +44,16 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
+	public FloraAssets Flora { get; private set; } = null!;
 	public DevilDealAssets DevilDeal { get; private set; } = null!;
 	public static Dictionary<string, GameObject> DevilDealPrefabs = new Dictionary<string, GameObject>();
 
     public MapObjectHandler() {
 		
-		if(Plugin.ModConfig.ConfigItemCrateEnabled.Value)
+		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
 			Crate = new CrateAssets("crateassets");
+
+		if (Plugin.ModConfig.ConfigFloraEnabled.Value) RegisterOutsideFlora();
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
 
@@ -64,6 +73,28 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		}
 	}
 
+	public void RegisterOutsideFlora() {
+		Flora = new FloraAssets("floraassets");
+		var floraStuff = Flora.Flora.GetComponent<Flora>();
+		foreach (var flora in floraStuff.BluntspearB) {
+			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+		}
+		foreach (var flora in floraStuff.PeacockPlant) {
+			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+		}
+		foreach (var flora in floraStuff.BluntspearA) {
+			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+		}
+		foreach (var flora in floraStuff.Staright) {
+			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+		}
+		foreach (var flora in floraStuff.SteelSprigs) {
+			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+		}
+		foreach (var flora in floraStuff.Misc) {
+			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+		}
+	}
 	public void RegisterDevilDeal() {
 		DevilDeal = new DevilDealAssets("devildealassets");
 		DevilDealPrefabs.Add("Devil", DevilDeal.DevilPrefab);

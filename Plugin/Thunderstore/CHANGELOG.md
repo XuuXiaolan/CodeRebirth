@@ -1,17 +1,34 @@
-## v0.2.3
+## v0.3.0
+- Add slider config for tornado strength.
+- Added yeet SFX in config for tornado (false by default).
+- Randomised a bit more the strength of the tornado throwing and at what point you'd be thrown.
+- Added a bunch of flora.
+- Decreased overall assetbundle size from 32mb~ to 18mb~.
+
+## v0.2.6
+- Lowered tornado power.
+- Fixed scannodes for the new weapons.
+- Lowered default config for meteor shower lol.
+- Fixed tornado throwing you.
+
+## v0.2.5
+- Should fix tornado kinematic patch not working.
+- Turned off some spammy logs.
+- Tornado should stray from ship if spawned next to it.
+- Fixed some hoverboard sound with footsteps not playing.
+
+## v0.2.4
 - Fixed tornado config properly.
 - Added tornado volume in ship config.
 - Added cutiefly flap sound volume config.
 - Fixed Snailcat and Cutiefly flying routes.
 - Improved tornado looks.
 - Windy tornado can now throw the player.
-- Added more weapons.
 - Added compatibility with Surfaced.
 - Fixed hoverboard.
 - Buffed hoverboard.
 - Added compatibility with subtitles API (may not work for some reason).
 - Added 3 new weapons.
-- Added redwood and driftwood to coderebirth, revamped, new animations, etc.
 - Added 2 new gems in the meteor shower and made them more common.
 - Water tornado now drowns you.
 - Made weather registry a soft compatibility (required to install but can disable).
