@@ -84,7 +84,7 @@ namespace CodeRebirth.Configs {
                                                 "Whether Flora is enabled.");
             ConfigFloraSpawnPlaces = configFile.Bind("Flora Options",
                                                 "Flora | Spawn Places",
-                                                "All",
+                                                "Vow,Adamance,March,Modded",
                                                 "Flora spawn places e.g. `All,Experimentation,Assurance,Gloom`, can only spawn on top of grass tagged ground!!");
             #endregion
             #region Tornado
@@ -152,7 +152,7 @@ namespace CodeRebirth.Configs {
                                                 "Whether Natures Mace scrap is enabled.");
             ConfigNaturesMaceScrapSpawnWeights = configFile.Bind("NatureMace Options",
                                                 "Natures Mace | Scrap Spawn Weights",
-                                                "Modded:25,Vanilla:25",
+                                                "Modded:15,Vanilla:15",
                                                 "Natures Mace scrap spawn weights.");
             ConfigIcyHammerScrapEnabled = configFile.Bind("Icy Hammer Options",
                                                 "Icy Hammer | Scrap Enabled",
@@ -160,7 +160,7 @@ namespace CodeRebirth.Configs {
                                                 "Whether Icy Hammer scrap is enabled.");
             ConfigIcyHammerScrapSpawnWeights = configFile.Bind("Icy Hammer Options",
                                                 "Icy Hammer | Scrap Spawn Weights",
-                                                "Modded:25,Vanilla:25",
+                                                "Modded:15,Vanilla:15",
                                                 "Icy Hammer scrap spawn weights.");
             ConfigSpikyMaceScrapEnabled = configFile.Bind("Spiky Mace Options",
                                                 "Spiky Mace | Scrap Enabled",
@@ -168,7 +168,7 @@ namespace CodeRebirth.Configs {
                                                 "Whether Spiky Mace scrap is enabled.");
             ConfigSpikyMaceScrapSpawnWeights = configFile.Bind("Spiky Mace Options",
                                                 "Spiky Mace | Scrap Spawn Weights",
-                                                "Modded:25,Vanilla:25",
+                                                "Modded:15,Vanilla:15",
                                                 "Spiky Mace scrap spawn weights.");
             ConfigEpicAxeScrapEnabled = configFile.Bind("EpicAxe Options",
                                                 "Epic Axe Scrap | Enabled",
