@@ -1,5 +1,6 @@
 ﻿﻿using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.Patches;
 using CodeRebirth.ScrapStuff;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
@@ -83,18 +84,35 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
 		}
 		foreach (var flora in floraStuff.BluntspearA) {
-			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
 		}
 		foreach (var flora in floraStuff.Staright) {
-			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
 		}
 		foreach (var flora in floraStuff.SteelSprigs) {
-			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
 		}
 		foreach (var flora in floraStuff.Misc) {
-			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
 		}
 	}
+
+	public void RegisterFlora(GameObject prefab, AnimationCurve curve, string configString) {
+		(Levels.LevelTypes[] vanillaLevelSpawnType, string[] CustomLevelType) = MapObjectConfigParsing(configString);
+
+		Levels.LevelTypes levelTypes = 0;
+		foreach (Levels.LevelTypes levelType in vanillaLevelSpawnType) {
+			levelTypes |= levelType;
+		}
+		
+		RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora() {
+			prefab = prefab,
+			customLevelTypes = CustomLevelType,
+			levelTypes = levelTypes,
+			spawnCurve = curve
+		});
+	}
+	
 	public void RegisterDevilDeal() {
 		DevilDeal = new DevilDealAssets("devildealassets");
 		DevilDealPrefabs.Add("Devil", DevilDeal.DevilPrefab);
