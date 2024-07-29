@@ -32,7 +32,16 @@ static class RoundManagerPatch {
 
 				if(!Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
 					continue;
-				
+
+				bool isValid = true;
+				foreach (string tag in flora.blacklistedTags) {
+					if (hit.transform.gameObject.CompareTag(tag)) {
+						isValid = false;
+						break;
+					}
+				}
+				if(!isValid) continue;
+
 				GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 			
 				spawnedFlora.transform.up = hit.normal;

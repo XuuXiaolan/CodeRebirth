@@ -9,4 +9,5 @@ public class SpawnableFlora {
 	public Levels.LevelTypes levelTypes;
 	public string[] customLevelTypes;
 	public AnimationCurve spawnCurve;
+	public string[] blacklistedTags;
 }

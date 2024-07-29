@@ -109,7 +109,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 			prefab = prefab,
 			customLevelTypes = CustomLevelType,
 			levelTypes = levelTypes,
-			spawnCurve = curve
+			spawnCurve = curve,
+			blacklistedTags = []
 		});
 	}
 	
