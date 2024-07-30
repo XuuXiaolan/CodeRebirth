@@ -78,7 +78,6 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
-
             #region Flora
             ConfigFloraEnabled = configFile.Bind("Flora Options",
                                                 "Flora | Enabled",
@@ -162,7 +161,7 @@ namespace CodeRebirth.Configs {
                                                 "Whether Natures Mace scrap is enabled.");
             ConfigNaturesMaceScrapSpawnWeights = configFile.Bind("NatureMace Options",
                                                 "Natures Mace | Scrap Spawn Weights",
-                                                "Modded:15,Vanilla:15",
+                                                "Custom:15,Vanilla:15",
                                                 "Natures Mace scrap spawn weights.");
             ConfigIcyHammerScrapEnabled = configFile.Bind("Icy Hammer Options",
                                                 "Icy Hammer | Scrap Enabled",
@@ -170,7 +169,7 @@ namespace CodeRebirth.Configs {
                                                 "Whether Icy Hammer scrap is enabled.");
             ConfigIcyHammerScrapSpawnWeights = configFile.Bind("Icy Hammer Options",
                                                 "Icy Hammer | Scrap Spawn Weights",
-                                                "Modded:15,Vanilla:15",
+                                                "Custom:15,Vanilla:15",
                                                 "Icy Hammer scrap spawn weights.");
             ConfigSpikyMaceScrapEnabled = configFile.Bind("Spiky Mace Options",
                                                 "Spiky Mace | Scrap Enabled",
@@ -178,7 +177,7 @@ namespace CodeRebirth.Configs {
                                                 "Whether Spiky Mace scrap is enabled.");
             ConfigSpikyMaceScrapSpawnWeights = configFile.Bind("Spiky Mace Options",
                                                 "Spiky Mace | Scrap Spawn Weights",
-                                                "Modded:15,Vanilla:15",
+                                                "Custom:15,Vanilla:15",
                                                 "Spiky Mace scrap spawn weights.");
             ConfigEpicAxeScrapEnabled = configFile.Bind("EpicAxe Options",
                                                 "Epic Axe Scrap | Enabled",
@@ -186,7 +185,7 @@ namespace CodeRebirth.Configs {
                                                 "Enables/Disables the Epic Axe from showing up in the Factory.");
             ConfigEpicAxeScrapSpawnWeights = configFile.Bind("EpicAxe Options",
                                                 "Epic Axe Scrap | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
+                                                "Custom:15,Vanilla:15",
                                                 "Spawn Weight of the epic axe in moons.");
             #endregion
             #region Redwood
@@ -325,7 +324,7 @@ namespace CodeRebirth.Configs {
                                                 "Enables/Disables the CutieFly enemy");
             ConfigCutieFlySpawnWeights = configFile.Bind("CutieFly Options",
                                                 "CutieFly Enemy | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
+                                                "Custom:50,Vanilla:50",
                                                 "SpawnWeight of the CutieFly in moons.");
             ConfigCutieFlyMaxSpawnCount = configFile.Bind("CutieFly Options",
                                                 "CutieFly Enemy | Max Spawn Count",
@@ -350,7 +349,7 @@ namespace CodeRebirth.Configs {
                                                 "Enables/Disables the SnailCat enemy");
             ConfigSnailCatSpawnWeights = configFile.Bind("SnailCat Options",
                                                 "SnailCat Enemy | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
+                                                "Custom:50,Vanilla:50",
                                                 "SpawnWeight of the SnailCat in moons.");
             ConfigSnailCatMaxSpawnCount = configFile.Bind("SnailCat Options",
                                                 "SnailCat Enemy | Max Spawn Count",
@@ -406,7 +405,7 @@ namespace CodeRebirth.Configs {
                                                 "Enables/Disables the Snow Globe from spawning.");
             ConfigSnowGlobeSpawnWeights = configFile.Bind("SnowGlobe Options",
                                                 "Snow Globe | Spawn Weights",
-                                                "Modded:50,Vanilla:50",
+                                                "Custom:50,Vanilla:50",
                                                 "Spawn Weight of the Snow Globe in moons.");
             ConfigSnowGlobeMusic = configFile.Bind("SnowGlobe Options",
                                                 "Snow Globe | Music",

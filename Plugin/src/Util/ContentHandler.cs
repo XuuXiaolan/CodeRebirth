@@ -60,11 +60,13 @@ public class ContentHandler<T> where T: ContentHandler<T> {
 
             if (entryParts.Length != 2) continue;
 
-            string name = entryParts[0];
+            string name = entryParts[0].ToLowerInvariant();
             int spawnrate;
 
             if (!int.TryParse(entryParts[1], out spawnrate)) continue;
-
+            if (name == "custom") {
+                name = "modded";
+            }
             if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
             {
                 spawnRateByLevelType[levelType] = spawnrate;
