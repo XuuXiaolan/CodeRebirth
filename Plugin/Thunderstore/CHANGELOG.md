@@ -1,3 +1,7 @@
+## v0.3.2
+- Github is now public and contributions/talent/reports/more ideas are appreciated.
+- Configs now accept both custom and modded (custom is more recommended just incase).
+
 ## v0.3.1
 - Halved the strength of the pull of the tornado by default.
 - Added 20 more plants.
