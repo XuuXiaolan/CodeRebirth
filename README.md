@@ -1,6 +1,8 @@
 # Code:Rebirth
 Overhaul mod for Lethal Company
 
+## Contribute:
+
 - [Make a fresh rip using nomnom's Unity LC Patcher tool and name it CodeRebirthUnityProject](https://github.com/nomnomab/unity-lc-project-patcher)
 - Copy the CodeRebirth folder in CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth <--
 - Paste it into that Unity Project's `plugins` folder
@@ -9,7 +11,7 @@ Overhaul mod for Lethal Company
 
 - To make the CodeRebirth.csproj.user work properly, COPY the template version and get rid of the `.template` at the end in the copy. simple!
 
-## Working-On List:
+## Working-On List: OUTDATED
 ### Enemies
 
 ### Moons
