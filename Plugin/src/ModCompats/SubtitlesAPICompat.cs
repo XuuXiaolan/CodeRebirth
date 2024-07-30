@@ -11,6 +11,7 @@ public static class SubtitlesAPICompatibilityChecker {
         InitSounds();
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static void InitSounds() {
         SubtitlesAPI.SubtitlesAPI.Localization.AddTranslation("WingFlap", "Cutiefly Wing Flap");
     }

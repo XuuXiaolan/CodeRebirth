@@ -13,6 +13,7 @@ public static class WeatherRegistryCompatibilityChecker {
         Plugin.WeatherRegistryIsOn = true;
     }
 
+	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     internal static void DisplayWindyWarning() {
         if(WeatherHandler.Instance.TornadoesWeather == null) return; // tornado weather didn't load
         if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) == WeatherHandler.Instance.TornadoesWeather) {

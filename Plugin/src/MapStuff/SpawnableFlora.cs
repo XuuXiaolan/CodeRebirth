@@ -4,10 +4,16 @@ using UnityEngine;
 
 namespace CodeRebirth.MapStuff;
 
+public enum FloraTag {
+	Desert,
+	Snow,
+	Grass,
+}
+
 public class SpawnableFlora {
-	public GameObject prefab;
-	public Levels.LevelTypes levelTypes;
-	public string[] customLevelTypes;
-	public AnimationCurve spawnCurve;
-	public string[] blacklistedTags;
+	public GameObject prefab = null!;
+	public string[] moonsWhiteList = null!;
+	public AnimationCurve spawnCurve = null!;
+	public string[] blacklistedTags = null!;
+	public FloraTag floraTag;
 }

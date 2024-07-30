@@ -27,7 +27,7 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
     public static event Action<PlayerControllerB, CodeRebirthStatusEffects, bool>? OnStatusEffectChanged;
     public void Awake()
     {
-        if (Plugin.ModConfig.ConfigTornadosEnabled.Value) InitPlayerParticles();
+        if (Plugin.WeatherRegistryIsOn && Plugin.ModConfig.ConfigTornadosEnabled.Value) InitPlayerParticles();
         if (StartOfRound.Instance != null) previousDoorClosed = StartOfRound.Instance.hangarDoorsClosed;
     }
 

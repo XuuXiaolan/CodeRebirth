@@ -63,8 +63,9 @@ public class ItemCrate : CRHittable {
 	void UpdateDigPosition(float old, float newValue) {
 		if(IsOwner) // :wharg:
 			transform.position = originalPosition + (transform.up * newValue * .5f);
-		
+
 		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {newValue}");
+		if (crateType == CrateType.Metal) pickable.enabled = false;
 		if (crateType == CrateType.Wooden) {
 			trigger.interactable = newValue >= 1;
 			pickable.enabled = trigger.interactable;
@@ -134,7 +135,7 @@ public class ItemCrate : CRHittable {
 		animator?.SetTrigger("opened");
 		crateLid.isKinematic = false;
 		crateLid.useGravity = true;
-		crateLid.AddForce(crateLid.transform.up * 2000f, ForceMode.Impulse); // during tests this launched the lid not up?
+		crateLid.AddForce(crateLid.transform.up * 200f, ForceMode.Impulse); // during tests this launched the lid not up?
 	}
 
 	[ServerRpc(RequireOwnership = false)]

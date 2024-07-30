@@ -1,7 +1,10 @@
 ## v0.3.1
 - Halved the strength of the pull of the tornado by default.
-- Added 20 more plants
-- Added a metal item crate 
+- Added 20 more plants.
+- Added a metal item crate.
+- Fixed soft dependencies not working properly.
+- Fixed flower config breakages.
+- Added more flower configs.
 
 ## v0.3.0
 - Add slider config for tornado strength.

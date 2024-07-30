@@ -1,6 +1,7 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using BepInEx.Configuration;
 using CodeRebirth.Misc;
 using CodeRebirth.Util;
@@ -15,16 +16,13 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     public class MeteoriteAssets(string bundleName) : AssetBundleLoader<MeteoriteAssets>(bundleName) {
         [LoadFromBundle("BetterCrater.prefab")]
         public GameObject CraterPrefab { get; private set; } = null!;
+
         [LoadFromBundle("BigExplosion.prefab")]
         public GameObject ExplosionPrefab { get; private set; } = null!;
 
-    
         [LoadFromBundle("MeteoriteObj")]
         public Item MeteoriteItem { get; private set; } = null!;
-        
-        [LoadFromBundle("WesleyCubeMeteor.prefab")]
-        public GameObject WesleyModePrefab { get; private set; } = null!;
-        
+
         [LoadFromBundle("Meteor.prefab")]
         public GameObject MeteorPrefab { get; private set; } = null!;
         
@@ -69,6 +67,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         if (Plugin.WeatherRegistryIsOn && Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
     }
 
+	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private void RegisterTornadoWeather() {
         Tornado = new TornadoAssets("tornadoassets");
         GameObject effectObject = GameObject.Instantiate(Tornado.TornadoEffectPrefab);
@@ -92,6 +91,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
     }
 
+	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private void RegisterMeteorShower() {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
         Plugin.samplePrefabs.Add("Meteorite", Meteorite.MeteoriteItem);

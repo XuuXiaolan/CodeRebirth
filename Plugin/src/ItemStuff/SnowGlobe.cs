@@ -53,6 +53,16 @@ public class SnowGlobe : GrabbableObject
         }
 
     }
+
+    public override void GrabItem()
+    {
+        base.GrabItem();
+        previouslyHeldBy = playerHeldBy;
+        if (previouslyHeldBy == null) {
+            Plugin.Logger.LogDebug("previouslyHeldBy is null");
+        }
+        ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
+    }
     public override void EquipItem()
     {
         base.EquipItem();
@@ -75,9 +85,8 @@ public class SnowGlobe : GrabbableObject
 
     public override void DiscardItem()
     {
-        base.DiscardItem();
-
         if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
+        base.DiscardItem();
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)

@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using GameNetcodeStuff;
 using CodeRebirth.Util.PlayerManager;
 using WeatherRegistry;
+using System.Runtime.CompilerServices;
 
 namespace CodeRebirth.Patches;
 
@@ -21,19 +22,8 @@ static class StartOfRoundPatch {
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
 		
 	}
-	
-	[HarmonyPatch(nameof(StartOfRound.OnDisable))]
-	[HarmonyPrefix]
-	public static void DisableWeathersPatch() {
-		if (MeteorShower.Active) { 
-			// patch to fix OnDisable not being triggered as its not actually in the scene.
-			WeatherHandler.Instance.MeteorShowerWeather.Effect.DisableEffect();
-		}
-		if (TornadoWeather.Active) {
-			WeatherHandler.Instance.TornadoesWeather.Effect.DisableEffect();
-		}
-	}
 
+	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	[HarmonyPatch(nameof(StartOfRound.ArriveAtLevel)), HarmonyPostfix]
 	static void DisplayWindyWarning(StartOfRound __instance) {
 		if(WeatherRegistryCompatibilityChecker.Enabled)	WeatherRegistryCompatibilityChecker.DisplayWindyWarning();

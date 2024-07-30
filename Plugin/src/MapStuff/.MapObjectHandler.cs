@@ -1,4 +1,5 @@
-﻿﻿using System.Collections.Generic;
+﻿﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.Patches;
 using CodeRebirth.ScrapStuff;
@@ -26,7 +27,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 
 	public class FloraAssets(string bundleName) : AssetBundleLoader<FloraAssets>(bundleName) {
 		[LoadFromBundle("AllFlora.prefab")]
-		public GameObject Flora { get; private set; } = null!;
+		public GameObject AllFloraPrefab { get; private set; } = null!;
 	}
 
 	public class DevilDealAssets(string bundleName) : AssetBundleLoader<DevilDealAssets>(bundleName) {
@@ -76,41 +77,30 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 
 	public void RegisterOutsideFlora() {
 		Flora = new FloraAssets("floraassets");
-		var floraStuff = Flora.Flora.GetComponent<Flora>();
-		foreach (var flora in floraStuff.BluntspearB) {
-			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+		Flora floraStuff = Flora.AllFloraPrefab.GetComponent<Flora>();
+		
+		string[] moonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+
+		foreach (var flora in floraStuff.Desert) {
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), moonList, FloraTag.Desert);
 		}
-		foreach (var flora in floraStuff.PeacockPlant) {
-			RegisterOutsideObjectWithConfig(["Grass"], 1, flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+
+		foreach (var flora in floraStuff.Snowy) {
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), moonList, FloraTag.Snow);
 		}
-		foreach (var flora in floraStuff.BluntspearA) {
-			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
-		}
-		foreach (var flora in floraStuff.Staright) {
-			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
-		}
-		foreach (var flora in floraStuff.SteelSprigs) {
-			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
-		}
-		foreach (var flora in floraStuff.Misc) {
-			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 20), new Keyframe(1, 100)), Plugin.ModConfig.ConfigFloraSpawnPlaces.Value);
+
+		foreach (var flora in floraStuff.Grass) {
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), moonList, FloraTag.Grass);
 		}
 	}
 
-	public void RegisterFlora(GameObject prefab, AnimationCurve curve, string configString) {
-		(Levels.LevelTypes[] vanillaLevelSpawnType, string[] CustomLevelType) = MapObjectConfigParsing(configString);
-
-		Levels.LevelTypes levelTypes = 0;
-		foreach (Levels.LevelTypes levelType in vanillaLevelSpawnType) {
-			levelTypes |= levelType;
-		}
-		
+	public void RegisterFlora(GameObject prefab, AnimationCurve curve, string[] moonList, FloraTag tag) {
 		RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora() {
 			prefab = prefab,
-			customLevelTypes = CustomLevelType,
-			levelTypes = levelTypes,
+			moonsWhiteList = moonList,
 			spawnCurve = curve,
-			blacklistedTags = []
+			blacklistedTags = ["Metal", "Wood", "Concrete", "Puddle", "Untagged", "Aluminum"],
+			floraTag = tag
 		});
 	}
 	

@@ -67,6 +67,8 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         // Misc
+        public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
+        public ConfigEntry<int> ConfigFloraMinAbundance { get; private set; }
         public ConfigEntry<string> ConfigFloraSpawnPlaces { get; private set; }
         public ConfigEntry<float> ConfigCritChance { get; private set; }
         public ConfigEntry<bool> ConfigEnableImperiumDebugs { get; private set; }
@@ -84,8 +86,16 @@ namespace CodeRebirth.Configs {
                                                 "Whether Flora is enabled.");
             ConfigFloraSpawnPlaces = configFile.Bind("Flora Options",
                                                 "Flora | Spawn Places",
-                                                "Vow,Adamance,March,Modded",
-                                                "Flora spawn places e.g. `All,Experimentation,Assurance,Gloom`, can only spawn on top of grass tagged ground!!");
+                                                "Vow,Adamance,March,Custom,",
+                                                "Flora spawn places e.g. `All,Custom,Vanilla,Experimentation,Assurance,Gloom`, can only spawn on top of grass tagged ground!!");
+            ConfigFloraMaxAbundance = configFile.Bind("Flora Options",
+                                                "Flora | Max Abundance",
+                                                40,
+                                                "How many plants can get added at most.");
+            ConfigFloraMinAbundance = configFile.Bind("Flora Options",
+                                                "Flora | Min Abundance",
+                                                20,
+                                                "How many plants can get added at least.");
             #endregion
             #region Tornado
             ConfigTornadosEnabled = configFile.Bind("Tornado Options",

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using CodeRebirth.Util.Spawning;
 using GameNetcodeStuff;
 using LethalLevelLoader;
@@ -302,6 +303,7 @@ public class Dealer : NetworkBehaviour
         LogIfDebugBuild("IncreaseHealth");
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public void DecreaseMoonPrices() {
         foreach (ExtendedLevel extendedLevel in LethalLevelLoader.PatchedContent.ExtendedLevels) {
             extendedLevel.RoutePrice = (int)(extendedLevel.RoutePrice /1.2f);
@@ -380,6 +382,7 @@ public class Dealer : NetworkBehaviour
         LogIfDebugBuild("DecreaseStamina");
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public void IncreaseMoonPrices() {
         foreach (ExtendedLevel extendedLevel in LethalLevelLoader.PatchedContent.ExtendedLevels) {
             extendedLevel.RoutePrice = (int)(extendedLevel.RoutePrice*1.2f);
