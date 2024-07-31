@@ -10,6 +10,7 @@ using Unity.Netcode;
 using UnityEngine;
 using CodeRebirth.Util;
 using System.Text.RegularExpressions;
+using UnityEngine.AI;
 
 namespace CodeRebirth.Patches;
 
@@ -49,14 +50,13 @@ static class RoundManagerPatch {
 			if (!validTags.TryGetValue(tagGroup.Key, out bool isLevelValid) || !isLevelValid) {
 				continue;
 			}
-
 			foreach (SpawnableFlora flora in tagGroup) {
 				var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
 				for (int i = 0; i < targetSpawns; i++) {
-					Vector3 basePosition = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+					Vector3 basePosition = GetRandomPointNearPointsOfInterest(random);
 					Vector3 offset = new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
 					Vector3 randomPosition = basePosition + offset;
-					Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(randomPosition, 10f, default, random, -1) + (Vector3.up * 2);
+					Vector3 vector = GetRandomNavMeshPosition(randomPosition, 20f, random) + (Vector3.up * 2);
 
 					if (!Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
 						continue;
@@ -78,6 +78,28 @@ static class RoundManagerPatch {
 				}
 			}
 		}
+	}
+
+	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random) {
+		// Get all points of interest
+		Vector3[] pointsOfInterest = RoundManager.Instance.outsideAINodes.Select(node => node.transform.position).ToArray();
+		
+		// Choose a random point of interest
+		Vector3 chosenPoint = pointsOfInterest[random.Next(0, pointsOfInterest.Length)];
+		
+		// Calculate an offset to avoid too much bunching up
+		Vector3 offset = new Vector3(random.NextFloat(-20, 20), 0, random.NextFloat(-20, 20));
+		return chosenPoint + offset;
+	}
+
+	public static Vector3 GetRandomNavMeshPosition(Vector3 center, float range, System.Random random) {
+		for (int i = 0; i < 30; i++) { // Try up to 30 times to find a valid position
+			Vector3 randomPos = center + new Vector3(random.NextFloat(-range, range), 0, random.NextFloat(-range, range));
+			if (NavMesh.SamplePosition(randomPos, out NavMeshHit hit, range, NavMesh.AllAreas)) {
+				return hit.position;
+			}
+		}
+		return center; // Fallback to the center if no valid position found
 	}
 
 	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]

@@ -52,6 +52,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
 
         // Weather Specific
+        public ConfigEntry<float> ConfigTornadoInsideBeforeThrow { get; private set; }
         public ConfigEntry<float> ConfigTornadoPullStrength { get; private set; }
         public ConfigEntry<bool> ConfigTornadoYeetSFX { get; private set; }
         public ConfigEntry<string> ConfigTornadoCanFlyYouAwayWeatherTypes { get; private set; }
@@ -87,11 +88,11 @@ namespace CodeRebirth.Configs {
                                                 "Whether Flora is enabled.");
             ConfigFloraMaxAbundance = configFile.Bind("Flora Options",
                                                 "Flora | Max Abundance",
-                                                100,
+                                                60,
                                                 "How many plants can get added at most.");
             ConfigFloraMinAbundance = configFile.Bind("Flora Options",
                                                 "Flora | Min Abundance",
-                                                50,
+                                                20,
                                                 "How many plants can get added at least.");
             ConfigFloraGrassSpawnPlaces = configFile.Bind("Flora Options",
                                                 "Flora | Grass Spawn Places",
@@ -122,7 +123,7 @@ namespace CodeRebirth.Configs {
                                                 "Tornado weather types that can fly you away (All, or specify per weather type like so: Fire,Electric,etc except water!!).");
             ConfigTornadoSpeed = configFile.Bind("Tornado Options",
                                                 "Tornados | Speed",
-                                                5f,
+                                                7f,
                                                 new ConfigDescription(
                                                     "Speed of tornados.",
                                                     new AcceptableValueRange<float>(0, 100f)
@@ -133,6 +134,13 @@ namespace CodeRebirth.Configs {
                                                 new ConfigDescription(
                                                     "Pull strength of tornados.",
                                                     new AcceptableValueRange<float>(0f, 100f)
+                                                ));
+            ConfigTornadoInsideBeforeThrow = configFile.Bind("Tornado Options",
+                                                "Tornados | Inside Before Throw",
+                                                10f,
+                                                new ConfigDescription(
+                                                   "Timer of being inside tornado before you get flung the hell out (50 if you never wanna be thrown).",
+                                                   new AcceptableValueRange<float>(1f, 50f)
                                                 ));
             ConfigTornadoDefaultVolume = configFile.Bind("Tornado Options",
                                                 "Tornados | Default Volume",

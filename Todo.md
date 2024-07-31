@@ -7,3 +7,4 @@
 - Item crate add networked opening speed.
 - Update readme.
 - Fix the tornado particles not showing.
+- Look into metal crate giving disabled items.

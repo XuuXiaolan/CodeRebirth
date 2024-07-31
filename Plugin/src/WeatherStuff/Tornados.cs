@@ -190,12 +190,12 @@ public class Tornados : EnemyAI
         
         var localPlayer = GameNetworkManager.Instance.localPlayerController;
         if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.transform.position) <= 10f && !CodeRebirthPlayerManager.dataForPlayer[localPlayer].flingingAway && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water) {
-            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 20f);
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 49f);
         } else if (Vector3.Distance(localPlayer.transform.position, this.transform.position) > 10f && !CodeRebirthPlayerManager.dataForPlayer[localPlayer].flingingAway) {
-            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 20f);
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 49f);
         }
 
-        if (timeSinceBeingInsideTornado >= 7f) {
+        if (timeSinceBeingInsideTornado >= Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value) {
             SetPlayerFlingingServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
         }
 

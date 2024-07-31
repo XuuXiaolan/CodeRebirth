@@ -6,11 +6,11 @@ If you're interested in helping with the development of the mod, feel free to re
 
 Current Additions:
 
-- 40+ Plant types
-- 2 Ambient Enemies
-- 2 Weather with 7 different events total
-- 2 Shop Item
-- 7 Scrap
+- 160+ Plant types!!!
+- 2 Ambient Enemies.
+- 2 Weather with 7 different events total.
+- 2 Shop Item.
+- 7 Scrap.
 - Custom Outside Objects.
 - Custom Inside Objects.
 
@@ -97,9 +97,9 @@ Shop Item to get some extra cash for the quota can pick up coins.
 ```
 Cracked, rare and unique. This Snow Globe is found deep inside of abandoned moons, made for children but loved by all. (Includes custom animations and sounds)
 ```
-### Meteorite
+### Meteorite (Sapphire)
 
-![](https://i.postimg.cc/nVg8pG8Y/imawdawdaage-removebg-preview.png)
+![]()
 
 ```
 Valuable rare Scrap found from the remaining debris of some Meteors.
@@ -128,7 +128,7 @@ Can crit and deal 2x damage.
 ![]()
 
 ```
-Looks like it would hurt a lot.
+Looks like it would hurt a lot...
 Can crit and deal 2x damage.
 ```
 

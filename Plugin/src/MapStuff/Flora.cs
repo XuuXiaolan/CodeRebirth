@@ -6,4 +6,5 @@ public class Flora : MonoBehaviour { // Added for potential future implementatio
     public GameObject[] Grass = null!;
     public GameObject[] Desert = null!;
     public GameObject[] Snowy = null!;
+    public GameObject[] DangerousSpecies = null!;
 }

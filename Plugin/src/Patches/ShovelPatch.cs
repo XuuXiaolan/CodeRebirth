@@ -1,6 +1,8 @@
 ﻿using CodeRebirth.WeaponStuff;
 using CodeRebirth.Util.Extensions;
 using HarmonyLib;
+using System.Collections.Generic;
+using GameNetcodeStuff;
 
 namespace CodeRebirth.Patches;
 
@@ -35,6 +37,14 @@ static class ShovelPatch {
 		if (__instance is CodeRebirthWeapons CRWeapon) {
 			postFixWorks = true;
 			CRWeapon.shovelHitForce = CRWeapon.defaultForce;	
+		}
+
+		if (__instance is NaturesMace naturesMace) {
+			List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
+
+			foreach (PlayerControllerB player in playerList) {
+				naturesMace.Heal(player);
+			}
 		}
 	}
 }

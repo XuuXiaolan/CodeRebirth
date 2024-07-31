@@ -29,6 +29,13 @@ static class EnemyAIPatch
 
             slowedEnemies[self] = self.StartCoroutine(DelayResetAcceleration(self));
         }
+
+        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer.itemProperties.itemName == "Nature's Mace") {
+            force = 0;
+            self.enemyHP++;
+            Plugin.Logger.LogInfo($"Enemy HP: {self.enemyHP}");
+        }
+        
         orig(self, force, playerWhoHit, playHitSFX, hitID);
     }
 
