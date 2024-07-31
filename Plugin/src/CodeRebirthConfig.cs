@@ -69,7 +69,9 @@ namespace CodeRebirth.Configs {
         // Misc
         public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
         public ConfigEntry<int> ConfigFloraMinAbundance { get; private set; }
-        public ConfigEntry<string> ConfigFloraSpawnPlaces { get; private set; }
+        public ConfigEntry<string> ConfigFloraGrassSpawnPlaces { get; private set; }
+        public ConfigEntry<string> ConfigFloraDesertSpawnPlaces { get; private set; }
+        public ConfigEntry<string> ConfigFloraSnowSpawnPlaces { get; private set; }
         public ConfigEntry<float> ConfigCritChance { get; private set; }
         public ConfigEntry<bool> ConfigEnableImperiumDebugs { get; private set; }
         public ConfigEntry<bool> ConfigWalletMode { get; private set; }
@@ -83,18 +85,26 @@ namespace CodeRebirth.Configs {
                                                 "Flora | Enabled",
                                                 true,
                                                 "Whether Flora is enabled.");
-            ConfigFloraSpawnPlaces = configFile.Bind("Flora Options",
-                                                "Flora | Spawn Places",
-                                                "Vow,Adamance,March,Custom,",
-                                                "Flora spawn places e.g. `All,Custom,Vanilla,Experimentation,Assurance,Gloom`, can only spawn on top of grass tagged ground!!");
             ConfigFloraMaxAbundance = configFile.Bind("Flora Options",
                                                 "Flora | Max Abundance",
-                                                40,
+                                                100,
                                                 "How many plants can get added at most.");
             ConfigFloraMinAbundance = configFile.Bind("Flora Options",
                                                 "Flora | Min Abundance",
-                                                20,
+                                                50,
                                                 "How many plants can get added at least.");
+            ConfigFloraGrassSpawnPlaces = configFile.Bind("Flora Options",
+                                                "Flora | Grass Spawn Places",
+                                                "Vow,Adamance,March,Custom,",
+                                                "Flora spawn places e.g. `All,Custom,Vanilla,Experimentation,Assurance,Gloom`.");
+            ConfigFloraDesertSpawnPlaces = configFile.Bind("Flora Options",
+                                                "Flora | Desert Spawn Places",
+                                                "Assurance,Offense,Custom,",
+                                                "Flora spawn places e.g. `All,Custom,Vanilla,Experimentation,Assurance,Gloom`.");
+            ConfigFloraSnowSpawnPlaces = configFile.Bind("Flora Options",
+                                                "Flora | Snow Spawn Places",
+                                                "Dine,Rend,Titan,Custom,",
+                                                "Flora spawn places e.g. `All,Custom,Vanilla,Experimentation,Assurance,Gloom`.");
             #endregion
             #region Tornado
             ConfigTornadosEnabled = configFile.Bind("Tornado Options",
@@ -425,7 +435,7 @@ namespace CodeRebirth.Configs {
 			configFile.SaveOnConfigSet = true;
 			ClearUnusedEntries(configFile);
         }
-        
+
         private void ClearUnusedEntries(ConfigFile configFile) {
             // Normally, old unused config entries don't get removed, so we do it with this piece of code. Credit to Kittenji.
             PropertyInfo orphanedEntriesProp = configFile.GetType().GetProperty("OrphanedEntries", BindingFlags.NonPublic | BindingFlags.Instance);

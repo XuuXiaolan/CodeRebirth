@@ -8,6 +8,8 @@ using CodeRebirth.Util.Spawning;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
+using CodeRebirth.Util;
+using System.Text.RegularExpressions;
 
 namespace CodeRebirth.Patches;
 
@@ -26,44 +28,62 @@ static class RoundManagerPatch {
 
 	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	static void SpawnFlora() {
-		bool isLevelValid = IsCurrentMoonInConfig(spawnableFlora[0].moonsWhiteList);
-		if (!isLevelValid) return;
 		Plugin.Logger.LogInfo("Spawning flora!!!");
 		System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
 
-		foreach (SpawnableFlora flora in spawnableFlora) {
-			var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0,1));
-			for (int i = 0; i < targetSpawns; i++) {
-				Vector3 basePosition = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
-				Vector3 offset = new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
-				Vector3 randomPosition = basePosition + offset;
-				Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(randomPosition, 10f, default, random, -1) + (Vector3.up * 2);
+		// Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
+		Dictionary<FloraTag, string[]> tagToMoonWhiteList = spawnableFlora
+			.GroupBy(flora => flora.floraTag)
+			.ToDictionary(g => g.Key, g => g.First().moonsWhiteList);
 
-				if(!Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
-					continue;
+		// Cache the valid tags based on the current moon configuration
+		Dictionary<FloraTag, bool> validTags = new Dictionary<FloraTag, bool>();
+		foreach (var tag in tagToMoonWhiteList.Keys) {
+			if (tagToMoonWhiteList.TryGetValue(tag, out string[] moonsWhiteList)) {
+				bool isLevelValid = IsCurrentMoonInConfig(moonsWhiteList);
+				validTags[tag] = isLevelValid;
+			}
+		}
 
-				bool isValid = true;
-				if (Plugin.LethalLevelLoaderIsOn) {
-					flora.blacklistedTags = flora.blacklistedTags.Where(x => x != "Untagged").ToArray();
-				}
-				foreach (string tag in flora.blacklistedTags) {
-					if (hit.transform.gameObject.CompareTag(tag)) {
-						isValid = false;
-						break;
+		foreach (var tagGroup in spawnableFlora.GroupBy(flora => flora.floraTag)) {
+			if (!validTags.TryGetValue(tagGroup.Key, out bool isLevelValid) || !isLevelValid) {
+				continue;
+			}
+
+			foreach (SpawnableFlora flora in tagGroup) {
+				var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
+				for (int i = 0; i < targetSpawns; i++) {
+					Vector3 basePosition = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+					Vector3 offset = new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
+					Vector3 randomPosition = basePosition + offset;
+					Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(randomPosition, 10f, default, random, -1) + (Vector3.up * 2);
+
+					if (!Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
+						continue;
+
+					bool isValid = true;
+					if (Plugin.LethalLevelLoaderIsOn) {
+						flora.blacklistedTags = flora.blacklistedTags.Where(x => x != "Untagged").ToArray();
 					}
-				}
-				if(!isValid) continue;
+					foreach (string floorTag in flora.blacklistedTags) {
+						if (hit.transform.gameObject.CompareTag(floorTag)) {
+							isValid = false;
+							break;
+						}
+					}
+					if (!isValid) continue;
 
-				GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-				spawnedFlora.transform.up = hit.normal;
+					GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+					spawnedFlora.transform.up = hit.normal;
+				}
 			}
 		}
 	}
 
+	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	public static bool IsCurrentMoonInConfig(string[] moonsWhiteList) {
 		// Prepare the current level name
-		string currentLevelName = (StartOfRound.Instance.currentLevel.PlanetName + "Level").Split(' ')[1].Trim().ToLower();
-		
+		string currentLevelName = Regex.Replace(StartOfRound.Instance.currentLevel.PlanetName, "^(?:\\d+ )*(.*)", "$1Level").ToLowerInvariant();
 		// Convert whitelist to lowercase and sort it
 		var whiteList = moonsWhiteList.Select(levelType => levelType.ToLowerInvariant()).ToArray();
 		Array.Sort(whiteList);
@@ -76,22 +96,24 @@ static class RoundManagerPatch {
 		// Check if "all" is in the whitelist
 		if (IsInWhiteList("all")) return true;
 		
-		// Determine if the current level is a vanilla moon
-		bool isVanillaMoon = Array.Exists(StartOfRound.Instance.levels, level => level.Equals(StartOfRound.Instance.currentLevel));
-		
+		bool isVanillaMoon = true;
+		if (Plugin.LethalLevelLoaderIsOn) {
+			// Determine if the current level is a vanilla moon
+			isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
+		}
 		// Check for vanilla moon conditions
 		if (isVanillaMoon) {
 			if (IsInWhiteList("vanilla")) return true;
 			if (IsInWhiteList(currentLevelName)) return true;
+			return false;
 		}
 
 		// Check for custom moon conditions
 		if (IsInWhiteList("custom")) return true;
 		
 		// Check for custom level name if LethalLevelLoader is on
-		if (Plugin.LethalLevelLoaderIsOn) {
+		if (Plugin.LethalLevelLoaderIsOn && !isVanillaMoon) {
 			currentLevelName = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLower();
-			Plugin.Logger.LogInfo($"Current level name: {currentLevelName}");
 			return IsInWhiteList(currentLevelName);
 		}
 		

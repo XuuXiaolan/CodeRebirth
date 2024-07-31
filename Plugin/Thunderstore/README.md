@@ -3,15 +3,16 @@
 Code Rebirth is a general content mod expanding on all parts of the game.
 
 If you're interested in helping with the development of the mod, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on discord!
-[@Idea/Issue Submission Form](https://github.com/XuuXiao/CodeRebirthReports)
 
 Current Additions:
 
+- 40+ Plant types
 - 2 Ambient Enemies
-- 2 Weather event
+- 2 Weather with 7 different events total
 - 2 Shop Item
 - 7 Scrap
 - Custom Outside Objects.
+- Custom Inside Objects.
 
 ## Preview (Spoilers ahead!)
 

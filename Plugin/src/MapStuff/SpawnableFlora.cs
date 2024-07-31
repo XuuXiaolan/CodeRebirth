@@ -5,6 +5,7 @@ using UnityEngine;
 namespace CodeRebirth.MapStuff;
 
 public enum FloraTag {
+	None,
 	Desert,
 	Snow,
 	Grass,

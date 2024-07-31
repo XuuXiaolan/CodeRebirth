@@ -1,3 +1,11 @@
+## v0.4.0
+- Fixed flora not spawning on some custom moons.
+- Metal crate changed to drop non-scrap equipment.
+- Added 18 new flora types
+
+## v0.3.3
+- Flora can now be sorted into 3 different types.
+
 ## v0.3.2
 - Github is now public and contributions/talent/reports/more ideas are appreciated.
 - Configs now accept both custom and modded (custom is more recommended just incase).

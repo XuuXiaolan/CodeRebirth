@@ -1,4 +1,5 @@
 ﻿﻿using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.ItemStuff;
 using CodeRebirth.Misc;
 using CodeRebirth.Util.Extensions;
@@ -33,6 +34,7 @@ public class ItemCrate : CRHittable {
 	public NetworkVariable<int> health = new(4);
 	public Vector3 originalPosition;
 	public Random random = new();
+	public List<Item> ShopItemList = new();
 	public enum CrateType {
 		Wooden,
 		Metal,
@@ -50,9 +52,17 @@ public class ItemCrate : CRHittable {
 
 		digProgress.OnValueChanged += UpdateDigPosition;
 		
-		
+			
 		originalPosition = transform.position;
 		UpdateDigPosition(0, 0);
+
+		if (crateType == CrateType.Metal) {
+			foreach (Item item in StartOfRound.Instance.allItemsList.itemsList) {
+				if (!item.isScrap) {
+					ShopItemList.Add(item);
+				}
+			}
+		}
 	}
 
 	public override void OnNetworkSpawn() {
@@ -107,8 +117,18 @@ public class ItemCrate : CRHittable {
 
 	public void OpenCrate() {
 		for (int i = 0; i < 3; i++) {
-			SpawnableItemWithRarity chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
-			Item item = chosenItemWithRarity.spawnableItem;
+			SpawnableItemWithRarity chosenItemWithRarity;
+			Item item;
+			if (crateType == CrateType.Metal) {
+				item = GetRandomShopItem();
+			} else if (crateType == CrateType.Wooden) {
+				chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
+				item = chosenItemWithRarity.spawnableItem;
+			} else {
+				chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
+				item = chosenItemWithRarity.spawnableItem;
+			}
+			
 			GameObject spawned = Instantiate(item.spawnPrefab, transform.position + transform.up*0.6f + transform.right*random.NextFloat(-0.2f, 0.2f) + transform.forward*random.NextFloat(-0.2f, 0.2f), Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
 			GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
@@ -133,6 +153,7 @@ public class ItemCrate : CRHittable {
 		opened = true;
 
 		animator?.SetTrigger("opened");
+		if (crateLid == null) return;
 		crateLid.isKinematic = false;
 		crateLid.useGravity = true;
 		crateLid.AddForce(crateLid.transform.up * 200f, ForceMode.Impulse); // during tests this launched the lid not up?
@@ -167,4 +188,8 @@ public class ItemCrate : CRHittable {
 		}
 		return true; // this bool literally doesn't get used. i have no clue.
 	}
+
+	public Item GetRandomShopItem() {
+		return ShopItemList[random.Next(ShopItemList.Count)];
+	}	
 }
