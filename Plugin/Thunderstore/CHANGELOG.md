@@ -1,3 +1,8 @@
+## v0.4.1
+- Spiky Mace by default deals 2 damage now.
+- Icy Hammer slows down enemies and players hit by it temporarily.
+-
+
 ## v0.4.0
 - Fixed flora not spawning on some custom moons.
 - Metal crate changed to drop non-scrap equipment.

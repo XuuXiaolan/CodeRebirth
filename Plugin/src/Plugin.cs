@@ -75,6 +75,7 @@ public class Plugin : BaseUnityPlugin {
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
         PlayerControllerBPatch.Init();
+        EnemyAIPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");

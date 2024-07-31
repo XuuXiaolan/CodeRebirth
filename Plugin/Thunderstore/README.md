@@ -23,15 +23,21 @@ Current Additions:
 
 ### Windy
 
-![](https://i.postimg.cc/x81dKbhc/tornado.png)
+![]()
+![]()
+![]()
+![]()
+![]()
+![]()
 
 ```
-Disastrous weather where the player is pulled and ripped apart by different types of tornados (currently only blood tornado available).
+Disastrous weather where the player is pulled and ripped apart by different types of tornados.
 ```
 
 ### Meteor Shower
 
 ![](https://i.postimg.cc/RFJzM5yL/image-removebg-preview-1.png)
+![]()
 
 ```
 World-ending weather where the world will slowly crumble as time goes on, but with the potential for rare crystals to spawn.
@@ -104,7 +110,35 @@ Valuable rare Scrap found from the remaining debris of some Meteors.
 ![](https://i.postimg.cc/wxWPFcTY/imwadaage-removebg-preview.png)
 
 ```
-Cool glowy Axe that deals twice the damage of the shovel.
+Cool glowy Axe!.
+Can crit and deal 2x damage.
+```
+
+### Nature's Mace
+
+![]()
+
+```
+Mace that uses the power of nature to strike your enemies.
+Can crit and deal 2x damage.
+```
+
+### Spiky Mace
+
+![]()
+
+```
+Looks like it would hurt a lot.
+Can crit and deal 2x damage.
+```
+
+### Icy Hammer
+
+![]()
+
+```
+With the power of ice, enemies and players may be slowed down temporarily...
+Can crit and deal 2x damage.
 ```
 
 ### Coin
