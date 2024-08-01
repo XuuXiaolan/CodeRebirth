@@ -1,5 +1,6 @@
 ﻿﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CodeRebirth.ItemStuff;
 using CodeRebirth.Misc;
 using CodeRebirth.Util.Extensions;
@@ -34,7 +35,7 @@ public class ItemCrate : CRHittable {
 	public NetworkVariable<int> health = new(4);
 	public Vector3 originalPosition;
 	public Random random = new();
-	public List<Item> ShopItemList = new();
+	public static List<Item> ShopItemList = new();
 	public enum CrateType {
 		Wooden,
 		Metal,
@@ -56,10 +57,14 @@ public class ItemCrate : CRHittable {
 		originalPosition = transform.position;
 		UpdateDigPosition(0, 0);
 
-		if (crateType == CrateType.Metal) {
+		if (crateType == CrateType.Metal && ShopItemList.Count == 0) {
+			// theoretically this is stupid, but it only runs once so oh well
+			Terminal terminal = FindObjectOfType<Terminal>();
+            
 			foreach (Item item in StartOfRound.Instance.allItemsList.itemsList) {
-				if (!item.isScrap) {
+				if (!item.isScrap && terminal.buyableItemsList.Contains(item)) {
 					ShopItemList.Add(item);
+					Plugin.Logger.LogDebug(item.name);
 				}
 			}
 		}
