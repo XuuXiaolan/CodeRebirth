@@ -41,17 +41,33 @@ public class SnowGlobe : GrabbableObject
             Plugin.Logger.LogDebug("player is null");
             return;
         }
-        var playerOverrideThing = CodeRebirthPlayerManager.dataForPlayer[player].playerOverrideController;
+        AnimatorOverrideController? playerOverrideThing = CodeRebirthPlayerManager.dataForPlayer[player].playerOverrideController;
         if (playerOverrideThing == null) {
             Plugin.Logger.LogDebug("playerOverrideThing is null");
             return;
         }
         if (_override) {
-            playerOverrideThing["HoldClipboard"] = overrideClip;
+            if (player.isCrouching) {
+                player.Crouch(!player.isCrouching);
+                StartCoroutine(DelayOverrideAnim(playerOverrideThing));
+            } else {
+                playerOverrideThing["HoldLungApparatice"] = overrideClip;
+            }
         } else {
-            playerOverrideThing["HoldClipboard"] = null;
+            playerOverrideThing["HoldLungApparatice"] = null;
         }
+    }
 
+    public IEnumerator DelayOverrideAnim(AnimatorOverrideController playerOverrideThing) {
+        yield return new WaitForSeconds(0.3f);
+        if (this.isHeld && playerHeldBy == previouslyHeldBy) {
+            playerOverrideThing["HoldLungApparatice"] = overrideClip;
+        }
+    }
+
+    public override void Update() {
+        base.Update();
+        if (previouslyHeldBy == null) return;
     }
 
     public override void GrabItem()

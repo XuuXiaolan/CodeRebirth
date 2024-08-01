@@ -28,7 +28,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  spawningDisabled: 1
+  spawningDisabled: 0
   spawnFromWeeds: 0
   numberSpawnedFalloff:
     serializedVersion: 2
@@ -41,8 +41,8 @@ MonoBehaviour:
   requireNestObjectsToSpawn: 0
   enemyPrefab: {fileID: 2459062693091599277, guid: 5b400b77a2e2bfb4389382d660592a2a,
     type: 3}
-  PowerLevel: 0
-  MaxCount: 1
+  PowerLevel: 1
+  MaxCount: 10
   numberSpawned: 0
   nestsSpawned: 0
   isOutsideEnemy: 1

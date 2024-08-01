@@ -1,7 +1,12 @@
 ## v0.4.1
 - Spiky Mace by default deals 2 damage now.
 - Icy Hammer slows down enemies and players hit by it temporarily.
--
+- Nature's Mace heals enemies by 1 hit point and heals players.
+- Improved readme.
+- Added a blacklist moon config for flora (doesn't except placeholders, only moon names).
+- Made LLL and WeatherRegistry a hard dependency.
+- Registered Tornado as an enemy with 0 spawnweights for that one guy.
+- Added I think like 70 more flower types?
 
 ## v0.4.0
 - Fixed flora not spawning on some custom moons.

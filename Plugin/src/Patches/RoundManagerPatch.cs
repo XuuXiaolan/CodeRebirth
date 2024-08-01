@@ -27,21 +27,28 @@ static class RoundManagerPatch {
 		
 	}
 
-	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	static void SpawnFlora() {
 		Plugin.Logger.LogInfo("Spawning flora!!!");
 		System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
 
 		// Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
-		Dictionary<FloraTag, string[]> tagToMoonWhiteList = spawnableFlora
+		var tagToMoonLists = spawnableFlora
 			.GroupBy(flora => flora.floraTag)
-			.ToDictionary(g => g.Key, g => g.First().moonsWhiteList);
+			.ToDictionary(
+				g => g.Key,
+				g => new
+				{
+					MoonsWhiteList = g.First().moonsWhiteList,
+					MoonsBlackList = g.First().moonsBlackList
+				}
+			);
 
 		// Cache the valid tags based on the current moon configuration
 		Dictionary<FloraTag, bool> validTags = new Dictionary<FloraTag, bool>();
-		foreach (var tag in tagToMoonWhiteList.Keys) {
-			if (tagToMoonWhiteList.TryGetValue(tag, out string[] moonsWhiteList)) {
-				bool isLevelValid = IsCurrentMoonInConfig(moonsWhiteList);
+		foreach (var tag in tagToMoonLists.Keys) {
+			if (tagToMoonLists.TryGetValue(tag, out var moonLists))
+			{
+				bool isLevelValid = IsCurrentMoonInConfig(moonLists.MoonsWhiteList, moonLists.MoonsBlackList);
 				validTags[tag] = isLevelValid;
 			}
 		}
@@ -62,9 +69,6 @@ static class RoundManagerPatch {
 						continue;
 
 					bool isValid = true;
-					if (Plugin.LethalLevelLoaderIsOn) {
-						flora.blacklistedTags = flora.blacklistedTags.Where(x => x != "Untagged").ToArray();
-					}
 					foreach (string floorTag in flora.blacklistedTags) {
 						if (hit.transform.gameObject.CompareTag(floorTag)) {
 							isValid = false;
@@ -102,47 +106,42 @@ static class RoundManagerPatch {
 		return center; // Fallback to the center if no valid position found
 	}
 
-	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-	public static bool IsCurrentMoonInConfig(string[] moonsWhiteList) {
+	public static bool IsCurrentMoonInConfig(string[] moonsWhiteList, string[] moonsBlackList) {
 		// Prepare the current level name
 		string currentLevelName = Regex.Replace(StartOfRound.Instance.currentLevel.PlanetName, "^(?:\\d+ )*(.*)", "$1Level").ToLowerInvariant();
-		// Convert whitelist to lowercase and sort it
+		string currentLLLLevelName = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLower();
+		// Convert whitelist and blacklist to lowercase and sort them
 		var whiteList = moonsWhiteList.Select(levelType => levelType.ToLowerInvariant()).ToArray();
+		var blackList = moonsBlackList.Select(levelType => levelType.ToLowerInvariant()).ToArray();
 		Array.Sort(whiteList);
-		
-		// Function to check if an item exists in the sorted whitelist using binary search
-		bool IsInWhiteList(string item) {
-			return Array.BinarySearch(whiteList, item) >= 0;
+		Array.Sort(blackList);
+
+		// Function to check if an item exists in the sorted list using binary search
+		bool IsInList(string item, string[] list) {
+			return Array.BinarySearch(list, item) >= 0;
 		}
 
 		// Check if "all" is in the whitelist
-		if (IsInWhiteList("all")) return true;
+		if (IsInList("all", whiteList)) return true;
 		
-		bool isVanillaMoon = true;
-		if (Plugin.LethalLevelLoaderIsOn) {
-			// Determine if the current level is a vanilla moon
-			isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
-		}
+		bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
+
+		// Check blacklist first
+		if (IsInList(currentLevelName, blackList) || IsInList(currentLLLLevelName, blackList)) return false;
+
 		// Check for vanilla moon conditions
 		if (isVanillaMoon) {
-			if (IsInWhiteList("vanilla")) return true;
-			if (IsInWhiteList(currentLevelName)) return true;
+			if (IsInList("vanilla", whiteList)) return true;
+			if (IsInList(currentLevelName, whiteList)) return true;
 			return false;
 		}
 
 		// Check for custom moon conditions
-		if (IsInWhiteList("custom")) return true;
-		
-		// Check for custom level name if LethalLevelLoader is on
-		if (Plugin.LethalLevelLoaderIsOn && !isVanillaMoon) {
-			currentLevelName = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLower();
-			return IsInWhiteList(currentLevelName);
-		}
-		
-		// If none of the conditions match, return false
-		return false;
-	}
+		if (IsInList("custom", whiteList)) return true;
 
+		// Check for custom level name
+		return IsInList(currentLLLLevelName, whiteList);
+	}
 
 	static void SpawnCrates() {
 		Plugin.Logger.LogDebug("Spawning crates!!!");

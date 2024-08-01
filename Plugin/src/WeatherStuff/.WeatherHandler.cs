@@ -1,12 +1,6 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using BepInEx.Configuration;
-using CodeRebirth.Misc;
+﻿﻿using System.Runtime.CompilerServices;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
-using LethalLib.Modules;
 using UnityEngine;
 using WeatherRegistry;
 
@@ -34,27 +28,20 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     }
 
     public class TornadoAssets(string bundleName) : AssetBundleLoader<TornadoAssets>(bundleName) {
-        [LoadFromBundle("WaterPlayerParticles.prefab")]
-        public GameObject WaterPlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("WindPlayerParticles.prefab")]
-        public GameObject WindPlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("SmokePlayerParticles.prefab")]
-        public GameObject SmokePlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("FirePlayerParticles.prefab")]
-        public GameObject FirePlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("ElectricPlayerParticles.prefab")]
-        public GameObject ElectricPlayerParticles { get; private set; } = null!;
-        [LoadFromBundle("BloodPlayerParticles.prefab")]
-        public GameObject BloodPlayerParticles { get; private set; } = null!;
-        
-        [LoadFromBundle("TornadoMain.prefab")]
-        public GameObject TornadoPrefab { get; private set; } = null!;
+        [LoadFromBundle("TornadoObj.asset")]
+        public EnemyType TornadoObj { get; private set; } = null!;
         
         [LoadFromBundle("TornadoContainer.prefab")]
         public GameObject TornadoEffectPrefab { get; private set; } = null!;
         
         [LoadFromBundle("TornadoWeather.prefab")]
         public GameObject TornadoPermanentEffectPrefab { get; private set; } = null!;
+        
+        [LoadFromBundle("TornadoTN.asset")]
+        public TerminalNode TornadoTerminalNode { get; private set; } = null!;
+
+        [LoadFromBundle("TornadoTK.asset")]
+        public TerminalKeyword TornadoTerminalKeyword { get; private set; } = null!;
     }
 
     public MeteoriteAssets Meteorite { get; private set; } = null!;
@@ -63,11 +50,10 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     public Weather TornadoesWeather { get; private set; } = null!;
 
     public WeatherHandler() {
-        if (Plugin.WeatherRegistryIsOn && Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
-        if (Plugin.WeatherRegistryIsOn && Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
+        if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
+        if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
     }
 
-	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private void RegisterTornadoWeather() {
         Tornado = new TornadoAssets("tornadoassets");
         GameObject effectObject = GameObject.Instantiate(Tornado.TornadoEffectPrefab);
@@ -83,15 +69,17 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         };
 
         TornadoesWeather = new Weather("Windy", tornadoEffect) {
-            DefaultLevelFilters = new[] { "Gordion" },
+            DefaultWeight = Plugin.ModConfig.ConfigTornadoWeatherWeight.Value,
+            ScrapAmountMultiplier = Plugin.ModConfig.ConfigTornadoScrapAmountMultiplier.Value,
+            ScrapValueMultiplier = Plugin.ModConfig.ConfigTornadoScrapValueMultiplier.Value,
+            DefaultLevelFilters = new string[] { "Gordion" },
             LevelFilteringOption = FilteringOption.Exclude,
             Color = UnityEngine.Color.gray,
         };
-
-        WeatherRegistry.WeatherManager.RegisterWeather(TornadoesWeather);
+        RegisterEnemyWithConfig("All:0", Tornado.TornadoObj, Tornado.TornadoTerminalNode, Tornado.TornadoTerminalKeyword, 1, 10);
+        WeatherManager.RegisterWeather(TornadoesWeather);
     }
 
-	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private void RegisterMeteorShower() {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
         Plugin.samplePrefabs.Add("Meteorite", Meteorite.MeteoriteItem);
@@ -110,11 +98,15 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         };
 
         MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {
-            DefaultLevelFilters = new[] { "Gordion" },
+            DefaultWeight = Plugin.ModConfig.ConfigMeteorWeatherWeight.Value,
+            ScrapAmountMultiplier = Plugin.ModConfig.ConfigMeteorScrapAmountMultiplier.Value,
+            ScrapValueMultiplier = Plugin.ModConfig.ConfigMeteorScrapValueMultiplier.Value,
+            DefaultLevelFilters = new string[] { "Gordion" },
             LevelFilteringOption = FilteringOption.Exclude,
             Color = new Color(0.5f, 0f, 0f, 1f),
+
         };
 
-        WeatherRegistry.WeatherManager.RegisterWeather(MeteorShowerWeather);
+        WeatherManager.RegisterWeather(MeteorShowerWeather);
     }
 }

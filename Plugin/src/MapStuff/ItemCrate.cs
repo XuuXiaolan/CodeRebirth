@@ -58,13 +58,11 @@ public class ItemCrate : CRHittable {
 		UpdateDigPosition(0, 0);
 
 		if (crateType == CrateType.Metal && ShopItemList.Count == 0) {
-			// theoretically this is stupid, but it only runs once so oh well
 			Terminal terminal = FindObjectOfType<Terminal>();
             
 			foreach (Item item in StartOfRound.Instance.allItemsList.itemsList) {
 				if (!item.isScrap && terminal.buyableItemsList.Contains(item)) {
 					ShopItemList.Add(item);
-					Plugin.Logger.LogDebug(item.name);
 				}
 			}
 		}
@@ -76,7 +74,7 @@ public class ItemCrate : CRHittable {
 	}
 	
 	void UpdateDigPosition(float old, float newValue) {
-		if(IsOwner) // :wharg:
+		if(IsOwner)
 			transform.position = originalPosition + (transform.up * newValue * .5f);
 
 		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {newValue}");

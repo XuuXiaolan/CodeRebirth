@@ -17,12 +17,12 @@ using CodeRebirth.Patches;
 namespace CodeRebirth;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
-[BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(Imperium.PluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("Surfaced", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("MoreShipUpgrades", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.SoftDependency)] // todo: soft depend on subtitles api and add support.
+[BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] // todo: soft depend on subtitles api and add support.
 [BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger = null!;
@@ -30,10 +30,8 @@ public class Plugin : BaseUnityPlugin {
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
     internal static bool ImperiumIsOn = false;
     internal static bool SurfacedIsOn = false;
-    internal static bool WeatherRegistryIsOn = false;
     internal static bool LGUIsOn = false;
     internal static bool SubtitlesAPIIsOn = false;
-    internal static bool LethalLevelLoaderIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
@@ -46,30 +44,28 @@ public class Plugin : BaseUnityPlugin {
     
     private void Awake() {
         Logger = base.Logger;
-
-        if (LethalLevelLoaderCompatibilityChecker.Enabled) {
-            LethalLevelLoaderCompatibilityChecker.Init();
-        }
         if (ImperiumCompatibilityChecker.Enabled) {
             ImperiumCompatibilityChecker.Init();
+        } else {
+            // Logger.LogWarning("Imperium not found. Special Debugs will not be activated.");
         }
 
         if (SurfacedCompatibilityChecker.Enabled) {
             SurfacedCompatibilityChecker.Init();
-        }
-        
-        if (WeatherRegistryCompatibilityChecker.Enabled) {
-            WeatherRegistryCompatibilityChecker.Init();
         } else {
-            Plugin.Logger.LogWarning("Weather registry not found. Custom Weathers will not be activated.");
+            // Logger.LogWarning("Surfaced not found. Sharknado will not be activated.");
         }
 
         if (LGUCompatibilityChecker.Enabled) {
             LGUCompatibilityChecker.Init();
+        } else {
+            // Logger.LogWarning("lategameupgrades not found. Custom hunter samples will not be activated.");
         }
 
         if (SubtitlesAPICompatibilityChecker.Enabled) {
             SubtitlesAPICompatibilityChecker.Init();
+        } else {
+            // Logger.LogWarning("SubtitlesAPI not found. Subtitles will not be activated.");
         }
 
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
@@ -86,13 +82,13 @@ public class Plugin : BaseUnityPlugin {
         
         Logger.LogInfo("Registering content.");
 
-        List<Type> creatureHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
+        List<Type> contentHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
             && x.BaseType.GetGenericTypeDefinition() == typeof(ContentHandler<>)
         ).ToList();
         
-        foreach(Type type in creatureHandlers) {
+        foreach(Type type in contentHandlers) {
             type.GetConstructor([]).Invoke([]);
         }
         if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");

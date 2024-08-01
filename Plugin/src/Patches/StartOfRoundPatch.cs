@@ -23,10 +23,13 @@ static class StartOfRoundPatch {
 		
 	}
 
-	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	[HarmonyPatch(nameof(StartOfRound.ArriveAtLevel)), HarmonyPostfix]
 	static void DisplayWindyWarning(StartOfRound __instance) {
-		if(WeatherRegistryCompatibilityChecker.Enabled)	WeatherRegistryCompatibilityChecker.DisplayWindyWarning();
+        if(WeatherHandler.Instance.TornadoesWeather == null) return; // tornado weather didn't load
+		if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) == WeatherHandler.Instance.TornadoesWeather) {
+			Plugin.Logger.LogWarning("Displaying Windy Weather Warning.");
+			HUDManager.Instance.DisplayTip("Weather alert!", "You have routed to a Windy moon. Exercise caution if you are sensitive to flashing lights!", true, true, "CR_WindyTip");
+		}
 	}
 	
 	private static void CreateNetworkManager()

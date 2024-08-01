@@ -50,8 +50,13 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigSnailCatMaxSpawnCount { get; private set; }
         public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
         public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
-
         // Weather Specific
+        public ConfigEntry<float> ConfigMeteorScrapAmountMultiplier { get; private set; }
+        public ConfigEntry<float> ConfigMeteorScrapValueMultiplier { get; private set; }
+        public ConfigEntry<int> ConfigMeteorWeatherWeight { get; private set; }
+        public ConfigEntry<float> ConfigTornadoScrapAmountMultiplier { get; private set; }
+        public ConfigEntry<float> ConfigTornadoScrapValueMultiplier { get; private set; }
+        public ConfigEntry<int> ConfigTornadoWeatherWeight { get; private set; }
         public ConfigEntry<float> ConfigTornadoInsideBeforeThrow { get; private set; }
         public ConfigEntry<float> ConfigTornadoPullStrength { get; private set; }
         public ConfigEntry<bool> ConfigTornadoYeetSFX { get; private set; }
@@ -68,6 +73,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         // Misc
+        public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; private set; }
         public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
         public ConfigEntry<int> ConfigFloraMinAbundance { get; private set; }
         public ConfigEntry<string> ConfigFloraGrassSpawnPlaces { get; private set; }
@@ -106,6 +112,10 @@ namespace CodeRebirth.Configs {
                                                 "Flora | Snow Spawn Places",
                                                 "Dine,Rend,Titan,Custom,",
                                                 "Flora spawn places e.g. `All,Custom,Vanilla,Experimentation,Assurance,Gloom`.");
+            ConfigFloraExcludeSpawnPlaces = configFile.Bind("Flora Options",
+                                                "Flora | Exclude Spawn Places",
+                                                "Infernis",
+                                                "Flora EXLUDE spawn places e.g. `Experimentation,Assurance,Gloom` (only takes moon names).");
             #endregion
             #region Tornado
             ConfigTornadosEnabled = configFile.Bind("Tornado Options",
@@ -142,6 +152,24 @@ namespace CodeRebirth.Configs {
                                                    "Timer of being inside tornado before you get flung the hell out (50 if you never wanna be thrown).",
                                                    new AcceptableValueRange<float>(1f, 50f)
                                                 ));
+            ConfigTornadoScrapAmountMultiplier = configFile.Bind("Tornado Options",
+                                                "Tornados | Scrap Amount Multiplier",
+                                                1.1f,
+                                                new ConfigDescription(
+                                                    "Multiplier of the amount of scrap spawned when a Tornado is present.",
+                                                    new AcceptableValueRange<float>(0, 100f)
+                                                ));
+            ConfigTornadoScrapValueMultiplier = configFile.Bind("Tornado Options",
+                                                "Tornados | Scrap Value Multiplier",
+                                                1.1f,
+                                                new ConfigDescription(
+                                                    "Multiplier of the value of scrap spawned when a Tornado is present.",
+                                                    new AcceptableValueRange<float>(0, 100f)
+                                                ));
+            ConfigTornadoWeatherWeight = configFile.Bind("Tornado Options",
+                                                "Tornados | Weather Weights",
+                                                100,
+                                                "Tornados spawn weights.");
             ConfigTornadoDefaultVolume = configFile.Bind("Tornado Options",
                                                 "Tornados | Default Volume",
                                                 1f,
@@ -310,10 +338,24 @@ namespace CodeRebirth.Configs {
 													"Chance of spawning a meteorite when a meteor is spawned (0 to 100 decimals included).",
 													new AcceptableValueRange<float>(0, 100f)
 												));
-            ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
-                                                "MeteorShower | Wesley Mode",
-                                                false,
-                                                "Enables/Disables the Wesley Mode (this is a meme, not recommended lol).");
+            ConfigMeteorScrapAmountMultiplier = configFile.Bind("MeteorShower Options",
+                                                "Meteors | Scrap Amount Multiplier",
+                                                1.1f,
+                                                new ConfigDescription(
+                                                    "Multiplier of the amount of scrap spawned when a Meteor Shower is present.",
+                                                    new AcceptableValueRange<float>(0, 100f)
+                                                ));
+            ConfigMeteorScrapValueMultiplier = configFile.Bind("MeteorShower Options",
+                                                "Meteors | Scrap Value Multiplier",
+                                                1.1f,
+                                                new ConfigDescription(
+                                                    "Multiplier of the value of scrap spawned when a Meteor Shower is present.",
+                                                    new AcceptableValueRange<float>(0, 100f)
+                                                ));
+            ConfigMeteorWeatherWeight = configFile.Bind("MeteorShower Options",
+                                                "Meteors | Weather Weights",
+                                                100,
+                                                "Meteors spawn weights.");
             ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                                 "Meteors | Default Volume",
                                                 0.25f,
@@ -328,6 +370,10 @@ namespace CodeRebirth.Configs {
 													"Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.", 
 													new AcceptableValueRange<float>(0, 1f)
 												));
+            ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
+                                                "MeteorShower | Wesley Mode",
+                                                false,
+                                                "Enables/Disables the Wesley Mode (this is a meme, not recommended lol).");
             #endregion
             #region ModCompat
             ConfigEnableImperiumDebugs = configFile.Bind("Imperium Compatibility", 

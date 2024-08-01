@@ -17,4 +17,5 @@ public class SpawnableFlora {
 	public AnimationCurve spawnCurve = null!;
 	public string[] blacklistedTags = null!;
 	public FloraTag floraTag;
+	public string[] moonsBlackList = null!;
 }
