@@ -1,3 +1,8 @@
+## v0.4.2
+- Sigh, fixed the tornado stuff for the guy who wants it to spawn naturally as an enemy (WONT WORK IF THE WEATHER IS WIMDY ALREADY).
+- Fixed plant spawning not on navmesh (this is custom moons being bad and adding colliders where there shouldn't be, so wasnt even my fault smh).
+- uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.
+
 ## v0.4.1
 - Spiky Mace by default deals 2 damage now.
 - Icy Hammer slows down enemies and players hit by it temporarily.

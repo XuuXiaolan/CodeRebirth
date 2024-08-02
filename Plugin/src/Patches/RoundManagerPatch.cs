@@ -60,7 +60,8 @@ static class RoundManagerPatch {
 			}
 			foreach (SpawnableFlora flora in tagGroup) {
 				var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
-				for (int i = 0; i < targetSpawns; i++) {
+				for (int i = 0; i < targetSpawns; i++)
+				{
 					Vector3 basePosition = GetRandomPointNearPointsOfInterest(random);
 					Vector3 offset = new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
 					Vector3 randomPosition = basePosition + offset;
@@ -70,16 +71,27 @@ static class RoundManagerPatch {
 						continue;
 
 					bool isValid = true;
-					foreach (string floorTag in flora.blacklistedTags) {
-						if (hit.transform.gameObject.CompareTag(floorTag)) {
+					foreach (string floorTag in flora.blacklistedTags)
+					{
+						if (hit.transform.gameObject.CompareTag(floorTag))
+						{
 							isValid = false;
 							break;
 						}
 					}
 					if (!isValid) continue;
 
-					GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, GetRandomNavMeshPosition(hit.point, 20f, random), Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-					spawnedFlora.transform.up = hit.normal;
+					// Use NavMesh.SamplePosition to get the nearest point on the NavMesh
+					if (NavMesh.SamplePosition(hit.point, out NavMeshHit navMeshHit, 20f, NavMesh.AllAreas))
+					{
+						Vector3 navMeshPosition = navMeshHit.position;
+
+						// Adjust the position to align with the terrain normal
+						Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+						GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, navMeshPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
+						spawnedFlora.transform.up = hit.normal;
+					}
 				}
 			}
 		}

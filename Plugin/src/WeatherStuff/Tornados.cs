@@ -10,6 +10,7 @@ using CodeRebirth.Util.PlayerManager;
 using CodeRebirth.Util.Extensions;
 using System;
 using CodeRebirth.Patches;
+using WeatherRegistry;
 
 namespace CodeRebirth.WeatherStuff;
 public class Tornados : EnemyAI
@@ -94,6 +95,60 @@ public class Tornados : EnemyAI
         timeSinceBeingInsideTornado = 0;
         if (Vector3.Distance(this.transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20) {
             SetDestinationToPosition(ChooseFarthestNodeFromPosition(this.transform.position, avoidLineOfSight: false).position, true);
+        }
+
+        if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) != WeatherHandler.Instance.TornadoesWeather) {
+            Plugin.Logger.LogInfo("Tornado spawned as an enemy?");
+            outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
+            tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
+            this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: Vector3.zero, radius: 100f, randomSeed: tornadoRandom);
+            this.transform.position = this.origin;
+            List<Tornados.TornadoType> tornadoTypeIndices = new List<Tornados.TornadoType>();
+            var types = Plugin.ModConfig.ConfigTornadoWeatherTypes.Value.Split(',');
+
+            foreach (string type in types)
+            {
+                switch (type.Trim().ToLower())
+                {
+                    case "fire":
+                        tornadoTypeIndices.Add(Tornados.TornadoType.Fire);
+                        break;
+                    case "blood":
+                        tornadoTypeIndices.Add(Tornados.TornadoType.Blood);
+                        break;
+                    case "windy":
+                        tornadoTypeIndices.Add(Tornados.TornadoType.Windy);
+                        break;
+                    case "smoke":
+                        tornadoTypeIndices.Add(Tornados.TornadoType.Smoke);
+                        break;
+                    case "water":
+                        tornadoTypeIndices.Add(Tornados.TornadoType.Water);
+                        break;
+                    case "electric":
+                        tornadoTypeIndices.Add(Tornados.TornadoType.Electric);
+                        break;
+                    case "random":
+                        var randomType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().Next(6));
+                        tornadoTypeIndices.Add(randomType);
+                        break;
+                    default:
+                        var defaultType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().Next(6));
+                        tornadoTypeIndices.Add(defaultType);
+                        break;
+                }
+            }
+
+            // Remove duplicates if any (optional)
+            tornadoTypeIndices.Distinct().ToList();
+            Plugin.Logger.LogInfo($"Tornado types: {tornadoTypeIndices}");
+            int randomTypeIndex = (int)tornadoTypeIndices[tornadoRandom.Next(tornadoTypeIndices.Count)];
+            int typeIndex = randomTypeIndex;
+            this.tornadoType = (TornadoType)typeIndex;
+            WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
+            Plugin.Logger.LogInfo($"Setting up tornado of type: {tornadoType} at {origin}");
+            SetupTornadoType();
+            UpdateAudio(); // Make sure audio works correctly on the first frame.
         }
     }
 
