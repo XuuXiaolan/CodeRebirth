@@ -58,12 +58,17 @@ public class CRBundeWindow : EditorWindow {
 
     static bool fileSizeChangesFoldoutOpen = false;
     
+    internal static bool logChangedFiles = false;
+    internal static string ignorelist = "";
+    
     [MenuItem("Code Rebirth/Bundle Builder")]
     static void Open() {
         GetWindow<CRBundeWindow>("CR Bundle Builder");
 
         buildOutputPath = EditorPrefs.GetString("build_output");
         buildOnlyChanged = EditorPrefs.GetBool("build_changed", false);
+
+        ignorelist = EditorPrefs.GetString("ignorelist");
         
         Refresh();
     }
@@ -172,6 +177,11 @@ public class CRBundeWindow : EditorWindow {
             BuildBundles();
         }
         
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+
+        logChangedFiles = EditorGUILayout.Toggle("Log Changed Files", logChangedFiles);
+        ignorelist = EditorGUILayout.TextField("Ignore List", ignorelist, GUILayout.ExpandWidth(true));
     }
 
     void BuildBundles() {
@@ -179,6 +189,7 @@ public class CRBundeWindow : EditorWindow {
         
         EditorPrefs.SetString("build_output", buildOutputPath);
         EditorPrefs.SetBool("build_changed", buildOnlyChanged);
+        EditorPrefs.SetString("ignorelist", ignorelist);
         
         AssetBundleBuild[] bundleBuilds = bundles.Values
              .Where(bundle => {

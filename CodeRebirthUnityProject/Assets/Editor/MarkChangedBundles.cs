@@ -13,11 +13,19 @@ public class MarkChangedBundles : AssetPostprocessor {
 
         foreach (string asset in allAssets) {
             if (Path.GetExtension(asset) == "shader" || Path.GetExtension(asset) == "shadergraph") {
-                Debug.Log("shader changed.");
                 continue;
             }
             string bundle = AssetDatabase.GetImplicitAssetBundleName(asset);
             if (!string.IsNullOrEmpty(bundle) && CRBundeWindow.bundles.TryGetValue(bundle, out CRBundeWindow.BundleBuildSettings settings)) {
+                string name = Path.GetFileName(asset);
+                if (CRBundeWindow.ignorelist.Split(",").Contains(name)) { // i couldn't care less
+                    continue;
+                }
+
+                if (CRBundeWindow.logChangedFiles) {
+                    Debug.Log($"changed file: \"{name}\"");
+                }  
+
                 if(settings.changedSinceLastBuild) continue;
                 Debug.Log($"Bundle: {settings.BundleName} has unbuilt changes.");
                 settings.changedSinceLastBuild = true;
