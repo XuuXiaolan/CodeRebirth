@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using CodeRebirth.MapStuff;
@@ -77,7 +78,7 @@ static class RoundManagerPatch {
 					}
 					if (!isValid) continue;
 
-					GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+					GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, GetRandomNavMeshPosition(hit.point, 20f, random), Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 					spawnedFlora.transform.up = hit.normal;
 				}
 			}
