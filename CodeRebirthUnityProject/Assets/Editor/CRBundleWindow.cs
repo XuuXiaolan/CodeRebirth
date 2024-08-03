@@ -42,7 +42,7 @@ public class CRBundleWindow : EditorWindow
                 }
             }
 
-            FileInfo bundleFileInfo = new FileInfo(Path.Combine(buildOutputPath, bundleName));
+            FileInfo bundleFileInfo = new FileInfo(Path.Combine(CRBundleWindowSettings.instance.buildOutputPath, bundleName));
             if (bundleFileInfo.Exists)
                 BuiltBundleSize = bundleFileInfo.Length;
         }
@@ -55,18 +55,79 @@ public class CRBundleWindow : EditorWindow
     }
 
     [FilePath("Project/CRBundleWindowSettings.asset", FilePathAttribute.Location.PreferencesFolder)]
-    public class CRBundleWindowSettings : ScriptableSingleton<CRBundleWindowSettings>
+    public class CRBundleWindowSettings : ScriptableSingleton<CRBundleWindowSettings>, ISerializationCallbackReceiver
     {
+        public static CRBundleWindowSettings Instance
+        {
+            get
+            {
+                CRBundleWindowSettings.instance.RefreshCallbacks();
+                return instance;
+            }
+        }
+
+        public bool hasRefreshedCallbacks;
         public bool buildAllBundles;
         public string buildOutputPath;
         public bool buildOnlyChanged;
+
+        [SerializeField] private List<string> assetBundlesDictKeys;
+        [SerializeField] private List<bool> assetBundlesDictValues;
+        [SerializeField] private List<string> buildOptionsDictKeys;
+        [SerializeField] private List<bool> buildOptionsDictValues;
+
         public Dictionary<string, bool> assetBundlesDict = new Dictionary<string, bool>();
         public Dictionary<string, bool> buildOptionsDict = new Dictionary<string, bool>();
         public SortOption assetSortOption = SortOption.Size; // Default sorting by size
 
+        public static List<string> buildOptionsDescriptions = new List<string>()
+        {
+            "",
+            "Don't compress the data when creating the AssetBundle.",
+            "",
+            "",
+            "Do not include type information within the AssetBundle.",
+            "",
+            "Force rebuild the assetBundles.",
+            "Ignore the type tree changes when doing the incremental build check.",
+            "Append the hash to the assetBundle name.",
+            "Use chunk-based LZ4 compression when creating the AssetBundle.",
+            "Do not allow the build to succeed if any errors are reporting during it.",
+            "Do a dry run build.",
+            "Disables Asset Bundle LoadAsset by file name.",
+            "Disables Asset Bundle LoadAsset by file name with extension.",
+            "Removes the Unity Version number in the Archive File & Serialized File headers during the build.",
+            "Use the content of the asset bundle to calculate the hash."
+        };
+
         public void Save()
         {
             Save(true);
+        }
+
+        public void RefreshCallbacks()
+        {
+            if (hasRefreshedCallbacks)
+            {
+                Save();
+                Application.quitting -= Save;
+                Application.quitting += Save;
+                AssemblyReloadEvents.beforeAssemblyReload -= Save;
+                AssemblyReloadEvents.beforeAssemblyReload += Save;
+                hasRefreshedCallbacks = true;
+            }
+        }
+
+        public void OnBeforeSerialize()
+        {
+            EditorHelpers.SerializeDictionary(ref assetBundlesDict, ref assetBundlesDictKeys, ref assetBundlesDictValues);
+            EditorHelpers.SerializeDictionary(ref buildOptionsDict, ref buildOptionsDictKeys, ref buildOptionsDictValues);
+        }
+
+        public void OnAfterDeserialize()
+        {
+            EditorHelpers.DeserializeDictionary(ref assetBundlesDict, ref assetBundlesDictKeys, ref assetBundlesDictValues);
+            EditorHelpers.DeserializeDictionary(ref buildOptionsDict, ref buildOptionsDictKeys, ref buildOptionsDictValues);
         }
     }
 
@@ -108,8 +169,6 @@ public class CRBundleWindow : EditorWindow
     static string buildOutputPath => CRBundleWindowSettings.instance.buildOutputPath;
     static bool buildOnlyChanged => CRBundleWindowSettings.instance.buildOnlyChanged;
 
-    static bool fileSizeChangesFoldoutOpen = false;
-
     internal static bool logChangedFiles = false;
 
     private SortOption _assetSortOption => CRBundleWindowSettings.instance.assetSortOption;
@@ -149,6 +208,10 @@ public class CRBundleWindow : EditorWindow
 
     void OnGUI()
     {
+        Color FolderColor = new Color(0.8f, 0.8f, 1f, 1f);
+        Color BundleDataColor = new Color(0.8f, 1f, 0.8f, 1f);
+        Color AssetColor = new Color(1f, 0.8f, 0.8f, 1f);
+
         GUIStyle headerStyle = new GUIStyle(GUI.skin.label)
         {
             fontStyle = FontStyle.Bold,
@@ -192,7 +255,7 @@ public class CRBundleWindow : EditorWindow
 
             // Drawing the label next to the icon
             Rect labelRect = new Rect(iconRect.xMax + 5, foldoutRect.y, foldoutRect.width - iconRect.width, foldoutRect.height);
-            EditorGUI.LabelField(labelRect, $"{prefix}{bundle.DisplayName}", headerStyle);
+            EditorGUI.LabelField(labelRect, $"{prefix}{bundle.DisplayName}", new GUIStyle(headerStyle) { normal = { textColor = FolderColor } });
 
             if (Event.current.type == EventType.MouseDown && foldoutRect.Contains(Event.current.mousePosition))
             {
@@ -205,9 +268,9 @@ public class CRBundleWindow : EditorWindow
                 continue;
             }
 
-            EditorGUILayout.LabelField("Total Size", GetReadableFileSize(bundle.TotalSize), boldLabelStyle);
-            EditorGUILayout.LabelField("Previous Total Size", GetReadableFileSize(bundle.LastBuildSize), boldLabelStyle);
-            EditorGUILayout.LabelField("Built Bundle Size", GetReadableFileSize(bundle.BuiltBundleSize), boldLabelStyle);
+            EditorGUILayout.LabelField("Total Size", GetReadableFileSize(bundle.TotalSize), new GUIStyle(boldLabelStyle) { normal = { textColor = BundleDataColor } });
+            EditorGUILayout.LabelField("Previous Total Size", GetReadableFileSize(bundle.LastBuildSize), new GUIStyle(boldLabelStyle) { normal = { textColor = BundleDataColor } });
+            EditorGUILayout.LabelField("Built Bundle Size", GetReadableFileSize(bundle.BuiltBundleSize), new GUIStyle(boldLabelStyle) { normal = { textColor = BundleDataColor } });
 
             bool build = bundle.Build;
             build = EditorGUILayout.Toggle("Build", build);
@@ -247,8 +310,8 @@ public class CRBundleWindow : EditorWindow
                     {
                         GUILayout.Label(icon, GUILayout.Width(24), GUILayout.Height(24), GUILayout.ExpandWidth(false)); // Adjust icon size and positioning
                     }
-                    EditorGUILayout.LabelField(Path.GetFileName(asset.Path), GUILayout.ExpandWidth(true));
-                    EditorGUILayout.LabelField(GetReadableFileSize(asset.Size), GUILayout.Width(150), GUILayout.ExpandWidth(false));
+                    EditorGUILayout.LabelField(Path.GetFileName(asset.Path), new GUIStyle(EditorStyles.label) { normal = { textColor = AssetColor } }, GUILayout.ExpandWidth(true));
+                    EditorGUILayout.LabelField(GetReadableFileSize(asset.Size), new GUIStyle(EditorStyles.label) { normal = { textColor = AssetColor } }, GUILayout.Width(150), GUILayout.ExpandWidth(false));
                     EditorGUILayout.EndHorizontal();
                 }
             }
@@ -304,7 +367,7 @@ public class CRBundleWindow : EditorWindow
 
         if (GUILayout.Button("Build"))
         {
-            BuildBundles();
+            EditorApplication.update += BuildBundlesOnMainThread;
         }
 
         EditorGUILayout.Space();
@@ -312,6 +375,14 @@ public class CRBundleWindow : EditorWindow
 
         logChangedFiles = EditorGUILayout.Toggle("Log Changed Files", logChangedFiles);
         EditorPrefs.SetBool("log_changed_files", logChangedFiles);
+
+        if (GUILayout.Button("Clear Console"))
+        {
+            if (EditorUtility.DisplayDialog("Clear Console", "Are you sure you want to clear the console?", "Yes", "No"))
+            {
+                ClearConsole();
+            }
+        }
     }
 
     void SortAssets(List<BundleBuildSettings.AssetDetails> assets)
@@ -333,45 +404,98 @@ public class CRBundleWindow : EditorWindow
         }
     }
 
-    void BuildBundles()
+    void BuildBundlesOnMainThread()
     {
-        Debug.Log("Getting ready for build.");
+        EditorApplication.update -= BuildBundlesOnMainThread;
 
-        AssetBundleBuild[] bundleBuilds = bundles.Values
-            .Where(bundle => !bundle.Blacklisted && (CRBundleWindowSettings.instance.buildOnlyChanged ? bundle.ChangedSinceLastBuild : bundle.Build))
-            .Select(bundle =>
+        try
+        {
+            Debug.Log("Starting the build process.");
+
+            List<AssetBundleBuild> bundleBuilds = new List<AssetBundleBuild>();
+
+            foreach (var bundle in bundles.Values)
             {
+                if (bundle.Blacklisted)
+                {
+                    Debug.Log($"Skipping blacklisted bundle: {bundle.BundleName}");
+                    continue;
+                }
+
+                if (CRBundleWindowSettings.instance.buildOnlyChanged && !bundle.ChangedSinceLastBuild)
+                {
+                    Debug.Log($"Skipping unchanged bundle: {bundle.BundleName}");
+                    continue;
+                }
+
+                if (!bundle.Build)
+                {
+                    Debug.Log($"Skipping unselected bundle: {bundle.BundleName}");
+                    continue;
+                }
+
+                var build = new AssetBundleBuild
+                {
+                    assetBundleName = bundle.BundleName,
+                    assetNames = bundle.Assets.Select(a => a.Path).ToArray()
+                };
+
                 bundle.ChangedSinceLastBuild = false;
                 bundle.LastBuildSize = bundle.TotalSize;
-
                 EditorPrefs.SetBool($"{bundle.BundleName}_changed", false);
                 EditorPrefs.SetInt($"{bundle.BundleName}_size", (int)bundle.TotalSize);
 
-                return new AssetBundleBuild
+                bundleBuilds.Add(build);
+            }
+
+            if (bundleBuilds.Count == 0)
+            {
+                Debug.LogWarning("No bundles selected for build.");
+                return;
+            }
+
+            Debug.Log($"Building {bundleBuilds.Count} bundle(s)!");
+            BuildPipeline.BuildAssetBundles(CRBundleWindowSettings.instance.buildOutputPath, bundleBuilds.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+
+            Debug.Log("Performing cleanup.");
+            Refresh();
+
+            // Clean up empty bundle files
+            string directoryName = Path.GetFileName(CRBundleWindowSettings.instance.buildOutputPath);
+            string emptyBundlePath = Path.Combine(CRBundleWindowSettings.instance.buildOutputPath, directoryName);
+            if (File.Exists(emptyBundlePath))
+            {
+                File.Delete(emptyBundlePath);
+            }
+
+            // Optionally, handle manifest files differently if they are needed elsewhere
+            if (!NeedToKeepManifests())
+            {
+                foreach (string file in Directory.GetFiles(CRBundleWindowSettings.instance.buildOutputPath, "*.manifest", SearchOption.TopDirectoryOnly))
                 {
-                    assetBundleName = bundle.BundleName,
-                    assetNames = AssetDatabase.GetAssetPathsFromAssetBundle(bundle.BundleName)
-                };
-            })
-            .ToArray();
+                    File.Delete(file);
+                }
+            }
 
-        Debug.Log($"Building {bundleBuilds.Length} bundle(s)!");
-        BuildPipeline.BuildAssetBundles(CRBundleWindowSettings.instance.buildOutputPath, bundleBuilds, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-
-        Debug.Log("Performing cleanup.");
-        Refresh();
-        string directoryName = Path.GetFileName(CRBundleWindowSettings.instance.buildOutputPath);
-        string emptyBundlePath = Path.Combine(CRBundleWindowSettings.instance.buildOutputPath, directoryName);
-        if (File.Exists(emptyBundlePath))
-        {
-            File.Delete(emptyBundlePath);
+            Debug.Log("Build completed and cleanup done.");
         }
-
-        foreach (string file in Directory.GetFiles(CRBundleWindowSettings.instance.buildOutputPath, "*.manifest", SearchOption.TopDirectoryOnly))
+        catch (Exception e)
         {
-            File.Delete(file);
+            Debug.LogError($"Build process encountered an error: {e.Message}\n{e.StackTrace}");
         }
+    }
 
-        Debug.Log("Build completed and cleanup done.");
+    void ClearConsole()
+    {
+        var logEntries = System.Type.GetType("UnityEditor.LogEntries,UnityEditor.dll");
+        var clearMethod = logEntries.GetMethod("Clear", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+        clearMethod.Invoke(null, null);
+    }
+
+    // Method to check if manifests need to be retained
+    bool NeedToKeepManifests()
+    {
+        // Implement logic to determine if manifests need to be kept
+        return true; // Placeholder: modify based on your requirements
     }
 }
