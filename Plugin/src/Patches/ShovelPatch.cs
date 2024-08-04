@@ -30,6 +30,14 @@ static class ShovelPatch {
 				CRWeapon.shovelHitForce = ShovelExtensions.CriticalHit(CRWeapon.shovelHitForce, random, CRWeapon.critChance);
 			}
 		}
+
+		if (__instance is NaturesMace naturesMace) {
+			List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
+			Plugin.Logger.LogInfo("playerList: " + playerList.Count);
+			foreach (PlayerControllerB player in playerList) {
+				naturesMace.Heal(player);
+			}
+		}
 	}
 
 	[HarmonyPatch(nameof(Shovel.HitShovel)), HarmonyPostfix]
@@ -37,14 +45,6 @@ static class ShovelPatch {
 		if (__instance is CodeRebirthWeapons CRWeapon) {
 			postFixWorks = true;
 			CRWeapon.shovelHitForce = CRWeapon.defaultForce;	
-		}
-
-		if (__instance is NaturesMace naturesMace) {
-			List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
-
-			foreach (PlayerControllerB player in playerList) {
-				naturesMace.Heal(player);
-			}
 		}
 	}
 }

@@ -82,6 +82,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		string[] grassMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraGrassSpawnPlaces.Value);
 		string[] desertMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraDesertSpawnPlaces.Value);
 		string[] snowMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraSnowSpawnPlaces.Value);
+		string[] dangerMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraDangerSpawnPlaces.Value);
 		string[] moonBlackList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraExcludeSpawnPlaces.Value);
 
 		foreach (var flora in floraStuff.Desert) {
@@ -94,6 +95,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 
 		foreach (var flora in floraStuff.Grass) {
 			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), grassMoonList, FloraTag.Grass, moonBlackList);
+		}
+
+		foreach (var flora in floraStuff.DangerousSpecies) {
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 3)), dangerMoonList, FloraTag.Dangerous, moonBlackList);
 		}
 	}
 

@@ -12,6 +12,7 @@ using UnityEngine;
 using CodeRebirth.Util;
 using System.Text.RegularExpressions;
 using UnityEngine.AI;
+using System.Diagnostics;
 
 namespace CodeRebirth.Patches;
 
@@ -31,7 +32,10 @@ static class RoundManagerPatch {
 	static void SpawnFlora() {
 		Plugin.Logger.LogInfo("Spawning flora!!!");
 		System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
-
+		int spawnCount = 0;
+		
+		Stopwatch timer = new();
+		timer.Start();
 		// Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
 		var tagToMoonLists = spawnableFlora
 			.GroupBy(flora => flora.floraTag)
@@ -91,10 +95,14 @@ static class RoundManagerPatch {
 
 						GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, navMeshPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
 						spawnedFlora.transform.up = hit.normal;
+						spawnedFlora.transform.position = spawnedFlora.transform.position - spawnedFlora.transform.up * 0.25f;
+						spawnCount++;
 					}
 				}
 			}
 		}
+		timer.Stop();
+		Plugin.Logger.LogInfo($"Spawned {spawnCount} flora in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
 	}
 
 	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random) {
@@ -203,4 +211,29 @@ static class RoundManagerPatch {
 			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.DespawnDevilPropsServerRpc();
 		}
 	}*/
+
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(StartOfRound), "OnShipLandedMiscEvents")]
+	public static void OnShipLandedMiscEventsPatch(StartOfRound __instance)
+	{
+		Plugin.Logger.LogInfo("Starting big object search");
+
+		Stopwatch timer = new();
+		timer.Start();
+		var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+		int FoundObject = 0;
+		LayerMask layerMask = LayerMask.NameToLayer("Foliage");
+		foreach (var item in objs)
+		{
+			if (item.layer == layerMask)
+			{
+				item.AddComponent<BoxCollider>().isTrigger = true;
+				FoundObject++;
+			}
+		}
+
+		timer.Stop();
+
+		Plugin.Logger.LogInfo($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
+	}
 }

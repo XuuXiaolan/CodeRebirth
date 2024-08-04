@@ -9,6 +9,7 @@ public enum FloraTag {
 	Desert,
 	Snow,
 	Grass,
+	Dangerous,
 }
 
 public class SpawnableFlora {
