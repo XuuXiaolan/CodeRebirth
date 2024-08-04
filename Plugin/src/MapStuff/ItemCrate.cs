@@ -1,22 +1,18 @@
-﻿﻿using System;
-using System.Collections;
+﻿﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CodeRebirth.ItemStuff;
 using CodeRebirth.Misc;
 using CodeRebirth.Util.Extensions;
+using CodeRebirth.Util.Spawning;
 using GameNetcodeStuff;
-using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = System.Random;
 
 namespace CodeRebirth.MapStuff;
 
 public class ItemCrate : CRHittable {
-
-	[SerializeField]
-	public SkinnedMeshRenderer mainRenderer;
 
 	[SerializeField]
 	[Header("Hover Tooltips")]
@@ -26,25 +22,20 @@ public class ItemCrate : CRHittable {
 
 	[Header("Audio")]
 	[SerializeField]
-	public AudioSource slowlyOpeningSFX;
-
+	public AudioSource slowlyOpeningSFX = null!;
 	[SerializeField]
-	public AudioSource openSFX;
-	
-	public InteractTrigger trigger;
-	public Collider[] colliders;
-	
-	public Pickable pickable;
-
-	Animator animator;
-	public AnimationClip openClip;
-
-	public bool opened;
-	
-	public NetworkVariable<float> digProgress = new(writePerm: NetworkVariableWritePermission.Owner);
-
+	public AudioSource openSFX = null!;
+	public InteractTrigger trigger = null!;
+	public Pickable pickable = null!;
+	private Animator animator = null!;
+	private List<PlayerControllerB> playersOpeningBox = new List<PlayerControllerB>(); // rework so that it's faster if more players are opening etc
+	public Rigidbody crateLid = null!;
+	private bool opened = false;
+	private NetworkVariable<float> digProgress = new(writePerm: NetworkVariableWritePermission.Owner);
+	public NetworkVariable<int> health = new(4);
 	public Vector3 originalPosition;
 	public Random random = new();
+	public static List<Item> ShopItemList = new();
 	public enum CrateType {
 		Wooden,
 		Metal,
@@ -53,13 +44,6 @@ public class ItemCrate : CRHittable {
 	public CrateType crateType;
 	
 	public void Awake() {
-		if (crateType == CrateType.Wooden) {
-			// mainRenderer.GetComponent<SkinnedMeshRenderer>().materials[0] = Assets.WoodenCrateMaterial;
-			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.WoodenCrateMesh;
-		} else if (crateType == CrateType.Metal) {
-			// mainRenderer.GetComponent<SkinnedMeshRenderer>().materials[0] = Assets.MetalCrateMaterial;
-			// mainRenderer.GetComponent<SkinnedMeshRenderer>().Mesh = Assets.MetalCrateMesh;
-		}
 		trigger = GetComponent<InteractTrigger>();
 		pickable = GetComponent<Pickable>();
 		animator = GetComponent<Animator>();
@@ -69,9 +53,19 @@ public class ItemCrate : CRHittable {
 
 		digProgress.OnValueChanged += UpdateDigPosition;
 		
-		
+			
 		originalPosition = transform.position;
 		UpdateDigPosition(0, 0);
+
+		if (crateType == CrateType.Metal && ShopItemList.Count == 0) {
+			Terminal terminal = FindObjectOfType<Terminal>();
+            
+			foreach (Item item in StartOfRound.Instance.allItemsList.itemsList) {
+				if (!item.isScrap && terminal.buyableItemsList.Contains(item)) {
+					ShopItemList.Add(item);
+				}
+			}
+		}
 	}
 
 	public override void OnNetworkSpawn() {
@@ -80,16 +74,18 @@ public class ItemCrate : CRHittable {
 	}
 	
 	void UpdateDigPosition(float old, float newValue) {
-		if(IsOwner) // :wharg:
+		if(IsOwner)
 			transform.position = originalPosition + (transform.up * newValue * .5f);
-		
+
 		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {newValue}");
-		trigger.interactable = newValue >= 1;
-		pickable.enabled = trigger.interactable;
+		if (crateType == CrateType.Metal) pickable.enabled = false;
+		if (crateType == CrateType.Wooden) {
+			trigger.interactable = newValue >= 1;
+			pickable.enabled = trigger.interactable;
+		}
 	}
 
 	public void Update() {
-		
 		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
 			trigger.hoverTip = keyHoverTip;
 		} else {
@@ -112,6 +108,7 @@ public class ItemCrate : CRHittable {
 	}
 
 	public void Open() {
+		if(opened) return;
 		if (!IsHost) OpenCrateServerRPC();
 		else OpenCrate();
 	}
@@ -123,12 +120,25 @@ public class ItemCrate : CRHittable {
 
 	public void OpenCrate() {
 		for (int i = 0; i < 3; i++) {
-			SpawnableItemWithRarity chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
-			Item item = chosenItemWithRarity.spawnableItem;
+			SpawnableItemWithRarity chosenItemWithRarity;
+			Item item;
+			if (crateType == CrateType.Metal) {
+				item = GetRandomShopItem();
+			} else if (crateType == CrateType.Wooden) {
+				chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
+				item = chosenItemWithRarity.spawnableItem;
+			} else {
+				chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
+				item = chosenItemWithRarity.spawnableItem;
+			}
+			
 			GameObject spawned = Instantiate(item.spawnPrefab, transform.position + transform.up*0.6f + transform.right*random.NextFloat(-0.2f, 0.2f) + transform.forward*random.NextFloat(-0.2f, 0.2f), Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
-			spawned.GetComponent<GrabbableObject>().SetScrapValue((int)(random.Next(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier));
-			spawned.GetComponent<NetworkObject>().Spawn(false);
+			GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
+			
+			grabbableObject.SetScrapValue((int)(random.Next(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier * (crateType == CrateType.Metal ? 1.2f : 1f)));
+			grabbableObject.NetworkObject.Spawn();
+			CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
 		}
 		OpenCrateClientRPC();
 	}
@@ -140,19 +150,34 @@ public class ItemCrate : CRHittable {
 
 	public void OpenCrateLocally() {
 		pickable.IsLocked = false;
-		openSFX.Play();
 		trigger.enabled = false;
+		openSFX.Play();
 		GetComponent<Collider>().enabled = false;
 		opened = true;
-		animator.SetTrigger("opened");
+
+		animator?.SetTrigger("opened");
+		if (crateLid == null) return;
+		crateLid.isKinematic = false;
+		crateLid.useGravity = true;
+		crateLid.AddForce(crateLid.transform.up * 200f, ForceMode.Impulse); // during tests this launched the lid not up?
 	}
 
 	[ServerRpc(RequireOwnership = false)]
 	void SetNewDigProgressServerRPC(float newDigProgress) {
 		digProgress.Value = Mathf.Clamp01(newDigProgress);
 	}
+
+	[ServerRpc(RequireOwnership = false)]
+	void DamageCrateServerRPC(int damage) {
+		health.Value -= damage;
+
+		if (health.Value <= 0) {
+			OpenCrate();
+		}
+	}
 	
-	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
+	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
+		if (opened) return false;
 		if (digProgress.Value < 1) {
 			float progressChange = random.NextFloat(0.15f, 0.25f);
 			if (IsOwner) {
@@ -161,7 +186,13 @@ public class ItemCrate : CRHittable {
 				SetNewDigProgressServerRPC(digProgress.Value + progressChange);
 			}
 			
+		} else {
+			DamageCrateServerRPC(1);
 		}
 		return true; // this bool literally doesn't get used. i have no clue.
 	}
+
+	public Item GetRandomShopItem() {
+		return ShopItemList[random.Next(ShopItemList.Count)];
+	}	
 }

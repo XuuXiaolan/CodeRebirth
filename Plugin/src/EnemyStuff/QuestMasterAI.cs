@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
-using CodeRebirth.Misc;
 using CodeRebirth.src.EnemyStuff;
 using GameNetcodeStuff;
-using Unity.Mathematics;
 using CodeRebirth.Util.Extensions;
 using UnityEngine;
 using CodeRebirth.Util.Spawning;
@@ -18,10 +15,10 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public float questTimer = 120f;
     [Tooltip("List of items' names the player needs to collect to complete the quest")]
     [SerializeField]
-    public string[] questItems;
+    public string[] questItems = null!;
     [Tooltip("Name of the given quest")]
     [SerializeField]
-    public string questName;
+    public string questName = null!;
     [Tooltip("Chance of the player receiving another quest after completing the current one")]
     [SerializeField]
     public float questRepeatChance = 10f;
@@ -32,22 +29,22 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     [Header("Animations")]
     [SerializeField]
-    public AnimationClip spawnAnimation;
+    public AnimationClip spawnAnimation = null!;
     [Space(5f)]
 
     [Header("Audio")]
     [SerializeField]
-    public AudioSource creatureUltraVoice;
+    public AudioSource creatureUltraVoice = null!;
     [SerializeField]
-    public AudioClip questGiveClip;
+    public AudioClip questGiveClip = null!;
     [SerializeField]
-    public AudioClip questSucceedClip;
+    public AudioClip questSucceedClip = null!;
     [SerializeField]
-    public AudioClip questFailClip;
+    public AudioClip questFailClip = null!;
     [SerializeField]
-    public AudioClip questGiveAgainClip;
+    public AudioClip questGiveAgainClip = null!;
     [SerializeField]
-    public AudioClip questAfterFailClip;
+    public AudioClip questAfterFailClip = null!;
     [Header("Behaviour")]
     [Tooltip("Detection Range")]
     [SerializeField]

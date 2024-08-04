@@ -22,14 +22,14 @@ public class Meteors : NetworkBehaviour {
 
     [Header("Audio")]
     [SerializeField]
-    AudioSource ImpactAudio;
+    private AudioSource ImpactAudio = null!;
 
     [SerializeField]
-    AudioSource NormalTravelAudio, CloseTravelAudio;
+    private AudioSource NormalTravelAudio = null!, CloseTravelAudio = null!;
 
     [Header("Graphics")]
     [SerializeField]
-    ParticleSystem FireTrail;
+    private ParticleSystem FireTrail = null!;
     [SerializeField]
     AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
     
@@ -45,6 +45,7 @@ public class Meteors : NetworkBehaviour {
         this.origin = origin;
         this.target = target;
         float distance = Vector3.Distance(origin, target);
+        initialSpeed = Plugin.ModConfig.ConfigMeteorSpeed.Value;
         travelTime = Mathf.Sqrt(2 * distance / initialSpeed);  // Time to reach the target, adjusted for acceleration
         isMoving = true;
         transform.LookAt(target);
@@ -57,7 +58,7 @@ public class Meteors : NetworkBehaviour {
     }
     
     private void Awake() {
-        MeteorShower.Instance.AddMeteor(this);
+        if (MeteorShower.Instance != null) MeteorShower.Instance.AddMeteor(this);
         NormalTravelAudio.Play();
         FireTrail.Stop();
         chanceToSpawnScrap = Plugin.ModConfig.ConfigMeteorShowerMeteoriteSpawnChance.Value;
@@ -115,34 +116,34 @@ public class Meteors : NetworkBehaviour {
             CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", target);
         }
             
-        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Assets.CraterPrefab, target, Quaternion.identity);
+        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Meteorite.CraterPrefab, target, Quaternion.identity);
         CraterController craterController = craterInstance.GetComponent<CraterController>();
         if (craterController != null) {
             craterController.ShowCrater(target);
         }
         
         FireTrail.Stop();
-            
-        Landmine.SpawnExplosion(transform.position, true, 4f, 20f, 50, 200, WeatherHandler.Instance.Assets.ExplosionPrefab);
+        
+        Utilities.CreateExplosion(transform.position, true, 100, 0, 10, 4, CauseOfDeath.Blast, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab);
 
         yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit. <-- Actually i think the meteor just looks cool staying on the ground for an extra 10 seconds.
         if(IsHost)
             Destroy(gameObject);
-        MeteorShower.Instance.RemoveMeteor(this);
+        if (MeteorShower.Instance != null) MeteorShower.Instance.RemoveMeteor(this);
     }
 }
 public class CraterController : MonoBehaviour // Change this to use decals!!
 {
     [SerializeField]
     [Tooltip("The GameObject that will be spawned when the meteor hits the ground.")]
-    GameObject craterMesh;
-    private ColliderIdentifier fireCollider;
+    private GameObject craterMesh = null!;
+    private ColliderIdentifier fireCollider = null!;
 
     private void Awake()
     {
         fireCollider = this.transform.Find("WildFire").GetComponent<ColliderIdentifier>();
         ToggleCrater(false);
-        MeteorShower.Instance.AddCrater(this);
+        if (MeteorShower.Instance != null) MeteorShower.Instance.AddCrater(this);
     }
     public void ShowCrater(Vector3 impactLocation)
     {

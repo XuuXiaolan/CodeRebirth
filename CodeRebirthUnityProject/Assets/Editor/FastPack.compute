@@ -1,0 +1,28 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+#pragma kernel ChannelSet
+
+RWTexture2D<float4> Result;
+RWTexture2D<float4> Mask;
+
+Texture2D<float4> metal;
+Texture2D<float4> ambient;
+Texture2D<float4> detail;
+Texture2D<float4> smooth;
+
+int isRough;
+
+float maskCol;
+
+[numthreads(1,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    half rough = lerp(smooth[id.xy].r, (1 - smooth[id.xy].r), isRough);
+    Result[id.xy] = float4(metal[id.xy].r, ambient[id.xy].r, detail[id.xy].r, rough);
+}
+
+[numthreads(1, 1, 1)]
+void ChannelSet(uint3 id : SV_DispatchThreadID)
+{
+    Mask[id.xy] = float4(maskCol, 0, 0, 1);
+}

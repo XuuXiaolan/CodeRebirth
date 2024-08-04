@@ -12,27 +12,21 @@ using Random = System.Random;
 
 namespace CodeRebirth.WeatherStuff;
 public class TornadoWeather : CodeRebirthWeathers {
-	Coroutine spawnHandler;
-	List<GameObject> nodes;
-    [Space(5f)]
-    [SerializeField]
-    [Tooltip("Minimum Amount of Tornados per Spawn")]
-    private int minTornadosToSpawn;
-    [SerializeField]
-    [Tooltip("Maximum Amount of Tornados per Spawn")]
-    private int maxTornadosToSpawn;
-    private List<GameObject> alreadyUsedNodes;
-
+	private Coroutine spawnHandler = null!;
+	private List<GameObject> nodes = null!;
+    private List<GameObject> alreadyUsedNodes = new List<GameObject>();
 	private List<Tornados> tornados = new List<Tornados>(); // Proper initialization
-	
-	Random random;
-	
-	public static TornadoWeather Instance { get; private set; }
+	private Random random = null!;
+	private List<Tornados.TornadoType> tornadoTypeIndices = new List<Tornados.TornadoType>();
+
+	public static TornadoWeather? Instance { get; private set; }
 	public static bool Active => Instance != null;
-	public int tornadoTypeIndex = 0;
-	
+
 	private void OnEnable() { // init weather
 		Plugin.Logger.LogInfo("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name);
+		RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount -= 3, 0, 999);
+		RoundManager.Instance.currentLevel.maxEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxEnemyPowerCount += 3, 0, 999);
+		RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount -= 3, 0, 999);
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
@@ -40,34 +34,48 @@ public class TornadoWeather : CodeRebirthWeathers {
 		nodes = CullNodesByProximity(nodes, 5.0f, true, true).ToList();
 		
 		if(!IsAuthority()) return; // Only run on the host.
-        
-		random = new Random();
-		switch (Plugin.ModConfig.ConfigTornadoWeatherType.Value) {
-			case 0:
-				tornadoTypeIndex = random.Next(0, 6);
-				break;
-			case 1:
-				tornadoTypeIndex = 0;
-				break;
-			case 2:
-				tornadoTypeIndex = 1;
-				break;
-			case 3:
-				tornadoTypeIndex = 2;
-				break;
-			case 4:
-				tornadoTypeIndex = 3;
-				break;
-			case 5:
-				tornadoTypeIndex = 4;
-				break;
-			case 6:
-				tornadoTypeIndex = 5;
-				break;
-			default:
-				tornadoTypeIndex = random.Next(0, 6);
-				break;
-		}
+
+        Plugin.Logger.LogInfo(Plugin.ModConfig.ConfigTornadoWeatherTypes.Value); //convert config type to string with acceptable values
+		
+		tornadoTypeIndices = new List<Tornados.TornadoType>();
+        var types = Plugin.ModConfig.ConfigTornadoWeatherTypes.Value.Split(',');
+
+        foreach (string type in types)
+        {
+            switch (type.Trim().ToLower())
+            {
+                case "fire":
+                    tornadoTypeIndices.Add(Tornados.TornadoType.Fire);
+                    break;
+                case "blood":
+                    tornadoTypeIndices.Add(Tornados.TornadoType.Blood);
+                    break;
+                case "windy":
+                    tornadoTypeIndices.Add(Tornados.TornadoType.Windy);
+                    break;
+                case "smoke":
+                    tornadoTypeIndices.Add(Tornados.TornadoType.Smoke);
+                    break;
+                case "water":
+                    tornadoTypeIndices.Add(Tornados.TornadoType.Water);
+                    break;
+                case "electric":
+                    tornadoTypeIndices.Add(Tornados.TornadoType.Electric);
+                    break;
+                case "random":
+                    var randomType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().Next(6));
+                    tornadoTypeIndices.Add(randomType);
+                    break;
+                default:
+                    var defaultType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().Next(6));
+                    tornadoTypeIndices.Add(defaultType);
+                    break;
+            }
+        }
+
+        // Remove duplicates if any (optional)
+        tornadoTypeIndices.Distinct().ToList();
+		Plugin.Logger.LogInfo($"Tornado types: {tornadoTypeIndices}");
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}
 
@@ -75,7 +83,7 @@ public class TornadoWeather : CodeRebirthWeathers {
 		try {
 			Plugin.Logger.LogDebug("Cleaning up Weather.");
 			ClearTornados();
-			Instance = null;
+			Instance = null!;
 
 			if(!IsAuthority()) return; // Only run on the host.
 			StopCoroutine(spawnHandler);
@@ -83,7 +91,7 @@ public class TornadoWeather : CodeRebirthWeathers {
 			Plugin.Logger.LogFatal("Cleaning up Weather failed." + e.Message);
 		}
 	}
-	void ClearTornados()
+	private void ClearTornados()
 	{
         foreach (Tornados tornado in tornados)
         {
@@ -96,23 +104,17 @@ public class TornadoWeather : CodeRebirthWeathers {
 
 	private IEnumerator TornadoSpawnerHandler() {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get Tornados before theyve inited everything.
-		for (int i = 0; i < random.Next(1, 1); i++) {
-			SpawnTornado(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
-		}
-		int delay = random.Next(700, 1000);
-		yield return new WaitForSeconds(delay);
-		for (int i = 0; i < random.Next(minTornadosToSpawn, maxTornadosToSpawn); i++) {
-			SpawnTornado(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
-		}
+		SpawnTornado(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 	}
 
 	private void SpawnTornado(Vector3 target) {
 		Vector3 origin = target;
             
-		Tornados tornado = Instantiate(WeatherHandler.Instance.Assets.TornadoPrefab, origin, Quaternion.identity).GetComponent<Tornados>();
+		Tornados tornado = Instantiate(WeatherHandler.Instance.Tornado.TornadoObj.enemyPrefab, origin, Quaternion.identity).GetComponent<Tornados>();
+        int randomTypeIndex = (int)tornadoTypeIndices[random.Next(tornadoTypeIndices.Count)];
 		tornado.NetworkObject.OnSpawn(() => {
-			tornado.SetupTornadoClientRpc(origin, tornadoTypeIndex);
-		});
+            tornado.SetupTornadoClientRpc(origin, randomTypeIndex);
+        });
 		tornado.NetworkObject.Spawn();
 	}
 

@@ -14,27 +14,27 @@ using Random = System.Random;
 namespace CodeRebirth.WeatherStuff;
 
 public class MeteorShower : CodeRebirthWeathers {
-	Coroutine spawnHandler;
+	private Coroutine spawnHandler = null!;
 
-	List<GameObject> nodes;
+	private List<GameObject> nodes = new List<GameObject>();
     [Space(5f)]
     [Header("Time between Meteor Spawns")]
 	[SerializeField]
 	[Tooltip("Minimum Time between Meteor Spawns")]
-    int minTimeBetweenSpawns;
+    private float minTimeBetweenSpawns = 1;
     [Space(5f)]
     [SerializeField]
     [Tooltip("Maximum Time between Meteor Spawns")]
-    int maxTimeBetweenSpawns;
+    private float maxTimeBetweenSpawns = 3;
     [Space(5f)]
     [SerializeField]
     [Tooltip("Minimum Amount of Meteors per Spawn")]
-    int minMeteorsPerSpawn;
+    private int minMeteorsPerSpawn = 1;
     [Space(5f)]
     [SerializeField]
     [Tooltip("Maximum Amount of Meteors per Spawn")]
-    int maxMeteorsPerSpawn;
-    private List<GameObject> alreadyUsedNodes;
+    private int maxMeteorsPerSpawn = 3;
+    private List<GameObject> alreadyUsedNodes = new List<GameObject>();
 	private enum Direction {
 		Random,
 		East,
@@ -43,23 +43,34 @@ public class MeteorShower : CodeRebirthWeathers {
 		South
 	}
 	private Direction direction = Direction.Random;
-	private GameObject meteorOverridePrefab;
+	private GameObject meteorOverridePrefab = null!;
 	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
 	readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
 	
-	Random random;
+	private Random random = null!;
 	
-	public static MeteorShower Instance { get; private set; }
+	public static MeteorShower? Instance { get; private set; }
 	public static bool Active => Instance != null;
 	
 	private void OnEnable() { // init weather
 		Plugin.Logger.LogInfo("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
+		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
+		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
+		RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount -= 3, 0, 999);
+		RoundManager.Instance.currentLevel.maxEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxEnemyPowerCount += 3, 0, 999);
+		RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount -= 3, 0, 999);
+		if (minMeteorsPerSpawn > maxMeteorsPerSpawn) {
+			Plugin.Logger.LogWarning("Min Meteor Spawn Count is greater than Max Meteor Spawn Count. Swapping values.");
+			(int, int) temp = (minMeteorsPerSpawn, maxMeteorsPerSpawn);
+			minMeteorsPerSpawn = temp.Item2;
+			maxMeteorsPerSpawn = temp.Item1;
+		}
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
 		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
-		meteorOverridePrefab = Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? WeatherHandler.Instance.Assets.WesleyModePrefab : null; // eventually gonna have a config bool to turn on override prefabs and maybe have more prefab options.
+		// eventually gonna have a config bool to turn on override prefabs and maybe have more prefab options.
 		SpawnOverheadVisualMeteors(random.Next(15, 45), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
 		
 		if(!IsAuthority()) return; // Only run on the host.
@@ -105,7 +116,7 @@ public class MeteorShower : CodeRebirthWeathers {
         }
         craters.Clear();
     }
-	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject overridePrefab = null) {
+	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null) {
         Vector3 averageLocation = CalculateAverageLandNodePosition(nodes);
         Vector3 centralLocation = averageLocation + new Vector3(0, random.Next(250, 300), 0);
 		for (int i = 0; i < amount; i++) {
@@ -126,9 +137,9 @@ public class MeteorShower : CodeRebirthWeathers {
 				);
         }
 	}
-	private void SpawnVisualMeteors(Vector3 centralLocation, Vector3 offset = default, float speed = 0f, float sizeMultiplier = 1f, GameObject overridePrefab = null)
+	private void SpawnVisualMeteors(Vector3 centralLocation, Vector3 offset = default, float speed = 0f, float sizeMultiplier = 1f, GameObject? overridePrefab = null)
     {
-        Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Assets.MeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
+        Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
 		meteor.transform.localScale *= sizeMultiplier;
         AddRandomMovement(meteor, speed);
         meteor.SetupAsLooping();
@@ -141,7 +152,7 @@ public class MeteorShower : CodeRebirthWeathers {
 				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
 				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
 			}
-			int delay = random.Next(minTimeBetweenSpawns, maxTimeBetweenSpawns);
+			float delay = random.NextFloat(minTimeBetweenSpawns, maxTimeBetweenSpawns);
 			yield return new WaitForSeconds(delay);
 		}
 	}
@@ -170,12 +181,11 @@ public class MeteorShower : CodeRebirthWeathers {
 
         return target + new Vector3(x, y, z);
     }
-	private void SpawnMeteor(Vector3 target, GameObject overridePrefab = null) {
+	private void SpawnMeteor(Vector3 target, GameObject? overridePrefab = null) {
 		if (target == Vector3.zero) {
 			Plugin.Logger.LogInfo("Target is zero, not spawning meteor");
 			return;
 		}
-		Plugin.Logger.LogInfo(direction.ToString());
 		Vector3 origin = new Vector3();
 		if (direction == Direction.Random) {
 			origin = target + new Vector3(
@@ -187,7 +197,7 @@ public class MeteorShower : CodeRebirthWeathers {
 			origin = CalculateVector(target);
 		}
             
-		Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Assets.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
+		Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
 		meteor.NetworkObject.OnSpawn(() => {
 			meteor.SetupMeteorClientRpc(origin, target);
 		});
@@ -243,7 +253,7 @@ public class MeteorShower : CodeRebirthWeathers {
 
 public class StabilizeMovement : MonoBehaviour
 {
-    private Rigidbody rb;
+    private Rigidbody rb = null!;
     private Vector3 targetVelocity;
 
     public void Initialize(Rigidbody rigidbody, Vector3 velocity)

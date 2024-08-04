@@ -4,16 +4,53 @@ using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeRebirth.src.EnemyStuff;
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
+    public EnemyAI? targetEnemy;
     public override void Start()
     {
         base.Start();
         LogIfDebugBuild(enemyType.enemyName + " Spawned.");
+        GrabEnemyRarity(enemyType.enemyName);
     }
-    
+
+    public void GrabEnemyRarity(string enemyName)
+    {
+        // Search in OutsideEnemies
+        var enemy = RoundManager.Instance.currentLevel.OutsideEnemies
+            .OfType<SpawnableEnemyWithRarity>()
+            .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
+
+        // If not found in OutsideEnemies, search in DaytimeEnemies
+        if (enemy == null)
+        {
+            enemy = RoundManager.Instance.currentLevel.DaytimeEnemies
+                .OfType<SpawnableEnemyWithRarity>()
+                .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
+        }
+
+        // If not found in DaytimeEnemies, search in Enemies
+        if (enemy == null)
+        {
+            enemy = RoundManager.Instance.currentLevel.Enemies
+                .OfType<SpawnableEnemyWithRarity>()
+                .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
+        }
+
+        // Log the result
+        if (enemy != null)
+        {
+            LogIfDebugBuild(enemyName + " has Rarity: " + enemy.rarity.ToString());
+        }
+        else
+        {
+            LogIfDebugBuild("Enemy not found.");
+        }
+    }
+
     [Conditional("DEBUG")]
     public void LogIfDebugBuild(object text)
     {
@@ -72,7 +109,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         agent.speed = speed;
     }
     public bool FindClosestPlayerInRange(float range) {
-        PlayerControllerB closestPlayer = null;
+        PlayerControllerB? closestPlayer = null;
         float minDistance = float.MaxValue;
 
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
@@ -99,7 +136,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             _ = eye;
         }
 
-        if (Vector3.Distance(eye.position, pos) >= range || Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) return false;
+        if (Vector3.Distance(eye!.position, pos) >= range || Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) return false;
 
         Vector3 to = pos - eye.position;
         return Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
@@ -137,13 +174,13 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         }
         return (creatureAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
     }
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SetTargetServerRpc(int PlayerID) {
         SetTargetClientRpc(PlayerID);
     }
     [ClientRpc]
     public void SetTargetClientRpc(int PlayerID) {
-        if(PlayerID == -1) {
+        if (PlayerID == -1) {
             targetPlayer = null;
             LogIfDebugBuild($"Clearing target on {this}");
             return;
@@ -155,13 +192,32 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         targetPlayer = StartOfRound.Instance.allPlayerScripts[PlayerID];
         LogIfDebugBuild($"{this} setting target to: {targetPlayer.playerUsername}");
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetEnemyTargetServerRpc(int enemyID) {
+        SetEnemyTargetClientRpc(enemyID);
+    }
+    [ClientRpc]
+    public void SetEnemyTargetClientRpc(int enemyID) {
+        if (enemyID == -1) {
+            targetEnemy = null;
+            LogIfDebugBuild($"Clearing Enemy target on {this}");
+            return;
+        }
+        if (RoundManager.Instance.SpawnedEnemies[enemyID] == null) {
+            LogIfDebugBuild($"Enemy Index invalid! {this}");
+            return;
+        }
+        targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
+        LogIfDebugBuild($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
+    }
 }
 
 public class SimpleWanderRoutine
 {
     public List<GameObject> unvisitedNodes = new List<GameObject>();
-    public GameObject currentTargetNode;
-    public GameObject nextTargetNode;
+    public GameObject? currentTargetNode;
+    public GameObject? nextTargetNode;
     public bool inProgress;
     public Vector3 NestPosition;
     public float wanderRadius = 30f;

@@ -6,13 +6,14 @@ repository = "https://thunderstore.io"
 
 [package]
 description = "Content Expansion mod with Custom Weathers, Items, Enemies and more!."
-websiteUrl = "https://github.com/XuXiaolan/CodeRebirth"
+websiteUrl = "https://github.com/XuuXiao/CodeRebirth"
 containsNsfwContent = false
 [package.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
-Evaisa-LethalLib = "0.16.0"
+Evaisa-LethalLib = "0.16.1"
 Rune580-LethalCompany_InputUtils = "0.7.7"
-mrov-WeatherRegistry = "0.1.5"
+mrov-WeatherRegistry = "0.1.20"
+IAmBatby-LethalLevelLoader = "1.3.8"
 
 [build]
 icon = "./icon.png"
@@ -24,15 +25,69 @@ source = "../bin/Release/netstandard2.1/CodeRebirth.dll"
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]
-source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/coderebirthasset"
-target = "plugins/CodeRebirth/"
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/coderebirthasset"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/tornadoassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/meteorshowerassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/moneyassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/crateassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/snowglobeassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/walletassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/epicaxeassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/hoverboardassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/snailcatassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/cutieflyassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/icyhammerassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/naturesmaceassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/spikymaceassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/floraassets"
+target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]
 source = "./CHANGELOG.md"
 target = "/"
 
-[publish]
-communities = [ "lethal-company", ]
-[publish.categories]
-# Get the list of categories from https://thunderstore.io/api/experimental/community/lethal-company/category/
-lethal-company = [ "bepinex", "clientside", "serverside", "mods", ]
+[[build.copy]]
+source = "./LICENSE.md"
+target = "/"

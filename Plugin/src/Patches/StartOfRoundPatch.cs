@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using CodeRebirth.Misc;
+﻿using CodeRebirth.Dependency;
 using CodeRebirth.Util.Spawning;
 using CodeRebirth.Util.Extensions;
 using CodeRebirth.WeatherStuff;
@@ -8,43 +6,29 @@ using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using LethalLib.Modules;
 using GameNetcodeStuff;
 using CodeRebirth.Util.PlayerManager;
+using WeatherRegistry;
+using System.Runtime.CompilerServices;
 
 namespace CodeRebirth.Patches;
 
 [HarmonyPatch(typeof(StartOfRound))]
 static class StartOfRoundPatch {
-	[HarmonyPrefix]
-	[HarmonyPatch(nameof(StartOfRound.Start))]
-	static void RegisterScraps() {
-		foreach (var item in Plugin.samplePrefabs.Values) {
-			if (!StartOfRound.Instance.allItemsList.itemsList.Contains(item)) {
-				StartOfRound.Instance.allItemsList.itemsList.Add(item);
-			}
-		}
-	}
-	
 	[HarmonyPatch(nameof(StartOfRound.Awake))]
 	[HarmonyPostfix]
 	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
-		foreach (PlayerControllerB player in __instance.allPlayerScripts) {
-			player.gameObject.AddComponent<CodeRebirthPlayerManager>();
-		}
+		
 	}
-	
-	[HarmonyPatch(nameof(StartOfRound.OnDisable))]
-	[HarmonyPrefix]
-	public static void DisableWeathersPatch() {
-		if (MeteorShower.Active) { 
-			// patch to fix OnDisable not being triggered as its not actually in the scene.
-			WeatherHandler.Instance.MeteorShowerWeather.Effect.DisableEffect();
-		}
-		if (TornadoWeather.Active) {
-			WeatherHandler.Instance.TornadoesWeather.Effect.DisableEffect();
+
+	[HarmonyPatch(nameof(StartOfRound.ArriveAtLevel)), HarmonyPostfix]
+	static void DisplayWindyWarning(StartOfRound __instance) {
+        if(WeatherHandler.Instance.TornadoesWeather == null) return; // tornado weather didn't load
+		if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) == WeatherHandler.Instance.TornadoesWeather) {
+			Plugin.Logger.LogWarning("Displaying Windy Weather Warning.");
+			HUDManager.Instance.DisplayTip("Weather alert!", "You have routed to a Windy moon. Exercise caution if you are sensitive to flashing lights!", true, true, "CR_WindyTip");
 		}
 	}
 	
@@ -56,6 +40,7 @@ static class StartOfRoundPatch {
 				GameObject utilsInstance = GameObject.Instantiate(Plugin.Assets.UtilsPrefab);
 				SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
 				utilsInstance.GetComponent<NetworkObject>().Spawn();
+				utilsInstance.AddComponent<CodeRebirthPlayerManager>();
 				Plugin.Logger.LogInfo($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
 			} else {
 				Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");

@@ -72,26 +72,25 @@ public class CodeRebirthWeathers : MonoBehaviour {
 			}
 			position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
 			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
-			if (!Plugin.ModConfig.ConfigMeteorHitShip.Value && Vector3.Distance(position, StartOfRound.Instance.shipBounds.transform.position) < 13) {
+			if (!Plugin.ModConfig.ConfigMeteorHitShip.Value && Vector3.Distance(position, StartOfRound.Instance.shipBounds.transform.position) <= 16) {
 				for (int i = 0; i < 5; i++) {
-					if (Vector3.Distance(position, StartOfRound.Instance.shipBounds.transform.position) < 13) {
-						nextNode = random.NextItem(nodes);
-						position = nextNode.transform.position;
-						position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
-						position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
-						if (i == 4) {
-							Plugin.Logger.LogWarning("Selecting random position failed.");
-							return Vector3.zero;
-						}
-					} else {
-						break;
+					position = nextNode.transform.position;
+					position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
+					position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
+					Plugin.Logger.LogDebug("Selecting random position failed. Trying again.");
+					if (Vector3.Distance(position, StartOfRound.Instance.shipBounds.transform.position) > 16) {
+						return position;
 					}
-				}	
+					else if (i == 4) {
+						Plugin.Logger.LogWarning("Selecting random position failed.");
+						return Vector3.zero;
+					}
+				}
 			}
 		return position;
 		} catch {
 			Plugin.Logger.LogFatal("Selecting random position failed.");
-			return new Vector3(0,0,0);
+			return Vector3.zero;
 		}
 	}
 	public bool IsAuthority()

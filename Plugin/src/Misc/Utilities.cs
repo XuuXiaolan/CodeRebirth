@@ -1,10 +1,6 @@
 ﻿using GameNetcodeStuff;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,7 +9,7 @@ namespace CodeRebirth.Misc
 {
     public class Utilities
     {
-        private static Dictionary<int, int> _masksByLayer;
+        private static Dictionary<int, int> _masksByLayer = new Dictionary<int, int>();
         public static void Init()
         {
             GenerateLayerMap();
@@ -36,7 +32,7 @@ namespace CodeRebirth.Misc
             }
         }
 
-        public static Transform TryFindRoot(Transform child)
+        public static Transform? TryFindRoot(Transform child)
         {
             // iterate upwards until we find a NetworkObject
             Transform current = child;
@@ -111,20 +107,24 @@ namespace CodeRebirth.Misc
             enemy.SyncPositionToClients();
         }
 
-        public static void CreateExplosion(Vector3 explosionPosition, bool spawnExplosionEffect = false, int damage = 20, float minDamageRange = 0f, float maxDamageRange = 1f, int enemyHitForce = 6, CauseOfDeath causeOfDeath = CauseOfDeath.Blast, PlayerControllerB attacker = null)
+        public static void CreateExplosion(Vector3 explosionPosition = default, bool spawnExplosionEffect = false, int damage = 20, float minDamageRange = 0f, float maxDamageRange = 1f, int enemyHitForce = 6, CauseOfDeath causeOfDeath = CauseOfDeath.Blast, PlayerControllerB? attacker = null, GameObject? overridePrefab = null)
         {
-            Debug.Log("Spawning explosion at pos: {explosionPosition}");
+            // Plugin.Logger.LogDebug($"Spawning explosion at pos: {explosionPosition}");
 
-            Transform holder = null;
+            Transform? holder = null;
 
             if (RoundManager.Instance != null && RoundManager.Instance.mapPropsContainer != null && RoundManager.Instance.mapPropsContainer.transform != null)
             {
                 holder = RoundManager.Instance.mapPropsContainer.transform;
             }
 
-            if (spawnExplosionEffect)
-            {
-                UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(value: true);
+            if (spawnExplosionEffect) {
+                if (overridePrefab == null) {
+                    UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(value: true);
+
+                } else {
+                    UnityEngine.Object.Instantiate(overridePrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(value: true);
+                }
             }
 
             float playerDistanceFromExplosion = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, explosionPosition);
@@ -138,7 +138,7 @@ namespace CodeRebirth.Misc
             }
 
             Collider[] array = Physics.OverlapSphere(explosionPosition, maxDamageRange, 2621448, QueryTriggerInteraction.Collide);
-            PlayerControllerB playerControllerB = null;
+            PlayerControllerB? playerControllerB = null;
             for (int i = 0; i < array.Length; i++)
             {
                 float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, array[i].transform.position);
@@ -165,7 +165,7 @@ namespace CodeRebirth.Misc
                     Landmine componentInChildren = array[i].gameObject.GetComponentInChildren<Landmine>();
                     if (componentInChildren != null && !componentInChildren.hasExploded && distanceOfObjectFromExplosion < 6f)
                     {
-                        Debug.Log("Setting off other mine");
+                        // Plugin.Logger.LogDebug("Setting off other mine");
                         componentInChildren.StartCoroutine(componentInChildren.TriggerOtherMineDelayed(componentInChildren));
                     }
                 }

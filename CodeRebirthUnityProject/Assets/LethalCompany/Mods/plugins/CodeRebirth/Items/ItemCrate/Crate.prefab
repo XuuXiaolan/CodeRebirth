@@ -512,12 +512,11 @@ MonoBehaviour:
   slowlyOpeningSFX: {fileID: 7401679166512140689}
   openSFX: {fileID: 425542958155706037}
   trigger: {fileID: 7939740615921497438}
-  colliders:
-  - {fileID: 6231895189161968458}
   pickable: {fileID: 8184444134436801629}
   openClip: {fileID: 7400000, guid: 9c7eb4f280b62564c94e10e9a02fcd35, type: 2}
   opened: 0
-  digProgress: 0
+  digProgress:
+    m_InternalValue: 0
   originalPosition: {x: 0, y: 0, z: 0}
   crateType: 0
 --- !u!114 &7939740615921497438
@@ -532,7 +531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 21300000, guid: e3bd9699d825892488759d2018fa997f, type: 3}
+  hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: 'Hold : [E]'
   disabledHoverIcon: {fileID: 0}
   disabledHoverTip: 

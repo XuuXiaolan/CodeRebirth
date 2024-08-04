@@ -5,35 +5,35 @@ using UnityEngine.InputSystem;
 namespace CodeRebirth.Keybinds;
 public class IngameKeybinds : LcInputActions {
     [InputAction("<Keyboard>/w", Name = "HoverForward")]
-    public InputAction HoverForward { get; set; }
+    public InputAction HoverForward { get; set; } = null!;
 
     [InputAction("<Keyboard>/a", Name = "HoverLeft")]
-    public InputAction HoverLeft { get; set; }
+    public InputAction HoverLeft { get; set; } = null!;
 
     [InputAction("<Keyboard>/s", Name = "HoverBackward")]
-    public InputAction HoverBackward { get; set; }
+    public InputAction HoverBackward { get; set; } = null!;
 
     [InputAction("<Keyboard>/d", Name = "HoverRight")]
-    public InputAction HoverRight { get; set; }
+    public InputAction HoverRight { get; set; } = null!;
 
     [InputAction("<Keyboard>/space", Name = "HoverUp")]
-    public InputAction HoverUp { get; set; }
+    public InputAction HoverUp { get; set; } = null!;
 
     [InputAction("<Keyboard>/c", Name = "DropHoverboard")]
-    public InputAction DropHoverboard { get; set; }
+    public InputAction DropHoverboard { get; set; } = null!;
 
     [InputAction("<Keyboard>/f", Name = "SwitchMode")]
-    public InputAction SwitchMode { get; set; }
+    public InputAction SwitchMode { get; set; } = null!;
 
     [InputAction(MouseControl.Delta, Name = "MouseDelta")]
-    public InputAction MouseDelta { get; set; }
+    public InputAction MouseDelta { get; set; } = null!;
 
     [InputAction(MouseControl.LeftButton, Name = "WalletActivate")]
-    public InputAction WalletActivate { get; set; }
+    public InputAction WalletActivate { get; set; } = null!;
 
     [InputAction("<keyboard>/l", Name = "WalletDrop")]
-    public InputAction WalletDrop { get; set; }
+    public InputAction WalletDrop { get; set; } = null!;
 
     [InputAction("<keyboard>/o", Name = "WalletSell")]
-    public InputAction WalletSell { get; set; }
+    public InputAction WalletSell { get; set; } = null!;
 }

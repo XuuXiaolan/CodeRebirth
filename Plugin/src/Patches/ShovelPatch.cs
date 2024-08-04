@@ -1,17 +1,18 @@
 ﻿using CodeRebirth.WeaponStuff;
 using CodeRebirth.Util.Extensions;
 using HarmonyLib;
-using BepInEx.AssemblyPublicizer;
+using System.Collections.Generic;
+using GameNetcodeStuff;
 
 namespace CodeRebirth.Patches;
 
 [HarmonyPatch(typeof(Shovel))]
 static class ShovelPatch {
-	public static System.Random random;
+	public static System.Random? random;
+	private static bool postFixWorks = true;
 	
-	[HarmonyPatch(nameof(CodeRebirthWeapons.HitShovel)), HarmonyPrefix]
-	public static void CritHitShovelPre(CodeRebirthWeapons __instance) {
-		__instance.defaultForce = __instance.shovelHitForce;
+	[HarmonyPatch(nameof(Shovel.HitShovel)), HarmonyPrefix]
+	public static void CritHitShovelPre(Shovel __instance) {
 		if (random == null) {
 			if (StartOfRound.Instance != null) {
 				random = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
@@ -19,13 +20,31 @@ static class ShovelPatch {
 				random = new System.Random(69);
 			}
 		}
-		if (__instance.critPossible && Plugin.ModConfig.ConfigAllowCrits.Value) {
-			__instance.shovelHitForce = ShovelExtensions.CriticalHit(__instance.shovelHitForce, random, __instance.critChance);
+		if (__instance is CodeRebirthWeapons CRWeapon) {
+			if (!postFixWorks) {
+				Plugin.Logger.LogError("postfix doesn't work");
+			}
+			postFixWorks = false;
+			CRWeapon.defaultForce = CRWeapon.shovelHitForce;
+			if (CRWeapon.critPossible && Plugin.ModConfig.ConfigAllowCrits.Value) {
+				CRWeapon.shovelHitForce = ShovelExtensions.CriticalHit(CRWeapon.shovelHitForce, random, CRWeapon.critChance);
+			}
 		}
 	}
 
-	[HarmonyPatch(nameof(CodeRebirthWeapons.HitShovel)), HarmonyPostfix]
-	public static void CritHitShovelPost(CodeRebirthWeapons __instance) {
-		__instance.shovelHitForce = __instance.defaultForce;
+	[HarmonyPatch(nameof(Shovel.HitShovel)), HarmonyPostfix]
+	public static void CritHitShovelPost(Shovel __instance) {
+		if (__instance is CodeRebirthWeapons CRWeapon) {
+			postFixWorks = true;
+			CRWeapon.shovelHitForce = CRWeapon.defaultForce;	
+		}
+
+		if (__instance is NaturesMace naturesMace) {
+			List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
+
+			foreach (PlayerControllerB player in playerList) {
+				naturesMace.Heal(player);
+			}
+		}
 	}
 }

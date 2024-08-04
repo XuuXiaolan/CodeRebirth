@@ -3,15 +3,16 @@
 Code Rebirth is a general content mod expanding on all parts of the game.
 
 If you're interested in helping with the development of the mod, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on discord!
-[@Idea/Issue Submission Form](https://forms.office.com/e/x2BkrpRVzP)
 
 Current Additions:
 
-- 2 Ambient Enemies
-- 2 Weather event
-- 2 Shop Item
-- 4 Scrap
-- Outside Hazard
+- 160+ Plant types!!!
+- 2 Ambient Enemies.
+- 2 Weather with 7 different events total.
+- 2 Shop Item.
+- 7 Scrap.
+- Custom Outside Objects.
+- Custom Inside Objects.
 
 ## Preview (Spoilers ahead!)
 
@@ -22,15 +23,21 @@ Current Additions:
 
 ### Windy
 
-![](https://i.postimg.cc/x81dKbhc/tornado.png)
+![](https://i.postimg.cc/WbG5f0JK/image.png)
+![](https://i.postimg.cc/tCkhxk6X/image.png)
+![](https://i.postimg.cc/59qzhgnw/image.png)
+![](https://i.postimg.cc/ZKbN4NMX/image.png)
+![](https://i.postimg.cc/wTwmvvKM/image.png)
+![](https://i.postimg.cc/Fz8gYsq2/image.png)
 
 ```
-Disastrous weather where the player is pulled and ripped apart by different types of tornados (currently only blood tornado available).
+Disastrous weather where the player is pulled and ripped apart by different types of tornados.
 ```
 
 ### Meteor Shower
 
 ![](https://i.postimg.cc/RFJzM5yL/image-removebg-preview-1.png)
+![](https://i.postimg.cc/6pRzGnBz/image.png)
 
 ```
 World-ending weather where the world will slowly crumble as time goes on, but with the potential for rare crystals to spawn.
@@ -90,9 +97,9 @@ Shop Item to get some extra cash for the quota can pick up coins.
 ```
 Cracked, rare and unique. This Snow Globe is found deep inside of abandoned moons, made for children but loved by all. (Includes custom animations and sounds)
 ```
-### Meteorite
+### Meteorite (Sapphire)
 
-![](https://i.postimg.cc/nVg8pG8Y/imawdawdaage-removebg-preview.png)
+![](https://i.postimg.cc/gJff3RxD/image.png)
 
 ```
 Valuable rare Scrap found from the remaining debris of some Meteors.
@@ -103,7 +110,35 @@ Valuable rare Scrap found from the remaining debris of some Meteors.
 ![](https://i.postimg.cc/wxWPFcTY/imwadaage-removebg-preview.png)
 
 ```
-Cool glowy Axe that deals twice the damage of the shovel.
+Cool glowy Axe!.
+Can crit and deal 2x damage.
+```
+
+### Nature's Mace
+
+![](https://i.postimg.cc/zvKF6H00/image.png)
+
+```
+Mace that uses the power of nature to strike your enemies.
+Can crit and deal 2x damage.
+```
+
+### Spiky Mace
+
+![](https://i.postimg.cc/5tr5tSrs/image.png)
+
+```
+Looks like it would hurt a lot...
+Can crit and deal 2x damage.
+```
+
+### Icy Hammer
+
+![](https://i.postimg.cc/G2NsQgQD/image.png)
+
+```
+With the power of ice, enemies may be slowed down temporarily...
+Can crit and deal 2x damage.
 ```
 
 ### Coin
@@ -122,9 +157,11 @@ Scrap to get some extra cash for the quota, Coin doesn't affect normal-level scr
 ### Item Crate
 
 ![](https://i.postimg.cc/jqg2RD0j/itemcrate.png)
+![](https://i.postimg.cc/g0xR1608/image.png)
 
 ```
-Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
+Wooden: Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
+Metal: Similar except you keep bashing it! gives you shop items.
 ```
 
 </details>
@@ -135,7 +172,7 @@ Coding:
 - Xu, Bongo, TestAccount666 and WhiteSpike
 
 Modeling/Designs:
-- S1ckboy, Solid, Codding Cat and IntegrityChaos
+- S1ckboy, Solid, Codding Cat, IntegrityChaos and Bobilka
 
 Sounds:
 - Oof Bubble, Moroxide

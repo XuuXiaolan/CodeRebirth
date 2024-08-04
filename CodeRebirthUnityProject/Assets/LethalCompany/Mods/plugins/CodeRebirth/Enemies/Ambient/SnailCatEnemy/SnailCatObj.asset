@@ -19,27 +19,27 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: -0.0000021606684
-      outSlope: -0.0000021606684
+      inSlope: -6.6666665
+      outSlope: -6.6666665
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.8
-      value: 0.9999983
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      time: 0.15
+      value: 0
+      inSlope: -0.000583067
+      outSlope: -0.000583067
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 1
     - serializedVersion: 3
       time: 1
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
-      tangentMode: 0
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -47,6 +47,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   spawningDisabled: 0
+  spawnFromWeeds: 0
   numberSpawnedFalloff:
     serializedVersion: 2
     m_Curve: []
@@ -59,10 +60,10 @@ MonoBehaviour:
   enemyPrefab: {fileID: 2984345086716998709, guid: 1db672619e634324fbe9838381d21e18,
     type: 3}
   PowerLevel: 0
-  MaxCount: 10
+  MaxCount: 4
   numberSpawned: 0
   nestsSpawned: 0
-  isOutsideEnemy: 0
+  isOutsideEnemy: 1
   isDaytimeEnemy: 1
   normalizedTimeInDayToLeave: 1
   stunTimeMultiplier: 0

@@ -8,54 +8,70 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.Keybinds;
 using HarmonyLib;
-using CodeRebirth.src;
-using CodeRebirth.Misc;
 using CodeRebirth.Util;
 using CodeRebirth.Util.AssetLoading;
-using CodeRebirth.WeatherStuff;
-using LethalLib;
-using System.Collections.ObjectModel;
-using CodeRebirth.MapStuff;
 using CodeRebirth.Util.Extensions;
-using System.Runtime.CompilerServices;
+using CodeRebirth.Dependency;
+using CodeRebirth.Patches;
 
 namespace CodeRebirth;
-[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(Imperium.PluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("Surfaced", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("MoreShipUpgrades", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] // todo: soft depend on subtitles api and add support.
+[BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
-    internal static new ManualLogSource Logger;
-    private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
-    
+    internal static new ManualLogSource Logger = null!;
+    private readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
-    
-    internal static readonly Dictionary<string, Item> samplePrefabs = new();
-    internal static IngameKeybinds InputActionsInstance;
-    public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
+    internal static bool ImperiumIsOn = false;
+    internal static bool SurfacedIsOn = false;
+    internal static bool LGUIsOn = false;
+    internal static bool SubtitlesAPIIsOn = false;
+    internal static readonly Dictionary<string, Item> samplePrefabs = [];
+    internal static IngameKeybinds InputActionsInstance = null!;
+    public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
 
-    internal static MainAssets Assets { get; private set; }
+    internal static MainAssets Assets { get; private set; } = null!;
     internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName) {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
-        public GameObject UtilsPrefab { get; private set; }
-        [LoadFromBundle("WaterPlayerParticles.prefab")]
-        public GameObject WaterPlayerParticles { get; private set; }
-        [LoadFromBundle("WindPlayerParticles.prefab")]
-        public GameObject WindPlayerParticles { get; private set; }
-        [LoadFromBundle("SmokePlayerParticles.prefab")]
-        public GameObject SmokePlayerParticles { get; private set; }
-        [LoadFromBundle("FirePlayerParticles.prefab")]
-        public GameObject FirePlayerParticles { get; private set; }
-        [LoadFromBundle("ElectricPlayerParticles.prefab")]
-        public GameObject ElectricPlayerParticles { get; private set; }
-        [LoadFromBundle("BloodPlayerParticles.prefab")]
-        public GameObject BloodPlayerParticles { get; private set; }
+        public GameObject UtilsPrefab { get; private set; } = null!;
     }
     
     private void Awake() {
         Logger = base.Logger;
+        if (ImperiumCompatibilityChecker.Enabled) {
+            ImperiumCompatibilityChecker.Init();
+        } else {
+            // Logger.LogWarning("Imperium not found. Special Debugs will not be activated.");
+        }
+
+        if (SurfacedCompatibilityChecker.Enabled) {
+            SurfacedCompatibilityChecker.Init();
+        } else {
+            // Logger.LogWarning("Surfaced not found. Sharknado will not be activated.");
+        }
+
+        if (LGUCompatibilityChecker.Enabled) {
+            LGUCompatibilityChecker.Init();
+        } else {
+            // Logger.LogWarning("lategameupgrades not found. Custom hunter samples will not be activated.");
+        }
+
+        if (SubtitlesAPICompatibilityChecker.Enabled) {
+            SubtitlesAPICompatibilityChecker.Init();
+        } else {
+            // Logger.LogWarning("SubtitlesAPI not found. Subtitles will not be activated.");
+        }
+
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
+        PlayerControllerBPatch.Init();
+        EnemyAIPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");
@@ -66,17 +82,18 @@ public class Plugin : BaseUnityPlugin {
         
         Logger.LogInfo("Registering content.");
 
-        List<Type> creatureHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
+        List<Type> contentHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
             && x.BaseType.GetGenericTypeDefinition() == typeof(ContentHandler<>)
         ).ToList();
         
-        foreach(Type type in creatureHandlers) {
+        foreach(Type type in contentHandlers) {
             type.GetConstructor([]).Invoke([]);
         }
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
 
-        Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 
     void OnDisable() {
@@ -85,8 +102,6 @@ public class Plugin : BaseUnityPlugin {
         }
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
-        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
-        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Piggy.PiggyVarietyMod")) Logger.LogFatal("You are using a mod (Piggy's Variety mod) that breaks the player animator and the snow globe will not work properly with this mod, you have been warned.");
     }
 
     private void InitializeNetworkBehaviours() {

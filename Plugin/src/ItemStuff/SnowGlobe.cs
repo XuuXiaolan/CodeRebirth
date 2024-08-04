@@ -1,100 +1,107 @@
-using CodeRebirth.Misc;
-using GameNetcodeStuff;
-using Unity.Netcode;
 using UnityEngine;
-using CodeRebirth.ScrapStuff;
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.Util.PlayerManager;
+using GameNetcodeStuff;
 
 namespace CodeRebirth.ItemStuff;
 public class SnowGlobe : GrabbableObject
 {
     [Tooltip("Lights")]
     [SerializeField]
-    private GameObject mainLightGameObject;
+    private GameObject mainLightGameObject = null!;
     [SerializeField]
-    private GameObject[] redLightsGameObject;
+    private GameObject[] redLightsGameObject = null!;
     [SerializeField]
-    private GameObject[] blueLightsGameObject;
+    private GameObject[] blueLightsGameObject = null!;
     [SerializeField]
-    private GameObject[] greenLightsGameObject;
+    private GameObject[] greenLightsGameObject = null!;
     [Space(5)]
 
     [SerializeField]
-    private ScanNodeProperties scanNode;
+    private Animator shipAnimator = null!;
 
     [SerializeField]
-    private Animator shipAnimator;
+    private ParticleSystem snowPS = null!;
 
     [SerializeField]
-    private ParticleSystem snowPS;
+    private ParticleSystemRenderer snowPSR = null!;
 
     [SerializeField]
-    private ParticleSystemRenderer snowPSR;
+    private AudioSource musicAS = null!;
 
     [SerializeField]
-    private AudioSource musicAS;
+    private AnimationClip overrideClip = null!;
+    private PlayerControllerB? previouslyHeldBy;
 
     private bool activated;
-    public AnimatorOverrideController SnowGlobeOverride;
 
-    // Dictionary to hold animator state helpers for each player
-    private Dictionary<ulong, PlayerAnimatorStateHelper> animatorStateHelpers = new Dictionary<ulong, PlayerAnimatorStateHelper>();
+    public void ReplaceOrPutBackAnimationClip(PlayerControllerB? player, bool _override) {
+        if (player == null) {
+            Plugin.Logger.LogDebug("player is null");
+            return;
+        }
+        AnimatorOverrideController? playerOverrideThing = CodeRebirthPlayerManager.dataForPlayer[player].playerOverrideController;
+        if (playerOverrideThing == null) {
+            Plugin.Logger.LogDebug("playerOverrideThing is null");
+            return;
+        }
+        if (_override) {
+            if (player.isCrouching) {
+                player.Crouch(!player.isCrouching);
+                StartCoroutine(DelayOverrideAnim(playerOverrideThing));
+            } else {
+                playerOverrideThing["HoldLungApparatice"] = overrideClip;
+            }
+        } else {
+            playerOverrideThing["HoldLungApparatice"] = null;
+        }
+    }
 
+    public IEnumerator DelayOverrideAnim(AnimatorOverrideController playerOverrideThing) {
+        yield return new WaitForSeconds(0.3f);
+        if (this.isHeld && playerHeldBy == previouslyHeldBy) {
+            playerOverrideThing["HoldLungApparatice"] = overrideClip;
+        }
+    }
+
+    public override void Update() {
+        base.Update();
+        if (previouslyHeldBy == null) return;
+    }
+
+    public override void GrabItem()
+    {
+        base.GrabItem();
+        previouslyHeldBy = playerHeldBy;
+        if (previouslyHeldBy == null) {
+            Plugin.Logger.LogDebug("previouslyHeldBy is null");
+        }
+        ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
+    }
     public override void EquipItem()
     {
         base.EquipItem();
-
-        if (playerHeldBy != null && playerHeldBy.playerBodyAnimator != null)
-        {
-            ulong playerId = playerHeldBy.actualClientId;
-            if (!animatorStateHelpers.ContainsKey(playerId))
-            {
-                animatorStateHelpers[playerId] = new PlayerAnimatorStateHelper(playerHeldBy.playerBodyAnimator);
-            }
-
-            var animatorStateHelper = animatorStateHelpers[playerId];
-            animatorStateHelper.SaveAnimatorStates();
-            animatorStateHelper.SetAnimatorOverrideController(SnowGlobeOverride);
-            Debug.Log("Animator override set for player: " + playerHeldBy.playerBodyAnimator.gameObject.name);
+        previouslyHeldBy = playerHeldBy;
+        if (previouslyHeldBy == null) {
+            Plugin.Logger.LogDebug("previouslyHeldBy is null");
         }
-
+        ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
         // Coming from pocketing since this is also called when using inventory
         ToggleParticleRenderer(true);
     }
 
     public override void PocketItem()
     {
-        if (playerHeldBy != null && playerHeldBy.playerBodyAnimator != null)
-        {
-            ulong playerId = playerHeldBy.OwnerClientId;
-            if (animatorStateHelpers.ContainsKey(playerId))
-            {
-                var animatorStateHelper = animatorStateHelpers[playerId];
-                animatorStateHelper.SaveAnimatorStates();
-                animatorStateHelper.RestoreOriginalAnimatorController();
-                Debug.Log("Animator restored for player: " + playerHeldBy.playerBodyAnimator.gameObject.name);
-            }
-        }
         base.PocketItem();
-
-        // Disable Particles renderer
+        // Disable Particles renderer#
+        if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
         ToggleParticleRenderer(false);
     }
 
     public override void DiscardItem()
     {
-        if (playerHeldBy != null && playerHeldBy.playerBodyAnimator != null)
-        {
-            ulong playerId = playerHeldBy.OwnerClientId;
-            if (animatorStateHelpers.ContainsKey(playerId))
-            {
-                var animatorStateHelper = animatorStateHelpers[playerId];
-                animatorStateHelper.SaveAnimatorStates();
-                animatorStateHelper.RestoreOriginalAnimatorController();
-                Debug.Log("Animator restored for player: " + playerHeldBy.playerBodyAnimator.gameObject.name);
-            }
-        }
+        if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
         base.DiscardItem();
     }
 

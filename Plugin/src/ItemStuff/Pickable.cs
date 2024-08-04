@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.ItemStuff;
@@ -7,14 +6,14 @@ namespace CodeRebirth.ItemStuff;
 [RequireComponent(typeof(InteractTrigger))]
 public class Pickable : MonoBehaviour {
 	[SerializeField]
-	AudioSource unlockSFX;
+	private AudioSource unlockSFX = null!;
 	
 	[SerializeField]
-	UnityEvent onUnlock;
+	private UnityEvent onUnlock = null!;
 
 	public bool IsLocked { get; set; } = true;
 
-	InteractTrigger trigger;
+	private InteractTrigger trigger = null!;
 
 	void Awake() {
 		trigger = GetComponent<InteractTrigger>();

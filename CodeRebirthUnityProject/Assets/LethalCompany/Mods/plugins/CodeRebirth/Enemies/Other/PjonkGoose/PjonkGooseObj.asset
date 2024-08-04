@@ -65,7 +65,7 @@ MonoBehaviour:
   useNumberSpawnedFalloff: 0
   spawnInGroupsOf: 1
   requireNestObjectsToSpawn: 0
-  enemyPrefab: {fileID: 5609220378103668747, guid: 494626648ec040b4eb5b5b22176ebd79,
+  enemyPrefab: {fileID: 2729552444380287612, guid: 1dfacb9cebc61c241a766ed2a48ea344,
     type: 3}
   PowerLevel: 2
   MaxCount: 1
@@ -74,24 +74,23 @@ MonoBehaviour:
   isOutsideEnemy: 0
   isDaytimeEnemy: 0
   normalizedTimeInDayToLeave: 1
-  stunTimeMultiplier: 2
-  doorSpeedMultiplier: 1
+  stunTimeMultiplier: 1
+  doorSpeedMultiplier: 2
   stunGameDifficultyMultiplier: 1
   canBeStunned: 1
   canDie: 1
   destroyOnDeath: 0
   canSeeThroughFog: 0
-  pushPlayerForce: 0.16
-  pushPlayerDistance: 1.26
+  pushPlayerForce: 0
+  pushPlayerDistance: 0
   SizeLimit: 0
   timeToPlayAudio: 15
   loudnessMultiplier: 1
   overrideVentSFX: {fileID: 0}
-  nestSpawnPrefab: {fileID: 6181971026089299518, guid: 1c8b175c5ebbc424d8ecfcf12b021161,
-    type: 3}
-  nestSpawnPrefabWidth: 3
-  useMinEnemyThresholdForNest: 1
-  minEnemiesToSpawnNest: 1
+  nestSpawnPrefab: {fileID: 0}
+  nestSpawnPrefabWidth: 0
+  useMinEnemyThresholdForNest: 0
+  minEnemiesToSpawnNest: 0
   hitBodySFX: {fileID: 0}
   hitEnemyVoiceSFX: {fileID: 0}
   deathSFX: {fileID: 0}

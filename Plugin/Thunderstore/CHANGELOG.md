@@ -1,3 +1,109 @@
+## v0.4.2
+- Sigh, fixed the tornado stuff for the guy who wants it to spawn naturally as an enemy (WONT WORK IF THE WEATHER IS WIMDY ALREADY).
+- Fixed plant spawning not on navmesh (this is custom moons being bad and adding colliders where there shouldn't be, so wasnt even my fault smh).
+- uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.
+
+## v0.4.1
+- Spiky Mace by default deals 2 damage now.
+- Icy Hammer slows down enemies and players hit by it temporarily.
+- Nature's Mace heals enemies by 1 hit point and heals players.
+- Improved readme.
+- Added a blacklist moon config for flora (doesn't except placeholders, only moon names).
+- Made LLL and WeatherRegistry a hard dependency.
+- Registered Tornado as an enemy with 0 spawnweights for that one guy.
+- Added I think like 70 more flower types?
+
+## v0.4.0
+- Fixed flora not spawning on some custom moons.
+- Metal crate changed to drop non-scrap equipment.
+- Added 18 new flora types
+
+## v0.3.3
+- Flora can now be sorted into 3 different types.
+
+## v0.3.2
+- Github is now public and contributions/talent/reports/more ideas are appreciated.
+- Configs now accept both custom and modded (custom is more recommended just incase).
+
+## v0.3.1
+- Halved the strength of the pull of the tornado by default.
+- Added 20 more plants.
+- Added a metal item crate.
+- Fixed soft dependencies not working properly.
+- Fixed flower config breakages.
+- Added more flower configs.
+
+## v0.3.0
+- Add slider config for tornado strength.
+- Added yeet SFX in config for tornado (false by default).
+- Randomised a bit more the strength of the tornado throwing and at what point you'd be thrown.
+- Added a bunch of flora.
+- Decreased overall assetbundle size from 32mb~ to 18mb~.
+
+## v0.2.6
+- Lowered tornado power.
+- Fixed scannodes for the new weapons.
+- Lowered default config for meteor shower lol.
+- Fixed tornado throwing you.
+
+## v0.2.5
+- Should fix tornado kinematic patch not working.
+- Turned off some spammy logs.
+- Tornado should stray from ship if spawned next to it.
+- Fixed some hoverboard sound with footsteps not playing.
+
+## v0.2.4
+- Fixed tornado config properly.
+- Added tornado volume in ship config.
+- Added cutiefly flap sound volume config.
+- Fixed Snailcat and Cutiefly flying routes.
+- Improved tornado looks.
+- Windy tornado can now throw the player.
+- Added compatibility with Surfaced.
+- Fixed hoverboard.
+- Buffed hoverboard.
+- Added compatibility with subtitles API (may not work for some reason).
+- Added 3 new weapons.
+- Added 2 new gems in the meteor shower and made them more common.
+- Water tornado now drowns you.
+- Made weather registry a soft compatibility (required to install but can disable).
+- Hopefully Sync'd some issues with particles when near a tornado.
+- Fixed tornado math pulling you when you're further away.
+- Blood tornado either heals or damages you now randomly.
+- Fire tornado would get weaker when you're on 20 or lower hp.
+- Electric tornado gives a bigger speed boost.
+- Balanced and made tornados weaker overall.
+- Made tornados much faster and properly move around.
+- Tornado weather now decreases total outside power level by 3 and inside by 3.
+- Meteor shower weather now decreases total outside power level by 3 and inside by 3.
+- Made enemies rideable.
+
+## v0.2.2
+- Fixed Snowglobe animations.
+
+## v0.2.1
+- Fixed company not loading bug.
+- Fixed tornado config -ish.
+
+## v0.2.0
+- Fixed tornado not spawning, may need to recreate config.
+
+## v0.1.9
+- Fixed being unable to ride truck during tornado.
+- Potentially fixed hoverboard slow issues.
+
+## v0.1.8
+- Accidently included something not supposed to be there, caused an error.
+- Potentially fixed item crate error.
+
+## v0.1.7
+- Improved hoverboard collisions, I think.
+- Increased range for tornado effects.
+- Tornados will get a bigger update when I'm more free later I promise.
+- Added config to switch wallet between an actual item to the refactored version.
+- Tried to fix bug where only host could pick up the wallet in the new system.
+- Updated version of the mod to play nice in latest version of the game.
+
 ## v0.1.6
 - Buffed item crate by atleast 3 times.
 - Added config to disable snow globe music (client side).
@@ -5,6 +111,7 @@
 - Stopped you from being able to pick up multiple wallets.
 - Improved tooltips for wallet.
 - Improved tooltips for hoverboard.
+- Nerfed Tornado power again.
 
 ## v0.1.5
 - Fixed particle effects not working.
@@ -82,6 +189,3 @@
 ## v0.0.1
 
 - Initial release
-
-## TODO:
-- Updated Icons for items

@@ -1,13 +1,3 @@
-using System;
-using System.Collections;
-using System.Diagnostics;
-using CodeRebirth.Misc;
-using CodeRebirth.src;
-using CodeRebirth.src.EnemyStuff;
-using GameNetcodeStuff;
-using Unity.Mathematics;
-using UnityEngine;
-
 namespace CodeRebirth.EnemyStuff;
 public class ScrapMasterAI : QuestMasterAI
 {
