@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 597875678
+CRC: 748872524
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3da307601b6b4607cf340305e7543222
+    Hash: e5e30ec95d0470c4b0f9d6fd82ea1a61
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 557bf0898309256371171cd73b2392dd
+    Hash: fd9ad8da1face78776f425640d477309
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 3da307601b6b4607cf340305e7543222
+    Hash: e5e30ec95d0470c4b0f9d6fd82ea1a61
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -19,6 +19,8 @@ ClassTypes:
 - Class: 21
   Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 43
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
@@ -30,15 +32,22 @@ ClassTypes:
   Script: {fileID: -1255866238, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/BiomeSpreader.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/CorruptionParticlesMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/Materials/Textures/CrimsonTexture.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/Materials/Textures/CorruptionTexture.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/Materials/Textures/HallowTexture.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/Materials/CorruptionDecalMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/CrimsonParticlesMaterial.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/HallowedParticlesMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/Materials/HallowDecalMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/AddOns/BiomeInfestation/Materials/CrimsonDecalMaterial.mat
 Dependencies: []

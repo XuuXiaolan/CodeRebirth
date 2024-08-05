@@ -11,8 +11,8 @@ namespace CodeRebirth.MapStuff
         public DecalProjector corruptionProjector = null!;
         public DecalProjector crimsonProjector = null!;
         public DecalProjector hallowProjector = null!;
-        public ParticleSystem deadParticles = null!;
-
+        
+        private ParticleSystem deadParticles = null!;
         private DecalProjector activeProjector = null!;
         private System.Random random = new System.Random(69);
         private int foliageLayer;
@@ -40,6 +40,7 @@ namespace CodeRebirth.MapStuff
                     break;
             }
 
+            deadParticles = activeProjector.gameObject.GetComponentInChildren<ParticleSystem>();
             foliageLayer = LayerMask.NameToLayer("Foliage");
             StartCoroutine(CheckAndDestroyFoliage());
         }
@@ -48,7 +49,7 @@ namespace CodeRebirth.MapStuff
         {
             if (activeProjector == null) return;
 
-            activeProjector.gameObject.transform.localScale += new Vector3(Time.deltaTime * 0.5f, Time.deltaTime * 0.5f, Time.deltaTime * 0.5f);
+            activeProjector.gameObject.transform.localScale += new Vector3(Time.deltaTime * 0.34f, Time.deltaTime * 0.34f, 0f);
         }
 
         private IEnumerator CheckAndDestroyFoliage()
@@ -61,8 +62,8 @@ namespace CodeRebirth.MapStuff
         }
 
         private void PerformSphereCast()
-        {
-            Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, activeProjector.gameObject.transform.localScale.y, 1 << foliageLayer);
+        { // todo: make it destroy destroyable trees too.
+            Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, activeProjector.gameObject.transform.localScale.y/4f, 1 << foliageLayer);
             foreach (var hitCollider in hitColliders)
             {
                 var meshRenderer = hitCollider.GetComponent<MeshRenderer>();
@@ -71,6 +72,7 @@ namespace CodeRebirth.MapStuff
                 if (meshRenderer != null && meshFilter != null)
                 {
                     Vector3 hitPosition = hitCollider.transform.position;
+                    Quaternion hitRotation = hitCollider.transform.rotation;
 
                     if (hitCollider.GetComponent<NetworkObject>() != null)
                     {
@@ -87,9 +89,9 @@ namespace CodeRebirth.MapStuff
                     }
 
                     // Instantiate dead particles at the position of the destroyed foliage
-                    //ParticleSystem particles = Instantiate(deadParticles, hitPosition, Quaternion.identity);
-                    //particles.Play();
-                    //Destroy(particles.gameObject, particles.main.duration + particles.main.startLifetime.constantMax);
+                    ParticleSystem particles = Instantiate(deadParticles, hitPosition, hitRotation);
+                    particles.Play();
+                    Destroy(particles.gameObject, particles.main.duration + particles.main.startLifetime.constantMax);
                 }
             }
         }

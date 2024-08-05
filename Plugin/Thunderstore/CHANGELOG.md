@@ -1,3 +1,12 @@
+## v0.5.0
+- Fixed nature's mace stuff not doing its thing right with healing players.
+- Adjusted Icy Hammer to only slow 100% on crit and only deal 1 damage.
+- Added biomes.
+- Fixed floating flora (hopefully).
+- Improved some patches.
+- Added dangerous flora.
+- Added new companion, robot doggy.
+
 ## v0.4.2
 - Sigh, fixed the tornado stuff for the guy who wants it to spawn naturally as an enemy (WONT WORK IF THE WEATHER IS WIMDY ALREADY).
 - Fixed plant spawning not on navmesh (this is custom moons being bad and adding colliders where there shouldn't be, so wasnt even my fault smh).

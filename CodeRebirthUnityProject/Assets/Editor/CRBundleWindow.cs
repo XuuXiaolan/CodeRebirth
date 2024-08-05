@@ -279,8 +279,19 @@ public class CRBundleWindow : EditorWindow
                         GUILayout.Label(icon, GUILayout.Width(24), GUILayout.Height(24), GUILayout.ExpandWidth(false)); // Adjust icon size and positioning
                     }
                     EditorGUILayout.LabelField(Path.GetFileName(asset.Path), new GUIStyle(EditorStyles.label) { normal = { textColor = AssetColor } }, GUILayout.ExpandWidth(true));
+                    Rect lastRect = GUILayoutUtility.GetLastRect();
                     EditorGUILayout.LabelField(GetReadableFileSize(asset.Size), new GUIStyle(EditorStyles.label) { normal = { textColor = AssetColor } }, GUILayout.Width(150), GUILayout.ExpandWidth(false));
                     EditorGUILayout.EndHorizontal();
+
+                    EditorGUIUtility.AddCursorRect(lastRect, MouseCursor.Link); // Change cursor to link cursor
+
+                    if (Event.current.type == EventType.MouseDown && lastRect.Contains(Event.current.mousePosition) && Event.current.clickCount == 2)
+                    {
+                        // Ping the asset when double clicked
+                        var assetObject = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(asset.Path);
+                        EditorGUIUtility.PingObject(assetObject);
+                        Event.current.Use();
+                    }
                 }
             }
             EditorGUI.indentLevel--;
