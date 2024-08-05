@@ -77,21 +77,41 @@ static class PlayerControllerBPatch {
         });
     }
 
+    /// <summary>
+    /// Modifies item dropping code to attempt to find a NetworkObject from collided object's parents
+    /// in case the collided object itself doesn't have a NetworkObject, if the following is true:<br/>
+    /// - The collided GameObject's name ends with <c>"_RedirectToRootNetworkObject"</c><br/>
+    /// <br/>
+    /// This is necessary for parenting items to enemies, because the raycast that collides with an object
+    /// ignores the enemies layer.
+    /// </summary>
     private static void ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject(ILContext il)
     {
         ILCursor c = new(il);
 
         if (!c.TryGotoNext(MoveType.Before,
             x => x.MatchLdloc(0),                                   // load transform to stack
-            x => x.MatchCallvirt<Component>(nameof(Component.GetComponent)),  // var component = transform.GetComponent<NetworkObject>();
-            x => x.MatchStloc(3),                                   // if (component != null)
-            x => x.MatchLdloc(3),
-            x => x.MatchLdnull(),
-            x => x.MatchCall<UnityEngine.Object>("op_Inequality"),
-            x => x.MatchBrfalse(out _)
+            x => x.MatchCallvirt<Component>(nameof(Component.GetComponent)), // var component = transform.GetComponent<NetworkObject>();
+            x => x.MatchStloc(3)
+            // Context:
+            // x => x.MatchLdloc(3),                                // if (component != null)
+            // x => x.MatchLdnull(),
+            // x => x.MatchCall<UnityEngine.Object>("op_Inequality"),
+            // x => x.MatchBrfalse(out _)
         ))
         {
-            Plugin.Logger.LogError($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] Could not match IL!");
+            // Couldn't match, let's figure out if we should worry
+            if (c.TryGotoNext(MoveType.Before,
+                x => x.MatchLdloc(0),
+                x => x.MatchLdcI4(out _),   // Matching against EmitDelegate
+                x => x.MatchCall("MonoMod.Cil.RuntimeILReferenceBag/InnerBag`1<System.Func`2<UnityEngine.Transform,UnityEngine.Transform>>", "Get"), // There exists some bug probably that typeof doesn't work here because of generics?
+                x => x.MatchCall(typeof(RuntimeILReferenceBag.FastDelegateInvokers), "Invoke"),
+                x => x.MatchCallvirt<Component>(nameof(Component.GetComponent)),
+                x => x.MatchStloc(3)
+            ))
+                Plugin.Logger.LogInfo($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] This ILHook has most likely already been applied by another mod.");
+            else
+                Plugin.Logger.LogError($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] Could not match IL!!");
             return;
         }
 
