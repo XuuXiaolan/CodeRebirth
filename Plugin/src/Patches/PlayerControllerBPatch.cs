@@ -56,25 +56,25 @@ static class PlayerControllerBPatch {
     private static void PlayerControllerB_CheckConditionsForSinkingInQuicksand(ILContext il)
     {
         ILCursor c = new(il);
-        ILLabel inSpecialInteractionLabel = null!;
 
-        if (!c.TryGotoNext(MoveType.Before,
+        if (!c.TryGotoNext(MoveType.After,
             x => x.MatchLdarg(0),
             x => x.MatchLdfld<PlayerControllerB>(nameof(PlayerControllerB.thisController)),
             x => x.MatchCallvirt<CharacterController>("get_" + nameof(CharacterController.isGrounded)),
-            x => x.MatchBrtrue(out inSpecialInteractionLabel)
+            x => x.MatchBrtrue(out _)
         ))
         {
             Plugin.Logger.LogError("[ILHook:PlayerControllerB.CheckConditionsForSinkingInQuicksand] Couldn't find thisController.isGrounded check!");
             return;
         }
 
-        c.EmitDelegate<Func<bool>>(() =>
+        c.Index -= 1;
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate((bool isGrounded, PlayerControllerB self) =>
         {
-            bool skipIsGroundedCheck = true;
-            return skipIsGroundedCheck;
+            // Pretend we are grounded when in a water tornado so we can drown.
+            return isGrounded || self.GetCRPlayerData().Water;
         });
-        c.Emit(OpCodes.Brtrue_S, inSpecialInteractionLabel);
     }
 
     private static void ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject(ILContext il)
