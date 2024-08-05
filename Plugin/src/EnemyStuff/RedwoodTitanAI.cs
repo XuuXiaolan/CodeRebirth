@@ -136,7 +136,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         if (shipDoorClosed) {
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
                 if (player.isInHangarShipRoom) {
-                    foreach (Collider playerCollider in CodeRebirthPlayerManager.dataForPlayer[player].playerColliders!) {
+                    foreach (Collider playerCollider in player.GetCRPlayerData().playerColliders!) {
                         if (playerCollider == null) continue;
                         foreach (Collider enemyCollider in enemyColliders) {
                             Physics.IgnoreCollision(playerCollider, enemyCollider, true);
@@ -146,7 +146,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             }
         } else {
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
-                foreach (Collider playerCollider in CodeRebirthPlayerManager.dataForPlayer[player].playerColliders!) {
+                foreach (Collider playerCollider in player.GetCRPlayerData().playerColliders!) {
                     foreach (Collider enemyCollider in enemyColliders) {
                         Physics.IgnoreCollision(playerCollider, enemyCollider, false);
                     }

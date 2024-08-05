@@ -15,8 +15,8 @@ namespace CodeRebirth.Patches;
 static class PlayerControllerBPatch {
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]
     public static bool PlayerHitGroundEffects(PlayerControllerB __instance) {
-        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && CodeRebirthPlayerManager.dataForPlayer[__instance].flung) {
-            CodeRebirthPlayerManager.dataForPlayer[__instance].flung = false;
+        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && __instance.GetCRPlayerData().flung) {
+            __instance.GetCRPlayerData().flung = false;
             __instance.playerRigidbody.isKinematic = true;
         }
         return true;
@@ -24,7 +24,7 @@ static class PlayerControllerBPatch {
 
 	[HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayFootstepSound)), HarmonyPrefix]
 	public static bool PlayFootstepSound(PlayerControllerB __instance) {
-        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && CodeRebirthPlayerManager.dataForPlayer[__instance].ridingHoverboard) {
+        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && __instance.GetCRPlayerData().ridingHoverboard) {
             return false;
         } else {
             return true;
@@ -36,16 +36,16 @@ static class PlayerControllerBPatch {
         if (!CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance)) {
             CodeRebirthPlayerManager.dataForPlayer.Add(__instance, new CRPlayerData());
             List<Collider> colliders = new List<Collider>(__instance.GetComponentsInChildren<Collider>());
-            CodeRebirthPlayerManager.dataForPlayer[__instance].playerColliders = colliders;
+            __instance.GetCRPlayerData().playerColliders = colliders;
         }
     }
 
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.Update)), HarmonyPrefix]
     public static void Update(PlayerControllerB __instance) {
         if (GameNetworkManager.Instance.localPlayerController == null) return;
-        if (CodeRebirthPlayerManager.dataForPlayer[__instance].playerOverrideController != null) return;
-        CodeRebirthPlayerManager.dataForPlayer[__instance].playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
-        __instance.playerBodyAnimator.runtimeAnimatorController = CodeRebirthPlayerManager.dataForPlayer[__instance].playerOverrideController; 
+        if (__instance.GetCRPlayerData().playerOverrideController != null) return;
+        __instance.GetCRPlayerData().playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
+        __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController; 
     }
 
     public static void Init() {

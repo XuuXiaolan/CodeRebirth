@@ -41,7 +41,7 @@ public class SnowGlobe : GrabbableObject
             Plugin.Logger.LogDebug("player is null");
             return;
         }
-        AnimatorOverrideController? playerOverrideThing = CodeRebirthPlayerManager.dataForPlayer[player].playerOverrideController;
+        AnimatorOverrideController? playerOverrideThing = player.GetCRPlayerData().playerOverrideController;
         if (playerOverrideThing == null) {
             Plugin.Logger.LogDebug("playerOverrideThing is null");
             return;

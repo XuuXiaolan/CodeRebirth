@@ -229,24 +229,24 @@ public class Tornados : EnemyAI
             Plugin.Logger.LogError("PlayerID is -1, this should never happen!");
             return;
         }
-        CodeRebirthPlayerManager.dataForPlayer[StartOfRound.Instance.allPlayerScripts[PlayerID]].flingingAway = true;
+        StartOfRound.Instance.allPlayerScripts[PlayerID].GetCRPlayerData().flingingAway = true;
         StartCoroutine(AutoReEnableKinematicsAfter10Seconds(StartOfRound.Instance.allPlayerScripts[PlayerID]));
     }
 
     public IEnumerator AutoReEnableKinematicsAfter10Seconds(PlayerControllerB player) {
         yield return new WaitForSeconds(10f);
         player.playerRigidbody.isKinematic = true;
-        CodeRebirthPlayerManager.dataForPlayer[player].flingingAway = false;
-        CodeRebirthPlayerManager.dataForPlayer[player].flung = false;
+        player.GetCRPlayerData().flingingAway = false;
+        player.GetCRPlayerData().flung = false;
     }
     public override void Update() {
         base.Update();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
         
         var localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.transform.position) <= 10f && !CodeRebirthPlayerManager.dataForPlayer[localPlayer].flingingAway && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water) {
+        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.transform.position) <= 10f && !localPlayer.GetCRPlayerData().flingingAway && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water) {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 49f);
-        } else if (Vector3.Distance(localPlayer.transform.position, this.transform.position) > 10f && !CodeRebirthPlayerManager.dataForPlayer[localPlayer].flingingAway) {
+        } else if (Vector3.Distance(localPlayer.transform.position, this.transform.position) > 10f && !localPlayer.GetCRPlayerData().flingingAway) {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 49f);
         }
 
@@ -273,7 +273,7 @@ public class Tornados : EnemyAI
         UpdateAudio();
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
             HandleTornadoActions(player);   
-            if (CodeRebirthPlayerManager.dataForPlayer[player].flingingAway && !CodeRebirthPlayerManager.dataForPlayer[player].flung) {
+            if (player.GetCRPlayerData().flingingAway && !player.GetCRPlayerData().flung) {
                 //Plugin.Logger.LogDebug("Tornado is flinging away");
                 Vector3 directionToCenter = (throwingPoint.position - player.transform.position).normalized;
                 Rigidbody playerRigidbody = player.playerRigidbody;
@@ -287,8 +287,8 @@ public class Tornados : EnemyAI
                     playerRigidbody.AddForce(verticalForce, ForceMode.VelocityChange);
                     if (player == GameNetworkManager.Instance.localPlayerController) timeSinceBeingInsideTornado = 0f;
                     if (Plugin.ModConfig.ConfigTornadoYeetSFX.Value) yeetAudio.Play();
-                    CodeRebirthPlayerManager.dataForPlayer[player].flung = true;
-                    CodeRebirthPlayerManager.dataForPlayer[player].flingingAway = false;
+                    player.GetCRPlayerData().flung = true;
+                    player.GetCRPlayerData().flingingAway = false;
                 }
             }
         }
@@ -315,7 +315,7 @@ public class Tornados : EnemyAI
             float distanceToTornado = Vector3.Distance(transform.position, player.transform.position);
             bool hasLineOfSight = TornadoHasLineOfSightToPosition();
             Vector3 directionToCenter = (transform.position - player.transform.position).normalized;
-            if (CodeRebirthPlayerManager.dataForPlayer[player].flingingAway && player.playerRigidbody.isKinematic) {
+            if (player.GetCRPlayerData().flingingAway && player.playerRigidbody.isKinematic) {
                 player.playerRigidbody.isKinematic = false;
                 player.playerRigidbody.AddForce(Vector3.up * 10f, ForceMode.Impulse);
             } else if (distanceToTornado <= 75) {
@@ -328,7 +328,7 @@ public class Tornados : EnemyAI
 
     public bool TornadoConditionsAreMet(PlayerControllerB player) {
         return  !player.inVehicleAnimation && 
-                !CodeRebirthPlayerManager.dataForPlayer[player].ridingHoverboard && 
+                !player.GetCRPlayerData().ridingHoverboard && 
                 !StartOfRound.Instance.shipBounds.bounds.Contains(player.transform.position) && 
                 !player.isInsideFactory && 
                 player.isPlayerControlled && 
@@ -367,68 +367,68 @@ public class Tornados : EnemyAI
 
     private void ApplyFireStatusEffect(PlayerControllerB player, float range) {
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !CodeRebirthPlayerManager.dataForPlayer[player].Fire) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Fire = true;
+        if (distance < range && !player.GetCRPlayerData().Fire) {
+            player.GetCRPlayerData().Fire = true;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Fire, true);
-        } else if (distance >= range && CodeRebirthPlayerManager.dataForPlayer[player].Fire) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Fire = false;
+        } else if (distance >= range && player.GetCRPlayerData().Fire) {
+            player.GetCRPlayerData().Fire = false;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Fire, false);
         }
     }
 
     private void ApplyBloodStatusEffect(PlayerControllerB player, float range) {
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !CodeRebirthPlayerManager.dataForPlayer[player].Blood) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Blood = true;
+        if (distance < range && !player.GetCRPlayerData().Blood) {
+            player.GetCRPlayerData().Blood = true;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Blood, true);
-        } else if (distance >= range && CodeRebirthPlayerManager.dataForPlayer[player].Blood) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Blood = false;
+        } else if (distance >= range && player.GetCRPlayerData().Blood) {
+            player.GetCRPlayerData().Blood = false;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Blood, false);
         }
     }
 
     private void ApplyWindyStatusEffect(PlayerControllerB player, float range) {
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !CodeRebirthPlayerManager.dataForPlayer[player].Windy) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Windy = true;
+        if (distance < range && !player.GetCRPlayerData().Windy) {
+            player.GetCRPlayerData().Windy = true;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Windy, true);
-        } else if (distance >= range && CodeRebirthPlayerManager.dataForPlayer[player].Windy) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Windy = false;
+        } else if (distance >= range && player.GetCRPlayerData().Windy) {
+            player.GetCRPlayerData().Windy = false;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Windy, false);
         }
     }
 
     private void ApplySmokeStatusEffect(PlayerControllerB player, float range) {
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !CodeRebirthPlayerManager.dataForPlayer[player].Smoke) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Smoke = true;
+        if (distance < range && !player.GetCRPlayerData().Smoke) {
+            player.GetCRPlayerData().Smoke = true;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Smoke, true);
-        } else if (distance >= range && CodeRebirthPlayerManager.dataForPlayer[player].Smoke) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Smoke = false;
+        } else if (distance >= range && player.GetCRPlayerData().Smoke) {
+            player.GetCRPlayerData().Smoke = false;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Smoke, false);
         }
     }
 
     private void ApplyWaterStatusEffect(PlayerControllerB player, float range) {
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !CodeRebirthPlayerManager.dataForPlayer[player].Water && player.isUnderwater) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Water = true;
+        if (distance < range && !player.GetCRPlayerData().Water && player.isUnderwater) {
+            player.GetCRPlayerData().Water = true;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Water, true);
-        } else if (distance >= range && CodeRebirthPlayerManager.dataForPlayer[player].Water) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Water = false;
+        } else if (distance >= range && player.GetCRPlayerData().Water) {
+            player.GetCRPlayerData().Water = false;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Water, false);
         }
     }
 
     private void ApplyElectricStatusEffect(PlayerControllerB player, float range) {
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !CodeRebirthPlayerManager.dataForPlayer[player].Electric) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Electric = true;
+        if (distance < range && !player.GetCRPlayerData().Electric) {
+            player.GetCRPlayerData().Electric = true;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Electric, true);
             originalPlayerSpeed = player.movementSpeed;
             player.movementSpeed *= 1.5f;
-        } else if (distance >= range && CodeRebirthPlayerManager.dataForPlayer[player].Electric) {
-            CodeRebirthPlayerManager.dataForPlayer[player].Electric = false;
+        } else if (distance >= range && player.GetCRPlayerData().Electric) {
+            player.GetCRPlayerData().Electric = false;
             CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Electric, false);
             player.movementSpeed = originalPlayerSpeed;
         }
@@ -442,7 +442,11 @@ public class Tornados : EnemyAI
     private float CalculatePullStrength(float distance, bool hasLineOfSight, PlayerControllerB localPlayerController) {
         float maxDistance = 150f;
         float minStrength = 0;
-        float maxStrength = (hasLineOfSight ? Plugin.ModConfig.ConfigTornadoPullStrength.Value : 0.125f*Plugin.ModConfig.ConfigTornadoPullStrength.Value) * (tornadoType == TornadoType.Smoke ? 1.25f : 1f) * (CodeRebirthPlayerManager.dataForPlayer[localPlayerController].Water ? 0.25f : 1f) * (tornadoType == TornadoType.Fire && localPlayerController.health <= 20 ? 0.25f : 1f);
+        float maxStrength =
+            (hasLineOfSight ? Plugin.ModConfig.ConfigTornadoPullStrength.Value : 0.125f * Plugin.ModConfig.ConfigTornadoPullStrength.Value)
+            * (tornadoType == TornadoType.Smoke ? 1.25f : 1f)
+            * (localPlayerController.GetCRPlayerData().Water ? 0.25f : 1f)
+            * (tornadoType == TornadoType.Fire && localPlayerController.health <= 20 ? 0.25f : 1f);
 
         // Calculate the normalized distance and apply an exponential falloff
         float normalizedDistance = distance / maxDistance;
@@ -546,7 +550,7 @@ public class Tornados : EnemyAI
         return false;
     }
     public bool CheckIfPlayerSeenByTornado(PlayerControllerB player) {
-        if (CodeRebirthPlayerManager.dataForPlayer[player].flingingAway) return false;
+        if (player.GetCRPlayerData().flingingAway) return false;
         foreach (Transform eye in eyes)
         {
             if (Physics.Linecast(eye.position, player.gameplayCamera.transform.position, StartOfRound.Instance.playersMask, queryTriggerInteraction: QueryTriggerInteraction.Ignore))
