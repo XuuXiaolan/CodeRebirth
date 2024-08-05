@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Random = System.Random;
 using System.Collections.Generic;
+using CodeRebirth.Util.Extensions;
 
 namespace CodeRebirth.Util.Spawning;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -43,7 +44,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
         GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
         go.GetComponent<NetworkObject>().Spawn();
-        int value = random.Next(minValue: item.minValue + valueIncrease, maxValue: item.maxValue + valueIncrease);
+        int value = random.NextInt(item.minValue + valueIncrease, item.maxValue + valueIncrease);
         var scanNode = go.GetComponentInChildren<ScanNodeProperties>();
         scanNode.scrapValue = value;
         scanNode.subText = $"Value: ${value}";
@@ -59,7 +60,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             if (netObj.TryGetComponent(out GrabbableObject grabbableObject)) {
                 grabbableObject.SetScrapValue(value);
-                Plugin.Logger.LogInfo($"Scrap Value: {value}");
+                Plugin.ExtendedLogging($"Scrap Value: {value}");
             }
         }
     }
@@ -85,7 +86,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         GameObject obj = Instantiate<GameObject>(MapObjectHandler.DevilDealPrefabs[objectName], location, rotation);
         NetworkObject component = obj.GetComponent<NetworkObject>();
-        Plugin.Logger.LogInfo(obj.name + " NetworkObject spawned");
+        Plugin.ExtendedLogging(obj.name + " NetworkObject spawned");
         component.Spawn(false);
         return obj;
     }

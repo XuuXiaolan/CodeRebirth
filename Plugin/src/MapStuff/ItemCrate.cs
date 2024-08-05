@@ -136,7 +136,7 @@ public class ItemCrate : CRHittable {
 
 			GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
 			
-			grabbableObject.SetScrapValue((int)(random.Next(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier * (crateType == CrateType.Metal ? 1.2f : 1f)));
+			grabbableObject.SetScrapValue((int)(random.NextInt(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier * (crateType == CrateType.Metal ? 1.2f : 1f)));
 			grabbableObject.NetworkObject.Spawn();
 			CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
 		}
@@ -193,6 +193,6 @@ public class ItemCrate : CRHittable {
 	}
 
 	public Item GetRandomShopItem() {
-		return ShopItemList[random.Next(ShopItemList.Count)];
+		return ShopItemList[random.NextInt(0, ShopItemList.Count-1)];
 	}	
 }

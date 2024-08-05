@@ -91,7 +91,7 @@ static class PlayerControllerBPatch {
             x => x.MatchBrfalse(out _)
         ))
         {
-            Plugin.Logger.LogError($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] Could not match IL!");
+            Plugin.Logger.LogWarning($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] Could not match IL! (Can probably safely ignore)");
             return;
         }
 

@@ -44,10 +44,17 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		public GameObject PlayerChairPrefab { get; private set; } = null!;
 	}
 
+	public class BiomeAssets(string bundleName) : AssetBundleLoader<BiomeAssets>(bundleName) {
+		[LoadFromBundle("BiomeSpreader.prefab")]
+		public GameObject BiomePrefab { get; private set; } = null!;
+	}
+
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
 	public DevilDealAssets DevilDeal { get; private set; } = null!;
+	public BiomeAssets Biome { get; private set; } = null!;
+
 	public static Dictionary<string, GameObject> DevilDealPrefabs = new Dictionary<string, GameObject>();
 
     public MapObjectHandler() {
@@ -58,6 +65,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value) RegisterOutsideFlora();
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
+
+		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
+			Biome = new BiomeAssets("biomeassets");
 
 		if (false) RegisterDevilDeal();
 	}

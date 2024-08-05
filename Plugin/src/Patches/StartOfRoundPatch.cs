@@ -41,7 +41,7 @@ static class StartOfRoundPatch {
 				SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
 				utilsInstance.GetComponent<NetworkObject>().Spawn();
 				utilsInstance.AddComponent<CodeRebirthPlayerManager>();
-				Plugin.Logger.LogInfo($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
+				Plugin.ExtendedLogging($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
 			} else {
 				Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");
 			}

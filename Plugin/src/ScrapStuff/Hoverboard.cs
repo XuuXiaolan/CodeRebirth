@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using System.Linq;
 using UnityEngine.AI;
 using CodeRebirth.Util.PlayerManager;
+using CodeRebirth.Util.Extensions;
 
 namespace CodeRebirth.ScrapStuff;
 public class Hoverboard : GrabbableObject, IHittable {
@@ -46,7 +47,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         StartBaseImportant();
 
         System.Random random = new System.Random();
-        int hoverboardTypeIndex = random.Next(0, 3);
+        int hoverboardTypeIndex = random.NextInt(0, 2);
         switch (hoverboardTypeIndex) {
             case 0:
                 hoverboardType = HoverboardTypes.Regular;
@@ -192,7 +193,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         if (hoverboardMode == HoverboardMode.Mounted && playerControlling.transform.GetParent() != hoverboardSeat.transform) {
             playerControlling.transform.SetParent(hoverboardSeat.transform, true);
-            Plugin.Logger.LogInfo($"Setting parent of {playerControlling} to {playerControlling.transform.GetParent()}");
+            Plugin.ExtendedLogging($"Setting parent of {playerControlling} to {playerControlling.transform.GetParent()}");
         }
         if (playerControlling.inAnimationWithEnemy || playerControlling.isClimbingLadder || (hoverboardMode == HoverboardMode.Mounted && playerControlling.isClimbingLadder)) {
             DropHoverboard();
@@ -309,15 +310,15 @@ public class Hoverboard : GrabbableObject, IHittable {
                 playerControlling.transform.SetParent(playerControlling.playersManager.playersContainer, true);
             }
             playerControlling = null;
-            Plugin.Logger.LogInfo($"Clearing target on {this}");
+            Plugin.ExtendedLogging($"Clearing target on {this}");
             return;
         }
         if (StartOfRound.Instance.allPlayerScripts[PlayerID] == null) {
-            Plugin.Logger.LogInfo($"Index invalid! {PlayerID}");
+            Plugin.Logger.LogWarning($"Index invalid! {PlayerID}");
             return;
         }
         if (playerControlling == StartOfRound.Instance.allPlayerScripts[PlayerID]) {
-            Plugin.Logger.LogInfo($"{this} already targeting: {playerControlling.playerUsername}");
+            Plugin.ExtendedLogging($"{this} already targeting: {playerControlling.playerUsername}");
             return;
         }
         hoverboardChild.rotation = resetChildRotation;
@@ -336,7 +337,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         CodeRebirthPlayerManager.dataForPlayer[playerControlling].ridingHoverboard = true;
         playerControlling.transform.position = hoverboardSeat.transform.position;
         playerControlling.transform.rotation = hoverboardSeat.transform.rotation * Quaternion.Euler(0, 90, 0);
-        Plugin.Logger.LogInfo($"{this} setting target to: {playerControlling.playerUsername}");
+        Plugin.ExtendedLogging($"{this} setting target to: {playerControlling.playerUsername}");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -357,7 +358,7 @@ public class Hoverboard : GrabbableObject, IHittable {
     [ClientRpc]
     internal void SetHoverboardStateClientRpc(int state) {
         if (playerControlling == null && hoverboardMode != HoverboardMode.None) {
-            Plugin.Logger.LogInfo($"Player controlling is null for me...");
+            Plugin.Logger.LogWarning($"Player controlling is null for me...");
         }
         switch (state) {
             case 0:

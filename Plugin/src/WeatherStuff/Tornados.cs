@@ -80,7 +80,7 @@ public class Tornados : EnemyAI
         this.transform.position = this.origin;
         this.tornadoType = (TornadoType)typeIndex;
         WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
-        Plugin.Logger.LogInfo($"Setting up tornado of type: {tornadoType} at {origin}");
+        Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}");
         SetupTornadoType();
         UpdateAudio(); // Make sure audio works correctly on the first frame.
     }
@@ -98,7 +98,7 @@ public class Tornados : EnemyAI
         }
 
         if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) != WeatherHandler.Instance.TornadoesWeather) {
-            Plugin.Logger.LogInfo("Tornado spawned as an enemy?");
+            Plugin.ExtendedLogging("Tornado spawned as an enemy?");
             outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
             tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
             this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: Vector3.zero, radius: 100f, randomSeed: tornadoRandom);
@@ -129,11 +129,11 @@ public class Tornados : EnemyAI
                         tornadoTypeIndices.Add(Tornados.TornadoType.Electric);
                         break;
                     case "random":
-                        var randomType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().Next(6));
+                        var randomType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().NextInt(0, 5));
                         tornadoTypeIndices.Add(randomType);
                         break;
                     default:
-                        var defaultType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().Next(6));
+                        var defaultType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().NextInt(0, 5));
                         tornadoTypeIndices.Add(defaultType);
                         break;
                 }
@@ -141,12 +141,12 @@ public class Tornados : EnemyAI
 
             // Remove duplicates if any (optional)
             tornadoTypeIndices.Distinct().ToList();
-            Plugin.Logger.LogInfo($"Tornado types: {tornadoTypeIndices}");
-            int randomTypeIndex = (int)tornadoTypeIndices[tornadoRandom.Next(tornadoTypeIndices.Count)];
+            Plugin.ExtendedLogging($"Tornado types: {tornadoTypeIndices}");
+            int randomTypeIndex = (int)tornadoTypeIndices[tornadoRandom.NextInt(0, tornadoTypeIndices.Count-1)];
             int typeIndex = randomTypeIndex;
             this.tornadoType = (TornadoType)typeIndex;
             WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
-            Plugin.Logger.LogInfo($"Setting up tornado of type: {tornadoType} at {origin}");
+            Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}");
             SetupTornadoType();
             UpdateAudio(); // Make sure audio works correctly on the first frame.
         }
@@ -470,7 +470,7 @@ public class Tornados : EnemyAI
                 }
                 break;
             case TornadoType.Blood:
-                localPlayerController.DamagePlayer(Math.Clamp(tornadoRandom.Next(-5, 6), 0, 100));
+                localPlayerController.DamagePlayer(Math.Clamp(tornadoRandom.NextInt(-5, 5), 0, 100));
                 break;
             case TornadoType.Windy:
                 break;
