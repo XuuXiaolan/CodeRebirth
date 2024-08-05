@@ -90,3 +90,9 @@ public class CRPlayerData
     public List<Collider>? playerColliders;
     public AnimatorOverrideController? playerOverrideController;
 }
+
+internal static class PlayerControllerBExtensions
+{
+    internal static CRPlayerData GetCRPlayerData(this PlayerControllerB player) =>
+        CodeRebirthPlayerManager.dataForPlayer[player];
+}
