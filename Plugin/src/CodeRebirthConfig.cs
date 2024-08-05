@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 namespace CodeRebirth.Configs {
     public class CodeRebirthConfig {
         // Enables/Disables
+        public ConfigEntry<bool> ConfigBiomesEnabled { get; private set; }
         public ConfigEntry<bool> ConfigFloraEnabled { get; private set; }
         public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
         public ConfigEntry<bool> ConfigRedwoodEnabled { get; private set; }
@@ -73,6 +74,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         // Misc
+        public ConfigEntry<bool> ConfigEnableExtendedLogging { get; private set; }
         public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; private set; }
         public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
         public ConfigEntry<int> ConfigFloraMinAbundance { get; private set; }
@@ -88,6 +90,18 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
+            #region 
+            ConfigEnableExtendedLogging = configFile.Bind("General",
+                                                "Enable Extended Logging",
+                                                false,
+                                                "Whether extended logging is enabled.");
+            #endregion
+            #region Biomes
+            ConfigBiomesEnabled = configFile.Bind("Biome Options",
+                                                "Biomes | Enabled",
+                                                true,
+                                                "Whether Biomes are enabled.");
+            #endregion
             #region Flora
             ConfigFloraEnabled = configFile.Bind("Flora Options",
                                                 "Flora | Enabled",

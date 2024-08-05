@@ -114,7 +114,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
                 break;
 
             default:
-                LogIfDebugBuild("This Behavior State doesn't exist!");
+                Plugin.Logger.LogWarning("This Behavior State doesn't exist!");
                 break;
         }
     }

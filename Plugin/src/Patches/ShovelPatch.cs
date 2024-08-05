@@ -33,7 +33,7 @@ static class ShovelPatch {
 
 		if (__instance is NaturesMace naturesMace) {
 			List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
-			Plugin.Logger.LogInfo("playerList: " + playerList.Count);
+			Plugin.ExtendedLogging("playerList: " + playerList.Count);
 			foreach (PlayerControllerB player in playerList) {
 				naturesMace.Heal(player);
 			}

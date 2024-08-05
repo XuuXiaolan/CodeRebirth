@@ -47,9 +47,9 @@ public class NaturesMace : CodeRebirthWeapons { // Added for potential future im
 
 	public void Heal(PlayerControllerB playerToHeal)
 	{
-		Plugin.Logger.LogInfo("previousplayerHeldby: " + previousPlayerHeldBy.playerUsername + " Health:" + previousPlayerHeldBy.health);
+		Plugin.ExtendedLogging("previousplayerHeldby: " + previousPlayerHeldBy.playerUsername + " Health:" + previousPlayerHeldBy.health);
 		playerToHeal.DamagePlayer(-30, false, false, 0, 0, false, default);
-		Plugin.Logger.LogInfo("playerToHeal: " + playerToHeal.playerUsername + "| HealthAfterRpc: " + playerToHeal.health);
+		Plugin.ExtendedLogging("playerToHeal: " + playerToHeal.playerUsername + "| HealthAfterRpc: " + playerToHeal.health);
 		if (playerToHeal.health >= 20)
 		{
 			playerToHeal.criticallyInjured = false;

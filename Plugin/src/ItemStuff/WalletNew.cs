@@ -260,7 +260,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
                     this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
                 }
             }
-            Plugin.Logger.LogInfo($"Clearing target on {this}");
+            Plugin.ExtendedLogging($"Clearing target on {this}");
             
             isHeld = false;
             if (walletMode == WalletModes.Sold) {
@@ -287,7 +287,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
 
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[PlayerID];
         if (player == null) {
-            Plugin.Logger.LogInfo($"Invalid player index: {PlayerID}");
+            Plugin.Logger.LogWarning($"Invalid player index: {PlayerID}");
             return;
         }
         walletMode = WalletModes.Held;

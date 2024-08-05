@@ -6,7 +6,7 @@ public static class ImperiumCompatibilityChecker {
     
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void Init() {
-        Plugin.Logger.LogInfo("No way imperium is on?!");
+        Plugin.ExtendedLogging("No way imperium is on?!");
         Plugin.ImperiumIsOn = true;
     }
 } // tbd.

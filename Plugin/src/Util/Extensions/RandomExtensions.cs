@@ -26,6 +26,10 @@ public static class RandomExtensions {
 		return (float)random.NextDouble(min, max);
 	}
 
+	public static int NextInt(this Random random, int min, int max) {
+		return random.Next(min, max+1);
+	}
+
 	public static bool NextBool(this Random random) {
 		return random.Next(0, 2) == 0;
 	}
