@@ -136,7 +136,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         if (shipDoorClosed) {
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
                 if (player.isInHangarShipRoom) {
-                    foreach (Collider playerCollider in CodeRebirthPlayerManager.dataForPlayer[player].playerColliders!) {
+                    foreach (Collider playerCollider in player.GetCRPlayerData().playerColliders!) {
                         if (playerCollider == null) continue;
                         foreach (Collider enemyCollider in enemyColliders) {
                             Physics.IgnoreCollision(playerCollider, enemyCollider, true);
@@ -146,7 +146,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             }
         } else {
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
-                foreach (Collider playerCollider in CodeRebirthPlayerManager.dataForPlayer[player].playerColliders!) {
+                foreach (Collider playerCollider in player.GetCRPlayerData().playerColliders!) {
                     foreach (Collider enemyCollider in enemyColliders) {
                         Physics.IgnoreCollision(playerCollider, enemyCollider, false);
                     }
@@ -191,7 +191,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public void WanderAroundAnimEvent() {
         if (IsServer) networkAnimator.SetTrigger("startWalk");
-        LogIfDebugBuild("Start Walking Around");
+        Plugin.ExtendedLogging("Start Walking Around");
         StartSearch(this.transform.position);
         agent.speed = walkingSpeed;
         SwitchToBehaviourStateOnLocalClient((int)State.WanderingLand);
@@ -200,7 +200,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public void DoWanderingLand() {
         if (FindClosestAliveGiantInRange(seeableDistance)) {
             networkAnimator.SetTrigger("startChase");
-            LogIfDebugBuild("Start Target Giant");
+            Plugin.ExtendedLogging("Start Target Giant");
             StopSearch(currentSearch);
             SwitchToBehaviourServerRpc((int)State.RunningToTarget);
             agent.speed = walkingSpeed * 4;
@@ -245,7 +245,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             agent.speed = 1f;
             StartCoroutine(KickTimer());
             if (IsServer) networkAnimator.SetTrigger("startKick");
-            LogIfDebugBuild("Start Kick");
+            Plugin.ExtendedLogging("Start Kick");
         }
         Vector3 targetPosition = closestPlayer.transform.position;
         Vector3 direction = (targetPosition - this.transform.position).normalized;
@@ -261,13 +261,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "startKick");
         
         startedKick = false;
-        LogIfDebugBuild("Kick ended");
+        Plugin.ExtendedLogging("Kick ended");
         SwitchToBehaviourServerRpc((int)State.WanderingLand);
     }
     public void DoRunningToTarget() {
         // Keep targetting closest Giant, unless they are over 20 units away and we can't see them.
         if (targetEnemy == null) {
-            LogIfDebugBuild("Stop Target Giant");
+            Plugin.ExtendedLogging("Stop Target Giant");
             networkAnimator.SetTrigger("startWalk");
             StartSearch(this.transform.position);
             agent.speed = walkingSpeed;
@@ -275,7 +275,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             return;
         }
         if (Vector3.Distance(transform.position, targetEnemy.transform.position) > seeableDistance+10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5)) {
-            LogIfDebugBuild("Stop Target Giant");
+            Plugin.ExtendedLogging("Stop Target Giant");
             networkAnimator.SetTrigger("startWalk");
             StartSearch(this.transform.position);
             agent.speed = walkingSpeed;
@@ -307,7 +307,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             case (int)State.EatingTargetGiant:
                 break;
             default:
-                LogIfDebugBuild("This Behavior State doesn't exist!");
+                Plugin.Logger.LogWarning("This Behavior State doesn't exist!");
                 break;
         }
     }
@@ -333,7 +333,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         }
 
         // Optional: Log the distance and remaining HP for debugging
-        // LogIfDebugBuild($"Distance: {distanceFromEnemy} HP: {enemy.enemyHP}");
+        // Plugin.ExtendedLogging($"Distance: {distanceFromEnemy} HP: {enemy.enemyHP}");
     }
 
     public void LeftFootStepInteractions() {
@@ -383,7 +383,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         } else if (targetEnemy.enemyType.enemyName == "RadMech") {
             OldBirdParticles.Play();
         }
-        LogIfDebugBuild(targetEnemy.enemyType.enemyName);
+        Plugin.ExtendedLogging(targetEnemy.enemyType.enemyName);
         targetEnemy.KillEnemyOnOwnerClient(overrideDestroy: true);
     }
     
@@ -449,7 +449,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             rad.TryGetComponent(out IVisibleThreat threat);
             if (threat != null && rad.focusedThreatTransform == threat.GetThreatTransform())
             {
-                LogIfDebugBuild("Stuff is happening!!");
+                Plugin.ExtendedLogging("Stuff is happening!!");
                 rad.targetedThreatCollider = null;
                 rad.CheckSightForThreat();
             }
@@ -493,7 +493,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             enemyHP -= force;
             if (TargetClosestRadMech(seeableDistance+25) && currentBehaviourStateIndex == (int)State.WanderingLand && Plugin.ModConfig.ConfigRedwoodCanEatOldBirds.Value) {
                 if (IsServer) networkAnimator.SetTrigger("startChase");
-                LogIfDebugBuild("Start Target Giant");
+                Plugin.ExtendedLogging("Start Target Giant");
                 StopSearch(currentSearch);
                 SwitchToBehaviourStateOnLocalClient((int)State.RunningToTarget);
             }
@@ -510,7 +510,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
                 }
             }
         }
-        LogIfDebugBuild(enemyHP.ToString());
+        Plugin.ExtendedLogging(enemyHP.ToString());
     }
 
     public override void KillEnemy(bool destroy = false) { 

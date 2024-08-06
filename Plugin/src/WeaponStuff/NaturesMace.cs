@@ -40,16 +40,16 @@ public class NaturesMace : CodeRebirthWeapons { // Added for potential future im
                 }
             }
         }
-
+        playersHit = playersHit.Distinct().ToList();
         return playersHit;
     }
 
 
 	public void Heal(PlayerControllerB playerToHeal)
 	{
-		Plugin.Logger.LogInfo("previousplayerHeldby: " + previousPlayerHeldBy.playerUsername + " Health:" + previousPlayerHeldBy.health);
-		playerToHeal.DamagePlayer(-10, true, true, 0, 0, false, default);
-		Plugin.Logger.LogInfo("playerToHeal: " + playerToHeal.playerUsername + "| HealthAfterRpc: " + playerToHeal.health);
+		Plugin.ExtendedLogging("previousplayerHeldby: " + previousPlayerHeldBy.playerUsername + " Health:" + previousPlayerHeldBy.health);
+		playerToHeal.DamagePlayer(-30, false, false, 0, 0, false, default);
+		Plugin.ExtendedLogging("playerToHeal: " + playerToHeal.playerUsername + "| HealthAfterRpc: " + playerToHeal.health);
 		if (playerToHeal.health >= 20)
 		{
 			playerToHeal.criticallyInjured = false;

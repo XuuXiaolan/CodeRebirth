@@ -6,7 +6,7 @@ public static class LGUCompatibilityChecker {
     
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void Init() {
-        Plugin.Logger.LogInfo("No way lategameupgrades is on?!");
+        Plugin.ExtendedLogging("No way lategameupgrades is on?!");
         Plugin.LGUIsOn = true;
     }
 } // tbd.

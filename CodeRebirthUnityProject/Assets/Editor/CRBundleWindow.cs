@@ -55,7 +55,7 @@ public class CRBundleWindow : EditorWindow
     }
 
     [FilePath("Project/CRBundleWindowSettings.asset", FilePathAttribute.Location.PreferencesFolder)]
-    public class CRBundleWindowSettings : ScriptableSingleton<CRBundleWindowSettings>, ISerializationCallbackReceiver
+    public class CRBundleWindowSettings : ScriptableSingleton<CRBundleWindowSettings>
     {
         public static CRBundleWindowSettings Instance
         {
@@ -80,26 +80,6 @@ public class CRBundleWindow : EditorWindow
         public Dictionary<string, bool> buildOptionsDict = new Dictionary<string, bool>();
         public SortOption assetSortOption = SortOption.Size; // Default sorting by size
 
-        public static List<string> buildOptionsDescriptions = new List<string>()
-        {
-            "",
-            "Don't compress the data when creating the AssetBundle.",
-            "",
-            "",
-            "Do not include type information within the AssetBundle.",
-            "",
-            "Force rebuild the assetBundles.",
-            "Ignore the type tree changes when doing the incremental build check.",
-            "Append the hash to the assetBundle name.",
-            "Use chunk-based LZ4 compression when creating the AssetBundle.",
-            "Do not allow the build to succeed if any errors are reporting during it.",
-            "Do a dry run build.",
-            "Disables Asset Bundle LoadAsset by file name.",
-            "Disables Asset Bundle LoadAsset by file name with extension.",
-            "Removes the Unity Version number in the Archive File & Serialized File headers during the build.",
-            "Use the content of the asset bundle to calculate the hash."
-        };
-
         public void Save()
         {
             Save(true);
@@ -116,18 +96,6 @@ public class CRBundleWindow : EditorWindow
                 AssemblyReloadEvents.beforeAssemblyReload += Save;
                 hasRefreshedCallbacks = true;
             }
-        }
-
-        public void OnBeforeSerialize()
-        {
-            EditorHelpers.SerializeDictionary(ref assetBundlesDict, ref assetBundlesDictKeys, ref assetBundlesDictValues);
-            EditorHelpers.SerializeDictionary(ref buildOptionsDict, ref buildOptionsDictKeys, ref buildOptionsDictValues);
-        }
-
-        public void OnAfterDeserialize()
-        {
-            EditorHelpers.DeserializeDictionary(ref assetBundlesDict, ref assetBundlesDictKeys, ref assetBundlesDictValues);
-            EditorHelpers.DeserializeDictionary(ref buildOptionsDict, ref buildOptionsDictKeys, ref buildOptionsDictValues);
         }
     }
 
@@ -311,8 +279,19 @@ public class CRBundleWindow : EditorWindow
                         GUILayout.Label(icon, GUILayout.Width(24), GUILayout.Height(24), GUILayout.ExpandWidth(false)); // Adjust icon size and positioning
                     }
                     EditorGUILayout.LabelField(Path.GetFileName(asset.Path), new GUIStyle(EditorStyles.label) { normal = { textColor = AssetColor } }, GUILayout.ExpandWidth(true));
+                    Rect lastRect = GUILayoutUtility.GetLastRect();
                     EditorGUILayout.LabelField(GetReadableFileSize(asset.Size), new GUIStyle(EditorStyles.label) { normal = { textColor = AssetColor } }, GUILayout.Width(150), GUILayout.ExpandWidth(false));
                     EditorGUILayout.EndHorizontal();
+
+                    EditorGUIUtility.AddCursorRect(lastRect, MouseCursor.Link); // Change cursor to link cursor
+
+                    if (Event.current.type == EventType.MouseDown && lastRect.Contains(Event.current.mousePosition) && Event.current.clickCount == 2)
+                    {
+                        // Ping the asset when double clicked
+                        var assetObject = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(asset.Path);
+                        EditorGUIUtility.PingObject(assetObject);
+                        Event.current.Use();
+                    }
                 }
             }
             EditorGUI.indentLevel--;
@@ -428,7 +407,7 @@ public class CRBundleWindow : EditorWindow
                     continue;
                 }
 
-                if (!bundle.Build)
+                if (!bundle.Build && !CRBundleWindowSettings.instance.buildOnlyChanged)
                 {
                     Debug.Log($"Skipping unselected bundle: {bundle.BundleName}");
                     continue;

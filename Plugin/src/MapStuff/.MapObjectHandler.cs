@@ -44,10 +44,17 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		public GameObject PlayerChairPrefab { get; private set; } = null!;
 	}
 
+	public class BiomeAssets(string bundleName) : AssetBundleLoader<BiomeAssets>(bundleName) {
+		[LoadFromBundle("BiomeSpreader.prefab")]
+		public GameObject BiomePrefab { get; private set; } = null!;
+	}
+
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
 	public DevilDealAssets DevilDeal { get; private set; } = null!;
+	public BiomeAssets Biome { get; private set; } = null!;
+
 	public static Dictionary<string, GameObject> DevilDealPrefabs = new Dictionary<string, GameObject>();
 
     public MapObjectHandler() {
@@ -58,6 +65,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value) RegisterOutsideFlora();
 
 		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
+
+		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
+			Biome = new BiomeAssets("biomeassets");
 
 		if (false) RegisterDevilDeal();
 	}
@@ -82,6 +92,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		string[] grassMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraGrassSpawnPlaces.Value);
 		string[] desertMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraDesertSpawnPlaces.Value);
 		string[] snowMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraSnowSpawnPlaces.Value);
+		string[] dangerMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraDangerSpawnPlaces.Value);
 		string[] moonBlackList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraExcludeSpawnPlaces.Value);
 
 		foreach (var flora in floraStuff.Desert) {
@@ -94,6 +105,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 
 		foreach (var flora in floraStuff.Grass) {
 			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), grassMoonList, FloraTag.Grass, moonBlackList);
+		}
+
+		foreach (var flora in floraStuff.DangerousSpecies) {
+			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 3)), dangerMoonList, FloraTag.Dangerous, moonBlackList);
 		}
 	}
 

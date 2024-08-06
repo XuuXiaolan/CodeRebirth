@@ -12,6 +12,7 @@ using UnityEngine;
 using CodeRebirth.Util;
 using System.Text.RegularExpressions;
 using UnityEngine.AI;
+using System.Diagnostics;
 
 namespace CodeRebirth.Patches;
 
@@ -25,13 +26,16 @@ static class RoundManagerPatch {
         
 		if (!RoundManager.Instance.IsHost) return;
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) SpawnCrates();
-		
+		if (Plugin.ModConfig.ConfigBiomesEnabled.Value) SpawnRandomBiomes();
 	}
 
 	static void SpawnFlora() {
-		Plugin.Logger.LogInfo("Spawning flora!!!");
+		Plugin.ExtendedLogging("Spawning flora!!!");
 		System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
-
+		int spawnCount = 0;
+		
+		Stopwatch timer = new();
+		timer.Start();
 		// Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
 		var tagToMoonLists = spawnableFlora
 			.GroupBy(flora => flora.floraTag)
@@ -65,36 +69,39 @@ static class RoundManagerPatch {
 					Vector3 basePosition = GetRandomPointNearPointsOfInterest(random);
 					Vector3 offset = new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
 					Vector3 randomPosition = basePosition + offset;
-					Vector3 vector = GetRandomNavMeshPosition(randomPosition, 20f, random) + (Vector3.up * 2);
-
-					if (!Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
-						continue;
-
-					bool isValid = true;
-					foreach (string floorTag in flora.blacklistedTags)
-					{
-						if (hit.transform.gameObject.CompareTag(floorTag))
-						{
-							isValid = false;
-							break;
-						}
-					}
-					if (!isValid) continue;
 
 					// Use NavMesh.SamplePosition to get the nearest point on the NavMesh
-					if (NavMesh.SamplePosition(hit.point, out NavMeshHit navMeshHit, 20f, NavMesh.AllAreas))
+					if (NavMesh.SamplePosition(randomPosition, out NavMeshHit navMeshHit, 20f, NavMesh.AllAreas))
 					{
 						Vector3 navMeshPosition = navMeshHit.position;
+						Vector3 vector = navMeshPosition + (Vector3.up * 2);
 
-						// Adjust the position to align with the terrain normal
-						Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+						if (Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
+						{
+							bool isValid = true;
+							foreach (string floorTag in flora.blacklistedTags)
+							{
+								if (hit.transform.gameObject.CompareTag(floorTag))
+								{
+									isValid = false;
+									break;
+								}
+							}
+							if (!isValid) continue;
 
-						GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, navMeshPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
-						spawnedFlora.transform.up = hit.normal;
+							Vector3 spawnPosition = hit.point;
+							Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+							GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
+							spawnedFlora.transform.up = hit.normal;
+							spawnCount++;
+						}
 					}
 				}
 			}
 		}
+		timer.Stop();
+		Plugin.ExtendedLogging($"Spawned {spawnCount} flora in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
 	}
 
 	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random) {
@@ -102,7 +109,7 @@ static class RoundManagerPatch {
 		Vector3[] pointsOfInterest = RoundManager.Instance.outsideAINodes.Select(node => node.transform.position).ToArray();
 		
 		// Choose a random point of interest
-		Vector3 chosenPoint = pointsOfInterest[random.Next(0, pointsOfInterest.Length)];
+		Vector3 chosenPoint = pointsOfInterest[random.NextInt(0, pointsOfInterest.Length-1)];
 		
 		// Calculate an offset to avoid too much bunching up
 		Vector3 offset = new Vector3(random.NextFloat(-20, 20), 0, random.NextFloat(-20, 20));
@@ -157,11 +164,11 @@ static class RoundManagerPatch {
 	}
 
 	static void SpawnCrates() {
-		Plugin.Logger.LogDebug("Spawning crates!!!");
+		Plugin.ExtendedLogging("Spawning crates!!!");
 		System.Random random = new();
 		int minValue = 0;
-		for (int i = 0; i < random.Next(minValue, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, minValue, 1000)); i++) {
-			Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+		for (int i = 0; i < random.NextInt(minValue, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, minValue, 1000)); i++) {
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length-1)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
@@ -169,12 +176,27 @@ static class RoundManagerPatch {
 			GameObject crate = random.NextBool() ? MapObjectHandler.Instance.Crate.MetalCratePrefab : MapObjectHandler.Instance.Crate.ItemCratePrefab;
 			
 			GameObject spawnedCrate = GameObject.Instantiate(crate, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-			Plugin.Logger.LogDebug($"Spawning {crate.name} at {hit.point}");
+			Plugin.ExtendedLogging($"Spawning {crate.name} at {hit.point}");
 			spawnedCrate.transform.up = hit.normal;
 			spawnedCrate.GetComponent<NetworkObject>().Spawn();
 		}
 	}
 	
+	static void SpawnRandomBiomes() {
+		Plugin.ExtendedLogging("Spawning Biome/s!!!");
+		System.Random random = new();
+		int minValue = 1;
+		for (int i = 0; i < random.NextInt(minValue, 1); i++) {
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length-1)].transform.position;
+			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1);
+
+			GameObject biome = MapObjectHandler.Instance.Biome.BiomePrefab;
+			
+			GameObject spawnedBiome = GameObject.Instantiate(biome, vector, Quaternion.identity);
+			Plugin.ExtendedLogging($"Spawning biome at {vector}");
+			spawnedBiome.GetComponent<NetworkObject>().Spawn();
+		}
+	}
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	static void PatchFix_DespawnOldCrates() {
 		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>()) {
@@ -188,7 +210,7 @@ static class RoundManagerPatch {
 	{
 		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
 		{
-			Plugin.Logger.LogInfo("Spawning Devil deal objects");
+			Plugin.ExtendedLogging("Spawning Devil deal objects");
 			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.SpawnDevilPropsServerRpc();
 		}
 	}
@@ -199,8 +221,33 @@ static class RoundManagerPatch {
 	{
 		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
 		{
-			Plugin.Logger.LogInfo("Despawning Devil deal objects");
+			Plugin.ExtendedLogging("Despawning Devil deal objects");
 			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.DespawnDevilPropsServerRpc();
 		}
 	}*/
+
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(StartOfRound), "OnShipLandedMiscEvents")]
+	public static void OnShipLandedMiscEventsPatch(StartOfRound __instance)
+	{
+		Plugin.ExtendedLogging("Starting big object search");
+
+		Stopwatch timer = new();
+		timer.Start();
+		var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+		int FoundObject = 0;
+		LayerMask layerMask = LayerMask.NameToLayer("Foliage");
+		foreach (var item in objs)
+		{
+			if (item.layer == layerMask)
+			{
+				item.AddComponent<BoxCollider>().isTrigger = true;
+				FoundObject++;
+			}
+		}
+
+		timer.Stop();
+
+		Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
+	}
 }

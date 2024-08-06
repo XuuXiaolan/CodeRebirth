@@ -75,7 +75,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
 
     public void OnInteract(PlayerControllerB player) {
         if (GameNetworkManager.Instance.localPlayerController != player) return;
-        if (CodeRebirthPlayerManager.dataForPlayer[player].holdingWallet) return;
+        if (player.GetCRPlayerData().holdingWallet) return;
         if (IsHost) {
             SetTargetClientRpc(System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         } else {
@@ -260,7 +260,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
                     this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
                 }
             }
-            Plugin.Logger.LogInfo($"Clearing target on {this}");
+            Plugin.ExtendedLogging($"Clearing target on {this}");
             
             isHeld = false;
             if (walletMode == WalletModes.Sold) {
@@ -278,7 +278,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
                 }
                 SetInteractable(true);
                 walletHeldBy.carryWeight -= (this.itemProperties.weight - 1);
-                CodeRebirthPlayerManager.dataForPlayer[walletHeldBy].holdingWallet = false;
+                walletHeldBy.GetCRPlayerData().holdingWallet = false;
                 walletMode = WalletModes.None;
                 walletHeldBy = null;
             }
@@ -287,7 +287,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
 
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[PlayerID];
         if (player == null) {
-            Plugin.Logger.LogInfo($"Invalid player index: {PlayerID}");
+            Plugin.Logger.LogWarning($"Invalid player index: {PlayerID}");
             return;
         }
         walletMode = WalletModes.Held;
@@ -295,16 +295,16 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         walletHeldBy = player;
         this.transform.position = player.transform.position + player.transform.up * 1f + player.transform.right * 0.25f + player.transform.forward * 0.05f;
         walletHeldBy.carryWeight += (this.itemProperties.weight - 1f);
-        if (walletHeldBy == GameNetworkManager.Instance.localPlayerController && !CodeRebirthPlayerManager.dataForPlayer[walletHeldBy].holdingWallet) {
+        if (walletHeldBy == GameNetworkManager.Instance.localPlayerController && !walletHeldBy.GetCRPlayerData().holdingWallet) {
             DialogueSegment dialogue = new DialogueSegment {
                     speakerText = "Wallet Tooltips",
                     bodyText = "L to Drop, E to Grab, LMB to Grab coins, O at company Counter to sell.",
                     waitTime = 7f
             };
             HUDManager.Instance.ReadDialogue([dialogue]);
-            CodeRebirthPlayerManager.dataForPlayer[walletHeldBy].holdingWallet = true;
+            walletHeldBy.GetCRPlayerData().holdingWallet = true;
         }
-        CodeRebirthPlayerManager.dataForPlayer[walletHeldBy].holdingWallet = true;
+        walletHeldBy.GetCRPlayerData().holdingWallet = true;
         // Apply the rotations
         Quaternion rotationLeft = Quaternion.Euler(0, 180, 0);
         Quaternion rotationForward = Quaternion.Euler(15, 0, 0);

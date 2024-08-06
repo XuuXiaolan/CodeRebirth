@@ -15,8 +15,8 @@ namespace CodeRebirth.Patches;
 static class PlayerControllerBPatch {
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]
     public static bool PlayerHitGroundEffects(PlayerControllerB __instance) {
-        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && CodeRebirthPlayerManager.dataForPlayer[__instance].flung) {
-            CodeRebirthPlayerManager.dataForPlayer[__instance].flung = false;
+        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && __instance.GetCRPlayerData().flung) {
+            __instance.GetCRPlayerData().flung = false;
             __instance.playerRigidbody.isKinematic = true;
         }
         return true;
@@ -24,7 +24,7 @@ static class PlayerControllerBPatch {
 
 	[HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayFootstepSound)), HarmonyPrefix]
 	public static bool PlayFootstepSound(PlayerControllerB __instance) {
-        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && CodeRebirthPlayerManager.dataForPlayer[__instance].ridingHoverboard) {
+        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && __instance.GetCRPlayerData().ridingHoverboard) {
             return false;
         } else {
             return true;
@@ -36,16 +36,16 @@ static class PlayerControllerBPatch {
         if (!CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance)) {
             CodeRebirthPlayerManager.dataForPlayer.Add(__instance, new CRPlayerData());
             List<Collider> colliders = new List<Collider>(__instance.GetComponentsInChildren<Collider>());
-            CodeRebirthPlayerManager.dataForPlayer[__instance].playerColliders = colliders;
+            __instance.GetCRPlayerData().playerColliders = colliders;
         }
     }
 
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.Update)), HarmonyPrefix]
     public static void Update(PlayerControllerB __instance) {
         if (GameNetworkManager.Instance.localPlayerController == null) return;
-        if (CodeRebirthPlayerManager.dataForPlayer[__instance].playerOverrideController != null) return;
-        CodeRebirthPlayerManager.dataForPlayer[__instance].playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
-        __instance.playerBodyAnimator.runtimeAnimatorController = CodeRebirthPlayerManager.dataForPlayer[__instance].playerOverrideController; 
+        if (__instance.GetCRPlayerData().playerOverrideController != null) return;
+        __instance.GetCRPlayerData().playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
+        __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController; 
     }
 
     public static void Init() {
@@ -56,42 +56,62 @@ static class PlayerControllerBPatch {
     private static void PlayerControllerB_CheckConditionsForSinkingInQuicksand(ILContext il)
     {
         ILCursor c = new(il);
-        ILLabel inSpecialInteractionLabel = null!;
 
-        if (!c.TryGotoNext(MoveType.Before,
+        if (!c.TryGotoNext(MoveType.After,
             x => x.MatchLdarg(0),
             x => x.MatchLdfld<PlayerControllerB>(nameof(PlayerControllerB.thisController)),
             x => x.MatchCallvirt<CharacterController>("get_" + nameof(CharacterController.isGrounded)),
-            x => x.MatchBrtrue(out inSpecialInteractionLabel)
+            x => x.MatchBrtrue(out _)
         ))
         {
             Plugin.Logger.LogError("[ILHook:PlayerControllerB.CheckConditionsForSinkingInQuicksand] Couldn't find thisController.isGrounded check!");
             return;
         }
 
-        c.EmitDelegate<Func<bool>>(() =>
+        c.Index -= 1;
+        c.Emit(OpCodes.Ldarg_0);
+        c.EmitDelegate((bool isGrounded, PlayerControllerB self) =>
         {
-            bool skipIsGroundedCheck = true;
-            return skipIsGroundedCheck;
+            // Pretend we are grounded when in a water tornado so we can drown.
+            return isGrounded || self.GetCRPlayerData().Water;
         });
-        c.Emit(OpCodes.Brtrue_S, inSpecialInteractionLabel);
     }
 
+    /// <summary>
+    /// Modifies item dropping code to attempt to find a NetworkObject from collided object's parents
+    /// in case the collided object itself doesn't have a NetworkObject, if the following is true:<br/>
+    /// - The collided GameObject's name ends with <c>"_RedirectToRootNetworkObject"</c><br/>
+    /// <br/>
+    /// This is necessary for parenting items to enemies, because the raycast that collides with an object
+    /// ignores the enemies layer.
+    /// </summary>
     private static void ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject(ILContext il)
     {
         ILCursor c = new(il);
 
         if (!c.TryGotoNext(MoveType.Before,
             x => x.MatchLdloc(0),                                   // load transform to stack
-            x => x.MatchCallvirt<Component>(nameof(Component.GetComponent)),  // var component = transform.GetComponent<NetworkObject>();
-            x => x.MatchStloc(3),                                   // if (component != null)
-            x => x.MatchLdloc(3),
-            x => x.MatchLdnull(),
-            x => x.MatchCall<UnityEngine.Object>("op_Inequality"),
-            x => x.MatchBrfalse(out _)
+            x => x.MatchCallvirt<Component>(nameof(Component.GetComponent)), // var component = transform.GetComponent<NetworkObject>();
+            x => x.MatchStloc(3)
+            // Context:
+            // x => x.MatchLdloc(3),                                // if (component != null)
+            // x => x.MatchLdnull(),
+            // x => x.MatchCall<UnityEngine.Object>("op_Inequality"),
+            // x => x.MatchBrfalse(out _)
         ))
         {
-            Plugin.Logger.LogError($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] Could not match IL!");
+            // Couldn't match, let's figure out if we should worry
+            if (c.TryGotoNext(MoveType.Before,
+                x => x.MatchLdloc(0),
+                x => x.MatchLdcI4(out _),   // Matching against EmitDelegate
+                x => x.MatchCall("MonoMod.Cil.RuntimeILReferenceBag/InnerBag`1<System.Func`2<UnityEngine.Transform,UnityEngine.Transform>>", "Get"), // There exists some bug probably that typeof doesn't work here because of generics?
+                x => x.MatchCall(typeof(RuntimeILReferenceBag.FastDelegateInvokers), "Invoke"),
+                x => x.MatchCallvirt<Component>(nameof(Component.GetComponent)),
+                x => x.MatchStloc(3)
+            ))
+                Plugin.Logger.LogInfo($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] This ILHook has most likely already been applied by another mod.");
+            else
+                Plugin.Logger.LogError($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] Could not match IL!!");
             return;
         }
 

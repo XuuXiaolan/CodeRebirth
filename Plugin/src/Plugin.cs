@@ -44,6 +44,10 @@ public class Plugin : BaseUnityPlugin {
     
     private void Awake() {
         Logger = base.Logger;
+        ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
+#if DEBUG
+        ModConfig.ConfigEnableExtendedLogging.Value = true;
+#endif
         if (ImperiumCompatibilityChecker.Enabled) {
             ImperiumCompatibilityChecker.Init();
         } else {
@@ -68,7 +72,6 @@ public class Plugin : BaseUnityPlugin {
             // Logger.LogWarning("SubtitlesAPI not found. Subtitles will not be activated.");
         }
 
-        ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
@@ -96,12 +99,18 @@ public class Plugin : BaseUnityPlugin {
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 
-    void OnDisable() {
+    private void OnDisable() {
         foreach (AssetBundle bundle in LoadedBundles.Values) {
             bundle.Unload(false);
         }
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();
+    }
+
+    internal static void ExtendedLogging(object text) {
+        if (ModConfig.ConfigEnableExtendedLogging.Value) {
+            Logger.LogInfo(text);
+        }
     }
 
     private void InitializeNetworkBehaviours() {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using CodeRebirth.Util.Extensions;
 using CodeRebirth.Util.Spawning;
 using GameNetcodeStuff;
 using LethalLevelLoader;
@@ -96,12 +97,6 @@ public class Dealer : NetworkBehaviour
         trigger.onInteract.AddListener(OnInteract);
     }
 
-    [Conditional("DEBUG")]
-    public void LogIfDebugBuild(object text)
-    {
-        Plugin.Logger.LogInfo(text);
-    }
-
     private void OnInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
@@ -150,8 +145,8 @@ public class Dealer : NetworkBehaviour
 
 
     public (PositiveEffect positive, NegativeEffect negative) GetCardEffects() {
-        PositiveEffect positiveEffect = positiveEffects[random.Next(positiveEffects.Count)];
-        NegativeEffect negativeEffect = negativeEffects[random.Next(negativeEffects.Count)];
+        PositiveEffect positiveEffect = positiveEffects[random.NextInt(0, positiveEffects.Count-1)];
+        NegativeEffect negativeEffect = negativeEffects[random.NextInt(0, negativeEffects.Count-1)];
         
         return (positiveEffect, negativeEffect);
     }
@@ -176,19 +171,19 @@ public class Dealer : NetworkBehaviour
     private void Card1InteractionResult(PlayerControllerB? playerThatInteracted) {
         if (playerThatInteracted != playerWhoCanDoShit) return;
         ThreeCardInteractionServerRpc(0, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
-        LogIfDebugBuild("Card1InteractionResult");
+        Plugin.ExtendedLogging("Card1InteractionResult");
     }
 
     private void Card2InteractionResult(PlayerControllerB? playerThatInteracted) {
         if (playerThatInteracted != playerWhoCanDoShit) return;
         ThreeCardInteractionServerRpc(1, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
-        LogIfDebugBuild("Card2InteractionResult");
+        Plugin.ExtendedLogging("Card2InteractionResult");
     }
 
     private void Card3InteractionResult(PlayerControllerB? playerThatInteracted) {
         if (playerThatInteracted != playerWhoCanDoShit) return;
         ThreeCardInteractionServerRpc(2, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerThatInteracted));
-        LogIfDebugBuild("Card3InteractionResult");
+        Plugin.ExtendedLogging("Card3InteractionResult");
     }
 
     public void Update() {
@@ -198,13 +193,13 @@ public class Dealer : NetworkBehaviour
             foreach (ParticleSystem particle in handParticles) {
                 particle.Play();
             }
-            LogIfDebugBuild("Enabling hand particles");
+            Plugin.ExtendedLogging("Enabling hand particles");
             particlesEnabled = true; // Update the state to enabled
         } else if ((!withinDistance || dealMade) && particlesEnabled) {
             foreach (ParticleSystem particle in handParticles) {
                 particle.Stop();
             }
-            LogIfDebugBuild("Disabling hand particles");
+            Plugin.ExtendedLogging("Disabling hand particles");
             particlesEnabled = false; // Update the state to disabled
         }
 
@@ -248,7 +243,7 @@ public class Dealer : NetworkBehaviour
                 ExecuteNegativeEffect(cardEffects[CardNumber.Three].negative, playerModified);
                 break;
         }
-        LogIfDebugBuild("main particles animation done");
+        Plugin.ExtendedLogging("main particles animation done");
     }
 
     #region Good Deals
@@ -258,7 +253,7 @@ public class Dealer : NetworkBehaviour
             return;
         }
         playerModified.movementSpeed *= 1.25f;
-        LogIfDebugBuild("IncreaseMovementSpeed");
+        Plugin.ExtendedLogging("IncreaseMovementSpeed");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -268,7 +263,7 @@ public class Dealer : NetworkBehaviour
 
         GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
         
-        grabbableObject.SetScrapValue((int)(random.Next(Shotgun.minValue, Shotgun.maxValue) * RoundManager.Instance.scrapValueMultiplier));
+        grabbableObject.SetScrapValue((int)(random.NextInt(Shotgun.minValue, Shotgun.maxValue) * RoundManager.Instance.scrapValueMultiplier));
         grabbableObject.NetworkObject.Spawn();
         CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
         grabbableObject.gameObject.transform.position = ItemSpawnSpot.position;
@@ -281,7 +276,7 @@ public class Dealer : NetworkBehaviour
 
             grabbableObjectAmmo.gameObject.transform.position = ItemSpawnSpot.position;
         }
-        LogIfDebugBuild("SpawnShotgunWithShellsServerRpc");
+        Plugin.ExtendedLogging("SpawnShotgunWithShellsServerRpc");
     }
 
     public void IncreaseStamina(PlayerControllerB? playerModified) {
@@ -290,7 +285,7 @@ public class Dealer : NetworkBehaviour
             return;
         }
         playerModified.sprintTime += 5f;
-        LogIfDebugBuild("IncreaseStamina");
+        Plugin.ExtendedLogging("IncreaseStamina");
     }
 
     public void IncreaseHealth(PlayerControllerB? playerModified) {
@@ -300,7 +295,7 @@ public class Dealer : NetworkBehaviour
         }
 
         playerModified.DamagePlayer(playerModified.health - 125);
-        LogIfDebugBuild("IncreaseHealth");
+        Plugin.ExtendedLogging("IncreaseHealth");
     }
 
     public void DecreaseMoonPrices() {
@@ -308,7 +303,7 @@ public class Dealer : NetworkBehaviour
             extendedLevel.RoutePrice = (int)(extendedLevel.RoutePrice /1.2f);
         }
 
-        LogIfDebugBuild("DecreaseMoonPrices");
+        Plugin.ExtendedLogging("DecreaseMoonPrices");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -318,11 +313,11 @@ public class Dealer : NetworkBehaviour
 
         GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
         
-        grabbableObject.SetScrapValue((int)(random.Next(GoldBar.minValue, GoldBar.maxValue) * RoundManager.Instance.scrapValueMultiplier));
+        grabbableObject.SetScrapValue((int)(random.NextInt(GoldBar.minValue, GoldBar.maxValue) * RoundManager.Instance.scrapValueMultiplier));
         grabbableObject.NetworkObject.Spawn();
         grabbableObject.gameObject.transform.position = ItemSpawnSpot.position;
         CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
-        LogIfDebugBuild("SpawnGoldbarServerRpc");
+        Plugin.ExtendedLogging("SpawnGoldbarServerRpc");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -334,7 +329,7 @@ public class Dealer : NetworkBehaviour
         
         grabbableObject.NetworkObject.Spawn();
         grabbableObject.gameObject.transform.position = ItemSpawnSpot.position;
-        LogIfDebugBuild("SpawnJetpackServerRpc");
+        Plugin.ExtendedLogging("SpawnJetpackServerRpc");
     }
 
     public void IncreaseCarrySlotNumber(PlayerControllerB? playerModified) {
@@ -351,7 +346,7 @@ public class Dealer : NetworkBehaviour
         {
             UpdateHUD(true);
         }
-        LogIfDebugBuild("IncreaseCarrySlotNumber");
+        Plugin.ExtendedLogging("IncreaseCarrySlotNumber");
     }
     #endregion
 
@@ -362,13 +357,13 @@ public class Dealer : NetworkBehaviour
             return;
         }
         playerModified.movementSpeed /= 1.25f;
-        LogIfDebugBuild("DecreaseMovementSpeed");
+        Plugin.ExtendedLogging("DecreaseMovementSpeed");
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void StealCreditOrScrapServerRpc() {
         DetermineScrapToDestroyOrCreditsToSteal();
-        LogIfDebugBuild("StealCreditOrScrap");
+        Plugin.ExtendedLogging("StealCreditOrScrap");
     }
 
     public void DecreaseStamina(PlayerControllerB? playerModified) {
@@ -378,14 +373,14 @@ public class Dealer : NetworkBehaviour
         }
         if (playerModified.sprintTime < 1f) return;
         playerModified.sprintTime = Mathf.Clamp(playerModified.sprintTime - 2.5f, 1f, 1000f);;
-        LogIfDebugBuild("DecreaseStamina");
+        Plugin.ExtendedLogging("DecreaseStamina");
     }
 
     public void IncreaseMoonPrices() {
         foreach (ExtendedLevel extendedLevel in LethalLevelLoader.PatchedContent.ExtendedLevels) {
             extendedLevel.RoutePrice = (int)(extendedLevel.RoutePrice*1.2f);
         }
-        LogIfDebugBuild("IncreaseMoonPrices");
+        Plugin.ExtendedLogging("IncreaseMoonPrices");
     }
 
     public void DecreaseCarrySlotNumber(PlayerControllerB? playerModified) {
@@ -402,7 +397,7 @@ public class Dealer : NetworkBehaviour
         {
             UpdateHUD(false);
         }
-        LogIfDebugBuild("DecreaseCarrySlotNumber");
+        Plugin.ExtendedLogging("DecreaseCarrySlotNumber");
     }
 
     public void DealPlayerDamage(PlayerControllerB? playerModified) {
@@ -411,7 +406,7 @@ public class Dealer : NetworkBehaviour
             return;
         }
         playerModified.DamagePlayer(50, true, false, CauseOfDeath.Burning, 0, false, default);
-        LogIfDebugBuild("DealPlayerDamage");
+        Plugin.ExtendedLogging("DealPlayerDamage");
     }
     #endregion
 
@@ -530,8 +525,8 @@ public class Dealer : NetworkBehaviour
             // find index of last slot named `slot\d` regex
             var index = iconFrames.Count;
 
-            LogIfDebugBuild("Adding 1 item slots! Surely this will go well..");
-            LogIfDebugBuild($"Adding after index: {index}");
+            Plugin.ExtendedLogging("Adding 1 item slots! Surely this will go well..");
+            Plugin.ExtendedLogging($"Adding after index: {index}");
 
             for (int i = 0; i < 1; i++)
             {
@@ -572,7 +567,7 @@ public class Dealer : NetworkBehaviour
             hud.itemSlotIconFrames = iconFrames.ToArray();
             hud.itemSlotIcons = icons.ToArray();
 
-            LogIfDebugBuild("Added 1 item slots!");
+            Plugin.ExtendedLogging("Added 1 item slots!");
         } else {
             var iconFrames = hud.itemSlotIconFrames.ToList();
             var icons = hud.itemSlotIcons.ToList();
@@ -598,7 +593,7 @@ public class Dealer : NetworkBehaviour
 
             hud.itemSlotIcons = icons.ToArray();
 
-            LogIfDebugBuild($"Removed 1 item slots!");
+            Plugin.ExtendedLogging($"Removed 1 item slots!");
 
         }
     }

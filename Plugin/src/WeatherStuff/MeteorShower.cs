@@ -53,7 +53,7 @@ public class MeteorShower : CodeRebirthWeathers {
 	public static bool Active => Instance != null;
 	
 	private void OnEnable() { // init weather
-		Plugin.Logger.LogInfo("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
+		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
 		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
 		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
 		RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount -= 3, 0, 999);
@@ -71,13 +71,13 @@ public class MeteorShower : CodeRebirthWeathers {
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
 		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
 		// eventually gonna have a config bool to turn on override prefabs and maybe have more prefab options.
-		SpawnOverheadVisualMeteors(random.Next(15, 45), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
+		SpawnOverheadVisualMeteors(random.NextInt(15, 45), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
 		
 		if(!IsAuthority()) return; // Only run on the host.
 		random = new Random();
 
 		Direction[] directions = { Direction.Random, Direction.East, Direction.West, Direction.North, Direction.South };
-        int index = random.Next(directions.Length);
+        int index = random.NextInt(0, directions.Length-1);
         direction = directions[index];
 
 		spawnHandler = StartCoroutine(MeteorSpawnerHandler());
@@ -118,14 +118,14 @@ public class MeteorShower : CodeRebirthWeathers {
     }
 	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null) {
         Vector3 averageLocation = CalculateAverageLandNodePosition(nodes);
-        Vector3 centralLocation = averageLocation + new Vector3(0, random.Next(250, 300), 0);
+        Vector3 centralLocation = averageLocation + new Vector3(0, random.NextFloat(250, 300), 0);
 		for (int i = 0; i < amount; i++) {
 			SpawnVisualMeteors(
 				overridePrefab: overridePrefab,
 				centralLocation: centralLocation,
-				offset: new Vector3(random.Next(-175, 175), random.Next(-50, 50), random.Next(-175, 175)),
+				offset: new Vector3(random.NextFloat(-175, 175), random.NextFloat(-50, 50), random.NextFloat(-175, 175)),
 				speed: 2f,
-				sizeMultiplier: (float)random.NextDouble() * 3f + 2f);
+				sizeMultiplier: random.NextFloat(2, 5));
 		}
         for (int i = 0; i < 1; i++) {
 			SpawnVisualMeteors(
@@ -133,7 +133,7 @@ public class MeteorShower : CodeRebirthWeathers {
 				centralLocation: centralLocation,
 				offset: Vector3.zero,
 				speed: 1.5f,
-				sizeMultiplier: random.Next(10, 25)
+				sizeMultiplier: random.NextFloat(10, 25)
 				);
         }
 	}
@@ -148,7 +148,7 @@ public class MeteorShower : CodeRebirthWeathers {
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get meteors before theyve inited everything.
 		while (true) { // this is fine because it gets stopped in OnDisable.
 
-			for (int i = 0; i < random.Next(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++) {
+			for (int i = 0; i < random.NextInt(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++) {
 				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
 				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
 			}
@@ -158,8 +158,8 @@ public class MeteorShower : CodeRebirthWeathers {
 	}
     public Vector3 CalculateVector(Vector3 target) {
         float x = 0, z = 0;
-        float distanceX = random.Next(250, 500);
-        float distanceZ = random.Next(250, 500);
+        float distanceX = random.NextFloat(250, 500);
+        float distanceZ = random.NextFloat(250, 500);
 
         switch (direction) {
             case Direction.East:
@@ -183,7 +183,7 @@ public class MeteorShower : CodeRebirthWeathers {
     }
 	private void SpawnMeteor(Vector3 target, GameObject? overridePrefab = null) {
 		if (target == Vector3.zero) {
-			Plugin.Logger.LogInfo("Target is zero, not spawning meteor");
+			Plugin.Logger.LogWarning("Target is zero, not spawning meteor");
 			return;
 		}
 		Vector3 origin = new Vector3();

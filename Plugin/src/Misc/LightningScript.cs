@@ -1,3 +1,4 @@
+using CodeRebirth.Util.Extensions;
 using DigitalRuby.ThunderAndLightning;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -5,33 +6,28 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace CodeRebirth.Misc.LightningScript;
 public class LightningStrikeScript {
-    public static void LogIfDebugBuild(string text) {
-        #if DEBUG
-        Plugin.Logger.LogInfo(text);
-        #endif
-    }
 
     public static void SpawnLightningBolt(Vector3 strikePosition)
     {
         System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
-        Vector3 offset = new Vector3((float)random.Next(-32, 32), 0f, (float)random.Next(-32, 32));
+        Vector3 offset = new Vector3(random.NextFloat(-32, 32), 0f, random.NextFloat(-32, 32));
         Vector3 vector = strikePosition + Vector3.up * 160f + offset;
 
         StormyWeather stormy = UnityEngine.Object.FindObjectOfType<StormyWeather>(true);
         if (stormy == null)
         {
-            LogIfDebugBuild("StormyWeather not found");
+            Plugin.Logger.LogWarning("StormyWeather not found");
             return;
         }
 
-        // LogIfDebugBuild($"{vector} -> {strikePosition}");
+        // Plugin.ExtendedLogging($"{vector} -> {strikePosition}");
 
         LightningBoltPrefabScript localLightningBoltPrefabScript = Object.Instantiate(stormy.targetedThunder);
         localLightningBoltPrefabScript.enabled = true;
 
         if (localLightningBoltPrefabScript == null)
         {
-            LogIfDebugBuild("localLightningBoltPrefabScript not found");
+            Plugin.Logger.LogWarning("localLightningBoltPrefabScript not found");
             return;
         }
 

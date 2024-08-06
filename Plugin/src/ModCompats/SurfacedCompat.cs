@@ -6,7 +6,7 @@ public static class SurfacedCompatibilityChecker {
     
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void Init() {
-        Plugin.Logger.LogInfo("No way surfaced is on?!");
+        Plugin.ExtendedLogging("No way surfaced is on?!");
         Plugin.SurfacedIsOn = true;
     }
 } // tbd.

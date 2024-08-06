@@ -143,7 +143,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     }
     protected virtual IEnumerator DoGiveQuest()
     {
-        LogIfDebugBuild("Starting Quest: " + questName);
+        Plugin.ExtendedLogging("Starting Quest: " + questName);
         if (!questCompleted) creatureSFX.PlayOneShot(questGiveClip);
         if (questCompleted) creatureSFX.PlayOneShot(questGiveAgainClip);
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
@@ -181,7 +181,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         }
         if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder] && targetPlayer.currentlyHeldObjectServer.TryGetComponent<QuestItem>(out QuestItem questItem))
         {
-            LogIfDebugBuild("completed!");
+            Plugin.ExtendedLogging("completed!");
             targetPlayer.DespawnHeldObject();
             DoCompleteQuest(QuestCompletion.Completed);
             return;
@@ -207,7 +207,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
                 }
             case QuestCompletion.Null:
                 {
-                    LogIfDebugBuild("Target Player or Enemy vents is null?");
+                    Plugin.Logger.LogWarning("Target Player or Enemy vents is null?");
                     break;
                 }
         }
@@ -270,7 +270,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
                 DoDocile();
                 break;
             default:
-                LogIfDebugBuild("This Behavior State doesn't exist!");
+                Plugin.Logger.LogWarning("This Behavior State doesn't exist!");
                 break;
         }
     }

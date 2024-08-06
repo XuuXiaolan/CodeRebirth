@@ -3,6 +3,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class ItemGrabEditor : MonoBehaviour
 {
+    #nullable disable warnings
     public Transform parentObject; // Reference to the player's hand or local item holder
     public Transform item; // Reference to the item being held
     public bool previewGrab = false; // Toggle to enable/disable preview
