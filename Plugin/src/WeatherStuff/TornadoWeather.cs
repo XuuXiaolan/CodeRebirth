@@ -2,12 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.Misc;
 using CodeRebirth.Util.Extensions;
-using Newtonsoft.Json.Serialization;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 using Random = System.Random;
 
 namespace CodeRebirth.WeatherStuff;
@@ -24,10 +20,8 @@ public class TornadoWeather : CodeRebirthWeathers {
 
 	private void OnEnable() { // init weather
 		Plugin.ExtendedLogging("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name);
-		RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount -= 3, 0, 999);
-		RoundManager.Instance.currentLevel.maxEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxEnemyPowerCount += 3, 0, 999);
-		RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount -= 3, 0, 999);
-		Instance = this;
+        ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 3, dayTimePower: -3);
+        Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
 		alreadyUsedNodes = new List<GameObject>();
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
@@ -83,7 +77,8 @@ public class TornadoWeather : CodeRebirthWeathers {
 		try {
 			Plugin.Logger.LogDebug("Cleaning up Weather.");
 			ClearTornados();
-			Instance = null!;
+            ChangeCurrentLevelMaximumPower(outsidePower: 3, insidePower: -3, dayTimePower: 3);
+            Instance = null!;
 
 			if(!IsAuthority()) return; // Only run on the host.
 			StopCoroutine(spawnHandler);

@@ -2,13 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.Misc;
 using CodeRebirth.Util.Extensions;
-using Newtonsoft.Json.Serialization;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
-using static Steamworks.InventoryItem;
 using Random = System.Random;
 
 namespace CodeRebirth.WeatherStuff;
@@ -56,9 +51,7 @@ public class MeteorShower : CodeRebirthWeathers {
 		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
 		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
 		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
-		RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount -= 3, 0, 999);
-		RoundManager.Instance.currentLevel.maxEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxEnemyPowerCount += 3, 0, 999);
-		RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount -= 3, 0, 999);
+		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 3, dayTimePower: -3);
 		if (minMeteorsPerSpawn > maxMeteorsPerSpawn) {
 			Plugin.Logger.LogWarning("Min Meteor Spawn Count is greater than Max Meteor Spawn Count. Swapping values.");
 			(int, int) temp = (minMeteorsPerSpawn, maxMeteorsPerSpawn);
@@ -88,6 +81,7 @@ public class MeteorShower : CodeRebirthWeathers {
 			Plugin.Logger.LogDebug("Cleaning up Weather.");
 			ClearMeteorites();
 			ClearCraters();
+            ChangeCurrentLevelMaximumPower(outsidePower: 3, insidePower: -3, dayTimePower: 3);
 
             Instance = null;
 

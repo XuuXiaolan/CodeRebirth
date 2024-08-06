@@ -93,6 +93,13 @@ public class CodeRebirthWeathers : MonoBehaviour {
 			return Vector3.zero;
 		}
 	}
+	public void ChangeCurrentLevelMaximumPower(int outsidePower, int insidePower, int dayTimePower)
+	{
+        RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount + outsidePower, 0, 999);
+        RoundManager.Instance.currentLevel.maxEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxEnemyPowerCount + insidePower, 0, 999);
+        RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount + dayTimePower, 0, 999);
+    }
+
 	public bool IsAuthority()
     {
         return NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
