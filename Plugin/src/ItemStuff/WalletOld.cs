@@ -63,6 +63,7 @@ public class WalletOld : GrabbableObject {
     }
 
     public void DestroyObject(NetworkObject netObj) {
+        Destroy(netObj.gameObject.GetComponent<Money>().radarIcon);
         if(netObj.IsOwnedByServer && netObj.IsSpawned && netObj.IsOwner) netObj.Despawn();
     }
 }

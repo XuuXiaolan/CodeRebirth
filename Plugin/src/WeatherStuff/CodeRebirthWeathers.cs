@@ -63,6 +63,15 @@ public class CodeRebirthWeathers : MonoBehaviour {
 
 		return nodeList;
 	}
+
+	public void ChangeCurrentLevelMaximumPower(int outsidePower, int insidePower, int dayTimePower)
+	{
+		if (!Plugin.ModConfig.ConfigAllowPowerLevelChangesFromWeather.Value) return;
+        RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount + outsidePower, 0, 999);
+        RoundManager.Instance.currentLevel.maxEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxEnemyPowerCount + insidePower, 0, 999);
+        RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount + dayTimePower, 0, 999);
+    }
+
 	public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, List<GameObject> alreadyUsedNodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
 		try {
 			var nextNode = random.NextItem(nodes);

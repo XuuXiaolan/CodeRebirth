@@ -1,6 +1,5 @@
 ﻿﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using CodeRebirth.ItemStuff;
 using CodeRebirth.Misc;
 using CodeRebirth.Util.Extensions;
@@ -47,13 +46,13 @@ public class ItemCrate : CRHittable {
 		trigger = GetComponent<InteractTrigger>();
 		pickable = GetComponent<Pickable>();
 		animator = GetComponent<Animator>();
+
 		trigger.onInteractEarly.AddListener(OnInteractEarly);
 		trigger.onInteract.AddListener(OnInteract);
 		trigger.onStopInteract.AddListener(OnInteractCancel);
 
 		digProgress.OnValueChanged += UpdateDigPosition;
-		
-			
+
 		originalPosition = transform.position;
 		UpdateDigPosition(0, 0);
 
@@ -78,10 +77,19 @@ public class ItemCrate : CRHittable {
 			transform.position = originalPosition + (transform.up * newValue * .5f);
 
 		Plugin.Logger.LogDebug($"ItemCrate was hit! New digProgress: {newValue}");
-		if (crateType == CrateType.Metal) pickable.enabled = false;
-		if (crateType == CrateType.Wooden) {
-			trigger.interactable = newValue >= 1;
-			pickable.enabled = trigger.interactable;
+		switch(crateType)
+		{
+			case CrateType.Metal:
+				{
+					pickable.enabled = false;
+					break;
+				}
+			case CrateType.Wooden:
+				{
+                    trigger.interactable = newValue >= 1;
+                    pickable.enabled = trigger.interactable;
+					break;
+                }
 		}
 	}
 
@@ -122,21 +130,27 @@ public class ItemCrate : CRHittable {
 		for (int i = 0; i < 3; i++) {
 			SpawnableItemWithRarity chosenItemWithRarity;
 			Item item;
-			if (crateType == CrateType.Metal) {
-				item = GetRandomShopItem();
-			} else if (crateType == CrateType.Wooden) {
-				chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
-				item = chosenItemWithRarity.spawnableItem;
-			} else {
-				chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
-				item = chosenItemWithRarity.spawnableItem;
+			switch(crateType)
+			{
+				case CrateType.Metal:
+                    {
+                        item = GetRandomShopItem();
+						break;
+                    }
+				case CrateType.Wooden:
+                default:
+					{
+                        chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
+                        item = chosenItemWithRarity.spawnableItem;
+						break;
+                    }
 			}
 			
 			GameObject spawned = Instantiate(item.spawnPrefab, transform.position + transform.up*0.6f + transform.right*random.NextFloat(-0.2f, 0.2f) + transform.forward*random.NextFloat(-0.2f, 0.2f), Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
 			GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
 			
-			grabbableObject.SetScrapValue((int)(random.NextInt(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier * (crateType == CrateType.Metal ? 1.2f : 1f)));
+			grabbableObject.SetScrapValue((int)(random.Next(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier * (crateType == CrateType.Metal ? 1.2f : 1f)));
 			grabbableObject.NetworkObject.Spawn();
 			CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
 		}
@@ -193,6 +207,6 @@ public class ItemCrate : CRHittable {
 	}
 
 	public Item GetRandomShopItem() {
-		return ShopItemList[random.NextInt(0, ShopItemList.Count-1)];
+		return ShopItemList[random.Next(ShopItemList.Count)];
 	}	
 }

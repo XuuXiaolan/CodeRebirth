@@ -74,6 +74,7 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
         public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
         // Misc
+        public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
         public ConfigEntry<bool> ConfigEnableExtendedLogging { get; private set; }
         public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; private set; }
         public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
@@ -90,11 +91,15 @@ namespace CodeRebirth.Configs {
         public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
         public CodeRebirthConfig(ConfigFile configFile) {
 			configFile.SaveOnConfigSet = false;
-            #region 
+            #region General
             ConfigEnableExtendedLogging = configFile.Bind("General",
                                                 "Enable Extended Logging",
                                                 false,
                                                 "Whether extended logging is enabled.");
+            ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",
+                                                "Allow Power Level Changes From Weather",
+                                                true,
+                                                "Whether power level changes from CodeRebirth weathers are allowed.");
             #endregion
             #region Biomes
             ConfigBiomesEnabled = configFile.Bind("Biome Options",

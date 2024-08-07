@@ -15,11 +15,12 @@ static class EnemyAIPatch
 
     private static void EnemyAI_HitEnemy(On.EnemyAI.orig_HitEnemy orig, EnemyAI self, int force, PlayerControllerB playerWhoHit, bool playHitSFX, int hitID)
     {
+        var oldAcceleration = self.agent.acceleration;
         if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer.itemProperties.itemName == "Icy Hammer")
         {
             if (!slowedEnemies.ContainsKey(self))
             {
-                self.agent.acceleration *= 0.2f;
+                self.agent.acceleration *= 0f;
             }
             
             if (slowedEnemies.ContainsKey(self) && slowedEnemies[self] != null)
