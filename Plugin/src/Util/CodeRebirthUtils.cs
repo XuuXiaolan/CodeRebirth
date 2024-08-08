@@ -6,13 +6,14 @@ using UnityEngine;
 using Random = System.Random;
 using System.Collections.Generic;
 using CodeRebirth.Util.Extensions;
+using CodeRebirth.ScrapStuff;
 
 namespace CodeRebirth.Util.Spawning;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
     private static Random random = null!;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
-    public static List<GrabbableObject> goldenEggs = new List<GrabbableObject>();
+    public static List<GoldenEgg> goldenEggs = new List<GoldenEgg>();
     public static Dictionary<string, GameObject> Objects = new Dictionary<string, GameObject>();
 
     void Awake()

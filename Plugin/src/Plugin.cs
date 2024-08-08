@@ -95,6 +95,7 @@ public class Plugin : BaseUnityPlugin {
             type.GetConstructor([]).Invoke([]);
         }
         if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("dev.ladyalice.scarletmansion")) Logger.LogWarning("You are using a mod (SDM) that currently bugs out the player animator when holding the coderebirth snowglobe, this is of no fault of SDM and is being worked on by both mods.");
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }

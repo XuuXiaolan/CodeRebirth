@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using CodeRebirth.Misc;
+using CodeRebirth.ScrapStuff;
 using CodeRebirth.src.EnemyStuff;
 using CodeRebirth.Util.Extensions;
 using CodeRebirth.Util.Spawning;
@@ -13,43 +14,43 @@ using UnityEngine.AI;
 namespace CodeRebirth.EnemyStuff;
 public class PjonkGooseAI : CodeRebirthEnemyAI
 {
-    private SimpleWanderRoutine currentWander = null!;
-    private PlayerControllerB? playerWhoLastHit;
-    private Coroutine wanderCoroutine = null!;
+    private SimpleWanderRoutine currentWander;
+    private PlayerControllerB playerWhoLastHit;
+    private Coroutine wanderCoroutine;
     private const float WALKING_SPEED = 5f;
     private const float SPRINTING_SPEED = 20f;
     private bool isAggro = false;
     private int playerHits = 0;
     private bool carryingPlayerBody;
-    private DeadBodyInfo? bodyBeingCarried;
-    public AudioClip GuardHyperVentilateClip = null!;
-    public AudioClip[] HonkSounds = null!;
-    public AudioClip StartStunSound = null!;
-    public AudioClip EndStunSound = null!;
-    public AudioClip SpawnSound = null!;
-    public AudioClip HissSound = null!;
-    public AudioClip EnrageSound = null!;
-    public AudioClip[] FootstepSounds = null!;
-    public AudioClip[] ViolentFootstepSounds = null!;
-    public AudioClip[] featherSounds = null!;
-    public AudioClip[] hitSounds = null!;
-    public AudioClip[] deathSounds = null!;
-    public Transform TopOfBody = null!;
-    public GameObject nest = null!;
-    public ParticleSystem featherHitParticles = null!;
-    public AnimationClip stunAnimation = null!;
+    private DeadBodyInfo bodyBeingCarried;
+    public AudioClip GuardHyperVentilateClip;
+    public AudioClip[] HonkSounds;
+    public AudioClip StartStunSound;
+    public AudioClip EndStunSound;
+    public AudioClip SpawnSound;
+    public AudioClip HissSound;
+    public AudioClip EnrageSound;
+    public AudioClip[] FootstepSounds;
+    public AudioClip[] ViolentFootstepSounds;
+    public AudioClip[] featherSounds;
+    public AudioClip[] hitSounds;
+    public AudioClip[] deathSounds;
+    public Transform TopOfBody;
+    public GameObject nest;
+    public ParticleSystem featherHitParticles;
+    public AnimationClip stunAnimation;
 
-    private GrabbableObject goldenEgg = null!;
+    private GoldenEgg goldenEgg;
     private float timeSinceHittingLocalPlayer;
     private float timeSinceAction;
     private bool holdingEgg = false;
     private bool recentlyDamaged = false;
     private bool nestCreated = false;
     private bool isNestInside = true;
-    private Coroutine? recentlyDamagedCoroutine;
-    private float collisionThresholdVelocity = SPRINTING_SPEED - 3f;
-    private System.Random enemyRandom = null!;
-    private DoorLock[]? doors;
+    private Coroutine recentlyDamagedCoroutine;
+    private float collisionThresholdVelocity = SPRINTING_SPEED - 4f;
+    private System.Random enemyRandom;
+    private DoorLock[] doors;
     private bool goldenEggCreated = false;
     private Vector3 lastPosition;
     private float velocity;
@@ -96,11 +97,11 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     }
 
     public void PlayFootstepSound() {
-        creatureSFX.PlayOneShot(FootstepSounds[enemyRandom.NextInt(0, FootstepSounds.Length-1)]);
+        creatureSFX.PlayOneShot(FootstepSounds[enemyRandom.Next(0, FootstepSounds.Length)]);
     } // Animation Event
 
     public void PlayViolentFootstepSound() {
-        creatureSFX.PlayOneShot(ViolentFootstepSounds[enemyRandom.NextInt(0, ViolentFootstepSounds.Length-1)]);
+        creatureSFX.PlayOneShot(ViolentFootstepSounds[enemyRandom.Next(0, ViolentFootstepSounds.Length)]);
     } // Animation Event
 
     [ClientRpc]
@@ -218,12 +219,12 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     }
 
     private void CheckForCollidingWithDoor() {
-        if (targetPlayer == null || currentBehaviourStateIndex != (int)State.ChasingPlayer || doors == null) return;
+        if (targetPlayer == null || currentBehaviourStateIndex != (int)State.ChasingPlayer) return;
         foreach (DoorLock door in doors)
         {
             if (door == null) continue;
             if (door.isDoorOpened) continue;
-            if (velocity > collisionThresholdVelocity && Vector3.Distance(door.transform.position, transform.position) < 1f && !door.GetComponent<Rigidbody>())
+            if (velocity > collisionThresholdVelocity-2 && Vector3.Distance(door.transform.position, transform.position) < 1f && !door.GetComponent<Rigidbody>())
             {
                 ExplodeDoorClientRpc(Array.IndexOf(doors, door));
                 StunGoose(targetPlayer, false);
@@ -312,7 +313,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         if (!isAggro)
         {
-            if (timeSinceAction >= enemyRandom.NextInt(10, 20)) {
+            if (timeSinceAction >= enemyRandom.Next(10, 20)) {
                 timeSinceAction = 0;
                 ControlStateSpeedAnimationServerRpc(0f, (int)State.Idle, false, false, false, -1, true, false);
                 TriggerAnimationClientRpc("PerformIdleAction");
@@ -331,7 +332,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                     Plugin.ExtendedLogging("Egg is not held by any player");
                     if (targetPlayer != null) SetTargetServerRpc(-1);
                     // If not recently hit and egg is not held, go to the egg
-                    if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f && !holdingEgg) {
+                    if ((Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f || (goldenEgg.isInShipRoom && Vector3.Distance(goldenEgg.transform.position, this.transform.position) <= 3f)) && !holdingEgg) {
                         GrabEggServerRpc();
                         PlayMiscSoundsServerRpc(0);
                         ControlStateSpeedAnimationServerRpc(WALKING_SPEED + 10f, (int)State.Guarding, false, false, true, -1, true, false);
@@ -366,7 +367,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     [ClientRpc]
     public void HonkAnimationClientRpc() {
-        creatureVoice.PlayOneShot(HonkSounds[enemyRandom.NextInt(0, HonkSounds.Length-1)]);
+        creatureVoice.PlayOneShot(HonkSounds[enemyRandom.Next(0, HonkSounds.Length)]);
         TriggerAnimationOnLocalClient("Honk");
     }
     
@@ -382,7 +383,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
         // If the golden egg is held by the player, keep chasing the player until the egg is dropped
         if (goldenEgg == null) {
-            Plugin.Logger.LogWarning("Golden egg is null?");
+            Plugin.ExtendedLogging("Golden egg is null");
             ControlStateSpeedAnimationServerRpc(WALKING_SPEED, (int)State.Wandering, true, false, false, -1, true, false);
             SetTargetServerRpc(-1);
             return;
@@ -411,7 +412,9 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             } else if (!this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) {
                 GoThroughEntrance();
             } else if ((this.isOutside && !goldenEgg.playerHeldBy.isInsideFactory) || (!this.isOutside && goldenEgg.playerHeldBy.isInsideFactory)) {
-                SetDestinationToPosition(targetPlayer.transform.position, false);
+                if (!SetDestinationToPosition(targetPlayer.transform.position, true)) {
+                    SetDestinationToPosition(RoundManager.Instance.GetRandomNavMeshPositionInRadius(targetPlayer.transform.position, 5f), false);
+                }
             }
             return;
         } else if (goldenEgg.playerHeldBy != null && targetPlayer != goldenEgg.playerHeldBy) {
@@ -422,13 +425,21 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             Plugin.ExtendedLogging("Egg is not held by any player");
             if (targetPlayer != null) SetTargetServerRpc(-1);
             // If not recently hit and egg is not held, go to the egg
-            if (Vector3.Distance(this.transform.position, goldenEgg.transform.position) < 1f && !holdingEgg) {
+            if ((Vector3.Distance(this.transform.position, goldenEgg.transform.position) <= 1f || (goldenEgg.isInShipRoom && Vector3.Distance(goldenEgg.transform.position, this.transform.position) <= 3f)) && !holdingEgg) {
                 GrabEggServerRpc();
                 PlayMiscSoundsServerRpc(0);
                 ControlStateSpeedAnimationServerRpc(WALKING_SPEED, (int)State.Guarding, false, false, true, -1, true, false);
                 return;
             }
-            SetDestinationToPosition(goldenEgg.transform.position, false);
+            if (!SetDestinationToPosition(goldenEgg.transform.position, true)) {
+                Plugin.ExtendedLogging("Could not set destination to egg position");
+                if (NavMesh.SamplePosition(goldenEgg.transform.position, out NavMeshHit navMeshHit, 6f, NavMesh.AllAreas)) {
+                    Vector3 navMeshPosition = navMeshHit.position; 
+                    SetDestinationToPosition(navMeshPosition, false);
+                } else {
+                    SetDestinationToPosition(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldenEgg.transform.position, 10f), false);
+                }
+            }
             return;
         }
 
@@ -443,7 +454,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         DragBodiesToNest();
     }
 
-    public void StartWandering(Vector3 nestPosition, SimpleWanderRoutine? newWander = null)
+    public void StartWandering(Vector3 nestPosition, SimpleWanderRoutine newWander = null)
     {
         this.StopWandering(this.currentWander, true);
         if (newWander == null)
@@ -522,7 +533,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private void SetWanderDestinationToPosition(Vector3 position, bool stopCurrentPath)
     {
         if (position == Vector3.zero) {
-            Plugin.Logger.LogWarning("Attempted to set destination to Vector3.zero");
+            Plugin.ExtendedLogging("Attempted to set destination to Vector3.zero");
             return; // Optionally set a default or backup destination
         }
         this.SetDestinationToPosition(position);
@@ -567,9 +578,10 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 DropPlayerBodyServerRpc();
             }
         }
+        if (goldenEgg != null) goldenEgg.mommyAlive = false;
         var FeatherPS = this.transform.Find("GooseRig").Find("Root").Find("Torso").Find("Torso.001").Find("Feather PS").GetComponent<ParticleSystem>().main;
         FeatherPS.loop = false;
-        creatureVoice.PlayOneShot(deathSounds[enemyRandom.NextInt(0, deathSounds.Length-1)]);
+        creatureVoice.PlayOneShot(deathSounds[enemyRandom.Next(0, deathSounds.Length)]);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -584,7 +596,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         StartCoroutine(DelayDroppingEgg());
     } // hittingenemyserverrpc and the speed
 
-    public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    public override void HitEnemy(int force = 1, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (force == 0) {
@@ -594,7 +606,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
             force /= (int)2;
         }
         featherHitParticles.Play();
-        creatureVoice.PlayOneShot(hitSounds[enemyRandom.NextInt(0, hitSounds.Length-1)]);
+        creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(0, hitSounds.Length)]);
         if (isEnemyDead || currentBehaviourStateIndex == (int)State.Death) return;
         enemyHP -= force;
         Plugin.ExtendedLogging($"Player who hit: {playerWhoHit}");
@@ -617,26 +629,20 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     }
 
     public void GoThroughEntrance() {
-        var pathToTeleport = new NavMeshPath();
         var insideEntrancePosition = RoundManager.FindMainEntrancePosition(true, false);
         var outsideEntrancePosition = RoundManager.FindMainEntrancePosition(true, true);
         if (isOutside) {
-            NavMesh.CalculatePath(this.transform.position, outsideEntrancePosition, this.agent.areaMask, pathToTeleport);
-            if (pathToTeleport.status != NavMeshPathStatus.PathComplete) {
-                Plugin.Logger.LogWarning("Failed to find path to outside entrance");
-                ControlStateSpeedAnimationServerRpc(WALKING_SPEED, (int)State.Wandering, true, false, false, -1, false, false);
+            if (!SetDestinationToPosition(outsideEntrancePosition, true)) {
+                //Plugin.ExtendedLogging("Failed to find path to outside entrance");
+                //ControlStateSpeedAnimationServerRpc(WALKING_SPEED, (int)State.Wandering, true, false, false, -1, false, false);
                 return;
             }
-            SetDestinationToPosition(outsideEntrancePosition);
-            
             if (Vector3.Distance(transform.position, outsideEntrancePosition) < 1f) {
                 this.agent.Warp(insideEntrancePosition);
                 SetEnemyOutsideServerRpc(false);
             }
         } else {
-            if (NavMesh.CalculatePath(this.transform.position, insideEntrancePosition, this.agent.areaMask, pathToTeleport)) {
-                SetDestinationToPosition(insideEntrancePosition);
-            }
+            SetDestinationToPosition(insideEntrancePosition, false);
             if (Vector3.Distance(transform.position, insideEntrancePosition) < 1f) {
                 this.agent.Warp(outsideEntrancePosition);
                 SetEnemyOutsideServerRpc(true);
@@ -654,16 +660,16 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     public void SetEnemyOutsideClientRpc(bool setOutisde) {
         this.SetEnemyOutside(setOutisde);
     }
-    public IEnumerator RecentlyDamagedCooldown(PlayerControllerB? playerWhoHit = null) {
+    public IEnumerator RecentlyDamagedCooldown(PlayerControllerB playerWhoHit) {
         recentlyDamaged = true;
         playerWhoLastHit = playerWhoHit;
         if (IsHost) SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
-        yield return new WaitForSeconds(enemyRandom.NextInt(10, 15));
+        yield return new WaitForSeconds(enemyRandom.Next(10, 15));
         if (IsHost && !(currentBehaviourStateIndex != (int)State.Death || currentBehaviourStateIndex != (int)State.Stunned)) PlayMiscSoundsServerRpc(1);
         recentlyDamaged = false;
     }
     
-    public void PlayerHitEnemy(PlayerControllerB? playerWhoStunned = null)
+    public void PlayerHitEnemy(PlayerControllerB playerWhoStunned = null)
     {
         playerHits += 1;
         Plugin.ExtendedLogging($"PlayerHitEnemy called. Current hits: {playerHits}, Current State: {currentBehaviourStateIndex}");
@@ -682,7 +688,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
     }
 
-    public void AggroOnHit(PlayerControllerB? playerWhoStunned = null)
+    public void AggroOnHit(PlayerControllerB playerWhoStunned)
     {
         SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoStunned));
         PlayMiscSoundsServerRpc(2);
@@ -691,7 +697,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     public void PlayFeatherSound() // Animation Event
     {
-        creatureVoice.PlayOneShot(featherSounds[enemyRandom.NextInt(0, featherSounds.Length-1)]);
+        creatureVoice.PlayOneShot(featherSounds[enemyRandom.Next(0, featherSounds.Length)]);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -712,7 +718,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
                 creatureVoice.PlayOneShot(EnrageSound);
                 break;
             default:
-                Plugin.Logger.LogWarning($"Invalid sound ID: {soundID}");
+                Plugin.ExtendedLogging($"Invalid sound ID: {soundID}");
                 break;
         }
     }
@@ -742,8 +748,9 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     {
         yield return new WaitForSeconds(0.5f);
         CodeRebirthUtils.goldenEggs = CodeRebirthUtils.goldenEggs.Where(egg => egg != null).ToList();
-        goldenEgg = CodeRebirthUtils.goldenEggs.Where(egg => Vector3.Distance(egg.transform.position, this.transform.position) < 2f).FirstOrDefault();
+        goldenEgg = CodeRebirthUtils.goldenEggs.Where(egg => Vector3.Distance(egg.transform.position, this.transform.position) <= 2f).FirstOrDefault();
         if (IsServer) goldenEgg.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+        goldenEgg.transform.localScale *= this.transform.localScale.x;
         Plugin.ExtendedLogging($"Found egg in nest: {goldenEgg.itemProperties.itemName}");
     }
 
@@ -850,6 +857,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         } else {
             timeSinceHittingLocalPlayer = 0;
             Plugin.ExtendedLogging("Hitting player");
+            TriggerAnimationServerRpc("bite");
             player.DamagePlayer(75, true, true, CauseOfDeath.Bludgeoning, 0, false, default);
             if (player.health <= 0) {
                 Plugin.ExtendedLogging("Player is dead");
@@ -859,6 +867,11 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         }
     }
     
+
+    [ServerRpc(RequireOwnership = false)]
+    private void TriggerAnimationServerRpc(string animationName) {
+        TriggerAnimationClientRpc(animationName);
+    }
 
     [ServerRpc(RequireOwnership = false)]
     private void HostDecisionAfterDeathServerRpc()
@@ -874,7 +887,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     private void DropPlayerBody()
 	{
-		if (!this.carryingPlayerBody || this.bodyBeingCarried == null)
+		if (!this.carryingPlayerBody)
 		{
 			return;
 		}
@@ -889,7 +902,6 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
 
     [ClientRpc]
     public void ExplodeDoorClientRpc(int DoorIndex) {
-        if (doors == null || DoorIndex >= doors.Length) return;
         Plugin.ExtendedLogging("Exploding door: " + DoorIndex);
         DoorLock door = doors[DoorIndex];
         Utilities.CreateExplosion(door.transform.position, true, 25, 0, 4, 0, CauseOfDeath.Blast, null);

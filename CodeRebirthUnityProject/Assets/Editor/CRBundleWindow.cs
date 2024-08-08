@@ -31,20 +31,45 @@ public class CRBundleWindow : EditorWindow
             BundleName = bundleName;
             DisplayName = ConvertToDisplayName(bundleName);
 
+            HashSet<string> processedAssets = new HashSet<string>();
+
             foreach (string asset in AssetDatabase.GetAssetPathsFromAssetBundle(bundleName))
             {
-                FileInfo fileInfo = new FileInfo(asset);
-                if (fileInfo.Exists)
-                {
-                    long fileSize = fileInfo.Length;
-                    TotalSize += fileSize;
-                    Assets.Add(new AssetDetails { Path = asset, Size = fileSize });
-                }
+                ProcessAsset(asset, processedAssets);
             }
 
             FileInfo bundleFileInfo = new FileInfo(Path.Combine(CRBundleWindowSettings.Instance.buildOutputPath, bundleName));
             if (bundleFileInfo.Exists)
                 BuiltBundleSize = bundleFileInfo.Length;
+        }
+
+        private void ProcessAsset(string assetPath, HashSet<string> processedAssets)
+        {
+            if (processedAssets.Contains(assetPath))
+                return;
+
+            FileInfo fileInfo = new FileInfo(assetPath);
+            if (fileInfo.Exists)
+            {
+                long fileSize = fileInfo.Length;
+                TotalSize += fileSize;
+                Assets.Add(new AssetDetails { Path = assetPath, Size = fileSize });
+                processedAssets.Add(assetPath);
+
+                // Process referenced assets
+                UnityEngine.Object assetObject = AssetDatabase.LoadMainAssetAtPath(assetPath);
+                if (assetObject != null)
+                {
+                    string[] dependencies = AssetDatabase.GetDependencies(assetPath);
+                    foreach (string dependency in dependencies)
+                    {
+                        if (dependency != assetPath) // Avoid self-reference
+                        {
+                            ProcessAsset(dependency, processedAssets);
+                        }
+                    }
+                }
+            }
         }
 
         internal class AssetDetails
