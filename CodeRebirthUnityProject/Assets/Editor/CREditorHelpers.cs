@@ -7,19 +7,13 @@ using UnityEngine;
 
 public class EditorHelpers
 {
-    private static Color _DefaultBackgroundColor;
-    public static Color DefaultBackgroundColor
+    public static Color DefaultBackgroundColor => GetDefaultBackgroundColor();
+
+    private static Color GetDefaultBackgroundColor()
     {
-        get
-        {
-            if (_DefaultBackgroundColor.a == 0)
-            {
-                var method = typeof(EditorGUIUtility)
-                    .GetMethod("GetDefaultBackgroundColor", BindingFlags.NonPublic | BindingFlags.Static);
-                _DefaultBackgroundColor = (Color)method.Invoke(null, null);
-            }
-            return _DefaultBackgroundColor;
-        }
+        var method = typeof(EditorGUIUtility)
+            .GetMethod("GetDefaultBackgroundColor", BindingFlags.NonPublic | BindingFlags.Static);
+        return (Color)method.Invoke(null, null);
     }
 
     public static Color GetAlternatingColor(int arrayIndex)
@@ -50,55 +44,6 @@ public class EditorHelpers
         texture.SetPixel(0, 0, color);
         texture.Apply();
         return texture;
-    }
-
-    public static void InsertValueDataColumn<T>(string headerText, float columnWidth, List<T> dataList)
-    {
-        if (headerText == null || headerText == string.Empty || dataList == null) return;
-
-        EditorGUILayout.BeginVertical(BackgroundStyle.Get(new Color(0.8f, 1f, 0.8f, 1f)), GUILayout.ExpandWidth(true));
-
-        EditorGUILayout.LabelField(headerText.Colorize(Color.white), GetNewStyle(fontSize: 14));
-
-        for (int i = 0; i < dataList.Count; i++)
-            InsertDynamicValueLabel(dataList[i], GetNewStyle(fontSize: 12), GetAlternatingColor(i), GUILayout.ExpandWidth(false));
-
-        EditorGUILayout.EndVertical();
-    }
-
-    public static void InsertObjectDataColumn<T>(string headerText, float columnWidth, List<T> dataList) where T : UnityEngine.Object
-    {
-        if (headerText == null || headerText == string.Empty || dataList == null) return;
-
-        EditorGUILayout.BeginVertical(BackgroundStyle.Get(new Color(0.8f, 1f, 0.8f, 1f)), GUILayout.ExpandWidth(true));
-
-        EditorGUILayout.LabelField(headerText.Colorize(Color.white), GetNewStyle(fontSize: 14));
-
-        for (int i = 0; i < dataList.Count; i++)
-            InsertDynamicObjectLabel(dataList[i], GetNewStyle(fontSize: 12), GetAlternatingColor(i), GUILayout.ExpandWidth(false));
-
-        EditorGUILayout.EndVertical();
-    }
-
-    public static void InsertDynamicObjectLabel<T>(T type, GUIStyle style, Color color, params GUILayoutOption[] layoutOptions) where T : UnityEngine.Object
-    {
-        EditorGUILayout.BeginHorizontal(BackgroundStyle.Get(color), GUILayout.ExpandWidth(false));
-        EditorGUILayout.ObjectField(type, typeof(T), true, GUILayout.ExpandWidth(false));
-        EditorGUILayout.EndHorizontal();
-    }
-
-    public static void InsertDynamicValueLabel<T>(T label, GUIStyle style, Color color, params GUILayoutOption[] layoutOptions)
-    {
-        GUIStyle guiStyle = BackgroundStyle.Get(color);
-        guiStyle.alignment = TextAnchor.MiddleCenter;
-        EditorGUILayout.BeginHorizontal(guiStyle, GUILayout.ExpandWidth(false));
-
-        if (label is string strLabel)
-            EditorGUILayout.LabelField(strLabel.ToBold().Colorize(Color.white), style, layoutOptions);
-        else if (label is int intLabel)
-            EditorGUILayout.IntField(Convert.ToInt32(intLabel), style, layoutOptions);
-
-        EditorGUILayout.EndHorizontal();
     }
 
     public static List<GameObject> GetPrefabsWithType(Type type)

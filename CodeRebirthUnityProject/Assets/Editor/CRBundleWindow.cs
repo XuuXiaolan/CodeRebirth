@@ -42,7 +42,7 @@ public class CRBundleWindow : EditorWindow
                 }
             }
 
-            FileInfo bundleFileInfo = new FileInfo(Path.Combine(CRBundleWindowSettings.instance.buildOutputPath, bundleName));
+            FileInfo bundleFileInfo = new FileInfo(Path.Combine(CRBundleWindowSettings.Instance.buildOutputPath, bundleName));
             if (bundleFileInfo.Exists)
                 BuiltBundleSize = bundleFileInfo.Length;
         }
@@ -57,45 +57,15 @@ public class CRBundleWindow : EditorWindow
     [FilePath("Project/CRBundleWindowSettings.asset", FilePathAttribute.Location.PreferencesFolder)]
     public class CRBundleWindowSettings : ScriptableSingleton<CRBundleWindowSettings>
     {
-        public static CRBundleWindowSettings Instance
-        {
-            get
-            {
-                CRBundleWindowSettings.instance.RefreshCallbacks();
-                return instance;
-            }
-        }
+        public static CRBundleWindowSettings Instance => instance;
 
-        public bool hasRefreshedCallbacks;
-        public bool buildAllBundles;
         public string buildOutputPath;
         public bool buildOnlyChanged;
-
-        [SerializeField] private List<string> assetBundlesDictKeys;
-        [SerializeField] private List<bool> assetBundlesDictValues;
-        [SerializeField] private List<string> buildOptionsDictKeys;
-        [SerializeField] private List<bool> buildOptionsDictValues;
-
-        public Dictionary<string, bool> assetBundlesDict = new Dictionary<string, bool>();
-        public Dictionary<string, bool> buildOptionsDict = new Dictionary<string, bool>();
         public SortOption assetSortOption = SortOption.Size; // Default sorting by size
 
         public void Save()
         {
             Save(true);
-        }
-
-        public void RefreshCallbacks()
-        {
-            if (hasRefreshedCallbacks)
-            {
-                Save();
-                Application.quitting -= Save;
-                Application.quitting += Save;
-                AssemblyReloadEvents.beforeAssemblyReload -= Save;
-                AssemblyReloadEvents.beforeAssemblyReload += Save;
-                hasRefreshedCallbacks = true;
-            }
         }
     }
 
@@ -134,12 +104,9 @@ public class CRBundleWindow : EditorWindow
 
     internal static Dictionary<string, BundleBuildSettings> bundles = new();
 
-    static string buildOutputPath => CRBundleWindowSettings.instance.buildOutputPath;
-    static bool buildOnlyChanged => CRBundleWindowSettings.instance.buildOnlyChanged;
-
     internal static bool logChangedFiles = false;
 
-    private SortOption _assetSortOption => CRBundleWindowSettings.instance.assetSortOption;
+    private SortOption _assetSortOption => CRBundleWindowSettings.Instance.assetSortOption;
 
     Vector2 scrollPosition;
 
@@ -148,12 +115,23 @@ public class CRBundleWindow : EditorWindow
     {
         GetWindow<CRBundleWindow>("CR Bundle Builder");
 
-        CRBundleWindowSettings.instance.buildOutputPath = EditorPrefs.GetString("build_output", CRBundleWindowSettings.instance.buildOutputPath);
-        CRBundleWindowSettings.instance.buildOnlyChanged = EditorPrefs.GetBool("build_changed", CRBundleWindowSettings.instance.buildOnlyChanged);
-        CRBundleWindowSettings.instance.assetSortOption = (SortOption)EditorPrefs.GetInt("asset_sort_option", (int)CRBundleWindowSettings.instance.assetSortOption);
-        CRBundleWindowSettings.instance.Save();
-
+        LoadSettings();
+        CRBundleWindowSettings.Instance.Save();
         Refresh();
+    }
+
+    static void LoadSettings()
+    {
+        CRBundleWindowSettings.Instance.buildOutputPath = EditorPrefs.GetString("build_output", CRBundleWindowSettings.Instance.buildOutputPath);
+        CRBundleWindowSettings.Instance.buildOnlyChanged = EditorPrefs.GetBool("build_changed", CRBundleWindowSettings.Instance.buildOnlyChanged);
+        CRBundleWindowSettings.Instance.assetSortOption = (SortOption)EditorPrefs.GetInt("asset_sort_option", (int)CRBundleWindowSettings.Instance.assetSortOption);
+    }
+
+    static void SaveBuildOutputPath(string path)
+    {
+        CRBundleWindowSettings.Instance.buildOutputPath = path;
+        EditorPrefs.SetString("build_output", path);
+        CRBundleWindowSettings.Instance.Save();
     }
 
     static void Refresh()
@@ -203,8 +181,8 @@ public class CRBundleWindow : EditorWindow
 
         var assetSortOption = (SortOption)EditorGUILayout.EnumPopup("Sort Assets By:", _assetSortOption);
         EditorPrefs.SetInt("asset_sort_option", (int)assetSortOption);
-        CRBundleWindowSettings.instance.assetSortOption = assetSortOption;
-        CRBundleWindowSettings.instance.Save();
+        CRBundleWindowSettings.Instance.assetSortOption = assetSortOption;
+        CRBundleWindowSettings.Instance.Save();
 
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
@@ -327,21 +305,23 @@ public class CRBundleWindow : EditorWindow
         GUILayout.EndHorizontal();
 
         EditorGUIUtility.labelWidth = 300;
-        CRBundleWindowSettings.instance.buildOnlyChanged = EditorGUILayout.Toggle("Build Only Changed (Experimental): ", CRBundleWindowSettings.instance.buildOnlyChanged, GUILayout.ExpandWidth(true));
-        EditorPrefs.SetBool("build_changed", CRBundleWindowSettings.instance.buildOnlyChanged);
+        CRBundleWindowSettings.Instance.buildOnlyChanged = EditorGUILayout.Toggle("Build Only Changed (Experimental): ", CRBundleWindowSettings.Instance.buildOnlyChanged, GUILayout.ExpandWidth(true));
+        EditorPrefs.SetBool("build_changed", CRBundleWindowSettings.Instance.buildOnlyChanged);
 
         EditorGUIUtility.labelWidth = 150;
 
         EditorGUILayout.Space();
 
         EditorGUILayout.BeginHorizontal();
-        CRBundleWindowSettings.instance.buildOutputPath = EditorGUILayout.TextField("Build Output Directory:", CRBundleWindowSettings.instance.buildOutputPath, GUILayout.ExpandWidth(true));
+        string newBuildOutputPath = EditorGUILayout.TextField("Build Output Directory:", CRBundleWindowSettings.Instance.buildOutputPath, GUILayout.ExpandWidth(true));
         if (GUILayout.Button("Select", EditorStyles.miniButton))
         {
-            CRBundleWindowSettings.instance.buildOutputPath = EditorUtility.OpenFolderPanel("Select Build Output Directory", CRBundleWindowSettings.instance.buildOutputPath, "");
-            EditorPrefs.SetString("build_output", CRBundleWindowSettings.instance.buildOutputPath);
+            newBuildOutputPath = EditorUtility.OpenFolderPanel("Select Build Output Directory", CRBundleWindowSettings.Instance.buildOutputPath, "");
+            if (!string.IsNullOrEmpty(newBuildOutputPath))
+            {
+                SaveBuildOutputPath(newBuildOutputPath);
+            }
         }
-
         EditorGUILayout.EndHorizontal();
 
         if (GUILayout.Button("Build"))
@@ -372,10 +352,10 @@ public class CRBundleWindow : EditorWindow
                 assets.Sort((a, b) => b.Size.CompareTo(a.Size));
                 break;
             case SortOption.Alphabetical:
-                assets.Sort((a, b) => a.Path.CompareTo(b.Path));
+                assets.Sort((a, b) => string.Compare(a.Path, b.Path, StringComparison.OrdinalIgnoreCase));
                 break;
             case SortOption.ReverseAlphabetical:
-                assets.Sort((a, b) => b.Path.CompareTo(a.Path));
+                assets.Sort((a, b) => string.Compare(b.Path, a.Path, StringComparison.OrdinalIgnoreCase));
                 break;
             case SortOption.ReverseSize:
                 assets.Sort((a, b) => a.Size.CompareTo(b.Size));
@@ -401,13 +381,13 @@ public class CRBundleWindow : EditorWindow
                     continue;
                 }
 
-                if (CRBundleWindowSettings.instance.buildOnlyChanged && !bundle.ChangedSinceLastBuild)
+                if (CRBundleWindowSettings.Instance.buildOnlyChanged && !bundle.ChangedSinceLastBuild)
                 {
                     Debug.Log($"Skipping unchanged bundle: {bundle.BundleName}");
                     continue;
                 }
 
-                if (!bundle.Build && !CRBundleWindowSettings.instance.buildOnlyChanged)
+                if (!bundle.Build && !CRBundleWindowSettings.Instance.buildOnlyChanged)
                 {
                     Debug.Log($"Skipping unselected bundle: {bundle.BundleName}");
                     continue;
@@ -434,14 +414,14 @@ public class CRBundleWindow : EditorWindow
             }
 
             Debug.Log($"Building {bundleBuilds.Count} bundle(s)!");
-            BuildPipeline.BuildAssetBundles(CRBundleWindowSettings.instance.buildOutputPath, bundleBuilds.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+            BuildPipeline.BuildAssetBundles(CRBundleWindowSettings.Instance.buildOutputPath, bundleBuilds.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
 
             Debug.Log("Performing cleanup.");
             Refresh();
 
             // Clean up empty bundle files
-            string directoryName = Path.GetFileName(CRBundleWindowSettings.instance.buildOutputPath);
-            string emptyBundlePath = Path.Combine(CRBundleWindowSettings.instance.buildOutputPath, directoryName);
+            string directoryName = Path.GetFileName(CRBundleWindowSettings.Instance.buildOutputPath);
+            string emptyBundlePath = Path.Combine(CRBundleWindowSettings.Instance.buildOutputPath, directoryName);
             if (File.Exists(emptyBundlePath))
             {
                 File.Delete(emptyBundlePath);
@@ -450,7 +430,7 @@ public class CRBundleWindow : EditorWindow
             // Optionally, handle manifest files differently if they are needed elsewhere
             if (!NeedToKeepManifests())
             {
-                foreach (string file in Directory.GetFiles(CRBundleWindowSettings.instance.buildOutputPath, "*.manifest", SearchOption.TopDirectoryOnly))
+                foreach (string file in Directory.GetFiles(CRBundleWindowSettings.Instance.buildOutputPath, "*.manifest", SearchOption.TopDirectoryOnly))
                 {
                     File.Delete(file);
                 }

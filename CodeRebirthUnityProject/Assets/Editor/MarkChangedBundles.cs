@@ -41,7 +41,6 @@ public class MarkChangedBundles : AssetPostprocessor
                 }
                 else
                 {
-                    // Log only if the asset belongs to a known bundle but isn't tracked
                     if (!string.IsNullOrEmpty(bundle))
                     {
                         Debug.LogWarning($"Asset \"{asset}\" does not belong to any known bundle or the bundle is not tracked.");
