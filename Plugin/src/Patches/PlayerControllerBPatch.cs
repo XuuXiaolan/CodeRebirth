@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using CodeRebirth.Util.PlayerManager;
-using CodeRebirth.WeatherStuff;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -44,6 +43,7 @@ static class PlayerControllerBPatch {
     public static void Update(PlayerControllerB __instance) {
         if (GameNetworkManager.Instance.localPlayerController == null) return;
         if (__instance.GetCRPlayerData().playerOverrideController != null) return;
+        Plugin.ExtendedLogging($"[ILHook:PlayerControllerB.Update] Setting playerOverrideController to {__instance.playerBodyAnimator.runtimeAnimatorController}");
         __instance.GetCRPlayerData().playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
         __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController; 
     }
