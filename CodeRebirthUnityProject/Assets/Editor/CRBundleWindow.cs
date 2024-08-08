@@ -45,7 +45,7 @@ public class CRBundleWindow : EditorWindow
 
         private void ProcessAsset(string assetPath, HashSet<string> processedAssets)
         {
-            if (processedAssets.Contains(assetPath))
+            if (processedAssets.Contains(assetPath) || assetPath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) || assetPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                 return;
 
             FileInfo fileInfo = new FileInfo(assetPath);
