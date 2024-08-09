@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace CodeRebirth.ScrapStuff;
 public class GoldenEgg : GrabbableObject {
-    public bool mommyAlive = true;
+    public bool mommyAlive = false;
     public bool spawnedOne = false;
+    public float motherlyFactor = 1f;
     public override void Start() {
         base.Start();
-        CodeRebirthUtils.goldenEggs.Add(this);
         grabbableToEnemies = false;
         if (IsHost) {
             StartCoroutine(RandomChanceOfHatching());
@@ -18,11 +18,11 @@ public class GoldenEgg : GrabbableObject {
     }
 
     private IEnumerator RandomChanceOfHatching() {
-        while (mommyAlive && !spawnedOne) {
-            yield return new WaitForSeconds(3f);
-            if (UnityEngine.Random.Range(1, 100) <= 10) {
+        while (mommyAlive && !spawnedOne && !this.isInShipRoom) {
+            yield return new WaitForSeconds(5f);
+            if (UnityEngine.Random.Range(1f, 100f) <= 2.5f * motherlyFactor) {
                 // make it a cracked egg, same egg but just animate it to be cracked
-                var newGoose = RoundManager.Instance.SpawnEnemyGameObject(this.transform.position + this.transform.forward, this.transform.rotation.y, -1, EnemyHandler.Instance.PjonkGoose.PjonkGooseEnemyType);
+                var newGoose = RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 5f), this.transform.rotation.y, -1, EnemyHandler.Instance.PjonkGoose.PjonkGooseEnemyType);
                 SpawnedStuffServerRpc(newGoose);
             }
         }
@@ -36,7 +36,19 @@ public class GoldenEgg : GrabbableObject {
     [ClientRpc]
     public void SpawnedStuffClientRpc(NetworkObjectReference go) {
         go.TryGet(out NetworkObject netObj);
-        netObj.gameObject.transform.localScale *= 0.75f;
+        netObj.gameObject.transform.localScale *= 0.75f * this.transform.localScale.x;
+        this.transform.localScale = new Vector3(0.75f, 1f, 0.75f) * this.transform.localScale.x;
+        this.originalScale = this.transform.localScale;
         spawnedOne = true;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if (this.isHeld && this.playerHeldBy != null && this.playerHeldBy.playerSteamId == 76561198217661947) {
+            motherlyFactor = 4f;
+        } else {
+            motherlyFactor = 1f;
+        }
     }
 }

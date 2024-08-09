@@ -75,6 +75,12 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         creatureAnimator.SetBool(name, active);
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void TriggerAnimationServerRpc(string triggerName)
+    {
+        TriggerAnimationClientRpc(triggerName);
+    }
+
     [ClientRpc]
     public void TriggerAnimationClientRpc(string triggerName)
     {
@@ -136,7 +142,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         return Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
     }
     public bool IsPlayerReachable(PlayerControllerB PlayerToCheck) {
-        Vector3 Position = RoundManager.Instance.GetNavMeshPosition(targetPlayer.transform.position, RoundManager.Instance.navHit, 2.7f);
+        Vector3 Position = RoundManager.Instance.GetNavMeshPosition(PlayerToCheck.transform.position, RoundManager.Instance.navHit, 2.7f);
         if (!RoundManager.Instance.GotNavMeshPositionResult) {
             Plugin.ExtendedLogging("Player Reach Test: No Navmesh position");
             return false; 
@@ -146,21 +152,24 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         Plugin.ExtendedLogging($"Player Reach Test: {HasPath}");
         return HasPath;
     }
+
     public float PlayerDistanceFromShip(PlayerControllerB PlayerToCheck) {
         if(PlayerToCheck == null) return -1;
-        float DistanceFromShip = Vector3.Distance(targetPlayer.transform.position, StartOfRound.Instance.shipBounds.transform.position);
+        float DistanceFromShip = Vector3.Distance(PlayerToCheck.transform.position, StartOfRound.Instance.shipBounds.transform.position);
         Plugin.ExtendedLogging($"PlayerNearShip check: {DistanceFromShip}");
         return DistanceFromShip;
     }
-    private float DistanceFromTargetPlayer(PlayerControllerB targetPlayer, bool IncludeYAxis) {
-        if (targetPlayer == null) return -1f;
+
+    private float DistanceFromPlayer(PlayerControllerB player, bool IncludeYAxis) {
+        if (player == null) return -1f;
         if (IncludeYAxis) {
-            return Vector3.Distance(targetPlayer.transform.position, this.transform.position);
+            return Vector3.Distance(player.transform.position, this.transform.position);
         }
-        Vector2 PlayerFlatLocation = new Vector2(targetPlayer.transform.position.x, targetPlayer.transform.position.z);
+        Vector2 PlayerFlatLocation = new Vector2(player.transform.position.x, player.transform.position.z);
         Vector2 EnemyFlatLocation = new Vector2(transform.position.x, transform.position.z);
         return Vector2.Distance(PlayerFlatLocation, EnemyFlatLocation);
     }
+
     public bool AnimationIsFinished(string AnimName) {
         if (!creatureAnimator.GetCurrentAnimatorStateInfo(0).IsName(AnimName)) {
             Plugin.ExtendedLogging(__getTypeName() + ": Checking for animation " + AnimName + ", but current animation is " + creatureAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
@@ -168,10 +177,12 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         }
         return (creatureAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
     }
+
     [ServerRpc(RequireOwnership = false)]
     public void SetTargetServerRpc(int PlayerID) {
         SetTargetClientRpc(PlayerID);
     }
+
     [ClientRpc]
     public void SetTargetClientRpc(int PlayerID) {
         if (PlayerID == -1) {
@@ -191,6 +202,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public void SetEnemyTargetServerRpc(int enemyID) {
         SetEnemyTargetClientRpc(enemyID);
     }
+
     [ClientRpc]
     public void SetEnemyTargetClientRpc(int enemyID) {
         if (enemyID == -1) {
@@ -205,15 +217,34 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
-}
 
-public class SimpleWanderRoutine
-{
-    public List<GameObject> unvisitedNodes = new List<GameObject>();
-    public GameObject? currentTargetNode;
-    public GameObject? nextTargetNode;
-    public bool inProgress;
-    public Vector3 NestPosition;
-    public float wanderRadius = 30f;
-    public float searchPrecision = 5f;
+    public void GoThroughEntrance() {
+        var insideEntrancePosition = RoundManager.FindMainEntrancePosition(true, false);
+        var outsideEntrancePosition = RoundManager.FindMainEntrancePosition(true, true);
+        if (isOutside) {
+            SetDestinationToPosition(outsideEntrancePosition);
+            
+            if (Vector3.Distance(transform.position, outsideEntrancePosition) < 1f) {
+                this.agent.Warp(insideEntrancePosition);
+                SetEnemyOutsideServerRpc(false);
+            }
+        } else {
+            SetDestinationToPosition(insideEntrancePosition);
+            if (Vector3.Distance(transform.position, insideEntrancePosition) < 1f) {
+                this.agent.Warp(outsideEntrancePosition);
+                SetEnemyOutsideServerRpc(true);
+            }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetEnemyOutsideServerRpc(bool setOutside)
+    {
+        SetEnemyOutsideClientRpc(setOutside);
+    }
+
+    [ClientRpc]
+    public void SetEnemyOutsideClientRpc(bool setOutisde) {
+        this.SetEnemyOutside(setOutisde);
+    }
 }

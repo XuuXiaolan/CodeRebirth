@@ -6544,6 +6544,7 @@ MonoBehaviour:
   isEnemyDead: 0
   daytimeEnemyLeaving: 0
   enemyHP: 15
+  nodesTempArray: []
   openDoorSpeedMultiplier: 2
   useSecondaryAudiosOnAnimatedObjects: 0
   currentSearch:
@@ -6569,6 +6570,7 @@ MonoBehaviour:
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
   isOutside: 0
+  hitsPhysicsObjects: 0
   targetEnemy: {fileID: 0}
   GuardHyperVentilateClip: {fileID: 8300000, guid: 14df35cd0a4f2bd4ca776ed2f0637992,
     type: 3}

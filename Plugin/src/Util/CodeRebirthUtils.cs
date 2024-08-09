@@ -6,14 +6,12 @@ using UnityEngine;
 using Random = System.Random;
 using System.Collections.Generic;
 using CodeRebirth.Util.Extensions;
-using CodeRebirth.ScrapStuff;
 
 namespace CodeRebirth.Util.Spawning;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
     private static Random random = null!;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
-    public static List<GoldenEgg> goldenEggs = new List<GoldenEgg>();
     public static Dictionary<string, GameObject> Objects = new Dictionary<string, GameObject>();
 
     void Awake()
@@ -23,14 +21,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     
     [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0) {
-        if (StartOfRound.Instance == null) {
-            return;
-        }
-        
-        if (random == null) {
-            random = new Random(StartOfRound.Instance.randomMapSeed + 85);
-        }
-
         if (itemName == string.Empty) {
             return;
         }
@@ -39,6 +29,18 @@ internal class CodeRebirthUtils : NetworkBehaviour
             // throw for stacktrace
             throw new NullReferenceException($"'{itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
         }
+        SpawnScrap(item, position, isQuest, defaultRotation, valueIncrease);
+    }
+
+    public NetworkObjectReference SpawnScrap(Item item, Vector3 position, bool isQuest, bool defaultRotation, int valueIncrease) {
+        if (StartOfRound.Instance == null) {
+            return default;
+        }
+        
+        if (random == null) {
+            random = new Random(StartOfRound.Instance.randomMapSeed + 85);
+        }
+
         Transform? parent = null;
         if (parent == null) {
             parent = StartOfRound.Instance.propsContainer;
@@ -52,6 +54,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         go.GetComponent<GrabbableObject>().scrapValue = value;
         UpdateScanNodeClientRpc(new NetworkObjectReference(go), value);
         if (isQuest) go.AddComponent<QuestItem>();
+        return new NetworkObjectReference(go);
     }
 
     [ClientRpc]
@@ -59,7 +62,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         go.TryGet(out NetworkObject netObj);
         if(netObj != null)
         {
-            if (netObj.TryGetComponent(out GrabbableObject grabbableObject)) {
+            if (netObj.gameObject.TryGetComponent(out GrabbableObject grabbableObject)) {
                 grabbableObject.SetScrapValue(value);
                 Plugin.ExtendedLogging($"Scrap Value: {value}");
             }

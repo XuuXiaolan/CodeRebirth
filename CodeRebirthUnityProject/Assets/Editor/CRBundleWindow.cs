@@ -450,6 +450,11 @@ public class CRBundleWindow : EditorWindow
             if (File.Exists(emptyBundlePath))
             {
                 File.Delete(emptyBundlePath);
+                string manifestPath = emptyBundlePath + ".manifest";
+                if (File.Exists(manifestPath))
+                {
+                    File.Delete(manifestPath);
+                }
             }
 
             // Optionally, handle manifest files differently if they are needed elsewhere
