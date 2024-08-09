@@ -21,7 +21,7 @@ namespace CodeRebirth.Patches;
 static class RoundManagerPatch {
 	internal static List<SpawnableFlora> spawnableFlora = [];
 
-	internal static float PATCH_SIZE = 15;
+	internal static float PATCH_SIZE = 7;
 	
 	[HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
 	static void SpawnOutsideMapObjects() {
@@ -40,16 +40,40 @@ static class RoundManagerPatch {
 		Stopwatch timer = new();
 		timer.Start();
 		// Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
-		var tagToMoonLists = spawnableFlora
-			.GroupBy(flora => flora.floraTag)
-			.ToDictionary(
-				g => g.Key,
-				g => new
-				{
-					MoonsWhiteList = g.First().moonsWhiteList,
-					MoonsBlackList = g.First().moonsBlackList
+		List<IGrouping<FloraTag, SpawnableFlora>> sortedFlora = GetValidFlora();
+		
+		foreach(IGrouping<FloraTag, SpawnableFlora> floraGroup in sortedFlora) {
+			int patches = random.NextInt(7, 10);
+
+			for (int i = 0; i < patches; i++) {
+				Vector3 patchOrigin = GetPatchOrigin(random);
+				List<SpawnableFlora> floraList = floraGroup.ToList();
+
+				int variety = Mathf.Min(random.NextInt(4, 6), floraList.Count - 1);
+				
+				for (int j = 0; j < variety; j++) {
+					SpawnableFlora flora = floraList[j];
+
+					SpawnFloraInPatch(random, patchOrigin, flora, ref spawnCount);
 				}
-			);
+			}
+
+		}
+		timer.Stop();
+		Plugin.ExtendedLogging($"Spawned {spawnCount} flora in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
+	}
+
+	static List<IGrouping<FloraTag, SpawnableFlora>> GetValidFlora() {
+		var tagToMoonLists = spawnableFlora
+							 .GroupBy(flora => flora.floraTag)
+							 .ToDictionary(
+								 g => g.Key,
+								 g => new
+								 {
+									 MoonsWhiteList = g.First().moonsWhiteList,
+									 MoonsBlackList = g.First().moonsBlackList
+								 }
+							 );
 
 		// Cache the valid tags based on the current moon configuration
 		Dictionary<FloraTag, bool> validTags = new Dictionary<FloraTag, bool>();
@@ -61,79 +85,50 @@ static class RoundManagerPatch {
 			}
 		}
 
-		
+		return spawnableFlora.GroupBy(flora => flora.floraTag).Where(it => validTags.TryGetValue(it.Key, out bool isLevelValid) && isLevelValid).ToList();
+	}
+    
+	static void SpawnFloraInPatch(Random random, Vector3 patchOrigin, SpawnableFlora flora, ref int spawnCount) {
+		var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
+		for (int i = 0; i < targetSpawns; i++) {
+			Vector3 randomPosition = patchOrigin + new Vector3(random.NextFloat(-PATCH_SIZE, PATCH_SIZE), 0, random.NextFloat(-PATCH_SIZE, PATCH_SIZE));
 
-		var sortedFlora = spawnableFlora.GroupBy(flora => flora.floraTag).ToList();
-		
-
-		foreach(IGrouping<FloraTag, SpawnableFlora> floraGroup in sortedFlora) {
-			Plugin.Logger.LogDebug("starting patch");
-			if (!validTags.TryGetValue(floraGroup.Key, out bool isLevelValid) || !isLevelValid) {
+			if (!GetValidPoint(random, randomPosition, out RaycastHit hit))
 				continue;
-			}
 
-			int patches = random.NextInt(7, 10);
-			Plugin.Logger.LogDebug("valid");
+			if(!flora.CanSpawnOn(hit.transform.gameObject))
+				continue;
 
-			for (int i = 0; i < patches; i++) {
-				Vector3 patchOrigin = GetPatchOrigin(random);
-				List<SpawnableFlora> floraList = floraGroup.ToList();
+			Vector3 spawnPosition = hit.point;
+			Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 
-				int variety = Mathf.Min(random.NextInt(4, 6), floraList.Count - 1);
-
-				Plugin.Logger.LogDebug($"vairety: {variety}");
-
-
-				for (int j = 0; j < variety; j++) {
-					SpawnableFlora flora = floraList[j];
-
-					var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
-					for (int k = 0; k < targetSpawns; k++) {
-						Vector3 randomPosition = patchOrigin + new Vector3(random.NextFloat(-PATCH_SIZE, PATCH_SIZE), 0, random.NextFloat(-PATCH_SIZE, PATCH_SIZE));
-
-						// Use NavMesh.SamplePosition to get the nearest point on the NavMesh
-						if (NavMesh.SamplePosition(randomPosition, out NavMeshHit navMeshHit, PATCH_SIZE*2, NavMesh.AllAreas)) {
-							Vector3 navMeshPosition = navMeshHit.position;
-							Vector3 vector = navMeshPosition + (Vector3.up * 2);
-
-							if (Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
-								bool isValid = true;
-								foreach (string floorTag in flora.blacklistedTags) {
-									if (hit.transform.gameObject.CompareTag(floorTag)) {
-										isValid = false;
-										break;
-									}
-								}
-
-								if (!isValid) continue;
-
-								Vector3 spawnPosition = hit.point;
-								Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-
-								GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
-								spawnedFlora.transform.up = hit.normal;
-								spawnCount++;
-							}
-						}
-					}
-				}
-			}
-
+			GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
+			spawnedFlora.transform.up = hit.normal;
+			spawnCount++;
 		}
-		timer.Stop();
-		Plugin.ExtendedLogging($"Spawned {spawnCount} flora in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
 	}
 
-	static Vector3 GetPatchOrigin(Random random) {
+	static bool GetValidPoint(Random random, Vector3 origin, out RaycastHit rayHit) {
+		rayHit = new();
 		Vector3 patchOrigin = GetRandomPointNearPointsOfInterest(random) + new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
-		NavMeshHit hit = new();
-		while (!NavMesh.SamplePosition(patchOrigin, out hit, 20, NavMesh.AllAreas)) {
-			patchOrigin = GetRandomPointNearPointsOfInterest(random) + new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
+		if (!NavMesh.SamplePosition(patchOrigin, out NavMeshHit hit, 20, NavMesh.AllAreas)) {
+			return false;
 		}
 
-		Physics.Raycast(hit.position + (Vector3.up * 2), Vector3.down, out RaycastHit rayHit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+		if (!Physics.Raycast(hit.position + (Vector3.up * 2), Vector3.down, out rayHit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
+			return false;
+		}
 
-		return rayHit.point;
+		return true;
+	}
+    
+	static Vector3 GetPatchOrigin(Random random) {
+		Vector3 patchOrigin = GetRandomPointNearPointsOfInterest(random) + new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
+		if (GetValidPoint(random, patchOrigin, out RaycastHit hit)) {
+			return hit.point;
+		} else {
+			return Vector3.zero;
+		}
 	}
 
 	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random) {

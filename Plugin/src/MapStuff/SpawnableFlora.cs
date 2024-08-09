@@ -1,4 +1,5 @@
-﻿using LethalLib.Extras;
+﻿using System.Linq;
+using LethalLib.Extras;
 using LethalLib.Modules;
 using UnityEngine;
 
@@ -19,4 +20,8 @@ public class SpawnableFlora {
 	public string[] blacklistedTags = null!;
 	public FloraTag floraTag;
 	public string[] moonsBlackList = null!;
+
+	public bool CanSpawnOn(GameObject gameObject) {
+		return blacklistedTags.All(it => !gameObject.CompareTag(it));
+	}
 }
