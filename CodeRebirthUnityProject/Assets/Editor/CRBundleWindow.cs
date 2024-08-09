@@ -45,28 +45,30 @@ public class CRBundleWindow : EditorWindow
 
         private void ProcessAsset(string assetPath, HashSet<string> processedAssets)
         {
+            // Only consider an asset processed if its full path is already in the processed list
             if (processedAssets.Contains(assetPath) || assetPath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) || assetPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                 return;
 
             FileInfo fileInfo = new FileInfo(assetPath);
-            if (fileInfo.Exists)
-            {
-                long fileSize = fileInfo.Length;
-                TotalSize += fileSize;
-                Assets.Add(new AssetDetails { Path = assetPath, Size = fileSize });
-                processedAssets.Add(assetPath);
+            if (!fileInfo.Exists) return;
 
-                // Process referenced assets
-                UnityEngine.Object assetObject = AssetDatabase.LoadMainAssetAtPath(assetPath);
-                if (assetObject != null)
+            long fileSize = fileInfo.Length;
+            TotalSize += fileSize;
+            Assets.Add(new AssetDetails { Path = assetPath, Size = fileSize });
+            processedAssets.Add(assetPath);
+
+            if (!CRBundleWindowSettings.Instance.processDependenciesRecursively)
+                return;
+
+            // Process referenced assets, ensuring we check by full path
+            UnityEngine.Object assetObject = AssetDatabase.LoadMainAssetAtPath(assetPath);
+            if (assetObject != null)
+            {
+                foreach (string dependency in AssetDatabase.GetDependencies(assetPath))
                 {
-                    string[] dependencies = AssetDatabase.GetDependencies(assetPath);
-                    foreach (string dependency in dependencies)
+                    if (!processedAssets.Contains(dependency) && dependency != assetPath) // Avoid self-reference and redundant processing
                     {
-                        if (dependency != assetPath) // Avoid self-reference
-                        {
-                            ProcessAsset(dependency, processedAssets);
-                        }
+                        ProcessAsset(dependency, processedAssets);
                     }
                 }
             }
@@ -86,6 +88,7 @@ public class CRBundleWindow : EditorWindow
 
         public string buildOutputPath;
         public bool buildOnlyChanged;
+        public bool processDependenciesRecursively = false; // Default is false
         public SortOption assetSortOption = SortOption.Size; // Default sorting by size
 
         public void Save()
@@ -147,9 +150,11 @@ public class CRBundleWindow : EditorWindow
 
     static void LoadSettings()
     {
-        CRBundleWindowSettings.Instance.buildOutputPath = EditorPrefs.GetString("build_output", CRBundleWindowSettings.Instance.buildOutputPath);
-        CRBundleWindowSettings.Instance.buildOnlyChanged = EditorPrefs.GetBool("build_changed", CRBundleWindowSettings.Instance.buildOnlyChanged);
-        CRBundleWindowSettings.Instance.assetSortOption = (SortOption)EditorPrefs.GetInt("asset_sort_option", (int)CRBundleWindowSettings.Instance.assetSortOption);
+        var settings = CRBundleWindowSettings.Instance;
+        settings.buildOutputPath = EditorPrefs.GetString("build_output", settings.buildOutputPath);
+        settings.buildOnlyChanged = EditorPrefs.GetBool("build_changed", settings.buildOnlyChanged);
+        settings.assetSortOption = (SortOption)EditorPrefs.GetInt("asset_sort_option", (int)settings.assetSortOption);
+        settings.processDependenciesRecursively = EditorPrefs.GetBool("process_dependencies_recursively", settings.processDependenciesRecursively);
     }
 
     static void SaveBuildOutputPath(string path)
@@ -204,10 +209,15 @@ public class CRBundleWindow : EditorWindow
             Refresh();
         }
 
-        var assetSortOption = (SortOption)EditorGUILayout.EnumPopup("Sort Assets By:", _assetSortOption);
-        EditorPrefs.SetInt("asset_sort_option", (int)assetSortOption);
-        CRBundleWindowSettings.Instance.assetSortOption = assetSortOption;
-        CRBundleWindowSettings.Instance.Save();
+        var settings = CRBundleWindowSettings.Instance;
+
+        settings.assetSortOption = (SortOption)EditorGUILayout.EnumPopup("Sort Assets By:", settings.assetSortOption);
+        EditorPrefs.SetInt("asset_sort_option", (int)settings.assetSortOption);
+
+        settings.processDependenciesRecursively = EditorGUILayout.Toggle("Process Dependencies Recursively", settings.processDependenciesRecursively);
+        EditorPrefs.SetBool("process_dependencies_recursively", settings.processDependenciesRecursively);
+
+        settings.Save();
 
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
@@ -330,18 +340,18 @@ public class CRBundleWindow : EditorWindow
         GUILayout.EndHorizontal();
 
         EditorGUIUtility.labelWidth = 300;
-        CRBundleWindowSettings.Instance.buildOnlyChanged = EditorGUILayout.Toggle("Build Only Changed (Experimental): ", CRBundleWindowSettings.Instance.buildOnlyChanged, GUILayout.ExpandWidth(true));
-        EditorPrefs.SetBool("build_changed", CRBundleWindowSettings.Instance.buildOnlyChanged);
+        settings.buildOnlyChanged = EditorGUILayout.Toggle("Build Only Changed (Experimental): ", settings.buildOnlyChanged, GUILayout.ExpandWidth(true));
+        EditorPrefs.SetBool("build_changed", settings.buildOnlyChanged);
 
         EditorGUIUtility.labelWidth = 150;
 
         EditorGUILayout.Space();
 
         EditorGUILayout.BeginHorizontal();
-        string newBuildOutputPath = EditorGUILayout.TextField("Build Output Directory:", CRBundleWindowSettings.Instance.buildOutputPath, GUILayout.ExpandWidth(true));
+        string newBuildOutputPath = EditorGUILayout.TextField("Build Output Directory:", settings.buildOutputPath, GUILayout.ExpandWidth(true));
         if (GUILayout.Button("Select", EditorStyles.miniButton))
         {
-            newBuildOutputPath = EditorUtility.OpenFolderPanel("Select Build Output Directory", CRBundleWindowSettings.Instance.buildOutputPath, "");
+            newBuildOutputPath = EditorUtility.OpenFolderPanel("Select Build Output Directory", settings.buildOutputPath, "");
             if (!string.IsNullOrEmpty(newBuildOutputPath))
             {
                 SaveBuildOutputPath(newBuildOutputPath);
@@ -421,7 +431,7 @@ public class CRBundleWindow : EditorWindow
                 var build = new AssetBundleBuild
                 {
                     assetBundleName = bundle.BundleName,
-                    assetNames = bundle.Assets.Select(a => a.Path).ToArray()
+                    assetNames = bundle.Assets.Select(a => a.Path).ToArray()  // Ensure full paths are used
                 };
 
                 bundle.ChangedSinceLastBuild = false;
@@ -444,16 +454,22 @@ public class CRBundleWindow : EditorWindow
             Debug.Log("Performing cleanup.");
             Refresh();
 
-            // Clean up empty bundle files
-            string directoryName = Path.GetFileName(CRBundleWindowSettings.Instance.buildOutputPath);
-            string emptyBundlePath = Path.Combine(CRBundleWindowSettings.Instance.buildOutputPath, directoryName);
-            if (File.Exists(emptyBundlePath))
+            // Clean up empty bundle files and their associated .manifest and .meta files
+            foreach (string bundleName in bundles.Keys)
             {
-                File.Delete(emptyBundlePath);
-                string manifestPath = emptyBundlePath + ".manifest";
-                if (File.Exists(manifestPath))
+                string bundlePath = Path.Combine(CRBundleWindowSettings.Instance.buildOutputPath, bundleName);
+                if (File.Exists(bundlePath) && new FileInfo(bundlePath).Length == 0)
                 {
-                    File.Delete(manifestPath);
+                    File.Delete(bundlePath);
+
+                    // Delete associated .manifest and .meta files
+                    string manifestPath = bundlePath + ".manifest";
+                    string bundleMetaPath = bundlePath + ".meta";
+                    string manifestMetaPath = manifestPath + ".meta";
+
+                    DeleteIfExists(manifestPath);
+                    DeleteIfExists(bundleMetaPath);
+                    DeleteIfExists(manifestMetaPath);
                 }
             }
 
@@ -462,7 +478,8 @@ public class CRBundleWindow : EditorWindow
             {
                 foreach (string file in Directory.GetFiles(CRBundleWindowSettings.Instance.buildOutputPath, "*.manifest", SearchOption.TopDirectoryOnly))
                 {
-                    File.Delete(file);
+                    DeleteIfExists(file);
+                    DeleteIfExists(file + ".meta");
                 }
             }
 
@@ -474,6 +491,14 @@ public class CRBundleWindow : EditorWindow
         }
     }
 
+    void DeleteIfExists(string path)
+    {
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
+
     void ClearConsole()
     {
         var logEntries = System.Type.GetType("UnityEditor.LogEntries,UnityEditor.dll");
@@ -481,7 +506,6 @@ public class CRBundleWindow : EditorWindow
         clearMethod.Invoke(null, null);
     }
 
-    // Method to check if manifests need to be retained
     bool NeedToKeepManifests()
     {
         // Implement logic to determine if manifests need to be kept
