@@ -91,9 +91,7 @@ static class RoundManagerPatch {
 	static void SpawnFloraInPatch(Random random, Vector3 patchOrigin, SpawnableFlora flora, ref int spawnCount) {
 		var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
 		for (int i = 0; i < targetSpawns; i++) {
-			Vector3 randomPosition = patchOrigin + new Vector3(random.NextFloat(-PATCH_SIZE, PATCH_SIZE), 0, random.NextFloat(-PATCH_SIZE, PATCH_SIZE));
-
-			if (!GetValidPoint(random, randomPosition, out RaycastHit hit))
+			if (!GetValidPoint(random, patchOrigin, out RaycastHit hit, PATCH_SIZE))
 				continue;
 
 			if(!flora.CanSpawnOn(hit.transform.gameObject))
@@ -108,9 +106,9 @@ static class RoundManagerPatch {
 		}
 	}
 
-	static bool GetValidPoint(Random random, Vector3 origin, out RaycastHit rayHit) {
+	static bool GetValidPoint(Random random, Vector3 origin, out RaycastHit rayHit, float radius = 5) {
 		rayHit = new();
-		Vector3 patchOrigin = GetRandomPointNearPointsOfInterest(random) + new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
+		Vector3 patchOrigin = origin + new Vector3(random.NextFloat(-radius, radius), 0, random.NextFloat(-radius, radius));
 		if (!NavMesh.SamplePosition(patchOrigin, out NavMeshHit hit, 20, NavMesh.AllAreas)) {
 			return false;
 		}
