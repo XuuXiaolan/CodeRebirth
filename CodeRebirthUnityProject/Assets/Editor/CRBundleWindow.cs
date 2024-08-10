@@ -406,6 +406,8 @@ public class CRBundleWindow : EditorWindow
         {
             Debug.Log("Starting the build process.");
 
+            List<AssetBundleBuild> bundleBuilds = new List<AssetBundleBuild>();
+
             foreach (var bundle in bundles.Values)
             {
                 if (bundle.Blacklisted)
@@ -426,29 +428,28 @@ public class CRBundleWindow : EditorWindow
                     continue;
                 }
 
-                // Prepare the AssetBundleBuild for this specific bundle
                 var build = new AssetBundleBuild
                 {
                     assetBundleName = bundle.BundleName,
-                    assetNames = bundle.Assets.Select(a => a.Path).ToArray()
+                    assetNames = bundle.Assets.Select(a => a.Path).ToArray()  // Ensure full paths are used
                 };
 
-                Debug.Log($"Building AssetBundle: {bundle.BundleName}");
-                BuildPipeline.BuildAssetBundles(
-                    CRBundleWindowSettings.Instance.buildOutputPath, 
-                    new AssetBundleBuild[] { build }, 
-                    BuildAssetBundleOptions.None, 
-                    BuildTarget.StandaloneWindows
-                );
-
-                // Mark the bundle as built
                 bundle.ChangedSinceLastBuild = false;
                 bundle.LastBuildSize = bundle.TotalSize;
                 EditorPrefs.SetBool($"{bundle.BundleName}_changed", false);
                 EditorPrefs.SetInt($"{bundle.BundleName}_size", (int)bundle.TotalSize);
 
-                Debug.Log($"Built bundle: {bundle.BundleName}");
+                bundleBuilds.Add(build);
             }
+
+            if (bundleBuilds.Count == 0)
+            {
+                Debug.LogWarning("No bundles selected for build.");
+                return;
+            }
+
+            Debug.Log($"Building {bundleBuilds.Count} bundle(s)!");
+            BuildPipeline.BuildAssetBundles(CRBundleWindowSettings.Instance.buildOutputPath, bundleBuilds.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
 
             Debug.Log("Performing cleanup.");
             Refresh();

@@ -10,78 +10,47 @@ public class MarkChangedBundles : AssetPostprocessor
     {
         try
         {
-            // Handle imported assets
-            foreach (string asset in importedAssets)
-            {
-                HandleAsset(asset, isDeleted: false);
-            }
+            List<string> allAssets = new List<string>(importedAssets);
+            allAssets.AddRange(deletedAssets);
+            allAssets.AddRange(movedAssets);
 
-            // Handle deleted assets
-            foreach (string asset in deletedAssets)
+            foreach (string asset in allAssets)
             {
-                HandleAsset(asset, isDeleted: true);
-            }
-
-            // Handle moved assets
-            for (int i = 0; i < movedAssets.Length; i++)
-            {
-                string oldAssetPath = movedFromAssetPaths[i];
-                string newAssetPath = movedAssets[i];
-
-                // Mark the original bundle as changed due to asset move
-                if (File.Exists(oldAssetPath))
+                string extension = Path.GetExtension(asset).ToLower();
+                if (extension == ".shader" || extension == ".shadergraph")
                 {
-                    HandleAsset(oldAssetPath, isDeleted: true);
+                    continue;
                 }
 
-                // Mark the new bundle as changed due to asset move
-                HandleAsset(newAssetPath, isDeleted: false);
+                string bundle = AssetDatabase.GetImplicitAssetBundleName(asset);
+                if (!string.IsNullOrEmpty(bundle) && CRBundleWindow.bundles.TryGetValue(bundle, out CRBundleWindow.BundleBuildSettings settings))
+                {
+                    string name = Path.GetFileName(asset);
+
+                    if (CRBundleWindow.logChangedFiles)
+                    {
+                        Debug.Log($"Changed file: \"{name}\" in bundle: \"{bundle}\"");
+                    }
+
+                    if (!settings.ChangedSinceLastBuild)
+                    {
+                        Debug.Log($"Bundle: {settings.BundleName} has unbuilt changes.");
+                        settings.ChangedSinceLastBuild = true;
+                        EditorPrefs.SetBool($"{settings.BundleName}_changed", true);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(bundle))
+                    {
+                        Debug.LogWarning($"Asset \"{asset}\" does not belong to any known bundle or the bundle is not tracked.");
+                    }
+                }
             }
         }
         catch (Exception e)
         {
             Debug.LogError($"An error occurred during asset post-processing: {e.Message}\n{e.StackTrace}");
-        }
-    }
-
-    static void HandleAsset(string assetPath, bool isDeleted)
-    {
-        // Skip processing if the asset is a shader or shadergraph file
-        if (assetPath.EndsWith(".shader", StringComparison.OrdinalIgnoreCase) || assetPath.EndsWith(".shadergraph", StringComparison.OrdinalIgnoreCase))
-        {
-            Debug.Log($"Ignoring shader or shadergraph file: \"{assetPath}\".");
-            return;
-        }
-
-        // Skip processing if the asset is marked as deleted and doesn't exist
-        if (isDeleted && !File.Exists(assetPath))
-        {
-            Debug.LogWarning($"Asset \"{assetPath}\" is deleted and does not exist.");
-            return;
-        }
-
-        try
-        {
-            string bundle = AssetDatabase.GetImplicitAssetBundleName(assetPath);
-            if (!string.IsNullOrEmpty(bundle) && CRBundleWindow.bundles.TryGetValue(bundle, out CRBundleWindow.BundleBuildSettings settings))
-            {
-                if (CRBundleWindow.logChangedFiles)
-                {
-                    string action = isDeleted ? "Deleted" : "Changed";
-                    Debug.Log($"{action} file: \"{assetPath}\" in bundle: \"{bundle}\"");
-                }
-
-                if (!settings.ChangedSinceLastBuild)
-                {
-                    settings.ChangedSinceLastBuild = true;
-                    EditorPrefs.SetBool($"{settings.BundleName}_changed", true);
-                    Debug.Log($"Bundle: {settings.BundleName} has unbuilt changes.");
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to handle asset \"{assetPath}\". Error: {e.Message}");
         }
     }
 }
