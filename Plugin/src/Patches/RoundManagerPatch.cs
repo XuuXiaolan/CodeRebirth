@@ -13,6 +13,7 @@ using CodeRebirth.Util;
 using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using System.Diagnostics;
+using Random = System.Random;
 
 namespace CodeRebirth.Patches;
 
@@ -36,17 +37,78 @@ static class RoundManagerPatch {
 		
 		Stopwatch timer = new();
 		timer.Start();
+		
+		var validFlora = GetValidFlora();
+
+		foreach (var tagGroup in validFlora) {
+			foreach (SpawnableFlora flora in tagGroup) {
+				SpawnFlora(random, flora, ref spawnCount);
+			}
+		}
+		
+		timer.Stop();
+		Plugin.ExtendedLogging($"Spawned {spawnCount} flora in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
+	}
+
+	static void SpawnFlora(Random random, SpawnableFlora flora, ref int spawnCount) {
+		var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
+		for (int i = 0; i < targetSpawns; i++)
+		{
+			if(!TryGetValidFloraSpawnPoint(random, out RaycastHit hit))
+				continue; // spawn failed
+			
+			bool isValid = true;
+			foreach (string floorTag in flora.blacklistedTags)
+			{
+				if (hit.transform.gameObject.CompareTag(floorTag))
+				{
+					isValid = false;
+					break;
+				}
+			}
+			if (!isValid) continue;
+
+			Vector3 spawnPosition = hit.point;
+			Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+			GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
+			spawnedFlora.transform.up = hit.normal;
+			spawnCount++;
+		}
+	}
+
+	static bool TryGetValidFloraSpawnPoint(Random random, out RaycastHit hit) {
+		Vector3 basePosition = GetRandomPointNearPointsOfInterest(random);
+		Vector3 offset = new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
+		Vector3 randomPosition = basePosition + offset;
+
+		hit = default;
+
+		if (!NavMesh.SamplePosition(randomPosition, out NavMeshHit navMeshHit, 20f, NavMesh.AllAreas))
+			return false;
+		
+		
+		Vector3 navMeshPosition = navMeshHit.position;
+		Vector3 vector = navMeshPosition + (Vector3.up * 2);
+
+		if (!Physics.Raycast(vector, Vector3.down, out hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) 
+			return false;
+
+		return true;
+	}
+
+	static IEnumerable<IGrouping<FloraTag, SpawnableFlora>> GetValidFlora() {
 		// Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
 		var tagToMoonLists = spawnableFlora
-			.GroupBy(flora => flora.floraTag)
-			.ToDictionary(
-				g => g.Key,
-				g => new
-				{
-					MoonsWhiteList = g.First().moonsWhiteList,
-					MoonsBlackList = g.First().moonsBlackList
-				}
-			);
+							 .GroupBy(flora => flora.floraTag)
+							 .ToDictionary(
+								 g => g.Key,
+								 g => new
+								 {
+									 MoonsWhiteList = g.First().moonsWhiteList,
+									 MoonsBlackList = g.First().moonsBlackList
+								 }
+							 );
 
 		// Cache the valid tags based on the current moon configuration
 		Dictionary<FloraTag, bool> validTags = new Dictionary<FloraTag, bool>();
@@ -58,50 +120,7 @@ static class RoundManagerPatch {
 			}
 		}
 
-		foreach (var tagGroup in spawnableFlora.GroupBy(flora => flora.floraTag)) {
-			if (!validTags.TryGetValue(tagGroup.Key, out bool isLevelValid) || !isLevelValid) {
-				continue;
-			}
-			foreach (SpawnableFlora flora in tagGroup) {
-				var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
-				for (int i = 0; i < targetSpawns; i++)
-				{
-					Vector3 basePosition = GetRandomPointNearPointsOfInterest(random);
-					Vector3 offset = new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
-					Vector3 randomPosition = basePosition + offset;
-
-					// Use NavMesh.SamplePosition to get the nearest point on the NavMesh
-					if (NavMesh.SamplePosition(randomPosition, out NavMeshHit navMeshHit, 20f, NavMesh.AllAreas))
-					{
-						Vector3 navMeshPosition = navMeshHit.position;
-						Vector3 vector = navMeshPosition + (Vector3.up * 2);
-
-						if (Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
-						{
-							bool isValid = true;
-							foreach (string floorTag in flora.blacklistedTags)
-							{
-								if (hit.transform.gameObject.CompareTag(floorTag))
-								{
-									isValid = false;
-									break;
-								}
-							}
-							if (!isValid) continue;
-
-							Vector3 spawnPosition = hit.point;
-							Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-
-							GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
-							spawnedFlora.transform.up = hit.normal;
-							spawnCount++;
-						}
-					}
-				}
-			}
-		}
-		timer.Stop();
-		Plugin.ExtendedLogging($"Spawned {spawnCount} flora in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
+		return spawnableFlora.GroupBy(flora => flora.floraTag).Where(it => validTags.TryGetValue(it.Key, out bool isLevelValid) && isLevelValid);
 	}
 
 	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random) {
