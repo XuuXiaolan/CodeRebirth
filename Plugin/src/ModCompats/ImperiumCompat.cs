@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
-namespace CodeRebirth.Dependency;
 
+namespace CodeRebirth.src.ModCompats;
 public static class ImperiumCompatibilityChecker {
     public static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("giosuel.Imperium"); } }
     

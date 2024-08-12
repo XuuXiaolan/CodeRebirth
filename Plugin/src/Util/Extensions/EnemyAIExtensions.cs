@@ -1,6 +1,6 @@
-﻿using CodeRebirth.EnemyStuff;
+﻿using CodeRebirth.src.Content.Enemies;
 
-namespace CodeRebirth.Util.Extensions;
+namespace CodeRebirth.src.Util.Extensions;
 
 // these really should just be handled by the enemy ai 
 public static class EnemyAIExtensions {

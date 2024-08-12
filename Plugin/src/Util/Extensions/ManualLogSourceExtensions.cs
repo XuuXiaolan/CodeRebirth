@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using BepInEx.Logging;
 
-namespace CodeRebirth.Util.Extensions;
+namespace CodeRebirth.src.Util.Extensions;
 
 public static class ManualLogSourceExtensions {
 	[Conditional("DEBUG")]

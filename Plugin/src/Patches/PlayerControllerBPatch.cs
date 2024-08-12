@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CodeRebirth.Util.PlayerManager;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -8,8 +8,7 @@ using MonoMod.Cil;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace CodeRebirth.Patches;
-
+namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(GameNetcodeStuff.PlayerControllerB))]
 static class PlayerControllerBPatch {
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]

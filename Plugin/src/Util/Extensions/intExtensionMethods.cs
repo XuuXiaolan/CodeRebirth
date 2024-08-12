@@ -1,6 +1,6 @@
-﻿using CodeRebirth.EnemyStuff;
+﻿using CodeRebirth.src.Content.Enemies;
 
-namespace CodeRebirth.Util.Extensions;
+namespace CodeRebirth.src.Util.Extensions;
 
 // this is cooked :sob:
 public static class IntExtensionMethods {

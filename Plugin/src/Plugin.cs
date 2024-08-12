@@ -3,18 +3,18 @@ using System.Reflection;
 using UnityEngine;
 using BepInEx;
 using BepInEx.Logging;
-using CodeRebirth.Configs;
+using CodeRebirth.src.Configs;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.Keybinds;
+using CodeRebirth.src.Keybinds;
 using HarmonyLib;
-using CodeRebirth.Util;
-using CodeRebirth.Util.AssetLoading;
-using CodeRebirth.Util.Extensions;
-using CodeRebirth.Dependency;
-using CodeRebirth.Patches;
+using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirth.src.Util.Extensions;
+using CodeRebirth.src.ModCompats;
+using CodeRebirth.src.Patches;
+using CodeRebirth.src.Util;
 
-namespace CodeRebirth;
+namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]

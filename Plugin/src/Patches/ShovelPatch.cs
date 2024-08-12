@@ -1,11 +1,10 @@
-﻿using CodeRebirth.WeaponStuff;
-using CodeRebirth.Util.Extensions;
+﻿using CodeRebirth.src.Content.Weapons;
+using CodeRebirth.src.Util.Extensions;
 using HarmonyLib;
 using System.Collections.Generic;
 using GameNetcodeStuff;
 
-namespace CodeRebirth.Patches;
-
+namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(Shovel))]
 static class ShovelPatch {
 	public static System.Random? random;

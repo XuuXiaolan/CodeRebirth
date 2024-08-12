@@ -1,9 +1,8 @@
-﻿using CodeRebirth.ItemStuff;
+﻿using CodeRebirth.src.Content.Items;
 using HarmonyLib;
 using UnityEngine;
 
-namespace CodeRebirth.Patches;
-
+namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(KeyItem))]
 static class KeyItemPatch {
 	[HarmonyPatch(nameof(KeyItem.ItemActivate)), HarmonyPostfix]

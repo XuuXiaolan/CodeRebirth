@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using CodeRebirth.MapStuff;
-using CodeRebirth.Util.Extensions;
-using CodeRebirth.Util.Spawning;
+using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.Util.Extensions;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
-using CodeRebirth.Util;
+using CodeRebirth.src.Util;
 using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using System.Diagnostics;
 using Random = System.Random;
 
-namespace CodeRebirth.Patches;
-
+namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
 static class RoundManagerPatch {
 	internal static List<SpawnableFlora> spawnableFlora = [];

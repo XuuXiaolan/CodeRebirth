@@ -6,7 +6,7 @@ using UnityEngine;
 using NetworkPrefabs = LethalLib.Modules.NetworkPrefabs;
 using Utilities = LethalLib.Modules.Utilities;
 
-namespace CodeRebirth.Util.AssetLoading;
+namespace CodeRebirth.src.Util.AssetLoading;
 public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
 {
 	protected AssetBundle bundle;

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using CodeRebirth.WeatherStuff;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace CodeRebirth.Util.PlayerManager;
+namespace CodeRebirth.src.Util;
 public enum CodeRebirthStatusEffects
 {
     None,

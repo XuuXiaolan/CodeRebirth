@@ -5,6 +5,7 @@
 - Add two more gems and make them more common.
 - Make tornado config allowing them to spawn on specific moons.
 - Item crate add networked opening speed.
-- Update readme.
-- Fix the tornado particles not showing.
-- Look into metal crate giving disabled items.
+- Redo Icy hammer
+- implement Hoverboard changes from issues.
+- Fix collisions on sapphire gem.
+- Make sure natures mace works.

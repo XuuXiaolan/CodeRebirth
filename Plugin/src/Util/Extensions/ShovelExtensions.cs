@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeRebirth.Util.Extensions;
+namespace CodeRebirth.src.Util.Extensions;
 
 public static class ShovelExtensions {
 	public static int CriticalHit(int force, System.Random random, float critChance) {

@@ -1,18 +1,13 @@
-﻿using CodeRebirth.Dependency;
-using CodeRebirth.Util.Spawning;
-using CodeRebirth.Util.Extensions;
-using CodeRebirth.WeatherStuff;
+﻿using CodeRebirth.src.Content.Weathers;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using GameNetcodeStuff;
-using CodeRebirth.Util.PlayerManager;
+using CodeRebirth.src.Util;
 using WeatherRegistry;
-using System.Runtime.CompilerServices;
+using CodeRebirth.src.Util.Extensions;
 
-namespace CodeRebirth.Patches;
-
+namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
 static class StartOfRoundPatch {
 	[HarmonyPatch(nameof(StartOfRound.Awake))]

@@ -1,13 +1,13 @@
 using System;
-using CodeRebirth.MapStuff;
-using CodeRebirth.EnemyStuff;
+using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.Content.Enemies;
 using Unity.Netcode;
 using UnityEngine;
 using Random = System.Random;
 using System.Collections.Generic;
-using CodeRebirth.Util.Extensions;
+using CodeRebirth.src.Util.Extensions;
 
-namespace CodeRebirth.Util.Spawning;
+namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
     private static Random random = null!;
