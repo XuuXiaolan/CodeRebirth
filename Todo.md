@@ -5,7 +5,5 @@
 - Add two more gems and make them more common.
 - Make tornado config allowing them to spawn on specific moons.
 - Item crate add networked opening speed.
-- Redo Icy hammer
 - implement Hoverboard changes from issues.
-- Fix collisions on sapphire gem.
 - Make sure natures mace works.

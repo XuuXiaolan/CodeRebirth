@@ -1,4 +1,5 @@
 ## v0.5.0
+- Fixed Sapphire gem colliders.
 - Fixed nature's mace stuff not doing its thing right with healing players.
 - Adjusted Icy Hammer to only slow 100% on crit and only deal 1 damage.
 - Added biomes.
