@@ -46,7 +46,7 @@ public class CRBundleWindow : EditorWindow
         private void ProcessAsset(string assetPath, HashSet<string> processedAssets)
         {
             // Only consider an asset processed if its full path is already in the processed list
-            if (processedAssets.Contains(assetPath) || assetPath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) || assetPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+            if (processedAssets.Contains(assetPath))
                 return;
 
             FileInfo fileInfo = new FileInfo(assetPath);

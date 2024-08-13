@@ -8,23 +8,21 @@ using UnityEngine.InputSystem;
 using System.Linq;
 using UnityEngine.AI;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirth.src.Content.Items;
 public class Hoverboard : GrabbableObject, IHittable {
     public Rigidbody hb = null!;
     public InteractTrigger trigger = null!;
     private bool turnedOn = false;
-    public float mult;
     public GameObject hoverboardSeat = null!;
-    public Transform[] anchors = new Transform[4];
+    public Transform[] anchors = new Transform[10];
     private PlayerControllerB? playerControlling;
-    private RaycastHit[] hits = new RaycastHit[4];
+    private RaycastHit[] hits = new RaycastHit[10];
     private bool _isHoverForwardHeld = false;
     private bool jumpCooldown = true;
     public Transform hoverboardChild = null!;
     private HoverboardTypes hoverboardType = HoverboardTypes.Regular;
-    private float playerMovementSpeed = 0f;
+    private bool weightApplied = false;
     public enum HoverboardMode {
         None,
         Held,
@@ -39,22 +37,11 @@ public class Hoverboard : GrabbableObject, IHittable {
     private bool isAdjusting = false;
     private Quaternion targetRotation;
     // Variables to store initial anchor positions and rotations
-    private Vector3[] initialAnchorPositions = new Vector3[4];
-    private Quaternion[] initialAnchorRotations = new Quaternion[4];
-    private bool collidersIgnored = false;
+    private Vector3[] initialAnchorPositions = new Vector3[10];
+    private Quaternion[] initialAnchorRotations = new Quaternion[10];
 
     public override void Start() {
         StartBaseImportant();
-
-        System.Random random = new System.Random();
-        int hoverboardTypeIndex = random.NextInt(0, 2);
-        switch (hoverboardTypeIndex) {
-            case 0:
-                hoverboardType = HoverboardTypes.Regular;
-                break;
-            default:
-                break;
-        }
         switch (hoverboardType) {
             case HoverboardTypes.Regular:
                 break;
@@ -80,8 +67,7 @@ public class Hoverboard : GrabbableObject, IHittable {
             initialAnchorPositions[i] = anchors[i].localPosition;
             initialAnchorRotations[i] = anchors[i].localRotation;
         }
-        if (!IsHost) return;
-        SetHoverboardStateClientRpc(0);
+        SetHoverboardState(0);
     }
 
     public void OnInteract(PlayerControllerB player) {
@@ -92,15 +78,9 @@ public class Hoverboard : GrabbableObject, IHittable {
     }
 
     public IEnumerator OnInteractCoroutine(PlayerControllerB player) {
-        if (IsHost) {
-            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
-            yield return new WaitUntil(() => playerControlling == player);
-            SetHoverboardStateClientRpc(2);
-        } else {
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
-            yield return new WaitUntil(() => playerControlling == player);
-            SetHoverboardStateServerRpc(2);
-        }
+        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+        yield return new WaitUntil(() => playerControlling == player);
+        SetHoverboardStateServerRpc(2);
     }
 
     public void ModeHandler(InputAction.CallbackContext context) {
@@ -108,17 +88,9 @@ public class Hoverboard : GrabbableObject, IHittable {
         var btn = (ButtonControl)context.control;
         if (btn.wasPressedThisFrame) {
             if (hoverboardMode == HoverboardMode.Mounted) {
-                if (IsHost) {
-                    SetHoverboardStateClientRpc(1);
-                } else {
-                    SetHoverboardStateServerRpc(1);
-                }
+                SetHoverboardStateServerRpc(1);
             } else if (hoverboardMode == HoverboardMode.Held) {
-                if (IsHost) {
-                    SetHoverboardStateClientRpc(2);
-                } else {
-                    SetHoverboardStateServerRpc(2);
-                }
+                SetHoverboardStateServerRpc(2);
             }
             Plugin.InputActionsInstance.SwitchMode.performed += ModeHandler;
         }
@@ -128,17 +100,9 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         var btn = (ButtonControl)context.control;
         if (btn.wasPressedThisFrame) {
-            if (IsHost) {
-                SetHoverboardHeldClientRpc(true);
-            } else {
-                SetHoverboardHeldServerRpc(true);
-            }
+            SetHoverboardHeldServerRpc(true);
         } else if (btn.wasReleasedThisFrame) {
-            if (IsHost) {
-                SetHoverboardHeldClientRpc(false);
-            } else {
-                SetHoverboardHeldServerRpc(false);
-            }
+            SetHoverboardHeldServerRpc(false);
         }
     }
 
@@ -154,10 +118,10 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (playerControlling == null) return;
         if (GameNetworkManager.Instance.localPlayerController == playerControlling) {
             if (hoverboardMode != HoverboardMode.Held && turnedOn) {
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 10; i++) {
                     ApplyForce(anchors[i], hits[i]);
                 }
-            } // make the force only apply to raycasts that are 0.3 to 1 of the dot product of the up vector 
+            } 
         }
     }
 
@@ -170,11 +134,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         if (playerControlling == null) return;
         if (playerControlling == GameNetworkManager.Instance.localPlayerController && Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 5) {
-            if (IsHost) {
-                SetHoverboardStateClientRpc(1);
-            } else {
-                SetHoverboardStateServerRpc(1);
-            }
+            SetHoverboardStateServerRpc(1);
             return;
         }
         if (playerControlling == GameNetworkManager.Instance.localPlayerController && hoverboardMode == HoverboardMode.Mounted) {
@@ -234,20 +194,9 @@ public class Hoverboard : GrabbableObject, IHittable {
     }
 
     public void DropHoverboard() {
-        if (IsHost) {
-            SetHoverboardStateClientRpc(0);
-            SetTargetClientRpc(-1);
-        } else {
-            SetHoverboardStateServerRpc(0);
-            SetTargetServerRpc(-1);
-        }
+        SetHoverboardStateServerRpc(0);
+        SetTargetServerRpc(-1);
         SwitchModeExtension(true);
-    }
-
-    public bool IsPointOnNavMesh(Vector3 position, float maxDistance) {
-        NavMeshHit hit;
-        bool hasNavMesh = NavMesh.SamplePosition(position, out hit, maxDistance, NavMesh.AllAreas);
-        return hasNavMesh;
     }
 
     private void HandleMovement() {
@@ -288,7 +237,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
             float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 3f : 100f);
             // Debug log for force and anchor positions
-            hb.AddForceAtPosition(hoverboardChild.up * force * mult * 2f, anchor.position, ForceMode.Acceleration);
+            hb.AddForceAtPosition(hoverboardChild.up * force * 2f, anchor.position, ForceMode.Acceleration);
         }
     }
 
@@ -299,11 +248,9 @@ public class Hoverboard : GrabbableObject, IHittable {
 
     [ClientRpc]
     public void SetTargetClientRpc(int PlayerID) {
-        NetworkObject networkObject = GetComponent<NetworkObject>();
         if (PlayerID == -1 && playerControlling != null) {
-            playerControlling.playerActions.Movement.Jump.Enable();
-            playerControlling.playerActions.Movement.Look.Enable();
-            playerControlling.movementSpeed = playerMovementSpeed;
+            playerControlling.disableMoveInput = false;
+            playerControlling.disableLookInput = false;
             if (playerControlling.isInHangarShipRoom || StartOfRound.Instance.shipBounds.bounds.Contains(this.playerControlling.transform.position)) {
                 playerControlling.transform.SetParent(playerControlling.playersManager.elevatorTransform, true);
             } else {
@@ -323,9 +270,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         hoverboardChild.rotation = resetChildRotation;
         playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
-        if (IsServer) {
-            networkObject.ChangeOwnership(playerControlling.actualClientId);
-        }
+        if (IsServer) this.NetworkObject.ChangeOwnership(playerControlling.actualClientId);
         if (playerControlling == GameNetworkManager.Instance.localPlayerController && !playerControlling.GetCRPlayerData().ridingHoverboard) {
             DialogueSegment dialogue = new DialogueSegment {
                     speakerText = "Hoverboard Tooltips",
@@ -357,6 +302,10 @@ public class Hoverboard : GrabbableObject, IHittable {
 
     [ClientRpc]
     internal void SetHoverboardStateClientRpc(int state) {
+        SetHoverboardState(state);
+    }
+
+    private void SetHoverboardState(int state) {
         if (playerControlling == null && hoverboardMode != HoverboardMode.None) {
             Plugin.Logger.LogWarning($"Player controlling is null for me...");
         }
@@ -384,6 +333,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         HandleToolTips();
     }
+
     public void SwitchToMounted(PlayerControllerB playerCurrentlyControlling) {
         if (hoverboardMode == HoverboardMode.Held) {
             hoverboardChild.position = playerCurrentlyControlling.transform.position;
@@ -410,11 +360,11 @@ public class Hoverboard : GrabbableObject, IHittable {
         playerCurrentlyControlling.transform.SetParent(hoverboardSeat.transform, true);
         playerCurrentlyControlling.GetCRPlayerData().ridingHoverboard = true;
         hoverboardMode = HoverboardMode.Mounted;
-        if (!collidersIgnored) SetupCollidersIgnoringOrIncluding(true);
-        playerCurrentlyControlling.playerActions.Movement.Look.Disable();
-        playerCurrentlyControlling.playerActions.Movement.Jump.Disable();
-        playerMovementSpeed = playerCurrentlyControlling.movementSpeed;
-        playerCurrentlyControlling.movementSpeed = 0f;
+        if (weightApplied) playerCurrentlyControlling.carryWeight = Mathf.Clamp(playerCurrentlyControlling.carryWeight - 0.24f, 1, 1000);
+        weightApplied = false;
+        SetupCollidersIgnoringOrIncluding(true);
+        playerCurrentlyControlling.disableLookInput = true;
+        playerCurrentlyControlling.disableMoveInput = true;
         if (playerCurrentlyControlling == GameNetworkManager.Instance.localPlayerController) {
             StartCoroutine(TurnOnHoverboard());
         }
@@ -435,9 +385,10 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         playerCurrentlyControlling.GetCRPlayerData().ridingHoverboard = false;
         hoverboardMode = HoverboardMode.Held;
-        playerCurrentlyControlling.playerActions.Movement.Look.Enable();
-        playerCurrentlyControlling.playerActions.Movement.Jump.Enable();
-        playerCurrentlyControlling.movementSpeed = playerMovementSpeed;
+        playerCurrentlyControlling.disableLookInput = false;
+        playerCurrentlyControlling.disableMoveInput = false;
+        if (!weightApplied) playerCurrentlyControlling.carryWeight = Mathf.Clamp(playerCurrentlyControlling.carryWeight + 0.24f, 1, 1000);
+        weightApplied = true;
         hoverboardChild.position = playerCurrentlyControlling.transform.position + playerCurrentlyControlling.transform.right * 0.7f + playerCurrentlyControlling.transform.up * 1f;
         Quaternion rotationOffset = Quaternion.Euler(180, 180, -90); // Adjust to match correct facing direction
         hoverboardChild.rotation = playerCurrentlyControlling.transform.rotation * rotationOffset;
@@ -456,8 +407,12 @@ public class Hoverboard : GrabbableObject, IHittable {
                 this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             }
         }
-        if (collidersIgnored) SetupCollidersIgnoringOrIncluding(false);
-        if (playerControlling != null) playerControlling.GetCRPlayerData().ridingHoverboard = false;
+        SetupCollidersIgnoringOrIncluding(false);
+        if (playerControlling != null) {
+            playerControlling.GetCRPlayerData().ridingHoverboard = false;
+            if (weightApplied) playerControlling.carryWeight = Mathf.Clamp(playerControlling.carryWeight - 0.24f, 1, 1000);
+            weightApplied = false;
+        }
         turnedOn = false;
         _isHoverForwardHeld = false;
         hb.useGravity = true;
@@ -467,12 +422,9 @@ public class Hoverboard : GrabbableObject, IHittable {
     public IEnumerator TurnOnHoverboard() {
         yield return new WaitForSeconds(1f);
         if (hoverboardMode != HoverboardMode.Mounted) yield break;
-        if (IsHost) {
-            TurnOnHoverboardClientRpc();
-        } else {
-            TurnOnHoverboardServerRpc();
-        }
+        TurnOnHoverboardServerRpc();
     }
+
     [ServerRpc(RequireOwnership = false)]
     public void TurnOnHoverboardServerRpc() {
         TurnOnHoverboardClientRpc();
@@ -607,20 +559,17 @@ public class Hoverboard : GrabbableObject, IHittable {
 	}
     
     public void SetupCollidersIgnoringOrIncluding(bool ignore) {
-        collidersIgnored = ignore;
-        Collider hbCollider = hb.GetComponent<Collider>();
-        Collider hoverboardChildCollider = hoverboardChild.GetComponent<Collider>();
-        Collider hoverboardChildChildrenCollider = hoverboardChild.GetComponentInChildren<Collider>();
         foreach (var player in StartOfRound.Instance.allPlayerScripts) {
-            SimplifyCollidersIgnore(hbCollider, player, ignore);
-            SimplifyCollidersIgnore(hoverboardChildCollider, player, ignore);
-            SimplifyCollidersIgnore(hoverboardChildChildrenCollider, player, ignore);
+            foreach (var collider in this.GetComponentsInChildren<Collider>()) {
+                SimplifyCollidersIgnore(collider, player, ignore);
+            }
         }
     }
+
     public void SimplifyCollidersIgnore(Collider hoverboardCollider, PlayerControllerB player, bool ignore) {
         Physics.IgnoreCollision(hoverboardCollider, player.playerCollider, ignore);
-        Physics.IgnoreCollision(hoverboardCollider, player.playerRigidbody.GetComponent<Collider>(), ignore);
-        Physics.IgnoreCollision(hoverboardCollider, player.GetComponent<CharacterController>().GetComponent<Collider>(), ignore);
+        Physics.IgnoreCollision(hoverboardCollider, player.playerRigidbody.GetComponent<Collider>(), true);
+        Physics.IgnoreCollision(hoverboardCollider, player.GetComponent<CharacterController>().GetComponent<Collider>(), true);
         Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("PlayerPhysicsBox").GetComponent<BoxCollider>(), ignore);
         Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("PlayerPhysicsBox").GetComponent<Rigidbody>().GetComponent<Collider>(), ignore);
         Physics.IgnoreCollision(hoverboardCollider, player.transform.Find("Misc").Find("Cube").GetComponent<BoxCollider>(), ignore);
