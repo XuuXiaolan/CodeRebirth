@@ -8,3 +8,4 @@
 - implement Hoverboard changes from issues.
 - Make sure natures mace works.
 - More hoverboard work, make sure pr is mostly done and that it's smoother with more anchors etc.
+- Add an internally battery to the hoverboard for boosts since sprint boost doesnt work rn.

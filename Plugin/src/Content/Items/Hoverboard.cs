@@ -15,9 +15,9 @@ public class Hoverboard : GrabbableObject, IHittable {
     public InteractTrigger trigger = null!;
     private bool turnedOn = false;
     public GameObject hoverboardSeat = null!;
-    public Transform[] anchors = new Transform[10];
+    public Transform[] anchors = new Transform[4];
     private PlayerControllerB? playerControlling;
-    private RaycastHit[] hits = new RaycastHit[10];
+    private RaycastHit[] hits = new RaycastHit[4];
     private bool _isHoverForwardHeld = false;
     private bool jumpCooldown = true;
     public Transform hoverboardChild = null!;
@@ -37,8 +37,8 @@ public class Hoverboard : GrabbableObject, IHittable {
     private bool isAdjusting = false;
     private Quaternion targetRotation;
     // Variables to store initial anchor positions and rotations
-    private Vector3[] initialAnchorPositions = new Vector3[10];
-    private Quaternion[] initialAnchorRotations = new Quaternion[10];
+    private Vector3[] initialAnchorPositions = new Vector3[4];
+    private Quaternion[] initialAnchorRotations = new Quaternion[4];
 
     public override void Start() {
         StartBaseImportant();
@@ -118,7 +118,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (playerControlling == null) return;
         if (GameNetworkManager.Instance.localPlayerController == playerControlling) {
             if (hoverboardMode != HoverboardMode.Held && turnedOn) {
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 4; i++) {
                     ApplyForce(anchors[i], hits[i]);
                 }
             } 
@@ -237,7 +237,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
             float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 3f : 100f);
             // Debug log for force and anchor positions
-            hb.AddForceAtPosition(hoverboardChild.up * force * 2f, anchor.position, ForceMode.Acceleration);
+            hb.AddForceAtPosition(hoverboardChild.up * force * 8f, anchor.position, ForceMode.Acceleration);
         }
     }
 
