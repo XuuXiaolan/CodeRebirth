@@ -57,7 +57,7 @@ static class PlayerControllerBPatch {
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)
     {
         orig(self);
-        if (self.GetCRPlayerData() != null && self.TryGetHoverboardRiding() != null)
+        if (self.GetCRPlayerData() != null && self.TryGetHoverboardRiding() != null && self.currentlyHeldObjectServer != null && ((self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
         {
             Hoverboard? hoverboard = self.TryGetHoverboardRiding();
             if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self == GameNetworkManager.Instance.localPlayerController) {
