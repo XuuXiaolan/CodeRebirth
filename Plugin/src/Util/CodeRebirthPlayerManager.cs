@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CodeRebirth.src.Content.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -76,17 +77,18 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
 public class CRPlayerData
 {
     public static Dictionary<PlayerControllerB, CRPlayerData>? dataForPlayer;
-    public bool Water;
-    public bool Electric;
-    public bool Fire;
-    public bool Smoke;
-    public bool Windy;
-    public bool Blood;
-    public bool ridingHoverboard;
-    public bool holdingWallet;
+    public bool Water = false;
+    public bool Electric = false;
+    public bool Fire = false;
+    public bool Smoke = false;
+    public bool Windy = false;
+    public bool Blood = false;
+    public bool ridingHoverboard = false;
+    public bool holdingWallet = false;
     public bool flingingAway = false;
     public bool flung = false;
-    public List<Collider>? playerColliders;
+    public Hoverboard? hoverboardRiding;
+    public List<Collider>? playerColliders = null;
     public AnimatorOverrideController? playerOverrideController;
 }
 
@@ -94,4 +96,7 @@ internal static class PlayerControllerBExtensions
 {
     internal static CRPlayerData GetCRPlayerData(this PlayerControllerB player) =>
         CodeRebirthPlayerManager.dataForPlayer[player];
+
+    internal static Hoverboard? TryGetHoverboardRiding(this PlayerControllerB player) =>
+        player.GetCRPlayerData().hoverboardRiding;
 }

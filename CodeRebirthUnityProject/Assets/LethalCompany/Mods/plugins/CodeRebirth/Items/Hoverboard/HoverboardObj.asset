@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: 0
   itemName: Hoverboard
   spawnPositionTypes: []
-  twoHanded: 1
+  twoHanded: 0
   twoHandedAnimation: 0
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 0
@@ -32,10 +32,10 @@ MonoBehaviour:
   minValue: 10
   spawnPrefab: {fileID: 5677648857109473811, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
     type: 3}
-  requiresBattery: 0
-  batteryUsage: 0
+  requiresBattery: 1
+  batteryUsage: 60
   automaticallySetUsingPower: 0
-  itemIcon: {fileID: 21300000, guid: ad4641deff92d9b439f063928e057fb8, type: 3}
+  itemIcon: {fileID: 21300000, guid: ad0db5d71af6cbe44908c92bc6d86602, type: 3}
   grabAnim: 
   useAnim: 
   pocketAnim: 

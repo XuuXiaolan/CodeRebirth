@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using HarmonyLib;
@@ -50,6 +51,23 @@ static class PlayerControllerBPatch {
     public static void Init() {
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
+        On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
+    }
+
+    private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)
+    {
+        orig(self);
+        if (self.GetCRPlayerData() != null && self.TryGetHoverboardRiding() != null)
+        {
+            Hoverboard? hoverboard = self.TryGetHoverboardRiding();
+            if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self == GameNetworkManager.Instance.localPlayerController) {
+                HUDManager.Instance.batteryMeter.fillAmount = hoverboard.insertedBattery.charge / 1.3f;
+                HUDManager.Instance.batteryMeter.gameObject.SetActive(true);
+                HUDManager.Instance.batteryIcon.enabled = true;
+                var num4 = HUDManager.Instance.batteryMeter.fillAmount;
+                HUDManager.Instance.batteryBlinkUI.SetBool("blink", num4 < 0.2f && num4 > 0f);
+            }
+        }
     }
 
     private static void PlayerControllerB_CheckConditionsForSinkingInQuicksand(ILContext il)
