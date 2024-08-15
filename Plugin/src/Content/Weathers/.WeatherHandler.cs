@@ -42,6 +42,12 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         public TerminalKeyword TornadoTerminalKeyword { get; private set; } = null!;
     }
 
+    public class GodRayAssets(string bundleName) : AssetBundleLoader<GodRayAssets>(bundleName) {
+        [LoadFromBundle("GodRayManager.prefab")]
+        public GameObject GodRayManagerPrefab { get; private set; } = null!;
+    }
+
+    public GodRayAssets GodRay { get; private set; } = null!;
     public MeteoriteAssets Meteorite { get; private set; } = null!;
     public TornadoAssets Tornado { get; private set; } = null!;
     public Weather MeteorShowerWeather { get; private set; } = null!;

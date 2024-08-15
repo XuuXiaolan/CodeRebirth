@@ -259,7 +259,7 @@ public class CodeRebirthConfig {
                                             "Spawn Weight of the epic axe in moons.");
         #endregion
         #region Redwood
-        /*ConfigRedwoodCanEatOldBirds = configFile.Bind("Redwood Options",
+        ConfigRedwoodCanEatOldBirds = configFile.Bind("Redwood Options",
                                             "Redwood | Can Eat Old Birds",
                                             true,
                                             "Whether redwood can eat old birds.");
@@ -323,7 +323,7 @@ public class CodeRebirthConfig {
                                             new ConfigDescription(
                                                 "Redwood in ship volume.",
                                                 new AcceptableValueRange<float>(0, 1f)
-                                            ));*/
+                                            ));
         #endregion
         #region Meteors
         ConfigMeteorShowerEnabled = configFile.Bind("MeteorShower Options",

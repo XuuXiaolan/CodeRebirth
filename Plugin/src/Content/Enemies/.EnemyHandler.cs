@@ -51,15 +51,15 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         public Item GoldenEggItem { get; private set; } = null!;
     }
 
-    public class RedwoodGiantAssets(string bundleName) : AssetBundleLoader<RedwoodGiantAssets>(bundleName) {
-        [LoadFromBundle("RedwoodGiantObj.asset")]
-        public EnemyType RedwoodGiantEnemyType { get; private set; } = null!;
+    public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName) {
+        [LoadFromBundle("RedwoodTitanObj.asset")]
+        public EnemyType RedwoodTitanEnemyType { get; private set; } = null!;
 
-        [LoadFromBundle("RedwoodGiantTN.asset")]
-        public TerminalNode RedwoodGiantTerminalNode { get; private set; } = null!;
+        [LoadFromBundle("RedwoodTitanTN.asset")]
+        public TerminalNode RedwoodTitanTerminalNode { get; private set; } = null!;
 
-        [LoadFromBundle("RedwoodGiantTK.asset")]
-        public TerminalKeyword RedwoodGiantTerminalKeyword { get; private set; } = null!;
+        [LoadFromBundle("RedwoodTitanTK.asset")]
+        public TerminalKeyword RedwoodTitanTerminalKeyword { get; private set; } = null!;
         
         [LoadFromBundle("RedwoodHeart.asset")]
         public Item RedwoodHeart { get; private set; } = null!;
@@ -71,16 +71,16 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
     public SnailCatAssets SnailCat { get; private set; } = null!;
     // public ScrapMasterAssets ScrapMaster { get; private set; }
     public PjonkGooseAssets PjonkGoose { get; private set; } = null!;
-    public RedwoodGiantAssets RedwoodGiant { get; private set; } = null!;
+    public RedwoodTitanAssets RedwoodTitan { get; private set; } = null!;
 
     public EnemyHandler() {
         // ScrapMaster = new ScrapMasterAssets("coderebirthasset");
         // Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
-        if (false) {
-            RedwoodGiant = new RedwoodGiantAssets("redwoodgiantassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodGiant.RedwoodGiantEnemyType, RedwoodGiant.RedwoodGiantTerminalNode, RedwoodGiant.RedwoodGiantTerminalKeyword, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
-            Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodGiant.RedwoodHeart);
+        if (Plugin.ModConfig.ConfigRedwoodEnabled.Value) {
+            RedwoodTitan = new RedwoodTitanAssets("redwoodtitanassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodTitan.RedwoodTitanEnemyType, RedwoodTitan.RedwoodTitanTerminalNode, RedwoodTitan.RedwoodTitanTerminalKeyword, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
+            Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodTitan.RedwoodHeart);
         }
         if (Plugin.ModConfig.ConfigCutieFlyEnabled.Value) {
             Butterfly = new ButterflyAssets("cutieflyassets");
