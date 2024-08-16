@@ -93,7 +93,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         }
 
         // TODO: swap out with actual config.
-        if (true) {
+        if (false) {
             PjonkGoose = new PjonkGooseAssets("pjonkgooseassets");
             RegisterEnemyWithConfig("All:500", PjonkGoose.PjonkGooseEnemyType, PjonkGoose.PjonkGooseTerminalNode, PjonkGoose.PjonkGooseTerminalKeyword, 3, 1);
             RegisterScrapWithConfig("All:0", PjonkGoose.GoldenEggItem);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Rendering.HighDefinition;
-using Unity.Netcode;
 using CodeRebirth.src.Util.Extensions;
 using System.Collections;
 
@@ -26,13 +25,8 @@ struct GodRaySpotlightData
 
     public GodRaySpotlightData(Vector3 topPoint, float topRadius, Vector3 bottomPoint, float bottomRadius, Color colour)
     {
-        // dx * r/dr
-        float dx = (topPoint - bottomPoint).magnitude;
-        float dr = bottomRadius - topRadius;
-        float x = dx * topRadius / dr;
-        location = topPoint + (topPoint - bottomPoint).normalized * x;
-
-        rotation = Quaternion.FromToRotation(Vector3.forward, bottomPoint - topPoint);
+        location = CalculateSpotlightLocation(topPoint, topRadius, bottomPoint, bottomRadius);
+    rotation = Quaternion.FromToRotation(Vector3.forward, (bottomPoint - topPoint).normalized);
 
         Vector2 towardsLight = new Vector2(location.x - topPoint.x, location.z - topPoint.z);
         Func<Vector2, Vector2, Vector2, (float a, float b, float c)> distances = (a, b, c) => ((c - b).magnitude, (c - a).magnitude, (b - a).magnitude);
@@ -45,6 +39,25 @@ struct GodRaySpotlightData
         angle = halfTheta * 2;
 
         this.colour = colour;
+    }
+
+    /// <summary>
+    /// Calculates the distance and location of the spotlight based on the given top and bottom points.
+    /// </summary>
+    private readonly Vector3 CalculateSpotlightLocation(Vector3 topPoint, float topRadius, Vector3 bottomPoint, float bottomRadius)
+    {
+        if (Mathf.Approximately(topRadius, bottomRadius))
+        {
+            // If the radii are approximately equal, return the top point as the location
+            return topPoint;
+        }
+        else
+        {
+            float dx = (topPoint - bottomPoint).magnitude;
+            float dr = bottomRadius - topRadius;
+            float x = dx * topRadius / dr;
+            return topPoint + (topPoint - bottomPoint).normalized * x;
+        }
     }
 }
 
@@ -105,8 +118,6 @@ public class GodRayManager : CodeRebirthWeathers
         timeBetweenGodRaySpawns = 10f;
         rayColours = [
             new(1f, 0f, 0f, 0.25f),
-            new(1f, 1f, 0f, 0.25f),
-            new(1f, 0.65f, 0, 0.25f)
         ];
         godRayRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
         localCamera = GameNetworkManager.Instance.localPlayerController.gameplayCamera;
@@ -117,7 +128,7 @@ public class GodRayManager : CodeRebirthWeathers
         StartCoroutine(UpdateGodRays());
     }
 
-    IEnumerator UpdateGodRays() {
+    private IEnumerator UpdateGodRays() {
         while (this.godRays.Count() <= 10) {
             yield return new WaitForSeconds(godRayRandom.NextFloat(0.75f, 1.25f) * timeBetweenGodRaySpawns);
             Vector2 position = this.godRays.Count() == 0 ? Vector2.zero : new Vector2(godRayRandom.NextFloat(minX, maxX), godRayRandom.NextFloat(minZ, maxZ));
@@ -126,7 +137,7 @@ public class GodRayManager : CodeRebirthWeathers
             this.AddGodRay(new GodRay(rayColour, position, godRayRandom.NextFloat(2f, 4f), godRayRandom.NextFloat(2f, 5f), new Vector3 (bottomPosition.x, 4.5f, bottomPosition.y), 8f, rayColour));
         }
     }
-    void SetScale(float scale)
+    private void SetScale(float scale)
     {
         // just to prevent the furthest vertex from being clipped
         scale *= 0.99f;
@@ -144,13 +155,12 @@ public class GodRayManager : CodeRebirthWeathers
             HDAdditionalLightData light = godRaySpotlights[i].GetComponent<HDAdditionalLightData>();
             light.range = localCamera.farClipPlane * 2;
 
-            float innerAnglePercent = 100f;
+            float innerAnglePercent = Mathf.Clamp((spotlightData.angle*2f) * Mathf.Rad2Deg, 1f, 179f);
             if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
-            light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
+            light.SetSpotAngle(innerAnglePercent, innerAnglePercent);
             light.shapeRadius = 0;
             light.luxAtDistance = (spotlightData.location - godRays[i].BottomPosition).magnitude;
-            light.SetIntensity(7000, LightUnit.Lux);
-
+            light.SetIntensity(100, LightUnit.Lux);
             godRaySpotlights[i].gameObject.transform.rotation = spotlightData.rotation;
             godRaySpotlights[i].gameObject.transform.position = spotlightData.location;
             GenerateSpotlightMesh(godRaySpotlights[i].gameObject, distance, godRays[i].BottomRadius, godRays[i].LightColour, false, 40);
@@ -161,13 +171,14 @@ public class GodRayManager : CodeRebirthWeathers
 
     private void Update()
     {
-        this.transform.position = localCamera.transform.position;
-        if (scale != localCamera.farClipPlane * 2) SetScale(localCamera.farClipPlane);
-        else if (previousPosition != localCamera.transform.position)
+        Vector3 currentCameraPosition = localCamera.transform.position;
+        if (scale != localCamera.farClipPlane * 2 || previousPosition != currentCameraPosition)
         {
             SetScale(localCamera.farClipPlane);
-            previousPosition = localCamera.transform.position;
+            previousPosition = currentCameraPosition;
         }
+
+        this.transform.position = currentCameraPosition;
     }
 
     /// <summary>
@@ -176,8 +187,9 @@ public class GodRayManager : CodeRebirthWeathers
     /// </summary>
     /// <param name="ray">The ray to remove</param>
     /// <returns>true if the ray has been removed, or false otherwise</returns>
-    public bool RemoveGodRay(GodRay ray)
+    private bool RemoveGodRay(GodRay ray)
     {
+        Plugin.ExtendedLogging($"Adding GodRay at TopPosition: {ray.TopPosition}, BottomPosition: {ray.BottomPosition}");
         int index;
         if ((index = godRays.IndexOf(ray)) != -1)
         {
@@ -196,8 +208,9 @@ public class GodRayManager : CodeRebirthWeathers
     /// </summary>
     /// <param name="ray">The GodRay to add.</param>
     /// <returns>The ray that was added (a reference to the given argument "ray")</returns>
-    public GodRay AddGodRay(GodRay ray)
+    private GodRay AddGodRay(GodRay ray)
     {
+        Plugin.ExtendedLogging($"Adding GodRay at TopPosition: {ray.TopPosition}, BottomPosition: {ray.BottomPosition}");
         float skyHeight = localCamera.farClipPlane * 0.99f + localCamera.transform.position.y;
         godRays.Add(ray);
         godRayEffects.Add(ray.SkyEffect(skyHeight));
@@ -206,12 +219,12 @@ public class GodRayManager : CodeRebirthWeathers
         HDAdditionalLightData light = lightGameObject.AddHDLight(HDLightTypeAndShape.ConeSpot);
         light.range = localCamera.farClipPlane * 2;
 
-        float innerAnglePercent = 100f;
+        float innerAnglePercent = Mathf.Clamp((spotlightData.angle*2f) * Mathf.Rad2Deg, 1f, 179f);
         if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
-        light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
+        light.SetSpotAngle(innerAnglePercent, innerAnglePercent);
         light.shapeRadius = 0;
         light.luxAtDistance = (spotlightData.location - ray.BottomPosition).magnitude;
-        light.SetIntensity(7000, LightUnit.Lux);
+        light.SetIntensity(100, LightUnit.Lux);
 
         light.color = spotlightData.colour;
         lightGameObject.transform.parent = godRayParent.transform;
@@ -223,12 +236,12 @@ public class GodRayManager : CodeRebirthWeathers
         return ray;
     }
 
-    void GenerateSpotlightMesh(GameObject light, float distance, float bottomRadius, Color colour, bool generateNewMesh = true, int pointCount = 100)
+    private void GenerateSpotlightMesh(GameObject light, float distance, float bottomRadius, Color colour, bool generateNewMesh = true, int pointCount = 100)
     {
         if (pointCount < 3 || pointCount >= 254) throw new ArgumentOutOfRangeException(nameof(pointCount));
         Vector3[] points = new Vector3[pointCount + 1];
         int[] indices = new int[pointCount * 3];
-        points[0] = Vector3.zero;
+        points[0] = Vector3.zero; // Start at the light's position
         for (int i = 0; i < pointCount; i++)
         {
             float theta = (float)i / pointCount * Mathf.PI * 2f;
@@ -251,34 +264,62 @@ public class GodRayManager : CodeRebirthWeathers
         mesh.vertices = points;
         mesh.triangles = indices;
         light.GetComponent<Renderer>().material = godRayMaterial;
-        light.GetComponent<Renderer>().material.color = new Color(colour.r, colour.g, colour.b, 56f / 255f);
+        light.GetComponent<Renderer>().material.color = new Color(colour.r, colour.g, colour.b, 30f / 255f);
         mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
 
         meshCollider.sharedMesh = mesh;
     }
 
-    void RegenerateRayComputeBuffer()
+    private void RegenerateRayComputeBuffer()
     {
-        if (rayBuffer != null)
-        {
-            rayBuffer.Release();
-            rayBuffer = null;
-        }
-
         if (godRayEffects.Count != 0)
         {
-            rayBuffer = new ComputeBuffer(godRayEffects.Count, sizeof(float) * 12);
+            if (rayBuffer == null || rayBuffer.count != godRayEffects.Count)
+            {
+                rayBuffer?.Release();
+                rayBuffer = new ComputeBuffer(godRayEffects.Count, sizeof(float) * 12);
+            }
             rayBuffer.SetData(godRayEffects, 0, 0, godRayEffects.Count);
             sphereMaterial.SetBuffer("_rays", rayBuffer);
         }
-
+        else
+        {
+            rayBuffer?.Release();
+            rayBuffer = null;
+        }
         sphereMaterial.SetInt("_rayCount", godRayEffects.Count);
+    }
+
+    private IEnumerator FadeInLight(HDAdditionalLightData light, float targetIntensity, float duration)
+    {
+        float initialIntensity = light.intensity;
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            light.SetIntensity(Mathf.Lerp(initialIntensity, targetIntensity, t / duration), LightUnit.Lux);
+            yield return null;
+        }
+        light.SetIntensity(targetIntensity, LightUnit.Lux);
+    }
+
+    private IEnumerator FadeOutLight(HDAdditionalLightData light, float duration)
+    {
+        float initialIntensity = light.intensity;
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            light.SetIntensity(Mathf.Lerp(initialIntensity, 0, t / duration), LightUnit.Lux);
+            yield return null;
+        }
+        light.SetIntensity(0, LightUnit.Lux);
+        light.gameObject.SetActive(false); // Optionally return to pool here
     }
 
     private void OnDisable()
     {
         Instance = null;
-        foreach (GodRay ray in godRays)
+
+        StopAllCoroutines();
+        foreach (GodRay ray in godRays.ToList())
         {
             this.RemoveGodRay(ray);
         }
@@ -286,5 +327,6 @@ public class GodRayManager : CodeRebirthWeathers
         godRayEffects.Clear();
         godRaySpotlights.Clear();
         rayBuffer?.Release();
+        rayBuffer = null;
     }
 }
