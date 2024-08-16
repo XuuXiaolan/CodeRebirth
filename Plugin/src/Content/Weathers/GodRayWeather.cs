@@ -102,7 +102,6 @@ public class GodRayManager : CodeRebirthWeathers
     float scale;
     Vector3 previousPosition;
     public float timeBetweenGodRaySpawns;
-    public float minX, maxX, minZ, maxZ;
     [SerializeField]
     public List<Color> rayColours;
     System.Random godRayRandom = new();
@@ -111,10 +110,6 @@ public class GodRayManager : CodeRebirthWeathers
     private void OnEnable()
     {
         Instance = this;
-        minX = -40;
-        maxX = 40;
-        minZ = -40;
-        maxZ = 40;
         timeBetweenGodRaySpawns = 10f;
         rayColours = [
             new(1f, 0f, 0f, 0.25f),
@@ -129,14 +124,24 @@ public class GodRayManager : CodeRebirthWeathers
     }
 
     private IEnumerator UpdateGodRays() {
+        // Calculate the center point from all AI nodes
+        Vector3 centre = CalculateCenterOfPoints(RoundManager.Instance.outsideAINodes.Select(node => node.transform.position).ToList());
+
         while (this.godRays.Count() <= 10) {
             yield return new WaitForSeconds(godRayRandom.NextFloat(0.75f, 1.25f) * timeBetweenGodRaySpawns);
-            Vector2 position = this.godRays.Count() == 0 ? Vector2.zero : new Vector2(godRayRandom.NextFloat(minX, maxX), godRayRandom.NextFloat(minZ, maxZ));
-            Vector2 bottomPosition = new Vector2(godRayRandom.NextFloat(minX, maxX), godRayRandom.NextFloat(minZ, maxZ));
+            
+            // Get a random bottom position within a certain range around the center
+            Vector3 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(centre, 100f, default, godRayRandom);
+            
+            // Top position can be directly above the bottom position
+            Vector2 position = this.godRays.Count() == 0 ? Vector2.zero : new Vector2(bottomPosition.x, bottomPosition.z);
             Color rayColour = rayColours[godRayRandom.Next(0, rayColours.Count)];
-            this.AddGodRay(new GodRay(rayColour, position, godRayRandom.NextFloat(2f, 4f), godRayRandom.NextFloat(2f, 5f), new Vector3 (bottomPosition.x, 4.5f, bottomPosition.y), 8f, rayColour));
+
+            // Create and add the GodRay
+            this.AddGodRay(new GodRay(rayColour, position, godRayRandom.NextFloat(2f, 4f), godRayRandom.NextFloat(2f, 5f), new Vector3(bottomPosition.x, 0, bottomPosition.z), godRayRandom.NextFloat(3f, 8f), rayColour));
         }
     }
+
     private void SetScale(float scale)
     {
         // just to prevent the furthest vertex from being clipped
@@ -155,7 +160,7 @@ public class GodRayManager : CodeRebirthWeathers
             HDAdditionalLightData light = godRaySpotlights[i].GetComponent<HDAdditionalLightData>();
             light.range = localCamera.farClipPlane * 2;
 
-            float innerAnglePercent = Mathf.Clamp((spotlightData.angle*2f) * Mathf.Rad2Deg, 1f, 179f);
+            float innerAnglePercent = Mathf.Clamp((spotlightData.angle*1.5f) * Mathf.Rad2Deg, 1f, 179f);
             if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
             light.SetSpotAngle(innerAnglePercent, innerAnglePercent);
             light.shapeRadius = 0;
@@ -219,7 +224,7 @@ public class GodRayManager : CodeRebirthWeathers
         HDAdditionalLightData light = lightGameObject.AddHDLight(HDLightTypeAndShape.ConeSpot);
         light.range = localCamera.farClipPlane * 2;
 
-        float innerAnglePercent = Mathf.Clamp((spotlightData.angle*2f) * Mathf.Rad2Deg, 1f, 179f);
+        float innerAnglePercent = Mathf.Clamp((spotlightData.angle*1.5f) * Mathf.Rad2Deg, 1f, 179f);
         if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
         light.SetSpotAngle(innerAnglePercent, innerAnglePercent);
         light.shapeRadius = 0;
@@ -234,6 +239,18 @@ public class GodRayManager : CodeRebirthWeathers
         godRaySpotlights.Add(light);
         RegenerateRayComputeBuffer();
         return ray;
+    }
+
+    private Vector3 CalculateCenterOfPoints(List<Vector3> points)
+    {
+        if (points == null || points.Count == 0) return Vector3.zero;
+
+        Vector3 sum = Vector3.zero;
+        foreach (var point in points)
+        {
+            sum += point;
+        }
+        return sum / points.Count;
     }
 
     private void GenerateSpotlightMesh(GameObject light, float distance, float bottomRadius, Color colour, bool generateNewMesh = true, int pointCount = 100)
