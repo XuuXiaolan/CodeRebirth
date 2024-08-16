@@ -3,24 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Rendering.HighDefinition;
+using Unity.Netcode;
+using CodeRebirth.src.Util.Extensions;
+using System.Collections;
 
 namespace CodeRebirth.src.Content.Weathers;
-struct GodRaySkyEffect
+struct GodRaySkyEffect(Color colour, Vector3 position, float radius, float falloff, Vector3 bottomPosition)
 {
-    public Color colour;
-    public Vector3 topPosition;
-    public Vector3 bottomPosition;
-    public float radius;
-    public float falloff;
-
-    public GodRaySkyEffect(Color colour, Vector3 position, float radius, float falloff, Vector3 bottomPosition)
-    {
-        this.colour = colour;
-        this.topPosition = position;
-        this.radius = radius;
-        this.falloff = falloff;
-        this.bottomPosition = bottomPosition;
-    }
+    public Color colour = colour;
+    public Vector3 topPosition = position;
+    public Vector3 bottomPosition = bottomPosition;
+    public float radius = radius;
+    public float falloff = falloff;
 }
 
 struct GodRaySpotlightData
@@ -40,13 +34,13 @@ struct GodRaySpotlightData
 
         rotation = Quaternion.FromToRotation(Vector3.forward, bottomPoint - topPoint);
 
-        Vector2 towardsLight = new Vector2(location.x - topPoint.x, location.z-topPoint.z);
+        Vector2 towardsLight = new Vector2(location.x - topPoint.x, location.z - topPoint.z);
         Func<Vector2, Vector2, Vector2, (float a, float b, float c)> distances = (a, b, c) => ((c - b).magnitude, (c - a).magnitude, (b - a).magnitude);
         // a^2 = b^2 + c^2 - 2bc cos(A)
         // b^2 + c^2 - a^2 = 2bc cos(A)
         // A = acos( (b^2 + c^2 - a^2) / 2bc )
-        Func<float, float, float, float> triangleAngle = (a, b, c) => Mathf.Acos((b*b + c*c - a*a) / (2*b*c));
-        (float a, float b, float c) d = distances(new Vector2(towardsLight.magnitude, location.y-topPoint.y), Vector3.zero, Vector2.right * topRadius);
+        Func<float, float, float, float> triangleAngle = (a, b, c) => Mathf.Acos((b * b + c * c - a * a) / (2 * b * c));
+        (float a, float b, float c) d = distances(new Vector2(towardsLight.magnitude, location.y - topPoint.y), Vector3.zero, Vector2.right * topRadius);
         float halfTheta = triangleAngle(d.a, d.b, d.c);
         angle = halfTheta * 2;
 
@@ -54,93 +48,101 @@ struct GodRaySpotlightData
     }
 }
 
-public class GodRay
+/// <summary>
+/// Creates the data for a GodRay, which a GodRayManager can spawn.
+/// </summary>
+/// <param name="skyColour">The colour of this GodRay in the sky texture.</param>
+/// <param name="topPosition">The position of this GodRay in the sky.</param>
+/// <param name="topRadius">The base radius of the GodRay in the sky texture</param>
+/// <param name="topFalloff">The size of the area in the sky around the GodRay which is lit up. Must be positive (non-zero).</param>
+public class GodRay(Color skyColour, Vector2 topPosition, float topRadius, float topFalloff, Vector3 bottomPosition, float bottomRadius, Color lightColour)
 {
-    public Color SkyColour { get; private set; }
-    public Color LightColour { get; private set; }
-    public Vector2 TopPosition { get; private set; }
-    public float TopRadius { get; private set; }
-    public float TopFalloff { get; private set; }
-    public Vector3 BottomPosition { get; private set; }
-    public float BottomRadius { get; private set; }
-
-
-    /// <summary>
-    /// Creates the data for a GodRay, which a GodRayManager can spawn.
-    /// </summary>
-    /// <param name="skyColour">The colour of this GodRay in the sky texture.</param>
-    /// <param name="topPosition">The position of this GodRay in the sky.</param>
-    /// <param name="topRadius">The base radius of the GodRay in the sky texture</param>
-    /// <param name="topFalloff">The size of the area in the sky around the GodRay which is lit up. Must be positive (non-zero).</param>
-    public GodRay(Color skyColour, Vector2 topPosition, float topRadius, float topFalloff, Vector3 bottomPosition, float bottomRadius, Color lightColour)
-    {
-        SkyColour = skyColour;
-        TopPosition = topPosition;
-        TopRadius = topRadius;
-        TopFalloff = topFalloff;
-        BottomRadius = bottomRadius;
-        BottomPosition = bottomPosition;
-        LightColour = lightColour;
-    }
+    public Color SkyColour { get; private set; } = skyColour;
+    public Color LightColour { get; private set; } = lightColour;
+    public Vector2 TopPosition { get; private set; } = topPosition;
+    public float TopRadius { get; private set; } = topRadius;
+    public float TopFalloff { get; private set; } = topFalloff;
+    public Vector3 BottomPosition { get; private set; } = bottomPosition;
+    public float BottomRadius { get; private set; } = bottomRadius;
 
     internal GodRaySkyEffect SkyEffect(float skyHeight) => new(SkyColour, new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius, TopFalloff, BottomPosition);
     internal GodRaySpotlightData SpotlightData(float skyHeight) => new(new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius, BottomPosition, BottomRadius, LightColour);
 }
 
-public class GodRayManager : MonoBehaviour
+public class GodRayManager : CodeRebirthWeathers
 {
     // these lists must be kept aligned
     // so that godRayEffects[i] os the effect for godRays[i],
     // for example.
     // you might see the number of lists and call it "a bad idea",
     // but I call it "ECS", which sounds much fancier.
-    List<GodRaySkyEffect> godRayEffects;
-    List<HDAdditionalLightData> godRaySpotlights;
-    List<GodRay> godRays;
+    List<GodRaySkyEffect> godRayEffects = [];
+    List<HDAdditionalLightData> godRaySpotlights = [];
+    List<GodRay> godRays = [];
 
-    public Material godRayMaterial;
-    public GameObject godRayParent;
+    public Material godRayMaterial = null!;
+    public GameObject godRayParent = null!;
 
-    public IEnumerable<GodRay> GodRays { get => godRays.Select(x => x); }
-
-    Material material;
-    ComputeBuffer rayBuffer;
-    public Camera camera;
+    public Material sphereMaterial = null!;
+    ComputeBuffer? rayBuffer;
+    Camera localCamera = null!;
     float scale;
     Vector3 previousPosition;
-
-    private void Start()
+    public float timeBetweenGodRaySpawns;
+    public float minX, maxX, minZ, maxZ;
+    [SerializeField]
+    public List<Color> rayColours;
+    System.Random godRayRandom = new();
+	public static GodRayManager? Instance { get; private set; }
+	public static bool Active => Instance != null;
+    private void OnEnable()
     {
-        transform.position = camera.transform.position;
-        godRayEffects = new List<GodRaySkyEffect>();
-        godRaySpotlights = new List<HDAdditionalLightData>();
-        godRays = new List<GodRay>();
-        material = GetComponent<Renderer>().material;
-        SetScale(camera.farClipPlane);
+        Instance = this;
+        minX = -40;
+        maxX = 40;
+        minZ = -40;
+        maxZ = 40;
+        timeBetweenGodRaySpawns = 10f;
+        rayColours = [
+            new(1f, 0f, 0f, 0.25f),
+            new(1f, 1f, 0f, 0.25f),
+            new(1f, 0.65f, 0, 0.25f)
+        ];
+        godRayRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
+        localCamera = GameNetworkManager.Instance.localPlayerController.gameplayCamera;
+        transform.position = localCamera.transform.position;
+        SetScale(localCamera.farClipPlane);
         RegenerateRayComputeBuffer();
-        previousPosition = camera.transform.position;
-        godRayParent.transform.localScale = Vector3.one;
-        godRayParent.transform.rotation = Quaternion.identity;
-        godRayParent.transform.position = Vector3.zero;
+        previousPosition = localCamera.transform.position;
+        StartCoroutine(UpdateGodRays());
     }
 
+    IEnumerator UpdateGodRays() {
+        while (this.godRays.Count() <= 10) {
+            yield return new WaitForSeconds(godRayRandom.NextFloat(0.75f, 1.25f) * timeBetweenGodRaySpawns);
+            Vector2 position = this.godRays.Count() == 0 ? Vector2.zero : new Vector2(godRayRandom.NextFloat(minX, maxX), godRayRandom.NextFloat(minZ, maxZ));
+            Vector2 bottomPosition = new Vector2(godRayRandom.NextFloat(minX, maxX), godRayRandom.NextFloat(minZ, maxZ));
+            Color rayColour = rayColours[godRayRandom.Next(0, rayColours.Count)];
+            this.AddGodRay(new GodRay(rayColour, position, godRayRandom.NextFloat(2f, 4f), godRayRandom.NextFloat(2f, 5f), new Vector3 (bottomPosition.x, 4.5f, bottomPosition.y), 8f, rayColour));
+        }
+    }
     void SetScale(float scale)
     {
         // just to prevent the furthest vertex from being clipped
         scale *= 0.99f;
         transform.localScale = Vector3.one * scale * 2;
-        transform.position = camera.transform.position;
+        transform.position = localCamera.transform.position;
         this.scale = scale * 2;
-        material.SetFloat("_skyBoxRadius", scale);
-        for (int i=0; i<godRaySpotlights.Count; i++)
+        sphereMaterial.SetFloat("_skyBoxRadius", scale);
+        for (int i = 0; i < godRaySpotlights.Count; i++)
         {
-            float skyHeight = camera.farClipPlane * 0.99f + camera.transform.position.y;
+            float skyHeight = localCamera.farClipPlane * 0.99f + localCamera.transform.position.y;
             GodRaySpotlightData spotlightData = godRays[i].SpotlightData(skyHeight);
             float distance = (godRays[i].BottomPosition - spotlightData.location).magnitude + 5f;
             godRaySpotlights[i].range = distance;
 
             HDAdditionalLightData light = godRaySpotlights[i].GetComponent<HDAdditionalLightData>();
-            light.range = camera.farClipPlane * 2;
+            light.range = localCamera.farClipPlane * 2;
 
             float innerAnglePercent = 100f;
             if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
@@ -153,18 +155,18 @@ public class GodRayManager : MonoBehaviour
             godRaySpotlights[i].gameObject.transform.position = spotlightData.location;
             GenerateSpotlightMesh(godRaySpotlights[i].gameObject, distance, godRays[i].BottomRadius, godRays[i].LightColour, false, 40);
 
-            // godRayEffects[i] = godRays[i].SkyEffect(camera.farClipPlane * 0.99f + camera.transform.position.y);
+            // godRayEffects[i] = godRays[i].SkyEffect(localCamera.farClipPlane * 0.99f + localCamera.transform.position.y);
         }
     }
 
     private void Update()
     {
-        transform.position = camera.transform.position;
-        if (scale != camera.farClipPlane*2) SetScale(camera.farClipPlane);
-        else if (previousPosition != camera.transform.position)
+        this.transform.position = localCamera.transform.position;
+        if (scale != localCamera.farClipPlane * 2) SetScale(localCamera.farClipPlane);
+        else if (previousPosition != localCamera.transform.position)
         {
-            SetScale(camera.farClipPlane);
-            previousPosition = camera.transform.position;
+            SetScale(localCamera.farClipPlane);
+            previousPosition = localCamera.transform.position;
         }
     }
 
@@ -196,13 +198,13 @@ public class GodRayManager : MonoBehaviour
     /// <returns>The ray that was added (a reference to the given argument "ray")</returns>
     public GodRay AddGodRay(GodRay ray)
     {
-        float skyHeight = camera.farClipPlane * 0.99f + camera.transform.position.y;
+        float skyHeight = localCamera.farClipPlane * 0.99f + localCamera.transform.position.y;
         godRays.Add(ray);
         godRayEffects.Add(ray.SkyEffect(skyHeight));
         GodRaySpotlightData spotlightData = ray.SpotlightData(skyHeight);
         GameObject lightGameObject = new GameObject();
         HDAdditionalLightData light = lightGameObject.AddHDLight(HDLightTypeAndShape.ConeSpot);
-        light.range = camera.farClipPlane*2;
+        light.range = localCamera.farClipPlane * 2;
 
         float innerAnglePercent = 100f;
         if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
@@ -215,31 +217,33 @@ public class GodRayManager : MonoBehaviour
         lightGameObject.transform.parent = godRayParent.transform;
         lightGameObject.transform.position = spotlightData.location;
         lightGameObject.transform.rotation = spotlightData.rotation;
-        GenerateSpotlightMesh(lightGameObject, (ray.BottomPosition-spotlightData.location).magnitude, ray.BottomRadius, spotlightData.colour, pointCount: 40);
+        GenerateSpotlightMesh(lightGameObject, (ray.BottomPosition - spotlightData.location).magnitude, ray.BottomRadius, spotlightData.colour, pointCount: 40);
         godRaySpotlights.Add(light);
         RegenerateRayComputeBuffer();
         return ray;
     }
 
-    void GenerateSpotlightMesh(GameObject light, float distance, float bottomRadius, Color colour, bool generateNewMesh=true, int pointCount=100)
+    void GenerateSpotlightMesh(GameObject light, float distance, float bottomRadius, Color colour, bool generateNewMesh = true, int pointCount = 100)
     {
         if (pointCount < 3 || pointCount >= 254) throw new ArgumentOutOfRangeException(nameof(pointCount));
         Vector3[] points = new Vector3[pointCount + 1];
         int[] indices = new int[pointCount * 3];
         points[0] = Vector3.zero;
-        for (int i=0; i<pointCount; i++)
+        for (int i = 0; i < pointCount; i++)
         {
             float theta = (float)i / pointCount * Mathf.PI * 2f;
             Vector3 offset = new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0) * bottomRadius;
             points[i + 1] = new Vector3(0, 0, distance) + offset;
             indices[i * 3 + 0] = 0;
             indices[i * 3 + 1] = 1 + ((i + 1) % pointCount);
-            indices[i * 3 + 2] = i+1;
+            indices[i * 3 + 2] = i + 1;
         }
 
-        MeshFilter meshFilter = generateNewMesh ? light.AddComponent<MeshFilter>() : light.GetComponent<MeshFilter>();
-        MeshRenderer meshRenderer = generateNewMesh ? light.AddComponent<MeshRenderer>() : light.GetComponent<MeshRenderer>();
-        MeshCollider meshCollider = generateNewMesh ? light.AddComponent<MeshCollider>() : light.GetComponent<MeshCollider>();
+        MeshFilter? meshFilter = generateNewMesh ? light.AddComponent<MeshFilter>() : light.GetComponent<MeshFilter>();
+        MeshRenderer? meshRenderer = generateNewMesh ? light.AddComponent<MeshRenderer>() : light.GetComponent<MeshRenderer>();
+        MeshCollider? meshCollider = generateNewMesh ? light.AddComponent<MeshCollider>() : light.GetComponent<MeshCollider>();
+        meshCollider.convex = true;
+        meshCollider.isTrigger = true;
 
         Mesh mesh = new Mesh();
         if (!generateNewMesh) Destroy(meshFilter.mesh);
@@ -265,14 +269,22 @@ public class GodRayManager : MonoBehaviour
         {
             rayBuffer = new ComputeBuffer(godRayEffects.Count, sizeof(float) * 12);
             rayBuffer.SetData(godRayEffects, 0, 0, godRayEffects.Count);
-            material.SetBuffer("_rays", rayBuffer);
+            sphereMaterial.SetBuffer("_rays", rayBuffer);
         }
 
-        material.SetInt("_rayCount", godRayEffects.Count);
+        sphereMaterial.SetInt("_rayCount", godRayEffects.Count);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (rayBuffer != null) rayBuffer.Release();
+        Instance = null;
+        foreach (GodRay ray in godRays)
+        {
+            this.RemoveGodRay(ray);
+        }
+        godRays.Clear();
+        godRayEffects.Clear();
+        godRaySpotlights.Clear();
+        rayBuffer?.Release();
     }
 }

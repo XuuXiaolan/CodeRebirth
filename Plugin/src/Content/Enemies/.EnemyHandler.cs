@@ -61,11 +61,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         [LoadFromBundle("RedwoodTitanTK.asset")]
         public TerminalKeyword RedwoodTitanTerminalKeyword { get; private set; } = null!;
         
-        [LoadFromBundle("RedwoodHeart.asset")]
+        /*[LoadFromBundle("RedwoodHeart.asset")]
         public Item RedwoodHeart { get; private set; } = null!;
 
         [LoadFromBundle("RedwoodWhistle.asset")]
-        public Item RedwoodWhistle { get; private set; } = null!;
+        public Item RedwoodWhistle { get; private set; } = null!;*/
     }
     public ButterflyAssets Butterfly { get; private set; } = null!;
     public SnailCatAssets SnailCat { get; private set; } = null!;
@@ -80,7 +80,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         if (Plugin.ModConfig.ConfigRedwoodEnabled.Value) {
             RedwoodTitan = new RedwoodTitanAssets("redwoodtitanassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodTitan.RedwoodTitanEnemyType, RedwoodTitan.RedwoodTitanTerminalNode, RedwoodTitan.RedwoodTitanTerminalKeyword, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
-            Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodTitan.RedwoodHeart);
+            //Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodTitan.RedwoodHeart);
         }
         if (Plugin.ModConfig.ConfigCutieFlyEnabled.Value) {
             Butterfly = new ButterflyAssets("cutieflyassets");

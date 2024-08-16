@@ -13,6 +13,7 @@ using CodeRebirth.src.Util.Extensions;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
+using System.IO;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -78,7 +79,6 @@ public class Plugin : BaseUnityPlugin {
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");
-        
         InitializeNetworkBehaviours();
         // Register Keybinds
         InputActionsInstance = new IngameKeybinds();

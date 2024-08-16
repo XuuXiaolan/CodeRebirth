@@ -43,19 +43,42 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     }
 
     public class GodRayAssets(string bundleName) : AssetBundleLoader<GodRayAssets>(bundleName) {
-        [LoadFromBundle("GodRayManager.prefab")]
-        public GameObject GodRayManagerPrefab { get; private set; } = null!;
+        [LoadFromBundle("GodRayManager.prefab")] // <-- Weather
+        public GameObject GodRayManagerPermanentEffectPrefab { get; private set; } = null!;
     }
 
     public GodRayAssets GodRay { get; private set; } = null!;
     public MeteoriteAssets Meteorite { get; private set; } = null!;
     public TornadoAssets Tornado { get; private set; } = null!;
+    public Weather GodRaysWeather { get; private set; } = null!;
     public Weather MeteorShowerWeather { get; private set; } = null!;
     public Weather TornadoesWeather { get; private set; } = null!;
 
     public WeatherHandler() {
         if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
         if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
+        if (true) RegisterGodRayWeather();
+    }
+
+    private void RegisterGodRayWeather() {
+        GodRay = new GodRayAssets("godrayassets");
+        GameObject effectPermanentObject = GameObject.Instantiate(GodRay.GodRayManagerPermanentEffectPrefab);
+        effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
+        GameObject.DontDestroyOnLoad(effectPermanentObject);
+        ImprovedWeatherEffect godRayEffect = new(null, effectPermanentObject) {
+            SunAnimatorBool = "",
+        };
+
+        GodRaysWeather = new Weather("Red Sun", godRayEffect) {
+            DefaultWeight = 3999,
+            ScrapAmountMultiplier = 1,
+            ScrapValueMultiplier = 1,
+            DefaultLevelFilters = new string[] { "Gordion" },
+            LevelFilteringOption = FilteringOption.Exclude,
+            Color = new Color(1f, 0f, 0f, 1f),
+        };
+
+        WeatherManager.RegisterWeather(GodRaysWeather);
     }
 
     private void RegisterTornadoWeather() {
