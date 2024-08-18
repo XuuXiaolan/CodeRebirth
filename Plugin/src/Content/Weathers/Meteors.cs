@@ -122,17 +122,14 @@ public class Meteors : NetworkBehaviour {
         if (MeteorShower.Instance != null) MeteorShower.Instance.RemoveMeteor(this);
     }
 }
-public class CraterController : MonoBehaviour // Change this to use decals!!
+public class CraterController : MonoBehaviour // todo: make sure this works with better cooldown trigger
 {
     [SerializeField]
     [Tooltip("The GameObject that will be spawned when the meteor hits the ground.")]
     private GameObject craterMesh = null!;
-    private ColliderIdentifier fireCollider = null!;
 
     private void Awake()
     {
-        fireCollider = this.transform.Find("WildFire").GetComponent<ColliderIdentifier>();
-        ToggleCrater(false);
         if (MeteorShower.Instance != null) MeteorShower.Instance.AddCrater(this);
     }
     public void ShowCrater(Vector3 impactLocation)
@@ -140,15 +137,5 @@ public class CraterController : MonoBehaviour // Change this to use decals!!
         transform.position = impactLocation + new Vector3(0, 3f, 0); // Position the crater at the impact location
     
         craterMesh.SetActive(true);
-        fireCollider.enabled = true; // Enable the ColliderIdentifier
-    }
-    void ToggleCrater(bool enable)
-    {
-        craterMesh.SetActive(enable);
-        fireCollider.enabled = enable;
-    }
-    public void HideCrater()
-    {
-        ToggleCrater(false);
     }
 }
