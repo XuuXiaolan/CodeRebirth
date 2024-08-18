@@ -5,6 +5,8 @@
 - Add two more gems and make them more common.
 - Make tornado config allowing them to spawn on specific moons.
 - Item crate add networked opening speed.
-- implement Hoverboard changes from issues.
 - Make sure natures mace works.
-- More hoverboard work, make sure pr is mostly done and that it's smoother with more anchors etc.
+- add robot doggy.
+- finish adding biomes.
+- add dangerous flora.
+- fix red sun bugs
