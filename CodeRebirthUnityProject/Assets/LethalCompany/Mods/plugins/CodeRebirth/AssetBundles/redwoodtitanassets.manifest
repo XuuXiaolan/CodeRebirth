@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 969703202
+CRC: 2592207305
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 75dbcb8aee1afc5309b8eecb050e3550
+    Hash: 1a606c587f31ae86c30a2876fb960695
   TypeTreeHash:
     serializedVersion: 2
-    Hash: e6583e70b507b37753500ac30e71122d
+    Hash: 5c61e27609d676e36954cfab5646cc75
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 75dbcb8aee1afc5309b8eecb050e3550
+    Hash: 1a606c587f31ae86c30a2876fb960695
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -26,11 +26,15 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
 - Class: 65
   Script: {instanceID: 0}
 - Class: 74
   Script: {instanceID: 0}
 - Class: 82
+  Script: {instanceID: 0}
+- Class: 83
   Script: {instanceID: 0}
 - Class: 91
   Script: {instanceID: 0}
@@ -52,11 +56,19 @@ ClassTypes:
   Script: {fileID: -58974956, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
+- Class: 114
+  Script: {fileID: -502015034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
   Script: {instanceID: 0}
 - Class: 195
+  Script: {instanceID: 0}
+- Class: 241
+  Script: {instanceID: 0}
+- Class: 243
+  Script: {instanceID: 0}
+- Class: 245
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
@@ -65,23 +77,36 @@ SerializeReferenceClassIdentifiers:
   ClassName: EnemyBehaviourState
 - AssemblyName: Assembly-CSharp
   ClassName: NavSizeLimit
+- AssemblyName: Unity.Netcode.Components
+  ClassName: Unity.Netcode.Components.NetworkAnimator/TransitionStateinfo
 Assets:
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/ClosePinkGiantStomp1.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/SpikeMat.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedJumpAttack.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/CrunchySquish.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/FarPinkGiantStomp2.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/ClosePinkGiantStomp2.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/PinkGiantSpawning.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/RedwoodGiantRoar.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/BodyMat.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedwoodWalk.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedKick.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/TeethMat.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/FarPinkGiantStomp1.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedSpawn.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/RedwoodTitanObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedDeath.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedIdle.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/Eyes.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/RedwoodTitanAnimController.controller
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/ClosePinkGiantStomp3.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/FarPinkGiantStomp3.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Bestiary/RedwoodTitanTN.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/RedwoodTitan.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedEnrage.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Bestiary/RedwoodTitanTK.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/ForestKeeperScream.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/PinkGiantMoroxideStep.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/RedwoodTitan.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedwoodGrab.anim
 Dependencies: []

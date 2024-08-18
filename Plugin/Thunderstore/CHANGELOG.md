@@ -14,6 +14,7 @@
 - Gave hoverboard some weight when in held mode.
 - Gave hoverboard collisions for moving it around while not held by you or a player.
 - Hoverboard battery works now when holding shift for a boost.
+- Adjusted snowglobe holding animation, no more bugs wooo.
 
 ## v0.4.2
 - Sigh, fixed the tornado stuff for the guy who wants it to spawn naturally as an enemy (WONT WORK IF THE WEATHER IS WIMDY ALREADY).

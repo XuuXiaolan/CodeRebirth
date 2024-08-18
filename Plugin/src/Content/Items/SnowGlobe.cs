@@ -36,7 +36,7 @@ public class SnowGlobe : GrabbableObject
 
     private bool activated;
 
-    public void ReplaceOrPutBackAnimationClip(PlayerControllerB? player, bool _override) {
+    /*public void ReplaceOrPutBackAnimationClip(PlayerControllerB? player, bool _override) {
         if (player == null) {
             Plugin.Logger.LogDebug("player is null");
             return;
@@ -63,7 +63,7 @@ public class SnowGlobe : GrabbableObject
         if (this.isHeld && playerHeldBy == previouslyHeldBy) {
             playerOverrideThing["HoldLungApparatice"] = overrideClip;
         }
-    }
+    }*/
 
     public override void Update() {
         base.Update();
@@ -77,7 +77,7 @@ public class SnowGlobe : GrabbableObject
         if (previouslyHeldBy == null) {
             Plugin.Logger.LogDebug("previouslyHeldBy is null");
         }
-        ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
+        // ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
     }
     public override void EquipItem()
     {
@@ -86,7 +86,7 @@ public class SnowGlobe : GrabbableObject
         if (previouslyHeldBy == null) {
             Plugin.Logger.LogDebug("previouslyHeldBy is null");
         }
-        ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
+        // ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
         // Coming from pocketing since this is also called when using inventory
         ToggleParticleRenderer(true);
     }
@@ -95,13 +95,13 @@ public class SnowGlobe : GrabbableObject
     {
         base.PocketItem();
         // Disable Particles renderer#
-        if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
+        // if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
         ToggleParticleRenderer(false);
     }
 
     public override void DiscardItem()
     {
-        if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
+        // if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
         base.DiscardItem();
     }
 

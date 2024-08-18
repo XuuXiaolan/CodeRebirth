@@ -44,6 +44,7 @@ public class Hoverboard : GrabbableObject, IHittable {
 
     public override void Start() {
         StartBaseImportant();
+        this.EnablePhysics(false);
         this.insertedBattery = new Battery(false, 1f);
         this.ChargeBatteries();
         switch (hoverboardType) {
@@ -475,10 +476,6 @@ public class Hoverboard : GrabbableObject, IHittable {
     [ClientRpc]
     public void TurnOnHoverboardClientRpc() {
         turnedOn = true;
-    }
-
-    public override void FallWithCurve() {
-        return;
     }
 
     public void StartBaseImportant() {

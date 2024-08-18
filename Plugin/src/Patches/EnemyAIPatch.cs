@@ -1,3 +1,4 @@
+using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using System;
@@ -36,7 +37,7 @@ static class EnemyAIPatch
 
     private static void EnemyAI_HitEnemy(On.EnemyAI.orig_HitEnemy orig, EnemyAI self, int force, PlayerControllerB playerWhoHit, bool playHitSFX, int hitID)
     {
-        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer.itemProperties.itemName == "Icy Hammer")
+        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is IcyHammer)
         {   
             if (enemyRandom.NextFloat(0, 100) <= 10) {
                 Plugin.ExtendedLogging("Slowed enemy");
@@ -49,7 +50,7 @@ static class EnemyAIPatch
             }
         }
 
-        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer.itemProperties.itemName == "Nature's Mace") {
+        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is NaturesMace) {
             force = 0;
             self.enemyHP++;
             Plugin.ExtendedLogging($"Enemy HP: {self.enemyHP}");

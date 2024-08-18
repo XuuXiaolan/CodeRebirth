@@ -42,15 +42,15 @@ static class PlayerControllerBPatch {
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.Update)), HarmonyPrefix]
     public static void Update(PlayerControllerB __instance) {
         if (GameNetworkManager.Instance.localPlayerController == null) return;
-        if (__instance.GetCRPlayerData().playerOverrideController != null) return;
+        /*if (__instance.GetCRPlayerData().playerOverrideController != null) return;
         Plugin.ExtendedLogging($"[ILHook:PlayerControllerB.Update] Setting playerOverrideController to {__instance.playerBodyAnimator.runtimeAnimatorController}");
         __instance.GetCRPlayerData().playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
-        __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController; 
+        __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController;*/
     }
 
     public static void Init() {
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
-        IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
+        // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
     }
 
@@ -102,7 +102,7 @@ static class PlayerControllerBPatch {
     /// This is necessary for parenting items to enemies, because the raycast that collides with an object
     /// ignores the enemies layer.
     /// </summary>
-    private static void ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject(ILContext il)
+    /*private static void ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject(ILContext il)
     {
         ILCursor c = new(il);
 
@@ -155,5 +155,5 @@ static class PlayerControllerBPatch {
             current = current.transform.parent;
         }
         return null;
-    }
+    }*/
 }
