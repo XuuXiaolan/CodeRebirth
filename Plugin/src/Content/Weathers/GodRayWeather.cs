@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine.Rendering.HighDefinition;
 using CodeRebirth.src.Util.Extensions;
 using System.Collections;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Content.Weathers;
 struct GodRaySkyEffect(Color colour, Vector3 position, float radius, float falloff, Vector3 bottomPosition)
@@ -120,7 +121,7 @@ public class GodRayManager : CodeRebirthWeathers
     {
         Vector3 centre = CalculateCenterOfPoints(RoundManager.Instance.outsideAINodes.Select(node => node.transform.position).ToList());
 
-        while (godRays.Count() <= 10)
+        while (godRays.Count() <= 1)
         {
             yield return new WaitForSeconds(godRayRandom.NextFloat(0.75f, 1.25f) * timeBetweenGodRaySpawns);
 
@@ -149,7 +150,7 @@ public class GodRayManager : CodeRebirthWeathers
             HDAdditionalLightData light = godRaySpotlights[i].GetComponent<HDAdditionalLightData>();
             light.range = localCamera.farClipPlane * 2;
 
-            float innerAnglePercent = Mathf.Clamp((spotlightData.angle*1.5f) * Mathf.Rad2Deg, 1f, 179f);
+            float innerAnglePercent = Mathf.Clamp(spotlightData.angle * Mathf.Rad2Deg, 1f, 179f);
             if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
             light.SetSpotAngle(innerAnglePercent, innerAnglePercent);
             light.shapeRadius = 0;
@@ -211,7 +212,7 @@ public class GodRayManager : CodeRebirthWeathers
         HDAdditionalLightData light = lightGameObject.AddHDLight(HDLightTypeAndShape.ConeSpot);
         light.range = localCamera.farClipPlane * 2;
 
-        float innerAnglePercent = Mathf.Clamp((spotlightData.angle * 1.5f) * Mathf.Rad2Deg, 1f, 179f);
+        float innerAnglePercent = Mathf.Clamp(spotlightData.angle * Mathf.Rad2Deg, 1f, 179f);
         if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
         light.SetSpotAngle(innerAnglePercent, innerAnglePercent);
         light.shapeRadius = 0;
@@ -243,6 +244,11 @@ public class GodRayManager : CodeRebirthWeathers
     private void GenerateSpotlightMesh(GameObject light, float distance, float bottomRadius, Color colour, bool generateNewMesh = true, int pointCount = 100)
     {
         if (pointCount < 3 || pointCount >= 254) throw new ArgumentOutOfRangeException(nameof(pointCount));
+
+        // Adjust the distance to a more reasonable length
+        float adjustedDistance = distance * 1.05f;
+
+        // Generate the visual mesh (this is purely for visual representation)
         Vector3[] points = new Vector3[pointCount + 1];
         int[] indices = new int[pointCount * 3];
         points[0] = Vector3.zero; // Start at the light's position
@@ -250,7 +256,7 @@ public class GodRayManager : CodeRebirthWeathers
         {
             float theta = (float)i / pointCount * Mathf.PI * 2f;
             Vector3 offset = new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0) * bottomRadius;
-            points[i + 1] = new Vector3(0, 0, distance) + offset;
+            points[i + 1] = new Vector3(0, 0, adjustedDistance) + offset;
             indices[i * 3 + 0] = 0;
             indices[i * 3 + 1] = 1 + ((i + 1) % pointCount);
             indices[i * 3 + 2] = i + 1;
@@ -258,9 +264,6 @@ public class GodRayManager : CodeRebirthWeathers
 
         MeshFilter? meshFilter = generateNewMesh ? light.AddComponent<MeshFilter>() : light.GetComponent<MeshFilter>();
         MeshRenderer? meshRenderer = generateNewMesh ? light.AddComponent<MeshRenderer>() : light.GetComponent<MeshRenderer>();
-        MeshCollider? meshCollider = generateNewMesh ? light.AddComponent<MeshCollider>() : light.GetComponent<MeshCollider>();
-        meshCollider.convex = true;
-        meshCollider.isTrigger = true;
 
         Mesh mesh = new Mesh();
         if (!generateNewMesh) Destroy(meshFilter.mesh);
@@ -270,9 +273,46 @@ public class GodRayManager : CodeRebirthWeathers
         light.GetComponent<Renderer>().material = godRayMaterial;
         light.GetComponent<Renderer>().material.color = new Color(colour.r, colour.g, colour.b, 30f / 255f);
         mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
 
-        meshCollider.sharedMesh = mesh;
+        // Calculate the correct bottom position after the adjustment
+        Vector3 bottomPosition = light.transform.position + light.transform.forward * adjustedDistance;
+
+        // Create a small sphere collider at the center of the bottom position
+        GameObject sphereColliderObject = new GameObject("TriggerCollider");
+        sphereColliderObject.transform.parent = light.transform;
+
+        // Set the position of the collider directly to match the bottom position
+        sphereColliderObject.transform.position = bottomPosition;
+
+        // Adjust the sphere collider's radius to match the bottom radius
+        SphereCollider sphereCollider = sphereColliderObject.AddComponent<SphereCollider>();
+        sphereCollider.radius = bottomRadius;
+        sphereCollider.isTrigger = true;
+
+        // Attach the BetterCooldownTrigger script to the sphere collider object
+        BetterCooldownTrigger cdt = sphereColliderObject.AddComponent<BetterCooldownTrigger>();
+        SetupCooldownTrigger(cdt);
+    }
+
+    private void SetupCooldownTrigger(BetterCooldownTrigger cdt)
+    {
+        cdt.deathAnimation = BetterCooldownTrigger.DeathAnimation.Burnt;
+        cdt.forceDirection = BetterCooldownTrigger.ForceDirection.Up;
+        cdt.causeOfDeath = CauseOfDeath.Burning;
+        cdt.forceMagnitudeAfterDamage = 0f;
+        cdt.forceMagnitudeAfterDeath = 50f;
+        cdt.triggerForEnemies = false;
+        cdt.sharedCooldown = true;
+        cdt.playDefaultPlayerDamageSFX = true;
+        cdt.forceDirectionFromThisObject = false;
+        cdt.soundAttractsDogs = false;
+        cdt.damageDuration = 0f;
+        cdt.damageToDealForPlayers = 5;
+        cdt.damageToDealForEnemies = 1;
+        cdt.damageIntervalForPlayers = 1f;
+        cdt.damageIntervalForEnemies = 20f;
+        cdt.damageClip = new List<AudioClip>();
+        cdt.damageAudioSources = new List<AudioSource>();
     }
 
     private void RegenerateRayComputeBuffer()

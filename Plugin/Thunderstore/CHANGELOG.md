@@ -1,20 +1,22 @@
 ## v0.5.0
 - Fixed Sapphire gem colliders.
+- Fixed Sapphire gem tranparency.
 - Fixed nature's mace stuff not doing its thing right with healing players.
 - Adjusted Icy Hammer to only slow 100% on crit and only deal 1 damage.
-- Added biomes.
 - Fixed floating flora (hopefully).
-- Improved some patches.
+- Fixed money radar icon not disappearing when picked up.
+- Added biomes.
 - Added dangerous flora.
 - Added new companion, robot doggy.
-- Changed the weathers to have a config to not do the powerlevel shenanigans, but currently tornado and meteor shower increase inside power by 6 and decrease outside and daytime by 3.
-- Fixed money radar icon not disappearing when picked up.
-- Flora doesn't spawn on catwalks anymore.
 - Added reworked redwood titan
+- Improved some patches.
+- Changed the weathers to have a config to not do the powerlevel shenanigans, but currently tornado and meteor shower increase inside power by 6 and decrease outside and daytime by 3.
+- Flora doesn't spawn on catwalks anymore.
 - Gave hoverboard some weight when in held mode.
 - Gave hoverboard collisions for moving it around while not held by you or a player.
 - Hoverboard battery works now when holding shift for a boost.
 - Adjusted snowglobe holding animation, no more bugs wooo.
+
 
 ## v0.4.2
 - Sigh, fixed the tornado stuff for the guy who wants it to spawn naturally as an enemy (WONT WORK IF THE WEATHER IS WIMDY ALREADY).

@@ -6,20 +6,23 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
-public class BetterCooldownTrigger : MonoBehaviour //todo: add a check to see if the same player is still in the lava
+public class BetterCooldownTrigger : MonoBehaviour
 {
-    public enum DeathAnimation {
-        Default, 
-        HeadBurst, 
-        Spring, 
-        Electrocuted, 
-        ComedyMask, 
-        TragedyMask, 
-        Burnt, 
-        Snipped, 
+    public enum DeathAnimation
+    {
+        Default,
+        HeadBurst,
+        Spring,
+        Electrocuted,
+        ComedyMask,
+        TragedyMask,
+        Burnt,
+        Snipped,
         SliceHead
     }
-    public enum ForceDirection {
+
+    public enum ForceDirection
+    {
         Forward,
         Backward,
         Up,
@@ -28,7 +31,7 @@ public class BetterCooldownTrigger : MonoBehaviour //todo: add a check to see if
         Right,
         Center,
     }
-    
+
     [Tooltip("Different ragdoll body types that spawn after death.")]
     public DeathAnimation deathAnimation = DeathAnimation.Default;
     [Tooltip("The force direction of the damage.")]
@@ -65,10 +68,11 @@ public class BetterCooldownTrigger : MonoBehaviour //todo: add a check to see if
     public List<AudioSource>? damageAudioSources = null;
 
     private static float lastDamageTime = -Mathf.Infinity; // Last time damage was dealt across all instances
- 
-    // Dictionaries to track coroutine status for each player and enemy
+
     private Dictionary<PlayerControllerB, bool> playerCoroutineStatus = new Dictionary<PlayerControllerB, bool>();
     private Dictionary<EnemyAI, bool> enemyCoroutineStatus = new Dictionary<EnemyAI, bool>();
+    private Dictionary<PlayerControllerB, AudioSource> playerClosestAudioSources = new Dictionary<PlayerControllerB, AudioSource>();
+    private Dictionary<EnemyAI, AudioSource> enemyClosestAudioSources = new Dictionary<EnemyAI, AudioSource>();
 
     private void OnEnable()
     {
@@ -83,96 +87,112 @@ public class BetterCooldownTrigger : MonoBehaviour //todo: add a check to see if
         gameObject.SetActive(false); // Disable this component or GameObject after the damage duration
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
             if (!playerCoroutineStatus.ContainsKey(player))
             {
-                playerCoroutineStatus[player] = false;
-            }
-
-            if (sharedCooldown)
-            {
-                if (Time.time >= lastDamageTime + damageIntervalForPlayers && !playerCoroutineStatus[player])
+                playerCoroutineStatus[player] = true;
+                if (damageAudioSources != null && damageAudioSources.Count > 0)
                 {
-                    lastDamageTime = Time.time; // Update the last damage time
-                    StartCoroutine(DamageCooldown(damageIntervalForPlayers, player: player));
+                    playerClosestAudioSources[player] = GetClosestAudioSource(player.transform);
                 }
+                StartCoroutine(DamagePlayerCoroutine(player));
             }
-            else
-            {
-                if (!playerCoroutineStatus[player]) // Check if coroutine is already running for this player
-                {
-                    StartCoroutine(DamageCooldown(damageIntervalForPlayers, player: player));
-                }
-            }
-            return;
         }
-
-        Transform? parent = TryFindRoot(other.transform);
-        if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead)
+        else if (triggerForEnemies)
         {
-            if (!enemyCoroutineStatus.ContainsKey(enemy))
+            Transform? parent = TryFindRoot(other.transform);
+            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead)
             {
-                enemyCoroutineStatus[enemy] = false;
-            }
-
-            if (sharedCooldown)
-            {
-                if (Time.time >= lastDamageTime + damageIntervalForEnemies && !enemyCoroutineStatus[enemy])
+                if (!enemyCoroutineStatus.ContainsKey(enemy))
                 {
-                    lastDamageTime = Time.time; // Update the last damage time
-                    StartCoroutine(DamageCooldown(damageIntervalForEnemies, enemy: enemy));
-                }
-            } else {
-                if (!enemyCoroutineStatus[enemy]) // Check if coroutine is already running for this enemy
-                {
-                    StartCoroutine(DamageCooldown(damageIntervalForEnemies, enemy: enemy));
+                    enemyCoroutineStatus[enemy] = true;
+                    if (damageAudioSources != null && damageAudioSources.Count > 0)
+                    {
+                        enemyClosestAudioSources[enemy] = GetClosestAudioSource(enemy.transform);
+                    }
+                    StartCoroutine(DamageEnemyCoroutine(enemy));
                 }
             }
-            return;
         }
     }
 
-    private IEnumerator DamageCooldown(float interval, PlayerControllerB? player = null, EnemyAI? enemy = null)
+    private void OnTriggerExit(Collider other)
     {
-        if (player != null)
+        if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
-            playerCoroutineStatus[player] = true; // Set the flag to true when coroutine starts
-
-            // Calculate the force direction after damage
-            Vector3 calculatedForceAfterDamage = CalculateForceDirection(player, forceMagnitudeAfterDamage);
-            Vector3 calculatedForceAfterDeath = CalculateForceDirection(player, forceMagnitudeAfterDeath);
-
-            player.DamagePlayer(damageToDealForPlayers, playDefaultPlayerDamageSFX, true, causeOfDeath, (int)deathAnimation, false, calculatedForceAfterDeath);
-            PlayDamageSound(player.transform);
-
-            if (!player.isPlayerDead)
+            playerCoroutineStatus[player] = false;
+            playerClosestAudioSources.Remove(player);
+        }
+        else if (triggerForEnemies)
+        {
+            Transform? parent = TryFindRoot(other.transform);
+            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy))
             {
-                player.externalForces += calculatedForceAfterDamage;
+                enemyCoroutineStatus[enemy] = false;
+                enemyClosestAudioSources.Remove(enemy);
+            }
+        }
+    }
+
+    private IEnumerator DamagePlayerCoroutine(PlayerControllerB player)
+    {
+        while (playerCoroutineStatus[player])
+        {
+            if (sharedCooldown && Time.time < lastDamageTime + damageIntervalForPlayers)
+            {
+                yield return null;
+                continue;
             }
 
-            yield return new WaitForSeconds(interval);
-            playerCoroutineStatus[player] = false; // Reset the flag when coroutine finishes
+            lastDamageTime = Time.time;
+            ApplyDamageToPlayer(player);
+            yield return new WaitForSeconds(damageIntervalForPlayers);
         }
-        if (enemy != null)
+    }
+
+    private IEnumerator DamageEnemyCoroutine(EnemyAI enemy)
+    {
+        while (enemyCoroutineStatus[enemy])
         {
-            enemyCoroutineStatus[enemy] = true; // Set the flag to true when coroutine starts
+            if (sharedCooldown && Time.time < lastDamageTime + damageIntervalForEnemies)
+            {
+                yield return null;
+                continue;
+            }
 
-            enemy.HitEnemy(damageToDealForEnemies, null, false, -1);
-            PlayDamageSound(enemy.transform);
-
-            yield return new WaitForSeconds(interval);
-            enemyCoroutineStatus[enemy] = false; // Reset the flag when coroutine finishes
+            lastDamageTime = Time.time;
+            ApplyDamageToEnemy(enemy);
+            yield return new WaitForSeconds(damageIntervalForEnemies);
         }
+    }
+
+    private void ApplyDamageToPlayer(PlayerControllerB player)
+    {
+        Vector3 calculatedForceAfterDamage = CalculateForceDirection(player, forceMagnitudeAfterDamage);
+        Vector3 calculatedForceAfterDeath = CalculateForceDirection(player, forceMagnitudeAfterDeath);
+
+        player.DamagePlayer(damageToDealForPlayers, playDefaultPlayerDamageSFX, true, causeOfDeath, (int)deathAnimation, false, calculatedForceAfterDeath);
+        PlayDamageSound(player.transform, playerClosestAudioSources.ContainsKey(player) ? playerClosestAudioSources[player] : null);
+
+        if (!player.isPlayerDead)
+        {
+            player.externalForces += calculatedForceAfterDamage;
+        }
+    }
+
+    private void ApplyDamageToEnemy(EnemyAI enemy)
+    {
+        enemy.HitEnemy(damageToDealForEnemies, null, false, -1);
+        PlayDamageSound(enemy.transform, enemyClosestAudioSources.ContainsKey(enemy) ? enemyClosestAudioSources[enemy] : null);
     }
 
     private Vector3 CalculateForceDirection(PlayerControllerB player, float baseForce)
     {
         Vector3 forceDirectionVector = Vector3.zero;
 
-        // Determine the base direction vector based on the enum
         switch (forceDirection)
         {
             case ForceDirection.Forward:
@@ -198,55 +218,53 @@ public class BetterCooldownTrigger : MonoBehaviour //todo: add a check to see if
                 break;
         }
 
-        // Multiply the direction vector by the base force magnitude
         return forceDirectionVector.normalized * baseForce;
     }
 
-    private void PlayDamageSound(Transform targetTransform)
+    private void PlayDamageSound(Transform targetTransform, AudioSource? audioSource)
     {
-        if (damageClip != null && damageAudioSources != null && damageAudioSources.Count > 0)
+        if (damageClip != null && audioSource != null)
         {
-            AudioSource closestAudioSource = damageAudioSources[0];
-            float closestDistance = float.MaxValue;
-            foreach (AudioSource audioSource in damageAudioSources)
-            {
-                float distanceToTarget = Vector3.Distance(audioSource.transform.position, targetTransform.position);
-
-                if (distanceToTarget < closestDistance)
-                {
-                    closestDistance = distanceToTarget;
-                    closestAudioSource = audioSource;
-                }
-            }
-
             if (soundAttractsDogs)
             {
-                RoundManager.Instance.PlayAudibleNoise(closestAudioSource.transform.position, closestAudioSource.maxDistance, closestAudioSource.volume, 0, false, 0);
+                RoundManager.Instance.PlayAudibleNoise(audioSource.transform.position, audioSource.maxDistance, audioSource.volume, 0, false, 0);
             }
 
-            WalkieTalkie.TransmitOneShotAudio(closestAudioSource, damageClip[Random.Range(0, damageClip.Count)], closestAudioSource.volume);
-            RoundManager.PlayRandomClip(closestAudioSource, damageClip.ToArray(), true, closestAudioSource.volume, 0, damageClip.Count);
-            closestAudioSource.PlayOneShot(damageClip[Random.Range(0, damageClip.Count)]);
+            WalkieTalkie.TransmitOneShotAudio(audioSource, damageClip[Random.Range(0, damageClip.Count)], audioSource.volume);
+            RoundManager.PlayRandomClip(audioSource, damageClip.ToArray(), true, audioSource.volume, 0, damageClip.Count);
+            audioSource.PlayOneShot(damageClip[Random.Range(0, damageClip.Count)]);
         }
+    }
+
+    private AudioSource GetClosestAudioSource(Transform targetTransform)
+    {
+        AudioSource closest = damageAudioSources![0];
+        float closestDistance = Vector3.Distance(closest.transform.position, targetTransform.position);
+
+        foreach (AudioSource source in damageAudioSources)
+        {
+            float distance = Vector3.Distance(source.transform.position, targetTransform.position);
+            if (distance < closestDistance)
+            {
+                closest = source;
+                closestDistance = distance;
+            }
+        }
+
+        return closest;
     }
 
     public void OnDisable()
     {
         StopAllCoroutines();
-        // Reset all flags when the object is disabled
-        foreach (var key in playerCoroutineStatus.Keys.ToList())
-        {
-            playerCoroutineStatus[key] = false;
-        }
-        foreach (var key in enemyCoroutineStatus.Keys.ToList())
-        {
-            enemyCoroutineStatus[key] = false;
-        }
+        playerCoroutineStatus.Clear();
+        enemyCoroutineStatus.Clear();
+        playerClosestAudioSources.Clear();
+        enemyClosestAudioSources.Clear();
     }
 
     public static Transform? TryFindRoot(Transform child)
     {
-        // Iterate upwards until we find a NetworkObject
         Transform current = child;
         while (current != null)
         {
