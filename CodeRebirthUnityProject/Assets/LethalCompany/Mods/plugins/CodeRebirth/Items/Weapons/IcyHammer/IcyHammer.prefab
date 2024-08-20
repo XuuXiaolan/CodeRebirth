@@ -36,6 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 109547010174821447}
+  - {fileID: 3562574291700897897}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1140884561607105622
@@ -107,8 +108,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.412173, y: 1.0010984, z: 0.35888475}
-  m_Center: {x: 0, y: -0.07649121, z: -0.00000045448542}
+  m_Size: {x: 0.412173, y: 1.7102642, z: 0.35888475}
+  m_Center: {x: 0, y: -0.39703965, z: -0.00000044703484}
 --- !u!82 &5160405325622461773
 AudioSource:
   m_ObjectHideFlags: 0
@@ -129,7 +130,7 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 1.14
   MinDistance: 1
   MaxDistance: 16
   Pan2D: 0
@@ -181,7 +182,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.31111112
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -248,6 +249,7 @@ MonoBehaviour:
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
   mainObjectRenderer: {fileID: 2896319507796682908}
+  isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}
@@ -265,6 +267,8 @@ MonoBehaviour:
   defaultForce: 1
   critPossible: 1
   critChance: 25
+  canBreakTrees: 0
+  weaponTip: {fileID: 3562574291700897897}
 --- !u!114 &5331341163544241749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,6 +289,37 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 0
+--- !u!1 &8391879688554021295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3562574291700897897}
+  m_Layer: 6
+  m_Name: Tip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3562574291700897897
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8391879688554021295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.636, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4069820177949037555}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8493214924997257148
 GameObject:
   m_ObjectHideFlags: 0

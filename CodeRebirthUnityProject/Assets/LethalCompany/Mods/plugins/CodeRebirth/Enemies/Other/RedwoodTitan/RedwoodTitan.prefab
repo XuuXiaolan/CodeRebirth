@@ -771,7 +771,7 @@ MonoBehaviour:
   m_Script: {fileID: -502015034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainscript: {fileID: 4537627090396360056}
+  mainscript: {fileID: 0}
 --- !u!1 &2362142276317583931
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,7 +1468,7 @@ MonoBehaviour:
   m_Script: {fileID: -502015034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainscript: {fileID: 4537627090396360056}
+  mainscript: {fileID: 0}
 --- !u!1 &6138474869787139688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1643,7 +1643,7 @@ MonoBehaviour:
   previousBehaviourStateIndex: 0
   currentOwnershipOnThisClient: -1
   isInsidePlayerShip: 0
-  AIIntervalTime: 0.2
+  AIIntervalTime: 0.1
   inSpecialAnimation: 0
   inSpecialAnimationWithPlayer: {fileID: 0}
   serverPosition: {x: 0, y: 0, z: 0}
@@ -1664,7 +1664,7 @@ MonoBehaviour:
   moveTowardsDestination: 1
   destination: {x: 0, y: 0, z: 0}
   addPlayerVelocityToDestination: 0
-  syncMovementSpeed: 99999
+  syncMovementSpeed: 0.22
   timeSinceSpawn: 0
   exitVentAnimationTime: 1
   ventAnimationFinished: 0
@@ -1672,7 +1672,7 @@ MonoBehaviour:
   daytimeEnemyLeaving: 0
   enemyHP: 69
   nodesTempArray: []
-  openDoorSpeedMultiplier: 0
+  openDoorSpeedMultiplier: 1
   useSecondaryAudiosOnAnimatedObjects: 0
   currentSearch:
     unsearchedNodes: []
@@ -1686,6 +1686,7 @@ MonoBehaviour:
     nodesEliminatedInCurrentSearch: 0
     inProgress: 0
     calculatingNodeInSearch: 0
+    startedSearchAtSelf: 0
     searchWidth: 200
     searchPrecision: 5
     randomized: 0
@@ -1698,6 +1699,7 @@ MonoBehaviour:
   debugEnemyAI: 0
   isOutside: 1
   hitsPhysicsObjects: 0
+  gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
   DeathColliders: []
   CollisionFootR: {fileID: 6301755504406239059}
@@ -1722,7 +1724,7 @@ MonoBehaviour:
   spawnSound: {fileID: 8300000, guid: eaef63b734a1bc347b1f624d85966587, type: 3}
   roarSound: {fileID: 8300000, guid: 751dff49638e1a745ba3cc2b49f5c3ff, type: 3}
   crunchySquishSound: {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
-  holdingBone: {fileID: 6138474869787139688}
+  holdingBone: {fileID: 2362142276317583931}
   eatingArea: {fileID: 8502562699440387874}
   eating: {fileID: 7400000, guid: bde4b014909da4d4ab48f5e78949ad7c, type: 2}
   kickAnimation: {fileID: 7400000, guid: 210fe676fc89119429b58c36a07c3603, type: 2}
@@ -1781,6 +1783,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1917823488
+    DestinationState: 1377418853
+    TransitionDuration: 2.0673523
+    TriggerNameHash: 1822675767
+    TransitionIndex: 0
   - IsCrossFadeExit: 0
     Layer: 0
     OriginatingState: 1377418853

@@ -75,6 +75,7 @@ public class Plugin : BaseUnityPlugin {
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
+        ShovelPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");

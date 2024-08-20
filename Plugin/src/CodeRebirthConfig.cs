@@ -74,6 +74,7 @@ public class CodeRebirthConfig {
     public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     // Misc
+    public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
     public ConfigEntry<bool> ConfigEnableExtendedLogging { get; private set; }
     public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; private set; }
@@ -214,6 +215,10 @@ public class CodeRebirthConfig {
                                             "Tornado Yeet SFX");
         #endregion
         #region Weapons
+        ConfigCanBreakTrees = configFile.Bind("Weapon Options",
+                                            "Weapons | Can Break Trees",
+                                            true,
+                                            "Enables/Disables breaking trees in the game for code rebirth weapons.");
         ConfigAllowCrits = configFile.Bind("Weapon Options",
                                             "Weapons | Crits",
                                             true,

@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: -1657131812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialSpeed: 14.9
+  initialSpeed: 50
   chanceToSpawnScrap: 1
   ImpactAudio: {fileID: 1029774656660226041}
   NormalTravelAudio: {fileID: 4710230063907462938}
@@ -560,29 +560,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 1
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.9435372
-      value: 0.9186509
-      inSlope: 1.4551542
-      outSlope: 1.4551542
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.5243753
-    - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1.0829085
-      outSlope: 1.0829085
+      inSlope: 1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.37085664
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

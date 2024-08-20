@@ -39,7 +39,7 @@ static class EnemyAIPatch
     {
         if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is IcyHammer)
         {   
-            if (enemyRandom.NextFloat(0, 100) <= 10) {
+            if (enemyRandom.NextFloat(0, 100) <= 25) {
                 Plugin.ExtendedLogging("Slowed enemy");
                 if (!speedOfEnemies.ContainsKey(self)) speedOfEnemies[self] = self.agent.speed;
                 if (slowedEnemies.ContainsKey(self) && slowedEnemies[self] != null)

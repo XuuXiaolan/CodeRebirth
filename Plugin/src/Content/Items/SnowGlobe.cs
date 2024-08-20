@@ -29,9 +29,6 @@ public class SnowGlobe : GrabbableObject
 
     [SerializeField]
     private AudioSource musicAS = null!;
-
-    [SerializeField]
-    private AnimationClip overrideClip = null!;
     private PlayerControllerB? previouslyHeldBy;
 
     private bool activated;

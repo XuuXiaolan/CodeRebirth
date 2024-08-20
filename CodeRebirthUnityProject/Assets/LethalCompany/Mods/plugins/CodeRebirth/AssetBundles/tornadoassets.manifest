@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1006866901
+CRC: 4211774351
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b43dac72fa5759ff47b929063dac1222
+    Hash: eea4f76d41fc40fae680ac770badedae
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d8577520c21a1748b972ba614bcf468e
+    Hash: a8a50feb312cb9b44dee8b6796819bf2
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: b43dac72fa5759ff47b929063dac1222
+    Hash: eea4f76d41fc40fae680ac770badedae
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -43,6 +43,8 @@ ClassTypes:
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 693530375, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: f8ec375840c30a0e501d18e3ba05fdb3, type: 3}
@@ -53,11 +55,9 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
-- Class: 114
   Script: {fileID: -862584014, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 114
-  Script: {fileID: 693530375, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
@@ -67,12 +67,6 @@ ClassTypes:
 - Class: 198
   Script: {instanceID: 0}
 - Class: 199
-  Script: {instanceID: 0}
-- Class: 241
-  Script: {instanceID: 0}
-- Class: 243
-  Script: {instanceID: 0}
-- Class: 245
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
@@ -84,7 +78,6 @@ SerializeReferenceClassIdentifiers:
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Fbx/a4.FBX
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Material/Texture/a6_2.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Shaders/SH_Vefects_VFX_Distortion.shader
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Material/Texture/a8.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Material/Texture/a7.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Materials/Material.001.mat
@@ -93,7 +86,6 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Material/a2_b.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Audio/Tornado_Near.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Materials/Textures/YieldSignTex.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Shaders/SH_Vefects_VFX_AdvTrail.shader
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Materials/Textures/AirSharkModel_Material.001_Normal.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Material/Texture/a4.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/Tornado/Materials/Textures/BroomTex.png
