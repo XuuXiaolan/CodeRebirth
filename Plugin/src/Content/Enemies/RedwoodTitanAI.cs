@@ -42,11 +42,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     private LineRenderer line = null!;
     private Collider[] enemyColliders = null!;
     private PlayerControllerB? playerToKick = null;
+    private bool kickingOut = false;
     [NonSerialized]
     public bool kicking = false;
     [NonSerialized]
     public bool jumping = false;
-    public float kickMultipler = 0.1f;
 
     #region ThreatType
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
@@ -171,14 +171,16 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             Vector3 targetPosition = playerToKick.transform.position;
 
             // Introduce an offset to the right of the player to align with the left leg
-            Vector3 offset = this.transform.right * kickMultipler; // Adjust the 0.5f value as needed // todo: make him look more riht using vector3.right?
-            Vector3 direction = (targetPosition + offset - this.transform.position).normalized;
+            Vector3 direction = targetPosition.normalized;
             direction.y = 0; // Keep the y component zero to prevent vertical rotation
 
-            if (direction != Vector3.zero) {
+            if (!kickingOut) {
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
                 this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
-            }   
+            } else if (kickingOut) {
+                Quaternion lookRotation = Quaternion.LookRotation(this.transform.right);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
+            }
         }
     }
 
@@ -237,6 +239,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public IEnumerator KickTimer() {
         yield return new WaitForSeconds(kickAnimation.length);
         kicking = false;
+        kickingOut = false;
         Plugin.ExtendedLogging("Kick ended");
         playerToKick = null;
         agent.speed = walkingSpeed;
@@ -276,7 +279,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)State.RunningToTarget);
             StartCoroutine(SetSpeedForChasingGiant());
-            agent.speed = walkingSpeed * 4;
             return;
         } // Look for Giants
         PlayerControllerB closestPlayer = GetClosestPlayerToRedwood();
@@ -415,6 +417,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy)  {
         if (isEnemyDead) return;
+        Plugin.ExtendedLogging("OnCollideWithEnemy");
         if (collidedEnemy == targetEnemy && !eatingEnemy && currentBehaviourStateIndex == (int)State.RunningToTarget) {
             eatingEnemy = true;
             foreach (Collider enemyCollider in targetEnemy.GetComponentsInChildren<Collider>()) {
@@ -490,6 +493,10 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             return true;
         }
         return false;
+    }
+
+    public void KickingOutStart() { // AnimEvent
+        kickingOut = true;
     }
 
     public void WanderAroundAfterSpawnAnimation() { // AnimEvent
