@@ -182,15 +182,28 @@ static class RoundManagerPatch {
 
 	static void SpawnCrates() {
 		Plugin.ExtendedLogging("Spawning crates!!!");
-		System.Random random = new();
-		int minValue = 0;
-		for (int i = 0; i < random.NextInt(minValue, Mathf.Clamp(Plugin.ModConfig.ConfigCrateAbundance.Value, minValue, 1000)); i++) {
+		System.Random random = new ();
+		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigWoodenCrateAbundance.Value, 0, 1000)); i++) {
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length-1)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
 
-			GameObject crate = random.NextBool() ? MapObjectHandler.Instance.Crate.MetalCratePrefab : MapObjectHandler.Instance.Crate.ItemCratePrefab;
+			GameObject crate = MapObjectHandler.Instance.Crate.WoodenCratePrefab;
+			
+			GameObject spawnedCrate = GameObject.Instantiate(crate, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+			Plugin.ExtendedLogging($"Spawning {crate.name} at {hit.point}");
+			spawnedCrate.transform.up = hit.normal;
+			spawnedCrate.GetComponent<NetworkObject>().Spawn();
+		}
+
+		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigMetalCrateAbundance.Value, 0, 1000)); i++) {
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length-1)].transform.position;
+			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
+
+			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+
+			GameObject crate = MapObjectHandler.Instance.Crate.MetalCratePrefab;
 			
 			GameObject spawnedCrate = GameObject.Instantiate(crate, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 			Plugin.ExtendedLogging($"Spawning {crate.name} at {hit.point}");

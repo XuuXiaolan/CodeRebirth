@@ -842,7 +842,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         if (doors == null || DoorIndex >= doors.Length) return;
         Plugin.ExtendedLogging("Exploding door: " + DoorIndex);
         DoorLock door = doors[DoorIndex];
-        Utilities.CreateExplosion(door.transform.position, true, 25, 0, 4, 0, CauseOfDeath.Blast, null);
+        CRUtilities.CreateExplosion(door.transform.position, true, 25, 0, 4, 0, CauseOfDeath.Blast, null);
         Destroy(door.transform.parent.gameObject);
         // remove the door from the array
         doors = doors.Where((d, i) => i != DoorIndex).ToArray();

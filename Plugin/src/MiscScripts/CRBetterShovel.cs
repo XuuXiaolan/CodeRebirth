@@ -1,11 +1,20 @@
+using System;
 using System.Linq;
+using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
-public class BetterShovel : Shovel { // Added for potential future implementations
+public class CRBetterShovel : Shovel {
     public float ShovelSpeedMultiplier = 1f;
+
+    public bool canBreakTrees = false;
     private bool _animatorSpeedCurrentlyModified;
     private float _originalPlayerAnimatorSpeed;
+    private PlayerControllerB previouslyHeldBy = null!;
+    [NonSerialized] public int defaultForce = 0;
+    public bool critPossible = true;
+    public float critChance = 25;
+    public Transform weaponTip = null!;
 
 
     public override void Start()
@@ -36,23 +45,23 @@ public class BetterShovel : Shovel { // Added for potential future implementatio
             _animatorSpeedCurrentlyModified = true;
             playerHeldBy.playerBodyAnimator.speed = newSpeed;
         }
-        previousPlayerHeldBy = playerHeldBy;
+        previouslyHeldBy = playerHeldBy;
     }
 
     public override void DiscardItem()
     {
         base.DiscardItem();
         // Get the reel up animation clip
-        AnimationClip reelingUpClip = previousPlayerHeldBy.playerBodyAnimator.runtimeAnimatorController.animationClips
+        AnimationClip reelingUpClip = previouslyHeldBy.playerBodyAnimator.runtimeAnimatorController.animationClips
             .FirstOrDefault(clip => clip.name == "ShovelReelUp");
-        AnimationClip swingDownClip = previousPlayerHeldBy.playerBodyAnimator.runtimeAnimatorController.animationClips
+        AnimationClip swingDownClip = previouslyHeldBy.playerBodyAnimator.runtimeAnimatorController.animationClips
             .FirstOrDefault(clip => clip.name == "HitShovel");
 
         // Check if we found the clip successfully.
         if (reelingUpClip != null && swingDownClip != null &&  _animatorSpeedCurrentlyModified)
         {
             // Get the current player body animator speed.
-            previousPlayerHeldBy.playerBodyAnimator.speed = _originalPlayerAnimatorSpeed;
+            previouslyHeldBy.playerBodyAnimator.speed = _originalPlayerAnimatorSpeed;
             _animatorSpeedCurrentlyModified = false;
         }
     }
@@ -61,16 +70,16 @@ public class BetterShovel : Shovel { // Added for potential future implementatio
     {
         base.PocketItem();
         // Get the reel up animation clip
-        AnimationClip reelingUpClip = previousPlayerHeldBy.playerBodyAnimator.runtimeAnimatorController.animationClips
+        AnimationClip reelingUpClip = previouslyHeldBy.playerBodyAnimator.runtimeAnimatorController.animationClips
             .FirstOrDefault(clip => clip.name == "ShovelReelUp");
-        AnimationClip swingDownClip = previousPlayerHeldBy.playerBodyAnimator.runtimeAnimatorController.animationClips
+        AnimationClip swingDownClip = previouslyHeldBy.playerBodyAnimator.runtimeAnimatorController.animationClips
             .FirstOrDefault(clip => clip.name == "HitShovel");
 
         // Check if we found the clip successfully.
         if (reelingUpClip != null && swingDownClip != null && _animatorSpeedCurrentlyModified)
         {
             // Get the current player body animator speed.
-            previousPlayerHeldBy.playerBodyAnimator.speed = _originalPlayerAnimatorSpeed;
+            previouslyHeldBy.playerBodyAnimator.speed = _originalPlayerAnimatorSpeed;
             _animatorSpeedCurrentlyModified = false;
         }
     }

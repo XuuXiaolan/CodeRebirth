@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace CodeRebirth.src.MiscScripts;
-public class Utilities
+public class CRUtilities
 {
     private static Dictionary<int, int> _masksByLayer = new Dictionary<int, int>();
     public static void Init()

@@ -35,7 +35,8 @@ public class CodeRebirthConfig {
     public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
     public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
-    public ConfigEntry<int> ConfigCrateAbundance { get; private set; }
+    public ConfigEntry<int> ConfigMetalCrateAbundance { get; private set; }
+    public ConfigEntry<int> ConfigWoodenCrateAbundance { get; private set; }
     public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
     // Enemy Specific
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
@@ -510,10 +511,14 @@ public class CodeRebirthConfig {
                                             "Item Crate | Enabled",
                                             true,
                                             "Enables/Disables the Item Crate from spawning.");
-        ConfigCrateAbundance = configFile.Bind("Crate Options",
-                                            "Crate | Abundance",
+        ConfigMetalCrateAbundance = configFile.Bind("Crate Options",
+                                            "Crate | Metal Abundance",
                                             3,
-                                            "Abundance of crates that spawn outside (between 0 and your number).");
+                                            "Abundance of Metal Crates that spawn outside (between 0 and your number).");
+        ConfigWoodenCrateAbundance = configFile.Bind("Crate Options",
+                                            "Crate | Wooden Abundance",
+                                            3,
+                                            "Abundance of Wooden Crates that spawn outside (between 0 and your number).");
         #endregion
         configFile.SaveOnConfigSet = true;
         ClearUnusedEntries(configFile);
