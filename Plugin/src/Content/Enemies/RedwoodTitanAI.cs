@@ -275,12 +275,20 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             Plugin.ExtendedLogging("Start Target Giant");
             StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)State.RunningToTarget);
-            agent.speed = walkingSpeed * 2;
+            StartCoroutine(SetSpeedForChasingGiant());
+            agent.speed = walkingSpeed * 4;
+            return;
         } // Look for Giants
         PlayerControllerB closestPlayer = GetClosestPlayerToRedwood();
         if (closestPlayer != null) {
             DoFunnyThingWithNearestPlayer(closestPlayer);
         }
+    }
+
+    public IEnumerator SetSpeedForChasingGiant() {
+        agent.speed = 0f;
+        yield return new WaitForSeconds(6.9f);
+        agent.speed = walkingSpeed * 4;
     }
 
     public void DoRunningToTarget() {
@@ -338,13 +346,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public void ParticlesFromEatingForestKeeper(EnemyAI targetEnemy) {
         if (targetEnemy is ForestGiantAI) {
-            ForestKeeperParticles.Play(); // Also make them be affected by the world for proper fog stuff?
+            //ForestKeeperParticles.Play(); // Also make them be affected by the world for proper fog stuff?
         } else if (targetEnemy is DriftwoodMenaceAI) {
-            DriftwoodGiantParticles.Play();
+            //DriftwoodGiantParticles.Play();
         } else if (targetEnemy is RadMechAI) {
-            OldBirdParticles.Play();
+            //OldBirdParticles.Play();
         }
-        Plugin.ExtendedLogging(targetEnemy.enemyType.enemyName);
+        Plugin.ExtendedLogging("Ate: " + targetEnemy.enemyType.enemyName);
         targetEnemy.KillEnemyOnOwnerClient(overrideDestroy: true);
     }
 
@@ -353,8 +361,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         float minDistance = float.MaxValue;
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies) {
-            if (enemy is not ForestGiantAI || enemy is not DriftwoodMenaceAI || enemy.isEnemyDead) continue;
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (enemy is not ForestGiantAI && enemy is not DriftwoodMenaceAI || enemy.isEnemyDead) continue;
+            float distance = Vector3.Distance(this.transform.position, enemy.transform.position);
             if (distance < range && distance < minDistance && Vector3.Distance(enemy.transform.position, shipBoundaries.position) > distanceFromShip) {
                 minDistance = distance;
                 closestEnemy = enemy;
@@ -402,6 +410,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         PlayerControllerB player = MeetsStandardPlayerCollisionConditions(other);
         if (player == null) return;
         player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
+        // play player death particles.
     }
 
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy)  {
@@ -411,6 +420,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             foreach (Collider enemyCollider in targetEnemy.GetComponentsInChildren<Collider>()) {
                 enemyCollider.enabled = false;
             }
+            Plugin.ExtendedLogging("Eating Giant");
             StartCoroutine(EatTargetEnemy(targetEnemy));
         }
     }

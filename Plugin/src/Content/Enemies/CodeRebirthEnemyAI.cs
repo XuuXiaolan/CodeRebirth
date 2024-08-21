@@ -9,8 +9,9 @@ namespace CodeRebirth.src.Content.Enemies;
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
     public EnemyAI? targetEnemy;
-    private Coroutine? searchRoutine = null;
+    private Coroutine? searchRoutine;
     private bool reachedDestination;
+    private bool isSearching = false;
 
     public override void Start()
     {
@@ -251,26 +252,32 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     }
 
     public void StartSearchRoutine(Vector3 position, float radius, LayerMask agentMask) {
-        searchRoutine ??= StartCoroutine(SearchAlgorithm(position, radius));
+        if (searchRoutine != null) {
+            StopCoroutine(searchRoutine);
+        }
+        isSearching = true;
+        searchRoutine = StartCoroutine(SearchAlgorithm(position, radius));
     }
 
     public void StopSearchRoutine() {
+        isSearching = false;
         StopCoroutine(searchRoutine);
         searchRoutine = null;
     }
 
     private IEnumerator SearchAlgorithm(Vector3 position, float radius)
     {
-        while (true) {
+        while (isSearching) {
             Vector3 positionToTravel = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, radius, default);
             reachedDestination = false;
-            while (!reachedDestination) {
+            while (!reachedDestination && isSearching) {
                 SetDestinationToPosition(positionToTravel);
                 yield return new WaitForSeconds(8f);
-                if (Vector3.Distance(this.transform.position, positionToTravel) < 5f) {
+                if (Vector3.Distance(this.transform.position, positionToTravel) < 5f || agent.velocity.magnitude <= 0.5f) {
                     reachedDestination = true;
                 }
             }
         }
+        searchRoutine = null; // Clear the coroutine reference when it finishes
     }
 }

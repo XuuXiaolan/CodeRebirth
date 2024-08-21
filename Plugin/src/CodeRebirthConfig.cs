@@ -261,7 +261,7 @@ public class CodeRebirthConfig {
                                             ));
         ConfigRedwoodShipPadding = configFile.Bind("Redwood Options",
                                             "Redwood | Ship Padding",
-                                            15f,
+                                            10f,
                                             new ConfigDescription(
                                                 "How far away the redwood usually stays from the ship.",
                                                 new AcceptableValueRange<float>(0, 999f)
