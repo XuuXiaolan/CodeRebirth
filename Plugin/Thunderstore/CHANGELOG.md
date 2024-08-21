@@ -7,7 +7,6 @@
 - Fixed money radar icon not disappearing when picked up.
 - Added biomes.
 - Added dangerous flora.
-- Added new companion, robot doggy.
 - Added reworked redwood titan
 - Improved some patches.
 - Changed the weathers to have a config to not do the powerlevel shenanigans, but currently tornado and meteor shower increase inside power by 6 and decrease outside and daytime by 3.
@@ -17,6 +16,7 @@
 - Hoverboard battery works now when holding shift for a boost.
 - Adjusted snowglobe holding animation, no more bugs wooo.
 - Epic axe can chop trees now.
+- Added emerald meteorites... for real now, i might've lied last time I said that.
 
 ## v0.4.2
 - Sigh, fixed the tornado stuff for the guy who wants it to spawn naturally as an enemy (WONT WORK IF THE WEATHER IS WIMDY ALREADY).

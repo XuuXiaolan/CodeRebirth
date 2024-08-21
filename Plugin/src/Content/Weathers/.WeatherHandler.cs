@@ -15,6 +15,9 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         [LoadFromBundle("MeteoriteObj")]
         public Item MeteoriteItem { get; private set; } = null!;
 
+        [LoadFromBundle("EmeraldMeteoriteObj")]
+        public Item EmeraldMeteoriteItem { get; private set; } = null!;
+
         [LoadFromBundle("Meteor.prefab")]
         public GameObject MeteorPrefab { get; private set; } = null!;
         
@@ -42,43 +45,14 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         public TerminalKeyword TornadoTerminalKeyword { get; private set; } = null!;
     }
 
-    public class GodRayAssets(string bundleName) : AssetBundleLoader<GodRayAssets>(bundleName) {
-        [LoadFromBundle("GodRayManager.prefab")] // <-- Weather
-        public GameObject GodRayManagerPermanentEffectPrefab { get; private set; } = null!;
-    }
-
-    public GodRayAssets GodRay { get; private set; } = null!;
     public MeteoriteAssets Meteorite { get; private set; } = null!;
     public TornadoAssets Tornado { get; private set; } = null!;
-    public Weather GodRaysWeather { get; private set; } = null!;
     public Weather MeteorShowerWeather { get; private set; } = null!;
     public Weather TornadoesWeather { get; private set; } = null!;
 
     public WeatherHandler() {
         if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
         if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
-        if (true) RegisterGodRayWeather();
-    }
-
-    private void RegisterGodRayWeather() {
-        GodRay = new GodRayAssets("godrayassets");
-        GameObject effectPermanentObject = GameObject.Instantiate(GodRay.GodRayManagerPermanentEffectPrefab);
-        effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
-        GameObject.DontDestroyOnLoad(effectPermanentObject);
-        ImprovedWeatherEffect godRayEffect = new(null, effectPermanentObject) {
-            SunAnimatorBool = "",
-        };
-
-        GodRaysWeather = new Weather("Red Sun", godRayEffect) {
-            DefaultWeight = 3999,
-            ScrapAmountMultiplier = 1,
-            ScrapValueMultiplier = 1,
-            DefaultLevelFilters = new string[] { "Gordion" },
-            LevelFilteringOption = FilteringOption.Exclude,
-            Color = new Color(1f, 0f, 0f, 1f),
-        };
-
-        WeatherManager.RegisterWeather(GodRaysWeather);
     }
 
     private void RegisterTornadoWeather() {
@@ -96,9 +70,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         };
 
         TornadoesWeather = new Weather("Windy", tornadoEffect) {
-            DefaultWeight = Plugin.ModConfig.ConfigTornadoWeatherWeight.Value,
-            ScrapAmountMultiplier = Plugin.ModConfig.ConfigTornadoScrapAmountMultiplier.Value,
-            ScrapValueMultiplier = Plugin.ModConfig.ConfigTornadoScrapValueMultiplier.Value,
+            DefaultWeight = 50,
             DefaultLevelFilters = new string[] { "Gordion" },
             LevelFilteringOption = FilteringOption.Exclude,
             Color = UnityEngine.Color.gray,
@@ -111,6 +83,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
         Plugin.samplePrefabs.Add("Meteorite", Meteorite.MeteoriteItem);
         RegisterScrapWithConfig("All:0", Meteorite.MeteoriteItem);
+        Plugin.samplePrefabs.Add("Emerald Meteorite", Meteorite.EmeraldMeteoriteItem);
+        RegisterScrapWithConfig("All:0", Meteorite.EmeraldMeteoriteItem);
 
         GameObject effectObject = GameObject.Instantiate(Meteorite.MeteorEffectPrefab);
         effectObject.hideFlags = HideFlags.HideAndDontSave;
@@ -125,9 +99,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         };
 
         MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {
-            DefaultWeight = Plugin.ModConfig.ConfigMeteorWeatherWeight.Value,
-            ScrapAmountMultiplier = Plugin.ModConfig.ConfigMeteorScrapAmountMultiplier.Value,
-            ScrapValueMultiplier = Plugin.ModConfig.ConfigMeteorScrapValueMultiplier.Value,
+            DefaultWeight = 50,
             DefaultLevelFilters = new string[] { "Gordion" },
             LevelFilteringOption = FilteringOption.Exclude,
             Color = new Color(0.5f, 0f, 0f, 1f),

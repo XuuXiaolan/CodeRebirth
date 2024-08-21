@@ -9,4 +9,3 @@
 - add robot doggy.
 - finish adding biomes.
 - add dangerous flora.
-- fix red sun bugs
