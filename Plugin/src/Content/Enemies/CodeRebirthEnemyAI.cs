@@ -3,11 +3,15 @@ using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
+using System.Collections;
 
 namespace CodeRebirth.src.Content.Enemies;
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
     public EnemyAI? targetEnemy;
+    private Coroutine? searchRoutine = null;
+    private bool reachedDestination;
+
     public override void Start()
     {
         base.Start();
@@ -244,5 +248,29 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [ClientRpc]
     public void SetEnemyOutsideClientRpc(bool setOutisde) {
         this.SetEnemyOutside(setOutisde);
+    }
+
+    public void StartSearchRoutine(Vector3 position, float radius, LayerMask agentMask) {
+        searchRoutine ??= StartCoroutine(SearchAlgorithm(position, radius));
+    }
+
+    public void StopSearchRoutine() {
+        StopCoroutine(searchRoutine);
+        searchRoutine = null;
+    }
+
+    private IEnumerator SearchAlgorithm(Vector3 position, float radius)
+    {
+        while (true) {
+            Vector3 positionToTravel = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, radius, default);
+            reachedDestination = false;
+            while (!reachedDestination) {
+                SetDestinationToPosition(positionToTravel);
+                yield return new WaitForSeconds(8f);
+                if (Vector3.Distance(this.transform.position, positionToTravel) < 5f) {
+                    reachedDestination = true;
+                }
+            }
+        }
     }
 }

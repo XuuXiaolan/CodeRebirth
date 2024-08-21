@@ -41,8 +41,12 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     private bool testBuild = false; 
     private LineRenderer line = null!;
     private Collider[] enemyColliders = null!;
+    private PlayerControllerB? playerToKick = null;
     [NonSerialized]
-    public bool startedKick = false;
+    public bool kicking = false;
+    [NonSerialized]
+    public bool jumping = false;
+    public float kickMultipler = 0.1f;
 
     #region ThreatType
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
@@ -89,7 +93,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 #if DEBUG
         testBuild = true;
 #endif
-
+        this.currentSearch.searchWidth *= 10f;
+        this.currentSearch.searchPrecision *= 0.25f;
         walkingSpeed = Plugin.ModConfig.ConfigRedwoodSpeed.Value;
         distanceFromShip = Plugin.ModConfig.ConfigRedwoodShipPadding.Value;
         seeableDistance = Plugin.ModConfig.ConfigRedwoodEyesight.Value;
@@ -159,7 +164,26 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         base.EnableEnemyMesh(enable);
     }
 
+    public override void Update() {
+        base.Update();
+        if (isEnemyDead) return;
+        if (kicking && playerToKick != null) {
+            Vector3 targetPosition = playerToKick.transform.position;
+
+            // Introduce an offset to the right of the player to align with the left leg
+            Vector3 offset = this.transform.right * kickMultipler; // Adjust the 0.5f value as needed // todo: make him look more riht using vector3.right?
+            Vector3 direction = (targetPosition + offset - this.transform.position).normalized;
+            direction.y = 0; // Keep the y component zero to prevent vertical rotation
+
+            if (direction != Vector3.zero) {
+                Quaternion lookRotation = Quaternion.LookRotation(direction);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
+            }   
+        }
+    }
+
     public void LateUpdate() {
+        if (isEnemyDead) return;
         if (currentBehaviourStateIndex == (int)State.EatingTargetGiant && targetEnemy != null) {
             var grabPosition = holdingBone.transform.position;
             targetEnemy.transform.position = grabPosition + new Vector3(0, -1f, 0);
@@ -186,39 +210,35 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer) {
         var distanceToClosestPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
-        if (distanceToClosestPlayer <= 5f && UnityEngine.Random.Range(0f, 100f) <= 1f && !startedKick) {
+        if (distanceToClosestPlayer <= 5f && UnityEngine.Random.Range(0f, 100f) <= 1f && !kicking) {
             JumpInPlace();   
-        } else if ((distanceToClosestPlayer <= 10f && UnityEngine.Random.Range(0f, 100f) <= 1f) || startedKick) {
+        } else if ((distanceToClosestPlayer <= 10f && UnityEngine.Random.Range(0f, 100f) <= 1f) || kicking) {
             DoKickTargetPlayer(closestPlayer);
         }
     }
 
     public void JumpInPlace() {
-        if (IsServer) networkAnimator.SetTrigger("startJump");    
+        if (IsServer) networkAnimator.SetTrigger("startJump");
+        jumping = true; 
+        Plugin.ExtendedLogging("Start Jump"); 
     }
 
     public void DoKickTargetPlayer(PlayerControllerB closestPlayer) {
-        if (!startedKick) {
-            startedKick = true;
+        if (!kicking && !jumping) {
+            kicking = true;
             agent.speed = 0.5f;
             StartCoroutine(KickTimer());
             if (IsServer) networkAnimator.SetTrigger("startKick");
+            playerToKick = closestPlayer;
             Plugin.ExtendedLogging("Start Kick");
-        }
-        Vector3 targetPosition = closestPlayer.transform.position;
-        Vector3 direction = (targetPosition - this.transform.position).normalized;
-        direction.y = 0; // Keep the y component zero to prevent vertical rotation
-
-        if (direction != Vector3.zero) {
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * 5f);
         }
     }
 
     public IEnumerator KickTimer() {
         yield return new WaitForSeconds(kickAnimation.length);
-        startedKick = false;
+        kicking = false;
         Plugin.ExtendedLogging("Kick ended");
+        playerToKick = null;
         agent.speed = walkingSpeed;
     }
 
@@ -253,7 +273,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         if (FindClosestAliveGiantInRange(seeableDistance)) {
             networkAnimator.SetTrigger("startChase");
             Plugin.ExtendedLogging("Start Target Giant");
-            StopSearch(currentSearch);
+            StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)State.RunningToTarget);
             agent.speed = walkingSpeed * 2;
         } // Look for Giants
@@ -268,7 +288,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         if (targetEnemy == null) {
             Plugin.ExtendedLogging("Stop Target Giant");
             networkAnimator.SetTrigger("startWalk");
-            StartSearch(this.transform.position);
+            StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
             agent.speed = walkingSpeed;
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
@@ -276,7 +296,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         if (Vector3.Distance(transform.position, targetEnemy.transform.position) >= seeableDistance+10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5)) {
             Plugin.ExtendedLogging("Stop Target Giant");
             networkAnimator.SetTrigger("startWalk");
-            StartSearch(this.transform.position);
+            StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
             agent.speed = walkingSpeed;
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
@@ -310,10 +330,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public PlayerControllerB GetClosestPlayerToRedwood()
     {
-        Plugin.Logger.LogInfo(StartOfRound.Instance.allPlayerScripts);
         return StartOfRound.Instance.allPlayerScripts
             .Where(player => player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead)
-            .OrderBy(x => Vector3.Distance(x.transform.position, transform.position))
+            .OrderBy(x => Vector3.Distance(x.transform.position, transform.position) <= 11)
             .FirstOrDefault(x => RWHasLineOfSightToPosition(x.transform.position, 120, seeableDistance, 5));
     }
 
@@ -415,7 +434,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             if (TargetClosestRadMech(seeableDistance) && currentBehaviourStateIndex == (int)State.Wandering && Plugin.ModConfig.ConfigRedwoodCanEatOldBirds.Value) {
                 if (IsServer) networkAnimator.SetTrigger("startChase");
                 Plugin.ExtendedLogging("Start Target Giant");
-                StopSearch(currentSearch);
+                StopSearchRoutine();
                 SwitchToBehaviourStateOnLocalClient((int)State.RunningToTarget);
             }
         } else {
@@ -466,19 +485,20 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public void WanderAroundAfterSpawnAnimation() { // AnimEvent
         if (IsServer) networkAnimator.SetTrigger("startWalk");
         Plugin.ExtendedLogging("Start Walking Around");
-        StartSearch(this.transform.position);
+        StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
         agent.speed = walkingSpeed;
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
 
     public void OnLandFromJump() { // AnimEvent
-        foreach (var player in StartOfRound.Instance.allPlayerScripts) {
-            if (Vector3.Distance(CollisionFootL.transform.position, player.transform.position) <= 3f || Vector3.Distance(CollisionFootR.transform.position, player.transform.position) <= 3f) {
-                player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
-                creatureSFX.PlayOneShot(crunchySquishSound);
-                creatureSFXFar.PlayOneShot(crunchySquishSound);
-            }
+        var localPlayer = GameNetworkManager.Instance.localPlayerController;
+        if (Vector3.Distance(CollisionFootL.transform.position, localPlayer.transform.position) <= 8f || Vector3.Distance(CollisionFootR.transform.position, localPlayer.transform.position) <= 8f) {
+            localPlayer.DamagePlayer(200, true, true, CauseOfDeath.Crushing, 0, false, localPlayer.velocityLastFrame);
         }
+        creatureSFX.PlayOneShot(crunchySquishSound);
+        creatureSFXFar.PlayOneShot(crunchySquishSound);
+        jumping = false;
+        Plugin.ExtendedLogging("End Jump");
     }
 
     public void EnableDeathColliders() { // AnimEvent
@@ -538,7 +558,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         }
         var enemiesList = RoundManager.Instance.SpawnedEnemies; //todo: change this to a spherecast
         foreach (var enemy in enemiesList) {
-            if (enemy == null || enemy.isEnemyDead) continue;
+            if (enemy == null || enemy.isEnemyDead || enemy is RedwoodTitanAI) continue;
             var LeftFootDistance = Vector3.Distance(CollisionFootL.transform.position, enemy.transform.position);
             if (LeftFootDistance <= 7.5f) {
                 DealEnemyDamageFromShockwave(enemy, LeftFootDistance);
@@ -559,7 +579,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         }
         var enemiesList = RoundManager.Instance.SpawnedEnemies; //todo: change this to a spherecast
         foreach (var enemy in enemiesList) {
-            if (enemy == null || enemy.isEnemyDead) continue;
+            if (enemy == null || enemy.isEnemyDead || enemy is RedwoodTitanAI) continue;
             var RightFootDistance = Vector3.Distance(CollisionFootR.transform.position, enemy.transform.position);
             if (RightFootDistance <= 7.5f) {
                 DealEnemyDamageFromShockwave(enemy, RightFootDistance);

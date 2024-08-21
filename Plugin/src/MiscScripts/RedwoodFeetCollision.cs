@@ -8,14 +8,15 @@ namespace CodeRebirth.src.MiscScripts;
 public class RedwoodFeetCollision : MonoBehaviour
 {
     public RedwoodTitanAI mainscript;
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            PlayerControllerB player = collision.collider.GetComponent<PlayerControllerB>();
-            if (player == GameNetworkManager.Instance.localPlayerController && mainscript.startedKick)
-                player.DamagePlayer(50, true, true, CauseOfDeath.Bludgeoning, 0, false);
-                player.externalForces = this.gameObject.transform.forward * 20f;
+            PlayerControllerB player = other.GetComponent<PlayerControllerB>();
+            if (player == GameNetworkManager.Instance.localPlayerController && mainscript.kicking)
+                Plugin.ExtendedLogging("Kicked player...");
+                player.DamagePlayer(20, true, true, CauseOfDeath.Bludgeoning, 0, false);
+                player.externalForces = this.gameObject.transform.forward * 500f;
         }
     }
 }
