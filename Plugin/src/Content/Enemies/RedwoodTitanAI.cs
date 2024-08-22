@@ -6,6 +6,8 @@ using UnityEngine.AI;
 using CodeRebirth.src.Util;
 using Unity.Netcode.Components;
 using System;
+using Unity.Netcode;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
@@ -187,6 +189,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public void LateUpdate() {
         if (isEnemyDead) return;
         if (currentBehaviourStateIndex == (int)State.EatingTargetGiant && targetEnemy != null) {
+            this.agent.velocity = Vector3.zero;
             var grabPosition = holdingBone.transform.position;
             targetEnemy.transform.position = grabPosition + new Vector3(0, -1f, 0);
             targetEnemy.transform.LookAt(eatingArea.transform.position);
@@ -214,7 +217,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         var distanceToClosestPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
         if (distanceToClosestPlayer <= 5f && UnityEngine.Random.Range(0f, 100f) <= 1f && !kicking) {
             JumpInPlace();   
-        } else if ((distanceToClosestPlayer <= 10f && UnityEngine.Random.Range(0f, 100f) <= 1f) || kicking) {
+        } else if ((distanceToClosestPlayer <= 10f && UnityEngine.Random.Range(0f, 100f) <= 1f) || kicking && (currentBehaviourStateIndex != (int)State.EatingTargetGiant || currentBehaviourStateIndex != (int)State.RunningToTarget)) {
             DoKickTargetPlayer(closestPlayer);
         }
     }
@@ -348,11 +351,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public void ParticlesFromEatingForestKeeper(EnemyAI targetEnemy) {
         if (targetEnemy is ForestGiantAI) {
-            //ForestKeeperParticles.Play(); // Also make them be affected by the world for proper fog stuff?
+            ForestKeeperParticles.Play(); // Also make them be affected by the world for proper fog stuff?
         } else if (targetEnemy is DriftwoodMenaceAI) {
-            //DriftwoodGiantParticles.Play();
+            DriftwoodGiantParticles.Play();
         } else if (targetEnemy is RadMechAI) {
-            //OldBirdParticles.Play();
+            OldBirdParticles.Play();
         }
         Plugin.ExtendedLogging("Ate: " + targetEnemy.enemyType.enemyName);
         targetEnemy.KillEnemyOnOwnerClient(overrideDestroy: true);
@@ -363,11 +366,12 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         float minDistance = float.MaxValue;
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies) {
-            if (enemy is not ForestGiantAI && enemy is not DriftwoodMenaceAI || enemy.isEnemyDead) continue;
-            float distance = Vector3.Distance(this.transform.position, enemy.transform.position);
-            if (distance < range && distance < minDistance && Vector3.Distance(enemy.transform.position, shipBoundaries.position) > distanceFromShip) {
-                minDistance = distance;
-                closestEnemy = enemy;
+            if ((enemy is ForestGiantAI || enemy is DriftwoodMenaceAI) && !enemy.isEnemyDead) {
+                float distance = Vector3.Distance(this.transform.position, enemy.transform.position);
+                if (distance < range && distance < minDistance && Vector3.Distance(enemy.transform.position, shipBoundaries.position) > distanceFromShip) {
+                    minDistance = distance;
+                    closestEnemy = enemy;
+                }
             }
         }
         if (closestEnemy != null) {
@@ -417,7 +421,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy)  {
         if (isEnemyDead) return;
-        Plugin.ExtendedLogging("OnCollideWithEnemy");
         if (collidedEnemy == targetEnemy && !eatingEnemy && currentBehaviourStateIndex == (int)State.RunningToTarget) {
             eatingEnemy = true;
             foreach (Collider enemyCollider in targetEnemy.GetComponentsInChildren<Collider>()) {
@@ -479,8 +482,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         float minDistance = float.MaxValue;
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies) {
-            string enemyName = enemy.enemyType.enemyName;
-            if (enemyName == "RadMech" && !enemy.isEnemyDead) {
+            if (enemy is RadMechAI && !enemy.isEnemyDead) {
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 if (distance < range && distance < minDistance) {
                     minDistance = distance;
@@ -499,6 +501,17 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         kickingOut = true;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void OnLandCrunchySoundServerRpc() {
+        OnLandCrunchySoundClientRpc();
+    }
+
+    [ClientRpc]
+    public void OnLandCrunchySoundClientRpc() {
+        creatureSFX.PlayOneShot(crunchySquishSound);
+        creatureSFXFar.PlayOneShot(crunchySquishSound);
+    }
+
     public void WanderAroundAfterSpawnAnimation() { // AnimEvent
         if (IsServer) networkAnimator.SetTrigger("startWalk");
         Plugin.ExtendedLogging("Start Walking Around");
@@ -510,24 +523,25 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public void OnLandFromJump() { // AnimEvent
         var localPlayer = GameNetworkManager.Instance.localPlayerController;
         if (Vector3.Distance(CollisionFootL.transform.position, localPlayer.transform.position) <= 8f || Vector3.Distance(CollisionFootR.transform.position, localPlayer.transform.position) <= 8f) {
-            localPlayer.DamagePlayer(200, true, true, CauseOfDeath.Crushing, 0, false, localPlayer.velocityLastFrame);
+            localPlayer.DamagePlayer(200, false, true, CauseOfDeath.Crushing, 0, false, localPlayer.velocityLastFrame);
+            OnLandCrunchySoundServerRpc();
         }
-        creatureSFX.PlayOneShot(crunchySquishSound);
-        creatureSFXFar.PlayOneShot(crunchySquishSound);
         jumping = false;
         Plugin.ExtendedLogging("End Jump");
     }
 
     public void EnableDeathColliders() { // AnimEvent
         foreach (Collider deathCollider in DeathColliders) {
-            deathCollider.enabled = true;
+            deathCollider.isTrigger = true;
+            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabled = true;
         }
     }
 
     public void DisableDeathColliders() { // AnimEvent
-        //DeathParticles.Play();
+        DeathParticles.Play();
         foreach (Collider deathCollider in DeathColliders) {
-            deathCollider.enabled = false;
+            deathCollider.isTrigger = false;
+            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabled = false;
         }
     }
 
@@ -562,10 +576,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
             }
     }
 
-    public void LeftFootStepInteractions() { // AnimEvent
-        //DustParticlesLeft.Play(); // Play the particle system with the updated color
+    public void FootStepSounds() { // AnimEvent
         creatureSFX.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, stompSounds.Length)]);
         creatureSFXFar.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, farStompSounds.Length)]);
+    }
+
+    public void LeftFootStepInteractions() { // AnimEvent
+        DustParticlesLeft.Play(); // Play the particle system with the updated color
         PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
         if (player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom) {
             float distance = Vector3.Distance(CollisionFootL.transform.position, player.transform.position);
@@ -584,7 +601,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     }
 
     public void RightFootStepInteractions() { // AnimEvent
-        // DustParticlesRight.Play(); // Play the particle system with the updated color
+        DustParticlesRight.Play(); // Play the particle system with the updated color
         creatureSFX.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, stompSounds.Length)]);
         creatureSFXFar.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, farStompSounds.Length)]);
         PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;

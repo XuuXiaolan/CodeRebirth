@@ -80,7 +80,6 @@ public class CodeRebirthConfig {
     public ConfigEntry<string> ConfigFloraDesertSpawnPlaces { get; private set; }
     public ConfigEntry<string> ConfigFloraSnowSpawnPlaces { get; private set; }
     public ConfigEntry<float> ConfigCritChance { get; private set; }
-    public ConfigEntry<bool> ConfigEnableImperiumDebugs { get; private set; }
     public ConfigEntry<bool> ConfigWalletMode { get; private set; }
     public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
     public ConfigEntry<int> ConfigWalletCost { get; private set; }
@@ -364,10 +363,6 @@ public class CodeRebirthConfig {
                                             "Enables/Disables the Wesley Mode (this is a meme, not recommended lol).");
         #endregion
         #region ModCompat
-        ConfigEnableImperiumDebugs = configFile.Bind("Imperium Compatibility", 
-                                                    "Enable Imperium Debugs",
-                                                    false,
-                                                    "Enables the debugs I made using the imperium api for stuff like tornados. (currently no work)");
         #endregion
         #region CutieFly
         ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",

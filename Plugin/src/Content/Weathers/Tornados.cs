@@ -510,15 +510,6 @@ public class Tornados : EnemyAI
             closeTravelAudio.volume = Plugin.ModConfig.ConfigTornadoDefaultVolume.Value;
         }
     }
-
-    public void LateUpdate()
-    {
-        if (!Plugin.ImperiumIsOn || !Plugin.ModConfig.ConfigEnableImperiumDebugs.Value) return;
-        if (eye != null && sphereMaterial != null)
-        {
-            //Imperium.API.Visualization.DrawSphere(this.gameObject, this.eye, 60, this.sphereMaterial, Imperium.API.Visualization.GizmoType.Custom, null, null);
-        }
-    }
     
     public bool TornadoHasLineOfSightToPosition(int range = 100)
     {

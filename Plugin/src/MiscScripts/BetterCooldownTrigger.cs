@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
-public class BetterCooldownTrigger : MonoBehaviour
+public class BetterCooldownTrigger : NetworkBehaviour
 {
+    #region Enums
+
     public enum DeathAnimation
     {
         Default,
@@ -32,26 +33,39 @@ public class BetterCooldownTrigger : MonoBehaviour
         Center,
     }
 
+    #endregion
+
+    #region Fields
+
+    [Header("Death Animation Settings")]
     [Tooltip("Different ragdoll body types that spawn after death.")]
     public DeathAnimation deathAnimation = DeathAnimation.Default;
+    [Space(2)]
+    [Header("Force Settings")]
     [Tooltip("The force direction of the damage.")]
     public ForceDirection forceDirection = ForceDirection.Forward;
-    [Tooltip("Cause of death displayed in ScanNode after death.")]
-    public CauseOfDeath causeOfDeath = CauseOfDeath.Unknown;
     [Tooltip("The force magnitude of the damage.")]
     public float forceMagnitudeAfterDamage = 0f;
     [Tooltip("The force magnitude after death of player.")]
     public float forceMagnitudeAfterDeath = 0f;
+    [Tooltip("If true, the force direction will be calculated from the object's transform. If false, the force direction will be calculated from the player's transform.")]
+    public bool forceDirectionFromThisObject = true;
+    [Space(2)]
+    [Header("Cause of Death")]
+    [Tooltip("Cause of death displayed in ScanNode after death.")]
+    public CauseOfDeath causeOfDeath = CauseOfDeath.Unknown;
+    [Space(2)]
+    [Header("Trigger Settings")]
     [Tooltip("Whether to trigger for enemies.")]
     public bool triggerForEnemies = false;
     [Tooltip("Whether to use shared cooldown between different GameObjects that use this script.")]
     public bool sharedCooldown = false;
     [Tooltip("Whether to play default player damage SFX when damage is dealt.")]
     public bool playDefaultPlayerDamageSFX = false;
-    [Tooltip("If true, the force direction will be calculated from the object's transform. If false, the force direction will be calculated from the player's transform.")]
-    public bool forceDirectionFromThisObject = true;
     [Tooltip("Whether to play sound when damage is dealt to player that enemies can hear.")]
     public bool soundAttractsDogs = false;
+    [Space(2)]
+    [Header("Damage Settings")]
     [Tooltip("Timer in which the gameobject will disable itself, 0 will not disable itself after any point of time.")]
     public float damageDuration = 0f;
     [Tooltip("Damage to deal every interval for players.")]
@@ -62,10 +76,36 @@ public class BetterCooldownTrigger : MonoBehaviour
     public float damageIntervalForPlayers = 0.25f;
     [Tooltip("Cooldown to deal damage for enemies.")]
     public float damageIntervalForEnemies = 0.25f;
+    [Space(2)]
+    [Header("Audio Settings")]
     [Tooltip("Damage clip to play when damage is dealt to player/enemy.")]
     public List<AudioClip>? damageClip = null;
     [Tooltip("Damage audio sources to play when damage is dealt to player (picks the closest AudioSource to the player).")]
     public List<AudioSource>? damageAudioSources = null;
+    [Space(2)]
+    [Header("Death Prefab Settings")]
+    [Tooltip("Prefab to spawn when the player dies.")]
+    public GameObject? deathPrefabForPlayer = null;
+    [Tooltip("Prefab to spawn when the enemy dies.")]
+    public GameObject? deathPrefabForEnemy = null;
+    [Space(2)]
+    [Header("Particle System Settings")]
+    [Tooltip("Use particle systems when damage is dealt to player/enemy.")]
+    public bool useParticleSystems = false;
+    [Tooltip("Teleport particle system to enemy/player when damage is dealt.")]
+    public bool teleportParticles = false;
+    [Tooltip("Particle system to play when the player dies.")]
+    public List<ParticleSystem> deathParticlesForPlayer = new();
+    [Tooltip("Particle system to play when the player is damaged.")]
+    public List<ParticleSystem> damageParticlesForPlayer = new();
+    [Tooltip("Particle system to play when the enemy dies.")]
+    public List<ParticleSystem> deathParticlesForEnemy = new();
+    [Tooltip("Particle system to play when the enemy is damaged.")]
+    public List<ParticleSystem> damageParticlesForEnemy = new();
+
+    #endregion
+
+    #region Private Fields
 
     private static float lastDamageTime = -Mathf.Infinity; // Last time damage was dealt across all instances
 
@@ -74,6 +114,7 @@ public class BetterCooldownTrigger : MonoBehaviour
     private Dictionary<PlayerControllerB, AudioSource> playerClosestAudioSources = new Dictionary<PlayerControllerB, AudioSource>();
     private Dictionary<EnemyAI, AudioSource> enemyClosestAudioSources = new Dictionary<EnemyAI, AudioSource>();
 
+    #endregion
     private void OnEnable()
     {
         StartCoroutine(ManageDamageTimer());
@@ -89,7 +130,7 @@ public class BetterCooldownTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !player.isPlayerDead)
         {
             if (!playerCoroutineStatus.ContainsKey(player))
             {
@@ -104,7 +145,7 @@ public class BetterCooldownTrigger : MonoBehaviour
         else if (triggerForEnemies)
         {
             Transform? parent = TryFindRoot(other.transform);
-            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead)
+            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead && enemy.enemyType.enemyName != "Redwood Titan")
             {
                 if (!enemyCoroutineStatus.ContainsKey(enemy))
                 {
@@ -121,7 +162,7 @@ public class BetterCooldownTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !player.isPlayerDead)
         {
             playerCoroutineStatus[player] = false;
             playerClosestAudioSources.Remove(player);
@@ -129,7 +170,7 @@ public class BetterCooldownTrigger : MonoBehaviour
         else if (triggerForEnemies)
         {
             Transform? parent = TryFindRoot(other.transform);
-            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy))
+            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead)
             {
                 enemyCoroutineStatus[enemy] = false;
                 enemyClosestAudioSources.Remove(enemy);
@@ -176,17 +217,103 @@ public class BetterCooldownTrigger : MonoBehaviour
 
         player.DamagePlayer(damageToDealForPlayers, playDefaultPlayerDamageSFX, true, causeOfDeath, (int)deathAnimation, false, calculatedForceAfterDeath);
         PlayDamageSound(player.transform, playerClosestAudioSources.ContainsKey(player) ? playerClosestAudioSources[player] : null);
-
+        if (teleportParticles) {
+            foreach (ParticleSystem? particle in damageParticlesForPlayer) {
+                if (particle != null) particle.transform.position = player.transform.position;
+            }
+            foreach (ParticleSystem? particle in deathParticlesForPlayer) {
+                if (particle != null) particle.transform.position = player.transform.position;
+            }
+        }
         if (!player.isPlayerDead)
         {
             player.externalForces += calculatedForceAfterDamage;
+
+        } else {
+
+            if (deathPrefabForPlayer != null && deathPrefabForPlayer.GetComponent<NetworkObject>() != null) {
+                SpawnDeathPrefabServerRpc(player.transform.position, player.transform.rotation, true);
+            } else if (deathPrefabForPlayer != null) {
+                Instantiate(deathPrefabForPlayer, player.transform.position, player.transform.rotation);
+                playerCoroutineStatus[player] = false;
+                playerClosestAudioSources.Remove(player);
+            }
         }
+        if (useParticleSystems) HandleParticleSystemStuffServerRpc(player.transform.position, true, player.isPlayerDead);
     }
 
     private void ApplyDamageToEnemy(EnemyAI enemy)
     {
         enemy.HitEnemy(damageToDealForEnemies, null, false, -1);
         PlayDamageSound(enemy.transform, enemyClosestAudioSources.ContainsKey(enemy) ? enemyClosestAudioSources[enemy] : null);
+
+        if (enemy.isEnemyDead) {
+            if (deathPrefabForEnemy != null && deathPrefabForEnemy.GetComponent<NetworkObject>() != null) {
+                SpawnDeathPrefabServerRpc(enemy.transform.position, enemy.transform.rotation, false);
+            } else if (deathPrefabForEnemy != null) {
+                Instantiate(deathPrefabForEnemy, enemy.transform.position, enemy.transform.rotation);
+            }
+            enemyCoroutineStatus[enemy] = false;
+            enemyClosestAudioSources.Remove(enemy);
+        }
+
+        if (useParticleSystems) HandleParticleSystemStuffServerRpc(enemy.transform.position, false, enemy.isEnemyDead);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void HandleParticleSystemStuffServerRpc(Vector3 position, bool forPlayer, bool isDead) {
+        HandleParticleSystemStuffClientRpc(position, forPlayer, isDead);
+    }
+
+    [ClientRpc]
+    private void HandleParticleSystemStuffClientRpc(Vector3 position, bool forPlayer, bool isDead) {
+        if (teleportParticles) {
+            if (forPlayer) {
+                foreach (ParticleSystem? particle in damageParticlesForPlayer) {
+                    if (particle != null) particle.transform.position = position;
+                }
+                foreach (ParticleSystem? particle in deathParticlesForPlayer) {
+                    if (particle != null) particle.transform.position = position;
+                }  
+            } else {
+                foreach (ParticleSystem? particle in damageParticlesForEnemy) {
+                    if (particle != null) particle.transform.position = position;
+                }
+                foreach (ParticleSystem? particle in deathParticlesForEnemy) {
+                    if (particle != null) particle.transform.position = position;
+                }
+            }
+        }
+
+        if (forPlayer) {
+            if (!isDead) {
+                var particleSystem = damageParticlesForPlayer[Random.Range(0, damageParticlesForPlayer.Count)];
+                particleSystem.Play();
+            } else {
+                var particleSystem = deathParticlesForPlayer[Random.Range(0, deathParticlesForPlayer.Count)];
+                particleSystem.Play();
+            }
+        } else {
+            if (!isDead) {
+                var particleSystem = damageParticlesForEnemy[Random.Range(0, damageParticlesForEnemy.Count)];
+                particleSystem.Play();
+            } else {
+                var particleSystem = deathParticlesForEnemy[Random.Range(0, deathParticlesForEnemy.Count)];
+                particleSystem.Play();
+            }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnDeathPrefabServerRpc(Vector3 position, Quaternion rotation, bool forPlayer)
+    {
+        if (forPlayer) {
+            Instantiate(deathPrefabForPlayer, position, rotation);
+            deathPrefabForPlayer?.GetComponent<NetworkObject>().Spawn();
+        } else {
+            Instantiate(deathPrefabForEnemy, position, rotation);
+            deathPrefabForEnemy?.GetComponent<NetworkObject>().Spawn();
+        }
     }
 
     private Vector3 CalculateForceDirection(PlayerControllerB player, float baseForce)
@@ -232,7 +359,6 @@ public class BetterCooldownTrigger : MonoBehaviour
 
             WalkieTalkie.TransmitOneShotAudio(audioSource, damageClip[Random.Range(0, damageClip.Count)], audioSource.volume);
             RoundManager.PlayRandomClip(audioSource, damageClip.ToArray(), true, audioSource.volume, 0, damageClip.Count);
-            audioSource.PlayOneShot(damageClip[Random.Range(0, damageClip.Count)]);
         }
     }
 

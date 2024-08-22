@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2320.3567, g: 2400.092, b: 3459.1372, a: 1}
+  m_IndirectSpecularColor: {r: 2321.6995, g: 2399.799, b: 3453.5864, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -348,10 +348,60 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 17928295381250015, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 134962425986559666, guid: 1a3e18a3d3270c740af0863871682e22,
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1626056371
+      objectReference: {fileID: 0}
+    - target: {fileID: 717603463399588869, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308946607574488242, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680993429602726859, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2085849885341625015, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2085849885341625015, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2335343272743622604, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5417107557336820823, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630872643516179201, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6301755504406239059, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6657914976785946626, guid: 1a3e18a3d3270c740af0863871682e22,
         type: 3}
@@ -408,11 +458,77 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8219533084570719197, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9024903830607934526, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3321590937327193257, guid: 1a3e18a3d3270c740af0863871682e22,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 182353282}
   m_SourcePrefab: {fileID: 100100000, guid: 1a3e18a3d3270c740af0863871682e22, type: 3}
+--- !u!1 &182353280 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3321590937327193257, guid: 1a3e18a3d3270c740af0863871682e22,
+    type: 3}
+  m_PrefabInstance: {fileID: 182353279}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &182353281 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 848744891434479662, guid: 1a3e18a3d3270c740af0863871682e22,
+    type: 3}
+  m_PrefabInstance: {fileID: 182353279}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &182353282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182353280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1835421178, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathAnimation: 6
+  forceDirection: 3
+  forceMagnitudeAfterDamage: 0
+  forceMagnitudeAfterDeath: 0
+  forceDirectionFromThisObject: 1
+  causeOfDeath: 8
+  triggerForEnemies: 0
+  sharedCooldown: 0
+  playDefaultPlayerDamageSFX: 0
+  soundAttractsDogs: 1
+  damageDuration: 0
+  damageToDealForPlayers: 0
+  damageToDealForEnemies: 0
+  damageIntervalForPlayers: 1
+  damageIntervalForEnemies: 0.25
+  damageClip:
+  - {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
+  damageAudioSources:
+  - {fileID: 182353281}
+  deathPrefabForPlayer: {fileID: 0}
+  deathPrefabForEnemy: {fileID: 0}
+  useParticleSystems: 1
+  teleportParticles: 0
+  deathParticlesForPlayer:
+  - {fileID: 0}
+  damageParticlesForPlayer: []
+  deathParticlesForEnemy: []
+  damageParticlesForEnemy: []
 --- !u!1 &432432459
 GameObject:
   m_ObjectHideFlags: 0

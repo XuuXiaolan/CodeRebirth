@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 934617654
+CRC: 2296630666
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8383ad5ced0034926e754f0f0310ac7c
+    Hash: 4ff205914c37aabc043235480e7ee1ab
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 2a215befa971c93f10a7ce9dde690a3a
+    Hash: 75c44b7a306eb53ec9cc56858351186e
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 8383ad5ced0034926e754f0f0310ac7c
+    Hash: 4ff205914c37aabc043235480e7ee1ab
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -19,6 +19,8 @@ ClassTypes:
 - Class: 21
   Script: {instanceID: 0}
 - Class: 23
+  Script: {instanceID: 0}
+- Class: 28
   Script: {instanceID: 0}
 - Class: 33
   Script: {instanceID: 0}
@@ -43,6 +45,8 @@ ClassTypes:
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 1835421178, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
@@ -50,8 +54,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
 - Class: 114
@@ -62,6 +64,8 @@ ClassTypes:
   Script: {fileID: -58974956, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
+- Class: 114
+  Script: {fileID: -718089171, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 136
@@ -69,6 +73,12 @@ ClassTypes:
 - Class: 137
   Script: {instanceID: 0}
 - Class: 195
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
@@ -84,6 +94,7 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/SpikeMat.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedJumpAttack.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/CrunchySquish.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/Textures/WispySmoke03b_8x8.tga
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/FarPinkGiantStomp2.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/ClosePinkGiantStomp2.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/PinkGiantSpawning.ogg
@@ -102,11 +113,14 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/ClosePinkGiantStomp3.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/FarPinkGiantStomp3.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Bestiary/RedwoodTitanTN.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/Textures/WoodSplinters.tga
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/RedwoodTitan.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedEnrage.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/MAT_DustParticles.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Bestiary/RedwoodTitanTK.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/ForestKeeperScream.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/PinkGiantMoroxideStep.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/MAT_KeeperParticles.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/RedwoodTitan.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Animations/GyattWood_RedwoodGrab.anim
 Dependencies: []

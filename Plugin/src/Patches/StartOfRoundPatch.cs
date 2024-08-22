@@ -20,7 +20,7 @@ static class StartOfRoundPatch {
 
 	[HarmonyPatch(nameof(StartOfRound.ArriveAtLevel)), HarmonyPostfix]
 	static void DisplayWindyWarning(StartOfRound __instance) {
-        if(WeatherHandler.Instance.TornadoesWeather == null) return; // tornado weather didn't load
+        if(__instance == null || WeatherHandler.Instance.TornadoesWeather == null) return; // tornado weather didn't load
 		if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) == WeatherHandler.Instance.TornadoesWeather) {
 			Plugin.Logger.LogWarning("Displaying Windy Weather Warning.");
 			HUDManager.Instance.DisplayTip("Weather alert!", "You have routed to a Windy moon. Exercise caution if you are sensitive to flashing lights!", true, true, "CR_WindyTip");

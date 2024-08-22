@@ -77,7 +77,11 @@ public class BiomeManager : NetworkBehaviour
             // Check if the collider belongs to foliage or a tree
             if (IsFoliage(hitCollider) || IsTree(hitCollider))
             {
-                DestroyColliderObject(hitCollider);
+                if (random.NextInt(1, 100) <= 50) {
+                    DestroyColliderObject(hitCollider);
+                } else {
+                    
+                }
             }
         }
 

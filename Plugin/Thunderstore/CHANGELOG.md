@@ -1,4 +1,5 @@
-## v0.5.0
+# v0.5.0
+
 - Fixed Sapphire gem colliders.
 - Fixed Sapphire gem tranparency.
 - Fixed nature's mace stuff not doing its thing right with healing players.
@@ -19,11 +20,13 @@
 - Added emerald meteorites... for real now, i might've lied last time I said that.
 
 ## v0.4.2
+
 - Sigh, fixed the tornado stuff for the guy who wants it to spawn naturally as an enemy (WONT WORK IF THE WEATHER IS WIMDY ALREADY).
 - Fixed plant spawning not on navmesh (this is custom moons being bad and adding colliders where there shouldn't be, so wasnt even my fault smh).
 - uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.
 
 ## v0.4.1
+
 - Spiky Mace by default deals 2 damage now.
 - Icy Hammer slows down enemies and players hit by it temporarily.
 - Nature's Mace heals enemies by 1 hit point and heals players.
@@ -34,18 +37,22 @@
 - Added I think like 70 more flower types?
 
 ## v0.4.0
+
 - Fixed flora not spawning on some custom moons.
 - Metal crate changed to drop non-scrap equipment.
 - Added 18 new flora types
 
 ## v0.3.3
+
 - Flora can now be sorted into 3 different types.
 
 ## v0.3.2
+
 - Github is now public and contributions/talent/reports/more ideas are appreciated.
 - Configs now accept both custom and modded (custom is more recommended just incase).
 
 ## v0.3.1
+
 - Halved the strength of the pull of the tornado by default.
 - Added 20 more plants.
 - Added a metal item crate.
@@ -54,6 +61,7 @@
 - Added more flower configs.
 
 ## v0.3.0
+
 - Add slider config for tornado strength.
 - Added yeet SFX in config for tornado (false by default).
 - Randomised a bit more the strength of the tornado throwing and at what point you'd be thrown.
@@ -61,18 +69,21 @@
 - Decreased overall assetbundle size from 32mb~ to 18mb~.
 
 ## v0.2.6
+
 - Lowered tornado power.
 - Fixed scannodes for the new weapons.
 - Lowered default config for meteor shower lol.
 - Fixed tornado throwing you.
 
 ## v0.2.5
+
 - Should fix tornado kinematic patch not working.
 - Turned off some spammy logs.
 - Tornado should stray from ship if spawned next to it.
 - Fixed some hoverboard sound with footsteps not playing.
 
 ## v0.2.4
+
 - Fixed tornado config properly.
 - Added tornado volume in ship config.
 - Added cutiefly flap sound volume config.
@@ -99,24 +110,30 @@
 - Made enemies rideable.
 
 ## v0.2.2
+
 - Fixed Snowglobe animations.
 
 ## v0.2.1
+
 - Fixed company not loading bug.
 - Fixed tornado config -ish.
 
 ## v0.2.0
+
 - Fixed tornado not spawning, may need to recreate config.
 
 ## v0.1.9
+
 - Fixed being unable to ride truck during tornado.
 - Potentially fixed hoverboard slow issues.
 
 ## v0.1.8
+
 - Accidently included something not supposed to be there, caused an error.
 - Potentially fixed item crate error.
 
 ## v0.1.7
+
 - Improved hoverboard collisions, I think.
 - Increased range for tornado effects.
 - Tornados will get a bigger update when I'm more free later I promise.
@@ -125,6 +142,7 @@
 - Updated version of the mod to play nice in latest version of the game.
 
 ## v0.1.6
+
 - Buffed item crate by atleast 3 times.
 - Added config to disable snow globe music (client side).
 - Attempted to fix wallet positioning.
@@ -134,12 +152,14 @@
 - Nerfed Tornado power again.
 
 ## v0.1.5
+
 - Fixed particle effects not working.
 - Fixed unlimited range on tornados.
 - Fixed tornado audio disappearing when entering and leaving interior.
 - Reduced tornado spawning near ship.
 
 ## v0.1.4
+
 - Improved electric, water and potentially other tornado types and gave unique mechanics and changes.
 - Potentially fixed snowglobe not working for everyone's animator.
 - Potentially fixed item crate desyncs and exploit that didn't require digging it up.
@@ -147,6 +167,7 @@
 - Added particle effects to players near tornados (will improve in the future).
 
 ## v0.1.3
+
 - Fixed crater textures being weird.
 - Improved tornado particles.
 - Added subtypes for the tornado that don't currently do anything differently special.
@@ -154,6 +175,7 @@
 - Added config for subtypes.
 
 ## v0.1.2
+
 - Fixed Snow Globe not having a value.
 - Allowed you to use ladders and special animations while tornado is around.
 - Reverted funny visuals with meteor craters.
@@ -162,6 +184,7 @@
 - Potentially fixed a wallet bug.
 
 ## v0.1.1
+
 - Fixed wallet dropping while using terminal.
 - Fixed item crates not disappearing after opening.
 - Updated item crate scannode.
@@ -172,6 +195,7 @@
 - windy and meteors can now be disabled in config
 
 ## v0.1.0
+
 - Added new item, SnowGlobe.
 - Added configs for SnowGlobe.
 - Added a loooooot of configs.
@@ -189,6 +213,7 @@
 - Improved how wallet works, it's a player upgrade now.
 
 ## v0.0.3
+
 - Added moon blacklist config for the weather.
 - Added Volume config for the weather.
 - Lowered Coin spawnage from just 10, to 0 to 10
@@ -202,6 +227,7 @@
 - Improved a lot on meteors by increasing size, messing with the particle system, please report any fps drops.
 
 ## v0.0.2
+
 - Fixed weather not turning off when heading to main menu/other reasons.
 - Fixed wallet not working.
 - Fixed coin tooltip not showing.
