@@ -272,7 +272,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             reachedDestination = false;
             while (!reachedDestination && isSearching) {
                 SetDestinationToPosition(positionToTravel);
-                yield return new WaitForSeconds(5f);
+                yield return new WaitForSeconds(3f);
                 if (Vector3.Distance(this.transform.position, positionToTravel) <= 10f || agent.velocity.magnitude <= 1f) {
                     reachedDestination = true;
                 }

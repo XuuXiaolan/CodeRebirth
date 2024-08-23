@@ -36,7 +36,9 @@ public class BetterCooldownTrigger : NetworkBehaviour
     #endregion
 
     #region Fields
-
+    [Header("Script Enabled")]
+    [Tooltip("Whether this script is enabled.")]
+    public bool enabledScript = true;
     [Header("Death Animation Settings")]
     [Tooltip("Different ragdoll body types that spawn after death.")]
     public DeathAnimation deathAnimation = DeathAnimation.Default;
@@ -130,6 +132,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!enabledScript) return;
         if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !player.isPlayerDead)
         {
             if (!playerCoroutineStatus.ContainsKey(player))
@@ -162,6 +165,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (!enabledScript) return;
         if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !player.isPlayerDead)
         {
             playerCoroutineStatus[player] = false;
@@ -244,6 +248,9 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     private void ApplyDamageToEnemy(EnemyAI enemy)
     {
+        Plugin.Logger.LogInfo($"Applying damage to {enemy.enemyType.enemyName}");
+        Plugin.Logger.LogInfo($"Damage: {damageToDealForEnemies}");
+        Plugin.Logger.LogInfo($"GameObject: {this.gameObject.name}");
         enemy.HitEnemy(damageToDealForEnemies, null, false, -1);
         PlayDamageSound(enemy.transform, enemyClosestAudioSources.ContainsKey(enemy) ? enemyClosestAudioSources[enemy] : null);
 
@@ -286,10 +293,10 @@ public class BetterCooldownTrigger : NetworkBehaviour
         }
 
         if (forPlayer) {
-            if (!isDead) {
+            if (!isDead && damageParticlesForPlayer.Count > 0) {
                 var particleSystem = damageParticlesForPlayer[Random.Range(0, damageParticlesForPlayer.Count)];
                 particleSystem.Play();
-            } else {
+            } else if (isDead && deathParticlesForPlayer.Count > 0) {
                 var particleSystem = deathParticlesForPlayer[Random.Range(0, deathParticlesForPlayer.Count)];
                 particleSystem.Play();
             }

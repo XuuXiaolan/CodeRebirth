@@ -21,6 +21,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public ParticleSystem DriftwoodGiantParticles = null!;
     public ParticleSystem OldBirdParticles = null!;
     public ParticleSystem DeathParticles = null!;
+    public ParticleSystem BigSmokeEffect = null!;
     public AudioSource creatureSFXFar = null!;
     public AudioClip[] stompSounds = null!;
     public AudioClip[] farStompSounds = null!;
@@ -44,7 +45,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     private LineRenderer line = null!;
     private Collider[] enemyColliders = null!;
     private PlayerControllerB? playerToKick = null;
-    private bool kickingOut = false;
+    [NonSerialized]
+    public bool kickingOut = false;
     [NonSerialized]
     public bool kicking = false;
     [NonSerialized]
@@ -170,15 +172,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         base.Update();
         if (isEnemyDead) return;
         if (kicking && playerToKick != null) {
-            Vector3 targetPosition = playerToKick.transform.position;
-
-            // Introduce an offset to the right of the player to align with the left leg
-            Vector3 direction = targetPosition.normalized;
-            direction.y = 0; // Keep the y component zero to prevent vertical rotation
 
             if (!kickingOut) {
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, playerToKick.transform.rotation, Time.deltaTime * 2f);
             } else if (kickingOut) {
                 Quaternion lookRotation = Quaternion.LookRotation(this.transform.right);
                 this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
@@ -215,7 +211,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer) {
         var distanceToClosestPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
-        if (distanceToClosestPlayer <= 5f && UnityEngine.Random.Range(0f, 100f) <= 1f && !kicking) {
+        if (distanceToClosestPlayer <= 5f && UnityEngine.Random.Range(0f, 100f) <= 40f && !kicking && !jumping) {
             JumpInPlace();   
         } else if ((distanceToClosestPlayer <= 10f && UnityEngine.Random.Range(0f, 100f) <= 1f) || kicking && (currentBehaviourStateIndex != (int)State.EatingTargetGiant || currentBehaviourStateIndex != (int)State.RunningToTarget)) {
             DoKickTargetPlayer(closestPlayer);
@@ -293,6 +289,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public IEnumerator SetSpeedForChasingGiant() {
         agent.speed = 0f;
         yield return new WaitForSeconds(6.9f);
+        agent.angularSpeed = 100f;
         agent.speed = walkingSpeed * 4;
     }
 
@@ -301,6 +298,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         if (targetEnemy == null) {
             Plugin.ExtendedLogging("Stop Target Giant");
             networkAnimator.SetTrigger("startWalk");
+            this.agent.angularSpeed = 40f;
             StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
             agent.speed = walkingSpeed;
             SwitchToBehaviourServerRpc((int)State.Wandering);
@@ -308,6 +306,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         }
         if (Vector3.Distance(transform.position, targetEnemy.transform.position) >= seeableDistance+10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5)) {
             Plugin.ExtendedLogging("Stop Target Giant");
+            this.agent.angularSpeed = 40f;
             networkAnimator.SetTrigger("startWalk");
             StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
             agent.speed = walkingSpeed;
@@ -392,7 +391,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         if (IsServer) networkAnimator.SetTrigger("eatEnemyGiant");
         SwitchToBehaviourStateOnLocalClient((int)State.EatingTargetGiant);
         agent.speed = 0f;
-        yield return new WaitForSeconds(eating.length);
+        yield return new WaitForSeconds(eating.length + 5f);
         if (isEnemyDead) yield break;
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
@@ -406,7 +405,10 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
                 rad.CheckSightForThreat();
             }
         }
+        this.agent.angularSpeed = 40f;
+        agent.speed = walkingSpeed;
         if (IsServer) networkAnimator.SetTrigger("startWalk");
+        StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
 
@@ -421,8 +423,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy)  {
         if (isEnemyDead) return;
-        if (collidedEnemy == targetEnemy && !eatingEnemy && currentBehaviourStateIndex == (int)State.RunningToTarget) {
+        if (collidedEnemy == targetEnemy && !eatingEnemy && currentBehaviourStateIndex == (int)State.RunningToTarget && this.agent.angularSpeed >= 80) {
             eatingEnemy = true;
+            foreach (Collider enemyCollider in targetEnemy.GetComponents<Collider>()) {
+                enemyCollider.enabled = false;
+            }
             foreach (Collider enemyCollider in targetEnemy.GetComponentsInChildren<Collider>()) {
                 enemyCollider.enabled = false;
             }
@@ -474,7 +479,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         CollisionFootL.enabled = false;
         CollisionFootR.enabled = false;
         if (IsServer) networkAnimator.SetTrigger("startDeath");
-        SpawnHeartOnDeath(transform.position);
+        //SpawnHeartOnDeath(transform.position);
     }
 
     public bool TargetClosestRadMech(float range) {
@@ -522,26 +527,25 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public void OnLandFromJump() { // AnimEvent
         var localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (Vector3.Distance(CollisionFootL.transform.position, localPlayer.transform.position) <= 8f || Vector3.Distance(CollisionFootR.transform.position, localPlayer.transform.position) <= 8f) {
+        if (Vector3.Distance(CollisionFootL.transform.position, localPlayer.transform.position) <= 10f || Vector3.Distance(CollisionFootR.transform.position, localPlayer.transform.position) <= 10f) {
             localPlayer.DamagePlayer(200, false, true, CauseOfDeath.Crushing, 0, false, localPlayer.velocityLastFrame);
             OnLandCrunchySoundServerRpc();
         }
         jumping = false;
+        BigSmokeEffect.Play();
         Plugin.ExtendedLogging("End Jump");
     }
 
     public void EnableDeathColliders() { // AnimEvent
         foreach (Collider deathCollider in DeathColliders) {
-            deathCollider.isTrigger = true;
-            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabled = true;
+            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabledScript = true;
         }
     }
 
     public void DisableDeathColliders() { // AnimEvent
         DeathParticles.Play();
         foreach (Collider deathCollider in DeathColliders) {
-            deathCollider.isTrigger = false;
-            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabled = false;
+            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabledScript = false;
         }
     }
 
@@ -550,6 +554,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         ParticlesFromEatingForestKeeper(targetEnemy);
         eatingEnemy = false;
         sizeUp = false;
+        targetEnemy = null;
     }
 
     public void ShakePlayerCamera() { // AnimEvent
