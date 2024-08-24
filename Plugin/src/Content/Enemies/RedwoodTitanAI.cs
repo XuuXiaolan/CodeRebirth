@@ -28,6 +28,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public AudioClip eatenSound = null!;
     public AudioClip spawnSound = null!;
     public AudioClip roarSound = null!;
+    public AudioClip jumpSound = null!;
+    public AudioClip kickSound = null!;
     public AudioClip crunchySquishSound = null!;
     public GameObject holdingBone = null!;
     public GameObject eatingArea = null!;
@@ -226,6 +228,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public void JumpInPlace() {
         if (IsServer) networkAnimator.SetTrigger("startJump");
+        creatureSFX.PlayOneShot(jumpSound);
+        creatureSFXFar.PlayOneShot(jumpSound);
         jumping = true; 
         Plugin.ExtendedLogging("Start Jump"); 
     }
@@ -233,19 +237,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public void DoKickTargetPlayer(PlayerControllerB closestPlayer) {
         kicking = true;
         agent.speed = 0.5f;
-        StartCoroutine(KickTimer());
         if (IsServer) networkAnimator.SetTrigger("startKick");
         playerToKick = closestPlayer;
+        creatureSFX.PlayOneShot(kickSound);
+        creatureSFXFar.PlayOneShot(kickSound);
         Plugin.ExtendedLogging("Start Kick");
-    }
-
-    public IEnumerator KickTimer() {
-        yield return new WaitForSeconds(kickAnimation.length);
-        kicking = false;
-        kickingOut = false;
-        Plugin.ExtendedLogging("Kick ended");
-        playerToKick = null;
-        agent.speed = walkingSpeed;
     }
 
     public override void DoAIInterval() {
@@ -506,10 +502,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         return false;
     }
 
-    public void KickingOutStart() { // AnimEvent
-        kickingOut = true;
-    }
-
     [ServerRpc(RequireOwnership = false)]
     public void OnLandCrunchySoundServerRpc() {
         OnLandCrunchySoundClientRpc();
@@ -519,6 +511,18 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public void OnLandCrunchySoundClientRpc() {
         creatureSFX.PlayOneShot(crunchySquishSound);
         creatureSFXFar.PlayOneShot(crunchySquishSound);
+    }
+
+    public void FinishKicking() { // AnimEvent
+        kicking = false;
+        kickingOut = false;
+        Plugin.ExtendedLogging("Kick ended");
+        playerToKick = null;
+        agent.speed = walkingSpeed;
+    }
+
+    public void KickingOutStart() { // AnimEvent
+        kickingOut = true;
     }
 
     public void WanderAroundAfterSpawnAnimation() { // AnimEvent

@@ -54,8 +54,6 @@ public class Tornados : EnemyAI
     private bool damageTimer = true;
     private float originalPlayerSpeed = 0;
     private bool lightningBoltTimer = true;
-    [SerializeField]
-    private Material sphereMaterial = null!; // Reference to the material for the sphere (make sure to assign this in the inspector)
 
     private Random tornadoRandom = new Random();
     private bool isDebugging = false;

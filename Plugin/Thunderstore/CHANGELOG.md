@@ -18,6 +18,7 @@
 - Adjusted snowglobe holding animation, no more bugs wooo.
 - Epic axe can chop trees now.
 - Added emerald meteorites... for real now, i might've lied last time I said that.
+- Accidently adjusted flora, if you see the wrong flora in the wrong biome let me know.
 
 ## v0.4.2
 

@@ -15,13 +15,7 @@ static class ShovelPatch {
 
     private static void Shovel_HitShovel(On.Shovel.orig_HitShovel orig, Shovel self, bool cancel)
     {
-        if (random == null) {
-			if (StartOfRound.Instance != null) {
-				random = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
-			} else {
-				random = new System.Random(69);
-			}
-		}
+        random ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
 		if (self is CodeRebirthWeapons CRWeapon) {
 			CRWeapon.defaultForce = CRWeapon.shovelHitForce;
 			if (CRWeapon.critPossible && Plugin.ModConfig.ConfigAllowCrits.Value) {
@@ -29,11 +23,11 @@ static class ShovelPatch {
 			}
 		}
 
-		if (self is NaturesMace naturesMace) {
+		if (self.playerHeldBy != null && self is NaturesMace naturesMace && GameNetworkManager.Instance.localPlayerController == self.playerHeldBy) {
 			List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
 			Plugin.ExtendedLogging("playerList: " + playerList.Count);
 			foreach (PlayerControllerB player in playerList) {
-				naturesMace.Heal(player);
+				naturesMace.HealServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
 			}
 		}
 

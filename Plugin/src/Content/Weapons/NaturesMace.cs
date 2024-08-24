@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weapons;
@@ -44,11 +45,16 @@ public class NaturesMace : CodeRebirthWeapons { // Added for potential future im
         return playersHit;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void HealServerRpc(int playerIndex) {
+        HealClientRpc(playerIndex);
+    }
 
-	public void Heal(PlayerControllerB playerToHeal)
+    [ClientRpc]
+	public void HealClientRpc(int playerToHealIndex)
 	{
-		Plugin.ExtendedLogging("previousplayerHeldby: " + previousPlayerHeldBy.playerUsername + " Health:" + previousPlayerHeldBy.health);
-		playerToHeal.DamagePlayer(-30, false, false, 0, 0, false, default);
+        PlayerControllerB playerToHeal = StartOfRound.Instance.allPlayerScripts[playerToHealIndex];
+		playerToHeal.DamagePlayer(-50, false, false, 0, 0, false, default);
 		Plugin.ExtendedLogging("playerToHeal: " + playerToHeal.playerUsername + "| HealthAfterRpc: " + playerToHeal.health);
 		if (playerToHeal.health >= 20)
 		{

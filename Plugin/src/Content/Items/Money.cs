@@ -6,7 +6,7 @@ namespace CodeRebirth.src.Content.Items;
 public class Money : GrabbableObject {
     public override void Start() {
         base.Start();
-        int baseValue = Math.Clamp(Plugin.ModConfig.ConfigAverageCoinValue.Value, 10, 1000);
+        int baseValue = Math.Clamp(Plugin.ModConfig.ConfigAverageCoinValue.Value, 11, 1000);
         if(!IsHost) return;
         
         // This isn't the best solution but :3
