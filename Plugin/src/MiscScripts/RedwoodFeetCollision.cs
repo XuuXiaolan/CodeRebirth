@@ -23,11 +23,11 @@ public class RedwoodFeetCollision : MonoBehaviour
 
     private IEnumerator KickingPlayer(PlayerControllerB player)
     {
-        float duration = 2f;
+        float duration = 1f;
         Vector3 direction = (player.transform.position - this.gameObject.transform.position).normalized;
         while (duration > 0) {
             duration -= Time.fixedDeltaTime;
-            player.externalForces = direction * 20f;
+            player.externalForces = direction * 100f;
             yield return new WaitForFixedUpdate();
         }
         playersBeingKicked.Remove(player);

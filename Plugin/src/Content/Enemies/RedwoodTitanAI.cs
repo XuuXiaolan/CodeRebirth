@@ -171,12 +171,17 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     public override void Update() {
         base.Update();
         if (isEnemyDead) return;
-        if (kicking && playerToKick != null) {
 
+        if (playerToKick != null) {
             if (!kickingOut) {
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, playerToKick.transform.rotation, Time.deltaTime * 2f);
+                // Calculate the direction towards the player
+                Vector3 directionToPlayer = playerToKick.transform.position - this.transform.position;
+                Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
             } else if (kickingOut) {
-                Quaternion lookRotation = Quaternion.LookRotation(this.transform.right);
+                // Assuming you want to rotate towards the right direction of the object
+                Vector3 rightDirection = this.transform.right;
+                Quaternion lookRotation = Quaternion.LookRotation(rightDirection);
                 this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
             }
         }
@@ -211,9 +216,10 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
 
     public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer) {
         var distanceToClosestPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
-        if (distanceToClosestPlayer <= 5f && UnityEngine.Random.Range(0f, 100f) <= 40f && !kicking && !jumping) {
+        if (kicking || jumping) return;
+        if (distanceToClosestPlayer <= 8f && UnityEngine.Random.Range(0f, 100f) <= 2.5f) {
             JumpInPlace();   
-        } else if ((distanceToClosestPlayer <= 10f && UnityEngine.Random.Range(0f, 100f) <= 1f) || kicking && (currentBehaviourStateIndex != (int)State.EatingTargetGiant || currentBehaviourStateIndex != (int)State.RunningToTarget)) {
+        } else if (distanceToClosestPlayer <= 16f && UnityEngine.Random.Range(0f, 100f) <= 2.5f && currentBehaviourStateIndex == (int)State.Wandering) {
             DoKickTargetPlayer(closestPlayer);
         }
     }
@@ -225,14 +231,12 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
     }
 
     public void DoKickTargetPlayer(PlayerControllerB closestPlayer) {
-        if (!kicking && !jumping) {
-            kicking = true;
-            agent.speed = 0.5f;
-            StartCoroutine(KickTimer());
-            if (IsServer) networkAnimator.SetTrigger("startKick");
-            playerToKick = closestPlayer;
-            Plugin.ExtendedLogging("Start Kick");
-        }
+        kicking = true;
+        agent.speed = 0.5f;
+        StartCoroutine(KickTimer());
+        if (IsServer) networkAnimator.SetTrigger("startKick");
+        playerToKick = closestPlayer;
+        Plugin.ExtendedLogging("Start Kick");
     }
 
     public IEnumerator KickTimer() {
@@ -244,7 +248,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat {
         agent.speed = walkingSpeed;
     }
 
-    public override void DoAIInterval() { // todo: change the search algorithm, don't use zeekerss, i have to search for far nodes and go in straight lines until i reach em so the animations arent janky
+    public override void DoAIInterval() {
         if (testBuild) { 
             StartCoroutine(DrawPath(line, agent));
         }

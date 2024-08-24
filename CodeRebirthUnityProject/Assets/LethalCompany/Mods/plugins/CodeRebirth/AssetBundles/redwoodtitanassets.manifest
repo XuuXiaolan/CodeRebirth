@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1640915117
+CRC: 4168593189
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 73579bf2d24af1d965a2d27720572a6b
+    Hash: 8f786aea8824737ac42b0fd826fa27b3
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6cc79e6956254f74ec6af6d5f360b497
+    Hash: 4d22bfd82c07c92c3a3909fe19408848
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 73579bf2d24af1d965a2d27720572a6b
+    Hash: 8f786aea8824737ac42b0fd826fa27b3
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -51,6 +51,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
@@ -60,6 +62,8 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 000ae222f5a7f7c7cee5ab5298053935, type: 3}
 - Class: 114
   Script: {fileID: -718089171, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 114
@@ -88,9 +92,15 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: EnemyBehaviourState
 - AssemblyName: Assembly-CSharp
+  ClassName: InteractEvent
+- AssemblyName: Assembly-CSharp
+  ClassName: InteractEventFloat
+- AssemblyName: Assembly-CSharp
   ClassName: NavSizeLimit
 - AssemblyName: Unity.Netcode.Components
   ClassName: Unity.Netcode.Components.NetworkAnimator/TransitionStateinfo
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Audio/ClosePinkGiantStomp1.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/RedwoodTitan/Materials/SpikeMat.mat
