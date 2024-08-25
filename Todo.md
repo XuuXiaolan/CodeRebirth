@@ -12,3 +12,4 @@
 - Rework natures mace.
 - Fix dealer so that stuff gets saved into the file and buffs re-apply permanently including health and item slots etc
 - Fix god ray script.
+- Finish readme images
