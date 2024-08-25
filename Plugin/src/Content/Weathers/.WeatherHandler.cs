@@ -48,14 +48,42 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         public TerminalKeyword TornadoTerminalKeyword { get; private set; } = null!;
     }
 
+    public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName) { 
+        [LoadFromBundle("GodRayWeather.prefab")]
+        public GameObject GodRayPermanentEffectPrefab { get; private set; } = null!;
+    }
+
     public MeteoriteAssets Meteorite { get; private set; } = null!;
     public TornadoAssets Tornado { get; private set; } = null!;
+    public GodRaysAssets GodRays { get; private set; } = null!;
     public Weather MeteorShowerWeather { get; private set; } = null!;
     public Weather TornadoesWeather { get; private set; } = null!;
+    public Weather GodRaysWeather { get; private set; } = null!;
 
     public WeatherHandler() {
         if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
         if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
+        if (true) RegisterGodRaysWeather();
+    }
+
+    private void RegisterGodRaysWeather() {
+        GodRays = new GodRaysAssets("godraysassets");
+                
+        GameObject effectPermanentObject = GameObject.Instantiate(GodRays.GodRayPermanentEffectPrefab);
+        effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
+        GameObject.DontDestroyOnLoad(effectPermanentObject);
+
+        ImprovedWeatherEffect godRayEffect = new(null, effectPermanentObject) {
+            SunAnimatorBool = "",
+        };
+
+        GodRaysWeather = new Weather("Red Sun", godRayEffect) {
+            DefaultWeight = 50,
+            DefaultLevelFilters = ["Gordion"],
+            LevelFilteringOption = FilteringOption.Exclude,
+            Color = UnityEngine.Color.red,
+        };
+        WeatherManager.RegisterWeather(GodRaysWeather);
     }
 
     private void RegisterTornadoWeather() {

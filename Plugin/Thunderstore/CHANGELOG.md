@@ -2,7 +2,7 @@
 
 - Fixed Sapphire gem colliders.
 - Fixed Sapphire gem tranparency.
-- Fixed nature's mace stuff not doing its thing right with healing players.
+- Fixed nature's mace stuff not doing its thing right with healing players, probably.
 - Adjusted Icy Hammer to only slow 100% on crit and only deal 1 damage.
 - Fixed floating flora (hopefully).
 - Fixed money radar icon not disappearing when picked up.
@@ -19,6 +19,9 @@
 - Epic axe can chop trees now.
 - Added emerald meteorites... for real now, i might've lied last time I said that.
 - Accidently adjusted flora, if you see the wrong flora in the wrong biome let me know.
+- Added ruby gem to meteorite.
+- Updated default config.
+- Updated readme images and presentation.
 
 ## v0.4.2
 

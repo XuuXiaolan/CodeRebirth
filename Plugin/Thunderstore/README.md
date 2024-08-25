@@ -157,7 +157,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Infectious Biomes
 
-![IBCo]()
+![IBCo](https://i.postimg.cc/G380FxFx/image.png)
 ![IBH](https://i.postimg.cc/wjRJfCfv/image.png)
 ![IBCr](https://i.postimg.cc/jq3xFLJx/image.png)
 

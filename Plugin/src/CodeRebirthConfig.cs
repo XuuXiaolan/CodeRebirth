@@ -109,11 +109,11 @@ public class CodeRebirthConfig {
                                             "Whether Flora is enabled.");
         ConfigFloraMaxAbundance = configFile.Bind("Flora Options",
                                             "Flora | Max Abundance",
-                                            60,
+                                            75,
                                             "How many plants can get added at most.");
         ConfigFloraMinAbundance = configFile.Bind("Flora Options",
                                             "Flora | Min Abundance",
-                                            20,
+                                            50,
                                             "How many plants can get added at least.");
         ConfigFloraGrassSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Grass Spawn Places",
