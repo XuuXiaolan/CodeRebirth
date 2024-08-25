@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using CodeRebirth.src;
 using CodeRebirth.src.Util;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using UnityEngine;
 
 namespace CodeRebirth.Content;
 

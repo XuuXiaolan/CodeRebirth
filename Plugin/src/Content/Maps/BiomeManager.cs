@@ -50,7 +50,7 @@ public class BiomeManager : NetworkBehaviour
     public void Update()
     {
         if (activeProjector == null) return;
-        if (activeProjector.size.x >= 350 || activeProjector.size.y >= 350) return;
+        if (activeProjector.size.x >= 250 || activeProjector.size.y >= 250) return;
         activeProjector.size += new Vector3(Time.deltaTime * 0.34f, Time.deltaTime * 0.34f, 0f);
     }
 
@@ -77,11 +77,7 @@ public class BiomeManager : NetworkBehaviour
             // Check if the collider belongs to foliage or a tree
             if (IsFoliage(hitCollider) || IsTree(hitCollider))
             {
-                if (random.NextInt(1, 100) <= 50) {
-                    DestroyColliderObject(hitCollider);
-                } else {
-                    
-                }
+                DestroyColliderObject(hitCollider);
             }
         }
 

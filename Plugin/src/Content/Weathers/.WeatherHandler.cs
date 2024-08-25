@@ -12,11 +12,14 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         [LoadFromBundle("BigExplosion.prefab")]
         public GameObject ExplosionPrefab { get; private set; } = null!;
 
-        [LoadFromBundle("MeteoriteObj")]
-        public Item MeteoriteItem { get; private set; } = null!;
+        [LoadFromBundle("SapphireMeteoriteObj")]
+        public Item SapphireMeteoriteItem { get; private set; } = null!;
 
         [LoadFromBundle("EmeraldMeteoriteObj")]
         public Item EmeraldMeteoriteItem { get; private set; } = null!;
+
+        [LoadFromBundle("RubyMeteoriteObj")]
+        public Item RubyMeteoriteItem { get; private set; } = null!;
 
         [LoadFromBundle("Meteor.prefab")]
         public GameObject MeteorPrefab { get; private set; } = null!;
@@ -81,10 +84,12 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
 
     private void RegisterMeteorShower() {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
-        Plugin.samplePrefabs.Add("Meteorite", Meteorite.MeteoriteItem);
-        RegisterScrapWithConfig("All:0", Meteorite.MeteoriteItem);
+        Plugin.samplePrefabs.Add("Sapphire Meteorite", Meteorite.SapphireMeteoriteItem);
+        RegisterScrapWithConfig("All:0", Meteorite.SapphireMeteoriteItem);
         Plugin.samplePrefabs.Add("Emerald Meteorite", Meteorite.EmeraldMeteoriteItem);
         RegisterScrapWithConfig("All:0", Meteorite.EmeraldMeteoriteItem);
+        Plugin.samplePrefabs.Add("Ruby Meteorite", Meteorite.RubyMeteoriteItem);
+        RegisterScrapWithConfig("All:0", Meteorite.RubyMeteoriteItem);
 
         GameObject effectObject = GameObject.Instantiate(Meteorite.MeteorEffectPrefab);
         effectObject.hideFlags = HideFlags.HideAndDontSave;

@@ -103,8 +103,9 @@ public class Meteors : NetworkBehaviour {
         ImpactAudio.Play();
             
         if (IsHost && UnityEngine.Random.Range(0, 10000) < (int)chanceToSpawnScrap*100) {
-            if (UnityEngine.Random.Range(0, 100) < 50 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Meteorite", target);
-            else CodeRebirthUtils.Instance.SpawnScrapServerRpc("Emerald Meteorite", target);
+            if (UnityEngine.Random.Range(0, 100) <= 33.33f ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Sapphire Meteorite", target);
+            else if (UnityEngine.Random.Range(0, 100) <= 33.33f ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Emerald Meteorite", target);
+            else CodeRebirthUtils.Instance.SpawnScrapServerRpc("Ruby Meteorite", target);
         }
             
         GameObject craterInstance = Instantiate(WeatherHandler.Instance.Meteorite.CraterPrefab, target, Quaternion.identity);
