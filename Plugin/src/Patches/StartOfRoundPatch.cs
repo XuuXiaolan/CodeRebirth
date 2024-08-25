@@ -1,4 +1,5 @@
-﻿using CodeRebirth.src.Content.Weathers;
+﻿using CodeRebirth.Content;
+using CodeRebirth.src.Content.Weathers;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,6 +26,11 @@ static class StartOfRoundPatch {
 			Plugin.Logger.LogWarning("Displaying Windy Weather Warning.");
 			HUDManager.Instance.DisplayTip("Weather alert!", "You have routed to a Windy moon. Exercise caution if you are sensitive to flashing lights!", true, true, "CR_WindyTip");
 		}
+	}
+
+	[HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
+	static void SaveCodeRebirthData() {
+		if(CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
 	}
 	
 	private static void CreateNetworkManager()

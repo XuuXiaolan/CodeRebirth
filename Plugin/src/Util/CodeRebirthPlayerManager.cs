@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using CodeRebirth.Content;
 using CodeRebirth.src.Content.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -76,7 +78,6 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
 
 public class CRPlayerData
 {
-    public static Dictionary<PlayerControllerB, CRPlayerData>? dataForPlayer;
     public bool Water = false;
     public bool Electric = false;
     public bool Fire = false;
@@ -90,6 +91,8 @@ public class CRPlayerData
     public Hoverboard? hoverboardRiding;
     public List<Collider>? playerColliders = null;
     public AnimatorOverrideController? playerOverrideController;
+
+    internal CodeRebirthLocalSave persistentData => CodeRebirthSave.Current.PlayerData[CodeRebirthPlayerManager.dataForPlayer.FirstOrDefault(it => it.Value == this).Key.playerSteamId];
 }
 
 internal static class PlayerControllerBExtensions

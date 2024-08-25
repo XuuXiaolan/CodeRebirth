@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.Content;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -245,12 +246,15 @@ public class Dealer : NetworkBehaviour
     }
 
     #region Good Deals
-    public void IncreaseMovementSpeed(PlayerControllerB? playerModified) {
+    public static void IncreaseMovementSpeed(PlayerControllerB? playerModified) {
         if (playerModified == null) {
             Plugin.Logger.LogError("playerModified is null");
             return;
         }
         playerModified.movementSpeed *= 1.25f;
+
+        if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) playerModified.GetCRPlayerData().persistentData.MovementSpeedUpgrades++;
+        
         Plugin.ExtendedLogging("IncreaseMovementSpeed");
     }
 
@@ -277,12 +281,15 @@ public class Dealer : NetworkBehaviour
         Plugin.ExtendedLogging("SpawnShotgunWithShellsServerRpc");
     }
 
-    public void IncreaseStamina(PlayerControllerB? playerModified) {
+    public static void IncreaseStamina(PlayerControllerB? playerModified) {
         if (playerModified == null) {
             Plugin.Logger.LogError("playerModified is null");
             return;
         }
         playerModified.sprintTime += 5f;
+
+        if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) playerModified.GetCRPlayerData().persistentData.StaminaUpgrades++;
+        
         Plugin.ExtendedLogging("IncreaseStamina");
     }
 
@@ -296,11 +303,13 @@ public class Dealer : NetworkBehaviour
         Plugin.ExtendedLogging("IncreaseHealth");
     }
 
-    public void DecreaseMoonPrices() {
+    public static void DecreaseMoonPrices() {
         foreach (ExtendedLevel extendedLevel in LethalLevelLoader.PatchedContent.ExtendedLevels) {
             extendedLevel.RoutePrice = (int)(extendedLevel.RoutePrice /1.2f);
         }
 
+        if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.MoonPriceUpgrade++;
+        
         Plugin.ExtendedLogging("DecreaseMoonPrices");
     }
 
@@ -330,7 +339,7 @@ public class Dealer : NetworkBehaviour
         Plugin.ExtendedLogging("SpawnJetpackServerRpc");
     }
 
-    public void IncreaseCarrySlotNumber(PlayerControllerB? playerModified) {
+    public static void IncreaseCarrySlotNumber(PlayerControllerB? playerModified) {
         if (playerModified == null) {
             Plugin.Logger.LogError("playerModified is null");
             return;
@@ -344,17 +353,22 @@ public class Dealer : NetworkBehaviour
         {
             UpdateHUD(true);
         }
+        
+        if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) playerModified.GetCRPlayerData().persistentData.CarrySlotUpgrades++;
+        
         Plugin.ExtendedLogging("IncreaseCarrySlotNumber");
     }
     #endregion
 
     #region Bad Deals
-    public void DecreaseMovementSpeed(PlayerControllerB? playerModified) {
+    public static void DecreaseMovementSpeed(PlayerControllerB? playerModified) {
         if (playerModified == null) {
             Plugin.Logger.LogError("playerModified is null");
             return;
         }
         playerModified.movementSpeed /= 1.25f;
+        
+        if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) playerModified.GetCRPlayerData().persistentData.MovementSpeedUpgrades--;
         Plugin.ExtendedLogging("DecreaseMovementSpeed");
     }
 
@@ -364,24 +378,28 @@ public class Dealer : NetworkBehaviour
         Plugin.ExtendedLogging("StealCreditOrScrap");
     }
 
-    public void DecreaseStamina(PlayerControllerB? playerModified) {
+    public static void DecreaseStamina(PlayerControllerB? playerModified) {
         if (playerModified == null) {
             Plugin.Logger.LogError("playerModified is null");
             return;
         }
         if (playerModified.sprintTime < 1f) return;
         playerModified.sprintTime = Mathf.Clamp(playerModified.sprintTime - 2.5f, 1f, 1000f);;
+        
+        if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) playerModified.GetCRPlayerData().persistentData.StaminaUpgrades--;
         Plugin.ExtendedLogging("DecreaseStamina");
     }
 
-    public void IncreaseMoonPrices() {
+    public static void IncreaseMoonPrices() {
         foreach (ExtendedLevel extendedLevel in LethalLevelLoader.PatchedContent.ExtendedLevels) {
             extendedLevel.RoutePrice = (int)(extendedLevel.RoutePrice*1.2f);
         }
+        
+        if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.MoonPriceUpgrade--;
         Plugin.ExtendedLogging("IncreaseMoonPrices");
     }
 
-    public void DecreaseCarrySlotNumber(PlayerControllerB? playerModified) {
+    public static void DecreaseCarrySlotNumber(PlayerControllerB? playerModified) {
         if (playerModified == null) {
             Plugin.Logger.LogError("playerModified is null");
             return;
@@ -395,6 +413,8 @@ public class Dealer : NetworkBehaviour
         {
             UpdateHUD(false);
         }
+        
+        if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) playerModified.GetCRPlayerData().persistentData.CarrySlotUpgrades--;
         Plugin.ExtendedLogging("DecreaseCarrySlotNumber");
     }
 
@@ -497,10 +517,26 @@ public class Dealer : NetworkBehaviour
                 break;
         }
     }
+    
+    public static void ApplyEffects(PlayerControllerB player) {
+        Plugin.Logger.LogInfo("applying effects..");
+        CodeRebirthLocalSave data = player.GetCRPlayerData().persistentData;
+        ApplyEffect(player, data.MovementSpeedUpgrades, IncreaseMovementSpeed, DecreaseMovementSpeed);
+        ApplyEffect(player, data.StaminaUpgrades, IncreaseStamina, DecreaseStamina);
+        ApplyEffect(player, data.CarrySlotUpgrades, IncreaseCarrySlotNumber, DecreaseCarrySlotNumber);
+    }
 
-    public List<int> slotIndexes = new List<int>();
+    static void ApplyEffect(PlayerControllerB player, int amount, Action<PlayerControllerB> positive, Action<PlayerControllerB> negative) {
+        if(amount == 0) return;
+        for (int i = 0; i < Math.Abs(amount); i++) {
+            if (amount > 0) positive(player);
+            else negative(player);
+        }
+    }
+    
+    public static List<int> slotIndexes = new List<int>();
 
-    public void UpdateHUD(bool add)
+    public static void UpdateHUD(bool add)
     {
         slotIndexes.Clear();
         var hud = HUDManager.Instance;

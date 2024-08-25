@@ -5,7 +5,12 @@ using Unity.Netcode;
 using UnityEngine;
 using Random = System.Random;
 using System.Collections.Generic;
+using CodeRebirth.Content;
 using CodeRebirth.src.Util.Extensions;
+using Mono.Cecil.Cil;
+using Newtonsoft.Json;
+using On.GameNetcodeStuff;
+using PlayerControllerB = GameNetcodeStuff.PlayerControllerB;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -13,7 +18,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     private static Random random = null!;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
     public static Dictionary<string, GameObject> Objects = new Dictionary<string, GameObject>();
-
+    
     void Awake()
     {
         Instance = this;
@@ -93,5 +98,48 @@ internal class CodeRebirthUtils : NetworkBehaviour
         Plugin.ExtendedLogging(obj.name + " NetworkObject spawned");
         component.Spawn(false);
         return obj;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void RequestLoadSaveDataServerRPC(int playerID) {
+        ulong steamID = StartOfRound.Instance.allPlayerScripts[playerID].playerSteamId;
+        if (!CodeRebirthSave.Current.PlayerData.ContainsKey(steamID)) { CodeRebirthSave.Current.PlayerData[steamID] = new(); CodeRebirthSave.Current.Save();}
+        SetSaveDataClientRPC(playerID, JsonConvert.SerializeObject(CodeRebirthSave.Current));
+    }
+
+    [ClientRpc]
+    void SetSaveDataClientRPC(int playerID, string saveData) {
+        Plugin.ExtendedLogging("Received save data from host!");
+
+        if (!IsHost && !IsServer) {
+            CodeRebirthSave.Current = JsonConvert.DeserializeObject<CodeRebirthSave>(saveData, new JsonSerializerSettings {
+                ContractResolver = new IncludePrivateSetterContractResolver()
+            })!;
+        }
+
+        if (StartOfRound.Instance.allPlayerScripts[playerID] == GameNetworkManager.Instance.localPlayerController) {
+            // apply to all players
+            foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
+                if(!player.isPlayerControlled) continue;
+                Dealer.ApplyEffects(player);
+            }
+            
+            for (int i = 0; i < Math.Abs(CodeRebirthSave.Current.MoonPriceUpgrade); i++) {
+                if (CodeRebirthSave.Current.MoonPriceUpgrade > 0) Dealer.DecreaseMoonPrices();
+                else Dealer.IncreaseMoonPrices();
+            }
+        } else
+            Dealer.ApplyEffects(StartOfRound.Instance.allPlayerScripts[playerID]); // only apply to new player
+    }
+
+    public override void OnNetworkSpawn() {
+        if (IsHost || IsServer) {
+            CodeRebirthSave.Current = PersistentDataHandler.Load<CodeRebirthSave>($"CRSave{GameNetworkManager.Instance.saveFileNum}");
+        }
+        RequestLoadSaveDataServerRPC(StartOfRound.Instance.ClientPlayerList[NetworkManager.Singleton.LocalClientId]);
+    }
+
+    void OnDisable() {
+        CodeRebirthSave.Current = null!;
     }
 }
