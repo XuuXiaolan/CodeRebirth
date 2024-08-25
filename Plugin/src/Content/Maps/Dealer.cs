@@ -346,7 +346,7 @@ public class Dealer : NetworkBehaviour
         }
         playerModified.DropAllHeldItems();
         var itemSlots = playerModified.ItemSlots.ToList();
-
+        
         playerModified.ItemSlots = new GrabbableObject[itemSlots.Count + 1];
 
         if (playerModified == GameNetworkManager.Instance.localPlayerController)
@@ -562,41 +562,32 @@ public class Dealer : NetworkBehaviour
             Plugin.ExtendedLogging("Adding 1 item slots! Surely this will go well..");
             Plugin.ExtendedLogging($"Adding after index: {index}");
 
-            for (int i = 0; i < 1; i++)
-            {
-                // calculate xPosition to center belt using TotalWidth
-                var anchor = -(referenceFrame.rectTransform.parent.GetComponent<RectTransform>().sizeDelta.x / 2) - (15 / 4);
+            int i = lastInventorySize - 4;
+            // calculate xPosition to center belt using TotalWidth
+            var anchor = -(referenceFrame.rectTransform.parent.GetComponent<RectTransform>().sizeDelta.x / 2) - 3F;
 
-                var xPosition = anchor + (i * slotSizeX) + (i * 15f);
+            var xPosition = anchor + (i * slotSizeX) + (i * 15f);
 
 
-                var prefab = iconFrames[0];
+            var prefab = iconFrames[0];
 
-                var frame = Instantiate(prefab, referenceFrame.transform.parent);
-                frame.name = $"Slot{lastInventorySize + i}[ProjectSCPDealDevil]";
-                frame.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
-                frame.rectTransform.eulerAngles = frameAngles;
+            var frame = Instantiate(prefab, referenceFrame.transform.parent);
+            frame.name = $"Slot{lastInventorySize + i}[ProjectSCPDealDevil]";
+            frame.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
+            frame.rectTransform.eulerAngles = frameAngles;
 
-                var icon = frame.transform.GetChild(0).GetComponent<Image>();
-                icon.name = "icon";
-                icon.enabled = false;
-                icon.rectTransform.eulerAngles = iconAngles;
-                // rotate 90 degrees because unity is goofy
-                icon.rectTransform.Rotate(new Vector3(0.0f, 0.0f, -90.0f));
+            var icon = frame.transform.GetChild(0).GetComponent<Image>();
+            icon.name = "icon";
+            icon.enabled = false;
+            icon.rectTransform.eulerAngles = iconAngles;
+            // rotate 90 degrees because unity is goofy
+            icon.rectTransform.Rotate(new Vector3(0.0f, 0.0f, -90.0f));
+            // insert at index
+            iconFrames.Add(frame);
+            icons.Add( icon);
 
-                var slotIndex = index + i;
-
-                // insert at index
-                iconFrames.Insert(slotIndex, frame);
-                icons.Insert(slotIndex, icon);
-
-                slotIndexes.Add(slotIndex);
-
-                // move up in parent to match index
-                frame.transform.SetSiblingIndex(slotIndex);
-
-                
-            }
+            // move up in parent to match index
+            frame.transform.SetSiblingIndex(i);
 
             hud.itemSlotIconFrames = iconFrames.ToArray();
             hud.itemSlotIcons = icons.ToArray();
