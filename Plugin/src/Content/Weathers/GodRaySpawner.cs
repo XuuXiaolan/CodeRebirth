@@ -31,7 +31,7 @@ public class GodRaySpawner : MonoBehaviour
             Color colour = rayColours[godRayRandom.NextInt(0, rayColours.Count - 1)];
 
             Vector2 topPosition = new Vector2(godRayRandom.NextFloat(minX, maxX), godRayRandom.NextFloat(minZ, maxZ));
-            Vector2 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(centerOfWorld, 200, default);
+            Vector2 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(centerOfWorld, 100, default);
             godRayManager.AddGodRay(new GodRay(
                 colour,
                 topPosition,

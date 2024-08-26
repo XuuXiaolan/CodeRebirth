@@ -108,14 +108,14 @@ public class GodRayManager : MonoBehaviour
     private void SetScale(float scale)
     {
         // just to prevent the furthest vertex from being clipped
-        scale *= 0.99f;
+        scale *= 0.90f;
         transform.localScale = Vector3.one * scale * 2;
         transform.position = camera.transform.position;
         this.scale = scale * 2;
         material.SetFloat("_skyBoxRadius", scale);
         for (int i = 0; i < godRaySpotlights.Count; i++)
         {
-            float skyHeight = camera.farClipPlane * 0.99f + camera.transform.position.y;
+            float skyHeight = camera.farClipPlane * 0.90f + camera.transform.position.y;
             GodRaySpotlightData spotlightData = godRays[i].SpotlightData(skyHeight);
             float distance = (godRays[i].BottomPosition - spotlightData.location).magnitude + 5f;
             godRaySpotlights[i].range = distance;
@@ -177,11 +177,12 @@ public class GodRayManager : MonoBehaviour
     /// <returns>The ray that was added (a reference to the given argument "ray")</returns>
     public GodRay AddGodRay(GodRay ray)
     {
-        float skyHeight = camera.farClipPlane * 0.99f + camera.transform.position.y;
+        float skyHeight = camera.farClipPlane * 0.90f + camera.transform.position.y;
         godRays.Add(ray);
         godRayEffects.Add(ray.SkyEffect(skyHeight));
         GodRaySpotlightData spotlightData = ray.SpotlightData(skyHeight);
         GameObject lightGameObject = new GameObject();
+        lightGameObject.layer = LayerMask.NameToLayer("Room");
         HDAdditionalLightData light = lightGameObject.AddHDLight(HDLightTypeAndShape.ConeSpot);
         light.range = camera.farClipPlane*2;
 
@@ -221,6 +222,8 @@ public class GodRayManager : MonoBehaviour
         MeshFilter meshFilter = generateNewMesh ? light.AddComponent<MeshFilter>() : light.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = generateNewMesh ? light.AddComponent<MeshRenderer>() : light.GetComponent<MeshRenderer>();
         MeshCollider meshCollider = generateNewMesh ? light.AddComponent<MeshCollider>() : light.GetComponent<MeshCollider>();
+        meshCollider.convex = true;
+        meshCollider.isTrigger = true;
 
         Mesh mesh = new Mesh();
         if (!generateNewMesh) Destroy(meshFilter.mesh);
