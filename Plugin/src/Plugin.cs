@@ -27,7 +27,6 @@ public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger = null!;
     private readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
-    internal static bool ImperiumIsOn = false;
     internal static bool SurfacedIsOn = false;
     internal static bool LGUIsOn = false;
     internal static bool SubtitlesAPIIsOn = false;
@@ -47,12 +46,6 @@ public class Plugin : BaseUnityPlugin {
 #if DEBUG
         ModConfig.ConfigEnableExtendedLogging.Value = true;
 #endif
-        if (ImperiumCompatibilityChecker.Enabled) {
-            ImperiumCompatibilityChecker.Init();
-        } else {
-            // Logger.LogWarning("Imperium not found. Special Debugs will not be activated.");
-        }
-
         if (SurfacedCompatibilityChecker.Enabled) {
             SurfacedCompatibilityChecker.Init();
         } else {
