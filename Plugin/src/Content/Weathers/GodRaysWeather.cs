@@ -64,7 +64,7 @@ public class GodRay(Color skyColour, Vector2 topPosition, float topRadius, float
     public float BottomRadius { get; private set; } = bottomRadius;
 
     internal GodRaySkyEffect SkyEffect(float skyHeight) => new(SkyColour, new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius, TopFalloff, BottomPosition);
-    internal GodRaySpotlightData SpotlightData(float skyHeight) => new(new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius, BottomPosition, BottomRadius, LightColour);
+    internal GodRaySpotlightData SpotlightData(float skyHeight) => new(new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius, BottomPosition, BottomRadius * 1.2f, LightColour);
 }
 
 public class GodRayManager : MonoBehaviour
@@ -122,7 +122,7 @@ public class GodRayManager : MonoBehaviour
             godRaySpotlights[i].range = distance;
 
             HDAdditionalLightData light = godRaySpotlights[i].GetComponent<HDAdditionalLightData>();
-            light.range = camera.farClipPlane * 2;
+            light.range = camera.farClipPlane * 2f;
 
             float innerAnglePercent = 100f;
             if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
@@ -185,7 +185,7 @@ public class GodRayManager : MonoBehaviour
         GameObject lightGameObject = new GameObject();
         lightGameObject.layer = LayerMask.NameToLayer("Room");
         HDAdditionalLightData light = lightGameObject.AddHDLight(HDLightTypeAndShape.ConeSpot);
-        light.range = camera.farClipPlane*2;
+        light.range = camera.farClipPlane * 2;
 
         float innerAnglePercent = 100f;
         if (spotlightData.angle * Mathf.Rad2Deg < 1f) innerAnglePercent = spotlightData.angle * Mathf.Rad2Deg * 100f;
