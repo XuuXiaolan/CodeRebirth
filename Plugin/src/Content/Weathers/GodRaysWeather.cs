@@ -109,14 +109,14 @@ public class GodRayManager : MonoBehaviour
     private void SetScale(float scale)
     {
         // just to prevent the furthest vertex from being clipped
-        scale *= 0.90f;
+        scale *= 0.99f;
         transform.localScale = Vector3.one * scale * 2;
         transform.position = camera.transform.position;
         this.scale = scale * 2;
         material.SetFloat("_skyBoxRadius", scale);
         for (int i = 0; i < godRaySpotlights.Count; i++)
         {
-            float skyHeight = camera.farClipPlane * 0.90f + camera.transform.position.y;
+            float skyHeight = camera.farClipPlane * 0.99f + camera.transform.position.y;
             GodRaySpotlightData spotlightData = godRays[i].SpotlightData(skyHeight);
             float distance = (godRays[i].BottomPosition - spotlightData.location).magnitude + 5f;
             godRaySpotlights[i].range = distance;
@@ -129,7 +129,7 @@ public class GodRayManager : MonoBehaviour
             light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
             light.shapeRadius = 0;
             light.luxAtDistance = (spotlightData.location - godRays[i].BottomPosition).magnitude;
-            light.SetIntensity(7000, LightUnit.Lux);
+            light.SetIntensity(1000, LightUnit.Lux);
 
             godRaySpotlights[i].gameObject.transform.rotation = spotlightData.rotation;
             godRaySpotlights[i].gameObject.transform.position = spotlightData.location;
@@ -178,7 +178,7 @@ public class GodRayManager : MonoBehaviour
     /// <returns>The ray that was added (a reference to the given argument "ray")</returns>
     public GodRay AddGodRay(GodRay ray)
     {
-        float skyHeight = camera.farClipPlane * 0.90f + camera.transform.position.y;
+        float skyHeight = camera.farClipPlane * 0.99f;
         godRays.Add(ray);
         godRayEffects.Add(ray.SkyEffect(skyHeight));
         GodRaySpotlightData spotlightData = ray.SpotlightData(skyHeight);
@@ -192,7 +192,7 @@ public class GodRayManager : MonoBehaviour
         light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
         light.shapeRadius = 0;
         light.luxAtDistance = (spotlightData.location - ray.BottomPosition).magnitude;
-        light.SetIntensity(7000, LightUnit.Lux);
+        light.SetIntensity(1000, LightUnit.Lux);
 
         light.color = spotlightData.colour;
         lightGameObject.transform.parent = godRayParent.transform;
@@ -224,8 +224,14 @@ public class GodRayManager : MonoBehaviour
         MeshRenderer meshRenderer = generateNewMesh ? light.AddComponent<MeshRenderer>() : light.GetComponent<MeshRenderer>();
         MeshCollider meshCollider = generateNewMesh ? light.AddComponent<MeshCollider>() : light.GetComponent<MeshCollider>();
         BetterCooldownTrigger damageTrigger = generateNewMesh ? light.AddComponent<BetterCooldownTrigger>() : light.GetComponent<BetterCooldownTrigger>();
-        damageTrigger.damageToDealForPlayers = 2;
-        damageTrigger.damageIntervalForPlayers = .5f;
+        damageTrigger.damageToDealForPlayers = 1;
+        damageTrigger.damageIntervalForPlayers = 2f;
+        damageTrigger.sharedCooldown = true;
+        damageTrigger.forceDirectionFromThisObject = false;
+        damageTrigger.forceDirection = BetterCooldownTrigger.ForceDirection.Forward;
+        damageTrigger.forceMagnitudeAfterDamage = 10;
+        damageTrigger.canThingExit = false;
+
         meshCollider.convex = true;
         meshCollider.isTrigger = true;
 

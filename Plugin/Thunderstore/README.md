@@ -172,6 +172,7 @@ If you're interested in helping with the development of the mod, feel free to re
 **Modeling/Designs:**
 
 - S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
+- "Carnivorous plant" [Carnivorous Plant](https://skfb.ly/oww8I) by Jara is licensed under Creative Commons Attribution [License](http://creativecommons.org/licenses/by/4.0/).
 
 **Sounds:**
 

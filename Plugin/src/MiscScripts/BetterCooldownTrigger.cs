@@ -62,6 +62,8 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Header("Trigger Settings")]
     [Tooltip("Whether to trigger for enemies.")]
     public bool triggerForEnemies = false;
+    [Tooltip("Whether player/enemy can exit the trigger's effect.")]
+    public bool canThingExit = true;
     [Tooltip("Whether to use shared cooldown between different GameObjects that use this script.")]
     public bool sharedCooldown = false;
     [Tooltip("Whether to play default player damage SFX when damage is dealt.")]
@@ -164,19 +166,12 @@ public class BetterCooldownTrigger : NetworkBehaviour
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
-        Plugin.ExtendedLogging("ontriggerexit 1");
-        if (!enabledScript) return;
-        Plugin.ExtendedLogging("ontriggerexit 2, dumping booledane values >_<");
+        if (!enabledScript || !canThingExit) return;
 
-        Plugin.ExtendedLogging(other.CompareTag("Player"));
-        Plugin.ExtendedLogging(other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player));
-        Plugin.ExtendedLogging(player == GameNetworkManager.Instance.localPlayerController);
-        Plugin.ExtendedLogging(!player.isPlayerDead);
 
-        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out player) && player == GameNetworkManager.Instance.localPlayerController && !player.isPlayerDead) {
-            Plugin.ExtendedLogging("local player exited !1! ! ! ! ! 1");
+        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController && !player.isPlayerDead) {
             currentlyDamagingLocalPlayer = false;
             playerClosestAudioSources.Remove(player);
         }
@@ -398,23 +393,11 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     public void OnDisable()
     {
-        Plugin.ExtendedLogging("asguiogsdrg  gh iasdg ruhg gasdh agb erui  afg wer  r asdfgbb v  asdfg ");
         StopAllCoroutines();
         currentlyDamagingLocalPlayer = false;
         enemyCoroutineStatus.Clear();
         playerClosestAudioSources.Clear();
         enemyClosestAudioSources.Clear();
-    }
-
-    Collider _collider;
-
-    void Awake() {
-        _collider = GetComponent<Collider>();
-    }
-
-    void Update() {
-        if(currentlyDamagingLocalPlayer)
-            Plugin.ExtendedLogging(_collider.enabled);
     }
 
     public static Transform? TryFindRoot(Transform child)

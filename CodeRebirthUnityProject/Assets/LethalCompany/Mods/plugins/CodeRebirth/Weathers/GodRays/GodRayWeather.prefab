@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6038806343593123924
+--- !u!1 &5158067114614243529
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,86 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6761979662197561216}
-  - component: {fileID: 4462423980716023262}
-  - component: {fileID: 5329889778751701930}
-  - component: {fileID: 4845513036453637888}
-  - component: {fileID: 5503066315162587889}
+  - component: {fileID: 4611237663097145858}
+  - component: {fileID: 5593713038402944938}
+  - component: {fileID: 7604720067980438901}
+  - component: {fileID: 8632077249224047354}
+  - component: {fileID: 2537166877112761155}
   m_Layer: 0
-  m_Name: GodRayWeather
+  m_Name: GodRayActualWeather
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &6761979662197561216
+  m_IsActive: 1
+--- !u!4 &4611237663097145858
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6038806343593123924}
+  m_GameObject: {fileID: 5158067114614243529}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1439956, y: -0.17726183, z: -0.17689157}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6945346164230765429}
-  m_Father: {fileID: 0}
+  m_Children: []
+  m_Father: {fileID: 6761979662197561216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &4462423980716023262
+--- !u!33 &5593713038402944938
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6038806343593123924}
+  m_GameObject: {fileID: 5158067114614243529}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &5329889778751701930
+--- !u!114 &7604720067980438901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158067114614243529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -552449086, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  godRayManager: {fileID: 8632077249224047354}
+  timeBetweenGodRaySpawns: 10
+  minX: -100
+  maxX: 100
+  minZ: -100
+  maxZ: 100
+  rayColours:
+  - {r: 1, g: 0.28773582, b: 0.28773582, a: 0}
+  - {r: 1, g: 0.23113209, b: 0.23113209, a: 0}
+  - {r: 1, g: 0.1273585, b: 0.1273585, a: 0}
+  - {r: 0.8207547, g: 0.16647384, b: 0.16647384, a: 0}
+--- !u!114 &8632077249224047354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158067114614243529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1200757664, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  godRayMaterial: {fileID: 2100000, guid: 838963a679063384aaecc9e9051e26d3, type: 2}
+  godRayParent: {fileID: 6089813104749223742}
+  camera: {fileID: 0}
+--- !u!23 &2537166877112761155
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6038806343593123924}
+  m_GameObject: {fileID: 5158067114614243529}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -86,44 +123,39 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4845513036453637888
-MonoBehaviour:
+--- !u!1 &6038806343593123924
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6761979662197561216}
+  m_Layer: 0
+  m_Name: GodRayWeather
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6761979662197561216
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6038806343593123924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1200757664, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  godRayMaterial: {fileID: 2100000, guid: 838963a679063384aaecc9e9051e26d3, type: 2}
-  godRayParent: {fileID: 6089813104749223742}
-  camera: {fileID: 0}
---- !u!114 &5503066315162587889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6038806343593123924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -552449086, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  godRayManager: {fileID: 4845513036453637888}
-  timeBetweenGodRaySpawns: 10
-  minX: -100
-  maxX: 100
-  minZ: -100
-  maxZ: 100
-  rayColours:
-  - {r: 1, g: 0.28773582, b: 0.28773582, a: 0}
-  - {r: 1, g: 0.23113209, b: 0.23113209, a: 0}
-  - {r: 1, g: 0.1273585, b: 0.1273585, a: 0}
-  - {r: 0.8207547, g: 0.16647384, b: 0.16647384, a: 0}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.1439956, y: -0.17726183, z: -0.17689157}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6945346164230765429}
+  - {fileID: 4611237663097145858}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6089813104749223742
 GameObject:
   m_ObjectHideFlags: 0
