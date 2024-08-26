@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using CodeRebirth.src.MiscScripts;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace CodeRebirth.src.Content.Weathers;
@@ -222,6 +223,9 @@ public class GodRayManager : MonoBehaviour
         MeshFilter meshFilter = generateNewMesh ? light.AddComponent<MeshFilter>() : light.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = generateNewMesh ? light.AddComponent<MeshRenderer>() : light.GetComponent<MeshRenderer>();
         MeshCollider meshCollider = generateNewMesh ? light.AddComponent<MeshCollider>() : light.GetComponent<MeshCollider>();
+        BetterCooldownTrigger damageTrigger = generateNewMesh ? light.AddComponent<BetterCooldownTrigger>() : light.GetComponent<BetterCooldownTrigger>();
+        damageTrigger.damageToDealForPlayers = 2;
+        damageTrigger.damageIntervalForPlayers = .5f;
         meshCollider.convex = true;
         meshCollider.isTrigger = true;
 

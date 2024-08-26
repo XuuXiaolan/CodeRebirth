@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CodeRebirth.src.MiscScripts;
 public class BetterCooldownTrigger : NetworkBehaviour
@@ -111,7 +113,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     private static float lastDamageTime = -Mathf.Infinity; // Last time damage was dealt across all instances
 
-    private Dictionary<PlayerControllerB, bool> playerCoroutineStatus = new Dictionary<PlayerControllerB, bool>();
+    bool currentlyDamagingLocalPlayer = false;
     private Dictionary<EnemyAI, bool> enemyCoroutineStatus = new Dictionary<EnemyAI, bool>();
     private Dictionary<PlayerControllerB, AudioSource> playerClosestAudioSources = new Dictionary<PlayerControllerB, AudioSource>();
     private Dictionary<EnemyAI, AudioSource> enemyClosestAudioSources = new Dictionary<EnemyAI, AudioSource>();
@@ -133,16 +135,15 @@ public class BetterCooldownTrigger : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!enabledScript) return;
-        if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !player.isPlayerDead)
+        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController && !player.isPlayerDead)
         {
-            if (!playerCoroutineStatus.ContainsKey(player))
-            {
-                playerCoroutineStatus[player] = true;
+            if (!currentlyDamagingLocalPlayer) {
+                currentlyDamagingLocalPlayer = true;
                 if (damageAudioSources != null && damageAudioSources.Count > 0)
                 {
                     playerClosestAudioSources[player] = GetClosestAudioSource(player.transform);
                 }
-                StartCoroutine(DamagePlayerCoroutine(player));
+                StartCoroutine(DamageLocalPlayerCoroutine());
             }
         }
         else if (triggerForEnemies)
@@ -163,12 +164,20 @@ public class BetterCooldownTrigger : NetworkBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
+        Plugin.ExtendedLogging("ontriggerexit 1");
         if (!enabledScript) return;
-        if (other.CompareTag("Player") && GameNetworkManager.Instance.localPlayerController == other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !player.isPlayerDead)
-        {
-            playerCoroutineStatus[player] = false;
+        Plugin.ExtendedLogging("ontriggerexit 2, dumping booledane values >_<");
+
+        Plugin.ExtendedLogging(other.CompareTag("Player"));
+        Plugin.ExtendedLogging(other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player));
+        Plugin.ExtendedLogging(player == GameNetworkManager.Instance.localPlayerController);
+        Plugin.ExtendedLogging(!player.isPlayerDead);
+
+        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out player) && player == GameNetworkManager.Instance.localPlayerController && !player.isPlayerDead) {
+            Plugin.ExtendedLogging("local player exited !1! ! ! ! ! 1");
+            currentlyDamagingLocalPlayer = false;
             playerClosestAudioSources.Remove(player);
         }
         else if (triggerForEnemies)
@@ -182,9 +191,9 @@ public class BetterCooldownTrigger : NetworkBehaviour
         }
     }
 
-    private IEnumerator DamagePlayerCoroutine(PlayerControllerB player)
+    private IEnumerator DamageLocalPlayerCoroutine()
     {
-        while (playerCoroutineStatus[player])
+        while (currentlyDamagingLocalPlayer)
         {
             if (sharedCooldown && Time.time < lastDamageTime + damageIntervalForPlayers)
             {
@@ -193,11 +202,11 @@ public class BetterCooldownTrigger : NetworkBehaviour
             }
 
             lastDamageTime = Time.time;
-            ApplyDamageToPlayer(player);
+            ApplyDamageToLocalPlayer();
             yield return new WaitForSeconds(damageIntervalForPlayers);
         }
     }
-
+    
     private IEnumerator DamageEnemyCoroutine(EnemyAI enemy)
     {
         while (enemyCoroutineStatus[enemy])
@@ -214,8 +223,8 @@ public class BetterCooldownTrigger : NetworkBehaviour
         }
     }
 
-    private void ApplyDamageToPlayer(PlayerControllerB player)
-    {
+    private void ApplyDamageToLocalPlayer() {
+        PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
         Vector3 calculatedForceAfterDamage = CalculateForceDirection(player, forceMagnitudeAfterDamage);
         Vector3 calculatedForceAfterDeath = CalculateForceDirection(player, forceMagnitudeAfterDeath);
 
@@ -239,7 +248,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
                 SpawnDeathPrefabServerRpc(player.transform.position, player.transform.rotation, true);
             } else if (deathPrefabForPlayer != null) {
                 Instantiate(deathPrefabForPlayer, player.transform.position, player.transform.rotation);
-                playerCoroutineStatus[player] = false;
+                currentlyDamagingLocalPlayer = false;
                 playerClosestAudioSources.Remove(player);
             }
         }
@@ -389,11 +398,23 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     public void OnDisable()
     {
+        Plugin.ExtendedLogging("asguiogsdrg  gh iasdg ruhg gasdh agb erui  afg wer  r asdfgbb v  asdfg ");
         StopAllCoroutines();
-        playerCoroutineStatus.Clear();
+        currentlyDamagingLocalPlayer = false;
         enemyCoroutineStatus.Clear();
         playerClosestAudioSources.Clear();
         enemyClosestAudioSources.Clear();
+    }
+
+    Collider _collider;
+
+    void Awake() {
+        _collider = GetComponent<Collider>();
+    }
+
+    void Update() {
+        if(currentlyDamagingLocalPlayer)
+            Plugin.ExtendedLogging(_collider.enabled);
     }
 
     public static Transform? TryFindRoot(Transform child)
