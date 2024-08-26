@@ -144,13 +144,15 @@ public class Hoverboard : GrabbableObject, IHittable {
         base.Update();
         if (HandleDropping()) return;
         if (_isSprintHeld && !this.insertedBattery.empty && _isHoverForwardHeld && hoverboardMode == HoverboardMode.Mounted) {
+            this.isBeingUsed = true;
             this.insertedBattery.charge = Mathf.Clamp(this.insertedBattery.charge - (Time.deltaTime / this.itemProperties.batteryUsage), 0f, 1f);
-            if (this.insertedBattery.charge <= 0f) {
+            if (this.insertedBattery.charge <= 0f && !this.insertedBattery.empty) {
                 this.insertedBattery.empty = true;
             }
         } else {
+            this.isBeingUsed = false;
             this.insertedBattery.charge = Mathf.Clamp(this.insertedBattery.charge + (Time.deltaTime / this.itemProperties.batteryUsage), 0f, 1f);
-            if (this.insertedBattery.charge >= 0.15f) {
+            if (this.insertedBattery.charge >= 0.15f && this.insertedBattery.empty) {
                 this.insertedBattery.empty = false;
             }
         }
@@ -330,7 +332,6 @@ public class Hoverboard : GrabbableObject, IHittable {
     [ClientRpc]
     internal void SetHoverboardSprintClientRpc(bool held) {
         _isSprintHeld = held;
-        this.isBeingUsed = held;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -434,6 +435,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         hoverboardChild.rotation = playerCurrentlyControlling.transform.rotation * rotationOffset;
         _isHoverForwardHeld = false;
         _isSprintHeld = false;
+        isBeingUsed = false;
         turnedOn = false;
         hb.useGravity = false;
         hb.isKinematic = true;
@@ -458,6 +460,7 @@ public class Hoverboard : GrabbableObject, IHittable {
         turnedOn = false;
         _isHoverForwardHeld = false;
         _isSprintHeld = false;
+        isBeingUsed = false;
         hb.useGravity = true;
         hb.isKinematic = false;
         trigger.interactable = true;
@@ -543,18 +546,22 @@ public class Hoverboard : GrabbableObject, IHittable {
         if (playerControlling == null || GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         HUDManager.Instance.ClearControlTips();
         if (hoverboardMode == HoverboardMode.Mounted) {
-            HUDManager.Instance.ChangeControlTipMultiple(new string[] {
+            HUDManager.Instance.ChangeControlTipMultiple([
                 $"Dismount Hoverboard : [{Plugin.InputActionsInstance.DropHoverboard.GetBindingDisplayString().Split(' ')[0]}]",
                 $"Move Hoverboard : [{Plugin.InputActionsInstance.HoverForward.GetBindingDisplayString().Split(' ')[0]}][{Plugin.InputActionsInstance.HoverLeft.GetBindingDisplayString().Split(' ')[0]}][{Plugin.InputActionsInstance.HoverBackward.GetBindingDisplayString().Split(' ')[0]}][{Plugin.InputActionsInstance.HoverRight.GetBindingDisplayString().Split(' ')[0]}]",
                 $"Up Boost : [{Plugin.InputActionsInstance.HoverUp.GetBindingDisplayString().Split(' ')[0]}]",
                 $"Switch Mode (Mounted) : [{Plugin.InputActionsInstance.SwitchMode.GetBindingDisplayString().Split(' ')[0]}]"
-            });
+            ]);
         } else if (hoverboardMode == HoverboardMode.Held) {
-            HUDManager.Instance.ChangeControlTipMultiple(new string[] {
+            HUDManager.Instance.ChangeControlTipMultiple([
                 $"Drop Hoverboard : [{Plugin.InputActionsInstance.DropHoverboard.GetBindingDisplayString().Split(' ')[0]}]",
                 $"Switch Mode (Held) : [{Plugin.InputActionsInstance.SwitchMode.GetBindingDisplayString().Split(' ')[0]}]"
-            });
+            ]);
         }
+    }
+
+    public override void FallWithCurve() {
+        return;
     }
 
     private void CalculateVerticalLookingInput(Vector2 inputVector, PlayerControllerB playerCurrentlyControlling) {

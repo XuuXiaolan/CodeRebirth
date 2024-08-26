@@ -91,7 +91,7 @@ public class GodRayManager : MonoBehaviour
 	public static GodRayManager? Instance { get; private set; }
 	public static bool Active => Instance != null;
 
-    private void Start()
+    public void OnEnable()
     {
         Instance = this;
         camera = GameNetworkManager.Instance.localPlayerController.gameplayCamera;

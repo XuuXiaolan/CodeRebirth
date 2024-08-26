@@ -67,7 +67,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     }
 
     private void RegisterGodRaysWeather() {
-        GodRays = new GodRaysAssets("godraysassets");
+        GodRays = new GodRaysAssets("godrayassets");
                 
         GameObject effectPermanentObject = GameObject.Instantiate(GodRays.GodRayPermanentEffectPrefab);
         effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
