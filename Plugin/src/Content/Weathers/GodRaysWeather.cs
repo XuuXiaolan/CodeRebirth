@@ -199,6 +199,7 @@ public class GodRayManager : MonoBehaviour
         lightGameObject.transform.position = spotlightData.location;
         lightGameObject.transform.rotation = spotlightData.rotation;
         GenerateSpotlightMesh(lightGameObject, (ray.BottomPosition-spotlightData.location).magnitude, ray.BottomRadius, spotlightData.colour, pointCount: 40);
+        GenerateDamageTrigger(ray.BottomPosition, ray.BottomRadius);
         godRaySpotlights.Add(light);
         RegenerateRayComputeBuffer();
         return ray;
@@ -222,18 +223,6 @@ public class GodRayManager : MonoBehaviour
 
         MeshFilter meshFilter = generateNewMesh ? light.AddComponent<MeshFilter>() : light.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = generateNewMesh ? light.AddComponent<MeshRenderer>() : light.GetComponent<MeshRenderer>();
-        MeshCollider meshCollider = generateNewMesh ? light.AddComponent<MeshCollider>() : light.GetComponent<MeshCollider>();
-        BetterCooldownTrigger damageTrigger = generateNewMesh ? light.AddComponent<BetterCooldownTrigger>() : light.GetComponent<BetterCooldownTrigger>();
-        damageTrigger.damageToDealForPlayers = 1;
-        damageTrigger.damageIntervalForPlayers = 2f;
-        damageTrigger.sharedCooldown = true;
-        damageTrigger.forceDirectionFromThisObject = false;
-        damageTrigger.forceDirection = BetterCooldownTrigger.ForceDirection.Forward;
-        damageTrigger.forceMagnitudeAfterDamage = 10;
-        damageTrigger.canThingExit = false;
-
-        meshCollider.convex = true;
-        meshCollider.isTrigger = true;
 
         Mesh mesh = new Mesh();
         if (!generateNewMesh) Destroy(meshFilter.mesh);
@@ -243,8 +232,26 @@ public class GodRayManager : MonoBehaviour
         light.GetComponent<Renderer>().material = godRayMaterial;
         light.GetComponent<Renderer>().material.color = new Color(colour.r, colour.g, colour.b, 56f / 255f);
         mesh.RecalculateNormals();
+    }
 
-        meshCollider.sharedMesh = mesh;
+    void GenerateDamageTrigger(Vector3 position, float radius) {
+        GameObject trigger = new GameObject();
+        trigger.layer = LayerMask.NameToLayer("Room");
+        trigger.transform.position = position;
+
+        SphereCollider collider = trigger.AddComponent<SphereCollider>();
+        BetterCooldownTrigger damageTrigger = trigger.AddComponent<BetterCooldownTrigger>();
+        
+        damageTrigger.damageToDealForPlayers = 1;
+        damageTrigger.damageIntervalForPlayers = 2f;
+        damageTrigger.sharedCooldown = true;
+        damageTrigger.forceDirectionFromThisObject = false;
+        damageTrigger.forceDirection = BetterCooldownTrigger.ForceDirection.Forward;
+        damageTrigger.forceMagnitudeAfterDamage = 10;
+        damageTrigger.canThingExit = false;
+
+        collider.radius = radius;
+        collider.isTrigger = true;
     }
 
     private void RegenerateRayComputeBuffer()
