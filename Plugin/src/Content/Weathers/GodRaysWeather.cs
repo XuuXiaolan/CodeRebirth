@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering;
 
 namespace CodeRebirth.src.Content.Weathers;
 struct GodRaySkyEffect(Color colour, Vector3 position, float radius, float falloff, Vector3 bottomPosition)
@@ -64,7 +65,7 @@ public class GodRay(Color skyColour, Vector2 topPosition, float topRadius, float
     public float BottomRadius { get; private set; } = bottomRadius;
 
     internal GodRaySkyEffect SkyEffect(float skyHeight) => new(SkyColour, new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius, TopFalloff, BottomPosition);
-    internal GodRaySpotlightData SpotlightData(float skyHeight) => new(new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius, BottomPosition, BottomRadius * 1.2f, LightColour);
+    internal GodRaySpotlightData SpotlightData(float skyHeight) => new(new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius * 1.4f, BottomPosition, BottomRadius * 1.2f, LightColour);
 }
 
 public class GodRayManager : MonoBehaviour
@@ -104,6 +105,7 @@ public class GodRayManager : MonoBehaviour
         godRayParent.transform.localScale = Vector3.one;
         godRayParent.transform.rotation = Quaternion.identity;
         godRayParent.transform.position = Vector3.zero;
+        RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
     }
 
     private void SetScale(float scale)
@@ -139,10 +141,13 @@ public class GodRayManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera)
     {
         transform.position = camera.transform.position;
-        if (scale != camera.farClipPlane*2) SetScale(camera.farClipPlane);
+        if (scale != camera.farClipPlane*2) 
+        {
+            SetScale(camera.farClipPlane);
+        }
         else if (previousPosition != camera.transform.position)
         {
             SetScale(camera.farClipPlane);
@@ -182,7 +187,7 @@ public class GodRayManager : MonoBehaviour
         godRays.Add(ray);
         godRayEffects.Add(ray.SkyEffect(skyHeight));
         GodRaySpotlightData spotlightData = ray.SpotlightData(skyHeight);
-        GameObject lightGameObject = new GameObject();
+        GameObject lightGameObject = new GameObject("LightGameObject");
         lightGameObject.layer = LayerMask.NameToLayer("Room");
         HDAdditionalLightData light = lightGameObject.AddHDLight(HDLightTypeAndShape.ConeSpot);
         light.range = camera.farClipPlane * 2;
@@ -199,7 +204,7 @@ public class GodRayManager : MonoBehaviour
         lightGameObject.transform.position = spotlightData.location;
         lightGameObject.transform.rotation = spotlightData.rotation;
         GenerateSpotlightMesh(lightGameObject, (ray.BottomPosition-spotlightData.location).magnitude, ray.BottomRadius, spotlightData.colour, pointCount: 40);
-        GenerateDamageTrigger(ray.BottomPosition, ray.BottomRadius);
+        GenerateDamageTrigger(ray.BottomPosition, ray.BottomRadius, spotlightData.rotation);
         godRaySpotlights.Add(light);
         RegenerateRayComputeBuffer();
         return ray;
@@ -229,28 +234,30 @@ public class GodRayManager : MonoBehaviour
         meshFilter.mesh = mesh;
         mesh.vertices = points;
         mesh.triangles = indices;
-        light.GetComponent<Renderer>().material = godRayMaterial;
-        light.GetComponent<Renderer>().material.color = new Color(colour.r, colour.g, colour.b, 56f / 255f);
+        meshRenderer.material = godRayMaterial;
+        meshRenderer.material.color = new Color(colour.r, colour.g, colour.b, 56f / 255f);
         mesh.RecalculateNormals();
     }
 
-    void GenerateDamageTrigger(Vector3 position, float radius) {
-        GameObject trigger = new GameObject();
-        trigger.layer = LayerMask.NameToLayer("Room");
-        trigger.transform.position = position;
-
-        SphereCollider collider = trigger.AddComponent<SphereCollider>();
+    private void GenerateDamageTrigger(Vector3 bottomPosition, float bottomRadius, Quaternion rotation) {
+        GameObject trigger = new GameObject("LightTrigger")
+        {
+            layer = LayerMask.NameToLayer("Room")
+        };
+        trigger.transform.position = bottomPosition;
+        trigger.transform.rotation = rotation;
+        CapsuleCollider collider = trigger.AddComponent<CapsuleCollider>();
         BetterCooldownTrigger damageTrigger = trigger.AddComponent<BetterCooldownTrigger>();
-        
+
         damageTrigger.damageToDealForPlayers = 1;
         damageTrigger.damageIntervalForPlayers = 2f;
         damageTrigger.sharedCooldown = true;
         damageTrigger.forceDirectionFromThisObject = false;
         damageTrigger.forceDirection = BetterCooldownTrigger.ForceDirection.Forward;
         damageTrigger.forceMagnitudeAfterDamage = 10;
-        damageTrigger.canThingExit = false;
-
-        collider.radius = radius;
+        collider.height = bottomRadius * 20f;
+        collider.direction = 2;
+        collider.radius = bottomRadius;
         collider.isTrigger = true;
     }
 
@@ -274,7 +281,14 @@ public class GodRayManager : MonoBehaviour
 
     private void OnDisable() {
         rayBuffer?.Release();
+        RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
         rayBuffer = null;
-        Instance = null!;
+        Instance = null;
+        foreach (HDAdditionalLightData light in godRaySpotlights) {
+            Destroy(light.gameObject);
+        }
+        godRayEffects.Clear();
+        godRaySpotlights.Clear();
+        godRays.Clear();
     }
 }

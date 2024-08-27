@@ -170,7 +170,6 @@ public class BetterCooldownTrigger : NetworkBehaviour
     {
         if (!enabledScript || !canThingExit) return;
 
-
         if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController && !player.isPlayerDead) {
             currentlyDamagingLocalPlayer = false;
             playerClosestAudioSources.Remove(player);
