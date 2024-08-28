@@ -65,7 +65,7 @@ public class GodRay(Color skyColour, Vector2 topPosition, float topRadius, float
     public float BottomRadius { get; private set; } = bottomRadius;
 
     internal GodRaySkyEffect SkyEffect(float skyHeight) => new(SkyColour, new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius, TopFalloff, BottomPosition);
-    internal GodRaySpotlightData SpotlightData(float skyHeight) => new(new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius * 1.4f, BottomPosition, BottomRadius * 1.2f, LightColour);
+    internal GodRaySpotlightData SpotlightData(float skyHeight) => new(new Vector3(TopPosition.x, skyHeight, TopPosition.y), TopRadius * 1.45f, BottomPosition, BottomRadius * 1.2f, LightColour);
 }
 
 public class GodRayManager : MonoBehaviour
@@ -131,7 +131,7 @@ public class GodRayManager : MonoBehaviour
             light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
             light.shapeRadius = 0;
             light.luxAtDistance = (spotlightData.location - godRays[i].BottomPosition).magnitude;
-            light.SetIntensity(1000, LightUnit.Lux);
+            light.SetIntensity(7000, LightUnit.Lux);
 
             godRaySpotlights[i].gameObject.transform.rotation = spotlightData.rotation;
             godRaySpotlights[i].gameObject.transform.position = spotlightData.location;
@@ -197,20 +197,20 @@ public class GodRayManager : MonoBehaviour
         light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
         light.shapeRadius = 0;
         light.luxAtDistance = (spotlightData.location - ray.BottomPosition).magnitude;
-        light.SetIntensity(1000, LightUnit.Lux);
+        light.SetIntensity(7000, LightUnit.Lux);
 
         light.color = spotlightData.colour;
-        lightGameObject.transform.parent = godRayParent.transform;
+        lightGameObject.transform.SetParent(godRayParent.transform);
         lightGameObject.transform.position = spotlightData.location;
         lightGameObject.transform.rotation = spotlightData.rotation;
+
         GenerateSpotlightMesh(lightGameObject, (ray.BottomPosition-spotlightData.location).magnitude, ray.BottomRadius, spotlightData.colour, pointCount: 40);
-        GenerateDamageTrigger(ray.BottomPosition, ray.BottomRadius, spotlightData.rotation);
         godRaySpotlights.Add(light);
         RegenerateRayComputeBuffer();
         return ray;
     }
 
-    private void GenerateSpotlightMesh(GameObject light, float distance, float bottomRadius, Color colour, bool generateNewMesh=true, int pointCount=100)
+    private void GenerateSpotlightMesh(GameObject testRay, float distance, float bottomRadius, Color colour, bool generateNewMesh=true, int pointCount=100)
     {
         if (pointCount < 3 || pointCount >= 254) throw new ArgumentOutOfRangeException(nameof(pointCount));
         Vector3[] points = new Vector3[pointCount + 1];
@@ -223,42 +223,40 @@ public class GodRayManager : MonoBehaviour
             points[i + 1] = new Vector3(0, 0, distance) + offset;
             indices[i * 3 + 0] = 0;
             indices[i * 3 + 1] = 1 + ((i + 1) % pointCount);
-            indices[i * 3 + 2] = i+1;
+            indices[i * 3 + 2] = i + 1;
         }
 
-        MeshFilter meshFilter = generateNewMesh ? light.AddComponent<MeshFilter>() : light.GetComponent<MeshFilter>();
-        MeshRenderer meshRenderer = generateNewMesh ? light.AddComponent<MeshRenderer>() : light.GetComponent<MeshRenderer>();
+        MeshFilter meshFilter = generateNewMesh ? testRay.AddComponent<MeshFilter>() : testRay.GetComponent<MeshFilter>();
+        MeshRenderer meshRenderer = generateNewMesh ? testRay.AddComponent<MeshRenderer>() : testRay.GetComponent<MeshRenderer>();
+        //MeshCollider meshCollider = generateNewMesh ? testRay.AddComponent<MeshCollider>() : testRay.GetComponent<MeshCollider>();
 
         Mesh mesh = new Mesh();
         if (!generateNewMesh) Destroy(meshFilter.mesh);
+        meshFilter.mesh.Clear();
         meshFilter.mesh = mesh;
         mesh.vertices = points;
         mesh.triangles = indices;
+        mesh.RecalculateNormals();
+
         meshRenderer.material = godRayMaterial;
         meshRenderer.material.color = new Color(colour.r, colour.g, colour.b, 56f / 255f);
-        mesh.RecalculateNormals();
+
+        if (generateNewMesh) DoTheThingWithCollider(mesh, testRay.transform);
     }
 
-    private void GenerateDamageTrigger(Vector3 bottomPosition, float bottomRadius, Quaternion rotation) {
-        GameObject trigger = new GameObject("LightTrigger")
-        {
-            layer = LayerMask.NameToLayer("Room")
-        };
-        trigger.transform.position = bottomPosition;
-        trigger.transform.rotation = rotation;
-        CapsuleCollider collider = trigger.AddComponent<CapsuleCollider>();
-        BetterCooldownTrigger damageTrigger = trigger.AddComponent<BetterCooldownTrigger>();
-
+    private void DoTheThingWithCollider(Mesh mesh, Transform transform)
+    {
+        GameObject testRay = new GameObject("TestRay");
+        testRay.transform.SetParent(godRayParent.transform);
+        testRay.transform.position = transform.position;
+        testRay.transform.rotation = transform.rotation;
+        MeshCollider meshCollider = testRay.AddComponent<MeshCollider>();
+        meshCollider.sharedMesh = mesh;
+        meshCollider.convex = true;
+        BetterCooldownTrigger damageTrigger = testRay.AddComponent<BetterCooldownTrigger>();
         damageTrigger.damageToDealForPlayers = 1;
-        damageTrigger.damageIntervalForPlayers = 2f;
-        damageTrigger.sharedCooldown = true;
-        damageTrigger.forceDirectionFromThisObject = false;
-        damageTrigger.forceDirection = BetterCooldownTrigger.ForceDirection.Forward;
-        damageTrigger.forceMagnitudeAfterDamage = 10;
-        collider.height = bottomRadius * 20f;
-        collider.direction = 2;
-        collider.radius = bottomRadius;
-        collider.isTrigger = true;
+        damageTrigger.damageIntervalForPlayers = 0.5f;
+        meshCollider.isTrigger = true;
     }
 
     private void RegenerateRayComputeBuffer()

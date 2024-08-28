@@ -339,10 +339,10 @@ public class BetterCooldownTrigger : NetworkBehaviour
                 forceDirectionVector = forceDirectionFromThisObject ? -transform.forward : -player.transform.forward;
                 break;
             case ForceDirection.Up:
-                forceDirectionVector = Vector3.up;
+                forceDirectionVector = forceDirectionFromThisObject ? transform.up : player.transform.up;
                 break;
             case ForceDirection.Down:
-                forceDirectionVector = Vector3.down;
+                forceDirectionVector = forceDirectionFromThisObject ? -transform.up : -player.transform.up;
                 break;
             case ForceDirection.Left:
                 forceDirectionVector = forceDirectionFromThisObject ? -transform.right : -player.transform.right;

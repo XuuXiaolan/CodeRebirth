@@ -13,7 +13,7 @@ public class GodRaySpawner : MonoBehaviour
     public float minX, maxX, minZ, maxZ;
     public List<Color> rayColours = new();
     private System.Random godRayRandom = null!;
-    private int numberOfGodrays = 50;
+    private int numberOfGodrays = 30;
     private Vector3 centerOfWorld;
 
     // Layer mask for "Room" and "Terrain"
@@ -31,16 +31,16 @@ public class GodRaySpawner : MonoBehaviour
     {
         while (GodRayManager.Active && godRayManager.GodRays.Count() < numberOfGodrays)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(1f);
             Color colour = rayColours[godRayRandom.NextInt(0, rayColours.Count - 1)];
 
             Vector2 topPosition = new Vector2(godRayRandom.NextFloat(minX, maxX), godRayRandom.NextFloat(minZ, maxZ));
-            Vector2 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(centerOfWorld, 100, default, godRayRandom);
+            Vector3 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(centerOfWorld, 100, default, godRayRandom);
 
             // Convert top and bottom positions to 3D vectors
-            Vector3 raycastStart = new Vector3(topPosition.x, 10f, topPosition.y); // Start raycast from a height above the map
-            Vector3 raycastEnd = new Vector3(bottomPosition.x, -1f, bottomPosition.y); // End raycast just below the map
-            Plugin.Logger.LogDebug($"Raycast start: {raycastStart}, Raycast end: {raycastEnd}");
+            Vector3 raycastStart = bottomPosition;
+            Vector3 raycastEnd = new Vector3(topPosition.x, 30f, topPosition.y); // End raycast just below the map
+            Plugin.Logger.LogInfo($"Raycast start: {raycastStart}, Raycast end: {raycastEnd}");
             // Calculate the direction from top to bottom position
             Vector3 rayDirection = (raycastEnd - raycastStart).normalized;
 
