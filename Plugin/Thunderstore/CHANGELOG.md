@@ -6,7 +6,7 @@
 - Adjusted Icy Hammer to only slow 100% on crit and only deal 1 damage.
 - Fixed floating flora (hopefully).
 - Fixed money radar icon not disappearing when picked up.
-- Added biomes.
+- Added biomes (currently do nothing).
 - Added dangerous flora.
 - Added reworked redwood titan
 - Improved some patches.
@@ -22,6 +22,8 @@
 - Added ruby gem to meteorite.
 - Updated default config.
 - Updated readme images and presentation.
+- Fixed multi-hit bug.
+- Uploaded to fix tornados not working in v62.
 
 ## v0.4.2
 
