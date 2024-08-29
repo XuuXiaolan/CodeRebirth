@@ -1,4 +1,11 @@
-# v0.5.0
+
+# v0.6.0
+
+- Added dangerous flora
+- Added reworked redwood titan.
+- Added shockwave gal.
+
+## v0.5.0
 
 - Fixed Sapphire gem colliders.
 - Fixed Sapphire gem tranparency.
@@ -7,8 +14,6 @@
 - Fixed floating flora (hopefully).
 - Fixed money radar icon not disappearing when picked up.
 - Added biomes (currently do nothing).
-- Added dangerous flora.
-- Added reworked redwood titan
 - Improved some patches.
 - Changed the weathers to have a config to not do the powerlevel shenanigans, but currently tornado and meteor shower increase inside power by 6 and decrease outside and daytime by 3.
 - Flora doesn't spawn on catwalks anymore.
