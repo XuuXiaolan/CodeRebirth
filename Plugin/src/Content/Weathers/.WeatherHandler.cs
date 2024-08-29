@@ -63,7 +63,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     public WeatherHandler() {
         if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
         if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
-        if (false) RegisterGodRaysWeather();
+        if (true) RegisterGodRaysWeather();
     }
 
     private void RegisterGodRaysWeather() {

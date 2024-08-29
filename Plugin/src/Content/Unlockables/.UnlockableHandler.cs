@@ -14,7 +14,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler> {
 	public ShockwaveBotAssets ShockwaveBot { get; private set; } = null!;
 
     public UnlockableHandler() {
-		if (false) RegisterShockWaveGal();
+		if (true) RegisterShockWaveGal();
 	}
 
     private void RegisterShockWaveGal() {

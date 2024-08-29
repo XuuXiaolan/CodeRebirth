@@ -77,7 +77,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         // ScrapMaster = new ScrapMasterAssets("coderebirthasset");
         // Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
-        if (false) {
+        if (true) {
             RedwoodTitan = new RedwoodTitanAssets("redwoodtitanassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodTitan.RedwoodTitanEnemyType, RedwoodTitan.RedwoodTitanTerminalNode, RedwoodTitan.RedwoodTitanTerminalKeyword, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
             //Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodTitan.RedwoodHeart);

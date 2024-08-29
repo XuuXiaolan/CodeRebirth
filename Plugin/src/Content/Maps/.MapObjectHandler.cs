@@ -67,7 +67,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
 			Biome = new BiomeAssets("biomeassets");
 
-		if (false) RegisterDevilDeal();
+		if (true) RegisterDevilDeal();
 	}
 
 	public void RegisterInsideMoney() {

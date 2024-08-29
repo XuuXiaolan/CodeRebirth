@@ -1,6 +1,7 @@
 
 # v0.6.0
 
+- Made biomes more dangerous.
 - Added dangerous flora
 - Added reworked redwood titan.
 - Added shockwave gal.
