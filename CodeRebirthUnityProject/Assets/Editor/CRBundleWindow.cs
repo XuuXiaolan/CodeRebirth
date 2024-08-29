@@ -6,8 +6,15 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
+[InitializeOnLoad]
 public class CRBundleWindow : EditorWindow
 {
+    // Static constructor is called when Unity loads, including on startup
+    static CRBundleWindow()
+    {
+        OpenOnStartup();
+    }
+
     internal class BundleBuildSettings
     {
         public string BundleName { get; private set; }
@@ -138,20 +145,48 @@ public class CRBundleWindow : EditorWindow
 
     Vector2 scrollPosition;
 
-    [MenuItem("Code Rebirth/Bundle Builder")]
-    static void Open()
+    void OnEnable()
     {
-        GetWindow<CRBundleWindow>("CR Bundle Builder");
-
+        Debug.Log("OnEnable called");
         LoadSettings();
         CRBundleWindowSettings.Instance.Save();
         Refresh();
     }
 
+    [MenuItem("Code Rebirth/Bundle Builder")]
+    static void Open()
+    {
+        var window = GetWindow<CRBundleWindow>("CR Bundle Builder");
+        
+        // Use the class name to call static methods
+        CRBundleWindow.LoadSettings();  // Ensure settings are loaded if manually opened
+        CRBundleWindowSettings.Instance.Save();
+        CRBundleWindow.Refresh();
+    }
+
+    static void OpenOnStartup()
+    {
+        // Ensures that the window opens when Unity starts
+        EditorApplication.delayCall += () =>
+        {
+            Open(); // Opens the window when Unity finishes loading
+        };
+    }
+
     static void LoadSettings()
     {
+        Debug.Log("LoadSettings called");
         var settings = CRBundleWindowSettings.Instance;
+
         settings.buildOutputPath = EditorPrefs.GetString("build_output", settings.buildOutputPath);
+
+        if (string.IsNullOrEmpty(settings.buildOutputPath))
+        {
+            Debug.Log("Having to use default build output path.");
+            settings.buildOutputPath = "F:/Ammar Stuff/ModdingProject/CodeRebirthStuff/CodeRebirth/CodeRebirth/CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles";
+            SaveBuildOutputPath(settings.buildOutputPath);
+        }
+
         settings.buildOnlyChanged = EditorPrefs.GetBool("build_changed", settings.buildOnlyChanged);
         settings.assetSortOption = (SortOption)EditorPrefs.GetInt("asset_sort_option", (int)settings.assetSortOption);
         settings.processDependenciesRecursively = EditorPrefs.GetBool("process_dependencies_recursively", settings.processDependenciesRecursively);
@@ -159,9 +194,13 @@ public class CRBundleWindow : EditorWindow
 
     static void SaveBuildOutputPath(string path)
     {
-        CRBundleWindowSettings.Instance.buildOutputPath = path;
-        EditorPrefs.SetString("build_output", path);
-        CRBundleWindowSettings.Instance.Save();
+        if (!string.IsNullOrEmpty(path))
+        {
+            CRBundleWindowSettings.Instance.buildOutputPath = path;
+            EditorPrefs.SetString("build_output", path);
+            Debug.Log($"Saved build_output: {path}");
+            CRBundleWindowSettings.Instance.Save();
+        }
     }
 
     static void Refresh()
