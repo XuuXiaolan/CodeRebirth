@@ -10,3 +10,8 @@
 - add dangerous flora needs models and code.
 - Rework natures mace.
 - Fix god ray script.
+- Make coin average min and max set by config.
+- Look into crates acting up.
+  - Wooden crates are openable by hit only.
+  - Metal crates spawn like 8 items sometimes.
+  - Metal crates spawn disabled shop items sometimes.

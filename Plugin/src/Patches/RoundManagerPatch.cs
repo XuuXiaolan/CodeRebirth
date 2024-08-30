@@ -232,9 +232,13 @@ static class RoundManagerPatch {
 		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>()) {
 			crate.NetworkObject.Despawn();
 		}
+
+		foreach (BiomeManager biome in GameObject.FindObjectsOfType<BiomeManager>()) {
+			biome.NetworkObject.Despawn();
+		}
 	}
 
-	/*[HarmonyPatch("LoadNewLevelWait")]
+	[HarmonyPatch("LoadNewLevelWait")]
 	[HarmonyPrefix]
 	public static void LoadNewLevelWaitPatch(RoundManager __instance)
 	{
@@ -254,7 +258,7 @@ static class RoundManagerPatch {
 			Plugin.ExtendedLogging("Despawning Devil deal objects");
 			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.DespawnDevilPropsServerRpc();
 		}
-	}*/
+	}
 
 	[HarmonyPostfix]
 	[HarmonyPatch(typeof(StartOfRound), "OnShipLandedMiscEvents")]

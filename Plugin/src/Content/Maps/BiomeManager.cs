@@ -18,6 +18,9 @@ public class BiomeManager : NetworkBehaviour
     private int foliageLayer;
     private int terrainLayer;
 
+	public static BiomeManager? Instance { get; private set; }
+	public static bool Active => Instance != null;
+
     public void Start()
     {
         if (StartOfRound.Instance != null)

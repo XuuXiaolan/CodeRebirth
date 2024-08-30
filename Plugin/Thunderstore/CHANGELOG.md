@@ -1,10 +1,13 @@
-
 # v0.6.0
 
 - Made biomes more dangerous.
 - Added dangerous flora
 - Added reworked redwood titan.
 - Added shockwave gal.
+
+## v0.5.1
+
+- Fixed biomes not despawning on round leave.
 
 ## v0.5.0
 
