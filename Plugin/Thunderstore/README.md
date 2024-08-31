@@ -8,7 +8,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 - 160+ Plant types!!!
 - 1 Outside Enemy.
-- 1 Helpful Creature.
+- 2 Helpful Creature.
 - 2 Ambient Enemies.
 - 2 Weather with 7 different events total.
 - 2 Shop Items.
@@ -47,6 +47,19 @@ If you're interested in helping with the development of the mod, feel free to re
 ### Redwood Titan
 
 ![RT]()
+
+</details>
+
+<details>
+  <summary><strong>Helpful Enemies</strong></summary>
+
+### Shockwave Gal
+
+![ShG]()
+
+#### Seamine Gal
+
+![SeG]()
 
 </details>
 

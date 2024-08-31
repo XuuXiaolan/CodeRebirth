@@ -83,7 +83,8 @@ public class CodeRebirthConfig {
     public ConfigEntry<bool> ConfigWalletMode { get; private set; }
     public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
     public ConfigEntry<int> ConfigWalletCost { get; private set; }
-    public ConfigEntry<int> ConfigAverageCoinValue { get; private set; }
+    public ConfigEntry<int> ConfigMinCoinValue { get; private set; }
+    public ConfigEntry<int> ConfigMaxCoinValue { get; private set; }
     public CodeRebirthConfig(ConfigFile configFile) {
         configFile.SaveOnConfigSet = false;
         #region General
@@ -440,10 +441,14 @@ public class CodeRebirthConfig {
                                             "Money Scrap | Abundance",
                                             10,
                                             "Overall Abundance of Money in the level.");
-        ConfigAverageCoinValue = configFile.Bind("Money Options",
-                                            "Money Scrap | Average Value",
-                                            15,
-                                            "Average value of Money in the level. (so 5 and 25 are lower and upper limits here).");
+        ConfigMinCoinValue = configFile.Bind("Money Options",
+                                            "Money Scrap | Min Value",
+                                            5,
+                                            "Min value of Money in the level (can be negative).");
+        ConfigMaxCoinValue = configFile.Bind("Money Options",
+                                            "Money Scrap | Max Value",
+                                            25,
+                                            "Max value of Money in the level (has to be higher than min value (or same)).");
         #endregion
         #region SnowGlobe
         ConfigSnowGlobeEnabled = configFile.Bind("SnowGlobe Options",

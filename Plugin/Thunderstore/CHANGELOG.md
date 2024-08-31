@@ -5,6 +5,13 @@
 - Added reworked redwood titan.
 - Added shockwave gal.
 
+## v0.5.2
+
+- Removed redwood from readme for now.
+- Fixed potential meteor shower error.
+- Fixed Coin radar not disappearing on
+- Added coin min and max config.
+
 ## v0.5.1
 
 - Fixed biomes not despawning on round leave.

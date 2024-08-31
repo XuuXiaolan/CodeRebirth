@@ -22,7 +22,7 @@ public class WalletOld : GrabbableObject {
             if (coin == null) return;
             GetComponent<AudioSource>().Play();
             UpdateScrapValueServerRpc(coin.scrapValue);
-            NetworkObject obj = coin.gameObject.GetComponent<NetworkObject>();
+            NetworkObject obj = coin.NetworkObject;
             float newblendShapeWeight = Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0)+20f, 0, 300);
             if (playerHeldBy) {
                 IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
@@ -63,7 +63,7 @@ public class WalletOld : GrabbableObject {
     }
 
     public void DestroyObject(NetworkObject netObj) {
-        Destroy(netObj.gameObject.GetComponent<Money>().radarIcon);
+        Destroy(netObj.gameObject.GetComponent<Money>().radarIcon.gameObject);
         if(netObj.IsOwnedByServer && netObj.IsSpawned && netObj.IsOwner) netObj.Despawn();
     }
 }

@@ -224,7 +224,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
     }
 
     public void DestroyObject(NetworkObject netObj) {
-        Destroy(netObj.gameObject.GetComponent<Money>().radarIcon);
+        Destroy(netObj.gameObject.GetComponent<Money>().radarIcon.gameObject);
         if (netObj.IsOwnedByServer && netObj.IsSpawned && netObj.IsOwner) netObj.Despawn();
     }
 

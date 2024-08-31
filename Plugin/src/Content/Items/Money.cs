@@ -6,12 +6,17 @@ namespace CodeRebirth.src.Content.Items;
 public class Money : GrabbableObject {
     public override void Start() {
         base.Start();
-        int baseValue = Math.Clamp(Plugin.ModConfig.ConfigAverageCoinValue.Value, 11, 1000);
         if(!IsHost) return;
+
+        int minBaseValue = Plugin.ModConfig.ConfigMinCoinValue.Value;
+        int maxBaseValue = Plugin.ModConfig.ConfigMaxCoinValue.Value;
+        if (minBaseValue > maxBaseValue) {
+            minBaseValue = maxBaseValue;
+        }
         
         // This isn't the best solution but :3
         NetworkObject.OnSpawn(() => {
-            int value = UnityEngine.Random.Range(baseValue - 10, baseValue + 10);
+            int value = UnityEngine.Random.Range(minBaseValue, maxBaseValue);
             SetScrapValue(value);
             SetMoneyValueClientRPC(value);
         });
