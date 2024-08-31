@@ -9808,6 +9808,7 @@ GameObject:
   - component: {fileID: 7160885114248928007}
   - component: {fileID: 5288427920449576465}
   - component: {fileID: 8037120649345004237}
+  - component: {fileID: 8180637380151788495}
   m_Layer: 0
   m_Name: WildFire
   m_TagString: Untagged
@@ -14672,15 +14673,17 @@ MonoBehaviour:
   m_Script: {fileID: 1835421178, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enabledScript: 1
   deathAnimation: 6
   forceDirection: 3
-  causeOfDeath: 13
   forceMagnitudeAfterDamage: 5
   forceMagnitudeAfterDeath: 40
-  triggerForEnemies: 1
-  sharedCooldown: 1
-  playDefaultPlayerDamageSFX: 0
   forceDirectionFromThisObject: 1
+  causeOfDeath: 13
+  triggerForEnemies: 1
+  canThingExit: 1
+  sharedCooldown: 1
+  playDefaultPlayerDamageSFX: 1
   soundAttractsDogs: 0
   damageDuration: 16
   damageToDealForPlayers: 5
@@ -14689,6 +14692,34 @@ MonoBehaviour:
   damageIntervalForEnemies: 20
   damageClip: []
   damageAudioSources: []
+  deathPrefabForPlayer: {fileID: 0}
+  deathPrefabForEnemy: {fileID: 0}
+  useParticleSystems: 0
+  teleportParticles: 0
+  deathParticlesForPlayer: []
+  damageParticlesForPlayer: []
+  deathParticlesForEnemy: []
+  damageParticlesForEnemy: []
+--- !u!114 &8180637380151788495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036187600366711837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 0
 --- !u!1 &7036436141201858497
 GameObject:
   m_ObjectHideFlags: 0
