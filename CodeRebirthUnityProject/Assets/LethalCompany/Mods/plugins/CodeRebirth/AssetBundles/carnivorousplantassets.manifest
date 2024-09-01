@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3747346056
+CRC: 3210441213
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 305b6d8fe33d2a71a42b95e1f98049dc
+    Hash: aa274eee1a214211803530e14c430dd7
   TypeTreeHash:
     serializedVersion: 2
-    Hash: b6325716f409588566cc633851e20b80
+    Hash: d5c9af9f56e4a4b739beedc12a6bb02b
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 305b6d8fe33d2a71a42b95e1f98049dc
+    Hash: aa274eee1a214211803530e14c430dd7
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -41,6 +41,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
@@ -49,9 +51,9 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
-- Class: 114
   Script: {fileID: 927458284, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 135
@@ -73,6 +75,8 @@ SerializeReferenceClassIdentifiers:
   ClassName: EnemyBehaviourState
 - AssemblyName: Assembly-CSharp
   ClassName: NavSizeLimit
+- AssemblyName: Unity.Netcode.Components
+  ClassName: Unity.Netcode.Components.NetworkAnimator/TransitionStateinfo
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/CarnivorousPlant/Materials/CarnivorousPlant.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/CarnivorousPlant/CarnivorousPlantObj.asset

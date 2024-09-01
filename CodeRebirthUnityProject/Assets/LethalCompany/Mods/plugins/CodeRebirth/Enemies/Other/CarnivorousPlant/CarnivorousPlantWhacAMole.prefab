@@ -1901,6 +1901,7 @@ GameObject:
   - component: {fileID: 8330145986142023091}
   - component: {fileID: 6018552592219118470}
   - component: {fileID: 6900835463141935646}
+  - component: {fileID: 577517964605079600}
   m_Layer: 0
   m_Name: CarnivorousPlantWhacAMole
   m_TagString: Untagged
@@ -2039,6 +2040,10 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
+  eyes: []
+  attackAnimation: {fileID: 7400000, guid: 01fc1f4500b2d324db8fe9f5872e4770, type: 2}
+  networkAnimator: {fileID: 577517964605079600}
+  mouth: {fileID: 3058117292641546787}
 --- !u!114 &7343797206146909737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2068,7 +2073,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 8882997186667264661}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2.21
   m_Speed: 0
   m_Acceleration: 0
   avoidancePriority: 50
@@ -2077,8 +2082,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
+  m_Height: 6.48
+  m_BaseOffset: -1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!95 &6018552592219118470
@@ -2123,6 +2128,41 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 10, z: 1}
   m_Center: {x: 0, y: 5, z: 0}
+--- !u!114 &577517964605079600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882997186667264661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1701686356
+    DestinationState: -1758350282
+    TransitionDuration: 0.22116375
+    TriggerNameHash: -1090396576
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1701686356
+    DestinationState: -332215613
+    TransitionDuration: 0.25
+    TriggerNameHash: -1533413595
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1758350282
+    DestinationState: -332215613
+    TransitionDuration: 0.25
+    TriggerNameHash: -1533413595
+    TransitionIndex: 1
+  m_Animator: {fileID: 6018552592219118470}
 --- !u!1 &8945839021943058437
 GameObject:
   m_ObjectHideFlags: 0

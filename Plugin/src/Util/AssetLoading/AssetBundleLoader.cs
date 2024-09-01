@@ -55,7 +55,7 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
 		}
 		foreach (Item item in bundle.LoadAllAssets<Item>())
 		{
-			if (!registerNetworkPrefabs || item.spawnPrefab.GetComponent<NetworkObject>() == null) continue;
+			if (!registerNetworkPrefabs || item.spawnPrefab == null || item.spawnPrefab.GetComponent<NetworkObject>() == null) continue;
 			NetworkPrefabs.RegisterNetworkPrefab(item.spawnPrefab);
 			Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {item.name}");
 		}

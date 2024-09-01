@@ -1,6 +1,5 @@
 using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util;
-using UnityEngine;
 using LethalLib.Modules;
 using LethalLib.Extras;
 
@@ -46,7 +45,8 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler> {
     }
 
 	private void RegisterSeamineTink() {
-		SeamineTink = new SeamineTinkAssets("seamaintinkassets");		
+		SeamineTink = new SeamineTinkAssets("seaminetinkassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(SeamineTink.SeamineTinkUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.Decor);
 	}
 
 	private void RegisterPlantPot() {
