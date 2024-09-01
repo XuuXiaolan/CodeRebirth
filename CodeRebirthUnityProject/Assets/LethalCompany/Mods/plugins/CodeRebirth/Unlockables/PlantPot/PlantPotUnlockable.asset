@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1213685003, guid: c12905fc7e8511347839a69634f3e12d, type: 3}
+  m_Name: PlantPotUnlockable
+  m_EditorClassIdentifier: 
+  storeType: 2
+  unlockable:
+    unlockableName: PlantPot
+    prefabObject: {fileID: 0}
+    unlockableType: 0
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 0
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    inStorage: 0
+    canBeStored: 0
+    maxNumber: 10
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}

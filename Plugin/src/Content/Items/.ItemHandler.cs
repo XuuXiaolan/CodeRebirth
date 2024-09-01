@@ -56,6 +56,7 @@ public class ItemHandler : ContentHandler<ItemHandler> {
     public IcyHammerAssets IcyHammer { get; private set; } = null!;
     public SpikyMaceAssets SpikyMace { get; private set; } = null!;
 
+
     public ItemHandler() {
 
         if (Plugin.ModConfig.ConfigWalletEnabled.Value) {

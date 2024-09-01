@@ -5,7 +5,11 @@ using BepInEx.Configuration;
 
 namespace CodeRebirth.src.Configs;
 public class CodeRebirthConfig {
-    // Enables/Disables
+    #region Enables/Disables
+    public ConfigEntry<bool> ConfigSeamineTinkEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigShockwaveBotEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigDangerousFloraEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigFarmingEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBiomesEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFloraEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
@@ -26,7 +30,9 @@ public class CodeRebirthConfig {
     public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
-    // Spawn Weights
+    #endregion
+    #region Spawn Weights
+    public ConfigEntry<string> ConfigCarnivorousSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
@@ -38,7 +44,10 @@ public class CodeRebirthConfig {
     public ConfigEntry<int> ConfigMetalCrateAbundance { get; private set; }
     public ConfigEntry<int> ConfigWoodenCrateAbundance { get; private set; }
     public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
-    // Enemy Specific
+    #endregion
+    #region Enemy Specific
+    public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
+    public ConfigEntry<int> ConfigCarnivorousMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
     public ConfigEntry<float> ConfigRedwoodPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigRedwoodMaxSpawnCount { get; private set; }
@@ -52,7 +61,8 @@ public class CodeRebirthConfig {
     public ConfigEntry<int> ConfigSnailCatMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
     public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
-    // Weather Specific
+    #endregion
+    #region Weather Specific
     public ConfigEntry<float> ConfigTornadoInsideBeforeThrow { get; private set; }
     public ConfigEntry<float> ConfigTornadoPullStrength { get; private set; }
     public ConfigEntry<bool> ConfigTornadoYeetSFX { get; private set; }
@@ -68,7 +78,10 @@ public class CodeRebirthConfig {
     public ConfigEntry<float> ConfigMeteorShowerInShipVolume { get; private set; }
     public ConfigEntry<bool> ConfigMeteorHitShip { get; private set; }
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
-    // Misc
+    #endregion
+    #region Misc
+    public ConfigEntry<int> ConfigSeamineTinkCost { get; private set; }
+    public ConfigEntry<int> ConfigShockwaveBotCost { get; private set; }
     public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
     public ConfigEntry<bool> ConfigEnableExtendedLogging { get; private set; }
@@ -85,6 +98,7 @@ public class CodeRebirthConfig {
     public ConfigEntry<int> ConfigWalletCost { get; private set; }
     public ConfigEntry<int> ConfigMinCoinValue { get; private set; }
     public ConfigEntry<int> ConfigMaxCoinValue { get; private set; }
+    #endregion 
     public CodeRebirthConfig(ConfigFile configFile) {
         configFile.SaveOnConfigSet = false;
         #region General
@@ -97,6 +111,26 @@ public class CodeRebirthConfig {
                                             true,
                                             "Whether power level changes from CodeRebirth weathers are allowed.");
         #endregion
+        #region Shockwave Gal
+        ConfigShockwaveBotEnabled = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Enabled",
+                                            true,
+                                            "Whether the Shockwave Gal is enabled.");
+        ConfigShockwaveBotCost = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Cost",
+                                            999,
+                                            "Cost of the Shockwave Gal.");
+        #endregion
+        #region Seamine Gal
+        ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Enabled",
+                                            true,
+                                            "Whether the Seamine Gal is enabled.");
+        ConfigSeamineTinkCost = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Cost",
+                                            999,
+                                            "Cost of the Seamine Tink.");
+        #endregion
         #region Biomes
         ConfigBiomesEnabled = configFile.Bind("Biome Options",
                                             "Biomes | Enabled",
@@ -108,6 +142,22 @@ public class CodeRebirthConfig {
                                             "Flora | Enabled",
                                             true,
                                             "Whether Flora is enabled.");
+        ConfigDangerousFloraEnabled = configFile.Bind("Flora Options",
+                                            "Dangerous Flora | Enabled",
+                                            true,
+                                            "Whether dangerous Flora is enabled.");
+        ConfigCarnivorousSpawnWeights = configFile.Bind("Flora Options",
+                                            "Dangerous Flora | Carnivorous Spawn Weights",
+                                            "Custom:20,Vanilla:20",
+                                            "Carnivorous Plant spawn weights e.g. `Custom:20,Vanilla:20`.");
+        ConfigCarnivorousPowerLevel = configFile.Bind("Flora Options",
+                                            "Dangerous Flora | Carnivorous Power Levels",
+                                            0.5f,
+                                            "Carnivorous Plant power level.");
+        ConfigCarnivorousMaxSpawnCount = configFile.Bind("Flora Options",
+                                            "Dangerous Flora | Carnivorous Max Count",
+                                            6,
+                                            "Carnivorous Plant max count.");
         ConfigFloraMaxAbundance = configFile.Bind("Flora Options",
                                             "Flora | Max Abundance",
                                             75,
@@ -136,6 +186,12 @@ public class CodeRebirthConfig {
                                             "Flora | Exclude Spawn Places",
                                             "Infernis",
                                             "Flora EXLUDE spawn places e.g. `Experimentation,Assurance,Gloom` (only takes moon names).");
+        #endregion
+        #region Farming
+        ConfigFarmingEnabled = configFile.Bind("Farming Options",
+                                            "Farming | Enabled",
+                                            true,
+                                            "Whether Farming is enabled.");
         #endregion
         #region Tornado
         ConfigTornadosEnabled = configFile.Bind("Tornado Options",

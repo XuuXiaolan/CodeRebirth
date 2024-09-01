@@ -1,9 +1,10 @@
 ﻿using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util.Extensions;
-using HarmonyLib;
 using System.Collections.Generic;
 using GameNetcodeStuff;
 using System;
+using CodeRebirth.src.Util;
+using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch {
@@ -36,7 +37,11 @@ static class ShovelPatch {
 		if (self is CodeRebirthWeapons CRWeaponPost) {
 			CRWeaponPost.shovelHitForce = CRWeaponPost.defaultForce;	
 			if (CRWeaponPost.canBreakTrees) {
-				Plugin.Logger.LogInfo("Tree Destroyed: " + CRWeaponPost.weaponTip.position);
+				Plugin.ExtendedLogging("Tree Destroyed: " + CRWeaponPost.weaponTip.position);
+				if (random.NextFloat(0f, 100f) < 2f && Plugin.ModConfig.ConfigFarmingEnabled.Value) {
+					Plugin.ExtendedLogging("Tree Destroyed with luck");
+					CodeRebirthUtils.Instance.SpawnScrap(UnlockableHandler.Instance.PlantPot.Seed, CRWeaponPost.weaponTip.position, false, true, 5);
+				}
 				RoundManager.Instance.DestroyTreeOnLocalClient(CRWeaponPost.weaponTip.position);
 			}
 		}

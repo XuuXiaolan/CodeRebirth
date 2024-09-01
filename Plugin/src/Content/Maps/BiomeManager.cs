@@ -14,7 +14,7 @@ public class BiomeManager : NetworkBehaviour
     
     private ParticleSystem deathParticles = null!;
     private DecalProjector activeProjector = null!;
-    private System.Random random = new System.Random(69);
+    private System.Random biomeRandom = new System.Random(69);
     private int foliageLayer;
     private int terrainLayer;
 
@@ -25,10 +25,10 @@ public class BiomeManager : NetworkBehaviour
     {
         if (StartOfRound.Instance != null)
         {
-            random = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
+            biomeRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
         }
 
-        switch (random.NextInt(0, 2))
+        switch (biomeRandom.NextInt(0, 2))
         {
             case 0:
                 corruptionProjector.gameObject.SetActive(true);
@@ -75,17 +75,30 @@ public class BiomeManager : NetworkBehaviour
         
         // Perform sphere cast
         Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, activeProjector.size.y / 4f, combinedLayerMask);
+        int foliageOrTreeCount = 0;
+        foreach (var hitCollider in hitColliders) {
+            // Check if the collider belongs to foliage or a tree
+            if (IsFoliage(hitCollider) || IsTree(hitCollider))
+            {
+                foliageOrTreeCount++;
+            }
+        }
+
         foreach (var hitCollider in hitColliders)
         {
             // Check if the collider belongs to foliage or a tree
             if (IsFoliage(hitCollider) || IsTree(hitCollider))
             {
-                DestroyColliderObject(hitCollider);
+                DestroyColliderObject(hitCollider, foliageOrTreeCount);
             }
         }
 
         timer.Stop();
         Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
+    }
+
+    private bool BasicIsFoliageOrTree(Collider collider) {
+        return (collider.CompareTag("Wood") && collider.gameObject.layer == terrainLayer && !collider.isTrigger) || (collider.gameObject.layer == foliageLayer);
     }
 
     private bool IsFoliage(Collider collider)
@@ -100,12 +113,10 @@ public class BiomeManager : NetworkBehaviour
         var meshRenderer = collider.GetComponent<MeshRenderer>();
         var meshFilter = collider.GetComponent<MeshFilter>();
         return meshRenderer != null && meshFilter != null &&
-            collider.CompareTag("Wood") &&
-            collider.gameObject.layer == terrainLayer &&
-            collider != null && !collider.isTrigger;
+            collider.CompareTag("Wood") && collider.gameObject.layer == terrainLayer && !collider.isTrigger;
     }
 
-    private void DestroyColliderObject(Collider collider)
+    private void DestroyColliderObject(Collider collider, int colliderCount)
     {
         Vector3 hitPosition = collider.transform.position;
         Quaternion hitRotation = collider.transform.rotation;
@@ -125,8 +136,10 @@ public class BiomeManager : NetworkBehaviour
         }
 
         // Instantiate dead particles at the position of the destroyed object
-        ParticleSystem particles = Instantiate(deathParticles, hitPosition, hitRotation);
-        particles.Play();
-        Destroy(particles.gameObject, particles.main.duration + particles.main.startLifetime.constantMax);
-    }
+        if ((colliderCount != 0 && biomeRandom.NextInt(1, colliderCount) <= 5) || biomeRandom.NextInt(1, 100) <= 20) {
+            ParticleSystem particles = Instantiate(deathParticles, hitPosition, hitRotation);
+            particles.Play();
+            Destroy(particles.gameObject, particles.main.duration + particles.main.startLifetime.constantMax);
+        }
+   }
 }

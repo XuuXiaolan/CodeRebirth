@@ -4,6 +4,11 @@
 - Added dangerous flora
 - Added reworked redwood titan.
 - Added shockwave gal.
+- Added farming.
+  - Added new decor, "plant pot".
+  - Added wooden seed, obtained by chopping wood and getting it randomly.
+  - Added tomato and golden tomato, sellable to the company.
+- Added seamine tink.
 
 ## v0.5.2
 

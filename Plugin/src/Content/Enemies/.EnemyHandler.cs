@@ -51,6 +51,17 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         public Item GoldenEggItem { get; private set; } = null!;
     }
 
+    public class CarnivorousPlantAssets(string bundleName ) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName) {
+        [LoadFromBundle("CarnivorousPlantObj.asset")]
+        public EnemyType CarnivorousPlantEnemyType { get; private set; } = null!;
+
+        [LoadFromBundle("CarnivorousPlantTN")]
+        public TerminalNode CarnivorousPlantTerminalNode { get; private set; } = null!;
+
+        [LoadFromBundle("CarnivorousPlantTK")]
+        public TerminalKeyword CarnivorousPlantTerminalKeyword { get; private set; } = null!;
+    }
+
     public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName) {
         [LoadFromBundle("RedwoodTitanObj.asset")]
         public EnemyType RedwoodTitanEnemyType { get; private set; } = null!;
@@ -67,8 +78,22 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         [LoadFromBundle("RedwoodWhistle.asset")]
         public Item RedwoodWhistle { get; private set; } = null!;*/
     }
+
+    public class ReadyJPAssets(string bundleName) : AssetBundleLoader<ReadyJPAssets>(bundleName) {
+        [LoadFromBundle("ReadyJPObj.asset")]
+        public EnemyType ReadyJPEnemyType { get; private set; } = null!;
+
+        [LoadFromBundle("ReadyJPTN.asset")]
+        public TerminalNode ReadyJPTerminalNode { get; private set; } = null!;
+
+        [LoadFromBundle("ReadyJPTK.asset")]
+        public TerminalKeyword ReadyJPTerminalKeyword { get; private set; } = null!;
+    }
+
+    public ReadyJPAssets ReadyJP { get; private set; } = null!;
     public ButterflyAssets Butterfly { get; private set; } = null!;
     public SnailCatAssets SnailCat { get; private set; } = null!;
+    public CarnivorousPlantAssets CarnivorousPlant { get; private set; } = null!;
     // public ScrapMasterAssets ScrapMaster { get; private set; }
     public PjonkGooseAssets PjonkGoose { get; private set; } = null!;
     public RedwoodTitanAssets RedwoodTitan { get; private set; } = null!;
@@ -77,10 +102,15 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         // ScrapMaster = new ScrapMasterAssets("coderebirthasset");
         // Plugin.samplePrefabs.Add("Grape", Assets.GrapeItem);
 
-        if (true) {
+        if (Plugin.ModConfig.ConfigRedwoodEnabled.Value) {
             RedwoodTitan = new RedwoodTitanAssets("redwoodtitanassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodTitan.RedwoodTitanEnemyType, RedwoodTitan.RedwoodTitanTerminalNode, RedwoodTitan.RedwoodTitanTerminalKeyword, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
             //Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodTitan.RedwoodHeart);
+        }
+
+        if (Plugin.ModConfig.ConfigDangerousFloraEnabled.Value) {
+            CarnivorousPlant = new CarnivorousPlantAssets("carnivorousplantassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCarnivorousSpawnWeights.Value, CarnivorousPlant.CarnivorousPlantEnemyType, CarnivorousPlant.CarnivorousPlantTerminalNode, CarnivorousPlant.CarnivorousPlantTerminalKeyword, Plugin.ModConfig.ConfigCarnivorousPowerLevel.Value, Plugin.ModConfig.ConfigCarnivorousMaxSpawnCount.Value);
         }
 
         if (Plugin.ModConfig.ConfigCutieFlyEnabled.Value) {
@@ -94,6 +124,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
         }
 
         /*if (false) {
+            ReadyJP = new ReadyJPAssets("readyjpassets");
+            RegisterEnemyWithConfig("All:500", ReadyJP.ReadyJPEnemyType, ReadyJP.ReadyJPTerminalNode, ReadyJP.ReadyJPTerminalKeyword, 3, 1);
+        }
+
+        if (false) {
             PjonkGoose = new PjonkGooseAssets("pjonkgooseassets");
             RegisterEnemyWithConfig("All:500", PjonkGoose.PjonkGooseEnemyType, PjonkGoose.PjonkGooseTerminalNode, PjonkGoose.PjonkGooseTerminalKeyword, 3, 1);
             RegisterScrapWithConfig("All:0", PjonkGoose.GoldenEggItem);

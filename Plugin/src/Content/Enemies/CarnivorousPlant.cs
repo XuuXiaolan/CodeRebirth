@@ -45,6 +45,7 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
             if (player.isInHangarShipRoom || player.isPlayerDead || !player.isPlayerControlled) continue;
             if (Vector3.Distance(transform.position, player.transform.position) <= 5) {
                 SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+                SwitchToBehaviourServerRpc((int)State.AttackTargetPlayer);
             }
         }
     }
