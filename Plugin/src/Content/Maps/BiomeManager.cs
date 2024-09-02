@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using System.Collections;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace CodeRebirth.src.Content.Maps;
 public class BiomeManager : NetworkBehaviour
@@ -17,6 +18,7 @@ public class BiomeManager : NetworkBehaviour
     private System.Random biomeRandom = new System.Random(69);
     private int foliageLayer;
     private int terrainLayer;
+    private List<Collider> foliageOrTreeColliderList = new();
 
 	public static BiomeManager? Instance { get; private set; }
 	public static bool Active => Instance != null;
@@ -47,6 +49,12 @@ public class BiomeManager : NetworkBehaviour
         deathParticles = activeProjector.gameObject.GetComponentInChildren<ParticleSystem>();
         foliageLayer = LayerMask.NameToLayer("Foliage");
         terrainLayer = LayerMask.NameToLayer("Terrain");
+        int combinedLayerMask = (1 << foliageLayer) | (1 << terrainLayer);
+        Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, 250/4, combinedLayerMask);
+        foreach (var hitCollider in hitColliders) 
+        {
+            if (IsTree(hitCollider) || IsFoliage(hitCollider)) foliageOrTreeColliderList.Add(hitCollider);
+        }
         StartCoroutine(CheckAndDestroyFoliage());
     }
 
@@ -78,7 +86,7 @@ public class BiomeManager : NetworkBehaviour
         int foliageOrTreeCount = 0;
         foreach (var hitCollider in hitColliders) {
             // Check if the collider belongs to foliage or a tree
-            if (IsFoliage(hitCollider) || IsTree(hitCollider))
+            if (foliageOrTreeColliderList.Contains(hitCollider))
             {
                 foliageOrTreeCount++;
             }
@@ -87,8 +95,9 @@ public class BiomeManager : NetworkBehaviour
         foreach (var hitCollider in hitColliders)
         {
             // Check if the collider belongs to foliage or a tree
-            if (IsFoliage(hitCollider) || IsTree(hitCollider))
+            if (foliageOrTreeColliderList.Contains(hitCollider))
             {
+                foliageOrTreeColliderList.Remove(hitCollider);
                 DestroyColliderObject(hitCollider, foliageOrTreeCount);
             }
         }

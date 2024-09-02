@@ -5,12 +5,13 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
-public class CarnivorousPlant : CodeRebirthEnemyAI, INoiseListener
+public class CarnivorousPlant : CodeRebirthEnemyAI
 {
     public Transform[] eyes;
     public AnimationClip attackAnimation = null!;
     public NetworkAnimator networkAnimator = null!;
     public Transform mouth = null!;
+    public Gradient CarnivorousPlantColourGradient = new Gradient();
     private bool carryingPlayerBody;
     private DeadBodyInfo? bodyBeingCarried;
     private bool attacking = false;
@@ -40,7 +41,7 @@ public class CarnivorousPlant : CodeRebirthEnemyAI, INoiseListener
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             
             // Smoothly rotate towards the target player
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
         }
         else
         {

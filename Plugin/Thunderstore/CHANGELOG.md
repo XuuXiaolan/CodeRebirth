@@ -1,7 +1,7 @@
 # v0.6.0
 
 - Made biomes more dangerous.
-- Added dangerous flora
+- Added carnivorous plant.
 - Added reworked redwood titan.
 - Added shockwave gal.
 - Added farming.
@@ -9,6 +9,9 @@
   - Added wooden seed, obtained by chopping wood and getting it randomly.
   - Added tomato and golden tomato, sellable to the company.
 - Added seamine tink.
+- Improved meteor shower visuals.
+- Improved biome particles performance.
+- Updated for v64.
 
 ## v0.5.2
 
