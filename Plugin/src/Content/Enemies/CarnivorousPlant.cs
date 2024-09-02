@@ -95,7 +95,7 @@ public class CarnivorousPlant : CodeRebirthEnemyAI, INoiseListener
         PlayerControllerB player = MeetsStandardPlayerCollisionConditions(other);
         if (player == null) return;
         player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
-        if (player.isPlayerDead) CarryingDeadPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+        if (player.isPlayerDead && !carryingPlayerBody) CarryingDeadPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         // play player death particles.
     }
 

@@ -50,36 +50,48 @@ public class CRBundleWindow : EditorWindow
                 BuiltBundleSize = bundleFileInfo.Length;
         }
 
-        private void ProcessAsset(string assetPath, HashSet<string> processedAssets)
+    private void ProcessAsset(string assetPath, HashSet<string> processedAssets)
+    {
+        if (processedAssets.Contains(assetPath))
+            return;
+
+        // Exclude script files
+        if (assetPath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
         {
-            // Only consider an asset processed if its full path is already in the processed list
-            if (processedAssets.Contains(assetPath))
-                return;
+            Debug.LogWarning($"Excluding script file from AssetBundle: {assetPath}");
+            return;
+        }
 
-            FileInfo fileInfo = new FileInfo(assetPath);
-            if (!fileInfo.Exists) return;
+        FileInfo fileInfo = new FileInfo(assetPath);
+        if (!fileInfo.Exists) return;
 
-            long fileSize = fileInfo.Length;
-            TotalSize += fileSize;
-            Assets.Add(new AssetDetails { Path = assetPath, Size = fileSize });
-            processedAssets.Add(assetPath);
+        long fileSize = fileInfo.Length;
+        TotalSize += fileSize;
+        Assets.Add(new AssetDetails { Path = assetPath, Size = fileSize });
+        processedAssets.Add(assetPath);
 
-            if (!CRBundleWindowSettings.Instance.processDependenciesRecursively)
-                return;
+        if (!CRBundleWindowSettings.Instance.processDependenciesRecursively)
+            return;
 
-            // Process referenced assets, ensuring we check by full path
-            UnityEngine.Object assetObject = AssetDatabase.LoadMainAssetAtPath(assetPath);
-            if (assetObject != null)
+        UnityEngine.Object assetObject = AssetDatabase.LoadMainAssetAtPath(assetPath);
+        if (assetObject != null)
+        {
+            try
             {
                 foreach (string dependency in AssetDatabase.GetDependencies(assetPath))
                 {
-                    if (!processedAssets.Contains(dependency) && dependency != assetPath) // Avoid self-reference and redundant processing
+                    if (!processedAssets.Contains(dependency) && dependency != assetPath)
                     {
                         ProcessAsset(dependency, processedAssets);
                     }
                 }
             }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error processing dependencies for {assetPath}: {e.Message}");
+            }
         }
+    }
 
         internal class AssetDetails
         {
@@ -423,7 +435,16 @@ public class CRBundleWindow : EditorWindow
         switch (_assetSortOption)
         {
             case SortOption.Size:
-                assets.Sort((a, b) => b.Size.CompareTo(a.Size));
+                assets.Sort((a, b) =>
+                {
+                    int sizeComparison = b.Size.CompareTo(a.Size);
+                    if (sizeComparison == 0)
+                    {
+                        // Use path as secondary sort criterion to ensure a stable sort
+                        return string.Compare(a.Path, b.Path, StringComparison.OrdinalIgnoreCase);
+                    }
+                    return sizeComparison;
+                });
                 break;
             case SortOption.Alphabetical:
                 assets.Sort((a, b) => string.Compare(a.Path, b.Path, StringComparison.OrdinalIgnoreCase));
@@ -432,7 +453,16 @@ public class CRBundleWindow : EditorWindow
                 assets.Sort((a, b) => string.Compare(b.Path, a.Path, StringComparison.OrdinalIgnoreCase));
                 break;
             case SortOption.ReverseSize:
-                assets.Sort((a, b) => a.Size.CompareTo(b.Size));
+                assets.Sort((a, b) =>
+                {
+                    int sizeComparison = a.Size.CompareTo(b.Size);
+                    if (sizeComparison == 0)
+                    {
+                        // Use path as secondary sort criterion to ensure a stable sort
+                        return string.Compare(a.Path, b.Path, StringComparison.OrdinalIgnoreCase);
+                    }
+                    return sizeComparison;
+                });
                 break;
         }
     }

@@ -90,7 +90,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		string[] grassMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraGrassSpawnPlaces.Value);
 		string[] desertMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraDesertSpawnPlaces.Value);
 		string[] snowMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraSnowSpawnPlaces.Value);
-		string[] dangerMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraDangerSpawnPlaces.Value);
 		string[] moonBlackList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraExcludeSpawnPlaces.Value);
 
 		foreach (var flora in floraStuff.Desert) {

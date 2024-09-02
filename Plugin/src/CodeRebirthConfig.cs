@@ -88,7 +88,6 @@ public class CodeRebirthConfig {
     public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; private set; }
     public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
     public ConfigEntry<int> ConfigFloraMinAbundance { get; private set; }
-    public ConfigEntry<string> ConfigFloraDangerSpawnPlaces { get; private set; }
     public ConfigEntry<string> ConfigFloraGrassSpawnPlaces { get; private set; }
     public ConfigEntry<string> ConfigFloraDesertSpawnPlaces { get; private set; }
     public ConfigEntry<string> ConfigFloraSnowSpawnPlaces { get; private set; }
@@ -138,10 +137,6 @@ public class CodeRebirthConfig {
                                             "Whether Biomes are enabled.");
         #endregion
         #region Flora
-        ConfigFloraEnabled = configFile.Bind("Flora Options",
-                                            "Flora | Enabled",
-                                            true,
-                                            "Whether Flora is enabled.");
         ConfigDangerousFloraEnabled = configFile.Bind("Flora Options",
                                             "Dangerous Flora | Enabled",
                                             true,
@@ -158,6 +153,10 @@ public class CodeRebirthConfig {
                                             "Dangerous Flora | Carnivorous Max Count",
                                             6,
                                             "Carnivorous Plant max count.");
+        ConfigFloraEnabled = configFile.Bind("Flora Options",
+                                            "Flora | Enabled",
+                                            true,
+                                            "Whether Flora is enabled.");
         ConfigFloraMaxAbundance = configFile.Bind("Flora Options",
                                             "Flora | Max Abundance",
                                             75,
@@ -178,10 +177,6 @@ public class CodeRebirthConfig {
                                             "Flora | Snow Spawn Places",
                                             "Dine,Rend,Titan,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
-        ConfigFloraDangerSpawnPlaces = configFile.Bind("Flora Options",
-                                            "Flora | Danger Spawn Places",
-                                            "Vanilla,Custom",
-                                            "Flora spawn places e.g. `Experimentation,Assurance,Gloom` (only takes moon names).");
         ConfigFloraExcludeSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Exclude Spawn Places",
                                             "Infernis",
