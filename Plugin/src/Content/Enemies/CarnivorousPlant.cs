@@ -30,6 +30,7 @@ public class CarnivorousPlant : CodeRebirthEnemyAI, INoiseListener
     public override void Update()
     {
         base.Update();
+        if (isEnemyDead) return;
         if (targetPlayer != null && currentBehaviourStateIndex == (int)State.AttackTargetPlayer)
         {
             // Calculate direction to target player
@@ -41,12 +42,21 @@ public class CarnivorousPlant : CodeRebirthEnemyAI, INoiseListener
             // Smoothly rotate towards the target player
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
         }
+        else
+        {
+            // Default slow rotation to the right (positive y-axis)
+            float rotationSpeed = 2f; // Adjust speed here if needed
+            transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+            
+            // To rotate to the left (negative y-axis), use:
+            // transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
+        }
     }
 
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-
+        if (isEnemyDead) return;
         switch (currentBehaviourStateIndex)
         {
             case (int)State.Idle:
@@ -138,5 +148,20 @@ public class CarnivorousPlant : CodeRebirthEnemyAI, INoiseListener
         bodyBeingCarried.attachedTo = this.mouth;
         bodyBeingCarried.attachedLimb = player.deadBody.bodyParts[0];
         bodyBeingCarried.matchPositionExactly = true;
+    }
+
+    public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+        enemyHP -= force;
+
+        if (IsHost) networkAnimator.SetTrigger("takeDamage");
+
+        if (enemyHP <= 0 && !isEnemyDead) {
+            if (IsOwner) {
+                creatureAnimator.SetBool("isDead", true);
+                KillEnemyOnOwnerClient();
+            }
+        }
     }
 }
