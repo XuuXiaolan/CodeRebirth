@@ -58,7 +58,6 @@ public class CRBundleWindow : EditorWindow
         // Exclude script files
         if (assetPath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
         {
-            Debug.LogWarning($"Excluding script file from AssetBundle: {assetPath}");
             return;
         }
 
