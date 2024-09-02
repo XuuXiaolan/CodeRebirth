@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1590516572
+CRC: 2773422082
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b12b49910581299557e2c4df32918b2a
+    Hash: a888c0a3b383ea02a3c8fce5f9d044e0
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 0dbb02dc8f1e07094dbf29b81706a69c
+    Hash: 7b956a93cbf0f319372659090f1a3ff1
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: b12b49910581299557e2c4df32918b2a
+    Hash: a888c0a3b383ea02a3c8fce5f9d044e0
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -31,6 +31,8 @@ ClassTypes:
 - Class: 64
   Script: {instanceID: 0}
 - Class: 65
+  Script: {instanceID: 0}
+- Class: 72
   Script: {instanceID: 0}
 - Class: 82
   Script: {instanceID: 0}
@@ -55,8 +57,6 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 994651365, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: b2686e09ec7aef44bad2843e4416f057, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
 - Class: 115
   Script: {instanceID: 0}
@@ -68,72 +68,71 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
+- Class: 73398921
+  Script: {instanceID: 0}
+- Class: 2058629509
+  Script: {instanceID: 0}
+- Class: 2083052967
+  Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: Battery
-- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
-  ClassName: UnityEngine.Rendering.HighDefinition.DiffusionProfile
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/MediumFlame03.tif
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Explosion.tif
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/FireExplosion.tif
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/BetterCrater.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/EmeraldDiffuseMap.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Explosion.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/GrayPorcelain.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Explosion.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/EmeraldDiffuseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/ExplosionDistortion.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/ExplosionEmission.tif
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Embers.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/TornadoShaderVersion/Prefabs/Foliage
-  Diffusion Profile.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/GemDiffuseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/FireSphere2.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Audio/NearImpact.ogg
-- Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipelineResources/Texture/DecalGizmo.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/EmeraldRoughnessMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Audio/MeteorLand.ogg
-- Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.shader
-- Packages/com.unity.render-pipelines.high-definition/Editor/RenderPipelineResources/Texture/DiffusionProfileSettingsAsset.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/SmokeDark.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Magic
   fire pro blue.prefab
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorContainer.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/SmokeDark.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Visual Effect.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Trail67.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Audio/MeteorConstant.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Debris.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Procedural
   Real Crystals Material.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/RubyNormalMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/TestMat.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/RubyNormalMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Emerald.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Stones_01_Atlas_Diffuse_01.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/WesleyCubeMeteor.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/New Graph.vfx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/BetterSapphire.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/CraterMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/FlameStream.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/RubyDiffuseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/TinyStones.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/RubyRoughnessMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Smoke26.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Icosphere_Bake1_CyclesBake_GLOSSY.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Icosphere_Bake1_CyclesBake_NORMAL.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Emerald.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/EmeraldNormalMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/MediumFlame03.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Icosphere_Bake1_CyclesBake_GLOSSY.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/RubyRoughnessMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Ruby.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorShowerWeather.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/BigExplosion.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Crater2.fbx
-- Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipelineResources/Material/DefaultHDMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/SapphireMeteoriteObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/SphereNormal.tif
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/EmeraldMeteoriteObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Meteor.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/RubyMeteoriteObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/shockwave.tif
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/FireBallEmission.tif
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/GemMaterial.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/ScrapItemIcon2.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/FireBallEmission.tif
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/MeteorContainer.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/SmokePuff01.tif
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/Ruby.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/GemRoughnessMap.png
@@ -142,9 +141,8 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/meteor.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/FireSphere2.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/LargeFlame02.tif
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Smoke26.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Icosphere_Bake1_CyclesBake_ROUGHNESS.png
-- Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/Decal.shader
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Smoke26.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Sapphire.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/EmeraldMaterial.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/CraterDecal.png
@@ -153,9 +151,8 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Trail67.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/FireSphere1.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/FireExplosion.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Shaders/Chaos_Shader.shadergraph
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/FireSphere1.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/WildFire.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/FireSphere1.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Prefabs/SapphireGem.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/SparkSphere.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Weathers/MeteorShower/Materials/Textures/Icosphere_Bake1_CyclesBake_DIFFUSE.png

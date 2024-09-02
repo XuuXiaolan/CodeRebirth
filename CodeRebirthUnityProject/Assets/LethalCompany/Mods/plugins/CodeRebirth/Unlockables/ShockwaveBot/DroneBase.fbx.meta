@@ -8,27 +8,27 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Dot
-    second: {fileID: 2100000, guid: 4ab83078c87f58f41b6d92e613510f86, type: 2}
+    second: {fileID: 2100000, guid: 92d5444518c407f4a95c489e55aaa1f7, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: DroneMain
-    second: {fileID: 2100000, guid: d61f622eafe7dc441be8363182c3b288, type: 2}
+    second: {fileID: 2100000, guid: b71d8dd7a705fb34c93701d5f6bd3e62, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: DroneMiddleBody
-    second: {fileID: 2100000, guid: 882bf40b1e121864ea1489282b24c4a5, type: 2}
+    second: {fileID: 2100000, guid: 4587e56e15c59084a8152702d9f2685e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Fans
-    second: {fileID: 2100000, guid: 39c6475e99d0e1d418ed69931c6e064b, type: 2}
+    second: {fileID: 2100000, guid: 21e43f90395a5a84798f55f340c6fd0b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: SmallParts
-    second: {fileID: 2100000, guid: 876ee46c36ce3b746b75697bdb7fbfd7, type: 2}
+    second: {fileID: 2100000, guid: 23e0adb99d5eae14494c726fc0ab2b9d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -60,16 +60,16 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 10
-    meshCompression: 2
+    globalScale: 1
+    meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
-    importVisibility: 0
+    importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
@@ -115,7 +115,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 10
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

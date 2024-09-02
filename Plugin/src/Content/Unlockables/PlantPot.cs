@@ -74,6 +74,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
                         break;
                 }
             }
+            yield return new WaitForEndOfFrame();
         }
     }
 
