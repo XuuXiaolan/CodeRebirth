@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 935348386
+CRC: 3439823306
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 71744d81cfa217df054a244511eb7292
+    Hash: 8b545c597c0a30656af0ac3933e38f48
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 218a8ba33223c721b9b627870cfce540
+    Hash: 2a7f1e689199935fbba5d1d188af04cd
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 71744d81cfa217df054a244511eb7292
+    Hash: 8b545c597c0a30656af0ac3933e38f48
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -39,11 +39,11 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
 - Class: 114
-  Script: {fileID: -1213685003, guid: c12905fc7e8511347839a69634f3e12d, type: 3}
-- Class: 114
   Script: {fileID: -465311125, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 114
   Script: {fileID: -2057638404, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+- Class: 114
+  Script: {fileID: -1213685003, guid: c12905fc7e8511347839a69634f3e12d, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 213
@@ -60,7 +60,7 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
 Assets:
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/PlantPot/Materials/Textures/FlowerPot-Color.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/WoodenSeed/Material/Material.001.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/GoldenTomato/GoldenTomatoObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/WoodenSeed/Model/TreeSeed.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/PlantPot/Materials/Textures/Dirt-Color.png
@@ -71,6 +71,7 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/WoodenSeed/Material/Textures/Body-Bump.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/PlantPot/Materials/Textures/Dirt_Bump.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/PlantPot/FlowerPot.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/Tomato/Tomato.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/PlantPot/Materials/Material.001.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/PlantPot/Materials/Textures/FlowerPot_Bump.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/WoodenSeed/TreeSeed.prefab
@@ -79,5 +80,6 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/PlantPot/PlantPotUnlockable.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/WoodenSeed/Material/Textures/GreenRoot-Bump.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/WoodenSeed/Material/Material.002.mat
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/WoodenSeed/Material/Material.001.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Items/GoldenTomato/GoldenTomato.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/PlantPot/Materials/Textures/FlowerPot-Color.png
 Dependencies: []
