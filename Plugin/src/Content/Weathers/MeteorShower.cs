@@ -142,7 +142,6 @@ public class MeteorShower : CodeRebirthWeathers {
 
 			for (int i = 0; i < random.NextInt(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++) {
 				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
-				yield return new WaitForSeconds(random.NextFloat(0f, 0.5f));
 			}
 			float delay = random.NextFloat(minTimeBetweenSpawns, maxTimeBetweenSpawns);
 			yield return new WaitForSeconds(delay);
@@ -169,7 +168,7 @@ public class MeteorShower : CodeRebirthWeathers {
         }
 
         // Assume y is upwards and we want to keep it within a certain range
-        float y = random.NextFloat(500, 800); // Fixed vertical range
+        float y = random.NextFloat(600, 900); // Fixed vertical range
 
         return target + new Vector3(x, y, z);
     }
@@ -182,7 +181,7 @@ public class MeteorShower : CodeRebirthWeathers {
 		if (direction == Direction.Random) {
 			origin = target + new Vector3(
 				random.NextFloat(250, 500) * random.NextSign(), 
-				random.NextFloat(500, 800), 
+				random.NextFloat(600, 900), 
 				random.NextFloat(250, 500) * random.NextSign()
 			);
 		} else {
