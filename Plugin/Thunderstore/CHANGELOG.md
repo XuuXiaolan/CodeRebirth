@@ -12,6 +12,8 @@
 - Improved meteor shower visuals.
 - Improved biome particles performance.
 - Updated for v64.
+- Improved hoverboard a bit.
+- Improved meteor shower overhead visuals a bit.
 
 ## v0.5.2
 

@@ -110,14 +110,14 @@ public class MeteorShower : CodeRebirthWeathers {
     }
 	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null) {
         Vector3 averageLocation = CalculateAverageLandNodePosition(nodes);
-        Vector3 centralLocation = averageLocation + new Vector3(0, random.NextFloat(250, 300), 0);
+        Vector3 centralLocation = averageLocation + new Vector3(0, random.NextFloat(150, 200), 0);
 		for (int i = 0; i < amount; i++) {
 			SpawnVisualMeteors(
 				overridePrefab: overridePrefab,
 				centralLocation: centralLocation,
 				offset: new Vector3(random.NextFloat(-175, 175), random.NextFloat(-50, 50), random.NextFloat(-175, 175)),
 				speed: 2f,
-				sizeMultiplier: random.NextFloat(2, 5));
+				sizeMultiplier: random.NextFloat(1.5f, 4));
 		}
         for (int i = 0; i < 1; i++) {
 			SpawnVisualMeteors(
@@ -125,7 +125,7 @@ public class MeteorShower : CodeRebirthWeathers {
 				centralLocation: centralLocation,
 				offset: Vector3.zero,
 				speed: 1.5f,
-				sizeMultiplier: random.NextFloat(10, 25)
+				sizeMultiplier: random.NextFloat(7.5f, 12.5f)
 				);
         }
 	}
