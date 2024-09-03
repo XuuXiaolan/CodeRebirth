@@ -279,9 +279,9 @@ public class ShockwaveGalAI : NetworkBehaviour
         if (IsServer) item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         item.EnablePhysics(true);
         item.fallTime = 0f;
-        Plugin.ExtendedLogging("Dropping Egg");
-        Plugin.ExtendedLogging($"Egg Position: {item.transform.position}");
-        Plugin.ExtendedLogging($"Egg Parent: {item.transform.parent}");
+        Plugin.ExtendedLogging("Dropping Item");
+        Plugin.ExtendedLogging($"Item Position: {item.transform.position}");
+        Plugin.ExtendedLogging($"Item Parent: {item.transform.parent}");
         item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
         item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
         item.floorYRot = -1;

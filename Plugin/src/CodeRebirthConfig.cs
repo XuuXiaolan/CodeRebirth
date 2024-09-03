@@ -80,6 +80,7 @@ public class CodeRebirthConfig {
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<bool> ConfigShovelCratesOnly { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCost { get; private set; }
     public ConfigEntry<int> ConfigShockwaveBotCost { get; private set; }
     public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
@@ -528,6 +529,10 @@ public class CodeRebirthConfig {
                                             "Crate | Wooden Abundance",
                                             3,
                                             "Abundance of Wooden Crates that spawn outside (between 0 and your number).");
+        ConfigShovelCratesOnly = configFile.Bind("Crate Options",
+                                            "Crate | Shovel Crates Only",
+                                            true,
+                                            "Only Shovels can hit Crates.");
         #endregion
         configFile.SaveOnConfigSet = true;
         ClearUnusedEntries(configFile);

@@ -191,6 +191,7 @@ public class ItemCrate : CRHittable {
 	
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
 		if (opened) return false;
+		if (playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer == null && Plugin.ModConfig.ConfigShovelCratesOnly.Value) return false; 
 		if (digProgress.Value < 1) {
 			float progressChange = random.NextFloat(0.15f, 0.25f);
 			if (IsOwner) {
