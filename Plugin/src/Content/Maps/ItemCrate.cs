@@ -199,11 +199,10 @@ public class ItemCrate : CRHittable {
 			} else {
 				SetNewDigProgressServerRPC(digProgress.Value + progressChange);
 			}
-			
 		} else {
 			DamageCrateServerRPC(1);
 		}
-		return true; // this bool literally doesn't get used. i have no clue.
+		return true;
 	}
 
 	public Item GetRandomShopItem() {

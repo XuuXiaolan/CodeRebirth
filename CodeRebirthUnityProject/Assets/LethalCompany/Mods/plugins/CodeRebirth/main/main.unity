@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2325.8694, g: 2403.631, b: 3456.6724, a: 1}
+  m_IndirectSpecularColor: {r: 2324.0051, g: 2400.2463, b: 3448.7075, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -543,6 +543,109 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2024323842
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2223349174044118611, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 302722976
+      objectReference: {fileID: 0}
+    - target: {fileID: 5677648857109473811, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_Name
+      value: Hoverboard
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932733639174811098, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 2.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932733639174811098, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932733639174811098, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932733639174811098, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_Center.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932733639174811098, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932733639174811098, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.0178204
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.0000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.8206382
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199844611387490420, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b3a39ce9ff3f9e648aeee9f1a8af9fce, type: 3}
 --- !u!1001 &5342010602727137140
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -625,3 +728,4 @@ SceneRoots:
   - {fileID: 2013410475}
   - {fileID: 1752473781}
   - {fileID: 5342010602727137140}
+  - {fileID: 2024323842}

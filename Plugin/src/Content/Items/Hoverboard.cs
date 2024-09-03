@@ -6,7 +6,6 @@ using System;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem;
 using System.Linq;
-using UnityEngine.AI;
 using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Items;
@@ -20,6 +19,9 @@ public class Hoverboard : GrabbableObject, IHittable {
     public PlayerControllerB? playerControlling;
     private RaycastHit[] hits = new RaycastHit[4];
     private bool _isHoverForwardHeld = false;
+    private bool _isHoverBackwardHeld = false;
+    private bool _isHoverLeftHeld = false;
+    private bool _isHoverRightHeld = false;
     private bool _isSprintHeld = false;
     private bool jumpCooldown = true;
     public Transform hoverboardChild = null!;
@@ -101,42 +103,77 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
     }
 
-    public void OnHoverForward(InputAction.CallbackContext context) {
+    public void OnKeyHeld(InputAction.CallbackContext context) {
         if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         var btn = (ButtonControl)context.control;
-        if (btn.wasPressedThisFrame) {
-            SetHoverboardHeldServerRpc(true);
-        } else if (btn.wasReleasedThisFrame) {
-            SetHoverboardHeldServerRpc(false);
+        InputAction action = context.action;
+        bool forward = false, backward = false, left = false, right = false, sprint = false;
+        if (btn.wasPressedThisFrame)
+        {
+            switch (action.name)
+            {
+                case "HoverForward":
+                    forward = true;
+                    break;
+                case "HoverBackward":
+                    backward = true;
+                    break;
+                case "HoverLeft":
+                    left = true;
+                    break;
+                case "HoverRight":
+                    right = true;
+                    break;
+                case "SprintForward":
+                    sprint = true;
+                    break;
+            }
+            SetHoverboardHeldServerRpc(forward, backward, right, left, sprint);
         }
     }
 
-    public void OnSprintKeyHeld(InputAction.CallbackContext context) {
+    public void OnKeyReleased(InputAction.CallbackContext context) {
         if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         var btn = (ButtonControl)context.control;
-        if (btn.wasPressedThisFrame) {
-            SetHoverboardSprintServerRpc(true);
-        } else if (btn.wasReleasedThisFrame) {
-            SetHoverboardSprintServerRpc(false);
+        InputAction action = context.action;
+        bool forward = true, backward = true, left = true, right = true, sprint = true;
+        if (btn.wasReleasedThisFrame)
+        {
+            switch (action.name)
+            {
+                case "HoverForward":
+                    forward = false;
+                    break;
+                case "HoverBackward":
+                    backward = false;
+                    break;
+                case "HoverLeft":
+                    left = false;
+                    break;
+                case "HoverRight":
+                    right = false;
+                    break;
+                case "SprintForward":
+                    sprint = false;
+                    break;
+            }
+            SetHoverboardReleasedServerRpc(forward, backward, right, left, sprint);
         }
     }
-
     public void MovementHandler(InputAction.CallbackContext context) {
         if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;
         var btn = (ButtonControl)context.control;
-        if (btn.wasPressedThisFrame) {
+        if (btn.wasPressedThisFrame && context.action == Plugin.InputActionsInstance.HoverUp) {
             HandleMovement();
         }
     }
 
     public void FixedUpdate() {
-        if (playerControlling == null) return;
-        if (GameNetworkManager.Instance.localPlayerController == playerControlling) {
-            if (hoverboardMode != HoverboardMode.Held && turnedOn) {
-                for (int i = 0; i < 4; i++) {
-                    ApplyForce(anchors[i], hits[i]);
-                }
-            } 
+        if (playerControlling == null || playerControlling != GameNetworkManager.Instance.localPlayerController) return;
+        if (turnedOn && hoverboardMode != HoverboardMode.Held) {
+            for (int i = 0; i < 4; i++) {
+                ApplyForce(anchors[i], hits[i]);
+            }
         }
     }
 
@@ -187,17 +224,27 @@ public class Hoverboard : GrabbableObject, IHittable {
             DropHoverboard();
             return;
         }
-        if (hoverboardMode == HoverboardMode.Mounted) {
-            if (Vector3.Distance(hoverboardSeat.transform.position, playerControlling.transform.position) > 0.01f) {
+        if (hoverboardMode == HoverboardMode.Mounted && turnedOn && playerControlling == GameNetworkManager.Instance.localPlayerController) {
+            if (Vector3.Distance(hoverboardSeat.transform.position, playerControlling.transform.position) >= 0.001f) {
                 playerControlling.transform.position = Vector3.Lerp(playerControlling.transform.position, hoverboardSeat.transform.position, Time.deltaTime * 5f);
             }
             if (_isHoverForwardHeld) {
-                hb.AddForce(Vector3.zero + hoverboardChild.right * 25f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
+                hb.AddForce((Vector3.zero + hoverboardChild.right) * 25f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
             }
+            if (_isHoverBackwardHeld) {
+                hb.AddForce((Vector3.zero - hoverboardChild.right) * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
+            }
+            if (_isHoverLeftHeld) {
+                hb.AddForce((Vector3.zero + hoverboardChild.forward) * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
+            }
+            if (_isHoverRightHeld) {
+                hb.AddForce((Vector3.zero - hoverboardChild.forward) * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
+            }
+
             if (!isAdjusting)
                 CheckIfUpsideDown();
-            playerControlling.ResetFallGravity();
         }
+        if (hoverboardMode == HoverboardMode.Mounted) playerControlling.ResetFallGravity();
     }
 
     public override void LateUpdate() {
@@ -228,23 +275,11 @@ public class Hoverboard : GrabbableObject, IHittable {
     }
 
     private void HandleMovement() {
-        if (playerControlling == null) return;
+        if (playerControlling == null || playerControlling != GameNetworkManager.Instance.localPlayerController) return;
         Vector3 forceDirection = Vector3.zero;
-        float moveForce = 300f;
+        float moveForce = 0f;
 
-        if (Plugin.InputActionsInstance.HoverLeft.WasPressedThisFrame())
-            forceDirection += hoverboardChild.forward;
-
-        if (Plugin.InputActionsInstance.HoverRight.WasPressedThisFrame())
-            forceDirection -= hoverboardChild.forward;
-
-        if (Plugin.InputActionsInstance.HoverBackward.WasPressedThisFrame())
-            forceDirection -= hoverboardChild.right;
-
-        if (Plugin.InputActionsInstance.HoverForward.WasPressedThisFrame())
-            forceDirection += hoverboardChild.right;
-
-        if (Plugin.InputActionsInstance.HoverUp.WasPressedThisFrame() && jumpCooldown) {
+        if (jumpCooldown) {
             jumpCooldown = false;
             forceDirection += hoverboardChild.up;
             moveForce = 1500f;
@@ -260,7 +295,6 @@ public class Hoverboard : GrabbableObject, IHittable {
         jumpCooldown = true;
     }
 
-    // ApplyForce method with added debug logs
     public void ApplyForce(Transform anchor, RaycastHit hit) {
         if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
             float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 3f : 100f);
@@ -315,23 +349,30 @@ public class Hoverboard : GrabbableObject, IHittable {
     }
 
     [ServerRpc(RequireOwnership = false)]
-    internal void SetHoverboardHeldServerRpc(bool held) {
-        SetHoverboardHeldClientRpc(held);
+    internal void SetHoverboardHeldServerRpc(bool forwardHeld, bool backwardHeld, bool rightHeld, bool leftHeld, bool sprintHeld) {
+        SetHoverboardHeldClientRpc(forwardHeld, backwardHeld, rightHeld, leftHeld, sprintHeld);
     }
 
     [ClientRpc]
-    internal void SetHoverboardHeldClientRpc(bool held) {
-        _isHoverForwardHeld = held;
+    internal void SetHoverboardHeldClientRpc(bool forwardHeld, bool backwardHeld, bool rightHeld, bool leftHeld, bool sprintHeld) {
+        if (forwardHeld) _isHoverForwardHeld = true;
+        if (backwardHeld) _isHoverBackwardHeld = true;
+        if (rightHeld) _isHoverRightHeld = true;
+        if (leftHeld) _isHoverLeftHeld = true;
+        if (sprintHeld) _isSprintHeld = true;
     }
-
     [ServerRpc(RequireOwnership = false)]
-    internal void SetHoverboardSprintServerRpc(bool held) {
-        SetHoverboardSprintClientRpc(held);
+    internal void SetHoverboardReleasedServerRpc(bool forwardHeld, bool backwardHeld, bool rightHeld, bool leftHeld, bool sprintHeld) {
+        SetHoverboardReleasedClientRpc(forwardHeld, backwardHeld, rightHeld, leftHeld, sprintHeld);
     }
 
     [ClientRpc]
-    internal void SetHoverboardSprintClientRpc(bool held) {
-        _isSprintHeld = held;
+    internal void SetHoverboardReleasedClientRpc(bool forwardHeld, bool backwardHeld, bool rightHeld, bool leftHeld, bool sprintHeld) {
+        if (!forwardHeld) _isHoverForwardHeld = false;
+        if (!backwardHeld) _isHoverBackwardHeld = false;
+        if (!rightHeld) _isHoverRightHeld = false;
+        if (!leftHeld) _isHoverLeftHeld = false;
+        if (!sprintHeld) _isSprintHeld = false;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -366,9 +407,6 @@ public class Hoverboard : GrabbableObject, IHittable {
                     Plugin.Logger.LogError($"Player controlling is null when switching to mounted...");
                 }
                 break;
-            default:
-                Plugin.Logger.LogFatal("Invalid Hoverboard state!");
-                break;
         }
         HandleToolTips();
     }
@@ -387,16 +425,17 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         // Reset hoverboardChild's rotation and position
         hoverboardChild.rotation = resetChildRotation;
-        if (hoverboardMode == HoverboardMode.Held) {
+        Plugin.ExtendedLogging($"Rotation: {hoverboardChild.rotation}");
+        /*if (hoverboardMode == HoverboardMode.Held) {
             hoverboardChild.rotation = playerCurrentlyControlling.transform.rotation * Quaternion.Euler(0, -90, 0);
-        }
+        }*/
         hoverboardChild.position += Vector3.up * 0.3f;
         for (int i = 0; i < anchors.Length; i++) {
             anchors[i].localPosition = initialAnchorPositions[i];
             anchors[i].localRotation = initialAnchorRotations[i];
         }
         // Debug log for position and rotation
-        playerCurrentlyControlling.transform.SetParent(hoverboardSeat.transform, true);
+        if (IsServer) playerCurrentlyControlling.transform.SetParent(hoverboardSeat.transform, true);
         playerCurrentlyControlling.GetCRPlayerData().ridingHoverboard = true;
         playerCurrentlyControlling.GetCRPlayerData().hoverboardRiding = this;
         hoverboardMode = HoverboardMode.Mounted;
@@ -425,6 +464,8 @@ public class Hoverboard : GrabbableObject, IHittable {
         }
         playerCurrentlyControlling.GetCRPlayerData().ridingHoverboard = false;
         playerCurrentlyControlling.GetCRPlayerData().hoverboardRiding = null;
+        playerCurrentlyControlling.disableMoveInput = false;
+        playerCurrentlyControlling.disableLookInput = false;
         hoverboardMode = HoverboardMode.Held;
         playerCurrentlyControlling.disableLookInput = false;
         playerCurrentlyControlling.disableMoveInput = false;
@@ -435,6 +476,9 @@ public class Hoverboard : GrabbableObject, IHittable {
         hoverboardChild.rotation = playerCurrentlyControlling.transform.rotation * rotationOffset;
         _isHoverForwardHeld = false;
         _isSprintHeld = false;
+        _isHoverRightHeld = false;
+        _isHoverLeftHeld = false;
+        _isHoverBackwardHeld = false;
         isBeingUsed = false;
         turnedOn = false;
         hb.useGravity = false;
@@ -451,15 +495,12 @@ public class Hoverboard : GrabbableObject, IHittable {
             }
         }
         SetupCollidersIgnoringOrIncluding(false);
-        if (playerControlling != null) {
-            playerControlling.GetCRPlayerData().ridingHoverboard = false;
-            playerControlling.GetCRPlayerData().hoverboardRiding = null;
-            if (weightApplied) playerControlling.carryWeight = Mathf.Clamp(playerControlling.carryWeight - 0.24f, 1, 1000);
-            weightApplied = false;
-        }
         turnedOn = false;
         _isHoverForwardHeld = false;
         _isSprintHeld = false;
+        _isHoverRightHeld = false;
+        _isHoverLeftHeld = false;
+        _isHoverBackwardHeld = false;
         isBeingUsed = false;
         hb.useGravity = true;
         hb.isKinematic = false;
@@ -518,25 +559,29 @@ public class Hoverboard : GrabbableObject, IHittable {
 
     public void SwitchModeExtension(bool SwitchingOff) {
         if (SwitchingOff) {
-            Plugin.InputActionsInstance.HoverForward.performed -= OnHoverForward;
-            Plugin.InputActionsInstance.HoverForward.canceled -= OnHoverForward;
-            Plugin.InputActionsInstance.SprintForward.performed -= OnSprintKeyHeld;
-            Plugin.InputActionsInstance.SprintForward.canceled -= OnSprintKeyHeld;
-            Plugin.InputActionsInstance.HoverLeft.performed -= MovementHandler;
-            Plugin.InputActionsInstance.HoverRight.performed -= MovementHandler;
-            Plugin.InputActionsInstance.HoverBackward.performed -= MovementHandler;
-            Plugin.InputActionsInstance.HoverForward.performed -= MovementHandler;
+            Plugin.InputActionsInstance.HoverForward.performed -= OnKeyHeld;
+            Plugin.InputActionsInstance.HoverBackward.performed -= OnKeyHeld;
+            Plugin.InputActionsInstance.HoverLeft.performed -= OnKeyHeld;
+            Plugin.InputActionsInstance.HoverRight.performed -= OnKeyHeld;
+            Plugin.InputActionsInstance.SprintForward.performed -= OnKeyHeld;
+            Plugin.InputActionsInstance.HoverForward.canceled -= OnKeyReleased;
+            Plugin.InputActionsInstance.HoverBackward.canceled -= OnKeyReleased;
+            Plugin.InputActionsInstance.HoverLeft.canceled -= OnKeyReleased;
+            Plugin.InputActionsInstance.HoverRight.canceled -= OnKeyReleased;
+            Plugin.InputActionsInstance.SprintForward.canceled -= OnKeyReleased;
             Plugin.InputActionsInstance.HoverUp.performed -= MovementHandler;
             Plugin.InputActionsInstance.SwitchMode.performed -= ModeHandler;
         } else {
-            Plugin.InputActionsInstance.HoverForward.performed += OnHoverForward;
-            Plugin.InputActionsInstance.HoverForward.canceled += OnHoverForward;
-            Plugin.InputActionsInstance.SprintForward.performed += OnSprintKeyHeld;
-            Plugin.InputActionsInstance.SprintForward.canceled += OnSprintKeyHeld;
-            Plugin.InputActionsInstance.HoverLeft.performed += MovementHandler;
-            Plugin.InputActionsInstance.HoverRight.performed += MovementHandler;
-            Plugin.InputActionsInstance.HoverBackward.performed += MovementHandler;
-            Plugin.InputActionsInstance.HoverForward.performed += MovementHandler;
+            Plugin.InputActionsInstance.HoverForward.performed += OnKeyHeld;
+            Plugin.InputActionsInstance.HoverBackward.performed += OnKeyHeld;
+            Plugin.InputActionsInstance.HoverLeft.performed += OnKeyHeld;
+            Plugin.InputActionsInstance.HoverRight.performed += OnKeyHeld;
+            Plugin.InputActionsInstance.SprintForward.performed += OnKeyHeld;
+            Plugin.InputActionsInstance.HoverForward.canceled += OnKeyReleased;
+            Plugin.InputActionsInstance.HoverBackward.canceled += OnKeyReleased;
+            Plugin.InputActionsInstance.HoverLeft.canceled += OnKeyReleased;
+            Plugin.InputActionsInstance.HoverRight.canceled += OnKeyReleased;
+            Plugin.InputActionsInstance.SprintForward.canceled += OnKeyReleased;
             Plugin.InputActionsInstance.HoverUp.performed += MovementHandler;
             Plugin.InputActionsInstance.SwitchMode.performed += ModeHandler;
         }
@@ -578,23 +623,26 @@ public class Hoverboard : GrabbableObject, IHittable {
     }
 
     private void CheckIfUpsideDown() {
-        // Check if the hoverboard's up vector is pointing down
-        if (Vector3.Dot(hoverboardChild.up, Vector3.down) > 0) {
-            // If upside down, start the adjustment process
-            targetRotation = Quaternion.LookRotation(hoverboardChild.forward, Vector3.up);
+        // Calculate the angle between the hoverboard's up vector and the world's up vector
+        float angle = Vector3.Angle(hoverboardChild.up, Vector3.up);
+
+        // If the angle is greater than 90 degrees, the hoverboard is considered upside down
+        if (angle > 60f) {
+            // Start the adjustment process
+            targetRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(hoverboardChild.forward, Vector3.up), Vector3.up);
             StartCoroutine(AdjustOrientation());
         }
     }
 
     private IEnumerator AdjustOrientation() {
         isAdjusting = true;
-        float duration = 1f;
+        float duration = 0.5f; // Duration of the rotation
         float elapsed = 0f;
         Quaternion initialRotation = hoverboardChild.rotation;
 
         while (elapsed < duration) {
             elapsed += Time.deltaTime;
-            hoverboardChild.rotation = Quaternion.Lerp(initialRotation, targetRotation, elapsed / duration);
+            hoverboardChild.rotation = Quaternion.Slerp(initialRotation, targetRotation, elapsed / duration);
             yield return null;
         }
 
