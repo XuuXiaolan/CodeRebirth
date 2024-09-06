@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 363660462
+CRC: 1614513323
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2a6c0796d58356b0a97432b3e6ba6e7a
+    Hash: 7b764a188715c5d4a9023d3b90787692
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6442f849e4f47618f10a5c576afc91a2
+    Hash: 9de84cb98c4971d6d26f18d279b45818
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 2a6c0796d58356b0a97432b3e6ba6e7a
+    Hash: 7b764a188715c5d4a9023d3b90787692
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -66,6 +66,8 @@ ClassTypes:
   Script: {fileID: -1750704273, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
+- Class: 114
+  Script: {fileID: 1389439161, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 136
@@ -103,12 +105,15 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX6.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX3.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/Textures/IMG_3185.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Bestiary/Frame.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/KickDownDoor.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/ApparatusSpinAttack.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/WideWalk.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX4.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/GoingFireExit.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/anvil 1.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/JPArmCurl.mp3
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/JPHitPlayerSound.mp3
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/Admire.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/WhereApparatusLong.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/Textures/anvil_diff.tga
@@ -116,17 +121,22 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/PushupNoises.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/RandomGrunting.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Bestiary/ReadyJPTN.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/JPDeath2.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Bestiary/TankLight.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/DeathEnd2.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/DeathEnd1WithAnvil.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/M_HeavenSun.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/AnC_JPManlet.controller
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX5.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/JPImage.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/ReadyJPObj.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/MeleeAttack.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/ArmCurl.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX2.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/WalkWithAppy.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/IdleWithAppy.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Bestiary/modelnumber.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/JPManlet.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/JumpJacks.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/AdmireSelf.ogg
@@ -138,7 +148,9 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/WhereApparatusShort.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/Textures/anvil_nrm.tga
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/DeathStartWithParticles.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/JPDeath1.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Bestiary/ReadyJPTK.asset
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/AnvilPrefab.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX1.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Bestiary/SteelProngs.mat
 Dependencies: []
