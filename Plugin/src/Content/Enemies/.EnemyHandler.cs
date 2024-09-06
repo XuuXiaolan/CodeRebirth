@@ -123,12 +123,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
         }
 
-        /*if (false) {
+        if (true) {
             ReadyJP = new ReadyJPAssets("readyjpassets");
             RegisterEnemyWithConfig("All:500", ReadyJP.ReadyJPEnemyType, ReadyJP.ReadyJPTerminalNode, ReadyJP.ReadyJPTerminalKeyword, 3, 1);
         }
 
-        if (false) {
+        /*if (false) {
             PjonkGoose = new PjonkGooseAssets("pjonkgooseassets");
             RegisterEnemyWithConfig("All:500", PjonkGoose.PjonkGooseEnemyType, PjonkGoose.PjonkGooseTerminalNode, PjonkGoose.PjonkGooseTerminalKeyword, 3, 1);
             RegisterScrapWithConfig("All:0", PjonkGoose.GoldenEggItem);

@@ -1,30 +1,144 @@
 ManifestFileVersion: 0
-CRC: 4255943621
+CRC: 363660462
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 494628d9921a468ed0efb3f8f2016fcf
+    Hash: 2a6c0796d58356b0a97432b3e6ba6e7a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 78ae3eb1519174be06dc49354aa5eb41
+    Hash: 6442f849e4f47618f10a5c576afc91a2
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 494628d9921a468ed0efb3f8f2016fcf
+    Hash: 2a6c0796d58356b0a97432b3e6ba6e7a
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+- Class: 114
+  Script: {fileID: -1750704273, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
 - Class: 115
   Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 195
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
+  ClassName: AISearchRoutine
+- AssemblyName: Assembly-CSharp
+  ClassName: EnemyBehaviourState
+- AssemblyName: Assembly-CSharp
   ClassName: NavSizeLimit
+- AssemblyName: Unity.Netcode.Components
+  ClassName: Unity.Netcode.Components.NetworkAnimator/TransitionStateinfo
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.BoolScalableSettingValue
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
 Assets:
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/ReadyJPObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/ApparatusPlease.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/Textures/ReadyJP.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/M_Anvil.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/JPManlet.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/M_JPImage.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/JumpingJacks.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/TankLight.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/AppyJump.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX6.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX3.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/Textures/IMG_3185.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/KickDownDoor.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/ApparatusSpinAttack.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/WideWalk.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX4.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/GoingFireExit.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/anvil 1.fbx
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/Admire.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/WhereApparatusLong.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/Textures/anvil_diff.tga
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/Idle.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/PushupNoises.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/RandomGrunting.ogg
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Bestiary/ReadyJPTN.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/DeathEnd2.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/DeathEnd1WithAnvil.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/M_HeavenSun.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/AnC_JPManlet.controller
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX5.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/ReadyJPObj.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/MeleeAttack.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/ArmCurl.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX2.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/WalkWithAppy.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/IdleWithAppy.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/JPManlet.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/JumpJacks.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/AdmireSelf.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/M_HeavenParticle.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/PushUp.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/Spawn.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/DeathStart.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/Walk.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/WhereApparatusShort.ogg
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Material/Textures/anvil_nrm.tga
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Animations/DeathStartWithParticles.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Bestiary/ReadyJPTK.asset
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/AnvilPrefab.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Enemies/Other/ReadyJP/Audio/DamageSFX1.ogg
 Dependencies: []

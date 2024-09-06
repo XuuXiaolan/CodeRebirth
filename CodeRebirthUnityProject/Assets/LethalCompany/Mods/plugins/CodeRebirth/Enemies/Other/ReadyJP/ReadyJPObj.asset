@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
   m_Name: ReadyJPObj
   m_EditorClassIdentifier: 
-  enemyName: ReadyJP
+  enemyName: JohnPaularatus
   probabilityCurve:
     serializedVersion: 2
     m_Curve:
@@ -48,7 +48,8 @@ MonoBehaviour:
   useNumberSpawnedFalloff: 0
   spawnInGroupsOf: 0
   requireNestObjectsToSpawn: 0
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 6785919554749142487, guid: 612a890bc61e08a4f8216b2ee6527193,
+    type: 3}
   PowerLevel: 0
   MaxCount: 1
   numberSpawned: 0
@@ -62,8 +63,8 @@ MonoBehaviour:
   stunGameDifficultyMultiplier: 0
   canBeStunned: 0
   canDie: 1
-  canBeDestroyed: 1
-  destroyOnDeath: 1
+  canBeDestroyed: 0
+  destroyOnDeath: 0
   canSeeThroughFog: 1
   pushPlayerForce: 0
   pushPlayerDistance: 0

@@ -280,4 +280,16 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         }
         searchRoutine = null; // Clear the coroutine reference when it finishes
     }
+
+    /*[ServerRpc(RequireOwnership = false)]
+    private void PlayRandomClipServerRpc()
+    {
+
+    }
+
+    [ClientRpc]
+    private void PlayRandomClipClientRpc()
+    {
+        RoundManager.PlayRandomClip(this.creatureVoice, ref clipsArray, true, audioSource.volume, alertDogs ? 1 : 0);
+    }*/
 }

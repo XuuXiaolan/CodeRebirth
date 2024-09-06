@@ -14,6 +14,9 @@
 - Updated for v64.
 - Improved hoverboard a bit.
 - Improved meteor shower overhead visuals a bit.
+- Fixed Snailcat not being rideable.
+- Fixed Cutiefly not being rideable.
+- New icon for coderebirth!! thanks to []()
 
 ## v0.5.2
 
