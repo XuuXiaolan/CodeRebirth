@@ -34,8 +34,8 @@ public class GodRaySpawner : MonoBehaviour
             yield return new WaitForSeconds(1f);
             Color colour = rayColours[godRayRandom.NextInt(0, rayColours.Count - 1)];
 
-            Vector2 topPosition = new Vector2(godRayRandom.NextFloat(minX, maxX), godRayRandom.NextFloat(minZ, maxZ));
-            Vector3 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(centerOfWorld, 100, default, godRayRandom);
+            Vector2 topPosition = new Vector3(godRayRandom.NextFloat(minX, maxX), 0, godRayRandom.NextFloat(minZ, maxZ));
+            Vector3 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(godRayRandom.NextItem(RoundManager.Instance.outsideAINodes).transform.position, 100, default, godRayRandom);
 
             // Convert top and bottom positions to 3D vectors
             Vector3 raycastStart = bottomPosition;
@@ -53,7 +53,7 @@ public class GodRaySpawner : MonoBehaviour
                     topPosition,
                     godRayRandom.NextFloat(2f, 4f),
                     godRayRandom.NextFloat(2f, 5f),
-                    new Vector3(bottomPosition.x, -1f, bottomPosition.y),
+                    new Vector3(bottomPosition.x, -1f, bottomPosition.z),
                     8f,
                     colour
                 ));

@@ -17,6 +17,11 @@ public static class RandomExtensions {
 		int index = random.Next(collection.Count);
 		return collection[index];
 	}
+	
+	public static T NextItem<T>(this Random random, T[] collection) {
+		int index = random.Next(collection.Length);
+		return collection[index];
+	}
 
 	public static double NextDouble(this Random random, double min, double max) {
 		return (random.NextDouble() * (max - min)) + min;
