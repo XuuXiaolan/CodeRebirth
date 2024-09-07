@@ -29,14 +29,15 @@ public class ReadyJP : CodeRebirthEnemyAI
     public AnimationClip SmashDoorAnimation = null!;
     public AnimationClip MeleeAnimation = null!;
     public GameObject LungPropPrefab = null!;
-    public List<Collider> RegularColliders = null!;
-    public List<Collider> DeathColliders = null!;
+    public GameObject Collisions = null!;
+    public GameObject DeathColliders = null!;
 
     [NonSerialized] public bool meleeAttack = false;
     private LungProp? targetLungProp;
     private bool holdingLungProp = false;
     private List<DoorLock> doorLocks = [];
     private readonly float idleCooldownTimer = 15f;
+    private float afterSpeed = 0;
     private float randomSoundsTimer = 10f;
     private float idleTimer = 5f;
     private float timeSinceSpinAttack = 3f;
@@ -80,22 +81,8 @@ public class ReadyJP : CodeRebirthEnemyAI
     public override void Start() 
     {
         base.Start();
-        foreach (var collider in DeathColliders)
-        {
-            collider.enabled = false;
-        }
         doorLocks = FindObjectsOfType<DoorLock>().ToList();
         JPRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 223);
-        StartCoroutine(CheckState());
-    }
-
-    private IEnumerator CheckState()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(5f);
-            Plugin.Logger.LogInfo(currentBehaviourStateIndex.ToString());
-        }
     }
 
     public override void Update()
@@ -167,7 +154,7 @@ public class ReadyJP : CodeRebirthEnemyAI
         // trigger apparatus stuff.
         StartSearch(transform.position);
         SwitchToBehaviourServerRpc((int)State.Walking);
-        LungPropPrefab.SetActive(true);
+        HideOrUnhideHeldLungPropServerRpc(false);
         creatureAnimator.SetFloat("HasAppy", 1);
         targetLungProp = null;
         agent.speed = SPRINTING_SPEED;
@@ -185,7 +172,6 @@ public class ReadyJP : CodeRebirthEnemyAI
 
     private void PerformRandomIdleAction(RandomActions randomAction)
     {
-        Plugin.ExtendedLogging($"Performing random idle action: {randomAction}");
         float previousSpeed = agent.speed;
         if (randomAction != RandomActions.WalkDialogue) agent.speed = 0f;
         if (holdingLungProp && randomAction != RandomActions.WalkDialogue) HideOrUnhideHeldLungPropServerRpc(true);
@@ -222,7 +208,7 @@ public class ReadyJP : CodeRebirthEnemyAI
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void SetTargetApparatusStatusServerRpc(bool value)
     {
         SetTargetApparatusStatusClientRpc(value);
@@ -300,13 +286,15 @@ public class ReadyJP : CodeRebirthEnemyAI
         creatureVoice.PlayOneShot(RandomDialogueSounds[JPRandom.NextInt(0, RandomDialogueSounds.Count - 1)]);
     }
 
-    private IEnumerator DelayGoingBackToPreviousState(float delay, float speed) // todo: if a player is close and they're holding the apparatus, say "please" soundclip
+    private IEnumerator DelayGoingBackToPreviousState(float delay, float speed)
     {
         yield return new WaitForSeconds(delay);
         agent.speed = speed;
         creatureAnimator.SetBool("AdmiringSelf", false);
         if (holdingLungProp) HideOrUnhideHeldLungPropServerRpc(false);
         SwitchToBehaviourServerRpc(previousBehaviourStateIndex);
+        agent.speed += afterSpeed;
+        afterSpeed = 0;
         delayRoutine = null;
     }
 
@@ -356,7 +344,7 @@ public class ReadyJP : CodeRebirthEnemyAI
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
                 if (player == null || player.isInHangarShipRoom || player.isPlayerDead || !player.isPlayerControlled) continue;
-                if (Vector3.Distance(transform.position, player.transform.position) <= 20)
+                if (Vector3.Distance(transform.position, player.transform.position) <= 10)
                 {
                     SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
                     StopSearch(currentSearch);
@@ -382,7 +370,7 @@ public class ReadyJP : CodeRebirthEnemyAI
                         {
                             if (begTimer <= 0)
                             {
-                                begTimer = 3f;
+                                begTimer = 5f;
                                 PlaySpecificSoundServerRpc(9);
                             }
                         }                        
@@ -399,15 +387,15 @@ public class ReadyJP : CodeRebirthEnemyAI
             SetDestinationToPosition(targetPlayer.transform.position);
         }
 
-        if ((timeSinceSpinAttack >= (MeleeAnimation.length+3f)) && holdingLungProp && targetPlayer != null)
+        if ((timeSinceSpinAttack >= (MeleeAnimation.length+1f)) && holdingLungProp && targetPlayer != null)
         {
-            if (Vector3.Distance(transform.position, targetPlayer.transform.position) <= 3f)
+            if (Vector3.Distance(transform.position, targetPlayer.transform.position) <= 3.2f)
             {
                 timeSinceSpinAttack = 0;
                 networkAnimator.SetTrigger("DoMelee");
                 PlaySpecificSoundServerRpc(8);
             }
-            if (Vector3.Distance(transform.position, targetPlayer.transform.position) > 30f)
+            if (Vector3.Distance(transform.position, targetPlayer.transform.position) > 15f)
             {
                 StartSearch(this.transform.position);
                 SwitchToBehaviourServerRpc((int)State.Walking);
@@ -424,29 +412,19 @@ public class ReadyJP : CodeRebirthEnemyAI
         {
             enemyHP -= force;
             if (delayRoutine == null) agent.speed += 0.5f;
-            // todo: add the number to a list which adds after the delayroutine ends.
-            Plugin.Logger.LogInfo($"EnemyHP: {enemyHP}");
+            else afterSpeed += 0.25f;
         }
         if (enemyHP <= 0 && !isEnemyDead && IsOwner) {
             KillEnemyOnOwnerClient();
-            Plugin.Logger.LogInfo("KillEnemyOnOwnerClient");
-            // todo, trigger stuff that would start death animation.
         }
     }
 
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
-        Plugin.Logger.LogInfo("KillEnemy");
         StopAllCoroutines();
-        foreach (var collider in RegularColliders)
-        {
-            collider.enabled = false;
-        }
-        foreach (var collider in DeathColliders)
-        {
-            collider.enabled = true;
-        }
+        Collisions.SetActive(false);
+        DeathColliders.SetActive(true);
         SwitchToBehaviourStateOnLocalClient((int)State.Death);
         agent.speed = 0f;
         if (IsServer)
@@ -457,7 +435,6 @@ public class ReadyJP : CodeRebirthEnemyAI
             creatureAnimator.SetFloat("HasAppy", 0);
             int randomDeathNumber = JPRandom.NextInt(1,2);
             string deathNumber = randomDeathNumber.ToString();
-            Plugin.Logger.LogInfo("DoDeath" + deathNumber);
             networkAnimator.SetTrigger("DoDeath" + deathNumber);
 
             if (randomDeathNumber == 1)
@@ -471,7 +448,7 @@ public class ReadyJP : CodeRebirthEnemyAI
 
             if (targetLungProp == null) 
             {
-                NetworkObjectReference lungPropRef = CodeRebirthUtils.Instance.SpawnScrap(StartOfRound.Instance.allItemsList.itemsList.Where(x => x.itemName == "Apparatus").First(), RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(this.transform.position, 4, default, JPRandom), false, true, 200);
+                NetworkObjectReference lungPropRef = CodeRebirthUtils.Instance.SpawnScrap(StartOfRound.Instance.allItemsList.itemsList.Where(x => x.itemName == "Apparatus").First(), RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(this.transform.position, 4, default, JPRandom), false, true, 100);
             }
         }
         if (holdingLungProp)
