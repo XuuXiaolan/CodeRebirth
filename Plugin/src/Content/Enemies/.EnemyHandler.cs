@@ -125,7 +125,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
 
         if (true) {
             ReadyJP = new ReadyJPAssets("readyjpassets");
-            RegisterEnemyWithConfig("All:500", ReadyJP.ReadyJPEnemyType, ReadyJP.ReadyJPTerminalNode, ReadyJP.ReadyJPTerminalKeyword, 3, 1);
+            RegisterEnemyWithConfig("All:0", ReadyJP.ReadyJPEnemyType, ReadyJP.ReadyJPTerminalNode, ReadyJP.ReadyJPTerminalKeyword, 3, 1);
         }
 
         /*if (false) {

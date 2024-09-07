@@ -31,6 +31,7 @@ public class ReadyJP : CodeRebirthEnemyAI
     public GameObject LungPropPrefab = null!;
     public GameObject Collisions = null!;
     public GameObject DeathColliders = null!;
+    public AudioClip[] FootstepSounds = null!;
 
     [NonSerialized] public bool meleeAttack = false;
     private LungProp? targetLungProp;
@@ -82,6 +83,11 @@ public class ReadyJP : CodeRebirthEnemyAI
     {
         base.Start();
         doorLocks = FindObjectsOfType<DoorLock>().ToList();
+        foreach (DoorLock doorLock in doorLocks)
+        {
+            if (doorLock.isLocked) doorLock.UnlockDoor();
+        }
+        
         JPRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 223);
     }
 
@@ -127,17 +133,10 @@ public class ReadyJP : CodeRebirthEnemyAI
 
         if (targetLungProp == null || holdingLungProp) return;
 
-        if (Vector3.Distance(targetLungProp.transform.position, transform.position) <= 1f && grabLungPropRoutine == null)
+        if (Vector3.Distance(targetLungProp.transform.position, transform.position) <= 2.5f && grabLungPropRoutine == null)
         {
             SetTargetApparatusStatusServerRpc(false);
             grabLungPropRoutine = StartCoroutine(GrabLungAnimation());
-        }
-        if (Vector3.Distance(targetLungProp.transform.position, transform.position) > 3f && grabLungPropRoutine != null)
-        {
-            StopCoroutine(grabLungPropRoutine);
-            grabLungPropRoutine = null;
-            SetTargetApparatusStatusServerRpc(true);
-            holdingLungProp = false;
         }
     }
 
@@ -165,9 +164,13 @@ public class ReadyJP : CodeRebirthEnemyAI
     private IEnumerator DoOpenDoor(DoorLock doorLock)
     {
         networkAnimator.SetTrigger("DoDoorKick");
+        float previousSpeed = agent.speed;
+        agent.speed = 0f;
         yield return new WaitForSeconds(SmashDoorAnimation.length);
+        agent.speed = previousSpeed;
         if (doorLock.isLocked) doorLock.UnlockDoorServerRpc();
         doorLock.OpenDoorAsEnemyServerRpc();
+        doorLockRoutine = null;
     }
 
     private void PerformRandomIdleAction(RandomActions randomAction)
@@ -358,7 +361,7 @@ public class ReadyJP : CodeRebirthEnemyAI
     {
         if (targetLungProp != null)
         {
-            SetDestinationToPosition(targetLungProp.transform.position);
+            agent.SetDestination(targetLungProp.transform.position);
             if (targetLungProp.isHeld)
             {
                 foreach (var player in StartOfRound.Instance.allPlayerScripts)
@@ -502,6 +505,16 @@ public class ReadyJP : CodeRebirthEnemyAI
         {
             SetTargetLungPropServerRpc();
         }
+        else if (targetLungProp != null)
+        {
+            SetDestinationToPosition(targetLungProp.transform.position);
+            SwitchToBehaviourStateOnLocalClient((int)State.SearchingForApparatus);
+        }
         agent.speed = WALKING_SPEED;
+    }
+
+    public void TriggerFootstepSoundAnimEvent()
+    {
+        creatureSFX.PlayOneShot(FootstepSounds[JPRandom.NextInt(0, FootstepSounds.Length-1)]);
     }
 }
