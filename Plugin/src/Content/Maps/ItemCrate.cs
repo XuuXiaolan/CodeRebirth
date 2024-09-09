@@ -144,11 +144,14 @@ public class ItemCrate : CRHittable {
 						break;
                     }
 			}
-			
+			if (item == null || item.spawnPrefab == null) continue;
 			GameObject spawned = Instantiate(item.spawnPrefab, transform.position + transform.up*0.6f + transform.right*random.NextFloat(-0.2f, 0.2f) + transform.forward*random.NextFloat(-0.2f, 0.2f), Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
 			GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
-			
+			if (grabbableObject == null) {
+				Destroy(spawned);
+				continue;
+			}
 			grabbableObject.SetScrapValue((int)(random.Next(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier * (crateType == CrateType.Metal ? 1.2f : 1f)));
 			grabbableObject.NetworkObject.Spawn();
 			CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
@@ -182,7 +185,7 @@ public class ItemCrate : CRHittable {
 
 	[ServerRpc(RequireOwnership = false)]
 	void DamageCrateServerRPC(int damage) {
-		health.Value -= damage;
+		if (crateType == CrateType.Metal) health.Value -= damage;
 
 		if (health.Value <= 0) {
 			OpenCrate();

@@ -56,6 +56,7 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
     private Vector3 lastPosition;
     private float velocity;
     private float deltaTime = 0.05f; // Adjust this value as necessary for your update rate
+    [NonSerialized] public bool pushingAway = false;
 
     public enum State
     {
@@ -137,9 +138,21 @@ public class PjonkGooseAI : CodeRebirthEnemyAI
         this.openDoorSpeedMultiplier = 0.5f;
         if (!IsHost) return;
         lastPosition = transform.position;
+        StartCoroutine(PushTimer());
         StartCoroutine(CalculateVelocity());
         ControlStateSpeedAnimationServerRpc(0f, (int)State.Spawning, false, false, false, -1, true, false);
         StartCoroutine(SpawnTimer()); // 559 state is not transferring when client hits on clients end, constantly clearing target because the egg is not held but it should keep target because recently damaged
+    }
+
+    private IEnumerator PushTimer()
+    {
+        while (true)
+        {
+            pushingAway = true;
+            yield return new WaitForSeconds(0.5f);
+            pushingAway = false;
+            yield return new WaitForSeconds(3f);
+        }
     }
 
     private IEnumerator CalculateVelocity()

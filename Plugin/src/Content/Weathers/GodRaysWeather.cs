@@ -131,7 +131,7 @@ public class GodRayManager : MonoBehaviour
             light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
             light.shapeRadius = 0;
             light.luxAtDistance = (spotlightData.location - godRays[i].BottomPosition).magnitude;
-            light.SetIntensity(7000, LightUnit.Lux);
+            light.SetIntensity(1000, LightUnit.Lux);
 
             godRaySpotlights[i].gameObject.transform.rotation = spotlightData.rotation;
             godRaySpotlights[i].gameObject.transform.position = spotlightData.location;
@@ -197,7 +197,7 @@ public class GodRayManager : MonoBehaviour
         light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
         light.shapeRadius = 0;
         light.luxAtDistance = (spotlightData.location - ray.BottomPosition).magnitude;
-        light.SetIntensity(7000, LightUnit.Lux);
+        light.SetIntensity(1000, LightUnit.Lux);
 
         light.color = spotlightData.colour;
         lightGameObject.transform.SetParent(godRayParent.transform);

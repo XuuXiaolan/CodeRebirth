@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3561445042
+CRC: 2215148361
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ec61e28bf9260d078cf16820f51801a7
+    Hash: 69223d37ece08fc602a67ad650497eec
   TypeTreeHash:
     serializedVersion: 2
-    Hash: e5fff6ba54e5300b0cff8d5f305dadb5
+    Hash: e307798da020b509bee57daaf7375bb1
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: ec61e28bf9260d078cf16820f51801a7
+    Hash: 69223d37ece08fc602a67ad650497eec
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -18,24 +18,44 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 33
   Script: {instanceID: 0}
 - Class: 43
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
 - Class: 74
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
   Script: {instanceID: 0}
 - Class: 91
   Script: {instanceID: 0}
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 11500000, guid: df8a8ec1fb4e08d01a3bd16540b76614, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
 - Class: 114
+  Script: {fileID: -2032878204, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+- Class: 114
+  Script: {fileID: -1375527670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+- Class: 114
   Script: {fileID: -1614751389, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b2f79a42f90ce4aa636bf27289ebbb62, type: 3}
 - Class: 114
   Script: {fileID: -1213685003, guid: c12905fc7e8511347839a69634f3e12d, type: 3}
 - Class: 115
@@ -46,28 +66,45 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
+- Class: 241
+  Script: {instanceID: 0}
+- Class: 243
+  Script: {instanceID: 0}
+- Class: 245
+  Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: InteractEvent
+- AssemblyName: Assembly-CSharp
+  ClassName: InteractEventFloat
 - AssemblyName: Assembly-CSharp
   ClassName: UnlockableItem
 - AssemblyName: Unity.Netcode.Components
   ClassName: Unity.Netcode.Components.NetworkAnimator/TransitionStateinfo
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
 Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_StopFly.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_DroneMain_Normal.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_DroneMain_BaseMap.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/ShockwaveDrone.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_ActivateInShip.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Charger.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_SmallParts_MaskMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_FanBladeSpin.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/SWDroneCharger.prefab
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_Attack.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/DroneMiddleBody.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Fans.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/sad-face-2691.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_DroneMiddleBody_Normal.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_StartFly.anim
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/SWDroneCharger.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_Dance.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_DreadedWalkCycle.anim
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_DroneMain_Emissive.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/ChargerTex.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_SmallParts_Normal.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/fan.png
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_DroneMain_Emissive.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_IdleRef.anim
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_DroneMiddleBody_BaseMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_DeactivateInShip.anim
@@ -75,9 +112,9 @@ Assets:
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/DroneBase.fbx
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/DroneMain.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/ShockwaveBotUnlockable.asset
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/DroneBase.prefab
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/fan.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_DroneMiddleBody_MaskMap.png
-- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/SmallParts.mat
+- Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/SmallParts.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Textures/DroneBase_DroneMain_MaskMap.png
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Materials/Dot.mat
 - Assets/LethalCompany/Mods/plugins/CodeRebirth/Unlockables/ShockwaveBot/Animations/Armature_Petting.anim

@@ -16,7 +16,8 @@
 - Improved meteor shower overhead visuals a bit.
 - Fixed Snailcat not being rideable.
 - Fixed Cutiefly not being rideable.
-- New icon for coderebirth!! thanks to []()
+- New icon for coderebirth!! thanks to [Koda](https://www.youtube.com/@Sp71ng).
+- Fixed wooden crates having health similar to metal crates.
 
 ## v0.5.2
 

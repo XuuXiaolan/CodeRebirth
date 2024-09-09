@@ -46,7 +46,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler> {
 
 	private void RegisterSeamineTink() {
 		SeamineTink = new SeamineTinkAssets("seaminetinkassets");
-		LethalLib.Modules.Unlockables.RegisterUnlockable(SeamineTink.SeamineTinkUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.Decor);
+		LethalLib.Modules.Unlockables.RegisterUnlockable(SeamineTink.SeamineTinkUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.ShipUpgrade);
 	}
 
 	private void RegisterPlantPot() {
