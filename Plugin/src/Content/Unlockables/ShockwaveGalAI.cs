@@ -27,6 +27,7 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
 
     private Dictionary<int, GrabbableObject?> itemsHeldDict = new();
     private bool flying = false;
+    private float adjustSpeedTimer = 0f;
     private bool isInside = false;
     private readonly int maxItemsToHold = 2;
     private State galState = State.Inactive;
@@ -53,6 +54,7 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
 
     public void Start() {
         Plugin.Logger.LogInfo("Hi creator");
+        Agent.enabled = galState != State.Inactive;
         StartCoroutine(StartUpDelay());
         int count = 0;
         foreach (Transform transform in itemsHeldTransforms)
@@ -107,12 +109,14 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
     }
 
     public void Update() {
+        Agent.enabled = galState != State.Inactive;
         if (galState == State.Inactive) return;
         HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         }
+        adjustSpeedTimer += Time.deltaTime;
         if (!IsHost) return;
         
         HostSideUpdate();
@@ -150,6 +154,15 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
 
     private void DoActive()
     {
+        if (ownerPlayer == null)
+        {
+            // do something like turning it inactive.
+            return;
+        }
+        if (Vector3.Distance(this.transform.position, ownerPlayer.transform.position) > 3f)
+        {
+            HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye, 3f);
+        }
     }
 
     private void DoFollowingPlayer()
@@ -164,11 +177,16 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
             GoThroughEntrance();
             return;
         }
-        Agent.SetDestination(ownerPlayer.transform.position);
         if (Agent.pathStatus == NavMeshPathStatus.PathInvalid || Agent.pathStatus == NavMeshPathStatus.PathPartial)
         {
             // figure out a partial path or something, then tp maybe??
         }
+        if (adjustSpeedTimer >= 2)
+        {
+            AdjustSpeedOnDistance(ownerPlayer);
+            adjustSpeedTimer = 0;
+        }
+        Agent.SetDestination(ownerPlayer.transform.position);
     }
 
     private void DoDeliveringItems() // todo: move where the charger is at a position closer to center of ship for navmesh reasons.
@@ -208,6 +226,31 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
 
     private void DoAttackMode()
     {
+    }
+
+    private void AdjustSpeedOnDistance(PlayerControllerB ownerPlayer)
+    {
+        float distanceFromOwner = Vector3.Distance(ownerPlayer.transform.position, this.transform.position);
+
+        // Define min and max distance thresholds
+        float minDistance = 0f;
+        float maxDistance = 40f;
+
+        // Define min and max speed values
+        float minSpeed = 1f; // Speed when closest
+        float maxSpeed = 25f; // Speed when farthest
+
+        // Clamp the distance within the range to avoid negative values or distances greater than maxDistance
+        float clampedDistance = Mathf.Clamp(distanceFromOwner, minDistance, maxDistance);
+
+        // Normalize the distance to a 0-1 range (minDistance to maxDistance maps to 0 to 1)
+        float normalizedDistance = (clampedDistance - minDistance) / (maxDistance - minDistance);
+
+        // Linearly interpolate the speed between minSpeed and maxSpeed based on normalized distance
+        float currentSpeed = Mathf.Lerp(minSpeed, maxSpeed, normalizedDistance);
+        Agent.speed = currentSpeed;
+        // Apply the calculated speed (you would replace this with your actual movement logic)
+        Plugin.ExtendedLogging($"Speed based on distance: {currentSpeed}");
     }
 
     [ServerRpc(RequireOwnership = false)]
