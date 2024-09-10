@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using System.Diagnostics;
 using Random = System.Random;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -293,5 +294,11 @@ static class RoundManagerPatch {
 		timer.Stop();
 
 		Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
+
+		foreach (GameObject node in RoundManager.Instance.insideAINodes)
+		{
+			if (node == null) continue;
+			node.AddComponent<DetectLightInSurroundings>();
+		}
 	}
 }
