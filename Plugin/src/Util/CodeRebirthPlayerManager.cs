@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.Content;
+using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;

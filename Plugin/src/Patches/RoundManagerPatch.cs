@@ -76,9 +76,8 @@ static class RoundManagerPatch {
 	}
 
 	static bool TryGetValidFloraSpawnPoint(Random random, out RaycastHit hit) {
-		Vector3 basePosition = GetRandomPointNearPointsOfInterest(random);
-		Vector3 offset = new Vector3(random.NextFloat(-5, 5), 0, random.NextFloat(-5, 5));
-		Vector3 randomPosition = basePosition + offset;
+		Vector3 basePosition = GetRandomPointNearPointsOfInterest(random, 20);
+		Vector3 randomPosition = basePosition;
 
 		hit = default;
 
@@ -87,11 +86,9 @@ static class RoundManagerPatch {
 		
 		
 		Vector3 navMeshPosition = navMeshHit.position;
-		Vector3 vector = navMeshPosition + (Vector3.up * 2);
-
-		if (!Physics.Raycast(vector, Vector3.down, out hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) 
+		Vector3 vector = navMeshPosition + (Vector3.up * 10);
+		if (!Physics.Raycast(vector, Vector3.down, out hit, 150, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) 
 			return false;
-
 		return true;
 	}
 
@@ -121,15 +118,28 @@ static class RoundManagerPatch {
 		return spawnableFlora.GroupBy(flora => flora.floraTag).Where(it => validTags.TryGetValue(it.Key, out bool isLevelValid) && isLevelValid);
 	}
 
-	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random) {
+	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random, float offsetRange = 20f) {
 		// Get all points of interest
-		Vector3[] pointsOfInterest = RoundManager.Instance.outsideAINodes.Select(node => node.transform.position).ToArray();
+		Vector3[] pointsOfInterest = RoundManager.Instance.outsideAINodes
+									.Select(node => node.transform.position)
+									.ToArray();
 		
+		// Check if there are any points of interest
+		if (pointsOfInterest.Length == 0) {
+			Plugin.Logger.LogWarning("No points of interest found.");
+			return Vector3.zero; // Return default if no points exist
+		}
+
 		// Choose a random point of interest
-		Vector3 chosenPoint = pointsOfInterest[random.NextInt(0, pointsOfInterest.Length-1)];
+		Vector3 chosenPoint = pointsOfInterest[random.Next(0, pointsOfInterest.Length)];
+
+		// Generate a random offset within the specified range
+		Vector3 offset = new Vector3(
+			random.NextFloat(-offsetRange, offsetRange),
+			random.NextFloat(0, offsetRange), 
+			random.NextFloat(-offsetRange, offsetRange)
+		);
 		
-		// Calculate an offset to avoid too much bunching up
-		Vector3 offset = new Vector3(random.NextFloat(-20, 20), 0, random.NextFloat(-20, 20));
 		return chosenPoint + offset;
 	}
 

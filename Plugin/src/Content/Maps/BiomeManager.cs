@@ -3,7 +3,6 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using System.Collections;
-using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -69,15 +68,15 @@ public class BiomeManager : NetworkBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(5f);
             PerformSphereCast();
         }
     }
 
     private void PerformSphereCast()
     {
-        Stopwatch timer = new Stopwatch();
-        timer.Start();
+        //Stopwatch timer = new Stopwatch();
+        //timer.Start();
         // Combine the foliage layer with the terrain layer to perform sphere cast on both
         int combinedLayerMask = (1 << foliageLayer) | (1 << terrainLayer);
         
@@ -102,12 +101,8 @@ public class BiomeManager : NetworkBehaviour
             }
         }
 
-        timer.Stop();
-        Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
-    }
-
-    private bool BasicIsFoliageOrTree(Collider collider) {
-        return (collider.CompareTag("Wood") && collider.gameObject.layer == terrainLayer && !collider.isTrigger) || (collider.gameObject.layer == foliageLayer);
+        //timer.Stop();
+        //Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
     }
 
     private bool IsFoliage(Collider collider)

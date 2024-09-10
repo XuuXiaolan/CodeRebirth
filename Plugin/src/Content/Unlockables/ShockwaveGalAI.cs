@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -13,7 +14,6 @@ namespace CodeRebirth.src.Content.Unlockables;
 public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is inexpensive, but it spawns the shockwave gal automatically.
 {
     public ShockwaveFaceController RobotFaceController = null!;
-    [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
     public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
     public Renderer FaceRenderer = null!;
     public Animator Animator = null!;
@@ -22,16 +22,17 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
     public InteractTrigger HeadPatTrigger = null!;
     public List<InteractTrigger> GiveItemTrigger = new();
     public List<Transform> itemsHeldTransforms = new();
+    [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
+    [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
 
+    private Dictionary<int, GrabbableObject?> itemsHeldDict = new();
     private bool flying = false;
     private bool isInside = false;
-    private int maxItemsToHold = 2;
-    private int nextEmptyHeldSlot = 0;
-    [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
+    private readonly int maxItemsToHold = 2;
     private State galState = State.Inactive;
     private PlayerControllerB? ownerPlayer;
     private bool holdingItems = false;
-    private List<GrabbableObject> itemsHeld = new();
+    private int ItemCount => itemsHeldDict.Where(x => x.Value != null).Count();
 
     public enum State {
         Inactive = 0,
@@ -53,6 +54,12 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
     public void Start() {
         Plugin.Logger.LogInfo("Hi creator");
         StartCoroutine(StartUpDelay());
+        int count = 0;
+        foreach (Transform transform in itemsHeldTransforms)
+        {
+            itemsHeldDict.Add(count, null);
+            count++;
+        }
     }
 
     private IEnumerator StartUpDelay() {
@@ -71,6 +78,7 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
             HandleStateAnimationSpeedChanges(State.Active, Emotion.OpenEye, 0f);
         }
     }
@@ -81,6 +89,7 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
             HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye, 0f);
         }
     }
@@ -99,10 +108,10 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
 
     public void Update() {
         if (galState == State.Inactive) return;
-        HeadPatTrigger.enabled = (galState != State.AttackMode && galState != State.Inactive);
+        HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.enabled = (galState != State.AttackMode && galState != State.Inactive);
+            trigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         }
         if (!IsHost) return;
         
@@ -181,13 +190,11 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
             Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
             if (Agent.pathStatus == NavMeshPathStatus.PathComplete)
             {
-                for (int i = 0; i < itemsHeld.Count; i++) {
-                    if (itemsHeld[i] == null) continue;
+                for (int i = 0; i < ItemCount; i++) {
                     HandleDroppingItemServerRpc(i);
-                    nextEmptyHeldSlot--;
                 }
                 holdingItems = false;
-            }            
+            }
         }
         else
         {
@@ -310,15 +317,11 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
     private void HandleStateInactiveChange()
     {
         flying = false;
-        holdingItems = false;
 
-        foreach (GrabbableObject item in itemsHeld) {
-            if (item == null) continue;
-            HandleDroppingItem(item);
-            nextEmptyHeldSlot--;
+        for (int i = 0; i < ItemCount; i++) {
+            HandleDroppingItem(itemsHeldDict[i]);
         }
 
-        itemsHeld.Clear();
         ownerPlayer = null;
         if (galState == State.AttackMode) RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.Inactive;
@@ -381,13 +384,13 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
     private void GrabItemInteract(PlayerControllerB player)
     {
         if (player != ownerPlayer || player.currentlyHeldObjectServer == null) return;
-        if (itemsHeld.Count >= maxItemsToHold)
+        if (ItemCount >= maxItemsToHold)
         {
             HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye, 0f);
         }
         else
         {
-            StartCoroutine(player.waitToEndOfFrameToDiscard());
+            StartCoroutine(player.waitToEndOfFrameToDiscard()); // todo: put the serverrpc AFTER THE DAMN DISCARD
             GrabItemOwnerHoldingServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));            
         }
     }
@@ -402,7 +405,7 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
     private void GrabItemOwnerHoldingClientRpc(int indexOfOwner)
     {
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[indexOfOwner];
-        HandleGrabbingItem(player.currentlyHeldObjectServer, itemsHeldTransforms[nextEmptyHeldSlot]);
+        HandleGrabbingItem(player.currentlyHeldObjectServer, itemsHeldTransforms[ItemCount]);
     }
 
     private void HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
@@ -413,9 +416,8 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
         item.hasHitGround = false;
         item.parentObject = heldTransform;
         item.EnablePhysics(false);
-        itemsHeld.Add(item);
+        itemsHeldDict[ItemCount] = item;
         HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
-        nextEmptyHeldSlot++;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -427,18 +429,21 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
     [ClientRpc]
     private void HandleDroppingItemClientRpc(int itemIndex)
     {
-        HandleDroppingItem(itemsHeld[itemIndex]);
+        HandleDroppingItem(itemsHeldDict[itemIndex]);
+        itemsHeldDict[itemIndex] = null;
     }
 
-    private void HandleDroppingItem(GrabbableObject item)
+    private void HandleDroppingItem(GrabbableObject? item)
     {
+        if (item == null)
+        {
+            Plugin.Logger.LogError("Item was null in HandleDroppingItem");
+            return;
+        }
         item.parentObject = null;
         if (IsServer) item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         item.EnablePhysics(true);
         item.fallTime = 0f;
-        Plugin.ExtendedLogging("Dropping Item");
-        Plugin.ExtendedLogging($"Item Position: {item.transform.position}");
-        Plugin.ExtendedLogging($"Item Parent: {item.transform.parent}");
         item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
         item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
         item.floorYRot = -1;
@@ -446,7 +451,7 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
         item.grabbable = true;
         item.isHeldByEnemy = false;
         item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
-        itemsHeld.Remove(item);
+        if (ItemCount == 0) holdingItems = false;
     }
 
     public void GoThroughEntrance() {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
 
-namespace CodeRebirth.Content;
+namespace CodeRebirth.src.Content;
 
 // PER HOST SAVE, VALUES ARE SYNCED FROM HOST, ONLY EDITABLE ON HOST.
 class CodeRebirthSave(string fileName) : SaveableData(fileName) {

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.Content;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;

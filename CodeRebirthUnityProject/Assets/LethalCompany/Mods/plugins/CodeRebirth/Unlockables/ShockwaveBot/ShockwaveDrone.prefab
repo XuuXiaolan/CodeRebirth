@@ -1095,7 +1095,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 0
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1118,7 +1118,7 @@ MonoBehaviour:
   TransitionStateInfoList:
   - IsCrossFadeExit: 0
     Layer: 1
-    OriginatingState: -620665514
+    OriginatingState: -1701686356
     DestinationState: -1758350282
     TransitionDuration: 0.43031627
     TriggerNameHash: -1090396576
@@ -1148,8 +1148,8 @@ MonoBehaviour:
   - {fileID: 8850445655996800828}
   itemsHeldTransforms:
   - {fileID: 7188649066956542065}
-  - {fileID: 6105249853117458165}
   - {fileID: 4674169137735784731}
+  - {fileID: 6105249853117458165}
   - {fileID: 2112926492838764476}
 --- !u!114 &3522212151486415226
 MonoBehaviour:

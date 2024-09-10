@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Random = System.Random;
 using System.Collections.Generic;
-using CodeRebirth.Content;
+using CodeRebirth.src.Content;
 using CodeRebirth.src.Util.Extensions;
 using Mono.Cecil.Cil;
 using Newtonsoft.Json;
