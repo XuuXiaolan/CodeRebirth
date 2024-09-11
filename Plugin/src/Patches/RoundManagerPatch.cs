@@ -256,7 +256,7 @@ static class RoundManagerPatch {
 		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
 		{
 			Plugin.ExtendedLogging("Spawning Devil deal objects");
-			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.SpawnDevilPropsServerRpc();
+			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.SpawnDevilPropsServerRpc(); // todo: for some reason there's an error
 		}
 	}
 

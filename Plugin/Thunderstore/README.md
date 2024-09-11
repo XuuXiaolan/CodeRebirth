@@ -206,3 +206,8 @@ If you're interested in helping with the development of the mod, feel free to re
 **Misc/Organisation:**
 
 - Smxrez
+
+## Credits - Misc Models
+
+"Baby Tomato Plant Scan (Low Poly)" (https://skfb.ly/oHvNF) by Marcos Silva is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+"Tomato Plant" (https://skfb.ly/69J7v) by zvanstone is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).

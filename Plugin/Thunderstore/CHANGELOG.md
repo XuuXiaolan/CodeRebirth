@@ -18,6 +18,8 @@
 - Fixed Cutiefly not being rideable.
 - New icon for coderebirth!! thanks to [Koda](https://www.youtube.com/@Sp71ng).
 - Fixed wooden crates having health similar to metal crates.
+- Fixed scan nodes with wooden and metal crates.
+- Fixed metal crates opening randomly by themselves.
 
 ## v0.5.2
 

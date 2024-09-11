@@ -89,7 +89,6 @@ GameObject:
   - component: {fileID: 1939688310041400566}
   - component: {fileID: 2986503539148383844}
   - component: {fileID: 1724521645361981057}
-  - component: {fileID: 2803385204816833290}
   m_Layer: 6
   m_Name: Money
   m_TagString: PhysicsProp
@@ -322,6 +321,7 @@ MonoBehaviour:
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
   mainObjectRenderer: {fileID: 7672261393319638666}
+  isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}
@@ -349,15 +349,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.04, y: 0.03, z: 0.05}
   m_Center: {x: 0, y: 0.013, z: 0}
---- !u!114 &2803385204816833290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8594509980011735093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 994651365, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

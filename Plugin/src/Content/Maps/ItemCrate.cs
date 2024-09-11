@@ -71,7 +71,7 @@ public class ItemCrate : CRHittable {
 			digProgress.Value = random.NextFloat(0.01f, 0.3f);
 	}
 	
-	void UpdateDigPosition(float old, float newValue) {
+	private void UpdateDigPosition(float old, float newValue) {
 		if(IsOwner)
 			transform.position = originalPosition + (transform.up * newValue * .5f);
 
@@ -179,13 +179,13 @@ public class ItemCrate : CRHittable {
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	void SetNewDigProgressServerRPC(float newDigProgress) {
+	private void SetNewDigProgressServerRPC(float newDigProgress) {
 		digProgress.Value = Mathf.Clamp01(newDigProgress);
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	void DamageCrateServerRPC(int damage) {
-		if (crateType == CrateType.Metal) health.Value -= damage;
+	private void DamageCrateServerRPC(int damage) {
+		health.Value -= damage;
 
 		if (health.Value <= 0) {
 			OpenCrate();
@@ -193,7 +193,7 @@ public class ItemCrate : CRHittable {
 	}
 	
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1) {
-		if (opened) return false;
+		if (opened || playerWhoHit == null) return false;
 		if (playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer == null && Plugin.ModConfig.ConfigShovelCratesOnly.Value) return false; 
 		if (digProgress.Value < 1) {
 			float progressChange = random.NextFloat(0.15f, 0.25f);
@@ -202,7 +202,7 @@ public class ItemCrate : CRHittable {
 			} else {
 				SetNewDigProgressServerRPC(digProgress.Value + progressChange);
 			}
-		} else {
+		} else if (crateType == CrateType.Metal) {
 			DamageCrateServerRPC(1);
 		}
 		return true;

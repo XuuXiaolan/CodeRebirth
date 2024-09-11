@@ -77,7 +77,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
             SunAnimatorBool = "",
         };
 
-        GodRaysWeather = new Weather("Red Sun", godRayEffect) {
+        GodRaysWeather = new Weather("When Day Breaks", godRayEffect) {
             DefaultWeight = 50,
             DefaultLevelFilters = ["Gordion"],
             LevelFilteringOption = FilteringOption.Exclude,

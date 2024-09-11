@@ -143,6 +143,7 @@ public class GodRayManager : MonoBehaviour
 
     private void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera)
     {
+        if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) return;
         transform.position = camera.transform.position;
         if (scale != camera.farClipPlane*2) 
         {

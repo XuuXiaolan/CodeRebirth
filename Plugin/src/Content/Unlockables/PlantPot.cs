@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -9,7 +11,7 @@ namespace CodeRebirth.src.Content.Unlockables;
 public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 {
     public InteractTrigger trigger = null!;
-    public Transform ItemSpawnSpot = null!;
+    public Transform[] ItemSpawnSpots = null!;
     public GameObject[] enableList = null!;
     public enum Stage {
         Zero = 0,
@@ -19,9 +21,9 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     }
 
     public enum FruitType {
-        None = -1,
-        Tomato = 0,
-        Golden_Tomato = 1,
+        None = 0,
+        Tomato = 1,
+        Golden_Tomato = 2,
     }
 
     public FruitType fruitType = FruitType.None;
@@ -30,35 +32,43 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     public void Start()
     {
         random = new System.Random(StartOfRound.Instance.randomMapSeed);
-        for (int i = 1; i <= enableList.Length; i++) {
-            enableList[i].SetActive(i <= (int)stage);
-        }
+        if (stage != Stage.Zero) enableList[(int)stage].SetActive(true);
         if (stage == Stage.Zero) 
         {
             trigger.onInteract.AddListener(OnInteract);
         }
-        else
-        {
-            StartCoroutine(GrowthRoutine());
-        }
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartPlantGrowthServerRpc(NetworkObjectReference netObjRef)
+    {
+        StartCoroutine(GrowthRoutine());
+        IncreaseStageClientRpc();
+        SetupFruitTypeClientRpc(netObjRef);
+    }
+
+    [ClientRpc]
+    private void SetupFruitTypeClientRpc(NetworkObjectReference netObjRef)
+    {
+        WoodenSeed woodenSeed = ((GameObject)netObjRef).GetComponent<WoodenSeed>();
+        fruitType = woodenSeed.fruitType;
+        Plugin.ExtendedLogging($"Setting up fruit type {fruitType}");
+        woodenSeed.playerHeldBy.DespawnHeldObject();
     }
 
     private void OnInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
-        if (playerInteracting.currentlyHeldObjectServer.itemProperties.itemName == "Wooden Seed") {
-            playerInteracting.DespawnHeldObjectServerRpc();
-            trigger.onInteract.RemoveListener(OnInteract);
-            stage = Stage.One;
-            StartCoroutine(GrowthRoutine());
+        if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
+        if (playerInteracting.currentlyHeldObjectServer != null && playerInteracting.currentlyHeldObjectServer.itemProperties.itemName == "Wooden Seed") {
+            StartPlantGrowthServerRpc(new NetworkObjectReference(playerInteracting.currentlyHeldObjectServer.NetworkObject));
         }
     }
 
     private IEnumerator GrowthRoutine() 
-    
     {
         while (true) {
-            yield return new WaitForSeconds(random.NextFloat(100f, 200f) * (stage == Stage.Three ? 0.5f : 1f));
+            yield return new WaitForSeconds(random.NextFloat(10f, 20f) * (stage == Stage.Three ? 0.5f : 1f));
             if (stage < Stage.Three) {
                 IncreaseStageServerRpc();
             }
@@ -91,7 +101,9 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
                 break;
         }
         Plugin.samplePrefabs.TryGetValue(itemToSpawn, out Item item);
-        CodeRebirthUtils.Instance.SpawnScrap(item, ItemSpawnSpot.position, false, true, 0);
+        foreach (var itemSpawnSpot in ItemSpawnSpots) {
+            CodeRebirthUtils.Instance.SpawnScrap(item, itemSpawnSpot.position, false, true, 0);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -103,7 +115,11 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     [ClientRpc]
     private void IncreaseStageClientRpc()
     {
+        Plugin.ExtendedLogging($"Increasing stage from {(int)stage} to {(int)stage + 1}");
+        if (stage == Stage.Zero) trigger.onInteract.RemoveListener(OnInteract);
+        enableList[(int)stage].SetActive(false);
         stage++;
+        enableList[(int)stage].SetActive(true);
     }
 
     public override void OnNetworkDespawn() 
