@@ -41,7 +41,7 @@ public class WalletOld : GrabbableObject {
             // there was a decrease in scrap value.
             float amountToDecrease = (ownScrapValue - scrapValue)/ownScrapValue;
             float decreaseAmount = skinnedMeshRenderer.GetBlendShapeWeight(0)*amountToDecrease;
-            IncreaseBlendShapeWeightClientRpc(skinnedMeshRenderer.GetBlendShapeWeight(0) - decreaseAmount);
+            IncreaseBlendShapeWeightClientRpc(Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) - decreaseAmount, 0, 300));
         }
         ownScrapValue = scrapValue;
     }
