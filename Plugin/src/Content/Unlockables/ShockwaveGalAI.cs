@@ -27,7 +27,6 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
 
     private Dictionary<int, GrabbableObject?> itemsHeldDict = new();
     private bool flying = false;
-    private float adjustSpeedTimer = 0f;
     private bool isInside = false;
     private readonly int maxItemsToHold = 2;
     private State galState = State.Inactive;
@@ -116,7 +115,6 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
         {
             trigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         }
-        adjustSpeedTimer += Time.deltaTime;
         if (!IsHost) return;
         
         HostSideUpdate();
@@ -181,15 +179,13 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
         {
             // figure out a partial path or something, then tp maybe??
         }
-        if (adjustSpeedTimer >= 2)
-        {
-            AdjustSpeedOnDistance(ownerPlayer);
-            adjustSpeedTimer = 0;
-        }
+
+        AdjustSpeedOnDistanceOnTargetPosition();
+
         Agent.SetDestination(ownerPlayer.transform.position);
     }
 
-    private void DoDeliveringItems() // todo: move where the charger is at a position closer to center of ship for navmesh reasons.
+    private void DoDeliveringItems()
     {
         if (!holdingItems)
         {
@@ -228,17 +224,17 @@ public class ShockwaveGalAI : NetworkBehaviour //todo: buy the charger, which is
     {
     }
 
-    private void AdjustSpeedOnDistance(PlayerControllerB ownerPlayer)
+    private void AdjustSpeedOnDistanceOnTargetPosition()
     {
-        float distanceFromOwner = Vector3.Distance(ownerPlayer.transform.position, this.transform.position);
+        float distanceFromOwner = Agent.remainingDistance;
 
         // Define min and max distance thresholds
         float minDistance = 0f;
         float maxDistance = 40f;
 
         // Define min and max speed values
-        float minSpeed = 1f; // Speed when closest
-        float maxSpeed = 25f; // Speed when farthest
+        float minSpeed = 0f; // Speed when closest
+        float maxSpeed = 20f; // Speed when farthest
 
         // Clamp the distance within the range to avoid negative values or distances greater than maxDistance
         float clampedDistance = Mathf.Clamp(distanceFromOwner, minDistance, maxDistance);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
@@ -102,7 +101,8 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         }
         Plugin.samplePrefabs.TryGetValue(itemToSpawn, out Item item);
         foreach (var itemSpawnSpot in ItemSpawnSpots) {
-            CodeRebirthUtils.Instance.SpawnScrap(item, itemSpawnSpot.position, false, true, 0);
+            NetworkObjectReference spawnedItem = CodeRebirthUtils.Instance.SpawnScrap(item, itemSpawnSpot.position, false, true, 0);
+            ((GameObject)spawnedItem).GetComponent<Fruit>().plantPot = this;
         }
     }
 
