@@ -20,6 +20,7 @@
 - Fixed wooden crates having health similar to metal crates.
 - Fixed scan nodes with wooden and metal crates.
 - Fixed metal crates opening randomly by themselves.
+- Allowed wallets to get smaller if their value somehow decreases.
 
 ## v0.5.2
 

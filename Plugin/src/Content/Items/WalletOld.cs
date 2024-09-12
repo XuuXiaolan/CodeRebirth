@@ -6,6 +6,7 @@ namespace CodeRebirth.src.Content.Items;
 public class WalletOld : GrabbableObject {
     private RaycastHit hit;
     private ScanNodeProperties scanNode = null!;
+    private int ownScrapValue = 0;
     private SkinnedMeshRenderer skinnedMeshRenderer = null!;
     public override void Start() {
         base.Start();
@@ -29,6 +30,20 @@ public class WalletOld : GrabbableObject {
             }
             DestroyObjectServerRpc(obj);
         }
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if (playerHeldBy == null) return;
+        if (scrapValue < ownScrapValue)
+        {
+            // there was a decrease in scrap value.
+            float amountToDecrease = (ownScrapValue - scrapValue)/ownScrapValue;
+            float decreaseAmount = skinnedMeshRenderer.GetBlendShapeWeight(0)*amountToDecrease;
+            IncreaseBlendShapeWeightClientRpc(skinnedMeshRenderer.GetBlendShapeWeight(0) - decreaseAmount);
+        }
+        ownScrapValue = scrapValue;
     }
 
     [ClientRpc]
