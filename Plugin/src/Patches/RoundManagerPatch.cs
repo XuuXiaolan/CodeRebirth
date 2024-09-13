@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util.Extensions;
 using HarmonyLib;
@@ -13,7 +11,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using System.Diagnostics;
 using Random = System.Random;
-using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -87,7 +85,7 @@ static class RoundManagerPatch {
 		
 		
 		Vector3 navMeshPosition = navMeshHit.position;
-		Vector3 vector = navMeshPosition + (Vector3.up * 10);
+		Vector3 vector = navMeshPosition;
 		if (!Physics.Raycast(vector, Vector3.down, out hit, 150, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) 
 			return false;
 		return true;
@@ -271,34 +269,27 @@ static class RoundManagerPatch {
 		}
 	}
 
-	[HarmonyPostfix]
-	[HarmonyPatch(typeof(StartOfRound), "OnShipLandedMiscEvents")]
-	public static void OnShipLandedMiscEventsPatch(StartOfRound __instance)
+	[HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
+	public static void PlayAudibleNoiseForShockwaveGalPostfix(RoundManager __instance, ref Vector3 noisePosition, ref float noiseRange, ref float noiseLoudness, ref int timesPlayedInSameSpot, ref bool noiseIsInsideClosedShip, ref int noiseID)
 	{
-		Plugin.ExtendedLogging("Starting big object search");
-
-		Stopwatch timer = new();
-		timer.Start();
-		var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-		int FoundObject = 0;
-		LayerMask layerMask = LayerMask.NameToLayer("Foliage");
-		foreach (var item in objs)
+		if (noiseID != 5) return;
+		if (noiseIsInsideClosedShip)
 		{
-			if (item.layer == layerMask)
-			{
-				item.AddComponent<BoxCollider>().isTrigger = true;
-				FoundObject++;
-			}
+			noiseRange /= 2f;
 		}
-
-		timer.Stop();
-
-		Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
-
-		foreach (GameObject node in RoundManager.Instance.insideAINodes)
+		Collider[] hitColliders = Physics.OverlapSphere(noisePosition, noiseRange, LayerMask.GetMask("Props"));
+		for (int i = 0; i < hitColliders.Length; i++)
 		{
-			if (node == null) continue;
-			node.AddComponent<DetectLightInSurroundings>();
+			INoiseListener noiseListener;
+			if (hitColliders[i].TryGetComponent<INoiseListener>(out noiseListener))
+			{
+				ShockwaveGalAI component = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
+				if (component == null)
+				{
+					return;
+				}
+				noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
+			}
 		}
 	}
 }

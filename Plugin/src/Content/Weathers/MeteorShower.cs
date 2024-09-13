@@ -84,7 +84,7 @@ public class MeteorShower : CodeRebirthWeathers {
 			Instance = null;
 
 			if(!IsAuthority()) return; // Only run on the host.
-			StopCoroutine(spawnHandler);
+			if (spawnHandler != null) StopCoroutine(spawnHandler);
 		} catch (Exception e) {
 			Plugin.Logger.LogFatal("Cleaning up Weather failed." + e.Message);
 		}

@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 using CodeRebirth.src.Util;
 using WeatherRegistry;
 using CodeRebirth.src.Util.Extensions;
+using System.Diagnostics;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -46,6 +48,36 @@ static class StartOfRoundPatch {
 			} else {
 				Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");
 			}
+		}
+	}
+
+	[HarmonyPatch(nameof(StartOfRound.OnShipLandedMiscEvents)), HarmonyPostfix]
+	public static void OnShipLandedMiscEventsPatch(StartOfRound __instance)
+	{
+		Plugin.ExtendedLogging("Starting big object search");
+
+		Stopwatch timer = new();
+		timer.Start();
+		var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+		int FoundObject = 0;
+		LayerMask layerMask = LayerMask.NameToLayer("Foliage");
+		foreach (var item in objs)
+		{
+			if (item.layer == layerMask)
+			{
+				item.AddComponent<BoxCollider>().isTrigger = true;
+				FoundObject++;
+			}
+		}
+
+		timer.Stop();
+
+		Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
+
+		foreach (GameObject node in RoundManager.Instance.insideAINodes)
+		{
+			if (node == null) continue;
+			node.AddComponent<DetectLightInSurroundings>();
 		}
 	}
 }

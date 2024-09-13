@@ -21,6 +21,7 @@
 - Fixed scan nodes with wooden and metal crates.
 - Fixed metal crates opening randomly by themselves.
 - Allowed wallets to get smaller if their value somehow decreases.
+- Made flower spawning a bit more spread-y.
 
 ## v0.5.2
 
