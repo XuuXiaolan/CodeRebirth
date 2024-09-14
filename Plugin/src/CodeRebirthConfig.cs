@@ -71,7 +71,7 @@ public class CodeRebirthConfig {
     public ConfigEntry<float> ConfigMeteorSpeed { get; private set; }
     public ConfigEntry<int> ConfigMinMeteorSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigMaxMeteorSpawnCount { get; private set; }
-    public ConfigEntry<string> ConfigTornadoWeatherTypes { get; private set; }
+    public ConfigEntry<string> ConfigTornadoMoonWeatherTypes { get; private set; }
     public ConfigEntry<float> ConfigTornadoInShipVolume { get; private set; }
     public ConfigEntry<float> ConfigTornadoDefaultVolume { get; private set; }
     public ConfigEntry<float> ConfigMeteorShowerMeteoriteSpawnChance { get; private set; }
@@ -194,11 +194,10 @@ public class CodeRebirthConfig {
                                             "Tornados | Enabled",
                                             true,
                                             "Enables/Disables the Tornados from popping up into moons.");
-        ConfigTornadoWeatherTypes = configFile.Bind("Tornado Options",
-                                            "Tornados | Enabled Types",
-                                            "random",
-                                            new ConfigDescription("Types of tornados that are allowed to spawn", new AcceptableValueList<string>("fire", "blood", "windy", "smoke", "water", "electric", "random"))
-                                            );
+        ConfigTornadoMoonWeatherTypes = configFile.Bind("Tornado Options",
+                                            "Tornados | Moon Types",
+                                            "Smoky: All, | Fire: All, | Water: All, | Electric: All, | Windy: All, | Blood: All, |",
+                                            "Moons that the fire type can pop into (All, or specify per moon type like so: Experimentation,Artifice,etc).");
         ConfigTornadoCanFlyYouAwayWeatherTypes = configFile.Bind("Tornado Options",
                                             "Tornado | Can Fly You Away Weather Types",
                                             "All",

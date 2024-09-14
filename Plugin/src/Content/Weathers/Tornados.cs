@@ -10,11 +10,11 @@ using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using System;
 using WeatherRegistry;
+using static CodeRebirth.src.Content.Weathers.Tornados;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Tornados : EnemyAI
 {
-
     [Header("Properties")]
     [SerializeField]
     private float initialSpeed = 5f;
@@ -50,18 +50,21 @@ public class Tornados : EnemyAI
         Water = 5,
         Electric = 6,
     }
+
     private TornadoType tornadoType = TornadoType.Fire;
     private bool damageTimer = true;
     private float originalPlayerSpeed = 0;
     private bool lightningBoltTimer = true;
-
     private Random tornadoRandom = new Random();
     private bool isDebugging = false;
     private float timeSinceBeingInsideTornado = 0;
     public static Tornados? Instance { get; private set; }
 
+    private TornadoSelector tornadoSelector;
+
     public void OnEnable() {
         Instance = this;
+        tornadoSelector = new TornadoSelector();
     }
 
     public void OnDisable() {
@@ -69,17 +72,26 @@ public class Tornados : EnemyAI
     }
 
     [ClientRpc]
-    public void SetupTornadoClientRpc(Vector3 origin, int typeIndex) {
+    public void SetupTornadoClientRpc(Vector3 origin) {
         outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
         this.origin = origin;
         tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
         this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: origin, radius: 10f, randomSeed: tornadoRandom);
         this.transform.position = this.origin;
+
+        // Use the TornadoSelector class to select the tornado type based on config
+        int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
+        if (typeIndex < 0)
+        {
+            typeIndex = 0;
+            Plugin.Logger.LogError("I fucked up, please report this");
+        }
         this.tornadoType = (TornadoType)typeIndex;
+
         WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
         Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}");
         SetupTornadoType();
-        UpdateAudio(); // Make sure audio works correctly on the first frame.
+        UpdateAudio(); // Ensure audio works correctly on the first frame.
     }
 
     public override void Start() {
@@ -90,6 +102,7 @@ public class Tornados : EnemyAI
         initialSpeed = Plugin.ModConfig.ConfigTornadoSpeed.Value;
         if (TornadoWeather.Instance != null) TornadoWeather.Instance.AddTornado(this);
         timeSinceBeingInsideTornado = 0;
+
         if (Vector3.Distance(this.transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20) {
             SetDestinationToPosition(ChooseFarthestNodeFromPosition(this.transform.position, avoidLineOfSight: false).position, true);
         }
@@ -100,52 +113,15 @@ public class Tornados : EnemyAI
             tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
             this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: Vector3.zero, radius: 100f, randomSeed: tornadoRandom);
             this.transform.position = this.origin;
-            List<Tornados.TornadoType> tornadoTypeIndices = new List<Tornados.TornadoType>();
-            var types = Plugin.ModConfig.ConfigTornadoWeatherTypes.Value.Split(',');
 
-            foreach (string type in types)
-            {
-                switch (type.Trim().ToLower())
-                {
-                    case "fire":
-                        tornadoTypeIndices.Add(Tornados.TornadoType.Fire);
-                        break;
-                    case "blood":
-                        tornadoTypeIndices.Add(Tornados.TornadoType.Blood);
-                        break;
-                    case "windy":
-                        tornadoTypeIndices.Add(Tornados.TornadoType.Windy);
-                        break;
-                    case "smoke":
-                        tornadoTypeIndices.Add(Tornados.TornadoType.Smoke);
-                        break;
-                    case "water":
-                        tornadoTypeIndices.Add(Tornados.TornadoType.Water);
-                        break;
-                    case "electric":
-                        tornadoTypeIndices.Add(Tornados.TornadoType.Electric);
-                        break;
-                    case "random":
-                        var randomType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().NextInt(0, 5));
-                        tornadoTypeIndices.Add(randomType);
-                        break;
-                    default:
-                        var defaultType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().NextInt(0, 5));
-                        tornadoTypeIndices.Add(defaultType);
-                        break;
-                }
-            }
-
-            // Remove duplicates if any (optional)
-            tornadoTypeIndices.Distinct().ToList();
-            Plugin.ExtendedLogging($"Tornado types: {tornadoTypeIndices}");
-            int randomTypeIndex = (int)tornadoTypeIndices[tornadoRandom.NextInt(0, tornadoTypeIndices.Count-1)];
-            int typeIndex = randomTypeIndex;
+            // Use the TornadoSelector class to select the tornado type based on config
+            int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
             this.tornadoType = (TornadoType)typeIndex;
+
             WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
             Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}");
             SetupTornadoType();
-            UpdateAudio(); // Make sure audio works correctly on the first frame.
+            UpdateAudio(); // Ensure audio works correctly on the first frame.
         }
     }
 
@@ -562,4 +538,80 @@ public class Tornados : EnemyAI
 			return new Vector3(0,0,0);
 		}
 	}
+}
+
+public class TornadoSelector
+{
+    private string currentMoonName = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName; // Dummy current moon, replace with actual value
+
+    private Dictionary<string, TornadoType> tornadoTypeMapping = new Dictionary<string, TornadoType>
+    {
+        { "Fire", TornadoType.Fire },
+        { "Blood", TornadoType.Blood },
+        { "Windy", TornadoType.Windy },
+        { "Smoke", TornadoType.Smoke },
+        { "Water", TornadoType.Water },
+        { "Electric", TornadoType.Electric },
+    };
+
+    public int SelectTornadoIndex(string tornadoConfigString)
+    {
+        string tornadoTypeString = tornadoConfigString;
+        string[] tornadoEntries = tornadoTypeString.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+
+        List<TornadoType> validTornadoTypes = new List<TornadoType>();
+
+        foreach (var entry in tornadoEntries)
+        {
+            string[] parts = entry.Split(':');
+            string tornadoName = parts[0].Trim();
+            string moonConditions = parts[1].Trim();
+
+            if (tornadoTypeMapping.ContainsKey(tornadoName))
+            {
+                TornadoType tornadoType = tornadoTypeMapping[tornadoName];
+
+                // Split moonConditions by comma and loop through them
+                string[] moonConditionsArray = moonConditions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                            .Select(m => m.Trim())
+                                                            .ToArray();
+
+                foreach (string moonCondition in moonConditionsArray)
+                {
+                    if (IsValidForMoon(moonCondition))
+                    {
+                        validTornadoTypes.Add(tornadoType);
+                        break; // No need to continue checking if one condition matches
+                    }
+                }
+            }
+        }
+
+        if (validTornadoTypes.Count > 0)
+        {
+            Random rand = new Random();
+            int randomIndex = rand.Next(validTornadoTypes.Count);
+            return (int)validTornadoTypes[randomIndex];
+        }
+
+        return -1; // Or another default value indicating no valid tornado types found
+    }
+
+    private bool IsValidForMoon(string moonCondition)
+    {
+        if (moonCondition == "All")
+        {
+            return true;
+        }
+        else if ((moonCondition == "Vanilla" && LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel))) || (moonCondition == "Custom" && LethalLevelLoader.PatchedContent.CustomExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel))) || (moonCondition == "Custom"))
+        {
+            // Dummy logic for Vanilla or Custom
+            return true;
+        }
+        else
+        {
+            // MoonName logic, for now just checks if the current moon matches the condition
+            return currentMoonName.Equals(moonCondition, StringComparison.OrdinalIgnoreCase);
+        }
+    }
 }

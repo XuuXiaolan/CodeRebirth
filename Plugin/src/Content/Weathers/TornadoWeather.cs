@@ -13,7 +13,6 @@ public class TornadoWeather : CodeRebirthWeathers {
     private List<GameObject> alreadyUsedNodes = new List<GameObject>();
 	private List<Tornados> tornados = new List<Tornados>(); // Proper initialization
 	private Random random = null!;
-	private List<Tornados.TornadoType> tornadoTypeIndices = new List<Tornados.TornadoType>();
 
 	public static TornadoWeather? Instance { get; private set; }
 	public static bool Active => Instance != null;
@@ -28,48 +27,6 @@ public class TornadoWeather : CodeRebirthWeathers {
 		nodes = CullNodesByProximity(nodes, 5.0f, true, true).ToList();
 		
 		if(!IsAuthority()) return; // Only run on the host.
-
-        Plugin.ExtendedLogging(Plugin.ModConfig.ConfigTornadoWeatherTypes.Value); //convert config type to string with acceptable values
-		
-		tornadoTypeIndices = new List<Tornados.TornadoType>();
-        var types = Plugin.ModConfig.ConfigTornadoWeatherTypes.Value.Split(',');
-
-        foreach (string type in types)
-        {
-            switch (type.Trim().ToLower())
-            {
-                case "fire":
-                    tornadoTypeIndices.Add(Tornados.TornadoType.Fire);
-                    break;
-                case "blood":
-                    tornadoTypeIndices.Add(Tornados.TornadoType.Blood);
-                    break;
-                case "windy":
-                    tornadoTypeIndices.Add(Tornados.TornadoType.Windy);
-                    break;
-                case "smoke":
-                    tornadoTypeIndices.Add(Tornados.TornadoType.Smoke);
-                    break;
-                case "water":
-                    tornadoTypeIndices.Add(Tornados.TornadoType.Water);
-                    break;
-                case "electric":
-                    tornadoTypeIndices.Add(Tornados.TornadoType.Electric);
-                    break;
-                case "random":
-                    var randomType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().NextInt(0, 5));
-                    tornadoTypeIndices.Add(randomType);
-                    break;
-                default:
-                    var defaultType = (Tornados.TornadoType)Enum.GetValues(typeof(Tornados.TornadoType)).GetValue(new Random().NextInt(0, 5));
-                    tornadoTypeIndices.Add(defaultType);
-                    break;
-            }
-        }
-
-        // Remove duplicates if any (optional)
-        tornadoTypeIndices.Distinct().ToList();
-		Plugin.ExtendedLogging($"Tornado types: {tornadoTypeIndices}");
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}
 
@@ -106,9 +63,8 @@ public class TornadoWeather : CodeRebirthWeathers {
 		Vector3 origin = target;
             
 		Tornados tornado = Instantiate(WeatherHandler.Instance.Tornado.TornadoObj.enemyPrefab, origin, Quaternion.identity).GetComponent<Tornados>();
-        int randomTypeIndex = (int)tornadoTypeIndices[random.NextInt(0, tornadoTypeIndices.Count-1)];
 		tornado.NetworkObject.OnSpawn(() => {
-            tornado.SetupTornadoClientRpc(origin, randomTypeIndex);
+            tornado.SetupTornadoClientRpc(origin);
         });
 		tornado.NetworkObject.Spawn();
 	}

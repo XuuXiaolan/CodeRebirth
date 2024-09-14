@@ -26,15 +26,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
 
     private bool boomboxPlaying = false;
-    private Dictionary<int, GrabbableObject?> itemsHeldDict = new();
+    private List<GrabbableObject> itemsHeldList = new();
     private EnemyAI? targetEnemy;
     private bool flying = false;
     private bool isInside = false;
-    private readonly int maxItemsToHold = 2;
+    private readonly int maxItemsToHold = 4;
     private State galState = State.Inactive;
     private PlayerControllerB? ownerPlayer;
-    private bool holdingItems = false;
-    private int ItemCount => itemsHeldDict.Where(x => x.Value != null).Count();
     private List<string> enemyTargetBlacklist = new();
     private int chargeCount = 3;
     private bool currentlyAttacking = false;
@@ -60,12 +58,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         Plugin.Logger.LogInfo("Hi creator");
         Agent.enabled = galState != State.Inactive;
         StartCoroutine(StartUpDelay());
-        int count = 0;
-        foreach (Transform transform in itemsHeldTransforms)
-        {
-            itemsHeldDict.Add(count, null);
-            count++;
-        }
+        // Initialize list with empty slots (null values)
     }
 
     private IEnumerator StartUpDelay() {
@@ -193,6 +186,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
             // figure out a partial path or something, then tp maybe??
         }
         
+        if (itemsHeldList.Count >= maxItemsToHold)
+        {
+            HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye, 0f);
+        }
+
         if (CheckForNearbyEnemiesToOwner())
         {
             HandleStateAnimationSpeedChanges(State.AttackMode, Emotion.OpenEye, 3f);
@@ -211,7 +209,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     private void DoDeliveringItems()
     {
-        if (!holdingItems)
+        if (itemsHeldList.Count == 0)
         {
             if (ownerPlayer != null)
             {
@@ -226,12 +224,16 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         if (!isInside)
         { // setup destination validation and whatnot with partial paths.
             Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
-            if (Agent.pathStatus == NavMeshPathStatus.PathComplete)
+            if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
             {
-                for (int i = 0; i < ItemCount; i++) {
-                    HandleDroppingItemServerRpc(i);
+                if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
+                {
+                    int heldItemCount = itemsHeldList.Count;
+                    Plugin.ExtendedLogging($"Items held: {heldItemCount}");
+                    for (int i = heldItemCount - 1; i >= 0; i--) {
+                        HandleDroppingItemServerRpc(i);
+                    }
                 }
-                holdingItems = false;
             }
         }
         else
@@ -336,7 +338,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
         // Define min and max speed values
         float minSpeed = 0f; // Speed when closest
-        float maxSpeed = 20f; // Speed when farthest
+        float maxSpeed = galState == State.FollowingPlayer ? 20f : 10f; // Speed when farthest
 
         // Clamp the distance within the range to avoid negative values or distances greater than maxDistance
         float clampedDistance = Mathf.Clamp(distanceFromOwner, minDistance, maxDistance);
@@ -458,9 +460,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private void HandleStateInactiveChange()
     {
         flying = false;
-
-        for (int i = 0; i < ItemCount; i++) {
-            HandleDroppingItem(itemsHeldDict[i]);
+        
+        int heldItemCount = itemsHeldList.Count;
+        for (int i = heldItemCount - 1; i >= 0; i--) {
+            HandleDroppingItem(itemsHeldList[i]);
         }
 
         ownerPlayer = null;
@@ -524,15 +527,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     private void GrabItemInteract(PlayerControllerB player)
     {
-        if (player != ownerPlayer || player.currentlyHeldObjectServer == null) return;
-        if (ItemCount >= maxItemsToHold)
-        {
-            HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye, 0f);
-        }
-        else
-        {
-            GrabItemOwnerHoldingServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));            
-        }
+        if (player != ownerPlayer || player.currentlyHeldObjectServer == null || itemsHeldList.Count >= maxItemsToHold) return;
+        GrabItemOwnerHoldingServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -545,19 +541,20 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private void GrabItemOwnerHoldingClientRpc(int indexOfOwner)
     {
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[indexOfOwner];
-        HandleGrabbingItem(player.currentlyHeldObjectServer, itemsHeldTransforms[ItemCount]);
+        HandleGrabbingItem(player.currentlyHeldObjectServer, itemsHeldTransforms[itemsHeldList.Count]);
     }
 
     private void HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
     {
+        item.isInElevator = false;
+        item.isInShipRoom = false;
         item.playerHeldBy.DiscardHeldObject();
-        holdingItems = true;
         item.grabbable = false;
         item.isHeldByEnemy = true;
         item.hasHitGround = false;
         item.parentObject = heldTransform;
         item.EnablePhysics(false);
-        itemsHeldDict[ItemCount] = item;
+        itemsHeldList.Add(item);
         HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
     }
 
@@ -570,8 +567,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     [ClientRpc]
     private void HandleDroppingItemClientRpc(int itemIndex)
     {
-        HandleDroppingItem(itemsHeldDict[itemIndex]);
-        itemsHeldDict[itemIndex] = null;
+        HandleDroppingItem(itemsHeldList[itemIndex]);
     }
 
     private void HandleDroppingItem(GrabbableObject? item)
@@ -583,6 +579,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         }
         item.parentObject = null;
         if (IsServer) item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+        item.isInShipRoom = true;
+        item.isInElevator = true;
         item.EnablePhysics(true);
         item.fallTime = 0f;
         item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
@@ -592,7 +590,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         item.grabbable = true;
         item.isHeldByEnemy = false;
         item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
-        if (ItemCount == 0) holdingItems = false;
+        itemsHeldList.Remove(item);
     }
 
     public void GoThroughEntrance() {
@@ -632,7 +630,18 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     [ClientRpc]
     public void SetShockwaveGalOutsideClientRpc(bool setOutside) {
+        for (int i = 0; i < itemsHeldList.Count; i++) {
+            itemsHeldList[i].isInFactory = !setOutside;
+            itemsHeldList[i].transform.position = itemsHeldTransforms[i].position;
+            StartCoroutine(SetItemPhysics(itemsHeldList[i]));
+        }
         isInside = !setOutside;
+    }
+
+    private IEnumerator SetItemPhysics(GrabbableObject grabbableObject)
+    {
+        yield return new WaitForSeconds(0.25f);
+        grabbableObject.EnablePhysics(false);
     }
 
     [ServerRpc(RequireOwnership = false)]
