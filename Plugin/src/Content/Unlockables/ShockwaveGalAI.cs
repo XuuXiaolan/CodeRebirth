@@ -640,7 +640,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     private IEnumerator SetItemPhysics(GrabbableObject grabbableObject)
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.1f);
         grabbableObject.EnablePhysics(false);
     }
 

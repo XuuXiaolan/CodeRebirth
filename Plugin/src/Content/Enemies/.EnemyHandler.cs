@@ -123,7 +123,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler> {
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
         }
 
-        if (true) {
+        if (false) {
             ReadyJP = new ReadyJPAssets("readyjpassets");
             RegisterEnemyWithConfig("All:0", ReadyJP.ReadyJPEnemyType, ReadyJP.ReadyJPTerminalNode, ReadyJP.ReadyJPTerminalKeyword, 3, 1);
         }
