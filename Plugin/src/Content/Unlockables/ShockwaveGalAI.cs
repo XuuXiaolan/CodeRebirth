@@ -24,6 +24,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     public List<Transform> itemsHeldTransforms = new();
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
     [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
+    public Collider[] colliders = [];
 
     private bool boomboxPlaying = false;
     private List<GrabbableObject> itemsHeldList = new();
@@ -38,7 +39,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private bool currentlyAttacking = false;
     private float boomboxTimer = 0f;
     private bool physicsEnabled = true;
-    private List<Collider> colliders = new();
 
     public enum State {
         Inactive = 0,
@@ -58,11 +58,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     public void Start() {
         Plugin.Logger.LogInfo("Hi creator");
-        foreach (Collider col in GetComponentsInChildren<Collider>())
-        {
-            if (col.isTrigger) continue;
-            colliders.Add(col);
-        }
         Agent.enabled = galState != State.Inactive;
         StartCoroutine(StartUpDelay());
     }
