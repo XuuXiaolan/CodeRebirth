@@ -37,6 +37,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private int chargeCount = 3;
     private bool currentlyAttacking = false;
     private float boomboxTimer = 0f;
+    private bool physicsEnabled = true;
+    private List<Collider> colliders = new();
 
     public enum State {
         Inactive = 0,
@@ -56,9 +58,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     public void Start() {
         Plugin.Logger.LogInfo("Hi creator");
+        foreach (Collider col in GetComponentsInChildren<Collider>())
+        {
+            if (col.isTrigger) continue;
+            colliders.Add(col);
+        }
         Agent.enabled = galState != State.Inactive;
         StartCoroutine(StartUpDelay());
-        // Initialize list with empty slots (null values)
     }
 
     private IEnumerator StartUpDelay() {
@@ -78,7 +84,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
             this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
-            HandleStateAnimationSpeedChanges(State.Active, Emotion.OpenEye, 0f);
+            HandleStateAnimationSpeedChanges(State.Active, Emotion.OpenEye);
         }
     }
 
@@ -89,7 +95,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
             this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
-            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye, 0f);
+            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
         }
     }
 
@@ -103,6 +109,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private void StartPetAnimationServerRpc()
     {
         NetworkAnimator.SetTrigger("startPet");
+        EnablePhysicsClientRpc(!physicsEnabled);
     }
 
     public void Update() {
@@ -157,12 +164,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     {
         if (ownerPlayer == null)
         {
-            // do something like turning it inactive.
+            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
             return;
         }
         if (Vector3.Distance(this.transform.position, ownerPlayer.transform.position) > 3f)
         {
-            HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye, 3f);
+            HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
         }
     }
 
@@ -170,10 +178,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     {
         if (ownerPlayer == null)
         {
-            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye, 0f);
+            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
-
-            // return to charger and be inactive, or maybe just TP.
             return;
         }
         if ((!isInside && ownerPlayer.isInsideFactory) || (isInside && !ownerPlayer.isInsideFactory))
@@ -183,23 +189,34 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         }
         if (Agent.pathStatus == NavMeshPathStatus.PathInvalid || Agent.pathStatus == NavMeshPathStatus.PathPartial)
         {
-            // figure out a partial path or something, then tp maybe??
+            if (Agent.pathStatus == NavMeshPathStatus.PathInvalid)
+            {
+                if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas));
+                {
+                    Agent.Warp(ownerPlayer.transform.position);
+                }
+            }
+            else
+            {
+                Agent.SetDestination(Agent.pathEndPosition);
+            }
+            return;
         }
         
         if (itemsHeldList.Count >= maxItemsToHold)
         {
-            HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye, 0f);
+            HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye);
         }
 
         if (CheckForNearbyEnemiesToOwner())
         {
-            HandleStateAnimationSpeedChanges(State.AttackMode, Emotion.OpenEye, 3f);
+            HandleStateAnimationSpeedChanges(State.AttackMode, Emotion.OpenEye);
             return;
         }
 
         if (boomboxPlaying)
         {
-            HandleStateAnimationSpeedChanges(State.Dancing, Emotion.Heart, 3f);
+            HandleStateAnimationSpeedChanges(State.Dancing, Emotion.Heart);
             StartCoroutine(StopDancingDelay());
             return;
         }
@@ -213,7 +230,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         {
             if (ownerPlayer != null)
             {
-                HandleStateAnimationSpeedChangesServerRpc((int)State.FollowingPlayer, (int)Emotion.OpenEye, 3f);
+                HandleStateAnimationSpeedChangesServerRpc((int)State.FollowingPlayer, (int)Emotion.OpenEye);
             }
             else
             {
@@ -248,11 +265,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         {
             if (ownerPlayer != null && chargeCount > 0)
             {
-                HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye, 3f);
+                HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
             }
             else
             {
-                HandleStateAnimationSpeedChanges(State.Inactive, Emotion.OpenEye, 3f);
+                HandleStateAnimationSpeedChanges(State.Inactive, Emotion.OpenEye);
             }
             return;
         }
@@ -282,7 +299,22 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private IEnumerator StopDancingDelay()
     {
         yield return new WaitUntil(() => !boomboxPlaying);  
-        HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Heart, 3f);
+        HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Heart);
+    }
+
+    [ClientRpc]
+    private void EnablePhysicsClientRpc(bool enablePhysics)
+    {
+        EnablePhysics(enablePhysics);
+    }
+
+    private void EnablePhysics(bool enablePhysics)
+    {
+        foreach (Collider collider in GetComponentsInChildren<Collider>())
+        {
+            collider.enabled = enablePhysics;
+        }
+        physicsEnabled = enablePhysics;
     }
 
     private bool CheckForNearbyEnemiesToOwner()
@@ -354,14 +386,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void HandleStateAnimationSpeedChangesServerRpc(int state, int emotion, float speed)
+    private void HandleStateAnimationSpeedChangesServerRpc(int state, int emotion)
     {
-        HandleStateAnimationSpeedChanges((State)state, (Emotion)emotion, speed);
+        HandleStateAnimationSpeedChanges((State)state, (Emotion)emotion);
     }
 
-    private void HandleStateAnimationSpeedChanges(State state, Emotion emotion, float speed) // This is for host
+    private void HandleStateAnimationSpeedChanges(State state, Emotion emotion) // This is for host
     {
-        Agent.speed = speed;
         SwitchStateOrEmotionServerRpc((int)state, (int)emotion);
         switch (state)
         {
@@ -573,7 +604,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private void HandleDroppingItem(GrabbableObject? item)
     {
         if (item == null)
-        { // this got logged, fuck.
+        {
             Plugin.Logger.LogError("Item was null in HandleDroppingItem");
             return;
         }

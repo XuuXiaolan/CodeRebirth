@@ -3,14 +3,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.MiscScripts;
-public class SmartAgentNavigator : MonoBehaviour
+public class SmartAgentNavigator(NavMeshAgent agent) : MonoBehaviour
 {
-    private NavMeshAgent agent;
-
-    public SmartAgentNavigator(NavMeshAgent agent)
-    {
-        this.agent = agent;
-    }
+    private NavMeshAgent agent = agent;
 
     /// <summary>
     /// Sets the agent's destination and handles partial paths.
@@ -79,6 +74,7 @@ public class SmartAgentNavigator : MonoBehaviour
             // The last valid point in the partial path
             return path.corners[^1];
         }
+        // should i maybe be using Agent.pathEndPosition?
         return Vector3.zero;
     }
 
