@@ -8,6 +8,7 @@ using CodeRebirth.src.Util;
 using WeatherRegistry;
 using CodeRebirth.src.Util.Extensions;
 using System.Diagnostics;
+using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Patches;
@@ -79,5 +80,11 @@ static class StartOfRoundPatch {
 			if (node == null) continue;
 			node.AddComponent<DetectLightInSurroundings>();
 		}
+	}
+
+	[HarmonyPatch(nameof(StartOfRound.ShipLeave)), HarmonyPostfix]
+	static void HandleDealDeclinedSFX() {
+		if(Dealer.Instance != null)
+			Dealer.Instance.DealDeclined();
 	}
 }

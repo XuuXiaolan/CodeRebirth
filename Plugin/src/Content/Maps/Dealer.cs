@@ -26,12 +26,23 @@ public class Dealer : NetworkBehaviour
     private PlayerControllerB? playerWhoCanDoShit = null;
     public Transform ItemSpawnSpot = null!;
 
+    [Header("Audio")]
+    [SerializeField]
+    AudioSource _voicelineSource;
+
+    [SerializeField]
+    AudioClip[] _greetingSFX, _dealMadeSFX, _dealDeclinedSFX;
+
+    bool _playedGreetingSFX;
+
+    internal static Dealer Instance { get; private set; }
+    
     public enum CardNumber {
         One,
         Two,
         Three
     }
-
+    
     public enum PositiveEffect {
         IncreaseMovementSpeed,
         SpawnShotgunWithShells,
@@ -41,6 +52,7 @@ public class Dealer : NetworkBehaviour
         SpawnGoldBar,
         IncreaseCarrySlotNumber,
         SpawnJetpack,
+        RandomShopItem
     }
 
     public enum NegativeEffect {
@@ -84,6 +96,8 @@ public class Dealer : NetworkBehaviour
         networkAnimator = GetComponent<NetworkAnimator>();
         animator = GetComponent<Animator>();
 
+        Instance = this;
+        
         foreach (Renderer cardRenderer in cardRenderers) {
             cardRenderer.enabled = false;
         }
@@ -184,8 +198,17 @@ public class Dealer : NetworkBehaviour
         Plugin.ExtendedLogging("Card3InteractionResult");
     }
 
+    internal void DealDeclined() {
+        _voicelineSource.PlayOneShot(random.NextItem(_dealDeclinedSFX));
+    }
+    
     public void Update() {
         bool withinDistance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) <= 10;
+
+        if (withinDistance && !_playedGreetingSFX) {
+            _playedGreetingSFX = true;
+            _voicelineSource.PlayOneShot(random.NextItem(_greetingSFX));
+        }
         
         if (withinDistance && !particlesEnabled && !dealMade) {
             foreach (ParticleSystem particle in handParticles) {
@@ -227,6 +250,7 @@ public class Dealer : NetworkBehaviour
         if (playerModified == null || cardPickedIndex == -1) {
             yield break;
         }
+        _voicelineSource.PlayOneShot(random.NextItem(_dealMadeSFX));
         switch (cardPickedIndex) {
             case 0:
                 ExecutePositiveEffect(cardEffects[CardNumber.One].positive, playerModified);
@@ -242,6 +266,10 @@ public class Dealer : NetworkBehaviour
                 break;
         }
         Plugin.ExtendedLogging("main particles animation done");
+    }
+
+    void OnDisable() {
+        Instance = null;
     }
 
     #region Good Deals
@@ -490,6 +518,23 @@ public class Dealer : NetworkBehaviour
                 break;
             case PositiveEffect.IncreaseCarrySlotNumber:
                 IncreaseCarrySlotNumber(playerModified);
+                break;
+            case PositiveEffect.RandomShopItem:
+                if(!IsHost) return;
+
+                Item item = ItemCrate.GetRandomShopItem();
+                
+                GameObject spawned = Instantiate(item.spawnPrefab, ItemSpawnSpot.position, Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
+
+                GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
+                if (grabbableObject == null) {
+                    Destroy(spawned);
+                    break;
+                }
+                grabbableObject.SetScrapValue((int)(random.Next(item.minValue + 10, item.maxValue + 10) * RoundManager.Instance.scrapValueMultiplier));
+                grabbableObject.NetworkObject.Spawn();
+                CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
+                
                 break;
         }
     }

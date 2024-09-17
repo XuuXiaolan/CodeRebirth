@@ -208,7 +208,7 @@ public class ItemCrate : CRHittable {
 		return true;
 	}
 
-	public Item GetRandomShopItem() {
-		return ShopItemList[random.Next(ShopItemList.Count)];
+	public static Item GetRandomShopItem() {
+		return ShopItemList[UnityEngine.Random.Range(0, ShopItemList.Count)];
 	}	
 }
