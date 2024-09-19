@@ -76,6 +76,7 @@ public class GodRayManager : MonoBehaviour
     // you might see the number of lists and call it "a bad idea",
     // but I call it "ECS", which sounds much fancier.
     private List<GodRaySkyEffect> godRayEffects = new();
+    private List<MeshCollider> godRayColliders = new();
     private List<HDAdditionalLightData> godRaySpotlights = new();
     private List<GodRay> godRays = new();
 
@@ -123,7 +124,7 @@ public class GodRayManager : MonoBehaviour
             float distance = (godRays[i].BottomPosition - spotlightData.location).magnitude + 5f;
             godRaySpotlights[i].range = distance;
 
-            HDAdditionalLightData light = godRaySpotlights[i].GetComponent<HDAdditionalLightData>();
+            HDAdditionalLightData light = godRaySpotlights[i];
             light.range = camera.farClipPlane * 2f;
 
             float innerAnglePercent = 100f;
@@ -131,7 +132,7 @@ public class GodRayManager : MonoBehaviour
             light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
             light.shapeRadius = 0;
             light.luxAtDistance = (spotlightData.location - godRays[i].BottomPosition).magnitude;
-            light.SetIntensity(1000, LightUnit.Lux);
+            light.SetIntensity(7000, LightUnit.Lux);
 
             godRaySpotlights[i].gameObject.transform.rotation = spotlightData.rotation;
             godRaySpotlights[i].gameObject.transform.position = spotlightData.location;
@@ -143,7 +144,7 @@ public class GodRayManager : MonoBehaviour
 
     private void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera)
     {
-        if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) return;
+        if (GameNetworkManager.Instance == null || GameNetworkManager.Instance.localPlayerController == null) return;
         transform.position = camera.transform.position;
         if (scale != camera.farClipPlane*2) 
         {
@@ -169,8 +170,10 @@ public class GodRayManager : MonoBehaviour
         {
             godRays.RemoveAt(index);
             godRayEffects.RemoveAt(index);
-            Destroy(godRaySpotlights[index]);
+            Destroy(godRaySpotlights[index].gameObject);
             godRaySpotlights.RemoveAt(index);
+            Destroy(godRayColliders[index].gameObject);
+            godRayColliders.RemoveAt(index);
             RegenerateRayComputeBuffer();
             return true;
         }
@@ -198,7 +201,7 @@ public class GodRayManager : MonoBehaviour
         light.SetSpotAngle(spotlightData.angle * Mathf.Rad2Deg, innerAnglePercent);
         light.shapeRadius = 0;
         light.luxAtDistance = (spotlightData.location - ray.BottomPosition).magnitude;
-        light.SetIntensity(1000, LightUnit.Lux);
+        light.SetIntensity(7000, LightUnit.Lux);
 
         light.color = spotlightData.colour;
         lightGameObject.transform.SetParent(godRayParent.transform);
@@ -208,10 +211,11 @@ public class GodRayManager : MonoBehaviour
         GenerateSpotlightMesh(lightGameObject, (ray.BottomPosition-spotlightData.location).magnitude, ray.BottomRadius, spotlightData.colour, pointCount: 40);
         godRaySpotlights.Add(light);
         RegenerateRayComputeBuffer();
+        // todo: figure out why light aint workin
         return ray;
     }
 
-    private void GenerateSpotlightMesh(GameObject testRay, float distance, float bottomRadius, Color colour, bool generateNewMesh=true, int pointCount=100)
+    private void GenerateSpotlightMesh(GameObject lightGameObject, float distance, float bottomRadius, Color colour, bool generateNewMesh=true, int pointCount=100)
     {
         if (pointCount < 3 || pointCount >= 254) throw new ArgumentOutOfRangeException(nameof(pointCount));
         Vector3[] points = new Vector3[pointCount + 1];
@@ -227,9 +231,9 @@ public class GodRayManager : MonoBehaviour
             indices[i * 3 + 2] = i + 1;
         }
 
-        MeshFilter meshFilter = generateNewMesh ? testRay.AddComponent<MeshFilter>() : testRay.GetComponent<MeshFilter>();
-        MeshRenderer meshRenderer = generateNewMesh ? testRay.AddComponent<MeshRenderer>() : testRay.GetComponent<MeshRenderer>();
-        //MeshCollider meshCollider = generateNewMesh ? testRay.AddComponent<MeshCollider>() : testRay.GetComponent<MeshCollider>();
+        MeshFilter meshFilter = generateNewMesh ? lightGameObject.AddComponent<MeshFilter>() : lightGameObject.GetComponent<MeshFilter>();
+        MeshRenderer meshRenderer = generateNewMesh ? lightGameObject.AddComponent<MeshRenderer>() : lightGameObject.GetComponent<MeshRenderer>();
+        //MeshCollider meshCollider = generateNewMesh ? lightGameObject.AddComponent<MeshCollider>() : lightGameObject.GetComponent<MeshCollider>();
 
         Mesh mesh = new Mesh();
         if (!generateNewMesh) Destroy(meshFilter.mesh);
@@ -242,22 +246,56 @@ public class GodRayManager : MonoBehaviour
         meshRenderer.material = godRayMaterial;
         meshRenderer.material.color = new Color(colour.r, colour.g, colour.b, 56f / 255f);
 
-        if (generateNewMesh) DoTheThingWithCollider(mesh, testRay.transform);
+        if (generateNewMesh) DoTheThingWithCollider(mesh, lightGameObject.transform);
     }
 
     private void DoTheThingWithCollider(Mesh mesh, Transform transform)
     {
-        GameObject testRay = new GameObject("TestRay");
-        testRay.transform.SetParent(godRayParent.transform);
-        testRay.transform.position = transform.position;
-        testRay.transform.rotation = transform.rotation;
-        MeshCollider meshCollider = testRay.AddComponent<MeshCollider>();
+        GameObject damageCollider = new GameObject("GodRayDamageCollider");
+        damageCollider.transform.SetParent(godRayParent.transform);
+        damageCollider.transform.position = transform.position;
+        damageCollider.transform.rotation = transform.rotation;
+        MeshCollider meshCollider = damageCollider.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = mesh;
         meshCollider.convex = true;
-        BetterCooldownTrigger damageTrigger = testRay.AddComponent<BetterCooldownTrigger>();
-        damageTrigger.damageToDealForPlayers = 1;
-        damageTrigger.damageIntervalForPlayers = 0.5f;
+        BetterCooldownTrigger damageTrigger = damageCollider.AddComponent<BetterCooldownTrigger>();
+        damageTrigger.SetupFields(
+                                true,
+                                true,
+                                true,
+                                BetterCooldownTrigger.DeathAnimation.Burnt,
+                                BetterCooldownTrigger.ForceDirection.Center,
+                                5f,
+                                0f,
+                                true,
+                                CauseOfDeath.Burning,
+                                true,
+                                true,
+                                true,
+                                true,
+                                0f,
+                                2,
+                                0.5f,
+                                1,
+                                15f,
+                                null,
+                                null,
+                                null,
+                                null,
+                                false,
+                                false,
+                                null,
+                                null,
+                                null,
+                                null,
+                                true,
+                                "Melting...",
+                                "Your body is melting.........",
+                                10f
+                                );
         meshCollider.isTrigger = true;
+        meshCollider.sharedMesh.RecalculateNormals();
+        godRayColliders.Add(meshCollider);
     }
 
     private void RegenerateRayComputeBuffer()
@@ -285,6 +323,9 @@ public class GodRayManager : MonoBehaviour
         Instance = null;
         foreach (HDAdditionalLightData light in godRaySpotlights) {
             Destroy(light.gameObject);
+        }
+        foreach (MeshCollider collider in godRayColliders) {
+            Destroy(collider.gameObject);
         }
         godRayEffects.Clear();
         godRaySpotlights.Clear();

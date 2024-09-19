@@ -1,7 +1,5 @@
 using Unity.Netcode;
 using UnityEngine;
-using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class CutieFlyAI : CodeRebirthEnemyAI
@@ -37,7 +35,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         lastIdleCycle = Time.time;
         StartSearch(transform.position);
-        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+        SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
 
     public override void Update() {
@@ -63,7 +61,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         climbing = agent.baseOffset <= MINIMUM_CLIMBING_OFFSET && agent.baseOffset < MAXIMUM_CLIMBING_OFFSET;
         if (timeSinceLastStateChange > WANDERING_MAXIMUM_TIME)
         {
-            this.SwitchToBehaviourStateOnLocalClient(State.Perching);
+            SwitchToBehaviourStateOnLocalClient((int)State.Perching);
             lastIdleCycle = Time.time;
         }
     }
@@ -77,7 +75,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         {
             StopSearch(currentSearch);
             ToggleEnemySounds(false);
-            this.SwitchToBehaviourStateOnLocalClient(State.Idle);
+            SwitchToBehaviourStateOnLocalClient((int)State.Idle);
             SyncBlendShapeWeightOnLocalClient(100f);
             lastIdleCycle = Time.time;
         }
@@ -90,7 +88,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         {
             StartSearch(transform.position);
             ToggleEnemySounds(true);
-            this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+            SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
             lastIdleCycle = Time.time;
         }
     }
@@ -100,16 +98,16 @@ public class CutieFlyAI : CodeRebirthEnemyAI
 
         float timeSinceLastStateChange = Time.time - lastIdleCycle;
 
-        switch(currentBehaviourStateIndex.ToCutieState()) {
-            case State.Wandering:
+        switch(currentBehaviourStateIndex) {
+            case (int)State.Wandering:
                 WanderAround(timeSinceLastStateChange);
                 break;
 
-            case State.Perching:
+            case (int)State.Perching:
                 Perch();
                 break;
 
-            case State.Idle:
+            case (int)State.Idle:
                 Idling(timeSinceLastStateChange);
                 break;
 

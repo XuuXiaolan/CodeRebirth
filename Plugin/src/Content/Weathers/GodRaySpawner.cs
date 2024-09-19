@@ -7,21 +7,20 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Weathers;
 public class GodRaySpawner : MonoBehaviour
 {
-    // these two should be set in the inspector
+    // these four should be set in the inspector
     public GodRayManager godRayManager = null!;
     public float timeBetweenGodRaySpawns;
     public float minX, maxX, minZ, maxZ;
     public List<Color> rayColours = new();
+
     private System.Random godRayRandom = null!;
-    private int numberOfGodrays = 15;
-    private Vector3 centerOfWorld;
+    private int numberOfGodrays = 30;
 
     // Layer mask for "Room" and "Terrain"
     private LayerMask raycastLayerMask;
 
     private void Start()
     {
-        centerOfWorld = CalculateCenterOfPoints(RoundManager.Instance.outsideAINodes.Select(x => x.transform.position).ToList());
         godRayRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
         raycastLayerMask = LayerMask.GetMask("Room", "Terrain");
         StartCoroutine(SpawnGodRays());
@@ -34,25 +33,25 @@ public class GodRaySpawner : MonoBehaviour
             yield return new WaitForSeconds(10f);
             Color colour = rayColours[godRayRandom.NextInt(0, rayColours.Count - 1)];
 
-            Vector3 topPosition = new Vector3(godRayRandom.NextFloat(minX, maxX), 0, godRayRandom.NextFloat(minZ, maxZ));
+            Vector3 topPosition = godRayRandom.NextItem(RoundManager.Instance.outsideAINodes).transform.position;
             Vector3 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(godRayRandom.NextItem(RoundManager.Instance.outsideAINodes).transform.position, 100, default, godRayRandom);
 
             // Convert top and bottom positions to 3D vectors
             Vector3 raycastStart = bottomPosition;
             Vector3 raycastEnd = new Vector3(topPosition.x, 30f, topPosition.z); // End raycast just below the map
-            Plugin.Logger.LogInfo($"Raycast start: {raycastStart}, Raycast end: {raycastEnd}");
             // Calculate the direction from top to bottom position
             Vector3 rayDirection = (raycastEnd - raycastStart).normalized;
 
             // Perform the raycast along the calculated direction
             float raycastDistance = Vector3.Distance(raycastStart, raycastEnd);
-            if (!Physics.Raycast(raycastStart, rayDirection, out RaycastHit hit, raycastDistance, raycastLayerMask))
+            float topRandomFloat = godRayRandom.NextFloat(2f, 8f);
+            if (!Physics.Raycast(raycastStart, rayDirection, out _, raycastDistance, raycastLayerMask))
             {
                 godRayManager.AddGodRay(new GodRay(
                     colour,
-                    topPosition,
-                    godRayRandom.NextFloat(2f, 4f),
-                    godRayRandom.NextFloat(2f, 5f),
+                    new Vector2(topPosition.x, topPosition.z),
+                    topRandomFloat,
+                    topRandomFloat,
                     new Vector3(bottomPosition.x, -1f, bottomPosition.z),
                     8f,
                     colour

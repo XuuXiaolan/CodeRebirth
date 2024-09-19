@@ -1,6 +1,3 @@
-using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.Util.Extensions;
-
 namespace CodeRebirth.src.Content.Enemies;
 public class SnailCatAI : CodeRebirthEnemyAI
 {
@@ -12,15 +9,15 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void Start() {
         base.Start();
         StartSearch(transform.position);
-        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+        SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
 
     public override void DoAIInterval() {
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
 
-        switch(currentBehaviourStateIndex.ToSnailState()) {
-            case State.Wandering:
+        switch(currentBehaviourStateIndex) {
+            case (int)State.Wandering:
                 agent.speed = 4f;
                 break;
             default:

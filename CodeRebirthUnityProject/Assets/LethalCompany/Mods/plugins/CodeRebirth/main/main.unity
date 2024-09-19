@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2323.3196, g: 2401.264, b: 3454.9731, a: 1}
+  m_IndirectSpecularColor: {r: 2325.885, g: 2403.596, b: 3456.7036, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -389,7 +389,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &971991120
+--- !u!1001 &1744765135
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -397,71 +397,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6038806343593123924, guid: 534afe6de4a791346b3aea879c026e8b,
+        type: 3}
+      propertyPath: m_Name
+      value: GodRayWeather
+      objectReference: {fileID: 0}
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.1461365
+      value: -11.232184
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.00000023841858
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 43.379803
+      value: 46.785355
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2454204721469615482, guid: 4aaff3bd061657245bfbce33ff25c87e,
+    - target: {fileID: 6761979662197561216, guid: 534afe6de4a791346b3aea879c026e8b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3522212151486415226, guid: 4aaff3bd061657245bfbce33ff25c87e,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 158994940
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977615103854654401, guid: 4aaff3bd061657245bfbce33ff25c87e,
-        type: 3}
-      propertyPath: m_Name
-      value: ShockwaveDrone
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4aaff3bd061657245bfbce33ff25c87e, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 534afe6de4a791346b3aea879c026e8b, type: 3}
 --- !u!1 &1752473777
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,4 +619,4 @@ SceneRoots:
   - {fileID: 432432461}
   - {fileID: 2013410475}
   - {fileID: 1752473781}
-  - {fileID: 971991120}
+  - {fileID: 1744765135}

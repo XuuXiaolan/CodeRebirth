@@ -128,4 +128,9 @@ public class DetectLightInSurroundings : MonoBehaviour
 
         return intensity;
     }
+
+    public void OnDestroy()
+    {
+        lights.Clear();
+    }
 }

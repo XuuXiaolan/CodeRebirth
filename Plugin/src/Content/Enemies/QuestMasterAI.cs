@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using GameNetcodeStuff;
-using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
 using CodeRebirth.src.Util;
 
@@ -111,7 +110,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         ChangeSpeedClientRpc(spawnSpeed);
         TriggerAnimationClientRpc(Animations.startSpawn.ToAnimationName());
         StartCoroutine(DoSpawning());
-        this.SwitchToBehaviourStateOnLocalClient(State.Spawning);
+        SwitchToBehaviourStateOnLocalClient((int)State.Spawning);
     }
     protected virtual IEnumerator DoSpawning()
     {
@@ -120,7 +119,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         StartSearch(transform.position);
         ChangeSpeedClientRpc(walkSpeed);
         TriggerAnimationClientRpc(Animations.startWalk.ToAnimationName());
-        this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+        SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
     protected virtual void DoWandering()
     {
@@ -128,7 +127,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         TriggerAnimationClientRpc(Animations.startApproach.ToAnimationName());
         ChangeSpeedClientRpc(approachSpeed);
         StopSearch(currentSearch);
-        this.SwitchToBehaviourStateOnLocalClient(State.Approaching);
+        SwitchToBehaviourStateOnLocalClient((int)State.Approaching);
     }
     protected virtual void DoApproaching()
     {
@@ -162,7 +161,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     protected virtual IEnumerator QuestTimer(float delay = 5f)
     {
         yield return new WaitForSeconds(delay);
-        this.SwitchToBehaviourStateOnLocalClient(State.OngoingQuest);
+        SwitchToBehaviourStateOnLocalClient((int)State.OngoingQuest);
         yield return new WaitForSeconds(questTimer);
         questTimedOut = true;
     }
@@ -214,12 +213,12 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         {
             questStarted = false;
             questTimedOut = false;
-            this.SwitchToBehaviourStateOnLocalClient(State.Wandering);
+            SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
             return;
         }
         questCompleted = true;
         ChangeSpeedClientRpc(docileSpeed);
-        this.SwitchToBehaviourStateOnLocalClient(State.Docile);
+        SwitchToBehaviourStateOnLocalClient((int)State.Docile);
         StartSearch(transform.position);
     }
     protected virtual IEnumerator QuestSucceedSequence()
@@ -252,20 +251,20 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
         if (!IsHost) return;
 
-        switch (currentBehaviourStateIndex.ToQuestMasterAIState())
+        switch (currentBehaviourStateIndex)
         {
-            case State.Spawning:
+            case (int)State.Spawning:
                 break;
-            case State.Wandering:
+            case (int)State.Wandering:
                 DoWandering();
                 break;
-            case State.Approaching:
+            case (int)State.Approaching:
                 DoApproaching();
                 break;
-            case State.OngoingQuest:
+            case (int)State.OngoingQuest:
                 DoOngoingQuest();
                 break;
-            case State.Docile:
+            case (int)State.Docile:
                 DoDocile();
                 break;
             default:

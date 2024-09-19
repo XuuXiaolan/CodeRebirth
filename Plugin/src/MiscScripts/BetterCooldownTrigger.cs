@@ -20,7 +20,13 @@ public class BetterCooldownTrigger : NetworkBehaviour
         TragedyMask,
         Burnt,
         Snipped,
-        SliceHead
+        SliceHead,
+        PlaceHolder1,
+        PlaceHolder2,
+        PlaceHolder3,
+        PlaceHolder4,
+        PlaceHolder5,
+        PlaceHolder6
     }
 
     public enum ForceDirection
@@ -59,6 +65,8 @@ public class BetterCooldownTrigger : NetworkBehaviour
     public CauseOfDeath causeOfDeath = CauseOfDeath.Unknown;
     [Space(2)]
     [Header("Trigger Settings")]
+    [Tooltip("Whether to trigger for players.")]
+    public bool triggerForPlayers = false;
     [Tooltip("Whether to trigger for enemies.")]
     public bool triggerForEnemies = false;
     [Tooltip("Whether player/enemy can exit the trigger's effect.")]
@@ -84,9 +92,9 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Space(2)]
     [Header("Audio Settings")]
     [Tooltip("Damage clip to play when damage is dealt to player/enemy.")]
-    public List<AudioClip>? damageClip = null;
+    public List<AudioClip> damageClips = new();
     [Tooltip("Damage audio sources to play when damage is dealt to player (picks the closest AudioSource to the player).")]
-    public List<AudioSource>? damageAudioSources = null;
+    public List<AudioSource> damageAudioSources = new();
     [Space(2)]
     [Header("Death Prefab Settings")]
     [Tooltip("Prefab to spawn when the player dies.")]
@@ -107,12 +115,22 @@ public class BetterCooldownTrigger : NetworkBehaviour
     public List<ParticleSystem> deathParticlesForEnemy = new();
     [Tooltip("Particle system to play when the enemy is damaged.")]
     public List<ParticleSystem> damageParticlesForEnemy = new();
-
+    [Space(2f)]
+    [Header("Display Message Settings")]
+    [Tooltip("Whether to display message to player once damage is dealt to player.")]
+    public bool displayMessage = false;
+    [Tooltip("Header of message to display to player once damage is dealt to player.")]
+    public string headerText = "Damage Dealt!";
+    [Tooltip("Message to display to player once damage is dealt to player.")]
+    public string message = "Damage dealt!";
+    [Tooltip("Interval between displaying message to player once damage is dealt to player.")]
+    public float messageInterval = 10f;
     #endregion
 
     #region Private Fields
 
-    private static float lastDamageTime = -Mathf.Infinity; // Last time damage was dealt across all instances
+    private static float lastDamageTime = -Mathf.Infinity;
+    private static float lastTipTime = -Mathf.Infinity;
 
     private Dictionary<PlayerControllerB, bool> playerCoroutineStatus = new Dictionary<PlayerControllerB, bool>();
     private Dictionary<EnemyAI, bool> enemyCoroutineStatus = new Dictionary<EnemyAI, bool>();
@@ -120,6 +138,48 @@ public class BetterCooldownTrigger : NetworkBehaviour
     private Dictionary<EnemyAI, AudioSource> enemyClosestAudioSources = new Dictionary<EnemyAI, AudioSource>();
 
     #endregion
+    public void SetupFields(bool enableScripts = true, bool damagePlayers = true, bool damageEnemies = true, DeathAnimation deathAnimation = DeathAnimation.Default, ForceDirection forceDirection = ForceDirection.Down, float forceMagnitudeAfterDamage = 0f, float forceMagnitudeAfterDeath = 0f, bool forceDirectionFromThisObject = true, CauseOfDeath causeOfDeath = CauseOfDeath.Abandoned, bool canThingExit = true, bool sharedCooldown = false, bool playDefaultPlayerDamageSFX = true, bool soundAttractsDogs = true, float damageDuration = 0f, int damageToDealForPlayers = 0, float damageIntervalForPlayers = 0f, int damageToDealForEnemies = 0, float damageIntervalForEnemies = 0, List<AudioClip>? damageClips = null, List<AudioSource>? damageAudioSources = null, GameObject? deathPrefabForPlayer = null, GameObject? deathPrefabForEnemy = null, bool useParticleSystems = false, bool teleportParticles = false, List<ParticleSystem>? damageParticlesForPlayer = null, List<ParticleSystem>? deathParticlesForPlayer = null, List<ParticleSystem>? damageParticlesForEnemy = null, List<ParticleSystem>? deathParticlesForEnemy = null, bool displayMessage = false, string headerText = "Damage", string message = "Damage dealt!", float messageInterval = 10f)
+    {
+        enabledScript = enableScripts;
+        triggerForPlayers = damagePlayers;
+        triggerForEnemies = damageEnemies;
+        this.deathAnimation = deathAnimation;
+        this.forceDirection = forceDirection;
+        this.forceMagnitudeAfterDamage = forceMagnitudeAfterDamage;
+        this.forceMagnitudeAfterDeath = forceMagnitudeAfterDeath;
+        this.forceDirectionFromThisObject = forceDirectionFromThisObject;
+        this.causeOfDeath = causeOfDeath;
+        this.canThingExit = canThingExit;
+        this.sharedCooldown = sharedCooldown;
+        this.playDefaultPlayerDamageSFX = playDefaultPlayerDamageSFX;
+        this.soundAttractsDogs = soundAttractsDogs;
+        this.damageDuration = damageDuration;
+        this.damageToDealForPlayers = damageToDealForPlayers;
+        this.damageIntervalForPlayers = damageIntervalForPlayers;
+        this.damageToDealForEnemies = damageToDealForEnemies;
+        this.damageIntervalForEnemies = damageIntervalForEnemies;
+        damageClips ??= new List<AudioClip>();
+        this.damageClips = damageClips;
+        damageAudioSources ??= new List<AudioSource>();
+        this.damageAudioSources = damageAudioSources;
+        this.deathPrefabForPlayer = deathPrefabForPlayer;
+        this.deathPrefabForEnemy = deathPrefabForEnemy;
+        this.useParticleSystems = useParticleSystems;
+        this.teleportParticles = teleportParticles;
+        damageParticlesForPlayer ??= new List<ParticleSystem>();
+        this.damageParticlesForPlayer = damageParticlesForPlayer;
+        deathParticlesForPlayer ??= new List<ParticleSystem>();
+        this.deathParticlesForPlayer = deathParticlesForPlayer;
+        damageParticlesForEnemy ??= new List<ParticleSystem>();
+        this.damageParticlesForEnemy = damageParticlesForEnemy;
+        deathParticlesForEnemy ??= new List<ParticleSystem>();
+        this.deathParticlesForEnemy = deathParticlesForEnemy;
+        this.displayMessage = displayMessage;
+        this.headerText = headerText;
+        this.message = message;
+        this.messageInterval = messageInterval;
+    }
+
     public void OnEnable()
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts) {
@@ -148,12 +208,12 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
+        if (triggerForPlayers && other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
         {
             if (playerCoroutineStatus.ContainsKey(player))
             {
                 playerCoroutineStatus[player] = true;
-                if (damageAudioSources != null && damageAudioSources.Count > 0)
+                if (damageAudioSources.Count > 0)
                 {
                     playerClosestAudioSources[player] = GetClosestAudioSource(player.transform);
                 }
@@ -161,7 +221,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
                 StartCoroutine(DamagePlayerCoroutine(player));
             }
         }
-        else if (triggerForEnemies)
+        if (triggerForEnemies)
         {
             Transform? parent = TryFindRoot(other.transform);
             if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead)
@@ -169,7 +229,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
                 if (!enemyCoroutineStatus.ContainsKey(enemy))
                 {
                     enemyCoroutineStatus[enemy] = true;
-                    if (damageAudioSources != null && damageAudioSources.Count > 0)
+                    if (damageAudioSources.Count > 0)
                     {
                         enemyClosestAudioSources[enemy] = GetClosestAudioSource(enemy.transform);
                     }
@@ -183,13 +243,13 @@ public class BetterCooldownTrigger : NetworkBehaviour
     {
         if (!enabledScript || !canThingExit) return;
 
-        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && GameNetworkManager.Instance.localPlayerController == player)
+        if (triggerForPlayers && other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && GameNetworkManager.Instance.localPlayerController == player)
         {
             Plugin.ExtendedLogging("Player Coroutine Stopped");
             RemovePlayerFromList(player);
             playerClosestAudioSources.Remove(player);
         }
-        else if (triggerForEnemies)
+        if (triggerForEnemies)
         {
             Transform? parent = TryFindRoot(other.transform);
             if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy))
@@ -238,6 +298,12 @@ public class BetterCooldownTrigger : NetworkBehaviour
         Vector3 calculatedForceAfterDeath = CalculateForceDirection(player, forceMagnitudeAfterDeath);
 
         player.DamagePlayer(damageToDealForPlayers, playDefaultPlayerDamageSFX, true, causeOfDeath, (int)deathAnimation, false, calculatedForceAfterDeath);
+        if (displayMessage && Time.time >= lastTipTime + damageIntervalForPlayers)
+        {
+            HUDManager.Instance.DisplayTip(headerText, message, true);
+            lastTipTime = Time.time;
+        }
+
         PlayDamageSound(player.transform, playerClosestAudioSources.ContainsKey(player) ? playerClosestAudioSources[player] : null);
         if (teleportParticles) {
             foreach (ParticleSystem? particle in damageParticlesForPlayer) {
@@ -372,21 +438,20 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     private void PlayDamageSound(Transform targetTransform, AudioSource? audioSource)
     {
-        if (damageClip != null && audioSource != null)
+        if (soundAttractsDogs)
         {
-            if (soundAttractsDogs)
-            {
-                RoundManager.Instance.PlayAudibleNoise(audioSource.transform.position, audioSource.maxDistance, audioSource.volume, 0, false, 0);
-            }
-
-            WalkieTalkie.TransmitOneShotAudio(audioSource, damageClip[Random.Range(0, damageClip.Count)], audioSource.volume);
-            RoundManager.PlayRandomClip(audioSource, damageClip.ToArray(), true, audioSource.volume, 0, damageClip.Count);
+            RoundManager.Instance.PlayAudibleNoise(targetTransform.transform.position, audioSource != null ? (float)audioSource.maxDistance : 10f, audioSource != null ? audioSource.volume : 0.85f, 0, false, 0);
+        }
+        if (damageClips.Count > 0 && audioSource != null)
+        {
+            WalkieTalkie.TransmitOneShotAudio(audioSource, damageClips[Random.Range(0, damageClips.Count)], audioSource.volume);
+            RoundManager.PlayRandomClip(audioSource, damageClips.ToArray(), true, audioSource.volume, 0, damageClips.Count);
         }
     }
 
     private AudioSource GetClosestAudioSource(Transform targetTransform)
     {
-        AudioSource closest = damageAudioSources![0];
+        AudioSource closest = damageAudioSources[0];
         float closestDistance = Vector3.Distance(closest.transform.position, targetTransform.position);
 
         foreach (AudioSource source in damageAudioSources)
