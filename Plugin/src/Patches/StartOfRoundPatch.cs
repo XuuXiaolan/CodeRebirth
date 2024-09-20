@@ -87,4 +87,10 @@ static class StartOfRoundPatch {
 		if(Dealer.Instance != null)
 			Dealer.Instance.DealDeclined();
 	}
+
+	[HarmonyPatch(nameof(StartOfRound.ResetShip)), HarmonyPostfix]
+	static void ResetSave() {
+		CodeRebirthSave.Current = new CodeRebirthSave(CodeRebirthSave.Current.FileName);
+		if(CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
+	}
 }
