@@ -322,9 +322,11 @@ public class GodRayManager : MonoBehaviour
         rayBuffer = null;
         Instance = null;
         foreach (HDAdditionalLightData light in godRaySpotlights) {
+            if (light == null) continue;
             Destroy(light.gameObject);
         }
-        foreach (MeshCollider collider in godRayColliders) {
+        foreach (var collider in godRayColliders) {
+            if (collider == null) continue;
             Destroy(collider.gameObject);
         }
         godRayEffects.Clear();
