@@ -331,6 +331,7 @@ public class GodRayManager : MonoBehaviour
         }
         godRayEffects.Clear();
         godRaySpotlights.Clear();
+        godRayColliders.Clear();
         godRays.Clear();
     }
 }
