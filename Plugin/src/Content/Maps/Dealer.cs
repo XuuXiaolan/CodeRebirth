@@ -52,7 +52,8 @@ public class Dealer : NetworkBehaviour
         SpawnGoldBar,
         IncreaseCarrySlotNumber,
         SpawnJetpack,
-        RandomShopItem
+        RandomShopItem,
+        RandomShipUpgrade
     }
 
     public enum NegativeEffect {
@@ -535,6 +536,14 @@ public class Dealer : NetworkBehaviour
                 grabbableObject.NetworkObject.Spawn();
                 CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
                 
+                break;
+            case PositiveEffect.RandomShipUpgrade:
+                if(!IsHost) return;
+
+                List<UnlockableItem> unlockables = StartOfRound.Instance.unlockablesList.unlockables;
+                UnlockableItem chosen = random.NextItem(unlockables);
+                StartOfRound.Instance.BuyShipUnlockableServerRpc(unlockables.IndexOf(chosen), FindObjectOfType<Terminal>().groupCredits); // keep current credits the same.
+
                 break;
         }
     }
