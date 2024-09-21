@@ -38,6 +38,7 @@ public class MeteorShower : CodeRebirthWeathers {
 	}
 	private Direction direction = Direction.Random;
 	private GameObject meteorOverridePrefab = null!;
+	private float normalisedTimeToLeave = 1f;
 	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
 	readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
 	
@@ -48,6 +49,7 @@ public class MeteorShower : CodeRebirthWeathers {
 	
 	private void OnEnable() { // init weather
 		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
+		normalisedTimeToLeave = Plugin.ModConfig.ConfigMeteorShowerTimeToLeave.Value;
 		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
 		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
 		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 6, dayTimePower: -3);
@@ -89,6 +91,14 @@ public class MeteorShower : CodeRebirthWeathers {
 			Plugin.Logger.LogFatal("Cleaning up Weather failed." + e.Message);
 		}
 	}
+	private void Update()
+	{
+		if (TimeOfDay.Instance.timeHasStarted && normalisedTimeToLeave <= TimeOfDay.Instance.normalizedTimeOfDay)
+		{
+			StopCoroutine(spawnHandler);
+		}
+	}
+
 	void ClearMeteorites()
 	{
         foreach (Meteors meteor in meteors)

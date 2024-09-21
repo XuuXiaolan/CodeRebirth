@@ -51,12 +51,17 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler> {
 
 	private void RegisterPlantPot() {
 		PlantPot = new PlantPotAssets("plantpotassets");
-		RegisterScrapWithConfig("", PlantPot.Seed);
+		RegisterScrapWithConfig("", PlantPot.Seed, -1, -1);
 		Plugin.samplePrefabs.Add("Wooden Seed", PlantPot.Seed);
-		RegisterScrapWithConfig("", PlantPot.Tomato);
+
+		var scrapValues = ChangeItemValues(PlantPot.Seed, Plugin.ModConfig.ConfigTomatoValue.Value);
+		RegisterScrapWithConfig("", PlantPot.Tomato, scrapValues[0], scrapValues[1]);
 		Plugin.samplePrefabs.Add("Tomato", PlantPot.Tomato);
-		RegisterScrapWithConfig("", PlantPot.GoldenTomato);
+
+		var gScrapValues = ChangeItemValues(PlantPot.Tomato, Plugin.ModConfig.ConfigGoldenTomatoValue.Value);
+		RegisterScrapWithConfig("", PlantPot.GoldenTomato, gScrapValues[0], gScrapValues[1]);
 		Plugin.samplePrefabs.Add("Golden Tomato", PlantPot.GoldenTomato);
+
 		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.ShipUpgrade);
 	}
 }

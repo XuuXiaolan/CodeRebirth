@@ -1,6 +1,6 @@
 # v0.6.0
 
-- Made biomes more dangerous.
+- Biomes disabled by default.
 - Added carnivorous plant.
 - Added reworked redwood titan.
 - Added shockwave gal.
@@ -8,8 +8,7 @@
   - Added new decor, "plant pot".
   - Added wooden seed, obtained by chopping wood and getting it randomly.
   - Added tomato and golden tomato, sellable to the company.
-- Added seamine tink.
-- Improved meteor shower visuals.
+- Improved meteor shower visuals drastically.
 - Improved biome particles performance.
 - Updated for v64.
 - Improved hoverboard a bit.
@@ -22,6 +21,10 @@
 - Fixed metal crates opening randomly by themselves.
 - Allowed wallets to get smaller if their value somehow decreases.
 - Made flower spawning a bit more spread-y.
+- Added metal crate config for whitelist if need be.
+- Added wooden crate config for whitelist if need be.
+- Gave each item a "min,max" worthiness config.
+- Added config for meteor shower to stop at a normalised time of day.
 
 ## v0.5.2
 

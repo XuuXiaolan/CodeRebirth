@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
+using LobbyCompatibility.Configuration;
 
 namespace CodeRebirth.src.Configs;
 public class CodeRebirthConfig {
@@ -63,6 +64,7 @@ public class CodeRebirthConfig {
     public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
     #endregion
     #region Weather Specific
+    public ConfigEntry<float> ConfigMeteorShowerTimeToLeave { get; private set; }
     public ConfigEntry<float> ConfigTornadoInsideBeforeThrow { get; private set; }
     public ConfigEntry<float> ConfigTornadoPullStrength { get; private set; }
     public ConfigEntry<bool> ConfigTornadoYeetSFX { get; private set; }
@@ -80,6 +82,8 @@ public class CodeRebirthConfig {
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<string> ConfigWoodenCratesWhitelist { get; private set; }
+    public ConfigEntry<string> ConfigMetalCratesWhitelist { get; private set; }
     public ConfigEntry<bool> ConfigShovelCratesOnly { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCost { get; private set; }
     public ConfigEntry<int> ConfigShockwaveBotCost { get; private set; }
@@ -99,6 +103,18 @@ public class CodeRebirthConfig {
     public ConfigEntry<int> ConfigMinCoinValue { get; private set; }
     public ConfigEntry<int> ConfigMaxCoinValue { get; private set; }
     #endregion 
+    #region Worth
+    public ConfigEntry<string> ConfigTomatoValue { get; private set; }
+    public ConfigEntry<string> ConfigGoldenTomatoValue { get; private set; }
+    public ConfigEntry<string> ConfigNaturesMaceWorth { get; private set; }
+    public ConfigEntry<string> ConfigIcyHammerWorth { get; private set; }
+    public ConfigEntry<string> ConfigSpikyMaceWorth { get; private set; }
+    public ConfigEntry<string> ConfigEpicAxeWorth { get; private set; }
+    public ConfigEntry<string> ConfigSnowGlobeWorth { get; private set; }
+    public ConfigEntry<string> ConfigSapphireWorth { get; private set; }
+    public ConfigEntry<string> ConfigRubyWorth { get; private set; }
+    public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
+    #endregion
     public CodeRebirthConfig(ConfigFile configFile) {
         configFile.SaveOnConfigSet = false;
         #region General
@@ -134,7 +150,7 @@ public class CodeRebirthConfig {
         #region Biomes
         ConfigBiomesEnabled = configFile.Bind("Biome Options",
                                             "Biomes | Enabled",
-                                            true,
+                                            false,
                                             "Whether Biomes are enabled.");
         #endregion
         #region Flora
@@ -188,6 +204,14 @@ public class CodeRebirthConfig {
                                             "Farming | Enabled",
                                             true,
                                             "Whether Farming is enabled.");
+        ConfigTomatoValue = configFile.Bind("Farming Options",
+                                            "Farming | Tomato Value",
+                                            "-1,-1",
+                                            "Min,Max value of the Tomato, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
+        ConfigGoldenTomatoValue = configFile.Bind("Farming Options",
+                                            "Farming | Golden Tomato Value",
+                                            "-1,-1",
+                                            "Min,Max value of the Golden Tomato, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         #endregion
         #region Tornado
         ConfigTornadosEnabled = configFile.Bind("Tornado Options",
@@ -262,6 +286,10 @@ public class CodeRebirthConfig {
                                             "Natures Mace | Scrap Enabled",
                                             true,
                                             "Whether Natures Mace scrap is enabled.");
+        ConfigNaturesMaceWorth = configFile.Bind("NatureMace Options",
+                                            "Natures Mace | Worth",
+                                            "-1,-1",
+                                            "Min and Max value of the NaturesMace, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         ConfigNaturesMaceScrapSpawnWeights = configFile.Bind("NatureMace Options",
                                             "Natures Mace | Scrap Spawn Weights",
                                             "Custom:15,Vanilla:15",
@@ -270,6 +298,10 @@ public class CodeRebirthConfig {
                                             "Icy Hammer | Scrap Enabled",
                                             true,
                                             "Whether Icy Hammer scrap is enabled.");
+        ConfigIcyHammerWorth = configFile.Bind("Icy Hammer Options",
+                                            "Icy Hammer | Worth",
+                                            "-1,-1",
+                                            "Min and Max value of the IcyHammer, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         ConfigIcyHammerScrapSpawnWeights = configFile.Bind("Icy Hammer Options",
                                             "Icy Hammer | Scrap Spawn Weights",
                                             "Custom:15,Vanilla:15",
@@ -278,6 +310,10 @@ public class CodeRebirthConfig {
                                             "Spiky Mace | Scrap Enabled",
                                             true,
                                             "Whether Spiky Mace scrap is enabled.");
+        ConfigSpikyMaceWorth = configFile.Bind("Spiky Mace Options",
+                                            "Spiky Mace | Worth",
+                                            "-1,-1",
+                                            "Min and Max value of the SpikyMace, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         ConfigSpikyMaceScrapSpawnWeights = configFile.Bind("Spiky Mace Options",
                                             "Spiky Mace | Scrap Spawn Weights",
                                             "Custom:15,Vanilla:15",
@@ -286,6 +322,10 @@ public class CodeRebirthConfig {
                                             "Epic Axe Scrap | Enabled",
                                             true,
                                             "Enables/Disables the Epic Axe from showing up in the Factory.");
+        ConfigEpicAxeWorth = configFile.Bind("EpicAxe Options",
+                                            "Epic Axe Scrap | Worth",
+                                            "-1,-1",
+                                            "Min and Max value of the EpicAxe, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         ConfigEpicAxeScrapSpawnWeights = configFile.Bind("EpicAxe Options",
                                             "Epic Axe Scrap | Spawn Weights",
                                             "Custom:15,Vanilla:15",
@@ -384,6 +424,13 @@ public class CodeRebirthConfig {
                                                 "Speed of meteors.",
                                                 new AcceptableValueRange<float>(0, 1000f)
                                             ));
+        ConfigMeteorShowerTimeToLeave = configFile.Bind("MeteorShower Options",
+                                            "MeteorShower | Time To Leave",
+                                            1f,
+                                            new ConfigDescription(
+                                                "Normalised time it takes for the meteor shower to leave the moon, 1 being at 12PM~.",
+                                                new AcceptableValueRange<float>(0, 1f)
+                                            ));
         ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",
                                             "MeteorShower | Meteor Strikes Ship",
                                             true,
@@ -409,6 +456,18 @@ public class CodeRebirthConfig {
                                                 "Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.", 
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
+        ConfigSapphireWorth = configFile.Bind("MeteorShower Options",
+                                            "MeteorShower | Sapphire Worth",
+                                            "-1,-1",
+                                            "Min and Max value of the Sapphire, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
+        ConfigRubyWorth = configFile.Bind("MeteorShower Options",
+                                            "MeteorShower | Ruby Worth",
+                                            "-1,-1",
+                                            "Min and Max value of the Ruby, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
+        ConfigEmeraldWorth = configFile.Bind("MeteorShower Options",
+                                            "MeteorShower | Emerald Worth",
+                                            "-1,-1",
+                                            "Min and Max value of the Emerald, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
                                             "MeteorShower | Wesley Mode",
                                             false,
@@ -506,6 +565,10 @@ public class CodeRebirthConfig {
                                             "Snow Globe | Enabled",
                                             true,
                                             "Enables/Disables the Snow Globe from spawning.");
+        ConfigSnowGlobeWorth = configFile.Bind("SnowGlobe Options",
+                                            "Snow Globe | Worth",
+                                            "-1,-1",
+                                            "Min and Max value of the SnowGlobe, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         ConfigSnowGlobeSpawnWeights = configFile.Bind("SnowGlobe Options",
                                             "Snow Globe | Spawn Weights",
                                             "Custom:50,Vanilla:50",
@@ -517,7 +580,7 @@ public class CodeRebirthConfig {
         #endregion
         #region ItemCrate
         ConfigItemCrateEnabled = configFile.Bind("Crate Options",
-                                            "Item Crate | Enabled",
+                                            "Crate | Enabled",
                                             true,
                                             "Enables/Disables the Item Crate from spawning.");
         ConfigMetalCrateAbundance = configFile.Bind("Crate Options",
@@ -528,6 +591,14 @@ public class CodeRebirthConfig {
                                             "Crate | Wooden Abundance",
                                             3,
                                             "Abundance of Wooden Crates that spawn outside (between 0 and your number).");
+        ConfigWoodenCratesWhitelist = configFile.Bind("Crate Options",
+                                            "Crate | Wooden Whitelist",
+                                            "",
+                                            "Whitelist of Items that can spawn from wooden crates (comma separated, recommend leaving empty).");
+        ConfigMetalCratesWhitelist = configFile.Bind("Crate Options",
+                                            "Crate | Metal Whitelist",
+                                            "",
+                                            "Whitelist of Items that can spawn from metal crates (comma separated, recommend leaving empty).");
         ConfigShovelCratesOnly = configFile.Bind("Crate Options",
                                             "Crate | Shovel Crates Only",
                                             true,
