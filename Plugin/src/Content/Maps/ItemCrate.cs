@@ -139,8 +139,31 @@ public class ItemCrate : CRHittable {
 				case CrateType.Wooden:
                 default:
 					{
-                        chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
-                        item = chosenItemWithRarity.spawnableItem;
+						bool useWhitelist = false;
+						string whiteListedScrapConfig = Plugin.ModConfig.ConfigWoodenCratesWhitelist.Value;
+						string[] whiteListedScrap = [];
+						if (!string.IsNullOrEmpty(whiteListedScrapConfig))
+						{
+							useWhitelist = true;
+							whiteListedScrap = whiteListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+						}
+						if (useWhitelist)
+						{
+							List<SpawnableItemWithRarity> acceptableItems = new();
+							foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
+							{
+								if (whiteListedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
+								{
+									acceptableItems.Add(spawnableItemWithRarity);
+								}
+							}
+	                        chosenItemWithRarity = random.NextItem(acceptableItems);
+						}
+                        else
+						{
+							chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
+						}
+						item = chosenItemWithRarity.spawnableItem;
 						break;
                     }
 			}
@@ -208,7 +231,31 @@ public class ItemCrate : CRHittable {
 		return true;
 	}
 
-	public static Item GetRandomShopItem() {
-		return ShopItemList[UnityEngine.Random.Range(0, ShopItemList.Count)];
+	public static Item? GetRandomShopItem()
+	{
+		bool useWhitelist = false;
+		string whiteListedScrapConfig = Plugin.ModConfig.ConfigMetalCratesWhitelist.Value;
+		string[] whiteListedScrap = [];
+		if (!string.IsNullOrEmpty(whiteListedScrapConfig))
+		{
+			useWhitelist = true;
+			whiteListedScrap = whiteListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+		}
+		if (useWhitelist)
+		{
+			List<Item> acceptableItems = new();
+			foreach (Item item in ShopItemList)
+			{
+				if (whiteListedScrap.Contains(item.itemName.ToLowerInvariant()))
+				{
+					acceptableItems.Add(item);
+				}
+			}
+			return acceptableItems[UnityEngine.Random.Range(0, acceptableItems.Count)];
+		}
+		else
+		{
+			return ShopItemList[UnityEngine.Random.Range(0, ShopItemList.Count)];
+		}
 	}	
 }
