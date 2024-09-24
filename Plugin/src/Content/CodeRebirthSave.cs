@@ -8,7 +8,6 @@ namespace CodeRebirth.src.Content;
 class CodeRebirthSave(string fileName) : SaveableData(fileName) {
 	public static CodeRebirthSave Current;
 
-	public int MoonPriceUpgrade { get; set; }
 
 	public Dictionary<ulong, CodeRebirthLocalSave> PlayerData { get; private set; } = [];
 	
@@ -24,7 +23,5 @@ class CodeRebirthSave(string fileName) : SaveableData(fileName) {
 
 // PER PLAYER
 class CodeRebirthLocalSave {
-	public int MovementSpeedUpgrades { get; set; }
-	public int StaminaUpgrades { get; set; }
-	public int CarrySlotUpgrades { get; set; }
+
 }

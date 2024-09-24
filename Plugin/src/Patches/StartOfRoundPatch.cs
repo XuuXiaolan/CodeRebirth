@@ -82,12 +82,6 @@ static class StartOfRoundPatch {
 		}
 	}
 
-	[HarmonyPatch(nameof(StartOfRound.ShipLeave)), HarmonyPostfix]
-	static void HandleDealDeclinedSFX() {
-		if(Dealer.Instance != null)
-			Dealer.Instance.DealDeclined();
-	}
-
 	[HarmonyPatch(nameof(StartOfRound.ResetShip)), HarmonyPostfix]
 	static void ResetSave() {
 		CodeRebirthSave.Current = new CodeRebirthSave(CodeRebirthSave.Current.FileName);

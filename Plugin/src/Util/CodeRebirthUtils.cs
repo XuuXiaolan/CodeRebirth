@@ -116,20 +116,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
                 ContractResolver = new IncludePrivateSetterContractResolver()
             })!;
         }
-
-        if (StartOfRound.Instance.allPlayerScripts[playerID] == GameNetworkManager.Instance.localPlayerController) {
-            // apply to all players
-            foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
-                if(!player.isPlayerControlled) continue;
-                Dealer.ApplyEffects(player);
-            }
-            
-            for (int i = 0; i < Math.Abs(CodeRebirthSave.Current.MoonPriceUpgrade); i++) {
-                if (CodeRebirthSave.Current.MoonPriceUpgrade > 0) Dealer.DecreaseMoonPrices();
-                else Dealer.IncreaseMoonPrices();
-            }
-        } else
-            Dealer.ApplyEffects(StartOfRound.Instance.allPlayerScripts[playerID]); // only apply to new player
     }
 
     public override void OnNetworkSpawn() {
