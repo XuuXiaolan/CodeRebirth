@@ -17,7 +17,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
 {
     private static Random random = null!;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
-    public static Dictionary<string, GameObject> Objects = new Dictionary<string, GameObject>();
     
     void Awake()
     {
@@ -72,32 +71,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
                 Plugin.ExtendedLogging($"Scrap Value: {value}");
             }
         }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SpawnDevilPropsServerRpc() {
-        Objects.Add("Devil", Spawn("Devil", new Vector3(-19.355f, -1.473f, -0.243f), Quaternion.Euler(-81.746f, 152.088f, -53.711f)));
-        Objects.Add("DevilChair", Spawn("DevilChair", new Vector3(-21.16f, -2.686f, 0), Quaternion.Euler(0, 180, 0)));
-        Objects.Add("DevilTable", Spawn("DevilTable", new Vector3(-19.518f, -2.686f, 0), Quaternion.identity));
-        Objects.Add("PlayerChair", Spawn("PlayerChair", new Vector3(-17.832f, -2.686f, 0), Quaternion.Euler(-90, -90, 0)));
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void DespawnDevilPropsServerRpc() {
-        foreach (KeyValuePair<string, GameObject> @object in Objects)
-        {
-            @object.Value.GetComponent<NetworkObject>().Despawn(true);
-        }
-        Objects.Clear();
-    }
-    
-    public static GameObject Spawn(string objectName, Vector3 location, Quaternion rotation)
-    {
-        GameObject obj = Instantiate<GameObject>(MapObjectHandler.DevilDealPrefabs[objectName], location, rotation);
-        NetworkObject component = obj.GetComponent<NetworkObject>();
-        Plugin.ExtendedLogging(obj.name + " NetworkObject spawned");
-        component.Spawn(false);
-        return obj;
     }
 
     [ServerRpc(RequireOwnership = false)]

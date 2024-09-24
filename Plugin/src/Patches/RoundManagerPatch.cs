@@ -247,27 +247,7 @@ static class RoundManagerPatch {
 		}
 	}
 
-	[HarmonyPatch("LoadNewLevelWait")]
-	[HarmonyPrefix]
-	public static void LoadNewLevelWaitPatch(RoundManager __instance)
-	{
-		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
-		{
-			Plugin.ExtendedLogging("Spawning Devil deal objects");
-			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.SpawnDevilPropsServerRpc(); // todo: for some reason there's an error
-		}
-	}
-
-	[HarmonyPatch("DespawnPropsAtEndOfRound")]
-	[HarmonyPostfix]
-	public static void DespawnPropsAtEndOfRoundPatch(RoundManager __instance)
-	{
-		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
-		{
-			Plugin.ExtendedLogging("Despawning Devil deal objects");
-			if (RoundManager.Instance.IsServer) CodeRebirthUtils.Instance.DespawnDevilPropsServerRpc();
-		}
-	}
+	
 
 	[HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
 	public static void PlayAudibleNoiseForShockwaveGalPostfix(RoundManager __instance, ref Vector3 noisePosition, ref float noiseRange, ref float noiseLoudness, ref int timesPlayedInSameSpot, ref bool noiseIsInsideClosedShip, ref int noiseID)

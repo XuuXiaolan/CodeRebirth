@@ -28,20 +28,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		public GameObject AllFloraPrefab { get; private set; } = null!;
 	}
 
-	public class DevilDealAssets(string bundleName) : AssetBundleLoader<DevilDealAssets>(bundleName) {
-		[LoadFromBundle("Devil.prefab")]
-		public GameObject DevilPrefab { get; private set; } = null!;
-
-		[LoadFromBundle("DevilChair.prefab")]
-		public GameObject DevilChairPrefab { get; private set; } = null!;
-
-		[LoadFromBundle("DevilTable.prefab")]
-		public GameObject DevilTablePrefab { get; private set; } = null!;
-
-		[LoadFromBundle("playerChair.prefab")]
-		public GameObject PlayerChairPrefab { get; private set; } = null!;
-	}
-
 	public class BiomeAssets(string bundleName) : AssetBundleLoader<BiomeAssets>(bundleName) {
 		[LoadFromBundle("BiomeSpreader.prefab")]
 		public GameObject BiomePrefab { get; private set; } = null!;
@@ -50,7 +36,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
-	public DevilDealAssets DevilDeal { get; private set; } = null!;
 	public BiomeAssets Biome { get; private set; } = null!;
 
 	public static Dictionary<string, GameObject> DevilDealPrefabs = new Dictionary<string, GameObject>();
@@ -67,7 +52,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
 			Biome = new BiomeAssets("biomeassets");
 
-		if (true) RegisterDevilDeal();
 	}
 
 	public void RegisterInsideMoney() {
@@ -118,13 +102,5 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 			floraTag = tag,
 			moonsBlackList = moonBlackList
 		});
-	}
-	
-	public void RegisterDevilDeal() {
-		DevilDeal = new DevilDealAssets("devildealassets");
-		DevilDealPrefabs.Add("Devil", DevilDeal.DevilPrefab);
-		DevilDealPrefabs.Add("DevilChair", DevilDeal.DevilChairPrefab);
-		DevilDealPrefabs.Add("DevilTable", DevilDeal.DevilTablePrefab);
-		DevilDealPrefabs.Add("PlayerChair", DevilDeal.PlayerChairPrefab);
 	}
 }
