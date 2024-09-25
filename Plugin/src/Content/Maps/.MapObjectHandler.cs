@@ -98,7 +98,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 			prefab = prefab,
 			moonsWhiteList = moonWhiteList,
 			spawnCurve = curve,
-			blacklistedTags = ["Metal", "Wood", "Concrete", "Puddle", "Aluminum", "Catwalk", "Bush", "Rock", "MoldSpore"],
+			blacklistedTags = ["Metal", "Wood", "Concrete", "Puddle", "Aluminum", "Catwalk", "Bush", "Rock", "MoldSpore", "Untagged"],
 			floraTag = tag,
 			moonsBlackList = moonBlackList
 		});
