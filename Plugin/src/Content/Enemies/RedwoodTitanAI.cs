@@ -596,7 +596,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         Plugin.ExtendedLogging(enemyHP.ToString());
     }
 
-    public override void KillEnemy(bool destroy = false) // todo: if target enemy is dead, stop chasing, set target to null
+    public override void KillEnemy(bool destroy = false)
     { 
         base.KillEnemy(destroy);
         CollisionFootL.enabled = false;
@@ -776,13 +776,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             }
         }
         var enemiesList = RoundManager.Instance.SpawnedEnemies; //todo: change this to a spherecast
-        foreach (var enemy in enemiesList)
+        for (int i = enemiesList.Count - 1; i >= 0; i--)
         {
-            if (enemy == null || enemy.isEnemyDead || enemy is RedwoodTitanAI) continue;
-            var LeftFootDistance = Vector3.Distance(CollisionFootL.transform.position, enemy.transform.position);
+            if (enemiesList[i] == null || enemiesList[i].isEnemyDead || enemiesList[i] is RedwoodTitanAI) continue;
+            var LeftFootDistance = Vector3.Distance(CollisionFootL.transform.position, enemiesList[i].transform.position);
             if (LeftFootDistance <= 7.5f)
             {
-                DealEnemyDamageFromShockwave(enemy, LeftFootDistance);
+                DealEnemyDamageFromShockwave(enemiesList[i], LeftFootDistance);
             }
         }
     }
@@ -802,13 +802,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             }
         }
         var enemiesList = RoundManager.Instance.SpawnedEnemies; //todo: change this to a spherecast
-        foreach (var enemy in enemiesList)
+        for (int i = enemiesList.Count - 1; i >= 0; i--)
         {
-            if (enemy == null || enemy.isEnemyDead || enemy is RedwoodTitanAI) continue;
-            var RightFootDistance = Vector3.Distance(CollisionFootR.transform.position, enemy.transform.position);
+            if (enemiesList[i] == null || enemiesList[i].isEnemyDead || enemiesList[i] is RedwoodTitanAI) continue;
+            var RightFootDistance = Vector3.Distance(CollisionFootR.transform.position, enemiesList[i].transform.position);
             if (RightFootDistance <= 7.5f)
             {
-                DealEnemyDamageFromShockwave(enemy, RightFootDistance);
+                DealEnemyDamageFromShockwave(enemiesList[i], RightFootDistance);
             }
         }
     }
