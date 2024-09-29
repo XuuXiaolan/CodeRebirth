@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -11,7 +9,7 @@ using UnityEngine.AI;
 using static CodeRebirth.src.Content.Unlockables.ShockwaveFaceController;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the charger, which is inexpensive, but it spawns the shockwave gal automatically.
+public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 {
     public ShockwaveFaceController RobotFaceController = null!;
     public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
@@ -25,6 +23,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
     [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
     public Collider[] colliders = [];
+    public Vector3 boxSize = Vector3.zero; // todo: assign the beam a box collider and give it the correct size and then disable it
 
     private bool boomboxPlaying = false;
     private List<GrabbableObject> itemsHeldList = new();
@@ -39,8 +38,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private bool currentlyAttacking = false;
     private float boomboxTimer = 0f;
     private bool physicsEnabled = true;
+    private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // todo: figure out w=yh this doesnt work
+    private readonly static int attackModeAnimation = Animator.StringToHash("attackMode");
+    private readonly static int danceAnimation = Animator.StringToHash("dancing");
+    private readonly static int activatedAnimation = Animator.StringToHash("activated");
+    private readonly static int pettingAnimation = Animator.StringToHash("startPet");
+    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed");
 
-    public enum State {
+    public enum State
+    {
         Inactive = 0,
         Active = 1,
         FollowingPlayer = 2,
@@ -49,20 +55,23 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         AttackMode = 5,
     }
 
-    public enum Emotion {
+    public enum Emotion
+    {
         Heart = 0,
         ClosedEye = 1,
         OpenEye = 2,
         Happy = 3
     }
 
-    public void Start() {
+    public void Start()
+    {
         Plugin.Logger.LogInfo("Hi creator");
         Agent.enabled = galState != State.Inactive;
         StartCoroutine(StartUpDelay());
     }
 
-    private IEnumerator StartUpDelay() {
+    private IEnumerator StartUpDelay()
+    {
         yield return new WaitForSeconds(0.5f);
         this.transform.position = ShockwaveCharger.ChargeTransform.position;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
@@ -103,11 +112,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     [ServerRpc(RequireOwnership = false)]
     private void StartPetAnimationServerRpc()
     {
-        NetworkAnimator.SetTrigger("startPet");
+        NetworkAnimator.SetTrigger(pettingAnimation);
         EnablePhysicsClientRpc(!physicsEnabled);
     }
 
-    public void Update() {
+    public void Update()
+    {
         Agent.enabled = galState != State.Inactive;
         if (galState == State.Inactive) return;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
@@ -133,7 +143,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private void HostSideUpdate()
     {
         AdjustSpeedOnDistanceOnTargetPosition();
-        Animator.SetFloat("RunSpeed", Agent.velocity.magnitude / 3);
+        Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 3);
         switch (galState)
         {
             case State.Inactive:
@@ -186,7 +196,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         {
             if (Agent.pathStatus == NavMeshPathStatus.PathInvalid)
             {
-                if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas));
+                if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas))
                 {
                     Agent.Warp(ownerPlayer.transform.position);
                 }
@@ -242,7 +252,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
                 {
                     int heldItemCount = itemsHeldList.Count;
                     Plugin.ExtendedLogging($"Items held: {heldItemCount}");
-                    for (int i = heldItemCount - 1; i >= 0; i--) {
+                    for (int i = heldItemCount - 1; i >= 0; i--)
+                    {
                         HandleDroppingItemServerRpc(i);
                     }
                 }
@@ -256,7 +267,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     private void DoAttackMode()
     {
-        if (targetEnemy == null || targetEnemy.isEnemyDead)
+        if (targetEnemy == null || targetEnemy.isEnemyDead || chargeCount <= 0 || ownerPlayer == null)
         {
             if (ownerPlayer != null && chargeCount > 0)
             {
@@ -264,6 +275,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
             }
             else
             {
+                // todo: go back to ship and shut off, or just teleport if the ship is leaving.
                 HandleStateAnimationSpeedChanges(State.Inactive, Emotion.OpenEye);
             }
             return;
@@ -279,7 +291,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
             Vector3 direction = (targetPosition - this.transform.position).normalized;
             direction.y = 0; // Keep the y component zero to prevent vertical rotation
 
-            if (direction != Vector3.zero) {
+            if (direction != Vector3.zero)
+            {
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
                 this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * 5f);
             }
@@ -305,7 +318,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     private void EnablePhysics(bool enablePhysics)
     {
-        foreach (Collider collider in GetComponentsInChildren<Collider>())
+        foreach (Collider collider in colliders)
         {
             collider.enabled = enablePhysics;
         }
@@ -331,20 +344,29 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
 
     private void CheckIfEnemyIsHitAnimEvent()
     {
-        if (targetEnemy == null || targetEnemy.isEnemyDead || !IsOwner) return;
-        RaycastHit[] raycastHits = Physics.RaycastAll(transform.position, transform.forward, 7.5f, LayerMask.GetMask("Enemies", "Player"), QueryTriggerInteraction.Ignore); 
-        if (raycastHits.Length == 0) return;
-        foreach (RaycastHit hit in raycastHits)
+        if (targetEnemy == null || targetEnemy.isEnemyDead) return;
+
+        // Define the center of the box based on the object's current position and forward direction
+        Vector3 boxCenter = transform.position + transform.forward * (boxSize.z / 2f);
+
+        // Check for all objects inside the box
+        Collider[] hits = Physics.OverlapBox(boxCenter, boxSize / 2f, transform.rotation, LayerMask.GetMask("Enemies", "Player"), QueryTriggerInteraction.Collide);
+
+        if (hits.Length == 0) return;
+
+        foreach (Collider hit in hits)
         {
             if (targetEnemy == null || targetEnemy.isEnemyDead) return;
+
             if (hit.transform == targetEnemy.transform)
             {
-                if (IsOwner) targetEnemy.KillEnemyOnOwnerClient(false);
+                if (targetEnemy.IsOwner) targetEnemy.KillEnemyOnOwnerClient();
             }
-            if (hit.transform.TryGetComponent(out PlayerControllerB? player))
+            if (hit.transform.TryGetComponent(out PlayerControllerB player))
             {
                 if (player == null || player.isPlayerDead) return;
-                player.DamagePlayer(player.health - (player.health - 1), true, true, CauseOfDeath.Blast, 0, false, (player.transform.position - this.transform.position).normalized * 50);
+
+                player.DamagePlayer(player.health - (player.health - 1), true, false, CauseOfDeath.Blast, 0, false, (player.transform.position - this.transform.position).normalized * 50);
             }
         }
     }
@@ -392,35 +414,36 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         switch (state)
         {
             case State.Inactive:
-                Animator.SetBool("attackMode", false);
-                Animator.SetBool("dancing", false);
-                Animator.SetBool("activated", false);
+                Animator.SetBool(attackModeAnimation, false);
+                Animator.SetBool(danceAnimation, false);
+                Animator.SetBool(activatedAnimation, false);
+                this.Agent.Warp(ShockwaveCharger.ChargeTransform.position);
                 break;
             case State.Active:
-                Animator.SetBool("attackMode", false);
-                Animator.SetBool("dancing", false);
-                Animator.SetBool("activated", true);
+                Animator.SetBool(attackModeAnimation, false);
+                Animator.SetBool(danceAnimation, false);
+                Animator.SetBool(activatedAnimation, true);
                 break;
             case State.FollowingPlayer:
-                Animator.SetBool("attackMode", false);
-                Animator.SetBool("dancing", false);
-                Animator.SetBool("activated", true);
+                Animator.SetBool(attackModeAnimation, false);
+                Animator.SetBool(danceAnimation, false);
+                Animator.SetBool(activatedAnimation, true);
                 break;
             case State.DeliveringItems:
-                Animator.SetBool("attackMode", false);
-                Animator.SetBool("dancing", false);
-                Animator.SetBool("activated", true);
+                Animator.SetBool(attackModeAnimation, false);
+                Animator.SetBool(danceAnimation, false);
+                Animator.SetBool(activatedAnimation, true);
                 // in host side of things, set destination to ship.
                 break;
             case State.Dancing:
-                Animator.SetBool("attackMode", false);
-                Animator.SetBool("dancing", true);
-                Animator.SetBool("activated", true);
+                Animator.SetBool(attackModeAnimation, false);
+                Animator.SetBool(danceAnimation, true);
+                Animator.SetBool(activatedAnimation, true);
                 break;
             case State.AttackMode:
-                Animator.SetBool("attackMode", true);
-                Animator.SetBool("dancing", false);
-                Animator.SetBool("activated", true);
+                Animator.SetBool(attackModeAnimation, true);
+                Animator.SetBool(danceAnimation, false);
+                Animator.SetBool(activatedAnimation, true);
                 break;
         }
     }
@@ -441,8 +464,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     {
         State stateToSwitchTo = (State)state;
         Emotion emotionToSwitchTo = (Emotion)emotion;
-        if (state != -1) {
-            switch (stateToSwitchTo) {
+        if (state != -1)
+        {
+            switch (stateToSwitchTo)
+            {
                 case State.Inactive:
                     HandleStateInactiveChange();
                     break;
@@ -464,8 +489,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
             }
         }
 
-        if (emotion != -1) {
-            switch (emotionToSwitchTo) {
+        if (emotion != -1)
+        {
+            switch (emotionToSwitchTo)
+            {
                 case Emotion.ClosedEye:
                     HandleEmotionInactiveChange();
                     break;
@@ -488,7 +515,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         flying = false;
         
         int heldItemCount = itemsHeldList.Count;
-        for (int i = heldItemCount - 1; i >= 0; i--) {
+        for (int i = heldItemCount - 1; i >= 0; i--)
+        {
             HandleDroppingItem(itemsHeldList[i]);
         }
 
@@ -560,6 +588,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     [ServerRpc(RequireOwnership = false)]
     private void GrabItemOwnerHoldingServerRpc(int indexOfOwner)
     {
+        Animator.SetBool(holdingItemAnimation, true);
         GrabItemOwnerHoldingClientRpc(indexOfOwner);
     }
 
@@ -567,14 +596,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     private void GrabItemOwnerHoldingClientRpc(int indexOfOwner)
     {
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[indexOfOwner];
-        HandleGrabbingItem(player.currentlyHeldObjectServer, itemsHeldTransforms[itemsHeldList.Count]);
+        StartCoroutine(HandleGrabbingItem(player.currentlyHeldObjectServer, itemsHeldTransforms[itemsHeldList.Count]));
     }
 
-    private void HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
+    private IEnumerator HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
     {
         item.isInElevator = false;
         item.isInShipRoom = false;
         item.playerHeldBy.DiscardHeldObject();
+        yield return null;
         item.grabbable = false;
         item.isHeldByEnemy = true;
         item.hasHitGround = false;
@@ -617,21 +647,31 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
         item.isHeldByEnemy = false;
         item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
         itemsHeldList.Remove(item);
+        if (itemsHeldList.Count == 0 && IsServer)
+        {
+            Animator.SetBool(holdingItemAnimation, false);
+        }
     }
 
-    public void GoThroughEntrance() {
+    public void GoThroughEntrance()
+    {
         var insideEntrancePosition = RoundManager.FindMainEntrancePosition(true, false);
         var outsideEntrancePosition = RoundManager.FindMainEntrancePosition(true, true);
-        if (!isInside) {
+        if (!isInside)
+        {
             Agent.SetDestination(outsideEntrancePosition);
             
-            if (Vector3.Distance(transform.position, outsideEntrancePosition) <= 3f) {
+            if (Vector3.Distance(transform.position, outsideEntrancePosition) <= 3f)
+            {
                 Agent.Warp(insideEntrancePosition);
                 SetShockwaveGalOutsideServerRpc(false);
             }
-        } else {
+        }
+        else
+        {
             Agent.SetDestination(insideEntrancePosition);
-            if (Vector3.Distance(transform.position, insideEntrancePosition) <= 3f) {
+            if (Vector3.Distance(transform.position, insideEntrancePosition) <= 3f)
+            {
                 Agent.Warp(outsideEntrancePosition);
                 SetShockwaveGalOutsideServerRpc(true);
             }
@@ -655,8 +695,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     }
 
     [ClientRpc]
-    public void SetShockwaveGalOutsideClientRpc(bool setOutside) {
-        for (int i = 0; i < itemsHeldList.Count; i++) {
+    public void SetShockwaveGalOutsideClientRpc(bool setOutside)
+    {
+        for (int i = 0; i < itemsHeldList.Count; i++)
+        {
             itemsHeldList[i].isInFactory = !setOutside;
             itemsHeldList[i].transform.position = itemsHeldTransforms[i].position;
             StartCoroutine(SetItemPhysics(itemsHeldList[i]));
@@ -671,18 +713,22 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener //todo: buy the c
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetEnemyTargetServerRpc(int enemyID) {
+    public void SetEnemyTargetServerRpc(int enemyID)
+    {
         SetEnemyTargetClientRpc(enemyID);
     }
 
     [ClientRpc]
-    public void SetEnemyTargetClientRpc(int enemyID) {
-        if (enemyID == -1) {
+    public void SetEnemyTargetClientRpc(int enemyID)
+    {
+        if (enemyID == -1)
+        {
             targetEnemy = null;
             Plugin.ExtendedLogging($"Clearing Enemy target on {this}");
             return;
         }
-        if (RoundManager.Instance.SpawnedEnemies[enemyID] == null) {
+        if (RoundManager.Instance.SpawnedEnemies[enemyID] == null)
+        {
             Plugin.ExtendedLogging($"Enemy Index invalid! {this}");
             return;
         }
