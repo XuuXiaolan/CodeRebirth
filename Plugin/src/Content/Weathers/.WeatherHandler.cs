@@ -113,15 +113,15 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     private void RegisterMeteorShower() {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
         
-        var sScrapValues = ChangeItemValues(Meteorite.SapphireMeteoriteItem, Plugin.ModConfig.ConfigSapphireWorth.Value);
+        int[] sScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigSapphireWorth.Value);
         Plugin.samplePrefabs.Add("Sapphire Meteorite", Meteorite.SapphireMeteoriteItem);
         RegisterScrapWithConfig("All:0", Meteorite.SapphireMeteoriteItem, sScrapValues[0], sScrapValues[1]);
 
-        var eScrapValues = ChangeItemValues(Meteorite.EmeraldMeteoriteItem, Plugin.ModConfig.ConfigEmeraldWorth.Value);
+        int[] eScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigEmeraldWorth.Value);
         Plugin.samplePrefabs.Add("Emerald Meteorite", Meteorite.EmeraldMeteoriteItem);
         RegisterScrapWithConfig("All:0", Meteorite.EmeraldMeteoriteItem, eScrapValues[0], eScrapValues[1]);
         
-        var rScrapValues = ChangeItemValues(Meteorite.RubyMeteoriteItem, Plugin.ModConfig.ConfigRubyWorth.Value);
+        int[] rScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigRubyWorth.Value);
         Plugin.samplePrefabs.Add("Ruby Meteorite", Meteorite.RubyMeteoriteItem);
         RegisterScrapWithConfig("All:0", Meteorite.RubyMeteoriteItem, rScrapValues[0], rScrapValues[1]);
 

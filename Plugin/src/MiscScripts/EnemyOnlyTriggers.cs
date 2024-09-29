@@ -8,7 +8,6 @@ public class EnemyOnlyTriggers : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         Transform? parent = TryFindRoot(other.transform);
         if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead)
         {

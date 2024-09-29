@@ -14999,18 +14999,19 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 0
   forceDirectionFromThisObject: 1
   causeOfDeath: 8
+  triggerForPlayers: 0
   triggerForEnemies: 0
   canThingExit: 1
   sharedCooldown: 0
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
+  enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
   damageToDealForPlayers: 0
   damageToDealForEnemies: 0
   damageIntervalForPlayers: 1
   damageIntervalForEnemies: 0.25
-  damageClip:
-  - {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
+  damageClips: []
   damageAudioSources:
   - {fileID: 848744891434479662}
   deathPrefabForPlayer: {fileID: 0}
@@ -15022,6 +15023,10 @@ MonoBehaviour:
   damageParticlesForPlayer: []
   deathParticlesForEnemy: []
   damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
 --- !u!1 &1286053148968788006
 GameObject:
   m_ObjectHideFlags: 0
@@ -15363,18 +15368,19 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
+  triggerForPlayers: 0
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
+  enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
   damageToDealForPlayers: 999
   damageToDealForEnemies: 999
   damageIntervalForPlayers: 30
   damageIntervalForEnemies: 30
-  damageClip:
-  - {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
+  damageClips: []
   damageAudioSources:
   - {fileID: 848744891434479662}
   deathPrefabForPlayer: {fileID: 0}
@@ -15387,6 +15393,10 @@ MonoBehaviour:
   deathParticlesForEnemy:
   - {fileID: 8693933963506359650}
   damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
 --- !u!114 &4473479764573031540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25660,18 +25670,19 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 0
   forceDirectionFromThisObject: 1
   causeOfDeath: 8
+  triggerForPlayers: 0
   triggerForEnemies: 0
   canThingExit: 1
   sharedCooldown: 0
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
+  enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
   damageToDealForPlayers: 0
   damageToDealForEnemies: 0
   damageIntervalForPlayers: 1
   damageIntervalForEnemies: 0.25
-  damageClip:
-  - {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
+  damageClips: []
   damageAudioSources:
   - {fileID: 848744891434479662}
   deathPrefabForPlayer: {fileID: 0}
@@ -25683,6 +25694,10 @@ MonoBehaviour:
   damageParticlesForPlayer: []
   deathParticlesForEnemy: []
   damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
 --- !u!1 &3415322658685851588
 GameObject:
   m_ObjectHideFlags: 0
@@ -25930,18 +25945,19 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
+  triggerForPlayers: 0
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
+  enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
   damageToDealForPlayers: 999
   damageToDealForEnemies: 999
   damageIntervalForPlayers: 30
   damageIntervalForEnemies: 30
-  damageClip:
-  - {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
+  damageClips: []
   damageAudioSources:
   - {fileID: 848744891434479662}
   deathPrefabForPlayer: {fileID: 0}
@@ -25954,6 +25970,10 @@ MonoBehaviour:
   deathParticlesForEnemy:
   - {fileID: 8693933963506359650}
   damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
 --- !u!136 &1680993429602726859
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -41084,18 +41104,19 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
+  triggerForPlayers: 0
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
+  enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
   damageToDealForPlayers: 999
   damageToDealForEnemies: 999
   damageIntervalForPlayers: 30
   damageIntervalForEnemies: 30
-  damageClip:
-  - {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
+  damageClips: []
   damageAudioSources:
   - {fileID: 848744891434479662}
   deathPrefabForPlayer: {fileID: 0}
@@ -41108,6 +41129,10 @@ MonoBehaviour:
   deathParticlesForEnemy:
   - {fileID: 8693933963506359650}
   damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
 --- !u!114 &768439171072820183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46111,10 +46136,10 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0fb179735f1d9e243ac97e71edafe361, type: 2}
-  - {fileID: 2100000, guid: 1040dd3de1259704ca3b1983ce94f4ee, type: 2}
-  - {fileID: 2100000, guid: 634b6c30aeee6564e8e683f8b9d5fa3f, type: 2}
-  - {fileID: 2100000, guid: ef93d76337efc234d8bcd3fc6200f065, type: 2}
+  - {fileID: 2100000, guid: cee9c60ebf07c7b44ae356c3fb4c21dc, type: 2}
+  - {fileID: 2100000, guid: 47795f3a9b2492245a77b699787b2b5e, type: 2}
+  - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
+  - {fileID: 2100000, guid: 86f2a6b4d082d8a4ba15258b0790d5c9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -46139,7 +46164,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 1
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 8497524491053831137, guid: 637c73f95b1e4574c9052f89409ad639, type: 3}
+  m_Mesh: {fileID: 202203596011355152, guid: 9046f7e60205ed44fbfb60c40790ed47, type: 3}
   m_Bones:
   - {fileID: 3724638416957337854}
   - {fileID: 8660683222156637817}
@@ -46527,6 +46552,11 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
+  AlbinoMaterials:
+  - {fileID: 2100000, guid: b2f4cfae3f887b645b9bc3d5040ef296, type: 2}
+  - {fileID: 2100000, guid: ecbba3b3c81707549abd5460f942000c, type: 2}
+  - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
+  - {fileID: 2100000, guid: 83ebd022765c0eb47af87dc5bf1e84b0, type: 2}
   DeathColliders:
   - {fileID: 5127988842370748894}
   - {fileID: 1680993429602726859}
@@ -46618,47 +46648,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
   - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1917823488
-    DestinationState: 1377418853
-    TransitionDuration: 2.0673523
-    TriggerNameHash: 1822675767
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1377418853
+    Layer: 1
+    OriginatingState: -542986255
     DestinationState: -380624004
     TransitionDuration: 1.0651171
     TriggerNameHash: -1608089
     TransitionIndex: 0
   - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1377418853
+    Layer: 1
+    OriginatingState: -542986255
     DestinationState: -1489130674
     TransitionDuration: 1.025834
-    TriggerNameHash: 899680580
+    TriggerNameHash: -1468029814
     TransitionIndex: 1
   - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1377418853
+    Layer: 1
+    OriginatingState: -542986255
     DestinationState: -1326707811
     TransitionDuration: 0.4957142
     TriggerNameHash: 1182904180
     TransitionIndex: 2
   - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -1296012370
+    Layer: 1
+    OriginatingState: -1489130674
     DestinationState: -1441185410
-    TransitionDuration: 0.7199049
+    TransitionDuration: 0.25
     TriggerNameHash: 439290163
     TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -1296012370
-    DestinationState: 1377418853
-    TransitionDuration: 3.0073533
-    TriggerNameHash: 1822675767
-    TransitionIndex: 1
   m_Animator: {fileID: 111922345862184124}
 --- !u!114 &6280165044034835773
 MonoBehaviour:
@@ -46699,7 +46715,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 6657914976785946626}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.74
+  m_Radius: 1
   m_Speed: 3.5
   m_Acceleration: 5
   avoidancePriority: 50
@@ -46709,7 +46725,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 4
-  m_BaseOffset: -0.05
+  m_BaseOffset: 0
   m_WalkableMask: 927
   m_ObstacleAvoidanceType: 1
 --- !u!1 &6862261050158760410
@@ -46927,18 +46943,19 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
+  triggerForPlayers: 0
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
+  enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
   damageToDealForPlayers: 999
   damageToDealForEnemies: 999
   damageIntervalForPlayers: 30
   damageIntervalForEnemies: 30
-  damageClip:
-  - {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
+  damageClips: []
   damageAudioSources:
   - {fileID: 848744891434479662}
   deathPrefabForPlayer: {fileID: 0}
@@ -46951,6 +46968,10 @@ MonoBehaviour:
   deathParticlesForEnemy:
   - {fileID: 8693933963506359650}
   damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
 --- !u!114 &103609240426556040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52053,18 +52074,19 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
+  triggerForPlayers: 0
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
+  enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
   damageToDealForPlayers: 999
   damageToDealForEnemies: 999
   damageIntervalForPlayers: 30
   damageIntervalForEnemies: 30
-  damageClip:
-  - {fileID: 8300000, guid: 32493c7f309928f46927e7d0586c3ca7, type: 3}
+  damageClips: []
   damageAudioSources:
   - {fileID: 848744891434479662}
   deathPrefabForPlayer: {fileID: 0}
@@ -52077,6 +52099,10 @@ MonoBehaviour:
   deathParticlesForEnemy:
   - {fileID: 8693933963506359650}
   damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
 --- !u!114 &8770906972711544240
 MonoBehaviour:
   m_ObjectHideFlags: 0

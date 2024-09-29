@@ -54,11 +54,11 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler> {
 		RegisterScrapWithConfig("", PlantPot.Seed, -1, -1);
 		Plugin.samplePrefabs.Add("Wooden Seed", PlantPot.Seed);
 
-		var scrapValues = ChangeItemValues(PlantPot.Seed, Plugin.ModConfig.ConfigTomatoValue.Value);
+		int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigTomatoValue.Value);
 		RegisterScrapWithConfig("", PlantPot.Tomato, scrapValues[0], scrapValues[1]);
 		Plugin.samplePrefabs.Add("Tomato", PlantPot.Tomato);
 
-		var gScrapValues = ChangeItemValues(PlantPot.Tomato, Plugin.ModConfig.ConfigGoldenTomatoValue.Value);
+		int[] gScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigGoldenTomatoValue.Value);
 		RegisterScrapWithConfig("", PlantPot.GoldenTomato, gScrapValues[0], gScrapValues[1]);
 		Plugin.samplePrefabs.Add("Golden Tomato", PlantPot.GoldenTomato);
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Content.Enemies;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -46,10 +47,12 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Header("Script Enabled")]
     [Tooltip("Whether this script is enabled.")]
     public bool enabledScript = true;
+
     [Header("Death Animation Settings")]
     [Tooltip("Different ragdoll body types that spawn after death.")]
     public DeathAnimation deathAnimation = DeathAnimation.Default;
     [Space(2)]
+    
     [Header("Force Settings")]
     [Tooltip("The force direction of the damage.")]
     public ForceDirection forceDirection = ForceDirection.Forward;
@@ -60,10 +63,12 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("If true, the force direction will be calculated from the object's transform. If false, the force direction will be calculated from the player's transform.")]
     public bool forceDirectionFromThisObject = true;
     [Space(2)]
+    
     [Header("Cause of Death")]
     [Tooltip("Cause of death displayed in ScanNode after death.")]
     public CauseOfDeath causeOfDeath = CauseOfDeath.Unknown;
     [Space(2)]
+    
     [Header("Trigger Settings")]
     [Tooltip("Whether to trigger for players.")]
     public bool triggerForPlayers = false;
@@ -78,7 +83,10 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("Whether to play sound when damage is dealt to player that enemies can hear.")]
     public bool soundAttractsDogs = false;
     [Space(2)]
+    
     [Header("Damage Settings")]
+    [Tooltip("Enemy Main Script if put on an enemy")]
+    public EnemyAI? enemyMainScript = null;
     [Tooltip("Timer in which the gameobject will disable itself, 0 will not disable itself after any point of time.")]
     public float damageDuration = 0f;
     [Tooltip("Damage to deal every interval for players.")]
@@ -90,18 +98,21 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("Cooldown to deal damage for enemies.")]
     public float damageIntervalForEnemies = 0.25f;
     [Space(2)]
+    
     [Header("Audio Settings")]
     [Tooltip("Damage clip to play when damage is dealt to player/enemy.")]
     public List<AudioClip> damageClips = new();
     [Tooltip("Damage audio sources to play when damage is dealt to player (picks the closest AudioSource to the player).")]
     public List<AudioSource> damageAudioSources = new();
     [Space(2)]
+    
     [Header("Death Prefab Settings")]
     [Tooltip("Prefab to spawn when the player dies.")]
     public GameObject? deathPrefabForPlayer = null;
     [Tooltip("Prefab to spawn when the enemy dies.")]
     public GameObject? deathPrefabForEnemy = null;
     [Space(2)]
+    
     [Header("Particle System Settings")]
     [Tooltip("Use particle systems when damage is dealt to player/enemy.")]
     public bool useParticleSystems = false;
@@ -116,6 +127,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("Particle system to play when the enemy is damaged.")]
     public List<ParticleSystem> damageParticlesForEnemy = new();
     [Space(2f)]
+    
     [Header("Display Message Settings")]
     [Tooltip("Whether to display message to player once damage is dealt to player.")]
     public bool displayMessage = false;
@@ -224,7 +236,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
         if (triggerForEnemies)
         {
             Transform? parent = TryFindRoot(other.transform);
-            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead)
+            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead && !(enemyMainScript != null && (enemy == enemyMainScript || enemyMainScript is RedwoodTitanAI redwoodTitanAI && enemy == redwoodTitanAI.targetEnemy)))
             {
                 if (!enemyCoroutineStatus.ContainsKey(enemy))
                 {
@@ -305,22 +317,29 @@ public class BetterCooldownTrigger : NetworkBehaviour
         }
 
         PlayDamageSound(player.transform, playerClosestAudioSources.ContainsKey(player) ? playerClosestAudioSources[player] : null);
-        if (teleportParticles) {
-            foreach (ParticleSystem? particle in damageParticlesForPlayer) {
+        if (teleportParticles)
+        {
+            foreach (ParticleSystem? particle in damageParticlesForPlayer)
+            {
                 if (particle != null) particle.transform.position = player.transform.position;
             }
-            foreach (ParticleSystem? particle in deathParticlesForPlayer) {
+            foreach (ParticleSystem? particle in deathParticlesForPlayer)
+            {
                 if (particle != null) particle.transform.position = player.transform.position;
             }
         }
         if (!player.isPlayerDead)
         {
             player.externalForces += calculatedForceAfterDamage;
-        } else {
+        }
+        else
+        {
             if (deathPrefabForPlayer != null && deathPrefabForPlayer.GetComponent<NetworkObject>() != null)
             {
                 SpawnDeathPrefabServerRpc(player.transform.position, player.transform.rotation, true);
-            } else if (deathPrefabForPlayer != null) {
+            }
+            else if (deathPrefabForPlayer != null)
+            {
                 Instantiate(deathPrefabForPlayer, player.transform.position, player.transform.rotation);
                 playerCoroutineStatus[player] = false;
                 playerClosestAudioSources.Remove(player);
@@ -334,11 +353,14 @@ public class BetterCooldownTrigger : NetworkBehaviour
         enemy.HitEnemy(damageToDealForEnemies, null, false, -1);
         PlayDamageSound(enemy.transform, enemyClosestAudioSources.ContainsKey(enemy) ? enemyClosestAudioSources[enemy] : null);
 
-        if (enemy.isEnemyDead) {
+        if (enemy.isEnemyDead)
+        {
             if (deathPrefabForEnemy != null && deathPrefabForEnemy.GetComponent<NetworkObject>() != null)
             {
                 SpawnDeathPrefabServerRpc(enemy.transform.position, enemy.transform.rotation, false);
-            } else if (deathPrefabForEnemy != null) {
+            }
+            else if (deathPrefabForEnemy != null)
+            {
                 Instantiate(deathPrefabForEnemy, enemy.transform.position, enemy.transform.rotation);
             }
             enemyCoroutineStatus[enemy] = false;
@@ -355,37 +377,54 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     [ClientRpc]
     private void HandleParticleSystemStuffClientRpc(Vector3 position, bool forPlayer, bool isDead) {
-        if (teleportParticles) {
-            if (forPlayer) {
-                foreach (ParticleSystem? particle in damageParticlesForPlayer) {
+        if (teleportParticles)
+        {
+            if (forPlayer)
+            {
+                foreach (ParticleSystem? particle in damageParticlesForPlayer)
+                {
                     if (particle != null) particle.transform.position = position;
                 }
-                foreach (ParticleSystem? particle in deathParticlesForPlayer) {
+                foreach (ParticleSystem? particle in deathParticlesForPlayer)
+                {
                     if (particle != null) particle.transform.position = position;
                 }  
-            } else {
-                foreach (ParticleSystem? particle in damageParticlesForEnemy) {
+            }
+            else
+            {
+                foreach (ParticleSystem? particle in damageParticlesForEnemy)
+                {
                     if (particle != null) particle.transform.position = position;
                 }
-                foreach (ParticleSystem? particle in deathParticlesForEnemy) {
+                foreach (ParticleSystem? particle in deathParticlesForEnemy)
+                {
                     if (particle != null) particle.transform.position = position;
                 }
             }
         }
 
-        if (forPlayer) {
-            if (!isDead && damageParticlesForPlayer.Count > 0) {
+        if (forPlayer)
+        {
+            if (!isDead && damageParticlesForPlayer.Count > 0)
+            {
                 var particleSystem = damageParticlesForPlayer[Random.Range(0, damageParticlesForPlayer.Count)];
                 particleSystem.Play();
-            } else if (isDead && deathParticlesForPlayer.Count > 0) {
+            }
+            else if (isDead && deathParticlesForPlayer.Count > 0)
+            {
                 var particleSystem = deathParticlesForPlayer[Random.Range(0, deathParticlesForPlayer.Count)];
                 particleSystem.Play();
             }
-        } else {
-            if (!isDead) {
+        }
+        else
+        {
+            if (!isDead && damageParticlesForEnemy.Count > 0)
+            {
                 var particleSystem = damageParticlesForEnemy[Random.Range(0, damageParticlesForEnemy.Count)];
                 particleSystem.Play();
-            } else {
+            }
+            else if (isDead && deathParticlesForEnemy.Count > 0)
+            {
                 var particleSystem = deathParticlesForEnemy[Random.Range(0, deathParticlesForEnemy.Count)];
                 particleSystem.Play();
             }
@@ -395,10 +434,13 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void SpawnDeathPrefabServerRpc(Vector3 position, Quaternion rotation, bool forPlayer)
     {
-        if (forPlayer) {
+        if (forPlayer)
+        {
             Instantiate(deathPrefabForPlayer, position, rotation);
             deathPrefabForPlayer?.GetComponent<NetworkObject>().Spawn();
-        } else {
+        }
+        else
+        {
             Instantiate(deathPrefabForEnemy, position, rotation);
             deathPrefabForEnemy?.GetComponent<NetworkObject>().Spawn();
         }

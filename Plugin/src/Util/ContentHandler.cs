@@ -118,15 +118,20 @@ public class ContentHandler<T> where T: ContentHandler<T>
         return (spawnRateByLevelType, spawnRateByCustomLevelType);
     }
 
-    protected int[] ChangeItemValues(Item item, string config)
+    protected int[] ChangeItemValues(string config)
     {
         string[] configParts = config.Split(',');
+        foreach (string configPart in configParts)
+        {
+            configPart.Trim();
+        }
         int minWorthInt = -1;
         int maxWorthInt = -1;
         if (configParts.Length == 2)
         {
-            minWorthInt = int.Parse(configParts[0].Trim());
-            maxWorthInt = int.Parse(configParts[1].Trim());
+            Plugin.ExtendedLogging("Changing item worth between " + configParts[0] + " and " + configParts[1]);
+            minWorthInt = int.Parse(configParts[0]);
+            maxWorthInt = int.Parse(configParts[1]);
         }
         return [minWorthInt, maxWorthInt];
     }
