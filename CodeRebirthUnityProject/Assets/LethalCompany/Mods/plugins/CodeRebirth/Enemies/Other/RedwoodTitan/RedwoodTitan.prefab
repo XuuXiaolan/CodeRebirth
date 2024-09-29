@@ -14999,15 +14999,15 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 0
   forceDirectionFromThisObject: 1
   causeOfDeath: 8
-  triggerForPlayers: 0
-  triggerForEnemies: 0
+  triggerForPlayers: 1
+  triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 0
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
   enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
-  damageToDealForPlayers: 0
+  damageToDealForPlayers: 200
   damageToDealForEnemies: 0
   damageIntervalForPlayers: 1
   damageIntervalForEnemies: 0.25
@@ -15019,9 +15019,10 @@ MonoBehaviour:
   useParticleSystems: 1
   teleportParticles: 0
   deathParticlesForPlayer:
-  - {fileID: 0}
+  - {fileID: 2178381428453425746}
   damageParticlesForPlayer: []
-  deathParticlesForEnemy: []
+  deathParticlesForEnemy:
+  - {fileID: 2178381428453425746}
   damageParticlesForEnemy: []
   displayMessage: 0
   headerText: Damage Dealt!
@@ -15368,7 +15369,7 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
-  triggerForPlayers: 0
+  triggerForPlayers: 1
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
@@ -25670,15 +25671,15 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 0
   forceDirectionFromThisObject: 1
   causeOfDeath: 8
-  triggerForPlayers: 0
-  triggerForEnemies: 0
+  triggerForPlayers: 1
+  triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 0
   playDefaultPlayerDamageSFX: 0
   soundAttractsDogs: 1
   enemyMainScript: {fileID: 4537627090396360056}
   damageDuration: 0
-  damageToDealForPlayers: 0
+  damageToDealForPlayers: 200
   damageToDealForEnemies: 0
   damageIntervalForPlayers: 1
   damageIntervalForEnemies: 0.25
@@ -25690,9 +25691,10 @@ MonoBehaviour:
   useParticleSystems: 1
   teleportParticles: 0
   deathParticlesForPlayer:
-  - {fileID: 0}
+  - {fileID: 4600959721752764096}
   damageParticlesForPlayer: []
-  deathParticlesForEnemy: []
+  deathParticlesForEnemy:
+  - {fileID: 2178381428453425746}
   damageParticlesForEnemy: []
   displayMessage: 0
   headerText: Damage Dealt!
@@ -25945,7 +25947,7 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
-  triggerForPlayers: 0
+  triggerForPlayers: 1
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
@@ -41104,7 +41106,7 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
-  triggerForPlayers: 0
+  triggerForPlayers: 1
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
@@ -46943,7 +46945,7 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
-  triggerForPlayers: 0
+  triggerForPlayers: 1
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
@@ -52074,7 +52076,7 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 10
   forceDirectionFromThisObject: 0
   causeOfDeath: 8
-  triggerForPlayers: 0
+  triggerForPlayers: 1
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1

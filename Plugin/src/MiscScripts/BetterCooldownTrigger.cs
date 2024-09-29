@@ -220,6 +220,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!enabledScript) return;
         if (triggerForPlayers && other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
         {
             if (playerCoroutineStatus.ContainsKey(player))

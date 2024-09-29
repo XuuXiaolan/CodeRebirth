@@ -47,6 +47,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     private Transform shipBoundaries = null!;
     private bool testBuild = false; 
     private LineRenderer line = null!;
+    private static int instanceNumbers = 0;
     private Collider[] enemyColliders = null!;
     private PlayerControllerB? playerToKick = null;
     private System.Random redwoodRandom = null!;
@@ -103,8 +104,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 #if DEBUG
         testBuild = true;
 #endif
+        instanceNumbers++;
 
-        redwoodRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
+        redwoodRandom = new System.Random(StartOfRound.Instance.randomMapSeed + instanceNumbers);
         if (redwoodRandom.Next(0, 2) == 0)
         {
             this.skinnedMeshRenderers[0].materials = AlbinoMaterials;
@@ -258,7 +260,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
     }
 
-    public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer) {
+    public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer)
+    {
         if (kicking || jumping) return;
         float distanceToClosestPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
         if (distanceToClosestPlayer <= 8f && UnityEngine.Random.Range(0f, 100f) <= 2.5f)
@@ -563,11 +566,12 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 if (IsServer)
                 {
+                    StopSearchRoutine();
                     this.creatureAnimator.SetBool("walking", false);
-                    this.creatureAnimator.SetBool("chasing", true);
+                    this.creatureAnimator.SetBool("chasing", false);
+                    StartCoroutine(SetSpeedForChasingGiant());
                 }
                 Plugin.ExtendedLogging("Start Target Giant");
-                StopSearchRoutine();
                 SwitchToBehaviourStateOnLocalClient((int)State.RunningToTarget);
             }
         }
@@ -605,6 +609,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         //SpawnHeartOnDeath(transform.position);
     }
 
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        instanceNumbers--;
+    }
     public bool TargetClosestRadMech(float range)
     {
         EnemyAI? closestEnemy = null;
