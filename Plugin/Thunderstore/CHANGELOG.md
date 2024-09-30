@@ -25,6 +25,7 @@
 - Added wooden crate config for whitelist if need be.
 - Gave each item a "min,max" worthiness config.
 - Added config for meteor shower to stop at a normalised time of day.
+- Added some more item crate configs.
 
 ## v0.5.2
 

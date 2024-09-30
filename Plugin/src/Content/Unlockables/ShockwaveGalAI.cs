@@ -350,12 +350,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         Vector3 boxCenter = transform.position + transform.forward * (boxSize.z / 2f);
 
         // Check for all objects inside the box
-        Collider[] hits = Physics.OverlapBox(boxCenter, boxSize / 2f, transform.rotation, LayerMask.GetMask("Enemies", "Player"), QueryTriggerInteraction.Collide);
+        int layerMask = 1 << LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Player");
+        Collider[] hits = Physics.OverlapBox(boxCenter, boxSize / 2f, transform.rotation, layerMask, QueryTriggerInteraction.Collide);
 
         if (hits.Length == 0) return;
 
         foreach (Collider hit in hits)
         {
+            Plugin.Logger.LogInfo($"Hit: {hit.name}");
             if (targetEnemy == null || targetEnemy.isEnemyDead) return;
 
             if (hit.transform == targetEnemy.transform)

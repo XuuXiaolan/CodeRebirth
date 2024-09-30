@@ -590,9 +590,13 @@ public class CodeRebirthConfig {
                                             3,
                                             "Abundance of Metal Crates that spawn outside (between 0 and your number).");
         ConfigCrateNumberToSpawn = configFile.Bind("Crate Options",
-                                            "Crate | Number To Spawn",
+                                            "Crate | Metal Number To Spawn",
                                             3,
                                             "Number of items that spawn inside a crate (between 0 and your number).");
+        ConfigWoodenCrateAbundance = configFile.Bind("Crate Options",
+                                            "Crate | Wooden Abundance",
+                                            3,
+                                            "Abundance of Wooden Crates that spawn outside (between 0 and your number).");
         ConfigMetalHitNumber = configFile.Bind("Crate Options",
                                             "Crate | Metal Hit Number",
                                             4,
