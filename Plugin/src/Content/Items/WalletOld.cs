@@ -1,20 +1,22 @@
 using Unity.Netcode;
 using UnityEngine;
-using CodeRebirth.src.Content.Items;
 
 namespace CodeRebirth.src.Content.Items;
-public class WalletOld : GrabbableObject {
+public class WalletOld : GrabbableObject
+{
     private RaycastHit hit;
     private ScanNodeProperties scanNode = null!;
     private int ownScrapValue = 0;
     private SkinnedMeshRenderer skinnedMeshRenderer = null!;
-    public override void Start() {
+    public override void Start()
+    {
         base.Start();
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         scanNode = GetComponentInChildren<ScanNodeProperties>();
     }
 
-    public override void ItemActivate(bool used, bool buttonDown = true) {
+    public override void ItemActivate(bool used, bool buttonDown = true)
+    {
         if (!playerHeldBy) return;
         var interactRay = new Ray(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
         if (Physics.Raycast(interactRay, out hit, playerHeldBy.grabDistance, playerHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8)
@@ -25,7 +27,8 @@ public class WalletOld : GrabbableObject {
             UpdateScrapValueServerRpc(coin.scrapValue);
             NetworkObject obj = coin.NetworkObject;
             float newblendShapeWeight = Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0)+20f, 0, 300);
-            if (playerHeldBy) {
+            if (playerHeldBy)
+            {
                 IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
             }
             DestroyObjectServerRpc(obj);
@@ -47,38 +50,48 @@ public class WalletOld : GrabbableObject {
     }
 
     [ClientRpc]
-    public void IncreaseBlendShapeWeightClientRpc(float newblendShapeWeight) {
+    public void IncreaseBlendShapeWeightClientRpc(float newblendShapeWeight)
+    {
         skinnedMeshRenderer.SetBlendShapeWeight(0, newblendShapeWeight);
     }
+
     [ServerRpc(RequireOwnership = false)]
-    public void UpdateScrapValueServerRpc(int valueToAdd) {
+    public void UpdateScrapValueServerRpc(int valueToAdd)
+    {
         this.scrapValue += valueToAdd;
         UpdateScrapValueClientRpc(scrapValue);
     }
 
     [ClientRpc]
-    private void UpdateScrapValueClientRpc(int newScrapValue) {
+    private void UpdateScrapValueClientRpc(int newScrapValue)
+    {
         this.scrapValue = newScrapValue;
         scanNode.scrapValue = scrapValue;
         scanNode.subText = $"Value: {scrapValue}";
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DestroyObjectServerRpc(NetworkObjectReference obj) {
+    public void DestroyObjectServerRpc(NetworkObjectReference obj)
+    {
         DestroyObjectClientRpc(obj);
     }
 
     [ClientRpc]
-    public void DestroyObjectClientRpc(NetworkObjectReference obj) {
-        if (obj.TryGet(out NetworkObject netObj)) {
+    public void DestroyObjectClientRpc(NetworkObjectReference obj)
+    {
+        if (obj.TryGet(out NetworkObject netObj))
+        {
             DestroyObject(netObj);
-        } else {
+        }
+        else
+        {
             // COULDNT FIND THE OBJECT TO DESTROY //
         }
     }
 
-    public void DestroyObject(NetworkObject netObj) {
+    public void DestroyObject(NetworkObject netObj)
+    {
         Destroy(netObj.gameObject.GetComponent<Money>().radarIcon.gameObject);
-        if(netObj.IsOwnedByServer && netObj.IsSpawned && netObj.IsOwner) netObj.Despawn();
+        if (netObj.IsOwnedByServer && netObj.IsSpawned && netObj.IsOwner) netObj.Despawn();
     }
 }

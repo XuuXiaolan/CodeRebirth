@@ -5,11 +5,13 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weapons;
-public class NaturesMace : CodeRebirthWeapons { // Added for potential future implementations
-	private int staffMask = 11012424;
+public class NaturesMace : CodeRebirthWeapons
+{ // Added for potential future implementations
+	private readonly int staffMask = 11012424;
 
-    public List<PlayerControllerB> HitNaturesMace() {
-        List<PlayerControllerB> playersHit = new List<PlayerControllerB>();
+    public List<PlayerControllerB> HitNaturesMace()
+    {
+        List<PlayerControllerB> playersHit = new();
         if (this.isHeld)
         {
             var objectsHitByStaff = Physics.SphereCastAll(
@@ -46,7 +48,8 @@ public class NaturesMace : CodeRebirthWeapons { // Added for potential future im
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void HealServerRpc(int playerIndex) {
+    public void HealServerRpc(int playerIndex)
+    {
         HealClientRpc(playerIndex);
     }
 

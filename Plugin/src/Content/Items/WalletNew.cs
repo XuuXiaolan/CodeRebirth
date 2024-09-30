@@ -157,23 +157,30 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         }
     }
 
-    public void HandleItemDrop(PlayerControllerB walletHeldBy) {
+    public void HandleItemDrop(PlayerControllerB walletHeldBy)
+    {
         if (!Plugin.InputActionsInstance.WalletDrop.triggered || walletHeldBy.inTerminalMenu) return;
         DropWallet();
     }
 
-    public void DropWallet() {
-        if (IsHost) {
+    public void DropWallet()
+    {
+        if (IsHost)
+        {
             SetTargetClientRpc(-1);
-        } else {
+        }
+        else
+        {
             SetTargetServerRpc(-1);
         }
     }
 
-    public void HandleItemActivate(PlayerControllerB walletHeldBy) {
+    public void HandleItemActivate(PlayerControllerB walletHeldBy)
+    {
         if (!Plugin.InputActionsInstance.WalletActivate.triggered) return;
         var interactRay = new Ray(walletHeldBy.gameplayCamera.transform.position, walletHeldBy.gameplayCamera.transform.forward);
-        if (Physics.Raycast(interactRay, out hit, walletHeldBy.grabDistance, walletHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8) {
+        if (Physics.Raycast(interactRay, out hit, walletHeldBy.grabDistance, walletHeldBy.interactableObjectsMask) && hit.collider.gameObject.layer != 8)
+        {
             Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
             if (coin == null) return;
             GetComponentInChildren<AudioSource>().Play();
@@ -187,61 +194,76 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void IncreaseBlendShapeWeightServerRpc(float newblendShapeWeight) {
+    public void IncreaseBlendShapeWeightServerRpc(float newblendShapeWeight)
+    {
         IncreaseBlendShapeWeightClientRpc(newblendShapeWeight);
     }
     [ClientRpc]
-    public void IncreaseBlendShapeWeightClientRpc(float newblendShapeWeight) {
+    public void IncreaseBlendShapeWeightClientRpc(float newblendShapeWeight)
+    {
         this.itemProperties.weight += 0.01f;
         skinnedMeshRenderer.SetBlendShapeWeight(0, newblendShapeWeight);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void UpdateScrapValueServerRpc(int valueToAdd) {
+    public void UpdateScrapValueServerRpc(int valueToAdd)
+    {
         this.scrapValue += valueToAdd;
         UpdateScrapValueClientRpc(scrapValue);
     }
 
     [ClientRpc]
-    private void UpdateScrapValueClientRpc(int newScrapValue) {
+    private void UpdateScrapValueClientRpc(int newScrapValue)
+    {
         this.scrapValue = newScrapValue;
         scanNode.scrapValue = scrapValue;
         scanNode.subText = $"Value: {scrapValue}";
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DestroyObjectServerRpc(NetworkObjectReference obj) {
+    public void DestroyObjectServerRpc(NetworkObjectReference obj)
+    {
         DestroyObjectClientRpc(obj);
     }
 
     [ClientRpc]
-    public void DestroyObjectClientRpc(NetworkObjectReference obj) {
-        if (obj.TryGet(out NetworkObject netObj)) {
+    public void DestroyObjectClientRpc(NetworkObjectReference obj)
+    {
+        if (obj.TryGet(out NetworkObject netObj))
+        {
             DestroyObject(netObj);
-        } else {
+        }
+        else
+        {
             Plugin.Logger.LogDebug("COULDNT FIND THE OBJECT TO DESTROY");
         }
     }
 
-    public void DestroyObject(NetworkObject netObj) {
+    public void DestroyObject(NetworkObject netObj)
+    {
         Destroy(netObj.gameObject.GetComponent<Money>().radarIcon.gameObject);
         if (netObj.IsOwnedByServer && netObj.IsSpawned && netObj.IsOwner) netObj.Despawn();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetTargetServerRpc(int PlayerID) {
+    public void SetTargetServerRpc(int PlayerID)
+    {
         SetTargetClientRpc(PlayerID);
     }
 
-    public override void LateUpdate() {
+    public override void LateUpdate()
+    {
         base.LateUpdate();
         if (!IsServer || walletMode == WalletModes.Held) return;
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-        if (StartOfRound.Instance.shipBounds.bounds.Contains(this.transform.position) && !isInShipRoom) {
+        if (StartOfRound.Instance.shipBounds.bounds.Contains(this.transform.position) && !isInShipRoom)
+        {
             this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
             isInShipRoom = true;
             isInElevator = true;
-        } else if (!StartOfRound.Instance.shipBounds.bounds.Contains(this.transform.position) && isInShipRoom) {
+        }
+        else if (!StartOfRound.Instance.shipBounds.bounds.Contains(this.transform.position) && isInShipRoom)
+        {
             this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             isInShipRoom = false;
             isInElevator = false;
@@ -251,30 +273,41 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
 
 
     [ClientRpc]
-    public void SetTargetClientRpc(int PlayerID) {
-        if (PlayerID == -1) {
+    public void SetTargetClientRpc(int PlayerID)
+    {
+        if (PlayerID == -1)
+        {
             PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-            if (IsServer) {
-                if (isInShipRoom) {
+            if (IsServer)
+            {
+                if (isInShipRoom)
+                {
                     this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
-                } else {
+                }
+                else
+                {
                     this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
                 }
             }
             Plugin.ExtendedLogging($"Clearing target on {this}");
             
             isHeld = false;
-            if (walletMode == WalletModes.Sold) {
+            if (walletMode == WalletModes.Sold)
+            {
                 SetInteractable(false);
             }
-            if (walletHeldBy != null) {
+            if (walletHeldBy != null)
+            {
                 // Perform a raycast from the camera to find the drop position
                 var interactRay = new Ray(walletHeldBy.gameplayCamera.transform.position, walletHeldBy.gameplayCamera.transform.forward);
-                if (Physics.Raycast(interactRay, out RaycastHit hit, walletHeldBy.grabDistance + 3f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) {
+                if (Physics.Raycast(interactRay, out RaycastHit hit, walletHeldBy.grabDistance + 3f, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
+                {
                     // Set the wallet's position to the hit point with an offset away from the surface
                     this.transform.position = hit.point + hit.normal * 0.1f;
                     this.transform.position += Vector3.down * 0.05f;
-                } else {
+                }
+                else
+                {
                     this.transform.position = walletHeldBy.transform.position + walletHeldBy.transform.forward * 0.3f;
                 }
                 SetInteractable(true);
@@ -287,7 +320,8 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         }
 
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[PlayerID];
-        if (player == null) {
+        if (player == null)
+        {
             Plugin.Logger.LogWarning($"Invalid player index: {PlayerID}");
             return;
         }
@@ -296,8 +330,10 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         walletHeldBy = player;
         this.transform.position = player.transform.position + player.transform.up * 1f + player.transform.right * 0.25f + player.transform.forward * 0.05f;
         walletHeldBy.carryWeight += (this.itemProperties.weight - 1f);
-        if (walletHeldBy == GameNetworkManager.Instance.localPlayerController && !walletHeldBy.GetCRPlayerData().holdingWallet) {
-            DialogueSegment dialogue = new DialogueSegment {
+        if (walletHeldBy == GameNetworkManager.Instance.localPlayerController && !walletHeldBy.GetCRPlayerData().holdingWallet)
+        {
+            DialogueSegment dialogue = new DialogueSegment
+            {
                     speakerText = "Wallet Tooltips",
                     bodyText = "L to Drop, E to Grab, LMB to Grab coins, O at company Counter to sell.",
                     waitTime = 7f
@@ -315,7 +351,8 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
 
         isHeld = true;
         this.transform.SetParent(walletHeldBy.transform, true);
-        if (IsServer) {
+        if (IsServer)
+        {
             GetComponent<NetworkObject>().ChangeOwnership(player.actualClientId);
         }
         UpdateToolTips();
@@ -339,19 +376,24 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         isInteractable.Value = value;
     }
     
-    public void UpdateToolTips() {
+    public void UpdateToolTips()
+    {
         if (walletHeldBy == null || GameNetworkManager.Instance.localPlayerController != walletHeldBy) return;
         HUDManager.Instance.ClearControlTips();
-        if (walletMode == WalletModes.Held) {
-            HUDManager.Instance.ChangeControlTipMultiple(new string[] {
+        if (walletMode == WalletModes.Held)
+        {
+            HUDManager.Instance.ChangeControlTipMultiple(new string[]
+            {
                 $"Use Wallet : [{Plugin.InputActionsInstance.WalletActivate.GetBindingDisplayString().Split(' ')[0]}]",
                 $"Drop Wallet : [{Plugin.InputActionsInstance.WalletDrop.GetBindingDisplayString().Split(' ')[0]}]",
                 $"Sell Wallet : [{Plugin.InputActionsInstance.WalletSell.GetBindingDisplayString().Split(' ')[0]}]"
             });
         }
     }
-    public void OnDisable() {
-        if (isHeld) {
+    public void OnDisable()
+    {
+        if (isHeld)
+        {
             if (!IsHost) return;
             SetTargetClientRpc(-1);
         }

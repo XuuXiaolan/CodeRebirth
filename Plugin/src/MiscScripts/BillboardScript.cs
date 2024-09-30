@@ -8,7 +8,6 @@ public class BillboardScript : MonoBehaviour
     public bool lockUpAxis = true;
     private Camera camera = null!;
 
-    // Start is called before the first frame update
     private void Start()
     {
         camera = GameNetworkManager.Instance.localPlayerController.gameplayCamera;
@@ -17,16 +16,17 @@ public class BillboardScript : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (lockUpAxis)
         {
-            if (parentObject.transform.eulerAngles == Vector3.zero) {
+            if (parentObject.transform.eulerAngles == Vector3.zero)
+            {
                 gameObject.transform.eulerAngles = new Vector3(gameObject.transform.eulerAngles.x, camera.transform.eulerAngles.y  + 180, gameObject.transform.eulerAngles.z);
 
             }
-            else{
+            else
+            {
                 gameObject.transform.eulerAngles = new Vector3(camera.transform.eulerAngles.x, parentObject.transform.eulerAngles.y, camera.transform.eulerAngles.z); 
             }
         }

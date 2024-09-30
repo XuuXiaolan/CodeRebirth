@@ -9,7 +9,8 @@ public class CodeRebirthWeapons : Shovel
     public bool canBreakTrees = false;
     public Transform weaponTip = null!;
 
-    public void Awake() {
+    public void Awake()
+    {
         defaultForce = shovelHitForce;
         canBreakTrees = Plugin.ModConfig.ConfigCanBreakTrees.Value;
         critChance = Plugin.ModConfig.ConfigCritChance.Value;

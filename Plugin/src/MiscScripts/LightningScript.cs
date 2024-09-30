@@ -5,7 +5,8 @@ using Object = UnityEngine.Object;
 using Vector3 = UnityEngine.Vector3;
 
 namespace CodeRebirth.src.MiscScripts;
-public class LightningStrikeScript {
+public class LightningStrikeScript
+{
 
     public static void SpawnLightningBolt(Vector3 strikePosition)
     {
@@ -44,9 +45,12 @@ public class LightningStrikeScript {
         AudioSource audioSource = Object.Instantiate(stormy.targetedStrikeAudio);
         audioSource.transform.position = strikePosition + Vector3.up * 0.5f;
         audioSource.enabled = true;
-        if (GameNetworkManager.Instance.localPlayerController.isInsideFactory) {
+        if (GameNetworkManager.Instance.localPlayerController.isInsideFactory)
+        {
             audioSource.volume = 0f;
-        } else {
+        }
+        else
+        {
             audioSource.volume = 0.20f;
         }
         stormy.PlayThunderEffects(strikePosition, audioSource);

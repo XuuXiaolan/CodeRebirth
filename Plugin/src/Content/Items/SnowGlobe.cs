@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 
 namespace CodeRebirth.src.Content.Items;
@@ -30,39 +28,10 @@ public class SnowGlobe : GrabbableObject
     [SerializeField]
     private AudioSource musicAS = null!;
     private PlayerControllerB? previouslyHeldBy;
-
     private bool activated;
 
-    /*public void ReplaceOrPutBackAnimationClip(PlayerControllerB? player, bool _override) {
-        if (player == null) {
-            Plugin.Logger.LogDebug("player is null");
-            return;
-        }
-        AnimatorOverrideController? playerOverrideThing = player.GetCRPlayerData().playerOverrideController;
-        if (playerOverrideThing == null) {
-            Plugin.Logger.LogDebug("playerOverrideThing is null");
-            return;
-        }
-        if (_override) {
-            if (player.isCrouching) {
-                player.Crouch(!player.isCrouching);
-                StartCoroutine(DelayOverrideAnim(playerOverrideThing));
-            } else {
-                playerOverrideThing["HoldLungApparatice"] = overrideClip;
-            }
-        } else {
-            playerOverrideThing["HoldLungApparatice"] = null;
-        }
-    }
-
-    public IEnumerator DelayOverrideAnim(AnimatorOverrideController playerOverrideThing) {
-        yield return new WaitForSeconds(0.3f);
-        if (this.isHeld && playerHeldBy == previouslyHeldBy) {
-            playerOverrideThing["HoldLungApparatice"] = overrideClip;
-        }
-    }*/
-
-    public override void Update() {
+    public override void Update()
+    {
         base.Update();
         if (previouslyHeldBy == null) return;
     }
@@ -71,19 +40,20 @@ public class SnowGlobe : GrabbableObject
     {
         base.GrabItem();
         previouslyHeldBy = playerHeldBy;
-        if (previouslyHeldBy == null) {
+        if (previouslyHeldBy == null)
+        {
             Plugin.Logger.LogDebug("previouslyHeldBy is null");
         }
-        // ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
     }
+
     public override void EquipItem()
     {
         base.EquipItem();
         previouslyHeldBy = playerHeldBy;
-        if (previouslyHeldBy == null) {
+        if (previouslyHeldBy == null)
+        {
             Plugin.Logger.LogDebug("previouslyHeldBy is null");
         }
-        // ReplaceOrPutBackAnimationClip(previouslyHeldBy, true);
         // Coming from pocketing since this is also called when using inventory
         ToggleParticleRenderer(true);
     }
@@ -92,13 +62,11 @@ public class SnowGlobe : GrabbableObject
     {
         base.PocketItem();
         // Disable Particles renderer#
-        // if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
         ToggleParticleRenderer(false);
     }
 
     public override void DiscardItem()
     {
-        // if (previouslyHeldBy != null) ReplaceOrPutBackAnimationClip(previouslyHeldBy, false);
         base.DiscardItem();
     }
 
@@ -107,9 +75,12 @@ public class SnowGlobe : GrabbableObject
         base.ItemActivate(used, buttonDown);
         if (!activated)
         {
-            if (Plugin.ModConfig.ConfigSnowGlobeMusic.Value) {
+            if (Plugin.ModConfig.ConfigSnowGlobeMusic.Value)
+            {
                 musicAS.volume = 1;
-            } else {
+            }
+            else
+            {
                 musicAS.volume = 0;
             }
             StartCoroutine(ActivateSnowGlobeCoroutine());
@@ -127,7 +98,7 @@ public class SnowGlobe : GrabbableObject
         activated = false;
     }
 
-    IEnumerator ToggleSnowGlobeCoroutine(bool toggle, float delay = 0.2f)
+    private IEnumerator ToggleSnowGlobeCoroutine(bool toggle, float delay = 0.2f)
     {
         ToggleParticles(toggle);
         ToggleMusic(toggle);
@@ -182,7 +153,7 @@ public class SnowGlobe : GrabbableObject
         ToggleLights(false);
     }
 
-    void ToggleLights(bool toggle)
+    private void ToggleLights(bool toggle)
     {
         foreach (GameObject light in redLightsGameObject)
         {
@@ -198,7 +169,7 @@ public class SnowGlobe : GrabbableObject
         }
     }
 
-    void ToggleParticles(bool toggle)
+    private void ToggleParticles(bool toggle)
     {
         if (toggle)
             snowPS.Play();
@@ -206,7 +177,7 @@ public class SnowGlobe : GrabbableObject
             snowPS.Stop();
     }
 
-    void ToggleMusic(bool toggle)
+    private void ToggleMusic(bool toggle)
     {
         if (toggle)
             musicAS.Play();
@@ -214,7 +185,7 @@ public class SnowGlobe : GrabbableObject
             musicAS.Stop();
     }
 
-    void ToggleParticleRenderer(bool toggle)
+    private void ToggleParticleRenderer(bool toggle)
     {
         snowPSR.enabled = toggle;
     }

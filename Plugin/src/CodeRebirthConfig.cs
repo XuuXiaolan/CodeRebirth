@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
 
-namespace CodeRebirth.src.Configs;
-public class CodeRebirthConfig {
+namespace CodeRebirth.src;
+public class CodeRebirthConfig
+{
     #region Enables/Disables
     public ConfigEntry<bool> ConfigSeamineTinkEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotEnabled { get; private set; }
@@ -117,7 +118,8 @@ public class CodeRebirthConfig {
     public ConfigEntry<string> ConfigRubyWorth { get; private set; }
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
-    public CodeRebirthConfig(ConfigFile configFile) {
+    public CodeRebirthConfig(ConfigFile configFile)
+    {
         configFile.SaveOnConfigSet = false;
         #region General
         ConfigEnableExtendedLogging = configFile.Bind("General",
@@ -622,7 +624,8 @@ public class CodeRebirthConfig {
         ClearUnusedEntries(configFile);
     }
 
-    private void ClearUnusedEntries(ConfigFile configFile) {
+    private void ClearUnusedEntries(ConfigFile configFile)
+    {
         // Normally, old unused config entries don't get removed, so we do it with this piece of code. Credit to Kittenji.
         PropertyInfo orphanedEntriesProp = configFile.GetType().GetProperty("OrphanedEntries", BindingFlags.NonPublic | BindingFlags.Instance);
         var orphanedEntries = (Dictionary<ConfigDefinition, string>)orphanedEntriesProp.GetValue(configFile, null);

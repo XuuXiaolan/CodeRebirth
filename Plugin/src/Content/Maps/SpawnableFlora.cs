@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public enum FloraTag {
+public enum FloraTag
+{
 	None,
 	Desert,
 	Snow,
@@ -9,7 +10,8 @@ public enum FloraTag {
 	Dangerous,
 }
 
-public class SpawnableFlora {
+public class SpawnableFlora
+{
 	public GameObject prefab = null!;
 	public string[] moonsWhiteList = null!;
 	public AnimationCurve spawnCurve = null!;

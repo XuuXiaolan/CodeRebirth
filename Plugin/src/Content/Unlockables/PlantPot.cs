@@ -12,14 +12,16 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     public InteractTrigger trigger = null!;
     public Transform[] ItemSpawnSpots = null!;
     public GameObject[] enableList = null!;
-    public enum Stage {
+    public enum Stage
+    {
         Zero = 0,
         One = 1,
         Two = 2,
         Three = 3,
     }
 
-    public enum FruitType {
+    public enum FruitType
+    {
         None = 0,
         Tomato = 1,
         Golden_Tomato = 2,
@@ -59,7 +61,8 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     private void OnInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
-        if (playerInteracting.currentlyHeldObjectServer != null && playerInteracting.currentlyHeldObjectServer.itemProperties.itemName == "Wooden Seed") {
+        if (playerInteracting.currentlyHeldObjectServer != null && playerInteracting.currentlyHeldObjectServer.itemProperties.itemName == "Wooden Seed")
+        {
             StartPlantGrowthServerRpc(new NetworkObjectReference(playerInteracting.currentlyHeldObjectServer.NetworkObject));
         }
     }
@@ -68,7 +71,8 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     {
         while (true) {
             yield return new WaitForSeconds(random.NextFloat(10f, 20f) * (stage == Stage.Three ? 0.5f : 1f));
-            if (stage < Stage.Three) {
+            if (stage < Stage.Three)
+            {
                 IncreaseStageServerRpc();
             }
             else
@@ -91,7 +95,8 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     private void ProduceFruitServerRpc(int fruitType)
     {
         string itemToSpawn = "";
-        switch (fruitType) {
+        switch (fruitType)
+        {
             case (int)FruitType.Tomato:
                 itemToSpawn = "Tomato";
                 break;
@@ -100,7 +105,8 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
                 break;
         }
         Plugin.samplePrefabs.TryGetValue(itemToSpawn, out Item item);
-        foreach (var itemSpawnSpot in ItemSpawnSpots) {
+        foreach (var itemSpawnSpot in ItemSpawnSpots)
+        {
             NetworkObjectReference spawnedItem = CodeRebirthUtils.Instance.SpawnScrap(item, itemSpawnSpot.position, false, true, 0);
             ((GameObject)spawnedItem).GetComponent<Fruit>().plantPot = this;
         }

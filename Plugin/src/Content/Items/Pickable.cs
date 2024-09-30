@@ -4,7 +4,8 @@ using UnityEngine.Events;
 namespace CodeRebirth.src.Content.Items;
 
 [RequireComponent(typeof(InteractTrigger))]
-public class Pickable : MonoBehaviour {
+public class Pickable : MonoBehaviour
+{
 	[SerializeField]
 	private AudioSource unlockSFX = null!;
 	
@@ -15,14 +16,16 @@ public class Pickable : MonoBehaviour {
 
 	private InteractTrigger trigger = null!;
 
-	void Awake() {
+	private void Awake()
+	{
 		trigger = GetComponent<InteractTrigger>();
 	}
 
-	public void Unlock() {
-		if(!IsLocked) return;
+	public void Unlock()
+	{
+		if (!IsLocked) return;
         
-		if(unlockSFX != null) unlockSFX.Play();
+		unlockSFX?.Play();
         
 		onUnlock.Invoke();
 		IsLocked = false;

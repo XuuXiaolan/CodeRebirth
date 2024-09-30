@@ -3,10 +3,8 @@ using System.Reflection;
 using UnityEngine;
 using BepInEx;
 using BepInEx.Logging;
-using CodeRebirth.src.Configs;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Keybinds;
 using HarmonyLib;
 using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util.Extensions;
@@ -68,6 +66,7 @@ public class Plugin : BaseUnityPlugin {
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
         ShovelPatch.Init();
+        RoundManagerPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");

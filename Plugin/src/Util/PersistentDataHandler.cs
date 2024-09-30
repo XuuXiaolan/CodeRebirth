@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace CodeRebirth.src.Util;
 
-abstract class SaveableData(string fileName) {
+public abstract class SaveableData(string fileName)
+{
 	[JsonIgnore]
 	public string FileName { get; private set; } = fileName;
 
@@ -15,24 +16,30 @@ abstract class SaveableData(string fileName) {
 	}
 }
 
-static class PersistentDataHandler {
+public static class PersistentDataHandler
+{
 	const string SAVE_EXTENSION = ".coderebirth_data";
 
-	static string GetFullPath(string fileName) {
+	private static string GetFullPath(string fileName)
+	{
 		string path = Path.Combine(Application.persistentDataPath, "CodeRebirth");
 		Directory.CreateDirectory(path);
 		return Path.Combine(path, fileName);
 	}
     
-	internal static T Load<T>(string fileName) {
+	internal static T Load<T>(string fileName)
+	{
 		string fullPath = GetFullPath($"{fileName}{SAVE_EXTENSION}");
 
-		if (!File.Exists(fullPath)) {
+		if (!File.Exists(fullPath))
+		{
 			Plugin.ExtendedLogging("Data does not exist! Using default constructor!");
 			T result = (T) typeof(T).GetConstructor([typeof(string)]).Invoke([fileName]);
 			Save(fileName, result);
 			return result;
-		} else {
+		}
+		else
+		{
 			Plugin.ExtendedLogging("Save exists! Attempting to load!");
 			
 			// maybe add more error handling here?
@@ -42,13 +49,16 @@ static class PersistentDataHandler {
 		}
 	}
 
-	internal static void Save<T>(string fileName, T data) {
+	internal static void Save<T>(string fileName, T data)
+	{
 		File.WriteAllText(GetFullPath($"{fileName}{SAVE_EXTENSION}"), JsonConvert.SerializeObject(data));
 	}
 
-	internal static bool TryDelete(string fileName) {
+	internal static bool TryDelete(string fileName)
+	{
 		string fullPath = GetFullPath($"{fileName}{SAVE_EXTENSION}");
-		if (File.Exists(fullPath)) {
+		if (File.Exists(fullPath))
+		{
 			File.Delete(fullPath);
 			return true;
 		}

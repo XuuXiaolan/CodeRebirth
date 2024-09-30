@@ -7,7 +7,8 @@ using Random = UnityEngine.Random;
 namespace CodeRebirth.src.Content.Items;
 
 [AddComponentMenu("TestAccount666/Code Rebirth/Material Variants")]
-public class MaterialVariants : NetworkBehaviour {
+public class MaterialVariants : NetworkBehaviour
+{
     [SerializeField]
     [Tooltip("The item data of the scrap.")]
     private Item itemData = null!;
@@ -39,7 +40,8 @@ public class MaterialVariants : NetworkBehaviour {
         SetRendererServerRpc();
 
     [ServerRpc(RequireOwnership = false)]
-    private void SetRendererServerRpc() {
+    private void SetRendererServerRpc()
+    {
         savedMaterialVariant = savedMaterialVariant is not -1
             ? Math.Clamp(savedMaterialVariant, 0, itemData.materialVariants.Length - 1)
             : Random.Range(0, itemData.materialVariants.Length);
@@ -48,8 +50,10 @@ public class MaterialVariants : NetworkBehaviour {
     }
 
     [ClientRpc]
-    private void SetRendererClientRpc(int materialVariant) {
-        foreach (var renderer in renderers) {
+    private void SetRendererClientRpc(int materialVariant)
+    {
+        foreach (var renderer in renderers)
+        {
             renderer.material = itemData.materialVariants[materialVariant];
 
             if (!changeScanNodeText)

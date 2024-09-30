@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class ShockwaveCharger : NetworkBehaviour {
+public class ShockwaveCharger : NetworkBehaviour
+{
     public GameObject ShockwaveGal = null!;
     public InteractTrigger ActivateOrDeactivateTrigger = null!;
     public Transform ChargeTransform = null!;

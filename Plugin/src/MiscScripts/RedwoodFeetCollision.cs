@@ -25,7 +25,8 @@ public class RedwoodFeetCollision : MonoBehaviour
     {
         float duration = 1f;
         Vector3 direction = (player.transform.position - this.gameObject.transform.position).normalized;
-        while (duration > 0) {
+        while (duration > 0)
+        {
             duration -= Time.fixedDeltaTime;
             player.externalForces = direction * 100f;
             yield return new WaitForFixedUpdate();

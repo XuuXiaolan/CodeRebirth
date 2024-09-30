@@ -2,14 +2,17 @@ using CodeRebirth.src.Util.Extensions;
 using Unity.Netcode;
 
 namespace CodeRebirth.src.Content.Items;
-public class Money : GrabbableObject {
-    public override void Start() {
+public class Money : GrabbableObject
+{
+    public override void Start()
+    {
         base.Start();
         if(!IsHost) return;
 
         int minBaseValue = Plugin.ModConfig.ConfigMinCoinValue.Value;
         int maxBaseValue = Plugin.ModConfig.ConfigMaxCoinValue.Value;
-        if (minBaseValue > maxBaseValue) {
+        if (minBaseValue > maxBaseValue)
+        {
             minBaseValue = maxBaseValue;
         }
         
@@ -22,7 +25,8 @@ public class Money : GrabbableObject {
     }
 
     [ClientRpc]
-    void SetMoneyValueClientRPC(int value) {
+    private void SetMoneyValueClientRPC(int value)
+    {
         if(IsHost) return;
         SetScrapValue(value);
     }

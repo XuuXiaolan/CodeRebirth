@@ -91,13 +91,15 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         return 0.75f;
     }
     #endregion
-    enum State {
+    enum State
+    {
         Spawn, // Roaring
         Idle, // Idling
         Wandering, // Wandering
         RunningToTarget, // Chasing
         EatingTargetGiant, // Eating
     }
+
     public override void Start()
     {
         base.Start();

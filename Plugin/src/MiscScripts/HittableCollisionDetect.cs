@@ -2,7 +2,8 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
-public class HittableCollisionDetect : MonoBehaviour, IHittable {
+public class HittableCollisionDetect : MonoBehaviour, IHittable
+{
 	[SerializeField]
 	private CRHittable _mainScript = null!;
 	

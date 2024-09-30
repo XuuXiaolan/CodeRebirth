@@ -9,13 +9,16 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Maps;
-public class MapObjectHandler : ContentHandler<MapObjectHandler> {
-	public class MoneyAssets(string bundleName) : AssetBundleLoader<MoneyAssets>(bundleName) {
+public class MapObjectHandler : ContentHandler<MapObjectHandler>
+{
+	public class MoneyAssets(string bundleName) : AssetBundleLoader<MoneyAssets>(bundleName)
+	{
 		[LoadFromBundle("MoneyObj.asset")]
 		public Item MoneyItem { get; private set; } = null!;
 	}
 
-	public class CrateAssets(string bundleName) : AssetBundleLoader<CrateAssets>(bundleName) {
+	public class CrateAssets(string bundleName) : AssetBundleLoader<CrateAssets>(bundleName)
+	{
 		[LoadFromBundle("Crate")]
 		public GameObject WoodenCratePrefab { get; private set; } = null!;
 		
@@ -23,12 +26,14 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		public GameObject MetalCratePrefab { get; private set; } = null!;
 	}
 
-	public class FloraAssets(string bundleName) : AssetBundleLoader<FloraAssets>(bundleName) {
+	public class FloraAssets(string bundleName) : AssetBundleLoader<FloraAssets>(bundleName)
+	{
 		[LoadFromBundle("AllFlora.prefab")]
 		public GameObject AllFloraPrefab { get; private set; } = null!;
 	}
 
-	public class BiomeAssets(string bundleName) : AssetBundleLoader<BiomeAssets>(bundleName) {
+	public class BiomeAssets(string bundleName) : AssetBundleLoader<BiomeAssets>(bundleName)
+	{
 		[LoadFromBundle("BiomeSpreader.prefab")]
 		public GameObject BiomePrefab { get; private set; } = null!;
 	}
@@ -38,9 +43,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 	public FloraAssets Flora { get; private set; } = null!;
 	public BiomeAssets Biome { get; private set; } = null!;
 
-	public static Dictionary<string, GameObject> DevilDealPrefabs = new Dictionary<string, GameObject>();
+	public static Dictionary<string, GameObject> DevilDealPrefabs = new();
 
-    public MapObjectHandler() {
+    public MapObjectHandler()
+	{
 		
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
 			Crate = new CrateAssets("crateassets");
@@ -54,20 +60,23 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 
 	}
 
-	public void RegisterInsideMoney() {
+	public void RegisterInsideMoney()
+	{
 		Money = new MoneyAssets("moneyassets");
 		Money.MoneyItem.spawnPrefab.GetComponent<Money>().SetScrapValue(-1);
 		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
 		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
 		mapObjDefBug.spawnableMapObject.prefabToSpawn = Money.MoneyItem.spawnPrefab;
-		if (Plugin.ModConfig.ConfigWalletEnabled.Value) {
+		if (Plugin.ModConfig.ConfigWalletEnabled.Value)
+		{
 			MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
 				new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigMoneyAbundance.Value, 0, 1000)))
 			);
 		}
 	}
 
-	public void RegisterOutsideFlora() {
+	public void RegisterOutsideFlora()
+	{
 		Flora = new FloraAssets("floraassets");
 		Flora floraStuff = Flora.AllFloraPrefab.GetComponent<Flora>();
 		
@@ -76,15 +85,18 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		string[] snowMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraSnowSpawnPlaces.Value);
 		string[] moonBlackList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraExcludeSpawnPlaces.Value);
 
-		foreach (var flora in floraStuff.Desert) {
+		foreach (var flora in floraStuff.Desert)
+		{
 			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), desertMoonList, FloraTag.Desert, moonBlackList);
 		}
 
-		foreach (var flora in floraStuff.Snowy) {
+		foreach (var flora in floraStuff.Snowy)
+		{
 			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), snowMoonList, FloraTag.Snow, moonBlackList);
 		}
 
-		foreach (var flora in floraStuff.Grass) {
+		foreach (var flora in floraStuff.Grass)
+		{
 			RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), grassMoonList, FloraTag.Grass, moonBlackList);
 		}
 
@@ -93,7 +105,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler> {
 		}*/
 	}
 
-	public void RegisterFlora(GameObject prefab, AnimationCurve curve, string[] moonWhiteList, FloraTag tag, string[] moonBlackList) {
+	public void RegisterFlora(GameObject prefab, AnimationCurve curve, string[] moonWhiteList, FloraTag tag, string[] moonBlackList)
+	{
 		RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora() {
 			prefab = prefab,
 			moonsWhiteList = moonWhiteList,

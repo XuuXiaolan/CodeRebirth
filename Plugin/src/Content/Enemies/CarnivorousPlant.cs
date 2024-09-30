@@ -71,7 +71,8 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
 
     private void DoIdle()
     {
-        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
+        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+        {
             if (player.isInHangarShipRoom || player.isPlayerDead || !player.isPlayerControlled) continue;
             if (Vector3.Distance(transform.position, player.transform.position) <= 20) {
                 SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
@@ -93,7 +94,8 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
     private void EndAttack()
     {
         attacking = false;
-        if (targetPlayer.isPlayerDead || Vector3.Distance(transform.position, targetPlayer.transform.position) > 5) {
+        if (targetPlayer.isPlayerDead || Vector3.Distance(transform.position, targetPlayer.transform.position) > 5)
+        {
             SetTargetServerRpc(-1);
             SwitchToBehaviourServerRpc((int)State.Idle);
         }
@@ -158,8 +160,10 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
 
         if (IsHost) networkAnimator.SetTrigger("takeDamage");
 
-        if (enemyHP <= 0 && !isEnemyDead) {
-            if (IsOwner) {
+        if (enemyHP <= 0 && !isEnemyDead)
+        {
+            if (IsOwner)
+            {
                 creatureAnimator.SetBool("isDead", true);
                 KillEnemyOnOwnerClient();
             }

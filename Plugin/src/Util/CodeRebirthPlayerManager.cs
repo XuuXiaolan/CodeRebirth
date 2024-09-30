@@ -31,9 +31,11 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
         if (StartOfRound.Instance != null) previousDoorClosed = StartOfRound.Instance.hangarDoorsClosed;
     }
 
-    public void Update() {
+    public void Update()
+    {
         if (StartOfRound.Instance == null) return;
-        if (previousDoorClosed != StartOfRound.Instance.hangarDoorsClosed) {
+        if (previousDoorClosed != StartOfRound.Instance.hangarDoorsClosed)
+        {
             Plugin.Logger.LogDebug("Door opened/closed!!");
             OnDoorStateChange?.Invoke(null, StartOfRound.Instance.hangarDoorsClosed);
         }

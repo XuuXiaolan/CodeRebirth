@@ -5,10 +5,12 @@ using Unity.Netcode;
 using static CodeRebirth.src.Content.Unlockables.PlantPot;
 
 namespace CodeRebirth.src.Content.Items;
-public class Fruit : GrabbableObject {
+public class Fruit : GrabbableObject
+{
     public FruitType fruitType = FruitType.None;
     [NonSerialized] public PlantPot plantPot = null!;
-    public override void Start() {
+    public override void Start()
+    {
         base.Start();
 
         if (!IsHost) return;
@@ -20,7 +22,8 @@ public class Fruit : GrabbableObject {
     }
 
     [ClientRpc]
-    void SetFruitValueClientRPC(int value) {
+    private void SetFruitValueClientRPC(int value)
+    {
         if (IsHost) return;
         SetScrapValue(value);
     }

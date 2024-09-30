@@ -6,12 +6,13 @@ using CodeRebirth.src.Util.Extensions;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
-using CodeRebirth.src.Util;
 using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using System.Diagnostics;
 using Random = System.Random;
 using CodeRebirth.src.Content.Unlockables;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -19,7 +20,8 @@ static class RoundManagerPatch {
 	internal static List<SpawnableFlora> spawnableFlora = [];
     
 	[HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
-	static void SpawnOutsideMapObjects() {
+	private static void SpawnOutsideMapObjects()
+	{
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value) SpawnFlora();
         
 		if (!RoundManager.Instance.IsHost) return;
@@ -27,7 +29,8 @@ static class RoundManagerPatch {
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value) SpawnRandomBiomes();
 	}
 
-	static void SpawnFlora() {
+	private static void SpawnFlora()
+	{
 		Plugin.ExtendedLogging("Spawning flora!!!");
 		System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
 		int spawnCount = 0;
@@ -37,8 +40,10 @@ static class RoundManagerPatch {
 		
 		var validFlora = GetValidFlora();
 
-		foreach (var tagGroup in validFlora) {
-			foreach (SpawnableFlora flora in tagGroup) {
+		foreach (var tagGroup in validFlora)
+		{
+			foreach (SpawnableFlora flora in tagGroup)
+			{
 				SpawnFlora(random, flora, ref spawnCount);
 			}
 		}
@@ -47,7 +52,8 @@ static class RoundManagerPatch {
 		Plugin.ExtendedLogging($"Spawned {spawnCount} flora in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
 	}
 
-	static void SpawnFlora(Random random, SpawnableFlora flora, ref int spawnCount) {
+	private static void SpawnFlora(Random random, SpawnableFlora flora, ref int spawnCount)
+	{
 		var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
 		for (int i = 0; i < targetSpawns; i++)
 		{
@@ -55,6 +61,7 @@ static class RoundManagerPatch {
 				continue; // spawn failed
 			
 			bool isValid = true;
+
 			foreach (string floorTag in flora.blacklistedTags)
 			{
 				if (hit.transform.gameObject.CompareTag(floorTag))
@@ -74,7 +81,8 @@ static class RoundManagerPatch {
 		}
 	}
 
-	static bool TryGetValidFloraSpawnPoint(Random random, out RaycastHit hit) {
+	private static bool TryGetValidFloraSpawnPoint(Random random, out RaycastHit hit)
+	{
 		Vector3 basePosition = GetRandomPointNearPointsOfInterest(random, 20);
 		Vector3 randomPosition = basePosition;
 
@@ -91,7 +99,9 @@ static class RoundManagerPatch {
 		return true;
 	}
 
-	static IEnumerable<IGrouping<FloraTag, SpawnableFlora>> GetValidFlora() {
+	// todo: change this so that it takes a moon's content tag and checks whether it fits for custom moons and vanilla moons a specific tag using FloraTag.
+	private static IEnumerable<IGrouping<FloraTag, SpawnableFlora>> GetValidFlora()
+	{
 		// Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
 		var tagToMoonLists = spawnableFlora
 							 .GroupBy(flora => flora.floraTag)
@@ -105,8 +115,9 @@ static class RoundManagerPatch {
 							 );
 
 		// Cache the valid tags based on the current moon configuration
-		Dictionary<FloraTag, bool> validTags = new Dictionary<FloraTag, bool>();
-		foreach (var tag in tagToMoonLists.Keys) {
+		Dictionary<FloraTag, bool> validTags = new();
+		foreach (var tag in tagToMoonLists.Keys)
+		{
 			if (tagToMoonLists.TryGetValue(tag, out var moonLists))
 			{
 				bool isLevelValid = IsCurrentMoonInConfig(moonLists.MoonsWhiteList, moonLists.MoonsBlackList);
@@ -273,4 +284,95 @@ static class RoundManagerPatch {
 			}
 		}
 	}
+
+	internal static void Init()
+    {
+        IL.RoundManager.SpawnOutsideHazards += ILHook_RoundManager_SpawnOutsideHazards;
+    }
+
+    private static void ILHook_RoundManager_SpawnOutsideHazards(ILContext il)
+    {
+        ILCursor c = new(il);
+        
+        // Make sure we are at the second for loop which uses `spawnDenialPoints`
+
+        // IL_02e8: ldfld class [UnityEngine.CoreModule]UnityEngine.GameObject[] RoundManager::spawnDenialPoints /* 04000AEB */
+        // IL_02ed: ldloc.s 18      // Also known as int n, used in for loop
+
+        if (!c.TryGotoNext(MoveType.After,
+            x => x.MatchLdfld<RoundManager>(nameof(RoundManager.spawnDenialPoints)),
+            x => x.MatchLdloc(18)
+        ))
+        {
+            Plugin.Logger.LogError($"[{nameof(ILHook_RoundManager_SpawnOutsideHazards)}] Could not match first predicates!");
+            return;
+        }
+
+        // Now we can find the logic for the float argument for the Vector3.Distance: 
+
+        // IL_0300: ldarg.0
+        // IL_0301: ldfld class SelectableLevel RoundManager::currentLevel /* 04000B04 */
+        // IL_0306: ldfld class SpawnableOutsideObjectWithRarity[] SelectableLevel::spawnableOutsideObjects /* 040010E1 */
+        // IL_030b: ldloc.s 9
+        // IL_030d: ldelem.ref
+        // IL_030e: ldfld class SpawnableOutsideObject SpawnableOutsideObjectWithRarity::spawnableObject /* 040010FB */
+        // IL_0313: ldfld int32 SpawnableOutsideObject::objectWidth /* 04001106 */
+        // IL_0318: conv.r4
+
+        if (!c.TryGotoNext(MoveType.Before,
+            x => x.MatchLdarg(0),
+            x => x.MatchLdfld<RoundManager>(nameof(RoundManager.currentLevel)),
+            x => x.MatchLdfld<SelectableLevel>(nameof(SelectableLevel.spawnableOutsideObjects)),
+            x => x.MatchLdloc(9),
+            x => x.MatchLdelemRef(),
+            x => x.MatchLdfld<SpawnableOutsideObjectWithRarity>(nameof(SpawnableOutsideObjectWithRarity.spawnableObject)),
+            x => x.MatchLdfld<SpawnableOutsideObject>(nameof(SpawnableOutsideObject.objectWidth)),
+            x => x.MatchConvR4(),
+            x => x.MatchLdcR4(6),
+            x => x.MatchAdd()
+        ))
+        {
+            Plugin.Logger.LogError($"[{nameof(ILHook_RoundManager_SpawnOutsideHazards)}] Could not match second predicates!");
+            return;
+        }
+
+        // Find the end of the previous match
+        ILCursor cAtEnd = new ILCursor(c).GotoNext(MoveType.After,
+            x => x.MatchLdcR4(6),
+            x => x.MatchAdd());
+
+        ILLabel label_original_logic = il.DefineLabel(c.Next);
+        ILLabel label_past_original_logic = il.DefineLabel(cAtEnd.Next);
+
+        //      if !thing
+        //          goto original_logic;
+        //
+        //      custom thing;
+        //      goto past_original_logic;
+        //
+        //  original_logic:
+        //      original thing;
+        //
+        //  past_original_logic:
+
+        c.Emit(OpCodes.Ldarg_0);
+        c.Emit(OpCodes.Ldloc_S, (byte)18); // int n, used in for loop
+        c.EmitDelegate<Func<RoundManager, int, bool>>((self, n) =>
+        {
+            return self.spawnDenialPoints[n].gameObject.name.Contains("_XuPatch");
+        });
+
+        // If the previous boolean is false, jump over our custom logic
+        c.Emit(OpCodes.Brfalse_S, label_original_logic);
+
+        // We emit our custom logic here
+        c.Emit(OpCodes.Ldarg_0);
+        c.Emit(OpCodes.Ldloc_S, (byte)18); // int n, used in for loop
+        c.EmitDelegate<Func<RoundManager, int, float>>((self, n) =>
+        {
+            return self.spawnDenialPoints[n].transform.localScale.x;
+        });
+
+        c.Emit(OpCodes.Br_S, label_past_original_logic);
+    }
 }

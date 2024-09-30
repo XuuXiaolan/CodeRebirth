@@ -4,13 +4,16 @@ using LethalLib.Modules;
 using LethalLib.Extras;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class UnlockableHandler : ContentHandler<UnlockableHandler> {
-	public class ShockwaveBotAssets(string bundleName) : AssetBundleLoader<ShockwaveBotAssets>(bundleName) {
+public class UnlockableHandler : ContentHandler<UnlockableHandler>
+{
+	public class ShockwaveBotAssets(string bundleName) : AssetBundleLoader<ShockwaveBotAssets>(bundleName)
+	{
 		[LoadFromBundle("ShockwaveBotUnlockable.asset")]
 		public UnlockableItemDef ShockWaveBotUnlockable { get; private set; } = null!;
 	}
 
-	public class PlantPotAssets(string bundleName) : AssetBundleLoader<PlantPotAssets>(bundleName) { 
+	public class PlantPotAssets(string bundleName) : AssetBundleLoader<PlantPotAssets>(bundleName)
+	{ 
 		[LoadFromBundle("PlantPotUnlockable.asset")]
 		public UnlockableItemDef PlantPotUnlockable { get; private set; } = null!;
 
@@ -24,7 +27,8 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler> {
 		public Item Seed { get; private set; } = null!;
 	}
 
-	public class SeamineTinkAssets(string bundleName) : AssetBundleLoader<SeamineTinkAssets>(bundleName) {
+	public class SeamineTinkAssets(string bundleName) : AssetBundleLoader<SeamineTinkAssets>(bundleName)
+	{
 		[LoadFromBundle("SeamineTinkUnlockable.asset")]
 		public UnlockableItemDef SeamineTinkUnlockable { get; private set; } = null!;
 	}
@@ -33,23 +37,27 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler> {
 	public PlantPotAssets PlantPot { get; private set; } = null!;
 	public ShockwaveBotAssets ShockwaveBot { get; private set; } = null!;
 
-    public UnlockableHandler() {
+    public UnlockableHandler()
+	{
 		if (Plugin.ModConfig.ConfigShockwaveBotEnabled.Value) RegisterShockWaveGal();
 		if (Plugin.ModConfig.ConfigFarmingEnabled.Value) RegisterPlantPot();
 		if (Plugin.ModConfig.ConfigSeamineTinkEnabled.Value) RegisterSeamineTink();
 	}
 
-    private void RegisterShockWaveGal() {
+    private void RegisterShockWaveGal()
+	{
         ShockwaveBot = new ShockwaveBotAssets("shockwavebotassets");
         LethalLib.Modules.Unlockables.RegisterUnlockable(ShockwaveBot.ShockWaveBotUnlockable, Plugin.ModConfig.ConfigShockwaveBotCost.Value, StoreType.ShipUpgrade);
     }
 
-	private void RegisterSeamineTink() {
+	private void RegisterSeamineTink()
+	{
 		SeamineTink = new SeamineTinkAssets("seaminetinkassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(SeamineTink.SeamineTinkUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.ShipUpgrade);
 	}
 
-	private void RegisterPlantPot() {
+	private void RegisterPlantPot()
+	{
 		PlantPot = new PlantPotAssets("plantpotassets");
 		RegisterScrapWithConfig("", PlantPot.Seed, -1, -1);
 		Plugin.samplePrefabs.Add("Wooden Seed", PlantPot.Seed);

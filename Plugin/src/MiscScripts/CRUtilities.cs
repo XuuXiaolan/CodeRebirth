@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 namespace CodeRebirth.src.MiscScripts;
 public class CRUtilities
 {
-    private static Dictionary<int, int> _masksByLayer = new Dictionary<int, int>();
+    private static Dictionary<int, int> _masksByLayer = new();
     public static void Init()
     {
         GenerateLayerMap();
@@ -45,6 +45,7 @@ public class CRUtilities
         }
         return null;
     }
+
     public static int MaskForLayer(int layer)
     {
         return _masksByLayer[layer];
@@ -106,6 +107,7 @@ public class CRUtilities
         enemy.SyncPositionToClients();
     }
 
+    // todo: this is cooked, redo it.
     public static void CreateExplosion(Vector3 explosionPosition = default, bool spawnExplosionEffect = false, int damage = 20, float minDamageRange = 0f, float maxDamageRange = 1f, int enemyHitForce = 6, CauseOfDeath causeOfDeath = CauseOfDeath.Blast, PlayerControllerB? attacker = null, GameObject? overridePrefab = null)
     {
         // Plugin.Logger.LogDebug($"Spawning explosion at pos: {explosionPosition}");
@@ -117,8 +119,10 @@ public class CRUtilities
             holder = RoundManager.Instance.mapPropsContainer.transform;
         }
 
-        if (spawnExplosionEffect) {
-            if (overridePrefab == null) {
+        if (spawnExplosionEffect)
+        {
+            if (overridePrefab == null)
+            {
                 UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(value: true);
 
             } else {
@@ -175,18 +179,6 @@ public class CRUtilities
                 {
                     componentInChildren2.mainScript.HitEnemyOnLocalClient(enemyHitForce, playerWhoHit: attacker);
                 }
-            }
-        }
-
-        int num3 = ~LayerMask.GetMask("Room");
-        num3 = ~LayerMask.GetMask("Colliders");
-        array = Physics.OverlapSphere(explosionPosition, 10f, num3);
-        for (int j = 0; j < array.Length; j++)
-        {
-            Rigidbody component = array[j].GetComponent<Rigidbody>();
-            if (component != null)
-            {
-                component.AddExplosionForce(70f, explosionPosition, 10f);
             }
         }
     }
