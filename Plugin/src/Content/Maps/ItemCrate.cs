@@ -46,6 +46,8 @@ public class ItemCrate : CRHittable {
 		pickable = GetComponent<Pickable>();
 		animator = GetComponent<Animator>();
 
+		health = new(Plugin.ModConfig.ConfigMetalHitNumber.Value); // todo: make this variable.
+		trigger.timeToHold = Plugin.ModConfig.ConfigWoodenOpenTimer.Value; // todo: make this variable.
 		trigger.onInteractEarly.AddListener(OnInteractEarly);
 		trigger.onInteract.AddListener(OnInteract);
 		trigger.onStopInteract.AddListener(OnInteractCancel);
@@ -92,43 +94,52 @@ public class ItemCrate : CRHittable {
 		}
 	}
 
-	public void Update() {
-		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key") {
+	public void Update()
+	{
+		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key")
+		{
 			trigger.hoverTip = keyHoverTip;
-		} else {
+		}
+		else
+		{
 			trigger.hoverTip = regularHoverTip;
 		}
 	}
 
-	public void OnInteractEarly(PlayerControllerB playerController) {
+	public void OnInteractEarly(PlayerControllerB playerController)
+	{
 		slowlyOpeningSFX.Play();
 	}
 	
-	public void OnInteract(PlayerControllerB playerController) {
+	public void OnInteract(PlayerControllerB playerController)
+	{
 		if (GameNetworkManager.Instance.localPlayerController != playerController) return;
 		Open();
 		slowlyOpeningSFX.Stop();
 	}
 
-	public void OnInteractCancel(PlayerControllerB playerController) {
+	public void OnInteractCancel(PlayerControllerB playerController)
+	{
 		slowlyOpeningSFX.Stop();
 	}
 
-	public void Open() {
+	public void Open()
+	{
 		if(opened) return;
 		if (!IsHost) OpenCrateServerRPC();
 		else OpenCrate();
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	public void OpenCrateServerRPC() {
+	public void OpenCrateServerRPC()
+	{
 		OpenCrate();
 	}
 
 	public void OpenCrate() {
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < Plugin.ModConfig.ConfigCrateNumberToSpawn.Value; i++) {
 			SpawnableItemWithRarity chosenItemWithRarity;
-			Item item;
+			Item? item;
 			switch(crateType)
 			{
 				case CrateType.Metal:
@@ -244,7 +255,7 @@ public class ItemCrate : CRHittable {
 		if (useWhitelist)
 		{
 			List<Item> acceptableItems = new();
-			foreach (Item item in ShopItemList)
+			foreach (Item? item in ShopItemList)
 			{
 				if (whiteListedScrap.Contains(item.itemName.ToLowerInvariant()))
 				{
