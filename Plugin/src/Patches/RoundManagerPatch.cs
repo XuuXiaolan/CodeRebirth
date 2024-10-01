@@ -35,9 +35,6 @@ static class RoundManagerPatch {
 		System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
 		int spawnCount = 0;
 		
-		Stopwatch timer = new();
-		timer.Start();
-		
 		var validFlora = GetValidFlora();
 
 		foreach (var tagGroup in validFlora)
@@ -47,9 +44,6 @@ static class RoundManagerPatch {
 				SpawnFlora(random, flora, ref spawnCount);
 			}
 		}
-		
-		timer.Stop();
-		Plugin.ExtendedLogging($"Spawned {spawnCount} flora in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms");
 	}
 
 	private static void SpawnFlora(Random random, SpawnableFlora flora, ref int spawnCount)
@@ -71,6 +65,21 @@ static class RoundManagerPatch {
 				}
 			}
 			if (!isValid) continue;
+			switch (flora.floraTag)
+			{
+				case FloraTag.Grass:
+					if (!hit.transform.gameObject.CompareTag("Grass"))
+						continue;
+					break;
+				case FloraTag.Desert:
+					if (!hit.transform.gameObject.CompareTag("Gravel"))
+						continue;
+					break;
+				case FloraTag.Snow:
+					if (!hit.transform.gameObject.CompareTag("Snow"))
+						continue;
+					break;
+			}
 
 			Vector3 spawnPosition = hit.point;
 			Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
@@ -90,8 +99,7 @@ static class RoundManagerPatch {
 
 		if (!NavMesh.SamplePosition(randomPosition, out NavMeshHit navMeshHit, 20f, NavMesh.AllAreas))
 			return false;
-		
-		
+
 		Vector3 navMeshPosition = navMeshHit.position;
 		Vector3 vector = navMeshPosition;
 		if (!Physics.Raycast(vector, Vector3.down, out hit, 150, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) 
@@ -109,8 +117,8 @@ static class RoundManagerPatch {
 								 g => g.Key,
 								 g => new
 								 {
-									 MoonsWhiteList = g.First().moonsWhiteList,
-									 MoonsBlackList = g.First().moonsBlackList
+									MoonsWhiteList = g.First().moonsWhiteList,
+									MoonsBlackList = g.First().moonsBlackList
 								 }
 							 );
 
@@ -128,14 +136,16 @@ static class RoundManagerPatch {
 		return spawnableFlora.GroupBy(flora => flora.floraTag).Where(it => validTags.TryGetValue(it.Key, out bool isLevelValid) && isLevelValid);
 	}
 
-	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random, float offsetRange = 20f) {
+	public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random, float offsetRange = 20f)
+	{
 		// Get all points of interest
 		Vector3[] pointsOfInterest = RoundManager.Instance.outsideAINodes
 									.Select(node => node.transform.position)
 									.ToArray();
 		
 		// Check if there are any points of interest
-		if (pointsOfInterest.Length == 0) {
+		if (pointsOfInterest.Length == 0)
+		{
 			Plugin.Logger.LogWarning("No points of interest found.");
 			return Vector3.zero; // Return default if no points exist
 		}
@@ -144,7 +154,7 @@ static class RoundManagerPatch {
 		Vector3 chosenPoint = pointsOfInterest[random.Next(0, pointsOfInterest.Length)];
 
 		// Generate a random offset within the specified range
-		Vector3 offset = new Vector3(
+		Vector3 offset = new(
 			random.NextFloat(-offsetRange, offsetRange),
 			random.NextFloat(0, offsetRange), 
 			random.NextFloat(-offsetRange, offsetRange)
@@ -153,17 +163,21 @@ static class RoundManagerPatch {
 		return chosenPoint + offset;
 	}
 
-	public static Vector3 GetRandomNavMeshPosition(Vector3 center, float range, System.Random random) {
-		for (int i = 0; i < 30; i++) { // Try up to 30 times to find a valid position
+	public static Vector3 GetRandomNavMeshPosition(Vector3 center, float range, System.Random random)
+	{
+		for (int i = 0; i < 30; i++)
+		{ // Try up to 30 times to find a valid position
 			Vector3 randomPos = center + new Vector3(random.NextFloat(-range, range), 0, random.NextFloat(-range, range));
-			if (NavMesh.SamplePosition(randomPos, out NavMeshHit hit, range, NavMesh.AllAreas)) {
+			if (NavMesh.SamplePosition(randomPos, out NavMeshHit hit, range, NavMesh.AllAreas))
+			{
 				return hit.position;
 			}
 		}
 		return center; // Fallback to the center if no valid position found
 	}
 
-	public static bool IsCurrentMoonInConfig(string[] moonsWhiteList, string[] moonsBlackList) {
+	public static bool IsCurrentMoonInConfig(string[] moonsWhiteList, string[] moonsBlackList)
+	{
 		// Prepare the current level name
 		string currentLevelName = Regex.Replace(StartOfRound.Instance.currentLevel.PlanetName, "^(?:\\d+ )*(.*)", "$1Level").ToLowerInvariant();
 		string currentLLLLevelName = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLower();
@@ -173,8 +187,9 @@ static class RoundManagerPatch {
 		Array.Sort(whiteList);
 		Array.Sort(blackList);
 
-		// Function to check if an item exists in the sorted list using binary search
-		bool IsInList(string item, string[] list) {
+        // Function to check if an item exists in the sorted list using binary search
+        static bool IsInList(string item, string[] list)
+		{
 			return Array.BinarySearch(list, item) >= 0;
 		}
 
@@ -187,7 +202,8 @@ static class RoundManagerPatch {
 		if (IsInList(currentLevelName, blackList) || IsInList(currentLLLLevelName, blackList)) return false;
 
 		// Check for vanilla moon conditions
-		if (isVanillaMoon) {
+		if (isVanillaMoon)
+		{
 			if (IsInList("vanilla", whiteList)) return true;
 			if (IsInList(currentLevelName, whiteList)) return true;
 			return false;
@@ -200,7 +216,8 @@ static class RoundManagerPatch {
 		return IsInList(currentLLLLevelName, whiteList);
 	}
 
-	static void SpawnCrates() {
+	static void SpawnCrates()
+	{
 		Plugin.ExtendedLogging("Spawning crates!!!");
 		System.Random random = new ();
 		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigWoodenCrateAbundance.Value, 0, 1000)); i++)
@@ -218,7 +235,8 @@ static class RoundManagerPatch {
 			spawnedCrate.GetComponent<NetworkObject>().Spawn();
 		}
 
-		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigMetalCrateAbundance.Value, 0, 1000)); i++) {
+		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigMetalCrateAbundance.Value, 0, 1000)); i++)
+		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length-1)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
@@ -233,11 +251,13 @@ static class RoundManagerPatch {
 		}
 	}
 	
-	static void SpawnRandomBiomes() {
+	static void SpawnRandomBiomes()
+	{
 		Plugin.ExtendedLogging("Spawning Biome/s!!!");
 		System.Random random = new();
 		int minValue = 1;
-		for (int i = 0; i < random.NextInt(minValue, 1); i++) {
+		for (int i = 0; i < random.NextInt(minValue, 1); i++)
+		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length-1)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1);
 
@@ -248,18 +268,20 @@ static class RoundManagerPatch {
 			spawnedBiome.GetComponent<NetworkObject>().Spawn();
 		}
 	}
+
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
-	static void PatchFix_DespawnOldCrates() {
-		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>()) {
+	static void PatchFix_DespawnOldCrates()
+	{
+		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>())
+		{
 			crate.NetworkObject.Despawn();
 		}
 
-		foreach (BiomeManager biome in GameObject.FindObjectsOfType<BiomeManager>()) {
+		foreach (BiomeManager biome in GameObject.FindObjectsOfType<BiomeManager>())
+		{
 			biome.NetworkObject.Despawn();
 		}
 	}
-
-	
 
 	[HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
 	public static void PlayAudibleNoiseForShockwaveGalPostfix(RoundManager __instance, ref Vector3 noisePosition, ref float noiseRange, ref float noiseLoudness, ref int timesPlayedInSameSpot, ref bool noiseIsInsideClosedShip, ref int noiseID)
@@ -272,16 +294,15 @@ static class RoundManagerPatch {
 		Collider[] hitColliders = Physics.OverlapSphere(noisePosition, noiseRange, LayerMask.GetMask("Props"));
 		for (int i = 0; i < hitColliders.Length; i++)
 		{
-			INoiseListener noiseListener;
-			if (hitColliders[i].TryGetComponent<INoiseListener>(out noiseListener))
-			{
-				ShockwaveGalAI component = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
-				if (component == null)
-				{
-					return;
-				}
-				noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
-			}
-		}
+            if (hitColliders[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener))
+            {
+                ShockwaveGalAI component = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
+                if (component == null)
+                {
+                    return;
+                }
+                noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
+            }
+        }
 	}
 }
