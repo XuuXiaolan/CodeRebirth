@@ -23,7 +23,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
     [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
     public Collider[] colliders = [];
-    public Vector3 boxSize = Vector3.zero; // todo: assign the beam a box collider and give it the correct size and then disable it
 
     private bool boomboxPlaying = false;
     private List<GrabbableObject> itemsHeldList = new();
@@ -35,10 +34,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     private PlayerControllerB? ownerPlayer;
     private List<string> enemyTargetBlacklist = new();
     private int chargeCount = 3;
+    private int maxChargeCount;
     private bool currentlyAttacking = false;
     private float boomboxTimer = 0f;
     private bool physicsEnabled = true;
-    private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // todo: figure out w=yh this doesnt work
+    private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // todo: figure out why this doesnt work
     private readonly static int attackModeAnimation = Animator.StringToHash("attackMode");
     private readonly static int danceAnimation = Animator.StringToHash("dancing");
     private readonly static int activatedAnimation = Animator.StringToHash("activated");
@@ -66,8 +66,22 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     public void Start()
     {
         Plugin.Logger.LogInfo("Hi creator");
+        maxChargeCount = chargeCount;
         Agent.enabled = galState != State.Inactive;
         StartCoroutine(StartUpDelay());
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RefillChargesServerRpc()
+    {
+        RefillChargesClientRpc();
+    }
+
+    [ClientRpc]
+    private void RefillChargesClientRpc()
+    {
+        chargeCount = maxChargeCount;
     }
 
     private IEnumerator StartUpDelay()
@@ -83,6 +97,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 
     public void ActivateShockwaveGal(PlayerControllerB owner)
     {
+        if (chargeCount <= 0) return;
         ownerPlayer = owner;
         if (IsServer)
         {
@@ -346,31 +361,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     {
         if (targetEnemy == null || targetEnemy.isEnemyDead) return;
 
-        // Define the center of the box based on the object's current position and forward direction
-        Vector3 boxCenter = transform.position + transform.forward * (boxSize.z / 2f);
-
-        // Check for all objects inside the box
-        int layerMask = 1 << LayerMask.NameToLayer("Enemies") | LayerMask.NameToLayer("Player");
-        Collider[] hits = Physics.OverlapBox(boxCenter, boxSize / 2f, transform.rotation, layerMask, QueryTriggerInteraction.Collide);
-
-        if (hits.Length == 0) return;
-
-        foreach (Collider hit in hits)
-        {
-            Plugin.Logger.LogInfo($"Hit: {hit.name}");
-            if (targetEnemy == null || targetEnemy.isEnemyDead) return;
-
-            if (hit.transform == targetEnemy.transform)
-            {
-                if (targetEnemy.IsOwner) targetEnemy.KillEnemyOnOwnerClient();
-            }
-            if (hit.transform.TryGetComponent(out PlayerControllerB player))
-            {
-                if (player == null || player.isPlayerDead) return;
-
-                player.DamagePlayer(player.health - (player.health - 1), true, false, CauseOfDeath.Blast, 0, false, (player.transform.position - this.transform.position).normalized * 50);
-            }
-        }
+        // todo: create an energy blast that checks for things in Layer `Enemies`, takes their EnemyAI component and if it exists, does .KillEnemyOnOwnerClient, and hcecks for `Player` layer and tries to get the component and does .DamagePlayer(player's current health - 1).
     }
 
     private void EndAttackAnimEvent()
@@ -381,7 +372,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 
     private void AdjustSpeedOnDistanceOnTargetPosition()
     {
-        float distanceFromOwner = Agent.remainingDistance;
+        float distanceToDestination = Agent.remainingDistance;
 
         // Define min and max distance thresholds
         float minDistance = 0f;
@@ -392,7 +383,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         float maxSpeed = galState == State.FollowingPlayer ? 20f : 10f; // Speed when farthest
 
         // Clamp the distance within the range to avoid negative values or distances greater than maxDistance
-        float clampedDistance = Mathf.Clamp(distanceFromOwner, minDistance, maxDistance);
+        float clampedDistance = Mathf.Clamp(distanceToDestination, minDistance, maxDistance);
 
         // Normalize the distance to a 0-1 range (minDistance to maxDistance maps to 0 to 1)
         float normalizedDistance = (clampedDistance - minDistance) / (maxDistance - minDistance);
@@ -401,7 +392,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         float currentSpeed = Mathf.Lerp(minSpeed, maxSpeed, normalizedDistance);
         Agent.speed = currentSpeed;
         // Apply the calculated speed (you would replace this with your actual movement logic)
-        // Plugin.ExtendedLogging($"Speed based on distance: {currentSpeed}");
+        Plugin.ExtendedLogging($"Speed based on distance: {currentSpeed}");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -435,7 +426,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
                 Animator.SetBool(attackModeAnimation, false);
                 Animator.SetBool(danceAnimation, false);
                 Animator.SetBool(activatedAnimation, true);
-                // in host side of things, set destination to ship.
                 break;
             case State.Dancing:
                 Animator.SetBool(attackModeAnimation, false);

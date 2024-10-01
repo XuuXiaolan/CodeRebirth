@@ -8,11 +8,8 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using UnityEngine.AI;
-using System.Diagnostics;
 using Random = System.Random;
 using CodeRebirth.src.Content.Unlockables;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -216,7 +213,7 @@ static class RoundManagerPatch {
 		return IsInList(currentLLLLevelName, whiteList);
 	}
 
-	static void SpawnCrates()
+	private static void SpawnCrates()
 	{
 		Plugin.ExtendedLogging("Spawning crates!!!");
 		System.Random random = new ();
@@ -251,7 +248,7 @@ static class RoundManagerPatch {
 		}
 	}
 	
-	static void SpawnRandomBiomes()
+	private static void SpawnRandomBiomes()
 	{
 		Plugin.ExtendedLogging("Spawning Biome/s!!!");
 		System.Random random = new();
@@ -270,7 +267,7 @@ static class RoundManagerPatch {
 	}
 
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
-	static void PatchFix_DespawnOldCrates()
+	private static void PatchFix_DespawnOldCrates()
 	{
 		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>())
 		{
@@ -280,6 +277,11 @@ static class RoundManagerPatch {
 		foreach (BiomeManager biome in GameObject.FindObjectsOfType<BiomeManager>())
 		{
 			biome.NetworkObject.Despawn();
+		}
+
+		foreach (ShockwaveGalAI shockwave in GameObject.FindObjectsOfType<ShockwaveGalAI>())
+		{
+			shockwave.RefillChargesServerRpc();
 		}
 	}
 

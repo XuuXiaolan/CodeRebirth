@@ -157,7 +157,7 @@ public class CodeRebirthConfig
                                             false,
                                             "Whether Biomes are enabled.");
         #endregion
-        #region Flora
+        #region DangerousFlora
         ConfigDangerousFloraEnabled = configFile.Bind("Flora Options",
                                             "Dangerous Flora | Enabled",
                                             true,
@@ -174,17 +174,19 @@ public class CodeRebirthConfig
                                             "Dangerous Flora | Carnivorous Max Count",
                                             6,
                                             "Carnivorous Plant max count.");
+        #endregion
+        #region Flora
         ConfigFloraEnabled = configFile.Bind("Flora Options",
                                             "Flora | Enabled",
                                             true,
                                             "Whether Flora is enabled.");
         ConfigFloraMaxAbundance = configFile.Bind("Flora Options",
                                             "Flora | Max Abundance",
-                                            75,
+                                            60,
                                             "How many plants can get added at most.");
         ConfigFloraMinAbundance = configFile.Bind("Flora Options",
                                             "Flora | Min Abundance",
-                                            50,
+                                            30,
                                             "How many plants can get added at least.");
         ConfigFloraGrassSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Grass Spawn Places",
