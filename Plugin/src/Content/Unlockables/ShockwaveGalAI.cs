@@ -290,17 +290,21 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
             }
             else
             {
-                // todo: go back to ship and shut off, or just teleport if the ship is leaving.
-                HandleStateAnimationSpeedChanges(State.Inactive, Emotion.OpenEye);
+                Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
+                if (Agent.remainingDistance <= Agent.stoppingDistance)
+                {
+                    Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+                    HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+                }
             }
             return;
         }
 
-        if (Vector3.Distance(this.transform.position, targetEnemy.transform.position) >= 3f)
+        if (!currentlyAttacking)
         {
             Agent.SetDestination(targetEnemy.transform.position);
         }
-        else
+        if (Agent.remainingDistance <= Agent.stoppingDistance || currentlyAttacking)
         {
             Vector3 targetPosition = targetEnemy.transform.position;
             Vector3 direction = (targetPosition - this.transform.position).normalized;
@@ -513,32 +517,32 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         }
 
         ownerPlayer = null;
-        if (galState == State.AttackMode) RobotFaceController.SetMode(RobotMode.Normal);
+        RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.Inactive;
     }
 
     private void HandleStateActiveChange()
     {
-        if (galState == State.AttackMode) RobotFaceController.SetMode(RobotMode.Normal);
+        RobotFaceController.SetMode(RobotMode.Normal);
         RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
         galState = State.Active;
     }
 
     private void HandleStateFollowingPlayerChange()
     {
-        if (galState == State.AttackMode) RobotFaceController.SetMode(RobotMode.Normal);
+        RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.FollowingPlayer;
     }
 
     private void HandleStateDeliveringItemsChange()
     {
-        if (galState == State.AttackMode) RobotFaceController.SetMode(RobotMode.Normal);
+        RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.DeliveringItems;
     }
 
     private void HandleStateDancingChange()
     {
-        if (galState == State.AttackMode) RobotFaceController.SetMode(RobotMode.Normal);
+        RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.Dancing;
     }
 
