@@ -45,8 +45,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     private float seeableDistance = 0f;
     private float distanceFromShip = 0f;
     private Transform shipBoundaries = null!;
-    private bool testBuild = false; 
-    private LineRenderer line = null!;
     private static int instanceNumbers = 0;
     private Collider[] enemyColliders = null!;
     private PlayerControllerB? playerToKick = null;
@@ -103,9 +101,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-#if DEBUG
-        testBuild = true;
-#endif
         instanceNumbers++;
 
         redwoodRandom = new System.Random(StartOfRound.Instance.randomMapSeed + instanceNumbers);
@@ -123,12 +118,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         shipBoundaries = StartOfRound.Instance.shipBounds.transform;
 
         enemyColliders = GetComponentsInChildren<Collider>();
-
-        if (testBuild)
-        {
-            line = gameObject.AddComponent<LineRenderer>();
-            line.widthMultiplier = 0.2f; // reduce width of the line
-        }
 
         creatureSFX.PlayOneShot(spawnSound);
         creatureSFXFar.PlayOneShot(spawnSound);
@@ -303,10 +292,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public override void DoAIInterval()
     {
-        if (testBuild)
-        { 
-            StartCoroutine(DrawPath(line, agent));
-        }
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost)
         {
@@ -388,19 +373,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
         SetDestinationToPosition(targetEnemy.transform.position, checkForPath: true);
-    }
-
-    public static IEnumerator DrawPath(LineRenderer line, NavMeshAgent agent)
-    {
-        if (!agent.enabled) yield break;
-        yield return new WaitForEndOfFrame();
-        line.SetPosition(0, agent.transform.position); //set the line's origin
-
-        line.positionCount = agent.path.corners.Length; //set the array of positions to the amount of corners
-        for (var i = 1; i < agent.path.corners.Length; i++)
-        {
-            line.SetPosition(i, agent.path.corners[i]); //go through each corner and set that to the line renderer's position
-        }
     }
 
     public void DealEnemyDamageFromShockwave(EnemyAI enemy, float distanceFromEnemy)
