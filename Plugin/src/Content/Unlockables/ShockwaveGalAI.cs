@@ -18,6 +18,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     public NetworkAnimator NetworkAnimator = null!;
     public NavMeshAgent Agent = null!;
     public InteractTrigger HeadPatTrigger = null!;
+    public InteractTrigger CatPoseTrigger = null!; // todo: add the triggers for this in unity.
     public List<InteractTrigger> GiveItemTrigger = new();
     public List<Transform> itemsHeldTransforms = new();
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
@@ -38,6 +39,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     private bool currentlyAttacking = false;
     private float boomboxTimer = 0f;
     private bool physicsEnabled = true;
+    private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // todo: figure out why this doesnt work
     private readonly static int attackModeAnimation = Animator.StringToHash("attackMode");
     private readonly static int danceAnimation = Animator.StringToHash("dancing");
@@ -88,7 +90,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     {
         yield return new WaitForSeconds(0.5f);
         this.transform.position = ShockwaveCharger.ChargeTransform.position;
+        this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
+        CatPoseTrigger.onInteract.AddListener(OnChestInteract);
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.onInteract.AddListener(GrabItemInteract);
@@ -124,11 +128,23 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         StartPetAnimationServerRpc();
     }
 
+    private void OnChestInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        StartCatPoseAnimationServerRpc();
+    }
+
     [ServerRpc(RequireOwnership = false)]
     private void StartPetAnimationServerRpc()
     {
         NetworkAnimator.SetTrigger(pettingAnimation);
         EnablePhysicsClientRpc(!physicsEnabled);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartCatPoseAnimationServerRpc()
+    {
+        NetworkAnimator.SetTrigger(catAnimation);
     }
 
     public void Update()
@@ -157,6 +173,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 
     private void HostSideUpdate()
     {
+        if ((StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase) && Agent.enabled)
+        {
+            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+            return;
+        }
         AdjustSpeedOnDistanceOnTargetPosition();
         Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 3);
         switch (galState)
@@ -180,12 +203,34 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         }
     }
 
+    private bool GoToChargerAndDeactivate()
+    {
+        if (StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase)
+        {
+            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+            return true;
+        }
+        Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
+        if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) < Agent.stoppingDistance)
+        {
+            if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
+            {
+                Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+                this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+                HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void DoActive()
     {
         if (ownerPlayer == null)
         {
-            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
-            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            GoToChargerAndDeactivate();
             return;
         }
         if (Vector3.Distance(this.transform.position, ownerPlayer.transform.position) > 3f)
@@ -198,8 +243,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     {
         if (ownerPlayer == null)
         {
-            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
-            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            GoToChargerAndDeactivate();
             return;
         }
         if ((!isInside && ownerPlayer.isInsideFactory) || (isInside && !ownerPlayer.isInsideFactory))
@@ -226,6 +270,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         if (itemsHeldList.Count >= maxItemsToHold)
         {
             HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye);
+            return;
         }
 
         if (CheckForNearbyEnemiesToOwner())
@@ -290,15 +335,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
             }
             else
             {
-                Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
-                if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
-                {
-                    if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
-                    {
-                        Agent.Warp(ShockwaveCharger.ChargeTransform.position);
-                        HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
-                    }
-                }
+                GoToChargerAndDeactivate();
             }
             return;
         }
@@ -414,32 +451,37 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         switch (state)
         {
             case State.Inactive:
+                Animator.SetBool(holdingItemAnimation, false);
                 Animator.SetBool(attackModeAnimation, false);
                 Animator.SetBool(danceAnimation, false);
                 Animator.SetBool(activatedAnimation, false);
-                this.Agent.Warp(ShockwaveCharger.ChargeTransform.position);
                 break;
             case State.Active:
+                Animator.SetBool(holdingItemAnimation, false);
                 Animator.SetBool(attackModeAnimation, false);
                 Animator.SetBool(danceAnimation, false);
                 Animator.SetBool(activatedAnimation, true);
                 break;
             case State.FollowingPlayer:
+                Animator.SetBool(holdingItemAnimation, false);
                 Animator.SetBool(attackModeAnimation, false);
                 Animator.SetBool(danceAnimation, false);
                 Animator.SetBool(activatedAnimation, true);
                 break;
             case State.DeliveringItems:
+                Animator.SetBool(holdingItemAnimation, true);
                 Animator.SetBool(attackModeAnimation, false);
                 Animator.SetBool(danceAnimation, false);
                 Animator.SetBool(activatedAnimation, true);
                 break;
             case State.Dancing:
+                Animator.SetBool(holdingItemAnimation, false);
                 Animator.SetBool(attackModeAnimation, false);
                 Animator.SetBool(danceAnimation, true);
                 Animator.SetBool(activatedAnimation, true);
                 break;
             case State.AttackMode:
+                Animator.SetBool(holdingItemAnimation, false);
                 Animator.SetBool(attackModeAnimation, true);
                 Animator.SetBool(danceAnimation, false);
                 Animator.SetBool(activatedAnimation, true);
@@ -587,7 +629,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     [ServerRpc(RequireOwnership = false)]
     private void GrabItemOwnerHoldingServerRpc(int indexOfOwner)
     {
-        Animator.SetBool(holdingItemAnimation, true);
         GrabItemOwnerHoldingClientRpc(indexOfOwner);
     }
 
@@ -603,7 +644,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         item.isInElevator = false;
         item.isInShipRoom = false;
         item.playerHeldBy.DiscardHeldObject();
-        yield return null;
+        yield return new WaitForSeconds(0.1f);
         item.grabbable = false;
         item.isHeldByEnemy = true;
         item.hasHitGround = false;
