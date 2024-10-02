@@ -291,10 +291,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
             else
             {
                 Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
-                if (Agent.remainingDistance <= Agent.stoppingDistance)
+                if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
                 {
-                    Agent.Warp(ShockwaveCharger.ChargeTransform.position);
-                    HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+                    if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
+                    {
+                        Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+                        HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+                    }
                 }
             }
             return;
