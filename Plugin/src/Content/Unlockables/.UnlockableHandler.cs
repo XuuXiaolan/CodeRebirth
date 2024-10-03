@@ -2,6 +2,7 @@ using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util;
 using LethalLib.Modules;
 using LethalLib.Extras;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockableHandler : ContentHandler<UnlockableHandler>
@@ -10,6 +11,9 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		[LoadFromBundle("ShockwaveBotUnlockable.asset")]
 		public UnlockableItemDef ShockWaveBotUnlockable { get; private set; } = null!;
+
+		[LoadFromBundle("LasetShockBlast.prefab")]
+		public GameObject LasetShockBlast { get; private set; } = null!;
 	}
 
 	public class PlantPotAssets(string bundleName) : AssetBundleLoader<PlantPotAssets>(bundleName)

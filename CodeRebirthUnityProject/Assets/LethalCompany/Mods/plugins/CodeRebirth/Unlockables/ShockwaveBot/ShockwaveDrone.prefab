@@ -807,6 +807,133 @@ CapsuleCollider:
   m_Height: 0.2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0.03}
+--- !u!1 &3477953187315022146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2809492975901664475}
+  - component: {fileID: 8797836321557300461}
+  - component: {fileID: 5644458118027785709}
+  m_Layer: 9
+  m_Name: CatTrigger
+  m_TagString: InteractTrigger
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2809492975901664475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3477953187315022146}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.000000029802322, y: -7.1054274e-15, z: -7.1054274e-15, w: 1}
+  m_LocalPosition: {x: 0, y: 0.2957993, z: -0.01850477}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 734853452862862452}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8797836321557300461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3477953187315022146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverIcon: {fileID: 21300000, guid: 5719a1b87b2b4f945bfe990e7165b620, type: 2}
+  hoverTip: Cat... the gal.
+  disabledHoverIcon: {fileID: 21300000, guid: 8830b5b1ba9b9ae429aec4fe3bc9af45, type: 3}
+  disabledHoverTip: Cannot cat the gal.
+  interactable: 1
+  oneHandedItemAllowed: 1
+  twoHandedItemAllowed: 1
+  holdInteraction: 0
+  timeToHold: 0.5
+  timeToHoldSpeedMultiplier: 1
+  holdTip: 
+  isBeingHeldByPlayer: 0
+  holdingInteractEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  touchTrigger: 0
+  triggerOnce: 0
+  interactCooldown: 1
+  cooldownTime: 1
+  currentCooldownValue: 0
+  disableTriggerMesh: 1
+  RandomChanceTrigger: 0
+  randomChancePercentage: 0
+  onInteractEarlyOtherClients:
+    m_PersistentCalls:
+      m_Calls: []
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  onInteractEarly:
+    m_PersistentCalls:
+      m_Calls: []
+  onStopInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  onCancelAnimation:
+    m_PersistentCalls:
+      m_Calls: []
+  specialCharacterAnimation: 0
+  stopAnimationManually: 0
+  stopAnimationString: SA_stopAnimation
+  hidePlayerItem: 0
+  isPlayingSpecialAnimation: 0
+  animationWaitTime: 2
+  animationString: 
+  lockPlayerPosition: 0
+  playerPositionNode: {fileID: 0}
+  clampLooking: 0
+  setVehicleAnimation: 0
+  minVerticalClamp: 0
+  maxVerticalClamp: 0
+  horizontalClamp: 0
+  allowUseWhileInAnimation: 0
+  overridePlayerParent: {fileID: 0}
+  isLadder: 0
+  topOfLadderPosition: {fileID: 0}
+  useRaycastToGetTopPosition: 0
+  bottomOfLadderPosition: {fileID: 0}
+  ladderHorizontalPosition: {fileID: 0}
+  ladderPlayerPositionNode: {fileID: 0}
+  usingLadder: 0
+--- !u!65 &5644458118027785709
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3477953187315022146}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.3236704, y: 0.16195329, z: 0.29663947}
+  m_Center: {x: 0.0116535425, y: -0.23925713, z: 0.04878795}
 --- !u!1 &3755681087677921748
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,7 +1312,7 @@ MonoBehaviour:
   disabledHoverTip: Cannot pat the gal.
   interactable: 1
   oneHandedItemAllowed: 1
-  twoHandedItemAllowed: 0
+  twoHandedItemAllowed: 1
   holdInteraction: 0
   timeToHold: 0.5
   timeToHoldSpeedMultiplier: 1
@@ -1433,6 +1560,7 @@ MonoBehaviour:
   NetworkAnimator: {fileID: 7424605644223556861}
   Agent: {fileID: 5693797852374194625}
   HeadPatTrigger: {fileID: 805489735468445872}
+  CatPoseTrigger: {fileID: 8797836321557300461}
   GiveItemTrigger:
   - {fileID: 7559031250048219402}
   - {fileID: 8850445655996800828}
@@ -1441,6 +1569,7 @@ MonoBehaviour:
   - {fileID: 4674169137735784731}
   - {fileID: 6105249853117458165}
   - {fileID: 2112926492838764476}
+  CatPoseAnim: {fileID: 0}
   colliders:
   - {fileID: 8543388767543760249}
   - {fileID: 1062158416216307949}
@@ -1467,7 +1596,6 @@ MonoBehaviour:
   - {fileID: 4630214488294318879}
   - {fileID: 2778391746724281121}
   - {fileID: 8679557905880371559}
-  boxSize: {x: 0.1148916, y: 0.1476045, z: 3.8256}
 --- !u!114 &3522212151486415226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2138,7 +2266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: Give her item [E].
-  disabledHoverIcon: {fileID: 0}
+  disabledHoverIcon: {fileID: 21300000, guid: 8830b5b1ba9b9ae429aec4fe3bc9af45, type: 3}
   disabledHoverTip: Cannot take items currently.
   interactable: 1
   oneHandedItemAllowed: 1
@@ -2454,6 +2582,37 @@ Transform:
   - {fileID: 6105249853117458165}
   m_Father: {fileID: 7852493483988190082}
   m_LocalEulerAnglesHint: {x: -30.718462, y: -23.639385, z: -73.02103}
+--- !u!1 &7338632317680485988
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2657630133268983769}
+  m_Layer: 0
+  m_Name: LaserOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2657630133268983769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7338632317680485988}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.09, z: 0.043}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 734853452862862452}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7343681301508709456
 GameObject:
   m_ObjectHideFlags: 0
@@ -2554,7 +2713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: Give her item [E].
-  disabledHoverIcon: {fileID: 0}
+  disabledHoverIcon: {fileID: 21300000, guid: 8830b5b1ba9b9ae429aec4fe3bc9af45, type: 3}
   disabledHoverTip: Cannot take items currently.
   interactable: 1
   oneHandedItemAllowed: 1
@@ -2797,6 +2956,8 @@ Transform:
   - {fileID: 8756277515336880400}
   - {fileID: 531858710044386808}
   - {fileID: 7198508312204051908}
+  - {fileID: 2809492975901664475}
+  - {fileID: 2657630133268983769}
   m_Father: {fileID: 2246578810123193331}
   m_LocalEulerAnglesHint: {x: -7.6178293, y: 7.673822e-13, z: 0}
 --- !u!136 &4796956177601714892

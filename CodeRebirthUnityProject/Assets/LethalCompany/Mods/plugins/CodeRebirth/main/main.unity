@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2262.426, g: 2352.637, b: 3404.6724, a: 1}
+  m_IndirectSpecularColor: {r: 2267.4211, g: 2355.1018, b: 3399.4849, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -616,6 +616,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1386095845457993730
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1955771577926682775, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4220220668
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2332053496581456245, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4975112313975070821, guid: 2ea58ab3566d9584589d6da389cd5d00,
+        type: 3}
+      propertyPath: m_Name
+      value: LaserShockBlast
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2ea58ab3566d9584589d6da389cd5d00, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -625,3 +698,4 @@ SceneRoots:
   - {fileID: 2013410475}
   - {fileID: 1752473781}
   - {fileID: 1962805876}
+  - {fileID: 1386095845457993730}

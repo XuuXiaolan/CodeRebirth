@@ -18,12 +18,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     public NetworkAnimator NetworkAnimator = null!;
     public NavMeshAgent Agent = null!;
     public InteractTrigger HeadPatTrigger = null!;
-    public InteractTrigger CatPoseTrigger = null!; // todo: add the triggers for this in unity.
+    public InteractTrigger CatPoseTrigger = null!;
     public List<InteractTrigger> GiveItemTrigger = new();
     public List<Transform> itemsHeldTransforms = new();
+    public AnimationClip CatPoseAnim = null!;
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
     [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
     public Collider[] colliders = [];
+    public Transform LaserOrigin = null!;
 
     private bool boomboxPlaying = false;
     private List<GrabbableObject> itemsHeldList = new();
@@ -39,6 +41,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     private bool currentlyAttacking = false;
     private float boomboxTimer = 0f;
     private bool physicsEnabled = true;
+    private bool catPosing = false;
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // todo: figure out why this doesnt work
     private readonly static int attackModeAnimation = Animator.StringToHash("attackMode");
@@ -145,6 +148,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     private void StartCatPoseAnimationServerRpc()
     {
         NetworkAnimator.SetTrigger(catAnimation);
+        StartCoroutine(ResetSpeedBackToNormal());
+    }
+
+    private IEnumerator ResetSpeedBackToNormal()
+    {
+        catPosing = true;
+        yield return new WaitForSeconds(CatPoseAnim.length);
+        catPosing = false;
     }
 
     public void Update()
@@ -405,7 +416,19 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     {
         if (targetEnemy == null || targetEnemy.isEnemyDead) return;
 
-        // todo: create an energy blast that checks for things in Layer `Enemies`, takes their EnemyAI component and if it exists, does .KillEnemyOnOwnerClient, and hcecks for `Player` layer and tries to get the component and does .DamagePlayer(player's current health - 1).
+        // Instantiate the laser beam on the server
+        if (IsServer)
+        {
+            GameObject laserPrefab = UnlockableHandler.Instance.ShockwaveBot.LasetShockBlast;
+            GameObject laserInstance = Instantiate(laserPrefab, LaserOrigin.position, LaserOrigin.rotation);
+            LaserShockBlast laserShockBlack = laserInstance.GetComponent<LaserShockBlast>();
+            
+            // Set the origin of the laser
+            laserShockBlack.laserOrigin = this.LaserOrigin;
+
+            // Spawn the laser over the network
+            laserShockBlack.NetworkObject.Spawn();
+        }
     }
 
     private void EndAttackAnimEvent()
@@ -434,9 +457,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 
         // Linearly interpolate the speed between minSpeed and maxSpeed based on normalized distance
         float currentSpeed = Mathf.Lerp(minSpeed, maxSpeed, normalizedDistance);
-        Agent.speed = currentSpeed;
+        if (!catPosing) Agent.speed = currentSpeed;
+        else Agent.speed = 0;
         // Apply the calculated speed (you would replace this with your actual movement logic)
-        Plugin.ExtendedLogging($"Speed based on distance: {currentSpeed}");
     }
 
     [ServerRpc(RequireOwnership = false)]
