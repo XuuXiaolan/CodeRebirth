@@ -78,7 +78,7 @@ public class LaserShockBlast : NetworkBehaviour
         }
 
         // Wait for the laser duration
-        yield return new WaitForSeconds(impactEffect.main.duration + LaserDuration);
+        yield return new WaitForSeconds(impactEffect.main.duration + LaserDuration + 5f);
 
         // Despawn the laser object on the server
         NetworkObject.Despawn();

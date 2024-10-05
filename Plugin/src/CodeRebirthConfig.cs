@@ -82,6 +82,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<int> ConfigPlantPotPrice { get; private set; }
     public ConfigEntry<string> ConfigShockwaveBotEnemyBlacklist { get; private set; }
     public ConfigEntry<int> ConfigMetalHitNumber { get; private set; }
     public ConfigEntry<float> ConfigWoodenOpenTimer { get; private set; }
@@ -147,14 +148,14 @@ public class CodeRebirthConfig
                                             "Comma separated list of enemies that the Shockwave Gal will not target.");
         #endregion
         #region Seamine Gal
-        ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
+        /*ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Enabled",
                                             true,
                                             "Whether the Seamine Gal is enabled.");
         ConfigSeamineTinkCost = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Cost",
                                             999,
-                                            "Cost of the Seamine Tink.");
+                                            "Cost of the Seamine Tink.");*/
         #endregion
         #region Biomes
         ConfigBiomesEnabled = configFile.Bind("Biome Options",
@@ -215,6 +216,10 @@ public class CodeRebirthConfig
                                             "Farming | Enabled",
                                             true,
                                             "Whether Farming is enabled.");
+        ConfigPlantPotPrice = configFile.Bind("Farming Options",
+                                            "Farming | Plant Pot Price",
+                                            696,
+                                            "Price of the Plant Pot.");
         ConfigTomatoValue = configFile.Bind("Farming Options",
                                             "Farming | Tomato Value",
                                             "-1,-1",

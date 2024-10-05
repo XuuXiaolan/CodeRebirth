@@ -49,7 +49,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private State galState = State.Inactive;
     private PlayerControllerB? ownerPlayer;
     private List<string> enemyTargetBlacklist = new();
-    private int chargeCount = 3;
+    [NonSerialized] public int chargeCount = 3;
     private int maxChargeCount;
     private bool currentlyAttacking = false;
     private float boomboxTimer = 0f;
@@ -128,7 +128,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     public void ActivateShockwaveGal(PlayerControllerB owner)
     {
-        if (chargeCount <= 0) return;
         ownerPlayer = owner;
         GalVoice.PlayOneShot(ActivateSound);
         if (IsServer)
@@ -194,7 +193,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void Update()
     {
         Agent.enabled = galState != State.Inactive;
-        if (galState == State.Inactive) return;
+        if (galState == State.Inactive) 
+        {
+            this.transform.position = ShockwaveCharger.ChargeTransform.position;
+            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+            return;
+        }
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         foreach (InteractTrigger trigger in GiveItemTrigger)
@@ -225,14 +229,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             idleNeededTimer = galRandom.NextFloat(5f, 10f);
             GalSFX.PlayOneShot(IdleSounds[galRandom.NextInt(0, IdleSounds.Length - 1)]);
         }
-        if (flying && !FlySource.isPlaying)
-        {
-            FlySource.UnPause();
-        }
-        else if (!flying && FlySource.isPlaying)
-        {
-            FlySource.Pause();
-        }
         if (!IsHost) return;
         HostSideUpdate();
     }
@@ -241,9 +237,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         if ((StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase) && Agent.enabled)
         {
-            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
-            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
-            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+            ShockwaveCharger.ActivateGirlServerRpc(-1);
             return;
         }
         AdjustSpeedOnDistanceOnTargetPosition();
@@ -271,21 +265,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private bool GoToChargerAndDeactivate()
     {
-        if (StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase)
-        {
-            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
-            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
-            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
-            return true;
-        }
         Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
         if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
             if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
             {
-                Agent.Warp(ShockwaveCharger.ChargeTransform.position);
-                this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
-                HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+                ShockwaveCharger.ActivateGirlServerRpc(-1);
                 return true;
             }
         }
@@ -501,6 +486,18 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         GalSFX.PlayOneShot(FootstepSounds[galRandom.NextInt(0, FootstepSounds.Length - 1)]);
     }
 
+    private void StartFlyingAnimEvent()
+    {
+        flying = true;
+        FlySource.UnPause();
+    }
+
+    private void StopFlyingAnimEvent()
+    {
+        flying = false;
+        FlySource.Pause();
+    }
+
     private void AdjustSpeedOnDistanceOnTargetPosition()
     {
         float distanceToDestination = Agent.remainingDistance;
@@ -640,8 +637,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     #region State Changes
     private void HandleStateInactiveChange()
     {
-        flying = false;
-        
         int heldItemCount = itemsHeldList.Count;
         for (int i = heldItemCount - 1; i >= 0; i--)
         {
@@ -655,8 +650,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private void HandleStateActiveChange()
     {
-        flying = false;
-
         RobotFaceController.SetMode(RobotMode.Normal);
         RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
         galState = State.Active;
@@ -664,8 +657,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private void HandleStateFollowingPlayerChange()
     {
-        flying = false;
-
         GalVoice.PlayOneShot(GreetOwnerSound);
         RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.FollowingPlayer;
@@ -673,24 +664,18 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private void HandleStateDeliveringItemsChange()
     {
-        flying = false;
-
         RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.DeliveringItems;
     }
 
     private void HandleStateDancingChange()
     {
-        flying = false;
-
         RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.Dancing;
     }
 
     private void HandleStateAttackModeChange()
     {
-        flying = true;
-
         galState = State.AttackMode;
         RobotFaceController.SetMode(RobotMode.Combat);
     }

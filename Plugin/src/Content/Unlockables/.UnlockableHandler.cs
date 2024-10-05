@@ -45,7 +45,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		if (Plugin.ModConfig.ConfigShockwaveBotEnabled.Value) RegisterShockWaveGal();
 		if (Plugin.ModConfig.ConfigFarmingEnabled.Value) RegisterPlantPot();
-		if (Plugin.ModConfig.ConfigSeamineTinkEnabled.Value) RegisterSeamineTink();
+		//if (Plugin.ModConfig.ConfigSeamineTinkEnabled.Value) RegisterSeamineTink();
 	}
 
     private void RegisterShockWaveGal()
@@ -74,6 +74,6 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		RegisterScrapWithConfig("", PlantPot.GoldenTomato, gScrapValues[0], gScrapValues[1]);
 		Plugin.samplePrefabs.Add("Golden Tomato", PlantPot.GoldenTomato);
 
-		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.ShipUpgrade);
+		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigPlantPotPrice.Value, StoreType.ShipUpgrade);
 	}
 }
