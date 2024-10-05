@@ -15,8 +15,9 @@ public class BiomeManager : NetworkBehaviour
     private ParticleSystem deathParticles = null!;
     private DecalProjector activeProjector = null!;
     private System.Random biomeRandom = new System.Random(69);
-    private int foliageLayer;
-    private int terrainLayer;
+    private readonly static int foliageLayer = LayerMask.NameToLayer("Foliage");
+    private readonly static int terrainLayer = LayerMask.NameToLayer("Terrain");
+    private readonly static int combinedLayerMask = (1 << foliageLayer) | (1 << terrainLayer);
     private List<Collider> foliageOrTreeColliderList = new();
 
 	public static BiomeManager? Instance { get; private set; }
@@ -46,9 +47,6 @@ public class BiomeManager : NetworkBehaviour
         }
 
         deathParticles = activeProjector.gameObject.GetComponentInChildren<ParticleSystem>();
-        foliageLayer = LayerMask.NameToLayer("Foliage");
-        terrainLayer = LayerMask.NameToLayer("Terrain");
-        int combinedLayerMask = (1 << foliageLayer) | (1 << terrainLayer);
         Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, 250/4, combinedLayerMask);
         foreach (var hitCollider in hitColliders) 
         {
@@ -77,9 +75,6 @@ public class BiomeManager : NetworkBehaviour
     {
         //Stopwatch timer = new Stopwatch();
         //timer.Start();
-        // Combine the foliage layer with the terrain layer to perform sphere cast on both
-        int combinedLayerMask = (1 << foliageLayer) | (1 << terrainLayer);
-        
         // Perform sphere cast
         Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, activeProjector.size.y / 4f, combinedLayerMask);
         int foliageOrTreeCount = 0;

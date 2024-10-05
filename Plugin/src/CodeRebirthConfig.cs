@@ -82,6 +82,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<string> ConfigShockwaveBotEnemyBlacklist { get; private set; }
     public ConfigEntry<int> ConfigMetalHitNumber { get; private set; }
     public ConfigEntry<float> ConfigWoodenOpenTimer { get; private set; }
     public ConfigEntry<int> ConfigCrateNumberToSpawn { get; private set; }
@@ -140,6 +141,10 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Cost",
                                             999,
                                             "Cost of the Shockwave Gal.");
+        ConfigShockwaveBotEnemyBlacklist = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Enemy Blacklist",
+                                            "",
+                                            "Comma separated list of enemies that the Shockwave Gal will not target.");
         #endregion
         #region Seamine Gal
         ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",

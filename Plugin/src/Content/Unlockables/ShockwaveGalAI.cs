@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -9,7 +11,7 @@ using UnityEngine.AI;
 using static CodeRebirth.src.Content.Unlockables.ShockwaveFaceController;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
+public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 {
     public ShockwaveFaceController RobotFaceController = null!;
     public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
@@ -26,6 +28,17 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
     public Collider[] colliders = [];
     public Transform LaserOrigin = null!;
+    public AudioSource FlySource = null!;
+    public AudioSource GalVoice = null!;
+    public AudioSource GalSFX = null!;
+    public AudioClip ActivateSound = null!;
+    public AudioClip GreetOwnerSound = null!;
+    public AudioClip[] IdleSounds = null!;
+    public AudioClip DeactivateSound = null!;
+    public AudioClip[] HitSounds = null!;
+    public AudioClip PatSound = null!;
+    public AudioClip[] FootstepSounds = [];
+    public AudioClip[] TakeDropItemSounds = [];
 
     private bool boomboxPlaying = false;
     private List<GrabbableObject> itemsHeldList = new();
@@ -42,6 +55,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     private float boomboxTimer = 0f;
     private bool physicsEnabled = true;
     private bool catPosing = false;
+    private float idleNeededTimer = 10f;
+    private float idleTimer = 0f;
+    private System.Random galRandom = new();
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // todo: figure out why this doesnt work
     private readonly static int attackModeAnimation = Animator.StringToHash("attackMode");
@@ -71,8 +87,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     public void Start()
     {
         Plugin.Logger.LogInfo("Hi creator");
+        galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         maxChargeCount = chargeCount;
         Agent.enabled = galState != State.Inactive;
+        FlySource.Pause();
+        List<string> enemyBlacklist = Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(',').ToList();
+        foreach (string enemy in enemyBlacklist)
+        {
+            enemyTargetBlacklist.Add(enemy.Trim());
+        }
         StartCoroutine(StartUpDelay());
     }
 
@@ -100,12 +123,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         {
             trigger.onInteract.AddListener(GrabItemInteract);
         }
+        StartCoroutine(CheckForNearbyEnemiesToOwner());
     }
 
     public void ActivateShockwaveGal(PlayerControllerB owner)
     {
         if (chargeCount <= 0) return;
         ownerPlayer = owner;
+        GalVoice.PlayOneShot(ActivateSound);
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -117,6 +142,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     public void DeactivateShockwaveGal()
     {
         ownerPlayer = null;
+        GalVoice.PlayOneShot(DeactivateSound);
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -133,7 +159,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 
     private void OnChestInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer || catPosing) return;
         StartCatPoseAnimationServerRpc();
     }
 
@@ -141,7 +167,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     private void StartPetAnimationServerRpc()
     {
         NetworkAnimator.SetTrigger(pettingAnimation);
+        PlayPatSoundClientRpc();
         EnablePhysicsClientRpc(!physicsEnabled);
+    }
+
+    [ClientRpc]
+    private void PlayPatSoundClientRpc()
+    {
+        GalVoice.PlayOneShot(PatSound);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -177,8 +210,30 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
                 boomboxPlaying = false;
             }
         }
+        if (galState == State.AttackMode)
+        {
+            Agent.stoppingDistance = 7f;
+        }
+        else
+        {
+            Agent.stoppingDistance = 3f;
+        }
+        idleTimer += Time.deltaTime;
+        if (idleTimer > idleNeededTimer)
+        {
+            idleTimer = 0f;
+            idleNeededTimer = galRandom.NextFloat(5f, 10f);
+            GalSFX.PlayOneShot(IdleSounds[galRandom.NextInt(0, IdleSounds.Length - 1)]);
+        }
+        if (flying && !FlySource.isPlaying)
+        {
+            FlySource.UnPause();
+        }
+        else if (!flying && FlySource.isPlaying)
+        {
+            FlySource.Pause();
+        }
         if (!IsHost) return;
-        
         HostSideUpdate();
     }
 
@@ -224,7 +279,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
             return true;
         }
         Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
-        if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) < Agent.stoppingDistance)
+        if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
             if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
             {
@@ -268,12 +323,17 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
             {
                 if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas))
                 {
-                    Agent.Warp(ownerPlayer.transform.position);
+                    if (physicsEnabled) EnablePhysicsClientRpc(!physicsEnabled);
+                    Agent.Warp(hit.position);
                 }
             }
             else
             {
                 Agent.SetDestination(Agent.pathEndPosition);
+                if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
+                {
+                    Agent.SetDestination(ownerPlayer.transform.position);
+                }
             }
             return;
         }
@@ -284,19 +344,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
             return;
         }
 
-        if (CheckForNearbyEnemiesToOwner())
-        {
-            HandleStateAnimationSpeedChanges(State.AttackMode, Emotion.OpenEye);
-            return;
-        }
-
         if (boomboxPlaying)
         {
             HandleStateAnimationSpeedChanges(State.Dancing, Emotion.Heart);
             StartCoroutine(StopDancingDelay());
             return;
         }
-
         Agent.SetDestination(ownerPlayer.transform.position);
     }
 
@@ -340,6 +393,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
     {
         if (targetEnemy == null || targetEnemy.isEnemyDead || chargeCount <= 0 || ownerPlayer == null)
         {
+            if (targetEnemy != null && targetEnemy.isEnemyDead) SetEnemyTargetServerRpc(-1);
             if (ownerPlayer != null && chargeCount > 0)
             {
                 HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
@@ -395,21 +449,26 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         physicsEnabled = enablePhysics;
     }
 
-    private bool CheckForNearbyEnemiesToOwner()
+    private IEnumerator CheckForNearbyEnemiesToOwner()
     {
-        if (ownerPlayer == null) return false;
-        Collider[] hitColliders = Physics.OverlapSphere(ownerPlayer.transform.position, 6f, LayerMask.GetMask("Enemies"));
-        foreach (Collider collider in hitColliders)
+        if (!IsServer) yield break;
+        while (true)
         {
-            if (collider.TryGetComponent(out EnemyAI? enemy))
+            yield return new WaitForSeconds(1f);
+            if (galState != State.FollowingPlayer) continue;
+            if (ownerPlayer == null) continue;
+            Collider[] hitColliders = Physics.OverlapSphere(ownerPlayer.transform.position, 25f, LayerMask.GetMask("Enemies"));
+            foreach (Collider collider in hitColliders)
             {
-                if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie) continue;
-
-                SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
-                return true;
+                if (collider.TryGetComponent(out EnemyAI? enemy))
+                {
+                    if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName)) continue;
+                    if (!Physics.Raycast(collider.transform.position, ownerPlayer.gameplayCamera.transform.position - collider.transform.position, out _, 25f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) continue;
+                    SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
+                    HandleStateAnimationSpeedChanges(State.AttackMode, Emotion.OpenEye);
+                }
             }
         }
-        return false;
     }
 
     private void CheckIfEnemyIsHitAnimEvent()
@@ -437,6 +496,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         chargeCount--;
     }
 
+    private void PlayFootstepSoundAnimEvent()
+    {
+        GalSFX.PlayOneShot(FootstepSounds[galRandom.NextInt(0, FootstepSounds.Length - 1)]);
+    }
+
     private void AdjustSpeedOnDistanceOnTargetPosition()
     {
         float distanceToDestination = Agent.remainingDistance;
@@ -447,7 +511,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 
         // Define min and max speed values
         float minSpeed = 0f; // Speed when closest
-        float maxSpeed = galState == State.FollowingPlayer ? 20f : 10f; // Speed when farthest
+        float maxSpeed = (galState == State.FollowingPlayer || galState == State.AttackMode) ? 20f : 10f; // Speed when farthest
 
         // Clamp the distance within the range to avoid negative values or distances greater than maxDistance
         float clampedDistance = Mathf.Clamp(distanceToDestination, minDistance, maxDistance);
@@ -591,6 +655,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 
     private void HandleStateActiveChange()
     {
+        flying = false;
+
         RobotFaceController.SetMode(RobotMode.Normal);
         RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
         galState = State.Active;
@@ -598,24 +664,33 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
 
     private void HandleStateFollowingPlayerChange()
     {
+        flying = false;
+
+        GalVoice.PlayOneShot(GreetOwnerSound);
         RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.FollowingPlayer;
     }
 
     private void HandleStateDeliveringItemsChange()
     {
+        flying = false;
+
         RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.DeliveringItems;
     }
 
     private void HandleStateDancingChange()
     {
+        flying = false;
+
         RobotFaceController.SetMode(RobotMode.Normal);
         galState = State.Dancing;
     }
 
     private void HandleStateAttackModeChange()
     {
+        flying = true;
+
         galState = State.AttackMode;
         RobotFaceController.SetMode(RobotMode.Combat);
     }
@@ -674,6 +749,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         item.parentObject = heldTransform;
         item.EnablePhysics(false);
         itemsHeldList.Add(item);
+        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
         HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
     }
 
@@ -710,6 +786,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         item.isHeldByEnemy = false;
         item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
         itemsHeldList.Remove(item);
+        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
         if (itemsHeldList.Count == 0 && IsServer)
         {
             Animator.SetBool(holdingItemAnimation, false);
@@ -797,5 +874,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener
         }
         targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
+    }
+
+    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        if (galState == State.Inactive) return false;
+        GalVoice.PlayOneShot(HitSounds[galRandom.NextInt(0, HitSounds.Length - 1)]);
+        return true;
     }
 }

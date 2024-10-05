@@ -12,7 +12,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		[LoadFromBundle("ShockwaveBotUnlockable.asset")]
 		public UnlockableItemDef ShockWaveBotUnlockable { get; private set; } = null!;
 
-		[LoadFromBundle("LasetShockBlast.prefab")]
+		[LoadFromBundle("LaserShockBlast.prefab")]
 		public GameObject LasetShockBlast { get; private set; } = null!;
 	}
 
