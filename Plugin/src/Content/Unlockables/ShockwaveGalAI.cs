@@ -88,6 +88,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         Plugin.Logger.LogInfo("Hi creator");
         galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
+        chargeCount = Plugin.ModConfig.ConfigShockwaveCharges.Value;
         maxChargeCount = chargeCount;
         Agent.enabled = galState != State.Inactive;
         FlySource.Pause();

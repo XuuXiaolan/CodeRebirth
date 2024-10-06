@@ -83,6 +83,7 @@ public class CodeRebirthConfig
     #endregion
     #region Misc
     public ConfigEntry<int> ConfigPlantPotPrice { get; private set; }
+    public ConfigEntry<int> ConfigShockwaveCharges { get; private set; }
     public ConfigEntry<string> ConfigShockwaveBotEnemyBlacklist { get; private set; }
     public ConfigEntry<int> ConfigMetalHitNumber { get; private set; }
     public ConfigEntry<float> ConfigWoodenOpenTimer { get; private set; }
@@ -120,6 +121,8 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigRubyWorth { get; private set; }
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
+    #region Debug
+    #endregion
     public CodeRebirthConfig(ConfigFile configFile)
     {
         configFile.SaveOnConfigSet = false;
@@ -142,6 +145,10 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Cost",
                                             999,
                                             "Cost of the Shockwave Gal.");
+        ConfigShockwaveCharges = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Charges",
+                                            3,
+                                            "How many charges the Shockwave Gal has.");
         ConfigShockwaveBotEnemyBlacklist = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Enemy Blacklist",
                                             "",
