@@ -92,6 +92,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         maxChargeCount = chargeCount;
         Agent.enabled = galState != State.Inactive;
         FlySource.Pause();
+        if (IsServer) this.transform.SetParent(ShockwaveCharger.transform, true);
         List<string> enemyBlacklist = Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(',').ToList();
         foreach (string enemy in enemyBlacklist)
         {
@@ -119,7 +120,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         this.transform.position = ShockwaveCharger.ChargeTransform.position;
         this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
-        CatPoseTrigger.onInteract.AddListener(OnChestInteract);
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.onInteract.AddListener(GrabItemInteract);
@@ -154,13 +154,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private void OnHeadInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
-        StartPetAnimationServerRpc();
-    }
-
-    private void OnChestInteract(PlayerControllerB playerInteracting)
-    {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer || catPosing) return;
-        StartCatPoseAnimationServerRpc();
+        if (UnityEngine.Random.Range(0f, 1f) < 0.5f) StartPetAnimationServerRpc();
+        else if (!catPosing) StartCatPoseAnimationServerRpc();
+        else StartPetAnimationServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -194,12 +190,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void Update()
     {
         Agent.enabled = galState != State.Inactive;
-        if (galState == State.Inactive) 
-        {
-            this.transform.position = ShockwaveCharger.ChargeTransform.position;
-            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
-            return;
-        }
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         foreach (InteractTrigger trigger in GiveItemTrigger)
