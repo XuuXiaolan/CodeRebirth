@@ -21,10 +21,16 @@ public static class DoorLockPatch
 			goto ret;
 		}
 
-        if (other.CompareTag("Enemy") && other.gameObject.name == "ShockwaveGalDoorColider")
+        if (other.CompareTag("Enemy") && other.gameObject.name == "ShockwaveGalDoorCollider")
         {
             float openDoorSpeedMultiplier = other.gameObject.transform.parent.GetComponent<ShockwaveGalAI>().doorOpeningSpeed;
             self.enemyDoorMeter += Time.deltaTime * openDoorSpeedMultiplier;
+    		if (self.enemyDoorMeter > 1f)
+			{
+				self.enemyDoorMeter = 0f;
+				self.gameObject.GetComponent<AnimatedObjectTrigger>().TriggerAnimationNonPlayer(false, true, false);
+				self.OpenDoorAsEnemyServerRpc();
+			}
         }
     ret:
         orig(self, other);

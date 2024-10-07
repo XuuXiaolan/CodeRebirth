@@ -524,7 +524,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private void HandleStateAnimationSpeedChanges(State state, Emotion emotion) // This is for host
     {
-        SwitchStateOrEmotionServerRpc((int)state, (int)emotion);
+        SwitchStateOrEmotionClientRpc((int)state, (int)emotion);
         switch (state)
         {
             case State.Inactive:
