@@ -191,6 +191,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void Update()
     {
         Agent.enabled = galState != State.Inactive;
+        if (!Agent.enabled) return;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         foreach (InteractTrigger trigger in GiveItemTrigger)

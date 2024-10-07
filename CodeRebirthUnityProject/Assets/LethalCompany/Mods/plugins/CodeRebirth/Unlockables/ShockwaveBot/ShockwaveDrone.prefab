@@ -1688,7 +1688,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RobotFaceController: {fileID: 7115646153991508291}
   FaceSkinnedMeshRenderer: {fileID: 8723646442970967387}
-  FaceRenderer: {fileID: 8723646442970967387}
+  FaceRenderer: {fileID: 1406066892711985857}
   Animator: {fileID: 6273410049850585625}
   NetworkAnimator: {fileID: 7424605644223556861}
   Agent: {fileID: 5693797852374194625}
@@ -1741,8 +1741,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f34769a1a52ce1c468a53ff61d07e3ea, type: 3}
   - {fileID: 8300000, guid: 1c4f501e4a1b87649a5f403ef7045bfa, type: 3}
   DeactivateSound: {fileID: 8300000, guid: b6c55c761340701488dc7925c6c45834, type: 3}
-  HitSounds: []
-  PatSound: {fileID: 8300000, guid: f6161a4fa3a5fe9448eaee6cf03d5e36, type: 3}
+  HitSounds:
+  - {fileID: 8300000, guid: f6161a4fa3a5fe9448eaee6cf03d5e36, type: 3}
+  PatSound: {fileID: 8300000, guid: a1d9e332ae5f7394bbccf15853cdfad6, type: 3}
   FootstepSounds:
   - {fileID: 8300000, guid: 56b7ec9e07fcb3e439ba01a55e36f46f, type: 3}
   - {fileID: 8300000, guid: 7c33ad107b6fd6e42882de6ab1fb9010, type: 3}
@@ -1752,6 +1753,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f34769a1a52ce1c468a53ff61d07e3ea, type: 3}
   - {fileID: 8300000, guid: b9de0fcdf19fbe9449c7f8c82709a7c6, type: 3}
   - {fileID: 8300000, guid: 35ad9e3e0654e174e8455f348f365559, type: 3}
+  doorOpeningSpeed: 1
 --- !u!114 &3522212151486415226
 MonoBehaviour:
   m_ObjectHideFlags: 0

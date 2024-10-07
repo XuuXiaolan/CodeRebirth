@@ -4,7 +4,6 @@
 - Finish LGU Compat (needs redwood and driftwood).
 - Finish adding driftwood and redwood.
 - Item crate add networked opening speed.
-- add robot shockwave gal.
 - finish adding biomes needs below and monsters and code.
 - add dangerous flora needs models and code.
 - Fix god ray script.
