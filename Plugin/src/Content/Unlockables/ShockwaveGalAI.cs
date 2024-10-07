@@ -39,6 +39,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public AudioClip PatSound = null!;
     public AudioClip[] FootstepSounds = [];
     public AudioClip[] TakeDropItemSounds = [];
+    public float doorOpeningSpeed = 1f;
 
     private bool boomboxPlaying = false;
     private List<GrabbableObject> itemsHeldList = new();
@@ -852,7 +853,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
 
-    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         if (galState == State.Inactive) return false;
         GalVoice.PlayOneShot(HitSounds[galRandom.NextInt(0, HitSounds.Length - 1)]);

@@ -1,7 +1,6 @@
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
