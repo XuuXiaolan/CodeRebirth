@@ -7,7 +7,9 @@ namespace CodeRebirth.src.Content.Unlockables;
 public class ShockwaveFaceController : MonoBehaviour
 {
     public ShockwaveGalAI ShockwaveGalAI = null!;
+    [SerializeField]
     private SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
+    [SerializeField]
     private Renderer FaceRenderer = null!;
     public float GlitchDuration = 0.1f;
     public float GlitchFrequency = 2f;
@@ -36,8 +38,6 @@ public class ShockwaveFaceController : MonoBehaviour
     private void Start()
     {
         controllerRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 32);
-        FaceSkinnedMeshRenderer = ShockwaveGalAI.FaceSkinnedMeshRenderer;
-        FaceRenderer = ShockwaveGalAI.FaceRenderer;
         glitchTimer = controllerRandom.NextFloat(1f / GlitchFrequency, 3f / GlitchFrequency);
         SetFaceState(ShockwaveGalAI.galEmotion, 100f);
         SetMode(currentMode);
@@ -47,6 +47,8 @@ public class ShockwaveFaceController : MonoBehaviour
 
     private void Update()
     {
+        //HandleInput();
+        
         glitchTimer -= Time.deltaTime;
         if (glitchTimer <= 0)
         {
@@ -91,6 +93,7 @@ public class ShockwaveFaceController : MonoBehaviour
         //set the current face state
         ShockwaveGalAI.galEmotion = faceState;
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)faceState, Mathf.Clamp(weight, 0f, 100f));
+        Debug.Log($"Set Face State: {faceState}");
     }
 
     public void SetMode(RobotMode mode)
@@ -128,21 +131,17 @@ public class ShockwaveFaceController : MonoBehaviour
     private void ApplyEmissionColor(Color emissionColor)
     {
         var materials = FaceRenderer.materials;
-        foreach (var material in materials)
-        {
-            material.SetColor("_EmissiveColor", emissionColor);
-
-        }
+        materials[0].SetColor("_EmissiveColor", emissionColor);
+        materials[2].SetColor("_EmissiveColor", emissionColor);
+        
         FaceRenderer.materials = materials;
     }
 
     private void ApplyFaceColor(Color faceColor)
     {
         var materials = FaceSkinnedMeshRenderer.materials;
-        foreach (var material in materials)
-        {
-            material.SetColor("_EmissiveColor", faceColor);
-        }
+        materials[0].SetColor("_EmissiveColor", faceColor);
+
         FaceSkinnedMeshRenderer.materials = materials;
     }
 
@@ -153,6 +152,37 @@ public class ShockwaveFaceController : MonoBehaviour
             FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)faceState, 0f);
         }
     }
+    
+    private void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SetFaceState(Emotion.Heart, 100f);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SetFaceState(Emotion.ClosedEye, 100f);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SetFaceState(Emotion.OpenEye, 100f);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            SetFaceState(Emotion.Happy, 100f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            SetMode(RobotMode.Normal);
+        }
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            SetMode(RobotMode.Combat);
+        }
+    }
+
+
     
     private void OnDisable()
     {
