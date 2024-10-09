@@ -147,7 +147,7 @@ public class CodeRebirthConfig
                                             "Cost of the Shockwave Gal.");
         ConfigShockwaveCharges = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Charges",
-                                            3,
+                                            10,
                                             "How many charges the Shockwave Gal has.");
         ConfigShockwaveBotEnemyBlacklist = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Enemy Blacklist",

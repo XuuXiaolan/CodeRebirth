@@ -20,7 +20,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public NetworkAnimator NetworkAnimator = null!;
     public NavMeshAgent Agent = null!;
     public InteractTrigger HeadPatTrigger = null!;
-    public InteractTrigger CatPoseTrigger = null!;
     public List<InteractTrigger> GiveItemTrigger = new();
     public List<Transform> itemsHeldTransforms = new();
     public AnimationClip CatPoseAnim = null!;
@@ -50,7 +49,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private State galState = State.Inactive;
     private PlayerControllerB? ownerPlayer;
     private List<string> enemyTargetBlacklist = new();
-    [NonSerialized] public int chargeCount = 3;
+    [NonSerialized] public int chargeCount = 10;
     private int maxChargeCount;
     private bool currentlyAttacking = false;
     private float boomboxTimer = 0f;
@@ -430,21 +429,40 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private IEnumerator CheckForNearbyEnemiesToOwner()
     {
         if (!IsServer) yield break;
+
+        var delay = new WaitForSeconds(1f);
         while (true)
         {
-            yield return new WaitForSeconds(1f);
-            if (galState != State.FollowingPlayer) continue;
-            if (ownerPlayer == null) continue;
-            Collider[] hitColliders = Physics.OverlapSphere(ownerPlayer.transform.position, 25f, LayerMask.GetMask("Enemies"));
-            foreach (Collider collider in hitColliders)
+            yield return delay;
+
+            if (galState != State.FollowingPlayer || ownerPlayer == null) continue;
+
+            // Use OverlapSphereNonAlloc to reduce garbage collection
+            Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
+            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 25f, hitColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
+
+            for (int i = 0; i < numHits; i++)
             {
-                if (collider.TryGetComponent(out EnemyAI? enemy))
-                {
-                    if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName)) continue;
-                    if (!Physics.Raycast(collider.transform.position, ownerPlayer.gameplayCamera.transform.position - collider.transform.position, out _, 25f, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) continue;
-                    SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
-                    HandleStateAnimationSpeedChanges(State.AttackMode, Emotion.OpenEye);
-                }
+                Collider collider = hitColliders[i];
+                if (!collider.TryGetComponent(out EnemyAI enemy))
+                    continue;
+
+                if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
+                    continue;
+
+                // First, do a simple direction check to see if the enemy is in front of the player
+                Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
+                // Then check if there's a clear line of sight
+                if (!Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, 25f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide))
+                    continue;
+
+                // Make sure the hit belongs to the same GameObject as the enemy
+                if (hit.collider.gameObject != enemy.gameObject && !hit.collider.transform.IsChildOf(enemy.transform))
+                    continue;
+
+                SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
+                HandleStateAnimationSpeedChanges(State.AttackMode, Emotion.OpenEye);
+                break;  // Exit loop after targeting one enemy, depending on game logic
             }
         }
     }
