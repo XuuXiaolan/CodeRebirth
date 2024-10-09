@@ -257,6 +257,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private bool GoToChargerAndDeactivate()
     {
+        if (isInside)
+        {
+            GoThroughEntrance();
+            return false;
+        }
         Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
         if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
@@ -384,9 +389,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         if (!currentlyAttacking)
         {
+            if (isInside && targetEnemy.isOutside || !isInside && !targetEnemy.isOutside)
+            {
+                GoThroughEntrance();
+                return;
+            }
             Agent.SetDestination(targetEnemy.transform.position);
         }
-        if (Agent.remainingDistance <= Agent.stoppingDistance || currentlyAttacking)
+        if (Vector3.Distance(this.transform.position, targetEnemy.transform.position) <= Agent.stoppingDistance || currentlyAttacking)
         {
             Vector3 targetPosition = targetEnemy.transform.position;
             Vector3 direction = (targetPosition - this.transform.position).normalized;
@@ -445,7 +455,16 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             {
                 Collider collider = hitColliders[i];
                 if (!collider.TryGetComponent(out EnemyAI enemy))
-                    continue;
+                {
+                    if (collider.GetComponent<NetworkObject>() == null)
+                    {
+                        NetworkObject networkObject = collider.GetComponentInParent<NetworkObject>();
+                        if (networkObject == null || !networkObject.TryGetComponent(out EnemyAI enemy2))
+                            continue;
+                        
+                        enemy = enemy2;
+                    }
+                }
 
                 if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
                     continue;

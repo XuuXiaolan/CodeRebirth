@@ -151,7 +151,7 @@ public class CodeRebirthConfig
                                             "How many charges the Shockwave Gal has.");
         ConfigShockwaveBotEnemyBlacklist = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Enemy Blacklist",
-                                            "",
+                                            "Red Locust Bees, Docile Locust Bees, Manticoil, CutieFly, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
                                             "Comma separated list of enemies that the Shockwave Gal will not target.");
         #endregion
         #region Seamine Gal
