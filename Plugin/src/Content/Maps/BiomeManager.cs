@@ -59,13 +59,12 @@ public class BiomeManager : NetworkBehaviour
 
     private IEnumerator CheckAndDestroyFoliage()
     {
-        yield return new WaitForSeconds(30f);
+        yield return new WaitForSeconds(40f);
         Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, 250 / 3.5f, combinedLayerMask);
         foreach (var hitCollider in hitColliders) 
         {
             if (IsTree(hitCollider) || IsFoliage(hitCollider)) 
             {
-                Plugin.ExtendedLogging($"Adding {hitCollider} to list");
                 foliageOrTreeColliderList.Add(hitCollider);
             }
         }
