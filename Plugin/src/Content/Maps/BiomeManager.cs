@@ -47,11 +47,6 @@ public class BiomeManager : NetworkBehaviour
         }
 
         deathParticles = activeProjector.gameObject.GetComponentInChildren<ParticleSystem>();
-        Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, 250/4, combinedLayerMask);
-        foreach (var hitCollider in hitColliders) 
-        {
-            if (IsTree(hitCollider) || IsFoliage(hitCollider)) foliageOrTreeColliderList.Add(hitCollider);
-        }
         StartCoroutine(CheckAndDestroyFoliage());
     }
 
@@ -64,9 +59,19 @@ public class BiomeManager : NetworkBehaviour
 
     private IEnumerator CheckAndDestroyFoliage()
     {
+        yield return new WaitForSeconds(30f);
+        Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, 250 / 3.5f, combinedLayerMask);
+        foreach (var hitCollider in hitColliders) 
+        {
+            if (IsTree(hitCollider) || IsFoliage(hitCollider)) 
+            {
+                Plugin.ExtendedLogging($"Adding {hitCollider} to list");
+                foliageOrTreeColliderList.Add(hitCollider);
+            }
+        }
         while (true)
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(2f);
             PerformSphereCast();
         }
     }
@@ -76,7 +81,7 @@ public class BiomeManager : NetworkBehaviour
         //Stopwatch timer = new Stopwatch();
         //timer.Start();
         // Perform sphere cast
-        Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, activeProjector.size.y / 4f, combinedLayerMask);
+        Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, activeProjector.size.y / 3.5f, combinedLayerMask);
         int foliageOrTreeCount = 0;
         foreach (var hitCollider in hitColliders) {
             // Check if the collider belongs to foliage or a tree

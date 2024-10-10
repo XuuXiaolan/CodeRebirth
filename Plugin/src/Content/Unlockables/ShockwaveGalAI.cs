@@ -57,7 +57,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private bool catPosing = false;
     private float idleNeededTimer = 10f;
     private float idleTimer = 0f;
+    private bool backFlipping = false;
     private System.Random galRandom = new();
+    private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // todo: figure out why this doesnt work
     private readonly static int attackModeAnimation = Animator.StringToHash("attackMode");
@@ -260,9 +262,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         if (isInside)
         {
             GoThroughEntrance();
-            return false;
         }
-        Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
+        else
+        {
+            Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
+        }
         if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
             if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
@@ -333,6 +337,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
         Agent.SetDestination(ownerPlayer.transform.position);
+        if (!backFlipping && UnityEngine.Random.Range(0f, 25000f) <= 1f && Agent.velocity.sqrMagnitude <= 0.01f && Vector3.Distance(Agent.transform.position, ownerPlayer.transform.position) <= 5f)
+        {
+            DoBackFliplol();
+        }
     }
 
     private void DoDeliveringItems()
@@ -410,9 +418,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             if (!currentlyAttacking)
             {
                 currentlyAttacking = true;
-                NetworkAnimator.SetTrigger("startAttack");
+                NetworkAnimator.SetTrigger(attackModeAnimation);
             }
         }
+    }
+
+    private void DoBackFliplol()
+    {
+        NetworkAnimator.SetTrigger(backFlipAnimation);
     }
 
     private IEnumerator StopDancingDelay()
@@ -519,12 +532,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private void StartFlyingAnimEvent()
     {
         flying = true;
+        backFlipping = true;
         FlySource.UnPause();
     }
 
     private void StopFlyingAnimEvent()
     {
         flying = false;
+        backFlipping = false;
         FlySource.Pause();
     }
 
@@ -548,7 +563,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         // Linearly interpolate the speed between minSpeed and maxSpeed based on normalized distance
         float currentSpeed = Mathf.Lerp(minSpeed, maxSpeed, normalizedDistance);
-        if (!catPosing) Agent.speed = currentSpeed;
+        if (!catPosing && !backFlipping) Agent.speed = currentSpeed;
         else Agent.speed = 0;
         // Apply the calculated speed (you would replace this with your actual movement logic)
     }
