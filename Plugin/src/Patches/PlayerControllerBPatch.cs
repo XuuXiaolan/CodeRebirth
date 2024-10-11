@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using HarmonyLib;
@@ -49,9 +50,23 @@ static class PlayerControllerBPatch {
     }
 
     public static void Init() {
+        On.GameNetcodeStuff.PlayerControllerB.TeleportPlayer += PlayerControllerB_TeleportPlayer;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
+    }
+
+    private static void PlayerControllerB_TeleportPlayer(On.GameNetcodeStuff.PlayerControllerB.orig_TeleportPlayer orig, PlayerControllerB self, Vector3 pos, bool withRotation, float rot, bool allowInteractTrigger, bool enableController)
+    {
+        foreach (var gal in UnityEngine.Object.FindObjectsOfType<ShockwaveGalAI>())
+        {
+            if (self == gal.ownerPlayer)
+            {
+                Plugin.ExtendedLogging($"Setting gal.positionOfPlayerBeforeTeleport to {self.transform.position}");
+                gal.positionOfPlayerBeforeTeleport = self.transform.position;
+            }
+        }
+        orig(self, pos, withRotation, rot, allowInteractTrigger, enableController);
     }
 
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)

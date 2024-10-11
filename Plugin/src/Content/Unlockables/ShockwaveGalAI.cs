@@ -47,7 +47,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private bool isInside = false;
     private readonly int maxItemsToHold = 4;
     private State galState = State.Inactive;
-    private PlayerControllerB? ownerPlayer;
+    [NonSerialized] public PlayerControllerB? ownerPlayer;
     private List<string> enemyTargetBlacklist = new();
     [NonSerialized] public int chargeCount = 10;
     private int maxChargeCount;
@@ -58,6 +58,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private float idleNeededTimer = 10f;
     private float idleTimer = 0f;
     private bool backFlipping = false;
+    [NonSerialized] public Vector3 positionOfPlayerBeforeTeleport = Vector3.zero;
+    private EntranceTeleport lastUsedEntranceTeleport = null!;
+    private Dictionary<EntranceTeleport, Transform[]> exitPoints = new();
     private System.Random galRandom = new();
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
@@ -133,6 +136,21 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         ownerPlayer = owner;
         GalVoice.PlayOneShot(ActivateSound);
+        positionOfPlayerBeforeTeleport = owner.transform.position;
+        var exits = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);
+        foreach (var exit in exits)
+        {
+            // todo: interior and exterior exits have their entrance and exit points mismatched, deal with this!!
+            exitPoints.Add(exit, [exit.entrancePoint, exit.exitPoint]);
+            if (exit.isEntranceToBuilding)
+            {
+                lastUsedEntranceTeleport = exit;
+            }
+            if (!exit.FindExitPoint())
+            {
+                Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
+            }
+        }
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -145,6 +163,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         ownerPlayer = null;
         GalVoice.PlayOneShot(DeactivateSound);
+        exitPoints.Clear();
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -261,7 +280,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         if (isInside)
         {
-            GoThroughEntrance();
+            GoThroughEntrance(false);
         }
         else
         {
@@ -300,7 +319,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
         if ((!isInside && ownerPlayer.isInsideFactory) || (isInside && !ownerPlayer.isInsideFactory))
         {
-            GoThroughEntrance();
+            GoThroughEntrance(true);
             return;
         }
         if (Agent.pathStatus == NavMeshPathStatus.PathInvalid || Agent.pathStatus == NavMeshPathStatus.PathPartial)
@@ -358,7 +377,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
 
         if (!isInside)
-        { // setup destination validation and whatnot with partial paths.
+        {
             Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
             if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
             {
@@ -375,7 +394,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
         else
         {
-            GoThroughEntrance();
+            GoThroughEntrance(false);
         }
     }
 
@@ -399,7 +418,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             if (isInside && targetEnemy.isOutside || !isInside && !targetEnemy.isOutside)
             {
-                GoThroughEntrance();
+                GoThroughEntrance(true);
                 return;
             }
             Agent.SetDestination(targetEnemy.transform.position);
@@ -823,28 +842,43 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    public void GoThroughEntrance()
+    public void GoThroughEntrance(bool followingPlayer)
     {
-        var insideEntrancePosition = RoundManager.FindMainEntrancePosition(true, false);
-        var outsideEntrancePosition = RoundManager.FindMainEntrancePosition(true, true);
-        if (!isInside)
+        Vector3 destination = Vector3.zero;
+        Vector3 destinationAfterTeleport = Vector3.zero;
+        EntranceTeleport entranceTeleportToUse = null!;
+        if (followingPlayer)
         {
-            Agent.SetDestination(outsideEntrancePosition);
-            
-            if (Vector3.Distance(transform.position, outsideEntrancePosition) <= 3f)
+            EntranceTeleport? closestExitPoint = null;
+            foreach (var exitpoint in exitPoints.Keys)
             {
-                Agent.Warp(insideEntrancePosition);
-                SetShockwaveGalOutsideServerRpc(false);
+                if (closestExitPoint == null || Vector3.Distance(positionOfPlayerBeforeTeleport, exitpoint.transform.position) < Vector3.Distance(positionOfPlayerBeforeTeleport, closestExitPoint.transform.position))
+                {
+                    closestExitPoint = exitpoint;
+                }
+            }
+            if (closestExitPoint != null)
+            {
+                entranceTeleportToUse = closestExitPoint;
+                destination = closestExitPoint.entrancePoint.transform.position;
+                destinationAfterTeleport = closestExitPoint.exitPoint.transform.position;
             }
         }
         else
         {
-            Agent.SetDestination(insideEntrancePosition);
-            if (Vector3.Distance(transform.position, insideEntrancePosition) <= 3f)
-            {
-                Agent.Warp(outsideEntrancePosition);
-                SetShockwaveGalOutsideServerRpc(true);
-            }
+            entranceTeleportToUse = lastUsedEntranceTeleport;
+            destination = isInside ? lastUsedEntranceTeleport.exitPoint.transform.position : lastUsedEntranceTeleport.entrancePoint.transform.position;
+            destinationAfterTeleport = isInside ? lastUsedEntranceTeleport.entrancePoint.transform.position : lastUsedEntranceTeleport.exitPoint.transform.position;
+        }
+
+        Plugin.ExtendedLogging($"Going through entrance: {destination}");
+        Agent.SetDestination(destination);
+        if (Vector3.Distance(transform.position, destination) <= 3f)
+        {
+            Plugin.ExtendedLogging($"Warping through entrance: {destinationAfterTeleport}");
+            lastUsedEntranceTeleport = entranceTeleportToUse;
+            Agent.Warp(destinationAfterTeleport);
+            SetShockwaveGalOutsideOrInsideServerRpc();
         }
     }
 
@@ -859,21 +893,21 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 	}
 
     [ServerRpc(RequireOwnership = false)]
-    private void SetShockwaveGalOutsideServerRpc(bool setOutside)
+    private void SetShockwaveGalOutsideOrInsideServerRpc()
     {
-        SetShockwaveGalOutsideClientRpc(setOutside);
+        SetShockwaveGalOutsideOrInsideClientRpc();
     }
 
     [ClientRpc]
-    public void SetShockwaveGalOutsideClientRpc(bool setOutside)
+    public void SetShockwaveGalOutsideOrInsideClientRpc()
     {
         for (int i = 0; i < itemsHeldList.Count; i++)
         {
-            itemsHeldList[i].isInFactory = !setOutside;
+            itemsHeldList[i].isInFactory = !isInside;
             itemsHeldList[i].transform.position = itemsHeldTransforms[i].position;
             StartCoroutine(SetItemPhysics(itemsHeldList[i]));
         }
-        isInside = !setOutside;
+        isInside = !isInside;
     }
 
     private IEnumerator SetItemPhysics(GrabbableObject grabbableObject)
