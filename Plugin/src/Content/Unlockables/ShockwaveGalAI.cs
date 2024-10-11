@@ -506,7 +506,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             yield return delay;
 
-            if (galState != State.FollowingPlayer || ownerPlayer == null) continue;
+            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled) continue;
 
             // Use OverlapSphereNonAlloc to reduce garbage collection
             Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
