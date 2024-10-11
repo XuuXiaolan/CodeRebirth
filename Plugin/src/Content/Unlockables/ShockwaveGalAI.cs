@@ -65,8 +65,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private System.Random galRandom = new();
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
-    private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // todo: figure out why this doesnt work
+    private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem");
     private readonly static int attackModeAnimation = Animator.StringToHash("attackMode");
+    private readonly static int startAttackAnimation = Animator.StringToHash("startAttack");
     private readonly static int danceAnimation = Animator.StringToHash("dancing");
     private readonly static int activatedAnimation = Animator.StringToHash("activated");
     private readonly static int pettingAnimation = Animator.StringToHash("startPet");
@@ -141,7 +142,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         var exits = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);
         foreach (var exit in exits)
         {
-            // todo: interior and exterior exits have their entrance and exit points mismatched, deal with this!!
             exitPoints.Add(exit, [exit.entrancePoint, exit.exitPoint]);
             if (exit.isEntranceToBuilding)
             {
@@ -443,6 +443,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
 
+        Plugin.ExtendedLogging($"Charge count: {chargeCount}");
+        Plugin.ExtendedLogging($"Currently attacking: {currentlyAttacking}");
+        Plugin.ExtendedLogging($"Target enemy is inside: {!targetEnemy.isOutside}");
+        Plugin.ExtendedLogging($"Target enemy is this close: {Vector3.Distance(this.transform.position, targetEnemy.transform.position).ToString()}");
         if (!currentlyAttacking)
         {
             if (isInside && targetEnemy.isOutside || !isInside && !targetEnemy.isOutside)
@@ -466,7 +470,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             if (!currentlyAttacking)
             {
                 currentlyAttacking = true;
-                NetworkAnimator.SetTrigger(attackModeAnimation);
+                NetworkAnimator.SetTrigger(startAttackAnimation);
             }
         }
     }
@@ -506,7 +510,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             yield return delay;
 
-            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled) continue;
+            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0) continue;
 
             // Use OverlapSphereNonAlloc to reduce garbage collection
             Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
@@ -611,7 +615,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         // Linearly interpolate the speed between minSpeed and maxSpeed based on normalized distance
         float currentSpeed = Mathf.Lerp(minSpeed, maxSpeed, normalizedDistance);
-        if (!catPosing && !backFlipping) Agent.speed = currentSpeed;
+        if (!catPosing && !backFlipping && targetEnemy == null) Agent.speed = currentSpeed;
         else Agent.speed = 0;
         // Apply the calculated speed (you would replace this with your actual movement logic)
     }
