@@ -318,11 +318,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             GoToChargerAndDeactivate();
             return;
         }
-        if ((!isInside && ownerPlayer.isInsideFactory) || (isInside && !ownerPlayer.isInsideFactory))
-        {
-            GoThroughEntrance(true);
-            return;
-        }
 
         if (!Agent.enabled)
         {
@@ -337,11 +332,18 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
 
             transform.position = newPosition;
+            transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
             if (Vector3.Distance(transform.position, targetPosition) <= 1f)
             {
                 Animator.SetBool(attackModeAnimation, false);
                 Agent.enabled = true;
             }
+            return;
+        }
+
+        if ((!isInside && ownerPlayer.isInsideFactory) || (isInside && !ownerPlayer.isInsideFactory))
+        {
+            GoThroughEntrance(true);
             return;
         }
 
@@ -378,7 +380,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         if (boomboxPlaying)
         {
-            HandleStateAnimationSpeedChanges(State.Dancing, Emotion.Heart);
+            HandleStateAnimationSpeedChanges(State.Dancing, Emotion.Happy);
             StartCoroutine(StopDancingDelay());
             return;
         }
@@ -430,7 +432,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         if (targetEnemy == null || targetEnemy.isEnemyDead || chargeCount <= 0 || ownerPlayer == null)
         {
             if (targetEnemy != null && targetEnemy.isEnemyDead) SetEnemyTargetServerRpc(-1);
-            if (ownerPlayer != null && chargeCount > 0)
+            if (ownerPlayer != null)
             {
                 HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
             }
@@ -477,7 +479,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private IEnumerator StopDancingDelay()
     {
         yield return new WaitUntil(() => !boomboxPlaying);  
-        HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Heart);
+        HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
     }
 
     [ClientRpc]
