@@ -95,7 +95,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         chargeCount = Plugin.ModConfig.ConfigShockwaveCharges.Value;
         maxChargeCount = chargeCount;
-        Agent.enabled = galState != State.Inactive;
+        Agent.enabled = false;
         FlySource.Pause();
         if (IsServer) this.transform.SetParent(ShockwaveCharger.transform, true);
         List<string> enemyBlacklist = Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(',').ToList();
@@ -210,8 +210,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     public void Update()
     {
-        Agent.enabled = galState != State.Inactive;
-        if (!Agent.enabled) return;
+        // Agent.enabled = galState != State.Inactive;
+        if (galState == State.Inactive) return;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive;
         foreach (InteractTrigger trigger in GiveItemTrigger)
@@ -322,23 +322,17 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             GoThroughEntrance(true);
             return;
         }
-        if (Agent.pathStatus == NavMeshPathStatus.PathInvalid || Agent.pathStatus == NavMeshPathStatus.PathPartial)
+
+        if (!Agent.enabled)
         {
-            if (Agent.pathStatus == NavMeshPathStatus.PathInvalid)
+
+        }
+        if (Agent.pathStatus == NavMeshPathStatus.PathPartial)
+        {
+            Agent.SetDestination(Agent.pathEndPosition);
+            if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
             {
-                if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas))
-                {
-                    if (physicsEnabled) EnablePhysicsClientRpc(!physicsEnabled);
-                    Agent.Warp(hit.position);
-                }
-            }
-            else
-            {
-                Agent.SetDestination(Agent.pathEndPosition);
-                if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
-                {
-                    Agent.SetDestination(ownerPlayer.transform.position);
-                }
+                Agent.SetDestination(ownerPlayer.transform.position);
             }
             return;
         }
@@ -709,6 +703,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         ownerPlayer = null;
         RobotFaceController.SetMode(RobotMode.Normal);
+        Agent.enabled = false;
         galState = State.Inactive;
     }
 
@@ -716,6 +711,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         RobotFaceController.SetMode(RobotMode.Normal);
         RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
+        Agent.enabled = true;
         galState = State.Active;
     }
 
