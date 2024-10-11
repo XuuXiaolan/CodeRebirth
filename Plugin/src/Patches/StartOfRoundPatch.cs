@@ -74,12 +74,6 @@ static class StartOfRoundPatch {
 		timer.Stop();
 
 		Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
-
-		foreach (GameObject node in RoundManager.Instance.insideAINodes)
-		{
-			if (node == null) continue;
-			node.AddComponent<DetectLightInSurroundings>();
-		}
 	}
 
 	[HarmonyPatch(nameof(StartOfRound.ResetShip)), HarmonyPostfix]

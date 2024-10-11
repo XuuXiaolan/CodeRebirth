@@ -58,6 +58,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private float idleNeededTimer = 10f;
     private float idleTimer = 0f;
     private bool backFlipping = false;
+    private Vector3 pointToGo = Vector3.zero;
     [NonSerialized] public Vector3 positionOfPlayerBeforeTeleport = Vector3.zero;
     private EntranceTeleport lastUsedEntranceTeleport = null!;
     private Dictionary<EntranceTeleport, Transform[]> exitPoints = new();
@@ -253,7 +254,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             ShockwaveCharger.ActivateGirlServerRpc(-1);
             return;
         }
-        AdjustSpeedOnDistanceOnTargetPosition();
+        if (Agent.enabled) AdjustSpeedOnDistanceOnTargetPosition();
         Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 3);
         switch (galState)
         {
@@ -325,18 +326,50 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         if (!Agent.enabled)
         {
+            Vector3 targetPosition = pointToGo;
+            float moveSpeed = 6f;  // Increased speed for a faster approach
+            float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
+            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
-        }
-        if (Agent.pathStatus == NavMeshPathStatus.PathPartial)
-        {
-            Agent.SetDestination(Agent.pathEndPosition);
-            if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
+            // Calculate the new position in an arcing motion
+            float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
+            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveSpeed);
+            newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
+
+            transform.position = newPosition;
+            if (Vector3.Distance(transform.position, targetPosition) <= 1f)
             {
-                Agent.SetDestination(ownerPlayer.transform.position);
+                Animator.SetBool(attackModeAnimation, false);
+                Agent.enabled = true;
             }
             return;
         }
-        
+
+        NavMeshPath path = new NavMeshPath();
+        if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status == NavMeshPathStatus.PathPartial)
+        {
+            if (Vector3.Distance(transform.position, ownerPlayer.transform.position) > 7f)
+            {
+                Agent.SetDestination(Agent.pathEndPosition);
+                if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
+                {
+                    Agent.SetDestination(ownerPlayer.transform.position);
+                    if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status != NavMeshPathStatus.PathComplete)
+                    {
+                        Vector3 nearbyPoint;
+                        if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+                        {
+                            nearbyPoint = hit.position;
+                            pointToGo = nearbyPoint;
+                            Animator.SetBool(attackModeAnimation, true);
+                            Agent.enabled = false;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+
         if (itemsHeldList.Count >= maxItemsToHold)
         {
             HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye);
