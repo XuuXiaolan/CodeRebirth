@@ -20,6 +20,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public NetworkAnimator NetworkAnimator = null!;
     public NavMeshAgent Agent = null!;
     public InteractTrigger HeadPatTrigger = null!;
+    public InteractTrigger ChestTrigger = null!;
     public List<InteractTrigger> GiveItemTrigger = new();
     public List<Transform> itemsHeldTransforms = new();
     public AnimationClip CatPoseAnim = null!;
@@ -130,6 +131,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         this.transform.position = ShockwaveCharger.ChargeTransform.position;
         this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
+        ChestTrigger.onInteract.AddListener(OnChestInteract);
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.onInteract.AddListener(GrabItemInteract);
@@ -176,10 +178,21 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
+    private void OnChestInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        int heldItemCount = itemsHeldList.Count;
+        Plugin.ExtendedLogging($"Items held: {heldItemCount}");
+        for (int i = heldItemCount - 1; i >= 0; i--)
+        {
+            HandleDroppingItemServerRpc(i);
+        }
+    }
+
     private void OnHeadInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
-        if (UnityEngine.Random.Range(0f, 1f) < 0.5f) StartPetAnimationServerRpc();
+        if (UnityEngine.Random.Range(0f, 1f) < 0.9f) StartPetAnimationServerRpc();
         else if (!catPosing) StartCatPoseAnimationServerRpc();
         else StartPetAnimationServerRpc();
     }
@@ -463,10 +476,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
 
-        Plugin.ExtendedLogging($"Charge count: {chargeCount}");
-        Plugin.ExtendedLogging($"Currently attacking: {currentlyAttacking}");
-        Plugin.ExtendedLogging($"Target enemy is inside: {!targetEnemy.isOutside}");
-        Plugin.ExtendedLogging($"Target enemy is this close: {Vector3.Distance(this.transform.position, targetEnemy.transform.position).ToString()}");
         if (!currentlyAttacking)
         {
             if (isInside && targetEnemy.isOutside || !isInside && !targetEnemy.isOutside)
@@ -534,7 +543,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
             // Use OverlapSphereNonAlloc to reduce garbage collection
             Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
-            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 25f, hitColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, hitColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < numHits; i++)
             {
@@ -557,7 +566,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 // First, do a simple direction check to see if the enemy is in front of the player
                 Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
                 // Then check if there's a clear line of sight
-                if (!Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, 25f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide))
+                if (!Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, 15, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide))
                     continue;
 
                 // Make sure the hit belongs to the same GameObject as the enemy
@@ -635,8 +644,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         // Linearly interpolate the speed between minSpeed and maxSpeed based on normalized distance
         float currentSpeed = Mathf.Lerp(minSpeed, maxSpeed, normalizedDistance);
-        if (!catPosing && !backFlipping && targetEnemy == null) Agent.speed = currentSpeed;
-        else Agent.speed = 0;
+        if ((backFlipping && targetEnemy == null) || catPosing) currentSpeed = 0f;
+        Agent.speed = currentSpeed;
         // Apply the calculated speed (you would replace this with your actual movement logic)
     }
 
