@@ -370,26 +370,23 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
 
         NavMeshPath path = new NavMeshPath();
-        if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status == NavMeshPathStatus.PathPartial)
+        if ((!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, ownerPlayer.transform.position) > 7f)
         {
-            if (Vector3.Distance(transform.position, ownerPlayer.transform.position) > 7f)
+            Agent.SetDestination(Agent.pathEndPosition);
+            if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
             {
-                Agent.SetDestination(Agent.pathEndPosition);
-                if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
+                Agent.SetDestination(ownerPlayer.transform.position);
+                if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status != NavMeshPathStatus.PathComplete)
                 {
-                    Agent.SetDestination(ownerPlayer.transform.position);
-                    if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status != NavMeshPathStatus.PathComplete)
+                    Vector3 nearbyPoint;
+                    if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
                     {
-                        Vector3 nearbyPoint;
-                        if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-                        {
-                            nearbyPoint = hit.position;
-                            pointToGo = nearbyPoint;
-                            Animator.SetBool(attackModeAnimation, true);
-                            Agent.enabled = false;
-                        }
-                        return;
+                        nearbyPoint = hit.position;
+                        pointToGo = nearbyPoint;
+                        Animator.SetBool(attackModeAnimation, true);
+                        Agent.enabled = false;
                     }
+                    return;
                 }
             }
         }
