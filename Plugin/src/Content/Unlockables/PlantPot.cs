@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
@@ -29,6 +30,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 
     public FruitType fruitType = FruitType.None;
     public Stage stage = Stage.Zero;
+    [NonSerialized] public bool grewThisOrbit = true;
     private System.Random random = new System.Random();
     public void Start()
     {
@@ -69,8 +71,9 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 
     private IEnumerator GrowthRoutine() 
     {
-        while (true) {
-            yield return new WaitForSeconds(random.NextFloat(10f, 20f) * (stage == Stage.Three ? 0.5f : 1f));
+        while (true)
+        {
+            yield return new WaitUntil(() => StartOfRound.Instance.inShipPhase && !grewThisOrbit);
             if (stage < Stage.Three)
             {
                 IncreaseStageServerRpc();
@@ -87,6 +90,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
                         break;
                 }
             }
+            grewThisOrbit = true;
             yield return new WaitForEndOfFrame();
         }
     }

@@ -10,6 +10,7 @@ using CodeRebirth.src.Util.Extensions;
 using System.Diagnostics;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -74,6 +75,12 @@ static class StartOfRoundPatch {
 		timer.Stop();
 
 		Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
+	
+		var plantpots = GameObject.FindObjectsOfType<PlantPot>();
+		foreach (var plant in plantpots)
+		{
+			plant.grewThisOrbit = false;
+		}
 	}
 
 	[HarmonyPatch(nameof(StartOfRound.ResetShip)), HarmonyPostfix]
