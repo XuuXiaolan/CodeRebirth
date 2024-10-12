@@ -23,7 +23,7 @@ public static class DoorLockPatch
 
         if (other.CompareTag("Enemy") && other.gameObject.name == "ShockwaveGalDoorCollider")
         {
-            float openDoorSpeedMultiplier = other.gameObject.transform.parent.GetComponent<ShockwaveGalAI>().doorOpeningSpeed;
+            float openDoorSpeedMultiplier = other.gameObject.transform.parent.GetComponent<ShockwaveGalAI>().DoorOpeningSpeed;
             self.enemyDoorMeter += Time.deltaTime * openDoorSpeedMultiplier;
     		if (self.enemyDoorMeter > 1f)
 			{

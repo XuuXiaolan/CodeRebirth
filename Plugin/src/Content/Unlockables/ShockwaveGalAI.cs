@@ -38,9 +38,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public AudioClip PatSound = null!;
     public AudioClip[] FootstepSounds = [];
     public AudioClip[] TakeDropItemSounds = [];
-    public float doorOpeningSpeed = 1f;
+    public float DoorOpeningSpeed = 1f;
+    public Transform DroneHead = null!;
 
     private bool boomboxPlaying = false;
+    private float staringTimer = 0f;
+    private const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
     private List<GrabbableObject> itemsHeldList = new();
     private EnemyAI? targetEnemy;
     private bool flying = false;
@@ -346,6 +349,25 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             GoThroughEntrance(true);
             return;
         }
+        // Check if owner is staring
+        Vector3 directionToDrone = (DroneHead.position - ownerPlayer.gameplayCamera.transform.position).normalized;
+        float dotProduct = Vector3.Dot(ownerPlayer.gameplayCamera.transform.forward, directionToDrone);
+
+        if (dotProduct > 0.8f) // Owner is staring at the drone (adjust threshold as needed)
+        {
+            staringTimer += Time.deltaTime;
+            if (staringTimer >= stareThreshold)
+            {
+                // Gradually rotate to face the owner
+                Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
+                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f); // Adjust rotation speed as needed
+            }
+        }
+        else
+        {
+            staringTimer = 0f;
+        }
 
         NavMeshPath path = new NavMeshPath();
         if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status == NavMeshPathStatus.PathPartial)
@@ -384,6 +406,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             StartCoroutine(StopDancingDelay());
             return;
         }
+
         Agent.SetDestination(ownerPlayer.transform.position);
         if (!backFlipping && UnityEngine.Random.Range(0f, 25000f) <= 1f && Agent.velocity.sqrMagnitude <= 0.01f && Vector3.Distance(Agent.transform.position, ownerPlayer.transform.position) <= 5f)
         {
