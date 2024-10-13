@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
+using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Meteors : NetworkBehaviour {
@@ -20,9 +21,13 @@ public class Meteors : NetworkBehaviour {
 
     [Header("Graphics")]
     [SerializeField]
-    private ParticleSystem FireTrail = null!;
+    private GameObject FireTrail = null!;
     [SerializeField]
     AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
+
+    [Header("Events")]
+    [SerializeField]
+    UnityEvent _onMeteorLand;
     
     Vector3 origin, target;
 
@@ -41,7 +46,7 @@ public class Meteors : NetworkBehaviour {
         isMoving = true;
         transform.LookAt(target);
         UpdateAudio(); // Make sure audio works correctly on the first frame.
-        FireTrail.Play();
+        FireTrail.SetActive(true);
     }
 
     public void SetupAsLooping() {
@@ -51,7 +56,8 @@ public class Meteors : NetworkBehaviour {
     private void Awake() {
         if (MeteorShower.Instance != null) MeteorShower.Instance.AddMeteor(this);
         NormalTravelAudio.Play();
-        FireTrail.Stop();
+        FireTrail.SetActive(false);
+
         chanceToSpawnScrap = Plugin.ModConfig.ConfigMeteorShowerMeteoriteSpawnChance.Value;
     }
 
@@ -114,10 +120,11 @@ public class Meteors : NetworkBehaviour {
             craterController.ShowCrater(target);
         }
         
-        FireTrail.Stop();
+        FireTrail.SetActive(false);
         
         CRUtilities.CreateExplosion(transform.position, true, 100, 0, 10, 4, CauseOfDeath.Blast, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab);
-
+        _onMeteorLand.Invoke();
+        
         yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit. <-- Actually i think the meteor just looks cool staying on the ground for an extra 10 seconds.
         if(IsHost)
             Destroy(gameObject);

@@ -141,7 +141,7 @@ public class MeteorShower : CodeRebirthWeathers {
 	}
 	private void SpawnVisualMeteors(Vector3 centralLocation, Vector3 offset = default, float speed = 0f, float sizeMultiplier = 1f, GameObject? overridePrefab = null)
     {
-        Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
+        Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.FloatingMeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
 		meteor.transform.localScale *= sizeMultiplier;
         AddRandomMovement(meteor, speed);
         meteor.SetupAsLooping();
@@ -197,7 +197,7 @@ public class MeteorShower : CodeRebirthWeathers {
 		} else {
 			origin = CalculateVector(target);
 		}
-            
+		
 		Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
 		meteor.NetworkObject.OnSpawn(() => {
 			meteor.SetupMeteorClientRpc(origin, target);

@@ -21,8 +21,11 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         [LoadFromBundle("RubyMeteoriteObj")]
         public Item RubyMeteoriteItem { get; private set; } = null!;
 
-        [LoadFromBundle("Meteor.prefab")]
+        [LoadFromBundle("NewMeteor.prefab")]
         public GameObject MeteorPrefab { get; private set; } = null!;
+        
+        [LoadFromBundle("Meteor.prefab")]
+        public GameObject FloatingMeteorPrefab { get; private set; } = null!;
         
         [LoadFromBundle("MeteorContainer.prefab")]
         public GameObject MeteorEffectPrefab { get; private set; } = null!;
