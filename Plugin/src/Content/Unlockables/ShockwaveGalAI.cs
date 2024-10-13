@@ -934,8 +934,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         Vector3 destination = Vector3.zero;
         Vector3 destinationAfterTeleport = Vector3.zero;
         EntranceTeleport entranceTeleportToUse = null!;
+
         if (followingPlayer)
         {
+            // Find the closest entrance to the player
             EntranceTeleport? closestExitPoint = null;
             foreach (var exitpoint in exitPoints.Keys)
             {
@@ -957,56 +959,88 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             destination = isInside ? lastUsedEntranceTeleport.exitPoint.transform.position : lastUsedEntranceTeleport.entrancePoint.transform.position;
             destinationAfterTeleport = isInside ? lastUsedEntranceTeleport.entrancePoint.transform.position : lastUsedEntranceTeleport.exitPoint.transform.position;
         }
-        if (elevatorScript != null && Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < Vector3.Distance(destination, entranceTeleportToUse.transform.position))
+
+        if (elevatorScript != null && NeedsElevator(destination, entranceTeleportToUse, elevatorScript))
         {
-            if (Vector3.Distance(this.transform.position, this.elevatorScript.elevatorBottomPoint.position) < Vector3.Distance(this.transform.position, this.elevatorScript.elevatorTopPoint.position))
-            {
-                UseTheElevator(true, this.elevatorScript);
-            }
-            else
-            {
-                UseTheElevator(false, this.elevatorScript);
-            }
+            UseTheElevator(elevatorScript);
             return;
         }
+
         if (Vector3.Distance(transform.position, destination) <= 3f)
         {
             lastUsedEntranceTeleport = entranceTeleportToUse;
             Agent.Warp(destinationAfterTeleport);
             SetShockwaveGalOutsideOrInsideServerRpc();
         }
+        else
+        {
+            Agent.SetDestination(destination);
+        }
     }
 
-    private void UseTheElevator(bool goUp, MineshaftElevatorController elevatorScript)
+    private bool NeedsElevator(Vector3 destination, EntranceTeleport entranceTeleportToUse, MineshaftElevatorController elevatorScript)
     {
-		Vector3 destination;
-		if (goUp)
-		{
-			destination = elevatorScript.elevatorBottomPoint.position;
-		}
-		else
-		{
-			destination = elevatorScript.elevatorTopPoint.position;
-		}
-		if (elevatorScript.elevatorFinishedMoving)
-		{
-			if (elevatorScript.elevatorDoorOpen && Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) < 1f && elevatorScript.elevatorMovingDown == goUp)
-			{
-				elevatorScript.PressElevatorButtonOnServer(true);
-			}
-			Agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
-			return;
-		}
-		if (Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
-		{
-			if (elevatorScript.elevatorDoorOpen && Vector3.Distance(this.transform.position, destination) < 1f && elevatorScript.elevatorMovingDown != goUp && !elevatorScript.elevatorCalled)
-			{
-				elevatorScript.CallElevatorOnServer(goUp);
-			}
-			Agent.SetDestination(destination);
-			return;
-		}
-		return;
+        // Determine if the elevator is needed based on destination proximity and current position
+        bool nearMainEntrance = Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < Vector3.Distance(destination, entranceTeleportToUse.transform.position);
+        bool closerToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
+        bool needsElevator = isInside && ((nearMainEntrance && !closerToTop) || (!nearMainEntrance && closerToTop));
+        return needsElevator;
+    }
+
+    private void UseTheElevator(MineshaftElevatorController elevatorScript)
+    {
+        // Determine if we need to go up or down based on current position and destination
+        bool goUp = Vector3.Distance(this.transform.position, elevatorScript.elevatorBottomPoint.position) < Vector3.Distance(this.transform.position, elevatorScript.elevatorTopPoint.position);
+        Plugin.ExtendedLogging($"Going up: {goUp}");
+        // Check if the elevator is finished moving
+        if (elevatorScript.elevatorFinishedMoving)
+        {
+            if (elevatorScript.elevatorDoorOpen)
+            {
+                // If elevator is not called yet and is at the wrong level, call it
+                if (NeedToCallElevator(elevatorScript, goUp))
+                {
+                    Plugin.Logger.LogInfo("Calling the elevator");
+                    elevatorScript.CallElevatorOnServer(goUp);
+                    return;
+                }
+                // Move to the inside point of the elevator if not already there
+                if (Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
+                {
+                    Agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
+                }
+                else
+                {
+                    // Press the button to start moving the elevator
+                    elevatorScript.PressElevatorButtonOnServer(true);
+                }
+            }
+        }
+        else
+        {
+            MoveToWaitingPoint(elevatorScript, goUp);
+        }
+    }
+
+    private bool NeedToCallElevator(MineshaftElevatorController elevatorScript, bool needToGoUp)
+    {
+        Plugin.ExtendedLogging($"Elevator at bottom: {elevatorScript.elevatorIsAtBottom}");
+        return !elevatorScript.elevatorCalled && ((!elevatorScript.elevatorIsAtBottom && needToGoUp) || (elevatorScript.elevatorIsAtBottom && !needToGoUp));
+    }
+
+    private void MoveToWaitingPoint(MineshaftElevatorController elevatorScript, bool needToGoUp)
+    {
+        // Elevator is currently moving
+        // Move to the appropriate waiting point (bottom or top)
+        if (Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
+        {
+            Agent.SetDestination(needToGoUp ? elevatorScript.elevatorBottomPoint.position : elevatorScript.elevatorTopPoint.position);
+        }
+        else
+        {
+            // Wait at the inside point for the elevator to arrive
+            Agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
+        }
     }
 
 	public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)

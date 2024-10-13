@@ -67,6 +67,7 @@ public class Plugin : BaseUnityPlugin {
         EnemyAIPatch.Init();
         ShovelPatch.Init();
         DoorLockPatch.Init();
+        MineshaftElevatorControllerPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");
