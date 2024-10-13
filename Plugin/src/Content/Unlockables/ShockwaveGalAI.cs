@@ -67,6 +67,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private EntranceTeleport lastUsedEntranceTeleport = null!;
     private Dictionary<EntranceTeleport, Transform[]> exitPoints = new();
     private System.Random galRandom = new();
+    private MineshaftElevatorController? elevatorScript = null;
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem");
@@ -166,6 +167,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             maxItemsToHold = 2;
         }
+	    this.elevatorScript = FindObjectOfType<MineshaftElevatorController>();
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -179,6 +181,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         ownerPlayer = null;
         GalVoice.PlayOneShot(DeactivateSound);
         exitPoints.Clear();
+        this.elevatorScript = null;
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -954,16 +957,56 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             destination = isInside ? lastUsedEntranceTeleport.exitPoint.transform.position : lastUsedEntranceTeleport.entrancePoint.transform.position;
             destinationAfterTeleport = isInside ? lastUsedEntranceTeleport.entrancePoint.transform.position : lastUsedEntranceTeleport.exitPoint.transform.position;
         }
-
-        Plugin.ExtendedLogging($"Going through entrance: {destination}");
-        Agent.SetDestination(destination);
+        if (elevatorScript != null && Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < Vector3.Distance(destination, entranceTeleportToUse.transform.position))
+        {
+            if (Vector3.Distance(this.transform.position, this.elevatorScript.elevatorBottomPoint.position) < Vector3.Distance(this.transform.position, this.elevatorScript.elevatorTopPoint.position))
+            {
+                UseTheElevator(true, this.elevatorScript);
+            }
+            else
+            {
+                UseTheElevator(false, this.elevatorScript);
+            }
+            return;
+        }
         if (Vector3.Distance(transform.position, destination) <= 3f)
         {
-            Plugin.ExtendedLogging($"Warping through entrance: {destinationAfterTeleport}");
             lastUsedEntranceTeleport = entranceTeleportToUse;
             Agent.Warp(destinationAfterTeleport);
             SetShockwaveGalOutsideOrInsideServerRpc();
         }
+    }
+
+    private void UseTheElevator(bool goUp, MineshaftElevatorController elevatorScript)
+    {
+		Vector3 destination;
+		if (goUp)
+		{
+			destination = elevatorScript.elevatorBottomPoint.position;
+		}
+		else
+		{
+			destination = elevatorScript.elevatorTopPoint.position;
+		}
+		if (elevatorScript.elevatorFinishedMoving)
+		{
+			if (elevatorScript.elevatorDoorOpen && Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) < 1f && elevatorScript.elevatorMovingDown == goUp)
+			{
+				elevatorScript.PressElevatorButtonOnServer(true);
+			}
+			Agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
+			return;
+		}
+		if (Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
+		{
+			if (elevatorScript.elevatorDoorOpen && Vector3.Distance(this.transform.position, destination) < 1f && elevatorScript.elevatorMovingDown != goUp && !elevatorScript.elevatorCalled)
+			{
+				elevatorScript.CallElevatorOnServer(goUp);
+			}
+			Agent.SetDestination(destination);
+			return;
+		}
+		return;
     }
 
 	public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)
