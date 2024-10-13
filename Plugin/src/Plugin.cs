@@ -17,8 +17,6 @@ namespace CodeRebirth.src;
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency("Surfaced", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("MoreShipUpgrades", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
@@ -44,17 +42,6 @@ public class Plugin : BaseUnityPlugin {
 #if DEBUG
         ModConfig.ConfigEnableExtendedLogging.Value = true;
 #endif
-        if (SurfacedCompatibilityChecker.Enabled) {
-            SurfacedCompatibilityChecker.Init();
-        } else {
-            // Logger.LogWarning("Surfaced not found. Sharknado will not be activated.");
-        }
-
-        if (LGUCompatibilityChecker.Enabled) {
-            LGUCompatibilityChecker.Init();
-        } else {
-            // Logger.LogWarning("lategameupgrades not found. Custom hunter samples will not be activated.");
-        }
 
         if (SubtitlesAPICompatibilityChecker.Enabled) {
             SubtitlesAPICompatibilityChecker.Init();
