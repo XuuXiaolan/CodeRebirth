@@ -271,9 +271,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void JumpInPlace()
     {
-        if (IsServer) networkAnimator.SetTrigger("startJump");
-        creatureSFX.PlayOneShot(jumpSound);
-        creatureSFXFar.PlayOneShot(jumpSound);
+        networkAnimator.SetTrigger("startJump");
+        PlayMiscSoundsClientRpc(0);
         jumping = true;
         agent.speed = 0.5f;
         Plugin.ExtendedLogging("Start Jump"); 
@@ -283,13 +282,37 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         kicking = true;
         agent.speed = 0.5f;
-        if (IsServer) networkAnimator.SetTrigger("startKick");
+        networkAnimator.SetTrigger("startKick");
         playerToKick = closestPlayer;
-        creatureSFX.PlayOneShot(kickSound);
-        creatureSFXFar.PlayOneShot(kickSound);
+        PlayMiscSoundsClientRpc(1);
         Plugin.ExtendedLogging("Start Kick");
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void PlayMiscSoundsServerRpc(int soundID)
+    {
+        PlayMiscSoundsClientRpc(soundID);
+    }
+
+    [ClientRpc]
+    private void PlayMiscSoundsClientRpc(int soundID)
+    {
+        switch (soundID)
+        {
+            case 0:
+                creatureSFX.PlayOneShot(jumpSound);
+                creatureSFXFar.PlayOneShot(jumpSound);
+                break;
+            case 1:
+                creatureSFX.PlayOneShot(kickSound);
+                creatureSFXFar.PlayOneShot(kickSound);
+                break;
+            case 2:
+                creatureSFX.PlayOneShot(crunchySquishSound);
+                creatureSFXFar.PlayOneShot(crunchySquishSound);
+                break;
+        }
+    }
     public override void DoAIInterval()
     {
         base.DoAIInterval();
@@ -613,19 +636,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         return false;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void OnLandCrunchySoundServerRpc()
-    {
-        OnLandCrunchySoundClientRpc();
-    }
-
-    [ClientRpc]
-    public void OnLandCrunchySoundClientRpc()
-    {
-        creatureSFX.PlayOneShot(crunchySquishSound);
-        creatureSFXFar.PlayOneShot(crunchySquishSound);
-    }
-
     public void FinishKicking()
     { // AnimEvent
         kicking = false;
@@ -664,7 +674,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (Vector3.Distance(CollisionFootL.transform.position, localPlayer.transform.position) <= 10f || Vector3.Distance(CollisionFootR.transform.position, localPlayer.transform.position) <= 10f)
         {
             localPlayer.DamagePlayer(200, false, true, CauseOfDeath.Crushing, 0, false, localPlayer.velocityLastFrame);
-            OnLandCrunchySoundServerRpc();
+            PlayMiscSoundsServerRpc(2);
         }
         jumping = false;
         BigSmokeEffect.Play();

@@ -1,4 +1,10 @@
-# v0.6.0
+# v0.6.1
+
+- Gave some sounds to the carnivorous plant.
+- Gave redwood kick some sounds too.
+- Fixed some redwood sounds playing only on host.
+
+## v0.6.0
 
 - Biomes disabled by default.
 - Added carnivorous plant.

@@ -11,6 +11,8 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
     public AnimationClip attackAnimation = null!;
     public NetworkAnimator networkAnimator = null!;
     public Transform mouth = null!;
+    public AudioClip BiteSound = null!;
+    public AudioClip[] HitSounds = [];
     public Gradient CarnivorousPlantColourGradient = new Gradient();
     private bool carryingPlayerBody;
     private DeadBodyInfo? bodyBeingCarried;
@@ -85,10 +87,17 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
     {
         if (!attacking) 
         {
+            PlayBiteSoundClientRpc();
             attacking = true;
             networkAnimator.SetTrigger("startAttack");
             Invoke(nameof(EndAttack), attackAnimation.length);
         }
+    }
+
+    [ClientRpc]
+    private void PlayBiteSoundClientRpc()
+    {
+        creatureVoice.PlayOneShot(BiteSound);
     }
 
     private void EndAttack()
@@ -157,8 +166,8 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         enemyHP -= force;
-
-        if (IsHost) networkAnimator.SetTrigger("takeDamage");
+        creatureVoice.PlayOneShot(HitSounds[UnityEngine.Random.Range(0, HitSounds.Length)]);
+        if (IsServer) networkAnimator.SetTrigger("takeDamage");
 
         if (enemyHP <= 0 && !isEnemyDead)
         {
