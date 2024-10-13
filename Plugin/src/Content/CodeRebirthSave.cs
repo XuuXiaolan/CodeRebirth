@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content;
@@ -11,6 +12,8 @@ class CodeRebirthSave(string fileName) : SaveableData(fileName)
 
 
 	public Dictionary<ulong, CodeRebirthLocalSave> PlayerData { get; private set; } = [];
+
+	public Dictionary<int, PlantPotData> PlantPotData { get; private set; } = [];
 	
 	public override void Save()
 	{

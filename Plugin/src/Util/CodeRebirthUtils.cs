@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Random = System.Random;
 using CodeRebirth.src.Content;
+using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util.Extensions;
 using Newtonsoft.Json;
 
@@ -104,5 +105,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     private void OnDisable()
     {
         CodeRebirthSave.Current = null!;
+        PlantPot.totalSpawnedPlantPots = 0;
     }
 }

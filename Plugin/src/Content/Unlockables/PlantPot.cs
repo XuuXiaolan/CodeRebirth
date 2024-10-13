@@ -8,6 +8,12 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
+class PlantPotData {
+    public PlantPot.FruitType fruitType = PlantPot.FruitType.None;
+    public PlantPot.Stage stage = PlantPot.Stage.Zero;
+}
+
 public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 {
     public InteractTrigger trigger = null!;
@@ -28,12 +34,45 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         Golden_Tomato = 2,
     }
 
-    public FruitType fruitType = FruitType.None;
-    public Stage stage = Stage.Zero;
+    PlantPotData _data;
+    
+    // point to new data structure because i do not feel like changing it
+    public FruitType fruitType {
+        get => _data.fruitType;
+        set => _data.fruitType = value;
+    }
+    public Stage stage {
+        get => _data.stage;
+        set => _data.stage = value;
+    }
+    
+    
     [NonSerialized] public bool grewThisOrbit = true;
     private System.Random random = new System.Random();
-    public void Start()
-    {
+
+    internal static int totalSpawnedPlantPots;
+    int _thisPlantPotID;
+    
+    public IEnumerator Start() {
+        yield return new WaitUntil(() => CodeRebirthUtils.Instance != null);
+        
+        _thisPlantPotID = totalSpawnedPlantPots;
+        
+        Plugin.ExtendedLogging($"plant pot id: {_thisPlantPotID}");
+
+        
+        // Because this is handled via reference it should just work
+        if (!CodeRebirthSave.Current.PlantPotData.TryGetValue(_thisPlantPotID, out _data)) {
+            _data = new PlantPotData();
+            CodeRebirthSave.Current.PlantPotData[_thisPlantPotID] = _data;
+        } else {
+            Plugin.ExtendedLogging("loaded from save!");
+        }
+        
+        Plugin.ExtendedLogging($"stage: {_data.stage}");
+        
+        totalSpawnedPlantPots++;
+        
         random = new System.Random(StartOfRound.Instance.randomMapSeed);
         if (stage != Stage.Zero) enableList[(int)stage].SetActive(true);
         if (stage == Stage.Zero) 
@@ -41,8 +80,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
             trigger.onInteract.AddListener(OnInteract);
         }
     }
-
-
+    
     [ServerRpc(RequireOwnership = false)]
     private void StartPlantGrowthServerRpc(NetworkObjectReference netObjRef)
     {
