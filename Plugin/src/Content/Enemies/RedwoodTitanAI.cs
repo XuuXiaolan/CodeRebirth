@@ -789,7 +789,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void SpawnHeartOnDeath(Vector3 position)
     {
-        if (Plugin.ModConfig.ConfigRedwoodHeartEnabled.Value && IsHost && !Plugin.LGUIsOn)
+        if (Plugin.ModConfig.ConfigRedwoodHeartEnabled.Value && IsHost)
         {
             CodeRebirthUtils.Instance.SpawnScrapServerRpc("RedwoodHeart", position);
         }

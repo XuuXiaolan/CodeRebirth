@@ -46,7 +46,11 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Redwood Titan
 
-![RT]()
+![RT](https://i.postimg.cc/FHXjYh5p/image-removebg.png)
+
+### Carnivorous Plant
+
+![CarnPlant](https://i.postimg.cc/d0xDgKFr/image.png)
 
 </details>
 
@@ -55,7 +59,8 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Shockwave Gal
 
-![ShG]()
+![ShG1](https://i.postimg.cc/2S37p0YR/SG1.png)
+![ShG2](https://i.postimg.cc/TwvVDGDf/SG2.png)
 
 #### Seamine Gal
 
@@ -188,7 +193,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Modeling/Designs:**
 
-- S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
+- V0xx (the goat), S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
 
 **Sounds:**
 

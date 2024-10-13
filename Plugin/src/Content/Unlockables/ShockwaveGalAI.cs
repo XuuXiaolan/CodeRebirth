@@ -220,7 +220,19 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     [ClientRpc]
     private void PlayPatSoundClientRpc()
     {
+        StartCoroutine(SetFaceToHearts());
         GalVoice.PlayOneShot(PatSound);
+    }
+
+    private IEnumerator SetFaceToHearts()
+    {
+        var currentState = galState;
+        var currentEmotion = galEmotion;
+        RobotFaceController.SetFaceState(Emotion.Heart, 100);
+        yield return new WaitForSeconds(PatSound.length);
+        if (currentState != galState) yield break;
+        RobotFaceController.SetFaceState(currentEmotion, 100);
+
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -863,6 +875,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     [ServerRpc(RequireOwnership = false)]
     private void GrabItemOwnerHoldingServerRpc(int indexOfOwner)
     {
+        Animator.SetBool(holdingItemAnimation, true);
         GrabItemOwnerHoldingClientRpc(indexOfOwner);
     }
 

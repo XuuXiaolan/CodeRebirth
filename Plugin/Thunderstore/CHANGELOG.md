@@ -8,14 +8,14 @@
   - Added new decor, "plant pot".
   - Added wooden seed, obtained by chopping wood and getting it randomly.
   - Added tomato and golden tomato, sellable to the company.
-- Improved meteor shower visuals drastically.
+- Improved meteor shower visuals drastically (thanks V0xx).
 - Improved biome particles performance.
 - Updated for v64.
 - Improved hoverboard a bit.
 - Improved meteor shower overhead visuals a bit.
 - Fixed Snailcat not being rideable.
 - Fixed Cutiefly not being rideable.
-- New icon for coderebirth!! thanks to [Koda](https://www.youtube.com/@Sp71ng).
+- New icon for coderebirth!! thanks to Koda.
 - Fixed wooden crates having health similar to metal crates.
 - Fixed scan nodes with wooden and metal crates.
 - Fixed metal crates opening randomly by themselves.
@@ -26,6 +26,7 @@
 - Gave each item a "min,max" worthiness config.
 - Added config for meteor shower to stop at a normalised time of day.
 - Added some more item crate configs.
+- Added change config for biomes.
 
 ## v0.5.2
 

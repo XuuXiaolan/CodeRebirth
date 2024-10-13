@@ -33,6 +33,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
     #endregion
     #region Spawn Weights
+    public ConfigEntry<float> ConfigBiomesSpawnChance { get; private set; }
     public ConfigEntry<string> ConfigCarnivorousSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
@@ -169,6 +170,10 @@ public class CodeRebirthConfig
                                             "Biomes | Enabled",
                                             false,
                                             "Whether Biomes are enabled.");
+        ConfigBiomesSpawnChance = configFile.Bind("Biome Options",
+                                            "Biomes | Spawn Chance",
+                                            0.5f,
+                                            "Biomes spawn chance.");
         #endregion
         #region DangerousFlora
         ConfigDangerousFloraEnabled = configFile.Bind("Flora Options",

@@ -251,7 +251,8 @@ static class RoundManagerPatch {
 	private static void SpawnRandomBiomes()
 	{
 		Plugin.ExtendedLogging("Spawning Biome/s!!!");
-		System.Random random = new();
+		System.Random random = new(StartOfRound.Instance.randomMapSeed);
+		if (random.NextFloat(0f, 1f) <= Plugin.ModConfig.ConfigBiomesSpawnChance.Value) return;
 		int minValue = 1;
 		for (int i = 0; i < random.NextInt(minValue, 1); i++)
 		{
