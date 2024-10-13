@@ -21,7 +21,7 @@ public class Meteors : NetworkBehaviour {
 
     [Header("Graphics")]
     [SerializeField]
-    private GameObject FireTrail = null!;
+    private GameObject? FireTrail = null;
     [SerializeField]
     AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
 
@@ -46,7 +46,7 @@ public class Meteors : NetworkBehaviour {
         isMoving = true;
         transform.LookAt(target);
         UpdateAudio(); // Make sure audio works correctly on the first frame.
-        FireTrail.SetActive(true);
+        FireTrail?.SetActive(true);
     }
 
     public void SetupAsLooping() {
@@ -56,7 +56,7 @@ public class Meteors : NetworkBehaviour {
     private void Awake() {
         if (MeteorShower.Instance != null) MeteorShower.Instance.AddMeteor(this);
         NormalTravelAudio.Play();
-        FireTrail.SetActive(false);
+        FireTrail?.SetActive(false);
 
         chanceToSpawnScrap = Plugin.ModConfig.ConfigMeteorShowerMeteoriteSpawnChance.Value;
     }
@@ -120,7 +120,7 @@ public class Meteors : NetworkBehaviour {
             craterController.ShowCrater(target);
         }
         
-        FireTrail.SetActive(false);
+        FireTrail?.SetActive(false);
         
         CRUtilities.CreateExplosion(transform.position, true, 100, 0, 10, 4, CauseOfDeath.Blast, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab);
         _onMeteorLand.Invoke();
