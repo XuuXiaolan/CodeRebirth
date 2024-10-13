@@ -49,7 +49,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private EnemyAI? targetEnemy;
     private bool flying = false;
     private bool isInside = false;
-    private readonly int maxItemsToHold = 4;
+    private int maxItemsToHold = 4;
     private State galState = State.Inactive;
     [NonSerialized] public PlayerControllerB? ownerPlayer;
     private List<string> enemyTargetBlacklist = new();
@@ -156,6 +156,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             {
                 Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
             }
+        }
+        int activePlayerCount = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerControlled).Count();
+        if (activePlayerCount == 1)
+        {
+            maxItemsToHold = 4;
+        }
+        else
+        {
+            maxItemsToHold = 2;
         }
         if (IsServer)
         {
@@ -286,6 +295,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 DoDeliveringItems();
                 break;
             case State.Dancing:
+                DoDancing();
                 break;
             case State.AttackMode:
                 DoAttackMode();
@@ -460,6 +470,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
+    private void DoDancing()
+    {
+        if (itemsHeldList.Count >= maxItemsToHold)
+        {
+            HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye);
+            return;
+        }
+    }
+
     private void DoAttackMode()
     {
         if (targetEnemy == null || targetEnemy.isEnemyDead || chargeCount <= 0 || ownerPlayer == null)
@@ -511,7 +530,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private IEnumerator StopDancingDelay()
     {
-        yield return new WaitUntil(() => !boomboxPlaying);  
+        yield return new WaitUntil(() => !boomboxPlaying || galState != State.Dancing);
+        if (galState != State.Dancing) yield break;  
         HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
     }
 
