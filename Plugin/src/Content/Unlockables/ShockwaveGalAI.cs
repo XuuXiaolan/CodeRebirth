@@ -176,7 +176,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         onCompanyMoon = RoundManager.Instance.currentLevel.levelID == 3;
         if (IsServer)
         {
-            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            if (Agent.enabled) Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            else this.transform.position = ShockwaveCharger.ChargeTransform.position;
             this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
             HandleStateAnimationSpeedChanges(State.Active, Emotion.OpenEye);
         }
@@ -192,7 +193,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         onCompanyMoon = false;
         if (IsServer)
         {
-            Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            if (Agent.enabled) Agent.Warp(ShockwaveCharger.ChargeTransform.position);
+            else this.transform.position = ShockwaveCharger.ChargeTransform.position;
             this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
             HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
         }
@@ -279,7 +281,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
         if (galState == State.AttackMode)
         {
-            Agent.stoppingDistance = 7f;
+            Agent.stoppingDistance = 6f;
         }
         else
         {
@@ -298,7 +300,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private void HostSideUpdate()
     {
-        if ((StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase) && Agent.enabled)
+        if (StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase)
         {
             ShockwaveCharger.ActivateGirlServerRpc(-1);
             return;
@@ -581,19 +583,23 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
+    private IEnumerator DelayDeactivatingDrone()
+    {
+        HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+        yield return new WaitForSeconds(1f);
+        ShockwaveCharger.ActivateGirlServerRpc(-1);
+    }
     private void DoSellingItems()
     {
         if (TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota || depositItemsDesk == null)
         {
-            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
-            this.transform.position = ShockwaveCharger.ChargeTransform.position;
-            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+            StartCoroutine(DelayDeactivatingDrone());
             return;
         }
 
         if (itemsToSell.Count <= 0)
         {
-            float sellPercentage = Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f) / 100;
+            float sellPercentage = StartOfRound.Instance.companyBuyingRate;
             int quota = TimeOfDay.Instance.profitQuota;
             int currentlySoldAmount = TimeOfDay.Instance.quotaFulfilled;
             List<GrabbableObject> itemsOnShip = GetItemsOnShip();
@@ -605,39 +611,37 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 SetItemAsGrabbableClientRpc(new NetworkObjectReference(item.NetworkObject), false);
             }
 
-            if (totalValue * sellPercentage < quota)
+            if ((totalValue * sellPercentage + currentlySoldAmount) < quota)
             {
                 foreach (GrabbableObject item in itemsToSell)
                 {
                     SetItemAsGrabbableClientRpc(new NetworkObjectReference(item.NetworkObject), true);
-                    item.grabbable = true;
                 }
                 itemsToSell.Clear();
-                this.transform.position = ShockwaveCharger.ChargeTransform.position;
-                this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
-                HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+                StartCoroutine(DelayDeactivatingDrone());
                 return;
             }
+            Plugin.ExtendedLogging("Total Value " + totalValue + " | max quota value " + (totalValue * sellPercentage + currentlySoldAmount) + " | quota needed: " + quota);
         }
 
         // Path to an item, grab it, repeat for grabbing up to 4 items from the itemsToSell list
         if (itemsHeldList.Count < maxItemsToHold && itemsToSell.Count > 0)
         {
             GrabbableObject itemToGrab = itemsToSell[0];
-            if (Vector3.Distance(this.transform.position, itemToGrab.transform.position) <= Agent.stoppingDistance)
+            if (Vector3.Distance(this.transform.position, itemToGrab.transform.position) <= 1f)
             {
                 StartCoroutine(HandleGrabbingItem(itemToGrab, itemsHeldTransforms[itemsHeldList.Count]));
                 itemsToSell.RemoveAt(0);
             }
             else
             {
-                Agent.SetDestination(itemToGrab.transform.position);
+                this.transform.position = Vector3.MoveTowards(this.transform.position, itemToGrab.transform.position, Agent.speed * Time.deltaTime);
             }
         }
         else if (itemsHeldList.Count > 0)
         {
             // Sell the items to the deposit desk by doing a distance check
-            if (Vector3.Distance(this.transform.position, depositItemsDesk.transform.position) <= Agent.stoppingDistance)
+            if (Vector3.Distance(this.transform.position, depositItemsDesk.transform.position) <= 1f)
             {
                 int heldItemCount = itemsHeldList.Count;
                 for (int i = heldItemCount - 1; i >= 0; i--)
@@ -651,7 +655,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             }
             else
             {
-                Agent.SetDestination(depositItemsDesk.transform.position);
+                this.transform.position = Vector3.MoveTowards(this.transform.position, depositItemsDesk.transform.position, Agent.speed * Time.deltaTime);
             }
         }
     }
@@ -699,7 +703,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private List<GrabbableObject> GetItemsOnShip()
     {
-        return GameObject.Find("/Environment/HangarShip").GetComponentsInChildren<GrabbableObject>().ToList();
+        return GameObject.Find("/Environment/HangarShip").GetComponentsInChildren<GrabbableObject>().Where(item => item.grabbable && item.scrapValue > 0).ToList();
     }
 
     [ClientRpc]
