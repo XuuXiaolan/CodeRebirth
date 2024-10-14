@@ -193,7 +193,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Modeling/Designs:**
 
-- V0xx (the goat), S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
+- V0xx (the goat), Rodrigo, S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
 
 **Sounds:**
 
@@ -201,8 +201,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Ideas/Lore:**
 
-- halley/serene/falin
-- Alli/Basil
+- Rodrigo
 
 **Concept Art:**
 

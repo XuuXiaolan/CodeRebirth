@@ -85,7 +85,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1.04
   MinDistance: 1
-  MaxDistance: 23
+  MaxDistance: 55
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -245,7 +245,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1.15
   MinDistance: 1
-  MaxDistance: 23
+  MaxDistance: 55
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -488,7 +488,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1.04
   MinDistance: 1
-  MaxDistance: 23
+  MaxDistance: 55
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -1196,7 +1196,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1.18
   MinDistance: 1
-  MaxDistance: 23
+  MaxDistance: 55
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -2031,9 +2031,9 @@ GameObject:
   - component: {fileID: 6018552592219118470}
   - component: {fileID: 6900835463141935646}
   - component: {fileID: 577517964605079600}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: CarnivorousPlantWhacAMole
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

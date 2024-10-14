@@ -46,6 +46,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private float staringTimer = 0f;
     private const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
     private List<GrabbableObject> itemsHeldList = new();
+    private List<GrabbableObject> itemsToSell = new();
     private EnemyAI? targetEnemy;
     private bool flying = false;
     private bool isInside = false;
@@ -68,6 +69,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private Dictionary<EntranceTeleport, Transform[]> exitPoints = new();
     private System.Random galRandom = new();
     private MineshaftElevatorController? elevatorScript = null;
+    private DepositItemsDesk? depositItemsDesk = null;
+    private bool onCompanyMoon = false;
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem");
@@ -86,6 +89,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         DeliveringItems = 3,
         Dancing = 4,
         AttackMode = 5,
+        SellingItems = 6,
     }
 
     public enum Emotion
@@ -159,7 +163,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             }
         }
         int activePlayerCount = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerControlled).Count();
-        if (activePlayerCount == 1)
+        if (activePlayerCount == 1 || Plugin.ModConfig.ConfigShockwaveHoldsFourItems.Value)
         {
             maxItemsToHold = 4;
         }
@@ -168,6 +172,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             maxItemsToHold = 2;
         }
 	    this.elevatorScript = FindObjectOfType<MineshaftElevatorController>();
+        this.depositItemsDesk = FindObjectOfType<DepositItemsDesk>();
+        onCompanyMoon = RoundManager.Instance.currentLevel.levelID == 3;
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -181,7 +187,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         ownerPlayer = null;
         GalVoice.PlayOneShot(DeactivateSound);
         exitPoints.Clear();
-        this.elevatorScript = null;
+        elevatorScript = null;
+        depositItemsDesk = null;
+        onCompanyMoon = false;
         if (IsServer)
         {
             Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -254,10 +262,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         // Agent.enabled = galState != State.Inactive;
         if (galState == State.Inactive) return;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
-        HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive;
+        HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        ChestTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0&& (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.enabled = galState != State.AttackMode && galState != State.Inactive;
+            trigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && ownerPlayer.isHoldingObject && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         }
         if (boomboxPlaying)
         {
@@ -315,6 +324,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             case State.AttackMode:
                 DoAttackMode();
                 break;
+            case State.SellingItems:
+                DoSellingItems();
+                break;
         }
     }
 
@@ -339,11 +351,68 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         return false;
     }
 
+    private void DoStaringAtOwner(PlayerControllerB ownerPlayer)
+    {
+        // Check if owner is staring
+        Vector3 directionToDrone = (DroneHead.position - ownerPlayer.gameplayCamera.transform.position).normalized;
+        float dotProduct = Vector3.Dot(ownerPlayer.gameplayCamera.transform.forward, directionToDrone);
+
+        if (dotProduct > 0.8f) // Owner is staring at the drone (adjust threshold as needed)
+        {
+            staringTimer += Time.deltaTime;
+            if (staringTimer >= stareThreshold)
+            {
+                // Gradually rotate to face the owner
+                Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
+                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f); // Adjust rotation speed as needed
+                if (staringTimer >= stareThreshold + 0.5f)
+                {
+                    staringTimer = 0f;
+                }
+            }
+        }
+        else
+        {
+            staringTimer = 0f;
+        }
+    }
+
+    private void DetermineIfNeedToDisableAgent(PlayerControllerB ownerPlayer)
+    {
+        NavMeshPath path = new NavMeshPath();
+        if ((!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, ownerPlayer.transform.position) > 7f)
+        {
+            Agent.SetDestination(Agent.pathEndPosition);
+            if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
+            {
+                Agent.SetDestination(ownerPlayer.transform.position);
+                if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status != NavMeshPathStatus.PathComplete)
+                {
+                    Vector3 nearbyPoint;
+                    if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+                    {
+                        nearbyPoint = hit.position;
+                        pointToGo = nearbyPoint;
+                        Animator.SetBool(attackModeAnimation, true);
+                        Agent.enabled = false;
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
     private void DoActive()
     {
         if (ownerPlayer == null)
         {
             GoToChargerAndDeactivate();
+            return;
+        }
+        if (onCompanyMoon)
+        {
+            HandleStateAnimationSpeedChanges(State.SellingItems, Emotion.OpenEye);
             return;
         }
         if (Vector3.Distance(this.transform.position, ownerPlayer.transform.position) > 3f)
@@ -387,47 +456,21 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             GoThroughEntrance(true);
             return;
         }
-        // Check if owner is staring
-        Vector3 directionToDrone = (DroneHead.position - ownerPlayer.gameplayCamera.transform.position).normalized;
-        float dotProduct = Vector3.Dot(ownerPlayer.gameplayCamera.transform.forward, directionToDrone);
 
-        if (dotProduct > 0.8f) // Owner is staring at the drone (adjust threshold as needed)
+        DoStaringAtOwner(ownerPlayer);
+
+        if (isInside && elevatorScript != null)
         {
-            staringTimer += Time.deltaTime;
-            if (staringTimer >= stareThreshold)
+            bool galCloserToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
+            bool ownerCloserToTop = Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorBottomPoint.position);
+            if (galCloserToTop != ownerCloserToTop)
             {
-                // Gradually rotate to face the owner
-                Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
-                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f); // Adjust rotation speed as needed
+                UseTheElevator(elevatorScript);
+                return;
             }
         }
-        else
-        {
-            staringTimer = 0f;
-        }
 
-        NavMeshPath path = new NavMeshPath();
-        if ((!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, ownerPlayer.transform.position) > 7f)
-        {
-            Agent.SetDestination(Agent.pathEndPosition);
-            if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
-            {
-                Agent.SetDestination(ownerPlayer.transform.position);
-                if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status != NavMeshPathStatus.PathComplete)
-                {
-                    Vector3 nearbyPoint;
-                    if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-                    {
-                        nearbyPoint = hit.position;
-                        pointToGo = nearbyPoint;
-                        Animator.SetBool(attackModeAnimation, true);
-                        Agent.enabled = false;
-                    }
-                    return;
-                }
-            }
-        }
+        if (!(isInside && elevatorScript != null && Vector3.Distance(transform.position, elevatorScript.elevatorInsidePoint.position) <= 2f && !elevatorScript.elevatorFinishedMoving)) DetermineIfNeedToDisableAgent(ownerPlayer);
 
         if (itemsHeldList.Count >= maxItemsToHold)
         {
@@ -442,11 +485,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
 
-        Agent.SetDestination(ownerPlayer.transform.position);
         if (!backFlipping && UnityEngine.Random.Range(0f, 25000f) <= 1f && Agent.velocity.sqrMagnitude <= 0.01f && Vector3.Distance(Agent.transform.position, ownerPlayer.transform.position) <= 5f)
         {
             DoBackFliplol();
+            return;
         }
+        Agent.SetDestination(ownerPlayer.transform.position);
     }
 
     private void DoDeliveringItems()
@@ -536,6 +580,68 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 NetworkAnimator.SetTrigger(startAttackAnimation);
             }
         }
+    }
+
+    private void DoSellingItems()
+    {
+        if (TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota)
+        {
+            HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+            this.transform.position = ShockwaveCharger.ChargeTransform.position;
+            this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+            return;
+        }
+        if (itemsToSell.Count <= 0)
+        {
+            float sellPercentage = Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)/100;
+            int quota = TimeOfDay.Instance.profitQuota;
+            int currentlySoldAmount = TimeOfDay.Instance.quotaFulfilled;
+            List<GrabbableObject> itemsOnShip = GetItemsOnShip();
+            itemsToSell = GetItemsToSell(itemsOnShip, quota, sellPercentage, currentlySoldAmount);
+            int totalValue = 0;
+            foreach (GrabbableObject item in itemsToSell)
+            {
+                totalValue += item.scrapValue;
+                item.grabbable = false;
+            }
+            if (totalValue*sellPercentage < quota)
+            {
+                foreach (GrabbableObject item in itemsToSell)
+                {
+                    item.grabbable = true;
+                }
+                itemsToSell.Clear();
+                this.transform.position = ShockwaveCharger.ChargeTransform.position;
+                this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+                HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
+                return;
+            }
+        }
+        // todo: path to an item, grab it, repeat for grabbing 4 items from the itemsToSell list, sell them to the depositDesk by doing a distance check then running this function: depositItemsDesk.AddObjectToDeskServerRpc(new NetworkObjectReference(item.GetComponent<NetworkObject>()));
+    }
+
+    private Vector3 GetRandomPointOnDesk(DepositItemsDesk depositItemsDesk, GrabbableObject grabbableObject)
+    {
+        Vector3 vector = RoundManager.RandomPointInBounds(depositItemsDesk.triggerCollider.bounds);
+        vector.y = depositItemsDesk.triggerCollider.bounds.min.y;
+        RaycastHit raycastHit;
+        if (Physics.Raycast(new Ray(vector + Vector3.up * 3f, Vector3.down), out raycastHit, 8f, 1048640, QueryTriggerInteraction.Collide))
+        {
+            vector = raycastHit.point;
+        }
+        vector.y += grabbableObject.itemProperties.verticalOffset;
+        vector = depositItemsDesk.deskObjectsContainer.transform.InverseTransformPoint(vector);
+        return vector;
+    }
+
+    private List<GrabbableObject> GetItemsToSell(List<GrabbableObject> itemsOnShip, int quota, float sellPercentage, int currentSoldAmount)
+    {
+        // get sale value of an item using item.scrapValue, return the most optimal list of items that just fulfill the quota
+    }
+
+    private List<GrabbableObject> GetItemsOnShip()
+    {
+        return GameObject.Find("/Environment/HangarShip").GetComponentsInChildren<GrabbableObject>().ToList();
     }
 
     private void DoBackFliplol()
@@ -731,6 +837,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 Animator.SetBool(danceAnimation, false);
                 Animator.SetBool(activatedAnimation, true);
                 break;
+            case State.SellingItems:
+                Animator.SetBool(holdingItemAnimation, false);
+                Animator.SetBool(attackModeAnimation, true);
+                Animator.SetBool(danceAnimation, false);
+                Animator.SetBool(activatedAnimation, true);
+                break;
         }
     }
 
@@ -771,6 +883,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                     break;
                 case State.AttackMode:
                     HandleStateAttackModeChange();
+                    break;
+                case State.SellingItems:
+                    HandleStateSellingItemsChange();
                     break;
             }
         }
@@ -839,8 +954,20 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private void HandleStateAttackModeChange()
     {
+        int heldItemCount = itemsHeldList.Count;
+        for (int i = heldItemCount - 1; i >= 0; i--)
+        {
+            HandleDroppingItem(itemsHeldList[i]);
+        }
         galState = State.AttackMode;
         RobotFaceController.SetMode(RobotMode.Combat);
+    }
+
+    private void HandleStateSellingItemsChange()
+    {
+        Agent.enabled = false;
+        galState = State.SellingItems;
+        RobotFaceController.SetMode(RobotMode.Normal);
     }
     #endregion
 
@@ -891,13 +1018,21 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         item.isInElevator = false;
         item.isInShipRoom = false;
         item.playerHeldBy.DiscardHeldObject();
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
         item.grabbable = false;
         item.isHeldByEnemy = true;
         item.hasHitGround = false;
         item.parentObject = heldTransform;
         item.EnablePhysics(false);
         itemsHeldList.Add(item);
+        if (heldTransform.gameObject.name.EndsWith("L"))
+        {
+            item.transform.localRotation = Quaternion.Euler(0, -100, 0);
+        }
+        else
+        {
+            item.transform.localRotation = Quaternion.Euler(0, 100, 0);
+        }
         GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
         HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
     }
@@ -939,6 +1074,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         if (itemsHeldList.Count == 0 && IsServer)
         {
             Animator.SetBool(holdingItemAnimation, false);
+        }
+        if (ownerPlayer != null && StartOfRound.Instance.shipBounds.bounds.Contains(item.transform.position))
+        {
+            ownerPlayer.SetItemInElevator(true, true, item);
         }
     }
 
@@ -983,6 +1122,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             lastUsedEntranceTeleport = entranceTeleportToUse;
             Agent.Warp(destinationAfterTeleport);
+            EnablePhysicsClientRpc(false);
             SetShockwaveGalOutsideOrInsideServerRpc();
         }
         else
@@ -1004,7 +1144,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         // Determine if we need to go up or down based on current position and destination
         bool goUp = Vector3.Distance(this.transform.position, elevatorScript.elevatorBottomPoint.position) < Vector3.Distance(this.transform.position, elevatorScript.elevatorTopPoint.position);
-        Plugin.ExtendedLogging($"Going up: {goUp}");
         // Check if the elevator is finished moving
         if (elevatorScript.elevatorFinishedMoving)
         {
@@ -1013,13 +1152,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 // If elevator is not called yet and is at the wrong level, call it
                 if (NeedToCallElevator(elevatorScript, goUp))
                 {
-                    Plugin.Logger.LogInfo("Calling the elevator");
                     elevatorScript.CallElevatorOnServer(goUp);
+                    MoveToWaitingPoint(elevatorScript, goUp);
                     return;
                 }
                 // Move to the inside point of the elevator if not already there
                 if (Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
                 {
+                    if (physicsEnabled) EnablePhysicsClientRpc(false);
                     Agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
                 }
                 else
@@ -1037,7 +1177,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private bool NeedToCallElevator(MineshaftElevatorController elevatorScript, bool needToGoUp)
     {
-        Plugin.ExtendedLogging($"Elevator at bottom: {elevatorScript.elevatorIsAtBottom}");
         return !elevatorScript.elevatorCalled && ((!elevatorScript.elevatorIsAtBottom && needToGoUp) || (elevatorScript.elevatorIsAtBottom && !needToGoUp));
     }
 

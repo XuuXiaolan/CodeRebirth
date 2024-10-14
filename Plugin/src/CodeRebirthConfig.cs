@@ -83,6 +83,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
     public ConfigEntry<int> ConfigPlantPotPrice { get; private set; }
     public ConfigEntry<int> ConfigShockwaveCharges { get; private set; }
     public ConfigEntry<string> ConfigShockwaveBotEnemyBlacklist { get; private set; }
@@ -150,10 +151,14 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Charges",
                                             10,
                                             "How many charges the Shockwave Gal has.");
+        ConfigShockwaveHoldsFourItems = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Holds Four Items",
+                                            false,
+                                            "Whether the Shockwave Gal holds four items regardless of singleplayer or multiplayer.");
         ConfigShockwaveBotEnemyBlacklist = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Enemy Blacklist",
-                                            "Red Locust Bees, Docile Locust Bees, Manticoil, CutieFly, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
-                                            "Comma separated list of enemies that the Shockwave Gal will not target.");
+                                            "Centipede, Red Locust Bees, Docile Locust Bees, Manticoil, CutieFly, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
+                                            "Comma separated list of enemies that the Shockwave Gal will not target (immortal enemies should be counted by default, just not in config).");
         #endregion
         #region Seamine Gal
         /*ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
@@ -366,7 +371,7 @@ public class CodeRebirthConfig
                                             "Whether redwood can eat old birds.");
         ConfigRedwoodMaxSpawnCount = configFile.Bind("Redwood Options",
                                             "Redwood | Max Spawn Count",
-                                            5,
+                                            1,
                                             new ConfigDescription(
                                                 "Redwood max spawn count.",
                                                 new AcceptableValueRange<int>(0, 99)
@@ -472,14 +477,14 @@ public class CodeRebirthConfig
                                             ));
         ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                             "Meteors | Default Volume",
-                                            0.25f,
+                                            0.2f,
                                             new ConfigDescription(
                                                 "Default Volume of Meteors (between 0 and 1).",
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
         ConfigMeteorShowerInShipVolume = configFile.Bind("MeteorShower Options",
                                             "MeteorShower | Meteor Volume",
-                                            1f,
+                                            0.5f,
                                             new ConfigDescription(
                                                 "Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.", 
                                                 new AcceptableValueRange<float>(0, 1f)

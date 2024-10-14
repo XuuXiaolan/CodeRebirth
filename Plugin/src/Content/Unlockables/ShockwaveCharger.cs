@@ -20,16 +20,22 @@ public class ShockwaveCharger : NetworkBehaviour
             GameObject shockwaveGal = GameObject.Instantiate(ShockwaveGal);
 			SceneManager.MoveGameObjectToScene(shockwaveGal, StartOfRound.Instance.gameObject.scene);
             shockwaveGal.GetComponent<NetworkObject>().Spawn();
-            shockwaveGalAI = shockwaveGal.GetComponent<ShockwaveGalAI>();
-            shockwaveGalAI.ShockwaveCharger = this;
+            SetGalForEveryoneClientRpc(new NetworkObjectReference(shockwaveGal.GetComponent<NetworkObject>()));
         }
         ActivateOrDeactivateTrigger.onInteract.AddListener(OnActivateShockwaveGal);
+    }
+
+    [ClientRpc]
+    private void SetGalForEveryoneClientRpc(NetworkObjectReference networkObjectReference)
+    {
+        shockwaveGalAI = ((GameObject)networkObjectReference).GetComponent<ShockwaveGalAI>();
+        shockwaveGalAI.ShockwaveCharger = this;
     }
 
     private void OnActivateShockwaveGal(PlayerControllerB playerInteracting)
     {
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
-        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving) return;
+        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota)) return;
         if (!shockwaveGalAI.Animator.GetBool("activated")) ActivateGirlServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
         else ActivateGirlServerRpc(-1);
     }

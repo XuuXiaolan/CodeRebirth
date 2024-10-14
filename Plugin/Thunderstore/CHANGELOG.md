@@ -1,4 +1,22 @@
-# v0.6.1
+# v0.6.2
+
+- Adjusted redwood spawn count and meteor volumes config.
+- Made gal drop items on attack mode switch.
+- Made item dropped register for ship.
+- Allowed gal to follow player through the elevator by herself.
+- Improved triggers for shockwave gal.
+- Remove physics when warping or heading to elevator for shockwave gal.
+- Added snare flea to shockwave gal config.
+- Added bozo rodrigo to readme credits.
+- Fixed sound ranges with plant monster.
+- Fixed item holding rotation with shockwave gal.
+- Added scannode to shockwave gal.
+- Items stick onto the ship when dropped by shockwave gal (while she dropped onto the ship).
+- Fixed multiplayer bug.
+- Shockwave gal has a new behaviour when activated on company, selling up to quota.
+- Added shockwave gal config for always being able to hold 4 items regardless of multiplayer or singleplayer (false by default).
+
+## v0.6.1
 
 - Gave some sounds to the carnivorous plant.
 - Gave redwood kick some sounds too.
