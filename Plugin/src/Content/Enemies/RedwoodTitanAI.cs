@@ -162,7 +162,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 if (player.isInHangarShipRoom)
                 {
-                    foreach (Collider? playerCollider in player.GetCRPlayerData().playerColliders!)
+                    foreach (Collider playerCollider in player.GetPlayerColliders())
                     {
                         foreach (Collider enemyCollider in enemyColliders)
                         {
@@ -176,7 +176,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
             {
-                foreach (Collider playerCollider in player.GetCRPlayerData().playerColliders!)
+                foreach (Collider playerCollider in player.GetPlayerColliders())
                 {
                     foreach (Collider enemyCollider in enemyColliders)
                     {

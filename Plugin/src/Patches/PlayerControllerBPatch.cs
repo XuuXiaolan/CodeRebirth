@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
@@ -7,40 +5,32 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
-[HarmonyPatch(typeof(GameNetcodeStuff.PlayerControllerB))]
+[HarmonyPatch(typeof(PlayerControllerB))]
 static class PlayerControllerBPatch {
-    [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]
-    public static bool PlayerHitGroundEffects(PlayerControllerB __instance) {
-        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && __instance.GetCRPlayerData().flung) {
-            __instance.GetCRPlayerData().flung = false;
-            __instance.playerRigidbody.isKinematic = true;
-        }
-        return true;
+    [HarmonyPatch(nameof(PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]
+    public static void PlayerHitGroundEffects(PlayerControllerB __instance) {
+        if (!__instance.ContainsCRPlayerData()) return;
+        if (!__instance.HasFlung()) return;
+        __instance.SetFlung(false);
+        __instance.playerRigidbody.isKinematic = true;
     }
 
-	[HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayFootstepSound)), HarmonyPrefix]
+	[HarmonyPatch(nameof(PlayerControllerB.PlayFootstepSound)), HarmonyPrefix]
 	public static bool PlayFootstepSound(PlayerControllerB __instance) {
-        if (CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance) && __instance.GetCRPlayerData().ridingHoverboard) {
-            return false;
-        } else {
-            return true;
-        }
-	}
-
-    [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.Awake)), HarmonyPostfix]
-    public static void Awake(PlayerControllerB __instance) {
-        if (!CodeRebirthPlayerManager.dataForPlayer.ContainsKey(__instance)) {
-            CodeRebirthPlayerManager.dataForPlayer.Add(__instance, new CRPlayerData());
-            List<Collider> colliders = new List<Collider>(__instance.GetComponentsInChildren<Collider>());
-            __instance.GetCRPlayerData().playerColliders = colliders;
-        }
+        return !__instance.ContainsCRPlayerData() || !__instance.IsRidingHoverboard();
     }
 
-    [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.Update)), HarmonyPrefix]
+    [HarmonyPatch(nameof(PlayerControllerB.Awake)), HarmonyPostfix]
+    public static void Awake(PlayerControllerB __instance) {
+        if (__instance.ContainsCRPlayerData()) return;
+
+        __instance.AddCRPlayerData();
+    }
+
+    [HarmonyPatch(nameof(PlayerControllerB.Update)), HarmonyPrefix]
     public static void Update(PlayerControllerB __instance) {
         if (GameNetworkManager.Instance.localPlayerController == null) return;
         /*if (__instance.GetCRPlayerData().playerOverrideController != null) return;
@@ -58,7 +48,7 @@ static class PlayerControllerBPatch {
 
     private static void PlayerControllerB_TeleportPlayer(On.GameNetcodeStuff.PlayerControllerB.orig_TeleportPlayer orig, PlayerControllerB self, Vector3 pos, bool withRotation, float rot, bool allowInteractTrigger, bool enableController)
     {
-        foreach (var gal in UnityEngine.Object.FindObjectsOfType<ShockwaveGalAI>())
+        foreach (ShockwaveGalAI gal in UnityEngine.Object.FindObjectsOfType<ShockwaveGalAI>())
         {
             if (self == gal.ownerPlayer)
             {
@@ -72,7 +62,7 @@ static class PlayerControllerBPatch {
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)
     {
         orig(self);
-        if (self.GetCRPlayerData() != null && ((self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
+        if (self.ContainsCRPlayerData() && ((self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
         {
             Hoverboard? hoverboard = self.TryGetHoverboardRiding();
             if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self == GameNetworkManager.Instance.localPlayerController) {
@@ -105,7 +95,7 @@ static class PlayerControllerBPatch {
         c.EmitDelegate((bool isGrounded, PlayerControllerB self) =>
         {
             // Pretend we are grounded when in a water tornado so we can drown.
-            return isGrounded || self.GetCRPlayerData().Water;
+            return isGrounded || self.HasEffectActive(CodeRebirthStatusEffects.Water);
         });
     }
 

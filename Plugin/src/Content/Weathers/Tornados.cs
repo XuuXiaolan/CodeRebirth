@@ -11,6 +11,7 @@ using CodeRebirth.src.Util.Extensions;
 using System;
 using WeatherRegistry;
 using static CodeRebirth.src.Content.Weathers.Tornados;
+using static CodeRebirth.src.Util.PlayerControllerBExtensions;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Tornados : EnemyAI
@@ -103,20 +104,20 @@ public class Tornados : EnemyAI
         if (TornadoWeather.Instance != null) TornadoWeather.Instance.AddTornado(this);
         timeSinceBeingInsideTornado = 0;
 
-        if (Vector3.Distance(this.transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20) {
-            SetDestinationToPosition(ChooseFarthestNodeFromPosition(this.transform.position, avoidLineOfSight: false).position, true);
+        if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20) {
+            SetDestinationToPosition(ChooseFarthestNodeFromPosition(transform.position, avoidLineOfSight: false).position, true);
         }
 
         if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) != WeatherHandler.Instance.TornadoesWeather) {
             Plugin.ExtendedLogging("Tornado spawned as an enemy?");
             outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
             tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
-            this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: Vector3.zero, radius: 100f, randomSeed: tornadoRandom);
-            this.transform.position = this.origin;
+            origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: Vector3.zero, radius: 100f, randomSeed: tornadoRandom);
+            transform.position = origin;
 
             // Use the TornadoSelector class to select the tornado type based on config
             int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
-            this.tornadoType = (TornadoType)typeIndex;
+            tornadoType = (TornadoType)typeIndex;
 
             WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
             Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}");
@@ -202,24 +203,24 @@ public class Tornados : EnemyAI
             Plugin.Logger.LogError("PlayerID is -1, this should never happen!");
             return;
         }
-        StartOfRound.Instance.allPlayerScripts[PlayerID].GetCRPlayerData().flingingAway = true;
+        StartOfRound.Instance.allPlayerScripts[PlayerID].SetFlingingAway(true);
         StartCoroutine(AutoReEnableKinematicsAfter10Seconds(StartOfRound.Instance.allPlayerScripts[PlayerID]));
     }
 
     public IEnumerator AutoReEnableKinematicsAfter10Seconds(PlayerControllerB player) {
         yield return new WaitForSeconds(10f);
         player.playerRigidbody.isKinematic = true;
-        player.GetCRPlayerData().flingingAway = false;
-        player.GetCRPlayerData().flung = false;
+        player.SetFlingingAway(false);
+        player.SetFlung(true);
     }
     public override void Update() {
         base.Update();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
         
         var localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.transform.position) <= 10f && !localPlayer.GetCRPlayerData().flingingAway && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water) {
+        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.transform.position) <= 10f && !localPlayer.IsFlingingAway() && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water) {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 49f);
-        } else if (Vector3.Distance(localPlayer.transform.position, this.transform.position) > 10f && !localPlayer.GetCRPlayerData().flingingAway) {
+        } else if (Vector3.Distance(localPlayer.transform.position, this.transform.position) > 10f && !localPlayer.IsFlingingAway()) {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 49f);
         }
 
@@ -246,7 +247,7 @@ public class Tornados : EnemyAI
         UpdateAudio();
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
             HandleTornadoActions(player);   
-            if (player.GetCRPlayerData().flingingAway && !player.GetCRPlayerData().flung) {
+            if (player.IsFlingingAway() && !player.HasFlung()) {
                 //Plugin.Logger.LogDebug("Tornado is flinging away");
                 Vector3 directionToCenter = (throwingPoint.position - player.transform.position).normalized;
                 Rigidbody playerRigidbody = player.playerRigidbody;
@@ -260,8 +261,8 @@ public class Tornados : EnemyAI
                     playerRigidbody.AddForce(verticalForce, ForceMode.VelocityChange);
                     if (player == GameNetworkManager.Instance.localPlayerController) timeSinceBeingInsideTornado = 0f;
                     if (Plugin.ModConfig.ConfigTornadoYeetSFX.Value) yeetAudio.Play();
-                    player.GetCRPlayerData().flung = true;
-                    player.GetCRPlayerData().flingingAway = false;
+                    player.SetFlung(true);
+                    player.SetFlingingAway(false);
                 }
             }
         }
@@ -288,7 +289,7 @@ public class Tornados : EnemyAI
             float distanceToTornado = Vector3.Distance(transform.position, player.transform.position);
             bool hasLineOfSight = TornadoHasLineOfSightToPosition();
             Vector3 directionToCenter = (transform.position - player.transform.position).normalized;
-            if (player.GetCRPlayerData().flingingAway && player.playerRigidbody.isKinematic) {
+            if (player.IsFlingingAway() && player.playerRigidbody.isKinematic) {
                 player.playerRigidbody.isKinematic = false;
                 player.playerRigidbody.AddForce(Vector3.up * 10f, ForceMode.Impulse);
             } else if (distanceToTornado <= 75) {
@@ -300,110 +301,58 @@ public class Tornados : EnemyAI
     }
 
     public bool TornadoConditionsAreMet(PlayerControllerB player) {
-        return  !player.inVehicleAnimation && 
-                !player.GetCRPlayerData().ridingHoverboard && 
-                !StartOfRound.Instance.shipBounds.bounds.Contains(player.transform.position) && 
-                !player.isInsideFactory && 
-                player.isPlayerControlled && 
-                !player.isPlayerDead && 
-                !player.isInHangarShipRoom && 
-                !player.inAnimationWithEnemy && 
-                !player.enteringSpecialAnimation && 
+        return  !player.inVehicleAnimation &&
+                !player.IsRidingHoverboard() &&
+                !StartOfRound.Instance.shipBounds.bounds.Contains(player.transform.position) &&
+                !player.isInsideFactory &&
+                player.isPlayerControlled &&
+                !player.isPlayerDead &&
+                !player.isInHangarShipRoom &&
+                !player.inAnimationWithEnemy &&
+                !player.enteringSpecialAnimation &&
                 !player.isClimbingLadder;
     }
     private void HandleStatusEffects(PlayerControllerB player) {
         float closeRange = 10f;
         float midRange = 20f;
         float longRange = 30f;
+        float distance = Vector3.Distance(player.transform.position, transform.position);
 
         switch (tornadoType) {
             case TornadoType.Fire:
-                ApplyFireStatusEffect(player, midRange);
+                player.ApplyStatusEffect(CodeRebirthStatusEffects.Fire, midRange, distance);
                 break;
             case TornadoType.Blood:
-                ApplyBloodStatusEffect(player, closeRange);
+                player.ApplyStatusEffect(CodeRebirthStatusEffects.Blood, closeRange, distance);
                 break;
             case TornadoType.Windy:
-                ApplyWindyStatusEffect(player, 110f);
+                player.ApplyStatusEffect(CodeRebirthStatusEffects.Windy, 110f, distance);
                 break;
             case TornadoType.Smoke:
-                ApplySmokeStatusEffect(player, longRange);
+                player.ApplyStatusEffect(CodeRebirthStatusEffects.Smoke, longRange, distance);
                 break;
             case TornadoType.Water:
-                ApplyWaterStatusEffect(player, closeRange);
+                player.ApplyStatusEffect(CodeRebirthStatusEffects.Water, closeRange, distance);
                 break;
             case TornadoType.Electric:
-                ApplyElectricStatusEffect(player, midRange);
+                ApplyElectricStatusEffect(player, midRange, distance);
                 break;
         }
     }
-
-    private void ApplyFireStatusEffect(PlayerControllerB player, float range) {
-        float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !player.GetCRPlayerData().Fire) {
-            player.GetCRPlayerData().Fire = true;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Fire, true);
-        } else if (distance >= range && player.GetCRPlayerData().Fire) {
-            player.GetCRPlayerData().Fire = false;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Fire, false);
-        }
-    }
-
-    private void ApplyBloodStatusEffect(PlayerControllerB player, float range) {
-        float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !player.GetCRPlayerData().Blood) {
-            player.GetCRPlayerData().Blood = true;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Blood, true);
-        } else if (distance >= range && player.GetCRPlayerData().Blood) {
-            player.GetCRPlayerData().Blood = false;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Blood, false);
-        }
-    }
-
-    private void ApplyWindyStatusEffect(PlayerControllerB player, float range) {
-        float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !player.GetCRPlayerData().Windy) {
-            player.GetCRPlayerData().Windy = true;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Windy, true);
-        } else if (distance >= range && player.GetCRPlayerData().Windy) {
-            player.GetCRPlayerData().Windy = false;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Windy, false);
-        }
-    }
-
-    private void ApplySmokeStatusEffect(PlayerControllerB player, float range) {
-        float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !player.GetCRPlayerData().Smoke) {
-            player.GetCRPlayerData().Smoke = true;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Smoke, true);
-        } else if (distance >= range && player.GetCRPlayerData().Smoke) {
-            player.GetCRPlayerData().Smoke = false;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Smoke, false);
-        }
-    }
-
-    private void ApplyWaterStatusEffect(PlayerControllerB player, float range) {
-        float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !player.GetCRPlayerData().Water && player.isUnderwater) {
-            player.GetCRPlayerData().Water = true;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Water, true);
-        } else if (distance >= range && player.GetCRPlayerData().Water) {
-            player.GetCRPlayerData().Water = false;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Water, false);
-        }
-    }
-
-    private void ApplyElectricStatusEffect(PlayerControllerB player, float range) {
-        float distance = Vector3.Distance(player.transform.position, this.transform.position);
-        if (distance < range && !player.GetCRPlayerData().Electric) {
-            player.GetCRPlayerData().Electric = true;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Electric, true);
-            originalPlayerSpeed = player.movementSpeed;
-            player.movementSpeed *= 1.5f;
-        } else if (distance >= range && player.GetCRPlayerData().Electric) {
-            player.GetCRPlayerData().Electric = false;
-            CodeRebirthPlayerManager.ChangeActiveStatus(player, CodeRebirthStatusEffects.Electric, false);
-            player.movementSpeed = originalPlayerSpeed;
+    private void ApplyElectricStatusEffect(PlayerControllerB player, float range, float distance) {
+        switch(player.ApplyStatusEffect(CodeRebirthStatusEffects.Electric, range, distance))
+        {
+            case ApplyEffectResults.Applied:
+                {
+                    originalPlayerSpeed = player.movementSpeed;
+                    player.movementSpeed *= 1.5f;
+                    break;
+                }
+            case ApplyEffectResults.Removed:
+                {
+                    player.movementSpeed = originalPlayerSpeed;
+                    break;
+                }
         }
     }
 
@@ -418,7 +367,7 @@ public class Tornados : EnemyAI
         float maxStrength =
             (hasLineOfSight ? Plugin.ModConfig.ConfigTornadoPullStrength.Value : 0.125f * Plugin.ModConfig.ConfigTornadoPullStrength.Value)
             * (tornadoType == TornadoType.Smoke ? 1.25f : 1f)
-            * (localPlayerController.GetCRPlayerData().Water ? 0.25f : 1f)
+            * (localPlayerController.HasEffectActive(CodeRebirthStatusEffects.Water) ? 0.25f : 1f)
             * (tornadoType == TornadoType.Fire && localPlayerController.health <= 20 ? 0.25f : 1f);
 
         // Calculate the normalized distance and apply an exponential falloff
@@ -493,7 +442,7 @@ public class Tornados : EnemyAI
         // Iterate through all hit colliders to check for players
         foreach (var hitCollider in hitColliders)
         {
-            return CheckIfAPlayerIsAGivenCollider(hitCollider);
+            if (CheckIfAPlayerIsAGivenCollider(hitCollider)) return true;
         }
         // If no players were found or there was no clear line of sight to any player, return false
         return false;
@@ -514,7 +463,7 @@ public class Tornados : EnemyAI
         return false;
     }
     public bool CheckIfPlayerSeenByTornado(PlayerControllerB player) {
-        if (player.GetCRPlayerData().flingingAway) return false;
+        if (player.IsFlingingAway()) return false;
         foreach (Transform eye in eyes)
         {
             if (Physics.Linecast(eye.position, player.gameplayCamera.transform.position, StartOfRound.Instance.playersMask, queryTriggerInteraction: QueryTriggerInteraction.Ignore))

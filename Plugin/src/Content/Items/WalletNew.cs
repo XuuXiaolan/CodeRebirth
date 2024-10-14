@@ -75,7 +75,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
 
     public void OnInteract(PlayerControllerB player) {
         if (GameNetworkManager.Instance.localPlayerController != player) return;
-        if (player.GetCRPlayerData().holdingWallet) return;
+        if (player.IsHoldingWallet()) return;
         if (IsHost) {
             SetTargetClientRpc(System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         } else {
@@ -312,7 +312,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
                 }
                 SetInteractable(true);
                 walletHeldBy.carryWeight -= (this.itemProperties.weight - 1);
-                walletHeldBy.GetCRPlayerData().holdingWallet = false;
+                walletHeldBy.SetHoldingWallet(false);
                 walletMode = WalletModes.None;
                 walletHeldBy = null;
             }
@@ -330,7 +330,7 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
         walletHeldBy = player;
         this.transform.position = player.transform.position + player.transform.up * 1f + player.transform.right * 0.25f + player.transform.forward * 0.05f;
         walletHeldBy.carryWeight += (this.itemProperties.weight - 1f);
-        if (walletHeldBy == GameNetworkManager.Instance.localPlayerController && !walletHeldBy.GetCRPlayerData().holdingWallet)
+        if (walletHeldBy == GameNetworkManager.Instance.localPlayerController && !walletHeldBy.IsHoldingWallet())
         {
             DialogueSegment dialogue = new DialogueSegment
             {
@@ -339,9 +339,8 @@ public class Wallet : GrabbableObject {  // todo: fix only host being able to pi
                     waitTime = 7f
             };
             HUDManager.Instance.ReadDialogue([dialogue]);
-            walletHeldBy.GetCRPlayerData().holdingWallet = true;
         }
-        walletHeldBy.GetCRPlayerData().holdingWallet = true;
+        walletHeldBy.SetHoldingWallet(true);
         // Apply the rotations
         Quaternion rotationLeft = Quaternion.Euler(0, 180, 0);
         Quaternion rotationForward = Quaternion.Euler(15, 0, 0);

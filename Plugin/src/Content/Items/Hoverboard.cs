@@ -389,7 +389,7 @@ public class Hoverboard : GrabbableObject, IHittable
         hoverboardChild.rotation = resetChildRotation;
         playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
         if (IsServer) this.NetworkObject.ChangeOwnership(playerControlling.actualClientId);
-        if (playerControlling == GameNetworkManager.Instance.localPlayerController && !playerControlling.GetCRPlayerData().ridingHoverboard) {
+        if (playerControlling == GameNetworkManager.Instance.localPlayerController && !playerControlling.IsRidingHoverboard()) {
             DialogueSegment dialogue = new DialogueSegment {
                     speakerText = "Hoverboard Tooltips",
                     bodyText = "C to Drop, E to Mount, F to Switch between Held and Mounted mode, Space to Jump, Shift to activate Boost.",
@@ -397,8 +397,8 @@ public class Hoverboard : GrabbableObject, IHittable
             };
             HUDManager.Instance.ReadDialogue([dialogue]);
         }
-        playerControlling.GetCRPlayerData().ridingHoverboard = true;
-        playerControlling.GetCRPlayerData().hoverboardRiding = this;
+        playerControlling.SetRidingHoverboard(true);
+        playerControlling.SetHoverboardRiding(this);
         playerControlling.transform.position = hoverboardSeat.transform.position;
         playerControlling.transform.rotation = hoverboardSeat.transform.rotation * Quaternion.Euler(0, 90, 0);
         Plugin.ExtendedLogging($"{this} setting target to: {playerControlling.playerUsername}");
@@ -513,8 +513,8 @@ public class Hoverboard : GrabbableObject, IHittable
         }
         // Debug log for position and rotation
         if (IsServer) playerCurrentlyControlling.transform.SetParent(hoverboardSeat.transform, true);
-        playerCurrentlyControlling.GetCRPlayerData().ridingHoverboard = true;
-        playerCurrentlyControlling.GetCRPlayerData().hoverboardRiding = this;
+        playerCurrentlyControlling.SetRidingHoverboard(true);
+        playerCurrentlyControlling.SetHoverboardRiding(this);
         hoverboardMode = HoverboardMode.Mounted;
         if (weightApplied) playerCurrentlyControlling.carryWeight = Mathf.Clamp(playerCurrentlyControlling.carryWeight - 0.24f, 1, 1000);
         weightApplied = false;
@@ -544,8 +544,8 @@ public class Hoverboard : GrabbableObject, IHittable
         {
             this.transform.SetParent(playerCurrentlyControlling.transform, true);
         }
-        playerCurrentlyControlling.GetCRPlayerData().ridingHoverboard = false;
-        playerCurrentlyControlling.GetCRPlayerData().hoverboardRiding = null;
+        playerCurrentlyControlling.SetRidingHoverboard(false);
+        playerCurrentlyControlling.SetHoverboardRiding(null);
         playerCurrentlyControlling.disableMoveInput = false;
         playerCurrentlyControlling.disableLookInput = false;
         hoverboardMode = HoverboardMode.Held;
