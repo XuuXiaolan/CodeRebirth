@@ -263,7 +263,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         if (galState == State.Inactive) return;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
-        ChestTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0&& (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        ChestTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && ownerPlayer.isHoldingObject && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
@@ -515,7 +515,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
                 {
                     int heldItemCount = itemsHeldList.Count;
-                    Plugin.ExtendedLogging($"Items held: {heldItemCount}");
                     for (int i = heldItemCount - 1; i >= 0; i--)
                     {
                         HandleDroppingItemServerRpc(i);
@@ -584,16 +583,17 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private void DoSellingItems()
     {
-        if (TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota)
+        if (TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota || depositItemsDesk == null)
         {
             HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
             this.transform.position = ShockwaveCharger.ChargeTransform.position;
             this.transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
             return;
         }
+
         if (itemsToSell.Count <= 0)
         {
-            float sellPercentage = Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)/100;
+            float sellPercentage = Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f) / 100;
             int quota = TimeOfDay.Instance.profitQuota;
             int currentlySoldAmount = TimeOfDay.Instance.quotaFulfilled;
             List<GrabbableObject> itemsOnShip = GetItemsOnShip();
@@ -602,12 +602,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             foreach (GrabbableObject item in itemsToSell)
             {
                 totalValue += item.scrapValue;
-                item.grabbable = false;
+                SetItemAsGrabbableClientRpc(new NetworkObjectReference(item.NetworkObject), false);
             }
-            if (totalValue*sellPercentage < quota)
+
+            if (totalValue * sellPercentage < quota)
             {
                 foreach (GrabbableObject item in itemsToSell)
                 {
+                    SetItemAsGrabbableClientRpc(new NetworkObjectReference(item.NetworkObject), true);
                     item.grabbable = true;
                 }
                 itemsToSell.Clear();
@@ -617,7 +619,48 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 return;
             }
         }
-        // todo: path to an item, grab it, repeat for grabbing 4 items from the itemsToSell list, sell them to the depositDesk by doing a distance check then running this function: depositItemsDesk.AddObjectToDeskServerRpc(new NetworkObjectReference(item.GetComponent<NetworkObject>()));
+
+        // Path to an item, grab it, repeat for grabbing up to 4 items from the itemsToSell list
+        if (itemsHeldList.Count < maxItemsToHold && itemsToSell.Count > 0)
+        {
+            GrabbableObject itemToGrab = itemsToSell[0];
+            if (Vector3.Distance(this.transform.position, itemToGrab.transform.position) <= Agent.stoppingDistance)
+            {
+                StartCoroutine(HandleGrabbingItem(itemToGrab, itemsHeldTransforms[itemsHeldList.Count]));
+                itemsToSell.RemoveAt(0);
+            }
+            else
+            {
+                Agent.SetDestination(itemToGrab.transform.position);
+            }
+        }
+        else if (itemsHeldList.Count > 0)
+        {
+            // Sell the items to the deposit desk by doing a distance check
+            if (Vector3.Distance(this.transform.position, depositItemsDesk.transform.position) <= Agent.stoppingDistance)
+            {
+                int heldItemCount = itemsHeldList.Count;
+                for (int i = heldItemCount - 1; i >= 0; i--)
+                {
+                    depositItemsDesk.AddObjectToDeskServerRpc(new NetworkObjectReference(itemsHeldList[i].NetworkObject));
+                    Vector3 dropPosition = GetRandomPointOnDesk(depositItemsDesk, itemsHeldList[i]);
+                    SetPositionOfItemsClientRpc(dropPosition, new NetworkObjectReference(itemsHeldList[i].NetworkObject));
+                    itemsHeldList[i].transform.position = dropPosition;
+                    HandleDroppingItemServerRpc(i);
+                }
+            }
+            else
+            {
+                Agent.SetDestination(depositItemsDesk.transform.position);
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void SetPositionOfItemsClientRpc(Vector3 position, NetworkObjectReference networkObjectReference)
+    {
+        GameObject gameObject = networkObjectReference;
+        gameObject.transform.position = position;
     }
 
     private Vector3 GetRandomPointOnDesk(DepositItemsDesk depositItemsDesk, GrabbableObject grabbableObject)
@@ -633,15 +676,37 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         vector = depositItemsDesk.deskObjectsContainer.transform.InverseTransformPoint(vector);
         return vector;
     }
-
     private List<GrabbableObject> GetItemsToSell(List<GrabbableObject> itemsOnShip, int quota, float sellPercentage, int currentSoldAmount)
     {
-        // get sale value of an item using item.scrapValue, return the most optimal list of items that just fulfill the quota
+        // Get the items that fulfill the quota with minimal excess value
+        itemsOnShip = itemsOnShip.OrderBy(item => item.scrapValue).ToList();
+        List<GrabbableObject> itemsToSell = new List<GrabbableObject>();
+        int accumulatedValue = currentSoldAmount;
+
+        foreach (GrabbableObject item in itemsOnShip)
+        {
+            if (accumulatedValue >= quota)
+            {
+                break;
+            }
+
+            itemsToSell.Add(item);
+            accumulatedValue += Mathf.RoundToInt(item.scrapValue * sellPercentage);
+        }
+
+        return itemsToSell;
     }
 
     private List<GrabbableObject> GetItemsOnShip()
     {
         return GameObject.Find("/Environment/HangarShip").GetComponentsInChildren<GrabbableObject>().ToList();
+    }
+
+    [ClientRpc]
+    private void SetItemAsGrabbableClientRpc(NetworkObjectReference networkObjectReference, bool grabbable)
+    {
+        GrabbableObject grabbableObject = ((GameObject)networkObjectReference).GetComponent<GrabbableObject>();
+        grabbableObject.grabbable = grabbable;
     }
 
     private void DoBackFliplol()
@@ -929,7 +994,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         RobotFaceController.SetMode(RobotMode.Normal);
         RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
-        Agent.enabled = true;
+        if (!onCompanyMoon) Agent.enabled = true;
         galState = State.Active;
     }
 
