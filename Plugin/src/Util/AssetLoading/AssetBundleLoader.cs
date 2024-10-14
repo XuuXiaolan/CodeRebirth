@@ -6,7 +6,7 @@ using UnityEngine;
 using NetworkPrefabs = LethalLib.Modules.NetworkPrefabs;
 using Utilities = LethalLib.Modules.Utilities;
 
-namespace CodeRebirth.Util.AssetLoading;
+namespace CodeRebirth.src.Util.AssetLoading;
 public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
 {
 	protected AssetBundle bundle;
@@ -55,7 +55,7 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
 		}
 		foreach (Item item in bundle.LoadAllAssets<Item>())
 		{
-			if (!registerNetworkPrefabs || item.spawnPrefab.GetComponent<NetworkObject>() == null) continue;
+			if (!registerNetworkPrefabs || item.spawnPrefab == null || item.spawnPrefab.GetComponent<NetworkObject>() == null) continue;
 			NetworkPrefabs.RegisterNetworkPrefab(item.spawnPrefab);
 			Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {item.name}");
 		}

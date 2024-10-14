@@ -345,7 +345,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4524720347330525158}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1202058252, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: -339269156, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _mainScript: {fileID: 1625452912518860209}
@@ -475,7 +475,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5441877127953216816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1328139491, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: 991525672, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   unlockSFX: {fileID: 0}
@@ -503,20 +503,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 5441877127953216816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -642691663, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainRenderer: {fileID: 2872154950008829778}
   regularHoverTip: 'Hold : [E]'
   keyHoverTip: 'Open : [LMB]'
   slowlyOpeningSFX: {fileID: 7401679166512140689}
   openSFX: {fileID: 425542958155706037}
   trigger: {fileID: 7939740615921497438}
   pickable: {fileID: 8184444134436801629}
-  openClip: {fileID: 7400000, guid: 9c7eb4f280b62564c94e10e9a02fcd35, type: 2}
-  opened: 0
-  digProgress:
-    m_InternalValue: 0
+  crateLid: {fileID: 0}
+  health:
+    m_InternalValue: 4
   originalPosition: {x: 0, y: 0, z: 0}
   crateType: 0
 --- !u!114 &7939740615921497438
@@ -554,6 +552,9 @@ MonoBehaviour:
   disableTriggerMesh: 1
   RandomChanceTrigger: 0
   randomChancePercentage: 0
+  onInteractEarlyOtherClients:
+    m_PersistentCalls:
+      m_Calls: []
   onInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -575,6 +576,13 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  clampLooking: 0
+  setVehicleAnimation: 0
+  minVerticalClamp: 0
+  maxVerticalClamp: 0
+  horizontalClamp: 0
+  allowUseWhileInAnimation: 0
+  overridePlayerParent: {fileID: 0}
   isLadder: 0
   topOfLadderPosition: {fileID: 0}
   useRaycastToGetTopPosition: 0
@@ -682,7 +690,7 @@ Transform:
   m_GameObject: {fileID: 6587025629217655398}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.488, z: 0}
   m_LocalScale: {x: 1.4596, y: 1.4596, z: 1.4596}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -715,7 +723,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.7, y: 0.7, z: 0.7}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &491574870744641238
 MonoBehaviour:

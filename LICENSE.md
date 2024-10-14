@@ -1,6 +1,6 @@
 Attribution-NonCommercial-ShareAlike 4.0 International
 
-Copyright (c) 2024 CodeRebirth Team <https://github.com/XuuXiao/CodeRebirth> 
+Copyright (c) 2024 CodeRebirth Team <https://github.com/XuuXiao/CodeRebirth/blob/main/CONTRIBUTORS.txt> 
 =======================================================================
 
 Creative Commons Corporation ("Creative Commons") is not a law firm and

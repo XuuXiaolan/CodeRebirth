@@ -3,34 +3,26 @@ using System.Reflection;
 using UnityEngine;
 using BepInEx;
 using BepInEx.Logging;
-using CodeRebirth.Configs;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.Keybinds;
 using HarmonyLib;
-using CodeRebirth.Util;
-using CodeRebirth.Util.AssetLoading;
-using CodeRebirth.Util.Extensions;
-using CodeRebirth.Dependency;
-using CodeRebirth.Patches;
+using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirth.src.Util.Extensions;
+using CodeRebirth.src.ModCompats;
+using CodeRebirth.src.Patches;
+using CodeRebirth.src.Util;
 
-namespace CodeRebirth;
+namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency(Imperium.PluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("Surfaced", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("MoreShipUpgrades", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] // todo: soft depend on subtitles api and add support.
+[BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger = null!;
     private readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
-    internal static bool ImperiumIsOn = false;
-    internal static bool SurfacedIsOn = false;
-    internal static bool LGUIsOn = false;
     internal static bool SubtitlesAPIIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
@@ -48,23 +40,6 @@ public class Plugin : BaseUnityPlugin {
 #if DEBUG
         ModConfig.ConfigEnableExtendedLogging.Value = true;
 #endif
-        if (ImperiumCompatibilityChecker.Enabled) {
-            ImperiumCompatibilityChecker.Init();
-        } else {
-            // Logger.LogWarning("Imperium not found. Special Debugs will not be activated.");
-        }
-
-        if (SurfacedCompatibilityChecker.Enabled) {
-            SurfacedCompatibilityChecker.Init();
-        } else {
-            // Logger.LogWarning("Surfaced not found. Sharknado will not be activated.");
-        }
-
-        if (LGUCompatibilityChecker.Enabled) {
-            LGUCompatibilityChecker.Init();
-        } else {
-            // Logger.LogWarning("lategameupgrades not found. Custom hunter samples will not be activated.");
-        }
 
         if (SubtitlesAPICompatibilityChecker.Enabled) {
             SubtitlesAPICompatibilityChecker.Init();
@@ -75,10 +50,12 @@ public class Plugin : BaseUnityPlugin {
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
+        ShovelPatch.Init();
+        DoorLockPatch.Init();
+        MineshaftElevatorControllerPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");
-        
         InitializeNetworkBehaviours();
         // Register Keybinds
         InputActionsInstance = new IngameKeybinds();

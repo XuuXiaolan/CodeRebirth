@@ -1,49 +1,76 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
-using LethalLib.Extras;
 using LethalLib.Modules;
-using UnityEngine;
 
-namespace CodeRebirth.Util;
+namespace CodeRebirth.src.Util;
 
-public class ContentHandler<T> where T: ContentHandler<T> {
+public class ContentHandler<T> where T: ContentHandler<T>
+{
 	internal static T Instance { get; private set; } = null!;
 
-	internal ContentHandler() {
+	internal ContentHandler()
+    {
 		Instance = (T)this;
 	}
 	
-    protected void RegisterEnemyWithConfig(string configMoonRarity, EnemyType enemy, TerminalNode terminalNode, TerminalKeyword terminalKeyword, float powerLevel, int spawnCount) {
+    protected void RegisterEnemyWithConfig(string configMoonRarity, EnemyType enemy, TerminalNode terminalNode, TerminalKeyword terminalKeyword, float powerLevel, int spawnCount)
+    {
         enemy.MaxCount = spawnCount;
         enemy.PowerLevel = powerLevel;
         (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
         Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
     }
-    protected void RegisterScrapWithConfig(string configMoonRarity, Item scrap) {
+
+    protected void RegisterScrapWithConfig(string configMoonRarity, Item scrap, int itemWorthMin, int itemWorthMax)
+    {
+        bool messWithWorth = true;
+        if (itemWorthMax == -1 || itemWorthMin == -1)
+        {
+            messWithWorth = false;
+        }
+        if (messWithWorth)
+        {
+            if (itemWorthMax < itemWorthMin)
+            {
+                itemWorthMax = itemWorthMin;
+            }
+            scrap.minValue = (int)(itemWorthMin/0.4f);
+            scrap.maxValue = (int)(itemWorthMax/0.4f);
+        }
         (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
         Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
     }
-    protected void RegisterShopItemWithConfig(bool enabledScrap, Item item, TerminalNode terminalNode, int itemCost, string configMoonRarity) {
+
+    protected void RegisterShopItemWithConfig(bool enabledScrap, Item item, TerminalNode terminalNode, int itemCost, string configMoonRarity, int minWorth, int maxWorth)
+    {
         Items.RegisterShopItem(item, null!, null!, terminalNode, itemCost);
-        if (enabledScrap) {
-            RegisterScrapWithConfig(configMoonRarity, item);
+        if (enabledScrap)
+        {
+            RegisterScrapWithConfig(configMoonRarity, item, minWorth, maxWorth);
         }
     }
 
-    protected string[] MapObjectConfigParsing(string configString) {
+    protected string[] MapObjectConfigParsing(string configString)
+    {
         var levelTypesList = new List<string>();
 
-        foreach (string entry in configString.Split(',').Select(s => s.Trim())) {
+        foreach (string entry in configString.Split(',').Select(s => s.Trim()))
+        {
             string name = entry;
-            if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType)) {
+            if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
+            {
                 levelTypesList.Add(name);
-            } else {
+            }
+            else
+            {
                 // Try appending "Level" to the name and re-attempt parsing
                 string modifiedName = name + "Level";
-                if (System.Enum.TryParse(modifiedName, true, out levelType)) {
+                if (System.Enum.TryParse(modifiedName, true, out levelType))
+                {
                     levelTypesList.Add(modifiedName);
-                } else {
+                }
+                else
+                {
                     levelTypesList.Add(name);
                 }
             }
@@ -52,21 +79,24 @@ public class ContentHandler<T> where T: ContentHandler<T> {
         return levelTypesList.ToArray();
     }
 
-    protected (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) ConfigParsing(string configMoonRarity) {
-        Dictionary<Levels.LevelTypes, int> spawnRateByLevelType = new Dictionary<Levels.LevelTypes, int>();
-        Dictionary<string, int> spawnRateByCustomLevelType = new Dictionary<string, int>();
-        foreach (string entry in configMoonRarity.Split(',').Select(s => s.Trim())) {
+    protected (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) ConfigParsing(string configMoonRarity)
+    {
+        Dictionary<Levels.LevelTypes, int> spawnRateByLevelType = new();
+        Dictionary<string, int> spawnRateByCustomLevelType = new();
+        foreach (string entry in configMoonRarity.Split(',').Select(s => s.Trim()))
+        {
             string[] entryParts = entry.Split(':');
 
             if (entryParts.Length != 2) continue;
 
             string name = entryParts[0].ToLowerInvariant();
-            int spawnrate;
 
-            if (!int.TryParse(entryParts[1], out spawnrate)) continue;
-            if (name == "custom") {
+            if (!int.TryParse(entryParts[1], out int spawnrate)) continue;
+            if (name == "custom")
+            {
                 name = "modded";
             }
+
             if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
             {
                 spawnRateByLevelType[levelType] = spawnrate;
@@ -86,5 +116,23 @@ public class ContentHandler<T> where T: ContentHandler<T> {
             }
         }
         return (spawnRateByLevelType, spawnRateByCustomLevelType);
+    }
+
+    protected int[] ChangeItemValues(string config)
+    {
+        string[] configParts = config.Split(',');
+        foreach (string configPart in configParts)
+        {
+            configPart.Trim();
+        }
+        int minWorthInt = -1;
+        int maxWorthInt = -1;
+        if (configParts.Length == 2)
+        {
+            Plugin.ExtendedLogging("Changing item worth between " + configParts[0] + " and " + configParts[1]);
+            minWorthInt = int.Parse(configParts[0]);
+            maxWorthInt = int.Parse(configParts[1]);
+        }
+        return [minWorthInt, maxWorthInt];
     }
 }

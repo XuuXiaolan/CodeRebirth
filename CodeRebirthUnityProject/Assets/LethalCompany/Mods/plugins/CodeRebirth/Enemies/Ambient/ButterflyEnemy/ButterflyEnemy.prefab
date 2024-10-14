@@ -47,11 +47,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   physicsTransform: {fileID: 7905533684427097838}
+  parentNetworkObject: {fileID: -4499367113007761919}
   allowDroppingItems: 1
   priority: 1
   disablePhysicsRegion: 0
   physicsCollider: {fileID: 4292495348433205728}
   itemDropCollider: {fileID: 8282417582293235270}
+  addPositionOffsetToItems: {x: 0, y: 0, z: 0}
   maxTippingAngle: 180
 --- !u!65 &4292495348433205728
 BoxCollider:
@@ -697,12 +699,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6280284854214770625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1135948407, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: -979041655, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: {fileID: 11400000, guid: 13f8af04e6ec2804682b447a622214d2, type: 2}
-  skinnedMeshRenderers: []
-  meshRenderers: []
+  skinnedMeshRenderers:
+  - {fileID: 8515539349144340227}
+  meshRenderers:
+  - {fileID: 6805173632238684322}
   creatureAnimator: {fileID: 0}
   creatureVoice: {fileID: 1863070480293937445}
   creatureSFX: {fileID: 8205381249055871545}
@@ -746,7 +750,7 @@ MonoBehaviour:
   previousBehaviourStateIndex: 0
   currentOwnershipOnThisClient: -1
   isInsidePlayerShip: 0
-  AIIntervalTime: 0.2
+  AIIntervalTime: 0.1
   inSpecialAnimation: 0
   inSpecialAnimationWithPlayer: {fileID: 0}
   serverPosition: {x: 0, y: 0, z: 0}
@@ -764,7 +768,7 @@ MonoBehaviour:
   updatePositionThreshold: 0.1
   targetPlayer: {fileID: 0}
   movingTowardsTargetPlayer: 0
-  moveTowardsDestination: 0
+  moveTowardsDestination: 1
   destination: {x: 0, y: 0, z: 0}
   addPlayerVelocityToDestination: 0
   syncMovementSpeed: 0.22
@@ -775,7 +779,7 @@ MonoBehaviour:
   daytimeEnemyLeaving: 0
   enemyHP: 99
   nodesTempArray: []
-  openDoorSpeedMultiplier: 1
+  openDoorSpeedMultiplier: 0
   useSecondaryAudiosOnAnimatedObjects: 0
   currentSearch:
     unsearchedNodes: []
@@ -789,6 +793,7 @@ MonoBehaviour:
     nodesEliminatedInCurrentSearch: 0
     inProgress: 0
     calculatingNodeInSearch: 0
+    startedSearchAtSelf: 0
     searchWidth: 200
     searchPrecision: 5
     randomized: 0
@@ -801,6 +806,7 @@ MonoBehaviour:
   debugEnemyAI: 0
   isOutside: 1
   hitsPhysicsObjects: 0
+  gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
 --- !u!65 &5140048232079319750
 BoxCollider:
@@ -1072,6 +1078,12 @@ PrefabInstance:
 --- !u!4 &4299263440970184954 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 378df2939894f0d4792d78d542e85c99,
+    type: 3}
+  m_PrefabInstance: {fileID: 4332660956768542481}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8515539349144340227 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -3887185075125053422, guid: 378df2939894f0d4792d78d542e85c99,
     type: 3}
   m_PrefabInstance: {fileID: 4332660956768542481}
   m_PrefabAsset: {fileID: 0}

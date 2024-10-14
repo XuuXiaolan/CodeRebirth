@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8584517484354245629}
   m_Layer: 0
-  m_Name: FL
+  m_Name: FL1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 290633720612609035}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: -0.1, z: -0.5}
+  m_LocalPosition: {x: 1.15, y: -0.3, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2599512765879005970}
   m_Layer: 0
-  m_Name: BR
+  m_Name: BR1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 1699817361000750367}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.33, y: -0.1, z: 0.5}
+  m_LocalPosition: {x: -1.15, y: -0.3, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -75,8 +75,8 @@ GameObject:
   - component: {fileID: 6873435658981610133}
   - component: {fileID: 8455382249001226961}
   - component: {fileID: 1923293930707144410}
-  - component: {fileID: 7481496084726876323}
-  - component: {fileID: 7047159885120433533}
+  - component: {fileID: 3453955734984241099}
+  - component: {fileID: 3019825454931529179}
   m_Layer: 9
   m_Name: HoverboardChild
   m_TagString: InteractTrigger
@@ -126,7 +126,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -324,7 +324,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7481496084726876323
+--- !u!114 &3453955734984241099
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,19 +333,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3244500461203868027}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7047159885120433533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3244500461203868027}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1796916156, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: 224771636, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1
@@ -364,8 +352,20 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
-  Interpolate: 0
+  Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &3019825454931529179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3244500461203868027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3399338272138284559
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,7 +512,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5677648857109473811}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 958465998, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: 1389013513, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: 0
@@ -538,22 +538,22 @@ MonoBehaviour:
   itemProperties: {fileID: 11400000, guid: 2333ed25d0741c74b95f03f8a466329c, type: 2}
   insertedBattery:
     empty: 0
-    charge: 0
+    charge: 1
   customGrabTooltip: 
   propBody: {fileID: 0}
   propColliders: []
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
-  mainObjectRenderer: {fileID: 0}
+  mainObjectRenderer: {fileID: 6463823230186417952}
+  isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}
   reachedFloorTarget: 0
-  grabbableToEnemies: 1
+  grabbableToEnemies: 0
   hasBeenHeld: 0
   hb: {fileID: 242724457207671706}
   trigger: {fileID: 8455382249001226961}
-  mult: 4
   hoverboardSeat: {fileID: 3399338272138284559}
   anchors:
   - {fileID: 5377353487610907256}
@@ -571,7 +571,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5098558390630374206}
   m_Layer: 0
-  m_Name: BL
+  m_Name: BL1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -586,7 +586,7 @@ Transform:
   m_GameObject: {fileID: 6291100969286811692}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.33, y: -0.1, z: -0.5}
+  m_LocalPosition: {x: -1.15, y: -0.3, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -602,7 +602,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5377353487610907256}
   m_Layer: 0
-  m_Name: FR
+  m_Name: FR1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -617,7 +617,7 @@ Transform:
   m_GameObject: {fileID: 6314028827297847542}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: -0.1, z: 0.5}
+  m_LocalPosition: {x: 1.15, y: -0.3, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -726,5 +726,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3306556, y: 1.0005364, z: 0.32445186}
-  m_Center: {x: 0.16510992, y: -0.00027984433, z: -0.24779184}
+  m_Size: {x: 2.3, y: 1, z: 0.3}
+  m_Center: {x: 0, y: 0, z: -0.15}

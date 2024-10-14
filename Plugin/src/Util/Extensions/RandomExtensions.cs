@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Random = System.Random;
 
-namespace CodeRebirth.Util.Extensions;
+namespace CodeRebirth.src.Util.Extensions;
 
 public static class RandomExtensions {
 	public static T NextEnum<T>(this Random random) where T : struct, Enum
@@ -15,6 +15,11 @@ public static class RandomExtensions {
 
 	public static T NextItem<T>(this Random random, List<T> collection) {
 		int index = random.Next(collection.Count);
+		return collection[index];
+	}
+	
+	public static T NextItem<T>(this Random random, T[] collection) {
+		int index = random.Next(collection.Length);
 		return collection[index];
 	}
 

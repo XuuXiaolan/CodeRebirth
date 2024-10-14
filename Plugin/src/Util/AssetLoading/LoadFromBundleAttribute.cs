@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeRebirth.Util.AssetLoading;
+namespace CodeRebirth.src.Util.AssetLoading;
 
 [AttributeUsage(AttributeTargets.Property)]
 internal class LoadFromBundleAttribute(string bundleFile) : Attribute {

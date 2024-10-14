@@ -345,7 +345,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4524720347330525158}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1202058252, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: -339269156, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _mainScript: {fileID: 1625452912518860209}
@@ -442,7 +442,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5441877127953216816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1328139491, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: 991525672, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   unlockSFX: {fileID: 0}
@@ -470,21 +470,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5441877127953216816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -642691663, guid: 851f7bfe0b2053a48a9e8f3142eec65d, type: 3}
+  m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainRenderer: {fileID: 0}
   regularHoverTip: 'Hold : [E]'
   keyHoverTip: 'Open : [LMB]'
   slowlyOpeningSFX: {fileID: 7401679166512140689}
   openSFX: {fileID: 425542958155706037}
   trigger: {fileID: 7939740615921497438}
   pickable: {fileID: 8184444134436801629}
-  openClip: {fileID: 0}
   crateLid: {fileID: 6254392715635784630}
-  opened: 0
-  digProgress:
-    m_InternalValue: 0
   health:
     m_InternalValue: 4
   originalPosition: {x: 0, y: 0, z: 0}
@@ -662,8 +657,8 @@ Transform:
   m_GameObject: {fileID: 6587025629217655398}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4596, y: 1.4596, z: 1.4596}
+  m_LocalPosition: {x: 0, y: 0.414, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5806937922113743738}

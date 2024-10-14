@@ -2,10 +2,14 @@ using LethalCompanyInputUtils.Api;
 using LethalCompanyInputUtils.BindingPathEnums;
 using UnityEngine.InputSystem;
 
-namespace CodeRebirth.Keybinds;
-public class IngameKeybinds : LcInputActions {
+namespace CodeRebirth.src;
+public class IngameKeybinds : LcInputActions
+{
     [InputAction("<Keyboard>/w", Name = "HoverForward")]
     public InputAction HoverForward { get; set; } = null!;
+
+    [InputAction("<Keyboard>/shift", Name = "SprintForward")]
+    public InputAction SprintForward { get; set; } = null!;
 
     [InputAction("<Keyboard>/a", Name = "HoverLeft")]
     public InputAction HoverLeft { get; set; } = null!;

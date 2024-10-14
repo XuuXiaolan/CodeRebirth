@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using CodeRebirth.Util.PlayerManager;
-using CodeRebirth.WeatherStuff;
+using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Content.Unlockables;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -9,8 +10,7 @@ using MonoMod.Cil;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace CodeRebirth.Patches;
-
+namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(GameNetcodeStuff.PlayerControllerB))]
 static class PlayerControllerBPatch {
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]
@@ -43,14 +43,46 @@ static class PlayerControllerBPatch {
     [HarmonyPatch(nameof(GameNetcodeStuff.PlayerControllerB.Update)), HarmonyPrefix]
     public static void Update(PlayerControllerB __instance) {
         if (GameNetworkManager.Instance.localPlayerController == null) return;
-        if (__instance.GetCRPlayerData().playerOverrideController != null) return;
+        /*if (__instance.GetCRPlayerData().playerOverrideController != null) return;
+        Plugin.ExtendedLogging($"[ILHook:PlayerControllerB.Update] Setting playerOverrideController to {__instance.playerBodyAnimator.runtimeAnimatorController}");
         __instance.GetCRPlayerData().playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
-        __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController; 
+        __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController;*/
     }
 
     public static void Init() {
+        On.GameNetcodeStuff.PlayerControllerB.TeleportPlayer += PlayerControllerB_TeleportPlayer;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
-        IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
+        // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
+        On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
+    }
+
+    private static void PlayerControllerB_TeleportPlayer(On.GameNetcodeStuff.PlayerControllerB.orig_TeleportPlayer orig, PlayerControllerB self, Vector3 pos, bool withRotation, float rot, bool allowInteractTrigger, bool enableController)
+    {
+        foreach (var gal in UnityEngine.Object.FindObjectsOfType<ShockwaveGalAI>())
+        {
+            if (self == gal.ownerPlayer)
+            {
+                Plugin.ExtendedLogging($"Setting gal.positionOfPlayerBeforeTeleport to {self.transform.position}");
+                gal.positionOfPlayerBeforeTeleport = self.transform.position;
+            }
+        }
+        orig(self, pos, withRotation, rot, allowInteractTrigger, enableController);
+    }
+
+    private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)
+    {
+        orig(self);
+        if (self.GetCRPlayerData() != null && ((self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
+        {
+            Hoverboard? hoverboard = self.TryGetHoverboardRiding();
+            if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self == GameNetworkManager.Instance.localPlayerController) {
+                HUDManager.Instance.batteryMeter.fillAmount = hoverboard.insertedBattery.charge / 1.3f;
+                HUDManager.Instance.batteryMeter.gameObject.SetActive(true);
+                HUDManager.Instance.batteryIcon.enabled = true;
+                var num4 = HUDManager.Instance.batteryMeter.fillAmount;
+                HUDManager.Instance.batteryBlinkUI.SetBool("blink", num4 < 0.2f && num4 > 0f);
+            }
+        }
     }
 
     private static void PlayerControllerB_CheckConditionsForSinkingInQuicksand(ILContext il)
@@ -85,7 +117,7 @@ static class PlayerControllerBPatch {
     /// This is necessary for parenting items to enemies, because the raycast that collides with an object
     /// ignores the enemies layer.
     /// </summary>
-    private static void ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject(ILContext il)
+    /*private static void ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject(ILContext il)
     {
         ILCursor c = new(il);
 
@@ -138,5 +170,5 @@ static class PlayerControllerBPatch {
             current = current.transform.parent;
         }
         return null;
-    }
+    }*/
 }

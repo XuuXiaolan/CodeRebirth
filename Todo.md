@@ -1,10 +1,15 @@
-# TODO:
+# TODO
+
 - Finish Surfaced Compat.
 - Finish LGU Compat (needs redwood and driftwood).
 - Finish adding driftwood and redwood.
-- Add two more gems and make them more common.
-- Make tornado config allowing them to spawn on specific moons.
 - Item crate add networked opening speed.
-- Update readme.
-- Fix the tornado particles not showing.
-- Look into metal crate giving disabled items.
+- finish adding biomes needs below and monsters and code.
+- add dangerous flora needs models and code.
+- Fix god ray script.
+- Look into crates acting up.
+  - Wooden crates are openable by hit only.
+  - Metal crates spawn like 8 items sometimes.
+  - Metal crates spawn disabled shop items sometimes.
+- Add plant pot, fruit, and seed
+- Add seamine gal.
