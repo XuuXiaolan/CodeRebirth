@@ -55,7 +55,6 @@ public class CRPlayerData
     public bool holdingWallet = false;
     public bool flingingAway = false;
     public bool flung = false;
-    public Dictionary<string, bool> effects = new();
     public Hoverboard? hoverboardRiding;
     public List<Collider>? playerColliders = null;
     public AnimatorOverrideController? playerOverrideController;
