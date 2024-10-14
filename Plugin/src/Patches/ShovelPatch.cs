@@ -8,7 +8,7 @@ using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch {
-	public static System.Random? random;
+	static Random? random;
 	
 	public static void Init() {
 		On.Shovel.HitShovel += Shovel_HitShovel;
@@ -16,34 +16,63 @@ static class ShovelPatch {
 
     private static void Shovel_HitShovel(On.Shovel.orig_HitShovel orig, Shovel self, bool cancel)
     {
-        random ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
-		if (self is CodeRebirthWeapons CRWeapon) {
-			CRWeapon.defaultForce = CRWeapon.shovelHitForce;
-			if (CRWeapon.critPossible && Plugin.ModConfig.ConfigAllowCrits.Value) {
-				CRWeapon.shovelHitForce = ShovelExtensions.CriticalHit(CRWeapon.shovelHitForce, random, CRWeapon.critChance);
-			}
-		}
+        PreHitShovel(ref self);
 
-		if (self.playerHeldBy != null && self is NaturesMace naturesMace && GameNetworkManager.Instance.localPlayerController == self.playerHeldBy) {
-			List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
-			Plugin.ExtendedLogging("playerList: " + playerList.Count);
-			foreach (PlayerControllerB player in playerList) {
-				naturesMace.HealServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
-			}
-		}
+        orig(self, cancel);
 
-		orig(self, cancel);
+        PostHitShovel(ref self);
+    }
 
-		if (self is CodeRebirthWeapons CRWeaponPost) {
-			CRWeaponPost.shovelHitForce = CRWeaponPost.defaultForce;	
-			if (CRWeaponPost.canBreakTrees) {
-				Plugin.ExtendedLogging("Tree Destroyed: " + CRWeaponPost.weaponTip.position);
-				if (random.NextFloat(0f, 100f) < 2f && Plugin.ModConfig.ConfigFarmingEnabled.Value) {
-					Plugin.ExtendedLogging("Tree Destroyed with luck");
-					CodeRebirthUtils.Instance.SpawnScrap(UnlockableHandler.Instance.PlantPot.Seed, CRWeaponPost.weaponTip.position, false, true, 5);
-				}
-				RoundManager.Instance.DestroyTreeOnLocalClient(CRWeaponPost.weaponTip.position);
-			}
-		}
+    static void PreHitShovel(ref Shovel self)
+    {
+        random ??= new Random(StartOfRound.Instance.randomMapSeed + 85);
+        TryCritWeapon(ref self);
+        TryHealNatureMace(ref self);
+    }
+
+    static void PostHitShovel(ref Shovel self)
+    {
+        if (self is not CodeRebirthWeapons CRWeapon) return;
+        ResetWeaponDamage(ref CRWeapon);
+        TryBreakTrees(ref CRWeapon);
+    }
+
+    static void ResetWeaponDamage(ref CodeRebirthWeapons CRWeapon)
+    {
+        CRWeapon.shovelHitForce = CRWeapon.defaultForce;
+    }
+
+    static void TryBreakTrees(ref CodeRebirthWeapons CRWeapon)
+    {
+        if (!CRWeapon.canBreakTrees) return;
+
+        Plugin.ExtendedLogging("Tree Destroyed: " + CRWeapon.weaponTip.position);
+        RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
+
+        if (!Plugin.ModConfig.ConfigFarmingEnabled.Value || random.NextFloat(0f, 1f) >= 0.02f) return;
+        Plugin.ExtendedLogging("Tree Destroyed with luck");
+        CodeRebirthUtils.Instance.SpawnScrap(UnlockableHandler.Instance.PlantPot.Seed, CRWeapon.weaponTip.position, false, true, 5);
+    }
+
+    static void TryCritWeapon(ref Shovel self)
+	{
+		if (self is not CodeRebirthWeapons CRWeapon) return;
+
+        CRWeapon.defaultForce = CRWeapon.shovelHitForce;
+		if (!Plugin.ModConfig.ConfigAllowCrits.Value || !CRWeapon.critPossible) return;
+
+        CRWeapon.shovelHitForce = ShovelExtensions.CriticalHit(CRWeapon.shovelHitForce, random, CRWeapon.critChance);
+    }
+
+    static void TryHealNatureMace(ref Shovel self)
+    {
+        if (self.playerHeldBy == null || self is not NaturesMace naturesMace || GameNetworkManager.Instance.localPlayerController != self.playerHeldBy) return;
+
+        List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
+        Plugin.ExtendedLogging("playerList: " + playerList.Count);
+        foreach (PlayerControllerB player in playerList)
+        {
+            naturesMace.HealServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+        }
     }
 }
