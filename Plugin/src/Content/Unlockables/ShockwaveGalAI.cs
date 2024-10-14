@@ -42,6 +42,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public float DoorOpeningSpeed = 1f;
     public Transform DroneHead = null!;
 
+    private bool isSellingItems = false;
     private bool boomboxPlaying = false;
     private float staringTimer = 0f;
     private const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
@@ -335,17 +336,30 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private bool GoToChargerAndDeactivate()
     {
-        if (isInside)
+        if (Agent.enabled)
         {
-            GoThroughEntrance(false);
+            if (isInside)
+            {
+                GoThroughEntrance(false);
+            }
+            else
+            {
+                Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
+            }
+            if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
+            {
+                if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
+                {
+                    ShockwaveCharger.ActivateGirlServerRpc(-1);
+                    return true;
+                }
+            }
         }
         else
         {
-            Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
-        }
-        if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
-        {
-            if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
+            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(ShockwaveCharger.ChargeTransform.position - this.transform.position), Time.deltaTime * 5f);
+            this.transform.position = Vector3.MoveTowards(this.transform.position, ShockwaveCharger.ChargeTransform.position, Agent.speed * Time.deltaTime);
+            if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= 0.1f)
             {
                 ShockwaveCharger.ActivateGirlServerRpc(-1);
                 return true;
@@ -591,79 +605,93 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    private IEnumerator DelayDeactivatingDrone()
-    {
-        HandleStateAnimationSpeedChanges(State.Inactive, Emotion.ClosedEye);
-        yield return new WaitForSeconds(1f);
-        ShockwaveCharger.ActivateGirlServerRpc(-1);
-    }
+
     private void DoSellingItems()
     {
+        // Stop if the quota is fulfilled or no desk is available
         if (TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota || depositItemsDesk == null)
         {
-            StartCoroutine(DelayDeactivatingDrone());
+            GoToChargerAndDeactivate();
             return;
         }
 
-        if (itemsToSell.Count <= 0)
+        // Initialize the selling list if it's empty and not already in selling mode
+        if (itemsToSell.Count == 0 && !isSellingItems)
         {
+            isSellingItems = true; // Set the flag to indicate the AI is actively selling items
             float sellPercentage = StartOfRound.Instance.companyBuyingRate;
             int quota = TimeOfDay.Instance.profitQuota;
             int currentlySoldAmount = TimeOfDay.Instance.quotaFulfilled;
             List<GrabbableObject> itemsOnShip = GetItemsOnShip();
             itemsToSell = GetItemsToSell(itemsOnShip, quota, sellPercentage, currentlySoldAmount);
-            int totalValue = 0;
-            foreach (GrabbableObject item in itemsToSell)
-            {
-                totalValue += item.scrapValue;
-                SetItemAsGrabbableClientRpc(new NetworkObjectReference(item.NetworkObject), false);
-            }
-
+            
+            // Validate if we have enough items to fulfill the quota
+            int totalValue = itemsToSell.Sum(item => item.scrapValue);
             if ((totalValue * sellPercentage + currentlySoldAmount) < quota)
             {
-                foreach (GrabbableObject item in itemsToSell)
-                {
-                    SetItemAsGrabbableClientRpc(new NetworkObjectReference(item.NetworkObject), true);
-                }
+                // Not enough value to fulfill quota, clear the list and reset the flag
                 itemsToSell.Clear();
-                StartCoroutine(DelayDeactivatingDrone());
+                isSellingItems = false;
+                depositItemsDesk = null;
                 return;
             }
-            Plugin.ExtendedLogging("Total Value " + totalValue + " | max quota value " + (totalValue * sellPercentage + currentlySoldAmount) + " | quota needed: " + quota);
+
+            // Mark items as non-grabbable to reserve them for selling
+            foreach (GrabbableObject item in itemsToSell)
+            {
+                SetItemAsGrabbableClientRpc(new NetworkObjectReference(item.NetworkObject), false);
+            }
         }
 
-        // Path to an item, grab it, repeat for grabbing up to 4 items from the itemsToSell list
+        // Proceed to grab items from the selling list if there are items to sell
         if (itemsHeldList.Count < maxItemsToHold && itemsToSell.Count > 0)
         {
             GrabbableObject itemToGrab = itemsToSell[0];
             if (Vector3.Distance(this.transform.position, itemToGrab.transform.position) <= 1f)
             {
-                StartCoroutine(HandleGrabbingItem(itemToGrab, itemsHeldTransforms[itemsHeldList.Count]));
+                HandleGrabbingItemClientRpc(new NetworkObjectReference(itemToGrab.NetworkObject), itemsHeldList.Count);
                 itemsToSell.RemoveAt(0);
             }
             else
             {
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(itemToGrab.transform.position - this.transform.position), Time.deltaTime * 5f);
                 this.transform.position = Vector3.MoveTowards(this.transform.position, itemToGrab.transform.position, Agent.speed * Time.deltaTime);
             }
         }
         else if (itemsHeldList.Count > 0)
         {
             // Sell the items to the deposit desk by doing a distance check
-            if (Vector3.Distance(this.transform.position, depositItemsDesk.transform.position) <= 1f)
+            if (Vector3.Distance(this.transform.position, depositItemsDesk.deskObjectsContainer.transform.position) <= 5f)
             {
                 int heldItemCount = itemsHeldList.Count;
                 for (int i = heldItemCount - 1; i >= 0; i--)
                 {
-                    depositItemsDesk.AddObjectToDeskServerRpc(new NetworkObjectReference(itemsHeldList[i].NetworkObject));
-                    Vector3 dropPosition = GetRandomPointOnDesk(depositItemsDesk, itemsHeldList[i]);
-                    SetPositionOfItemsClientRpc(dropPosition, new NetworkObjectReference(itemsHeldList[i].NetworkObject));
-                    itemsHeldList[i].transform.position = dropPosition;
+                    GrabbableObject grabbableObject = itemsHeldList[i];
                     HandleDroppingItemServerRpc(i);
+                    depositItemsDesk.AddObjectToDeskServerRpc(new NetworkObjectReference(grabbableObject.NetworkObject));
+                    Vector3 dropPosition = GetRandomPointOnDesk(depositItemsDesk, grabbableObject);
+                    SetPositionOfItemsClientRpc(dropPosition, new NetworkObjectReference(grabbableObject.NetworkObject));
+                    grabbableObject.transform.position = dropPosition;
+                }
+
+                if (itemsToSell.Count == 0)
+                {
+                    // Selling is complete, reset the selling state
+                    depositItemsDesk.SellItemsOnServer();
+                    depositItemsDesk = null;
+                    isSellingItems = false;
                 }
             }
             else
             {
-                this.transform.position = Vector3.MoveTowards(this.transform.position, depositItemsDesk.transform.position, Agent.speed * Time.deltaTime);
+                Vector3 targetPosition = depositItemsDesk.deskObjectsContainer.transform.position;
+                float distance = Vector3.Distance(this.transform.position, targetPosition);
+                    
+                if (distance > 5f)
+                {
+                    this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(targetPosition - this.transform.position), Time.deltaTime * 5f);
+                    this.transform.position = Vector3.MoveTowards(this.transform.position, targetPosition, Agent.speed * Time.deltaTime);
+                }
             }
         }
     }
@@ -711,7 +739,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private List<GrabbableObject> GetItemsOnShip()
     {
-        return GameObject.Find("/Environment/HangarShip").GetComponentsInChildren<GrabbableObject>().Where(item => item.grabbable && item.scrapValue > 0).ToList();
+        return FindObjectsByType<GrabbableObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID).Where(item => item.scrapValue > 0 && item.itemProperties.isScrap).ToList();
     }
 
     [ClientRpc]
@@ -1090,11 +1118,18 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         StartCoroutine(HandleGrabbingItem(player.currentlyHeldObjectServer, itemsHeldTransforms[itemsHeldList.Count]));
     }
 
+    [ClientRpc]
+    private void HandleGrabbingItemClientRpc(NetworkObjectReference networkObjectReference, int heldTransform)
+    {
+        StartCoroutine(HandleGrabbingItem(((GameObject)networkObjectReference).GetComponent<GrabbableObject>(), itemsHeldTransforms[heldTransform]));
+    }
+
     private IEnumerator HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
     {
+        yield return new WaitForSeconds(0.2f);
         item.isInElevator = false;
         item.isInShipRoom = false;
-        item.playerHeldBy.DiscardHeldObject();
+        item.playerHeldBy?.DiscardHeldObject();
         yield return new WaitForSeconds(0.2f);
         item.grabbable = false;
         item.isHeldByEnemy = true;
@@ -1133,28 +1168,34 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             Plugin.Logger.LogError("Item was null in HandleDroppingItem");
             return;
         }
-        item.parentObject = null;
-        if (IsServer) item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
-        item.isInShipRoom = true;
-        item.isInElevator = true;
-        item.EnablePhysics(true);
-        item.fallTime = 0f;
-        item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
-        item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
-        item.floorYRot = -1;
-        item.DiscardItemFromEnemy();
-        item.grabbable = true;
-        item.isHeldByEnemy = false;
-        item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
+        if (!isSellingItems)
+        {
+            item.parentObject = null;
+            item.isInShipRoom = true;
+            item.isInElevator = true;
+            item.EnablePhysics(true);
+            item.fallTime = 0f;
+            item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
+            item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
+            item.floorYRot = -1;
+            item.DiscardItemFromEnemy();
+            item.grabbable = true;
+            item.isHeldByEnemy = false;
+            item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
+        }
         itemsHeldList.Remove(item);
         GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
         if (itemsHeldList.Count == 0 && IsServer)
         {
             Animator.SetBool(holdingItemAnimation, false);
         }
-        if (ownerPlayer != null && StartOfRound.Instance.shipBounds.bounds.Contains(item.transform.position))
+        if (ownerPlayer != null && Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) < 5)
         {
             ownerPlayer.SetItemInElevator(true, true, item);
+        }
+        else if (!isSellingItems)
+        {
+            if (IsServer) item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         }
     }
 
