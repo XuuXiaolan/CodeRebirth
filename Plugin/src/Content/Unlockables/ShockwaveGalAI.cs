@@ -71,6 +71,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private MineshaftElevatorController? elevatorScript = null;
     private DepositItemsDesk? depositItemsDesk = null;
     private bool onCompanyMoon = false;
+    private bool usingElevator = false;
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem");
@@ -368,7 +369,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
                 Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f); // Adjust rotation speed as needed
-                if (staringTimer >= stareThreshold + 0.5f)
+                if (staringTimer >= stareThreshold + 1.5f)
                 {
                     staringTimer = 0f;
                 }
@@ -380,7 +381,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    private void DetermineIfNeedToDisableAgent(PlayerControllerB ownerPlayer)
+    private bool DetermineIfNeedToDisableAgent(PlayerControllerB ownerPlayer)
     {
         NavMeshPath path = new NavMeshPath();
         if ((!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, ownerPlayer.transform.position) > 7f)
@@ -399,10 +400,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                         Animator.SetBool(attackModeAnimation, true);
                         Agent.enabled = false;
                     }
-                    return;
                 }
             }
+            return true;
         }
+        return false;
     }
 
     private void DoActive()
@@ -452,7 +454,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             }
             return;
         }
-
         if ((!isInside && ownerPlayer.isInsideFactory) || (isInside && !ownerPlayer.isInsideFactory))
         {
             GoThroughEntrance(true);
@@ -461,7 +462,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         DoStaringAtOwner(ownerPlayer);
 
-        if (isInside && elevatorScript != null)
+        if (isInside && elevatorScript != null && !usingElevator)
         {
             bool galCloserToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
             bool ownerCloserToTop = Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorBottomPoint.position);
@@ -471,8 +472,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 return;
             }
         }
-
-        if (!(isInside && elevatorScript != null && Vector3.Distance(transform.position, elevatorScript.elevatorInsidePoint.position) <= 2f && !elevatorScript.elevatorFinishedMoving)) DetermineIfNeedToDisableAgent(ownerPlayer);
+        bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorInsidePoint.position) < 3f;
+        if (!usingElevator && !playerIsInElevator)
+        {
+            if (DetermineIfNeedToDisableAgent(ownerPlayer))
+            {
+                return;
+            }
+        }
 
         if (itemsHeldList.Count >= maxItemsToHold)
         {
@@ -492,7 +499,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             DoBackFliplol();
             return;
         }
-        Agent.SetDestination(ownerPlayer.transform.position);
+        if (!usingElevator) Agent.SetDestination(ownerPlayer.transform.position);
+        else if (usingElevator && elevatorScript != null) this.transform.position = elevatorScript.elevatorInsidePoint.position;
     }
 
     private void DoDeliveringItems()
@@ -1231,10 +1239,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                     if (physicsEnabled) EnablePhysicsClientRpc(false);
                     Agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
                 }
-                else
+                else if (!usingElevator)
                 {
                     // Press the button to start moving the elevator
                     elevatorScript.PressElevatorButtonOnServer(true);
+                    StartCoroutine(StopUsingElevator(elevatorScript));
                 }
             }
         }
@@ -1242,6 +1251,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             MoveToWaitingPoint(elevatorScript, goUp);
         }
+    }
+
+    private IEnumerator StopUsingElevator(MineshaftElevatorController elevatorScript)
+    {
+        usingElevator = true;
+        yield return new WaitForSeconds(2f);
+        yield return new WaitUntil(() => elevatorScript.elevatorDoorOpen && elevatorScript.elevatorFinishedMoving);
+        Plugin.ExtendedLogging("Stopped using elevator");
+        usingElevator = false;
     }
 
     private bool NeedToCallElevator(MineshaftElevatorController elevatorScript, bool needToGoUp)
