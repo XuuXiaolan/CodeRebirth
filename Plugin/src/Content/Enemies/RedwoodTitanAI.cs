@@ -429,6 +429,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
             if (enemy.isEnemyDead || (enemy is not ForestGiantAI && enemy is not DriftwoodMenaceAI && enemy.enemyType.enemyName != "DriftWoodGiant")) continue;
+
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < range && distance < minDistance && Vector3.Distance(enemy.transform.position, shipBoundaries.position) > distanceFromShip)
             {
                 minDistance = distance;
                 closestEnemy = enemy;
