@@ -407,9 +407,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public void ParticlesFromEatingForestKeeper(EnemyAI targetEnemy) {
         if (targetEnemy is ForestGiantAI)
         {
-            ForestKeeperParticles.Play(); // Also make them be affected by the world for proper fog stuff?
+            ForestKeeperParticles.Play();
         }
-        else if (targetEnemy is DriftwoodMenaceAI)
+        else if (targetEnemy is DriftwoodMenaceAI || targetEnemy.enemyType.enemyName == "DriftWoodGiant")
         {
             DriftwoodGiantParticles.Play();
         }
@@ -428,10 +428,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy.isEnemyDead || (enemy is not ForestGiantAI && enemy is not DriftwoodMenaceAI)) continue;
-
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distance < range && distance < minDistance && Vector3.Distance(enemy.transform.position, shipBoundaries.position) > distanceFromShip)
+            if (enemy.isEnemyDead || (enemy is not ForestGiantAI && enemy is not DriftwoodMenaceAI && enemy.enemyType.enemyName != "DriftWoodGiant")) continue;
             {
                 minDistance = distance;
                 closestEnemy = enemy;

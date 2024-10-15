@@ -63,7 +63,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	private void RegisterPlantPot()
 	{
 		PlantPot = new PlantPotAssets("plantpotassets");
-		RegisterScrapWithConfig("", PlantPot.Seed, -1, -1);
+		RegisterScrapWithConfig(Plugin.ModConfig.ConfigWoodenSeedSpawnWeights.Value, PlantPot.Seed, -1, -1);
 		Plugin.samplePrefabs.Add("Wooden Seed", PlantPot.Seed);
 
 		int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigTomatoValue.Value);

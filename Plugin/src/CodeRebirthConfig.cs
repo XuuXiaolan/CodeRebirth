@@ -33,6 +33,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
     #endregion
     #region Spawn Weights
+    public ConfigEntry<string> ConfigWoodenSeedSpawnWeights { get; private set; }
     public ConfigEntry<float> ConfigBiomesSpawnChance { get; private set; }
     public ConfigEntry<string> ConfigCarnivorousSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
@@ -83,6 +84,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
     public ConfigEntry<int> ConfigPlantPotPrice { get; private set; }
     public ConfigEntry<int> ConfigShockwaveCharges { get; private set; }
@@ -90,8 +92,8 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigMetalHitNumber { get; private set; }
     public ConfigEntry<float> ConfigWoodenOpenTimer { get; private set; }
     public ConfigEntry<int> ConfigCrateNumberToSpawn { get; private set; }
-    public ConfigEntry<string> ConfigWoodenCratesWhitelist { get; private set; }
-    public ConfigEntry<string> ConfigMetalCratesWhitelist { get; private set; }
+    public ConfigEntry<string> ConfigWoodenCratesBlacklist { get; private set; }
+    public ConfigEntry<string> ConfigMetalCratesBlacklist { get; private set; }
     public ConfigEntry<bool> ConfigShovelCratesOnly { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCost { get; private set; }
     public ConfigEntry<int> ConfigShockwaveBotCost { get; private set; }
@@ -159,6 +161,13 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Enemy Blacklist",
                                             "Centipede, Red Locust Bees, Docile Locust Bees, Manticoil, CutieFly, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
                                             "Comma separated list of enemies that the Shockwave Gal will not target (immortal enemies should be counted by default, just not in config).");
+        ConfigShockwaveBotPropellerVolume = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Propeller Volume",
+                                            0.75f,
+                                            new ConfigDescription(
+                                                "Volume of the Shockwave Gal's propeller.",
+                                                new AcceptableValueRange<float>(0, 100f)
+                                            ));
         #endregion
         #region Seamine Gal
         /*ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
@@ -237,6 +246,10 @@ public class CodeRebirthConfig
                                             "Farming | Plant Pot Price",
                                             696,
                                             "Price of the Plant Pot.");
+        ConfigWoodenSeedSpawnWeights = configFile.Bind("Farming Options",
+                                            "Farming | Wooden Seed Spawn Weights",
+                                            "",
+                                            "Weights of the Wooden Seed spawn moons e.g. `Custom:10,Vanilla:10,Experimentation:50,Assurance:30,Gloom:20` (recommended empty).");
         ConfigTomatoValue = configFile.Bind("Farming Options",
                                             "Farming | Tomato Value",
                                             "-1,-1",
@@ -636,14 +649,14 @@ public class CodeRebirthConfig
                                             "Crate | Wooden Open Timer",
                                             30f,
                                             "Timer to open wooden crate");
-        ConfigWoodenCratesWhitelist = configFile.Bind("Crate Options",
-                                            "Crate | Wooden Whitelist",
+        ConfigWoodenCratesBlacklist = configFile.Bind("Crate Options",
+                                            "Crate | Wooden Blacklist",
                                             "",
-                                            "Whitelist of Items that can spawn from wooden crates (comma separated, recommend leaving empty).");
-        ConfigMetalCratesWhitelist = configFile.Bind("Crate Options",
-                                            "Crate | Metal Whitelist",
+                                            "Blacklist of Items that can spawn from wooden crates (comma separated, recommend leaving empty).");
+        ConfigMetalCratesBlacklist = configFile.Bind("Crate Options",
+                                            "Crate | Metal Blacklist",
                                             "",
-                                            "Whitelist of Items that can spawn from metal crates (comma separated, recommend leaving empty).");
+                                            "Blacklist of Items that can spawn from metal crates (comma separated, recommend leaving empty).");
         ConfigShovelCratesOnly = configFile.Bind("Crate Options",
                                             "Crate | Shovel Crates Only",
                                             true,

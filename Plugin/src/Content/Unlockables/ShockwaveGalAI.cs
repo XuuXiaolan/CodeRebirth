@@ -110,7 +110,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         maxChargeCount = chargeCount;
         Agent.enabled = false;
         FlySource.Pause();
-        if (IsServer) this.transform.SetParent(ShockwaveCharger.transform, true);
+        this.transform.SetParent(ShockwaveCharger.transform, true);
         List<string> enemyBlacklist = Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(',').ToList();
         foreach (string enemy in enemyBlacklist)
         {
@@ -267,7 +267,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         if (galState == State.Inactive) return;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        HeadPatTrigger.interactable = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         ChestTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        ChestTrigger.interactable = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && ownerPlayer.isHoldingObject && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
@@ -395,19 +398,19 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    private bool DetermineIfNeedToDisableAgent(PlayerControllerB ownerPlayer)
+    private bool DetermineIfNeedToDisableAgent(Vector3 destination)
     {
         NavMeshPath path = new NavMeshPath();
-        if ((!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, ownerPlayer.transform.position) > 7f)
+        if ((!Agent.CalculatePath(destination, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, destination) > 7f)
         {
             Agent.SetDestination(Agent.pathEndPosition);
             if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
             {
-                Agent.SetDestination(ownerPlayer.transform.position);
-                if (!Agent.CalculatePath(ownerPlayer.transform.position, path) || path.status != NavMeshPathStatus.PathComplete)
+                Agent.SetDestination(destination);
+                if (!Agent.CalculatePath(destination, path) || path.status != NavMeshPathStatus.PathComplete)
                 {
                     Vector3 nearbyPoint;
-                    if (NavMesh.SamplePosition(ownerPlayer.transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+                    if (NavMesh.SamplePosition(destination, out NavMeshHit hit, 5f, NavMesh.AllAreas))
                     {
                         nearbyPoint = hit.position;
                         pointToGo = nearbyPoint;
@@ -489,7 +492,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorInsidePoint.position) < 3f;
         if (!usingElevator && !playerIsInElevator)
         {
-            if (DetermineIfNeedToDisableAgent(ownerPlayer))
+            if (DetermineIfNeedToDisableAgent(ownerPlayer.transform.position))
             {
                 return;
             }
@@ -533,6 +536,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         if (!isInside)
         {
+            if (DetermineIfNeedToDisableAgent(ShockwaveCharger.ChargeTransform.position))
+            {
+                return;
+            }
             Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
             if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
             {
@@ -785,7 +792,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             yield return delay;
 
-            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0) continue;
+            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || isInside && !ownerPlayer.isInsideFactory || !isInside && ownerPlayer.isInsideFactory) continue;
 
             // Use OverlapSphereNonAlloc to reduce garbage collection
             Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
@@ -1168,9 +1175,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             Plugin.Logger.LogError("Item was null in HandleDroppingItem");
             return;
         }
+        item.parentObject = null;
         if (!isSellingItems)
         {
-            item.parentObject = null;
             item.isInShipRoom = true;
             item.isInElevator = true;
             item.EnablePhysics(true);
@@ -1195,7 +1202,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
         else if (!isSellingItems)
         {
-            if (IsServer) item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+            item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         }
     }
 

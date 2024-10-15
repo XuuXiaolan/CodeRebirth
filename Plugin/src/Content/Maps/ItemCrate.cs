@@ -150,30 +150,18 @@ public class ItemCrate : CRHittable {
 				case CrateType.Wooden:
                 default:
 					{
-						bool useWhitelist = false;
-						string whiteListedScrapConfig = Plugin.ModConfig.ConfigWoodenCratesWhitelist.Value;
-						string[] whiteListedScrap = [];
-						if (!string.IsNullOrEmpty(whiteListedScrapConfig))
+						string blackListedScrapConfig = Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value;
+						string[] blackListedScrap = [];
+						blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+						List<SpawnableItemWithRarity> acceptableItems = new();
+						foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
 						{
-							useWhitelist = true;
-							whiteListedScrap = whiteListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
-						}
-						if (useWhitelist)
-						{
-							List<SpawnableItemWithRarity> acceptableItems = new();
-							foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
+							if (!blackListedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
 							{
-								if (whiteListedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
-								{
-									acceptableItems.Add(spawnableItemWithRarity);
-								}
+								acceptableItems.Add(spawnableItemWithRarity);
 							}
-	                        chosenItemWithRarity = random.NextItem(acceptableItems);
 						}
-                        else
-						{
-							chosenItemWithRarity = random.NextItem(RoundManager.Instance.currentLevel.spawnableScrap);
-						}
+						chosenItemWithRarity = random.NextItem(acceptableItems);
 						item = chosenItemWithRarity.spawnableItem;
 						break;
                     }
@@ -244,29 +232,17 @@ public class ItemCrate : CRHittable {
 
 	public static Item? GetRandomShopItem()
 	{
-		bool useWhitelist = false;
-		string whiteListedScrapConfig = Plugin.ModConfig.ConfigMetalCratesWhitelist.Value;
-		string[] whiteListedScrap = [];
-		if (!string.IsNullOrEmpty(whiteListedScrapConfig))
+		string blackListedScrapConfig = Plugin.ModConfig.ConfigMetalCratesBlacklist.Value;
+		string[] blackListedScrap = [];
+		blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+		List<Item> acceptableItems = new();
+		foreach (Item? item in ShopItemList)
 		{
-			useWhitelist = true;
-			whiteListedScrap = whiteListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
-		}
-		if (useWhitelist)
-		{
-			List<Item> acceptableItems = new();
-			foreach (Item? item in ShopItemList)
+			if (blackListedScrap.Contains(item.itemName.ToLowerInvariant()))
 			{
-				if (whiteListedScrap.Contains(item.itemName.ToLowerInvariant()))
-				{
-					acceptableItems.Add(item);
-				}
+				acceptableItems.Add(item);
 			}
-			return acceptableItems[UnityEngine.Random.Range(0, acceptableItems.Count)];
 		}
-		else
-		{
-			return ShopItemList[UnityEngine.Random.Range(0, ShopItemList.Count)];
-		}
+		return acceptableItems[UnityEngine.Random.Range(0, acceptableItems.Count)];
 	}	
 }
