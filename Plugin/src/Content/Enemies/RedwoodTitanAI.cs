@@ -106,11 +106,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         redwoodRandom = new System.Random(StartOfRound.Instance.randomMapSeed + instanceNumbers);
         if (redwoodRandom.Next(0, 2) == 0)
         {
-            this.skinnedMeshRenderers[0].materials = AlbinoMaterials;
+            skinnedMeshRenderers[0].materials = AlbinoMaterials;
         }
 
-        this.currentSearch.searchWidth *= 10f;
-        this.currentSearch.searchPrecision *= 0.25f;
+        currentSearch.searchWidth *= 10f;
+        currentSearch.searchPrecision *= 0.25f;
 
         walkingSpeed = Plugin.ModConfig.ConfigRedwoodSpeed.Value;
         distanceFromShip = Plugin.ModConfig.ConfigRedwoodShipPadding.Value;
@@ -126,9 +126,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         agent.speed = 0f;
         if (IsServer)
         {
-            this.creatureAnimator.SetBool("walking", false);
-            this.creatureAnimator.SetBool("chasing", false);
-            this.networkAnimator.SetTrigger("startSpawn");
+            SetAnimatorMotionBools(chasing: false, walking: false);
+            networkAnimator.SetTrigger("startSpawn");
         }
         SwitchToBehaviourStateOnLocalClient((int)State.Spawn);
         CodeRebirthPlayerManager.OnDoorStateChange += OnShipDoorStateChange;
@@ -156,32 +155,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     private void OnShipDoorStateChange(object sender, bool shipDoorClosed)
     {
-        if (shipDoorClosed)
+        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+            foreach (Collider playerCollider in player.GetPlayerColliders())
             {
-                if (player.isInHangarShipRoom)
+                foreach (Collider enemyCollider in enemyColliders)
                 {
-                    foreach (Collider playerCollider in player.GetPlayerColliders())
-                    {
-                        foreach (Collider enemyCollider in enemyColliders)
-                        {
-                            Physics.IgnoreCollision(playerCollider, enemyCollider, true);
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
-            {
-                foreach (Collider playerCollider in player.GetPlayerColliders())
-                {
-                    foreach (Collider enemyCollider in enemyColliders)
-                    {
-                        Physics.IgnoreCollision(playerCollider, enemyCollider, false);
-                    }
+                    Physics.IgnoreCollision(playerCollider, enemyCollider, shipDoorClosed && player.isInHangarShipRoom);
                 }
             }
         }
@@ -202,53 +182,60 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.Update();
         if (isEnemyDead) return;
-        if (playerToKick != null)
+        KickingPlayerUpdate();
+    }
+
+    public void KickingPlayerUpdate()
+    {
+        if (playerToKick == null) return;
+        if (!kickingOut)
         {
-            if (!kickingOut)
-            {
-                // Calculate the direction towards the player
-                Vector3 directionToPlayer = playerToKick.transform.position - this.transform.position;
-                Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
-            }
-            else if (kickingOut)
-            {
-                // Assuming you want to rotate towards the right direction of the object
-                Vector3 rightDirection = this.transform.right;
-                Quaternion lookRotation = Quaternion.LookRotation(rightDirection);
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime);
-            }
+            // Calculate the direction towards the player
+            Vector3 directionToPlayer = playerToKick.transform.position - transform.position;
+            Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
+        }
+        else
+        {
+            // Assuming you want to rotate towards the right direction of the object
+            Vector3 rightDirection = this.transform.right;
+            Quaternion lookRotation = Quaternion.LookRotation(rightDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
         }
     }
 
     public void LateUpdate()
     {
         if (isEnemyDead) return;
-        if (currentBehaviourStateIndex == (int)State.EatingTargetGiant && targetEnemy != null)
+        EatTargetGiantLateUpdate();
+    }
+
+    public void EatTargetGiantLateUpdate()
+    {
+        if (currentBehaviourStateIndex != (int)State.EatingTargetGiant || targetEnemy == null) return;
+
+        transform.position = eatPosition;
+        var grabPosition = holdingBone.transform.position;
+        targetEnemy.transform.position = grabPosition + new Vector3(0, -1f, 0);
+        targetEnemy.transform.LookAt(eatingArea.transform.position);
+        targetEnemy.transform.position = grabPosition + new Vector3(0, -5.5f, 0);
+        // Scale targetEnemy's transform down by 0.9995 everytime Update runs in this if statement
+        if (!sizeUp)
         {
-            this.transform.position = eatPosition;
-            var grabPosition = holdingBone.transform.position;
             targetEnemy.transform.position = grabPosition + new Vector3(0, -1f, 0);
             targetEnemy.transform.LookAt(eatingArea.transform.position);
-            targetEnemy.transform.position = grabPosition + new Vector3(0, -5.5f, 0);
-            // Scale targetEnemy's transform down by 0.9995 everytime Update runs in this if statement
-            if (!sizeUp)
-            {
-                targetEnemy.transform.position = grabPosition + new Vector3(0, -1f, 0);
-                targetEnemy.transform.LookAt(eatingArea.transform.position);
-                targetEnemy.transform.position = grabPosition + new Vector3(0, -6f, 0);
-                var newScale = targetEnemy.transform.localScale;
-                newScale.x *= 1.4f;
-                newScale.y *= 1.3f;
-                newScale.z *= 1.4f;
-                targetEnemy.transform.localScale = newScale;
-                sizeUp = true;
-            }
-            targetEnemy.transform.position += new Vector3(0, 0.02f, 0);
-            Vector3 currentScale = targetEnemy.transform.localScale;
-            currentScale *= 0.9995f;
-            targetEnemy.transform.localScale = Vector3.Lerp(targetEnemy.transform.localScale, currentScale, Time.deltaTime);
+            targetEnemy.transform.position = grabPosition + new Vector3(0, -6f, 0);
+            var newScale = targetEnemy.transform.localScale;
+            newScale.x *= 1.4f;
+            newScale.y *= 1.3f;
+            newScale.z *= 1.4f;
+            targetEnemy.transform.localScale = newScale;
+            sizeUp = true;
         }
+        targetEnemy.transform.position += new Vector3(0, 0.02f, 0);
+        Vector3 currentScale = targetEnemy.transform.localScale;
+        currentScale *= 0.9995f;
+        targetEnemy.transform.localScale = Vector3.Lerp(targetEnemy.transform.localScale, currentScale, Time.deltaTime);
     }
 
     public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer)
@@ -257,14 +244,12 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         float distanceToClosestPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
         if (distanceToClosestPlayer <= 8f && UnityEngine.Random.Range(0f, 100f) <= 2.5f)
         {
-            this.creatureAnimator.SetBool("walking", false);
-            this.creatureAnimator.SetBool("chasing", false);
-            JumpInPlace();   
+            SetAnimatorMotionBools(chasing: false, walking: false);
+            JumpInPlace();
         }
         else if (distanceToClosestPlayer <= 16f && UnityEngine.Random.Range(0f, 100f) <= 2.5f && currentBehaviourStateIndex == (int)State.Wandering)
         {
-            this.creatureAnimator.SetBool("walking", false);
-            this.creatureAnimator.SetBool("chasing", false);
+            SetAnimatorMotionBools(chasing: false, walking: false);
             DoKickTargetPlayer(closestPlayer);
         }
     }
@@ -344,8 +329,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         if (FindClosestAliveGiantInRange(seeableDistance))
         {
-            this.creatureAnimator.SetBool("walking", false);
-            this.creatureAnimator.SetBool("chasing", false);
+            SetAnimatorMotionBools(chasing: false, walking: false);
             Plugin.ExtendedLogging("Start Target Giant");
             StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)State.RunningToTarget);
@@ -362,9 +346,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public IEnumerator SetSpeedForChasingGiant()
     {
         agent.speed = 0f;
-        this.networkAnimator.SetTrigger("startEnrage");
+        networkAnimator.SetTrigger("startEnrage");
         yield return new WaitForSeconds(6.9f);
-        this.creatureAnimator.SetBool("chasing", true);
+        SetAnimatorMotionBools(chasing: true, walking: false);
         agent.angularSpeed = 100f;
         agent.speed = walkingSpeed * 4;
     }
@@ -376,10 +360,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             targetEnemy = null;
             Plugin.ExtendedLogging("Stop Target Giant");
-            this.creatureAnimator.SetBool("chasing", false);
-            this.creatureAnimator.SetBool("walking", true);
-            this.agent.angularSpeed = 40f;
-            StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
+            SetAnimatorMotionBools(chasing: false, walking: true);
+            agent.angularSpeed = 40f;
+            StartSearchRoutine(transform.position, 50, agent.areaMask);
             agent.speed = walkingSpeed;
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
@@ -387,10 +370,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (Vector3.Distance(transform.position, targetEnemy.transform.position) >= seeableDistance+10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5))
         {
             Plugin.ExtendedLogging("Stop Target Giant");
-            this.agent.angularSpeed = 40f;
-            this.creatureAnimator.SetBool("chasing", false);
-            this.creatureAnimator.SetBool("walking", true);
-            StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
+            agent.angularSpeed = 40f;
+            SetAnimatorMotionBools(chasing: false, walking: true);
+            StartSearchRoutine(transform.position, 50, agent.areaMask);
             agent.speed = walkingSpeed;
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
@@ -446,14 +428,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if ((enemy is ForestGiantAI || enemy is DriftwoodMenaceAI) && !enemy.isEnemyDead)
+            if (enemy.isEnemyDead || (enemy is not ForestGiantAI && enemy is not DriftwoodMenaceAI)) continue;
+
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < range && distance < minDistance && Vector3.Distance(enemy.transform.position, shipBoundaries.position) > distanceFromShip)
             {
-                float distance = Vector3.Distance(this.transform.position, enemy.transform.position);
-                if (distance < range && distance < minDistance && Vector3.Distance(enemy.transform.position, shipBoundaries.position) > distanceFromShip)
-                {
-                    minDistance = distance;
-                    closestEnemy = enemy;
-                }
+                minDistance = distance;
+                closestEnemy = enemy;
             }
         }
         if (closestEnemy != null)
@@ -477,9 +458,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         creatureVoice.PlayOneShot(eatenSound, 1);
         if (IsServer)
         {
-            this.networkAnimator.SetTrigger("eatEnemyGiant");
-            this.creatureAnimator.SetBool("chasing", false);
-            this.creatureAnimator.SetBool("walking", false);
+            networkAnimator.SetTrigger("eatEnemyGiant");
+            SetAnimatorMotionBools(chasing: false, walking: false);
         }
         SwitchToBehaviourStateOnLocalClient((int)State.EatingTargetGiant);
         agent.speed = 0f;
@@ -487,7 +467,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (isEnemyDead) yield break;
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy == null || enemy is not RadMechAI) continue;
+            if (enemy is not RadMechAI) continue;
             RadMechAI rad = (RadMechAI)enemy;
             rad.TryGetComponent(out IVisibleThreat threat);
             if (threat != null && rad.focusedThreatTransform == threat.GetThreatTransform())
@@ -497,14 +477,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
                 rad.CheckSightForThreat();
             }
         }
-        this.agent.angularSpeed = 40f;
+        agent.angularSpeed = 40f;
         agent.speed = walkingSpeed;
         if (IsServer)
         {
-            this.creatureAnimator.SetBool("chasing", false);
-            this.creatureAnimator.SetBool("walking", true);
+            SetAnimatorMotionBools(chasing: false, walking: true);
         }
-        StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
+        StartSearchRoutine(transform.position, 50, agent.areaMask);
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
 
@@ -520,9 +499,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy)
     {
         if (isEnemyDead) return;
-        if (collidedEnemy == targetEnemy && !eatingEnemy && currentBehaviourStateIndex == (int)State.RunningToTarget && this.agent.velocity.magnitude >= 1f)
+        if (collidedEnemy == targetEnemy && !eatingEnemy && currentBehaviourStateIndex == (int)State.RunningToTarget && agent.velocity.magnitude >= 1f)
         {
-            eatPosition = this.transform.position;
+            eatPosition = transform.position;
             eatingEnemy = true;
             collidedEnemy.agent.enabled = false;
             foreach (Collider enemyCollider in collidedEnemy.GetComponents<Collider>())
@@ -557,25 +536,21 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (isEnemyDead) return;
         if (force >= 6)
         {
-            enemyHP -= force;
             // Set on fire and stuff
             if (TargetClosestRadMech(seeableDistance) && currentBehaviourStateIndex == (int)State.Wandering && Plugin.ModConfig.ConfigRedwoodCanEatOldBirds.Value)
             {
                 if (IsServer)
                 {
                     StopSearchRoutine();
-                    this.creatureAnimator.SetBool("walking", false);
-                    this.creatureAnimator.SetBool("chasing", false);
+                    SetAnimatorMotionBools(chasing: false, walking: false);
                     StartCoroutine(SetSpeedForChasingGiant());
                 }
                 Plugin.ExtendedLogging("Start Target Giant");
                 SwitchToBehaviourStateOnLocalClient((int)State.RunningToTarget);
             }
         }
-        else
-        {
-            enemyHP -= force;
-        }
+
+        enemyHP -= force;
 
         if (enemyHP <= 0 && !isEnemyDead) {
             if (currentBehaviourStateIndex == (int)State.EatingTargetGiant)
@@ -618,14 +593,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy is RadMechAI && !enemy.isEnemyDead)
+            if (enemy.isEnemyDead || enemy is not RadMechAI) continue;
+
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < range && distance < minDistance)
             {
-                float distance = Vector3.Distance(transform.position, enemy.transform.position);
-                if (distance < range && distance < minDistance)
-                {
-                    minDistance = distance;
-                    closestEnemy = enemy;
-                }
+                minDistance = distance;
+                closestEnemy = enemy;
             }
         }
         if (closestEnemy != null)
@@ -643,8 +617,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         Plugin.ExtendedLogging("Kick ended");
         if (IsServer)
         {
-            this.creatureAnimator.SetBool("chasing", false);
-            this.creatureAnimator.SetBool("walking", true);
+            SetAnimatorMotionBools(chasing: false, walking: true);
         }
         playerToKick = null;
         agent.speed = walkingSpeed;
@@ -659,11 +632,10 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     { // AnimEvent
         if (IsServer)
         {
-            this.creatureAnimator.SetBool("chasing", false);
-            this.creatureAnimator.SetBool("walking", true);
+            SetAnimatorMotionBools(chasing: false, walking: true);
         }
         Plugin.ExtendedLogging("Start Walking Around");
-        StartSearchRoutine(this.transform.position, 50, this.agent.areaMask);
+        StartSearchRoutine(transform.position, 50, agent.areaMask);
         agent.speed = walkingSpeed;
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
@@ -681,26 +653,33 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         Plugin.ExtendedLogging("End Jump");
         if (IsServer)
         {
-            this.creatureAnimator.SetBool("chasing", false);
-            this.creatureAnimator.SetBool("walking", true);
+            SetAnimatorMotionBools(chasing: false, walking: true);
         }
         agent.speed = walkingSpeed;
     }
 
+    public void SetAnimatorMotionBools(bool chasing = false, bool walking = false)
+    {
+        SetBoolAnimationOnLocalClient("chasing", chasing);
+        SetBoolAnimationOnLocalClient("walking", walking);
+    }
+
     public void EnableDeathColliders()
     { // AnimEvent
-        foreach (Collider deathCollider in DeathColliders)
-        {
-            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabledScript = true;
-        }
+        ToggleDeathColliders(true);
     }
 
     public void DisableDeathColliders()
     { // AnimEvent
         DeathParticles.Play();
+        ToggleDeathColliders(false);
+    }
+
+    void ToggleDeathColliders(bool enable)
+    {
         foreach (Collider deathCollider in DeathColliders)
         {
-            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabledScript = false;
+            deathCollider.gameObject.GetComponent<BetterCooldownTrigger>().enabledScript = enable;
         }
     }
 
@@ -740,46 +719,29 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     }
 
     public void FootStepSounds()
-    { // AnimEvent
+    {
         creatureSFX.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, stompSounds.Length)]);
-        creatureSFXFar.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, farStompSounds.Length)]);
+        creatureSFXFar.PlayOneShot(farStompSounds[UnityEngine.Random.Range(0, farStompSounds.Length)]);
     }
 
     public void LeftFootStepInteractions()
     { // AnimEvent
-        DustParticlesLeft.Play(); // Play the particle system with the updated color
-        creatureSFX.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, stompSounds.Length)]);
-        creatureSFXFar.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, farStompSounds.Length)]);
-        PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
-        if (player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom)
-        {
-            float distance = Vector3.Distance(CollisionFootL.transform.position, player.transform.position);
-            if (distance <= 10f)
-            {
-                player.DamagePlayer(10, causeOfDeath: CauseOfDeath.Crushing);
-            }
-        }
-        var enemiesList = RoundManager.Instance.SpawnedEnemies; //todo: change this to a spherecast
-        for (int i = enemiesList.Count - 1; i >= 0; i--)
-        {
-            if (enemiesList[i] == null || enemiesList[i].isEnemyDead || enemiesList[i] is RedwoodTitanAI) continue;
-            var LeftFootDistance = Vector3.Distance(CollisionFootL.transform.position, enemiesList[i].transform.position);
-            if (LeftFootDistance <= 7.5f)
-            {
-                DealEnemyDamageFromShockwave(enemiesList[i], LeftFootDistance);
-            }
-        }
+        FootstepInteractions(ref CollisionFootL, ref DustParticlesLeft);
     }
 
     public void RightFootStepInteractions()
     { // AnimEvent
-        DustParticlesRight.Play(); // Play the particle system with the updated color
-        creatureSFX.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, stompSounds.Length)]);
-        creatureSFXFar.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, farStompSounds.Length)]);
+        FootstepInteractions(ref CollisionFootR, ref DustParticlesRight);
+    }
+
+    public void FootstepInteractions(ref Collider foot, ref ParticleSystem footParticles)
+    {
+        footParticles.Play(); // Play the particle system with the updated color
+        FootStepSounds();
         PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
         if (player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom)
         {
-            float distance = Vector3.Distance(CollisionFootR.transform.position, player.transform.position);
+            float distance = Vector3.Distance(foot.transform.position, player.transform.position);
             if (distance <= 10f)
             {
                 player.DamagePlayer(10, causeOfDeath: CauseOfDeath.Crushing);
@@ -789,10 +751,10 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         for (int i = enemiesList.Count - 1; i >= 0; i--)
         {
             if (enemiesList[i] == null || enemiesList[i].isEnemyDead || enemiesList[i] is RedwoodTitanAI) continue;
-            var RightFootDistance = Vector3.Distance(CollisionFootR.transform.position, enemiesList[i].transform.position);
-            if (RightFootDistance <= 7.5f)
+            var FootDistance = Vector3.Distance(foot.transform.position, enemiesList[i].transform.position);
+            if (FootDistance <= 7.5f)
             {
-                DealEnemyDamageFromShockwave(enemiesList[i], RightFootDistance);
+                DealEnemyDamageFromShockwave(enemiesList[i], FootDistance);
             }
         }
     }
