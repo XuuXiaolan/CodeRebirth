@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -174,7 +173,5 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     {
         base.OnNetworkDespawn();
         StopAllCoroutines();
-        // save stage here?
-        // save fruit type too maybe
     }
 }

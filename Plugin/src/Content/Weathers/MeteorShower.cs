@@ -93,7 +93,7 @@ public class MeteorShower : CodeRebirthWeathers {
 	}
 	private void Update()
 	{
-		if (TimeOfDay.Instance.timeHasStarted && normalisedTimeToLeave <= TimeOfDay.Instance.normalizedTimeOfDay)
+		if (TimeOfDay.Instance.timeHasStarted && normalisedTimeToLeave <= TimeOfDay.Instance.normalizedTimeOfDay && IsAuthority())
 		{
 			StopCoroutine(spawnHandler);
 		}

@@ -1,4 +1,19 @@
-# v0.6.2
+# v0.6.3
+
+- Fixed parenting issue with shockwave gal.
+- Turn crate configs into whitelists from blacklists.
+- Stopped gal from targetting enemies while you're inside and its outside or vice versa.
+- Give tomatoes an inventory icon.
+- Give seeds an inventory icon.
+- Config for propeller volume for shockwavegal.
+- Allow redwood to eat the driftwood giant.
+- Give config for seed spawn weights.
+- Fix meteor spam for clients.
+- Better pathing when coming to ship with items.
+- Fixed constant error for clients on meteor shower.
+- Fixed some rare config error with tornado smoky version.
+
+## v0.6.2
 
 - Adjusted redwood spawn count and meteor volumes config.
 - Made gal drop items on attack mode switch.

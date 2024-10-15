@@ -83,8 +83,8 @@ public class Tornados : EnemyAI
         int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
         if (typeIndex < 0)
         {
-            typeIndex = 0;
-            Plugin.Logger.LogError("I fucked up, please report this");
+            typeIndex = (int)TornadoType.Smoke;
+            Plugin.Logger.LogWarning("Your config is poorly done. Tornado type index is out of bounds. Defaulting to Smoke tornado.");
         }
         this.tornadoType = (TornadoType)typeIndex;
 
@@ -116,6 +116,11 @@ public class Tornados : EnemyAI
 
             // Use the TornadoSelector class to select the tornado type based on config
             int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
+            if (typeIndex < 0)
+            {
+                typeIndex = (int)TornadoType.Smoke;
+                Plugin.Logger.LogWarning("Your config is poorly done. Tornado type index is out of bounds. Defaulting to Smoke tornado.");
+            }
             this.tornadoType = (TornadoType)typeIndex;
 
             WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
@@ -549,7 +554,7 @@ public class TornadoSelector
         { "Fire", TornadoType.Fire },
         { "Blood", TornadoType.Blood },
         { "Windy", TornadoType.Windy },
-        { "Smoke", TornadoType.Smoke },
+        { "Smoky", TornadoType.Smoke },
         { "Water", TornadoType.Water },
         { "Electric", TornadoType.Electric },
     };
