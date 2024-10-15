@@ -23,7 +23,7 @@ public enum CodeRebirthStatusEffects
 public class CodeRebirthPlayerManager : NetworkBehaviour
 {
     private bool previousDoorClosed;
-    public static Dictionary<PlayerControllerB, CRPlayerData> dataForPlayer = new Dictionary<PlayerControllerB, CRPlayerData>();
+    internal static Dictionary<PlayerControllerB, CRPlayerData> dataForPlayer = new Dictionary<PlayerControllerB, CRPlayerData>();
     public static GameObject[] playerParticles = new GameObject[6];
     public static event EventHandler<bool>? OnDoorStateChange;
     public void Awake()
@@ -40,41 +40,6 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
             OnDoorStateChange?.Invoke(null, StartOfRound.Instance.hangarDoorsClosed);
         }
         previousDoorClosed = StartOfRound.Instance.hangarDoorsClosed;
-    }
-
-    public static void UpdateStatusEffect(PlayerControllerB player, CodeRebirthStatusEffects effect, bool isActive)
-    {
-        if (dataForPlayer.ContainsKey(player))
-        {
-            var playerData = dataForPlayer[player];
-
-            switch (effect)
-            {
-                case CodeRebirthStatusEffects.Water:
-                    playerData.Water = isActive;
-                    break;
-                case CodeRebirthStatusEffects.Electric:
-                    playerData.Electric = isActive;
-                    break;
-                case CodeRebirthStatusEffects.Fire:
-                    playerData.Fire = isActive;
-                    break;
-                case CodeRebirthStatusEffects.Smoke:
-                    playerData.Smoke = isActive;
-                    break;
-                case CodeRebirthStatusEffects.Windy:
-                    playerData.Windy = isActive;
-                    break;
-                case CodeRebirthStatusEffects.Blood:
-                    playerData.Blood = isActive;
-                    break;
-            }
-        }
-    }
-
-    public static void ChangeActiveStatus(PlayerControllerB player, CodeRebirthStatusEffects effect, bool isActive)
-    {
-        UpdateStatusEffect(player, effect, isActive);
     }
 }
 
@@ -99,9 +64,118 @@ public class CRPlayerData
 
 internal static class PlayerControllerBExtensions
 {
+    internal enum ApplyEffectResults : sbyte
+    {
+        Applied,
+        Removed,
+        None,
+    }
+    internal static ApplyEffectResults ApplyStatusEffect(this PlayerControllerB player, CodeRebirthStatusEffects effect, float range, float distance)
+    {
+        if (distance < range && !player.HasEffectActive(effect))
+        {
+            player.ApplyStatusEffect(effect, true);
+            return ApplyEffectResults.Applied;
+        }
+        else if (distance >= range && player.HasEffectActive(effect))
+        {
+            player.ApplyStatusEffect(effect, false);
+            return ApplyEffectResults.Removed;
+        }
+        return ApplyEffectResults.None;
+    }
+    internal static void ApplyStatusEffect(this PlayerControllerB player, CodeRebirthStatusEffects effect, bool isActive)
+    {
+        if (!player.ContainsCRPlayerData()) return;
+        CRPlayerData playerData = player.GetCRPlayerData();
+
+        switch (effect)
+        {
+            case CodeRebirthStatusEffects.Water:
+                playerData.Water = isActive;
+                break;
+            case CodeRebirthStatusEffects.Electric:
+                playerData.Electric = isActive;
+                break;
+            case CodeRebirthStatusEffects.Fire:
+                playerData.Fire = isActive;
+                break;
+            case CodeRebirthStatusEffects.Smoke:
+                playerData.Smoke = isActive;
+                break;
+            case CodeRebirthStatusEffects.Windy:
+                playerData.Windy = isActive;
+                break;
+            case CodeRebirthStatusEffects.Blood:
+                playerData.Blood = isActive;
+                break;
+        }
+    }
+
+    internal static bool HasEffectActive(this PlayerControllerB player, CodeRebirthStatusEffects effect)
+    {
+        if (!player.ContainsCRPlayerData()) return false;
+        CRPlayerData playerData = player.GetCRPlayerData();
+
+        switch(effect)
+        {
+            case CodeRebirthStatusEffects.Water:
+                return playerData.Water;
+            case CodeRebirthStatusEffects.Electric:
+                return playerData.Electric;
+            case CodeRebirthStatusEffects.Fire:
+                return playerData.Fire;
+            case CodeRebirthStatusEffects.Smoke:
+                return playerData.Smoke;
+            case CodeRebirthStatusEffects.Windy:
+                return playerData.Windy;
+            case CodeRebirthStatusEffects.Blood:
+                return playerData.Blood;
+        }
+        return false;
+    }
     internal static CRPlayerData GetCRPlayerData(this PlayerControllerB player) =>
         CodeRebirthPlayerManager.dataForPlayer[player];
 
+    internal static bool ContainsCRPlayerData(this PlayerControllerB player) =>
+        CodeRebirthPlayerManager.dataForPlayer.ContainsKey(player);
+
+    internal static void AddCRPlayerData(this PlayerControllerB player)
+    {
+        CodeRebirthPlayerManager.dataForPlayer.Add(player, new CRPlayerData());
+        player.GetCRPlayerData().playerColliders = new List<Collider>(player.GetComponentsInChildren<Collider>());
+    }
+
+    internal static bool IsHoldingWallet(this PlayerControllerB player) =>
+        player.GetCRPlayerData().holdingWallet;
+
+    internal static void SetHoldingWallet(this PlayerControllerB player, bool holdingWallet) =>
+        player.GetCRPlayerData().holdingWallet = holdingWallet;
+
     internal static Hoverboard? TryGetHoverboardRiding(this PlayerControllerB player) =>
         player.GetCRPlayerData().hoverboardRiding;
+
+    internal static void SetHoverboardRiding(this PlayerControllerB player, Hoverboard? hoverboard) =>
+        player.GetCRPlayerData().ridingHoverboard = hoverboard;
+
+    internal static bool IsRidingHoverboard(this PlayerControllerB player) =>
+        player.GetCRPlayerData().ridingHoverboard;
+
+    internal static void SetRidingHoverboard(this PlayerControllerB player, bool ridingHoverboard) =>
+        player.GetCRPlayerData().ridingHoverboard = ridingHoverboard;
+
+    internal static bool HasFlung(this PlayerControllerB player) =>
+        player.GetCRPlayerData().flung;
+
+    internal static void SetFlung(this PlayerControllerB player, bool flung) =>
+        player.GetCRPlayerData().flung = flung;
+
+    internal static bool IsFlingingAway(this PlayerControllerB player) =>
+        player.GetCRPlayerData().flingingAway;
+
+    internal static void SetFlingingAway(this PlayerControllerB player, bool flingingAway) =>
+        player.GetCRPlayerData().flingingAway = flingingAway;
+
+    internal static IEnumerable<Collider> GetPlayerColliders(this PlayerControllerB player) =>
+        player.GetCRPlayerData().playerColliders!;
 }

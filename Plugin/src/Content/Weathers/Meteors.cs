@@ -69,9 +69,10 @@ public class Meteors : NetworkBehaviour {
         MoveMeteor();
     }
 
-    private void MoveMeteor() {
+    private void MoveMeteor()
+    {
         float progress = Progress;
-        if (progress >= 1.0f) 
+        if (progress >= 1.0f)
         { // Checks if the progress is 100% or more
             transform.position = target; // Ensures the meteor position is set to the target at impact
             StartCoroutine(Impact()); // Start the impact effects

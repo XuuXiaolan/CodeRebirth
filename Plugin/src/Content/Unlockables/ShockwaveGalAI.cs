@@ -347,6 +347,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             }
             else
             {
+                if (DetermineIfNeedToDisableAgent(ShockwaveCharger.ChargeTransform.position))
+                {
+                    return false;
+                }
                 Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
             }
             if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
