@@ -267,7 +267,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         if (galState == State.Inactive) return;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        HeadPatTrigger.interactable = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         ChestTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        ChestTrigger.interactable = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && ownerPlayer.isHoldingObject && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
