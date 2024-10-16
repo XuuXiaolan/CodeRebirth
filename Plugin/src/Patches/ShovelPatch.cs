@@ -5,10 +5,11 @@ using GameNetcodeStuff;
 using System;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Content.Unlockables;
+using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch {
-	static Random? random;
+	static System.Random? random;
 	
 	public static void Init() {
 		On.Shovel.HitShovel += Shovel_HitShovel;
@@ -25,7 +26,7 @@ static class ShovelPatch {
 
     static void PreHitShovel(ref Shovel self)
     {
-        random ??= new Random(StartOfRound.Instance.randomMapSeed + 85);
+        random ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
         TryCritWeapon(ref self);
         TryHealNatureMace(ref self);
     }
@@ -46,9 +47,9 @@ static class ShovelPatch {
     {
         if (!CRWeapon.canBreakTrees) return;
 
-        RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
-
-        if (!Plugin.ModConfig.ConfigFarmingEnabled.Value || random.NextFloat(0f, 1f) >= 0.02f) return;
+		int num = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
+        if (!Plugin.ModConfig.ConfigFarmingEnabled.Value || random.NextFloat(0f, 1f) >= 0.02f || num <= 0) return;
+		RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
         Plugin.ExtendedLogging("Tree Destroyed with luck");
         CodeRebirthUtils.Instance.SpawnScrap(UnlockableHandler.Instance.PlantPot.Seed, CRWeapon.weaponTip.position, false, true, 5);
     }
