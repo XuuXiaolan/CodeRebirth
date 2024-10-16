@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -22,7 +24,21 @@ public class ShockwaveCharger : NetworkBehaviour
             shockwaveGal.GetComponent<NetworkObject>().Spawn();
             SetGalForEveryoneClientRpc(new NetworkObjectReference(shockwaveGal.GetComponent<NetworkObject>()));
         }
+        if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value) StartCoroutine(ActivateShockwaveGalAfterLand());
         ActivateOrDeactivateTrigger.onInteract.AddListener(OnActivateShockwaveGal);
+    }
+
+    private IEnumerator ActivateShockwaveGalAfterLand()
+    {
+        while (true)
+        {
+            yield return new WaitUntil(() => TimeOfDay.Instance.normalizedTimeOfDay <= 0.2f && StartOfRound.Instance.shipHasLanded && !shockwaveGalAI.Animator.GetBool("activated") && !StartOfRound.Instance.shipIsLeaving && !StartOfRound.Instance.inShipPhase && RoundManager.Instance.currentLevel.levelID != 3);
+            if (!shockwaveGalAI.Animator.GetBool("activated"))
+            {
+                PlayerControllerB closestPlayer = StartOfRound.Instance.allPlayerScripts.Where(p => p.isPlayerControlled).OrderBy(p => Vector3.Distance(transform.position, p.transform.position)).First();
+                shockwaveGalAI.ActivateShockwaveGal(closestPlayer);
+            }
+        }
     }
 
     [ClientRpc]

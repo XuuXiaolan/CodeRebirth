@@ -84,6 +84,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<bool> ConfigShockwaveBotAutomatic { get; private set; }
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
     public ConfigEntry<int> ConfigPlantPotPrice { get; private set; }
@@ -166,8 +167,12 @@ public class CodeRebirthConfig
                                             0.75f,
                                             new ConfigDescription(
                                                 "Volume of the Shockwave Gal's propeller.",
-                                                new AcceptableValueRange<float>(0, 100f)
+                                                new AcceptableValueRange<float>(0, 1f)
                                             ));
+        ConfigShockwaveBotAutomatic = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Automatic Behaviour",
+                                            false,
+                                            "Whether the Shockwave Gal will automatically wake up and choose the nearest player as the owner.");
         #endregion
         #region Seamine Gal
         /*ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",

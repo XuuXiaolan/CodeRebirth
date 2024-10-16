@@ -69,7 +69,7 @@ public class Meteors : NetworkBehaviour {
         MoveMeteor();
     }
 
-    void MoveMeteor()
+    private void MoveMeteor()
     {
         float progress = Progress;
         if (progress >= 1.0f)

@@ -675,7 +675,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         ToggleDeathColliders(false);
     }
 
-    void ToggleDeathColliders(bool enable)
+    private void ToggleDeathColliders(bool enable)
     {
         foreach (Collider deathCollider in DeathColliders)
         {

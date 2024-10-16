@@ -1,4 +1,10 @@
-# v0.6.3
+# v0.6.4
+
+- Added propeller volume config lol.
+- Auto start on ship start config.
+- Fixed the shovels spawning wooden seeds randomly.
+
+## v0.6.3
 
 - Fixed parenting issue with shockwave gal.
 - Turn crate configs into whitelists from blacklists.
