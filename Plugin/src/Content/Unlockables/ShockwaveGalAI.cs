@@ -105,6 +105,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void Start()
     {
         Plugin.Logger.LogInfo("Hi creator");
+        FlySource.Play();
         galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         chargeCount = Plugin.ModConfig.ConfigShockwaveCharges.Value;
         maxChargeCount = chargeCount;
@@ -314,7 +315,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void Update()
     {
         if (galState == State.Inactive) return;
-        FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
+        if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         InteractTriggersUpdate();
         BoomboxUpdate();
@@ -864,8 +865,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         this.flying = flying;
         backFlipping = flying;
-        if (flying) FlySource.UnPause();
-        else FlySource.Pause();
+        if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
+        else FlySource.volume = 0f;
     }
 
     private void AdjustSpeedOnDistanceOnTargetPosition()

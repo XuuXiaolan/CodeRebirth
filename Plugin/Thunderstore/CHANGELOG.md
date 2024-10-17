@@ -1,12 +1,9 @@
-# v1.0
+# v6.6
 
-- Added 6 new hazards
-  - Flash Turret.
-  - Air Control Unit.
-  - Bear Trap.
-  - Industrial Fan.
-  - Tesla Shock.
-  - Glowing Gem.
+- Fixed some propeller volume stuff.
+- Fixed hand interaction.
+- Fixed some movement pathing issues.
+- Will do a more detailed fix update when i'm more available (weekend).
 
 ## v0.6.5
 
