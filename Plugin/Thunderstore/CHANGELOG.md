@@ -1,4 +1,11 @@
-# v0.6.5
+# v6.6
+
+- Fixed some propeller volume stuff.
+- Fixed hand interaction.
+- Fixed some movement pathing issues.
+- Will do a more detailed fix update when i'm more available (weekend).
+
+## v0.6.5
 
 - Updated the looks of the wooden crate.
 - Fixed some misc bugs with shockwave gal.

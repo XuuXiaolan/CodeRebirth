@@ -105,6 +105,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void Start()
     {
         Plugin.Logger.LogInfo("Hi creator");
+        FlySource.Play();
         galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         chargeCount = Plugin.ModConfig.ConfigShockwaveCharges.Value;
         maxChargeCount = chargeCount;
@@ -177,7 +178,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         ResetToChargerStation(State.Active, Emotion.OpenEye);
     }
 
-    void ResetToChargerStation(State state, Emotion emotion)
+    private void ResetToChargerStation(State state, Emotion emotion)
     {
         if (!IsServer) return;
         if (Agent.enabled) Agent.Warp(ShockwaveCharger.ChargeTransform.position);
@@ -210,18 +211,18 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void DropAllHeldItemsServerRpc()
+    private void DropAllHeldItemsServerRpc()
     {
         DropAllHeldItemsClientRpc();
     }
 
     [ClientRpc]
-    void DropAllHeldItemsClientRpc()
+    private void DropAllHeldItemsClientRpc()
     {
         DropAllHeldItems();
     }
 
-    void DropAllHeldItems()
+    private void DropAllHeldItems()
     {
         int heldItemCount = itemsHeldList.Count;
         Plugin.ExtendedLogging($"Items held: {heldItemCount}");
@@ -271,23 +272,20 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         catPosing = false;
     }
 
-    void InteractTriggersUpdate()
+    private void InteractTriggersUpdate()
     {
         bool interactable = galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         bool idleInteractable = galState != State.DeliveringItems && galState != State.AttackMode && interactable;
-        HeadPatTrigger.enabled = interactable;
         HeadPatTrigger.interactable = interactable;
-        ChestTrigger.enabled = idleInteractable && itemsHeldList.Count > 0;
         ChestTrigger.interactable = idleInteractable && itemsHeldList.Count > 0;
 
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.enabled = galState != State.AttackMode && interactable && ownerPlayer!.isHoldingObject;
-            trigger.interactable = idleInteractable && itemsHeldList.Count > 0;
+            trigger.interactable = idleInteractable && ownerPlayer!.currentlyHeldObjectServer != null;
         }
     }
 
-    void BoomboxUpdate()
+    private void BoomboxUpdate()
     {
         if (!boomboxPlaying) return;
 
@@ -299,12 +297,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    void StoppingDistanceUpdate()
+    private void StoppingDistanceUpdate()
     {
         Agent.stoppingDistance = galState == State.AttackMode ? 6f : 3f;
     }
 
-    void IdleUpdate()
+    private void IdleUpdate()
     {
         idleTimer += Time.deltaTime;
         if (idleTimer <= idleNeededTimer) return;
@@ -317,7 +315,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void Update()
     {
         if (galState == State.Inactive) return;
-        FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
+        if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         InteractTriggersUpdate();
         BoomboxUpdate();
@@ -364,34 +362,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private bool GoToChargerAndDeactivate()
     {
-        if (Agent.enabled)
+
+        DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false);
+        if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
-            if (isInside)
-            {
-                GoThroughEntrance(false);
-            }
-            else
-            {
-                if (DetermineIfNeedToDisableAgent(ShockwaveCharger.ChargeTransform.position))
-                {
-                    return false;
-                }
-                Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
-            }
-            if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
-            {
-                if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
-                {
-                    ShockwaveCharger.ActivateGirlServerRpc(-1);
-                    return true;
-                }
-            }
-        }
-        else
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(ShockwaveCharger.ChargeTransform.position - transform.position), Time.deltaTime * 5f);
-            transform.position = Vector3.MoveTowards(transform.position, ShockwaveCharger.ChargeTransform.position, Agent.speed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= 0.1f)
+            if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
             {
                 ShockwaveCharger.ActivateGirlServerRpc(-1);
                 return true;
@@ -477,50 +452,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
 
-        if (!Agent.enabled)
+        if (DoPathingToDestination(ownerPlayer.transform.position, ownerPlayer.isInsideFactory, true))
         {
-            Vector3 targetPosition = pointToGo;
-            float moveSpeed = 6f;  // Increased speed for a faster approach
-            float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
-            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-
-            // Calculate the new position in an arcing motion
-            float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
-            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveSpeed);
-            newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
-
-            transform.position = newPosition;
-            transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
-            if (Vector3.Distance(transform.position, targetPosition) <= 1f)
-            {
-                Animator.SetBool(attackModeAnimation, false);
-                Agent.enabled = true;
-            }
-            return;
-        }
-        if ((!isInside && ownerPlayer.isInsideFactory) || (isInside && !ownerPlayer.isInsideFactory))
-        {
-            GoThroughEntrance(true);
             return;
         }
 
         DoStaringAtOwner(ownerPlayer);
-
-        if (isInside && elevatorScript != null && !usingElevator)
-        {
-            bool galCloserToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
-            bool ownerCloserToTop = Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorBottomPoint.position);
-            if (galCloserToTop != ownerCloserToTop)
-            {
-                UseTheElevator(elevatorScript);
-                return;
-            }
-        }
-        bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(ownerPlayer.transform.position, elevatorScript.elevatorInsidePoint.position) < 3f;
-        if (!usingElevator && !playerIsInElevator && DetermineIfNeedToDisableAgent(ownerPlayer.transform.position))
-        {
-            return;
-        }
 
         if (itemsHeldList.Count >= maxItemsToHold)
         {
@@ -540,8 +477,56 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             DoBackFliplol();
             return;
         }
-        if (!usingElevator) Agent.SetDestination(ownerPlayer.transform.position);
-        else if (usingElevator && elevatorScript != null) transform.position = elevatorScript.elevatorInsidePoint.position;
+    }
+
+    private bool DoPathingToDestination(Vector3 destination, bool destinationIsInside, bool followingPlayer)
+    {
+        if (!Agent.enabled)
+        {
+            Vector3 targetPosition = pointToGo;
+            float moveSpeed = 6f;  // Increased speed for a faster approach
+            float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
+            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+
+            // Calculate the new position in an arcing motion
+            float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
+            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveSpeed);
+            newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
+
+            transform.position = newPosition;
+            transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
+            if (Vector3.Distance(transform.position, targetPosition) <= 1f)
+            {
+                Animator.SetBool(attackModeAnimation, false);
+                Agent.enabled = true;
+            }
+            return true;
+        }
+
+        if ((!isInside && destinationIsInside) || (isInside && !destinationIsInside))
+        {
+            GoThroughEntrance(followingPlayer);
+            return true;
+        }
+
+        if (isInside && elevatorScript != null && !usingElevator)
+        {
+            bool galCloserToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
+            bool destinationCloserToTop = Vector3.Distance(destination, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(destination, elevatorScript.elevatorBottomPoint.position);
+            if (galCloserToTop != destinationCloserToTop)
+            {
+                UseTheElevator(elevatorScript);
+                return true;
+            }
+        }
+        bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(destination, elevatorScript.elevatorInsidePoint.position) < 3f;
+        if (!usingElevator && !playerIsInElevator && DetermineIfNeedToDisableAgent(destination))
+        {
+            return true;
+        }
+        if (!usingElevator) Agent.SetDestination(destination);
+        if (usingElevator && elevatorScript != null) this.transform.position = elevatorScript.elevatorInsidePoint.position;
+        return false;
     }
 
     private void DoDeliveringItems()
@@ -558,24 +543,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             }
         }
 
-        if (!isInside)
+        DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false);
+        if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
-            if (DetermineIfNeedToDisableAgent(ShockwaveCharger.ChargeTransform.position))
+            if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
             {
-                return;
+                DropAllHeldItemsServerRpc();
             }
-            Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
-            if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
-            {
-                if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
-                {
-                    DropAllHeldItemsServerRpc();
-                }
-            }
-        }
-        else
-        {
-            GoThroughEntrance(false);
         }
     }
 
@@ -606,12 +580,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         if (!currentlyAttacking)
         {
-            if (isInside && targetEnemy.isOutside || !isInside && !targetEnemy.isOutside)
-            {
-                GoThroughEntrance(true);
-                return;
-            }
-            Agent.SetDestination(targetEnemy.transform.position);
+            DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside, true);
         }
         if (Vector3.Distance(transform.position, targetEnemy.transform.position) <= Agent.stoppingDistance || currentlyAttacking)
         {
@@ -890,12 +859,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         SetFlying(false);
     }
 
-    void SetFlying(bool flying)
+    private void SetFlying(bool flying)
     {
         this.flying = flying;
         backFlipping = flying;
-        if (flying) FlySource.UnPause();
-        else FlySource.Pause();
+        if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
+        else FlySource.volume = 0f;
     }
 
     private void AdjustSpeedOnDistanceOnTargetPosition()
@@ -1194,7 +1163,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
 
-        if (Vector3.Distance(transform.position, destination) <= 3f)
+        if (Vector3.Distance(transform.position, destination) <= Agent.stoppingDistance)
         {
             lastUsedEntranceTeleport = entranceTeleportToUse;
             Agent.Warp(destinationAfterTeleport);
@@ -1212,7 +1181,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         // Determine if the elevator is needed based on destination proximity and current position
         bool nearMainEntrance = Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < Vector3.Distance(destination, entranceTeleportToUse.transform.position);
         bool closerToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
-        return isInside && (nearMainEntrance && !closerToTop) || (!nearMainEntrance && closerToTop);
+        return isInside && ((nearMainEntrance && !closerToTop) || (!nearMainEntrance && closerToTop));
     }
 
     private void UseTheElevator(MineshaftElevatorController elevatorScript)
