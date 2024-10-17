@@ -1,4 +1,14 @@
-# v0.6.5
+# v1.0
+
+- Added 6 new hazards
+  - Flash Turret.
+  - Air Control Unit.
+  - Bear Trap.
+  - Industrial Fan.
+  - Tesla Shock.
+  - Glowing Gem.
+
+## v0.6.5
 
 - Updated the looks of the wooden crate.
 - Fixed some misc bugs with shockwave gal.

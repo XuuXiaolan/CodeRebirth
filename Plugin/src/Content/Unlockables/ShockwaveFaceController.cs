@@ -13,7 +13,6 @@ public class ShockwaveFaceController : MonoBehaviour
     public float GlitchFrequency = 2f;
     
     private float glitchTimer;
-    private bool isGlitching = false;
     private Coroutine? glitchCoroutine = null;
     private Coroutine? modeCoroutine = null;
     private System.Random controllerRandom = new System.Random();
@@ -47,6 +46,11 @@ public class ShockwaveFaceController : MonoBehaviour
 
     private void Update()
     {
+        GlitchUpdate();
+    }
+
+    private void GlitchUpdate()
+    {
         glitchTimer -= Time.deltaTime;
         if (glitchTimer <= 0)
         {
@@ -61,8 +65,6 @@ public class ShockwaveFaceController : MonoBehaviour
 
     private IEnumerator GlitchEffect()
     {
-        isGlitching = true;
-
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)ShockwaveGalAI.galEmotion, 0f);
 
         int glitchShapeKeyIndex = controllerRandom.NextInt(0, FaceSkinnedMeshRenderer.sharedMesh.blendShapeCount - 1);
@@ -74,7 +76,6 @@ public class ShockwaveFaceController : MonoBehaviour
         FaceSkinnedMeshRenderer.SetBlendShapeWeight(glitchShapeKeyIndex, 0f);
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)ShockwaveGalAI.galEmotion, 100f);
 
-        isGlitching = false;
         glitchCoroutine = null;
     }
 
