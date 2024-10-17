@@ -1,4 +1,13 @@
-# v0.6.4
+# v0.6.5
+
+- Updated the looks of the wooden crate.
+- Fixed some misc bugs with shockwave gal.
+  - Laser not doing as intended for clients.
+  - Triggers not disappearing when you dont meet conditions to use em.
+  - etc
+- Fixed a bug involving automatic config with the gal.
+
+## v0.6.4
 
 - Added propeller volume config lol.
 - Auto start on ship start config.

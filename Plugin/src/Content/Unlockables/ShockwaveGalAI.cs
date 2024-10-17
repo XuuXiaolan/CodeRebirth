@@ -25,7 +25,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public List<Transform> itemsHeldTransforms = new();
     public AnimationClip CatPoseAnim = null!;
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
-    [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
+    public ShockwaveCharger ShockwaveCharger = null!;
     public Collider[] colliders = [];
     public Transform LaserOrigin = null!;
     public AudioSource FlySource = null!;
@@ -110,7 +110,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         maxChargeCount = chargeCount;
         Agent.enabled = false;
         FlySource.Pause();
-        this.transform.SetParent(ShockwaveCharger.transform, true);
         List<string> enemyBlacklist = Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(',').ToList();
         foreach (string enemy in enemyBlacklist)
         {
@@ -151,6 +150,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         ownerPlayer = owner;
         GalVoice.PlayOneShot(ActivateSound);
         positionOfPlayerBeforeTeleport = owner.transform.position;
+        exitPoints = new();
         var exits = FindObjectsByType<EntranceTeleport>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
         foreach (var exit in exits)
         {
@@ -189,7 +189,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         ownerPlayer = null;
         GalVoice.PlayOneShot(DeactivateSound);
-        exitPoints.Clear();
         elevatorScript = null;
         depositItemsDesk = null;
         onCompanyMoon = false;
@@ -267,14 +266,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         if (galState == State.Inactive) return;
         FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
-        HeadPatTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
-        HeadPatTrigger.interactable = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
-        ChestTrigger.enabled = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
-        ChestTrigger.interactable = galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        HeadPatTrigger.enabled = galState != State.Inactive && ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
+        HeadPatTrigger.interactable = galState != State.Inactive && ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
+        ChestTrigger.enabled = galState != State.DeliveringItems && galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
+        ChestTrigger.interactable = galState != State.DeliveringItems && galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
 
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.enabled = galState != State.AttackMode && galState != State.Inactive && (ownerPlayer != null && ownerPlayer.isHoldingObject && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+            trigger.enabled = galState != State.AttackMode && galState != State.Inactive && ownerPlayer != null && ownerPlayer.isHoldingObject && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
+            trigger.interactable = galState != State.DeliveringItems && galState != State.AttackMode && galState != State.Inactive && itemsHeldList.Count > 0 && ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
         }
         if (boomboxPlaying)
         {
