@@ -25,8 +25,9 @@ public class LaserShockBlast : NetworkBehaviour
     [NonSerialized] public Transform laserOrigin = null!; // Origin point of the laser beam
     private ParticleSystem impactEffect = null!; // Particle effect at the impact point
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         hitLayers = LayerMask.GetMask("Player", "Enemies") | StartOfRound.Instance.collidersAndRoomMaskAndDefault;
         impactEffect = ImpactEffectGameObject.GetComponent<ParticleSystem>();
         if (IsServer)
@@ -46,35 +47,18 @@ public class LaserShockBlast : NetworkBehaviour
         bool hitSomething = false;
         foreach (var raycastHit in raycastHits)
         {
-            Transform? parent = TryFindRoot(raycastHit.collider.transform);
-            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemyAI) && enemyAI != null)
-            {
-                // Handle hit on the server
-                HandleHit(null, enemyAI);
-                // Send hit info to clients for visual effects
-                FireLaserClientRpc(raycastHit.point, laserOrigin.position);
-                hitSomething = true;
-                break;
-            }
-            if (raycastHit.collider.gameObject.TryGetComponent<PlayerControllerB>(out var player) && player != null)
-            {
-                // Handle hit on the server
-                HandleHit(player, null);
-                // Send hit info to clients for visual effects
-                FireLaserClientRpc(raycastHit.point, laserOrigin.position);
-                hitSomething = true;
-                break;
-            }
+            bool hit = HandleHit(raycastHit);
 
             // Send hit info to clients for visual effects
             FireLaserClientRpc(raycastHit.point, laserOrigin.position);
             hitSomething = true;
+            if (hit) break;
         }
 
         if (!hitSomething)
         {
             // No hit detected, send laser to maximum range
-            FireLaserClientRpc(origin + direction * LaserRange, laserOrigin.position);
+            FireLaserClientRpc(origin + (direction * LaserRange), laserOrigin.position);
         }
 
         // Wait for the laser duration
@@ -118,22 +102,28 @@ public class LaserShockBlast : NetworkBehaviour
         }
     }
 
-    private void HandleHit(PlayerControllerB? player, EnemyAI? enemyAI)
+    bool HandleEnemyHit(RaycastHit raycastHit)
     {
-        // Check if the hit object is an enemy
-        if (enemyAI != null)
+        Transform? parent = TryFindRoot(raycastHit.collider.transform);
+        if (parent == null || !parent.TryGetComponent(out EnemyAI enemyAI) || enemyAI == null) return false;
+
+        KillEnemyFromOwnerClientRpc(new NetworkObjectReference(enemyAI.gameObject.GetComponent<NetworkObject>()));
+        return true;
+    }
+    bool HandlePlayerHit(RaycastHit raycastHit)
+    {
+        if (!raycastHit.collider.gameObject.TryGetComponent(out PlayerControllerB player) || player == null) return false;
+
+        int damageAmount = player.health - 1;
+        if (damageAmount > 0)
         {
-            KillEnemyFromOwnerClientRpc(new NetworkObjectReference(enemyAI.gameObject.GetComponent<NetworkObject>()));
+            player.DamagePlayer(damageAmount, true, true);
         }
-        // Check if the hit object is a player
-        if (player != null)
-        {
-            int damageAmount = player.health - 1;
-            if (damageAmount > 0)
-            {
-                player.DamagePlayer(damageAmount, true, true);
-            }
-        }
+        return true;
+    }
+    private bool HandleHit(RaycastHit raycastHit)
+    {
+        return HandleEnemyHit(raycastHit) || HandlePlayerHit(raycastHit);
     }
 
     [ClientRpc]
@@ -146,14 +136,10 @@ public class LaserShockBlast : NetworkBehaviour
     public static Transform? TryFindRoot(Transform child)
     {
         Transform current = child;
-        while (current != null)
+        while (current != null && current.GetComponent<NetworkObject>() == null)
         {
-            if (current.GetComponent<NetworkObject>() != null)
-            {
-                return current;
-            }
             current = current.transform.parent;
         }
-        return null;
+        return current;
     }
 }

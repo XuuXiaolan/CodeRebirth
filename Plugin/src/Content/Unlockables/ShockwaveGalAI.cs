@@ -400,28 +400,26 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         return false;
     }
 
+    const float STARE_DOT_THRESHOLD = 0.8f;
+    const float STARE_ROTATION_SPEED = 2f;
     private void DoStaringAtOwner(PlayerControllerB ownerPlayer)
     {
-        // Check if owner is staring
         Vector3 directionToDrone = (DroneHead.position - ownerPlayer.gameplayCamera.transform.position).normalized;
         float dotProduct = Vector3.Dot(ownerPlayer.gameplayCamera.transform.forward, directionToDrone);
 
-        if (dotProduct > 0.8f) // Owner is staring at the drone (adjust threshold as needed)
+        if (dotProduct <= STARE_DOT_THRESHOLD) // Not staring
         {
-            staringTimer += Time.deltaTime;
-            if (staringTimer >= stareThreshold)
-            {
-                // Gradually rotate to face the owner
-                Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
-                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f); // Adjust rotation speed as needed
-                if (staringTimer >= stareThreshold + 1.5f)
-                {
-                    staringTimer = 0f;
-                }
-            }
+            staringTimer = 0f;
+            return;
         }
-        else
+
+        staringTimer += Time.deltaTime;
+        if (staringTimer < stareThreshold) return;
+
+        Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * STARE_ROTATION_SPEED);
+        if (staringTimer >= stareThreshold + 1.5f)
         {
             staringTimer = 0f;
         }
@@ -543,7 +541,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
         if (!usingElevator) Agent.SetDestination(ownerPlayer.transform.position);
-        else if (usingElevator && elevatorScript != null) this.transform.position = elevatorScript.elevatorInsidePoint.position;
+        else if (usingElevator && elevatorScript != null) transform.position = elevatorScript.elevatorInsidePoint.position;
     }
 
     private void DoDeliveringItems()
@@ -567,7 +565,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 return;
             }
             Agent.SetDestination(ShockwaveCharger.ChargeTransform.position);
-            if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
+            if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
             {
                 if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
                 {
