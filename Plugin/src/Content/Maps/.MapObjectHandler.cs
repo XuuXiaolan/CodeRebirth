@@ -19,7 +19,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class CrateAssets(string bundleName) : AssetBundleLoader<CrateAssets>(bundleName)
 	{
-		[LoadFromBundle("Crate")]
+		[LoadFromBundle("Wooden Crate")]
 		public GameObject WoodenCratePrefab { get; private set; } = null!;
 		
 		[LoadFromBundle("Metal Crate")]

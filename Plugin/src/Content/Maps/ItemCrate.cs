@@ -46,8 +46,8 @@ public class ItemCrate : CRHittable {
 		pickable = GetComponent<Pickable>();
 		animator = GetComponent<Animator>();
 
-		health = new(Plugin.ModConfig.ConfigMetalHitNumber.Value); // todo: make this variable.
-		trigger.timeToHold = Plugin.ModConfig.ConfigWoodenOpenTimer.Value; // todo: make this variable.
+		health = new(Plugin.ModConfig.ConfigMetalHitNumber.Value);
+		trigger.timeToHold = Plugin.ModConfig.ConfigWoodenOpenTimer.Value;
 		trigger.onInteractEarly.AddListener(OnInteractEarly);
 		trigger.onInteract.AddListener(OnInteract);
 		trigger.onStopInteract.AddListener(OnInteractCancel);
