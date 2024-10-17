@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch {
-	static Random? random;
+	static System.Random? random;
 	
 	public static void Init() {
 		On.Shovel.HitShovel += Shovel_HitShovel;
@@ -26,7 +26,7 @@ static class ShovelPatch {
 
     static void PreHitShovel(ref Shovel self)
     {
-        random ??= new Random(StartOfRound.Instance.randomMapSeed + 85);
+        random ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
         TryCritWeapon(ref self);
         TryHealNatureMace(ref self);
     }
