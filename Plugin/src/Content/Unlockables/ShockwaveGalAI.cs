@@ -151,7 +151,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         ownerPlayer = owner;
         GalVoice.PlayOneShot(ActivateSound);
         positionOfPlayerBeforeTeleport = owner.transform.position;
-        var exits = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);
+        var exits = FindObjectsByType<EntranceTeleport>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
         foreach (var exit in exits)
         {
             exitPoints.Add(exit, [exit.entrancePoint, exit.exitPoint]);
