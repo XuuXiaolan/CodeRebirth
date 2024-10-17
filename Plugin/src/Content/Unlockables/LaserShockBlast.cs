@@ -52,7 +52,7 @@ public class LaserShockBlast : NetworkBehaviour
                 // Handle hit on the server
                 HandleHit(null, enemyAI);
                 // Send hit info to clients for visual effects
-                FireLaserClientRpc(raycastHit.point);
+                FireLaserClientRpc(raycastHit.point, laserOrigin.position);
                 hitSomething = true;
                 break;
             }
@@ -61,20 +61,20 @@ public class LaserShockBlast : NetworkBehaviour
                 // Handle hit on the server
                 HandleHit(player, null);
                 // Send hit info to clients for visual effects
-                FireLaserClientRpc(raycastHit.point);
+                FireLaserClientRpc(raycastHit.point, laserOrigin.position);
                 hitSomething = true;
                 break;
             }
 
             // Send hit info to clients for visual effects
-            FireLaserClientRpc(raycastHit.point);
+            FireLaserClientRpc(raycastHit.point, laserOrigin.position);
             hitSomething = true;
         }
 
         if (!hitSomething)
         {
             // No hit detected, send laser to maximum range
-            FireLaserClientRpc(origin + direction * LaserRange);
+            FireLaserClientRpc(origin + direction * LaserRange, laserOrigin.position);
         }
 
         // Wait for the laser duration
@@ -85,14 +85,14 @@ public class LaserShockBlast : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void FireLaserClientRpc(Vector3 hitPoint)
+    private void FireLaserClientRpc(Vector3 hitPoint, Vector3 laserOrigin)
     {
         // Visual effects for clients
         if (LineRenderer != null)
         {
-            AudioSource.gameObject.transform.position = laserOrigin.position;
+            AudioSource.gameObject.transform.position = laserOrigin;
             AudioSource.PlayOneShot(LaserSound);
-            LineRenderer.SetPosition(0, laserOrigin.position);
+            LineRenderer.SetPosition(0, laserOrigin);
             LineRenderer.SetPosition(1, hitPoint);
         }
 

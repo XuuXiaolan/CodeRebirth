@@ -25,7 +25,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public List<Transform> itemsHeldTransforms = new();
     public AnimationClip CatPoseAnim = null!;
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
-    [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
+    public ShockwaveCharger ShockwaveCharger = null!;
     public Collider[] colliders = [];
     public Transform LaserOrigin = null!;
     public AudioSource FlySource = null!;
@@ -110,7 +110,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         maxChargeCount = chargeCount;
         Agent.enabled = false;
         FlySource.Pause();
-        transform.SetParent(ShockwaveCharger.transform, true);
         foreach (string enemy in Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(','))
         {
             enemyTargetBlacklist.Add(enemy.Trim());
@@ -150,6 +149,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         ownerPlayer = owner;
         GalVoice.PlayOneShot(ActivateSound);
         positionOfPlayerBeforeTeleport = owner.transform.position;
+        exitPoints = new();
         foreach (var exit in FindObjectsByType<EntranceTeleport>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID))
         {
             exitPoints.Add(exit, [exit.entrancePoint, exit.exitPoint]);
@@ -190,7 +190,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         ownerPlayer = null;
         GalVoice.PlayOneShot(DeactivateSound);
-        exitPoints.Clear();
         elevatorScript = null;
         depositItemsDesk = null;
         onCompanyMoon = false;
@@ -274,15 +273,17 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     void InteractTriggersUpdate()
     {
-        bool interactable = galState != State.AttackMode && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        bool interactable = galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        bool idleInteractable = galState != State.DeliveringItems && galState != State.AttackMode && interactable;
         HeadPatTrigger.enabled = interactable;
         HeadPatTrigger.interactable = interactable;
-        ChestTrigger.enabled = interactable && itemsHeldList.Count > 0;
-        ChestTrigger.interactable = interactable && itemsHeldList.Count > 0;
+        ChestTrigger.enabled = idleInteractable && itemsHeldList.Count > 0;
+        ChestTrigger.interactable = idleInteractable && itemsHeldList.Count > 0;
 
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.enabled = interactable && ownerPlayer!.isHoldingObject;
+            trigger.enabled = galState != State.AttackMode && interactable && ownerPlayer!.isHoldingObject;
+            trigger.interactable = idleInteractable && itemsHeldList.Count > 0;
         }
     }
 

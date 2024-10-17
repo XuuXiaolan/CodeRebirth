@@ -125,7 +125,7 @@ public class ItemCrate : CRHittable {
 
 	public void Open()
 	{
-		if(opened) return;
+		if (opened) return;
 		if (!IsHost) OpenCrateServerRPC();
 		else OpenCrate();
 	}
