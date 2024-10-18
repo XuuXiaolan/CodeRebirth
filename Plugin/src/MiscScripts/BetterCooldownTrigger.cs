@@ -236,7 +236,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
         }
         if (triggerForEnemies)
         {
-            Transform? parent = TryFindRoot(other.transform);
+            Transform? parent = CRUtilities.TryFindRoot(other.transform);
             if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead && !(enemyMainScript != null && (enemy == enemyMainScript || enemyMainScript is RedwoodTitanAI redwoodTitanAI && enemy == redwoodTitanAI.targetEnemy)))
             {
                 if (!enemyCoroutineStatus.ContainsKey(enemy))
@@ -264,7 +264,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
         }
         if (triggerForEnemies)
         {
-            Transform? parent = TryFindRoot(other.transform);
+            Transform? parent = CRUtilities.TryFindRoot(other.transform);
             if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy))
             {
                 enemyCoroutineStatus[enemy] = false;
@@ -518,19 +518,5 @@ public class BetterCooldownTrigger : NetworkBehaviour
         playerClosestAudioSources.Clear();
         enemyClosestAudioSources.Clear();
         StartOfRound.Instance.playerTeleportedEvent.RemoveListener(new UnityAction<PlayerControllerB>(this.RemovePlayerFromList));
-    }
-
-    public static Transform? TryFindRoot(Transform child)
-    {
-        Transform current = child;
-        while (current != null)
-        {
-            if (current.GetComponent<NetworkObject>() != null)
-            {
-                return current;
-            }
-            current = current.transform.parent;
-        }
-        return null;
     }
 }

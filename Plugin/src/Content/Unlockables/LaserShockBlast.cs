@@ -102,7 +102,7 @@ public class LaserShockBlast : NetworkBehaviour
 
     private bool HandleEnemyHit(RaycastHit raycastHit)
     {
-        Transform? parent = TryFindRoot(raycastHit.collider.transform);
+        Transform? parent = CRUtilities.TryFindRoot(raycastHit.collider.transform);
         if (parent == null || !parent.TryGetComponent(out EnemyAI enemyAI) || enemyAI == null) return false;
 
         KillEnemyFromOwnerClientRpc(new NetworkObjectReference(enemyAI.gameObject.GetComponent<NetworkObject>()));
@@ -140,15 +140,5 @@ public class LaserShockBlast : NetworkBehaviour
     {
         EnemyAI enemyAI = ((GameObject)networkObjectReference).GetComponent<EnemyAI>();
         enemyAI.KillEnemyOnOwnerClient();
-    }
-
-    public static Transform? TryFindRoot(Transform child)
-    {
-        Transform current = child;
-        while (current != null && current.GetComponent<NetworkObject>() == null)
-        {
-            current = current.transform.parent;
-        }
-        return current;
     }
 }
