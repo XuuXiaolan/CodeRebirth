@@ -65,6 +65,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private float idleTimer = 0f;
     private bool backFlipping = false;
     private Vector3 pointToGo = Vector3.zero;
+    private Coroutine? headPatCoroutine = null;
     [NonSerialized] public Vector3 positionOfPlayerBeforeTeleport = Vector3.zero;
     private EntranceTeleport lastUsedEntranceTeleport = null!;
     private Dictionary<EntranceTeleport, Transform[]> exitPoints = new();
@@ -206,8 +207,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private void OnHeadInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
-        if (UnityEngine.Random.Range(0f, 1f) < 0.9f || catPosing) StartPetAnimationServerRpc();
-        else StartCatPoseAnimationServerRpc();
+        if ((UnityEngine.Random.Range(0f, 1f) < 0.9f || catPosing) && headPatCoroutine != null) StartPetAnimationServerRpc();
+        else if (!catPosing) StartCatPoseAnimationServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -243,7 +244,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     [ClientRpc]
     private void PlayPatSoundClientRpc()
     {
-        StartCoroutine(SetFaceToHearts());
+        headPatCoroutine = StartCoroutine(SetFaceToHearts());
         GalVoice.PlayOneShot(PatSound);
     }
 
@@ -254,6 +255,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         yield return new WaitForSeconds(PatSound.length);
         if (currentState != galState) yield break;
         RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
+        headPatCoroutine = null;
     }
 
     [ServerRpc(RequireOwnership = false)]

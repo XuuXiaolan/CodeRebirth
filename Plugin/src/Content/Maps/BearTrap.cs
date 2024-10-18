@@ -35,13 +35,11 @@ public class BearTrap : NetworkBehaviour
             retriggerTimer += Time.deltaTime;
             if (retriggerTimer >= 5)
             {
-
                 playerCaught?.DamagePlayer(20, true, true, CauseOfDeath.Crushing, 0, false, default);
                 enemyCaught?.HitEnemyClientRpc(1, -1, true, -1);
-                retriggerTimer = 0;
+                retriggerTimer = -0.5f;
                 ReleaseTrap();
-                if (playerCaught != null) TriggerPlayerTrapClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerCaught));
-                if (enemyCaught != null) TriggerEnemyTrapClientRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemyCaught));
+                StartCoroutine(RetriggerForEnemyAndPlayer());
             }
         }
         if (enemyCaught != null)
@@ -54,6 +52,13 @@ public class BearTrap : NetworkBehaviour
                 ReleaseTrap();
             }
         }
+    }
+
+    private IEnumerator RetriggerForEnemyAndPlayer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (playerCaught != null) TriggerPlayerTrapClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerCaught));
+        if (enemyCaught != null) TriggerEnemyTrapClientRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemyCaught));
     }
 
     private void OnTriggerEnter(Collider other)
