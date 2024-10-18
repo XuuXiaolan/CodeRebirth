@@ -254,7 +254,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         yield return new WaitForSeconds(PatSound.length);
         if (currentState != galState) yield break;
         RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
-
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -280,7 +279,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.interactable = interactable && idleInteractable && ownerPlayer!.currentlyHeldObjectServer != null;
+            trigger.interactable = idleInteractable && ownerPlayer!.currentlyHeldObjectServer != null;
         }
     }
 
@@ -374,29 +373,27 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         return false;
     }
 
+    const float STARE_DOT_THRESHOLD = 0.8f;
+    const float STARE_ROTATION_SPEED = 2f;
     private void DoStaringAtOwner(PlayerControllerB ownerPlayer)
     {
-        // Check if owner is staring
         Vector3 directionToDrone = (DroneHead.position - ownerPlayer.gameplayCamera.transform.position).normalized;
         float dotProduct = Vector3.Dot(ownerPlayer.gameplayCamera.transform.forward, directionToDrone);
 
-        if (dotProduct > 0.8f) // Owner is staring at the drone (adjust threshold as needed)
+        if (dotProduct <= STARE_DOT_THRESHOLD) // Not staring
         {
-            staringTimer += Time.deltaTime;
-            if (staringTimer >= stareThreshold)
-            {
-                // Gradually rotate to face the owner
-                Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
-                lookDirection.y = 0f;
-                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f); // Adjust rotation speed as needed
-                if (targetRotation == transform.rotation)
-                {
-                    staringTimer = 0f;
-                }
-            }
+            staringTimer = 0f;
+            return;
         }
-        else
+
+        staringTimer += Time.deltaTime;
+        if (staringTimer < stareThreshold) return;
+
+        Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
+        lookDirection.y = 0f;
+        Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * STARE_ROTATION_SPEED);
+        if (staringTimer >= stareThreshold + 1.5f || targetRotation == transform.rotation)
         {
             staringTimer = 0f;
         }
