@@ -1,4 +1,11 @@
-# v6.6
+# v0.6.7
+
+- Trying the 3rd time to fix the propeller sounds.
+- Fixed gal staring at player causing weird rotation.
+- Fixed her following enemy too much before attacking.
+- Changed some texts around.
+
+## v0.6.6
 
 - Fixed some propeller volume stuff.
 - Fixed hand interaction.

@@ -110,7 +110,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         chargeCount = Plugin.ModConfig.ConfigShockwaveCharges.Value;
         maxChargeCount = chargeCount;
         Agent.enabled = false;
-        FlySource.Pause();
+        FlySource.volume = 0f;
         foreach (string enemy in Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(','))
         {
             enemyTargetBlacklist.Add(enemy.Trim());
@@ -250,11 +250,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private IEnumerator SetFaceToHearts()
     {
         var currentState = galState;
-        var currentEmotion = galEmotion;
         RobotFaceController.SetFaceState(Emotion.Heart, 100);
         yield return new WaitForSeconds(PatSound.length);
         if (currentState != galState) yield break;
-        RobotFaceController.SetFaceState(currentEmotion, 100);
+        RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
 
     }
 
@@ -388,9 +387,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             {
                 // Gradually rotate to face the owner
                 Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
+                lookDirection.y = 0f;
                 Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f); // Adjust rotation speed as needed
-                if (staringTimer >= stareThreshold + 1.5f)
+                if (targetRotation == transform.rotation)
                 {
                     staringTimer = 0f;
                 }
@@ -584,7 +584,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside, true);
         }
-        if (Vector3.Distance(transform.position, targetEnemy.transform.position) <= Agent.stoppingDistance || currentlyAttacking)
+        if (Vector3.Distance(transform.position, targetEnemy.transform.position) <= (Agent.stoppingDistance + 5f) || currentlyAttacking)
         {
             Vector3 targetPosition = targetEnemy.transform.position;
             Vector3 direction = (targetPosition - this.transform.position).normalized;
