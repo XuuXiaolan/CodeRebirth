@@ -236,9 +236,9 @@ public class ItemCrate : CRHittable {
 		string[] blackListedScrap = [];
 		blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
 		List<Item> acceptableItems = new();
-		foreach (Item? item in ShopItemList)
+		foreach (Item item in ShopItemList)
 		{
-			if (blackListedScrap.Contains(item.itemName.ToLowerInvariant()))
+			if (!blackListedScrap.Contains(item.itemName.ToLowerInvariant()))
 			{
 				acceptableItems.Add(item);
 			}

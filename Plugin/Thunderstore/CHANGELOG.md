@@ -1,4 +1,8 @@
-# v0.6.7
+# v0.6.8
+
+- Forgot to make metal crate whitelist into a blacklist.
+
+## v0.6.7
 
 - Trying the 3rd time to fix the propeller sounds.
 - Fixed gal staring at player causing weird rotation.
