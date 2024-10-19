@@ -24,6 +24,30 @@ static class RoundManagerPatch {
 		if (!RoundManager.Instance.IsHost) return;
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) SpawnCrates();
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value) SpawnRandomBiomes();
+		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value) SpawnBearTrap();
+	}
+
+	private static void SpawnBearTrap()
+	{
+		Plugin.ExtendedLogging("Spawning bear trap!!!");
+		System.Random random = new();
+		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigBearTrapAbundance.Value, 0, 1000)); i++)
+		{
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
+
+			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+
+			if (hit.collider != null) // Check to make sure we hit something
+			{
+				GameObject beartrap = MapObjectHandler.Instance.BearTrap.BearTrapPrefab;
+
+				GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
+				spawnedTrap.transform.up = hit.normal;
+				spawnedTrap.GetComponent<NetworkObject>().Spawn();
+			}
+		}
 	}
 
 	private static void SpawnFlora()
@@ -216,7 +240,7 @@ static class RoundManagerPatch {
 	private static void SpawnCrates()
 	{
 		Plugin.ExtendedLogging("Spawning crates!!!");
-		System.Random random = new ();
+		System.Random random = new();
 		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigWoodenCrateAbundance.Value, 0, 1000)); i++)
 		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
@@ -257,7 +281,7 @@ static class RoundManagerPatch {
 	private static void SpawnRandomBiomes()
 	{
 		Plugin.ExtendedLogging("Spawning Biome/s!!!");
-		System.Random random = new(StartOfRound.Instance.randomMapSeed);
+		System.Random random = new();
 		if (random.NextFloat(0f, 1f) <= Plugin.ModConfig.ConfigBiomesSpawnChance.Value) return;
 		int minValue = 1;
 		for (int i = 0; i < random.NextInt(minValue, 1); i++)

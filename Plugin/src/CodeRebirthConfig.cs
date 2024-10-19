@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
+using LobbyCompatibility.Configuration;
 
 namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigGlowingGemEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigFlashTurretEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigIndustrialFanEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigTeslaShockEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigAirControlUnitEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDangerousFloraEnabled { get; private set; }
@@ -44,6 +51,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
     public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
+    public ConfigEntry<int> ConfigBearTrapAbundance { get; private set; }
     public ConfigEntry<int> ConfigMetalCrateAbundance { get; private set; }
     public ConfigEntry<int> ConfigWoodenCrateAbundance { get; private set; }
     public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
@@ -131,6 +139,46 @@ public class CodeRebirthConfig
     public CodeRebirthConfig(ConfigFile configFile)
     {
         configFile.SaveOnConfigSet = false;
+        #region Bear Trap
+        ConfigBearTrapEnabled = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Enabled",
+                                            true,
+                                            "Whether the bear trap is enabled.");
+        ConfigBearTrapAbundance = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Abundance",
+                                            5,
+                                            "The number of bear traps to spawn per round.");
+        #endregion
+        #region Glowing Gem
+        ConfigGlowingGemEnabled = configFile.Bind("Glowing Gem Options",
+                                            "Glowing Gem | Enabled",
+                                            true,
+                                            "Whether the glowing gem is enabled.");
+        #endregion
+        #region Flash Turret
+        ConfigFlashTurretEnabled = configFile.Bind("Flash Turret Options",
+                                            "Flash Turret | Enabled",
+                                            true,
+                                            "Whether the flash turret is enabled.");
+        #endregion
+        #region Industrial Fan
+        ConfigIndustrialFanEnabled = configFile.Bind("Industrial Fan Options",
+                                            "Industrial Fan | Enabled",
+                                            true,
+                                            "Whether the industrial fan is enabled.");
+        #endregion
+        #region Tesla Shock
+        ConfigTeslaShockEnabled = configFile.Bind("Tesla Shock Options",
+                                            "Tesla Shock | Enabled",
+                                            true,
+                                            "Whether the tesla shock is enabled.");
+        #endregion
+        #region Air Control Unit
+        ConfigAirControlUnitEnabled = configFile.Bind("Air Control Unit Options",
+                                            "Air Control Unit | Enabled",
+                                            true,
+                                            "Whether the air control unit is enabled.");
+        #endregion
         #region General
         ConfigEnableExtendedLogging = configFile.Bind("General",
                                             "Enable Extended Logging",

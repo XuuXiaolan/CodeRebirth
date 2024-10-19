@@ -38,10 +38,17 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public GameObject BiomePrefab { get; private set; } = null!;
 	}
 
+	public class BearTrapAssets(string bundleName) : AssetBundleLoader<BearTrapAssets>(bundleName)
+	{
+		[LoadFromBundle("BearTrap.prefab")]
+		public GameObject BearTrapPrefab { get; private set; } = null!;
+	}
+
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
 	public BiomeAssets Biome { get; private set; } = null!;
+	public BearTrapAssets BearTrap { get; private set; } = null!;
 
 	public static Dictionary<string, GameObject> DevilDealPrefabs = new();
 
@@ -51,13 +58,17 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
 			Crate = new CrateAssets("crateassets");
 
-		if (Plugin.ModConfig.ConfigFloraEnabled.Value) RegisterOutsideFlora();
+		if (Plugin.ModConfig.ConfigFloraEnabled.Value)
+			RegisterOutsideFlora();
 
-		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
+		if (Plugin.ModConfig.ConfigMoneyEnabled.Value)
+			RegisterInsideMoney();
 
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
 			Biome = new BiomeAssets("biomeassets");
 
+		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
+			BearTrap = new BearTrapAssets("beartrapassets");
 	}
 
 	public void RegisterInsideMoney()
