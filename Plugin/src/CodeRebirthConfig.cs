@@ -9,7 +9,7 @@ public class CodeRebirthConfig
 {
     #region Enables/Disables
     public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigGlowingGemEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigLaserTurretEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFlashTurretEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIndustrialFanEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTeslaShockEnabled { get; private set; }
@@ -54,6 +54,7 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigBearTrapAbundance { get; private set; }
     public ConfigEntry<int> ConfigMetalCrateAbundance { get; private set; }
     public ConfigEntry<int> ConfigWoodenCrateAbundance { get; private set; }
+    public ConfigEntry<int> ConfigLaserTurretAbundance { get; private set; }
     public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
@@ -149,32 +150,36 @@ public class CodeRebirthConfig
                                             5,
                                             "The number of bear traps to spawn per round.");
         #endregion
-        #region Glowing Gem
-        ConfigGlowingGemEnabled = configFile.Bind("Glowing Gem Options",
-                                            "Glowing Gem | Enabled",
+        #region Laser Turret
+        ConfigLaserTurretEnabled = configFile.Bind("LaserTurret Options",
+                                            "Laser Turret | Enabled",
                                             true,
-                                            "Whether the glowing gem is enabled.");
+                                            "Whether the Laser Turret is enabled.");
+        ConfigLaserTurretAbundance = configFile.Bind("LaserTurret Options",
+                                            "Laser Turret | Abundance",
+                                            5,
+                                            "The number of Laser Turrets to spawn per round.");
         #endregion
         #region Flash Turret
-        ConfigFlashTurretEnabled = configFile.Bind("Flash Turret Options",
+        ConfigFlashTurretEnabled = configFile.Bind("FlashTurret Options",
                                             "Flash Turret | Enabled",
                                             true,
                                             "Whether the flash turret is enabled.");
         #endregion
         #region Industrial Fan
-        ConfigIndustrialFanEnabled = configFile.Bind("Industrial Fan Options",
+        ConfigIndustrialFanEnabled = configFile.Bind("IndustrialFan Options",
                                             "Industrial Fan | Enabled",
                                             true,
                                             "Whether the industrial fan is enabled.");
         #endregion
         #region Tesla Shock
-        ConfigTeslaShockEnabled = configFile.Bind("Tesla Shock Options",
+        ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
                                             "Tesla Shock | Enabled",
                                             true,
                                             "Whether the tesla shock is enabled.");
         #endregion
         #region Air Control Unit
-        ConfigAirControlUnitEnabled = configFile.Bind("Air Control Unit Options",
+        ConfigAirControlUnitEnabled = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | Enabled",
                                             true,
                                             "Whether the air control unit is enabled.");

@@ -23,11 +23,6 @@ public class BearTrap : NetworkBehaviour
     private bool canTrigger = true;
     private float retriggerTimer = 0f;
 
-    private void Start()
-    {
-        // todo: make an interact trigger in unity that subscribes to ReleaseTrap()
-    }
-
     private void Update()
     {
         trapTrigger.interactable = isTriggered;

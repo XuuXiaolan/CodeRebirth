@@ -44,11 +44,17 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public GameObject BearTrapPrefab { get; private set; } = null!;
 	}
 
+	public class GlowingGemAssets(string bundleName) : AssetBundleLoader<GlowingGemAssets>(bundleName)
+	{
+		[LoadFromBundle("LaserTurret.prefab")]
+		public GameObject LaserTurretPrefab { get; private set; } = null!;
+	}
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
 	public BiomeAssets Biome { get; private set; } = null!;
 	public BearTrapAssets BearTrap { get; private set; } = null!;
+	public GlowingGemAssets GlowingGem { get; private set; } = null!;
 
 	public static Dictionary<string, GameObject> DevilDealPrefabs = new();
 
@@ -69,6 +75,20 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
 			BearTrap = new BearTrapAssets("beartrapassets");
+
+		if (Plugin.ModConfig.ConfigLaserTurretEnabled.Value)
+			RegisterLaserTurret();
+	}
+
+	public void RegisterLaserTurret()
+	{
+		GlowingGem = new GlowingGemAssets("glowinggemassets");
+		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
+		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
+		mapObjDefBug.spawnableMapObject.prefabToSpawn = GlowingGem.LaserTurretPrefab;
+		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
+			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigLaserTurretAbundance.Value, 0, 1000)))
+		);
 	}
 
 	public void RegisterInsideMoney()
