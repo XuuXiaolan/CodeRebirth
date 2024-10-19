@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class LaserTurret : NetworkBehaviour
     public float rotationSpeed = 45f;
     public float laserRange = 50f;
     public float laserDamage = 1f;
-    public float laserThickness = 0.5f;
+    public float laserThickness = 0.3f;
     public ParticleSystem ashParticle = null!;
 
     private bool isFiring = false;
@@ -20,10 +21,8 @@ public class LaserTurret : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsServer) return;
-
         // Rotate the turret
-        turretTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+        if (IsServer) turretTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 
         // Fire laser continuously
         FireLaser();
@@ -49,13 +48,13 @@ public class LaserTurret : NetworkBehaviour
                 damageTimer -= Time.deltaTime;
                 if (damageTimer <= 0f)
                 {
-                    if (player.health > laserDamage) player.DamagePlayer((int)laserDamage, true, true, CauseOfDeath.Burning, 0, false, default);
+                    if (player.health > laserDamage) player.DamagePlayer((int)laserDamage, true, false, CauseOfDeath.Burning, 0, false, default);
                     else player.KillPlayer(default, false, CauseOfDeath.Burning, 0, default);
                     damageTimer = 0.1f;
 
                     if (player.isPlayerDead)
                     {
-                        SpawnAshParticleClientRpc(player.transform.position);
+                        SpawnAshParticle(player.transform.position);
                     }
                 }
             }
@@ -70,8 +69,7 @@ public class LaserTurret : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    private void SpawnAshParticleClientRpc(Vector3 position)
+    private void SpawnAshParticle(Vector3 position)
     {
         Instantiate(ashParticle, position, Quaternion.identity).Play();
     }
