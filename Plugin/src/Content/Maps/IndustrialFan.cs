@@ -1,7 +1,6 @@
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
 public class IndustrialFan : NetworkBehaviour
@@ -10,31 +9,13 @@ public class IndustrialFan : NetworkBehaviour
     public float rotationSpeed = 45f;
     public float pushForce = 15f;
     public float suctionForce = 15f;
-    public VisualEffect windForwardEffect = null!;
-    public VisualEffect windBackwardEffect = null!;
     public ParticleSystem redMistEffect = null!;
-
-    private void Start()
-    {
-        windForwardEffect.Play();
-        windBackwardEffect.Play();
-    }
 
     private void Update()
     {
+        if (!IsServer) return;
         // Rotate the fan continuously
-        float frontDistance = GetDistanceToWall(fanTransform.forward);
-        float backDistance = GetDistanceToWall(-fanTransform.forward);
         fanTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-    }
-
-    private float GetDistanceToWall(Vector3 direction)
-    {
-        if (Physics.Raycast(fanTransform.position, direction, out RaycastHit hit, 50f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
-        {
-            return hit.distance;
-        }
-        return 50f;
     }
 
     private void OnTriggerEnter(Collider other)
