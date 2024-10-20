@@ -6,6 +6,7 @@ namespace CodeRebirth.src.Content.Maps;
 public class IndustrialFan : NetworkBehaviour
 {
     public Transform fanTransform = null!;
+    public AudioSource cutAudioSource = null!;
     public float rotationSpeed = 45f;
     public float pushForce = 15f;
     public float suctionForce = 15f;
@@ -23,6 +24,7 @@ public class IndustrialFan : NetworkBehaviour
         // Kill players who touch the back blades
         if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
+            cutAudioSource.Play();
             player.KillPlayer(default, false, CauseOfDeath.Fan, 0, default);
             if (player.isPlayerDead) PlayRedMist();
         }
