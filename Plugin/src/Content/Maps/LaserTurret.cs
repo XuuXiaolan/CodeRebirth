@@ -1,23 +1,43 @@
-using System.Collections.Generic;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
 public class LaserTurret : NetworkBehaviour
 {
     public Transform turretTransform = null!;
     public Transform laserStartPoint = null!;
-    public LineRenderer laserLineRenderer = null!;
+    public VisualEffect visualEffect = null!;
     public float rotationSpeed = 45f;
     public float laserRange = 50f;
     public float laserDamage = 1f;
     public float laserThickness = 0.3f;
     public ParticleSystem ashParticle = null!;
 
+    private float originalImpactPositionZ = 1f;
+    private float originalParticlesVelocityZ = 1f;
+    private float originalDarkBeamScaleY = 1f;
+    private float originalElectricBeamScaleY = 1f;
+    private float originalBeamCoreScaleY = 1f;
     private bool isFiring = false;
     private float damageTimer = 0f;
+
+    private void Start()
+    {
+        visualEffect.Play();
+        originalImpactPositionZ = visualEffect.GetVector3("ImpactPosition").z;
+        originalParticlesVelocityZ = visualEffect.GetVector3("ParticlesVelocity").z;
+        originalDarkBeamScaleY = visualEffect.GetVector3("DarkBeamScale").y;
+        originalElectricBeamScaleY = visualEffect.GetVector3("ElectricBeamScale").y;
+        originalBeamCoreScaleY = visualEffect.GetVector3("BeamCoreScale").y;
+
+        if (IsServer)
+        {
+            ValidateSpawnPosition();
+        }
+    }
 
     private void Update()
     {
@@ -34,13 +54,31 @@ public class LaserTurret : NetworkBehaviour
         if (Physics.SphereCast(laserStartPoint.position, laserThickness / 2, laserDirection, out RaycastHit hit, laserRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
         {
             Vector3 laserEndPoint = hit.point;
-            laserLineRenderer.SetPosition(0, laserStartPoint.position);
-            laserLineRenderer.SetPosition(1, laserEndPoint);
+            float distance = Vector3.Distance(laserStartPoint.position, laserEndPoint);
+            Vector3 beamCoreScale = visualEffect.GetVector3("BeamCoreScale");
+            beamCoreScale.y *= originalBeamCoreScaleY * distance;
+            Vector3 electricBeamScale = visualEffect.GetVector3("ElectricBeamScale");
+            electricBeamScale.y = originalElectricBeamScaleY * distance;
+            Vector3 darkBeamScale = visualEffect.GetVector3("DarkBeamScale");
+            darkBeamScale.y = originalDarkBeamScaleY * distance;
+            Vector3 particlesVelocity = visualEffect.GetVector3("ParticlesVelocity");
+            particlesVelocity.z = originalParticlesVelocityZ * distance;
+            Vector3 impactPosition = visualEffect.GetVector3("ImpactPosition");
+            impactPosition.z = originalImpactPositionZ * distance;
+
+            visualEffect.SetVector3("ImpactPosition", impactPosition);
+            visualEffect.SetVector3("ParticlesVelocity", particlesVelocity);
+            visualEffect.SetVector3("DarkBeamScale", darkBeamScale);
+            visualEffect.SetVector3("ElectricBeamScale", electricBeamScale);
+            visualEffect.SetVector3("BeamCoreScale", beamCoreScale);
+            
+            //laserLineRenderer.SetPosition(0, laserStartPoint.position);
+            //laserLineRenderer.SetPosition(1, laserEndPoint);
 
             if (!isFiring)
             {
                 isFiring = true;
-                laserLineRenderer.enabled = true;
+                //laserLineRenderer.enabled = true;
             }
 
             if (hit.collider.CompareTag("Player") && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
@@ -64,7 +102,7 @@ public class LaserTurret : NetworkBehaviour
             if (isFiring)
             {
                 isFiring = false;
-                laserLineRenderer.enabled = false;
+                //laserLineRenderer.enabled = false;
             }
         }
     }
@@ -97,14 +135,6 @@ public class LaserTurret : NetworkBehaviour
             this.transform.position = Vector3.Lerp(this.transform.position, averagePosition, 0.5f);
             NavMesh.SamplePosition(this.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas);
             this.transform.position = hit.position;
-        }
-    }
-
-    private void Start()
-    {
-        if (IsServer)
-        {
-            ValidateSpawnPosition();
         }
     }
 }

@@ -1,4 +1,10 @@
-# v0.6.8
+# v0.7.0
+
+- Added 7 new hazards
+- Fixed bug with getting fired.
+- 
+
+## v0.6.8
 
 - Forgot to make metal crate whitelist into a blacklist.
 

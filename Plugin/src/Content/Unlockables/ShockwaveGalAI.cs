@@ -207,7 +207,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private void OnHeadInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
-        if ((UnityEngine.Random.Range(0f, 1f) < 0.9f || catPosing) && headPatCoroutine != null) StartPetAnimationServerRpc();
+        if ((UnityEngine.Random.Range(0f, 1f) < 0.9f || catPosing) && headPatCoroutine == null) StartPetAnimationServerRpc();
         else if (!catPosing) StartCatPoseAnimationServerRpc();
     }
 
