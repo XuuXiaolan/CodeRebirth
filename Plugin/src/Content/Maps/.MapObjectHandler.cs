@@ -49,12 +49,27 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		[LoadFromBundle("LaserTurret.prefab")]
 		public GameObject LaserTurretPrefab { get; private set; } = null!;
 	}
+
+	public class IndustrialFanAssets(string bundleName) : AssetBundleLoader<IndustrialFanAssets>(bundleName)
+	{
+		[LoadFromBundle("FanTrap.prefab")]
+		public GameObject IndustrialFanPrefab { get; private set; } = null!;
+	}
+
+	public class FlashTurretAssets(string bundleName) : AssetBundleLoader<FlashTurretAssets>(bundleName)
+	{
+		[LoadFromBundle("FlashTurret.prefab")]
+		public GameObject FlashTurretPrefab { get; private set; } = null!;
+	}
+
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
 	public BiomeAssets Biome { get; private set; } = null!;
 	public BearTrapAssets BearTrap { get; private set; } = null!;
 	public GlowingGemAssets GlowingGem { get; private set; } = null!;
+	public IndustrialFanAssets IndustrialFan { get; private set; } = null!;
+	public FlashTurretAssets FlashTurret { get; private set; } = null!;
 
 	public static Dictionary<string, GameObject> DevilDealPrefabs = new();
 
@@ -78,6 +93,35 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 		if (Plugin.ModConfig.ConfigLaserTurretEnabled.Value)
 			RegisterLaserTurret();
+		
+		if (Plugin.ModConfig.ConfigIndustrialFanEnabled.Value)
+			RegisterIndustrialFan();
+
+		/*if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
+			RegisterFlashTurret();
+		*/
+	}
+
+	public void RegisterFlashTurret()
+	{
+		FlashTurret = new FlashTurretAssets("flashturretassets");
+		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
+		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
+		mapObjDefBug.spawnableMapObject.prefabToSpawn = FlashTurret.FlashTurretPrefab;
+		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
+			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigFlashTurretAbundance.Value, 0, 1000)))
+		);
+	}
+
+	public void RegisterIndustrialFan()
+	{
+		IndustrialFan = new IndustrialFanAssets("industrialfanassets");
+		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
+		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
+		mapObjDefBug.spawnableMapObject.prefabToSpawn = IndustrialFan.IndustrialFanPrefab;
+		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
+			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigIndustrialFanAbundance.Value, 0, 1000)))
+		);
 	}
 
 	public void RegisterLaserTurret()

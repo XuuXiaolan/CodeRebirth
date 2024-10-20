@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
-using LobbyCompatibility.Configuration;
 
 namespace CodeRebirth.src;
 public class CodeRebirthConfig
@@ -56,6 +55,10 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigWoodenCrateAbundance { get; private set; }
     public ConfigEntry<int> ConfigLaserTurretAbundance { get; private set; }
     public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
+    public ConfigEntry<int> ConfigFlashTurretAbundance { get; private set; }
+    public ConfigEntry<int> ConfigIndustrialFanAbundance { get; private set; }
+    public ConfigEntry<int> ConfigTeslaShockAbundance { get; private set; }
+    public ConfigEntry<int> ConfigAirControlUnitAbundance { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
@@ -165,24 +168,40 @@ public class CodeRebirthConfig
                                             "Flash Turret | Enabled",
                                             true,
                                             "Whether the flash turret is enabled.");
+        ConfigFlashTurretAbundance = configFile.Bind("FlashTurret Options",
+                                            "Flash Turret | Abundance",
+                                            5,
+                                            "The number of flash turrets to spawn per round.");
         #endregion
         #region Industrial Fan
         ConfigIndustrialFanEnabled = configFile.Bind("IndustrialFan Options",
                                             "Industrial Fan | Enabled",
                                             true,
                                             "Whether the industrial fan is enabled.");
+        ConfigIndustrialFanAbundance = configFile.Bind("IndustrialFan Options",
+                                            "Industrial Fan | Abundance",
+                                            5,
+                                            "The number of industrial fans to spawn per round.");
         #endregion
         #region Tesla Shock
         ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
                                             "Tesla Shock | Enabled",
                                             true,
                                             "Whether the tesla shock is enabled.");
+        ConfigTeslaShockAbundance = configFile.Bind("TeslaShock Options",
+                                            "Tesla Shock | Abundance",
+                                            5,
+                                            "The number of tesla shocks to spawn per round.");
         #endregion
         #region Air Control Unit
         ConfigAirControlUnitEnabled = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | Enabled",
                                             true,
                                             "Whether the air control unit is enabled.");
+        ConfigAirControlUnitAbundance = configFile.Bind("AirControlUnit Options",
+                                            "Air Control Unit | Abundance",
+                                            5,
+                                            "The number of air control units to spawn per round.");
         #endregion
         #region General
         ConfigEnableExtendedLogging = configFile.Bind("General",
