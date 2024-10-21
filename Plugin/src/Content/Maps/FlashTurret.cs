@@ -1,15 +1,13 @@
 using System.Linq;
 using GameNetcodeStuff;
-using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
 public class FlashTurret : NetworkBehaviour, INoiseListener
 {
     public Transform turretTransform = null!;
-    public VisualEffect visualEffect = null!;
+    public Light flashLight = null!;
     public AudioSource warningSound = null!;
     public float rotationSpeed = 90f;
     public float detectionRange = 15f;
@@ -17,10 +15,13 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     public float flashCooldownMax = 5f;
     public float flashDuration = 1f;
     public float blindDuration = 5f;
+    public float flashIntensity = 10f;
+    public float flashFadeSpeed = 5f;
 
     private bool isTriggered = false;
     private float flashTimer = 0f;
     private PlayerControllerB? detectedPlayer = null;
+    private bool isFlashing = false;
 
     private void Update()
     {
@@ -44,6 +45,17 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
                 flashTimer = UnityEngine.Random.Range(flashCooldownMin, flashCooldownMax);
             }
         }
+
+        // Handle flashing light intensity
+        if (isFlashing)
+        {
+            flashLight.intensity = Mathf.Lerp(flashLight.intensity, 0f, flashFadeSpeed * Time.deltaTime);
+            if (flashLight.intensity <= 0.1f)
+            {
+                flashLight.intensity = 0f;
+                isFlashing = false;
+            }
+        }
     }
 
     public void OnNoiseDetected(Vector3 noisePosition, int noiseID)
@@ -63,7 +75,11 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
     private void TriggerFlash()
     {
-        visualEffect.Play();
+        if (flashLight != null)
+        {
+            flashLight.intensity = flashIntensity;
+            isFlashing = true;
+        }
 
         if (detectedPlayer != null && detectedPlayer.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {

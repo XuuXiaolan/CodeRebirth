@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigLaserTurretEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFlashTurretEnabled { get; private set; }
@@ -59,6 +60,7 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigIndustrialFanAbundance { get; private set; }
     public ConfigEntry<int> ConfigTeslaShockAbundance { get; private set; }
     public ConfigEntry<int> ConfigAirControlUnitAbundance { get; private set; }
+    public ConfigEntry<int> ConfigFunctionalMicrowaveAbundance { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
@@ -143,6 +145,16 @@ public class CodeRebirthConfig
     public CodeRebirthConfig(ConfigFile configFile)
     {
         configFile.SaveOnConfigSet = false;
+        #region Functional Microwave
+        ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",
+                                            "Functional Microwave | Enabled",
+                                            true,
+                                            "Whether the Functional Microwave is enabled.");
+        ConfigFunctionalMicrowaveAbundance = configFile.Bind("FunctionalMicrowave Options",
+                                            "Functional Microwave | Abundance",
+                                            5,
+                                            "The number of Functional Microwaves to spawn per round.");
+        #endregion
         #region Bear Trap
         ConfigBearTrapEnabled = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Enabled",
