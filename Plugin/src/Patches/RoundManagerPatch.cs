@@ -46,6 +46,18 @@ static class RoundManagerPatch {
 				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
 				spawnedTrap.transform.up = hit.normal;
 				spawnedTrap.GetComponent<NetworkObject>().Spawn();
+				if (hit.collider.CompareTag("Grass"))
+				{
+					spawnedTrap.GetComponent<BearTrap>().mainMaterial = MapObjectHandler.Instance.BearTrap.GrassMat;
+				}
+				else if (hit.collider.CompareTag("Gravel"))
+				{
+					spawnedTrap.GetComponent<BearTrap>().mainMaterial = MapObjectHandler.Instance.BearTrap.DesertMat;
+				}
+				else if (hit.collider.CompareTag("Snow"))
+				{
+					spawnedTrap.GetComponent<BearTrap>().mainMaterial = MapObjectHandler.Instance.BearTrap.SnowMat;
+				}
 			}
 		}
 	}

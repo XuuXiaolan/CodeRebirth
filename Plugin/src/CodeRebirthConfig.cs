@@ -141,10 +141,18 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
     #region Debug
+    public ConfigEntry<bool> ConfigDebugMode { get; private set; }
     #endregion
     public CodeRebirthConfig(ConfigFile configFile)
     {
         configFile.SaveOnConfigSet = false;
+
+        #region Debug
+        ConfigDebugMode = configFile.Bind("Debug Options",
+                                            "Debug Mode",
+                                            false,
+                                            "Whether debug mode is enabled.");
+        #endregion
         #region Functional Microwave
         ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",
                                             "Functional Microwave | Enabled",

@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
+using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Maps;
 public class BearTrap : NetworkBehaviour
 {
+    public Material mainMaterial = null!;
     public Animator trapAnimator = null!;
     public Collider trapCollider = null!;
     public float delayBeforeReset = 3.0f;
@@ -21,24 +24,37 @@ public class BearTrap : NetworkBehaviour
     private readonly static int resetTrapAnimation = Animator.StringToHash("resetTrap");
     private bool isTriggered = false;
     private bool canTrigger = true;
-    private float retriggerTimer = 0f;
+    [NonSerialized] public bool byProduct = false;
 
+    private void Start()
+    {
+        this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = mainMaterial;
+        if (!IsServer || byProduct) return;
+        NavMeshHit hit = default;
+        Vector3[] usedPositions = new Vector3[5];
+        usedPositions.AddItem(this.transform.position);
+        for (int i = 0; i <= 4; i++)
+        {
+            Vector3 newPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 6, hit);
+            for (int j = 0; j < usedPositions.Length; j++)
+            {
+                if (Vector3.Distance(usedPositions[j], newPosition) < 1f)
+                {
+                    newPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 9, hit);
+                }
+            }
+            GameObject newBearTrap = Instantiate(this.gameObject, newPosition, default, this.transform.parent);
+            newBearTrap.transform.up = hit.normal;
+            newBearTrap.gameObject.GetComponent<NetworkObject>().Spawn();
+            newBearTrap.GetComponent<BearTrap>().byProduct = true;
+            usedPositions.AddItem(newPosition);
+        }
+    }
     private void Update()
     {
         trapTrigger.interactable = isTriggered;
         if (!IsServer) return;
 
-        if (isTriggered)
-        {
-            retriggerTimer += Time.deltaTime;
-            if (retriggerTimer >= 10f)
-            {
-                playerCaught?.DamagePlayer(20, true, true, CauseOfDeath.Crushing, 0, false, default);
-                enemyCaught?.HitEnemyClientRpc(1, -1, true, -1);
-                retriggerTimer = 0f;
-                RetriggerForEnemyAndPlayer();
-            }
-        }
         if (enemyCaught != null)
         {
             enemyCaught.agent.speed = 0f;
@@ -56,12 +72,6 @@ public class BearTrap : NetworkBehaviour
         TrapReleaseAnimationClientRpc();
         yield return new WaitForSeconds(3f);
         if (enemyCaught != null) ReleaseTrap();
-    }
-
-    private void RetriggerForEnemyAndPlayer()
-    {
-        if (playerCaught != null) TriggerPlayerTrapClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerCaught), true);
-        if (enemyCaught != null) TriggerEnemyTrapClientRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemyCaught), true);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -137,7 +147,6 @@ public class BearTrap : NetworkBehaviour
     {
         trapAnimator.SetTrigger(resetTrapAnimation);
         trapCollider.enabled = true;
-        retriggerTimer = 0f;
         enemyCaughtTimer = 0f;
         if (playerCaught != null)
         {

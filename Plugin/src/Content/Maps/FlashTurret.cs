@@ -17,13 +17,11 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     public float blindDuration = 5f;
     public float flashIntensity = 10f;
     public float flashFadeSpeed = 5f;
-    public int maxFlashes = 3;
-
+    public float flashFadeoutMultiplier = 0.5f;
     private bool isTriggered = false;
     private float flashTimer = 0f;
     private PlayerControllerB? detectedPlayer = null;
     private bool isFlashing = false;
-    private int currentFlashCount = 0;
     private System.Random random = new();
 
     private void Start()
@@ -49,13 +47,8 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
             {
                 TriggerFlash();
                 flashTimer = random.NextFloat(flashCooldownMin, flashCooldownMax);
-                currentFlashCount++;
 
-                // Reset after max flashes
-                if (currentFlashCount >= maxFlashes)
-                {
-                    ResetTurret();
-                }
+                ResetTurret();
             }
         }
 
@@ -87,7 +80,6 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
                     isTriggered = true;
                     warningSound.Play();
                     flashTimer = flashDuration; // Start flashing after initial detection
-                    currentFlashCount = 0; // Reset flash count on new detection
                 }
             }
         }
@@ -103,7 +95,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
         if (detectedPlayer != null)
         {
-            StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, 0.4f, 5f, 1f, false, null, null, blindDuration - 1);
+            StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, flashFadeoutMultiplier, 5f, 1f, false, null, null, blindDuration - 1);
         }
     }
 
@@ -111,7 +103,6 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     {
         isTriggered = false;
         detectedPlayer = null;
-        currentFlashCount = 0;
     }
 
     public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)

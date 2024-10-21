@@ -2712,7 +2712,7 @@ GameObject:
   - component: {fileID: 7540495099118453201}
   - component: {fileID: 2123439759598390477}
   - component: {fileID: 4461787965659276262}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: FanTrapAnimated
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2776,9 +2776,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanTransform: {fileID: 1739986065628525033}
   cutAudioSource: {fileID: 6326048358095893484}
-  rotationSpeed: 45
-  pushForce: 15
-  suctionForce: 15
+  rotationSpeed: 35
+  pushForce: 12
+  suctionForce: 8
   redMistEffect: {fileID: 9155697015635142109}
 --- !u!114 &8949203082928865293
 MonoBehaviour:
@@ -2871,8 +2871,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.3845854, y: 0.47505748, z: 1.1024504}
-  m_Center: {x: -0.07081461, y: 0.28217357, z: 0.051225185}
+  m_Size: {x: 3.3845854, y: 0.33665776, z: 1.1024504}
+  m_Center: {x: -0.07081461, y: 0.21297371, z: 0.051225185}
 --- !u!65 &2123439759598390477
 BoxCollider:
   m_ObjectHideFlags: 0

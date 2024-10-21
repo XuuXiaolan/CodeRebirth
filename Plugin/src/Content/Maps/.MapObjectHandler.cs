@@ -42,6 +42,12 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	{
 		[LoadFromBundle("BearTrap.prefab")]
 		public GameObject BearTrapPrefab { get; private set; } = null!;
+		[LoadFromBundle("SnowMat.material")]
+		public Material SnowMat { get; private set; } = null!;
+		[LoadFromBundle("GrassMat.material")]
+		public Material GrassMat { get; private set; } = null!;
+		[LoadFromBundle("DesertMat.material")]
+		public Material DesertMat { get; private set; } = null!;
 	}
 
 	public class GlowingGemAssets(string bundleName) : AssetBundleLoader<GlowingGemAssets>(bundleName)
@@ -71,11 +77,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public IndustrialFanAssets IndustrialFan { get; private set; } = null!;
 	public FlashTurretAssets FlashTurret { get; private set; } = null!;
 
-	public static Dictionary<string, GameObject> DevilDealPrefabs = new();
+	public static List<GameObject> hazardPrefabs = new List<GameObject>();
 
     public MapObjectHandler()
 	{
-		
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
 			Crate = new CrateAssets("crateassets");
 
@@ -99,7 +104,11 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 		if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
 			RegisterFlashTurret();
-		
+
+        hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.BearTrapPrefab);
+        hazardPrefabs.Add(MapObjectHandler.Instance.FlashTurret.FlashTurretPrefab);
+        hazardPrefabs.Add(MapObjectHandler.Instance.IndustrialFan.IndustrialFanPrefab);
+        hazardPrefabs.Add(MapObjectHandler.Instance.GlowingGem.LaserTurretPrefab);	
 	}
 
 	public void RegisterFlashTurret()
