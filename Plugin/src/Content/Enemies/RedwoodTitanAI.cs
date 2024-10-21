@@ -2,7 +2,6 @@ using System.Collections;
 using GameNetcodeStuff;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.AI;
 using CodeRebirth.src.Util;
 using Unity.Netcode.Components;
 using System;

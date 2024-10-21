@@ -52,7 +52,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class IndustrialFanAssets(string bundleName) : AssetBundleLoader<IndustrialFanAssets>(bundleName)
 	{
-		[LoadFromBundle("FanTrap.prefab")]
+		[LoadFromBundle("FanTrapAnimated.prefab")]
 		public GameObject IndustrialFanPrefab { get; private set; } = null!;
 	}
 

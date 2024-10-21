@@ -12,7 +12,7 @@ public class LaserTurret : NetworkBehaviour
     public VisualEffect visualEffect = null!;
     public float rotationSpeed = 45f;
     public float laserRange = 50f;
-    public float laserDamage = 2f;
+    public float laserDamage = 3f;
     public float laserThickness = 0.5f;
     public ParticleSystem ashParticle = null!;
 
