@@ -1,3 +1,4 @@
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -23,11 +24,15 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     private PlayerControllerB? detectedPlayer = null;
     private bool isFlashing = false;
     private int currentFlashCount = 0;
+    private System.Random random = new();
+
+    private void Start()
+    {
+        random = new System.Random(StartOfRound.Instance.randomMapSeed);
+    }
 
     private void Update()
     {
-        if (!IsServer) return;
-
         // Rotate turret towards player if triggered
         if (isTriggered && detectedPlayer != null)
         {
@@ -43,7 +48,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
             if (flashTimer <= 0f)
             {
                 TriggerFlash();
-                flashTimer = UnityEngine.Random.Range(flashCooldownMin, flashCooldownMax);
+                flashTimer = random.NextFloat(flashCooldownMin, flashCooldownMax);
                 currentFlashCount++;
 
                 // Reset after max flashes
@@ -68,7 +73,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
     public void OnNoiseDetected(Vector3 noisePosition, int noiseID)
     {
-        if (!IsServer || detectedPlayer != null) return;
+        if (detectedPlayer != null) return;
 
         float distance = Vector3.Distance(turretTransform.position, noisePosition);
         int playerNoiseID = 6;
