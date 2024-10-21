@@ -319,20 +319,21 @@ static class RoundManagerPatch {
 	[HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
 	public static void PlayAudibleNoiseForShockwaveGalPostfix(RoundManager __instance, ref Vector3 noisePosition, ref float noiseRange, ref float noiseLoudness, ref int timesPlayedInSameSpot, ref bool noiseIsInsideClosedShip, ref int noiseID)
 	{
-		if (noiseID != 5) return;
+		if (noiseID != 5 && noiseID != 6) return;
 		if (noiseIsInsideClosedShip)
 		{
 			noiseRange /= 2f;
 		}
-		Collider[] hitColliders = Physics.OverlapSphere(noisePosition, noiseRange, LayerMask.GetMask("Props"));
+		Collider[] hitColliders = Physics.OverlapSphere(noisePosition, noiseRange, LayerMask.GetMask("Props", "MapHazards"), QueryTriggerInteraction.Collide);
 		for (int i = 0; i < hitColliders.Length; i++)
 		{
             if (hitColliders[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener))
             {
-                ShockwaveGalAI component = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
-                if (component == null)
+                ShockwaveGalAI shockwaveGal = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
+				FlashTurret flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
+                if (shockwaveGal == null && flashTurret == null)
                 {
-                    return;
+                    continue;
                 }
                 noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
             }

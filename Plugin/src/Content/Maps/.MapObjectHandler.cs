@@ -58,7 +58,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class FlashTurretAssets(string bundleName) : AssetBundleLoader<FlashTurretAssets>(bundleName)
 	{
-		[LoadFromBundle("FlashTurret.prefab")]
+		[LoadFromBundle("FlashTurretUpdated.prefab")]
 		public GameObject FlashTurretPrefab { get; private set; } = null!;
 	}
 
@@ -97,9 +97,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigIndustrialFanEnabled.Value)
 			RegisterIndustrialFan();
 
-		/*if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
+		if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
 			RegisterFlashTurret();
-		*/
+		
 	}
 
 	public void RegisterFlashTurret()

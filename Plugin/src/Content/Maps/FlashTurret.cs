@@ -1,4 +1,3 @@
-using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,11 +16,13 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     public float blindDuration = 5f;
     public float flashIntensity = 10f;
     public float flashFadeSpeed = 5f;
+    public int maxFlashes = 3;
 
     private bool isTriggered = false;
     private float flashTimer = 0f;
     private PlayerControllerB? detectedPlayer = null;
     private bool isFlashing = false;
+    private int currentFlashCount = 0;
 
     private void Update()
     {
@@ -43,6 +44,13 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
             {
                 TriggerFlash();
                 flashTimer = UnityEngine.Random.Range(flashCooldownMin, flashCooldownMax);
+                currentFlashCount++;
+
+                // Reset after max flashes
+                if (currentFlashCount >= maxFlashes)
+                {
+                    ResetTurret();
+                }
             }
         }
 
@@ -60,16 +68,23 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
     public void OnNoiseDetected(Vector3 noisePosition, int noiseID)
     {
-        if (!IsServer) return;
+        if (!IsServer || detectedPlayer != null) return;
 
         float distance = Vector3.Distance(turretTransform.position, noisePosition);
-        int playerNoiseID = 0;
+        int playerNoiseID = 6;
         if (distance <= detectionRange && noiseID == playerNoiseID)
         {
-            detectedPlayer = StartOfRound.Instance.allPlayerScripts.Where(x => !x.isPlayerDead && x.isPlayerControlled && Vector3.Distance(x.transform.position, noisePosition) <= detectionRange).OrderBy(x => Vector3.Distance(x.transform.position, noisePosition)).FirstOrDefault();
-            isTriggered = true;
-            warningSound.Play();
-            flashTimer = flashDuration; // Start flashing after initial detection
+            if (Physics.Raycast(turretTransform.position, (noisePosition - turretTransform.position).normalized, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
+            {
+                if (hit.collider != null && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+                {
+                    detectedPlayer = player;
+                    isTriggered = true;
+                    warningSound.Play();
+                    flashTimer = flashDuration; // Start flashing after initial detection
+                    currentFlashCount = 0; // Reset flash count on new detection
+                }
+            }
         }
     }
 
@@ -81,10 +96,17 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
             isFlashing = true;
         }
 
-        if (detectedPlayer != null && detectedPlayer.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (detectedPlayer != null)
         {
-            // ApplyBlindness(blindDuration, player);
+            StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, 0.4f, 5f, 1f, false, null, null, blindDuration - 1);
         }
+    }
+
+    private void ResetTurret()
+    {
+        isTriggered = false;
+        detectedPlayer = null;
+        currentFlashCount = 0;
     }
 
     public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)
