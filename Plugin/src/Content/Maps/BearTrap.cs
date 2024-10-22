@@ -10,7 +10,6 @@ using UnityEngine.AI;
 namespace CodeRebirth.src.Content.Maps;
 public class BearTrap : NetworkBehaviour
 {
-    public Material mainMaterial = null!;
     public Animator trapAnimator = null!;
     public Collider trapCollider = null!;
     public float delayBeforeReset = 3.0f;
@@ -28,7 +27,6 @@ public class BearTrap : NetworkBehaviour
 
     private void Start()
     {
-        this.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = mainMaterial;
         if (!IsServer || byProduct) return;
         NavMeshHit hit = default;
         Vector3[] usedPositions = new Vector3[5];

@@ -40,14 +40,12 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class BearTrapAssets(string bundleName) : AssetBundleLoader<BearTrapAssets>(bundleName)
 	{
-		[LoadFromBundle("BearTrap.prefab")]
-		public GameObject BearTrapPrefab { get; private set; } = null!;
-		[LoadFromBundle("SnowMat.material")]
-		public Material SnowMat { get; private set; } = null!;
-		[LoadFromBundle("GrassMat.material")]
-		public Material GrassMat { get; private set; } = null!;
-		[LoadFromBundle("DesertMat.material")]
-		public Material DesertMat { get; private set; } = null!;
+		[LoadFromBundle("GrassBearTrap.prefab")]
+		public GameObject GrassMatPrefab { get; private set; } = null!;
+		[LoadFromBundle("GravelBearTrap.prefab")]
+		public GameObject GravelMatPrefab { get; private set; } = null!;
+		[LoadFromBundle("SnowBearTrap.prefab")]
+		public GameObject SnowMatPrefab { get; private set; } = null!;
 	}
 
 	public class GlowingGemAssets(string bundleName) : AssetBundleLoader<GlowingGemAssets>(bundleName)
@@ -105,7 +103,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
 			RegisterFlashTurret();
 
-        hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.BearTrapPrefab);
+        hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);
         hazardPrefabs.Add(MapObjectHandler.Instance.FlashTurret.FlashTurretPrefab);
         hazardPrefabs.Add(MapObjectHandler.Instance.IndustrialFan.IndustrialFanPrefab);
         hazardPrefabs.Add(MapObjectHandler.Instance.GlowingGem.LaserTurretPrefab);	

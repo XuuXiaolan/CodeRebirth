@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 24dd75af6a55a5b478abce0c9643581e
+guid: b56dbbb85e60ea848b85c1d09b5a71c5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: BearTrapMat
-    second: {fileID: 2100000, guid: 11cccff4a92b27a48b674ffad8d4b361, type: 2}
+    second: {fileID: 2100000, guid: 42ac90284f3114841bca1179a23c4a2e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -43,6 +43,35 @@ ModelImporter:
       internalID: -4846191778341320772
       firstFrame: 0
       lastFrame: 7
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Deactivated
+      takeName: BearTrapArmature|Deactivated
+      internalID: -6590851746389387307
+      firstFrame: 0
+      lastFrame: 5
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

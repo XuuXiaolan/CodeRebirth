@@ -40,24 +40,24 @@ static class RoundManagerPatch {
 
 			if (hit.collider != null) // Check to make sure we hit something
 			{
-				GameObject beartrap = MapObjectHandler.Instance.BearTrap.BearTrapPrefab;
+				GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+				if (hit.collider.CompareTag("Grass"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.GrassMatPrefab;
+				}
+				else if (hit.collider.CompareTag("Gravel"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+				}
+				else if (hit.collider.CompareTag("Snow"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
+				}
 
 				GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
 				spawnedTrap.transform.up = hit.normal;
 				spawnedTrap.GetComponent<NetworkObject>().Spawn();
-				if (hit.collider.CompareTag("Grass"))
-				{
-					spawnedTrap.GetComponent<BearTrap>().mainMaterial = MapObjectHandler.Instance.BearTrap.GrassMat;
-				}
-				else if (hit.collider.CompareTag("Gravel"))
-				{
-					spawnedTrap.GetComponent<BearTrap>().mainMaterial = MapObjectHandler.Instance.BearTrap.DesertMat;
-				}
-				else if (hit.collider.CompareTag("Snow"))
-				{
-					spawnedTrap.GetComponent<BearTrap>().mainMaterial = MapObjectHandler.Instance.BearTrap.SnowMat;
-				}
 			}
 		}
 	}

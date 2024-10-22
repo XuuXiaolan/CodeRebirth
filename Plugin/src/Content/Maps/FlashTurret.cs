@@ -11,23 +11,15 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     public AudioSource warningSound = null!;
     public float rotationSpeed = 90f;
     public float detectionRange = 15f;
-    public float flashCooldownMin = 3f;
-    public float flashCooldownMax = 5f;
-    public float flashDuration = 1f;
+    public float flashDuration = 3f;
     public float blindDuration = 5f;
     public float flashIntensity = 10f;
-    public float flashFadeSpeed = 5f;
-    public float flashFadeoutMultiplier = 0.5f;
+    public float flashCooldown = 3f;
     private bool isTriggered = false;
-    private float flashTimer = 0f;
     private PlayerControllerB? detectedPlayer = null;
     private bool isFlashing = false;
-    private System.Random random = new();
-
-    private void Start()
-    {
-        random = new System.Random(StartOfRound.Instance.randomMapSeed);
-    }
+    private float flashTimer = 0f;
+    private float cooldownTimer = 0f;
 
     private void Update()
     {
@@ -37,36 +29,49 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
             Vector3 directionToPlayer = (detectedPlayer.transform.position - turretTransform.position).normalized;
             Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
             turretTransform.rotation = Quaternion.RotateTowards(turretTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            // Check if turret has finished rotating towards the player
+            if (Quaternion.Angle(turretTransform.rotation, targetRotation) < 1f && !isFlashing)
+            {
+                // Check if the player is looking towards the turret
+                Vector3 playerForward = detectedPlayer.transform.forward;
+                Vector3 directionToTurret = (turretTransform.position - detectedPlayer.transform.position).normalized;
+                float dotProduct = Vector3.Dot(playerForward, directionToTurret);
+                if (dotProduct > 0.5f) // Player is looking roughly towards the turret
+                {
+                    TriggerFlash();
+                }
+                else
+                {
+                    ResetTurret();
+                }
+            }
         }
 
-        // Handle flashing cooldown
-        if (isTriggered)
+        // Handle flashing light duration
+        if (isFlashing)
         {
             flashTimer -= Time.deltaTime;
+            flashLight.intensity = Mathf.Lerp(flashIntensity, 0f, 1 - (flashTimer / 5f));
             if (flashTimer <= 0f)
             {
-                TriggerFlash();
-                flashTimer = random.NextFloat(flashCooldownMin, flashCooldownMax);
-
+                flashLight.intensity = 0f;
+                isFlashing = false;
+                cooldownTimer = flashCooldown;
                 ResetTurret();
             }
         }
 
-        // Handle flashing light intensity
-        if (isFlashing)
+        // Handle cooldown before detection can occur again
+        if (cooldownTimer > 0f)
         {
-            flashLight.intensity = Mathf.Lerp(flashLight.intensity, 0f, flashFadeSpeed * Time.deltaTime);
-            if (flashLight.intensity <= 0.1f)
-            {
-                flashLight.intensity = 0f;
-                isFlashing = false;
-            }
+            cooldownTimer -= Time.deltaTime;
         }
     }
 
     public void OnNoiseDetected(Vector3 noisePosition, int noiseID)
     {
-        if (detectedPlayer != null) return;
+        if (detectedPlayer != null || cooldownTimer > 0f) return;
 
         float distance = Vector3.Distance(turretTransform.position, noisePosition);
         int playerNoiseID = 6;
@@ -79,7 +84,6 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
                     detectedPlayer = player;
                     isTriggered = true;
                     warningSound.Play();
-                    flashTimer = flashDuration; // Start flashing after initial detection
                 }
             }
         }
@@ -91,11 +95,12 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
         {
             flashLight.intensity = flashIntensity;
             isFlashing = true;
+            flashTimer = flashDuration;
         }
 
         if (detectedPlayer != null)
         {
-            StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, flashFadeoutMultiplier, 5f, 1f, false, null, null, blindDuration - 1);
+            StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, 0.5f, 5f, 1f, false, null, null, blindDuration - 1);
         }
     }
 

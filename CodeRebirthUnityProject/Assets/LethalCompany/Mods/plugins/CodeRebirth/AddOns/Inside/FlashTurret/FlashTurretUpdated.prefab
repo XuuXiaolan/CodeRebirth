@@ -410,12 +410,10 @@ MonoBehaviour:
   warningSound: {fileID: 8015123506002439714}
   rotationSpeed: 235
   detectionRange: 17
-  flashCooldownMin: 1
-  flashCooldownMax: 2
   flashDuration: 3
   blindDuration: 5
   flashIntensity: 30000
-  flashFadeSpeed: 2
+  flashCooldown: 3
 --- !u!82 &8015123506002439714
 AudioSource:
   m_ObjectHideFlags: 0
