@@ -11,6 +11,7 @@ public class TeslaShock : NetworkBehaviour
     public int playerDamageAmount = 40;
     public float delayBeforeExplodePlayer = 3f;
     public float delayBetweenZaps = 2f;
+    public float pushMultiplier = 10f;
 
     private PlayerControllerB? targetPlayer;
 
@@ -29,7 +30,9 @@ public class TeslaShock : NetworkBehaviour
     {
         if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
-            player.DamagePlayer(playerDamageAmount, true, false, CauseOfDeath.Blast, 0, false, default);
+            Vector3 direction = (player.transform.position - this.transform.position).normalized;
+            Vector3 force = direction * pushMultiplier;
+            player.DamagePlayer(playerDamageAmount, true, false, CauseOfDeath.Blast, 0, false, force);
         }
     }
 

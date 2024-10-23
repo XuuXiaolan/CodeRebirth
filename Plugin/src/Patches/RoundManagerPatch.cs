@@ -25,8 +25,31 @@ static class RoundManagerPatch {
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) SpawnCrates();
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value) SpawnRandomBiomes();
 		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value) SpawnBearTrap();
+		if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value) SpawnAirControlUnit();
 	}
 
+	private static void SpawnAirControlUnit()
+	{
+		Plugin.ExtendedLogging("Spawning air control unit!!!");
+		System.Random random = new();
+		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigAirControlUnitAbundance.Value, 0, 1000)); i++)
+		{
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
+
+			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+
+			if (hit.collider != null) // Check to make sure we hit something
+			{
+				GameObject aircontrolunit = MapObjectHandler.Instance.AirControlUnit.AirControlUnitPrefab;
+
+				GameObject spawnedAirControlUnit = GameObject.Instantiate(aircontrolunit, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+				Plugin.ExtendedLogging($"Spawning air control unit at: {hit.point}");
+				spawnedAirControlUnit.transform.up = hit.normal;
+				spawnedAirControlUnit.GetComponent<NetworkObject>().Spawn();
+			}
+		}
+	}
 	private static void SpawnBearTrap()
 	{
 		Plugin.ExtendedLogging("Spawning bear trap!!!");

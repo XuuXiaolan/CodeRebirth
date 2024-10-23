@@ -72,6 +72,21 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public GameObject TeslaShockPrefab { get; private set; } = null!;
 	}
 
+	public class AirControlUnitAssets(string bundleName) : AssetBundleLoader<AirControlUnitAssets>(bundleName)
+	{
+		[LoadFromBundle("AirControlUnit.prefab")]
+		public GameObject AirControlUnitPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("AirControlUnitProjectile.prefab")]
+		public GameObject ProjectilePrefab { get; private set; } = null!;
+	}
+
+	public class FunctionalMicrowaveAssets(string bundleName) : AssetBundleLoader<FunctionalMicrowaveAssets>(bundleName)
+	{
+		[LoadFromBundle("FunctionalMicrowave.prefab")]
+		public GameObject FunctionalMicrowavePrefab { get; private set; } = null!;
+	}
+
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
@@ -81,6 +96,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public IndustrialFanAssets IndustrialFan { get; private set; } = null!;
 	public FlashTurretAssets FlashTurret { get; private set; } = null!;
 	public TeslaShockAssets TeslaShock { get; private set; } = null!;
+	public AirControlUnitAssets AirControlUnit { get; private set; } = null!;
+	public FunctionalMicrowaveAssets FunctionalMicrowave { get; private set; } = null!;
 
 	public static List<GameObject> hazardPrefabs = new List<GameObject>();
 
@@ -115,6 +132,27 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 		if (Plugin.ModConfig.ConfigTeslaShockEnabled.Value)
 			RegisterTeslaShock();
+
+		if (Plugin.ModConfig.ConfigFunctionalMicrowaveEnabled.Value)
+			RegisterFunctionalMicrowave();
+
+		if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value)
+		{
+			AirControlUnit = new AirControlUnitAssets("aircontrolunitassets");
+			hazardPrefabs.Add(MapObjectHandler.Instance.AirControlUnit.AirControlUnitPrefab);
+		}
+	}
+
+	public void RegisterFunctionalMicrowave()
+	{
+		FunctionalMicrowave = new FunctionalMicrowaveAssets("functionalmicrowaveassets");
+		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
+		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
+		mapObjDefBug.spawnableMapObject.prefabToSpawn = FunctionalMicrowave.FunctionalMicrowavePrefab;
+		hazardPrefabs.Add(MapObjectHandler.Instance.FunctionalMicrowave.FunctionalMicrowavePrefab);
+		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
+			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigFunctionalMicrowaveAbundance.Value, 0, 1000)))
+		);
 	}
 
 	public void RegisterTeslaShock()
