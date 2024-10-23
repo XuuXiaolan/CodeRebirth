@@ -66,6 +66,12 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public GameObject FlashTurretPrefab { get; private set; } = null!;
 	}
 
+	public class TeslaShockAssets(string bundleName) : AssetBundleLoader<TeslaShockAssets>(bundleName)
+	{
+		[LoadFromBundle("BugZapper.prefab")]
+		public GameObject TeslaShockPrefab { get; private set; } = null!;
+	}
+
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
@@ -74,6 +80,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public GlowingGemAssets GlowingGem { get; private set; } = null!;
 	public IndustrialFanAssets IndustrialFan { get; private set; } = null!;
 	public FlashTurretAssets FlashTurret { get; private set; } = null!;
+	public TeslaShockAssets TeslaShock { get; private set; } = null!;
 
 	public static List<GameObject> hazardPrefabs = new List<GameObject>();
 
@@ -92,7 +99,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 			Biome = new BiomeAssets("biomeassets");
 
 		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
+		{
 			BearTrap = new BearTrapAssets("beartrapassets");
+			hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);			
+		}
 
 		if (Plugin.ModConfig.ConfigLaserTurretEnabled.Value)
 			RegisterLaserTurret();
@@ -103,10 +113,21 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
 			RegisterFlashTurret();
 
-        hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);
-        hazardPrefabs.Add(MapObjectHandler.Instance.FlashTurret.FlashTurretPrefab);
-        hazardPrefabs.Add(MapObjectHandler.Instance.IndustrialFan.IndustrialFanPrefab);
-        hazardPrefabs.Add(MapObjectHandler.Instance.GlowingGem.LaserTurretPrefab);	
+		if (Plugin.ModConfig.ConfigTeslaShockEnabled.Value)
+			RegisterTeslaShock();
+	}
+
+	public void RegisterTeslaShock()
+	{
+		TeslaShock = new TeslaShockAssets("teslashockassets");
+		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
+		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
+		mapObjDefBug.spawnableMapObject.prefabToSpawn = TeslaShock.TeslaShockPrefab;
+		hazardPrefabs.Add(MapObjectHandler.Instance.TeslaShock.TeslaShockPrefab);
+		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
+			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigTeslaShockAbundance.Value, 0, 1000)))
+		);
+		hazardPrefabs.Add(MapObjectHandler.Instance.TeslaShock.TeslaShockPrefab);
 	}
 
 	public void RegisterFlashTurret()
@@ -118,6 +139,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
 			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigFlashTurretAbundance.Value, 0, 1000)))
 		);
+        hazardPrefabs.Add(MapObjectHandler.Instance.FlashTurret.FlashTurretPrefab);
 	}
 
 	public void RegisterIndustrialFan()
@@ -129,6 +151,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
 			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigIndustrialFanAbundance.Value, 0, 1000)))
 		);
+		hazardPrefabs.Add(MapObjectHandler.Instance.IndustrialFan.IndustrialFanPrefab);
 	}
 
 	public void RegisterLaserTurret()
@@ -140,6 +163,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
 			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigLaserTurretAbundance.Value, 0, 1000)))
 		);
+        hazardPrefabs.Add(MapObjectHandler.Instance.GlowingGem.LaserTurretPrefab);
 	}
 
 	public void RegisterInsideMoney()
