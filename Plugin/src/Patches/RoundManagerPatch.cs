@@ -25,10 +25,10 @@ static class RoundManagerPatch {
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) SpawnCrates();
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value) SpawnRandomBiomes();
 		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value) SpawnBearTrap();
-		if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value) SpawnAirControlUnit();
+		// if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value) SpawnAirControlUnit();
 	}
 
-	private static void SpawnAirControlUnit()
+	/*private static void SpawnAirControlUnit()
 	{
 		Plugin.ExtendedLogging("Spawning air control unit!!!");
 		System.Random random = new();
@@ -49,7 +49,8 @@ static class RoundManagerPatch {
 				spawnedAirControlUnit.GetComponent<NetworkObject>().Spawn();
 			}
 		}
-	}
+	}*/
+
 	private static void SpawnBearTrap()
 	{
 		Plugin.ExtendedLogging("Spawning bear trap!!!");

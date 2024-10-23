@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Maps;
 public class FunctionalMicrowave : NetworkBehaviour
@@ -10,14 +11,35 @@ public class FunctionalMicrowave : NetworkBehaviour
     public float microwaveClosingTimer = 7.5f;
     public Collider mainCollider = null!;
     public float hinderedMultiplier = 1.5f;
+    public int damageAmount = 3;
+    public float damageTimer = 0.1f;
+    public Animator animator = null!;
+    public NavMeshAgent agent = null!;
+    public float Speed = 3f;
+    public float TurnSpeed = 10f;
 
     private float microwaveOpening = 0f;
     private float microwaveClosing = 0f;
-    private bool isOpen = false;
+    private bool isOpen = true;
+    private float damageTimerDecrease = 0f;
+    private Vector3 newDestination = default;
     private List<PlayerControllerB> playersAffected = new();
+
+    private void Start()
+    {
+        microwaveClosing = microwaveClosingTimer;
+        microwaveOpening = microwaveOpeningTimer;
+        animator.SetBool("isActivated", isOpen);
+        agent.speed = Speed;
+        agent.acceleration = 5f;
+        agent.angularSpeed = TurnSpeed;
+        if (!IsServer) return;
+        newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
+    }
 
     private void Update()
     {
+        damageTimerDecrease -= Time.deltaTime;
         if (!isOpen)
         {
             microwaveOpening += Time.deltaTime;
@@ -26,7 +48,7 @@ public class FunctionalMicrowave : NetworkBehaviour
                 microwaveOpening = 0f;
                 isOpen = true;
                 mainCollider.enabled = true;
-                // other things related to animations etc
+                animator.SetBool("isActivated", isOpen);
             }
         }
         else
@@ -38,12 +60,16 @@ public class FunctionalMicrowave : NetworkBehaviour
                 isOpen = false;
                 mainCollider.enabled = false;
                 playersAffected.Clear();
-                // other things related to animations etc
+                animator.SetBool("isActivated", isOpen);
             }
         }
+
+        if (!IsServer) return;
+        agent.SetDestination(newDestination);
+        if (Vector3.Distance(transform.position, newDestination) < 1.5f) newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnColliderEnter(Collider other)
     {
         if (other.CompareTag("Player") && other.TryGetComponent(out PlayerControllerB playerControllerB))
         {
@@ -55,15 +81,19 @@ public class FunctionalMicrowave : NetworkBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    public void OnColliderStay(Collider other)
     {
         if (other.CompareTag("Player") && other.TryGetComponent(out PlayerControllerB playerControllerB))
         {
-            playerControllerB.DamagePlayer(5, true, false, CauseOfDeath.Burning, 0, false, default);
+            if (damageTimerDecrease <= 0f)
+            {
+                damageTimerDecrease = damageTimer;
+                playerControllerB.DamagePlayer(damageAmount, true, false, CauseOfDeath.Burning, 0, false, default);
+            }
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void OnColliderExit(Collider other)
     {
         if (other.CompareTag("Player") && other.TryGetComponent(out PlayerControllerB playerControllerB))
         {

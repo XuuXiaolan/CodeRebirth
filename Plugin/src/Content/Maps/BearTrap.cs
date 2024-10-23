@@ -15,6 +15,7 @@ public class BearTrap : NetworkBehaviour
     public float delayBeforeReset = 3.0f;
     public InteractTrigger trapTrigger = null!;
 
+    private Vector3 caughtPosition = default;
     private PlayerControllerB? playerCaught = null;
     private float enemyCaughtTimer = 0f;
     private EnemyAI? enemyCaught = null;
@@ -51,6 +52,7 @@ public class BearTrap : NetworkBehaviour
     private void Update()
     {
         trapTrigger.interactable = isTriggered;
+        if (playerCaught != null) playerCaught.transform.position = Vector3.Lerp(playerCaught.transform.position, caughtPosition, 5f * Time.deltaTime);
         if (!IsServer) return;
 
         if (enemyCaught != null)
@@ -121,6 +123,7 @@ public class BearTrap : NetworkBehaviour
         playerCaught = StartOfRound.Instance.allPlayerScripts[playerIndex];
         playerCaught.DamagePlayer(25, true, true, CauseOfDeath.Crushing, 0, false, default);
         playerCaught.disableMoveInput = true;
+        caughtPosition = playerCaught.transform.position;
     }
 
     public void ReleaseTrapEarly()

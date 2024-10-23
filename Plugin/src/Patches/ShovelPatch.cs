@@ -55,8 +55,8 @@ static class ShovelPatch {
         if (!CRWeapon.canBreakTrees) return;
 
 		int num = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
-        if (!Plugin.ModConfig.ConfigFarmingEnabled.Value || random.NextFloat(0f, 1f) >= 0.02f || num <= 0) return;
 		RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
+        if (!Plugin.ModConfig.ConfigFarmingEnabled.Value || random.NextFloat(0f, 1f) >= 0.02f || num <= 0) return;
         Plugin.ExtendedLogging("Tree Destroyed with luck");
         CodeRebirthUtils.Instance.SpawnScrap(UnlockableHandler.Instance.PlantPot.Seed, CRWeapon.weaponTip.position, false, true, 5);
     }
