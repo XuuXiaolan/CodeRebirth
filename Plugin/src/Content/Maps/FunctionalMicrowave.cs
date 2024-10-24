@@ -59,6 +59,10 @@ public class FunctionalMicrowave : NetworkBehaviour
                 microwaveClosing = 0f;
                 isOpen = false;
                 mainCollider.enabled = false;
+                foreach (PlayerControllerB player in playersAffected)
+                {
+                    player.movementSpeed *= hinderedMultiplier;
+                }
                 playersAffected.Clear();
                 animator.SetBool("isActivated", isOpen);
             }
