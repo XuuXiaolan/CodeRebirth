@@ -70,6 +70,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	{
 		[LoadFromBundle("BugZapper.prefab")]
 		public GameObject TeslaShockPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("ChainLightning.prefab")]
+		public GameObject ChainLightningPrefab { get; private set; } = null!;
 	}
 
 	/*public class AirControlUnitAssets(string bundleName) : AssetBundleLoader<AirControlUnitAssets>(bundleName)
@@ -161,7 +164,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
 		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
 		mapObjDefBug.spawnableMapObject.prefabToSpawn = TeslaShock.TeslaShockPrefab;
-		hazardPrefabs.Add(MapObjectHandler.Instance.TeslaShock.TeslaShockPrefab);
 		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
 			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigTeslaShockAbundance.Value, 0, 1000)))
 		);
