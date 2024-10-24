@@ -25,9 +25,8 @@ public class LaserShockBlast : NetworkBehaviour
     [NonSerialized] public Transform laserOrigin = null!; // Origin point of the laser beam
     private ParticleSystem impactEffect = null!; // Particle effect at the impact point
 
-    public override void OnNetworkSpawn()
+    public void Start()
     {
-        base.OnNetworkSpawn();
         hitLayers = LayerMask.GetMask("Enemies", "Room", "Player", "Colliders", "Vehicle", "Terrain");
         impactEffect = ImpactEffectGameObject.GetComponent<ParticleSystem>();
         if (IsServer)
@@ -51,11 +50,14 @@ public class LaserShockBlast : NetworkBehaviour
         {
             bool hit = HandleHit(raycastHit);
             finalHitPoint = raycastHit.point; // Update final hit point
-
+            Plugin.ExtendedLogging($"Raycast Hit: {raycastHit.collider.name}");
+            Plugin.ExtendedLogging($"Final Hit Point: {finalHitPoint}");
+            Plugin.ExtendedLogging($"Hit: {hit}");
             if (hit)
                 break; // Stop if we have hit a target
         }
 
+        yield return new WaitUntil(() => NetworkObject.IsSpawned);
         // Send hit info to clients only once with the final hit point
         FireLaserClientRpc(finalHitPoint, laserOrigin.position);
 

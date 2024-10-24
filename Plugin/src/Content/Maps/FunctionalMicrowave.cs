@@ -76,7 +76,7 @@ public class FunctionalMicrowave : NetworkBehaviour
             if (!playersAffected.Contains(playerControllerB))
             {
                 playersAffected.Add(playerControllerB);
-                playerControllerB.hinderedMultiplier *= hinderedMultiplier;
+                playerControllerB.movementSpeed /= hinderedMultiplier;
             }
         }
     }
@@ -100,7 +100,7 @@ public class FunctionalMicrowave : NetworkBehaviour
             if (playersAffected.Contains(playerControllerB))
             {
                 playersAffected.Remove(playerControllerB);
-                playerControllerB.hinderedMultiplier /= hinderedMultiplier;
+                playerControllerB.movementSpeed *= hinderedMultiplier;
             }
         }
     }

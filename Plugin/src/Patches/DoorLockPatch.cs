@@ -32,6 +32,16 @@ public static class DoorLockPatch
 				self.OpenDoorAsEnemyServerRpc();
 			}
         }
+        if (other.CompareTag("Enemy") && other.gameObject.name == "MicrowaveCollider")
+        {
+            self.enemyDoorMeter += Time.deltaTime * 0.5f;
+            if (self.enemyDoorMeter > 1f)
+            {
+                self.enemyDoorMeter = 0f;
+                self.gameObject.GetComponent<AnimatedObjectTrigger>().TriggerAnimationNonPlayer(false, true, false);
+                self.OpenDoorAsEnemyServerRpc();
+            }
+        }
     ret:
         orig(self, other);
     }
