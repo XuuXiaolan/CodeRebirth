@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
-using CodeRebirth.src.MiscScripts;
+using System.Collections.Generic;
 using GameNetcodeStuff;
-using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,27 +14,25 @@ public class BearTrap : NetworkBehaviour
     public float delayBeforeReset = 3.0f;
     public InteractTrigger trapTrigger = null!;
 
-    private Vector3 caughtPosition = default;
+    private Vector3 caughtPosition = Vector3.zero;
     private PlayerControllerB? playerCaught = null;
-    private float enemyCaughtTimer = 0f;
     private EnemyAI? enemyCaught = null;
-    private readonly static int retriggerTrapAnimation = Animator.StringToHash("retriggerTrap");
-    private readonly static int triggerTrapAnimation = Animator.StringToHash("triggerTrap");
-    private readonly static int resetTrapAnimation = Animator.StringToHash("resetTrap");
     private bool isTriggered = false;
     private bool canTrigger = true;
     [NonSerialized] public bool byProduct = false;
+    private Coroutine? releaseCoroutine = null;
+    private static readonly int IsTrapTriggered = Animator.StringToHash("isTrapTriggered");
+    private static readonly int IsTrapResetting = Animator.StringToHash("isTrapResetting");
 
     private void Start()
     {
         if (!IsServer || byProduct) return;
         NavMeshHit hit = default;
-        Vector3[] usedPositions = new Vector3[5];
-        usedPositions.AddItem(this.transform.position);
+        List<Vector3> usedPositions = new List<Vector3> { transform.position };
         for (int i = 0; i <= 4; i++)
         {
             Vector3 newPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 6, hit);
-            for (int j = 0; j < usedPositions.Length; j++)
+            for (int j = 0; j < usedPositions.Count; j++)
             {
                 if (Vector3.Distance(usedPositions[j], newPosition) < 1f)
                 {
@@ -46,121 +43,108 @@ public class BearTrap : NetworkBehaviour
             newBearTrap.transform.up = hit.normal;
             newBearTrap.gameObject.GetComponent<NetworkObject>().Spawn();
             newBearTrap.GetComponent<BearTrap>().byProduct = true;
-            usedPositions.AddItem(newPosition);
+            usedPositions.Add(newPosition);
         }
     }
+
     private void Update()
     {
         trapTrigger.interactable = isTriggered;
         if (playerCaught != null) playerCaught.transform.position = Vector3.Lerp(playerCaught.transform.position, caughtPosition, 5f * Time.deltaTime);
-        if (!IsServer) return;
+        if (enemyCaught == null) return;
 
-        if (enemyCaught != null)
-        {
-            enemyCaught.agent.speed = 0f;
-            enemyCaughtTimer += Time.deltaTime;
-            if (enemyCaughtTimer >= 10f)
-            {
-                enemyCaughtTimer = 0f;
-                StartCoroutine(DelayReleasingEnemy());
-            }
-        }
-    }
-
-    private IEnumerator DelayReleasingEnemy()
-    {
-        TrapReleaseAnimationClientRpc();
-        yield return new WaitForSeconds(3f);
-        if (enemyCaught != null) ReleaseTrap();
+        enemyCaught.agent.speed = 0f;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!IsServer || isTriggered || !canTrigger) return;
+        if (isTriggered || !canTrigger) return;
 
-        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && player != null)
+        if (other.CompareTag("Player") && other.TryGetComponent(out PlayerControllerB player))
         {
-            TriggerPlayerTrapServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), false);
+            TriggerTrap(player);
         }
-
-        Transform? parent = CRUtilities.TryFindRoot(other.gameObject.transform);
-        if (other.CompareTag("Enemy") && parent != null && parent.gameObject.TryGetComponent<EnemyAI>(out EnemyAI enemyAI) && enemyAI != null)
+        else if (other.CompareTag("Enemy") && other.TryGetComponent(out EnemyAI enemy))
         {
-            TriggerEnemyTrapServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemyAI), false);
+            TriggerTrap(enemy);
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void TriggerEnemyTrapServerRpc(int enemyIndex, bool retrigger)
+    private void TriggerTrap(PlayerControllerB player)
     {
         isTriggered = true;
-        TriggerEnemyTrapClientRpc(enemyIndex, retrigger);
-    }
-
-    [ClientRpc]
-    private void TriggerEnemyTrapClientRpc(int enemyIndex, bool retrigger)
-    {
-        if (!retrigger) trapAnimator.SetTrigger(triggerTrapAnimation);
-        else trapAnimator.SetTrigger(retriggerTrapAnimation);
-        trapCollider.enabled = false;
-        enemyCaught = RoundManager.Instance.SpawnedEnemies[enemyIndex];
-        enemyCaught.HitEnemy(1, null, false, -1);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void TriggerPlayerTrapServerRpc(int playerIndex, bool retrigger)
-    {
-        isTriggered = true;
-        TriggerPlayerTrapClientRpc(playerIndex, retrigger);
-    }
-
-    [ClientRpc]
-    private void TriggerPlayerTrapClientRpc(int playerIndex, bool retrigger)
-    {
-        if (!retrigger) trapAnimator.SetTrigger(triggerTrapAnimation);
-        else trapAnimator.SetTrigger(retriggerTrapAnimation);
-        trapCollider.enabled = false;
-        playerCaught = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        playerCaught.DamagePlayer(25, true, true, CauseOfDeath.Crushing, 0, false, default);
+        playerCaught = player;
         playerCaught.disableMoveInput = true;
+        playerCaught.DamagePlayer(25, true, false, CauseOfDeath.Crushing, 0, false, default);
         caughtPosition = playerCaught.transform.position;
+        trapAnimator.SetBool(IsTrapTriggered, true);
+        StartCoroutine(ResetBooleanAfterDelay(IsTrapTriggered, 0.5f));
+        trapCollider.enabled = false;
+    }
+
+    private void TriggerTrap(EnemyAI enemy)
+    {
+        isTriggered = true;
+        enemyCaught = enemy;
+        enemyCaught.HitEnemy(1, null, false, -1);
+        trapAnimator.SetBool(IsTrapTriggered, true);
+        StartCoroutine(ResetBooleanAfterDelay(IsTrapTriggered, 0.5f));
+        trapCollider.enabled = false;
+
+        if (releaseCoroutine != null)
+        {
+            StopCoroutine(releaseCoroutine);
+        }
+
+        releaseCoroutine = StartCoroutine(DelayReleasingEnemy());
+    }
+
+    private IEnumerator DelayReleasingEnemy()
+    {
+        yield return new WaitForSeconds(12f);
+        ReleaseTrap();
+        releaseCoroutine = null;
     }
 
     public void ReleaseTrapEarly()
     {
-        trapAnimator.SetTrigger(resetTrapAnimation);
-    }
-
-    [ClientRpc]
-    private void TrapReleaseAnimationClientRpc()
-    {
-        trapAnimator.SetTrigger(resetTrapAnimation);
+        trapAnimator.SetBool(IsTrapResetting, true);
+        StartCoroutine(ResetBooleanAfterDelay(IsTrapResetting, 0.5f));
     }
 
     public void OnCancelReleaseTrap()
     {
-        if (!IsServer) return;
-        if (playerCaught != null) TriggerPlayerTrapServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerCaught), false);
-        if (enemyCaught != null) TriggerEnemyTrapServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemyCaught), false);
+        if (!isTriggered || playerCaught == null) return;
+
+        TriggerTrap(playerCaught);
     }
 
     public void ReleaseTrap()
     {
-        trapAnimator.SetTrigger(resetTrapAnimation);
+        trapAnimator.SetBool(IsTrapResetting, true);
         trapCollider.enabled = true;
-        enemyCaughtTimer = 0f;
+
         if (playerCaught != null)
         {
-            if (playerCaught.disableMoveInput) playerCaught.disableMoveInput = false;
+            playerCaught.disableMoveInput = false;
             playerCaught = null;
         }
+
         if (enemyCaught != null)
         {
             enemyCaught = null;
         }
-        if (!IsServer) return;
+
         isTriggered = false;
         StartCoroutine(DelayForReuse());
+
+        // Reset `isTrapTriggered` if it hasn't been reset properly before
+        if (trapAnimator.GetBool(IsTrapTriggered))
+        {
+            trapAnimator.SetBool(IsTrapTriggered, false);
+        }
+
+        StartCoroutine(ResetBooleanAfterDelay(IsTrapResetting, 0.5f));
     }
 
     private IEnumerator DelayForReuse()
@@ -168,5 +152,11 @@ public class BearTrap : NetworkBehaviour
         canTrigger = false;
         yield return new WaitForSeconds(delayBeforeReset);
         canTrigger = true;
+    }
+
+    private IEnumerator ResetBooleanAfterDelay(int parameterHash, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        trapAnimator.SetBool(parameterHash, false);
     }
 }
