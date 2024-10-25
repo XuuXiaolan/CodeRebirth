@@ -25,7 +25,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public List<Transform> itemsHeldTransforms = new();
     public AnimationClip CatPoseAnim = null!;
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
-    public ShockwaveCharger ShockwaveCharger = null!;
+    [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
     public Collider[] colliders = [];
     public Transform LaserOrigin = null!;
     public AudioSource FlySource = null!;
@@ -146,9 +146,23 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         StartCoroutine(CheckForNearbyEnemiesToOwner());
     }
 
+    private void DoGalRadarAction(bool enabled)
+    {
+        if (enabled)
+        {
+            StartOfRound.Instance.mapScreen.AddTransformAsTargetToRadar(transform, "Delilah", isNonPlayer: true);
+        }
+        else
+        {
+            StartOfRound.Instance.mapScreen.RemoveTargetFromRadar(transform);
+        }
+        StartOfRound.Instance.mapScreen.SyncOrderOfRadarBoostersInList();
+    }
+
     public void ActivateShockwaveGal(PlayerControllerB owner)
     {
         ownerPlayer = owner;
+        DoGalRadarAction(true);
         GalVoice.PlayOneShot(ActivateSound);
         positionOfPlayerBeforeTeleport = owner.transform.position;
         exitPoints = new();
@@ -191,6 +205,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void DeactivateShockwaveGal()
     {
         ownerPlayer = null;
+        DoGalRadarAction(false);
         GalVoice.PlayOneShot(DeactivateSound);
         elevatorScript = null;
         depositItemsDesk = null;
@@ -1096,34 +1111,50 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             Plugin.Logger.LogError("Item was null in HandleDroppingItem");
             return;
         }
-        item.parentObject = null;
         if (!isSellingItems)
         {
-            item.isInShipRoom = true;
-            item.isInElevator = true;
-            item.EnablePhysics(true);
-            item.fallTime = 0f;
-            item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
-            item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
-            item.floorYRot = -1;
-            item.DiscardItemFromEnemy();
-            item.grabbable = true;
-            item.isHeldByEnemy = false;
-            item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
+            item.parentObject = null;
+            if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
+            {
+                Plugin.ExtendedLogging($"Dropping item in ship room: {item}");
+                item.isInShipRoom = true;
+                item.isInElevator = true;
+                item.transform.SetParent(GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform, true);
+                item.EnablePhysics(true);
+                item.EnableItemMeshes(true);
+                item.transform.localScale = item.originalScale;
+                item.isHeld = false;
+                item.isPocketed = false;
+                item.fallTime = 0f;
+                item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
+                Vector3 vector2 = item.GetItemFloorPosition(default(Vector3));
+                item.targetFloorPosition = GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform.InverseTransformPoint(vector2);
+                item.floorYRot = -1;
+                item.grabbable = true;
+                item.isHeldByEnemy = false;
+                item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
+            }
+            else
+            {
+                item.isInShipRoom = false;
+                item.isInElevator = false;
+                item.EnablePhysics(true);
+                item.fallTime = 0f;
+                item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
+                item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
+                item.floorYRot = -1;
+                item.DiscardItemFromEnemy();
+                item.grabbable = true;
+                item.isHeldByEnemy = false;
+                item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
+                item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+            }
         }
         itemsHeldList.Remove(item);
         GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
         if (itemsHeldList.Count == 0 && IsServer)
         {
             Animator.SetBool(holdingItemAnimation, false);
-        }
-        if (ownerPlayer != null && Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) < 5)
-        {
-            ownerPlayer.SetItemInElevator(true, true, item);
-        }
-        else if (!isSellingItems)
-        {
-            item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         }
     }
 

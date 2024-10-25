@@ -10,10 +10,19 @@ public class ShockwaveCharger : NetworkBehaviour
 {
     public InteractTrigger ActivateOrDeactivateTrigger = null!;
     public Transform ChargeTransform = null!;
-    public ShockwaveGalAI shockwaveGalAI = null!;
+    private ShockwaveGalAI shockwaveGalAI = null!;
 
     public void Start()
     {
+        if (IsServer)
+        {
+            shockwaveGalAI = Instantiate(UnlockableHandler.Instance.ShockwaveBot.ShockWaveDronePrefab, ChargeTransform.position, ChargeTransform.rotation).GetComponent<ShockwaveGalAI>();
+            shockwaveGalAI.GetComponent<NetworkObject>().Spawn();
+            shockwaveGalAI.transform.SetParent(this.transform, true);
+            shockwaveGalAI.transform.position = ChargeTransform.position;
+            shockwaveGalAI.transform.rotation = ChargeTransform.rotation;
+        }
+        shockwaveGalAI.ShockwaveCharger = this;
         if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value) StartCoroutine(ActivateShockwaveGalAfterLand());
         ActivateOrDeactivateTrigger.onInteract.AddListener(OnActivateShockwaveGal);
     }

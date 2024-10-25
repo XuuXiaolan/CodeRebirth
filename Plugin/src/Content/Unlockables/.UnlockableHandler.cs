@@ -14,6 +14,9 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
 		[LoadFromBundle("LaserShockBlast.prefab")]
 		public GameObject LasetShockBlast { get; private set; } = null!;
+		
+		[LoadFromBundle("ShockWaveDrone.prefab")]
+		public GameObject ShockWaveDronePrefab { get; private set; } = null!;
 	}
 
 	public class PlantPotAssets(string bundleName) : AssetBundleLoader<PlantPotAssets>(bundleName)
