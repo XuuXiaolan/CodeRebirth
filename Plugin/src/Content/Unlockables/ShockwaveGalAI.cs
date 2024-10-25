@@ -965,32 +965,17 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         Emotion emotionToSwitchTo = (Emotion)emotion;
         if (state != -1)
         {
-            RobotMode mode;
-            switch (stateToSwitchTo)
+            var mode = stateToSwitchTo switch
             {
-                case State.Inactive:
-                    mode = HandleStateInactiveChange();
-                    break;
-                case State.Active:
-                    mode = HandleStateActiveChange();
-                    break;
-                case State.FollowingPlayer:
-                    mode = HandleStateFollowingPlayerChange();
-                    break;
-                case State.DeliveringItems:
-                    mode = HandleStateDeliveringItemsChange();
-                    break;
-                case State.Dancing:
-                    mode = HandleStateDancingChange();
-                    break;
-                case State.AttackMode:
-                    mode = HandleStateAttackModeChange();
-                    break;
-                case State.SellingItems:
-                    mode = HandleStateSellingItemsChange();
-                    break;
-                default: mode = RobotMode.Normal; break;
-            }
+                State.Inactive => HandleStateInactiveChange(),
+                State.Active => HandleStateActiveChange(),
+                State.FollowingPlayer => HandleStateFollowingPlayerChange(),
+                State.DeliveringItems => HandleStateDeliveringItemsChange(),
+                State.Dancing => HandleStateDancingChange(),
+                State.AttackMode => HandleStateAttackModeChange(),
+                State.SellingItems => HandleStateSellingItemsChange(),
+                _ => RobotMode.Normal,
+            };
             RobotFaceController.SetMode(mode);
             galState = stateToSwitchTo;
         }

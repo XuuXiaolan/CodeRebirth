@@ -15,9 +15,9 @@ public class BiomeManager : NetworkBehaviour
     private ParticleSystem deathParticles = null!;
     private DecalProjector activeProjector = null!;
     private System.Random biomeRandom = new System.Random(69);
-    private readonly static int foliageLayer = LayerMask.NameToLayer("Foliage");
-    private readonly static int terrainLayer = LayerMask.NameToLayer("Terrain");
-    private readonly static int combinedLayerMask = (1 << foliageLayer) | (1 << terrainLayer);
+    private static int foliageLayer = 0;
+    private static int terrainLayer = 0;
+    private static int combinedLayerMask = 0;
     private List<Collider> foliageOrTreeColliderList = new();
 
 	public static BiomeManager? Instance { get; private set; }
@@ -25,6 +25,9 @@ public class BiomeManager : NetworkBehaviour
 
     public void Start()
     {
+        foliageLayer = LayerMask.NameToLayer("Foliage");
+        terrainLayer = LayerMask.NameToLayer("Terrain");
+        combinedLayerMask = (1 << foliageLayer) | (1 << terrainLayer);
         if (StartOfRound.Instance != null)
         {
             biomeRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
