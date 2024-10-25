@@ -172,6 +172,7 @@ public class CRUtilities
                 EnemyAICollisionDetect componentInChildren2 = array[i].gameObject.GetComponentInChildren<EnemyAICollisionDetect>();
                 if (componentInChildren2 != null && componentInChildren2.mainScript.IsOwner && distanceOfObjectFromExplosion < 4.5f)
                 {
+                    if (!componentInChildren2.mainScript.NetworkObject.IsSpawned) continue;
                     componentInChildren2.mainScript.HitEnemyOnLocalClient(enemyHitForce, playerWhoHit: attacker);
                 }
             }

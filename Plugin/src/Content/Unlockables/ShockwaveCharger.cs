@@ -17,11 +17,19 @@ public class ShockwaveCharger : NetworkBehaviour
         if (IsServer)
         {
             shockwaveGalAI = Instantiate(UnlockableHandler.Instance.ShockwaveBot.ShockWaveDronePrefab, ChargeTransform.position, ChargeTransform.rotation).GetComponent<ShockwaveGalAI>();
-            shockwaveGalAI.GetComponent<NetworkObject>().Spawn();
+            NetworkObject netObj = shockwaveGalAI.GetComponent<NetworkObject>();
+            netObj.Spawn();
+            SetGalForEveryoneClientRpc(new NetworkObjectReference(netObj));
             shockwaveGalAI.transform.SetParent(this.transform, true);
             shockwaveGalAI.transform.position = ChargeTransform.position;
             shockwaveGalAI.transform.rotation = ChargeTransform.rotation;
         }
+    }
+
+    [ClientRpc]
+    private void SetGalForEveryoneClientRpc(NetworkObjectReference netObjRef)
+    {
+        shockwaveGalAI = ((GameObject)netObjRef).GetComponent<ShockwaveGalAI>();
         shockwaveGalAI.ShockwaveCharger = this;
         if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value) StartCoroutine(ActivateShockwaveGalAfterLand());
         ActivateOrDeactivateTrigger.onInteract.AddListener(OnActivateShockwaveGal);

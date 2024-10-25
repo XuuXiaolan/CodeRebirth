@@ -33,17 +33,10 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
             if (Quaternion.Angle(turretTransform.rotation, targetRotation) < 1f && !isFlashing)
             {
                 // Check if the player is looking towards the turret
-                Vector3 playerForward = detectedPlayer.transform.forward;
+                Vector3 playerForward = detectedPlayer.gameplayCamera.transform.forward;
                 Vector3 directionToTurret = (turretTransform.position - detectedPlayer.transform.position).normalized;
                 float dotProduct = Vector3.Dot(playerForward, directionToTurret);
-                if (dotProduct > 0.5f) // Player is looking roughly towards the turret
-                {
-                    TriggerFlash();
-                }
-                else
-                {
-                    ResetTurret();
-                }
+                TriggerFlash(dotProduct);
             }
         }
 
@@ -88,7 +81,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
         }
     }
 
-    private void TriggerFlash()
+    private void TriggerFlash(float dotProduct)
     {
         if (flashLight != null)
         {
@@ -97,7 +90,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
             flashTimer = flashDuration;
         }
 
-        if (detectedPlayer != null)
+        if (detectedPlayer != null && dotProduct > 0.5f)
         {
             StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, 0.5f, 5f, 1f, false, null, null, blindDuration - 1);
         }

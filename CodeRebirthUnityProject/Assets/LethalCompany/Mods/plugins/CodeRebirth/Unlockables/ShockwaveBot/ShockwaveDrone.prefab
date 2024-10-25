@@ -463,7 +463,7 @@ GameObject:
   - component: {fileID: 8144318307373106634}
   - component: {fileID: 5627089283044738071}
   m_Layer: 6
-  m_Name: ShockWaveDrone
+  m_Name: ShockwaveDrone
   m_TagString: InteractTrigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -606,7 +606,6 @@ MonoBehaviour:
   - {fileID: 5674199889616152704}
   - {fileID: 3498476748268425813}
   CatPoseAnim: {fileID: 7400000, guid: 8e9f930d1b6ff5548b6e7abb38c64f45, type: 2}
-  ShockwaveCharger: {fileID: 0}
   colliders:
   - {fileID: 8399114803787972892}
   - {fileID: 1172609015266963544}
@@ -702,7 +701,7 @@ MonoBehaviour:
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
-  InLocalSpace: 0
+  InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
 --- !u!136 &628193322848618802

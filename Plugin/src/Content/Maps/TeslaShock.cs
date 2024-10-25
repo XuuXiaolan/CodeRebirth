@@ -139,9 +139,9 @@ public class TeslaShock : NetworkBehaviour
 
     private bool PlayerCarryingSomethingCondutive(PlayerControllerB player)
     {
-        if (player.ItemSlots.Count() == 0) return false;
         foreach (var item in player.ItemSlots)
         {
+            if (item == null || item.itemProperties == null) continue;
             if (item.itemProperties.isConductiveMetal) return true;
         }
         return false;
