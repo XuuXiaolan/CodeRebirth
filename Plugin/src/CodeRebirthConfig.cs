@@ -319,15 +319,15 @@ public class CodeRebirthConfig
                                             "How many plants can get added at least.");
         ConfigFloraGrassSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Grass Spawn Places",
-                                            "Vow,Adamance,March,Custom,",
+                                            "Vanilla,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraDesertSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Desert Spawn Places",
-                                            "Assurance,Offense,Custom,",
+                                            "Vanila,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraSnowSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Snow Spawn Places",
-                                            "Dine,Rend,Titan,Custom,",
+                                            "Vanilla,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraExcludeSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Exclude Spawn Places",
