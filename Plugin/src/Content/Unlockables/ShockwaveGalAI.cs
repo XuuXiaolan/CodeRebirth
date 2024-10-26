@@ -290,13 +290,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private void InteractTriggersUpdate()
     {
         bool interactable = galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
-        bool idleInteractable = galState != State.DeliveringItems && galState != State.AttackMode && interactable;
+        bool idleInteractable = galState != State.AttackMode && interactable;
         HeadPatTrigger.interactable = interactable;
         ChestTrigger.interactable = idleInteractable && itemsHeldList.Count > 0;
 
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.interactable = idleInteractable && ownerPlayer!.currentlyHeldObjectServer != null;
+            trigger.interactable = idleInteractable && ownerPlayer!.currentlyHeldObjectServer != null && galState != State.DeliveringItems;
         }
     }
 
