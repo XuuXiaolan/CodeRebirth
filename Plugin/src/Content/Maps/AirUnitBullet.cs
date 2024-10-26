@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class Projectile : NetworkBehaviour
+public class AirUnitProjectile : NetworkBehaviour
 {
     private float damage;
     public float speed = 20f;

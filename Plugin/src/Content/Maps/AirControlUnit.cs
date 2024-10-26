@@ -16,7 +16,7 @@ public class AirControlUnit : NetworkBehaviour
 
     private void Start()
     {
-        // projectilePrefab = MapObjectHandler.Instance.AirControlUnit.ProjectilePrefab;
+        projectilePrefab = MapObjectHandler.Instance.AirControlUnit.ProjectilePrefab;
     }
 
     private void Update()
@@ -59,11 +59,11 @@ public class AirControlUnit : NetworkBehaviour
     {
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
         NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
-        if (networkObject)
+        if (networkObject != null)
         {
             networkObject.Spawn();
         }
-        Projectile projectileComponent = projectile.GetComponent<Projectile>();
+        AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
         projectileComponent.Initialize(damageAmount);
     }
 }
