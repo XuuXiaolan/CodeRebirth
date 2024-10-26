@@ -1,8 +1,27 @@
 # v0.7.0
 
-- Added 7 new hazards
+- Added 7 new hazards.
+  - TeslaShock.
+    - Damages nearby things with metallic items, chains enemies and players alike.
+  - Functional Microwave.
+    - Wanders the facility... very slowly... while cooking it up.
+  - Air Control Unit.
+    - Screw jetpack users.
+  - Laser Turret.
+    - With gems stolen from Henry Stickman, some mad scientist created a big ass turret that went wild.
+  - Bear Traps.
+    - Usually is for bears.
+  - Flash Turret.
+    - Say cheese!
+  - Industrial Fan.
+    - Back when employees used to work overtime in the hot summers.
 - Fixed bug with getting fired.
-- 
+- Made it so you can drop gal's items while she's delivering them.
+- Cleaned up triggers with gal so prompt wont pop up unless you fulfill conditions.
+- Gave gal a radar dot so you can look at her in the terminal's radar, goes by Delilah.
+- Made it so gal doesnt jitter for clients on ship land/takeoff.
+- Fixed several bugs with gal killing enemies.
+- Fixed gal dropping off items onto ship, they now stay there with the ship, notif doesnt always show up though.
 
 ## v0.6.8
 

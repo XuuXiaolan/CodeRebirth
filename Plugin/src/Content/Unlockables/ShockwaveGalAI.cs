@@ -488,7 +488,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
 
-        if (!backFlipping && UnityEngine.Random.Range(0f, 25000f) <= 1f && Agent.velocity.sqrMagnitude <= 0.01f && Vector3.Distance(Agent.transform.position, ownerPlayer.transform.position) <= 5f)
+        if (!backFlipping && UnityEngine.Random.Range(0f, 25000f) <= 2f && Agent.velocity.sqrMagnitude <= 0.01f && Vector3.Distance(Agent.transform.position, ownerPlayer.transform.position) <= 5f)
         {
             DoBackFliplol();
             return;
@@ -939,7 +939,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    void SetAnimatorBools(bool holding, bool attack, bool dance, bool activated)
+    private void SetAnimatorBools(bool holding, bool attack, bool dance, bool activated)
     {
         Animator.SetBool(holdingItemAnimation, holding);
         Animator.SetBool(attackModeAnimation, attack);

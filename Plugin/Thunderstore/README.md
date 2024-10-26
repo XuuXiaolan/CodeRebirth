@@ -13,8 +13,8 @@ If you're interested in helping with the development of the mod, feel free to re
 - 2 Weather with 7 different events total.
 - 2 Shop Items.
 - 7 Scrap.
-- Custom Outside Objects.
-- Custom Inside Objects.
+- 4 Custom Outside Objects.
+- 6 Custom Inside Objects.
 
 ## Preview (Spoilers ahead!)
 
@@ -121,9 +121,10 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Meteorite (Ruby)
 
-![MR]()
+![MR](https://i.postimg.cc/prXbTzmp/image.png)
 
 > Valuable rare Scrap found from the remaining debris of some Meteors.
+> Yes I'm aware the ruby looks ass.
 
 ### Epic Axe
 
@@ -164,9 +165,51 @@ If you're interested in helping with the development of the mod, feel free to re
 <details>
   <summary><strong>Miscellaneous</strong></summary>
 
+### Tesla Shock
+
+![TS](https://i.postimg.cc/GpGRtvjj/image.png)
+
+> Was a fun little gadget for children of the employees, slowly amplified over time and now considered deadly with conductive items in nearby employees.
+
+### Laser Turret
+
+![LT](https://i.postimg.cc/1t3v2Q4N/image.png)
+
+> Uses unknown gem technology to amplify mining efficiency, was abandoned and somehow reactivated.
+
+### Industrial Fan
+
+![IF](https://i.postimg.cc/htGbKrcH/image.png)
+
+> Depending on which side you face, you could be dragged in and shredded or pushed away.
+
+### Functional Microwave
+
+![FM](https://i.postimg.cc/x84jMnNG/image.png)
+
+> Slowly moves around the facility, cooking the walls and employees alike.
+
+### Flash Turret
+
+![FT](https://i.postimg.cc/FH9mzY6t/image.png)
+
+> Blinds you temporarily if looked at, otherwise small flash of light.
+
+### Bear Trap
+
+![BT](https://i.postimg.cc/xdF738T4/image.png)
+
+> Randomly spawning outside in groups of 5~, can cause a lot of damage if unnoticed.
+
+### Air Control Unit
+
+![ACU]()
+
+> Made for people who think they can skip the moon by jetpacking.
+
 ### Item Crate
 
-![ICW](https://i.postimg.cc/jqg2RD0j/itemcrate.png)
+![ICW](https://i.postimg.cc/3Jz8Lfy1/image.png)
 ![ICM](https://i.postimg.cc/g0xR1608/image.png)
 
 > Wooden: Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
@@ -175,7 +218,6 @@ If you're interested in helping with the development of the mod, feel free to re
 ### Diverse Flora
 
 ![F](https://i.postimg.cc/8C8k191j/image.png)
-![DF]()
 
 ### Infectious Biomes
 
@@ -193,7 +235,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Modeling/Designs:**
 
-- V0xx (the goat), Rodrigo, S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
+- Rodrigo, v0xx, S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
 
 **Sounds:**
 
