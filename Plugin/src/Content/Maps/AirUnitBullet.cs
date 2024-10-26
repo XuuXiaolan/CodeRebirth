@@ -1,4 +1,3 @@
-
 using System.Collections;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -10,10 +9,12 @@ public class AirUnitProjectile : NetworkBehaviour
     private float damage;
     public float speed = 20f;
     public float lifetime = 5f;
+    private AirControlUnit airControlUnit = null!;
 
-    public void Initialize(float damageAmount)
+    public void Initialize(float damageAmount, AirControlUnit airControlUnit)
     {
         damage = damageAmount;
+        this.airControlUnit = airControlUnit;
         StartCoroutine(DespawnAfterDelay(lifetime));
     }
 
@@ -25,7 +26,8 @@ public class AirUnitProjectile : NetworkBehaviour
 
     private void Update()
     {
-        transform.Translate(Vector3.up * speed * Time.deltaTime);
+        if (airControlUnit == null) return;
+        transform.Translate(airControlUnit.turretCannonTransform.forward * speed * Time.deltaTime); // Follow the turret cannon's forward direction
     }
 
     private void OnTriggerEnter(Collider other)

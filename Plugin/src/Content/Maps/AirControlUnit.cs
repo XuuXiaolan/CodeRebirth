@@ -5,6 +5,7 @@ namespace CodeRebirth.src.Content.Maps;
 public class AirControlUnit : NetworkBehaviour
 {
     public Transform turretTransform = null!;
+    public Transform turretCannonTransform = null!;
     public Transform projectileSpawnPoint = null!;
     public float rotationSpeed = 45f;
     public float fireRate = 1f;
@@ -44,12 +45,20 @@ public class AirControlUnit : NetworkBehaviour
             {
                 Vector3 directionToTarget = target.transform.position - turretTransform.position;
                 float angle = Vector3.Angle(turretTransform.up, directionToTarget);
-
+                Plugin.ExtendedLogging($"Angle: {angle}");
                 if (angle <= 45f) // Check if within 45 degrees
                 {
                     Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                    targetRotation.y = 0f;
+                    targetRotation.z = 0f;
+                    targetRotation.x = 0f;
                     turretTransform.rotation = Quaternion.RotateTowards(turretTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+                    // Rotate the turret cannon to aim at the target
+                    Vector3 cannonDirection = target.transform.position - turretCannonTransform.position;
+                    Quaternion cannonTargetRotation = Quaternion.LookRotation(cannonDirection);
+                    cannonTargetRotation.y = turretCannonTransform.rotation.y; // Keep y rotation fixed
+                    cannonTargetRotation.z = 0f; // Only allow up/down rotation
+                    turretCannonTransform.rotation = Quaternion.RotateTowards(turretCannonTransform.rotation, cannonTargetRotation, rotationSpeed * Time.deltaTime);
                 }
             }
         }
@@ -59,11 +68,8 @@ public class AirControlUnit : NetworkBehaviour
     {
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
         NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
-        if (networkObject != null)
-        {
-            networkObject.Spawn();
-        }
+        networkObject?.Spawn();
         AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
-        projectileComponent.Initialize(damageAmount);
+        projectileComponent.Initialize(damageAmount, this);
     }
 }
