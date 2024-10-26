@@ -92,8 +92,22 @@ public class TeslaShock : NetworkBehaviour
                 foreach (LineRenderer lineRenderer in lineRenderers)
                 {
                     lineRenderer.positionCount = 2;
-                    lineRenderer.SetPosition(0, targetsSortedByDistance[i].position - targetsSortedByDistance[i].up * 0.15f);
-                    lineRenderer.SetPosition(1, targetsSortedByDistance[i + 1].position - targetsSortedByDistance[i + 1].up * 0.15f);
+
+                    Vector3 startPos = targetsSortedByDistance[i].position;
+                    Vector3 endPos = targetsSortedByDistance[i + 1].position;
+
+                    if (playersSortedByDistance.Any(p => p.gameplayCamera.transform == targetsSortedByDistance[i]))
+                    {
+                        startPos -= targetsSortedByDistance[i].up * 0.25f;
+                    }
+
+                    if (playersSortedByDistance.Any(p => p.gameplayCamera.transform == targetsSortedByDistance[i + 1]))
+                    {
+                        endPos -= targetsSortedByDistance[i + 1].up * 0.25f;
+                    }
+
+                    lineRenderer.SetPosition(0, startPos);
+                    lineRenderer.SetPosition(1, endPos);
                     lineRenderer.enabled = true;
                     StartCoroutine(DisableRendererAfterDelay(lineRenderer, 0.5f));
                 }
@@ -101,7 +115,7 @@ public class TeslaShock : NetworkBehaviour
                 // Damage each target in the chain
                 if (i > 0) // Skip the first point (startChainPoint)
                 {
-                    Transform currentTarget = targetsSortedByDistance[i+1];
+                    Transform currentTarget = targetsSortedByDistance[i + 1];
                     PlayerControllerB player = playersSortedByDistance.FirstOrDefault(p => p.gameplayCamera.transform == currentTarget);
                     if (player != null)
                     {
@@ -128,9 +142,9 @@ public class TeslaShock : NetworkBehaviour
 
             activeLineRenderers = linesNeeded;
             vfx.SetFloat("SpawnRate", 20f);
-            yield return new WaitForSeconds(delayBetweenZaps/2);
+            yield return new WaitForSeconds(delayBetweenZaps / 2);
             vfx.SetFloat("SpawnRate", 40);
-            yield return new WaitForSeconds(delayBetweenZaps/2);
+            yield return new WaitForSeconds(delayBetweenZaps / 2);
         }
         vfx.SetFloat("SpawnRate", 5f);
         // Disable all line renderers when done
