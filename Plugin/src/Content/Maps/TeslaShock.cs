@@ -5,6 +5,7 @@ using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
 public class TeslaShock : NetworkBehaviour
@@ -15,10 +16,16 @@ public class TeslaShock : NetworkBehaviour
     public float delayBetweenZaps = 2f;
     public float pushMultiplier = 10f;
     public Transform startChainPoint = null!;
+    public VisualEffect vfx = null!;
 
     private PlayerControllerB? targetPlayer;
     private Dictionary<GameObject, List<LineRenderer>> createdLineRenderers = new();
     private int activeLineRenderers = 0;
+
+    private void Start()
+    {
+        vfx.SetFloat("SpawnRate", 20f);
+    }
 
     private void Update()
     {
@@ -69,8 +76,8 @@ public class TeslaShock : NetworkBehaviour
             // Combine players and enemies into a single list ordered by proximity
             List<Transform> targetsSortedByDistance =
             [
-                startChainPoint, affectedPlayer.transform,
-                .. playersSortedByDistance.Select(player => player.transform),
+                startChainPoint, affectedPlayer.gameplayCamera.transform,
+                .. playersSortedByDistance.Select(player => player.gameplayCamera.transform),
                 .. enemiesSortedByDistance.Select(enemy => enemy.transform),
             ];
 
@@ -85,9 +92,26 @@ public class TeslaShock : NetworkBehaviour
                 foreach (LineRenderer lineRenderer in lineRenderers)
                 {
                     lineRenderer.positionCount = 2;
-                    lineRenderer.SetPosition(0, targetsSortedByDistance[i].position);
-                    lineRenderer.SetPosition(1, targetsSortedByDistance[i + 1].position);
+                    lineRenderer.SetPosition(0, targetsSortedByDistance[i].position - targetsSortedByDistance[i].up * 0.15f);
+                    lineRenderer.SetPosition(1, targetsSortedByDistance[i + 1].position - targetsSortedByDistance[i + 1].up * 0.15f);
                     lineRenderer.enabled = true;
+                    StartCoroutine(DisableRendererAfterDelay(lineRenderer, 0.5f));
+                }
+
+                // Damage each target in the chain
+                if (i > 0) // Skip the first point (startChainPoint)
+                {
+                    Transform currentTarget = targetsSortedByDistance[i+1];
+                    PlayerControllerB player = playersSortedByDistance.FirstOrDefault(p => p.gameplayCamera.transform == currentTarget);
+                    if (player != null)
+                    {
+                        player?.DamagePlayer(10, true, false, CauseOfDeath.Burning, 0, false, default);
+                    }
+                    else
+                    {
+                        EnemyAI enemy = enemiesSortedByDistance.FirstOrDefault(e => e.transform == currentTarget);
+                        enemy?.HitEnemy(1, null, true, -1);
+                    }
                 }
             }
 
@@ -103,10 +127,12 @@ public class TeslaShock : NetworkBehaviour
             }
 
             activeLineRenderers = linesNeeded;
-
-            yield return new WaitForSeconds(delayBetweenZaps);
+            vfx.SetFloat("SpawnRate", 20f);
+            yield return new WaitForSeconds(delayBetweenZaps/2);
+            vfx.SetFloat("SpawnRate", 40);
+            yield return new WaitForSeconds(delayBetweenZaps/2);
         }
-
+        vfx.SetFloat("SpawnRate", 5f);
         // Disable all line renderers when done
         foreach (var lineRendererDict in createdLineRenderers)
         {
@@ -118,6 +144,12 @@ public class TeslaShock : NetworkBehaviour
 
         activeLineRenderers = 0;
         targetPlayer = null;
+    }
+
+    private IEnumerator DisableRendererAfterDelay(LineRenderer lineRenderer, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        lineRenderer.enabled = false;
     }
 
     private void EnsureLineRendererPool(int linesNeeded)
