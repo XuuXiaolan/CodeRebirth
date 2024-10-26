@@ -55,9 +55,8 @@ public class AirControlUnit : NetworkBehaviour
 
                     // Rotate the turret cannon to aim at the target
                     Vector3 cannonDirection = target.transform.position - turretCannonTransform.position;
-                    Quaternion cannonTargetRotation = Quaternion.LookRotation(cannonDirection);
-                    cannonTargetRotation.y = turretCannonTransform.rotation.y; // Keep y rotation fixed
-                    cannonTargetRotation.z = 0f; // Only allow up/down rotation
+                    float targetAngleX = Mathf.Clamp(Vector3.SignedAngle(Vector3.forward, cannonDirection, turretCannonTransform.right), 0f, 45f);
+                    Quaternion cannonTargetRotation = Quaternion.Euler(targetAngleX, turretCannonTransform.eulerAngles.y, turretCannonTransform.eulerAngles.z);
                     turretCannonTransform.rotation = Quaternion.RotateTowards(turretCannonTransform.rotation, cannonTargetRotation, rotationSpeed * Time.deltaTime);
                 }
             }
