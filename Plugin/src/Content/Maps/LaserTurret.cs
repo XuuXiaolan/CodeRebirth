@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
-public class LaserTurret : NetworkBehaviour
+public class LaserTurret : NetworkBehaviour // turretAudioSource with looping rotating audio
 {
     public Transform turretTransform = null!;
     public Transform laserStartPoint = null!;
@@ -15,6 +15,7 @@ public class LaserTurret : NetworkBehaviour
     public float laserDamage = 3f;
     public float laserThickness = 0.5f;
     public ParticleSystem ashParticle = null!;
+    public AudioSource impactAudioSource = null!;
 
     private float originalImpactPositionZ = 1f;
     private float originalParticlesVelocityZ = 1f;
@@ -125,6 +126,7 @@ public class LaserTurret : NetworkBehaviour
         visualEffect.SetVector3(ElectricBeamScale, electricBeamScale);
         visualEffect.SetVector3(BeamCoreScale, beamCoreScale);
 
+        impactAudioSource.transform.position = laserEndPoint;
         if (!isFiring)
         {
             isFiring = true;

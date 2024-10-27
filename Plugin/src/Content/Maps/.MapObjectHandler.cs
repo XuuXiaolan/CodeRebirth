@@ -149,61 +149,31 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public void RegisterFunctionalMicrowave()
 	{
 		FunctionalMicrowave = new FunctionalMicrowaveAssets("functionalmicrowaveassets");
-		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
-		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
-		mapObjDefBug.spawnableMapObject.prefabToSpawn = FunctionalMicrowave.FunctionalMicrowavePrefab;
-		hazardPrefabs.Add(MapObjectHandler.Instance.FunctionalMicrowave.FunctionalMicrowavePrefab);
-		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
-			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigFunctionalMicrowaveAbundance.Value, 0, 1000)))
-		);
+		RegisterInsideMapObjectWithConfig(FunctionalMicrowave.FunctionalMicrowavePrefab, Plugin.ModConfig.ConfigFunctionalMicrowaveSpawnWeight.Value);
 	}
 
 	public void RegisterTeslaShock()
 	{
 		TeslaShock = new TeslaShockAssets("teslashockassets");
-		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
-		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
-		mapObjDefBug.spawnableMapObject.prefabToSpawn = TeslaShock.TeslaShockPrefab;
-		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
-			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigTeslaShockAbundance.Value, 0, 1000)))
-		);
-		hazardPrefabs.Add(MapObjectHandler.Instance.TeslaShock.TeslaShockPrefab);
+		RegisterInsideMapObjectWithConfig(TeslaShock.TeslaShockPrefab, Plugin.ModConfig.ConfigTeslaShockSpawnWeight.Value);
 	}
 
 	public void RegisterFlashTurret()
 	{
 		FlashTurret = new FlashTurretAssets("flashturretassets");
-		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
-		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
-		mapObjDefBug.spawnableMapObject.prefabToSpawn = FlashTurret.FlashTurretPrefab;
-		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
-			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigFlashTurretAbundance.Value, 0, 1000)))
-		);
-        hazardPrefabs.Add(MapObjectHandler.Instance.FlashTurret.FlashTurretPrefab);
+		RegisterInsideMapObjectWithConfig(FlashTurret.FlashTurretPrefab, Plugin.ModConfig.ConfigFlashTurretSpawnWeight.Value);
 	}
 
 	public void RegisterIndustrialFan()
 	{
 		IndustrialFan = new IndustrialFanAssets("industrialfanassets");
-		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
-		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
-		mapObjDefBug.spawnableMapObject.prefabToSpawn = IndustrialFan.IndustrialFanPrefab;
-		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
-			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigIndustrialFanAbundance.Value, 0, 1000)))
-		);
-		hazardPrefabs.Add(MapObjectHandler.Instance.IndustrialFan.IndustrialFanPrefab);
+		RegisterInsideMapObjectWithConfig(IndustrialFan.IndustrialFanPrefab, Plugin.ModConfig.ConfigIndustrialFanSpawnWeight.Value);
 	}
 
 	public void RegisterLaserTurret()
 	{
 		GlowingGem = new GlowingGemAssets("glowinggemassets");
-		SpawnableMapObjectDef mapObjDefBug = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
-		mapObjDefBug.spawnableMapObject = new SpawnableMapObject();
-		mapObjDefBug.spawnableMapObject.prefabToSpawn = GlowingGem.LaserTurretPrefab;
-		MapObjects.RegisterMapObject(mapObjDefBug, Levels.LevelTypes.All, (level) => 
-			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(Plugin.ModConfig.ConfigLaserTurretAbundance.Value, 0, 1000)))
-		);
-        hazardPrefabs.Add(MapObjectHandler.Instance.GlowingGem.LaserTurretPrefab);
+		RegisterInsideMapObjectWithConfig(GlowingGem.LaserTurretPrefab, Plugin.ModConfig.ConfigLaserTurretSpawnWeight.Value);
 	}
 
 	public void RegisterInsideMoney()

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Maps;
-public class FunctionalMicrowave : NetworkBehaviour
+public class FunctionalMicrowave : NetworkBehaviour // have a looping shaking sound turned on once activated
 {
     public float microwaveOpeningTimer = 15f;
     public float microwaveClosingTimer = 7.5f;
@@ -17,6 +17,9 @@ public class FunctionalMicrowave : NetworkBehaviour
     public NavMeshAgent agent = null!;
     public float Speed = 3f;
     public float TurnSpeed = 10f;
+    public AudioSource microwaveAudioSource = null!;
+    public AudioClip microwaveOpenSound = null!;
+    public AudioClip microwaveCloseSound = null!;
 
     private float microwaveOpening = 0f;
     private float microwaveClosing = 0f;
@@ -48,6 +51,7 @@ public class FunctionalMicrowave : NetworkBehaviour
                 microwaveOpening = 0f;
                 isOpen = true;
                 mainCollider.enabled = true;
+                microwaveAudioSource.PlayOneShot(microwaveOpenSound);
                 animator.SetBool("isActivated", isOpen);
             }
         }
@@ -59,6 +63,7 @@ public class FunctionalMicrowave : NetworkBehaviour
                 microwaveClosing = 0f;
                 isOpen = false;
                 mainCollider.enabled = false;
+                microwaveAudioSource.PlayOneShot(microwaveCloseSound);
                 foreach (PlayerControllerB player in playersAffected)
                 {
                     player.movementSpeed *= hinderedMultiplier;

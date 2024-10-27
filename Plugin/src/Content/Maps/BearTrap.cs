@@ -13,6 +13,9 @@ public class BearTrap : NetworkBehaviour
     public Collider trapCollider = null!;
     public float delayBeforeReset = 3.0f;
     public InteractTrigger trapTrigger = null!;
+    public AudioSource trapAudioSource = null!;
+    public AudioClip triggerSound = null!;
+    public AudioClip resetTrapSound = null!;
 
     private Vector3 caughtPosition = Vector3.zero;
     private PlayerControllerB? playerCaught = null;
@@ -59,7 +62,7 @@ public class BearTrap : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (isTriggered || !canTrigger) return;
-
+        
         if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player))
         {
             TriggerTrap(player);
@@ -72,6 +75,7 @@ public class BearTrap : NetworkBehaviour
 
     private void TriggerTrap(PlayerControllerB player)
     {
+        trapAudioSource.PlayOneShot(triggerSound);
         isTriggered = true;
         playerCaught = player;
         playerCaught.disableMoveInput = true;
@@ -84,6 +88,7 @@ public class BearTrap : NetworkBehaviour
 
     private void TriggerTrap(EnemyAI enemy)
     {
+        trapAudioSource.PlayOneShot(triggerSound);
         isTriggered = true;
         enemyCaught = enemy;
         enemyCaught.HitEnemy(1, null, false, -1);
@@ -121,6 +126,7 @@ public class BearTrap : NetworkBehaviour
 
     public void ReleaseTrap()
     {
+        trapAudioSource.PlayOneShot(resetTrapSound);
         trapAnimator.SetBool(IsTrapResetting, true);
         trapCollider.enabled = true;
 

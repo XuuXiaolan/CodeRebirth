@@ -74,6 +74,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private DepositItemsDesk? depositItemsDesk = null;
     private bool onCompanyMoon = false;
     private bool usingElevator = false;
+    private bool isInHangarShipRoom = true;
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem");
@@ -327,6 +328,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         GalSFX.PlayOneShot(IdleSounds[galRandom.NextInt(0, IdleSounds.Length - 1)]);
     }
 
+    private void ShipRoomUpdate()
+    {
+        isInHangarShipRoom = StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position);
+    }
+
     public void Update()
     {
         if (galState == State.Inactive) return;
@@ -336,6 +342,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         BoomboxUpdate();
         StoppingDistanceUpdate();
         IdleUpdate();
+        ShipRoomUpdate();
 
         if (!IsHost) return;
         HostSideUpdate();
@@ -666,8 +673,17 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             }
             else
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(itemToGrab.transform.position - transform.position), Time.deltaTime * 5f);
-                transform.position = Vector3.MoveTowards(transform.position, itemToGrab.transform.position, Agent.speed * Time.deltaTime);
+                bool bothInShip = isInHangarShipRoom && StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position);
+                if (bothInShip)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(itemToGrab.transform.position - transform.position), Time.deltaTime * 5f);
+                    transform.position = Vector3.MoveTowards(transform.position, itemToGrab.transform.position, Agent.speed * Time.deltaTime);
+                }
+                else
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(StartOfRound.Instance.shipDoorNode.transform.position - transform.position), Time.deltaTime * 5f);
+                    transform.position = Vector3.MoveTowards(transform.position, StartOfRound.Instance.shipDoorNode.transform.position, Agent.speed * Time.deltaTime);
+                }
             }
         }
         else if (itemsHeldList.Count > 0)
@@ -695,12 +711,16 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 }
             }
             else
-            {
-                Vector3 targetPosition = depositItemsDesk.deskObjectsContainer.transform.position;
-                float distance = Vector3.Distance(transform.position, targetPosition);
-                    
-                if (distance > 5f)
+            {                
+                if (isInHangarShipRoom)
                 {
+                    Vector3 targetPosition = StartOfRound.Instance.shipDoorNode.transform.position;
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+                }
+                else
+                {
+                    Vector3 targetPosition = depositItemsDesk.deskObjectsContainer.transform.position;
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
                 }
