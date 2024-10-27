@@ -54,7 +54,7 @@ public class AirControlUnit : NetworkBehaviour
                 lastPlayerTargetted = playerControllerB;
                 // Calculate the time needed for the projectile to reach the target
                 float distanceToTarget = Vector3.Distance(turretTransform.position, target.transform.position);
-                float timeToTarget = distanceToTarget / 100f; // Bullet speed is 100
+                float timeToTarget = distanceToTarget / 50f; // Bullet speed is 100 but we overshootin cuz overshooting is good
 
                 // Predict future position of the target based on its current velocity and time to target
                 Vector3 futurePosition = target.transform.position + targetRigidbody.velocity * timeToTarget;
