@@ -10,15 +10,19 @@ namespace CodeRebirth.src.Content.Maps
         private float damage;
         public float speed = 20f;
         public float lifetime = 5f;
-        public float anglePointingTo = 0f;
+        public float curveStrength = 2f; // Strength of curve adjustment
+    
+        private float anglePointingTo = 0f;
+        private PlayerControllerB playerToTarget = null!;
 
-        public void Initialize(float damageAmount, float angle)
+        public void Initialize(float damageAmount, float angle, PlayerControllerB targetPlayer)
         {
             damage = damageAmount;
             anglePointingTo = angle; // Assign the angle to use for rotation
+            playerToTarget = targetPlayer; // Assign the player to target
             StartCoroutine(DespawnAfterDelay(lifetime));
 
-            // Set the rotation of the projectile based on the angle
+            // Set the initial rotation of the projectile based on the angle
             Vector3 currentEulerAngles = transform.localEulerAngles;
             transform.localEulerAngles = new Vector3(anglePointingTo, currentEulerAngles.y, currentEulerAngles.z);
         }
@@ -29,6 +33,14 @@ namespace CodeRebirth.src.Content.Maps
 
             // Move the projectile in its forward direction in world space
             transform.position += transform.up * speed * Time.deltaTime;
+
+            // Curve towards target if the target player is within range
+            if (playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= 30f)
+            {
+                Vector3 directionToTarget = (playerToTarget.transform.position - transform.position).normalized;
+                Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.deltaTime).normalized;
+                transform.up = newDirection;
+            }
         }
 
         private IEnumerator DespawnAfterDelay(float delay)

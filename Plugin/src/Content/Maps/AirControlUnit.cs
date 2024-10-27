@@ -17,6 +17,7 @@ public class AirControlUnit : NetworkBehaviour
     private float currentAngle = 0f;
     private float fireTimer = 3f;
     private GameObject projectilePrefab = null!;
+    private PlayerControllerB? lastPlayerTargetted = null;
 
     private void Start()
     {
@@ -44,18 +45,25 @@ public class AirControlUnit : NetworkBehaviour
         Collider[] targets = Physics.OverlapSphere(turretTransform.position, detectionRange, LayerMask.GetMask("Player"), QueryTriggerInteraction.Collide);
         foreach (Collider target in targets)
         {
+            if (Physics.Raycast(turretCannonTransform.position, target.gameObject.transform.position - turretCannonTransform.position, out RaycastHit _, detectionRange, StartOfRound.Instance.collidersAndRoomMask)) return;
             if (target.CompareTag("Player"))
             {
-                Rigidbody targetRigidbody = target.GetComponent<PlayerControllerB>().playerRigidbody;
+                PlayerControllerB playerControllerB = target.GetComponent<PlayerControllerB>();
+                Rigidbody targetRigidbody = playerControllerB.playerRigidbody;
                 if (targetRigidbody == null) continue;
-
+                lastPlayerTargetted = playerControllerB;
+                // Calculate the time needed for the projectile to reach the target
                 float distanceToTarget = Vector3.Distance(turretTransform.position, target.transform.position);
-                float predictionFactor = Mathf.Clamp(distanceToTarget / 5f, 0.5f, 5f); // Increase prediction based on distance
-                Vector3 futurePosition = target.transform.position + targetRigidbody.velocity * predictionFactor;
+                float timeToTarget = distanceToTarget / 100f; // Bullet speed is 100
+
+                // Predict future position of the target based on its current velocity and time to target
+                Vector3 futurePosition = target.transform.position + targetRigidbody.velocity * timeToTarget;
+
+                // Calculate direction to the predicted position
                 Vector3 directionToTarget = futurePosition - turretTransform.position;
                 float angle = Vector3.Angle(turretTransform.up, directionToTarget);
-                Plugin.ExtendedLogging($"Angle: {angle}");
-                if (angle <= 45f) // Check if within 45 degrees
+
+                if (angle <= 60f) // Check if within 60 degrees
                 {
                     currentAngle = angle;
                     Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
@@ -75,11 +83,12 @@ public class AirControlUnit : NetworkBehaviour
 
     private void FireProjectile()
     {
+        if (lastPlayerTargetted == null) return;
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
         NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
         networkObject?.Spawn();
         AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
-        projectileComponent.Initialize(damageAmount, currentAngle);
+        projectileComponent.Initialize(damageAmount, currentAngle, lastPlayerTargetted);
 
         // Rattle the cannon's transform to emulate a shake effect
         StartCoroutine(RattleCannon());

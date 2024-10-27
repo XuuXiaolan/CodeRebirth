@@ -806,6 +806,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             for (int i = 0; i < numHits; i++)
             {
                 Collider collider = hitColliders[i];
+                if (!collider.gameObject.activeSelf) continue;
                 if (!collider.TryGetComponent(out EnemyAI enemy) && collider.GetComponent<NetworkObject>() == null)
                 {
                     NetworkObject networkObject = collider.GetComponentInParent<NetworkObject>();
