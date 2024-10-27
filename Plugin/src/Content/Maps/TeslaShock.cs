@@ -30,29 +30,25 @@ public class TeslaShock : NetworkBehaviour
     private void Update()
     {
         if (targetPlayer != null) return;
-        bool somethingConductiveFound = PlayerCarryingSomethingConductive(GameNetworkManager.Instance.localPlayerController);
-        if (!somethingConductiveFound) return;
-        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) > distanceFromPlayer) return;
-
-        targetPlayer = GameNetworkManager.Instance.localPlayerController;
-        SetTargetPlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
+        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+        {
+            bool somethingConductiveFound = PlayerCarryingSomethingConductive(player);
+            if (!somethingConductiveFound) continue;
+            if (Vector3.Distance(player.transform.position, transform.position) > distanceFromPlayer) continue;
+            targetPlayer = player;
+            StartCoroutine(ExplodePlayerAfterDelay(delayBeforeExplodePlayer, player));
+            break;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
             Vector3 direction = (player.transform.position - this.transform.position).normalized;
             Vector3 force = direction * pushMultiplier;
             player.DamagePlayer(playerDamageAmount, true, false, CauseOfDeath.Blast, 0, false, force);
         }
-    }
-
-    [ClientRpc]
-    private void SetTargetPlayerClientRpc(int playerIndex)
-    {
-        targetPlayer = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        StartCoroutine(ExplodePlayerAfterDelay(delayBeforeExplodePlayer, targetPlayer));
     }
 
     private IEnumerator ExplodePlayerAfterDelay(float delay, PlayerControllerB affectedPlayer)

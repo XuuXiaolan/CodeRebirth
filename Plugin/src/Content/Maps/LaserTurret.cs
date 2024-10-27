@@ -23,15 +23,20 @@ public class LaserTurret : NetworkBehaviour
     private float originalBeamCoreScaleY = 1f;
     private bool isFiring = false;
     private float damageTimer = 0f;
+    private static readonly int ImpactPosition = UnityEngine.Shader.PropertyToID("ImpactPosition");
+    private static readonly int ParticlesVelocity = UnityEngine.Shader.PropertyToID("ParticlesVelocity");
+    private static readonly int DarkBeamScale = UnityEngine.Shader.PropertyToID("DarkBeamScale");
+    private static readonly int ElectricBeamScale = UnityEngine.Shader.PropertyToID("ElectricBeamScale");
+    private static readonly int BeamCoreScale = UnityEngine.Shader.PropertyToID("BeamCoreScale");
 
     private void Start()
     {
         visualEffect.Play();
-        originalImpactPositionZ = visualEffect.GetVector3("ImpactPosition").z;
-        originalParticlesVelocityZ = visualEffect.GetVector3("ParticlesVelocity").z;
-        originalDarkBeamScaleY = visualEffect.GetVector3("DarkBeamScale").y;
-        originalElectricBeamScaleY = visualEffect.GetVector3("ElectricBeamScale").y;
-        originalBeamCoreScaleY = visualEffect.GetVector3("BeamCoreScale").y;
+        originalImpactPositionZ = visualEffect.GetVector3(ImpactPosition).z;
+        originalParticlesVelocityZ = visualEffect.GetVector3(ParticlesVelocity).z;
+        originalDarkBeamScaleY = visualEffect.GetVector3(DarkBeamScale).y;
+        originalElectricBeamScaleY = visualEffect.GetVector3(ElectricBeamScale).y;
+        originalBeamCoreScaleY = visualEffect.GetVector3(BeamCoreScale).y;
 
         if (IsServer)
         {
@@ -53,7 +58,7 @@ public class LaserTurret : NetworkBehaviour
         Vector3 laserDirection = laserStartPoint.forward;
         if (Physics.SphereCast(laserStartPoint.position, laserThickness / 2, laserDirection, out RaycastHit hit, laserRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
         {
-            if (hit.collider.CompareTag("Player") && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+            if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
             {
                 if (player.isCrouching && player.gameplayCamera.transform.position.y + laserThickness < laserStartPoint.position.y)
                 {
@@ -74,7 +79,7 @@ public class LaserTurret : NetworkBehaviour
 
             UpdateLaserVisuals(hit.point);
 
-            if (hit.collider.CompareTag("Player") && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB targetPlayer))
+            if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB targetPlayer))
             {
                 damageTimer -= Time.deltaTime;
                 if (damageTimer <= 0f)
@@ -103,22 +108,22 @@ public class LaserTurret : NetworkBehaviour
     private void UpdateLaserVisuals(Vector3 laserEndPoint)
     {
         float distance = Vector3.Distance(laserStartPoint.position, laserEndPoint) / 5;
-        Vector3 beamCoreScale = visualEffect.GetVector3("BeamCoreScale");
+        Vector3 beamCoreScale = visualEffect.GetVector3(BeamCoreScale);
         beamCoreScale.y = originalBeamCoreScaleY * distance;
-        Vector3 electricBeamScale = visualEffect.GetVector3("ElectricBeamScale");
+        Vector3 electricBeamScale = visualEffect.GetVector3(ElectricBeamScale);
         electricBeamScale.y = originalElectricBeamScaleY * distance;
-        Vector3 darkBeamScale = visualEffect.GetVector3("DarkBeamScale");
+        Vector3 darkBeamScale = visualEffect.GetVector3(DarkBeamScale);
         darkBeamScale.y = originalDarkBeamScaleY * distance;
-        Vector3 particlesVelocity = visualEffect.GetVector3("ParticlesVelocity");
+        Vector3 particlesVelocity = visualEffect.GetVector3(ParticlesVelocity);
         particlesVelocity.z = originalParticlesVelocityZ * distance;
-        Vector3 impactPosition = visualEffect.GetVector3("ImpactPosition");
+        Vector3 impactPosition = visualEffect.GetVector3(ImpactPosition);
         impactPosition.z = originalImpactPositionZ * distance;
 
-        visualEffect.SetVector3("ImpactPosition", impactPosition);
-        visualEffect.SetVector3("ParticlesVelocity", particlesVelocity);
-        visualEffect.SetVector3("DarkBeamScale", darkBeamScale);
-        visualEffect.SetVector3("ElectricBeamScale", electricBeamScale);
-        visualEffect.SetVector3("BeamCoreScale", beamCoreScale);
+        visualEffect.SetVector3(ImpactPosition, impactPosition);
+        visualEffect.SetVector3(ParticlesVelocity, particlesVelocity);
+        visualEffect.SetVector3(DarkBeamScale, darkBeamScale);
+        visualEffect.SetVector3(ElectricBeamScale, electricBeamScale);
+        visualEffect.SetVector3(BeamCoreScale, beamCoreScale);
 
         if (!isFiring)
         {

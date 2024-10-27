@@ -24,7 +24,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigRedwoodEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
     public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
-    public ConfigEntry<bool> ConfigWesleyModeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
     public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
@@ -611,10 +610,6 @@ public class CodeRebirthConfig
                                             "MeteorShower | Emerald Worth",
                                             "-1,-1",
                                             "Min and Max value of the Emerald, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
-                                            "MeteorShower | Wesley Mode",
-                                            false,
-                                            "Enables/Disables the Wesley Mode (this is a meme, not recommended lol).");
         #endregion
         #region ModCompat
         #endregion

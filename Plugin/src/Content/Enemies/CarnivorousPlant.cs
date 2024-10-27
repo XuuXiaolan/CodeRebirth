@@ -17,6 +17,9 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
     private bool carryingPlayerBody;
     private DeadBodyInfo? bodyBeingCarried;
     private bool attacking = false;
+    private static readonly int startAttack = Animator.StringToHash("startAttack");
+    private static readonly int takeDamage = Animator.StringToHash("takeDamage");
+    private static readonly int isDead = Animator.StringToHash("isDead");
     public enum State 
     {
         Idle,
@@ -89,7 +92,7 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
         {
             PlayBiteSoundClientRpc();
             attacking = true;
-            networkAnimator.SetTrigger("startAttack");
+            networkAnimator.SetTrigger(startAttack);
             Invoke(nameof(EndAttack), attackAnimation.length);
         }
     }
@@ -167,13 +170,13 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         enemyHP -= force;
         creatureVoice.PlayOneShot(HitSounds[UnityEngine.Random.Range(0, HitSounds.Length)]);
-        if (IsServer) networkAnimator.SetTrigger("takeDamage");
+        if (IsServer) networkAnimator.SetTrigger(takeDamage);
 
         if (enemyHP <= 0 && !isEnemyDead)
         {
             if (IsOwner)
             {
-                creatureAnimator.SetBool("isDead", true);
+                creatureAnimator.SetBool(isDead, true);
                 KillEnemyOnOwnerClient();
             }
         }

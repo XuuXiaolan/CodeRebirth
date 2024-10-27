@@ -69,13 +69,16 @@ public class FunctionalMicrowave : NetworkBehaviour
         }
 
         if (!IsServer) return;
-        agent.SetDestination(newDestination);
-        if (Vector3.Distance(transform.position, newDestination) < 1.5f) newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
+        if (agent.remainingDistance < 1f)
+        {
+            agent.SetDestination(newDestination);
+            newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
+        }
     }
 
     public void OnColliderEnter(Collider other)
     {
-        if (other.CompareTag("Player") && other.TryGetComponent(out PlayerControllerB playerControllerB))
+        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB playerControllerB))
         {
             if (!playersAffected.Contains(playerControllerB))
             {
@@ -87,7 +90,7 @@ public class FunctionalMicrowave : NetworkBehaviour
 
     public void OnColliderStay(Collider other)
     {
-        if (other.CompareTag("Player") && other.TryGetComponent(out PlayerControllerB playerControllerB))
+        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB playerControllerB))
         {
             if (damageTimerDecrease <= 0f)
             {
@@ -99,7 +102,7 @@ public class FunctionalMicrowave : NetworkBehaviour
 
     public void OnColliderExit(Collider other)
     {
-        if (other.CompareTag("Player") && other.TryGetComponent(out PlayerControllerB playerControllerB))
+        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB playerControllerB))
         {
             if (playersAffected.Contains(playerControllerB))
             {

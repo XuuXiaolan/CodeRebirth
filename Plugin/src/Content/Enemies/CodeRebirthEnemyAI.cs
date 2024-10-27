@@ -58,15 +58,14 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     }
 
     [ClientRpc]
-    public void SetBoolAnimationClientRpc(string name, bool active)
+    public void SetBoolAnimationClientRpc(int nameInt, bool active)
     {
-        SetBoolAnimationOnLocalClient(name, active);
+        SetBoolAnimationOnLocalClient(nameInt, active);
     }
 
-    public void SetBoolAnimationOnLocalClient(string name, bool active)
+    public void SetBoolAnimationOnLocalClient(int intName, bool active)
     {
-        Plugin.ExtendedLogging(name + " " + active);
-        creatureAnimator.SetBool(name, active);
+        creatureAnimator.SetBool(intName, active);
     }
 
     [ServerRpc(RequireOwnership = false)]

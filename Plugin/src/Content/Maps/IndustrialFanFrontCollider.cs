@@ -9,7 +9,7 @@ public class IndustrialFanFrontCollider : NetworkBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
             if (!industrialFan.IsObstructed(other.transform.position))
             {

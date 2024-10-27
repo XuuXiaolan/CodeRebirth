@@ -51,7 +51,7 @@ namespace CodeRebirth.src.Content.Maps
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+            if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
             {
                 Vector3 forceFlung = transform.up * 250f;
                 player.DamagePlayer((int)damage, true, false, CauseOfDeath.Blast, 0, false, forceFlung);

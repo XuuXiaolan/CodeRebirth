@@ -60,11 +60,11 @@ public class BearTrap : NetworkBehaviour
     {
         if (isTriggered || !canTrigger) return;
 
-        if (other.CompareTag("Player") && other.TryGetComponent(out PlayerControllerB player))
+        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player))
         {
             TriggerTrap(player);
         }
-        else if (other.CompareTag("Enemy") && other.TryGetComponent(out EnemyAI enemy))
+        else if (other.gameObject.layer == 19 && other.TryGetComponent(out EnemyAI enemy))
         {
             TriggerTrap(enemy);
         }

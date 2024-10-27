@@ -31,7 +31,7 @@ public class NaturesMace : CodeRebirthWeapons
                 {
                     if (hit.transform.TryGetComponent(out IHittable hittable) && hit.transform != previousPlayerHeldBy.transform)
                     {
-                        if (hit.transform.gameObject.CompareTag("Player"))
+                        if (hit.transform.gameObject.layer == 3)
                         {
                             var player = hit.transform.GetComponent<PlayerControllerB>();
                             if (player != null)

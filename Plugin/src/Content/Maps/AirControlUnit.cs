@@ -42,22 +42,27 @@ public class AirControlUnit : NetworkBehaviour
 
     private void FindAndAimAtTarget()
     {
-        Collider[] targets = Physics.OverlapSphere(turretTransform.position, detectionRange, LayerMask.GetMask("Player"), QueryTriggerInteraction.Collide);
-        foreach (Collider target in targets)
+        foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
         {
-            if (Physics.Raycast(turretCannonTransform.position, target.gameObject.transform.position - turretCannonTransform.position, out RaycastHit _, detectionRange, StartOfRound.Instance.collidersAndRoomMask)) return;
-            if (target.CompareTag("Player"))
+            if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || playerControllerB.isInHangarShipRoom) continue;
+
+            Rigidbody targetRigidbody = playerControllerB.playerRigidbody;
+            if (targetRigidbody == null) continue;
+
+            Vector3 directionToPlayer = playerControllerB.transform.position - turretCannonTransform.position;
+            float distanceToPlayer = directionToPlayer.magnitude;
+
+            // Check if player is within detection range and if there's line of sight
+            if (distanceToPlayer <= detectionRange && Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
             {
-                PlayerControllerB playerControllerB = target.GetComponent<PlayerControllerB>();
-                Rigidbody targetRigidbody = playerControllerB.playerRigidbody;
-                if (targetRigidbody == null) continue;
+                if (hit.collider.gameObject.layer != 3) continue;
                 lastPlayerTargetted = playerControllerB;
+
                 // Calculate the time needed for the projectile to reach the target
-                float distanceToTarget = Vector3.Distance(turretTransform.position, target.transform.position);
-                float timeToTarget = distanceToTarget / 50f; // Bullet speed is 100 but we overshootin cuz overshooting is good
+                float timeToTarget = distanceToPlayer / 50f; // Bullet speed is 100 but we overshootin cuz overshooting is good
 
                 // Predict future position of the target based on its current velocity and time to target
-                Vector3 futurePosition = target.transform.position + targetRigidbody.velocity * timeToTarget;
+                Vector3 futurePosition = playerControllerB.transform.position + targetRigidbody.velocity * timeToTarget;
 
                 // Calculate direction to the predicted position
                 Vector3 directionToTarget = futurePosition - turretTransform.position;
