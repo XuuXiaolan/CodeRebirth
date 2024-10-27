@@ -13,6 +13,7 @@ public class AirControlUnit : NetworkBehaviour
     public float detectionRange = 50f;
     public float damageAmount = 50f;
 
+    private float currentAngle = 0f;
     private float fireTimer = 0f;
     private GameObject projectilePrefab = null!;
 
@@ -47,23 +48,20 @@ public class AirControlUnit : NetworkBehaviour
                 Vector3 directionToTarget = target.transform.position - turretTransform.position;
                 float angle = Vector3.Angle(turretTransform.up, directionToTarget);
                 Plugin.ExtendedLogging($"Angle: {angle}");
+
                 if (angle <= 45f) // Check if within 45 degrees
                 {
+                    currentAngle = angle;
                     Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                     targetRotation.z = 0f;
                     targetRotation.x = 0f;
+
+                    // Rotate the base turret (left/right)
                     turretTransform.rotation = Quaternion.RotateTowards(turretTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime * 5f);
 
-                    float anglePlayerIsAtFromCannon = angle;
-
-                    // Get the current euler angles of the cannon
-                    Vector3 currentEulerAngles = turretCannonTransform.rotation.eulerAngles;
-
-                    // Create a new angle, clamping it to ensure it stays within the limits
-                    float newXAngle = Mathf.Lerp(currentEulerAngles.x, anglePlayerIsAtFromCannon, 10f * Time.deltaTime);
-
-                    Quaternion combinedRotation = turretTransform.rotation * Quaternion.Euler(newXAngle, 0, 0);
-                    turretCannonTransform.rotation = combinedRotation;
+                    // Set the pitch angle for the turret cannon
+                    Vector3 currentLocalEulerAngles = turretCannonTransform.localEulerAngles;
+                    turretCannonTransform.localEulerAngles = new Vector3(angle, currentLocalEulerAngles.y, currentLocalEulerAngles.z);
                 }
             }
         }
@@ -75,6 +73,6 @@ public class AirControlUnit : NetworkBehaviour
         NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
         networkObject?.Spawn();
         AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
-        projectileComponent.Initialize(damageAmount, turretCannonTransform.up);
+        projectileComponent.Initialize(damageAmount, currentAngle);
     }
 }

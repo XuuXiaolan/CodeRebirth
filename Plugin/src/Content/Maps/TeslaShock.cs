@@ -30,7 +30,7 @@ public class TeslaShock : NetworkBehaviour
     private void Update()
     {
         if (targetPlayer != null) return;
-        bool somethingConductiveFound = PlayerCarryingSomethingCondutive(GameNetworkManager.Instance.localPlayerController);
+        bool somethingConductiveFound = PlayerCarryingSomethingConductive(GameNetworkManager.Instance.localPlayerController);
         if (!somethingConductiveFound) return;
         if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) > distanceFromPlayer) return;
 
@@ -59,7 +59,7 @@ public class TeslaShock : NetworkBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        while (Vector3.Distance(affectedPlayer.transform.position, transform.position) <= distanceFromPlayer && !affectedPlayer.isPlayerDead && PlayerCarryingSomethingCondutive(affectedPlayer))
+        while (Vector3.Distance(affectedPlayer.transform.position, transform.position) <= distanceFromPlayer && !affectedPlayer.isPlayerDead && PlayerCarryingSomethingConductive(affectedPlayer))
         {
             affectedPlayer.DamagePlayer(playerDamageAmount, true, false, CauseOfDeath.Blast, 0, false, default);
 
@@ -183,7 +183,7 @@ public class TeslaShock : NetworkBehaviour
         }
     }
 
-    private bool PlayerCarryingSomethingCondutive(PlayerControllerB player)
+    private bool PlayerCarryingSomethingConductive(PlayerControllerB player)
     {
         foreach (var item in player.ItemSlots)
         {
