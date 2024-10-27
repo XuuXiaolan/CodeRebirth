@@ -1,4 +1,5 @@
 using System.Collections;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -40,15 +41,20 @@ public class AirControlUnit : NetworkBehaviour
 
     private void FindAndAimAtTarget()
     {
-        Collider[] targets = Physics.OverlapSphere(turretTransform.position, detectionRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide);
+        Collider[] targets = Physics.OverlapSphere(turretTransform.position, detectionRange, LayerMask.GetMask("Player"), QueryTriggerInteraction.Collide);
         foreach (Collider target in targets)
         {
             if (target.CompareTag("Player"))
             {
-                Vector3 directionToTarget = target.transform.position - turretTransform.position;
+                Rigidbody targetRigidbody = target.GetComponent<PlayerControllerB>().playerRigidbody;
+                if (targetRigidbody == null) continue;
+
+                float distanceToTarget = Vector3.Distance(turretTransform.position, target.transform.position);
+                float predictionFactor = Mathf.Clamp(distanceToTarget / 5f, 0.5f, 5f); // Increase prediction based on distance
+                Vector3 futurePosition = target.transform.position + targetRigidbody.velocity * predictionFactor;
+                Vector3 directionToTarget = futurePosition - turretTransform.position;
                 float angle = Vector3.Angle(turretTransform.up, directionToTarget);
                 Plugin.ExtendedLogging($"Angle: {angle}");
-
                 if (angle <= 45f) // Check if within 45 degrees
                 {
                     currentAngle = angle;
@@ -83,7 +89,7 @@ public class AirControlUnit : NetworkBehaviour
     {
         Vector3 originalPosition = turretCannonTransform.localPosition;
         float shakeDuration = 0.2f;
-        float shakeIntensity = 0.2f;
+        float shakeIntensity = 0.5f;
 
         while (shakeDuration > 0f)
         {

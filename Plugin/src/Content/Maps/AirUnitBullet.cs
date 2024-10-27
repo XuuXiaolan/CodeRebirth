@@ -39,15 +39,25 @@ namespace CodeRebirth.src.Content.Maps
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!IsServer) return;
-
             if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
             {
                 Vector3 forceFlung = transform.up * 250f;
-                player.DamagePlayer((int)damage, true, true, CauseOfDeath.Blast, 0, false, forceFlung);
-                if (!player.isPlayerDead) player.externalForces += forceFlung;
-                this.NetworkObject.Despawn();
+                player.DamagePlayer((int)damage, true, false, CauseOfDeath.Blast, 0, false, forceFlung);
+                this.GetComponent<Collider>().isTrigger = false;
+                if (!player.isPlayerDead) StartCoroutine(PushPlayerFarAway(player, forceFlung));
             }
+        }
+
+        private IEnumerator PushPlayerFarAway(PlayerControllerB player, Vector3 force)
+        {
+            float duration = 1f;
+            while (duration > 0)
+            {
+                duration -= Time.fixedDeltaTime;
+                player.externalForces += force;
+                yield return new WaitForFixedUpdate();
+            }
+            yield break;
         }
     }
 }
