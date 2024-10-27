@@ -9,12 +9,12 @@ public class AirUnitProjectile : NetworkBehaviour
     private float damage;
     public float speed = 20f;
     public float lifetime = 5f;
-    private AirControlUnit airControlUnit = null!;
+    private Vector3 directionOfBullet = Vector3.zero;
 
-    public void Initialize(float damageAmount, AirControlUnit airControlUnit)
+    public void Initialize(float damageAmount, Vector3 direction)
     {
         damage = damageAmount;
-        this.airControlUnit = airControlUnit;
+        this.directionOfBullet = direction;
         StartCoroutine(DespawnAfterDelay(lifetime));
     }
 
@@ -26,8 +26,7 @@ public class AirUnitProjectile : NetworkBehaviour
 
     private void Update()
     {
-        if (airControlUnit == null) return;
-        transform.Translate(airControlUnit.turretCannonTransform.forward * speed * Time.deltaTime); // Follow the turret cannon's forward direction
+        transform.Translate(directionOfBullet * speed * Time.deltaTime); // Follow the turret cannon's forward direction
     }
 
     private void OnTriggerEnter(Collider other)

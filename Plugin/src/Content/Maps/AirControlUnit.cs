@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -51,13 +52,18 @@ public class AirControlUnit : NetworkBehaviour
                     Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                     targetRotation.z = 0f;
                     targetRotation.x = 0f;
-                    turretTransform.rotation = Quaternion.RotateTowards(turretTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    turretTransform.rotation = Quaternion.RotateTowards(turretTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime * 5f);
 
-                    // Rotate the turret cannon to aim at the target
-                    Vector3 cannonDirection = target.transform.position - turretCannonTransform.position;
-                    float targetAngleX = Mathf.Clamp(Vector3.SignedAngle(Vector3.forward, cannonDirection, turretCannonTransform.right), 0f, 45f);
-                    Quaternion cannonTargetRotation = Quaternion.Euler(targetAngleX, turretCannonTransform.eulerAngles.y, turretCannonTransform.eulerAngles.z);
-                    turretCannonTransform.rotation = Quaternion.RotateTowards(turretCannonTransform.rotation, cannonTargetRotation, rotationSpeed * Time.deltaTime);
+                    float anglePlayerIsAtFromCannon = angle;
+
+                    // Get the current euler angles of the cannon
+                    Vector3 currentEulerAngles = turretCannonTransform.rotation.eulerAngles;
+
+                    // Create a new angle, clamping it to ensure it stays within the limits
+                    float newXAngle = Mathf.Lerp(currentEulerAngles.x, anglePlayerIsAtFromCannon, 10f * Time.deltaTime);
+
+                    Quaternion combinedRotation = turretTransform.rotation * Quaternion.Euler(newXAngle, 0, 0);
+                    turretCannonTransform.rotation = combinedRotation;
                 }
             }
         }
@@ -69,6 +75,6 @@ public class AirControlUnit : NetworkBehaviour
         NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
         networkObject?.Spawn();
         AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
-        projectileComponent.Initialize(damageAmount, this);
+        projectileComponent.Initialize(damageAmount, turretCannonTransform.up);
     }
 }

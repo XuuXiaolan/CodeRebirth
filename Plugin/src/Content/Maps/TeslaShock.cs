@@ -98,12 +98,12 @@ public class TeslaShock : NetworkBehaviour
 
                     if (playersSortedByDistance.Any(p => p.gameplayCamera.transform == targetsSortedByDistance[i]))
                     {
-                        startPos -= targetsSortedByDistance[i].up * 0.25f;
+                        startPos -= targetsSortedByDistance[i].up * 0.5f;
                     }
 
                     if (playersSortedByDistance.Any(p => p.gameplayCamera.transform == targetsSortedByDistance[i + 1]))
                     {
-                        endPos -= targetsSortedByDistance[i + 1].up * 0.25f;
+                        endPos -= targetsSortedByDistance[i + 1].up * 0.5f;
                     }
 
                     lineRenderer.SetPosition(0, startPos);
