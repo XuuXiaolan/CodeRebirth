@@ -289,7 +289,7 @@ static class RoundManagerPatch {
 				GameObject crate = MapObjectHandler.Instance.Crate.WoodenCratePrefab;
 
 				// Adjust the hit point deeper into the ground along the hit.normal direction
-				Vector3 spawnPoint = hit.point + hit.normal * -0.75f; // Adjust -0.5f to control how deep you want it
+				Vector3 spawnPoint = hit.point + hit.normal * -0.65f; // Adjust -0.65f to control how deep you want it
 
 				GameObject spawnedCrate = GameObject.Instantiate(crate, spawnPoint, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}");

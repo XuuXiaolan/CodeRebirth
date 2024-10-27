@@ -43,8 +43,9 @@ namespace CodeRebirth.src.Content.Maps
 
             if (other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
             {
-                player.DamagePlayer((int)damage, true, true, CauseOfDeath.Blast, 0, false, default);
-                player.DisableJetpackModeClientRpc();
+                Vector3 forceFlung = transform.up * 250f;
+                player.DamagePlayer((int)damage, true, true, CauseOfDeath.Blast, 0, false, forceFlung);
+                if (!player.isPlayerDead) player.externalForces += forceFlung;
                 this.NetworkObject.Despawn();
             }
         }

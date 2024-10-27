@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -14,7 +14,7 @@ public class AirControlUnit : NetworkBehaviour
     public float damageAmount = 50f;
 
     private float currentAngle = 0f;
-    private float fireTimer = 0f;
+    private float fireTimer = 3f;
     private GameObject projectilePrefab = null!;
 
     private void Start()
@@ -28,7 +28,7 @@ public class AirControlUnit : NetworkBehaviour
 
         // Rotate the turret to look for targets
         FindAndAimAtTarget();
-        
+
         // Handle firing logic
         fireTimer -= Time.deltaTime;
         if (fireTimer <= 0f)
@@ -74,5 +74,24 @@ public class AirControlUnit : NetworkBehaviour
         networkObject?.Spawn();
         AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
         projectileComponent.Initialize(damageAmount, currentAngle);
+
+        // Rattle the cannon's transform to emulate a shake effect
+        StartCoroutine(RattleCannon());
+    }
+
+    private IEnumerator RattleCannon()
+    {
+        Vector3 originalPosition = turretCannonTransform.localPosition;
+        float shakeDuration = 0.2f;
+        float shakeIntensity = 0.2f;
+
+        while (shakeDuration > 0f)
+        {
+            turretCannonTransform.localPosition = originalPosition + (Vector3)UnityEngine.Random.insideUnitCircle * shakeIntensity;
+            shakeDuration -= Time.deltaTime;
+            yield return null;
+        }
+
+        turretCannonTransform.localPosition = originalPosition;
     }
 }
