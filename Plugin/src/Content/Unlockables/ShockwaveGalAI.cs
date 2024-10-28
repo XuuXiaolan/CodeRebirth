@@ -691,13 +691,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 bool bothNotInShip = !isInHangarShipRoom && !StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position);
                 if (bothInShip || bothNotInShip)
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(itemToGrab.transform.position - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, itemToGrab.transform.position, Agent.speed * Time.deltaTime);
+                    Vector3 targetPosition = itemToGrab.transform.position;
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
                 }
                 else if (isInHangarShipRoom || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position))
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f) - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, (StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f), Agent.speed * Time.deltaTime);
+                    Vector3 targetPosition = StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f;
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
                 }
             }
         }

@@ -22,6 +22,7 @@
 - Made it so gal doesnt jitter for clients on ship land/takeoff.
 - Fixed several bugs with gal killing enemies.
 - Fixed gal dropping off items onto ship, they now stay there with the ship, notif doesnt always show up though.
+- Massively improved gal selling mechanics.
 
 ## v0.6.8
 
