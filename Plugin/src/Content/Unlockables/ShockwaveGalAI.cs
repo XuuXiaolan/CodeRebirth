@@ -384,7 +384,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private bool GoToChargerAndDeactivate()
     {
-
         DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false);
         if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
@@ -630,7 +629,22 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         // Stop if the quota is fulfilled or no desk is available
         if (TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota || depositItemsDesk == null)
         {
-            GoToChargerAndDeactivate();
+            if (isInHangarShipRoom)
+            {
+                Vector3 targetPosition = ShockwaveCharger.ChargeTransform.position;
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+            }
+            else
+            {
+                Vector3 targetPosition = StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f;
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+            }
+            if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
+            {
+                ShockwaveCharger.ActivateGirlServerRpc(-1);
+            }
             return;
         }
 
@@ -674,15 +688,16 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             else
             {
                 bool bothInShip = isInHangarShipRoom && StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position);
-                if (bothInShip)
+                bool bothNotInShip = !isInHangarShipRoom && !StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position);
+                if (bothInShip || bothNotInShip)
                 {
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(itemToGrab.transform.position - transform.position), Time.deltaTime * 5f);
                     transform.position = Vector3.MoveTowards(transform.position, itemToGrab.transform.position, Agent.speed * Time.deltaTime);
                 }
-                else
+                else if (isInHangarShipRoom || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position))
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(StartOfRound.Instance.shipDoorNode.transform.position - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, StartOfRound.Instance.shipDoorNode.transform.position, Agent.speed * Time.deltaTime);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f) - transform.position), Time.deltaTime * 5f);
+                    transform.position = Vector3.MoveTowards(transform.position, (StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f), Agent.speed * Time.deltaTime);
                 }
             }
         }
@@ -714,7 +729,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             {                
                 if (isInHangarShipRoom)
                 {
-                    Vector3 targetPosition = StartOfRound.Instance.shipDoorNode.transform.position;
+                    Vector3 targetPosition = (StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f + (-StartOfRound.Instance.shipDoorNode.right * 3f));
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
                 }
@@ -1117,9 +1132,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             Plugin.Logger.LogError("Item was null in HandleDroppingItem");
             return;
         }
+        item.parentObject = null;
         if (!isSellingItems)
         {
-            item.parentObject = null;
             if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
             {
                 Plugin.ExtendedLogging($"Dropping item in ship room: {item}");
