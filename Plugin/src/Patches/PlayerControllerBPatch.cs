@@ -1,3 +1,4 @@
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
@@ -39,6 +40,14 @@ static class PlayerControllerBPatch {
 
     private static void PlayerControllerB_TeleportPlayer(On.GameNetcodeStuff.PlayerControllerB.orig_TeleportPlayer orig, PlayerControllerB self, Vector3 pos, bool withRotation, float rot, bool allowInteractTrigger, bool enableController)
     {
+        foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
+        {
+            if (enemy is CodeRebirthEnemyAI codeRebirthEnemyAI)
+            {
+                Plugin.ExtendedLogging($"Setting codeRebirthEnemyAI.positionsOfPlayersBeforeTeleport[self] to {self.transform.position}");
+                codeRebirthEnemyAI.positionsOfPlayersBeforeTeleport[self] = self.transform.position;
+            }
+        }
         foreach (ShockwaveGalAI gal in UnityEngine.Object.FindObjectsOfType<ShockwaveGalAI>())
         {
             if (self == gal.ownerPlayer)
