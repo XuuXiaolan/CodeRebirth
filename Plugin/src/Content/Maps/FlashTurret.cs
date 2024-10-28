@@ -14,6 +14,8 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     public float blindDuration = 5f;
     public float flashIntensity = 10f;
     public float flashCooldown = 3f;
+    public AudioSource cameraAudioSource = null!;
+
     private bool isTriggered = false;
     private PlayerControllerB? detectedPlayer = null;
     private bool isFlashing = false;
@@ -83,6 +85,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
     private void TriggerFlash(float dotProduct)
     {
+        cameraAudioSource.Play();
         if (flashLight != null)
         {
             flashLight.intensity = flashIntensity;

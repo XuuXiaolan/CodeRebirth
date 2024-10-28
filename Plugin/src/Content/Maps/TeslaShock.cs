@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
-public class TeslaShock : NetworkBehaviour
+public class TeslaShock : NetworkBehaviour // have a background audiosource constantly low volume playing a sound
 {
     public float distanceFromPlayer = 5f;
     public int playerDamageAmount = 40;
@@ -17,6 +17,10 @@ public class TeslaShock : NetworkBehaviour
     public float pushMultiplier = 10f;
     public Transform startChainPoint = null!;
     public VisualEffect vfx = null!;
+    public AudioSource teslaAudioSource = null!;
+    public AudioClip teslaChargeSound = null!;
+    public AudioClip teslaZapSound = null!;
+    public AudioClip teslaFastChargeSound = null!;
 
     private PlayerControllerB? targetPlayer;
     private Dictionary<GameObject, List<LineRenderer>> createdLineRenderers = new();
@@ -53,6 +57,7 @@ public class TeslaShock : NetworkBehaviour
 
     private IEnumerator ExplodePlayerAfterDelay(float delay, PlayerControllerB affectedPlayer)
     {
+        teslaAudioSource.PlayOneShot(teslaChargeSound);
         yield return new WaitForSeconds(delay);
 
         while (Vector3.Distance(affectedPlayer.transform.position, transform.position) <= distanceFromPlayer && !affectedPlayer.isPlayerDead && PlayerCarryingSomethingConductive(affectedPlayer))
@@ -137,6 +142,8 @@ public class TeslaShock : NetworkBehaviour
             }
 
             activeLineRenderers = linesNeeded;
+            
+            teslaAudioSource.PlayOneShot(teslaFastChargeSound);
             vfx.SetFloat("SpawnRate", 20f);
             yield return new WaitForSeconds(delayBetweenZaps / 2);
             vfx.SetFloat("SpawnRate", 40);
