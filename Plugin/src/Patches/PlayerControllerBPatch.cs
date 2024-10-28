@@ -30,15 +30,6 @@ static class PlayerControllerBPatch {
         __instance.AddCRPlayerData();
     }
 
-    [HarmonyPatch(nameof(PlayerControllerB.Update)), HarmonyPrefix]
-    public static void Update(PlayerControllerB __instance) {
-        if (GameNetworkManager.Instance.localPlayerController == null) return;
-        /*if (__instance.GetCRPlayerData().playerOverrideController != null) return;
-        Plugin.ExtendedLogging($"[ILHook:PlayerControllerB.Update] Setting playerOverrideController to {__instance.playerBodyAnimator.runtimeAnimatorController}");
-        __instance.GetCRPlayerData().playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
-        __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController;*/
-    }
-
     public static void Init() {
         On.GameNetcodeStuff.PlayerControllerB.TeleportPlayer += PlayerControllerB_TeleportPlayer;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;

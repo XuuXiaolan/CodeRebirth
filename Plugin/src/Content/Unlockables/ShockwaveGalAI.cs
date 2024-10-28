@@ -541,7 +541,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return true;
         }
         if (!usingElevator) Agent.SetDestination(destination);
-        if (usingElevator && elevatorScript != null) this.transform.position = elevatorScript.elevatorInsidePoint.position;
+        if (usingElevator && elevatorScript != null) Agent.Warp(elevatorScript.elevatorInsidePoint.position);
         return false;
     }
 
