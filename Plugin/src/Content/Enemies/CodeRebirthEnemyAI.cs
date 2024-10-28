@@ -483,7 +483,10 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public void StopSearchRoutine()
     {
         isSearching = false;
-        StopCoroutine(searchRoutine);
+        if (searchCoroutine != null)
+        {
+            StopCoroutine(searchRoutine);
+        }
         searchRoutine = null;
     }
 

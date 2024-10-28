@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
@@ -12,7 +11,7 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class ParentEnemyAI : CodeRebirthEnemyAI
 {
-    public float Aceeleration = 0f;
+    public float Acceleration = 0f;
     public float WalkingSpeed = 0f;
     public float SprintingSpeed = 0f;
     public int MeleeDamage = 0;
@@ -31,7 +30,9 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public AudioClip[] deathSounds = null!;
     public Transform MouthTransform = null!;
 
-    private Transform spawnPosition = null!;
+    private float specialAttackTimer = 15f;
+    private bool closeToEevee = true;
+    private Transform spawnTransform = null!;
     private ChildEnemyAI childEevee = null!;
     private float timeSinceHittingLocalPlayer = 0f;
     private bool holdingChild = false;
@@ -92,12 +93,15 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             this.SetEnemyOutside(false);
             isSpawnInside = false;
         }
+        this.spawnTransform = this.transform;
         this.favoriteSpot = this.transform;
     }
 
     public override void Start()
     {
         base.Start();
+        agent.speed = 0f;
+        agent.acceleration = 0f;
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 323);
         if (enemyRandom.NextInt(1, 100) <= 5 && ShinyMaterials.Count != 0)
         {
@@ -119,7 +123,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     private void SpawnEeveeInNest()
     {
-        NetworkObjectReference go = CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PokemonEnemies.ChildEeveeItem, spawnPosition.position, false, true, 0);
+        NetworkObjectReference go = CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PokemonEnemies.ChildEeveeItem, spawnTransform.position, false, true, 0);
         SpawnEggInNestClientRpc(go);
     }
 
@@ -220,18 +224,25 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     private void HandleStateWanderingChange()
     {
+        StartSearchRoutine(transform.position, 40, agent.areaMask);
+        agent.speed = WalkingSpeed;
+        agent.acceleration = Acceleration; 
     }
 
     private void HandleStateGuardingChange()
     {
+        StopSearchRoutine();
+        GrabChild(childEevee, MouthTransform);
     }
 
     private void HandleStateChasingPlayerChange()
     {
+        StopSearchRoutine();
     }
 
     private void HandleStateDeathChange()
     {
+        StopSearchRoutine();
     }
     #endregion
 
@@ -239,25 +250,9 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     {
         base.Update();
         if (isEnemyDead) return;
-
+        specialAttackTimer -= Time.deltaTime;
         timeSinceHittingLocalPlayer -= Time.deltaTime;
-
-        if (creatureAnimator.GetBool("Guarding") || currentBehaviourStateIndex == (int)State.Guarding)
-        {
-            var targetRotationPlayer = StartOfRound.Instance.allPlayerScripts
-                .OrderBy(player => Vector3.Distance(player.transform.position, this.transform.position))
-                .First();
-
-            Vector3 targetPosition = targetRotationPlayer.transform.position;
-            Vector3 direction = (targetPosition - this.transform.position).normalized;
-            direction.y = 0; // Keep the y component zero to prevent vertical rotation
-
-            if (direction != Vector3.zero)
-            {
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * 5f);
-            }
-        }        
+        closeToEevee = Vector3.Distance(childEevee.transform.position, this.transform.position) <= 10;     
     }
 
     public override void DoAIInterval()
@@ -281,10 +276,38 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     public void DoWandering()
     {
+        if (closeToEevee)
+        {
+            foreach (var player in StartOfRound.Instance.allPlayerScripts)
+            {
+                Vector3 directionToEevee = (childEevee.transform.position - player.gameplayCamera.transform.position).normalized;
+                float dotProduct = Vector3.Dot(player.gameplayCamera.transform.forward, directionToEevee);
+                float distance = Vector3.Distance(player.gameplayCamera.transform.position, childEevee.transform.position);
+                if (distance <= 10 && dotProduct <= 0.5)
+                {
+                    DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false);
+                    this.transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position);
+                    // player is close and looking at eevee's direction.
+                    if (distance < 5 && Vector3.Distance(player.transform.position, spawnTransform.position) <= 30)
+                    {
+                        SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+                        HandleStateAnimationSpeedChanges(State.ChasingPlayer);
+                    }
+                    return;
+                }
+            }
+        }
+        else
+        {
+            if (childEevee.playerHeldBy == null || Vector3.Distance(childEevee.transform.position, spawnTransform.position) < 30) return;
+            SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, childEevee.playerHeldBy));
+            HandleStateAnimationSpeedChanges(State.ChasingPlayer);
+        }        
     }
 
     public void DoGuarding()
     {
+        DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, true);
     }
 
     public void DoChasingPlayer()
@@ -296,18 +319,13 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             HandleStateAnimationSpeedChanges(State.Wandering);
             return;
         }
-    }
 
-    private bool HandlePlayerGrabbingEgg()
-    {
-        if (childEevee.playerHeldBy != null && !holdingChild)
+        DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true);
+        if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
         {
-            Plugin.ExtendedLogging("Someone grabbed the eevee");
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, childEevee.playerHeldBy));
-            HandleStateAnimationSpeedChanges(State.ChasingPlayer);
-            return true;
+            // do attacks and animation stuff.
+            
         }
-        return false;
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -322,6 +340,11 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         {
             KillEnemyOnOwnerClient();
             return;
+        }
+
+        if (holdingChild)
+        {
+            DropChild(true);
         }
 
         if (playerWhoHit != null && currentBehaviourStateIndex != (int)State.ChasingPlayer)
@@ -348,25 +371,25 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         }
         if (holdingChild)
         {
-            DropChild();
+            DropChild(true);
         }
         if (childEevee != null) childEevee.mommyAlive = false;
         creatureVoice.PlayOneShot(deathSounds[enemyRandom.Next(0, deathSounds.Length)]);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void DropChildServerRpc()
+    private void DropChildServerRpc(bool wasHurt)
     {
-        DropChildClientRpc();
+        DropChildClientRpc(wasHurt);
     }
 
     [ClientRpc]
-    public void DropChildClientRpc() 
+    public void DropChildClientRpc(bool wasHurt) 
     {
-        DropChild();
+        DropChild(wasHurt);
     }
 
-    public void DropChild()
+    public void DropChild(bool wasHurt)
     {
         childEevee.parentObject = null;
         if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
@@ -403,6 +426,10 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             childEevee.isHeldByEnemy = false;
             childEevee.transform.rotation = Quaternion.Euler(childEevee.itemProperties.restingRotation);
             childEevee.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+        }
+        if (wasHurt)
+        {
+            // run an event on eevee that makes her run away.
         }
         // creatureVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
     }
@@ -448,6 +475,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         child.hasHitGround = false;
         child.parentObject = mouthTransform;
         child.EnablePhysics(false);
+        holdingChild = true;
         // creatureVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
         HoarderBugAI.grabbableObjectsInMap.Remove(child.gameObject);
     }
