@@ -627,7 +627,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private void DoSellingItems()
     {
         // Stop if the quota is fulfilled or no desk is available
-        if (TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota || depositItemsDesk == null)
+        if ((!Plugin.ModConfig.ConfigGalBypassQuota.Value && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota) || depositItemsDesk == null)
         {
             if (isInHangarShipRoom)
             {
@@ -769,6 +769,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     {
         // Get the items that fulfill the quota with minimal excess value
         itemsOnShip = itemsOnShip.OrderBy(item => item.scrapValue).ToList();
+        if (Plugin.ModConfig.ConfigGalBypassQuota.Value)
+        {
+            return itemsOnShip;
+        }
+
         List<GrabbableObject> itemsToSell = new List<GrabbableObject>();
         int accumulatedValue = currentSoldAmount;
 
