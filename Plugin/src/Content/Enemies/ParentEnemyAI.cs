@@ -285,7 +285,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
                 float distance = Vector3.Distance(player.gameplayCamera.transform.position, childEevee.transform.position);
                 if (distance <= 10 && dotProduct <= 0.5)
                 {
-                    DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false);
+                    DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
                     this.transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position);
                     // player is close and looking at eevee's direction.
                     if (distance < 5 && Vector3.Distance(player.transform.position, spawnTransform.position) <= 30)
@@ -307,7 +307,17 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     public void DoGuarding()
     {
-        DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, true);
+        if (!holdingChild && specialAttackTimer <= 0) // come to this state after hitting a player and making them drop the eevee, so eevee wont be held by anyone really
+        {
+            DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
+            if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
+            {
+                // do special attack
+                specialAttackTimer = 10f;
+            }
+        }
+        DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, true, null);
+        
     }
 
     public void DoChasingPlayer()
@@ -320,7 +330,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             return;
         }
 
-        DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true);
+        DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
         if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
         {
             // do attacks and animation stuff.
@@ -347,9 +357,17 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             DropChild(true);
         }
 
-        if (playerWhoHit != null && currentBehaviourStateIndex != (int)State.ChasingPlayer)
+        if (playerWhoHit != null)
         {
-            AggroOnHit(playerWhoHit);
+            if (specialAttackTimer <= 0)
+            {
+                specialAttackTimer = 15f;
+                // Do animation for special attack
+            }
+            if (currentBehaviourStateIndex != (int)State.ChasingPlayer)
+            {
+                AggroOnHit(playerWhoHit);
+            }
         }
         Plugin.ExtendedLogging($"Enemy HP: {enemyHP}");
         Plugin.ExtendedLogging($"Hit with force {force}");
@@ -504,7 +522,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         HandleAttack(new List<PlayerControllerB> { player }, default, SpecialMeleeDamage);
     }
 
-    public void OnCollideSpecialAOEAttack()
+    public void OnCollideSpecialAOEAttackAnimEvent()
     {
         List<PlayerControllerB> playersToHit = new List<PlayerControllerB>();
         Collider[] colliders = Physics.OverlapSphere(transform.position, 5, LayerMask.GetMask("Player"));

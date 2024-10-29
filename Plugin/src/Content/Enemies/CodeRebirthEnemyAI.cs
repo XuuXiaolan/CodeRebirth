@@ -262,7 +262,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
 
-    public bool DoPathingToDestination(Vector3 destination, bool destinationIsInside, bool followingPlayer)
+    public bool DoPathingToDestination(Vector3 destination, bool destinationIsInside, bool followingPlayer, PlayerControllerB? playerBeingFollowed)
     {
         if (!agent.enabled)
         {
@@ -287,7 +287,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
         if ((isOutside && destinationIsInside) || (!isOutside && !destinationIsInside))
         {
-            GoThroughEntrance(followingPlayer);
+            GoThroughEntrance(followingPlayer, playerBeingFollowed);
             return true;
         }
 
@@ -336,15 +336,15 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         return false;
     }
 
-    private void GoThroughEntrance(bool followingPlayer)
+    private void GoThroughEntrance(bool followingPlayer, PlayerControllerB? playerBeingFollowed)
     {
         Vector3 destination = Vector3.zero;
         Vector3 destinationAfterTeleport = Vector3.zero;
         EntranceTeleport entranceTeleportToUse = null!;
 
-        if (followingPlayer)
+        if (followingPlayer && playerBeingFollowed != null)
         {
-            Vector3 positionOfPlayerBeforeTeleport = positionsOfPlayersBeforeTeleport[targetPlayer];
+            Vector3 positionOfPlayerBeforeTeleport = positionsOfPlayersBeforeTeleport[playerBeingFollowed];
             // Find the closest entrance to the player
             EntranceTeleport? closestExitPoint = null;
             foreach (var exitpoint in exitPoints.Keys)
