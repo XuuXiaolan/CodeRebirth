@@ -712,11 +712,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 for (int i = heldItemCount - 1; i >= 0; i--)
                 {
                     GrabbableObject grabbableObject = itemsHeldList[i];
-                    HandleDroppingItemClientRpc(i);
-                    depositItemsDesk.AddObjectToDeskServerRpc(new NetworkObjectReference(grabbableObject.NetworkObject));
                     Vector3 dropPosition = GetRandomPointOnDesk(depositItemsDesk, grabbableObject);
-                    SetPositionOfItemsClientRpc(dropPosition, new NetworkObjectReference(grabbableObject.NetworkObject));
-                    grabbableObject.transform.position = dropPosition;
+                    HandleDroppingItemClientRpc(i, dropPosition);
+                    depositItemsDesk.AddObjectToDeskServerRpc(new NetworkObjectReference(grabbableObject.NetworkObject));
                 }
 
                 if (itemsToSell.Count == 0)
@@ -745,13 +743,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    [ClientRpc]
-    private void SetPositionOfItemsClientRpc(Vector3 position, NetworkObjectReference networkObjectReference)
-    {
-        GameObject gameObject = networkObjectReference;
-        gameObject.transform.position = position;
-    }
-
     private Vector3 GetRandomPointOnDesk(DepositItemsDesk depositItemsDesk, GrabbableObject grabbableObject)
     {
         Vector3 vector = RoundManager.RandomPointInBounds(depositItemsDesk.triggerCollider.bounds);
@@ -765,6 +756,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         vector = depositItemsDesk.deskObjectsContainer.transform.InverseTransformPoint(vector);
         return vector;
     }
+
     private List<GrabbableObject> GetItemsToSell(List<GrabbableObject> itemsOnShip, int quota, float sellPercentage, int currentSoldAmount)
     {
         // Get the items that fulfill the quota with minimal excess value
@@ -1127,12 +1119,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     }
 
     [ClientRpc]
-    private void HandleDroppingItemClientRpc(int itemIndex)
+    private void HandleDroppingItemClientRpc(int itemIndex, Vector3 dropPosition = default)
     {
-        HandleDroppingItem(itemsHeldList[itemIndex]);
+        HandleDroppingItem(itemsHeldList[itemIndex], dropPosition);
     }
 
-    private void HandleDroppingItem(GrabbableObject? item)
+    private void HandleDroppingItem(GrabbableObject? item, Vector3 dropPosition = default)
     {
         if (item == null)
         {
@@ -1140,6 +1132,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
         item.parentObject = null;
+        item.transform.SetParent(null, true);
         if (!isSellingItems)
         {
             if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
@@ -1177,6 +1170,17 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
                 item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
             }
+        }
+        else
+        {
+            item.isInShipRoom = false;
+            item.isInElevator = false;
+            item.EnablePhysics(true);
+            item.fallTime = 0f;
+            item.startFallingPosition = item.transform.InverseTransformPoint(dropPosition);
+            item.targetFloorPosition = item.transform.InverseTransformPoint(item.GetItemFloorPosition(dropPosition));
+            item.floorYRot = -1;
+            item.DiscardItemFromEnemy();
         }
         itemsHeldList.Remove(item);
         GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
