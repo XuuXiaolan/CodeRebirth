@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: faea7d0dcf3c7ec46af50ff649dd28e1
+guid: 635001c04592b074183da7898da739a6
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,32 +8,27 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Mat_Espe_Teeth
-    second: {fileID: 2100000, guid: ee227e4011902854f9c7512f0e6349e4, type: 2}
+    second: {fileID: 2100000, guid: 3566c8c0d35898145b0ac856f25abb22, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Mat_Espe_body_a
-    second: {fileID: 2100000, guid: bf22c68b403b9f34faaefa324d4370af, type: 2}
+      name: Mat_Jolte_body_a_
+    second: {fileID: 2100000, guid: f0b995a0f8b188c41bcd8960356c31e8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Mat_Espe_body_b
-    second: {fileID: 2100000, guid: 61ab6114ac5cbcc4db7df1766ac244ad, type: 2}
+      name: Mat_Jolte_body_b_
+    second: {fileID: 2100000, guid: c669eea93731efe48b8145d1fb53b966, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Mat_Espe_body_b_2
-    second: {fileID: 2100000, guid: e621870378b2f77439840511dc857edc, type: 2}
+      name: Mat_Jolte_l_eye
+    second: {fileID: 2100000, guid: 72028a244df09d843bb9050010dcb006, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Mat_Espe_l_eye
-    second: {fileID: 2100000, guid: b33d3d556c7866047ab6b006999b6137, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Mat_Espe_r_eye
-    second: {fileID: 2100000, guid: 37581faccbfba7246b75838e5b15a447, type: 2}
+      name: Mat_Jolte_r_eye
+    second: {fileID: 2100000, guid: a619952f09f7e3a49a1f5ee4f9708b9e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -63,11 +58,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: EspeonDead
-      takeName: A_Espeon_DED
-      internalID: -5038335482791258787
+      name: JolteonDead
+      takeName: A_Jolteon_DED
+      internalID: -7757946604567380398
       firstFrame: 0
-      lastFrame: 124
+      lastFrame: 65
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -92,11 +87,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: EspeonRun
-      takeName: A_Espeon_Run
-      internalID: -3451786904868182505
+      name: JolteonGuard
+      takeName: A_Jolteon_Guard
+      internalID: 8474478574679822583
       firstFrame: 0
-      lastFrame: 16
+      lastFrame: 87
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -121,96 +116,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: EspeonHurt
-      takeName: A_Espeon_Hurt
-      internalID: 8350859225316766555
-      firstFrame: 0
-      lastFrame: 70
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: EspeonWalk
-      takeName: A_Espeon_Walk
-      internalID: 2091786906416343357
-      firstFrame: 0
-      lastFrame: 27
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: EspeonGuard
-      takeName: A_Espeon_Guard
-      internalID: 8400870462088452582
-      firstFrame: 0
-      lastFrame: 103
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: EspeonGuardPlayerSpot
-      takeName: A_Espeon_Guard_PlayerSpot
-      internalID: 787958886941236387
+      name: JolteonGuardPlayerSpot
+      takeName: A_Jolteon_Guard_PlayerSpot
+      internalID: -6187893150450211997
       firstFrame: 0
       lastFrame: 79
       wrapMode: 0
@@ -237,11 +145,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: EspeonMelee
-      takeName: A_Espeon_Melle
-      internalID: -834889760635025265
+      name: JolteonHurt
+      takeName: A_Jolteon_Hurt
+      internalID: -8666423215997493702
       firstFrame: 0
-      lastFrame: 22
+      lastFrame: 15
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -266,11 +174,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: EspeonSpawn
-      takeName: A_Espeon_Spawn
-      internalID: -8293336267886000077
+      name: JolteonIdle
+      takeName: A_Jolteon_Idle
+      internalID: -3355332903028207602
       firstFrame: 0
-      lastFrame: 89
+      lastFrame: 47
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -295,11 +203,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: EspeonStare
-      takeName: A_Espeon_Stare
-      internalID: 6214528309575367910
+      name: JolteonMelee
+      takeName: A_Jolteon_Melle
+      internalID: 8318661322306273287
       firstFrame: 0
-      lastFrame: 36
+      lastFrame: 19
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -324,11 +232,156 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: EspeonIdle
-      takeName: A_Espeon_Idle
-      internalID: 5785399861585330712
+      name: JolteonRun
+      takeName: A_Jolteon_Run
+      internalID: 6940250610820525681
       firstFrame: 0
-      lastFrame: 52
+      lastFrame: 16
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: JolteonRunEnrage
+      takeName: A_Jolteon_Run_Enrage
+      internalID: 7468542036925675069
+      firstFrame: 0
+      lastFrame: 16
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: JolteonSpawn
+      takeName: A_Jolteon_Spawn
+      internalID: -3048655786631814999
+      firstFrame: 0
+      lastFrame: 34
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: JolteonSpecialAttack
+      takeName: A_Jolteon_SpecialAttack
+      internalID: -3067785416994574462
+      firstFrame: 0
+      lastFrame: 69
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: JolteonStare
+      takeName: A_Jolteon_Stare
+      internalID: 1136980688676132479
+      firstFrame: 0
+      lastFrame: 39
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: JolteonWalk
+      takeName: A_Jolteon_Walk
+      internalID: -1267364328743565052
+      firstFrame: 0
+      lastFrame: 27
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -356,15 +409,15 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 1
-    meshCompression: 2
+    meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
-    importVisibility: 0
+    importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
