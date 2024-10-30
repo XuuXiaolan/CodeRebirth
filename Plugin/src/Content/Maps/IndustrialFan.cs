@@ -7,6 +7,7 @@ public class IndustrialFan : NetworkBehaviour
 {
     public Transform fanTransform = null!;
     public AudioSource cutAudioSource = null!;
+    public AudioSource windAudioSource = null!;
     public float rotationSpeed = 45f;
     public float pushForce = 15f;
     public float suctionForce = 15f;

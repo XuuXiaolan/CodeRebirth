@@ -14,6 +14,7 @@ public class BearTrap : NetworkBehaviour
     public float delayBeforeReset = 3.0f;
     public InteractTrigger trapTrigger = null!;
     public AudioSource trapAudioSource = null!;
+    public AudioClip resetTrapEndSound = null!;
     public AudioClip triggerSound = null!;
     public AudioClip resetTrapSound = null!;
 
@@ -75,7 +76,9 @@ public class BearTrap : NetworkBehaviour
 
     private void TriggerTrap(PlayerControllerB player)
     {
-        trapAudioSource.PlayOneShot(triggerSound);
+        trapAudioSource.Stop();
+        trapAudioSource.clip = triggerSound;
+        trapAudioSource.Play();
         isTriggered = true;
         playerCaught = player;
         playerCaught.disableMoveInput = true;
@@ -88,7 +91,9 @@ public class BearTrap : NetworkBehaviour
 
     private void TriggerTrap(EnemyAI enemy)
     {
-        trapAudioSource.PlayOneShot(triggerSound);
+        trapAudioSource.Stop();
+        trapAudioSource.clip = triggerSound;
+        trapAudioSource.Play();
         isTriggered = true;
         enemyCaught = enemy;
         enemyCaught.HitEnemy(1, null, false, -1);
@@ -114,6 +119,9 @@ public class BearTrap : NetworkBehaviour
     public void ReleaseTrapEarly()
     {
         trapAnimator.SetBool(IsTrapResetting, true);
+        trapAudioSource.Stop();
+        trapAudioSource.clip = resetTrapSound;
+        trapAudioSource.Play();
         StartCoroutine(ResetBooleanAfterDelay(IsTrapResetting, 0.5f));
     }
 
@@ -126,7 +134,10 @@ public class BearTrap : NetworkBehaviour
 
     public void ReleaseTrap()
     {
-        trapAudioSource.PlayOneShot(resetTrapSound);
+        trapAudioSource.Stop();
+        trapAudioSource.clip = resetTrapEndSound;
+        trapAudioSource.Play();
+
         trapAnimator.SetBool(IsTrapResetting, true);
         trapCollider.enabled = true;
 

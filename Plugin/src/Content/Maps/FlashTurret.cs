@@ -7,7 +7,6 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 {
     public Transform turretTransform = null!;
     public Light flashLight = null!;
-    public AudioSource warningSound = null!;
     public float rotationSpeed = 90f;
     public float detectionRange = 15f;
     public float flashDuration = 3f;
@@ -15,6 +14,8 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     public float flashIntensity = 10f;
     public float flashCooldown = 3f;
     public AudioSource cameraAudioSource = null!;
+    public AudioClip spotPlayerSound = null!;
+    public AudioClip flashPlayerSound = null!;
 
     private bool isTriggered = false;
     private PlayerControllerB? detectedPlayer = null;
@@ -77,7 +78,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
                 {
                     detectedPlayer = player;
                     isTriggered = true;
-                    warningSound.Play();
+                    cameraAudioSource.PlayOneShot(spotPlayerSound);
                 }
             }
         }
@@ -85,7 +86,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
     private void TriggerFlash(float dotProduct)
     {
-        cameraAudioSource.Play();
+        cameraAudioSource.PlayOneShot(flashPlayerSound, 0.5f);
         if (flashLight != null)
         {
             flashLight.intensity = flashIntensity;
