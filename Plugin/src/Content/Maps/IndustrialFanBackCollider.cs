@@ -35,10 +35,7 @@ public class IndustrialFanBackCollider : NetworkBehaviour
     {
         if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
-            if (!industrialFan.IsObstructed(other.transform.position) && player == GameNetworkManager.Instance.localPlayerController)
-            {
-                industrialFan.windAudioSource.volume = 0.2f;
-            }
+            industrialFan.windAudioSource.volume = 0.2f;
         }
     }
 }

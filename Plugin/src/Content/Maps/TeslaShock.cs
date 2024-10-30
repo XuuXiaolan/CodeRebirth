@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +31,8 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
     {
         vfx.SetFloat("SpawnRate", 20f);
         teslaIdleAudioSource.clip = teslaSlowIdleSound;
+        teslaIdleAudioSource.Stop();
+        teslaIdleAudioSource.Play();
     }
 
     private void Update()
@@ -44,6 +45,7 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
             if (Vector3.Distance(player.transform.position, transform.position) > distanceFromPlayer) continue;
             targetPlayer = player;
             teslaIdleAudioSource.clip = teslaFastIdleSound;
+            teslaIdleAudioSource.Stop();
             teslaIdleAudioSource.Play();
             StartCoroutine(ExplodePlayerAfterDelay(player));
             break;
@@ -69,18 +71,73 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
             teslaAudioSource.PlayOneShot(teslaChargeSound);
             yield return new WaitForSeconds(teslaChargeSound.length);
             teslaAudioSource.PlayOneShot(teslaZapSounds[UnityEngine.Random.Range(0, teslaZapSounds.Count - 1)]);
+            if (Vector3.Distance(affectedPlayer.transform.position, transform.position) > distanceFromPlayer || affectedPlayer.isPlayerDead || !PlayerCarryingSomethingConductive(affectedPlayer))
+            {
+                continue;
+            }
             affectedPlayer.DamagePlayer(playerDamageAmount, true, false, CauseOfDeath.Blast, 0, false, default);
 
             List<PlayerControllerB> playersSortedByDistance = StartOfRound.Instance.allPlayerScripts
-                .Where(player => player != affectedPlayer && player.isPlayerControlled && !player.isPlayerDead && Vector3.Distance(player.transform.position, affectedPlayer.transform.position) <= distanceFromPlayer)
-                .OrderBy(player => Vector3.Distance(player.transform.position, affectedPlayer.transform.position))
+                .Where(player => player != affectedPlayer && player.isPlayerControlled && !player.isPlayerDead)
                 .ToList();
+
+            // First sort by distance to the affected player
+            playersSortedByDistance = playersSortedByDistance
+                .OrderBy(player => Vector3.Distance(player.gameplayCamera.transform.position, affectedPlayer.gameplayCamera.transform.position))
+                .ToList();
+
+            List<PlayerControllerB> finalSortedPlayers =
+            [
+                // Start with the closest player to the affected player
+                playersSortedByDistance[0],
+            ];
+            playersSortedByDistance.RemoveAt(0);
+
+            while (playersSortedByDistance.Count > 0)
+            {
+                // Get the last added player's position
+                Vector3 lastPlayerPosition = finalSortedPlayers.Last().gameplayCamera.transform.position;
+
+                // Find the closest player to the last added player
+                var closestPlayer = playersSortedByDistance
+                    .OrderBy(player => Vector3.Distance(player.gameplayCamera.transform.position, lastPlayerPosition))
+                    .First();
+
+                // Add the closest player to the final sorted list and remove it from the remaining players
+                finalSortedPlayers.Add(closestPlayer);
+                playersSortedByDistance.Remove(closestPlayer);
+            }
 
             List<EnemyAI> enemiesSortedByDistance = RoundManager.Instance.SpawnedEnemies
-                .Where(enemy => !enemy.isEnemyDead && Vector3.Distance(enemy.transform.position, affectedPlayer.transform.position) <= distanceFromPlayer)
-                .OrderBy(enemy => Vector3.Distance(enemy.transform.position, affectedPlayer.transform.position))
+                .Where(enemy => !enemy.isEnemyDead)
                 .ToList();
 
+            // First sort by distance to the target player
+            enemiesSortedByDistance = enemiesSortedByDistance
+                .OrderBy(enemy => Vector3.Distance(enemy.transform.position, affectedPlayer.gameplayCamera.transform.position))
+                .ToList();
+
+            List<EnemyAI> finalSortedEnemies =
+            [
+                // Start with the closest enemy to the target player
+                enemiesSortedByDistance[0],
+            ];
+            enemiesSortedByDistance.RemoveAt(0);
+
+            while (enemiesSortedByDistance.Count > 0)
+            {
+                // Get the last added enemy's position
+                Vector3 lastEnemyPosition = finalSortedEnemies.Last().transform.position;
+
+                // Find the closest enemy to the last added enemy
+                var closestEnemy = enemiesSortedByDistance
+                    .OrderBy(enemy => Vector3.Distance(enemy.transform.position, lastEnemyPosition))
+                    .First();
+
+                // Add the closest enemy to the final sorted list and remove it from the remaining enemies
+                finalSortedEnemies.Add(closestEnemy);
+                enemiesSortedByDistance.Remove(closestEnemy);
+            }
             // Combine players and enemies into a single list ordered by proximity
             List<Transform> targetsSortedByDistance =
             [
@@ -88,6 +145,9 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
                 .. playersSortedByDistance.Select(player => player.gameplayCamera.transform),
                 .. enemiesSortedByDistance.Select(enemy => enemy.transform),
             ];
+
+            targetsSortedByDistance.OrderBy(x => Vector3.Distance(x.position, startChainPoint.position));
+
 
             // Draw lines between consecutive targets
             int linesNeeded = targetsSortedByDistance.Count - 1;
@@ -157,6 +217,8 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
             yield return new WaitForSeconds(teslaFastChargeSound.length / 2);
         }
         teslaIdleAudioSource.clip = teslaSlowIdleSound;
+        teslaIdleAudioSource.Stop();
+        teslaIdleAudioSource.Play();
         vfx.SetFloat("SpawnRate", 5f);
         // Disable all line renderers when done
         foreach (var lineRendererDict in createdLineRenderers)

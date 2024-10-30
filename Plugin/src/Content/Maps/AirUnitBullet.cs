@@ -1,4 +1,5 @@
 using System.Collections;
+using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,10 +11,10 @@ public class AirUnitProjectile : NetworkBehaviour // add a firing sound audio so
     public float speed = 20f;
     public float lifetime = 5f;
     public float curveStrength = 2f; // Strength of curve adjustment
-    public GameObject particleEffectGameObject = null!;
     public Collider collider = null!;
     public AudioSource playerHitSoundSource = null!;
 
+    private bool explodedOnTarget = false;
     private float anglePointingTo = 0f;
     private PlayerControllerB playerToTarget = null!;
 
@@ -37,11 +38,15 @@ public class AirUnitProjectile : NetworkBehaviour // add a firing sound audio so
         transform.position += transform.up * speed * Time.deltaTime;
 
         // Curve towards target if the target player is within range
-        if (playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= 30f)
+        if (!explodedOnTarget && playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= 30f)
         {
             Vector3 directionToTarget = (playerToTarget.transform.position - transform.position).normalized;
             Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.deltaTime).normalized;
             transform.up = newDirection;
+        }
+        if (playerToTarget != null && explodedOnTarget)
+        {
+            transform.position = playerToTarget.transform.position;
         }
     }
 
@@ -56,11 +61,12 @@ public class AirUnitProjectile : NetworkBehaviour // add a firing sound audio so
         if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
             Vector3 forceFlung = transform.up * 250f;
+            CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, CauseOfDeath.Blast, null, null);
             player.DamagePlayer((int)damage, true, false, CauseOfDeath.Blast, 0, false, forceFlung);
             collider.isTrigger = false;
-            particleEffectGameObject.SetActive(true);
             playerHitSoundSource.Play();
             if (!player.isPlayerDead) StartCoroutine(PushPlayerFarAway(player, forceFlung));
+            explodedOnTarget = true;
         }
     }
 

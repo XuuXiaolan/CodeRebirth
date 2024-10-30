@@ -2,6 +2,7 @@ using System.Collections;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace CodeRebirth.src.Content.Maps;
 public class AirControlUnit : NetworkBehaviour
@@ -13,11 +14,20 @@ public class AirControlUnit : NetworkBehaviour
     public float fireRate = 1f;
     public float detectionRange = 50f;
     public float damageAmount = 50f;
+    public AudioSource ACUAudioSource = null!;
+    public AudioClip ACUFireSound = null!;
+    public AudioClip ACURechargeSound = null!;
+    public AudioSource ACUClickingAudioSource = null!;
+    public AudioSource DetectPlayerAudioSound = null!;
+    public AudioClip ACUStartOrEndSound = null!;
+    public AudioSource ACUTurnAudioSource = null!;
+
 
     private float currentAngle = 0f;
     private float fireTimer = 3f;
     private GameObject projectilePrefab = null!;
     private PlayerControllerB? lastPlayerTargetted = null;
+    private Coroutine? endTargettingPlayerRoutine = null;
 
     private void Start()
     {
@@ -67,9 +77,21 @@ public class AirControlUnit : NetworkBehaviour
                 // Calculate direction to the predicted position
                 Vector3 directionToTarget = futurePosition - turretTransform.position;
                 float angle = Vector3.Angle(turretTransform.up, directionToTarget);
-
-                if (angle <= 60f) // Check if within 60 degrees
+                if (angle <= 90) // Check if within 90 degrees
                 {
+                    if (ACUClickingAudioSource.clip = null)
+                    {
+                        DetectPlayerAudioSound.volume = 1f;
+                        ACUClickingAudioSource.Stop();
+                        ACUClickingAudioSource.clip = ACUStartOrEndSound;
+                        ACUClickingAudioSource.Play();
+                    }
+                    if (endTargettingPlayerRoutine != null)
+                    {
+                        StopCoroutine(endTargettingPlayerRoutine);
+                        endTargettingPlayerRoutine = null;
+                    }
+                    ACUTurnAudioSource.volume = 1f;
                     currentAngle = angle;
                     Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                     targetRotation.z = 0f;
@@ -82,13 +104,32 @@ public class AirControlUnit : NetworkBehaviour
                     Vector3 currentLocalEulerAngles = turretCannonTransform.localEulerAngles;
                     turretCannonTransform.localEulerAngles = new Vector3(angle, currentLocalEulerAngles.y, currentLocalEulerAngles.z);
                 }
+                else
+                {
+                    if (endTargettingPlayerRoutine == null)
+                    {
+                        endTargettingPlayerRoutine = StartCoroutine(EndTargettingPlayer());
+                    }
+                    DetectPlayerAudioSound.volume = 0f;
+                    ACUClickingAudioSource.Stop();
+                    ACUClickingAudioSource.clip = null;
+                    ACUTurnAudioSource.volume = 0f;
+                }
             }
         }
     }
 
+    private IEnumerator EndTargettingPlayer()
+    {
+        yield return new WaitForSeconds(1f);
+        lastPlayerTargetted = null;
+        endTargettingPlayerRoutine = null;
+    }
     private void FireProjectile()
     {
         if (lastPlayerTargetted == null) return;
+        // play shoot sound
+        ACUAudioSource.PlayOneShot(ACUFireSound);
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
         NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
         networkObject?.Spawn();
@@ -113,5 +154,6 @@ public class AirControlUnit : NetworkBehaviour
         }
 
         turretCannonTransform.localPosition = originalPosition;
+        ACUAudioSource.PlayOneShot(ACURechargeSound);
     }
 }
