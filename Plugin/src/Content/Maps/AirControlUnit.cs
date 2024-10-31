@@ -35,8 +35,6 @@ public class AirControlUnit : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsServer) return;
-
         // Rotate the turret to look for targets
         FindAndAimAtTarget();
 
@@ -127,14 +125,17 @@ public class AirControlUnit : NetworkBehaviour
         if (lastPlayerTargetted == null || DetectPlayerAudioSound.volume == 0) return;
         // play shoot sound
         ACUAudioSource.PlayOneShot(ACUFireSound);
-        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
-        NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
-        networkObject?.Spawn();
-        AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
-        projectileComponent.Initialize(damageAmount, currentAngle, lastPlayerTargetted);
+        if (IsServer)
+        {
+            GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
+            NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
+            networkObject?.Spawn();
+            AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
+            projectileComponent.Initialize(damageAmount, currentAngle, lastPlayerTargetted);
 
-        // Rattle the cannon's transform to emulate a shake effect
-        StartCoroutine(RattleCannon());
+            // Rattle the cannon's transform to emulate a shake effect
+            StartCoroutine(RattleCannon());
+        }
     }
 
     private IEnumerator RattleCannon()
