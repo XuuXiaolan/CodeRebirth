@@ -165,47 +165,86 @@ If you're interested in helping with the development of the mod, feel free to re
 <details>
   <summary><strong>Miscellaneous</strong></summary>
 
-### Tesla Shock
+### Bug Zapper
 
-![TS](https://i.postimg.cc/GpGRtvjj/image.png)
+![BZ](https://i.postimg.cc/GpGRtvjj/image.png)
 
-> Part of ancient defensive technology by the local inhabitants of the moons the employees visit, zap.
+> Designation : Bug Zapper  
+> Objective : Pest Control  
+>
+> These giant electric zappers, capable of delivering fatal electric shocks, were instrumental in the protection of valuable assets. After detecting a threat, the giant tesla coil would charge up before delivering a strong shock, deterring or killing any attackers.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : Zap metal carrier, Zap bug, Zap, Zap, Zap.
 
 ### Laser Turret
 
 ![LT](https://i.postimg.cc/1t3v2Q4N/image.png)
 
-> Uses unknown gem technology to amplify mining efficiency, was abandoned and somehow reactivated.
+> Designation : Laser Assisted Soil Excavation Rig (L.A.S.E.R.)  
+> Objective : Mine and Extract minerals
+>
+> The L.A.S.E.R. is the back bone of mining operations, this experimental tech uses a massive carved ruby that focuses light into a single point creating a laser capable of melting solid rock. Energy efficient and powerful, this device is instrumental in the quick extraction of ores.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : Spin, Mine, Spin, Mine,Spin, Mine.
 
 ### Industrial Fan
 
 ![IF](https://i.postimg.cc/htGbKrcH/image.png)
 
-> Depending on which side you face, you could be dragged in and shredded or pushed away.
+> Designation : Industrial Fan  
+> Objective : Aeration  
+> 
+> These giant industrial fans were used for aeration during mining operations, keeping dust off equipment and keeping crewmates cooled down. The fan's automated system would control fan speed by detecting the amount of dust, gas and other various aerosols.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : Fan Speed - Max, Maximum aeration mode - 360 degree coverage  
 
 ### Functional Microwave
 
 ![FM](https://i.postimg.cc/x84jMnNG/image.png)
 
-> Slowly moves around the facility, cooking the walls and employees alike.
+> Designation : Experimental Microwave  
+> Objective : Microwave rock
+>
+> These modified microwave ovens were used alongside L.A.S.E.R. devices to help in the mining operation. Using a modified power supply, the microwave shoots high microwave radiation at rocky surfaces to weaken and fracture surfaces. Once a surface is weakened by an automated microwave, the mining crew can start extraction using manual tools and L.A.S.E.R devices.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure  
+> [Log] Crewmate found with content of 6% various minerals  
+> [Update] Weaken minerals from crewmate  
+> [Update] Objective updated : Microwave crewmate
 
 ### Flash Turret
 
 ![FT](https://i.postimg.cc/FH9mzY6t/image.png)
 
-> Blinds you temporarily if looked at, otherwise small flash of light.
+> Designation : WunderFoto Pro Flash Camera  
+> Objective : Survey and Photograph
+>
+> The WunderFoto Pro Flash Cameras were deployed early on into mining operations to survey the local terrain for ores and photograph local wildlife for research purposes. These state of the art cameras are controlled by the latest company software with a reliable AI that will photograph and send data directly to the ship.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : photograph crew, photograph crew, photograph crew, photograph crew.
 
 ### Bear Trap
 
-![BT](https://i.postimg.cc/xdF738T4/image.png)
+![FT](https://i.postimg.cc/FH9mzY6t/image.png)
 
-> Randomly spawning outside in groups of 5~, can cause a lot of damage if unnoticed.
+> Designation : Bear Trap  
+> Objective : Wildlife control  
+>
+> These old mechanical bear traps, rusty but reliable, were used as a defensive measure against the local hostile wildlife trying to interrupt mining operations.  
+>
+> [Final Recorded Equipment Transmission]  
+> N/A
 
 ### Air Control Unit
 
 ![ACU](https://i.postimg.cc/HxLZnQKR/image.png)
 
-> Made for people who think they can skip the moon by jetpacking.
+> Designation : Air Control Unit  
+> Objective : Shoot down threats  
+>
+> An old heavy anti air canon repurposed for shooting down airborne threats. These were the last defense measure against hostile wildlife during mining operations. The AC unit uses a powerful pneumatic system that compresses surrounding air to launch heavy air seeking projectiles.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : Clear skies
 
 ### Item Crate
 

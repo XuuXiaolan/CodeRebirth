@@ -58,7 +58,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigFlashTurretSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigIndustrialFanSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigTeslaShockSpawnWeight { get; private set; }
-    public ConfigEntry<int> ConfigAirControlUnitAbundance { get; private set; }
+    public ConfigEntry<string> ConfigAirControlUnitSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigFunctionalMicrowaveSpawnWeight { get; private set; }
     #endregion
     #region Enemy Specific
@@ -218,9 +218,9 @@ public class CodeRebirthConfig
                                             "Air Control Unit | Enabled",
                                             true,
                                             "Whether the air control unit is enabled.");
-        ConfigAirControlUnitAbundance = configFile.Bind("AirControlUnit Options",
-                                            "Air Control Unit | Abundance",
-                                            5,
+        ConfigAirControlUnitSpawnWeight = configFile.Bind("AirControlUnit Options",
+                                            "Air Control Unit | SpawnWeight",
+                                            "Vanilla:5,Custom:5,Titan:1,Olympus:3",
                                             "The number of air control units to spawn per round.");
         #endregion
         #region General

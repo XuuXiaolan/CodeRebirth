@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using Random = System.Random;
 using CodeRebirth.src.Content.Unlockables;
+using BepInEx;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -31,8 +32,50 @@ static class RoundManagerPatch {
 	private static void SpawnAirControlUnit()
 	{
 		Plugin.ExtendedLogging("Spawning air control unit!!!");
+
+		// Parse the configuration string to get the spawn counts for different moons
+		Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigAirControlUnitSpawnWeight.Value);
+		foreach (var moonSpawn in moonSpawnCounts.Keys)
+		{
+			Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+		}
+
+		// Get the current moon type
+		string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
+		Plugin.ExtendedLogging("Current moon: " + currentMoon);
+
+		// Determine the spawn count based on the current moon configuration
+		int spawnCount = 0;
+
+		if (!moonSpawnCounts.TryGetValue(currentMoon, out spawnCount)) // Try to get the specific moon spawn count
+		{
+			if (!moonSpawnCounts.TryGetValue("all", out spawnCount)) // If not found, try to get the "all" spawn count
+			{
+				// Determine if it is a vanilla or custom moon and get the appropriate spawn count
+				bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels
+					.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
+
+				if (isVanillaMoon)
+				{
+					moonSpawnCounts.TryGetValue("vanilla", out spawnCount);
+				}
+				else
+				{
+					moonSpawnCounts.TryGetValue("custom", out spawnCount);
+				}
+			}
+		}
+
+		// Log the determined spawn count
+		Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+
+		// If no valid spawn count is found, return
+		if (spawnCount <= 0) return;
+
+		// Check if the current moon configuration is valid
 		System.Random random = new();
-		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigAirControlUnitAbundance.Value, 0, 1000)); i++)
+		Plugin.ExtendedLogging($"Spawning {spawnCount} air control units");
+		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
 		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
@@ -49,6 +92,30 @@ static class RoundManagerPatch {
 				spawnedAirControlUnit.GetComponent<NetworkObject>().Spawn();
 			}
 		}
+	}
+
+	private static Dictionary<string, int> ParseMoonSpawnConfig(string config)
+	{
+		Dictionary<string, int> moonSpawnCounts = new();
+
+		if (string.IsNullOrEmpty(config)) return moonSpawnCounts;
+
+		string[] entries = config.Split(',');
+		foreach (string entry in entries)
+		{
+			string[] parts = entry.Split(':');
+			if (parts.Length == 2 && int.TryParse(parts[1], out int count))
+			{
+				string key = parts[0].Trim().ToLowerInvariant();
+				if (key.Equals("modded", StringComparison.OrdinalIgnoreCase))
+				{
+					key = "custom";
+				}
+				moonSpawnCounts[key] = count;
+			}
+		}
+
+		return moonSpawnCounts;
 	}
 
 	private static void SpawnBearTrap()

@@ -1,4 +1,10 @@
-# v0.7.1
+# v0.7.2
+
+- Gave ACU a spawn weight config based on moon + value.
+- Gave microwave bigger collider to open doors.
+- Gave all hazards lore in the readme.
+
+## v0.7.1
 
 - Fixed potential bug with ACUnit where it wouldnt despawn on moon unload.
 - Fixed animator bug with bear trap.
