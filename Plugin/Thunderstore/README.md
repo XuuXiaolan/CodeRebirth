@@ -169,7 +169,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ![TS](https://i.postimg.cc/GpGRtvjj/image.png)
 
-> Was a fun little gadget for children of the employees, slowly amplified over time and now considered deadly with conductive items in nearby employees.
+> Part of ancient defensive technology by the local inhabitants of the moons the employees visit, zap.
 
 ### Laser Turret
 
@@ -203,7 +203,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Air Control Unit
 
-![ACU]()
+![ACU](https://i.postimg.cc/HxLZnQKR/image.png)
 
 > Made for people who think they can skip the moon by jetpacking.
 

@@ -2,7 +2,7 @@
 
 - Added 7 new hazards.
   - TeslaShock.
-    - Damages nearby things with metallic items, chains enemies and players alike.
+    - Damages nearby players with metallic items, chains enemies and players alike.
   - Functional Microwave.
     - Wanders the facility... very slowly... while cooking it up.
   - Air Control Unit.
@@ -19,9 +19,11 @@
 - Made it so you can drop gal's items while she's delivering them.
 - Cleaned up triggers with gal so prompt wont pop up unless you fulfill conditions.
 - Gave gal a radar dot so you can look at her in the terminal's radar, goes by Delilah.
+  - Works with the OpenBodyCams mod ~~not really the POV is from her feet~~.
 - Made it so gal doesnt jitter for clients on ship land/takeoff.
+- Gal probably doesnt jitter in the elevator anymore.
 - Fixed several bugs with gal killing enemies.
-- Fixed gal dropping off items onto ship, they now stay there with the ship, notif doesnt always show up though.
+- Fixed gal dropping off items onto ship, they now stay there with the ship, notif doesnt always show up though, so gal has her own notif now.
 - Massively improved gal selling mechanics.
 
 ## v0.6.8
