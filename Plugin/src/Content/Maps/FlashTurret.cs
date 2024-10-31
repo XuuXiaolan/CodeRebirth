@@ -66,6 +66,12 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
     public void OnNoiseDetected(Vector3 noisePosition, int noiseID)
     {
+        OnNoiseDetectedClientRpc(noisePosition, noiseID);
+    }
+
+    [ClientRpc]
+    public void OnNoiseDetectedClientRpc(Vector3 noisePosition, int noiseID)
+    {
         if (detectedPlayer != null || cooldownTimer > 0f) return;
 
         float distance = Vector3.Distance(turretTransform.position, noisePosition);

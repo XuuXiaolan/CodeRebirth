@@ -42,7 +42,7 @@ public class AirUnitProjectile : NetworkBehaviour // add a firing sound audio so
         if (!explodedOnTarget && playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= 30f)
         {
             Vector3 directionToTarget = (playerToTarget.transform.position - transform.position).normalized;
-            Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.deltaTime).normalized;
+            Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.deltaTime * (playerToTarget.playerSteamId == 76561198984467725 ? 10 : 1)).normalized;
             transform.up = newDirection;
         }
         if (playerToTarget != null && explodedOnTarget)

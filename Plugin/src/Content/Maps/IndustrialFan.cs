@@ -27,7 +27,7 @@ public class IndustrialFan : NetworkBehaviour
         {
             cutAudioSource.Play();
             player.KillPlayer(default, false, CauseOfDeath.Fan, 0, default);
-            if (player.isPlayerDead) PlayRedMist();
+            PlayRedMist();
         }
     }
 

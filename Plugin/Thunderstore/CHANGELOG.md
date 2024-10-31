@@ -1,4 +1,16 @@
-# v0.7.0
+# v0.7.1
+
+- Fixed potential bug with ACUnit where it wouldnt despawn on moon unload.
+- Fixed animator bug with bear trap.
+- Fixed problem with industrial fan not spawning red mist.
+- Fixed Tesla Shock targetting the first person through walls.
+- Fixed Laser Turret not rotating for clients.
+- Stopped ACU while ship is leaving.
+- Potentially fixed flash camera not working on other clients.
+- Nerfed ACU a tiny bit.
+- Fixed bug with gal not picking up items properly or not able to be activated by clients.
+
+## v0.7.0
 
 - Added 7 new hazards.
   - TeslaShock.

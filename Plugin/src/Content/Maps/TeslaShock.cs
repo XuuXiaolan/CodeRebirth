@@ -39,7 +39,7 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
         };
         scanNode.transform.position = this.transform.position + new Vector3(0, 2, 0);
         scanNode.transform.SetParent(this.transform, true);
-        scanNode.transform.localScale =     new Vector3(1, 1, 1);
+        scanNode.transform.localScale = new Vector3(1, 1, 1);
         ScanNodeProperties scanNodePorperties = scanNode.AddComponent<ScanNodeProperties>();
         scanNodePorperties.maxRange = 13;
         scanNodePorperties.minRange = 0;
@@ -57,6 +57,7 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
         if (targetPlayer != null) return;
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
+            if (!player.isPlayerControlled || player.isPlayerDead || Physics.Raycast(player.transform.position, transform.position - player.transform.position, out RaycastHit hit, distanceFromPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide)) continue;
             bool somethingConductiveFound = PlayerCarryingSomethingConductive(player);
             if (!somethingConductiveFound) continue;
             if (Vector3.Distance(player.transform.position, transform.position) > distanceFromPlayer) continue;

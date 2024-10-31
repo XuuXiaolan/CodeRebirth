@@ -20,7 +20,7 @@ public class AirControlUnit : NetworkBehaviour
     public AudioSource DetectPlayerAudioSound = null!;
     public AudioClip ACUStartOrEndSound = null!;
     public AudioSource ACUTurnAudioSource = null!;
-
+    public float playerHeadstart = 10f;
 
     private float currentAngle = 0f;
     private float fireTimer = 3f;
@@ -35,6 +35,8 @@ public class AirControlUnit : NetworkBehaviour
 
     private void Update()
     {
+        playerHeadstart -= Time.deltaTime;
+        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0) return;
         // Rotate the turret to look for targets
         FindAndAimAtTarget();
 
@@ -74,7 +76,7 @@ public class AirControlUnit : NetworkBehaviour
                 // Calculate direction to the predicted position
                 Vector3 directionToTarget = futurePosition - turretTransform.position;
                 float angle = Vector3.Angle(turretTransform.up, directionToTarget);
-                if (angle <= 80) // Check if within 80 degrees
+                if (angle <= 75 && playerControllerB.transform.position.y > turretCannonTransform.position.y) // Check if within 75 degrees
                 {
                     if (ACUClickingAudioSource.clip == null)
                     {

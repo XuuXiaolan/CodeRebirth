@@ -112,11 +112,24 @@ public class BearTrap : NetworkBehaviour
     private IEnumerator DelayReleasingEnemy()
     {
         yield return new WaitForSeconds(12f);
-        ReleaseTrap();
+        DoReleaseTrap();
         releaseCoroutine = null;
     }
 
     public void ReleaseTrapEarly()
+    {
+        Plugin.ExtendedLogging("release trap early");
+        DoReleaseTrapEarlyServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DoReleaseTrapEarlyServerRpc()
+    {
+        DoReleaseTrapEarlyClientRpc();
+    }
+
+    [ClientRpc]
+    private void DoReleaseTrapEarlyClientRpc()
     {
         trapAnimator.SetBool(IsTrapResetting, true);
         trapAudioSource.Stop();
@@ -127,12 +140,44 @@ public class BearTrap : NetworkBehaviour
 
     public void OnCancelReleaseTrap()
     {
+        Plugin.ExtendedLogging("Canceling trap release");
+        DoOnCancelReleaseTrapServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DoOnCancelReleaseTrapServerRpc()
+    {
+        DoOnCancelReleaseTrapClientRpc();
+    }
+
+    [ClientRpc]
+    public void DoOnCancelReleaseTrapClientRpc()
+    {
         if (!isTriggered || playerCaught == null) return;
 
         TriggerTrap(playerCaught);
     }
 
-    public void ReleaseTrap()
+    public void ReleaseTrap(PlayerControllerB player)
+    {
+        if (GameNetworkManager.Instance.localPlayerController != player) return;
+        Plugin.ExtendedLogging("release trap");
+        DoReleaseTrapServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DoReleaseTrapServerRpc()
+    {
+        DoReleaseTrapClientRpc();
+    }
+
+    [ClientRpc]
+    public void DoReleaseTrapClientRpc()
+    {
+        DoReleaseTrap();
+    }
+
+    private void DoReleaseTrap()
     {
         trapAudioSource.Stop();
         trapAudioSource.clip = resetTrapEndSound;

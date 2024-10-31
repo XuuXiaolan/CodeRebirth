@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,29 +11,59 @@ public class ShockwaveCharger : NetworkBehaviour
 {
     public InteractTrigger ActivateOrDeactivateTrigger = null!;
     public Transform ChargeTransform = null!;
-    private ShockwaveGalAI shockwaveGalAI = null!;
+    [NonSerialized] public ShockwaveGalAI shockwaveGalAI = null!;
 
     public void Start()
     {
         if (IsServer)
         {
+            // Instantiate the ShockwaveGalAI prefab
             shockwaveGalAI = Instantiate(UnlockableHandler.Instance.ShockwaveBot.ShockWaveDronePrefab, ChargeTransform.position, ChargeTransform.rotation).GetComponent<ShockwaveGalAI>();
             NetworkObject netObj = shockwaveGalAI.GetComponent<NetworkObject>();
+
+            // Spawn the NetworkObject to make it accessible across the network
             netObj.Spawn();
-            SetGalForEveryoneClientRpc(new NetworkObjectReference(netObj));
+
+            // Set the correct transform parent and move the instantiated object after it has been spawned
             shockwaveGalAI.transform.SetParent(this.transform, true);
-            shockwaveGalAI.transform.position = ChargeTransform.position;
-            shockwaveGalAI.transform.rotation = ChargeTransform.rotation;
+            
+            // Use ClientRpc to synchronize the position/rotation
+            SetPositionClientRpc(new NetworkObjectReference(netObj), ChargeTransform.position, ChargeTransform.rotation);
+
+            // Send a reference of the spawned object to all clients
+            SetGalForEveryoneClientRpc(new NetworkObjectReference(netObj));
+        }
+    }
+
+    [ClientRpc]
+    private void SetPositionClientRpc(NetworkObjectReference netObjRef, Vector3 position, Quaternion rotation)
+    {
+        if (netObjRef.TryGet(out NetworkObject networkObject))
+        {
+            // Set the position and rotation explicitly for the clients
+            networkObject.transform.position = position;
+            networkObject.transform.rotation = rotation;
         }
     }
 
     [ClientRpc]
     private void SetGalForEveryoneClientRpc(NetworkObjectReference netObjRef)
     {
-        shockwaveGalAI = ((GameObject)netObjRef).GetComponent<ShockwaveGalAI>();
-        shockwaveGalAI.ShockwaveCharger = this;
-        if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value) StartCoroutine(ActivateShockwaveGalAfterLand());
-        ActivateOrDeactivateTrigger.onInteract.AddListener(OnActivateShockwaveGal);
+        // Resolve the NetworkObjectReference to a GameObject
+        if (netObjRef.TryGet(out NetworkObject networkObject))
+        {
+            shockwaveGalAI = networkObject.gameObject.GetComponent<ShockwaveGalAI>();
+            shockwaveGalAI.ShockwaveCharger = this;
+
+            // Automatic activation if configured
+            if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value)
+            {
+                StartCoroutine(ActivateShockwaveGalAfterLand());
+            }
+
+            // Adding listener for interaction trigger
+            ActivateOrDeactivateTrigger.onInteract.AddListener(OnActivateShockwaveGal);
+        }
     }
 
     private IEnumerator ActivateShockwaveGalAfterLand()

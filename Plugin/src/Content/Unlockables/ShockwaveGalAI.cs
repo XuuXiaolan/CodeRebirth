@@ -136,6 +136,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private IEnumerator StartUpDelay()
     {
         yield return new WaitForSeconds(0.5f);
+        ShockwaveCharger shockwaveCharger = FindObjectsByType<ShockwaveCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID).OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();
+        shockwaveCharger.shockwaveGalAI = this;
+        this.ShockwaveCharger = shockwaveCharger;
         transform.position = ShockwaveCharger.ChargeTransform.position;
         transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
@@ -297,7 +300,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.interactable = idleInteractable && ownerPlayer!.currentlyHeldObjectServer != null && galState != State.DeliveringItems;
+            trigger.interactable = idleInteractable && ownerPlayer != null && ownerPlayer.currentlyHeldObjectServer != null && galState != State.DeliveringItems;
         }
     }
 
@@ -572,7 +575,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             {
                 DropAllHeldItemsServerRpc();
             }
-            HUDManager.Instance.DisplayTip("Scrap Delivered", "Shockwave Gal has delivered the items given to her to the ship!", false);
         }
     }
 
@@ -1133,11 +1135,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
         item.parentObject = null;
-        item.transform.SetParent(null, true);
         if (!isSellingItems)
         {
             if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
             {
+                if ((itemsHeldList.Count - 1) == 0)
+                {
+                    HUDManager.Instance.DisplayTip("Scrap Delivered", "Shockwave Gal has delivered the items given to her to the ship!", false);
+                }
                 Plugin.ExtendedLogging($"Dropping item in ship room: {item}");
                 item.isInShipRoom = true;
                 item.isInElevator = true;

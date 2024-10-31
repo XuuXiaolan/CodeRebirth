@@ -48,7 +48,7 @@ public class LaserTurret : NetworkBehaviour // turretAudioSource with looping ro
     private void Update()
     {
         // Rotate the turret
-        if (IsServer) turretTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+        turretTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 
         // Fire laser continuously
         FireLaser();
