@@ -253,6 +253,10 @@ If you're interested in helping with the development of the mod, feel free to re
 
 - Smxrez
 
+**Testing:**
+
+- A Glitched NPC (I didn't really need the testing in hindsight, cuz im a genius who just made it work from the get-go), Rodrigo.
+
 ## Credits - Misc Models
 
 "Baby Tomato Plant Scan (Low Poly)" (<https://skfb.ly/oHvNF>) by Marcos Silva is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
