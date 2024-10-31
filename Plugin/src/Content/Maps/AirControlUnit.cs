@@ -2,7 +2,6 @@ using System.Collections;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace CodeRebirth.src.Content.Maps;
 public class AirControlUnit : NetworkBehaviour
@@ -54,7 +53,7 @@ public class AirControlUnit : NetworkBehaviour
     {
         foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
         {
-            if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || playerControllerB.isInHangarShipRoom) continue;
+            if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position)) continue;
 
             Rigidbody targetRigidbody = playerControllerB.playerRigidbody;
             if (targetRigidbody == null) continue;
@@ -77,9 +76,9 @@ public class AirControlUnit : NetworkBehaviour
                 // Calculate direction to the predicted position
                 Vector3 directionToTarget = futurePosition - turretTransform.position;
                 float angle = Vector3.Angle(turretTransform.up, directionToTarget);
-                if (angle <= 90) // Check if within 90 degrees
+                if (angle <= 80) // Check if within 80 degrees
                 {
-                    if (ACUClickingAudioSource.clip = null)
+                    if (ACUClickingAudioSource.clip == null)
                     {
                         DetectPlayerAudioSound.volume = 1f;
                         ACUClickingAudioSource.Stop();
@@ -106,10 +105,7 @@ public class AirControlUnit : NetworkBehaviour
                 }
                 else
                 {
-                    if (endTargettingPlayerRoutine == null)
-                    {
-                        endTargettingPlayerRoutine = StartCoroutine(EndTargettingPlayer());
-                    }
+                    endTargettingPlayerRoutine ??= StartCoroutine(EndTargettingPlayer());
                     DetectPlayerAudioSound.volume = 0f;
                     ACUClickingAudioSource.Stop();
                     ACUClickingAudioSource.clip = null;
@@ -125,9 +121,10 @@ public class AirControlUnit : NetworkBehaviour
         lastPlayerTargetted = null;
         endTargettingPlayerRoutine = null;
     }
+
     private void FireProjectile()
     {
-        if (lastPlayerTargetted == null) return;
+        if (lastPlayerTargetted == null || DetectPlayerAudioSound.volume == 0) return;
         // play shoot sound
         ACUAudioSource.PlayOneShot(ACUFireSound);
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);

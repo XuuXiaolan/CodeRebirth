@@ -33,6 +33,23 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
         teslaIdleAudioSource.clip = teslaSlowIdleSound;
         teslaIdleAudioSource.Stop();
         teslaIdleAudioSource.Play();
+        GameObject scanNode = new("ScanNode")
+        {
+            layer = LayerMask.NameToLayer("ScanNode")
+        };
+        scanNode.transform.position = this.transform.position + new Vector3(0, 2, 0);
+        scanNode.transform.SetParent(this.transform, true);
+        scanNode.transform.localScale =     new Vector3(1, 1, 1);
+        ScanNodeProperties scanNodePorperties = scanNode.AddComponent<ScanNodeProperties>();
+        scanNodePorperties.maxRange = 13;
+        scanNodePorperties.minRange = 0;
+        scanNodePorperties.requiresLineOfSight = true;
+        scanNodePorperties.headerText = "Tesla Shock";
+        scanNodePorperties.subText = "My PC hated making the visuals for this thing...";
+        scanNodePorperties.nodeType = 1;
+        BoxCollider boxCollider = scanNode.AddComponent<BoxCollider>();
+        boxCollider.center = new Vector3(0, 2, 0);
+        boxCollider.size = new Vector3(1, 0.83f, 1);
     }
 
     private void Update()
@@ -83,24 +100,28 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
 
             // First sort by distance to the affected player
             playersSortedByDistance = playersSortedByDistance
-                .OrderBy(player => Vector3.Distance(player.gameplayCamera.transform.position, affectedPlayer.gameplayCamera.transform.position))
+                .OrderBy(player => Vector3.Distance(player.transform.position, affectedPlayer.transform.position))
                 .ToList();
 
-            List<PlayerControllerB> finalSortedPlayers =
-            [
-                // Start with the closest player to the affected player
-                playersSortedByDistance[0],
-            ];
-            playersSortedByDistance.RemoveAt(0);
+            List<PlayerControllerB> finalSortedPlayers = new();
+            if (playersSortedByDistance.Count > 0)
+            {
+                finalSortedPlayers =
+                [
+                    // Start with the closest player to the affected player
+                    playersSortedByDistance[0],
+                ];
+                playersSortedByDistance.RemoveAt(0);
+            }
 
             while (playersSortedByDistance.Count > 0)
             {
                 // Get the last added player's position
-                Vector3 lastPlayerPosition = finalSortedPlayers.Last().gameplayCamera.transform.position;
+                Vector3 lastPlayerPosition = finalSortedPlayers.Last().transform.position;
 
                 // Find the closest player to the last added player
                 var closestPlayer = playersSortedByDistance
-                    .OrderBy(player => Vector3.Distance(player.gameplayCamera.transform.position, lastPlayerPosition))
+                    .OrderBy(player => Vector3.Distance(player.transform.position, lastPlayerPosition))
                     .First();
 
                 // Add the closest player to the final sorted list and remove it from the remaining players
@@ -114,15 +135,19 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
 
             // First sort by distance to the target player
             enemiesSortedByDistance = enemiesSortedByDistance
-                .OrderBy(enemy => Vector3.Distance(enemy.transform.position, affectedPlayer.gameplayCamera.transform.position))
+                .OrderBy(enemy => Vector3.Distance(enemy.transform.position, affectedPlayer.transform.position))
                 .ToList();
 
-            List<EnemyAI> finalSortedEnemies =
-            [
-                // Start with the closest enemy to the target player
-                enemiesSortedByDistance[0],
-            ];
-            enemiesSortedByDistance.RemoveAt(0);
+            List<EnemyAI> finalSortedEnemies = new();
+            if (enemiesSortedByDistance.Count > 0)
+            {
+                finalSortedEnemies =
+                [
+                    // Start with the closest enemy to the target player
+                    enemiesSortedByDistance[0],
+                ];
+                enemiesSortedByDistance.RemoveAt(0);
+            }
 
             while (enemiesSortedByDistance.Count > 0)
             {
@@ -138,15 +163,20 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
                 finalSortedEnemies.Add(closestEnemy);
                 enemiesSortedByDistance.Remove(closestEnemy);
             }
-            // Combine players and enemies into a single list ordered by proximity
             List<Transform> targetsSortedByDistance =
             [
-                startChainPoint, affectedPlayer.gameplayCamera.transform,
-                .. playersSortedByDistance.Select(player => player.gameplayCamera.transform),
-                .. enemiesSortedByDistance.Select(enemy => enemy.transform),
+                startChainPoint,
+                affectedPlayer.transform,
+                // Add the sorted players' transforms
+                .. finalSortedPlayers.Select(player => player.transform),
+                // Add the sorted enemies' transforms
+                .. finalSortedEnemies.Select(enemy => enemy.transform),
             ];
 
-            targetsSortedByDistance.OrderBy(x => Vector3.Distance(x.position, startChainPoint.position));
+            // Order the targets by proximity to `startChainPoint`
+            targetsSortedByDistance = targetsSortedByDistance
+                .OrderBy(x => Vector3.Distance(x.position, startChainPoint.position))
+                .ToList();
 
 
             // Draw lines between consecutive targets
@@ -164,15 +194,6 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
                     Vector3 startPos = targetsSortedByDistance[i].position;
                     Vector3 endPos = targetsSortedByDistance[i + 1].position;
 
-                    if (playersSortedByDistance.Any(p => p.gameplayCamera.transform == targetsSortedByDistance[i]))
-                    {
-                        startPos -= targetsSortedByDistance[i].up * 0.5f;
-                    }
-
-                    if (playersSortedByDistance.Any(p => p.gameplayCamera.transform == targetsSortedByDistance[i + 1]))
-                    {
-                        endPos -= targetsSortedByDistance[i + 1].up * 0.5f;
-                    }
 
                     lineRenderer.SetPosition(0, startPos);
                     lineRenderer.SetPosition(1, endPos);
@@ -184,14 +205,14 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
                 if (i > 0) // Skip the first point (startChainPoint)
                 {
                     Transform currentTarget = targetsSortedByDistance[i + 1];
-                    PlayerControllerB player = playersSortedByDistance.FirstOrDefault(p => p.gameplayCamera.transform == currentTarget);
+                    PlayerControllerB player = finalSortedPlayers.FirstOrDefault(p => p.transform == currentTarget);
                     if (player != null)
                     {
                         player?.DamagePlayer(10, true, false, CauseOfDeath.Burning, 0, false, default);
                     }
                     else
                     {
-                        EnemyAI enemy = enemiesSortedByDistance.FirstOrDefault(e => e.transform == currentTarget);
+                        EnemyAI enemy = finalSortedEnemies.FirstOrDefault(e => e.transform == currentTarget);
                         enemy?.HitEnemy(3, null, true, -1);
                     }
                 }

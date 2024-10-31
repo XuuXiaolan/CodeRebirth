@@ -11,8 +11,9 @@ public class AirUnitProjectile : NetworkBehaviour // add a firing sound audio so
     public float speed = 20f;
     public float lifetime = 5f;
     public float curveStrength = 2f; // Strength of curve adjustment
-    public Collider collider = null!;
     public AudioSource playerHitSoundSource = null!;
+    public AudioSource windSource = null!;
+    public MeshFilter bulletMesh = null!;
 
     private bool explodedOnTarget = false;
     private float anglePointingTo = 0f;
@@ -58,15 +59,16 @@ public class AirUnitProjectile : NetworkBehaviour // add a firing sound audio so
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (!explodedOnTarget && other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
             Vector3 forceFlung = transform.up * 250f;
             CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, CauseOfDeath.Blast, null, null);
             player.DamagePlayer((int)damage, true, false, CauseOfDeath.Blast, 0, false, forceFlung);
-            collider.isTrigger = false;
             playerHitSoundSource.Play();
             if (!player.isPlayerDead) StartCoroutine(PushPlayerFarAway(player, forceFlung));
             explodedOnTarget = true;
+            bulletMesh.mesh = null;
+            windSource.volume = 0f;
         }
     }
 

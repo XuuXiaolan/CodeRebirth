@@ -572,6 +572,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             {
                 DropAllHeldItemsServerRpc();
             }
+            HUDManager.Instance.DisplayTip("Scrap Delivered", "Shockwave Gal has delivered the items given to her to the ship!", false);
         }
     }
 
