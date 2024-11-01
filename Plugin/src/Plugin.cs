@@ -11,6 +11,7 @@ using CodeRebirth.src.Util.Extensions;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
+using Unity.Netcode;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -100,6 +101,11 @@ public class Plugin : BaseUnityPlugin {
         var types = Assembly.GetExecutingAssembly().GetLoadableTypes();
         foreach (var type in types)
         {
+            if (type.IsNested || !typeof(NetworkBehaviour).IsAssignableFrom(type)) {
+                continue; // we do not care about fixing it, if it is not a network behaviour
+            }
+            // ExtendedLogging($"found network behaviour: {type.Name}");
+            
             var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             foreach (var method in methods)
             {
