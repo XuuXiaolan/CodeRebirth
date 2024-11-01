@@ -59,9 +59,7 @@ public class TeslaShock : NetworkBehaviour
         if (targetPlayer != null) return;
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (!player.isPlayerControlled || player.isPlayerDead || Physics.Raycast(player.transform.position, transform.position - player.transform.position, out RaycastHit hit, distanceFromPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide)) continue;
-            if (!PlayerCarryingSomethingConductive(player)) continue;
-            if (Vector3.Distance(player.transform.position, transform.position) > distanceFromPlayer) continue;
+            if (!ShouldContinueCharging(player)) continue;
             targetPlayer = player;
             teslaIdleAudioSource.clip = teslaFastIdleSound;
             teslaIdleAudioSource.Stop();
@@ -87,9 +85,10 @@ public class TeslaShock : NetworkBehaviour
     {
         while (ShouldContinueCharging(affectedPlayer))
         {
+            Plugin.ExtendedLogging($"Charging {affectedPlayer.playerUsername}");
             yield return StartCoroutine(ChargePlayer(affectedPlayer));
             List<Transform> validTargets = new();
-            if (!ShouldContinueCharging(affectedPlayer))
+            if (!ShouldContinueCharging(affectedPlayer) && Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position) <= distanceFromPlayer)
             {
                 validTargets.Add(chargedItemPlayerWasHolding.transform);
             }
@@ -115,7 +114,9 @@ public class TeslaShock : NetworkBehaviour
     {
         return Vector3.Distance(affectedPlayer.transform.position, transform.position) <= distanceFromPlayer
             && !affectedPlayer.isPlayerDead
-            && PlayerCarryingSomethingConductive(affectedPlayer);
+            && affectedPlayer.isPlayerControlled
+            && PlayerCarryingSomethingConductive(affectedPlayer)
+            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out RaycastHit hit, distanceFromPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide);
     }
 
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)

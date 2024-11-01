@@ -54,6 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceFromPlayer: 13
   playerDamageAmount: 40
+  playerZapDamageAmount: 10
   pushMultiplier: 50
   startChainPoint: {fileID: 5746014561467843648}
   vfx: {fileID: 1341370984318673724}
@@ -62,8 +63,9 @@ MonoBehaviour:
   teslaFastIdleSound: {fileID: 8300000, guid: 24d9a7cb893afb742bd0d9db700a9191, type: 3}
   teslaAudioSource: {fileID: 6593332144752130420}
   teslaTouchSound: {fileID: 8300000, guid: cabc9f28baae4954eb11242a91b94ae2, type: 3}
-  teslaChargeSound: {fileID: 8300000, guid: b547e7c7fac990a499f2e10b43e4e5bf, type: 3}
-  teslaFastChargeSound: {fileID: 8300000, guid: b580014009e90d3499049fff65867d9e,
+  teslaFirstBigChargeSound: {fileID: 8300000, guid: b547e7c7fac990a499f2e10b43e4e5bf,
+    type: 3}
+  teslaConsecutiveChargeSound: {fileID: 8300000, guid: b580014009e90d3499049fff65867d9e,
     type: 3}
   teslaZapSounds:
   - {fileID: 8300000, guid: b390e75e401346b429af2453f8318169, type: 3}
