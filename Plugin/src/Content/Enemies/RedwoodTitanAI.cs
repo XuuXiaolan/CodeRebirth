@@ -2,7 +2,6 @@ using System.Collections;
 using GameNetcodeStuff;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.AI;
 using CodeRebirth.src.Util;
 using Unity.Netcode.Components;
 using System;
@@ -49,6 +48,15 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     private Collider[] enemyColliders = null!;
     private PlayerControllerB? playerToKick = null;
     private System.Random redwoodRandom = null!;
+    private static readonly int chasingInt = Animator.StringToHash("chasing");
+    private static readonly int walkingInt = Animator.StringToHash("walking");
+    private static readonly int startKick = Animator.StringToHash("startKick");
+    private static readonly int startSpawn = Animator.StringToHash("startSpawn");
+    private static readonly int startJump = Animator.StringToHash("startJump");
+    private static readonly int startEnrage = Animator.StringToHash("startEnrage");
+    private static readonly int eatEnemyGiant = Animator.StringToHash("eatEnemyGiant");
+    private static readonly int startDeath = Animator.StringToHash("startDeath");
+
     [NonSerialized]
     public bool kickingOut = false;
     [NonSerialized]
@@ -127,7 +135,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (IsServer)
         {
             SetAnimatorMotionBools(chasing: false, walking: false);
-            networkAnimator.SetTrigger("startSpawn");
+            networkAnimator.SetTrigger(startSpawn);
         }
         SwitchToBehaviourStateOnLocalClient((int)State.Spawn);
         CodeRebirthPlayerManager.OnDoorStateChange += OnShipDoorStateChange;
@@ -256,7 +264,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void JumpInPlace()
     {
-        networkAnimator.SetTrigger("startJump");
+        networkAnimator.SetTrigger(startJump);
         PlayMiscSoundsClientRpc(0);
         jumping = true;
         agent.speed = 0.5f;
@@ -267,7 +275,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         kicking = true;
         agent.speed = 0.5f;
-        networkAnimator.SetTrigger("startKick");
+        networkAnimator.SetTrigger(startKick);
         playerToKick = closestPlayer;
         PlayMiscSoundsClientRpc(1);
         Plugin.ExtendedLogging("Start Kick");
@@ -346,7 +354,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public IEnumerator SetSpeedForChasingGiant()
     {
         agent.speed = 0f;
-        networkAnimator.SetTrigger("startEnrage");
+        networkAnimator.SetTrigger(startEnrage);
         yield return new WaitForSeconds(6.9f);
         SetAnimatorMotionBools(chasing: true, walking: false);
         agent.angularSpeed = 100f;
@@ -458,7 +466,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         creatureVoice.PlayOneShot(eatenSound, 1);
         if (IsServer)
         {
-            networkAnimator.SetTrigger("eatEnemyGiant");
+            networkAnimator.SetTrigger(eatEnemyGiant);
             SetAnimatorMotionBools(chasing: false, walking: false);
         }
         SwitchToBehaviourStateOnLocalClient((int)State.EatingTargetGiant);
@@ -573,7 +581,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         base.KillEnemy(destroy);
         CollisionFootL.enabled = false;
         CollisionFootR.enabled = false;
-        if (IsServer) networkAnimator.SetTrigger("startDeath");
+        if (IsServer) networkAnimator.SetTrigger(startDeath);
         if (targetEnemy != null && targetEnemy.agent != null && !targetEnemy.agent.enabled)
         {
             targetEnemy.agent.enabled = true;
@@ -660,8 +668,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void SetAnimatorMotionBools(bool chasing = false, bool walking = false)
     {
-        SetBoolAnimationOnLocalClient("chasing", chasing);
-        SetBoolAnimationOnLocalClient("walking", walking);
+        SetBoolAnimationOnLocalClient(chasingInt, chasing);
+        SetBoolAnimationOnLocalClient(walkingInt, walking);
     }
 
     public void EnableDeathColliders()

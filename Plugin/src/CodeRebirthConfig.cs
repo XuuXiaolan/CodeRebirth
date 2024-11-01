@@ -7,6 +7,13 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigLaserTurretEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigFlashTurretEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigIndustrialFanEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigTeslaShockEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigAirControlUnitEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDangerousFloraEnabled { get; private set; }
@@ -17,7 +24,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigRedwoodEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
     public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
-    public ConfigEntry<bool> ConfigWesleyModeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
     public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
@@ -44,9 +50,16 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
     public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
+    public ConfigEntry<int> ConfigBearTrapAbundance { get; private set; }
     public ConfigEntry<int> ConfigMetalCrateAbundance { get; private set; }
     public ConfigEntry<int> ConfigWoodenCrateAbundance { get; private set; }
+    public ConfigEntry<string> ConfigLaserTurretSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigFlashTurretSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigIndustrialFanSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigTeslaShockSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigAirControlUnitSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigFunctionalMicrowaveSpawnWeight { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
@@ -84,6 +97,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<bool> ConfigGalBypassQuota { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotAutomatic { get; private set; }
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
@@ -127,10 +141,93 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
     #region Debug
+    public ConfigEntry<bool> ConfigDisableHalloweenFog { get; private set; }
+    public ConfigEntry<bool> ConfigDebugMode { get; private set; }
     #endregion
     public CodeRebirthConfig(ConfigFile configFile)
     {
         configFile.SaveOnConfigSet = false;
+
+        #region Debug
+        ConfigDebugMode = configFile.Bind("Debug Options",
+                                            "Debug Mode",
+                                            false,
+                                            "Whether debug mode is enabled.");
+        ConfigDisableHalloweenFog = configFile.Bind("Debug Options",
+                                            "Disable Halloween Fog",
+                                            false,
+                                            "Whether to disable the halloween fog.");
+        #endregion
+        #region Functional Microwave
+        ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",
+                                            "Functional Microwave | Enabled",
+                                            true,
+                                            "Whether the Functional Microwave is enabled.");
+        ConfigFunctionalMicrowaveSpawnWeight = configFile.Bind("FunctionalMicrowave Options",
+                                            "Functional Microwave | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of Functional Microwaves to spawn between 0 and number given.");
+        #endregion
+        #region Bear Trap
+        ConfigBearTrapEnabled = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Enabled",
+                                            true,
+                                            "Whether the bear trap is enabled.");
+        ConfigBearTrapAbundance = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Abundance",
+                                            7,
+                                            "The number of bear traps to spawn per round.");
+        #endregion
+        #region Laser Turret
+        ConfigLaserTurretEnabled = configFile.Bind("LaserTurret Options",
+                                            "Laser Turret | Enabled",
+                                            true,
+                                            "Whether the Laser Turret is enabled.");
+        ConfigLaserTurretSpawnWeight = configFile.Bind("LaserTurret Options",
+                                            "Laser Turret | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of Laser Turrets to spawn between 0 and number given.");
+        #endregion
+        #region Flash Turret
+        ConfigFlashTurretEnabled = configFile.Bind("FlashTurret Options",
+                                            "Flash Turret | Enabled",
+                                            true,
+                                            "Whether the flash turret is enabled.");
+        ConfigFlashTurretSpawnWeight = configFile.Bind("FlashTurret Options",
+                                            "Flash Turret | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of flash turrets to spawn between 0 and number given.");
+        #endregion
+        #region Industrial Fan
+        ConfigIndustrialFanEnabled = configFile.Bind("IndustrialFan Options",
+                                            "Industrial Fan | Enabled",
+                                            true,
+                                            "Whether the industrial fan is enabled.");
+        ConfigIndustrialFanSpawnWeight = configFile.Bind("IndustrialFan Options",
+                                            "Industrial Fan | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of industrial fans to spawn between 0 and number given.");
+        #endregion
+        #region Tesla Shock
+        ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
+                                            "Tesla Shock | Enabled",
+                                            true,
+                                            "Whether the tesla shock is enabled.");
+        ConfigTeslaShockSpawnWeight = configFile.Bind("TeslaShock Options",
+                                            "Tesla Shock | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of tesla shocks to spawn between 0 and number given.");
+        #endregion
+        #region Air Control Unit
+        ConfigAirControlUnitEnabled = configFile.Bind("AirControlUnit Options",
+                                            "Air Control Unit | Enabled",
+                                            true,
+                                            "Whether the air control unit is enabled.");
+        ConfigAirControlUnitSpawnWeight = configFile.Bind("AirControlUnit Options",
+                                            "Air Control Unit | SpawnWeight",
+                                            "Vanilla:1,Custom:1,Titan:0,Olympus:2",
+                                            "The MoonName:Number of air control units to spawn between 0 and number given.");
+        #endregion
         #region General
         ConfigEnableExtendedLogging = configFile.Bind("General",
                                             "Enable Extended Logging",
@@ -173,6 +270,10 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Shockwave Gal will automatically wake up and choose the nearest player as the owner.");
+        ConfigGalBypassQuota = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Bypass Quota",
+                                            false,
+                                            "Whether the Shockwave Gal will bypass quota when using her sell function at company.");
         #endregion
         #region Seamine Gal
         /*ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
@@ -227,15 +328,15 @@ public class CodeRebirthConfig
                                             "How many plants can get added at least.");
         ConfigFloraGrassSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Grass Spawn Places",
-                                            "Vow,Adamance,March,Custom,",
+                                            "Vanilla,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraDesertSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Desert Spawn Places",
-                                            "Assurance,Offense,Custom,",
+                                            "Vanila,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraSnowSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Snow Spawn Places",
-                                            "Dine,Rend,Titan,Custom,",
+                                            "Vanilla,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraExcludeSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Exclude Spawn Places",
@@ -519,10 +620,6 @@ public class CodeRebirthConfig
                                             "MeteorShower | Emerald Worth",
                                             "-1,-1",
                                             "Min and Max value of the Emerald, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigWesleyModeEnabled = configFile.Bind("MeteorShower Options",
-                                            "MeteorShower | Wesley Mode",
-                                            false,
-                                            "Enables/Disables the Wesley Mode (this is a meme, not recommended lol).");
         #endregion
         #region ModCompat
         #endregion

@@ -10,7 +10,7 @@ static class EnemyAIPatch
 {
     private static Dictionary<EnemyAI, float> speedOfEnemies = new Dictionary<EnemyAI, float>();
     private static Dictionary<EnemyAI, Coroutine> slowedEnemies = new Dictionary<EnemyAI, Coroutine>();
-    private static System.Random enemyRandom;
+    private static System.Random enemyRandom = null;
 
     public static void Init()
     {
@@ -22,7 +22,7 @@ static class EnemyAIPatch
     private static void EnemyAI_Start(On.EnemyAI.orig_Start orig, EnemyAI self)
     {
         orig(self);
-        if (enemyRandom == null) enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
+        enemyRandom ??= new System.Random(StartOfRound.Instance.randomMapSeed);
     }
 
     private static void EnemyAI_Update(On.EnemyAI.orig_Update orig, EnemyAI self)

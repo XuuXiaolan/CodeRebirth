@@ -156,6 +156,7 @@ public class ItemCrate : CRHittable {
 						List<SpawnableItemWithRarity> acceptableItems = new();
 						foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
 						{
+							Plugin.ExtendedLogging("Moon's item pool: " + spawnableItemWithRarity.spawnableItem.itemName);
 							if (!blackListedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
 							{
 								acceptableItems.Add(spawnableItemWithRarity);
@@ -236,9 +237,10 @@ public class ItemCrate : CRHittable {
 		string[] blackListedScrap = [];
 		blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
 		List<Item> acceptableItems = new();
-		foreach (Item? item in ShopItemList)
+		foreach (Item item in ShopItemList)
 		{
-			if (blackListedScrap.Contains(item.itemName.ToLowerInvariant()))
+			Plugin.ExtendedLogging("Shop item: " + item.itemName);
+			if (!blackListedScrap.Contains(item.itemName.ToLowerInvariant()))
 			{
 				acceptableItems.Add(item);
 			}

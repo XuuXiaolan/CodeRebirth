@@ -13,8 +13,8 @@ If you're interested in helping with the development of the mod, feel free to re
 - 2 Weather with 7 different events total.
 - 2 Shop Items.
 - 7 Scrap.
-- Custom Outside Objects.
-- Custom Inside Objects.
+- 4 Custom Outside Objects.
+- 6 Custom Inside Objects.
 
 ## Preview (Spoilers ahead!)
 
@@ -121,9 +121,10 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Meteorite (Ruby)
 
-![MR]()
+![MR](https://i.postimg.cc/prXbTzmp/image.png)
 
 > Valuable rare Scrap found from the remaining debris of some Meteors.
+> Yes I'm aware the ruby looks ass.
 
 ### Epic Axe
 
@@ -164,9 +165,90 @@ If you're interested in helping with the development of the mod, feel free to re
 <details>
   <summary><strong>Miscellaneous</strong></summary>
 
+### Bug Zapper
+
+![BZ](https://i.postimg.cc/GpGRtvjj/image.png)
+
+> Designation : Bug Zapper  
+> Objective : Pest Control  
+>
+> These giant electric zappers, capable of delivering fatal electric shocks, were instrumental in the protection of valuable assets. After detecting a threat, the giant tesla coil would charge up before delivering a strong shock, deterring or killing any attackers.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : Zap metal carrier, Zap bug, Zap, Zap, Zap.
+
+### Laser Turret
+
+![LT](https://i.postimg.cc/1t3v2Q4N/image.png)
+
+> Designation : Laser Assisted Soil Excavation Rig (L.A.S.E.R.)  
+> Objective : Mine and Extract minerals
+>
+> The L.A.S.E.R. is the back bone of mining operations, this experimental tech uses a massive carved ruby that focuses light into a single point creating a laser capable of melting solid rock. Energy efficient and powerful, this device is instrumental in the quick extraction of ores.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : Spin, Mine, Spin, Mine,Spin, Mine.
+
+### Industrial Fan
+
+![IF](https://i.postimg.cc/htGbKrcH/image.png)
+
+> Designation : Industrial Fan  
+> Objective : Aeration  
+> 
+> These giant industrial fans were used for aeration during mining operations, keeping dust off equipment and keeping crewmates cooled down. The fan's automated system would control fan speed by detecting the amount of dust, gas and other various aerosols.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : Fan Speed - Max, Maximum aeration mode - 360 degree coverage  
+
+### Functional Microwave
+
+![FM](https://i.postimg.cc/x84jMnNG/image.png)
+
+> Designation : Experimental Microwave  
+> Objective : Microwave rock
+>
+> These modified microwave ovens were used alongside L.A.S.E.R. devices to help in the mining operation. Using a modified power supply, the microwave shoots high microwave radiation at rocky surfaces to weaken and fracture surfaces. Once a surface is weakened by an automated microwave, the mining crew can start extraction using manual tools and L.A.S.E.R devices.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure  
+> [Log] Crewmate found with content of 6% various minerals  
+> [Update] Weaken minerals from crewmate  
+> [Update] Objective updated : Microwave crewmate
+
+### Flash Turret
+
+![FT](https://i.postimg.cc/FH9mzY6t/image.png)
+
+> Designation : WunderFoto Pro Flash Camera  
+> Objective : Survey and Photograph
+>
+> The WunderFoto Pro Flash Cameras were deployed early on into mining operations to survey the local terrain for ores and photograph local wildlife for research purposes. These state of the art cameras are controlled by the latest company software with a reliable AI that will photograph and send data directly to the ship.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : photograph crew, photograph crew, photograph crew, photograph crew.
+
+### Bear Trap
+
+![FT](https://i.postimg.cc/FH9mzY6t/image.png)
+
+> Designation : Bear Trap  
+> Objective : Wildlife control  
+>
+> These old mechanical bear traps, rusty but reliable, were used as a defensive measure against the local hostile wildlife trying to interrupt mining operations.  
+>
+> [Final Recorded Equipment Transmission]  
+> N/A
+
+### Air Control Unit
+
+![ACU](https://i.postimg.cc/HxLZnQKR/image.png)
+
+> Designation : Air Control Unit  
+> Objective : Shoot down threats  
+>
+> An old heavy anti air canon repurposed for shooting down airborne threats. These were the last defense measure against hostile wildlife during mining operations. The AC unit uses a powerful pneumatic system that compresses surrounding air to launch heavy air seeking projectiles.  
+> [Final Recorded Equipment Transmission]  
+> [ERROR] Software critical failure - Objective updated : Clear skies
+
 ### Item Crate
 
-![ICW](https://i.postimg.cc/jqg2RD0j/itemcrate.png)
+![ICW](https://i.postimg.cc/3Jz8Lfy1/image.png)
 ![ICM](https://i.postimg.cc/g0xR1608/image.png)
 
 > Wooden: Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
@@ -175,7 +257,6 @@ If you're interested in helping with the development of the mod, feel free to re
 ### Diverse Flora
 
 ![F](https://i.postimg.cc/8C8k191j/image.png)
-![DF]()
 
 ### Infectious Biomes
 
@@ -193,7 +274,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Modeling/Designs:**
 
-- V0xx (the goat), Rodrigo, S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
+- Rodrigo, v0xx, S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
 
 **Sounds:**
 
@@ -210,6 +291,10 @@ If you're interested in helping with the development of the mod, feel free to re
 **Misc/Organisation:**
 
 - Smxrez
+
+**Testing:**
+
+- A Glitched NPC (I didn't really need the testing in hindsight, cuz im a genius who just made it work from the get-go), Rodrigo.
 
 ## Credits - Misc Models
 

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using Unity.Netcode;
 using UnityEngine;
@@ -6,6 +8,7 @@ using Random = System.Random;
 using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirth.Util.Extensions;
 using Newtonsoft.Json;
 
 namespace CodeRebirth.src.Util;
@@ -99,6 +102,23 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             CodeRebirthSave.Current = PersistentDataHandler.Load<CodeRebirthSave>($"CRSave{GameNetworkManager.Instance.saveFileNum}");
         }
+        Plugin.ExtendedLogging($"Attempting to get save data over RPC!");
+        Plugin.ExtendedLogging($"LocalClientId: {NetworkManager.Singleton.LocalClientId}");
+        Plugin.ExtendedLogging($"StartOfRound.Instance.ClientPlayerList: {{{string.Join(", ",StartOfRound.Instance.ClientPlayerList)}}}");
+
+        if (!StartOfRound.Instance.ClientPlayerList.ContainsKey(NetworkManager.Singleton.LocalClientId)) {
+            StartCoroutine(DelayLoadRequestRPC());
+            return;
+        }
+        
+        Plugin.ExtendedLogging("ClientPlayerList already contained the local client id, hooray :3");
+        RequestLoadSaveDataServerRPC(StartOfRound.Instance.ClientPlayerList[NetworkManager.Singleton.LocalClientId]);
+    }
+
+    IEnumerator DelayLoadRequestRPC() {
+        Plugin.Logger.LogInfo("ClientPlayerList did not contain LocalClientId, delaying save data request!");
+        
+        yield return new WaitUntil(() => StartOfRound.Instance.ClientPlayerList.ContainsKey(NetworkManager.Singleton.LocalClientId)); // ensure some of it has been populated ig?
         RequestLoadSaveDataServerRPC(StartOfRound.Instance.ClientPlayerList[NetworkManager.Singleton.LocalClientId]);
     }
 

@@ -21,7 +21,7 @@ public static class DoorLockPatch
 			goto ret;
 		}
 
-        if (other.CompareTag("Enemy") && other.gameObject.name == "ShockwaveGalDoorCollider")
+        if (other.gameObject.layer == 19 && other.gameObject.name == "ShockwaveGalDoorCollider")
         {
             float openDoorSpeedMultiplier = other.gameObject.transform.parent.GetComponent<ShockwaveGalAI>().DoorOpeningSpeed;
             self.enemyDoorMeter += Time.deltaTime * openDoorSpeedMultiplier;
@@ -31,6 +31,16 @@ public static class DoorLockPatch
 				self.gameObject.GetComponent<AnimatedObjectTrigger>().TriggerAnimationNonPlayer(false, true, false);
 				self.OpenDoorAsEnemyServerRpc();
 			}
+        }
+        if (other.gameObject.layer == 19 && other.gameObject.name == "MicrowaveCollider")
+        {
+            self.enemyDoorMeter += Time.deltaTime * 0.5f;
+            if (self.enemyDoorMeter > 1f)
+            {
+                self.enemyDoorMeter = 0f;
+                self.gameObject.GetComponent<AnimatedObjectTrigger>().TriggerAnimationNonPlayer(false, true, false);
+                self.OpenDoorAsEnemyServerRpc();
+            }
         }
     ret:
         orig(self, other);

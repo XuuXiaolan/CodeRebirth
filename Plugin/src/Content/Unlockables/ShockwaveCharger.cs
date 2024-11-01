@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,15 +11,26 @@ public class ShockwaveCharger : NetworkBehaviour
 {
     public InteractTrigger ActivateOrDeactivateTrigger = null!;
     public Transform ChargeTransform = null!;
-    public ShockwaveGalAI shockwaveGalAI = null!;
+    [NonSerialized] public ShockwaveGalAI shockwaveGalAI = null!;
 
     public void Start()
     {
-        if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value) StartCoroutine(ActivateShockwaveGalAfterLand());
-        ActivateOrDeactivateTrigger.onInteract.AddListener(OnActivateShockwaveGal);
+        if (IsServer)
+        {
+            // Instantiate the ShockwaveGalAI prefab
+            shockwaveGalAI = Instantiate(UnlockableHandler.Instance.ShockwaveBot.ShockWaveDronePrefab, ChargeTransform.position, ChargeTransform.rotation).GetComponent<ShockwaveGalAI>();
+            NetworkObject netObj = shockwaveGalAI.GetComponent<NetworkObject>();
+
+            // Spawn the NetworkObject to make it accessible across the network
+            netObj.Spawn();
+
+            // Set the correct transform parent and move the instantiated object after it has been spawned
+            shockwaveGalAI.transform.SetParent(this.transform, true);
+        }
     }
 
-    private IEnumerator ActivateShockwaveGalAfterLand()
+
+    public IEnumerator ActivateShockwaveGalAfterLand()
     {
         while (true)
         {
@@ -32,10 +44,10 @@ public class ShockwaveCharger : NetworkBehaviour
         }
     }
 
-    private void OnActivateShockwaveGal(PlayerControllerB playerInteracting)
+    public void OnActivateShockwaveGal(PlayerControllerB playerInteracting)
     {
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
-        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota)) return;
+        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota && !Plugin.ModConfig.ConfigGalBypassQuota.Value)) return;
         if (!shockwaveGalAI.Animator.GetBool("activated")) ActivateGirlServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
         else ActivateGirlServerRpc(-1);
     }

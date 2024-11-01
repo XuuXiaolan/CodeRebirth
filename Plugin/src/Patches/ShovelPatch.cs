@@ -6,6 +6,9 @@ using System;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Content.Unlockables;
 using UnityEngine;
+using CodeRebirth.src.Content.Maps;
+using UnityEngine.AI;
+using Unity.Netcode;
 
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch {
@@ -36,6 +39,10 @@ static class ShovelPatch {
         if (self is not CodeRebirthWeapons CRWeapon) return;
         ResetWeaponDamage(ref CRWeapon);
         TryBreakTrees(ref CRWeapon);
+        if (Plugin.ModConfig.ConfigDebugMode.Value)
+        {
+            TrySpawnRandomHazard(ref CRWeapon);
+        }
     }
 
     static void ResetWeaponDamage(ref CodeRebirthWeapons CRWeapon)
@@ -48,10 +55,39 @@ static class ShovelPatch {
         if (!CRWeapon.canBreakTrees) return;
 
 		int num = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
-        if (!Plugin.ModConfig.ConfigFarmingEnabled.Value || random.NextFloat(0f, 1f) >= 0.02f || num <= 0) return;
 		RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
+        if (!Plugin.ModConfig.ConfigFarmingEnabled.Value || random.NextFloat(0f, 1f) >= 0.02f || num <= 0) return;
         Plugin.ExtendedLogging("Tree Destroyed with luck");
         CodeRebirthUtils.Instance.SpawnScrap(UnlockableHandler.Instance.PlantPot.Seed, CRWeapon.weaponTip.position, false, true, 5);
+    }
+
+    private static void TrySpawnRandomHazard(ref CodeRebirthWeapons CRWeapon)
+    {
+        // Get a random prefab to spawn from the hazard prefabs list
+        GameObject prefabToSpawn = MapObjectHandler.hazardPrefabs[0];
+
+        // Remove the prefab from the list to prevent re-spawning it directly
+        MapObjectHandler.hazardPrefabs.RemoveAt(0);
+
+        // Get a random position on the NavMesh
+        NavMeshHit hit = default;
+        Vector3 positionToSpawn = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(CRWeapon.weaponTip.position, 2f, hit);
+
+        // Instantiate a new instance of the prefab
+        GameObject spawnedObject = GameObject.Instantiate(prefabToSpawn, positionToSpawn, Quaternion.identity);
+        
+        // Align the object's up direction with the hit normal
+        spawnedObject.transform.up = hit.normal;
+
+        // Get the NetworkObject component and spawn it on the network
+        NetworkObject networkObject = spawnedObject.GetComponent<NetworkObject>();
+        if (networkObject != null)
+        {
+            networkObject.Spawn();
+        }
+        
+        // Optionally, you can re-add the prefab back to the list if needed
+        MapObjectHandler.hazardPrefabs.Add(prefabToSpawn);
     }
 
     static void TryCritWeapon(ref Shovel self)

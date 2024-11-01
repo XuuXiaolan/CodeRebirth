@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Maps;
+using LethalLib.Extras;
 using LethalLib.Modules;
+using UnityEngine;
 
 namespace CodeRebirth.src.Util;
 
@@ -47,6 +50,28 @@ public class ContentHandler<T> where T: ContentHandler<T>
         if (enabledScrap)
         {
             RegisterScrapWithConfig(configMoonRarity, item, minWorth, maxWorth);
+        }
+    }
+
+    protected void RegisterInsideMapObjectWithConfig(GameObject prefab, string configString)
+    {
+        SpawnableMapObjectDef mapObjDef = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
+        mapObjDef.spawnableMapObject = new SpawnableMapObject
+        {
+            prefabToSpawn = prefab
+        };
+        MapObjectHandler.hazardPrefabs.Add(prefab);
+
+        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configString);
+        foreach (var entry in spawnRateByLevelType)
+        {
+            MapObjects.RegisterMapObject(mapObjDef, entry.Key, (level) => 
+			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(entry.Value, 0, 1000))));
+        }
+        foreach (var entry in spawnRateByCustomLevelType)
+        {
+            MapObjects.RegisterMapObject(mapObjDef, Levels.LevelTypes.None, [entry.Key], (level) => 
+			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(entry.Value, 0, 1000))));
         }
     }
 

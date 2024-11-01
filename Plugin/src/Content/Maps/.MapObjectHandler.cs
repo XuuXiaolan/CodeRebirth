@@ -38,26 +38,142 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public GameObject BiomePrefab { get; private set; } = null!;
 	}
 
+	public class BearTrapAssets(string bundleName) : AssetBundleLoader<BearTrapAssets>(bundleName)
+	{
+		[LoadFromBundle("GrassBearTrap.prefab")]
+		public GameObject GrassMatPrefab { get; private set; } = null!;
+		[LoadFromBundle("GravelBearTrap.prefab")]
+		public GameObject GravelMatPrefab { get; private set; } = null!;
+		[LoadFromBundle("SnowBearTrap.prefab")]
+		public GameObject SnowMatPrefab { get; private set; } = null!;
+	}
+
+	public class GlowingGemAssets(string bundleName) : AssetBundleLoader<GlowingGemAssets>(bundleName)
+	{
+		[LoadFromBundle("LaserTurret.prefab")]
+		public GameObject LaserTurretPrefab { get; private set; } = null!;
+	}
+
+	public class IndustrialFanAssets(string bundleName) : AssetBundleLoader<IndustrialFanAssets>(bundleName)
+	{
+		[LoadFromBundle("FanTrapAnimated.prefab")]
+		public GameObject IndustrialFanPrefab { get; private set; } = null!;
+	}
+
+	public class FlashTurretAssets(string bundleName) : AssetBundleLoader<FlashTurretAssets>(bundleName)
+	{
+		[LoadFromBundle("FlashTurretUpdated.prefab")]
+		public GameObject FlashTurretPrefab { get; private set; } = null!;
+	}
+
+	public class TeslaShockAssets(string bundleName) : AssetBundleLoader<TeslaShockAssets>(bundleName)
+	{
+		[LoadFromBundle("BugZapper.prefab")]
+		public GameObject TeslaShockPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("ChainLightning.prefab")]
+		public GameObject ChainLightningPrefab { get; private set; } = null!;
+	}
+
+	public class AirControlUnitAssets(string bundleName) : AssetBundleLoader<AirControlUnitAssets>(bundleName)
+	{
+		[LoadFromBundle("AirControlUnit.prefab")]
+		public GameObject AirControlUnitPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("AirControlUnitProjectile.prefab")]
+		public GameObject ProjectilePrefab { get; private set; } = null!;
+	}
+
+	public class FunctionalMicrowaveAssets(string bundleName) : AssetBundleLoader<FunctionalMicrowaveAssets>(bundleName)
+	{
+		[LoadFromBundle("FunctionalMicrowave.prefab")]
+		public GameObject FunctionalMicrowavePrefab { get; private set; } = null!;
+	}
+
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
 	public BiomeAssets Biome { get; private set; } = null!;
+	public BearTrapAssets BearTrap { get; private set; } = null!;
+	public GlowingGemAssets GlowingGem { get; private set; } = null!;
+	public IndustrialFanAssets IndustrialFan { get; private set; } = null!;
+	public FlashTurretAssets FlashTurret { get; private set; } = null!;
+	public TeslaShockAssets TeslaShock { get; private set; } = null!;
+	public AirControlUnitAssets AirControlUnit { get; private set; } = null!;
+	public FunctionalMicrowaveAssets FunctionalMicrowave { get; private set; } = null!;
 
-	public static Dictionary<string, GameObject> DevilDealPrefabs = new();
+	public static List<GameObject> hazardPrefabs = new List<GameObject>();
 
     public MapObjectHandler()
 	{
-		
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
 			Crate = new CrateAssets("crateassets");
 
-		if (Plugin.ModConfig.ConfigFloraEnabled.Value) RegisterOutsideFlora();
+		if (Plugin.ModConfig.ConfigFloraEnabled.Value)
+			RegisterOutsideFlora();
 
-		if (Plugin.ModConfig.ConfigMoneyEnabled.Value) RegisterInsideMoney();
+		if (Plugin.ModConfig.ConfigMoneyEnabled.Value)
+			RegisterInsideMoney();
 
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
 			Biome = new BiomeAssets("biomeassets");
 
+		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
+		{
+			BearTrap = new BearTrapAssets("beartrapassets");
+			hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);			
+		}
+
+		if (Plugin.ModConfig.ConfigLaserTurretEnabled.Value)
+			RegisterLaserTurret();
+		
+		if (Plugin.ModConfig.ConfigIndustrialFanEnabled.Value)
+			RegisterIndustrialFan();
+
+		if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
+			RegisterFlashTurret();
+
+		if (Plugin.ModConfig.ConfigTeslaShockEnabled.Value)
+			RegisterTeslaShock();
+
+		if (Plugin.ModConfig.ConfigFunctionalMicrowaveEnabled.Value)
+			RegisterFunctionalMicrowave();
+
+		if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value)
+		{
+			AirControlUnit = new AirControlUnitAssets("aircontrolunitassets");
+			hazardPrefabs.Add(MapObjectHandler.Instance.AirControlUnit.AirControlUnitPrefab);
+		}
+	}
+
+	public void RegisterFunctionalMicrowave()
+	{
+		FunctionalMicrowave = new FunctionalMicrowaveAssets("functionalmicrowaveassets");
+		RegisterInsideMapObjectWithConfig(FunctionalMicrowave.FunctionalMicrowavePrefab, Plugin.ModConfig.ConfigFunctionalMicrowaveSpawnWeight.Value);
+	}
+
+	public void RegisterTeslaShock()
+	{
+		TeslaShock = new TeslaShockAssets("teslashockassets");
+		RegisterInsideMapObjectWithConfig(TeslaShock.TeslaShockPrefab, Plugin.ModConfig.ConfigTeslaShockSpawnWeight.Value);
+	}
+
+	public void RegisterFlashTurret()
+	{
+		FlashTurret = new FlashTurretAssets("flashturretassets");
+		RegisterInsideMapObjectWithConfig(FlashTurret.FlashTurretPrefab, Plugin.ModConfig.ConfigFlashTurretSpawnWeight.Value);
+	}
+
+	public void RegisterIndustrialFan()
+	{
+		IndustrialFan = new IndustrialFanAssets("industrialfanassets");
+		RegisterInsideMapObjectWithConfig(IndustrialFan.IndustrialFanPrefab, Plugin.ModConfig.ConfigIndustrialFanSpawnWeight.Value);
+	}
+
+	public void RegisterLaserTurret()
+	{
+		GlowingGem = new GlowingGemAssets("glowinggemassets");
+		RegisterInsideMapObjectWithConfig(GlowingGem.LaserTurretPrefab, Plugin.ModConfig.ConfigLaserTurretSpawnWeight.Value);
 	}
 
 	public void RegisterInsideMoney()

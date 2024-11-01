@@ -14,6 +14,16 @@ public class CRUtilities
         GenerateLayerMap();
     }
 
+    public static Transform? TryFindRoot(Transform child)
+    {
+        Transform current = child;
+        while (current != null && current.GetComponent<NetworkObject>() == null)
+        {
+            current = current.transform.parent;
+        }
+        return current;
+    }
+
     public static void GenerateLayerMap()
     {
         _masksByLayer = new Dictionary<int, int>();
@@ -29,21 +39,6 @@ public class CRUtilities
             }
             _masksByLayer.Add(i, mask);
         }
-    }
-
-    public static Transform? TryFindRoot(Transform child)
-    {
-        // iterate upwards until we find a NetworkObject
-        Transform current = child;
-        while (current != null)
-        {
-            if (current.GetComponent<NetworkObject>() != null)
-            {
-                return current;
-            }
-            current = current.transform.parent;
-        }
-        return null;
     }
 
     public static int MaskForLayer(int layer)
@@ -177,6 +172,7 @@ public class CRUtilities
                 EnemyAICollisionDetect componentInChildren2 = array[i].gameObject.GetComponentInChildren<EnemyAICollisionDetect>();
                 if (componentInChildren2 != null && componentInChildren2.mainScript.IsOwner && distanceOfObjectFromExplosion < 4.5f)
                 {
+                    if (!componentInChildren2.mainScript.NetworkObject.IsSpawned) continue;
                     componentInChildren2.mainScript.HitEnemyOnLocalClient(enemyHitForce, playerWhoHit: attacker);
                 }
             }

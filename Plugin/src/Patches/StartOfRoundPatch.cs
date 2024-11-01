@@ -81,6 +81,12 @@ static class StartOfRoundPatch {
 		{
 			plant.grewThisOrbit = false;
 		}
+
+		if (Plugin.ModConfig.ConfigDisableHalloweenFog.Value)
+		{
+			Plugin.ExtendedLogging("Disabling halloween fog");
+			if (RoundManager.Instance.indoorFog.gameObject.activeSelf) RoundManager.Instance.indoorFog.gameObject.SetActive(false);
+		}
 	}
 
 	[HarmonyPatch(nameof(StartOfRound.ResetShip)), HarmonyPostfix]

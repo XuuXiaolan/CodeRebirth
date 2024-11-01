@@ -14674,17 +14674,19 @@ MonoBehaviour:
   forceMagnitudeAfterDeath: 40
   forceDirectionFromThisObject: 1
   causeOfDeath: 13
+  triggerForPlayers: 1
   triggerForEnemies: 1
   canThingExit: 1
   sharedCooldown: 1
   playDefaultPlayerDamageSFX: 1
   soundAttractsDogs: 0
+  enemyMainScript: {fileID: 0}
   damageDuration: 16
   damageToDealForPlayers: 5
   damageToDealForEnemies: 1
   damageIntervalForPlayers: 0.5
   damageIntervalForEnemies: 20
-  damageClip: []
+  damageClips: []
   damageAudioSources: []
   deathPrefabForPlayer: {fileID: 0}
   deathPrefabForEnemy: {fileID: 0}
@@ -14694,6 +14696,10 @@ MonoBehaviour:
   damageParticlesForPlayer: []
   deathParticlesForEnemy: []
   damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
 --- !u!114 &8180637380151788495
 MonoBehaviour:
   m_ObjectHideFlags: 0

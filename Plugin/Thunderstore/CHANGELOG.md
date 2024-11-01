@@ -1,4 +1,77 @@
-# v6.6
+# v0.7.5
+
+- Made shockwave gal resync with clients on lobby reload/late joiners.
+- Fixed teslashock shocking everyone lol.
+
+## v0.7.4
+
+- Improving ACU as best as I can, doesn't target you if you're actively on the ground or have something blocking LoS.
+- Improved BearTrap spawning.
+- Decreased IndustrialFan power by 25%.
+
+## v0.7.3
+
+- Added a debug config to disable halloween fog for my own testing and whoever else wants.
+- Reworked config names and values for hazards to be less and gave a better description for them.
+
+## v0.7.2
+
+- Gave ACU a spawn weight config based on moon + value.
+- Gave microwave bigger collider to open doors.
+- Gave all hazards lore in the readme.
+
+## v0.7.1
+
+- Fixed potential bug with ACUnit where it wouldnt despawn on moon unload.
+- Fixed animator bug with bear trap.
+- Fixed problem with industrial fan not spawning red mist.
+- Fixed Tesla Shock targetting the first person through walls.
+- Fixed Laser Turret not rotating for clients.
+- Stopped ACU while ship is leaving.
+- Potentially fixed flash camera not working on other clients.
+- Nerfed ACU a tiny bit.
+- Fixed bug with gal not picking up items properly or not able to be activated by clients.
+
+## v0.7.0
+
+- Added 7 new hazards.
+  - TeslaShock.
+    - Damages nearby players with metallic items, chains enemies and players alike.
+  - Functional Microwave.
+    - Wanders the facility... very slowly... while cooking it up.
+  - Air Control Unit.
+    - Screw jetpack users.
+  - Laser Turret.
+    - With gems stolen from Henry Stickman, some mad scientist created a big ass turret that went wild.
+  - Bear Traps.
+    - Usually is for bears.
+  - Flash Turret.
+    - Say cheese!
+  - Industrial Fan.
+    - Back when employees used to work overtime in the hot summers.
+- Fixed bug with getting fired.
+- Made it so you can drop gal's items while she's delivering them.
+- Cleaned up triggers with gal so prompt wont pop up unless you fulfill conditions.
+- Gave gal a radar dot so you can look at her in the terminal's radar, goes by Delilah.
+  - Works with the OpenBodyCams mod ~~not really the POV is from her feet~~.
+- Made it so gal doesnt jitter for clients on ship land/takeoff.
+- Gal probably doesnt jitter in the elevator anymore.
+- Fixed several bugs with gal killing enemies.
+- Fixed gal dropping off items onto ship, they now stay there with the ship, notif doesnt always show up though, so gal has her own notif now.
+- Massively improved gal selling mechanics.
+
+## v0.6.8
+
+- Forgot to make metal crate whitelist into a blacklist.
+
+## v0.6.7
+
+- Trying the 3rd time to fix the propeller sounds.
+- Fixed gal staring at player causing weird rotation.
+- Fixed her following enemy too much before attacking.
+- Changed some texts around.
+
+## v0.6.6
 
 - Fixed some propeller volume stuff.
 - Fixed hand interaction.

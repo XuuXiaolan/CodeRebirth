@@ -25,10 +25,9 @@ public class LaserShockBlast : NetworkBehaviour
     [NonSerialized] public Transform laserOrigin = null!; // Origin point of the laser beam
     private ParticleSystem impactEffect = null!; // Particle effect at the impact point
 
-    public override void OnNetworkSpawn()
+    public void Start()
     {
-        base.OnNetworkSpawn();
-        hitLayers = LayerMask.GetMask("Player", "Enemies") | StartOfRound.Instance.collidersAndRoomMaskAndDefault;
+        hitLayers = LayerMask.GetMask("Enemies", "Room", "Player", "Colliders", "Vehicle", "Terrain");
         impactEffect = ImpactEffectGameObject.GetComponent<ParticleSystem>();
         if (IsServer)
         {
@@ -42,24 +41,25 @@ public class LaserShockBlast : NetworkBehaviour
         Vector3 origin = laserOrigin.position;
         Vector3 direction = laserOrigin.forward;
 
-        // Perform a raycast to detect hits
         var raycastHits = Physics.RaycastAll(origin, direction, LaserRange, hitLayers, QueryTriggerInteraction.Collide);
-        bool hitSomething = false;
+        Array.Sort(raycastHits, (a, b) => a.distance.CompareTo(b.distance));
+
+        Vector3 finalHitPoint = origin + (direction * LaserRange);
+
         foreach (var raycastHit in raycastHits)
         {
             bool hit = HandleHit(raycastHit);
-
-            // Send hit info to clients for visual effects
-            FireLaserClientRpc(raycastHit.point, laserOrigin.position);
-            hitSomething = true;
-            if (hit) break;
+            finalHitPoint = raycastHit.point; // Update final hit point
+            Plugin.ExtendedLogging($"Raycast Hit: {raycastHit.collider.name}");
+            Plugin.ExtendedLogging($"Final Hit Point: {finalHitPoint}");
+            Plugin.ExtendedLogging($"Hit: {hit}");
+            if (hit)
+                break; // Stop if we have hit a target
         }
 
-        if (!hitSomething)
-        {
-            // No hit detected, send laser to maximum range
-            FireLaserClientRpc(origin + (direction * LaserRange), laserOrigin.position);
-        }
+        yield return new WaitUntil(() => NetworkObject.IsSpawned);
+        // Send hit info to clients only once with the final hit point
+        FireLaserClientRpc(finalHitPoint, laserOrigin.position);
 
         // Wait for the laser duration
         yield return new WaitForSeconds(impactEffect.main.duration + LaserDuration + 5f);
@@ -102,15 +102,16 @@ public class LaserShockBlast : NetworkBehaviour
         }
     }
 
-    bool HandleEnemyHit(RaycastHit raycastHit)
+    private bool HandleEnemyHit(RaycastHit raycastHit)
     {
-        Transform? parent = TryFindRoot(raycastHit.collider.transform);
+        Transform? parent = CRUtilities.TryFindRoot(raycastHit.collider.transform);
         if (parent == null || !parent.TryGetComponent(out EnemyAI enemyAI) || enemyAI == null) return false;
 
         KillEnemyFromOwnerClientRpc(new NetworkObjectReference(enemyAI.gameObject.GetComponent<NetworkObject>()));
         return true;
     }
-    bool HandlePlayerHit(RaycastHit raycastHit)
+
+    private bool HandlePlayerHit(RaycastHit raycastHit)
     {
         if (!raycastHit.collider.gameObject.TryGetComponent(out PlayerControllerB player) || player == null) return false;
 
@@ -121,9 +122,19 @@ public class LaserShockBlast : NetworkBehaviour
         }
         return true;
     }
+
+    private bool HandleTerrainOrGroundHit(RaycastHit raycastHit)
+    {
+        if (raycastHit.collider.gameObject.layer == LayerMask.NameToLayer("Terrain") || raycastHit.collider.gameObject.layer == LayerMask.NameToLayer("Room"))
+        {
+            return true;
+        }
+        return false;
+    }
+
     private bool HandleHit(RaycastHit raycastHit)
     {
-        return HandleEnemyHit(raycastHit) || HandlePlayerHit(raycastHit);
+        return HandleEnemyHit(raycastHit) || HandlePlayerHit(raycastHit) || HandleTerrainOrGroundHit(raycastHit);
     }
 
     [ClientRpc]
@@ -131,15 +142,5 @@ public class LaserShockBlast : NetworkBehaviour
     {
         EnemyAI enemyAI = ((GameObject)networkObjectReference).GetComponent<EnemyAI>();
         enemyAI.KillEnemyOnOwnerClient();
-    }
-
-    public static Transform? TryFindRoot(Transform child)
-    {
-        Transform current = child;
-        while (current != null && current.GetComponent<NetworkObject>() == null)
-        {
-            current = current.transform.parent;
-        }
-        return current;
     }
 }

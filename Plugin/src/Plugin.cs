@@ -11,6 +11,7 @@ using CodeRebirth.src.Util.Extensions;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
+using Unity.Netcode;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -19,11 +20,13 @@ namespace CodeRebirth.src;
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger = null!;
     private readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
     internal static bool SubtitlesAPIIsOn = false;
+    internal static bool OpenBodyCamsIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
@@ -41,10 +44,14 @@ public class Plugin : BaseUnityPlugin {
         ModConfig.ConfigEnableExtendedLogging.Value = true;
 #endif
 
-        if (SubtitlesAPICompatibilityChecker.Enabled) {
+        if (SubtitlesAPICompatibilityChecker.Enabled)
+        {
             SubtitlesAPICompatibilityChecker.Init();
-        } else {
-            // Logger.LogWarning("SubtitlesAPI not found. Subtitles will not be activated.");
+        }
+
+        if (OpenBodyCamCompatibilityChecker.Enabled)
+        {
+            OpenBodyCamCompatibilityChecker.Init();
         }
 
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
@@ -94,6 +101,11 @@ public class Plugin : BaseUnityPlugin {
         var types = Assembly.GetExecutingAssembly().GetLoadableTypes();
         foreach (var type in types)
         {
+            if (type.IsNested || !typeof(NetworkBehaviour).IsAssignableFrom(type)) {
+                continue; // we do not care about fixing it, if it is not a network behaviour
+            }
+            // ExtendedLogging($"found network behaviour: {type.Name}");
+            
             var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             foreach (var method in methods)
             {

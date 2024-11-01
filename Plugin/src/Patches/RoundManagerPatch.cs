@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using Random = System.Random;
 using CodeRebirth.src.Content.Unlockables;
+using BepInEx;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -24,6 +25,132 @@ static class RoundManagerPatch {
 		if (!RoundManager.Instance.IsHost) return;
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) SpawnCrates();
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value) SpawnRandomBiomes();
+		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value) SpawnBearTrap();
+		if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value) SpawnAirControlUnit();
+	}
+
+	private static void SpawnAirControlUnit()
+	{
+		Plugin.ExtendedLogging("Spawning air control unit!!!");
+
+		// Parse the configuration string to get the spawn counts for different moons
+		Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigAirControlUnitSpawnWeight.Value);
+		foreach (var moonSpawn in moonSpawnCounts.Keys)
+		{
+			Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+		}
+
+		// Get the current moon type
+		string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
+		Plugin.ExtendedLogging("Current moon: " + currentMoon);
+
+		// Determine the spawn count based on the current moon configuration
+		int spawnCount = 0;
+
+		if (!moonSpawnCounts.TryGetValue(currentMoon, out spawnCount)) // Try to get the specific moon spawn count
+		{
+			if (!moonSpawnCounts.TryGetValue("all", out spawnCount)) // If not found, try to get the "all" spawn count
+			{
+				// Determine if it is a vanilla or custom moon and get the appropriate spawn count
+				bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels
+					.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
+
+				if (isVanillaMoon)
+				{
+					moonSpawnCounts.TryGetValue("vanilla", out spawnCount);
+				}
+				else
+				{
+					moonSpawnCounts.TryGetValue("custom", out spawnCount);
+				}
+			}
+		}
+
+		// Log the determined spawn count
+		Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+
+		// If no valid spawn count is found, return
+		if (spawnCount <= 0) return;
+
+		// Check if the current moon configuration is valid
+		System.Random random = new();
+		Plugin.ExtendedLogging($"Spawning {spawnCount} air control units");
+		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
+		{
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
+
+			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+
+			if (hit.collider != null) // Check to make sure we hit something
+			{
+				GameObject aircontrolunit = MapObjectHandler.Instance.AirControlUnit.AirControlUnitPrefab;
+
+				GameObject spawnedAirControlUnit = GameObject.Instantiate(aircontrolunit, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+				Plugin.ExtendedLogging($"Spawning air control unit at: {hit.point}");
+				spawnedAirControlUnit.transform.up = hit.normal;
+				spawnedAirControlUnit.GetComponent<NetworkObject>().Spawn();
+			}
+		}
+	}
+
+	private static Dictionary<string, int> ParseMoonSpawnConfig(string config)
+	{
+		Dictionary<string, int> moonSpawnCounts = new();
+
+		if (string.IsNullOrEmpty(config)) return moonSpawnCounts;
+
+		string[] entries = config.Split(',');
+		foreach (string entry in entries)
+		{
+			string[] parts = entry.Split(':');
+			if (parts.Length == 2 && int.TryParse(parts[1], out int count))
+			{
+				string key = parts[0].Trim().ToLowerInvariant();
+				if (key.Equals("modded", StringComparison.OrdinalIgnoreCase))
+				{
+					key = "custom";
+				}
+				moonSpawnCounts[key] = count;
+			}
+		}
+
+		return moonSpawnCounts;
+	}
+
+	private static void SpawnBearTrap()
+	{
+		Plugin.ExtendedLogging("Spawning bear trap!!!");
+		System.Random random = new();
+		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigBearTrapAbundance.Value, 0, 1000)); i++)
+		{
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
+
+			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+
+			if (hit.collider != null) // Check to make sure we hit something
+			{
+				GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+				if (hit.collider.CompareTag("Grass"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.GrassMatPrefab;
+				}
+				else if (hit.collider.CompareTag("Gravel"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+				}
+				else if (hit.collider.CompareTag("Snow"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
+				}
+
+				GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
+				spawnedTrap.transform.up = hit.normal;
+				spawnedTrap.GetComponent<NetworkObject>().Spawn();
+			}
+		}
 	}
 
 	private static void SpawnFlora()
@@ -216,7 +343,7 @@ static class RoundManagerPatch {
 	private static void SpawnCrates()
 	{
 		Plugin.ExtendedLogging("Spawning crates!!!");
-		System.Random random = new ();
+		System.Random random = new();
 		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigWoodenCrateAbundance.Value, 0, 1000)); i++)
 		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
@@ -229,7 +356,7 @@ static class RoundManagerPatch {
 				GameObject crate = MapObjectHandler.Instance.Crate.WoodenCratePrefab;
 
 				// Adjust the hit point deeper into the ground along the hit.normal direction
-				Vector3 spawnPoint = hit.point + hit.normal * -0.75f; // Adjust -0.5f to control how deep you want it
+				Vector3 spawnPoint = hit.point + hit.normal * -0.65f; // Adjust -0.65f to control how deep you want it
 
 				GameObject spawnedCrate = GameObject.Instantiate(crate, spawnPoint, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}");
@@ -257,7 +384,7 @@ static class RoundManagerPatch {
 	private static void SpawnRandomBiomes()
 	{
 		Plugin.ExtendedLogging("Spawning Biome/s!!!");
-		System.Random random = new(StartOfRound.Instance.randomMapSeed);
+		System.Random random = new();
 		if (random.NextFloat(0f, 1f) <= Plugin.ModConfig.ConfigBiomesSpawnChance.Value) return;
 		int minValue = 1;
 		for (int i = 0; i < random.NextInt(minValue, 1); i++)
@@ -295,20 +422,21 @@ static class RoundManagerPatch {
 	[HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
 	public static void PlayAudibleNoiseForShockwaveGalPostfix(RoundManager __instance, ref Vector3 noisePosition, ref float noiseRange, ref float noiseLoudness, ref int timesPlayedInSameSpot, ref bool noiseIsInsideClosedShip, ref int noiseID)
 	{
-		if (noiseID != 5) return;
+		if (noiseID != 5 && noiseID != 6) return;
 		if (noiseIsInsideClosedShip)
 		{
 			noiseRange /= 2f;
 		}
-		Collider[] hitColliders = Physics.OverlapSphere(noisePosition, noiseRange, LayerMask.GetMask("Props"));
+		Collider[] hitColliders = Physics.OverlapSphere(noisePosition, noiseRange, LayerMask.GetMask("Props", "MapHazards"), QueryTriggerInteraction.Collide);
 		for (int i = 0; i < hitColliders.Length; i++)
 		{
             if (hitColliders[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener))
             {
-                ShockwaveGalAI component = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
-                if (component == null)
+                ShockwaveGalAI shockwaveGal = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
+				FlashTurret flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
+                if (shockwaveGal == null && flashTurret == null)
                 {
-                    return;
+                    continue;
                 }
                 noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
             }

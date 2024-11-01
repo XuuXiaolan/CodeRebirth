@@ -37,7 +37,6 @@ public class MeteorShower : CodeRebirthWeathers {
 		South
 	}
 	private Direction direction = Direction.Random;
-	private GameObject meteorOverridePrefab = null!;
 	private float normalisedTimeToLeave = 1f;
 	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
 	readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
@@ -47,13 +46,15 @@ public class MeteorShower : CodeRebirthWeathers {
 	public static MeteorShower? Instance { get; private set; }
 	public static bool Active => Instance != null;
 	
-	private void OnEnable() { // init weather
+	private void OnEnable()
+	{ // init weather
 		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
 		normalisedTimeToLeave = Plugin.ModConfig.ConfigMeteorShowerTimeToLeave.Value;
 		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
 		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
 		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 6, dayTimePower: -3);
-		if (minMeteorsPerSpawn > maxMeteorsPerSpawn) {
+		if (minMeteorsPerSpawn > maxMeteorsPerSpawn)
+		{
 			Plugin.Logger.LogWarning("Min Meteor Spawn Count is greater than Max Meteor Spawn Count. Swapping values.");
 			(int, int) temp = (minMeteorsPerSpawn, maxMeteorsPerSpawn);
 			minMeteorsPerSpawn = temp.Item2;
@@ -65,7 +66,7 @@ public class MeteorShower : CodeRebirthWeathers {
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
 		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
 		// eventually gonna have a config bool to turn on override prefabs and maybe have more prefab options.
-		SpawnOverheadVisualMeteors(random.NextInt(15, 45), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
+		SpawnOverheadVisualMeteors(random.NextInt(15, 45));
 		
 		if(!IsAuthority()) return; // Only run on the host.
 		random = new Random();
@@ -77,8 +78,10 @@ public class MeteorShower : CodeRebirthWeathers {
 		spawnHandler = StartCoroutine(MeteorSpawnerHandler());
 	}
 
-	private void OnDisable() { // clean up weather
-		try {
+	private void OnDisable()
+	{ // clean up weather
+		try
+		{
 			Plugin.Logger.LogDebug("Cleaning up Weather.");
 			ClearMeteorites();
 			ClearCraters();
@@ -87,7 +90,9 @@ public class MeteorShower : CodeRebirthWeathers {
 
 			if(!IsAuthority()) return; // Only run on the host.
 			if (spawnHandler != null) StopCoroutine(spawnHandler);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			Plugin.Logger.LogFatal("Cleaning up Weather failed." + e.Message);
 		}
 	}
@@ -99,7 +104,7 @@ public class MeteorShower : CodeRebirthWeathers {
 		}
 	}
 
-	void ClearMeteorites()
+	private void ClearMeteorites()
 	{
         foreach (Meteors meteor in meteors)
         {
@@ -109,7 +114,8 @@ public class MeteorShower : CodeRebirthWeathers {
         }
         meteors.Clear();
     }
-	void ClearCraters()
+
+	private void ClearCraters()
 	{
         foreach (CraterController crater in craters)
         {
@@ -118,6 +124,7 @@ public class MeteorShower : CodeRebirthWeathers {
         }
         craters.Clear();
     }
+
 	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null) {
         Vector3 averageLocation = CalculateAverageLandNodePosition(nodes);
         Vector3 centralLocation = averageLocation + new Vector3(0, random.NextFloat(150, 200), 0);
@@ -139,6 +146,7 @@ public class MeteorShower : CodeRebirthWeathers {
 				);
         }
 	}
+
 	private void SpawnVisualMeteors(Vector3 centralLocation, Vector3 offset = default, float speed = 0f, float sizeMultiplier = 1f, GameObject? overridePrefab = null)
     {
         Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.FloatingMeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
@@ -146,18 +154,23 @@ public class MeteorShower : CodeRebirthWeathers {
         AddRandomMovement(meteor, speed);
         meteor.SetupAsLooping();
     }
-	private IEnumerator MeteorSpawnerHandler() {
+
+	private IEnumerator MeteorSpawnerHandler()
+	{
 		yield return new WaitForSeconds(5f); // inital delay so clients don't get meteors before theyve inited everything.
 		while (true) { // this is fine because it gets stopped in OnDisable.
 
-			for (int i = 0; i < random.NextInt(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++) {
-				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25), overridePrefab: Plugin.ModConfig.ConfigWesleyModeEnabled.Value ? meteorOverridePrefab : null);
+			for (int i = 0; i < random.NextInt(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++)
+			{
+				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 			}
 			float delay = random.NextFloat(minTimeBetweenSpawns, maxTimeBetweenSpawns);
 			yield return new WaitForSeconds(delay);
 		}
 	}
-    public Vector3 CalculateVector(Vector3 target) {
+
+    public Vector3 CalculateVector(Vector3 target)
+	{
         float x = 0, z = 0;
         float distanceX = random.NextFloat(250, 500);
         float distanceZ = random.NextFloat(250, 500);
@@ -182,19 +195,25 @@ public class MeteorShower : CodeRebirthWeathers {
 
         return target + new Vector3(x, y, z);
     }
-	private void SpawnMeteor(Vector3 target, GameObject? overridePrefab = null) {
-		if (target == Vector3.zero) {
+
+	private void SpawnMeteor(Vector3 target, GameObject? overridePrefab = null)
+	{
+		if (target == Vector3.zero)
+		{
 			Plugin.Logger.LogWarning("Target is zero, not spawning meteor");
 			return;
 		}
-		Vector3 origin = new Vector3();
-		if (direction == Direction.Random) {
+		Vector3 origin = new();
+		if (direction == Direction.Random)
+		{
 			origin = target + new Vector3(
 				random.NextFloat(250, 500) * random.NextSign(), 
 				random.NextFloat(600, 900), 
 				random.NextFloat(250, 500) * random.NextSign()
 			);
-		} else {
+		}
+		else
+		{
 			origin = CalculateVector(target);
 		}
 		

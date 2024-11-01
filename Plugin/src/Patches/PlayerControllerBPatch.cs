@@ -1,3 +1,4 @@
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
@@ -30,24 +31,33 @@ static class PlayerControllerBPatch {
         __instance.AddCRPlayerData();
     }
 
-    [HarmonyPatch(nameof(PlayerControllerB.Update)), HarmonyPrefix]
-    public static void Update(PlayerControllerB __instance) {
-        if (GameNetworkManager.Instance.localPlayerController == null) return;
-        /*if (__instance.GetCRPlayerData().playerOverrideController != null) return;
-        Plugin.ExtendedLogging($"[ILHook:PlayerControllerB.Update] Setting playerOverrideController to {__instance.playerBodyAnimator.runtimeAnimatorController}");
-        __instance.GetCRPlayerData().playerOverrideController = new AnimatorOverrideController(__instance.playerBodyAnimator.runtimeAnimatorController);
-        __instance.playerBodyAnimator.runtimeAnimatorController = __instance.GetCRPlayerData().playerOverrideController;*/
-    }
-
     public static void Init() {
         On.GameNetcodeStuff.PlayerControllerB.TeleportPlayer += PlayerControllerB_TeleportPlayer;
+        On.GameNetcodeStuff.PlayerControllerB.DamagePlayer += PlayerControllerB_DamagePlayer;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
     }
 
+    private static void PlayerControllerB_DamagePlayer(On.GameNetcodeStuff.PlayerControllerB.orig_DamagePlayer orig, PlayerControllerB self, int damageNumber, bool hasDamageSFX, bool callRPC, CauseOfDeath causeOfDeath, int deathAnimation, bool fallDamage, Vector3 force)
+    {
+        orig(self, damageNumber, hasDamageSFX, callRPC, causeOfDeath, deathAnimation, fallDamage, force);
+        if (self.currentlyHeldObjectServer is ChildEnemyAI childEnemyAI)
+        {
+            self.StartCoroutine(self.waitToEndOfFrameToDiscard());
+        }
+    }
+
     private static void PlayerControllerB_TeleportPlayer(On.GameNetcodeStuff.PlayerControllerB.orig_TeleportPlayer orig, PlayerControllerB self, Vector3 pos, bool withRotation, float rot, bool allowInteractTrigger, bool enableController)
     {
+        foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
+        {
+            if (enemy is CodeRebirthEnemyAI codeRebirthEnemyAI)
+            {
+                Plugin.ExtendedLogging($"Setting codeRebirthEnemyAI.positionsOfPlayersBeforeTeleport[self] to {self.transform.position}");
+                codeRebirthEnemyAI.positionsOfPlayersBeforeTeleport[self] = self.transform.position;
+            }
+        }
         foreach (ShockwaveGalAI gal in UnityEngine.Object.FindObjectsOfType<ShockwaveGalAI>())
         {
             if (self == gal.ownerPlayer)
