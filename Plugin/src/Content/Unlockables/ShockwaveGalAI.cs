@@ -41,6 +41,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public AudioClip[] TakeDropItemSounds = [];
     public float DoorOpeningSpeed = 1f;
     public Transform DroneHead = null!;
+    public Transform DroneEye = null!;
+    public Renderer[] renderersToHideIn = [];
 
     private float sellingMovementSpeed = 6f;
     private bool isSellingItems = false;
@@ -163,14 +165,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         exitPoints = new();
         foreach (var exit in FindObjectsByType<EntranceTeleport>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID))
         {
+            if (!exit.FindExitPoint())
+            {
+                Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
+            }
             exitPoints.Add(exit, [exit.entrancePoint, exit.exitPoint]);
             if (exit.isEntranceToBuilding)
             {
                 lastUsedEntranceTeleport = exit;
-            }
-            if (!exit.FindExitPoint())
-            {
-                Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
             }
         }
         int activePlayerCount = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerControlled).Count();
