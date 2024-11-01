@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Maps;
-public class FunctionalMicrowave : NetworkBehaviour // have a looping shaking sound turned on once activated
+public class FunctionalMicrowave : NetworkBehaviour
 {
     public float microwaveOpeningTimer = 15f;
     public float microwaveClosingTimer = 7.5f;

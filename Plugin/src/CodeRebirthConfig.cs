@@ -8,6 +8,7 @@ public class CodeRebirthConfig
 {
     #region Enables/Disables
     public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigInsideBearTrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigLaserTurretEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFlashTurretEnabled { get; private set; }
@@ -168,6 +169,10 @@ public class CodeRebirthConfig
                                             "Bear Trap | Enabled",
                                             true,
                                             "Whether the bear trap is enabled.");
+        ConfigInsideBearTrapEnabled = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Interior Spawn",
+                                            false,
+                                            "Whether the bear traps can spawn in the interior.");
         ConfigBearTrapAbundance = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Abundance",
                                             7,

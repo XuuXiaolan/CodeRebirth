@@ -118,10 +118,13 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
 			Biome = new BiomeAssets("biomeassets");
 
+		if (Plugin.ModConfig.ConfigTeslaShockEnabled.Value)
+			RegisterTeslaShock();
+
 		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
 		{
 			BearTrap = new BearTrapAssets("beartrapassets");
-			hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);			
+			if (Plugin.ModConfig.ConfigInsideBearTrapEnabled.Value) RegisterInsideBearTraps();
 		}
 
 		if (Plugin.ModConfig.ConfigLaserTurretEnabled.Value)
@@ -133,9 +136,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
 			RegisterFlashTurret();
 
-		if (Plugin.ModConfig.ConfigTeslaShockEnabled.Value)
-			RegisterTeslaShock();
-
 		if (Plugin.ModConfig.ConfigFunctionalMicrowaveEnabled.Value)
 			RegisterFunctionalMicrowave();
 
@@ -144,6 +144,11 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 			AirControlUnit = new AirControlUnitAssets("aircontrolunitassets");
 			hazardPrefabs.Add(MapObjectHandler.Instance.AirControlUnit.AirControlUnitPrefab);
 		}
+	}
+
+	public void RegisterInsideBearTraps()
+	{
+		RegisterInsideMapObjectWithConfig(BearTrap.GrassMatPrefab, "All:" + (Plugin.ModConfig.ConfigBearTrapAbundance.Value).ToString());
 	}
 
 	public void RegisterFunctionalMicrowave()

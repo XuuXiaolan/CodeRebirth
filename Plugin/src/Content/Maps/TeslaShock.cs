@@ -4,11 +4,10 @@ using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
-public class TeslaShock : NetworkBehaviour // have a background audiosource constantly low volume playing a sound
+public class TeslaShock : NetworkBehaviour
 {
     public float distanceFromPlayer = 5f;
     public int playerDamageAmount = 40;
@@ -21,9 +20,7 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
     public AudioClip teslaFastIdleSound = null!;
     public AudioSource teslaAudioSource = null!;
     public AudioClip teslaTouchSound = null!;
-    [FormerlySerializedAs("teslaChargeSound")]
     public AudioClip teslaFirstBigChargeSound = null!;
-    [FormerlySerializedAs("teslaFastChargeSound")]
     public AudioClip teslaConsecutiveChargeSound = null!;
     public List<AudioClip> teslaZapSounds = null!;
 
@@ -63,8 +60,7 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
             if (!player.isPlayerControlled || player.isPlayerDead || Physics.Raycast(player.transform.position, transform.position - player.transform.position, out RaycastHit hit, distanceFromPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide)) continue;
-            bool somethingConductiveFound = PlayerCarryingSomethingConductive(player);
-            if (!somethingConductiveFound) continue;
+            if (!PlayerCarryingSomethingConductive(player)) continue;
             if (Vector3.Distance(player.transform.position, transform.position) > distanceFromPlayer) continue;
             targetPlayer = player;
             teslaIdleAudioSource.clip = teslaFastIdleSound;

@@ -45,6 +45,11 @@ public class AirControlUnit : NetworkBehaviour
         if (fireTimer <= 0f)
         {
             FireProjectile();
+            if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 70)
+            {
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+            }
             fireTimer = fireRate;
         }
     }
