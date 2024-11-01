@@ -141,7 +141,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
     #region Debug
-    public ConfigEntry<bool> ConfigDisableHalloweenFog { get; private set; }
     public ConfigEntry<bool> ConfigDebugMode { get; private set; }
     #endregion
     public CodeRebirthConfig(ConfigFile configFile)
@@ -153,10 +152,6 @@ public class CodeRebirthConfig
                                             "Debug Mode",
                                             false,
                                             "Whether debug mode is enabled.");
-        ConfigDisableHalloweenFog = configFile.Bind("Debug Options",
-                                            "Disable Halloween Fog",
-                                            false,
-                                            "Whether to disable the halloween fog.");
         #endregion
         #region Functional Microwave
         ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",
