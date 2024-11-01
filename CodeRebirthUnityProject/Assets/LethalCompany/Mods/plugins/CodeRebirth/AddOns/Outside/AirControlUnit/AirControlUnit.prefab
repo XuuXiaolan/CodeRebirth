@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRange: 20
+  maxRange: 30
   minRange: 0
   requiresLineOfSight: 1
   headerText: ACUnit
@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 497669273820603583}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -237,7 +237,6 @@ Transform:
   m_Children:
   - {fileID: 3611783422789201844}
   - {fileID: 5970254512266839228}
-  - {fileID: 1628291372814185282}
   - {fileID: 6196960126290770570}
   - {fileID: 1479218299775556695}
   - {fileID: 3541192837986108011}
@@ -322,6 +321,7 @@ MonoBehaviour:
   DetectPlayerAudioSound: {fileID: 280126752041892052}
   ACUStartOrEndSound: {fileID: 8300000, guid: a012878ce8e68be4384ff9784bfad54e, type: 3}
   ACUTurnAudioSource: {fileID: 3749041448614679287}
+  playerHeadstart: 10
 --- !u!1 &1575862944460693779
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +331,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3059923266653593531}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: AirCGun_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,7 +379,7 @@ Transform:
   m_GameObject: {fileID: 2320380751272664345}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -492,7 +492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6181171982955463715}
   - component: {fileID: 4832201124207895618}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +563,7 @@ Transform:
   m_GameObject: {fileID: 4183926733948058820}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 4.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -675,7 +675,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5970254512266839228}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: AirControlArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -798,7 +798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 824887891012387322}
   - component: {fileID: 6912705112702620223}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: AirCBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -855,7 +855,7 @@ GameObject:
   - component: {fileID: 3933671653360209703}
   - component: {fileID: 4417393930053820919}
   - component: {fileID: 1037832659252858770}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -988,7 +988,7 @@ Transform:
   m_GameObject: {fileID: 7852487307787532020}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1091,58 +1091,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &8163885629915413161
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1628291372814185282}
-  - component: {fileID: 5556557572352271316}
-  m_Layer: 22
-  m_Name: ScanNode
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1628291372814185282
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8163885629915413161}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2885832486561310941}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5556557572352271316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8163885629915413161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxRange: 30
-  minRange: 0
-  requiresLineOfSight: 1
-  headerText: Air Control Unit
-  subText: Partnered
-  scrapValue: 0
-  creatureScanID: -1
-  nodeType: 1
 --- !u!1 &9009926158031219349
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,7 +1103,7 @@ GameObject:
   - component: {fileID: 8178951353161499926}
   - component: {fileID: 5856628993770301047}
   - component: {fileID: 4094555883722536472}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: AirCGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}

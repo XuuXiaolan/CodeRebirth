@@ -51,7 +51,10 @@ public class AirControlUnit : NetworkBehaviour
 
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
     {
-        if (Physics.Raycast(playerControllerB.gameplayCamera.transform.position, -Vector3.up, out RaycastHit hit, 0.5f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Collide)) return true;
+        if (Physics.Raycast(playerControllerB.gameplayCamera.transform.position, -Vector3.up, out RaycastHit hit, 6f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+        {
+            return true;
+        }
         return false;
     }
 
@@ -60,7 +63,7 @@ public class AirControlUnit : NetworkBehaviour
         bool lockedOntoAPlayer = false;
         foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
         {
-            if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) && IsPlayerNearGround(playerControllerB))
+            if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) || IsPlayerNearGround(playerControllerB))
             {            
                 continue;
             }
@@ -85,7 +88,7 @@ public class AirControlUnit : NetworkBehaviour
             if (distanceToPlayer <= detectionRange && angle <= maxAngle)
             {
                 Plugin.ExtendedLogging($"Angle: {angle} | Distance: {distanceToPlayer}");
-                if (Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersRoomMaskDefaultAndPlayers | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Collide)) // Check if within 75 degrees
+                if (Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersRoomMaskDefaultAndPlayers, QueryTriggerInteraction.Collide)) // Check if within 75 degrees
                 {
                     Plugin.ExtendedLogging($"Raycast hit: {hit.collider.name} | with layer: {hit.collider.gameObject.layer}");
                     if (hit.collider.gameObject.layer != 3) continue;
