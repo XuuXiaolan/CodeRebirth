@@ -21,12 +21,12 @@ public class AirControlUnit : NetworkBehaviour
     public AudioClip ACUStartOrEndSound = null!;
     public AudioSource ACUTurnAudioSource = null!;
     public float playerHeadstart = 10f;
+    public float maxAngle = 75f;
 
     private float currentAngle = 0f;
     private float fireTimer = 3f;
     private GameObject projectilePrefab = null!;
     private PlayerControllerB? lastPlayerTargetted = null;
-    private Coroutine? endTargettingPlayerRoutine = null;
 
     private void Start()
     {
@@ -49,46 +49,54 @@ public class AirControlUnit : NetworkBehaviour
         }
     }
 
+    private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
+    {
+        if (Physics.Raycast(playerControllerB.gameplayCamera.transform.position, -Vector3.up, out RaycastHit hit, 0.5f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Collide)) return true;
+        return false;
+    }
+
     private void FindAndAimAtTarget()
     {
+        bool lockedOntoAPlayer = false;
         foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
         {
-            if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position)) continue;
+            if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) && IsPlayerNearGround(playerControllerB))
+            {            
+                continue;
+            }
 
             Rigidbody targetRigidbody = playerControllerB.playerRigidbody;
             if (targetRigidbody == null) continue;
 
-            Vector3 directionToPlayer = playerControllerB.transform.position - turretCannonTransform.position;
-            float distanceToPlayer = directionToPlayer.magnitude;
+            Vector3 directionToPlayer = (playerControllerB.transform.position - turretCannonTransform.position).normalized;
+            float distanceToPlayer = Vector3.Distance(turretCannonTransform.position, playerControllerB.transform.position);
+
+            // Calculate the time needed for the projectile to reach the target
+            float timeToTarget = distanceToPlayer / 50f; // Bullet speed is 100 but we overshootin cuz overshooting is good
+
+            // Predict future position of the target based on its current velocity and time to target
+            Vector3 futurePosition = playerControllerB.transform.position + targetRigidbody.velocity * timeToTarget;
+
+            // Calculate direction to the predicted position
+            Vector3 directionToTarget = futurePosition - turretTransform.position;
+            float angle = Vector3.Angle(turretTransform.up, directionToTarget);
 
             // Check if player is within detection range and if there's line of sight
-            if (distanceToPlayer <= detectionRange && Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
+            if (distanceToPlayer <= detectionRange && angle <= maxAngle)
             {
-                if (hit.collider.gameObject.layer != 3) continue;
-                lastPlayerTargetted = playerControllerB;
-
-                // Calculate the time needed for the projectile to reach the target
-                float timeToTarget = distanceToPlayer / 50f; // Bullet speed is 100 but we overshootin cuz overshooting is good
-
-                // Predict future position of the target based on its current velocity and time to target
-                Vector3 futurePosition = playerControllerB.transform.position + targetRigidbody.velocity * timeToTarget;
-
-                // Calculate direction to the predicted position
-                Vector3 directionToTarget = futurePosition - turretTransform.position;
-                float angle = Vector3.Angle(turretTransform.up, directionToTarget);
-                if (angle <= 75 && playerControllerB.transform.position.y > turretCannonTransform.position.y) // Check if within 75 degrees
+                Plugin.ExtendedLogging($"Angle: {angle} | Distance: {distanceToPlayer}");
+                if (Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersRoomMaskDefaultAndPlayers | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Collide)) // Check if within 75 degrees
                 {
+                    Plugin.ExtendedLogging($"Raycast hit: {hit.collider.name} | with layer: {hit.collider.gameObject.layer}");
+                    if (hit.collider.gameObject.layer != 3) continue;
+                    lockedOntoAPlayer = true;
+                    lastPlayerTargetted = playerControllerB;
                     if (ACUClickingAudioSource.clip == null)
                     {
                         DetectPlayerAudioSound.volume = 1f;
                         ACUClickingAudioSource.Stop();
                         ACUClickingAudioSource.clip = ACUStartOrEndSound;
                         ACUClickingAudioSource.Play();
-                    }
-                    if (endTargettingPlayerRoutine != null)
-                    {
-                        StopCoroutine(endTargettingPlayerRoutine);
-                        endTargettingPlayerRoutine = null;
                     }
                     ACUTurnAudioSource.volume = 1f;
                     currentAngle = angle;
@@ -103,28 +111,21 @@ public class AirControlUnit : NetworkBehaviour
                     Vector3 currentLocalEulerAngles = turretCannonTransform.localEulerAngles;
                     turretCannonTransform.localEulerAngles = new Vector3(angle, currentLocalEulerAngles.y, currentLocalEulerAngles.z);
                 }
-                else
-                {
-                    endTargettingPlayerRoutine ??= StartCoroutine(EndTargettingPlayer());
-                    DetectPlayerAudioSound.volume = 0f;
-                    ACUClickingAudioSource.Stop();
-                    ACUClickingAudioSource.clip = null;
-                    ACUTurnAudioSource.volume = 0f;
-                }
             }
         }
-    }
-
-    private IEnumerator EndTargettingPlayer()
-    {
-        yield return new WaitForSeconds(1f);
-        lastPlayerTargetted = null;
-        endTargettingPlayerRoutine = null;
+        if (!lockedOntoAPlayer)
+        {
+            lastPlayerTargetted = null;
+            DetectPlayerAudioSound.volume = 0f;
+            ACUClickingAudioSource.Stop();
+            ACUClickingAudioSource.clip = null;
+            ACUTurnAudioSource.volume = 0f;
+        }
     }
 
     private void FireProjectile()
     {
-        if (lastPlayerTargetted == null || DetectPlayerAudioSound.volume == 0) return;
+        if (lastPlayerTargetted == null) return;
         // play shoot sound
         ACUAudioSource.PlayOneShot(ACUFireSound);
         if (IsServer)

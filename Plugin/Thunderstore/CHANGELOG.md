@@ -1,4 +1,15 @@
-# v0.7.2
+# v0.7.4
+
+- Improving ACU as best as I can, doesn't target you if you're actively on the ground or have something blocking LoS.
+- Improved BearTrap spawning.
+- Decreased IndustrialFan power by 25%.
+
+## v0.7.3
+
+- Added a debug config to disable halloween fog for my own testing and whoever else wants.
+- Reworked config names and values for hazards to be less and gave a better description for them.
+
+## v0.7.2
 
 - Gave ACU a spawn weight config based on moon + value.
 - Gave microwave bigger collider to open doors.

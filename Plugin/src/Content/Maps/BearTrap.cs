@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -31,24 +32,38 @@ public class BearTrap : NetworkBehaviour
     private void Start()
     {
         if (!IsServer || byProduct) return;
-        NavMeshHit hit = default;
-        List<Vector3> usedPositions = new List<Vector3> { transform.position };
-        for (int i = 0; i <= 4; i++)
-        {
-            Vector3 newPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 6, hit);
-            for (int j = 0; j < usedPositions.Count; j++)
-            {
-                if (Vector3.Distance(usedPositions[j], newPosition) < 1f)
-                {
-                    newPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 9, hit);
-                }
-            }
-            GameObject newBearTrap = Instantiate(this.gameObject, newPosition, default, this.transform.parent);
-            newBearTrap.transform.up = hit.normal;
-            newBearTrap.gameObject.GetComponent<NetworkObject>().Spawn();
-            newBearTrap.GetComponent<BearTrap>().byProduct = true;
-            usedPositions.Add(newPosition);
-        }
+        var random = new System.Random(StartOfRound.Instance.randomMapSeed);
+		Vector3 position = this.transform.position;
+		for (int i = 0; i < random.NextInt(3, 6); i++)
+		{
+			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
+
+			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+
+			if (hit.collider != null) // Check to make sure we hit something
+			{
+				GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+				if (hit.collider.CompareTag("Grass"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.GrassMatPrefab;
+				}
+				else if (hit.collider.CompareTag("Gravel"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+				}
+				else if (hit.collider.CompareTag("Snow"))
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
+				}
+
+				GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+                spawnedTrap.GetComponent<BearTrap>().byProduct = true;
+				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
+				spawnedTrap.transform.up = hit.normal;
+				spawnedTrap.GetComponent<NetworkObject>().Spawn();
+                position = spawnedTrap.transform.position;
+			}
+		}
     }
 
     private void Update()

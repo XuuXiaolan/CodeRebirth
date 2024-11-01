@@ -141,6 +141,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
     #region Debug
+    public ConfigEntry<bool> ConfigDisableHalloweenFog { get; private set; }
     public ConfigEntry<bool> ConfigDebugMode { get; private set; }
     #endregion
     public CodeRebirthConfig(ConfigFile configFile)
@@ -152,6 +153,10 @@ public class CodeRebirthConfig
                                             "Debug Mode",
                                             false,
                                             "Whether debug mode is enabled.");
+        ConfigDisableHalloweenFog = configFile.Bind("Debug Options",
+                                            "Disable Halloween Fog",
+                                            false,
+                                            "Whether to disable the halloween fog.");
         #endregion
         #region Functional Microwave
         ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",
@@ -159,9 +164,9 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether the Functional Microwave is enabled.");
         ConfigFunctionalMicrowaveSpawnWeight = configFile.Bind("FunctionalMicrowave Options",
-                                            "Functional Microwave | SpawnWeight",
-                                            "Vanilla:5,Custom:5",
-                                            "The MoonName:Number of Functional Microwaves to spawn.");
+                                            "Functional Microwave | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of Functional Microwaves to spawn between 0 and number given.");
         #endregion
         #region Bear Trap
         ConfigBearTrapEnabled = configFile.Bind("BearTrap Options",
@@ -170,7 +175,7 @@ public class CodeRebirthConfig
                                             "Whether the bear trap is enabled.");
         ConfigBearTrapAbundance = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Abundance",
-                                            5,
+                                            7,
                                             "The number of bear traps to spawn per round.");
         #endregion
         #region Laser Turret
@@ -179,9 +184,9 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether the Laser Turret is enabled.");
         ConfigLaserTurretSpawnWeight = configFile.Bind("LaserTurret Options",
-                                            "Laser Turret | SpawnWeight",
-                                            "Vanilla:5,Custom:5",
-                                            "The MoonName:Number of Laser Turrets to spawn.");
+                                            "Laser Turret | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of Laser Turrets to spawn between 0 and number given.");
         #endregion
         #region Flash Turret
         ConfigFlashTurretEnabled = configFile.Bind("FlashTurret Options",
@@ -189,9 +194,9 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether the flash turret is enabled.");
         ConfigFlashTurretSpawnWeight = configFile.Bind("FlashTurret Options",
-                                            "Flash Turret | SpawnWeight",
-                                            "Vanilla:5,Custom:5",
-                                            "The MoonName:Number of flash turrets to spawn.");
+                                            "Flash Turret | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of flash turrets to spawn between 0 and number given.");
         #endregion
         #region Industrial Fan
         ConfigIndustrialFanEnabled = configFile.Bind("IndustrialFan Options",
@@ -199,9 +204,9 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether the industrial fan is enabled.");
         ConfigIndustrialFanSpawnWeight = configFile.Bind("IndustrialFan Options",
-                                            "Industrial Fan | SpawnWeight",
-                                            "Vanilla:5,Custom:5",
-                                            "The MoonName:Number of industrial fans to spawn.");
+                                            "Industrial Fan | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of industrial fans to spawn between 0 and number given.");
         #endregion
         #region Tesla Shock
         ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
@@ -209,9 +214,9 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether the tesla shock is enabled.");
         ConfigTeslaShockSpawnWeight = configFile.Bind("TeslaShock Options",
-                                            "Tesla Shock | SpawnWeight",
-                                            "Vanilla:5,Custom:5",
-                                            "The MoonName:Number of tesla shocks to spawn.");
+                                            "Tesla Shock | Abundance",
+                                            "Vanilla:2,Custom:2",
+                                            "The MoonName:Number of tesla shocks to spawn between 0 and number given.");
         #endregion
         #region Air Control Unit
         ConfigAirControlUnitEnabled = configFile.Bind("AirControlUnit Options",
@@ -220,8 +225,8 @@ public class CodeRebirthConfig
                                             "Whether the air control unit is enabled.");
         ConfigAirControlUnitSpawnWeight = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | SpawnWeight",
-                                            "Vanilla:5,Custom:5,Titan:1,Olympus:3",
-                                            "The number of air control units to spawn per round.");
+                                            "Vanilla:1,Custom:1,Titan:0,Olympus:2",
+                                            "The MoonName:Number of air control units to spawn between 0 and number given.");
         #endregion
         #region General
         ConfigEnableExtendedLogging = configFile.Bind("General",
