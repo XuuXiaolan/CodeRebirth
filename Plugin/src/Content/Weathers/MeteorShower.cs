@@ -152,7 +152,8 @@ public class MeteorShower : CodeRebirthWeathers {
         Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.FloatingMeteorPrefab, centralLocation + offset, Quaternion.identity).GetComponent<Meteors>();
 		meteor.transform.localScale *= sizeMultiplier;
         AddRandomMovement(meteor, speed);
-        meteor.SetupAsLooping();
+        bool isBig = sizeMultiplier > 5f;
+		meteor.SetupAsLooping(isBig);
     }
 
 	private IEnumerator MeteorSpawnerHandler()

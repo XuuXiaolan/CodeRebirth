@@ -33,7 +33,8 @@ public class Meteors : NetworkBehaviour {
 
     float timeInAir, travelTime;
     bool isMoving;
-    
+    bool isBig;
+
     public float Progress => timeInAir / travelTime;
 
     [ClientRpc]
@@ -49,9 +50,10 @@ public class Meteors : NetworkBehaviour {
         FireTrail?.SetActive(true);
     }
 
-    public void SetupAsLooping()
+    public void SetupAsLooping(bool isBig)
     {
         isMoving = false;
+        this.isBig = isBig;
     }
     
     private void Awake()
@@ -112,7 +114,12 @@ public class Meteors : NetworkBehaviour {
             {
                 NormalTravelAudio.volume = Mathf.Clamp01(0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
                 CloseTravelAudio.Play();
-            }   
+            }
+            if (!isMoving && !isBig)
+            {
+                NormalTravelAudio.volume = 0f;
+                CloseTravelAudio.volume = 0f;
+            }
         }
     }
 

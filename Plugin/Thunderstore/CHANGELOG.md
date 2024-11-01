@@ -1,4 +1,13 @@
-# v0.7.5
+# v0.7.6
+
+- Reverted the halloween fog changes I made to go back to being compatible with v64~
+- Added gal compatibility with openbodycams.
+- Cleaned up the gal's hand triggers, they won't show unless she's activate and you're holding an item.
+- Added appropriate screenshakes.
+- Polished tesla shock to be a stronger hit that has a longer cooldown.
+- Added a config to enable bear traps inside the interior.
+
+## v0.7.5
 
 - Made shockwave gal resync with clients on lobby reload/late joiners.
 - Fixed teslashock shocking everyone lol.

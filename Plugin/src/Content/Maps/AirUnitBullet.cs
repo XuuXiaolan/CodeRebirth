@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class AirUnitProjectile : NetworkBehaviour // add a firing sound audio source that plays on awake
+public class AirUnitProjectile : NetworkBehaviour
 {
     private float damage;
     public float speed = 20f;
@@ -65,6 +65,11 @@ public class AirUnitProjectile : NetworkBehaviour // add a firing sound audio so
             CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, CauseOfDeath.Blast, null, null);
             player.DamagePlayer((int)damage, true, false, CauseOfDeath.Blast, 0, false, forceFlung);
             playerHitSoundSource.Play();
+            if (player == GameNetworkManager.Instance.localPlayerController)
+            {
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+            }
             if (!player.isPlayerDead) StartCoroutine(PushPlayerFarAway(player, forceFlung));
             explodedOnTarget = true;
             bulletMesh.mesh = null;

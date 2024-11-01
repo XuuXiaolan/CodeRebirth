@@ -7,10 +7,11 @@ using UnityEngine;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
-public class TeslaShock : NetworkBehaviour // have a background audiosource constantly low volume playing a sound
+public class TeslaShock : NetworkBehaviour
 {
     public float distanceFromPlayer = 5f;
     public int playerDamageAmount = 40;
+    public int playerZapDamageAmount = 10;
     public float pushMultiplier = 10f;
     public Transform startChainPoint = null!;
     public VisualEffect vfx = null!;
@@ -19,10 +20,11 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
     public AudioClip teslaFastIdleSound = null!;
     public AudioSource teslaAudioSource = null!;
     public AudioClip teslaTouchSound = null!;
-    public AudioClip teslaChargeSound = null!;
-    public AudioClip teslaFastChargeSound = null!;
+    public AudioClip teslaFirstBigChargeSound = null!;
+    public AudioClip teslaConsecutiveChargeSound = null!;
     public List<AudioClip> teslaZapSounds = null!;
 
+    private GrabbableObject chargedItemPlayerWasHolding;
     private PlayerControllerB? targetPlayer;
     private Dictionary<GameObject, List<LineRenderer>> createdLineRenderers = new();
     private int activeLineRenderers = 0;
@@ -57,10 +59,7 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
         if (targetPlayer != null) return;
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (!player.isPlayerControlled || player.isPlayerDead || Physics.Raycast(player.transform.position, transform.position - player.transform.position, out RaycastHit hit, distanceFromPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide)) continue;
-            bool somethingConductiveFound = PlayerCarryingSomethingConductive(player);
-            if (!somethingConductiveFound) continue;
-            if (Vector3.Distance(player.transform.position, transform.position) > distanceFromPlayer) continue;
+            if (!ShouldContinueCharging(player)) continue;
             targetPlayer = player;
             teslaIdleAudioSource.clip = teslaFastIdleSound;
             teslaIdleAudioSource.Stop();
@@ -86,18 +85,26 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
     {
         while (ShouldContinueCharging(affectedPlayer))
         {
+            Plugin.ExtendedLogging($"Charging {affectedPlayer.playerUsername}");
             yield return StartCoroutine(ChargePlayer(affectedPlayer));
+            List<Transform> validTargets = new();
+            if (!ShouldContinueCharging(affectedPlayer) && Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position) <= distanceFromPlayer)
+            {
+                validTargets.Add(chargedItemPlayerWasHolding.transform);
+            }
+            else
+            {
+                List<PlayerControllerB> sortedPlayers = GetPlayersSortedByDistance(affectedPlayer);
+                List<EnemyAI> sortedEnemies = GetEnemiesSortedByDistance(affectedPlayer);
+                List<Transform> sortedTargets = GetTargetsSortedByDistanceIncludingAffectedPlayer(affectedPlayer, sortedPlayers, sortedEnemies);
 
-            List<PlayerControllerB> sortedPlayers = GetPlayersSortedByDistance(affectedPlayer);
-            List<EnemyAI> sortedEnemies = GetEnemiesSortedByDistance(affectedPlayer);
-            List<Transform> sortedTargets = GetTargetsSortedByDistanceIncludingAffectedPlayer(affectedPlayer, sortedPlayers, sortedEnemies);
-
-            List<Transform> validTargets = GetValidChainTargets(sortedTargets);
+                validTargets = GetValidChainTargets(sortedTargets);
+            }
 
             DrawChainLines(validTargets);
             DamageTargets(validTargets);
 
-            yield return StartCoroutine(HandleFastChargeEffects());
+            yield return StartCoroutine(HandleConsecutiveChargeEffects());
         }
 
         ResetEffects();
@@ -107,13 +114,15 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
     {
         return Vector3.Distance(affectedPlayer.transform.position, transform.position) <= distanceFromPlayer
             && !affectedPlayer.isPlayerDead
-            && PlayerCarryingSomethingConductive(affectedPlayer);
+            && affectedPlayer.isPlayerControlled
+            && PlayerCarryingSomethingConductive(affectedPlayer)
+            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out RaycastHit hit, distanceFromPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide);
     }
 
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)
     {
-        teslaAudioSource.PlayOneShot(teslaChargeSound);
-        yield return new WaitForSeconds(teslaChargeSound.length);
+        teslaAudioSource.PlayOneShot(teslaFirstBigChargeSound);
+        yield return new WaitForSeconds(teslaFirstBigChargeSound.length);
         teslaAudioSource.PlayOneShot(teslaZapSounds[UnityEngine.Random.Range(0, teslaZapSounds.Count - 1)]);
     }
 
@@ -192,25 +201,29 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
         {
             Transform currentTarget = sortedTargets[i];
             PlayerControllerB player = StartOfRound.Instance.allPlayerScripts.FirstOrDefault(p => p.transform == currentTarget);
+            EnemyAI enemy = RoundManager.Instance.SpawnedEnemies.FirstOrDefault(e => e.transform == currentTarget);
             if (player != null)
             {
-                player?.DamagePlayer(10, true, false, CauseOfDeath.Burning, 0, false, default);
+                player.DamagePlayer(playerZapDamageAmount, true, false, CauseOfDeath.Burning, 0, false, default);
+            }
+            else if (enemy != null)
+            {
+                enemy.HitEnemy(3, null, true, -1);
             }
             else
             {
-                EnemyAI enemy = RoundManager.Instance.SpawnedEnemies.FirstOrDefault(e => e.transform == currentTarget);
-                enemy?.HitEnemy(3, null, true, -1);
+                Plugin.ExtendedLogging("Shooting non player or non enemy target");
             }
         }
     }
 
-    private IEnumerator HandleFastChargeEffects()
+    private IEnumerator HandleConsecutiveChargeEffects()
     {
-        teslaAudioSource.PlayOneShot(teslaFastChargeSound);
+        teslaAudioSource.PlayOneShot(teslaConsecutiveChargeSound);
         vfx.SetFloat("SpawnRate", 20f);
-        yield return new WaitForSeconds(teslaFastChargeSound.length / 2);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 2);
         vfx.SetFloat("SpawnRate", 40);
-        yield return new WaitForSeconds(teslaFastChargeSound.length / 2);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 2);
     }
 
     private void ResetEffects()
@@ -276,7 +289,11 @@ public class TeslaShock : NetworkBehaviour // have a background audiosource cons
         foreach (var item in player.ItemSlots)
         {
             if (item == null || item.itemProperties == null) continue;
-            if (item.itemProperties.isConductiveMetal) return true;
+            if (item.itemProperties.isConductiveMetal)
+            {
+                chargedItemPlayerWasHolding = item;
+                return true;
+            }
         }
         return false;
     }

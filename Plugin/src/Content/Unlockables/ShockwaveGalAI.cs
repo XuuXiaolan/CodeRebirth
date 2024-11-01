@@ -351,6 +351,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public void Update()
     {
         SetIdleDefaultStateForEveryone();
+        InteractTriggersUpdate();
         if (galState == State.Inactive && ShockwaveCharger != null)
         {
             this.transform.position = ShockwaveCharger.transform.position;
@@ -359,7 +360,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
         if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
-        InteractTriggersUpdate();
         BoomboxUpdate();
         StoppingDistanceUpdate();
         IdleUpdate();

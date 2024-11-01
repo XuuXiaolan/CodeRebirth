@@ -8,6 +8,7 @@ public class CodeRebirthConfig
 {
     #region Enables/Disables
     public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigInsideBearTrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigLaserTurretEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFlashTurretEnabled { get; private set; }
@@ -141,7 +142,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
     #region Debug
-    public ConfigEntry<bool> ConfigDisableHalloweenFog { get; private set; }
     public ConfigEntry<bool> ConfigDebugMode { get; private set; }
     #endregion
     public CodeRebirthConfig(ConfigFile configFile)
@@ -153,10 +153,6 @@ public class CodeRebirthConfig
                                             "Debug Mode",
                                             false,
                                             "Whether debug mode is enabled.");
-        ConfigDisableHalloweenFog = configFile.Bind("Debug Options",
-                                            "Disable Halloween Fog",
-                                            false,
-                                            "Whether to disable the halloween fog.");
         #endregion
         #region Functional Microwave
         ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",
@@ -173,6 +169,10 @@ public class CodeRebirthConfig
                                             "Bear Trap | Enabled",
                                             true,
                                             "Whether the bear trap is enabled.");
+        ConfigInsideBearTrapEnabled = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Interior Spawn",
+                                            false,
+                                            "Whether the bear traps can spawn in the interior.");
         ConfigBearTrapAbundance = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Abundance",
                                             7,
