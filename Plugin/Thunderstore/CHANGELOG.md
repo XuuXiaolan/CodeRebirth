@@ -1,4 +1,9 @@
-# v0.7.4
+# v0.7.5
+
+- Made shockwave gal resync with clients on lobby reload/late joiners.
+- Fixed teslashock shocking everyone lol.
+
+## v0.7.4
 
 - Improving ACU as best as I can, doesn't target you if you're actively on the ground or have something blocking LoS.
 - Improved BearTrap spawning.

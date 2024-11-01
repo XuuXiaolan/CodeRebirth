@@ -42,6 +42,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public float DoorOpeningSpeed = 1f;
     public Transform DroneHead = null!;
 
+    private float sellingMovementSpeed = 6f;
     private bool isSellingItems = false;
     private bool boomboxPlaying = false;
     private float staringTimer = 0f;
@@ -104,23 +105,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         Happy = 3
     }
 
-    public void Start()
-    {
-        Plugin.Logger.LogInfo("Hi creator");
-        FlySource.Play();
-        galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
-        chargeCount = Plugin.ModConfig.ConfigShockwaveCharges.Value;
-        maxChargeCount = chargeCount;
-        Agent.enabled = false;
-        FlySource.volume = 0f;
-        foreach (string enemy in Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(','))
-        {
-            enemyTargetBlacklist.Add(enemy.Trim());
-        }
-        StartCoroutine(StartUpDelay());
-    }
-
-
     [ServerRpc(RequireOwnership = false)]
     public void RefillChargesServerRpc()
     {
@@ -133,9 +117,8 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         chargeCount = maxChargeCount;
     }
 
-    private IEnumerator StartUpDelay()
+    private void StartUpDelay()
     {
-        yield return new WaitForSeconds(0.5f);
         ShockwaveCharger shockwaveCharger = FindObjectsByType<ShockwaveCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID).OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();
         shockwaveCharger.shockwaveGalAI = this;
         this.ShockwaveCharger = shockwaveCharger;
@@ -143,6 +126,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
         ChestTrigger.onInteract.AddListener(OnChestInteract);
+        // Automatic activation if configured
+        if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value)
+        {
+            StartCoroutine(ShockwaveCharger.ActivateShockwaveGalAfterLand());
+        }
+
+        // Adding listener for interaction trigger
+        ShockwaveCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(ShockwaveCharger.OnActivateShockwaveGal);
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.onInteract.AddListener(GrabItemInteract);
@@ -336,9 +327,34 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         isInHangarShipRoom = StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position);
     }
 
+    private void SetIdleDefaultStateForEveryone()
+    {
+        if (ShockwaveCharger == null)
+        {
+            Plugin.Logger.LogInfo("Syncing for client");
+            FlySource.Play();
+            galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
+            chargeCount = Plugin.ModConfig.ConfigShockwaveCharges.Value;
+            maxChargeCount = chargeCount;
+            Agent.enabled = false;
+            FlySource.volume = 0f;
+            foreach (string enemy in Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(','))
+            {
+                enemyTargetBlacklist.Add(enemy.Trim());
+            }
+            StartUpDelay();
+        }
+    }
+
     public void Update()
     {
-        if (galState == State.Inactive) return;
+        SetIdleDefaultStateForEveryone();
+        if (galState == State.Inactive && ShockwaveCharger != null)
+        {
+            this.transform.position = ShockwaveCharger.transform.position;
+            this.transform.rotation = ShockwaveCharger.transform.rotation;
+            return;
+        }
         if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         InteractTriggersUpdate();
@@ -636,13 +652,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             {
                 Vector3 targetPosition = ShockwaveCharger.ChargeTransform.position;
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
             }
             else
             {
                 Vector3 targetPosition = StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f;
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
             }
             if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
             {
@@ -696,13 +712,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 {
                     Vector3 targetPosition = itemToGrab.transform.position;
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
                 }
                 else if (isInHangarShipRoom || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position))
                 {
                     Vector3 targetPosition = StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f;
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
                 }
             }
         }
@@ -734,13 +750,13 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 {
                     Vector3 targetPosition = (StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f + (-StartOfRound.Instance.shipDoorNode.right * 3f));
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
                 }
                 else
                 {
                     Vector3 targetPosition = depositItemsDesk.deskObjectsContainer.transform.position;
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, Agent.speed * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
                 }
             }
         }

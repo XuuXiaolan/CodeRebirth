@@ -26,47 +26,11 @@ public class ShockwaveCharger : NetworkBehaviour
 
             // Set the correct transform parent and move the instantiated object after it has been spawned
             shockwaveGalAI.transform.SetParent(this.transform, true);
-            
-            // Use ClientRpc to synchronize the position/rotation
-            SetPositionClientRpc(new NetworkObjectReference(netObj), ChargeTransform.position, ChargeTransform.rotation);
-
-            // Send a reference of the spawned object to all clients
-            SetGalForEveryoneClientRpc(new NetworkObjectReference(netObj));
         }
     }
 
-    [ClientRpc]
-    private void SetPositionClientRpc(NetworkObjectReference netObjRef, Vector3 position, Quaternion rotation)
-    {
-        if (netObjRef.TryGet(out NetworkObject networkObject))
-        {
-            // Set the position and rotation explicitly for the clients
-            networkObject.transform.position = position;
-            networkObject.transform.rotation = rotation;
-        }
-    }
 
-    [ClientRpc]
-    private void SetGalForEveryoneClientRpc(NetworkObjectReference netObjRef)
-    {
-        // Resolve the NetworkObjectReference to a GameObject
-        if (netObjRef.TryGet(out NetworkObject networkObject))
-        {
-            shockwaveGalAI = networkObject.gameObject.GetComponent<ShockwaveGalAI>();
-            shockwaveGalAI.ShockwaveCharger = this;
-
-            // Automatic activation if configured
-            if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value)
-            {
-                StartCoroutine(ActivateShockwaveGalAfterLand());
-            }
-
-            // Adding listener for interaction trigger
-            ActivateOrDeactivateTrigger.onInteract.AddListener(OnActivateShockwaveGal);
-        }
-    }
-
-    private IEnumerator ActivateShockwaveGalAfterLand()
+    public IEnumerator ActivateShockwaveGalAfterLand()
     {
         while (true)
         {
@@ -80,7 +44,7 @@ public class ShockwaveCharger : NetworkBehaviour
         }
     }
 
-    private void OnActivateShockwaveGal(PlayerControllerB playerInteracting)
+    public void OnActivateShockwaveGal(PlayerControllerB playerInteracting)
     {
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota && !Plugin.ModConfig.ConfigGalBypassQuota.Value)) return;
