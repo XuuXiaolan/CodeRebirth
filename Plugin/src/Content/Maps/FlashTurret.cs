@@ -66,6 +66,12 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
     public void OnNoiseDetected(Vector3 noisePosition, int noiseID)
     {
+        OnNoiseDetectedServerRpc(noisePosition, noiseID);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void OnNoiseDetectedServerRpc(Vector3 noisePosition, int noiseID)
+    {
         OnNoiseDetectedClientRpc(noisePosition, noiseID);
     }
 

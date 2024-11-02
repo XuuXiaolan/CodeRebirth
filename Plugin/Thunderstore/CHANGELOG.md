@@ -1,12 +1,15 @@
 # v0.7.6
 
 - Fixed endless growing of the plants by abusing going to company moon.
-- Reverted the halloween fog changes I made to go back to being compatible with v64~
+- Reverted the halloween fog changes because zeekerss made it less common.
 - Added gal compatibility with openbodycams.
 - Cleaned up the gal's hand triggers, they won't show unless she's activate and you're holding an item.
 - Added appropriate screenshakes.
 - Polished tesla shock to be a stronger hit that has a longer cooldown.
 - Added a config to enable bear traps inside the interior.
+- Industrial fan had frame rate issues.
+- Fixed flash turret not working for clients.
+- Gave ACUnit bullet a trail that explodes you less far.
 
 ## v0.7.5
 

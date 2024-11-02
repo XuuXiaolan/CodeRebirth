@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -6,6 +7,7 @@ namespace CodeRebirth.src.Content.Maps;
 public class IndustrialFanFrontCollider : NetworkBehaviour
 {
     public IndustrialFan industrialFan = null!;
+    private HashSet<PlayerControllerB> playersInRange = new HashSet<PlayerControllerB>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -15,19 +17,7 @@ public class IndustrialFanFrontCollider : NetworkBehaviour
             {
                 industrialFan.windAudioSource.volume = 0.8f;
             }
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
-        {
-            if (!industrialFan.IsObstructed(other.transform.position))
-            {
-                Vector3 pushDirection = (other.transform.position - industrialFan.fanTransform.position).normalized;
-                Vector3 force = pushDirection * industrialFan.pushForce;
-                player.externalForces += force;
-            }
+            playersInRange.Add(player);
         }
     }
 
@@ -36,6 +26,25 @@ public class IndustrialFanFrontCollider : NetworkBehaviour
         if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
             industrialFan.windAudioSource.volume = 0.2f;
+            playersInRange.Remove(player);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        foreach (PlayerControllerB player in playersInRange)
+        {
+            if (!industrialFan.IsObstructed(player.transform.position))
+            {
+                // Calculate the direction to push the player away from the fan
+                Vector3 pushDirection = (player.transform.position - industrialFan.fanTransform.position).normalized;
+
+                // Calculate the target position by moving the player in the push direction
+                Vector3 targetPosition = player.transform.position + (pushDirection * industrialFan.pushForce);
+
+                // Interpolate smoothly between the current position and the target position
+                player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, industrialFan.pushForce * Time.fixedDeltaTime);
+            }
         }
     }
 }

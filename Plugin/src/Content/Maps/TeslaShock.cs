@@ -90,13 +90,14 @@ public class TeslaShock : NetworkBehaviour
             List<Transform> validTargets = new();
             if (!ShouldContinueCharging(affectedPlayer))
             {
-                if (Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position) <= distanceFromPlayer)
+                float distanceFromItem = Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position);
+                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (transform.position - this.transform.position).normalized, out RaycastHit hit, distanceFromItem, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
                 {
                     validTargets.Add(startChainPoint);
                     validTargets.Add(chargedItemPlayerWasHolding.transform);
                     
                     DrawChainLines(validTargets);
-                    DamageTargets(validTargets);
+                    DamageTargets(validTargets, affectedPlayer);
 
                     yield return StartCoroutine(HandleConsecutiveChargeEffects());
                 }
@@ -110,7 +111,7 @@ public class TeslaShock : NetworkBehaviour
                 validTargets = GetValidChainTargets(sortedTargets);
             
                 DrawChainLines(validTargets);
-                DamageTargets(validTargets);
+                DamageTargets(validTargets, affectedPlayer);
 
                 yield return StartCoroutine(HandleConsecutiveChargeEffects());
             }
@@ -120,11 +121,12 @@ public class TeslaShock : NetworkBehaviour
 
     private bool ShouldContinueCharging(PlayerControllerB affectedPlayer)
     {
-        return Vector3.Distance(affectedPlayer.transform.position, transform.position) <= distanceFromPlayer
+        float distanceToPlayer = Vector3.Distance(affectedPlayer.transform.position, this.transform.position);
+        return distanceToPlayer <= distanceFromPlayer
             && !affectedPlayer.isPlayerDead
             && affectedPlayer.isPlayerControlled
             && PlayerCarryingSomethingConductive(affectedPlayer)
-            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out RaycastHit hit, distanceFromPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide);
+            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out RaycastHit hit, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide);
     }
 
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)
@@ -141,8 +143,6 @@ public class TeslaShock : NetworkBehaviour
         vfx.SetFloat("SpawnRate", 40);
         yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
         vfx.SetFloat("SpawnRate", 50);
-
-        teslaAudioSource.PlayOneShot(teslaZapSounds[UnityEngine.Random.Range(0, teslaZapSounds.Count - 1)]);
     }
 
     private List<PlayerControllerB> GetPlayersSortedByDistance(PlayerControllerB affectedPlayer)
@@ -205,6 +205,9 @@ public class TeslaShock : NetworkBehaviour
                 lineRenderer.positionCount = 2;
                 lineRenderer.SetPosition(0, sortedTargets[i].position);
                 lineRenderer.SetPosition(1, sortedTargets[i + 1].position);
+                teslaAudioSource.transform.position = sortedTargets[i + 1].position;
+                teslaAudioSource.PlayOneShot(teslaZapSounds[UnityEngine.Random.Range(0, teslaZapSounds.Count - 1)]);
+                //CRUtilities.CreateExplosion(sortedTargets[i + 1].position, true, 0, 0, 0, 0, CauseOfDeath.Blast, null, null);
                 lineRenderer.enabled = true;
                 StartCoroutine(DisableRendererAfterDelay(lineRenderer, 0.5f));
             }
@@ -214,7 +217,7 @@ public class TeslaShock : NetworkBehaviour
         activeLineRenderers = linesNeeded;
     }
 
-    private void DamageTargets(List<Transform> sortedTargets)
+    private void DamageTargets(List<Transform> sortedTargets, PlayerControllerB startingPlayer)
     {
         for (int i = 1; i < sortedTargets.Count; i++) // Skip the first point (startChainPoint)
         {
@@ -227,7 +230,7 @@ public class TeslaShock : NetworkBehaviour
             }
             else if (enemy != null)
             {
-                enemy.HitEnemy(3, null, true, -1);
+                enemy.HitEnemy(3, startingPlayer, true, -1);
             }
             else
             {
@@ -238,7 +241,11 @@ public class TeslaShock : NetworkBehaviour
 
     private IEnumerator HandleConsecutiveChargeEffects()
     {
+        teslaAudioSource.transform.position = transform.position;
         teslaAudioSource.PlayOneShot(teslaConsecutiveChargeSound);
+        teslaIdleAudioSource.clip = teslaSlowIdleSound;
+        teslaIdleAudioSource.Stop();
+        teslaIdleAudioSource.Play();
         vfx.SetFloat("SpawnRate", 40);
         yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
         vfx.SetFloat("SpawnRate", 30f);
@@ -254,9 +261,6 @@ public class TeslaShock : NetworkBehaviour
 
     private void ResetEffects()
     {
-        teslaIdleAudioSource.clip = teslaSlowIdleSound;
-        teslaIdleAudioSource.Stop();
-        teslaIdleAudioSource.Play();
         vfx.SetFloat("SpawnRate", 5f);
         DisableAllLineRenderers();
         activeLineRenderers = 0;
