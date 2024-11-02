@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
@@ -10,12 +11,13 @@ public class AirUnitProjectile : NetworkBehaviour
     private float damage;
     public float speed = 20f;
     public float lifetime = 5f;
+    public float bulletTrailForce = 50f;
     public float curveStrength = 2f; // Strength of curve adjustment
     public AudioSource playerHitSoundSource = null!;
     public AudioSource windSource = null!;
     public MeshFilter bulletMesh = null!;
 
-    private bool explodedOnTarget = false;
+    [NonSerialized] public bool explodedOnTarget = false;
     private float anglePointingTo = 0f;
     private PlayerControllerB playerToTarget = null!;
 

@@ -110,7 +110,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     {
         while (true)
         {
-            yield return new WaitUntil(() => StartOfRound.Instance.inShipPhase && !grewThisOrbit);
+            yield return new WaitUntil(() => StartOfRound.Instance.inShipPhase && !grewThisOrbit && RoundManager.Instance.currentLevel.levelID != 3);
             if (stage < Stage.Three)
             {
                 IncreaseStageServerRpc();

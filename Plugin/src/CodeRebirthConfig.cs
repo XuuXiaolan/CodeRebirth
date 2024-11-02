@@ -176,7 +176,7 @@ public class CodeRebirthConfig
         ConfigBearTrapAbundance = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Abundance",
                                             7,
-                                            "The number of bear traps to spawn per round.");
+                                            "The number of bear trap clusters to spawn per round (clusters means that theres 1 primary bear trap that spawns more (0 to 5) around it).");
         #endregion
         #region Laser Turret
         ConfigLaserTurretEnabled = configFile.Bind("LaserTurret Options",

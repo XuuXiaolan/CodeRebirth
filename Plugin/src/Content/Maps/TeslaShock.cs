@@ -88,9 +88,18 @@ public class TeslaShock : NetworkBehaviour
             Plugin.ExtendedLogging($"Charging {affectedPlayer.playerUsername}");
             yield return StartCoroutine(ChargePlayer(affectedPlayer));
             List<Transform> validTargets = new();
-            if (!ShouldContinueCharging(affectedPlayer) && Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position) <= distanceFromPlayer)
+            if (!ShouldContinueCharging(affectedPlayer))
             {
-                validTargets.Add(chargedItemPlayerWasHolding.transform);
+                if (Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position) <= distanceFromPlayer)
+                {
+                    validTargets.Add(startChainPoint);
+                    validTargets.Add(chargedItemPlayerWasHolding.transform);
+                    
+                    DrawChainLines(validTargets);
+                    DamageTargets(validTargets);
+
+                    yield return StartCoroutine(HandleConsecutiveChargeEffects());
+                }
             }
             else
             {
@@ -99,14 +108,13 @@ public class TeslaShock : NetworkBehaviour
                 List<Transform> sortedTargets = GetTargetsSortedByDistanceIncludingAffectedPlayer(affectedPlayer, sortedPlayers, sortedEnemies);
 
                 validTargets = GetValidChainTargets(sortedTargets);
+            
+                DrawChainLines(validTargets);
+                DamageTargets(validTargets);
+
+                yield return StartCoroutine(HandleConsecutiveChargeEffects());
             }
-
-            DrawChainLines(validTargets);
-            DamageTargets(validTargets);
-
-            yield return StartCoroutine(HandleConsecutiveChargeEffects());
         }
-
         ResetEffects();
     }
 
@@ -122,7 +130,18 @@ public class TeslaShock : NetworkBehaviour
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)
     {
         teslaAudioSource.PlayOneShot(teslaFirstBigChargeSound);
-        yield return new WaitForSeconds(teslaFirstBigChargeSound.length);
+        vfx.SetFloat("SpawnRate", 5);
+        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        vfx.SetFloat("SpawnRate", 10);
+        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        vfx.SetFloat("SpawnRate", 20);
+        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        vfx.SetFloat("SpawnRate", 30);
+        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        vfx.SetFloat("SpawnRate", 40);
+        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        vfx.SetFloat("SpawnRate", 50);
+
         teslaAudioSource.PlayOneShot(teslaZapSounds[UnityEngine.Random.Range(0, teslaZapSounds.Count - 1)]);
     }
 
@@ -220,10 +239,17 @@ public class TeslaShock : NetworkBehaviour
     private IEnumerator HandleConsecutiveChargeEffects()
     {
         teslaAudioSource.PlayOneShot(teslaConsecutiveChargeSound);
-        vfx.SetFloat("SpawnRate", 20f);
-        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 2);
         vfx.SetFloat("SpawnRate", 40);
-        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 2);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
+        vfx.SetFloat("SpawnRate", 30f);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
+        vfx.SetFloat("SpawnRate", 20);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
+        vfx.SetFloat("SpawnRate", 10f);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
+        vfx.SetFloat("SpawnRate", 0f);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
+        yield return new WaitForSeconds(5f);
     }
 
     private void ResetEffects()

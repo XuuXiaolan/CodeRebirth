@@ -1,5 +1,6 @@
 # v0.7.6
 
+- Fixed endless growing of the plants by abusing going to company moon.
 - Reverted the halloween fog changes I made to go back to being compatible with v64~
 - Added gal compatibility with openbodycams.
 - Cleaned up the gal's hand triggers, they won't show unless she's activate and you're holding an item.
