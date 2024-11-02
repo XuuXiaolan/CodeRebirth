@@ -31,7 +31,7 @@ public class TeslaShock : NetworkBehaviour
 
     private void Start()
     {
-        vfx.SetFloat("SpawnRate", 20f);
+        vfx.SetFloat("SpawnRate", 10f);
         teslaIdleAudioSource.clip = teslaSlowIdleSound;
         teslaIdleAudioSource.Stop();
         teslaIdleAudioSource.Play();
@@ -75,7 +75,7 @@ public class TeslaShock : NetworkBehaviour
         {
             Vector3 direction = (player.transform.position - this.transform.position).normalized;
             Vector3 force = direction * pushMultiplier;
-            player.DamagePlayer(playerDamageAmount, true, false, CauseOfDeath.Blast, 0, false, force);
+            player.DamagePlayer(50, true, false, CauseOfDeath.Blast, 0, false, force);
 
             teslaAudioSource.PlayOneShot(teslaTouchSound);
         }
@@ -132,17 +132,17 @@ public class TeslaShock : NetworkBehaviour
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)
     {
         teslaAudioSource.PlayOneShot(teslaFirstBigChargeSound);
-        vfx.SetFloat("SpawnRate", 5);
-        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
         vfx.SetFloat("SpawnRate", 10);
         yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
         vfx.SetFloat("SpawnRate", 20);
         yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
-        vfx.SetFloat("SpawnRate", 30);
-        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
         vfx.SetFloat("SpawnRate", 40);
         yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
-        vfx.SetFloat("SpawnRate", 50);
+        vfx.SetFloat("SpawnRate", 60);
+        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        vfx.SetFloat("SpawnRate", 80);
+        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        vfx.SetFloat("SpawnRate", 100);
     }
 
     private List<PlayerControllerB> GetPlayersSortedByDistance(PlayerControllerB affectedPlayer)
@@ -226,7 +226,7 @@ public class TeslaShock : NetworkBehaviour
             EnemyAI enemy = RoundManager.Instance.SpawnedEnemies.FirstOrDefault(e => e.transform == currentTarget);
             if (player != null)
             {
-                player.DamagePlayer(playerZapDamageAmount, true, false, CauseOfDeath.Burning, 0, false, default);
+                player.DamagePlayer(80, true, false, CauseOfDeath.Burning, 0, false, default);
             }
             else if (enemy != null)
             {
@@ -246,13 +246,13 @@ public class TeslaShock : NetworkBehaviour
         teslaIdleAudioSource.clip = teslaSlowIdleSound;
         teslaIdleAudioSource.Stop();
         teslaIdleAudioSource.Play();
+        vfx.SetFloat("SpawnRate", 80);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
+        vfx.SetFloat("SpawnRate", 60f);
+        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
         vfx.SetFloat("SpawnRate", 40);
         yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
-        vfx.SetFloat("SpawnRate", 30f);
-        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
-        vfx.SetFloat("SpawnRate", 20);
-        yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
-        vfx.SetFloat("SpawnRate", 10f);
+        vfx.SetFloat("SpawnRate", 20f);
         yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
         vfx.SetFloat("SpawnRate", 0f);
         yield return new WaitForSeconds(teslaConsecutiveChargeSound.length / 5);
@@ -261,7 +261,7 @@ public class TeslaShock : NetworkBehaviour
 
     private void ResetEffects()
     {
-        vfx.SetFloat("SpawnRate", 5f);
+        vfx.SetFloat("SpawnRate", 10f);
         DisableAllLineRenderers();
         activeLineRenderers = 0;
         targetPlayer = null;
