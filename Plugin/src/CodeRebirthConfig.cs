@@ -105,8 +105,8 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigPlantPotPrice { get; private set; }
     public ConfigEntry<int> ConfigShockwaveCharges { get; private set; }
     public ConfigEntry<string> ConfigShockwaveBotEnemyBlacklist { get; private set; }
-    public ConfigEntry<int> ConfigMetalHitNumber { get; private set; }
-    public ConfigEntry<float> ConfigWoodenOpenTimer { get; private set; }
+    public ConfigEntry<int> ConfigWoodenCrateHealth { get; private set; }
+    public ConfigEntry<float> ConfigMetalHoldTimer { get; private set; }
     public ConfigEntry<int> ConfigCrateNumberToSpawn { get; private set; }
     public ConfigEntry<string> ConfigWoodenCratesBlacklist { get; private set; }
     public ConfigEntry<string> ConfigMetalCratesBlacklist { get; private set; }
@@ -736,21 +736,21 @@ public class CodeRebirthConfig
                                             3,
                                             "Abundance of Metal Crates that spawn outside (between 0 and your number).");
         ConfigCrateNumberToSpawn = configFile.Bind("Crate Options",
-                                            "Crate | Metal Number To Spawn",
+                                            "Crate | Scrap Number To Spawn",
                                             3,
                                             "Number of items that spawn inside a crate (between 0 and your number).");
         ConfigWoodenCrateAbundance = configFile.Bind("Crate Options",
                                             "Crate | Wooden Abundance",
                                             3,
                                             "Abundance of Wooden Crates that spawn outside (between 0 and your number).");
-        ConfigMetalHitNumber = configFile.Bind("Crate Options",
-                                            "Crate | Metal Hit Number",
+        ConfigWoodenCrateHealth = configFile.Bind("Crate Options",
+                                            "Crate | Wooden Crate Health",
                                             4,
-                                            "Hits to open metal crate");
-        ConfigWoodenOpenTimer = configFile.Bind("Crate Options",
-                                            "Crate | Wooden Open Timer",
-                                            30f,
-                                            "Timer to open wooden crate");
+                                            "Hits to open Wooden crate");
+        ConfigMetalHoldTimer = configFile.Bind("Crate Options",
+                                            "Crate | Metal Hold Timer",
+                                            15f,
+                                            "Timer to open Metal crate");
         ConfigWoodenCratesBlacklist = configFile.Bind("Crate Options",
                                             "Crate | Wooden Blacklist",
                                             "",

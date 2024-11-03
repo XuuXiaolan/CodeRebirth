@@ -13,11 +13,6 @@ public class IndustrialFan : NetworkBehaviour
     public float suctionForce = 15f;
     public ParticleSystem redMistEffect = null!;
 
-    private void Start()
-    {
-        suctionForce = 6;
-    }
-
     private void Update()
     {
         if (!IsServer) return;

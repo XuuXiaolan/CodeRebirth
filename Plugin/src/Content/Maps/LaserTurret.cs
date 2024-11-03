@@ -159,7 +159,7 @@ public class LaserTurret : NetworkBehaviour // turretAudioSource with looping ro
         {
             averagePosition /= validRaycastCount;
             averagePosition.y = this.transform.position.y; // Keep the original height
-            this.transform.position = Vector3.Lerp(this.transform.position, averagePosition, 0.75f);
+            this.transform.position = Vector3.Lerp(this.transform.position, averagePosition, 0.8f);
             NavMesh.SamplePosition(this.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas);
             this.transform.position = hit.position;
         }

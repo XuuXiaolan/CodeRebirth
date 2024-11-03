@@ -14,12 +14,7 @@ public class Pickable : MonoBehaviour
 
 	public bool IsLocked { get; set; } = true;
 
-	private InteractTrigger trigger = null!;
-
-	private void Awake()
-	{
-		trigger = GetComponent<InteractTrigger>();
-	}
+	public InteractTrigger trigger = null!;
 
 	public void Unlock()
 	{
