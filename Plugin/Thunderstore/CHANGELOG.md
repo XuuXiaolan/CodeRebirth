@@ -1,4 +1,10 @@
-# v0.7.6
+# v0.7.8
+
+- Fixed really strong industrial fans.
+- Added metal safes, removed metal crates, changed how metal safes work from metal crates, same with wooden crates, changed how they work.
+  - Basically swapped features of metal crate and wooden crate.
+
+## v0.7.7
 
 - Fixed endless growing of the plants by abusing going to company moon.
 - Reverted the halloween fog changes because zeekerss made it less common.
@@ -10,6 +16,7 @@
 - Industrial fan had frame rate issues.
 - Fixed flash turret not working for clients.
 - Gave ACUnit bullet a trail that explodes you less far.
+- Fixed readme with bear trap and flash turret mix-up.
 
 ## v0.7.5
 
