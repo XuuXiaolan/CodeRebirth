@@ -1,4 +1,6 @@
 using System;
+using CodeRebirth.src.Content.Enemies;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -11,8 +13,10 @@ public class ChildEnemyAI : GrabbableObject
     public Animator animator = null!;
     public NetworkAnimator networkAnimator = null!;
 
+    [NonSerialized] public ParentEnemyAI parentEevee;
     [NonSerialized] public int health = 4;
     [NonSerialized] public bool mommyAlive = true;
+    public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 1.5f;
     private static readonly int isChildDeadAnimation = Animator.StringToHash("isChildDead");
     private static readonly int childGrabbedAnimation = Animator.StringToHash("childGrabbed");
     private static readonly int isWalkingAnimation = Animator.StringToHash("isWalking");
@@ -20,9 +24,18 @@ public class ChildEnemyAI : GrabbableObject
     private static readonly int isRunningAnimation = Animator.StringToHash("isRunning");
     private static readonly int isScaredAnimation = Animator.StringToHash("isScared");
     private static readonly int isSittingAnimation = Animator.StringToHash("isSitting");
+    private static readonly int isDancingAnimation = Animator.StringToHash("isDancing");
     private static readonly int doIdleGestureAnimation = Animator.StringToHash("doIdleGesture");
     private static readonly int doSitGesture1Animation = Animator.StringToHash("doSitGesture1");
     private static readonly int doSitGesture2Animation = Animator.StringToHash("doSitGesture2");
+    private State eeveeState = State.Spawning;
+    public enum State
+    {
+        Spawning,
+        Wandering,
+        FollowingPlayer,
+        Scared
+    }
 
     public override void Start()
     {
@@ -33,10 +46,53 @@ public class ChildEnemyAI : GrabbableObject
     {
         base.Update();
         if (!IsServer) return;
+
+        DoHostSideUpdate();
+    }
+
+    private void DoHostSideUpdate()
+    {
+        switch (eeveeState)
+        {
+            case State.Spawning:
+                break;
+            case State.Wandering:
+                DoWandering();
+                break;
+            case State.FollowingPlayer:
+                break;
+            case State.Scared:
+                break;
+        }
+    }
+
+    private void DoSpawning()
+    {
+
+    }
+
+    private void DoWandering()
+    {
+        
+    }
+
+    private void DoFollowingPlayer()
+    {
+        
+    }
+
+    private void DoScared()
+    {
+
+    }
+
+    private void DetectNearbyPlayer()
+    {
+
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DoBoolAnimationServerRpc(bool isChildDead, bool childGrabbed, bool isWalking, bool isGoofy, bool isRunning, bool isScared, bool isSitting)
+    public void DoBoolAnimationServerRpc(bool isChildDead, bool childGrabbed, bool isWalking, bool isGoofy, bool isRunning, bool isScared, bool isSitting, bool isDancing)
     {
         animator.SetBool(isChildDeadAnimation, isChildDead);
         animator.SetBool(childGrabbedAnimation, childGrabbed);
@@ -45,5 +101,6 @@ public class ChildEnemyAI : GrabbableObject
         animator.SetBool(isRunningAnimation, isRunning);
         animator.SetBool(isScaredAnimation, isScared);
         animator.SetBool(isSittingAnimation, isSitting);
+        animator.SetBool(isDancingAnimation, isDancing);
     }
 }

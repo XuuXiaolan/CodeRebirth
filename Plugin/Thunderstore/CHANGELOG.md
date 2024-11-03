@@ -1,10 +1,14 @@
 # v0.7.8
 
+- Fixed error where mod wouldn't load (whoopsie).
+
+## v0.7.7
+
 - Fixed really strong industrial fans.
 - Added metal safes, removed metal crates, changed how metal safes work from metal crates, same with wooden crates, changed how they work.
   - Basically swapped features of metal crate and wooden crate.
 
-## v0.7.7
+## v0.7.6
 
 - Fixed endless growing of the plants by abusing going to company moon.
 - Reverted the halloween fog changes because zeekerss made it less common.

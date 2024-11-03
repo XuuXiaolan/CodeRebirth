@@ -31,12 +31,12 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public Transform MouthTransform = null!;
 
     private float specialAttackTimer = 15f;
-    private bool closeToEevee = true;
-    private Transform spawnTransform = null!;
+    private bool CloseToEevee => Vector3.Distance(childEevee.transform.position, this.transform.position) <= 10;
+    [NonSerialized] public Transform spawnTransform = null!;
     private ChildEnemyAI childEevee = null!;
     private float timeSinceHittingLocalPlayer = 0f;
     private bool holdingChild = false;
-    private bool isSpawnInside = true;
+    [NonSerialized] public bool isSpawnInside = true;
     private System.Random enemyRandom = null!;
     private bool childCreated = false;
 
@@ -252,7 +252,6 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         if (isEnemyDead) return;
         specialAttackTimer -= Time.deltaTime;
         timeSinceHittingLocalPlayer -= Time.deltaTime;
-        closeToEevee = Vector3.Distance(childEevee.transform.position, this.transform.position) <= 10;     
     }
 
     public override void DoAIInterval()
@@ -276,7 +275,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     public void DoWandering()
     {
-        if (closeToEevee)
+        if (CloseToEevee)
         {
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
@@ -322,7 +321,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     public void DoChasingPlayer()
     {
-        // If the golden egg is held by the player, keep chasing the player until the egg is dropped
+        // If the eevee is held by the player, keep chasing the player until the eevee is dropped
         if (childEevee == null)
         {
             Plugin.ExtendedLogging("Child eevee turned null somehow");
