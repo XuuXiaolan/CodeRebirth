@@ -42,12 +42,13 @@ public class SmartAgentNavigator : NetworkBehaviour
     public void SetAllValues(bool isOutside)
     {
         this.isOutside = isOutside;
+        positionsOfPlayersBeforeTeleport.Clear();
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
             positionsOfPlayersBeforeTeleport.Add(player, player.transform.position);
         }
 
-        exitPoints = new();
+        exitPoints.Clear();
         foreach (var exit in FindObjectsByType<EntranceTeleport>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID))
         {
             exitPoints.Add(exit, [exit.entrancePoint, exit.exitPoint]);

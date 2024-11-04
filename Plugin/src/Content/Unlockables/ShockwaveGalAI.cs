@@ -118,10 +118,16 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private void StartUpDelay()
     {
         ShockwaveCharger shockwaveCharger = FindObjectsByType<ShockwaveCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID).OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();
+        if (shockwaveCharger == null)
+        {
+            if (IsServer) NetworkObject.Despawn();
+            Plugin.Logger.LogError($"ShockwaveCharger not found in scene. ShockwaveGalAI will not be functional.");
+            return;
+        }
         shockwaveCharger.shockwaveGalAI = this;
         this.ShockwaveCharger = shockwaveCharger;
-        transform.position = ShockwaveCharger.ChargeTransform.position;
-        transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+        transform.position = shockwaveCharger.ChargeTransform.position;
+        transform.rotation = shockwaveCharger.ChargeTransform.rotation;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
         ChestTrigger.onInteract.AddListener(OnChestInteract);
         // Automatic activation if configured
@@ -615,6 +621,12 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         if (itemsHeldList.Count < maxItemsToHold && itemsToSell.Count > 0)
         {
             GrabbableObject itemToGrab = itemsToSell[0];
+            if (itemToGrab == null)
+            {
+                Plugin.Logger.LogError("Item held/being targetted by gal became null somehow");
+                depositItemsDesk = null;
+                return;
+            }
             if (Vector3.Distance(transform.position, itemToGrab.transform.position) <= 1f)
             {
                 HandleGrabbingItemClientRpc(new NetworkObjectReference(itemToGrab.NetworkObject), itemsHeldList.Count);
@@ -664,7 +676,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             {                
                 if (isInHangarShipRoom)
                 {
-                    Vector3 targetPosition = (StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f + (-StartOfRound.Instance.shipDoorNode.right * 3f));
+                    Vector3 targetPosition = (StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f + (-StartOfRound.Instance.shipDoorNode.right * 6f));
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
                 }
@@ -727,6 +739,10 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private void SetItemAsGrabbableClientRpc(NetworkObjectReference networkObjectReference, bool grabbable)
     {
         GrabbableObject grabbableObject = ((GameObject)networkObjectReference).GetComponent<GrabbableObject>();
+        if (grabbableObject.playerHeldBy != null)
+        {
+            grabbableObject.playerHeldBy.DropAllHeldItems();
+        }
         grabbableObject.grabbable = grabbable;
     }
 
@@ -1066,9 +1082,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             Plugin.Logger.LogError("Item was null in HandleDroppingItem");
             return;
         }
-        item.parentObject = null;
         if (!isSellingItems)
         {
+            item.parentObject = null;
             if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
             {
                 if ((itemsHeldList.Count - 1) == 0)
@@ -1109,16 +1125,28 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
             }
         }
-        else
+        else if (depositItemsDesk != null)
         {
+            Vector3 vector = RoundManager.RandomPointInBounds(depositItemsDesk.triggerCollider.bounds);
+			vector.y = depositItemsDesk.triggerCollider.bounds.min.y;
+            if (Physics.Raycast(new Ray(vector + Vector3.up * 3f, Vector3.down), out RaycastHit raycastHit, 8f, 1048640, QueryTriggerInteraction.Collide))
+            {
+                vector = raycastHit.point;
+            }
+            vector.y += item.itemProperties.verticalOffset;
+			vector = depositItemsDesk.deskObjectsContainer.transform.InverseTransformPoint(vector);
+            depositItemsDesk.AddObjectToDeskServerRpc(item.gameObject.GetComponent<NetworkObject>());
             item.isInShipRoom = false;
             item.isInElevator = false;
             item.EnablePhysics(true);
             item.fallTime = 0f;
-            item.startFallingPosition = item.transform.InverseTransformPoint(dropPosition);
-            item.targetFloorPosition = item.transform.InverseTransformPoint(item.GetItemFloorPosition(dropPosition));
+            item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
+            item.targetFloorPosition = item.transform.parent.InverseTransformPoint(vector);
             item.floorYRot = -1;
             item.DiscardItemFromEnemy();
+            item.isHeldByEnemy = false;
+            item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
+            item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         }
         itemsHeldList.Remove(item);
         GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);

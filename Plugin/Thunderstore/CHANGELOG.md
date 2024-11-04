@@ -1,4 +1,15 @@
-# v0.7.9
+# v0.7.11
+
+- Fixed problems with hitting wooden crate.
+- Tried to fix problems with gal's selling features.
+- Fixed problem with gal erroring when employee gets fired.
+
+## v0.7.10
+
+- Fixed bug with gal for clients.
+- If crates are pulled up with fists, the player gets damaged a little bit.
+
+## v0.7.9
 
 - Fixed metal crate for clients.
 - Slightly updated metal crate textures.

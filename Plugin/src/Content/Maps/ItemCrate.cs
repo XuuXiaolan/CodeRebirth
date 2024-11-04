@@ -244,15 +244,22 @@ public class ItemCrate : CRHittable {
 	
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
 	{
-		if (opened || playerWhoHit == null || (playerWhoHit.currentlyHeldObjectServer == null && Plugin.ModConfig.ConfigShovelCratesOnly.Value)) return false; 
+		if (opened || playerWhoHit == null || (playerWhoHit.currentlyHeldObjectServer == null && Plugin.ModConfig.ConfigShovelCratesOnly.Value)) return false;
+		bool shouldDamage = false;
 		if (digProgress.Value < 1)
 		{
+			shouldDamage = true;
 			float progressChange = crateRandom.NextFloat(0.15f, 0.25f);
 			SetNewDigProgressServerRPC(digProgress.Value + progressChange);
 		}
 		else if (crateType == CrateType.Wooden)
 		{
+			shouldDamage = true;
 			DamageCrateServerRPC(1);
+		}
+		if (shouldDamage && force == 22)
+		{
+			playerWhoHit.DamagePlayer(5, true, true, CauseOfDeath.Crushing, 0, false, default);
 		}
 		return true;
 	}
