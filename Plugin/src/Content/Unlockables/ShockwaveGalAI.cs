@@ -1125,29 +1125,23 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
                 item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
             }
         }
-        else if (depositItemsDesk != null)
+        else if (dropPosition != default && depositItemsDesk != null)
         {
-            Vector3 vector = RoundManager.RandomPointInBounds(depositItemsDesk.triggerCollider.bounds);
-			vector.y = depositItemsDesk.triggerCollider.bounds.min.y;
-            if (Physics.Raycast(new Ray(vector + Vector3.up * 3f, Vector3.down), out RaycastHit raycastHit, 8f, 1048640, QueryTriggerInteraction.Collide))
-            {
-                vector = raycastHit.point;
-            }
-            vector.y += item.itemProperties.verticalOffset;
-			vector = depositItemsDesk.deskObjectsContainer.transform.InverseTransformPoint(vector);
-            depositItemsDesk.AddObjectToDeskServerRpc(item.gameObject.GetComponent<NetworkObject>());
+            Plugin.ExtendedLogging($"Dropping item in deposit: {item} at position: {dropPosition}");
+            item.parentObject = depositItemsDesk.deskObjectsContainer.transform;
             item.isInShipRoom = false;
             item.isInElevator = false;
             item.EnablePhysics(true);
             item.fallTime = 0f;
             item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
-            item.targetFloorPosition = item.transform.parent.InverseTransformPoint(vector);
+            item.targetFloorPosition = item.transform.parent.InverseTransformPoint(dropPosition);
             item.floorYRot = -1;
             item.DiscardItemFromEnemy();
+            item.grabbable = false;
             item.isHeldByEnemy = false;
             item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
-            item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         }
+
         itemsHeldList.Remove(item);
         GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
         if (itemsHeldList.Count == 0 && IsServer)

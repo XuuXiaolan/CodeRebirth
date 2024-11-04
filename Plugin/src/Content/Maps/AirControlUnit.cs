@@ -113,10 +113,8 @@ public class AirControlUnit : NetworkBehaviour
         // Check if player is within detection range and if there's line of sight
         if (distanceToPlayer <= detectionRange && angle <= maxAngle)
         {
-            Plugin.ExtendedLogging($"Angle: {angle} | Distance: {distanceToPlayer}");
             if (!Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
             {
-                Plugin.ExtendedLogging("No raycast hit. Locking onto player.");
                 lockedOntoAPlayer = true;
                 lastPlayerTargetted = playerControllerB;
                 if (ACUClickingAudioSource.clip == null)

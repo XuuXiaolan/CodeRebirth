@@ -33,18 +33,29 @@ public class AirUnitProjectile : NetworkBehaviour
         transform.localEulerAngles = new Vector3(anglePointingTo, currentEulerAngles.y, currentEulerAngles.z);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        Collider[] wallInWay = Physics.OverlapSphere(this.transform.position, 3f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Ignore);
+        if (wallInWay.Length != 0)
+        {
+            CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, CauseOfDeath.Blast, null, null);
+            playerHitSoundSource.Play();
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+            explodedOnTarget = true;
+            bulletMesh.mesh = null;
+            windSource.volume = 0f;
+        }
         if (!IsServer) return;
 
         // Move the projectile in its forward direction in world space
-        transform.position += transform.up * speed * Time.deltaTime;
+        transform.position += transform.up * speed * Time.fixedDeltaTime;
 
         // Curve towards target if the target player is within range
         if (!explodedOnTarget && playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= 30f)
         {
             Vector3 directionToTarget = (playerToTarget.transform.position - transform.position).normalized;
-            Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.deltaTime * (playerToTarget.playerSteamId == 76561198984467725 ? 10 : 1)).normalized;
+            Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.fixedDeltaTime * (playerToTarget.playerSteamId == 76561198984467725 ? 10 : 1)).normalized;
             transform.up = newDirection;
         }
         if (playerToTarget != null && explodedOnTarget)
