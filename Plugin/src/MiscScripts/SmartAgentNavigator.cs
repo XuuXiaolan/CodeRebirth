@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Patches;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -7,23 +9,67 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.MiscScripts;
-public class SmartAgentNavigator(NavMeshAgent agent) : NetworkBehaviour
+public class SmartAgentNavigator : NetworkBehaviour
 {
-    public UnityEvent<bool> OnUseEntranceTeleport;
+    [NonSerialized] public UnityEvent<bool> OnUseEntranceTeleport = new();
+    [NonSerialized] public UnityEvent<bool> OnEnableOrDisableAgent = new();
 
-    private readonly NavMeshAgent agent = agent;
+    private NavMeshAgent agent = null!;
+    private Vector3 pointToGo = Vector3.zero;
+    [NonSerialized] public bool isOutside = true;
+    private bool usingElevator = false;
+    private Coroutine? searchRoutine = null;
+    private Coroutine? searchCoroutine = null;
+    private bool isSearching = false;
+    private bool reachedDestination = false;
+    private MineshaftElevatorController? elevatorScript = null;
+    private EntranceTeleport? lastUsedEntranceTeleport = null;
+    [NonSerialized] public Dictionary<PlayerControllerB, Vector3> positionsOfPlayersBeforeTeleport = new();
+    private Dictionary<EntranceTeleport, Transform[]> exitPoints = new();
 
-    private Vector3 pointToGo;
-    private bool isOutside;
-    private bool usingElevator;
-    private Coroutine? searchRoutine;
-    private Coroutine? searchCoroutine;
-    private bool isSearching;
-    private bool reachedDestination;
-    private MineshaftElevatorController elevatorScript;
-    private EntranceTeleport lastUsedEntranceTeleport;
-    private Dictionary<PlayerControllerB, Vector3> positionsOfPlayersBeforeTeleport;
-    private Dictionary<EntranceTeleport, Vector3> exitPoints;
+    public void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        PlayerControllerBPatch.smartAgentNavigators.Add(this);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        PlayerControllerBPatch.smartAgentNavigators.Remove(this);
+    }
+
+    public void SetAllValues(bool isOutside)
+    {
+        this.isOutside = isOutside;
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        {
+            positionsOfPlayersBeforeTeleport.Add(player, player.transform.position);
+        }
+
+        exitPoints = new();
+        foreach (var exit in FindObjectsByType<EntranceTeleport>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID))
+        {
+            exitPoints.Add(exit, [exit.entrancePoint, exit.exitPoint]);
+            if (exit.isEntranceToBuilding)
+            {
+                lastUsedEntranceTeleport = exit;
+            }
+            if (!exit.FindExitPoint())
+            {
+                Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
+            }
+        }
+        elevatorScript = FindObjectOfType<MineshaftElevatorController>();
+    }
+
+    public void ResetAllValues()
+    {
+        exitPoints.Clear();
+        positionsOfPlayersBeforeTeleport.Clear();
+        lastUsedEntranceTeleport = null;
+        elevatorScript = null;
+    }
 
     public bool DoPathingToDestination(Vector3 destination, bool destinationIsInside, bool followingPlayer, PlayerControllerB? playerBeingFollowed)
     {
@@ -43,6 +89,7 @@ public class SmartAgentNavigator(NavMeshAgent agent) : NetworkBehaviour
             transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
             if (Vector3.Distance(transform.position, targetPosition) <= 1f)
             {
+                OnEnableOrDisableAgent.Invoke(true);
                 agent.enabled = true;
             }
             return true;
@@ -79,8 +126,9 @@ public class SmartAgentNavigator(NavMeshAgent agent) : NetworkBehaviour
         NavMeshPath path = new NavMeshPath();
         if ((!agent.CalculatePath(destination, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, destination) > 7f)
         {
-            agent.SetDestination(agent.pathEndPosition);
-            if (Vector3.Distance(agent.transform.position, agent.pathEndPosition) <= agent.stoppingDistance)
+            Vector3 lastValidPoint = FindClosestValidPoint();
+            agent.SetDestination(lastValidPoint);
+            if (Vector3.Distance(agent.transform.position, lastValidPoint) <= agent.stoppingDistance)
             {
                 agent.SetDestination(destination);
                 if (!agent.CalculatePath(destination, path) || path.status != NavMeshPathStatus.PathComplete)
@@ -90,6 +138,7 @@ public class SmartAgentNavigator(NavMeshAgent agent) : NetworkBehaviour
                     {
                         nearbyPoint = hit.position;
                         pointToGo = nearbyPoint;
+                        OnEnableOrDisableAgent.Invoke(false);
                         agent.enabled = false;
                     }
                 }
@@ -109,26 +158,46 @@ public class SmartAgentNavigator(NavMeshAgent agent) : NetworkBehaviour
         {
             Vector3 positionOfPlayerBeforeTeleport = positionsOfPlayersBeforeTeleport[playerBeingFollowed];
             // Find the closest entrance to the player
-            EntranceTeleport? closestExitPoint = null;
+            EntranceTeleport? closestExitPointToPlayer = null;
             foreach (var exitpoint in exitPoints.Keys)
             {
-                if (closestExitPoint == null || Vector3.Distance(positionOfPlayerBeforeTeleport, exitpoint.transform.position) < Vector3.Distance(positionOfPlayerBeforeTeleport, closestExitPoint.transform.position))
+                if (closestExitPointToPlayer == null || Vector3.Distance(positionOfPlayerBeforeTeleport, exitpoint.transform.position) < Vector3.Distance(positionOfPlayerBeforeTeleport, closestExitPointToPlayer.transform.position))
                 {
-                    closestExitPoint = exitpoint;
+                    closestExitPointToPlayer = exitpoint;
                 }
             }
-            if (closestExitPoint != null)
+            if (closestExitPointToPlayer != null)
             {
-                entranceTeleportToUse = closestExitPoint;
-                destination = closestExitPoint.entrancePoint.transform.position;
-                destinationAfterTeleport = closestExitPoint.exitPoint.transform.position;
+                entranceTeleportToUse = closestExitPointToPlayer;
+                destination = closestExitPointToPlayer.entrancePoint.transform.position;
+                destinationAfterTeleport = closestExitPointToPlayer.exitPoint.transform.position;
             }
         }
         else
         {
-            entranceTeleportToUse = lastUsedEntranceTeleport;
-            destination = !isOutside ? lastUsedEntranceTeleport.exitPoint.transform.position : lastUsedEntranceTeleport.entrancePoint.transform.position;
-            destinationAfterTeleport = !isOutside ? lastUsedEntranceTeleport.entrancePoint.transform.position : lastUsedEntranceTeleport.exitPoint.transform.position;
+            if (lastUsedEntranceTeleport != null)
+            {
+                entranceTeleportToUse = lastUsedEntranceTeleport;
+                destination = !isOutside ? lastUsedEntranceTeleport.exitPoint.transform.position : lastUsedEntranceTeleport.entrancePoint.transform.position;
+                destinationAfterTeleport = !isOutside ? lastUsedEntranceTeleport.entrancePoint.transform.position : lastUsedEntranceTeleport.exitPoint.transform.position;
+            }
+            else
+            {
+                EntranceTeleport? closestExitPointToScript = null;
+                foreach (var exitpoint in exitPoints.Keys)
+                {
+                    if (closestExitPointToScript == null || Vector3.Distance(this.transform.position, exitpoint.transform.position) < Vector3.Distance(this.transform.position, closestExitPointToScript.transform.position))
+                    {
+                        closestExitPointToScript = exitpoint;
+                    }
+                }
+                if (closestExitPointToScript != null)
+                {
+                    entranceTeleportToUse = closestExitPointToScript;
+                    destination = closestExitPointToScript.entrancePoint.transform.position;
+                    destinationAfterTeleport = closestExitPointToScript.exitPoint.transform.position;
+                }
+            }
         }
 
         if (elevatorScript != null && NeedsElevator(destination, entranceTeleportToUse, elevatorScript))
@@ -230,6 +299,7 @@ public class SmartAgentNavigator(NavMeshAgent agent) : NetworkBehaviour
     [ClientRpc]
     public void SetThingOutsideClientRpc(bool setOutside)
     {
+        isOutside = setOutside;
         OnUseEntranceTeleport.Invoke(setOutside);
     }
 

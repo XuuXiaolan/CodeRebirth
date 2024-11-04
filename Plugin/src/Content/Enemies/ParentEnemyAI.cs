@@ -224,25 +224,25 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     private void HandleStateWanderingChange()
     {
-        StartSearchRoutine(transform.position, 40, agent.areaMask);
+        smartAgentNavigator.StartSearchRoutine(transform.position, 40);
         agent.speed = WalkingSpeed;
         agent.acceleration = Acceleration; 
     }
 
     private void HandleStateGuardingChange()
     {
-        StopSearchRoutine();
+        smartAgentNavigator.StopSearchRoutine();
         GrabChild(childEevee, MouthTransform);
     }
 
     private void HandleStateChasingPlayerChange()
     {
-        StopSearchRoutine();
+        smartAgentNavigator.StopSearchRoutine();
     }
 
     private void HandleStateDeathChange()
     {
-        StopSearchRoutine();
+        smartAgentNavigator.StopSearchRoutine();
     }
     #endregion
 
@@ -284,7 +284,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
                 float distance = Vector3.Distance(player.gameplayCamera.transform.position, childEevee.transform.position);
                 if (distance <= 10 && dotProduct <= 0.5)
                 {
-                    DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
+                    smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
                     this.transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position);
                     // player is close and looking at eevee's direction.
                     if (distance < 5 && Vector3.Distance(player.transform.position, spawnTransform.position) <= 30)
@@ -308,14 +308,14 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     {
         if (!holdingChild && specialAttackTimer <= 0) // come to this state after hitting a player and making them drop the eevee, so eevee wont be held by anyone really
         {
-            DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
+            smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
             if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
             {
                 // do special attack
                 specialAttackTimer = 10f;
             }
         }
-        DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, true, null);
+        smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, true, null);
         
     }
 
@@ -329,11 +329,10 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             return;
         }
 
-        DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
         if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
         {
             // do attacks and animation stuff.
-            
         }
     }
 

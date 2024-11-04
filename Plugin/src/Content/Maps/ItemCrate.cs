@@ -123,8 +123,7 @@ public class ItemCrate : CRHittable {
 
 	public void OnInteract(PlayerControllerB player)
 	{
-		slowlyOpeningSFX?.Stop();
-		if (!IsServer || opened) return;
+		if (opened) return;
 		OpenCrateServerRPC();
 	}
 
@@ -212,6 +211,7 @@ public class ItemCrate : CRHittable {
 
 	public void OpenCrateLocally()
 	{
+		slowlyOpeningSFX?.Stop();
 		if (pickable != null && trigger != null)
 		{
 			pickable.IsLocked = false;

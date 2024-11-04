@@ -1,17 +1,19 @@
 using System;
 using CodeRebirth.src.Content.Enemies;
-using GameNetcodeStuff;
+using CodeRebirth.src.MiscScripts;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Items;
+[RequireComponent(typeof(SmartAgentNavigator))]
 public class ChildEnemyAI : GrabbableObject
 {
     public NavMeshAgent agent = null!;
     public Animator animator = null!;
     public NetworkAnimator networkAnimator = null!;
+    public SmartAgentNavigator smartAgentNavigator = null!;
 
     [NonSerialized] public ParentEnemyAI parentEevee;
     [NonSerialized] public int health = 4;
@@ -40,6 +42,7 @@ public class ChildEnemyAI : GrabbableObject
     public override void Start()
     {
         base.Start();
+        smartAgentNavigator.SetAllValues(parentEevee.isOutside);
     }
 
     public override void Update()

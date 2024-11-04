@@ -545,6 +545,7 @@ GameObject:
   - component: {fileID: 628193322848618802}
   - component: {fileID: 8144318307373106634}
   - component: {fileID: 5627089283044738071}
+  - component: {fileID: 8023955127254829699}
   m_Layer: 6
   m_Name: ShockwaveDrone
   m_TagString: InteractTrigger
@@ -745,6 +746,7 @@ MonoBehaviour:
   DroneEye: {fileID: 590808199739691480}
   renderersToHideIn:
   - {fileID: 9145391281392864541}
+  smartAgentNavigator: {fileID: 8023955127254829699}
 --- !u!114 &1288711711486736261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,6 +932,18 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &8023955127254829699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574516792246697467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2060832966963771189
 GameObject:
   m_ObjectHideFlags: 0

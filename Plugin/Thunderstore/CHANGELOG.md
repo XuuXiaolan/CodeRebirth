@@ -1,4 +1,11 @@
-# v0.7.8
+# v0.7.9
+
+- Fixed metal crate for clients.
+- Slightly updated metal crate textures.
+- Changed how I handle pathing for the gal and redwood giant, so let me know how those feel.
+- Disabled Cutiefly, SnailCat and Biomes in teh config by default.
+
+## v0.7.8
 
 - Fixed error where mod wouldn't load (whoopsie).
 

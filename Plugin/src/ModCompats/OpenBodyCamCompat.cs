@@ -5,12 +5,6 @@ using OpenBodyCams;
 
 namespace CodeRebirth.src.ModCompats;
 
-file class Gal : MonoBehaviour
-{
-    internal Transform headTransform;
-    internal Renderer[] headRenderers;
-}
-
 public static class OpenBodyCamCompatibilityChecker
 {
     public static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Zaggy1024.OpenBodyCams"); } }
@@ -20,10 +14,10 @@ public static class OpenBodyCamCompatibilityChecker
     {
         Plugin.ExtendedLogging("No way openbodycams is on?!");
         Plugin.OpenBodyCamsIsOn = true;
-        InitializeImpl();
+        //InitializeImpl();
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    /*[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static void InitializeImpl()
     {
         BodyCamComponent.BeforeTargetChangedToTransform += OverrideAttachmentPoint;
@@ -39,5 +33,5 @@ public static class OpenBodyCamCompatibilityChecker
             return true;
         }
         return false;
-    }
+    }*/
 }

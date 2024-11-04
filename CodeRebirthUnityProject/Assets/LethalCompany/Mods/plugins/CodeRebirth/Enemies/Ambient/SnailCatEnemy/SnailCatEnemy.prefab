@@ -581,6 +581,7 @@ GameObject:
   - component: {fileID: 6915483183140257759}
   - component: {fileID: 160975862138330719}
   - component: {fileID: 2645562290657506342}
+  - component: {fileID: 7143272965988592420}
   m_Layer: 19
   m_Name: SnailCatEnemy
   m_TagString: Enemy
@@ -709,7 +710,7 @@ MonoBehaviour:
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
+  smartAgentNavigator: {fileID: 7143272965988592420}
 --- !u!114 &8389260677907263061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -794,6 +795,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5102057, y: 1.8694813, z: 3.2212882}
   m_Center: {x: -0.25510287, y: -0.2786399, z: 0.4661765}
+--- !u!114 &7143272965988592420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984345086716998709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3276937039755652364
 GameObject:
   m_ObjectHideFlags: 0

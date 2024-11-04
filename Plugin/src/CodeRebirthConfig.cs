@@ -286,7 +286,7 @@ public class CodeRebirthConfig
                                             "Cost of the Seamine Tink.");*/
         #endregion
         #region Biomes
-        ConfigBiomesEnabled = configFile.Bind("Biome Options",
+        ConfigBiomesEnabled = configFile.Bind("Biome Options.",
                                             "Biomes | Enabled",
                                             false,
                                             "Whether Biomes are enabled.");
@@ -624,9 +624,9 @@ public class CodeRebirthConfig
         #region ModCompat
         #endregion
         #region CutieFly
-        ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",
+        ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options.",
                                             "CutieFly Enemy | Enabled",
-                                            true,
+                                            false,
                                             "Enables/Disables the CutieFly enemy");
         ConfigCutieFlySpawnWeights = configFile.Bind("CutieFly Options",
                                             "CutieFly Enemy | Spawn Weights",
@@ -649,9 +649,9 @@ public class CodeRebirthConfig
                                             ));
         #endregion
         #region SnailCat
-        ConfigSnailCatEnabled = configFile.Bind("SnailCat Options",
+        ConfigSnailCatEnabled = configFile.Bind("SnailCat Options.",
                                             "SnailCat Enemy | Enabled",
-                                            true,
+                                            false,
                                             "Enables/Disables the SnailCat enemy");
         ConfigSnailCatSpawnWeights = configFile.Bind("SnailCat Options",
                                             "SnailCat Enemy | Spawn Weights",

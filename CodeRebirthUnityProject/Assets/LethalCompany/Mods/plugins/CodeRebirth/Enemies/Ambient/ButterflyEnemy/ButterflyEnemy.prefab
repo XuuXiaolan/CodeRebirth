@@ -619,6 +619,7 @@ GameObject:
   - component: {fileID: 3441159902353900443}
   - component: {fileID: 2660043095881456530}
   - component: {fileID: 5140048232079319750}
+  - component: {fileID: 5510110637667820463}
   m_Layer: 19
   m_Name: ButterflyEnemy
   m_TagString: Enemy
@@ -807,7 +808,7 @@ MonoBehaviour:
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
+  smartAgentNavigator: {fileID: 5510110637667820463}
 --- !u!65 &5140048232079319750
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -829,6 +830,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.39502, y: 0.3753034, z: 0.8}
   m_Center: {x: -0.03603196, y: -0.16234833, z: 0}
+--- !u!114 &5510110637667820463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6280284854214770625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6487746265803145649
 GameObject:
   m_ObjectHideFlags: 0

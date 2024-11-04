@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -11,6 +12,7 @@ using UnityEngine.AI;
 using static CodeRebirth.src.Content.Unlockables.ShockwaveFaceController;
 
 namespace CodeRebirth.src.Content.Unlockables;
+[RequireComponent(typeof(SmartAgentNavigator))]
 public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 {
     public ShockwaveFaceController RobotFaceController = null!;
@@ -43,6 +45,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public Transform DroneHead = null!;
     public Transform DroneEye = null!;
     public Renderer[] renderersToHideIn = [];
+    public SmartAgentNavigator smartAgentNavigator = null!;
 
     private float sellingMovementSpeed = 6f;
     private bool isSellingItems = false;
@@ -53,7 +56,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private List<GrabbableObject> itemsToSell = new();
     private EnemyAI? targetEnemy;
     private bool flying = false;
-    private bool isInside = false;
     private int maxItemsToHold = 4;
     private State galState = State.Inactive;
     [NonSerialized] public PlayerControllerB? ownerPlayer;
@@ -67,17 +69,11 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     private float idleNeededTimer = 10f;
     private float idleTimer = 0f;
     private bool backFlipping = false;
-    private Vector3 pointToGo = Vector3.zero;
     private Coroutine? headPatCoroutine = null;
-    [NonSerialized] public Vector3 positionOfPlayerBeforeTeleport = Vector3.zero;
-    private EntranceTeleport lastUsedEntranceTeleport = null!;
-    private Dictionary<EntranceTeleport, Transform[]> exitPoints = new();
     private System.Random galRandom = new();
-    private MineshaftElevatorController? elevatorScript = null;
-    private DepositItemsDesk? depositItemsDesk = null;
     private bool onCompanyMoon = false;
-    private bool usingElevator = false;
     private bool isInHangarShipRoom = true;
+    private DepositItemsDesk? depositItemsDesk = null;
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem");
@@ -141,6 +137,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             trigger.onInteract.AddListener(GrabItemInteract);
         }
         StartCoroutine(CheckForNearbyEnemiesToOwner());
+
+        smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetShockwaveGalOutsideOrInside);
+        smartAgentNavigator.OnEnableOrDisableAgent.AddListener(ChangeAnimationForFlying);
     }
 
     private void DoGalRadarAction(bool enabled)
@@ -161,20 +160,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         ownerPlayer = owner;
         DoGalRadarAction(true);
         GalVoice.PlayOneShot(ActivateSound);
-        positionOfPlayerBeforeTeleport = owner.transform.position;
-        exitPoints = new();
-        foreach (var exit in FindObjectsByType<EntranceTeleport>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID))
-        {
-            if (!exit.FindExitPoint())
-            {
-                Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
-            }
-            exitPoints.Add(exit, [exit.entrancePoint, exit.exitPoint]);
-            if (exit.isEntranceToBuilding)
-            {
-                lastUsedEntranceTeleport = exit;
-            }
-        }
         int activePlayerCount = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerControlled).Count();
         if (activePlayerCount == 1 || Plugin.ModConfig.ConfigShockwaveHoldsFourItems.Value)
         {
@@ -184,7 +169,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             maxItemsToHold = 2;
         }
-        elevatorScript = FindObjectOfType<MineshaftElevatorController>();
+        smartAgentNavigator.SetAllValues(true);
         depositItemsDesk = FindObjectOfType<DepositItemsDesk>();
         onCompanyMoon = RoundManager.Instance.currentLevel.levelID == 3;
         ResetToChargerStation(State.Active, Emotion.OpenEye);
@@ -204,7 +189,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         ownerPlayer = null;
         DoGalRadarAction(false);
         GalVoice.PlayOneShot(DeactivateSound);
-        elevatorScript = null;
+        smartAgentNavigator.ResetAllValues();
         depositItemsDesk = null;
         onCompanyMoon = false;
         ResetToChargerStation(State.Inactive, Emotion.ClosedEye);
@@ -405,7 +390,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private bool GoToChargerAndDeactivate()
     {
-        DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false);
+        smartAgentNavigator.DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false, null);
         if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
             if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
@@ -443,30 +428,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    private bool DetermineIfNeedToDisableAgent(Vector3 destination)
+    public void ChangeAnimationForFlying(bool agentEnabled)
     {
-        NavMeshPath path = new NavMeshPath();
-        if ((!Agent.CalculatePath(destination, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, destination) > 7f)
-        {
-            Agent.SetDestination(Agent.pathEndPosition);
-            if (Vector3.Distance(Agent.transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance)
-            {
-                Agent.SetDestination(destination);
-                if (!Agent.CalculatePath(destination, path) || path.status != NavMeshPathStatus.PathComplete)
-                {
-                    Vector3 nearbyPoint;
-                    if (NavMesh.SamplePosition(destination, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-                    {
-                        nearbyPoint = hit.position;
-                        pointToGo = nearbyPoint;
-                        Animator.SetBool(attackModeAnimation, true);
-                        Agent.enabled = false;
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
+        Animator.SetBool(attackModeAnimation, !agentEnabled);
     }
 
     private void DoActive()
@@ -495,7 +459,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
 
-        if (DoPathingToDestination(ownerPlayer.transform.position, ownerPlayer.isInsideFactory, true))
+        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position, ownerPlayer.isInsideFactory, true, ownerPlayer))
         {
             return;
         }
@@ -522,56 +486,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    private bool DoPathingToDestination(Vector3 destination, bool destinationIsInside, bool followingPlayer)
-    {
-        if (!Agent.enabled)
-        {
-            Vector3 targetPosition = pointToGo;
-            float moveSpeed = 6f;  // Increased speed for a faster approach
-            float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
-            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-
-            // Calculate the new position in an arcing motion
-            float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
-            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveSpeed);
-            newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
-
-            transform.position = newPosition;
-            transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
-            if (Vector3.Distance(transform.position, targetPosition) <= 1f)
-            {
-                Animator.SetBool(attackModeAnimation, false);
-                Agent.enabled = true;
-            }
-            return true;
-        }
-
-        if ((!isInside && destinationIsInside) || (isInside && !destinationIsInside))
-        {
-            GoThroughEntrance(followingPlayer);
-            return true;
-        }
-
-        if (isInside && elevatorScript != null && !usingElevator)
-        {
-            bool galCloserToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
-            bool destinationCloserToTop = Vector3.Distance(destination, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(destination, elevatorScript.elevatorBottomPoint.position);
-            if (galCloserToTop != destinationCloserToTop)
-            {
-                UseTheElevator(elevatorScript);
-                return true;
-            }
-        }
-        bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(destination, elevatorScript.elevatorInsidePoint.position) < 3f;
-        if (!usingElevator && !playerIsInElevator && DetermineIfNeedToDisableAgent(destination))
-        {
-            return true;
-        }
-        if (!usingElevator) Agent.SetDestination(destination);
-        if (usingElevator && elevatorScript != null) Agent.Warp(elevatorScript.elevatorInsidePoint.position);
-        return false;
-    }
-
     private void DoDeliveringItems()
     {
         if (itemsHeldList.Count == 0)
@@ -586,7 +500,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             }
         }
 
-        DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false);
+        smartAgentNavigator.DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false, null);
         if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
             if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
@@ -623,7 +537,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
         if (!currentlyAttacking)
         {
-            DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside, true);
+            smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside, true, ownerPlayer);
         }
         if (Vector3.Distance(transform.position, targetEnemy.transform.position) <= (Agent.stoppingDistance + 5f) || currentlyAttacking)
         {
@@ -852,7 +766,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         {
             yield return delay;
 
-            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || isInside && !ownerPlayer.isInsideFactory || !isInside && ownerPlayer.isInsideFactory) continue;
+            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || !smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory || smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory) continue;
 
             // Use OverlapSphereNonAlloc to reduce garbage collection
             Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
@@ -1214,129 +1128,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    public void GoThroughEntrance(bool followingPlayer)
-    {
-        Vector3 destination = Vector3.zero;
-        Vector3 destinationAfterTeleport = Vector3.zero;
-        EntranceTeleport entranceTeleportToUse = null!;
-
-        if (followingPlayer)
-        {
-            // Find the closest entrance to the player
-            EntranceTeleport? closestExitPoint = null;
-            foreach (var exitpoint in exitPoints.Keys)
-            {
-                if (closestExitPoint == null || Vector3.Distance(positionOfPlayerBeforeTeleport, exitpoint.transform.position) < Vector3.Distance(positionOfPlayerBeforeTeleport, closestExitPoint.transform.position))
-                {
-                    closestExitPoint = exitpoint;
-                }
-            }
-            if (closestExitPoint != null)
-            {
-                entranceTeleportToUse = closestExitPoint;
-                destination = closestExitPoint.entrancePoint.transform.position;
-                destinationAfterTeleport = closestExitPoint.exitPoint.transform.position;
-            }
-        }
-        else
-        {
-            entranceTeleportToUse = lastUsedEntranceTeleport;
-            destination = isInside ? lastUsedEntranceTeleport.exitPoint.transform.position : lastUsedEntranceTeleport.entrancePoint.transform.position;
-            destinationAfterTeleport = isInside ? lastUsedEntranceTeleport.entrancePoint.transform.position : lastUsedEntranceTeleport.exitPoint.transform.position;
-        }
-
-        if (elevatorScript != null && NeedsElevator(destination, entranceTeleportToUse, elevatorScript))
-        {
-            UseTheElevator(elevatorScript);
-            return;
-        }
-
-        if (Vector3.Distance(transform.position, destination) <= Agent.stoppingDistance)
-        {
-            lastUsedEntranceTeleport = entranceTeleportToUse;
-            Agent.Warp(destinationAfterTeleport);
-            EnablePhysicsClientRpc(false);
-            SetShockwaveGalOutsideOrInsideServerRpc();
-        }
-        else
-        {
-            Agent.SetDestination(destination);
-        }
-    }
-
-    private bool NeedsElevator(Vector3 destination, EntranceTeleport entranceTeleportToUse, MineshaftElevatorController elevatorScript)
-    {
-        // Determine if the elevator is needed based on destination proximity and current position
-        bool nearMainEntrance = Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < Vector3.Distance(destination, entranceTeleportToUse.transform.position);
-        bool closerToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
-        return isInside && ((nearMainEntrance && !closerToTop) || (!nearMainEntrance && closerToTop));
-    }
-
-    private void UseTheElevator(MineshaftElevatorController elevatorScript)
-    {
-        // Determine if we need to go up or down based on current position and destination
-        bool goUp = Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position);
-        // Check if the elevator is finished moving
-        if (elevatorScript.elevatorFinishedMoving)
-        {
-            if (elevatorScript.elevatorDoorOpen)
-            {
-                // If elevator is not called yet and is at the wrong level, call it
-                if (NeedToCallElevator(elevatorScript, goUp))
-                {
-                    elevatorScript.CallElevatorOnServer(goUp);
-                    MoveToWaitingPoint(elevatorScript, goUp);
-                    return;
-                }
-                // Move to the inside point of the elevator if not already there
-                if (Vector3.Distance(transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
-                {
-                    if (physicsEnabled) EnablePhysicsClientRpc(false);
-                    Agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
-                }
-                else if (!usingElevator)
-                {
-                    // Press the button to start moving the elevator
-                    elevatorScript.PressElevatorButtonOnServer(true);
-                    StartCoroutine(StopUsingElevator(elevatorScript));
-                }
-            }
-        }
-        else
-        {
-            MoveToWaitingPoint(elevatorScript, goUp);
-        }
-    }
-
-    private IEnumerator StopUsingElevator(MineshaftElevatorController elevatorScript)
-    {
-        usingElevator = true;
-        yield return new WaitForSeconds(2f);
-        yield return new WaitUntil(() => elevatorScript.elevatorDoorOpen && elevatorScript.elevatorFinishedMoving);
-        Plugin.ExtendedLogging("Stopped using elevator");
-        usingElevator = false;
-    }
-
-    private bool NeedToCallElevator(MineshaftElevatorController elevatorScript, bool needToGoUp)
-    {
-        return !elevatorScript.elevatorCalled && ((!elevatorScript.elevatorIsAtBottom && needToGoUp) || (elevatorScript.elevatorIsAtBottom && !needToGoUp));
-    }
-
-    private void MoveToWaitingPoint(MineshaftElevatorController elevatorScript, bool needToGoUp)
-    {
-        // Elevator is currently moving
-        // Move to the appropriate waiting point (bottom or top)
-        if (Vector3.Distance(transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
-        {
-            Agent.SetDestination(needToGoUp ? elevatorScript.elevatorBottomPoint.position : elevatorScript.elevatorTopPoint.position);
-        }
-        else
-        {
-            // Wait at the inside point for the elevator to arrive
-            Agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
-        }
-    }
-
 	public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)
 	{
         if (galState == State.Inactive) return;
@@ -1347,22 +1138,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 		}
 	}
 
-    [ServerRpc(RequireOwnership = false)]
-    private void SetShockwaveGalOutsideOrInsideServerRpc()
+    public void SetShockwaveGalOutsideOrInside(bool setOutside)
     {
-        SetShockwaveGalOutsideOrInsideClientRpc();
-    }
-
-    [ClientRpc]
-    public void SetShockwaveGalOutsideOrInsideClientRpc()
-    {
+        if (physicsEnabled) EnablePhysics(false);
         for (int i = 0; i < itemsHeldList.Count; i++)
         {
-            itemsHeldList[i].isInFactory = !isInside;
+            itemsHeldList[i].isInFactory = setOutside;
             itemsHeldList[i].transform.position = itemsHeldTransforms[i].position;
             StartCoroutine(SetItemPhysics(itemsHeldList[i]));
         }
-        isInside = !isInside;
     }
 
     private IEnumerator SetItemPhysics(GrabbableObject grabbableObject)
