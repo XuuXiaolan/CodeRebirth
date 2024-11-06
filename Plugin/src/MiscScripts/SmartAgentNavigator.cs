@@ -29,7 +29,7 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     public void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = gameObject.GetComponent<NavMeshAgent>();
         PlayerControllerBPatch.smartAgentNavigators.Add(this);
     }
 
@@ -112,11 +112,13 @@ public class SmartAgentNavigator : NetworkBehaviour
                 return true;
             }
         }
+
         bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(destination, elevatorScript.elevatorInsidePoint.position) < 3f;
         if (!usingElevator && !playerIsInElevator && DetermineIfNeedToDisableAgent(destination))
         {
             return true;
         }
+
         if (!usingElevator) agent.SetDestination(destination);
         if (usingElevator && elevatorScript != null) agent.Warp(elevatorScript.elevatorInsidePoint.position);
         return false;
@@ -419,17 +421,21 @@ public class SmartAgentNavigator : NetworkBehaviour
         while (isSearching)
         {
             Vector3 positionToTravel = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, radius, default);
+            Plugin.ExtendedLogging($"Search: {positionToTravel}");
             reachedDestination = false;
+
             while (!reachedDestination && isSearching)
             {
                 agent.SetDestination(positionToTravel);
                 yield return new WaitForSeconds(3f);
+
                 if (Vector3.Distance(this.transform.position, positionToTravel) <= 10f || agent.velocity.magnitude <= 1f)
                 {
                     reachedDestination = true;
                 }
             }
         }
+
         searchRoutine = null; // Clear the coroutine reference when it finishes
     }
 }

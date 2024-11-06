@@ -1,4 +1,17 @@
-# v0.7.11
+# v0.7.12
+
+- Added config for safe item value multiplier, default is 1.4f value;
+- Turned all flora into static shadow casters, should help with performance a bit.
+- Reduced fan push force into 3 from 4 to help with not clipping through walls.
+- Beartraps are hopefully more synced up.
+- Redwood giant no longer lingers forcefully around the ship.
+- Fixed problems with metal crate.
+- I left a present for if a player enters a metal crate.
+- Fixed problems with hitting wooden crate part 2 electric bogaloo.
+- Fixed ACU being an explosive mess.
+- Added whitelist option for wooden crates, auto generates if blacklist field is empty and whitelist is toggled on.
+
+## v0.7.11
 
 - Fixed problems with hitting wooden crate.
 - Tried to fix problems with gal's selling features.

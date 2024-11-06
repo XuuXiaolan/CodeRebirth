@@ -349,6 +349,7 @@ GameObject:
   - component: {fileID: 3949561938320951568}
   - component: {fileID: 1114589694254424889}
   - component: {fileID: 2851295282374575768}
+  - component: {fileID: 6841124065061655706}
   m_Layer: 9
   m_Name: Metal Crate
   m_TagString: InteractTrigger
@@ -632,6 +633,27 @@ MonoBehaviour:
   originalPosition: {x: 0, y: 0, z: 0}
   crateType: 1
   mainCollider: {fileID: 4147470104225953683}
+--- !u!135 &6841124065061655706
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083264772084459009}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 1.3, z: -0.3}
 --- !u!1 &2725574471044135142
 GameObject:
   m_ObjectHideFlags: 0

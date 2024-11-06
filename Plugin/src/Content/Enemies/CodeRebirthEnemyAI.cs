@@ -11,6 +11,7 @@ namespace CodeRebirth.src.Content.Enemies;
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
     [NonSerialized] public EnemyAI? targetEnemy;
+
     public SmartAgentNavigator smartAgentNavigator = null!;
 
     public override void Start()

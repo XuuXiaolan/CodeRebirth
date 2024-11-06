@@ -35,8 +35,8 @@ public class AirUnitProjectile : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        Collider[] wallInWay = Physics.OverlapSphere(this.transform.position, 3f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Ignore);
-        if (wallInWay.Length != 0)
+        Collider[] wallInWay = Physics.OverlapSphere(this.transform.position, 2f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Ignore);
+        if (!explodedOnTarget && wallInWay.Length != 0)
         {
             CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, CauseOfDeath.Blast, null, null);
             playerHitSoundSource.Play();

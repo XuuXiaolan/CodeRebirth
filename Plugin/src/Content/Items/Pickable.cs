@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Items;
@@ -19,7 +20,21 @@ public class Pickable : MonoBehaviour
 	public void Unlock()
 	{
 		if (!IsLocked) return;
-        
+
+        UnlockStuffServerRpc();
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	public void UnlockStuffServerRpc()
+	{
+		UnlockStuffClientRpc();
+	}
+
+	[ClientRpc]
+	public void UnlockStuffClientRpc()
+	{
+		if (!IsLocked) return;
+
 		unlockSFX?.Play();
         
 		onUnlock.Invoke();

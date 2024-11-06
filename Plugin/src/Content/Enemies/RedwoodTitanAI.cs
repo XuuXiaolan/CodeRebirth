@@ -117,9 +117,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             skinnedMeshRenderers[0].materials = AlbinoMaterials;
         }
 
-        currentSearch.searchWidth *= 10f;
-        currentSearch.searchPrecision *= 0.25f;
-
         walkingSpeed = Plugin.ModConfig.ConfigRedwoodSpeed.Value;
         distanceFromShip = Plugin.ModConfig.ConfigRedwoodShipPadding.Value;
         seeableDistance = Plugin.ModConfig.ConfigRedwoodEyesight.Value;

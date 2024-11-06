@@ -4,8 +4,10 @@ using UnityEngine;
 using WeatherRegistry;
 
 namespace CodeRebirth.src.Content.Weathers;
-public class WeatherHandler : ContentHandler<WeatherHandler> {
-    public class MeteoriteAssets(string bundleName) : AssetBundleLoader<MeteoriteAssets>(bundleName) {
+public class WeatherHandler : ContentHandler<WeatherHandler>
+{
+    public class MeteoriteAssets(string bundleName) : AssetBundleLoader<MeteoriteAssets>(bundleName)
+    {
         [LoadFromBundle("BetterCrater.prefab")]
         public GameObject CraterPrefab { get; private set; } = null!;
 
@@ -34,7 +36,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         public GameObject MeteorPermanentEffectPrefab { get; private set; } = null!;
     }
 
-    public class TornadoAssets(string bundleName) : AssetBundleLoader<TornadoAssets>(bundleName) {
+    public class TornadoAssets(string bundleName) : AssetBundleLoader<TornadoAssets>(bundleName)
+    {
         [LoadFromBundle("TornadoObj.asset")]
         public EnemyType TornadoObj { get; private set; } = null!;
         
@@ -51,7 +54,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         public TerminalKeyword TornadoTerminalKeyword { get; private set; } = null!;
     }
 
-    public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName) { 
+    public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName)
+    { 
         [LoadFromBundle("GodRayWeather.prefab")]
         public GameObject GodRayPermanentEffectPrefab { get; private set; } = null!;
     }
@@ -63,24 +67,28 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
     public Weather TornadoesWeather { get; private set; } = null!;
     public Weather GodRaysWeather { get; private set; } = null!;
 
-    public WeatherHandler() {
+    public WeatherHandler()
+    {
         if (Plugin.ModConfig.ConfigMeteorShowerEnabled.Value) RegisterMeteorShower();
         if (Plugin.ModConfig.ConfigTornadosEnabled.Value) RegisterTornadoWeather();
         if (false) RegisterGodRaysWeather();
     }
 
-    private void RegisterGodRaysWeather() {
+    private void RegisterGodRaysWeather()
+    {
         GodRays = new GodRaysAssets("godrayassets");
                 
         GameObject effectPermanentObject = GameObject.Instantiate(GodRays.GodRayPermanentEffectPrefab);
         effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
         GameObject.DontDestroyOnLoad(effectPermanentObject);
 
-        ImprovedWeatherEffect godRayEffect = new(null, effectPermanentObject) {
+        ImprovedWeatherEffect godRayEffect = new(null, effectPermanentObject)
+        {
             SunAnimatorBool = "",
         };
 
-        GodRaysWeather = new Weather("When Day Breaks", godRayEffect) {
+        GodRaysWeather = new Weather("When Day Breaks", godRayEffect)
+        {
             DefaultWeight = 50,
             DefaultLevelFilters = ["Gordion"],
             LevelFilteringOption = FilteringOption.Exclude,
@@ -89,7 +97,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         WeatherManager.RegisterWeather(GodRaysWeather);
     }
 
-    private void RegisterTornadoWeather() {
+    private void RegisterTornadoWeather()
+    {
         Tornado = new TornadoAssets("tornadoassets");
         GameObject effectObject = GameObject.Instantiate(Tornado.TornadoEffectPrefab);
         effectObject.hideFlags = HideFlags.HideAndDontSave;
@@ -99,11 +108,13 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
         GameObject.DontDestroyOnLoad(effectPermanentObject);
 
-        ImprovedWeatherEffect tornadoEffect = new(effectObject, effectPermanentObject) {
+        ImprovedWeatherEffect tornadoEffect = new(effectObject, effectPermanentObject)
+        {
             SunAnimatorBool = "overcast",
         };
 
-        TornadoesWeather = new Weather("Windy", tornadoEffect) {
+        TornadoesWeather = new Weather("Windy", tornadoEffect)
+        {
             DefaultWeight = 50,
             DefaultLevelFilters = new string[] { "Gordion" },
             LevelFilteringOption = FilteringOption.Exclude,
@@ -113,7 +124,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         WeatherManager.RegisterWeather(TornadoesWeather);
     }
 
-    private void RegisterMeteorShower() {
+    private void RegisterMeteorShower()
+    {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
         
         int[] sScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigSapphireWorth.Value);
@@ -136,11 +148,13 @@ public class WeatherHandler : ContentHandler<WeatherHandler> {
         effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
         GameObject.DontDestroyOnLoad(effectPermanentObject);
 
-        ImprovedWeatherEffect meteorEffect = new(effectObject, effectPermanentObject) {
+        ImprovedWeatherEffect meteorEffect = new(effectObject, effectPermanentObject)
+        {
             SunAnimatorBool = "eclipse",
         };
 
-        MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect) {
+        MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect)
+        {
             DefaultWeight = 50,
             DefaultLevelFilters = new string[] { "Gordion" },
             LevelFilteringOption = FilteringOption.Exclude,

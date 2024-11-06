@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
@@ -8,6 +8,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using Random = System.Random;
+using System;
 
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable {
@@ -24,8 +25,8 @@ public class ItemCrate : CRHittable {
 	public Pickable? pickable = null!;
 	public Animator animator = null!;
 	private bool opened = false;
-	private NetworkVariable<float> digProgress = new(writePerm: NetworkVariableWritePermission.Owner);
-	public NetworkVariable<int> health = new(4);
+	private float digProgress = 0;
+	public int health = 4;
 	public Vector3 originalPosition;
 	public Random crateRandom = new();
 	public static List<Item> ShopItemList = new();
@@ -37,21 +38,23 @@ public class ItemCrate : CRHittable {
 	public CrateType crateType;
 	public Collider mainCollider = null!;
 	private bool openable = false;
-	
-	private void Start()
+
+    private void Start()
 	{
-		health = new(Plugin.ModConfig.ConfigWoodenCrateHealth.Value);
+		crateRandom = new Random(StartOfRound.Instance.randomMapSeed);
+		health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
+		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
+
+		originalPosition = transform.position;
+		UpdateDigPosition(0, 0);
+
+		Plugin.ExtendedLogging("ItemCrate successfully spawned with health: " + health);
 		if (crateType == CrateType.Metal && trigger != null)
 		{
 			trigger.timeToHold = Plugin.ModConfig.ConfigMetalHoldTimer.Value;
 			animator.SetFloat("openingSpeed", 11.875f/trigger.timeToHold);
 			Plugin.ExtendedLogging("Crate time to hold: " + trigger.timeToHold);
 		}
-
-		digProgress.OnValueChanged += UpdateDigPosition;
-
-		originalPosition = transform.position;
-		UpdateDigPosition(0, 0);
 
 		if (crateType == CrateType.Metal && ShopItemList.Count == 0)
 		{
@@ -67,21 +70,9 @@ public class ItemCrate : CRHittable {
 		}
 	}
 
-	public override void OnNetworkSpawn()
-	{
-		if (IsOwner)
-		{
-			digProgress.Value = crateRandom.NextFloat(0.01f, 0.1f);
-		}
-	}
-
 	private void UpdateDigPosition(float old, float newValue)
 	{
-		if (IsOwner)
-		{
-			transform.position = originalPosition + (transform.up * newValue * 0.5f);
-		}
-
+		transform.position = originalPosition + (transform.up * newValue * 0.5f);
 		Plugin.ExtendedLogging($"ItemCrate was hit! New digProgress: {newValue}");
 	}
 
@@ -98,8 +89,8 @@ public class ItemCrate : CRHittable {
 		}
 		if (trigger != null && pickable != null)
 		{
-			trigger.interactable = digProgress.Value >= 1 && openable && !opened;
-			pickable.enabled = digProgress.Value >= 1 && !openable && !opened;
+			trigger.interactable = digProgress >= 1 && openable && !opened;
+			pickable.enabled = digProgress >= 1 && !openable && !opened;
 		}
 	}
 
@@ -124,7 +115,7 @@ public class ItemCrate : CRHittable {
 	public void OnInteract(PlayerControllerB player)
 	{
 		if (opened) return;
-		OpenCrateServerRPC();
+		OpenCrateServerRpc();
 	}
 
 	public void OnInteractCancel()
@@ -152,7 +143,7 @@ public class ItemCrate : CRHittable {
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	public void OpenCrateServerRPC()
+	public void OpenCrateServerRpc()
 	{
 		OpenCrate();
 	}
@@ -167,7 +158,7 @@ public class ItemCrate : CRHittable {
 			switch(crateType)
 			{
 				case CrateType.Metal:
-					string blackListedScrapConfig = Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value;
+					string blackListedScrapConfig = Plugin.ModConfig.ConfigMetalCratesBlacklist.Value;
 					string[] blackListedScrap = [];
 					blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
 					List<SpawnableItemWithRarity> acceptableItems = new();
@@ -196,15 +187,15 @@ public class ItemCrate : CRHittable {
 				Destroy(spawned);
 				continue;
 			}
-			grabbableObject.SetScrapValue((int)(crateRandom.Next(item.minValue + 200, item.maxValue + 200) * RoundManager.Instance.scrapValueMultiplier));
+			grabbableObject.SetScrapValue((int)(crateRandom.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier * Plugin.ModConfig.ConfigMetalCrateValueMultiplier.Value));
 			grabbableObject.NetworkObject.Spawn();
 			CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
 		}
-		OpenCrateClientRPC();
+		OpenCrateClientRpc();
 	}
 
 	[ClientRpc]
-	public void OpenCrateClientRPC()
+	private void OpenCrateClientRpc()
 	{
 		OpenCrateLocally();
 	}
@@ -226,58 +217,138 @@ public class ItemCrate : CRHittable {
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	private void SetNewDigProgressServerRPC(float newDigProgress)
+	private void SetNewDigProgressServerRpc(float newDigProgress)
 	{
-		digProgress.Value = Mathf.Clamp01(newDigProgress);
+		SetNewDigProgressClientRpc(newDigProgress);
+	}
+
+	[ClientRpc]
+	private void SetNewDigProgressClientRpc(float newDigProgress)
+	{
+		UpdateDigPosition(digProgress, newDigProgress);
+		digProgress = Mathf.Clamp01(newDigProgress);
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	private void DamageCrateServerRPC(int damage)
+	private void DamageCrateServerRpc(int damage)
 	{
-		health.Value -= damage;
-
-		if (health.Value <= 0)
+		DamageCrateClientRpc(damage);
+		if (health - damage == 0)
 		{
 			OpenCrate();
 		}
+	}
+
+	[ClientRpc]
+	private void DamageCrateClientRpc(int damage)
+	{
+		health -= damage;
 	}
 	
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
 	{
 		if (opened || playerWhoHit == null || (playerWhoHit.currentlyHeldObjectServer == null && Plugin.ModConfig.ConfigShovelCratesOnly.Value)) return false;
+
 		bool shouldDamage = false;
-		if (digProgress.Value < 1)
+
+		if (digProgress < 1)
 		{
 			shouldDamage = true;
 			float progressChange = crateRandom.NextFloat(0.15f, 0.25f);
-			SetNewDigProgressServerRPC(digProgress.Value + progressChange);
+			SetNewDigProgressServerRpc(digProgress + progressChange);
 		}
 		else if (crateType == CrateType.Wooden)
 		{
 			shouldDamage = true;
-			DamageCrateServerRPC(1);
+			DamageCrateServerRpc(1);
 		}
+
+		// If damage should apply and meets specific conditions, apply player damage
 		if (shouldDamage && force == 22)
 		{
 			playerWhoHit.DamagePlayer(5, true, true, CauseOfDeath.Crushing, 0, false, default);
 		}
+
 		return true;
 	}
 
-	public static Item? GetRandomShopItem()
+	public Item? GetRandomShopItem()
 	{
-		string blackListedScrapConfig = Plugin.ModConfig.ConfigMetalCratesBlacklist.Value;
+		string woodenCrateItemConfig = Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value;
+		bool isWhitelist = Plugin.ModConfig.ConfigWoodenCrateIsWhitelist.Value;
 		string[] blackListedScrap = [];
-		blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+		string[] whiteListedScrap = [];
 		List<Item> acceptableItems = [];
-		foreach (Item item in ShopItemList)
+		if (!isWhitelist)
 		{
-			Plugin.ExtendedLogging("Shop item: " + item.itemName);
-			if (!blackListedScrap.Contains(item.itemName.ToLowerInvariant()))
+			blackListedScrap = woodenCrateItemConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+			foreach (Item item in ShopItemList)
 			{
+				Plugin.ExtendedLogging("Shop item: " + item.itemName);
+				if (!blackListedScrap.Contains(item.itemName.ToLowerInvariant()))
+				{
+					acceptableItems.Add(item);
+				}
+			}
+		}
+		else
+		{
+			if (String.IsNullOrEmpty(woodenCrateItemConfig))
+			{
+				// generate a whitelist and set it to the config
+				Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value = GenerateWhiteList();
+				woodenCrateItemConfig = Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value;
+			}
+
+			whiteListedScrap = woodenCrateItemConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+			foreach (Item item in ShopItemList)
+			{
+				if (!whiteListedScrap.Contains(item.itemName.ToLowerInvariant())) continue;
+				acceptableItems.Add(item);
+			}
+			foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
+			{
+				if (!whiteListedScrap.Contains(item.itemName.ToLowerInvariant())) continue;
 				acceptableItems.Add(item);
 			}
 		}
 		return acceptableItems[UnityEngine.Random.Range(0, acceptableItems.Count)];
-	}	
+	}
+
+	public string GenerateWhiteList()
+	{
+		List<string> whiteListedScrap = new();
+		foreach (Item item in ShopItemList)
+		{
+			whiteListedScrap.Add(item.itemName.ToLowerInvariant());
+		}
+		return string.Join(",", whiteListedScrap);
+	}
+
+	public void OnTriggerEnter(Collider other)
+	{
+		if (opened && other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
+		{
+			CloseCrateOnPlayerServerRpc();
+		}
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	private void CloseCrateOnPlayerServerRpc()
+	{
+		CloseCrateOnPlayerClientRpc();
+	}
+
+	[ClientRpc]
+	private void CloseCrateOnPlayerClientRpc()
+	{
+		if (pickable != null && trigger != null)
+		{
+			pickable.IsLocked = true;
+			trigger.enabled = true;
+		}
+		mainCollider.enabled = true;
+		opened = false;
+		animator.SetBool("opened", false);
+	}
 }

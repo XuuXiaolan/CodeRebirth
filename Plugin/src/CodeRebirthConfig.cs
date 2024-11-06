@@ -98,6 +98,8 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
+    public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
     public ConfigEntry<bool> ConfigGalBypassQuota { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotAutomatic { get; private set; }
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
@@ -286,7 +288,7 @@ public class CodeRebirthConfig
                                             "Cost of the Seamine Tink.");*/
         #endregion
         #region Biomes
-        ConfigBiomesEnabled = configFile.Bind("Biome Options.",
+        ConfigBiomesEnabled = configFile.Bind("Biome Options",
                                             "Biomes | Enabled",
                                             false,
                                             "Whether Biomes are enabled.");
@@ -332,7 +334,7 @@ public class CodeRebirthConfig
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraDesertSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Desert Spawn Places",
-                                            "Vanila,Custom,",
+                                            "Vanilla,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraSnowSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Snow Spawn Places",
@@ -624,7 +626,7 @@ public class CodeRebirthConfig
         #region ModCompat
         #endregion
         #region CutieFly
-        ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options.",
+        ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",
                                             "CutieFly Enemy | Enabled",
                                             false,
                                             "Enables/Disables the CutieFly enemy");
@@ -649,7 +651,7 @@ public class CodeRebirthConfig
                                             ));
         #endregion
         #region SnailCat
-        ConfigSnailCatEnabled = configFile.Bind("SnailCat Options.",
+        ConfigSnailCatEnabled = configFile.Bind("SnailCat Options",
                                             "SnailCat Enemy | Enabled",
                                             false,
                                             "Enables/Disables the SnailCat enemy");
@@ -754,7 +756,11 @@ public class CodeRebirthConfig
         ConfigWoodenCratesBlacklist = configFile.Bind("Crate Options",
                                             "Crate | Wooden Blacklist",
                                             "",
-                                            "Blacklist of Items that can spawn from wooden crates (comma separated, recommend leaving empty).");
+                                            "Blacklist of Items that can spawn from wooden crates (comma separated, recommend leaving empty, CAN become a whitelist).");
+        ConfigWoodenCrateIsWhitelist = configFile.Bind("Crate Options",
+                                            "Crate | Wooden Crate Is Whitelist",
+                                            false,
+                                            "If true, Wooden Crates will spawn using a whitelist which CAN include both shop and non shop items, if false, they will spawn from shop items pool with the blacklist.");
         ConfigMetalCratesBlacklist = configFile.Bind("Crate Options",
                                             "Crate | Metal Blacklist",
                                             "",
@@ -763,6 +769,10 @@ public class CodeRebirthConfig
                                             "Crate | Shovel Crates Only",
                                             true,
                                             "Only Shovels can hit Crates.");
+        ConfigMetalCrateValueMultiplier = configFile.Bind("Crate Options",
+                                            "Crate | Metal Value Multiplier",
+                                            1.4f,
+                                            "Value Multiplier for Metal Crates.");
         #endregion
         configFile.SaveOnConfigSet = true;
         ClearUnusedEntries(configFile);
