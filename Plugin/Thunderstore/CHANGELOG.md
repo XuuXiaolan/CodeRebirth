@@ -1,4 +1,8 @@
-# V0.7.14
+# v0.7.15
+
+- Forgot to get rid of dependency.
+
+## V0.7.14
 
 - Added to README about the model replacement feature.
 - Added a first time message saying what mods you can enable.
