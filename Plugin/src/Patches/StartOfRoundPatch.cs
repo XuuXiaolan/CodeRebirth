@@ -8,8 +8,6 @@ using CodeRebirth.src.Util;
 using WeatherRegistry;
 using CodeRebirth.src.Util.Extensions;
 using System.Diagnostics;
-using CodeRebirth.src.Content.Maps;
-using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Patches;

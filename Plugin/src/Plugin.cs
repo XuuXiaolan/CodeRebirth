@@ -25,7 +25,7 @@ namespace CodeRebirth.src;
 [BepInDependency("x753.More_Suits", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin {
     internal static new ManualLogSource Logger = null!;
-    private readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
+    internal static readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
     internal static bool SubtitlesAPIIsOn = false;
     internal static bool OpenBodyCamsIsOn = false;
@@ -64,12 +64,16 @@ public class Plugin : BaseUnityPlugin {
             MoreSuitsCompatibilityChecker.Init();
         }
 
-        if (ModelReplacementAPICompatibilityChecker.Enabled)
-        {
-            ModelReplacementAPICompatibilityChecker.Init();
-        }
+        _harmony.PatchAll(typeof(PlayerControllerBPatch));
+        _harmony.PatchAll(typeof(EnemyAIPatch));
+        _harmony.PatchAll(typeof(ShovelPatch));
+        _harmony.PatchAll(typeof(DoorLockPatch));
+        _harmony.PatchAll(typeof(MineshaftElevatorControllerPatch));
+        _harmony.PatchAll(typeof(DeleteFileButton));
+        _harmony.PatchAll(typeof(KeyItemPatch));
+        _harmony.PatchAll(typeof(RoundManagerPatch));
+        _harmony.PatchAll(typeof(StartOfRoundPatch));
 
-        _harmony.PatchAll(Assembly.GetExecutingAssembly());
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
         ShovelPatch.Init();
@@ -94,7 +98,6 @@ public class Plugin : BaseUnityPlugin {
         {
             type.GetConstructor([]).Invoke([]);
         }
-        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("impulse.CentralConfig")) Logger.LogFatal("You are using a mod (CentralConfig) that potentially changes how weather works and is potentially removing this mod's custom weather from moons, you have been warned.");
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
@@ -126,7 +129,6 @@ public class Plugin : BaseUnityPlugin {
             {
                 continue; // we do not care about fixing it, if it is not a network behaviour
             }
-            
             var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             foreach (var method in methods)
             {

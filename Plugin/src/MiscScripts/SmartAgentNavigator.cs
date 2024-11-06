@@ -113,7 +113,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             }
         }
 
-        bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(destination, elevatorScript.elevatorInsidePoint.position) < 3f;
+        bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(destination, elevatorScript.elevatorInsidePoint.position) < 7f;
         if (!usingElevator && !playerIsInElevator && DetermineIfNeedToDisableAgent(destination))
         {
             return true;
