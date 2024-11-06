@@ -1,4 +1,8 @@
-# v0.7.12
+# v0.7.13
+
+- Added a new thunderstore dependency, keep in mind it is OPTIONAL, you can get rid of it if you dont like it!
+
+## v0.7.12
 
 - Added config for safe item value multiplier, default is 1.4f value;
 - Turned all flora into static shadow casters, should help with performance a bit.
