@@ -1,4 +1,10 @@
-# v0.7.13
+# V0.7.14
+
+- Added to README about the model replacement feature.
+- Added a first time message saying what mods you can enable.
+- Added compatibility with shockwave gal with openbodycams camera.
+
+## v0.7.13
 
 - Added a new thunderstore dependency, keep in mind it is OPTIONAL, you can get rid of it if you dont like it!
 

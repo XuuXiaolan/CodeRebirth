@@ -7,6 +7,7 @@ If you're interested in helping with the development of the mod, feel free to re
 ## Current Additions
 
 - 160+ Plant types!!!
+- 1 Custom Model replacement (This needs you to have ModelReplacementAPI and MoreSuits installed!!).
 - 1 Outside Enemy.
 - 2 Helpful Creature.
 - 2 Ambient Enemies.

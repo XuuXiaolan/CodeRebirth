@@ -14,10 +14,10 @@ public static class OpenBodyCamCompatibilityChecker
     {
         Plugin.ExtendedLogging("No way openbodycams is on?!");
         Plugin.OpenBodyCamsIsOn = true;
-        //InitializeImpl();
+        InitializeImpl();
     }
 
-    /*[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static void InitializeImpl()
     {
         BodyCamComponent.BeforeTargetChangedToTransform += OverrideAttachmentPoint;
@@ -33,5 +33,5 @@ public static class OpenBodyCamCompatibilityChecker
             return true;
         }
         return false;
-    }*/
+    }
 }
