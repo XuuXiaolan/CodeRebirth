@@ -57,7 +57,7 @@ public class LaserTurret : NetworkBehaviour // turretAudioSource with looping ro
     private void FireLaser()
     {
         Vector3 laserDirection = laserStartPoint.forward;
-        if (Physics.SphereCast(laserStartPoint.position, laserThickness / 2, laserDirection, out RaycastHit hit, laserRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
+        if (Physics.SphereCast(laserStartPoint.position, laserThickness / 2, laserDirection, out RaycastHit hit, laserRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
             {
@@ -65,7 +65,7 @@ public class LaserTurret : NetworkBehaviour // turretAudioSource with looping ro
                 {
                     // Ignore player and continue laser
                     Vector3 newStart = hit.point + laserDirection * 0.01f; // Move start point slightly beyond player
-                    if (Physics.SphereCast(newStart, laserThickness / 2, laserDirection, out RaycastHit newHit, laserRange - hit.distance, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
+                    if (Physics.SphereCast(newStart, laserThickness / 2, laserDirection, out RaycastHit newHit, laserRange - hit.distance, StartOfRound.Instance.collidersAndRoomMaskAndPlayers | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
                     {
                         hit = newHit;
                     }

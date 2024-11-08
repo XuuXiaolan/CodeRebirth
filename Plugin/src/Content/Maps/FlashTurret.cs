@@ -108,7 +108,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
         if (detectedPlayer != null && dotProduct > 0.5f)
         {
-            StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, 0.5f, 5f, 1f, false, null, null, blindDuration - 1);
+            StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, 0.5f, 5f, 1f, false, null, null, 0);
         }
     }
 

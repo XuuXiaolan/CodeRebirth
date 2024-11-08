@@ -42,8 +42,16 @@ public class IndustrialFanFrontCollider : NetworkBehaviour
                 // Calculate the target position by moving the player in the push direction
                 Vector3 targetPosition = player.transform.position + (pushDirection * industrialFan.pushForce);
 
-                // Interpolate smoothly between the current position and the target position
-                player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, industrialFan.pushForce * Time.fixedDeltaTime);
+                // Check if the target position is valid using a raycast or other collision checks
+                if (!Physics.Raycast(player.transform.position, pushDirection, industrialFan.pushForce, StartOfRound.Instance.collidersAndRoomMask))
+                {
+                    // Interpolate smoothly between the current position and the target position
+                    player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, industrialFan.pushForce * Time.fixedDeltaTime);
+                }
+                else
+                {
+                    player.externalForces += pushDirection * industrialFan.pushForce * 0.1f;
+                }
             }
         }
     }

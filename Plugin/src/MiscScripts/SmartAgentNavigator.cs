@@ -209,7 +209,8 @@ public class SmartAgentNavigator : NetworkBehaviour
             return;
         }
 
-        if (Vector3.Distance(transform.position, destination) <= agent.stoppingDistance)
+        float distanceToDestination = Vector3.Distance(transform.position, destination);
+        if (distanceToDestination <= agent.stoppingDistance || (agent.velocity.sqrMagnitude <= 0.01f && distanceToDestination <= 10f))
         {
             lastUsedEntranceTeleport = entranceTeleportToUse;
             agent.Warp(destinationAfterTeleport);

@@ -38,6 +38,7 @@ public class ItemCrate : CRHittable {
 	public CrateType crateType;
 	public Collider mainCollider = null!;
 	private bool openable = false;
+	private bool openedOnce = false;
 
     private void Start()
 	{
@@ -150,46 +151,49 @@ public class ItemCrate : CRHittable {
 
 	public void OpenCrate()
 	{
-		for (int i = 0; i < Plugin.ModConfig.ConfigCrateNumberToSpawn.Value; i++)
+		if (!openedOnce)
 		{
-			SpawnableItemWithRarity chosenItemWithRarity;
-			Item? item = null;
-
-			switch(crateType)
+			for (int i = 0; i < Plugin.ModConfig.ConfigCrateNumberToSpawn.Value; i++)
 			{
-				case CrateType.Metal:
-					string blackListedScrapConfig = Plugin.ModConfig.ConfigMetalCratesBlacklist.Value;
-					string[] blackListedScrap = [];
-					blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
-					List<SpawnableItemWithRarity> acceptableItems = new();
-					foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
-					{
-						Plugin.ExtendedLogging("Moon's item pool: " + spawnableItemWithRarity.spawnableItem.itemName);
-						if (!blackListedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
+				SpawnableItemWithRarity chosenItemWithRarity;
+				Item? item = null;
+
+				switch(crateType)
+				{
+					case CrateType.Metal:
+						string blackListedScrapConfig = Plugin.ModConfig.ConfigMetalCratesBlacklist.Value;
+						string[] blackListedScrap = [];
+						blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+						List<SpawnableItemWithRarity> acceptableItems = new();
+						foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
 						{
-							acceptableItems.Add(spawnableItemWithRarity);
+							Plugin.ExtendedLogging("Moon's item pool: " + spawnableItemWithRarity.spawnableItem.itemName);
+							if (!blackListedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
+							{
+								acceptableItems.Add(spawnableItemWithRarity);
+							}
 						}
-					}
-					chosenItemWithRarity = crateRandom.NextItem(acceptableItems);
-					item = chosenItemWithRarity.spawnableItem;
-					break;
-				case CrateType.Wooden:
-					item = GetRandomShopItem();
-					break;
-			}
+						chosenItemWithRarity = crateRandom.NextItem(acceptableItems);
+						item = chosenItemWithRarity.spawnableItem;
+						break;
+					case CrateType.Wooden:
+						item = GetRandomShopItem();
+						break;
+				}
 
-			if (item == null || item.spawnPrefab == null) continue;
-			GameObject spawned = Instantiate(item.spawnPrefab, transform.position + Vector3.up * 0.6f + Vector3.right * crateRandom.NextFloat(-0.2f, 0.2f) + Vector3.forward * crateRandom.NextFloat(-0.2f, 0.2f), Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
+				if (item == null || item.spawnPrefab == null) continue;
+				GameObject spawned = Instantiate(item.spawnPrefab, transform.position + Vector3.up * 0.6f + Vector3.right * crateRandom.NextFloat(-0.2f, 0.2f) + Vector3.forward * crateRandom.NextFloat(-0.2f, 0.2f), Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
 
-			GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
-			if (grabbableObject == null)
-			{
-				Destroy(spawned);
-				continue;
+				GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
+				if (grabbableObject == null)
+				{
+					Destroy(spawned);
+					continue;
+				}
+				grabbableObject.SetScrapValue((int)(crateRandom.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier * Plugin.ModConfig.ConfigMetalCrateValueMultiplier.Value));
+				grabbableObject.NetworkObject.Spawn();
+				CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
 			}
-			grabbableObject.SetScrapValue((int)(crateRandom.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier * Plugin.ModConfig.ConfigMetalCrateValueMultiplier.Value));
-			grabbableObject.NetworkObject.Spawn();
-			CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
 		}
 		OpenCrateClientRpc();
 	}
@@ -211,7 +215,7 @@ public class ItemCrate : CRHittable {
 		openSFX.Play();
 		mainCollider.enabled = false;
 		opened = true;
-
+		openedOnce = true;
 		animator.SetBool("opened", true);
 		animator.SetBool("opening", false);
 	}
@@ -272,7 +276,7 @@ public class ItemCrate : CRHittable {
 		return true;
 	}
 
-	public Item? GetRandomShopItem()
+	public Item GetRandomShopItem()
 	{
 		string woodenCrateItemConfig = Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value;
 		bool isWhitelist = Plugin.ModConfig.ConfigWoodenCrateIsWhitelist.Value;
@@ -312,6 +316,11 @@ public class ItemCrate : CRHittable {
 				acceptableItems.Add(item);
 			}
 		}
+		if (acceptableItems.Count <= 0)
+		{
+			Plugin.Logger.LogError("Acceptable items count is 0, check your wooden crate config to make sure its setup right.");
+			return StartOfRound.Instance.allItemsList.itemsList[UnityEngine.Random.Range(0, StartOfRound.Instance.allItemsList.itemsList.Count)];
+		}
 		return acceptableItems[UnityEngine.Random.Range(0, acceptableItems.Count)];
 	}
 
@@ -329,25 +338,30 @@ public class ItemCrate : CRHittable {
 	{
 		if (opened && other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
 		{
-			CloseCrateOnPlayerServerRpc();
+			CloseCrateOnPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
 		}
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	private void CloseCrateOnPlayerServerRpc()
+	private void CloseCrateOnPlayerServerRpc(int playerIndex)
 	{
-		CloseCrateOnPlayerClientRpc();
+		CloseCrateOnPlayerClientRpc(playerIndex);
 	}
 
 	[ClientRpc]
-	private void CloseCrateOnPlayerClientRpc()
+	private void CloseCrateOnPlayerClientRpc(int playerIndex)
 	{
-		if (pickable != null && trigger != null)
+		PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
+		if (player != GameNetworkManager.Instance.localPlayerController)
 		{
-			pickable.IsLocked = true;
-			trigger.enabled = true;
+			if (pickable != null && trigger != null)
+			{
+				pickable.IsLocked = true;
+				trigger.enabled = true;
+			}
+			mainCollider.enabled = true;
 		}
-		mainCollider.enabled = true;
+		openedOnce = true;
 		opened = false;
 		animator.SetBool("opened", false);
 	}

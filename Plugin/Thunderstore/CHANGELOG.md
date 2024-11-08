@@ -1,4 +1,13 @@
-# v0.7.15
+# v0.7.16
+
+- Metal crates no longer abusable.
+- Fixed exploit with metal crates.
+- Added safeguards to wooden crates with desynced shops.
+- Maybe fixed bug where you would sometimes get flashed by flash camera for a long time.
+- Fan doesn't push/pull through doors now.
+- Laser turret doesnt shoot through doors too.
+
+## v0.7.15
 
 - Forgot to get rid of dependency.
 
