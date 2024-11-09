@@ -44,30 +44,29 @@ static class RoundManagerPatch {
 		string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
 		Plugin.ExtendedLogging("Current moon: " + currentMoon);
 
-		// Determine the spawn count based on the current moon configuration
-		int spawnCount = 0;
+        // Determine the spawn count based on the current moon configuration
 
-		if (!moonSpawnCounts.TryGetValue(currentMoon, out spawnCount)) // Try to get the specific moon spawn count
-		{
-			if (!moonSpawnCounts.TryGetValue("all", out spawnCount)) // If not found, try to get the "all" spawn count
-			{
-				// Determine if it is a vanilla or custom moon and get the appropriate spawn count
-				bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels
-					.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
+        if (!moonSpawnCounts.TryGetValue(currentMoon, out int spawnCount)) // Try to get the specific moon spawn count
+        {
+            if (!moonSpawnCounts.TryGetValue("all", out spawnCount)) // If not found, try to get the "all" spawn count
+            {
+                // Determine if it is a vanilla or custom moon and get the appropriate spawn count
+                bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels
+                    .Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
 
-				if (isVanillaMoon)
-				{
-					moonSpawnCounts.TryGetValue("vanilla", out spawnCount);
-				}
-				else
-				{
-					moonSpawnCounts.TryGetValue("custom", out spawnCount);
-				}
-			}
-		}
+                if (isVanillaMoon)
+                {
+                    moonSpawnCounts.TryGetValue("vanilla", out spawnCount);
+                }
+                else
+                {
+                    moonSpawnCounts.TryGetValue("custom", out spawnCount);
+                }
+            }
+        }
 
-		// Log the determined spawn count
-		Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+        // Log the determined spawn count
+        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
 
 		// If no valid spawn count is found, return
 		if (spawnCount <= 0) return;
@@ -94,64 +93,104 @@ static class RoundManagerPatch {
 		}
 	}
 
-	private static Dictionary<string, int> ParseMoonSpawnConfig(string config)
-	{
-		Dictionary<string, int> moonSpawnCounts = new();
+    private static Dictionary<string, int> ParseMoonSpawnConfig(string config)
+    {
+        Dictionary<string, int> moonSpawnCounts = new();
 
-		if (string.IsNullOrEmpty(config)) return moonSpawnCounts;
+        if (string.IsNullOrEmpty(config)) return moonSpawnCounts;
 
-		string[] entries = config.Split(',');
-		foreach (string entry in entries)
-		{
-			string[] parts = entry.Split(':');
-			if (parts.Length == 2 && int.TryParse(parts[1], out int count))
-			{
-				string key = parts[0].Trim().ToLowerInvariant();
-				if (key.Equals("modded", StringComparison.OrdinalIgnoreCase))
-				{
-					key = "custom";
-				}
-				moonSpawnCounts[key] = count;
-			}
-		}
+        string[] entries = config.Split(',');
+        foreach (string entry in entries)
+        {
+            string[] parts = entry.Split(':');
+            if (parts.Length == 2 && int.TryParse(parts[1], out int count))
+            {
+                string key = parts[0].Trim().ToLowerInvariant();
+                if (key.Equals("modded", StringComparison.OrdinalIgnoreCase))
+                {
+                    key = "custom";
+                }
+                moonSpawnCounts[key] = count;
+            }
+        }
 
-		return moonSpawnCounts;
-	}
+        return moonSpawnCounts;
+    }
 
-	private static void SpawnBearTrap()
-	{
-		Plugin.ExtendedLogging("Spawning bear trap!!!");
-		System.Random random = new();
-		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigBearTrapAbundance.Value, 0, 1000)); i++)
-		{
-			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
-			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
+    private static void SpawnBearTrap()
+    {
+        Plugin.ExtendedLogging("Spawning bear trap!!!");
 
-			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+        // Parse the configuration string to get the spawn counts for different moons
+        Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigBearTrapSpawnWeight.Value);
+        foreach (var moonSpawn in moonSpawnCounts.Keys)
+        {
+            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+        }
 
-			if (hit.collider != null) // Check to make sure we hit something
-			{
-				GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
-				if (hit.collider.CompareTag("Grass"))
-				{
-					beartrap = MapObjectHandler.Instance.BearTrap.GrassMatPrefab;
-				}
-				else if (hit.collider.CompareTag("Gravel"))
-				{
-					beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
-				}
-				else if (hit.collider.CompareTag("Snow"))
-				{
-					beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
-				}
+        // Get the current moon type
+        string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
+        Plugin.ExtendedLogging("Current moon: " + currentMoon);
 
-				GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
-				spawnedTrap.transform.up = hit.normal;
-				spawnedTrap.GetComponent<NetworkObject>().Spawn();
-			}
-		}
-	}
+        // Determine the spawn count based on the current moon configuration
+        if (!moonSpawnCounts.TryGetValue(currentMoon, out int spawnCount)) // Try to get the specific moon spawn count
+        {
+            if (!moonSpawnCounts.TryGetValue("all", out spawnCount)) // If not found, try to get the "all" spawn count
+            {
+                // Determine if it is a vanilla or custom moon and get the appropriate spawn count
+                bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels
+                    .Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
+
+                if (isVanillaMoon)
+                {
+                    moonSpawnCounts.TryGetValue("vanilla", out spawnCount);
+                }
+                else
+                {
+                    moonSpawnCounts.TryGetValue("custom", out spawnCount);
+                }
+            }
+        }
+
+        // Log the determined spawn count
+        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+
+        // If no valid spawn count is found, return
+        if (spawnCount <= 0) return;
+
+        // Check if the current moon configuration is valid
+        System.Random random = new();
+        Plugin.ExtendedLogging($"Spawning {spawnCount} bear traps");
+        for (int i = 0; i < random.NextInt(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
+        {
+            Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+            Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
+
+            Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+
+            if (hit.collider != null) // Check to make sure we hit something
+            {
+                GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+                if (hit.collider.CompareTag("Grass"))
+                {
+                    beartrap = MapObjectHandler.Instance.BearTrap.GrassMatPrefab;
+                }
+                else if (hit.collider.CompareTag("Gravel"))
+                {
+                    beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+                }
+                else if (hit.collider.CompareTag("Snow"))
+                {
+                    beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
+                }
+
+                GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+                Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
+                spawnedTrap.transform.up = hit.normal;
+                spawnedTrap.GetComponent<NetworkObject>().Spawn();
+            }
+        }
+    }
 
 	private static void SpawnFlora()
 	{

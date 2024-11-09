@@ -21,6 +21,8 @@ public class FunctionalMicrowave : NetworkBehaviour
     public AudioClip microwaveOpenSound = null!;
     public AudioClip microwaveCloseSound = null!;
 
+    private float movingTimer = 30f;
+    private bool movingForAWhile = false;
     private float microwaveOpening = 0f;
     private float microwaveClosing = 0f;
     private bool isOpen = true;
@@ -43,6 +45,12 @@ public class FunctionalMicrowave : NetworkBehaviour
     private void Update()
     {
         damageTimerDecrease -= Time.deltaTime;
+        movingTimer -= Time.deltaTime;
+        if (movingTimer < 0f)
+        {
+            movingForAWhile = true;
+            movingTimer = 30f;
+        }
         if (!isOpen)
         {
             microwaveOpening += Time.deltaTime;
@@ -74,8 +82,9 @@ public class FunctionalMicrowave : NetworkBehaviour
         }
 
         if (!IsServer) return;
-        if (agent.remainingDistance < 1f)
+        if (agent.remainingDistance < 1f || movingForAWhile)
         {
+            movingForAWhile = false;
             agent.SetDestination(newDestination);
             newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
         }

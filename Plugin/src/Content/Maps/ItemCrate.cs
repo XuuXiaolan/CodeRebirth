@@ -57,7 +57,7 @@ public class ItemCrate : CRHittable {
 			Plugin.ExtendedLogging("Crate time to hold: " + trigger.timeToHold);
 		}
 
-		if (crateType == CrateType.Metal && ShopItemList.Count == 0)
+		if (crateType == CrateType.Wooden && ShopItemList.Count == 0)
 		{
 			Terminal terminal = FindObjectOfType<Terminal>();
             

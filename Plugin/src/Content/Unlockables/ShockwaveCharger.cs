@@ -46,6 +46,7 @@ public class ShockwaveCharger : NetworkBehaviour
 
     public void OnActivateShockwaveGal(PlayerControllerB playerInteracting)
     {
+        if (!NetworkObject.IsSpawned) return;
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota && !Plugin.ModConfig.ConfigGalBypassQuota.Value)) return;
         if (!shockwaveGalAI.Animator.GetBool("activated")) ActivateGirlServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));

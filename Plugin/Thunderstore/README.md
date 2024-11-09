@@ -275,7 +275,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Modeling/Designs:**
 
-- Rodrigo, v0xx, S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
+- [Rodrigo](https://www.youtube.com/watch?v=AxE4TltnvjI), v0xx, S1ckboy, Solid, Codding Cat, IntegrityChaos, and Bobilka
 
 **Sounds:**
 
@@ -283,7 +283,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Ideas/Lore:**
 
-- Rodrigo
+- [Rodrigo](https://www.youtube.com/watch?v=AxE4TltnvjI)
 
 **Concept Art:**
 
@@ -295,7 +295,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Testing:**
 
-- A Glitched NPC (I didn't really need the testing in hindsight, cuz im a genius who just made it work from the get-go), Rodrigo.
+- A Glitched NPC, Rodrigo.
 
 ## Credits - Misc Models
 

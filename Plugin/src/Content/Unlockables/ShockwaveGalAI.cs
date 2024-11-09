@@ -117,13 +117,14 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
 
     private void StartUpDelay()
     {
-        ShockwaveCharger shockwaveCharger = FindObjectsByType<ShockwaveCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID).OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();
-        if (shockwaveCharger == null)
+        ShockwaveCharger[] shockwaveChargers = FindObjectsByType<ShockwaveCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+        if (shockwaveChargers.Length <= 0)
         {
             if (IsServer) NetworkObject.Despawn();
             Plugin.Logger.LogError($"ShockwaveCharger not found in scene. ShockwaveGalAI will not be functional.");
             return;
         }
+        ShockwaveCharger shockwaveCharger = shockwaveChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
         shockwaveCharger.shockwaveGalAI = this;
         this.ShockwaveCharger = shockwaveCharger;
         transform.position = shockwaveCharger.ChargeTransform.position;

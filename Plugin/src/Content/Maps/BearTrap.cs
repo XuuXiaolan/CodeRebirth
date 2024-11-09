@@ -69,7 +69,16 @@ public class BearTrap : NetworkBehaviour
     private void Update()
     {
         trapTrigger.interactable = isTriggered;
-        if (playerCaught != null) playerCaught.transform.position = Vector3.Lerp(playerCaught.transform.position, caughtPosition, 5f * Time.deltaTime);
+        if (playerCaught != null)
+        {
+            float distanceToPlayer = Vector3.Distance(playerCaught.transform.position, this.transform.position);
+            if (distanceToPlayer > 15)
+            {
+                DoReleaseTrap();
+                return;
+            }
+            playerCaught.transform.position = Vector3.Lerp(playerCaught.transform.position, caughtPosition, 5f * Time.deltaTime);
+        }
         if (enemyCaught == null) return;
 
         enemyCaught.agent.speed = 0f;

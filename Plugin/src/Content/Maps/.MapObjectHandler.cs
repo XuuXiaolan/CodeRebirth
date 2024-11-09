@@ -148,7 +148,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public void RegisterInsideBearTraps()
 	{
-		RegisterInsideMapObjectWithConfig(BearTrap.GrassMatPrefab, "All:" + (Plugin.ModConfig.ConfigBearTrapAbundance.Value).ToString());
+		RegisterInsideMapObjectWithConfig(BearTrap.GrassMatPrefab, Plugin.ModConfig.ConfigBearTrapSpawnWeight.Value);
 	}
 
 	public void RegisterFunctionalMicrowave()

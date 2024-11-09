@@ -1,4 +1,16 @@
-# v0.7.16
+# v0.7.17
+
+- Readjusted camera height with the shockwave gal model.
+- Fixed bug with wooden crate where it would error/spawn normal items despite config not allowing it.
+- Allowed you to be teleported away/use entrance teleports while in a bear trap to escape.
+- Gave bear traps a more advanced config.
+- Fixes to do with functional microwave.
+- Fixes to do with laser turret.
+- Fixes to do with wooden seeds.
+- Added config for wooden seed spawn chance from tree.
+- Shockwave gal fix with being fired, again.
+
+## v0.7.16
 
 - Metal crates no longer abusable.
 - Fixed exploit with metal crates.

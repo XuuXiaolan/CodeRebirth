@@ -52,7 +52,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
     public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
-    public ConfigEntry<int> ConfigBearTrapAbundance { get; private set; }
+    public ConfigEntry<string> ConfigBearTrapSpawnWeight { get; private set; }
     public ConfigEntry<int> ConfigMetalCrateAbundance { get; private set; }
     public ConfigEntry<int> ConfigWoodenCrateAbundance { get; private set; }
     public ConfigEntry<string> ConfigLaserTurretSpawnWeight { get; private set; }
@@ -99,6 +99,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<float> ConfigWoodenSeedTreeSpawnChance { get; private set; }
     public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
     public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
     public ConfigEntry<bool> ConfigGalBypassQuota { get; private set; }
@@ -176,10 +177,10 @@ public class CodeRebirthConfig
                                             "Bear Trap | Interior Spawn",
                                             false,
                                             "Whether the bear traps can spawn in the interior.");
-        ConfigBearTrapAbundance = configFile.Bind("BearTrap Options",
-                                            "Bear Trap | Abundance",
-                                            7,
-                                            "The number of bear trap clusters to spawn per round (clusters means that theres 1 primary bear trap that spawns more (0 to 5) around it).");
+        ConfigBearTrapSpawnWeight = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Spawn Abundance",
+                                            "Vanilla:10,Custom:10",
+                                            "The MoonName:Number Spawn Abundance (where it will spawn between 0 and 10) of bear trap clusters to spawn per round (clusters means that theres 1 primary bear trap that spawns more (0 to 5) around it).");
         #endregion
         #region Laser Turret
         ConfigLaserTurretEnabled = configFile.Bind("LaserTurret Options",
@@ -355,6 +356,10 @@ public class CodeRebirthConfig
                                             "Farming | Plant Pot Price",
                                             696,
                                             "Price of the Plant Pot.");
+        ConfigWoodenSeedTreeSpawnChance = configFile.Bind("Farming Options",
+                                            "Farming | Wooden Seed Tree Spawn Chance",
+                                            2f,
+                                            "Change of the wooden seed to spawn from a broken tree");
         ConfigWoodenSeedSpawnWeights = configFile.Bind("Farming Options",
                                             "Farming | Wooden Seed Spawn Weights",
                                             "",

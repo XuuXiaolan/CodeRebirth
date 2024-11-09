@@ -6,14 +6,19 @@ using System.Reflection;
 namespace CodeRebirth.src.Util.Extensions;
 
 public static class AssemblyExtensions {
-	internal static IEnumerable<Type> GetLoadableTypes(this Assembly assembly) {
-		if(assembly == null) {
+	internal static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
+	{
+		if (assembly == null)
+		{
 			throw new ArgumentNullException(nameof(assembly));
 		}
 
-		try {
+		try
+		{
 			return assembly.GetTypes();
-		} catch(ReflectionTypeLoadException ex) {
+		}
+		catch(ReflectionTypeLoadException ex)
+		{
 			return ex.Types.Where(t => t != null);
 		}
 	}
