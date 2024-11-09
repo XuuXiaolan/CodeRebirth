@@ -26,9 +26,9 @@ public static class OpenBodyCamCompatibilityChecker
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static bool OverrideAttachmentPoint(MonoBehaviour bodyCam, Transform target, ref Transform attachmentPoint, ref Vector3 offset, ref Quaternion angle, ref Renderer[] renderersToHide)
     {
-        if (target.TryGetComponent<ShockwaveGalAI>(out var gal))
+        if (target.TryGetComponent<GalAI>(out var gal))
         {
-            attachmentPoint = gal.DroneHead;
+            attachmentPoint = gal.GalHead;
             renderersToHide = gal.renderersToHideIn;
             return true;
         }

@@ -8,19 +8,15 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.AI;
 using static CodeRebirth.src.Content.Unlockables.ShockwaveFaceController;
 
 namespace CodeRebirth.src.Content.Unlockables;
 [RequireComponent(typeof(SmartAgentNavigator))]
-public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
+public class ShockwaveGalAI : GalAI
 {
     public ShockwaveFaceController RobotFaceController = null!;
     public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
     public Renderer FaceRenderer = null!;
-    public Animator Animator = null!;
-    public NetworkAnimator NetworkAnimator = null!;
-    public NavMeshAgent Agent = null!;
     public InteractTrigger HeadPatTrigger = null!;
     public InteractTrigger ChestTrigger = null!;
     public List<InteractTrigger> GiveItemTrigger = new();
@@ -28,51 +24,22 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
     public AnimationClip CatPoseAnim = null!;
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
     [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
-    public Collider[] colliders = [];
     public Transform LaserOrigin = null!;
     public AudioSource FlySource = null!;
-    public AudioSource GalVoice = null!;
-    public AudioSource GalSFX = null!;
-    public AudioClip ActivateSound = null!;
-    public AudioClip GreetOwnerSound = null!;
-    public AudioClip[] IdleSounds = null!;
-    public AudioClip DeactivateSound = null!;
-    public AudioClip[] HitSounds = null!;
     public AudioClip PatSound = null!;
-    public AudioClip[] FootstepSounds = [];
     public AudioClip[] TakeDropItemSounds = [];
-    public float DoorOpeningSpeed = 1f;
-    public Transform DroneHead = null!;
-    public Transform DroneEye = null!;
-    public Renderer[] renderersToHideIn = [];
-    public SmartAgentNavigator smartAgentNavigator = null!;
 
     private float sellingMovementSpeed = 6f;
     private bool isSellingItems = false;
-    private bool boomboxPlaying = false;
-    private float staringTimer = 0f;
-    private const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
     private List<GrabbableObject> itemsHeldList = new();
     private List<GrabbableObject> itemsToSell = new();
-    private EnemyAI? targetEnemy;
     private bool flying = false;
     private int maxItemsToHold = 4;
     private State galState = State.Inactive;
-    [NonSerialized] public PlayerControllerB? ownerPlayer;
-    private List<string> enemyTargetBlacklist = new();
-    [NonSerialized] public int chargeCount = 10;
-    private int maxChargeCount;
-    private bool currentlyAttacking = false;
-    private float boomboxTimer = 0f;
-    private bool physicsEnabled = true;
     private bool catPosing = false;
-    private float idleNeededTimer = 10f;
-    private float idleTimer = 0f;
     private bool backFlipping = false;
     private Coroutine? headPatCoroutine = null;
-    private System.Random galRandom = new();
     private bool onCompanyMoon = false;
-    private bool isInHangarShipRoom = true;
     private DepositItemsDesk? depositItemsDesk = null;
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
@@ -103,18 +70,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         Happy = 3
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void RefillChargesServerRpc()
-    {
-        RefillChargesClientRpc();
-    }
-
-    [ClientRpc]
-    private void RefillChargesClientRpc()
-    {
-        chargeCount = maxChargeCount;
-    }
-
     private void StartUpDelay()
     {
         ShockwaveCharger[] shockwaveChargers = FindObjectsByType<ShockwaveCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
@@ -125,7 +80,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
             return;
         }
         ShockwaveCharger shockwaveCharger = shockwaveChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
-        shockwaveCharger.shockwaveGalAI = this;
+        shockwaveCharger.GalAI = this;
         this.ShockwaveCharger = shockwaveCharger;
         transform.position = shockwaveCharger.ChargeTransform.position;
         transform.rotation = shockwaveCharger.ChargeTransform.rotation;
@@ -134,36 +89,22 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         // Automatic activation if configured
         if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value)
         {
-            StartCoroutine(ShockwaveCharger.ActivateShockwaveGalAfterLand());
+            StartCoroutine(ShockwaveCharger.ActivateGalAfterLand());
         }
 
         // Adding listener for interaction trigger
-        ShockwaveCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(ShockwaveCharger.OnActivateShockwaveGal);
+        ShockwaveCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(ShockwaveCharger.OnActivateGal);
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.onInteract.AddListener(GrabItemInteract);
         }
         StartCoroutine(CheckForNearbyEnemiesToOwner());
 
-        smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetShockwaveGalOutsideOrInside);
-        smartAgentNavigator.OnEnableOrDisableAgent.AddListener(ChangeAnimationForFlying);
     }
 
-    private void DoGalRadarAction(bool enabled)
+    public override void ActivateGal(PlayerControllerB owner)
     {
-        if (enabled)
-        {
-            StartOfRound.Instance.mapScreen.AddTransformAsTargetToRadar(transform, "Delilah", isNonPlayer: true);
-        }
-        else
-        {
-            StartOfRound.Instance.mapScreen.RemoveTargetFromRadar(transform);
-        }
-        StartOfRound.Instance.mapScreen.SyncOrderOfRadarBoostersInList();
-    }
-
-    public void ActivateShockwaveGal(PlayerControllerB owner)
-    {
+        base.ActivateGal(owner);
         ownerPlayer = owner;
         DoGalRadarAction(true);
         GalVoice.PlayOneShot(ActivateSound);
@@ -340,8 +281,15 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    public void Update()
+    public override void InActiveUpdate()
     {
+        base.InActiveUpdate();
+        inActive = galState == State.Inactive;
+    }
+
+    public override void Update()
+    {
+        base.Update();
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
         if (galState == State.Inactive && ShockwaveCharger != null)
@@ -352,10 +300,7 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
         if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
         if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
-        BoomboxUpdate();
         StoppingDistanceUpdate();
-        IdleUpdate();
-        ShipRoomUpdate();
 
         if (!IsHost) return;
         HostSideUpdate();
@@ -395,48 +340,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-    private bool GoToChargerAndDeactivate()
+    public override void OnEnableOrDisableAgent(bool agentEnabled)
     {
-        smartAgentNavigator.DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false, null);
-        if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
-        {
-            if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
-            {
-                ShockwaveCharger.ActivateGirlServerRpc(-1);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    const float STARE_DOT_THRESHOLD = 0.8f;
-    const float STARE_ROTATION_SPEED = 2f;
-    private void DoStaringAtOwner(PlayerControllerB ownerPlayer)
-    {
-        Vector3 directionToDrone = (DroneHead.position - ownerPlayer.gameplayCamera.transform.position).normalized;
-        float dotProduct = Vector3.Dot(ownerPlayer.gameplayCamera.transform.forward, directionToDrone);
-
-        if (dotProduct <= STARE_DOT_THRESHOLD) // Not staring
-        {
-            staringTimer = 0f;
-            return;
-        }
-
-        staringTimer += Time.deltaTime;
-        if (staringTimer < stareThreshold) return;
-
-        Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
-        lookDirection.y = 0f;
-        Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * STARE_ROTATION_SPEED);
-        if (staringTimer >= stareThreshold + 1.5f || targetRotation == transform.rotation)
-        {
-            staringTimer = 0f;
-        }
-    }
-
-    public void ChangeAnimationForFlying(bool agentEnabled)
-    {
+        base.OnEnableOrDisableAgent(agentEnabled);
         Animator.SetBool(attackModeAnimation, !agentEnabled);
     }
 
@@ -757,21 +663,6 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         yield return new WaitUntil(() => !boomboxPlaying || galState != State.Dancing);
         if (galState != State.Dancing) yield break;  
         HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
-    }
-
-    [ClientRpc]
-    private void EnablePhysicsClientRpc(bool enablePhysics)
-    {
-        EnablePhysics(enablePhysics);
-    }
-
-    private void EnablePhysics(bool enablePhysics)
-    {
-        foreach (Collider collider in colliders)
-        {
-            collider.enabled = enablePhysics;
-        }
-        physicsEnabled = enablePhysics;
     }
 
     private IEnumerator CheckForNearbyEnemiesToOwner()
@@ -1151,19 +1042,9 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
     }
 
-	public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)
-	{
-        if (galState == State.Inactive) return;
-		if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
-		{
-            boomboxTimer = 0f;
-			boomboxPlaying = true;
-		}
-	}
-
-    public void SetShockwaveGalOutsideOrInside(bool setOutside)
+    public override void OnUseEntranceTeleport(bool setOutside)
     {
-        if (physicsEnabled) EnablePhysics(false);
+        base.OnUseEntranceTeleport(setOutside);
         for (int i = 0; i < itemsHeldList.Count; i++)
         {
             itemsHeldList[i].isInFactory = setOutside;
@@ -1200,12 +1081,5 @@ public class ShockwaveGalAI : NetworkBehaviour, INoiseListener, IHittable
         }
         targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
-    }
-
-    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
-    {
-        if (galState == State.Inactive) return false;
-        GalVoice.PlayOneShot(HitSounds[galRandom.NextInt(0, HitSounds.Length - 1)]);
-        return true;
     }
 }
