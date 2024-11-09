@@ -356,7 +356,7 @@ static class RoundManagerPatch {
 				GameObject crate = MapObjectHandler.Instance.Crate.WoodenCratePrefab;
 
 				// Adjust the hit point deeper into the ground along the hit.normal direction
-				Vector3 spawnPoint = hit.point + hit.normal * -0.65f; // Adjust -0.65f to control how deep you want it
+				Vector3 spawnPoint = hit.point + hit.normal * -0.6f; // Adjust -0.6f to control how deep you want it
 
 				GameObject spawnedCrate = GameObject.Instantiate(crate, spawnPoint, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}");
@@ -367,17 +367,23 @@ static class RoundManagerPatch {
 
 		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigMetalCrateAbundance.Value, 0, 1000)); i++)
 		{
-			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length-1)].transform.position;
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
 
-			GameObject crate = MapObjectHandler.Instance.Crate.MetalCratePrefab;
-			
-			GameObject spawnedCrate = GameObject.Instantiate(crate, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-			Plugin.ExtendedLogging($"Spawning {crate.name} at {hit.point}");
-			spawnedCrate.transform.up = hit.normal;
-			spawnedCrate.GetComponent<NetworkObject>().Spawn();
+			if (hit.collider != null) // Check to make sure we hit something
+			{
+				GameObject crate = MapObjectHandler.Instance.Crate.MetalCratePrefab;
+
+				// Adjust the hit point deeper into the ground along the hit.normal direction
+				Vector3 spawnPoint = hit.point + hit.normal * -0.8f; // Adjust -0.65f to control how deep you want it
+
+				GameObject spawnedCrate = GameObject.Instantiate(crate, spawnPoint, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}");
+				spawnedCrate.transform.up = hit.normal;
+				spawnedCrate.GetComponent<NetworkObject>().Spawn();
+			}
 		}
 	}
 	

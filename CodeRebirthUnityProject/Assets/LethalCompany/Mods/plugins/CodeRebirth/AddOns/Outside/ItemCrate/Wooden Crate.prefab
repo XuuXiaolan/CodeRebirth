@@ -110,7 +110,7 @@ MonoBehaviour:
   minRange: 0
   requiresLineOfSight: 1
   headerText: Wooden Crate (Dig out with a shovel)
-  subText: Use a Key or Open slowly with [E]
+  subText: (Keep bashing to open)
   scrapValue: 0
   creatureScanID: -1
   nodeType: 0
@@ -970,8 +970,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9028613751656917342}
   - component: {fileID: 1194016539517707400}
-  - component: {fileID: 5119059752250437451}
-  - component: {fileID: 1950555788927546217}
   - component: {fileID: 4787198475372899351}
   - component: {fileID: 4954358645330385402}
   - component: {fileID: 8557149345729840933}
@@ -1024,107 +1022,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &5119059752250437451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7952619480326014836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
-  hoverTip: 'Hold : [E]'
-  disabledHoverIcon: {fileID: 0}
-  disabledHoverTip: 
-  interactable: 1
-  oneHandedItemAllowed: 1
-  twoHandedItemAllowed: 0
-  holdInteraction: 1
-  timeToHold: 30
-  timeToHoldSpeedMultiplier: 1
-  holdTip: Slowly Opening...
-  isBeingHeldByPlayer: 0
-  holdingInteractEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  touchTrigger: 0
-  triggerOnce: 0
-  interactCooldown: 1
-  cooldownTime: 1
-  currentCooldownValue: 0
-  disableTriggerMesh: 1
-  RandomChanceTrigger: 0
-  randomChancePercentage: 0
-  onInteractEarlyOtherClients:
-    m_PersistentCalls:
-      m_Calls: []
-  onInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  onInteractEarly:
-    m_PersistentCalls:
-      m_Calls: []
-  onStopInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  onCancelAnimation:
-    m_PersistentCalls:
-      m_Calls: []
-  specialCharacterAnimation: 0
-  stopAnimationManually: 0
-  stopAnimationString: SA_stopAnimation
-  hidePlayerItem: 0
-  isPlayingSpecialAnimation: 0
-  animationWaitTime: 2
-  animationString: 
-  lockPlayerPosition: 0
-  playerPositionNode: {fileID: 0}
-  clampLooking: 0
-  setVehicleAnimation: 0
-  minVerticalClamp: 0
-  maxVerticalClamp: 0
-  horizontalClamp: 0
-  allowUseWhileInAnimation: 0
-  overridePlayerParent: {fileID: 0}
-  isLadder: 0
-  topOfLadderPosition: {fileID: 0}
-  useRaycastToGetTopPosition: 0
-  bottomOfLadderPosition: {fileID: 0}
-  ladderHorizontalPosition: {fileID: 0}
-  ladderPlayerPositionNode: {fileID: 0}
-  usingLadder: 0
---- !u!114 &1950555788927546217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7952619480326014836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 991525672, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unlockSFX: {fileID: 0}
-  onUnlock:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4787198475372899351}
-        m_TargetAssemblyTypeName: CodeRebirth.src.Content.Maps.ItemCrate, CodeRebirth
-        m_MethodName: Open
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &4787198475372899351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1137,17 +1034,18 @@ MonoBehaviour:
   m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regularHoverTip: 'Hold : [E]'
-  keyHoverTip: 'Open : [LMB]'
+  regularHoverTip: 
+  keyHoverTip: 
   slowlyOpeningSFX: {fileID: 6992814719332117094}
   openSFX: {fileID: 850424377539253765}
-  trigger: {fileID: 5119059752250437451}
-  pickable: {fileID: 1950555788927546217}
-  crateLid: {fileID: 0}
+  trigger: {fileID: 0}
+  pickable: {fileID: 0}
+  animator: {fileID: 8557149345729840933}
   health:
     m_InternalValue: 4
   originalPosition: {x: 0, y: 0, z: 0}
   crateType: 0
+  mainCollider: {fileID: 4954358645330385402}
 --- !u!65 &4954358645330385402
 BoxCollider:
   m_ObjectHideFlags: 0

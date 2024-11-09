@@ -39,7 +39,7 @@ static class ShovelPatch {
         if (self is not CodeRebirthWeapons CRWeapon) return;
         ResetWeaponDamage(ref CRWeapon);
         TryBreakTrees(ref CRWeapon);
-        if (Plugin.ModConfig.ConfigDebugMode.Value)
+        if (Plugin.ModConfig.ConfigDebugMode.Value && NetworkManager.Singleton.IsServer)
         {
             TrySpawnRandomHazard(ref CRWeapon);
         }

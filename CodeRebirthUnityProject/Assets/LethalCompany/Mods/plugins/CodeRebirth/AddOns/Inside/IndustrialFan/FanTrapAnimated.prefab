@@ -2717,7 +2717,7 @@ GameObject:
   - component: {fileID: 5259636366446317204}
   - component: {fileID: 4767433396865484917}
   - component: {fileID: 8755523753245444412}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: FrontCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2841,6 +2841,7 @@ GameObject:
   - component: {fileID: 7540495099118453201}
   - component: {fileID: 2123439759598390477}
   - component: {fileID: 4461787965659276262}
+  - component: {fileID: 6655269209424670774}
   m_Layer: 21
   m_Name: FanTrapAnimated
   m_TagString: Untagged
@@ -2909,8 +2910,8 @@ MonoBehaviour:
   cutAudioSource: {fileID: 6326048358095893484}
   windAudioSource: {fileID: 4879713501467542502}
   rotationSpeed: 35
-  pushForce: 12
-  suctionForce: 8
+  pushForce: 3
+  suctionForce: 2
   redMistEffect: {fileID: 9155697015635142109}
 --- !u!114 &8949203082928865293
 MonoBehaviour:
@@ -2982,8 +2983,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.9976625, y: 2.0869517, z: 1}
-  m_Center: {x: 0.025966167, y: 1.8949497, z: 0}
+  m_Size: {x: 1.9976625, y: 2.2299926, z: 1}
+  m_Center: {x: 0.025966167, y: 1.9664701, z: 0}
 --- !u!65 &7540495099118453201
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3047,6 +3048,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.36176872, y: 2.6153464, z: 0.3517512}
   m_Center: {x: 1.5293503, y: 1.433289, z: -0.04893118}
+--- !u!65 &6655269209424670774
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5429102615241829864}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.259585, y: 0.27792382, z: 1}
+  m_Center: {x: 0.11436486, y: 3.34547, z: 0}
 --- !u!1 &5698496065680996426
 GameObject:
   m_ObjectHideFlags: 0
@@ -3488,7 +3510,7 @@ GameObject:
   - component: {fileID: 6886588701262549167}
   - component: {fileID: 8413289465190974852}
   - component: {fileID: 2521152294841282111}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: BackCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

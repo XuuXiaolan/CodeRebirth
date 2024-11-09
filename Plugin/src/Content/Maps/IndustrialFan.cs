@@ -13,11 +13,6 @@ public class IndustrialFan : NetworkBehaviour
     public float suctionForce = 15f;
     public ParticleSystem redMistEffect = null!;
 
-    private void Start()
-    {
-        suctionForce = 6;
-    }
-
     private void Update()
     {
         if (!IsServer) return;
@@ -40,7 +35,7 @@ public class IndustrialFan : NetworkBehaviour
     {
         Vector3 direction = (targetPosition - fanTransform.position).normalized;
         float distance = Vector3.Distance(fanTransform.position, targetPosition);
-        if (Physics.Raycast(fanTransform.position, direction, out RaycastHit hit, distance, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
+        if (Physics.Raycast(fanTransform.position, direction, out RaycastHit hit, distance, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.gameObject.layer != 3)
             {

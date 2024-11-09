@@ -7,6 +7,7 @@ If you're interested in helping with the development of the mod, feel free to re
 ## Current Additions
 
 - 160+ Plant types!!!
+- 1 Custom Model replacement (This needs you to have ModelReplacementAPI and MoreSuits installed!!).
 - 1 Outside Enemy.
 - 2 Helpful Creature.
 - 2 Ambient Enemies.
@@ -225,7 +226,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Bear Trap
 
-![FT](https://i.postimg.cc/FH9mzY6t/image.png)
+![BT](https://i.postimg.cc/xdF738T4/image.png)
 
 > Designation : Bear Trap  
 > Objective : Wildlife control  

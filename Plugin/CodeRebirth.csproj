@@ -9,7 +9,7 @@
     <!-- Configure description for Thunderstore at ./Thunderstore/thunderstore.toml -->
     <Description>Content mod that adds Custom Weathers, Items, Enemies and more.</Description>
 		<!-- This is the version of your plugin. This will be used by tcli when building our Thunderstore package. -->
-    <Version>0.7.5</Version>
+    <Version>0.7.16</Version>
 		<!-- This is required for BepInEx to load us properly. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<!-- This allows you to use C#11 features, for the most part. -->
@@ -41,10 +41,11 @@
     <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
     <PackageReference Include="IAmBatby.LethalLevelLoader" Version="1.3.1" />
     <PackageReference Include="mrov.WeatherRegistry" Publicize="true" Version="*" />
+    <PackageReference Include="Zaggy1024-OpenBodyCams" Version="3.0.0" />
+    <PackageReference Include="BunyaPineTree-ModelReplacementAPI" Version="2.4.11" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="OpenBodyCams"><HintPath>../dlls/OpenBodyCams.dll</HintPath></Reference>
     <Reference Include="SubtitlesAPI"><HintPath>../dlls/SubtitlesAPI.dll</HintPath></Reference>
     <Reference Include="MMHOOK_Assembly-CSharp"><HintPath>../dlls/MMHOOK_Assembly-CSharp.dll</HintPath></Reference>
   </ItemGroup>  

@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigFirstLaunchPopup { get; private set; }
     public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
     public ConfigEntry<bool> ConfigInsideBearTrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
@@ -98,6 +99,8 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
+    public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
     public ConfigEntry<bool> ConfigGalBypassQuota { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotAutomatic { get; private set; }
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
@@ -105,8 +108,8 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigPlantPotPrice { get; private set; }
     public ConfigEntry<int> ConfigShockwaveCharges { get; private set; }
     public ConfigEntry<string> ConfigShockwaveBotEnemyBlacklist { get; private set; }
-    public ConfigEntry<int> ConfigMetalHitNumber { get; private set; }
-    public ConfigEntry<float> ConfigWoodenOpenTimer { get; private set; }
+    public ConfigEntry<int> ConfigWoodenCrateHealth { get; private set; }
+    public ConfigEntry<float> ConfigMetalHoldTimer { get; private set; }
     public ConfigEntry<int> ConfigCrateNumberToSpawn { get; private set; }
     public ConfigEntry<string> ConfigWoodenCratesBlacklist { get; private set; }
     public ConfigEntry<string> ConfigMetalCratesBlacklist { get; private set; }
@@ -176,7 +179,7 @@ public class CodeRebirthConfig
         ConfigBearTrapAbundance = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Abundance",
                                             7,
-                                            "The number of bear traps to spawn per round.");
+                                            "The number of bear trap clusters to spawn per round (clusters means that theres 1 primary bear trap that spawns more (0 to 5) around it).");
         #endregion
         #region Laser Turret
         ConfigLaserTurretEnabled = configFile.Bind("LaserTurret Options",
@@ -332,7 +335,7 @@ public class CodeRebirthConfig
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraDesertSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Desert Spawn Places",
-                                            "Vanila,Custom,",
+                                            "Vanilla,Custom,",
                                             "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
         ConfigFloraSnowSpawnPlaces = configFile.Bind("Flora Options",
                                             "Flora | Snow Spawn Places",
@@ -622,11 +625,15 @@ public class CodeRebirthConfig
                                             "Min and Max value of the Emerald, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         #endregion
         #region ModCompat
+        ConfigFirstLaunchPopup = configFile.Bind("ModCompat Options",
+                                            "First Launch Popup",
+                                            true,
+                                            "Enables/Disables the first launch popup for the host about the ShockwaveGalModelReplacement mod.");
         #endregion
         #region CutieFly
         ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",
                                             "CutieFly Enemy | Enabled",
-                                            true,
+                                            false,
                                             "Enables/Disables the CutieFly enemy");
         ConfigCutieFlySpawnWeights = configFile.Bind("CutieFly Options",
                                             "CutieFly Enemy | Spawn Weights",
@@ -651,7 +658,7 @@ public class CodeRebirthConfig
         #region SnailCat
         ConfigSnailCatEnabled = configFile.Bind("SnailCat Options",
                                             "SnailCat Enemy | Enabled",
-                                            true,
+                                            false,
                                             "Enables/Disables the SnailCat enemy");
         ConfigSnailCatSpawnWeights = configFile.Bind("SnailCat Options",
                                             "SnailCat Enemy | Spawn Weights",
@@ -736,25 +743,29 @@ public class CodeRebirthConfig
                                             3,
                                             "Abundance of Metal Crates that spawn outside (between 0 and your number).");
         ConfigCrateNumberToSpawn = configFile.Bind("Crate Options",
-                                            "Crate | Metal Number To Spawn",
+                                            "Crate | Scrap Number To Spawn",
                                             3,
                                             "Number of items that spawn inside a crate (between 0 and your number).");
         ConfigWoodenCrateAbundance = configFile.Bind("Crate Options",
                                             "Crate | Wooden Abundance",
                                             3,
                                             "Abundance of Wooden Crates that spawn outside (between 0 and your number).");
-        ConfigMetalHitNumber = configFile.Bind("Crate Options",
-                                            "Crate | Metal Hit Number",
+        ConfigWoodenCrateHealth = configFile.Bind("Crate Options",
+                                            "Crate | Wooden Crate Health",
                                             4,
-                                            "Hits to open metal crate");
-        ConfigWoodenOpenTimer = configFile.Bind("Crate Options",
-                                            "Crate | Wooden Open Timer",
-                                            30f,
-                                            "Timer to open wooden crate");
+                                            "Hits to open Wooden crate");
+        ConfigMetalHoldTimer = configFile.Bind("Crate Options",
+                                            "Crate | Metal Hold Timer",
+                                            15f,
+                                            "Timer to open Metal crate");
         ConfigWoodenCratesBlacklist = configFile.Bind("Crate Options",
                                             "Crate | Wooden Blacklist",
                                             "",
-                                            "Blacklist of Items that can spawn from wooden crates (comma separated, recommend leaving empty).");
+                                            "Blacklist of Items that can spawn from wooden crates (comma separated, recommend leaving empty, CAN become a whitelist).");
+        ConfigWoodenCrateIsWhitelist = configFile.Bind("Crate Options",
+                                            "Crate | Wooden Crate Is Whitelist",
+                                            false,
+                                            "If true, Wooden Crates will spawn using a whitelist which CAN include both shop and non shop items, if false, they will spawn from shop items pool with the blacklist.");
         ConfigMetalCratesBlacklist = configFile.Bind("Crate Options",
                                             "Crate | Metal Blacklist",
                                             "",
@@ -763,6 +774,10 @@ public class CodeRebirthConfig
                                             "Crate | Shovel Crates Only",
                                             true,
                                             "Only Shovels can hit Crates.");
+        ConfigMetalCrateValueMultiplier = configFile.Bind("Crate Options",
+                                            "Crate | Metal Value Multiplier",
+                                            1.4f,
+                                            "Value Multiplier for Metal Crates.");
         #endregion
         configFile.SaveOnConfigSet = true;
         ClearUnusedEntries(configFile);

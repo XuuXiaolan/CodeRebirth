@@ -91,8 +91,10 @@ public class SnowGlobe : GrabbableObject
     public IEnumerator ActivateSnowGlobeCoroutine()
     {
         yield return new WaitForEndOfFrame();
+        RoundManager.Instance.PlayAudibleNoise(this.transform.position, 7, 1, 0, isInShipRoom);
         yield return ToggleSnowGlobeCoroutine(true);
         yield return new WaitUntil(() => !musicAS.isPlaying);
+        RoundManager.Instance.PlayAudibleNoise(this.transform.position, 7, 1, 0, isInShipRoom);
         yield return ToggleSnowGlobeCoroutine(false);
         yield return new WaitForSeconds(2f);
         activated = false;

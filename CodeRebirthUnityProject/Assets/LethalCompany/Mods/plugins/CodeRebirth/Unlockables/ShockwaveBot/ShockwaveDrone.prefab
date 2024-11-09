@@ -113,6 +113,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4619480781770405425}
   - {fileID: 6294148503571356849}
   - {fileID: 4777089451299535934}
   - {fileID: 3642604465238821871}
@@ -545,6 +546,7 @@ GameObject:
   - component: {fileID: 628193322848618802}
   - component: {fileID: 8144318307373106634}
   - component: {fileID: 5627089283044738071}
+  - component: {fileID: 8023955127254829699}
   m_Layer: 6
   m_Name: ShockwaveDrone
   m_TagString: InteractTrigger
@@ -741,10 +743,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b9de0fcdf19fbe9449c7f8c82709a7c6, type: 3}
   - {fileID: 8300000, guid: 35ad9e3e0654e174e8455f348f365559, type: 3}
   DoorOpeningSpeed: 1
-  DroneHead: {fileID: 354448229173011191}
+  DroneHead: {fileID: 4619480781770405425}
   DroneEye: {fileID: 590808199739691480}
   renderersToHideIn:
   - {fileID: 9145391281392864541}
+  smartAgentNavigator: {fileID: 8023955127254829699}
 --- !u!114 &1288711711486736261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,6 +933,18 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &8023955127254829699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574516792246697467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2060832966963771189
 GameObject:
   m_ObjectHideFlags: 0
@@ -3274,6 +3289,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 590808199739691480}
+  m_Father: {fileID: 354448229173011191}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7326864584308838026
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4619480781770405425}
+  m_Layer: 0
+  m_Name: HeadForOpenBodyCams
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4619480781770405425
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7326864584308838026}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 354448229173011191}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7537383518464116886

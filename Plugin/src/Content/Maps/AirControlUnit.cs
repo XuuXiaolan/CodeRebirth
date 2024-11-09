@@ -31,6 +31,11 @@ public class AirControlUnit : NetworkBehaviour
     private void Start()
     {
         projectilePrefab = MapObjectHandler.Instance.AirControlUnit.ProjectilePrefab;
+        lastPlayerTargetted = null;
+        DetectPlayerAudioSound.volume = 0f;
+        ACUClickingAudioSource.Stop();
+        ACUClickingAudioSource.clip = null;
+        ACUTurnAudioSource.volume = 0f;
     }
 
     private void Update()
@@ -45,11 +50,6 @@ public class AirControlUnit : NetworkBehaviour
         if (fireTimer <= 0f)
         {
             FireProjectile();
-            if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 70)
-            {
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
-            }
             fireTimer = fireRate;
         }
     }
@@ -113,10 +113,8 @@ public class AirControlUnit : NetworkBehaviour
         // Check if player is within detection range and if there's line of sight
         if (distanceToPlayer <= detectionRange && angle <= maxAngle)
         {
-            Plugin.ExtendedLogging($"Angle: {angle} | Distance: {distanceToPlayer}");
-            if (!Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
+            if (!Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
             {
-                Plugin.ExtendedLogging("No raycast hit. Locking onto player.");
                 lockedOntoAPlayer = true;
                 lastPlayerTargetted = playerControllerB;
                 if (ACUClickingAudioSource.clip == null)
@@ -145,6 +143,11 @@ public class AirControlUnit : NetworkBehaviour
     {
         if (lastPlayerTargetted == null) return;
         // play shoot sound
+        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 70)
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+        }
         ACUAudioSource.PlayOneShot(ACUFireSound);
         if (IsServer)
         {

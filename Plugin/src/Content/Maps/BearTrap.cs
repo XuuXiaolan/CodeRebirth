@@ -79,14 +79,27 @@ public class BearTrap : NetworkBehaviour
     {
         if (isTriggered || !canTrigger) return;
         
-        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player))
+        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
         {
-            TriggerTrap(player);
+            TriggerTrapServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }
         else if (other.gameObject.layer == 19 && other.TryGetComponent(out EnemyAI enemy))
         {
             TriggerTrap(enemy);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void TriggerTrapServerRpc(int index)
+    {
+        TriggerTrapClientRpc(index);
+    }
+
+    [ClientRpc]
+    private void TriggerTrapClientRpc(int index)
+    {
+        if (index == -1) return;
+        TriggerTrap(StartOfRound.Instance.allPlayerScripts[index]);
     }
 
     private void TriggerTrap(PlayerControllerB player)

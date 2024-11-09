@@ -31,12 +31,12 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public Transform MouthTransform = null!;
 
     private float specialAttackTimer = 15f;
-    private bool closeToEevee = true;
-    private Transform spawnTransform = null!;
+    private bool CloseToEevee => Vector3.Distance(childEevee.transform.position, this.transform.position) <= 10;
+    [NonSerialized] public Transform spawnTransform = null!;
     private ChildEnemyAI childEevee = null!;
     private float timeSinceHittingLocalPlayer = 0f;
     private bool holdingChild = false;
-    private bool isSpawnInside = true;
+    [NonSerialized] public bool isSpawnInside = true;
     private System.Random enemyRandom = null!;
     private bool childCreated = false;
 
@@ -224,25 +224,25 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     private void HandleStateWanderingChange()
     {
-        StartSearchRoutine(transform.position, 40, agent.areaMask);
+        smartAgentNavigator.StartSearchRoutine(transform.position, 40);
         agent.speed = WalkingSpeed;
         agent.acceleration = Acceleration; 
     }
 
     private void HandleStateGuardingChange()
     {
-        StopSearchRoutine();
+        smartAgentNavigator.StopSearchRoutine();
         GrabChild(childEevee, MouthTransform);
     }
 
     private void HandleStateChasingPlayerChange()
     {
-        StopSearchRoutine();
+        smartAgentNavigator.StopSearchRoutine();
     }
 
     private void HandleStateDeathChange()
     {
-        StopSearchRoutine();
+        smartAgentNavigator.StopSearchRoutine();
     }
     #endregion
 
@@ -252,7 +252,6 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         if (isEnemyDead) return;
         specialAttackTimer -= Time.deltaTime;
         timeSinceHittingLocalPlayer -= Time.deltaTime;
-        closeToEevee = Vector3.Distance(childEevee.transform.position, this.transform.position) <= 10;     
     }
 
     public override void DoAIInterval()
@@ -276,7 +275,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     public void DoWandering()
     {
-        if (closeToEevee)
+        if (CloseToEevee)
         {
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
@@ -285,7 +284,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
                 float distance = Vector3.Distance(player.gameplayCamera.transform.position, childEevee.transform.position);
                 if (distance <= 10 && dotProduct <= 0.5)
                 {
-                    DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
+                    smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
                     this.transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position);
                     // player is close and looking at eevee's direction.
                     if (distance < 5 && Vector3.Distance(player.transform.position, spawnTransform.position) <= 30)
@@ -309,20 +308,20 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     {
         if (!holdingChild && specialAttackTimer <= 0) // come to this state after hitting a player and making them drop the eevee, so eevee wont be held by anyone really
         {
-            DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
+            smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
             if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
             {
                 // do special attack
                 specialAttackTimer = 10f;
             }
         }
-        DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, true, null);
+        smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, true, null);
         
     }
 
     public void DoChasingPlayer()
     {
-        // If the golden egg is held by the player, keep chasing the player until the egg is dropped
+        // If the eevee is held by the player, keep chasing the player until the eevee is dropped
         if (childEevee == null)
         {
             Plugin.ExtendedLogging("Child eevee turned null somehow");
@@ -330,11 +329,10 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             return;
         }
 
-        DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
         if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
         {
             // do attacks and animation stuff.
-            
         }
     }
 

@@ -1,11 +1,80 @@
-# v0.7.6
+# v0.7.16
 
-- Reverted the halloween fog changes I made to go back to being compatible with v64~
+- Metal crates no longer abusable.
+- Fixed exploit with metal crates.
+- Added safeguards to wooden crates with desynced shops.
+- Maybe fixed bug where you would sometimes get flashed by flash camera for a long time.
+- Fan doesn't push/pull through doors now.
+- Laser turret doesnt shoot through doors too.
+
+## v0.7.15
+
+- Forgot to get rid of dependency.
+
+## V0.7.14
+
+- Added to README about the model replacement feature.
+- Added a first time message saying what mods you can enable.
+- Added compatibility with shockwave gal with openbodycams camera.
+
+## v0.7.13
+
+- Added a new thunderstore dependency, keep in mind it is OPTIONAL, you can get rid of it if you dont like it!
+
+## v0.7.12
+
+- Added config for safe item value multiplier, default is 1.4f value;
+- Turned all flora into static shadow casters, should help with performance a bit.
+- Reduced fan push force into 3 from 4 to help with not clipping through walls.
+- Beartraps are hopefully more synced up.
+- Redwood giant no longer lingers forcefully around the ship.
+- Fixed problems with metal crate.
+- I left a present for if a player enters a metal crate.
+- Fixed problems with hitting wooden crate part 2 electric bogaloo.
+- Fixed ACU being an explosive mess.
+- Added whitelist option for wooden crates, auto generates if blacklist field is empty and whitelist is toggled on.
+
+## v0.7.11
+
+- Fixed problems with hitting wooden crate.
+- Tried to fix problems with gal's selling features.
+- Fixed problem with gal erroring when employee gets fired.
+
+## v0.7.10
+
+- Fixed bug with gal for clients.
+- If crates are pulled up with fists, the player gets damaged a little bit.
+
+## v0.7.9
+
+- Fixed metal crate for clients.
+- Slightly updated metal crate textures.
+- Changed how I handle pathing for the gal and redwood giant, so let me know how those feel.
+- Disabled Cutiefly, SnailCat and Biomes in teh config by default.
+
+## v0.7.8
+
+- Fixed error where mod wouldn't load (whoopsie).
+
+## v0.7.7
+
+- Fixed really strong industrial fans.
+- Added metal safes, removed metal crates, changed how metal safes work from metal crates, same with wooden crates, changed how they work.
+  - Basically swapped features of metal crate and wooden crate.
+
+## v0.7.6
+
+- Fixed endless growing of the plants by abusing going to company moon.
+- Reverted the halloween fog changes because zeekerss made it less common.
 - Added gal compatibility with openbodycams.
 - Cleaned up the gal's hand triggers, they won't show unless she's activate and you're holding an item.
 - Added appropriate screenshakes.
 - Polished tesla shock to be a stronger hit that has a longer cooldown.
 - Added a config to enable bear traps inside the interior.
+- Industrial fan had frame rate issues.
+- Fixed flash turret not working for clients.
+- Gave ACUnit bullet a trail that explodes you less far.
+- Fixed readme with bear trap and flash turret mix-up.
 
 ## v0.7.5
 

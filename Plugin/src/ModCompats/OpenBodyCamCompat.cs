@@ -5,12 +5,6 @@ using OpenBodyCams;
 
 namespace CodeRebirth.src.ModCompats;
 
-file class Gal : MonoBehaviour
-{
-    internal Transform headTransform;
-    internal Renderer[] headRenderers;
-}
-
 public static class OpenBodyCamCompatibilityChecker
 {
     public static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Zaggy1024.OpenBodyCams"); } }
