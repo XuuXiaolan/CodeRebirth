@@ -105,9 +105,6 @@ public class ShockwaveGalAI : GalAI
     public override void ActivateGal(PlayerControllerB owner)
     {
         base.ActivateGal(owner);
-        ownerPlayer = owner;
-        DoGalRadarAction(true);
-        GalVoice.PlayOneShot(ActivateSound);
         int activePlayerCount = StartOfRound.Instance.allPlayerScripts.Where(x => x.isPlayerControlled).Count();
         if (activePlayerCount == 1 || Plugin.ModConfig.ConfigShockwaveHoldsFourItems.Value)
         {
@@ -117,7 +114,6 @@ public class ShockwaveGalAI : GalAI
         {
             maxItemsToHold = 2;
         }
-        smartAgentNavigator.SetAllValues(true);
         depositItemsDesk = FindObjectOfType<DepositItemsDesk>();
         onCompanyMoon = RoundManager.Instance.currentLevel.levelID == 3;
         ResetToChargerStation(State.Active, Emotion.OpenEye);
@@ -132,12 +128,9 @@ public class ShockwaveGalAI : GalAI
         HandleStateAnimationSpeedChanges(state, emotion);
     }
 
-    public void DeactivateShockwaveGal()
+    public override void DeactivateGal()
     {
-        ownerPlayer = null;
-        DoGalRadarAction(false);
-        GalVoice.PlayOneShot(DeactivateSound);
-        smartAgentNavigator.ResetAllValues();
+        base.DeactivateGal();
         depositItemsDesk = null;
         onCompanyMoon = false;
         ResetToChargerStation(State.Inactive, Emotion.ClosedEye);
@@ -306,6 +299,14 @@ public class ShockwaveGalAI : GalAI
         HostSideUpdate();
     }
 
+    private float GetCurrentSpeedMultiplier()
+    {
+        float speedMultiplier = (galState == State.FollowingPlayer || galState == State.AttackMode) ? 2f : 1f; // Speed when farthest
+        if ((backFlipping && targetEnemy == null) || catPosing) speedMultiplier = 0f;
+
+        return speedMultiplier;
+    }
+
     private void HostSideUpdate()
     {
         if (StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase)
@@ -313,7 +314,7 @@ public class ShockwaveGalAI : GalAI
             ShockwaveCharger.ActivateGirlServerRpc(-1);
             return;
         }
-        if (Agent.enabled) AdjustSpeedOnDistanceOnTargetPosition();
+        if (Agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
         Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 3);
         switch (galState)
         {
@@ -1057,29 +1058,5 @@ public class ShockwaveGalAI : GalAI
     {
         yield return new WaitForSeconds(0.1f);
         grabbableObject.EnablePhysics(false);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SetEnemyTargetServerRpc(int enemyID)
-    {
-        SetEnemyTargetClientRpc(enemyID);
-    }
-
-    [ClientRpc]
-    public void SetEnemyTargetClientRpc(int enemyID)
-    {
-        if (enemyID == -1)
-        {
-            targetEnemy = null;
-            Plugin.ExtendedLogging($"Clearing Enemy target on {this}");
-            return;
-        }
-        if (RoundManager.Instance.SpawnedEnemies[enemyID] == null)
-        {
-            Plugin.ExtendedLogging($"Enemy Index invalid! {this}");
-            return;
-        }
-        targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
-        Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
 }

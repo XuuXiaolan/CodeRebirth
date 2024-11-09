@@ -123,8 +123,12 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         ShipRoomUpdate();
     }
 
-    public virtual void ActivateGal(PlayerControllerB ownerPlayer)
+    public virtual void ActivateGal(PlayerControllerB owner)
     {
+        ownerPlayer = owner;
+        DoGalRadarAction(true);
+        GalVoice.PlayOneShot(ActivateSound);
+        smartAgentNavigator.SetAllValues(true);
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         smartAgentNavigator.OnEnableOrDisableAgent.AddListener(OnEnableOrDisableAgent);
     }
@@ -140,6 +144,10 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
 
     public virtual void DeactivateGal()
     {
+        ownerPlayer = null;
+        DoGalRadarAction(false);
+        GalVoice.PlayOneShot(DeactivateSound);
+        smartAgentNavigator.ResetAllValues();
         smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnUseEntranceTeleport);
         smartAgentNavigator.OnEnableOrDisableAgent.RemoveListener(OnEnableOrDisableAgent);
     }
@@ -201,6 +209,30 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
             collider.enabled = enablePhysics;
         }
         physicsEnabled = enablePhysics;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetEnemyTargetServerRpc(int enemyID)
+    {
+        SetEnemyTargetClientRpc(enemyID);
+    }
+
+    [ClientRpc]
+    public void SetEnemyTargetClientRpc(int enemyID)
+    {
+        if (enemyID == -1)
+        {
+            targetEnemy = null;
+            Plugin.ExtendedLogging($"Clearing Enemy target on {this}");
+            return;
+        }
+        if (RoundManager.Instance.SpawnedEnemies[enemyID] == null)
+        {
+            Plugin.ExtendedLogging($"Enemy Index invalid! {this}");
+            return;
+        }
+        targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
+        Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
 
 	public virtual void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)

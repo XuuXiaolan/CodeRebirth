@@ -14,6 +14,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     [NonSerialized] public UnityEvent<bool> OnUseEntranceTeleport = new();
     [NonSerialized] public UnityEvent<bool> OnEnableOrDisableAgent = new();
 
+    private float nonAgentMovementSpeed = 10f;
     private NavMeshAgent agent = null!;
     private Vector3 pointToGo = Vector3.zero;
     [NonSerialized] public bool isOutside = true;
@@ -77,13 +78,12 @@ public class SmartAgentNavigator : NetworkBehaviour
         if (!agent.enabled)
         {
             Vector3 targetPosition = pointToGo;
-            float moveSpeed = 6f;  // Increased speed for a faster approach
             float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
             float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
             // Calculate the new position in an arcing motion
             float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
-            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveSpeed);
+            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * nonAgentMovementSpeed);
             newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
 
             transform.position = newPosition;
@@ -362,18 +362,18 @@ public class SmartAgentNavigator : NetworkBehaviour
     /// The farther the distance, the faster the agent moves.
     /// </summary>
     /// <param name="distance">The distance to the target.</param>
-    private void AdjustSpeedBasedOnDistance(float distance)
+    public void AdjustSpeedBasedOnDistance(float multiplierBoost)
     {
         float minDistance = 0f;
         float maxDistance = 40f;
 
         float minSpeed = 0f; // Speed when closest
-        float maxSpeed = 20f; // Speed when farthest
+        float maxSpeed = 10f; // Speed when farthest
 
-        float clampedDistance = Mathf.Clamp(distance, minDistance, maxDistance);
+        float clampedDistance = Mathf.Clamp(agent.remainingDistance, minDistance, maxDistance);
         float normalizedDistance = (clampedDistance - minDistance) / (maxDistance - minDistance);
 
-        agent.speed = Mathf.Lerp(minSpeed, maxSpeed, normalizedDistance);
+        agent.speed = Mathf.Lerp(minSpeed, maxSpeed, normalizedDistance) * multiplierBoost;
     }
 
     /// <summary>

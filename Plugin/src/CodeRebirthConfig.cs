@@ -99,6 +99,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<int> ConfigSeamineTinkCharges { get; private set; }
     public ConfigEntry<float> ConfigWoodenSeedTreeSpawnChance { get; private set; }
     public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
     public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
@@ -132,6 +133,9 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigWalletCost { get; private set; }
     public ConfigEntry<int> ConfigMinCoinValue { get; private set; }
     public ConfigEntry<int> ConfigMaxCoinValue { get; private set; }
+    public ConfigEntry<string> ConfigSeamineTinkEnemyBlacklist { get; private set; }
+    public ConfigEntry<float> ConfigSeamineTinkRidingBruceVolume { get; private set; }
+    public ConfigEntry<bool> ConfigSeamineTinkAutomatic { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -280,14 +284,33 @@ public class CodeRebirthConfig
                                             "Whether the Shockwave Gal will bypass quota when using her sell function at company.");
         #endregion
         #region Seamine Gal
-        /*ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
+        ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Enabled",
                                             true,
                                             "Whether the Seamine Gal is enabled.");
         ConfigSeamineTinkCost = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Cost",
                                             999,
-                                            "Cost of the Seamine Tink.");*/
+                                            "Cost of the Seamine Gal.");
+        ConfigSeamineTinkCharges = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Charges",
+                                            10,
+                                            "How many charges the Seamine Gal has.");
+        ConfigSeamineTinkEnemyBlacklist = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Enemy Blacklist",
+                                            "",
+                                            "Comma separated list of enemies that the Seamine Gal will not target (keep in mind she ONLY targets immortal enemies).");
+        ConfigSeamineTinkRidingBruceVolume = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Riding Bruce Volume",
+                                            0.75f,
+                                            new ConfigDescription(
+                                                "Volume of the Seamine Gal's Riding Bruce.",
+                                                new AcceptableValueRange<float>(0, 1f)
+                                            ));
+        ConfigSeamineTinkAutomatic = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Automatic Behaviour",
+                                            false,
+                                            "Whether the Seamine Gal will automatically wake up and choose the nearest player as the owner.");
         #endregion
         #region Biomes
         ConfigBiomesEnabled = configFile.Bind("Biome Options",
@@ -359,7 +382,7 @@ public class CodeRebirthConfig
         ConfigWoodenSeedTreeSpawnChance = configFile.Bind("Farming Options",
                                             "Farming | Wooden Seed Tree Spawn Chance",
                                             2f,
-                                            "Change of the wooden seed to spawn from a broken tree");
+                                            "Chance of the wooden seed to spawn from a broken tree");
         ConfigWoodenSeedSpawnWeights = configFile.Bind("Farming Options",
                                             "Farming | Wooden Seed Spawn Weights",
                                             "",

@@ -38,6 +38,9 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		[LoadFromBundle("SeamineTinkUnlockable.asset")]
 		public UnlockableItemDef SeamineTinkUnlockable { get; private set; } = null!;
+
+		[LoadFromBundle("SeamineGal.prefab")]
+		public GameObject SeamineGalPrefab { get; private set; } = null!;
 	}
 
 	public SeamineTinkAssets SeamineTink { get; private set; } = null!;
@@ -48,7 +51,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		if (Plugin.ModConfig.ConfigShockwaveBotEnabled.Value) RegisterShockWaveGal();
 		if (Plugin.ModConfig.ConfigFarmingEnabled.Value) RegisterPlantPot();
-		//if (Plugin.ModConfig.ConfigSeamineTinkEnabled.Value) RegisterSeamineTink();
+		if (Plugin.ModConfig.ConfigSeamineTinkEnabled.Value) RegisterSeamineTink();
 	}
 
     private void RegisterShockWaveGal()
