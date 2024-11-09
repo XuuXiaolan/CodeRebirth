@@ -1,6 +1,10 @@
-# v0.7.17
+# v0.7.18
 
-- Readjusted camera height with the shockwave gal model.
+- Removed readjustment of camera with the shockwave gal model cuz that seems like a bad idea in hindsight.
+- Also credited rodrigo with a funny video.
+
+## v0.7.17
+
 - Fixed bug with wooden crate where it would error/spawn normal items despite config not allowing it.
 - Allowed you to be teleported away/use entrance teleports while in a bear trap to escape.
 - Gave bear traps a more advanced config.
