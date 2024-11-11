@@ -17,12 +17,12 @@ public class Fruit : GrabbableObject
         NetworkObject.OnSpawn(() => {
             int value = (int)(UnityEngine.Random.Range(this.itemProperties.minValue, this.itemProperties.maxValue) * 0.4f);
             SetScrapValue(value);
-            SetFruitValueClientRPC(value);
+            SetFruitValueClientRpc(value);
         });
     }
 
     [ClientRpc]
-    private void SetFruitValueClientRPC(int value)
+    private void SetFruitValueClientRpc(int value)
     {
         if (IsHost) return;
         SetScrapValue(value);

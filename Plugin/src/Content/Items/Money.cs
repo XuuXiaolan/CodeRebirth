@@ -20,12 +20,12 @@ public class Money : GrabbableObject
         NetworkObject.OnSpawn(() => {
             int value = UnityEngine.Random.Range(minBaseValue, maxBaseValue);
             SetScrapValue(value);
-            SetMoneyValueClientRPC(value);
+            SetMoneyValueClientRpc(value);
         });
     }
 
     [ClientRpc]
-    private void SetMoneyValueClientRPC(int value)
+    private void SetMoneyValueClientRpc(int value)
     {
         if(IsHost) return;
         SetScrapValue(value);
