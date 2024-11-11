@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using Unity.Netcode;
 using UnityEngine;
@@ -8,7 +7,6 @@ using Random = System.Random;
 using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util.Extensions;
-using CodeRebirth.Util.Extensions;
 using Newtonsoft.Json;
 
 namespace CodeRebirth.src.Util;

@@ -1,5 +1,3 @@
-
-using GameNetcodeStuff;
 using ModelReplacement;
 using UnityEngine;
 

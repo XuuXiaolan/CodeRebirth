@@ -3,11 +3,10 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Items;
-public class Wallet : GrabbableObject {  // todo: fix only host being able to pick it up
+public class Wallet : GrabbableObject {
     public InteractTrigger trigger = null!;
     private RaycastHit hit;
     private ScanNodeProperties scanNode = null!;

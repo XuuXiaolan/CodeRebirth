@@ -124,6 +124,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
 		{
 			BearTrap = new BearTrapAssets("beartrapassets");
+			hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);
 			if (Plugin.ModConfig.ConfigInsideBearTrapEnabled.Value) RegisterInsideBearTraps();
 		}
 

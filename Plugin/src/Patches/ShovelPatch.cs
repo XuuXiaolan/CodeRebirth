@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using GameNetcodeStuff;
 using System;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Content.Unlockables;
 using UnityEngine;
 using CodeRebirth.src.Content.Maps;
 using UnityEngine.AI;
