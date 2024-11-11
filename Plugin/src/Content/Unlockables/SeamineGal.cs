@@ -14,18 +14,25 @@ namespace CodeRebirth.src.Content.Unlockables;
 public class SeamineGalAI : GalAI
 {
     public List<AnimationClip> JojoAnimations = new();
-    [NonSerialized] public SeamineCharger SeamineCharger = null!;
+    public InteractTrigger hugInteractTrigger = null!;
     public AudioSource RidingBruceSource = null!;
 
+    private bool inHugAnimation = false;
+    private bool huggingOwner = false;
+    [NonSerialized] public SeamineCharger SeamineCharger = null!;
     private bool ridingBruce = false;
     private State galState = State.Inactive;
     private bool jojoPosing = false;
-    private readonly static int jojoAnimation = Animator.StringToHash("doJojoAnimation"); // should be an int to choose specific anim
-    private readonly static int rideBruceAnimation = Animator.StringToHash("rideBruce");
-    private readonly static int startAttackAnimation = Animator.StringToHash("startAttack");
-    private readonly static int danceAnimation = Animator.StringToHash("dancing");
-    private readonly static int activatedAnimation = Animator.StringToHash("activated");
-    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed");
+    private readonly static int chargeCountInt = Animator.StringToHash("chargeCount"); // int
+    private readonly static int revealHazardsAnimation = Animator.StringToHash("revealHazards"); // trigger
+    private readonly static int hugAnimation = Animator.StringToHash("doHug"); // trigger
+    private readonly static int jojoAnimationInt = Animator.StringToHash("jojoPoseInt"); // should be an int to choose specific anim
+    private readonly static int attackModeAnimation = Animator.StringToHash("attackMode"); // bool
+    private readonly static int ridingBruceAnimation = Animator.StringToHash("ridingBruce"); // bool
+    private readonly static int startExplodeAnimation = Animator.StringToHash("doExplode"); // trigger
+    private readonly static int danceAnimation = Animator.StringToHash("dancing"); // bool
+    private readonly static int activatedAnimation = Animator.StringToHash("activated"); // bool
+    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed"); // float
 
     public enum State
     {
@@ -57,10 +64,32 @@ public class SeamineGalAI : GalAI
         }
 
         // Adding listener for interaction trigger
+        hugInteractTrigger.onInteract.AddListener(OnHugInteract);
         SeamineCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(SeamineCharger.OnActivateGal);
 
         StartCoroutine(CheckForNearbyEnemiesToOwner());
 
+    }
+
+    private void OnHugInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        StartHugInteractServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartHugInteractServerRpc()
+    {
+        StartHugInteractClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartHugInteractClientRpc()
+    {
+        if (ownerPlayer == null) return;
+        ownerPlayer.disableMoveInput = true;
+        ownerPlayer.disableLookInput = true;
+        huggingOwner = true;
     }
 
     public override void ActivateGal(PlayerControllerB owner)
@@ -84,10 +113,11 @@ public class SeamineGalAI : GalAI
         ResetToChargerStation(State.Inactive);
     }
 
-    private IEnumerator ResetSpeedBackToNormal(float animLength)
+    private IEnumerator ResetSpeedBackToNormal()
     {
         jojoPosing = true;
-        yield return new WaitForSeconds(animLength);
+        yield return new WaitForSeconds(0.9f);
+        Animator.SetInteger(jojoAnimationInt, -1);
         jojoPosing = false;
     }
 
@@ -95,11 +125,13 @@ public class SeamineGalAI : GalAI
     {
         bool interactable = inActive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         bool idleInteractable = galState != State.AttackMode && interactable;
+        
+        hugInteractTrigger.interactable = idleInteractable;
     }
 
     private void StoppingDistanceUpdate()
     {
-        Agent.stoppingDistance = galState == State.AttackMode ? 6f : 3f;
+        Agent.stoppingDistance = galState == State.AttackMode ? 6f : 3f * (huggingOwner ? 0.1f : 1f);
     }
 
     private void SetIdleDefaultStateForEveryone()
@@ -109,6 +141,7 @@ public class SeamineGalAI : GalAI
             Plugin.Logger.LogInfo("Syncing for client");
             galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
             chargeCount = Plugin.ModConfig.ConfigSeamineTinkCharges.Value;
+            Animator.SetInteger(chargeCountInt, chargeCount);
             maxChargeCount = chargeCount;
             Agent.enabled = false;
             foreach (string enemy in Plugin.ModConfig.ConfigSeamineTinkEnemyBlacklist.Value.Split(','))
@@ -145,7 +178,7 @@ public class SeamineGalAI : GalAI
 
     private float GetCurrentSpeedMultiplier()
     {
-        float speedMultiplier = 1f * (galState == State.FollowingPlayer? 2f : 1f) *  (galState == State.AttackMode ? 4f : 1f);
+        float speedMultiplier = 1f * (galState == State.FollowingPlayer? 2f : 1f) *  (galState == State.AttackMode ? 4f : 1f) * (jojoPosing ? 0f : 1f);
         return speedMultiplier;
     }
 
@@ -180,7 +213,7 @@ public class SeamineGalAI : GalAI
     public override void OnEnableOrDisableAgent(bool agentEnabled)
     {
         base.OnEnableOrDisableAgent(agentEnabled);
-        Animator.SetBool(rideBruceAnimation, !agentEnabled);
+        Animator.SetBool(ridingBruceAnimation, !agentEnabled);
     }
 
     private void DoActive()
@@ -211,10 +244,13 @@ public class SeamineGalAI : GalAI
 
         DoStaringAtOwner(ownerPlayer);
 
-        if (boomboxPlaying)
+        if (DoHuggingOwner(ownerPlayer))
         {
-            HandleStateAnimationSpeedChanges(State.Dancing);
-            StartCoroutine(StopDancingDelay());
+            return;
+        }
+
+        if (DoDancingAction())
+        {
             return;
         }
 
@@ -263,16 +299,46 @@ public class SeamineGalAI : GalAI
             if (!currentlyAttacking)
             {
                 currentlyAttacking = true;
-                NetworkAnimator.SetTrigger(startAttackAnimation);
+                NetworkAnimator.SetTrigger(startExplodeAnimation);
             }
         }
     }
 
     private void DoJojoPoselol()
     {
-        int jojoAnimationInt = UnityEngine.Random.Range(0, JojoAnimations.Count);
-        Animator.SetInteger(jojoAnimation, 0);
-        StartCoroutine(ResetSpeedBackToNormal(JojoAnimations[jojoAnimationInt].length));
+        int jojoAnimationNumber = UnityEngine.Random.Range(0, JojoAnimations.Count);
+        Animator.SetInteger(jojoAnimationInt, jojoAnimationNumber);
+        StartCoroutine(ResetSpeedBackToNormal());
+    }
+
+    private bool DoDancingAction()
+    {
+        if (boomboxPlaying)
+        {
+            HandleStateAnimationSpeedChanges(State.Dancing);
+            StartCoroutine(StopDancingDelay());
+            return true;
+        }
+        return false;
+    }
+
+    private bool DoHuggingOwner(PlayerControllerB ownerPlayer)
+    {
+        if (!huggingOwner) return false;
+        if (Vector3.Distance(transform.position, ownerPlayer.transform.position) <= Agent.stoppingDistance && Agent.enabled && !inHugAnimation)
+        {
+            NetworkAnimator.SetTrigger(hugAnimation);
+            inHugAnimation = true;
+        }
+        return true;
+    }
+
+    public void EndHugAnimEvent()
+    {
+        inHugAnimation = false;
+        if (ownerPlayer == null) return;
+        ownerPlayer.disableMoveInput = false;
+        ownerPlayer.disableLookInput = false;
     }
 
     private IEnumerator StopDancingDelay()
@@ -383,25 +449,26 @@ public class SeamineGalAI : GalAI
         switch (state)
         {
             case State.Inactive:
-                SetAnimatorBools(rideBruce: false, dance: false, activated: false);
+                SetAnimatorBools(attackMode: false, dance: false, activated: false);
                 break;
             case State.Active:
-                SetAnimatorBools(rideBruce: false, dance: false, activated: true);
+                SetAnimatorBools(attackMode: false, dance: false, activated: true);
                 break;
             case State.FollowingPlayer:
-                SetAnimatorBools(rideBruce: false, dance: false, activated: true);
+                SetAnimatorBools(attackMode: false, dance: false, activated: true);
                 break;
             case State.Dancing:
-                SetAnimatorBools(rideBruce: false, dance: true, activated: true);
+                SetAnimatorBools(attackMode: false, dance: true, activated: true);
                 break;
             case State.AttackMode:
+                SetAnimatorBools(attackMode: true, dance: false, activated: true);
                 break;
         }
     }
 
-    private void SetAnimatorBools(bool rideBruce, bool dance, bool activated)
+    private void SetAnimatorBools(bool attackMode, bool dance, bool activated)
     {
-        Animator.SetBool(rideBruceAnimation, rideBruce);
+        Animator.SetBool(attackModeAnimation, attackMode);
         Animator.SetBool(danceAnimation, dance);
         Animator.SetBool(activatedAnimation, activated);
     }

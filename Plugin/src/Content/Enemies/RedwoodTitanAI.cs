@@ -162,6 +162,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
+            if (player == null || player.isPlayerDead || !player.isPlayerControlled || !player.ContainsCRPlayerData()) continue;
             foreach (Collider playerCollider in player.GetPlayerColliders())
             {
                 foreach (Collider enemyCollider in enemyColliders)

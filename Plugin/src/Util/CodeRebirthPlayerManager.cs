@@ -56,7 +56,7 @@ public class CRPlayerData
     public bool flingingAway = false;
     public bool flung = false;
     public Hoverboard? hoverboardRiding;
-    public List<Collider>? playerColliders = null;
+    public List<Collider> playerColliders = new();
     public AnimatorOverrideController? playerOverrideController;
 
     internal CodeRebirthLocalSave persistentData => CodeRebirthSave.Current.PlayerData[CodeRebirthPlayerManager.dataForPlayer.FirstOrDefault(it => it.Value == this).Key.playerSteamId];
@@ -177,5 +177,5 @@ internal static class PlayerControllerBExtensions
         player.GetCRPlayerData().flingingAway = flingingAway;
 
     internal static IEnumerable<Collider> GetPlayerColliders(this PlayerControllerB player) =>
-        player.GetCRPlayerData().playerColliders!;
+        player.GetCRPlayerData().playerColliders;
 }
