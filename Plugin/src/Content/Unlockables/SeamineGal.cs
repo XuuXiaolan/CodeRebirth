@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -10,7 +9,6 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
-[RequireComponent(typeof(SmartAgentNavigator))]
 public class SeamineGalAI : GalAI
 {
     public List<AnimationClip> JojoAnimations = new();

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
-public class LaserTurret : NetworkBehaviour // turretAudioSource with looping rotating audio
+public class LaserTurret : NetworkBehaviour
 {
     public Transform turretTransform = null!;
     public Transform laserStartPoint = null!;

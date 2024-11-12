@@ -21,6 +21,6 @@ public static class ModelReplacementAPICompatibilityChecker
     {
         Plugin.ExtendedLogging("Delilah is a new model registered!");
         PlayerModelHandler.Instance.ModelReplacement = new ModelReplacementAssets("shockwavegalmodelreplacementassets");
-        ModelReplacementAPI.RegisterSuitModelReplacement("Delilah", typeof(ShockwaveGalModel));
+        //ModelReplacementAPI.RegisterSuitModelReplacement("Delilah", typeof(ShockwaveGalModel));
     }
 }

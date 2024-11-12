@@ -2,7 +2,7 @@ using ModelReplacement;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.PlayerModels;
-public class ShockwaveGalModel : BodyReplacementBase
+/*public class ShockwaveGalModel : BodyReplacementBase
 {
     protected override void Awake()
     {
@@ -18,4 +18,4 @@ public class ShockwaveGalModel : BodyReplacementBase
     { 
         return PlayerModelHandler.Instance.ModelReplacement.ModelPrefab;
     }
-}
+}*/
