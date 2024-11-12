@@ -176,7 +176,7 @@ public class SeamineGalAI : GalAI
 
     private float GetCurrentSpeedMultiplier()
     {
-        float speedMultiplier = 1f * (galState == State.FollowingPlayer? 2f : 1f) *  (galState == State.AttackMode ? 4f : 1f) * (jojoPosing ? 0f : 1f);
+        float speedMultiplier = 1f * (galState == State.FollowingPlayer ? 2f : 1f) * (galState == State.AttackMode ? 4f : 1f) * (jojoPosing ? 0f : 1f);
         return speedMultiplier;
     }
 
@@ -188,7 +188,7 @@ public class SeamineGalAI : GalAI
             return;
         }
         if (Agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
-        Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 3);
+        Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 2);
         switch (galState)
         {
             case State.Inactive:
@@ -421,6 +421,14 @@ public class SeamineGalAI : GalAI
     private void StartRidingBruceAnimEvent()
     {
         SetRidingBruce(true);
+        StartCoroutine(FlyAnimationDelay());
+    }
+
+    private IEnumerator FlyAnimationDelay()
+    {
+        smartAgentNavigator.cantMove = true;
+        yield return new WaitForSeconds(1f);
+        smartAgentNavigator.cantMove = false;
     }
 
     private void StopRidingBruceAnimEvent()

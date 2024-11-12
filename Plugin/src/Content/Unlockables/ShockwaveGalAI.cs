@@ -745,6 +745,14 @@ public class ShockwaveGalAI : GalAI
     private void StartFlyingAnimEvent()
     {
         SetFlying(true);
+        StartCoroutine(FlyAnimationDelay());
+    }
+
+    private IEnumerator FlyAnimationDelay()
+    {
+        smartAgentNavigator.cantMove = true;
+        yield return new WaitForSeconds(0.5f);
+        smartAgentNavigator.cantMove = false;
     }
 
     private void StopFlyingAnimEvent()

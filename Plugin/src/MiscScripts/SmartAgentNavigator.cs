@@ -11,6 +11,7 @@ using UnityEngine.Events;
 namespace CodeRebirth.src.MiscScripts;
 public class SmartAgentNavigator : NetworkBehaviour
 {
+    [NonSerialized] public bool cantMove = false;
     [NonSerialized] public UnityEvent<bool> OnUseEntranceTeleport = new();
     [NonSerialized] public UnityEvent<bool> OnEnableOrDisableAgent = new();
 
@@ -77,6 +78,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     {
         if (!agent.enabled)
         {
+            if (cantMove) return true;
             Vector3 targetPosition = pointToGo;
             float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
             float distanceToTarget = Vector3.Distance(transform.position, targetPosition);

@@ -105,7 +105,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
 
         idleTimer = 0f;
         idleNeededTimer = galRandom.NextFloat(5f, 10f);
-        GalSFX.PlayOneShot(IdleSounds[galRandom.NextInt(0, IdleSounds.Length - 1)]);
+        GalSFX.PlayOneShot(IdleSounds[galRandom.Next(0, IdleSounds.Length)]);
     }
 
     private void ShipRoomUpdate()

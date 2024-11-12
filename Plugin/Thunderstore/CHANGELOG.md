@@ -1,4 +1,11 @@
-# v0.7.18
+# v0.8.0
+
+- Added seamine gal.
+- Added seamine gal as a player suit.
+- Added configs for enabling/disabling seamine and shockwave gal player models.
+- Fixed meteor shower initial volume stuff.
+
+## v0.7.18
 
 - Removed readjustment of camera with the shockwave gal model cuz that seems like a bad idea in hindsight.
 - Also credited rodrigo with a funny video.
