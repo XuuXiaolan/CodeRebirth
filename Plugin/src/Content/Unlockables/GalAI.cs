@@ -111,6 +111,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     private void ShipRoomUpdate()
     {
         isInHangarShipRoom = StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position);
+        if (isInHangarShipRoom) smartAgentNavigator.isOutside = true;
     }
 
     public virtual void Update()

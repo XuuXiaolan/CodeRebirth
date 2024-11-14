@@ -7,6 +7,8 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigSeamineTinkPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFirstLaunchPopup { get; private set; }
     public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
     public ConfigEntry<bool> ConfigInsideBearTrapEnabled { get; private set; }
@@ -282,6 +284,10 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Bypass Quota",
                                             false,
                                             "Whether the Shockwave Gal will bypass quota when using her sell function at company.");
+        ConfigShockwaveGalPlayerModelEnabled = configFile.Bind("Shockwave Options",
+                                            "Shockwave Gal | Player Model",
+                                            true,
+                                            "Whether the Shockwave Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
         #endregion
         #region Seamine Gal
         ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
@@ -311,6 +317,10 @@ public class CodeRebirthConfig
                                             "Seamine Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Seamine Gal will automatically wake up and choose the nearest player as the owner.");
+        ConfigSeamineTinkPlayerModelEnabled = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Player Model",
+                                            true,
+                                            "Whether the Seamine Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
         #endregion
         #region Biomes
         ConfigBiomesEnabled = configFile.Bind("Biome Options",
@@ -627,7 +637,7 @@ public class CodeRebirthConfig
                                             ));
         ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                             "Meteors | Default Volume",
-                                            0.2f,
+                                            0.6f,
                                             new ConfigDescription(
                                                 "Default Volume of Meteors (between 0 and 1).",
                                                 new AcceptableValueRange<float>(0, 1f)

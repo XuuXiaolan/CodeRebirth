@@ -13,6 +13,8 @@ public class SeamineGalAI : GalAI
 {
     public List<AnimationClip> JojoAnimations = new();
     public InteractTrigger hugInteractTrigger = null!;
+    public GameObject flashLightLight = null!;
+    public InteractTrigger flashLightInteractTrigger = null!;
     public AudioSource RidingBruceSource = null!;
 
     private bool inHugAnimation = false;
@@ -63,10 +65,28 @@ public class SeamineGalAI : GalAI
 
         // Adding listener for interaction trigger
         hugInteractTrigger.onInteract.AddListener(OnHugInteract);
+        flashLightInteractTrigger.onInteract.AddListener(OnFlashLightInteract);
         SeamineCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(SeamineCharger.OnActivateGal);
 
         StartCoroutine(CheckForNearbyEnemiesToOwner());
+    }
 
+    private void OnFlashLightInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        StartFlashLightInteractServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartFlashLightInteractServerRpc()
+    {
+        StartFlashLightInteractClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartFlashLightInteractClientRpc()
+    {
+        flashLightLight.SetActive(!flashLightLight.activeSelf);
     }
 
     private void OnHugInteract(PlayerControllerB playerInteracting)
@@ -85,6 +105,7 @@ public class SeamineGalAI : GalAI
     private void StartHugInteractClientRpc()
     {
         if (ownerPlayer == null) return;
+        ownerPlayer.enteringSpecialAnimation = true;
         ownerPlayer.disableMoveInput = true;
         ownerPlayer.disableLookInput = true;
         huggingOwner = true;
@@ -121,15 +142,16 @@ public class SeamineGalAI : GalAI
 
     private void InteractTriggersUpdate()
     {
-        bool interactable = inActive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        bool interactable = !inActive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         bool idleInteractable = galState != State.AttackMode && interactable;
         
         hugInteractTrigger.interactable = idleInteractable;
+        flashLightInteractTrigger.interactable = interactable;
     }
 
     private void StoppingDistanceUpdate()
     {
-        Agent.stoppingDistance = galState == State.AttackMode ? 6f : 3f * (huggingOwner ? 0.1f : 1f);
+        Agent.stoppingDistance = galState == State.AttackMode ? 6f : 3f * (huggingOwner ? 0.33f : 1f);
     }
 
     private void SetIdleDefaultStateForEveryone()
@@ -298,8 +320,15 @@ public class SeamineGalAI : GalAI
             {
                 currentlyAttacking = true;
                 NetworkAnimator.SetTrigger(startExplodeAnimation);
+                StartCoroutine(ResetTrigger(startExplodeAnimation));
             }
         }
+    }
+
+    private IEnumerator ResetTrigger(int triggerHash)
+    {
+        yield return new WaitForSeconds(0.2f);
+        NetworkAnimator.ResetTrigger(triggerHash);
     }
 
     private void DoJojoPoselol()
@@ -326,6 +355,7 @@ public class SeamineGalAI : GalAI
         if (Vector3.Distance(transform.position, ownerPlayer.transform.position) <= Agent.stoppingDistance && Agent.enabled && !inHugAnimation)
         {
             NetworkAnimator.SetTrigger(hugAnimation);
+            StartCoroutine(ResetTrigger(hugAnimation));
             inHugAnimation = true;
         }
         return true;
@@ -334,7 +364,9 @@ public class SeamineGalAI : GalAI
     public void EndHugAnimEvent()
     {
         inHugAnimation = false;
+        huggingOwner = false;
         if (ownerPlayer == null) return;
+        ownerPlayer.enteringSpecialAnimation = false;
         ownerPlayer.disableMoveInput = false;
         ownerPlayer.disableLookInput = false;
     }
@@ -396,15 +428,35 @@ public class SeamineGalAI : GalAI
 
     private void CheckIfEnemyIsHitAnimEvent()
     {
-        if (targetEnemy == null || targetEnemy.isEnemyDead) return;
+        List<EnemyAI> enemiesToKill = new();
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 15, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
 
-        if (Physics.Raycast(this.transform.position, (targetEnemy.transform.position - this.transform.position).normalized, out RaycastHit hit, 15, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Ignore))
+        foreach (Collider collider in colliders)
         {
-            if (hit.collider.gameObject == targetEnemy.gameObject || hit.collider.gameObject.transform.IsChildOf(targetEnemy.transform) && targetEnemy.IsOwner)
-            {
-                targetEnemy.KillEnemyOnOwnerClient(true);
-            }
+            Vector3 directionToEnemy = (collider.transform.position - this.transform.forward).normalized;
+            float distanceToEnemy = Vector3.Distance(collider.transform.position, this.transform.position);
+            if (!Physics.Raycast(this.transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Collide))
+                continue;
+            EnemyAI? enemyDetected = GetEnemyFromTransform(hit.collider.transform);
+            if (enemyDetected == null)
+                continue;
+            enemiesToKill.Add(enemyDetected);
         }
+
+        foreach (EnemyAI enemy in enemiesToKill)
+        {
+            if (enemy == null || enemy.isEnemyDead || !enemy.IsOwner)
+                continue;
+
+            enemy.KillEnemyOnOwnerClient(true);
+        }
+    }
+
+    private EnemyAI? GetEnemyFromTransform(Transform transform)
+    {
+        if (transform.TryGetComponent(out EnemyAI enemy))
+            return enemy;
+        return transform.GetComponentInParent<EnemyAI>();
     }
 
     private void EndAttackAnimEvent()

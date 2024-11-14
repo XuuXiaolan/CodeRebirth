@@ -476,9 +476,10 @@ static class RoundManagerPatch {
 		{
             if (hitColliders[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener))
             {
-                ShockwaveGalAI shockwaveGal = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
-				FlashTurret flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
-                if (shockwaveGal == null && flashTurret == null)
+                ShockwaveGalAI? shockwaveGal = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
+				SeamineGalAI? seamineGal = hitColliders[i].gameObject.GetComponent<SeamineGalAI>();
+				FlashTurret? flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
+                if (shockwaveGal == null && flashTurret == null && seamineGal == null)
                 {
                     continue;
                 }

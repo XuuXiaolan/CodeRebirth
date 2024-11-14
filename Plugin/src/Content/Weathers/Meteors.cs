@@ -54,6 +54,7 @@ public class Meteors : NetworkBehaviour {
     {
         isMoving = false;
         this.isBig = isBig;
+        StartCoroutine(UpdateAudio()); // Make sure audio works correctly on the first frame.
     }
     
     private void Awake()

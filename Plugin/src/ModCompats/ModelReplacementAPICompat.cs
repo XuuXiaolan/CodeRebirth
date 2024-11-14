@@ -19,8 +19,18 @@ public static class ModelReplacementAPICompatibilityChecker
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static void InitialiseImpl()
     {
-        Plugin.ExtendedLogging("Delilah is a new model registered!");
-        PlayerModelHandler.Instance.ModelReplacement = new ModelReplacementAssets("shockwavegalmodelreplacementassets");
-        //ModelReplacementAPI.RegisterSuitModelReplacement("Delilah", typeof(ShockwaveGalModel));
+        /*if (Plugin.ModConfig.ConfigShockwaveGalPlayerModelEnabled.Value)
+        {
+            Plugin.ExtendedLogging("Delilah is a new model registered!");
+            PlayerModelHandler.Instance.ShockwaveModelReplacement = new ShockwaveModelReplacementAssets("shockwavegalmodelreplacementassets");
+            ModelReplacementAPI.RegisterSuitModelReplacement("Delilah", typeof(ShockwaveGalModel));
+        }
+
+        if (Plugin.ModConfig.ConfigSeamineTinkPlayerModelEnabled.Value)
+        {
+            Plugin.ExtendedLogging("Seamine is a new model registered!");
+            PlayerModelHandler.Instance.SeamineModelReplacement = new SeamineModelReplacementAssets("seaminegalmodelreplacementassets");
+            ModelReplacementAPI.RegisterSuitModelReplacement("Seamine", typeof(SeamineGalModel));
+        }*/
     }
 }
