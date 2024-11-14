@@ -105,6 +105,7 @@ public class SeamineGalAI : GalAI
     private void StartHugInteractClientRpc()
     {
         if (ownerPlayer == null) return;
+        if (physicsEnabled) EnablePhysics(false);
         ownerPlayer.enteringSpecialAnimation = true;
         ownerPlayer.disableMoveInput = true;
         ownerPlayer.disableLookInput = true;
@@ -198,7 +199,8 @@ public class SeamineGalAI : GalAI
 
     private float GetCurrentSpeedMultiplier()
     {
-        float speedMultiplier = 1f * (galState == State.FollowingPlayer ? 2f : 1f) * (galState == State.AttackMode ? 4f : 1f) * (jojoPosing ? 0f : 1f);
+        float speedMultiplier = 1f * (galState == State.FollowingPlayer ? 2f : 1f) * (galState == State.AttackMode ? 4f : 1f) * (jojoPosing || inHugAnimation ? 0f : 1f);
+        if (inHugAnimation && Vector3.Distance(transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance) Agent.velocity = Vector3.zero;
         return speedMultiplier;
     }
 

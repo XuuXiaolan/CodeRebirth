@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -20,7 +21,9 @@ public class FunctionalMicrowave : NetworkBehaviour
     public AudioSource microwaveAudioSource = null!;
     public AudioClip microwaveOpenSound = null!;
     public AudioClip microwaveCloseSound = null!;
+    public Transform scrapSpawnPoint = null!;
 
+    private GrabbableObject? scrapSpawned = null;
     private float movingTimer = 30f;
     private bool movingForAWhile = false;
     private float microwaveOpening = 0f;
@@ -39,13 +42,42 @@ public class FunctionalMicrowave : NetworkBehaviour
         agent.acceleration = 5f;
         agent.angularSpeed = TurnSpeed;
         if (!IsServer) return;
+        Item? scrapToSpawn = ChooseRandomMicrowaveScrap();
+        if (scrapToSpawn == null) return;
+        NetworkObjectReference spawnedScrap = CodeRebirthUtils.Instance.SpawnScrap(scrapToSpawn, scrapSpawnPoint.position, false, false, 0);
+        scrapSpawned = ((GameObject)spawnedScrap).GetComponent<GrabbableObject>();
+        scrapSpawned.grabbable = false;
+        scrapSpawned.parentObject = scrapSpawnPoint;
         newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
+    }
+
+    private Item? ChooseRandomMicrowaveScrap()
+    {
+        int result = UnityEngine.Random.Range(0, 4);
+        if (result == 0)
+        {
+            return Plugin.samplePrefabs["MicrowaveSpork"];
+        }
+        else if (result == 1)
+        {
+            return Plugin.samplePrefabs["MicrowaveFork"];
+        }
+        else if (result == 2)
+        {
+            return Plugin.samplePrefabs["MicrowaveCharredBaby"];
+        }
+        return null;
     }
 
     private void Update()
     {
         damageTimerDecrease -= Time.deltaTime;
         movingTimer -= Time.deltaTime;
+        if (scrapSpawned != null && (scrapSpawned.isHeld || scrapSpawned.playerHeldBy != null))
+        {
+            scrapSpawned.grabbable = true;
+            scrapSpawned = null;
+        }
         if (movingTimer < 0f)
         {
             movingForAWhile = true;
@@ -56,6 +88,7 @@ public class FunctionalMicrowave : NetworkBehaviour
             microwaveOpening += Time.deltaTime;
             if (microwaveOpening >= microwaveOpeningTimer)
             {
+                if (scrapSpawned != null) scrapSpawned.grabbable = true;
                 microwaveOpening = 0f;
                 isOpen = true;
                 mainCollider.enabled = true;
@@ -68,6 +101,7 @@ public class FunctionalMicrowave : NetworkBehaviour
             microwaveClosing += Time.deltaTime;
             if (microwaveClosing >= microwaveClosingTimer)
             {
+                if (scrapSpawned != null) scrapSpawned.grabbable = false;
                 microwaveClosing = 0f;
                 isOpen = false;
                 mainCollider.enabled = false;

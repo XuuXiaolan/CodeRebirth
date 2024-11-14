@@ -44,6 +44,7 @@ Transform:
   - {fileID: 3344942931641457991}
   - {fileID: 7729405940156838785}
   - {fileID: 8903185739555923181}
+  - {fileID: 3786716905106481400}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8047242425586073426
@@ -164,6 +165,7 @@ MonoBehaviour:
   microwaveAudioSource: {fileID: 2074529695559177733}
   microwaveOpenSound: {fileID: 8300000, guid: 85549b097ee9b0b4eac564b9b59baa77, type: 3}
   microwaveCloseSound: {fileID: 8300000, guid: f413fa6a7a7c3c34bba848b775c71972, type: 3}
+  scrapSpawnPoint: {fileID: 3786716905106481400}
 --- !u!65 &5433948856735580322
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1122,6 +1124,59 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e76b04f960cf66b41b09fff01b4bf37a, type: 2}
+--- !u!1 &7506336067594161878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3786716905106481400}
+  - component: {fileID: 8010966868608993633}
+  m_Layer: 8
+  m_Name: ScrapSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3786716905106481400
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7506336067594161878}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.361, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8565336780344890789}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8010966868608993633
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7506336067594161878}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.49010515, y: 0.018960834, z: 0.5446916}
+  m_Center: {x: 0.019748807, y: -0.04778549, z: 0.016142633}
 --- !u!1 &8103220466607976680
 GameObject:
   m_ObjectHideFlags: 0

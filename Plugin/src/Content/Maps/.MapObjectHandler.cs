@@ -88,6 +88,15 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	{
 		[LoadFromBundle("FunctionalMicrowave.prefab")]
 		public GameObject FunctionalMicrowavePrefab { get; private set; } = null!;
+
+		[LoadFromBundle("MicrowaveForkItem.asset")]
+		public Item ForkItem { get; private set; } = null!;
+
+		[LoadFromBundle("MicrowaveSporkItem.asset")]
+		public Item SporkItem { get; private set; } = null!;
+
+		[LoadFromBundle("MicrowaveCharredBabyItem.asset")]
+		public Item CharredBabyItem { get; private set; } = null!;
 	}
 
 	public MoneyAssets Money { get; private set; } = null!;
@@ -155,6 +164,12 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public void RegisterFunctionalMicrowave()
 	{
 		FunctionalMicrowave = new FunctionalMicrowaveAssets("functionalmicrowaveassets");
+		RegisterScrapWithConfig("", FunctionalMicrowave.SporkItem, 0, 0);
+		RegisterScrapWithConfig("", FunctionalMicrowave.ForkItem, 0, 0);
+		RegisterScrapWithConfig("", FunctionalMicrowave.CharredBabyItem, 0, 0);
+		Plugin.samplePrefabs.Add("MicrowaveSpork", FunctionalMicrowave.SporkItem);
+		Plugin.samplePrefabs.Add("MicrowaveFork", FunctionalMicrowave.ForkItem);
+		Plugin.samplePrefabs.Add("MicrowaveCharredBaby", FunctionalMicrowave.CharredBabyItem);
 		RegisterInsideMapObjectWithConfig(FunctionalMicrowave.FunctionalMicrowavePrefab, Plugin.ModConfig.ConfigFunctionalMicrowaveSpawnWeight.Value);
 	}
 

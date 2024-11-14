@@ -4,6 +4,7 @@
 - Added seamine gal as a player suit.
 - Added configs for enabling/disabling seamine and shockwave gal player models.
 - Fixed meteor shower initial volume stuff.
+- Microwave has a chance to spawn scrap inside of it now, making it more deadly.
 
 ## v0.7.18
 

@@ -210,7 +210,7 @@ public class ShockwaveGalAI : GalAI
 
     private void InteractTriggersUpdate()
     {
-        bool interactable = galState != State.Inactive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        bool interactable = !inActive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         bool idleInteractable = galState != State.AttackMode && interactable;
         HeadPatTrigger.interactable = interactable;
         ChestTrigger.interactable = idleInteractable && itemsHeldList.Count > 0;
