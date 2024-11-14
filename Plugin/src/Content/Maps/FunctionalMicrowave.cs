@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -23,6 +24,8 @@ public class FunctionalMicrowave : NetworkBehaviour
     public AudioClip microwaveCloseSound = null!;
     public Transform scrapSpawnPoint = null!;
 
+    private int originalDamageAmount = 0;
+    private bool spawnedWithScrap = false;
     private GrabbableObject? scrapSpawned = null;
     private float movingTimer = 30f;
     private bool movingForAWhile = false;
@@ -44,6 +47,9 @@ public class FunctionalMicrowave : NetworkBehaviour
         if (!IsServer) return;
         Item? scrapToSpawn = ChooseRandomMicrowaveScrap();
         if (scrapToSpawn == null) return;
+        spawnedWithScrap = true;
+        originalDamageAmount = damageAmount;
+        damageAmount = 10;
         NetworkObjectReference spawnedScrap = CodeRebirthUtils.Instance.SpawnScrap(scrapToSpawn, scrapSpawnPoint.position, false, false, 0);
         scrapSpawned = ((GameObject)spawnedScrap).GetComponent<GrabbableObject>();
         scrapSpawned.grabbable = false;
@@ -76,6 +82,7 @@ public class FunctionalMicrowave : NetworkBehaviour
         if (scrapSpawned != null && (scrapSpawned.isHeld || scrapSpawned.playerHeldBy != null))
         {
             scrapSpawned.grabbable = true;
+            damageAmount = originalDamageAmount;
             scrapSpawned = null;
         }
         if (movingTimer < 0f)
@@ -94,6 +101,7 @@ public class FunctionalMicrowave : NetworkBehaviour
                 mainCollider.enabled = true;
                 microwaveAudioSource.PlayOneShot(microwaveOpenSound);
                 animator.SetBool("isActivated", isOpen);
+                if (scrapSpawned != null) CRUtilities.CreateExplosion(this.transform.position, true, 20, 0, 3, 2, CauseOfDeath.Blast, null, null);
             }
         }
         else
