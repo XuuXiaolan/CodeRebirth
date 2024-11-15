@@ -127,7 +127,6 @@ public class SeamineGalAI : GalAI
     {
         if (ownerPlayer == null) return;
         if (physicsEnabled) EnablePhysics(false);
-        GalVoice.PlayOneShot(hugSound);
         ownerPlayer.enteringSpecialAnimation = true;
         ownerPlayer.disableMoveInput = true;
         ownerPlayer.disableLookInput = true;
@@ -325,12 +324,12 @@ public class SeamineGalAI : GalAI
             }
             return;
         }
-
         if (!currentlyAttacking)
         {
             smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside, true, ownerPlayer);
         }
-        if (Vector3.Distance(transform.position, targetEnemy.transform.position) <= Agent.stoppingDistance || currentlyAttacking)
+        float distanceToTarget = Vector3.Distance(transform.position, targetEnemy.transform.position);
+        if (distanceToTarget <= Agent.stoppingDistance + 4 && !currentlyAttacking)
         {
             Vector3 targetPosition = targetEnemy.transform.position;
             Vector3 direction = (targetPosition - this.transform.position).normalized;
@@ -341,19 +340,12 @@ public class SeamineGalAI : GalAI
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
             }
-            if (!currentlyAttacking)
+            if (distanceToTarget <= Agent.stoppingDistance)
             {
                 currentlyAttacking = true;
                 NetworkAnimator.SetTrigger(startExplodeAnimation);
-                StartCoroutine(ResetTrigger(startExplodeAnimation));
             }
         }
-    }
-
-    private IEnumerator ResetTrigger(int triggerHash)
-    {
-        yield return new WaitForSeconds(0.2f);
-        NetworkAnimator.ResetTrigger(triggerHash);
     }
 
     private void DoJojoPoselol()
@@ -369,7 +361,6 @@ public class SeamineGalAI : GalAI
         if (hazardRevealTimer <= 0)
         {
             NetworkAnimator.SetTrigger(revealHazardsAnimation);
-            StartCoroutine(ResetTrigger(revealHazardsAnimation));
             hazardRevealTimer = UnityEngine.Random.Range(7.5f, 12.5f);
         }
     }
@@ -397,10 +388,16 @@ public class SeamineGalAI : GalAI
         if (Vector3.Distance(transform.position, ownerPlayer.transform.position) <= Agent.stoppingDistance && Agent.enabled && !inHugAnimation)
         {
             NetworkAnimator.SetTrigger(hugAnimation);
-            StartCoroutine(ResetTrigger(hugAnimation));
+            DoHugSoundClientRpc();
             inHugAnimation = true;
         }
         return true;
+    }
+
+    [ClientRpc]
+    private void DoHugSoundClientRpc()
+    {
+        GalVoice.PlayOneShot(hugSound);
     }
 
     public void EndHugAnimEvent()
@@ -478,13 +475,13 @@ public class SeamineGalAI : GalAI
         {
             Vector3 directionToEnemy = (collider.transform.position - this.transform.forward).normalized;
             float distanceToEnemy = Vector3.Distance(collider.transform.position, this.transform.position);
-            if (!Physics.Raycast(this.transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Collide))
-                continue;
-            EnemyAI? enemyDetected = GetEnemyFromTransform(hit.collider.transform);
+            if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore)) continue;
+
+            EnemyAI? enemyDetected = GetEnemyFromTransform(collider.transform);
             if (enemyDetected != null) Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
-            Plugin.ExtendedLogging("Thing hit: " + hit.collider.name);
-            if (enemyDetected == null)
-                continue;
+            Plugin.ExtendedLogging("Thing hit: " + collider.name);
+
+            if (enemyDetected == null) continue;
             enemiesToKill.Add(enemyDetected);
         }
 
@@ -499,9 +496,16 @@ public class SeamineGalAI : GalAI
 
     private EnemyAI? GetEnemyFromTransform(Transform transform)
     {
-        if (transform.TryGetComponent(out EnemyAI enemy))
-            return enemy;
-        return transform.GetComponentInParent<EnemyAI>();
+        if (!transform.gameObject.activeSelf) return null;
+        if (!transform.TryGetComponent(out EnemyAI enemy) && transform.GetComponent<NetworkObject>() == null)
+        {
+            NetworkObject networkObject = transform.GetComponentInParent<NetworkObject>();
+            if (networkObject == null || !networkObject.TryGetComponent(out EnemyAI enemy2))
+                return null;
+                
+            enemy = enemy2;
+        }
+        return enemy;
     }
 
     private void EndAttackAnimEvent()
