@@ -16,7 +16,16 @@ public class SeamineGalAI : GalAI
     public GameObject flashLightLight = null!;
     public InteractTrigger flashLightInteractTrigger = null!;
     public AudioSource RidingBruceSource = null!;
+    public AudioClip explosionSound = null!;
+    public AudioClip hazardPingSound = null!;
+    public AudioClip rechargeChargesSound = null!;
+    public AudioClip spotEnemySound = null!;
+    public AudioClip hugSound = null!;
+    public List<AudioClip> bruceSwimmingAudioClips = new();
+    public List<AudioClip> startOrEndRidingBruceAudioClips = new();
+    public AudioClip squeezeFishSound = null!;
 
+    private float hazardRevealTimer = 10f;
     private bool inHugAnimation = false;
     private bool huggingOwner = false;
     [NonSerialized] public SeamineCharger SeamineCharger = null!;
@@ -69,6 +78,17 @@ public class SeamineGalAI : GalAI
         SeamineCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(SeamineCharger.OnActivateGal);
 
         StartCoroutine(CheckForNearbyEnemiesToOwner());
+        StartCoroutine(UpdateRidingBruceSound());
+    }
+
+    private IEnumerator UpdateRidingBruceSound()
+    {
+        while (true)
+        {
+            yield return new WaitUntil(() => !RidingBruceSource.isPlaying);
+            RidingBruceSource.clip = bruceSwimmingAudioClips[UnityEngine.Random.Range(0, bruceSwimmingAudioClips.Count)];
+            RidingBruceSource.Play();
+        }
     }
 
     private void OnFlashLightInteract(PlayerControllerB playerInteracting)
@@ -86,6 +106,7 @@ public class SeamineGalAI : GalAI
     [ClientRpc]
     private void StartFlashLightInteractClientRpc()
     {
+        GalSFX.PlayOneShot(squeezeFishSound);
         flashLightLight.SetActive(!flashLightLight.activeSelf);
     }
 
@@ -106,6 +127,7 @@ public class SeamineGalAI : GalAI
     {
         if (ownerPlayer == null) return;
         if (physicsEnabled) EnablePhysics(false);
+        GalVoice.PlayOneShot(hugSound);
         ownerPlayer.enteringSpecialAnimation = true;
         ownerPlayer.disableMoveInput = true;
         ownerPlayer.disableLookInput = true;
@@ -184,7 +206,7 @@ public class SeamineGalAI : GalAI
         base.Update();
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
-        if (galState == State.Inactive && SeamineCharger != null)
+        if (inActive && SeamineCharger != null)
         {
             this.transform.position = SeamineCharger.transform.position;
             this.transform.rotation = SeamineCharger.transform.rotation;
@@ -265,6 +287,7 @@ public class SeamineGalAI : GalAI
         }
 
         DoStaringAtOwner(ownerPlayer);
+        DoRevealingHazards();
 
         if (DoHuggingOwner(ownerPlayer))
         {
@@ -338,6 +361,23 @@ public class SeamineGalAI : GalAI
         int jojoAnimationNumber = UnityEngine.Random.Range(0, JojoAnimations.Count);
         Animator.SetInteger(jojoAnimationInt, jojoAnimationNumber);
         StartCoroutine(ResetSpeedBackToNormal());
+    }
+
+    private void DoRevealingHazards()
+    {
+        hazardRevealTimer -= Time.deltaTime;
+        if (hazardRevealTimer <= 0)
+        {
+            NetworkAnimator.SetTrigger(revealHazardsAnimation);
+            StartCoroutine(ResetTrigger(revealHazardsAnimation));
+            hazardRevealTimer = UnityEngine.Random.Range(7.5f, 12.5f);
+        }
+    }
+
+    private void DoHazardActionsAnimEvent()
+    {
+        // plays the visual effect from gabriel
+        GalVoice.PlayOneShot(hazardPingSound);
     }
 
     private bool DoDancingAction()
@@ -430,6 +470,7 @@ public class SeamineGalAI : GalAI
 
     private void CheckIfEnemyIsHitAnimEvent()
     {
+        GalSFX.PlayOneShot(explosionSound);
         List<EnemyAI> enemiesToKill = new();
         Collider[] colliders = Physics.OverlapSphere(transform.position, 15, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
 
@@ -440,6 +481,8 @@ public class SeamineGalAI : GalAI
             if (!Physics.Raycast(this.transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Collide))
                 continue;
             EnemyAI? enemyDetected = GetEnemyFromTransform(hit.collider.transform);
+            if (enemyDetected != null) Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
+            Plugin.ExtendedLogging("Thing hit: " + hit.collider.name);
             if (enemyDetected == null)
                 continue;
             enemiesToKill.Add(enemyDetected);
@@ -493,7 +536,11 @@ public class SeamineGalAI : GalAI
     private void SetRidingBruce(bool RidingBruce)
     {
         this.ridingBruce = RidingBruce;
-        if (RidingBruce) RidingBruceSource.volume = Plugin.ModConfig.ConfigSeamineTinkRidingBruceVolume.Value;
+        if (RidingBruce)
+        {
+            GalSFX.PlayOneShot(startOrEndRidingBruceAudioClips[galRandom.NextInt(0, startOrEndRidingBruceAudioClips.Count - 1)]);
+            RidingBruceSource.volume = Plugin.ModConfig.ConfigSeamineTinkRidingBruceVolume.Value;
+        }
         else RidingBruceSource.volume = 0f;
     }
 
@@ -595,6 +642,7 @@ public class SeamineGalAI : GalAI
 
     private void HandleStateAttackModeChange()
     {
+        GalVoice.PlayOneShot(spotEnemySound);
     }
     #endregion
 

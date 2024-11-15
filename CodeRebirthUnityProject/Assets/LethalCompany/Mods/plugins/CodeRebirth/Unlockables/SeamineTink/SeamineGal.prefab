@@ -2629,12 +2629,18 @@ MonoBehaviour:
   - {fileID: 5728261754839704588}
   GalVoice: {fileID: 6064980724062433519}
   GalSFX: {fileID: 4812279475898839201}
-  ActivateSound: {fileID: 0}
+  ActivateSound: {fileID: 8300000, guid: 6d1e1a0a79676d74c8bd33370c71a0d9, type: 3}
   GreetOwnerSound: {fileID: 0}
-  IdleSounds: []
+  IdleSounds:
+  - {fileID: 8300000, guid: 2e45a2fccc089864bbd69dd6c45a2ec6, type: 3}
   DeactivateSound: {fileID: 0}
-  HitSounds: []
-  FootstepSounds: []
+  HitSounds:
+  - {fileID: 8300000, guid: 9a7400291ce5df1408efee016dcc519f, type: 3}
+  FootstepSounds:
+  - {fileID: 8300000, guid: c4859b542a536d4439847c9924da07de, type: 3}
+  - {fileID: 8300000, guid: c089dee0dc7771d4b8cc3206c0029a31, type: 3}
+  - {fileID: 8300000, guid: dd486a9bf490f5340b15496393d3f89e, type: 3}
+  - {fileID: 8300000, guid: b08c224662141bb449021adde7205c59, type: 3}
   DoorOpeningSpeed: 1
   GalHead: {fileID: 4437950775161954942}
   GalEye: {fileID: 0}
@@ -2654,6 +2660,20 @@ MonoBehaviour:
   flashLightLight: {fileID: 6093336303571181989}
   flashLightInteractTrigger: {fileID: 3830157339773201921}
   RidingBruceSource: {fileID: 732667429212843628}
+  explosionSound: {fileID: 8300000, guid: 3681e80122b9080498fb3a04e8430ab2, type: 3}
+  hazardPingSound: {fileID: 8300000, guid: 2fba98c854289634db1ad4e05aba66ed, type: 3}
+  rechargeChargesSound: {fileID: 8300000, guid: ed113c9f81399d74aa6a739776b7a165,
+    type: 3}
+  spotEnemySound: {fileID: 8300000, guid: a0338d556565e36449db89dd049072e6, type: 3}
+  hugSound: {fileID: 8300000, guid: 6d1e1a0a79676d74c8bd33370c71a0d9, type: 3}
+  bruceSwimmingAudioClips:
+  - {fileID: 8300000, guid: 1249ebe87f2be2b4db966e5fd7d1e3dc, type: 3}
+  - {fileID: 8300000, guid: f3ec3644ce00e3643a3a8469196f0384, type: 3}
+  - {fileID: 8300000, guid: 7f147eff63223434295c3123ab0bb80b, type: 3}
+  startOrEndRidingBruceAudioClips:
+  - {fileID: 8300000, guid: 15d050388cd74864f84532c45100c059, type: 3}
+  - {fileID: 8300000, guid: 64c6f78fc09c9ee4b888240ec148cccd, type: 3}
+  squeezeFishSound: {fileID: 8300000, guid: 5c74f8bb7cb155540bdf4534f26c16d9, type: 3}
 --- !u!114 &7859705604145919047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2762,11 +2782,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 1249ebe87f2be2b4db966e5fd7d1e3dc, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
