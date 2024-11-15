@@ -164,9 +164,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public void RegisterFunctionalMicrowave()
 	{
 		FunctionalMicrowave = new FunctionalMicrowaveAssets("functionalmicrowaveassets");
-		RegisterScrapWithConfig("", FunctionalMicrowave.SporkItem, 0, 0);
-		RegisterScrapWithConfig("", FunctionalMicrowave.ForkItem, 0, 0);
-		RegisterScrapWithConfig("", FunctionalMicrowave.CharredBabyItem, 0, 0);
+		RegisterScrapWithConfig("", FunctionalMicrowave.SporkItem, -1, -1);
+		RegisterScrapWithConfig("", FunctionalMicrowave.ForkItem, -1, -1);
+		RegisterScrapWithConfig("", FunctionalMicrowave.CharredBabyItem, -1, -1);
 		Plugin.samplePrefabs.Add("MicrowaveSpork", FunctionalMicrowave.SporkItem);
 		Plugin.samplePrefabs.Add("MicrowaveFork", FunctionalMicrowave.ForkItem);
 		Plugin.samplePrefabs.Add("MicrowaveCharredBaby", FunctionalMicrowave.CharredBabyItem);

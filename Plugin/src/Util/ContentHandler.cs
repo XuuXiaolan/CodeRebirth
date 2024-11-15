@@ -26,12 +26,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
     protected void RegisterScrapWithConfig(string configMoonRarity, Item scrap, int itemWorthMin, int itemWorthMax)
     {
-        bool messWithWorth = true;
         if (itemWorthMax == -1 || itemWorthMin == -1)
-        {
-            messWithWorth = false;
-        }
-        if (messWithWorth)
         {
             if (itemWorthMax < itemWorthMin)
             {
