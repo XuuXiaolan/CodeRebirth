@@ -436,31 +436,29 @@ public class SeamineGalAI : GalAI
             {
                 Collider collider = hitColliders[i];
                 if (!collider.gameObject.activeSelf) continue;
-                if (!collider.TryGetComponent(out EnemyAI enemy) && collider.GetComponent<NetworkObject>() == null)
+
+                if (collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect))
                 {
-                    NetworkObject networkObject = collider.GetComponentInParent<NetworkObject>();
-                    if (networkObject == null || !networkObject.TryGetComponent(out EnemyAI enemy2))
+                    EnemyAI enemy = enemyCollisionDetect.mainScript;
+
+                    if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
                         continue;
-                        
-                    enemy = enemy2;
+
+                    // First, do a simple direction check to see if the enemy is in front of the player
+                    Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
+                    // Then check if there's a clear line of sight
+                    if (!Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, 15, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Ignore))
+                    {
+                        //Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name);
+                        continue;
+                    }
+                    Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
+
+
+                    SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
+                    HandleStateAnimationSpeedChanges(State.AttackMode);
+                    break;  // Exit loop after targeting one enemy, depending on game logic
                 }
-
-                if (enemy == null || enemy.isEnemyDead || enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
-                    continue;
-
-                // First, do a simple direction check to see if the enemy is in front of the player
-                Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
-                // Then check if there's a clear line of sight
-                if (!Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, 15, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide))
-                    continue;
-
-                // Make sure the hit belongs to the same GameObject as the enemy
-                if (hit.collider.gameObject != enemy.gameObject && !hit.collider.transform.IsChildOf(enemy.transform))
-                    continue;
-
-                SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
-                HandleStateAnimationSpeedChanges(State.AttackMode);
-                break;  // Exit loop after targeting one enemy, depending on game logic
             }
         }
     }
@@ -473,16 +471,27 @@ public class SeamineGalAI : GalAI
 
         foreach (Collider collider in colliders)
         {
-            Vector3 directionToEnemy = (collider.transform.position - this.transform.forward).normalized;
-            float distanceToEnemy = Vector3.Distance(collider.transform.position, this.transform.position);
-            if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore)) continue;
-
-            EnemyAI? enemyDetected = GetEnemyFromTransform(collider.transform);
-            if (enemyDetected != null) Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
-            Plugin.ExtendedLogging("Thing hit: " + collider.name);
-
-            if (enemyDetected == null) continue;
-            enemiesToKill.Add(enemyDetected);
+            if (collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect))
+            {
+                EnemyAI enemyDetected = enemyCollisionDetect.mainScript;
+                if (enemyDetected != null && !enemyDetected.isEnemyDead)
+                {
+                    // Ensure there's a line of sight from SeamineGalAI to the enemy
+                    Vector3 directionToEnemy = (enemyDetected.transform.position - transform.position).normalized;
+                    float distanceToEnemy = Vector3.Distance(transform.position, enemyDetected.transform.position);
+                    if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+                    {
+                        Plugin.ExtendedLogging("No line of sight to enemy: " + enemyDetected);
+                        continue;
+                    }
+                    Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
+                    enemiesToKill.Add(enemyDetected);
+                }
+            }
+            else
+            {
+                Plugin.ExtendedLogging("Thing hit: " + collider.name);
+            }
         }
 
         foreach (EnemyAI enemy in enemiesToKill)
@@ -494,24 +503,11 @@ public class SeamineGalAI : GalAI
         }
     }
 
-    private EnemyAI? GetEnemyFromTransform(Transform transform)
-    {
-        if (!transform.gameObject.activeSelf) return null;
-        if (!transform.TryGetComponent(out EnemyAI enemy) && transform.GetComponent<NetworkObject>() == null)
-        {
-            NetworkObject networkObject = transform.GetComponentInParent<NetworkObject>();
-            if (networkObject == null || !networkObject.TryGetComponent(out EnemyAI enemy2))
-                return null;
-                
-            enemy = enemy2;
-        }
-        return enemy;
-    }
-
     private void EndAttackAnimEvent()
     {
         currentlyAttacking = false;
         chargeCount--;
+        Animator.SetInteger(chargeCountInt, chargeCount);
     }
 
     private void PlayFootstepSoundAnimEvent()
