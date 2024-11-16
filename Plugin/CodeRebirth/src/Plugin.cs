@@ -88,7 +88,13 @@ public class Plugin : BaseUnityPlugin {
         
         Logger.LogInfo("Registering content.");
 
-        List<Type> contentHandlers = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(x =>
+        RegisterContentHandlers(Assembly.GetExecutingAssembly());
+
+        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+    }
+
+    public static void RegisterContentHandlers(Assembly assembly) {
+        List<Type> contentHandlers = assembly.GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
             && x.BaseType.GetGenericTypeDefinition() == typeof(ContentHandler<>)
@@ -98,10 +104,8 @@ public class Plugin : BaseUnityPlugin {
         {
             type.GetConstructor([]).Invoke([]);
         }
-
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
-
+    
     private void OnDisable()
     {
         foreach (AssetBundle bundle in LoadedBundles.Values)
