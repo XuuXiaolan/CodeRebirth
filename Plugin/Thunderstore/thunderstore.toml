@@ -5,6 +5,8 @@ schemaVersion = "0.0.1"
 repository = "https://thunderstore.io"
 
 [package]
+namespace = "XuXiaolan"
+name = "CodeRebirth"
 description = "Content Expansion mod with Custom Weathers, Items, Enemies and more!."
 websiteUrl = "https://github.com/XuuXiao/CodeRebirth"
 containsNsfwContent = false
@@ -21,7 +23,11 @@ readme = "./README.md"
 outdir = "./Packages"
 
 [[build.copy]]
-source = "../bin/Release/netstandard2.1/CodeRebirth.dll"
+source = "../CodeRebirth/bin/Release/netstandard2.1/CodeRebirth.dll"
+target = "plugins/CodeRebirth/"
+
+[[build.copy]]
+source = "../CodeRebirthMRAPI/bin/Release/netstandard2.1/XuuXiaolan.CodeRebirthMRAPI.dll"
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]

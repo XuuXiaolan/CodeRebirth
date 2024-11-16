@@ -8,8 +8,6 @@
 		<!-- This assembly description doesn't show up on Thunderstore. -->
     <!-- Configure description for Thunderstore at ./Thunderstore/thunderstore.toml -->
     <Description>Content mod that adds Custom Weathers, Items, Enemies and more.</Description>
-		<!-- This is the version of your plugin. This will be used by tcli when building our Thunderstore package. -->
-    <Version>0.8.0</Version>
 		<!-- This is required for BepInEx to load us properly. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<!-- This allows you to use C#11 features, for the most part. -->
@@ -25,10 +23,6 @@
 		<DebugType>embedded</DebugType>
 		<PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
 	</PropertyGroup>
-  <PropertyGroup>
-	  <!-- Your Thunderstore Team name. This will be used by tcli when building our Thunderstore package. -->
-    <ThunderstoreTeam>XuXiaolan</ThunderstoreTeam>
-  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
@@ -67,11 +61,5 @@
   -->
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
     <Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
-  </Target>
-
-  <!-- Build our Thunderstore package when making a release build. This does not publish our package. -->
-  <!-- For more information about tcli, see https://github.com/thunderstore-io/thunderstore-cli/wiki -->
-  <Target Name="PackThunderstore" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
-    <Exec Command="dotnet tcli build --config-path &quot;$(ProjectDir)Thunderstore/thunderstore.toml&quot; --package-version $(Version) --package-name $(AssemblyName) --package-namespace $(ThunderstoreTeam)"  />
   </Target>
 </Project>
