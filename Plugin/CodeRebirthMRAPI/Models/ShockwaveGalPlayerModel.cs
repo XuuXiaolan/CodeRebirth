@@ -6,6 +6,6 @@ public class ShockwaveGalModel : BodyReplacementBase
 {
     protected override GameObject LoadAssetsAndReturnModel()
     { 
-        return CodeRebirthMRAPIAssets.ShockwaveModelAssets.ShockwaveModelPrefab;
+        return PlayerModelAssets.ShockwaveModelAssets.ShockwaveModelPrefab;
     }
 }

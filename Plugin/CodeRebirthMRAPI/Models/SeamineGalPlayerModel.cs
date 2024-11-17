@@ -6,6 +6,6 @@ public class SeamineGalModel : BodyReplacementBase
 {
     protected override GameObject LoadAssetsAndReturnModel()
     { 
-        return CodeRebirthMRAPIAssets.SeamineModelAssets.SeamineModelPrefab;
+        return PlayerModelAssets.SeamineModelAssets.SeamineModelPrefab;
     }
 }

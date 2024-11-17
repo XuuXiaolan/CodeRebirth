@@ -11,10 +11,10 @@ namespace CodeRebirthMRAPI;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(CodeRebirth.MyPluginInfo.PLUGIN_GUID)]
-[BepInDependency("meow.ModelReplacementAPI", BepInDependency.DependencyFlags.SoftDependency)] // soft dependency to not throw an error complaining it doesnt exist 
-[BepInDependency("x753.More_Suits", BepInDependency.DependencyFlags.SoftDependency)] // soft dependency to not throw an error complaining it doesnt exist 
-public class CodeRebirthMRAPIPlugin : BaseUnityPlugin {
-	public static CodeRebirthMRAPIPlugin Instance { get; private set; }
+[BepInDependency("meow.ModelReplacementAPI", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("x753.More_Suits", BepInDependency.DependencyFlags.SoftDependency)]
+public class Plugin : BaseUnityPlugin {
+	public static Plugin Instance { get; private set; }
 	internal new static ManualLogSource Logger { get; private set; }
 
 	private void Awake() {
@@ -30,26 +30,26 @@ public class CodeRebirthMRAPIPlugin : BaseUnityPlugin {
 			Logger.LogInfo("MoreSuits is not installed, skipping!");
 		}
 		
-		if (Plugin.ModConfig.ConfigShockwaveGalPlayerModelEnabled.Value)
+		if (CodeRebirth.src.Plugin.ModConfig.ConfigShockwaveGalPlayerModelEnabled.Value)
 		{
 			ExtendedLogging("Delilah is a new model registered!");
-			CodeRebirthMRAPIAssets.ShockwaveModelAssets = new CodeRebirthMRAPIAssets.ShockwaveModelReplacementAssets("shockwavegalmodelreplacementassets");
+			PlayerModelAssets.ShockwaveModelAssets = new PlayerModelAssets.ShockwaveModelReplacementAssets("shockwavegalmodelreplacementassets");
 			ModelReplacementAPI.RegisterSuitModelReplacement("Delilah", typeof(ShockwaveGalModel));
 		}
 
-		if (Plugin.ModConfig.ConfigSeamineTinkPlayerModelEnabled.Value)
+		/*if (Plugin.ModConfig.ConfigSeamineTinkPlayerModelEnabled.Value)
 		{
 			ExtendedLogging("Seamine is a new model registered!");
-			CodeRebirthMRAPIAssets.SeamineModelAssets = new CodeRebirthMRAPIAssets.SeamineModelReplacementAssets("seaminegalmodelreplacementassets");
+			PlayerModelAssets.SeamineModelAssets = new PlayerModelAssets.SeamineModelReplacementAssets("seaminegalmodelreplacementassets");
 			ModelReplacementAPI.RegisterSuitModelReplacement("Seamine", typeof(SeamineGalModel));
-		}
+		}*/
 		
 		Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded! :3");
 	}
 	
 	internal static void ExtendedLogging(object text)
 	{
-		if (Plugin.ModConfig.ConfigEnableExtendedLogging.Value)
+		if (CodeRebirth.src.Plugin.ModConfig.ConfigEnableExtendedLogging.Value)
 		{
 			Logger.LogInfo(text);
 		}
