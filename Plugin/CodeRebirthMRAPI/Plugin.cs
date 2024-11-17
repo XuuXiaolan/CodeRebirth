@@ -33,6 +33,7 @@ public class Plugin : BaseUnityPlugin {
 		if (CodeRebirth.src.Plugin.ModConfig.ConfigShockwaveGalPlayerModelEnabled.Value)
 		{
 			ExtendedLogging("Delilah is a new model registered!");
+        	GrabbableObjectPatches.Init();
 			PlayerModelAssets.ShockwaveModelAssets = new PlayerModelAssets.ShockwaveModelReplacementAssets("shockwavegalmodelreplacementassets");
 			ModelReplacementAPI.RegisterSuitModelReplacement("Delilah", typeof(ShockwaveGalModel));
 		}
