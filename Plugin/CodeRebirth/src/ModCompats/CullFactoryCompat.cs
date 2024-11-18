@@ -12,15 +12,15 @@ internal static class CullFactorySoftCompat
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void TryRefreshDynamicLight(Light light)
     {
-        RefreshDynamicLight(light);
+        if (CullFactoryDynamicObjectsAPIExists)
+        {
+            RefreshDynamicLight(light);
+        }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     internal static void RefreshDynamicLight(Light light)
     {
-        if (CullFactoryDynamicObjectsAPIExists)
-        {
-            DynamicObjectsAPI.RefreshLightPosition(light);
-        }
+        DynamicObjectsAPI.RefreshLightPosition(light);
     }
 }

@@ -413,7 +413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: 'Hold : [E]'
-  disabledHoverIcon: {fileID: 21300000, guid: b64c2f1d1dab3024eb82969f4be28b42, type: 2}
+  disabledHoverIcon: {fileID: 21300000, guid: e627092ae40a31349bb823b30f28e905, type: 3}
   disabledHoverTip: Requires a key first!
   interactable: 1
   oneHandedItemAllowed: 1
@@ -628,8 +628,7 @@ MonoBehaviour:
   trigger: {fileID: 5216363493227153392}
   pickable: {fileID: 7892467125358745976}
   animator: {fileID: 3949561938320951568}
-  health:
-    m_InternalValue: 4
+  health: 4
   originalPosition: {x: 0, y: 0, z: 0}
   crateType: 1
   mainCollider: {fileID: 4147470104225953683}

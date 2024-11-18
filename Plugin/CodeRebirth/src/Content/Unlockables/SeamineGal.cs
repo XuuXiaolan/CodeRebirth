@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -11,8 +12,10 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Unlockables;
 public class SeamineGalAI : GalAI
 {
+    public TerrainScanner terrainScanner = null!;
     public List<AnimationClip> JojoAnimations = new();
     public InteractTrigger hugInteractTrigger = null!;
+    public InteractTrigger beltInteractTrigger = null!;
     public GameObject flashLightLight = null!;
     public InteractTrigger flashLightInteractTrigger = null!;
     public AudioSource RidingBruceSource = null!;
@@ -73,12 +76,33 @@ public class SeamineGalAI : GalAI
         }
 
         // Adding listener for interaction trigger
+        beltInteractTrigger.onInteract.AddListener(OnBeltInteract);
         hugInteractTrigger.onInteract.AddListener(OnHugInteract);
         flashLightInteractTrigger.onInteract.AddListener(OnFlashLightInteract);
         SeamineCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(SeamineCharger.OnActivateGal);
 
         StartCoroutine(CheckForNearbyEnemiesToOwner());
         StartCoroutine(UpdateRidingBruceSound());
+    }
+
+    private void OnBeltInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        StartBeltInteractServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartBeltInteractServerRpc()
+    {
+        PlayChargeSoundClientRpc();
+        RefillChargesClientRpc();
+        Animator.SetInteger(chargeCountInt, chargeCount);
+    }
+
+    [ClientRpc]
+    private void PlayChargeSoundClientRpc()
+    {
+        GalSFX.PlayOneShot(rechargeChargesSound);
     }
 
     private IEnumerator UpdateRidingBruceSound()
@@ -129,7 +153,6 @@ public class SeamineGalAI : GalAI
         if (physicsEnabled) EnablePhysics(false);
         ownerPlayer.enteringSpecialAnimation = true;
         ownerPlayer.disableMoveInput = true;
-        ownerPlayer.disableLookInput = true;
         huggingOwner = true;
     }
 
@@ -167,6 +190,7 @@ public class SeamineGalAI : GalAI
         bool interactable = !inActive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         bool idleInteractable = galState != State.AttackMode && interactable;
         
+        beltInteractTrigger.interactable = idleInteractable && chargeCount <= 0;
         hugInteractTrigger.interactable = idleInteractable;
         flashLightInteractTrigger.interactable = interactable;
     }
@@ -220,7 +244,7 @@ public class SeamineGalAI : GalAI
 
     private float GetCurrentSpeedMultiplier()
     {
-        float speedMultiplier = 1f * (galState == State.FollowingPlayer ? 2f : 1f) * (galState == State.AttackMode ? 4f : 1f) * (jojoPosing || inHugAnimation ? 0f : 1f);
+        float speedMultiplier = 1f * (galState == State.FollowingPlayer ? 2f : 1f) * (galState == State.AttackMode ? 4f : 1f) * (jojoPosing || inHugAnimation || currentlyAttacking ? 0f : 1f);
         if (inHugAnimation && Vector3.Distance(transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance) Agent.velocity = Vector3.zero;
         return speedMultiplier;
     }
@@ -369,6 +393,13 @@ public class SeamineGalAI : GalAI
     {
         // plays the visual effect from gabriel
         GalVoice.PlayOneShot(hazardPingSound);
+        DoTerrainScan();
+    }
+
+    private void DoTerrainScan()
+    {
+        //if (GameNetworkManager.Instance.localPlayerController != ownerPlayer || Vector3.Distance(transform.position, ownerPlayer.transform.position) > 10) return;
+        terrainScanner.SpawnTerrainScanner(transform.position, this.transform.gameObject);
     }
 
     private bool DoDancingAction()
@@ -397,6 +428,13 @@ public class SeamineGalAI : GalAI
     [ClientRpc]
     private void DoHugSoundClientRpc()
     {
+        StartCoroutine(WaitUntilStopped());
+    }
+
+    private IEnumerator WaitUntilStopped()
+    {
+        yield return new WaitUntil(() => Agent.velocity == Vector3.zero);
+        yield return new WaitForSeconds(0.3f);
         GalVoice.PlayOneShot(hugSound);
     }
 
@@ -407,7 +445,6 @@ public class SeamineGalAI : GalAI
         if (ownerPlayer == null) return;
         ownerPlayer.enteringSpecialAnimation = false;
         ownerPlayer.disableMoveInput = false;
-        ownerPlayer.disableLookInput = false;
     }
 
     private IEnumerator StopDancingDelay()
@@ -481,7 +518,7 @@ public class SeamineGalAI : GalAI
                     float distanceToEnemy = Vector3.Distance(transform.position, enemyDetected.transform.position);
                     if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
                     {
-                        Plugin.ExtendedLogging("No line of sight to enemy: " + enemyDetected);
+                        Plugin.ExtendedLogging("No line of sight to enemy: " + enemyDetected + "| This detected instead: " + hit.collider.name);
                         continue;
                     }
                     Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
@@ -649,5 +686,6 @@ public class SeamineGalAI : GalAI
     public override void OnUseEntranceTeleport(bool setOutside)
     {
         base.OnUseEntranceTeleport(setOutside);
+        CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
     }
 }
