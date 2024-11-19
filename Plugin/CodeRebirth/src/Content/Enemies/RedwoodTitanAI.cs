@@ -160,13 +160,15 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     private void OnShipDoorStateChange(object sender, bool shipDoorClosed)
     {
-        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+        foreach (PlayerControllerB? player in StartOfRound.Instance.allPlayerScripts)
         {
             if (player == null || player.isPlayerDead || !player.isPlayerControlled || !player.ContainsCRPlayerData()) continue;
-            foreach (Collider playerCollider in player.GetPlayerColliders())
+            foreach (Collider? playerCollider in player.GetPlayerColliders())
             {
-                foreach (Collider enemyCollider in enemyColliders)
+                if (playerCollider == null) continue;
+                foreach (Collider? enemyCollider in enemyColliders)
                 {
+                    if (enemyCollider == null) continue;
                     Physics.IgnoreCollision(playerCollider, enemyCollider, shipDoorClosed && player.isInHangarShipRoom);
                 }
             }

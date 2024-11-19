@@ -1034,15 +1034,14 @@ MonoBehaviour:
   m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regularHoverTip: 
-  keyHoverTip: 
+  regularHoverTip: 'Hold : [E]'
+  keyHoverTip: 'Open : [LMB]'
   slowlyOpeningSFX: {fileID: 6992814719332117094}
   openSFX: {fileID: 850424377539253765}
   trigger: {fileID: 0}
   pickable: {fileID: 0}
   animator: {fileID: 8557149345729840933}
-  health:
-    m_InternalValue: 4
+  health: 4
   originalPosition: {x: 0, y: 0, z: 0}
   crateType: 0
   mainCollider: {fileID: 4954358645330385402}

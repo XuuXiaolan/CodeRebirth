@@ -14,7 +14,6 @@ namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable {
 
 	[Header("Hover Tooltips")]
-	public string regularHoverTip = "Hold : [E]";
 	public string keyHoverTip = "Open : [LMB]";
 
 	[Header("Audio")]
@@ -47,7 +46,7 @@ public class ItemCrate : CRHittable {
 		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
 
 		originalPosition = transform.position;
-		UpdateDigPosition(0, 0);
+		UpdateDigPosition(0, digProgress);
 
 		Plugin.ExtendedLogging("ItemCrate successfully spawned with health: " + health);
 		if (crateType == CrateType.Metal && trigger != null)
@@ -80,14 +79,6 @@ public class ItemCrate : CRHittable {
 	private void Update()
 	{
 		if (crateType != CrateType.Metal || trigger == null) return;
-		if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Key")
-		{
-			trigger.hoverTip = keyHoverTip;
-		}
-		else
-		{
-			trigger.hoverTip = regularHoverTip;
-		}
 		if (trigger != null && pickable != null)
 		{
 			trigger.interactable = digProgress >= 1 && openable && !opened;
