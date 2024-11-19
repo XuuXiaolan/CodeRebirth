@@ -5825,7 +5825,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3562207529879537937}
   serializedVersion: 8
-  lengthInSec: 1.2
+  lengthInSec: 10
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -6814,7 +6814,7 @@ ParticleSystem:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-      cycleCount: 100
+      cycleCount: 120
       repeatInterval: 0.01
       probability: 1
   SizeModule:
@@ -22323,6 +22323,12 @@ MonoBehaviour:
   - {fileID: 3308942315980270621}
   smartAgentNavigator: {fileID: 4293161289285573133}
   terrainScanner: {fileID: 6377546833133129263}
+  terrainScannerCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   JojoAnimations:
   - {fileID: 7400000, guid: 8d05acadfd0293c4592e931beeb9bfb3, type: 2}
   - {fileID: 7400000, guid: 62779595c79f9c24192b1911ec5253f3, type: 2}

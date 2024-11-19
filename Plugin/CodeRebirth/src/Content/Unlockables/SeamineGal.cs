@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -28,6 +29,7 @@ public class SeamineGalAI : GalAI
     public List<AudioClip> startOrEndRidingBruceAudioClips = new();
     public AudioClip squeezeFishSound = null!;
 
+    private Coroutine? customPassRoutine = null;
     private float hazardRevealTimer = 10f;
     private bool inHugAnimation = false;
     private bool huggingOwner = false;
@@ -130,6 +132,7 @@ public class SeamineGalAI : GalAI
     [ClientRpc]
     private void StartFlashLightInteractClientRpc()
     {
+        CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
         GalSFX.PlayOneShot(squeezeFishSound);
         flashLightLight.SetActive(!flashLightLight.activeSelf);
     }
@@ -385,7 +388,7 @@ public class SeamineGalAI : GalAI
         if (hazardRevealTimer <= 0)
         {
             NetworkAnimator.SetTrigger(revealHazardsAnimation);
-            hazardRevealTimer = UnityEngine.Random.Range(7.5f, 12.5f);
+            hazardRevealTimer = UnityEngine.Random.Range(12.5f, 17.5f);
         }
     }
 
@@ -393,13 +396,22 @@ public class SeamineGalAI : GalAI
     {
         // plays the visual effect from gabriel
         GalVoice.PlayOneShot(hazardPingSound);
-        DoTerrainScan();
+        ParticleSystem particleSystem = DoTerrainScan();
+        if (customPassRoutine == null)
+        {
+            customPassRoutine = StartCoroutine(DoCustomPassThing(particleSystem));
+        }
+        else
+        {
+            StopCoroutine(customPassRoutine);
+            customPassRoutine = StartCoroutine(DoCustomPassThing(particleSystem));
+        }
     }
 
-    private void DoTerrainScan()
+    private ParticleSystem DoTerrainScan()
     {
         //if (GameNetworkManager.Instance.localPlayerController != ownerPlayer || Vector3.Distance(transform.position, ownerPlayer.transform.position) > 10) return;
-        terrainScanner.SpawnTerrainScanner(transform.position, this.transform.gameObject);
+        return terrainScanner.SpawnTerrainScanner(transform.position);
     }
 
     private bool DoDancingAction()
@@ -687,5 +699,28 @@ public class SeamineGalAI : GalAI
     {
         base.OnUseEntranceTeleport(setOutside);
         CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
+    }
+
+    public IEnumerator DoCustomPassThing(ParticleSystem particleSystem)
+    {
+        if (CustomPassManager.Instance.EnableCustomPass(CustomPassManager.CustomPassType.SeeThroughEnemies, true) is not SeeThroughCustomPass customPass) yield break;
+
+        customPass.maxVisibilityDistance = 0f;
+
+        yield return new WaitWhile(() =>
+        {
+            float percentLifetime = particleSystem.time / particleSystem.main.startLifetime.constant;
+            customPass.maxVisibilityDistance =  particleSystem.sizeOverLifetime.size.Evaluate(percentLifetime) * 300; // takes some odd seconds
+            return customPass.maxVisibilityDistance < 300;
+        });
+
+        yield return new WaitForSeconds(3);
+
+        yield return new WaitWhile(() =>
+        {
+            customPass.maxVisibilityDistance -= Time.deltaTime * 300 / 3f; // takes 3s
+            return customPass.maxVisibilityDistance > 0f;
+        });
+        customPass.enabled = false;
     }
 }

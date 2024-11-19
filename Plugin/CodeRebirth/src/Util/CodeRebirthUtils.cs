@@ -12,14 +12,17 @@ using Newtonsoft.Json;
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
+    public Material WireframeMaterial = null!;
+    public Shader SeeThroughShader = null!;
+
     private static Random random = null!;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
-    
+
     private void Awake()
     {
         Instance = this;
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
     {
