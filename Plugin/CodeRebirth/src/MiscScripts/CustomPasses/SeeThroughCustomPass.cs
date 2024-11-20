@@ -48,11 +48,11 @@ public class SeeThroughCustomPass : CustomPass
             stencilMaterial = CoreUtils.CreateEngineMaterial(stencilShader);
 
         stencilMaterial.SetInt("_StencilWriteMask", (int)UserStencilUsage.UserBit0);
-        seeThroughMaterial.SetFloat("_MaxVisibilityDistance", maxVisibilityDistance);
+        seeThroughMaterial.SetFloat("_MaxVisibilityDistance", Mathf.Max(0, maxVisibilityDistance));
 
         RenderObjects(ctx.renderContext, ctx.cmd, stencilMaterial, 0, CompareFunction.LessEqual, ctx.cullingResults, ctx.hdCamera);
 
-        // Then we render the objects that are behind walls using the stencil buffer with Greater Equal ZTest:
+        // Then we render the objects that are behind walls using the stencil buffer with GreaterEqual ZTest:
         StencilState seeThroughStencil = new(
             enabled: true,
             readMask: (byte)UserStencilUsage.UserBit0,
@@ -69,13 +69,13 @@ public class SeeThroughCustomPass : CustomPass
         var result = new UnityEngine.Rendering.RendererUtils.RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
         {
             rendererConfiguration = PerObjectData.None,
-            renderQueueRange = RenderQueueRange.all,
+            renderQueueRange = RenderQueueRange.opaque,
             sortingCriteria = SortingCriteria.BackToFront,
             excludeObjectMotionVectors = false,
             overrideMaterial = overrideMaterial,
             overrideMaterialPassIndex = passIndex,
             layerMask = seeThroughLayer,
-            stateBlock = new RenderStateBlock(RenderStateMask.Depth) { depthState = new DepthState(writeEnabled: true, compareFunction: depthCompare) },
+            stateBlock = new RenderStateBlock(RenderStateMask.Depth) { depthState = new DepthState(writeEnabled: false, compareFunction: depthCompare) },
         };
 
         if (overrideStencil != null)

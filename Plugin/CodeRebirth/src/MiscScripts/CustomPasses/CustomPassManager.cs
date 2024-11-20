@@ -61,7 +61,7 @@ public class CustomPassManager
             case CustomPassType.SeeThroughEnemies:
                 {
                     var seeThrough = new SeeThroughCustomPass();
-                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.DepthStencil;
+                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
                     seeThrough.seeThroughLayer = LayerMask.GetMask("Enemies");
                     Color darkRed = Color.red;
                     Color lightRed = new(204/255f, 0/255f, 0/255f, 0.8f);
@@ -72,7 +72,7 @@ public class CustomPassManager
             case CustomPassType.SeeThroughItems:
                 {
                     var seeThrough = new SeeThroughCustomPass();
-                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.DepthStencil;
+                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
                     seeThrough.seeThroughLayer = LayerMask.GetMask("Props");
                     Color darkGreen = new(46/255f, 111/255f, 64/255f, 0.9f);
                     Color lightGreen = new(168/255f, 220/255f, 171/255f, 0.5f);
@@ -83,7 +83,7 @@ public class CustomPassManager
                 case CustomPassType.SeeThroughPlayers:
                 {
                     var seeThrough = new SeeThroughCustomPass();
-                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.DepthStencil;
+                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
                     seeThrough.seeThroughLayer = LayerMask.GetMask("Player", "PlayerRagdoll");
                     Color darkBlue = new(0/255f, 51/255f, 102/255f, 0.9f);
                     Color lightBlue = new(0/255f, 76/255f, 153/255f, 0.6f);
@@ -94,7 +94,7 @@ public class CustomPassManager
                 case CustomPassType.SeeThroughHazards:
                 {
                     var seeThrough = new SeeThroughCustomPass();
-                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.DepthStencil;
+                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
                     seeThrough.seeThroughLayer = LayerMask.GetMask("MapHazards");
                     Color darkRed = Color.red;
                     Color lightRed = new(204/255f, 0/255f, 0/255f, 0.8f);
