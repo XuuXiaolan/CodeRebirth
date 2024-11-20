@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: dcaf6e97be2011c40b38d3f0275ff065
+guid: e4c730b9a05f19d45a56e4c6fd3f21a4
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,33 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: BallNChain
-    second: {fileID: 2100000, guid: a3810dd56ad7a0b4dafca52e7bc351c0, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Body
-    second: {fileID: 2100000, guid: 655474ee5b4fb334ab2d84632f74a995, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: BruceBoard
-    second: {fileID: 2100000, guid: d31c02748b95d964c87e0e10aa5cc426, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: FishTex
-    second: {fileID: 2100000, guid: 3b482bb128c3d6c46b308f07617ddc4d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: FlashlightColors
-    second: {fileID: 2100000, guid: ec6a71536f667454ab2524eac197db8e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 4dc75258e94425844a7599b8c454e846, type: 2}
+      name: GooseTexture
+    second: {fileID: 2100000, guid: afdba2053b7b6744391762c1df580d77, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -66,7 +41,7 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 1
-    meshCompression: 2
+    meshCompression: 3
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
@@ -87,7 +62,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
-    optimizeBones: 1
+    optimizeBones: 0
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -127,7 +102,7 @@ ModelImporter:
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1

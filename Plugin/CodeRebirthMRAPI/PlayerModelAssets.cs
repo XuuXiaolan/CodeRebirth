@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace CodeRebirthMRAPI;
 
-static class PlayerModelAssets {
+static class PlayerModelAssets
+{
 	internal class ShockwaveModelReplacementAssets(string bundleName) : AssetBundleLoader<ShockwaveModelReplacementAssets>(bundleName)
 	{
 		[LoadFromBundle("ShockwaveGalPlayerModel.prefab")]

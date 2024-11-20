@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigPjonkTurkeyEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFirstLaunchPopup { get; private set; }
@@ -667,6 +668,10 @@ public class CodeRebirthConfig
                                             "First Launch Popup",
                                             true,
                                             "Enables/Disables the first launch popup for the host about the ShockwaveGalModelReplacement mod.");
+        ConfigPjonkTurkeyEnabled = configFile.Bind("ModCompat Options",
+                                            "Pjonk Turkey | Enabled",
+                                            false,
+                                            "Allows the pjonk turkey to spawn in certain conditions");
         #endregion
         #region CutieFly
         ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",

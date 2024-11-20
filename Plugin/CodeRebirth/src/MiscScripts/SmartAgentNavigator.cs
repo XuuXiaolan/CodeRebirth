@@ -14,6 +14,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     [NonSerialized] public bool cantMove = false;
     [NonSerialized] public UnityEvent<bool> OnUseEntranceTeleport = new();
     [NonSerialized] public UnityEvent<bool> OnEnableOrDisableAgent = new();
+    [NonSerialized] public UnityEvent<bool> OnEnterOrExitElevator = new();
 
     private float nonAgentMovementSpeed = 10f;
     private NavMeshAgent agent = null!;
@@ -270,9 +271,11 @@ public class SmartAgentNavigator : NetworkBehaviour
     private IEnumerator StopUsingElevator(MineshaftElevatorController elevatorScript)
     {
         usingElevator = true;
+        OnEnterOrExitElevator.Invoke(true);
         yield return new WaitForSeconds(2f);
         yield return new WaitUntil(() => elevatorScript.elevatorDoorOpen && elevatorScript.elevatorFinishedMoving);
         Plugin.ExtendedLogging("Stopped using elevator");
+        OnEnterOrExitElevator.Invoke(false);
         usingElevator = false;
     }
 

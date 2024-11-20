@@ -38,12 +38,12 @@ public class Plugin : BaseUnityPlugin {
 			ModelReplacementAPI.RegisterSuitModelReplacement("Delilah", typeof(ShockwaveGalModel));
 		}
 
-		/*if (Plugin.ModConfig.ConfigSeamineTinkPlayerModelEnabled.Value)
+		if (CodeRebirth.src.Plugin.ModConfig.ConfigSeamineTinkPlayerModelEnabled.Value)
 		{
 			ExtendedLogging("Seamine is a new model registered!");
 			PlayerModelAssets.SeamineModelAssets = new PlayerModelAssets.SeamineModelReplacementAssets("seaminegalmodelreplacementassets");
-			ModelReplacementAPI.RegisterSuitModelReplacement("Seamine", typeof(SeamineGalModel));
-		}*/
+			ModelReplacementAPI.RegisterSuitModelReplacement("Betty", typeof(SeamineGalModel));
+		}
 		
 		Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded! :3");
 	}

@@ -37,6 +37,7 @@ public class SeamineGalAI : GalAI
     private bool ridingBruce = false;
     private State galState = State.Inactive;
     private bool jojoPosing = false;
+    private readonly static int inElevatorAnimation = Animator.StringToHash("inElevator"); // bool
     private readonly static int chargeCountInt = Animator.StringToHash("chargeCount"); // int
     private readonly static int revealHazardsAnimation = Animator.StringToHash("revealHazards"); // trigger
     private readonly static int hugAnimation = Animator.StringToHash("doHug"); // trigger
@@ -703,6 +704,12 @@ public class SeamineGalAI : GalAI
     {
         base.OnUseEntranceTeleport(setOutside);
         CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
+    }
+
+    public override void OnEnterOrExitElevator(bool enteredElevator)
+    {
+        base.OnEnterOrExitElevator(enteredElevator);
+        Animator.SetBool(inElevatorAnimation, enteredElevator);
     }
 
     public IEnumerator DoCustomPassThing(ParticleSystem particleSystem, CustomPassManager.CustomPassType customPassType)

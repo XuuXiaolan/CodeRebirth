@@ -10,6 +10,7 @@
 - Made meteor shower automatically end at 80% through the day by default and start only after the ship has nearly landed.
 - Made meteor shower strike on ship by default false because I got scolded, and also improved the non-hitting of the ship to be a decent radius around the ship.
 - Made meteor shower scrap amount multiplier and scrap value multiplier 1.2x by default and lowered spawn weight from 50 to 30 (and tornado from 50 to 40).
+- Added a special death interaction for Pjonk, die often for the sake of us.
 
 ## v0.7.18
 
