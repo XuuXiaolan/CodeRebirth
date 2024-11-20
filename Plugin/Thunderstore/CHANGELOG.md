@@ -5,6 +5,11 @@
 - Added configs for enabling/disabling seamine and shockwave gal player models.
 - Fixed meteor shower initial volume stuff.
 - Microwave has a chance to spawn scrap inside of it now, making it more deadly.
+- Nerfed meteor shower fire damage a bit and reduced the particles to save on some frames.
+- Lowered the default speed of the meteor shower meteor's from 50 to 30.
+- Made meteor shower automatically end at 80% through the day by default and start only after the ship has nearly landed.
+- Made meteor shower strike on ship by default false because I got scolded, and also improved the non-hitting of the ship to be a decent radius around the ship.
+- Made meteor shower scrap amount multiplier and scrap value multiplier 1.2x by default and lowered spawn weight from 50 to 30 (and tornado from 50 to 40).
 
 ## v0.7.18
 

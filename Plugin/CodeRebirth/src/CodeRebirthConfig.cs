@@ -612,21 +612,21 @@ public class CodeRebirthConfig
                                             ));
         ConfigMeteorSpeed = configFile.Bind("MeteorShower Options",
                                             "Meteors | Speed",
-                                            50f,
+                                            30f,
                                             new ConfigDescription(
                                                 "Speed of meteors.",
                                                 new AcceptableValueRange<float>(0, 1000f)
                                             ));
         ConfigMeteorShowerTimeToLeave = configFile.Bind("MeteorShower Options",
                                             "MeteorShower | Time To Leave",
-                                            1f,
+                                            0.85f,
                                             new ConfigDescription(
                                                 "Normalised time it takes for the meteor shower to leave the moon, 1 being at 12PM~.",
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
         ConfigMeteorHitShip = configFile.Bind("MeteorShower Options",
                                             "MeteorShower | Meteor Strikes Ship",
-                                            true,
+                                            false,
                                             "Allows striking the ship with a meteor.");
         ConfigMeteorShowerMeteoriteSpawnChance = configFile.Bind("MeteorShower Options",
                                             "MeteorShower | Meteorite Spawn Chance",
@@ -637,14 +637,14 @@ public class CodeRebirthConfig
                                             ));
         ConfigMeteorsDefaultVolume = configFile.Bind("MeteorShower Options",
                                             "Meteors | Default Volume",
-                                            0.6f,
+                                            0.4f,
                                             new ConfigDescription(
                                                 "Default Volume of Meteors (between 0 and 1).",
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
         ConfigMeteorShowerInShipVolume = configFile.Bind("MeteorShower Options",
                                             "MeteorShower | Meteor Volume",
-                                            0.5f,
+                                            0.3f,
                                             new ConfigDescription(
                                                 "Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.", 
                                                 new AcceptableValueRange<float>(0, 1f)

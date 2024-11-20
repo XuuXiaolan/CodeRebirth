@@ -1,77 +1,124 @@
-﻿Shader "Custom/SeeThroughShader"
+﻿Shader "Hidden/Renderers/SeeThroughStencil"
 {
     Properties
     {
-        _EdgeColor ("Edge Color", Color) = (1,1,1,1)
-        _MainColor ("Fill Color", Color) = (1,1,1,1)
-        _WireframeVal ("Wireframe width", Range(0., 1.)) = 0.05
-        _MaxVisibilityDistance ("Max Visibility Distance", Float) = 10
+        _Color("Color", Color) = (1,1,1,1)
+        _ColorMap("ColorMap", 2D) = "white" {}
+        _MaxVisibilityDistance("Max Visibility Distance", Float) = 10
+        // Transparency
+        _AlphaCutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+        [HideInInspector]_StencilWriteMask("_StencilWriteMask", Float) = 0
     }
+
+    HLSLINCLUDE
+
+    #pragma target 4.5
+    #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
+
+    //enable GPU instancing support
+    #pragma multi_compile_instancing
+
+    ENDHLSL
 
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent" "RenderPipeline" = "HDRenderPipeline" }
-
         Pass
         {
-            Name "ForwardOnly"
-            Tags { "LightMode" = "ForwardOnly" }
+            Name "FirstPass"
+            Tags { "LightMode" = "FirstPass" "Queue" = "Transparent" }
 
-            ZWrite Off
-            ZTest Greater
             Blend SrcAlpha OneMinusSrcAlpha
+            ColorMask RGB
+            Cull Back
+            ZWrite On
+            ZTest LEqual
+
+            Stencil
+            {
+                Ref 1
+                Comp Always
+                WriteMask [_StencilWriteMask]
+                Pass Replace
+            }
 
             HLSLPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
 
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassRenderers.hlsl"
 
-            struct Attributes
+            void GetSurfaceAndBuiltinData(FragInputs fragInputs, float3 viewDirection, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
             {
-                float4 positionOS : POSITION;
-            };
-
-            struct Varyings
-            {
-                float4 positionCS : SV_POSITION;
-                float3 positionWS : TEXCOORD0;
-            };
-
-            CBUFFER_START(UnityPerMaterial)
-                float4 _EdgeColor;
-                float4 _MainColor;
-                float _WireframeVal;
-                float _MaxVisibilityDistance;
-            CBUFFER_END
-
-            Varyings vert(Attributes input)
-            {
-                Varyings output;
-                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
-                output.positionCS = TransformWorldToHClip(output.positionWS);
-                return output;
+                ZERO_INITIALIZE(BuiltinData, builtinData);
+                ZERO_INITIALIZE(SurfaceData, surfaceData);
+                surfaceData.color = 1;
             }
 
-            float4 frag(Varyings input) : SV_Target
+            #if SHADERPASS != SHADERPASS_FORWARD_UNLIT
+
+            #error SHADERPASS_is_not_correctly_defined
+            #endif
+
+            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/VertMesh.hlsl"
+
+            PackedVaryingsType Vert(AttributesMesh inputMesh)
             {
-                float2 screenUV = input.positionCS.xy / _ScreenSize.xy;
-                float sceneDepth = LoadCameraDepth(input.positionCS.xy);
-                float linearDepth = LinearEyeDepth(sceneDepth, _ZBufferParams);
-
-                // Calculate distance-based fade
-                float fadeAlpha = saturate((_MaxVisibilityDistance - linearDepth) / _MaxVisibilityDistance);
-
-                // Apply wireframe effect
-                float3 screenDeriv = fwidth(input.positionWS);
-                float edgeFactor = min(1.0 - saturate((length(screenDeriv.xy) / _WireframeVal)), 1);
-
-                float4 color = lerp(_MainColor, _EdgeColor, edgeFactor);
-                color.a *= fadeAlpha;
-
-                return color;
+                VaryingsType varyingsType;
+                varyingsType.vmesh = VertMesh(inputMesh);
+                return PackVaryingsType(varyingsType);
             }
+
+            #ifdef TESSELLATION_ON
+
+            PackedVaryingsToPS VertTesselation(VaryingsToDS input)
+            {
+                VaryingsToPS output;
+                output.vmesh = VertMeshTesselation(input.vmesh);
+                return PackVaryingsToPS(output);
+            }
+
+            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/TessellationShare.hlsl"
+
+            #endif // TESSELLATION_ON
+
+            float _MaxVisibilityDistance;
+            float _AlphaCutoff;
+
+            float4 Frag(PackedVaryingsToPS packedInput) : SV_Target
+            {
+                FragInputs input = UnpackVaryingsMeshToFragInputs(packedInput.vmesh);
+
+                PositionInputs posInput = GetPositionInput(input.positionSS.xy, _ScreenSize.zw, input.positionSS.z, input.positionSS.w, input.positionRWS);
+
+                float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
+
+                SurfaceData surfaceData;
+                BuiltinData builtinData;
+                GetSurfaceAndBuiltinData(input, V, posInput, surfaceData, builtinData);
+
+                BSDFData bsdfData = ConvertSurfaceDataToBSDFData(input.positionSS.xy, surfaceData);
+
+                float4 outColor = ApplyBlendMode(bsdfData.color + builtinData.emissiveColor, builtinData.opacity);
+        
+                // Calculate distance from camera
+                float distanceFromCamera = length(_WorldSpaceCameraPos - input.positionRWS);
+        
+                // Apply distance-based fade
+                float fadeAlpha = saturate((_MaxVisibilityDistance - distanceFromCamera) / _MaxVisibilityDistance);
+                outColor.a *= fadeAlpha;
+
+                // Apply alpha cutoff
+                if (outColor.a <= _AlphaCutoff)
+                {
+                    discard;
+                }
+
+                outColor = EvaluateAtmosphericScattering(posInput, V, outColor);
+
+                return outColor;
+            }
+
+            #pragma vertex Vert
+            #pragma fragment Frag
+
             ENDHLSL
         }
     }

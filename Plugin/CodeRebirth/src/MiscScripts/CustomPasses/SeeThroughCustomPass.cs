@@ -6,6 +6,7 @@ using CodeRebirth.src.Util;
 
 public class SeeThroughCustomPass : CustomPass
 {
+    [SerializeField]
     public Material seeThroughMaterial = new(CodeRebirthUtils.Instance.WireframeMaterial);
     public LayerMask seeThroughLayer;
     public float maxVisibilityDistance = 20f;
@@ -37,7 +38,6 @@ public class SeeThroughCustomPass : CustomPass
             new ShaderTagId("SRPDefaultUnlit"),
             new ShaderTagId("FirstPass"),
         ];
-
     }
 
     protected override void Execute(CustomPassContext ctx)
@@ -51,7 +51,6 @@ public class SeeThroughCustomPass : CustomPass
         seeThroughMaterial.SetFloat("_MaxVisibilityDistance", maxVisibilityDistance);
 
         RenderObjects(ctx.renderContext, ctx.cmd, stencilMaterial, 0, CompareFunction.LessEqual, ctx.cullingResults, ctx.hdCamera);
-        // CustomPassUtils.DrawRenderers(ctx, seeThroughLayer, RenderQueueType.All, overrideRenderState: stencilWriteRenderState);
 
         // Then we render the objects that are behind walls using the stencil buffer with Greater Equal ZTest:
         StencilState seeThroughStencil = new(
@@ -67,7 +66,6 @@ public class SeeThroughCustomPass : CustomPass
 
     void RenderObjects(ScriptableRenderContext renderContext, CommandBuffer cmd, Material overrideMaterial, int passIndex, CompareFunction depthCompare, CullingResults cullingResult, HDCamera hdCamera, StencilState? overrideStencil = null)
     {
-        // Render the objects in the layer blur mask into a mask buffer with their materials so we keep the alpha-clip and transparency if there is any.
         var result = new UnityEngine.Rendering.RendererUtils.RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
         {
             rendererConfiguration = PerObjectData.None,
@@ -77,7 +75,7 @@ public class SeeThroughCustomPass : CustomPass
             overrideMaterial = overrideMaterial,
             overrideMaterialPassIndex = passIndex,
             layerMask = seeThroughLayer,
-            stateBlock = new RenderStateBlock(RenderStateMask.Depth) { depthState = new DepthState(true, depthCompare) },
+            stateBlock = new RenderStateBlock(RenderStateMask.Depth) { depthState = new DepthState(writeEnabled: true, compareFunction: depthCompare) },
         };
 
         if (overrideStencil != null)

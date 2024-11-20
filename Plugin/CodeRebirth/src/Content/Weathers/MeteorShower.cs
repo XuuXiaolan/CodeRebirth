@@ -158,12 +158,14 @@ public class MeteorShower : CodeRebirthWeathers {
 
 	private IEnumerator MeteorSpawnerHandler()
 	{
-		yield return new WaitForSeconds(5f); // inital delay so clients don't get meteors before theyve inited everything.
-		while (true) { // this is fine because it gets stopped in OnDisable.
+		yield return new WaitForSeconds(10f); // inital delay so clients don't get meteors before theyve inited everything.
+		while (true)
+		{ // this is fine because it gets stopped in OnDisable.
 
 			for (int i = 0; i < random.NextInt(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++)
 			{
 				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
+				yield return new WaitForEndOfFrame();
 			}
 			float delay = random.NextFloat(minTimeBetweenSpawns, maxTimeBetweenSpawns);
 			yield return new WaitForSeconds(delay);

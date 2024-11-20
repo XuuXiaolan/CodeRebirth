@@ -29,7 +29,7 @@ public class SeamineGalAI : GalAI
     public List<AudioClip> startOrEndRidingBruceAudioClips = new();
     public AudioClip squeezeFishSound = null!;
 
-    private Coroutine? customPassRoutine = null;
+    private List<Coroutine> customPassRoutines = new();
     private float hazardRevealTimer = 10f;
     private bool inHugAnimation = false;
     private bool huggingOwner = false;
@@ -82,7 +82,6 @@ public class SeamineGalAI : GalAI
         hugInteractTrigger.onInteract.AddListener(OnHugInteract);
         flashLightInteractTrigger.onInteract.AddListener(OnFlashLightInteract);
         SeamineCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(SeamineCharger.OnActivateGal);
-
         StartCoroutine(CheckForNearbyEnemiesToOwner());
         StartCoroutine(UpdateRidingBruceSound());
     }
@@ -132,9 +131,9 @@ public class SeamineGalAI : GalAI
     [ClientRpc]
     private void StartFlashLightInteractClientRpc()
     {
-        CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
         GalSFX.PlayOneShot(squeezeFishSound);
         flashLightLight.SetActive(!flashLightLight.activeSelf);
+        CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
     }
 
     private void OnHugInteract(PlayerControllerB playerInteracting)
@@ -397,14 +396,19 @@ public class SeamineGalAI : GalAI
         // plays the visual effect from gabriel
         GalVoice.PlayOneShot(hazardPingSound);
         ParticleSystem particleSystem = DoTerrainScan();
-        if (customPassRoutine == null)
+        if (customPassRoutines.Count <= 0)
         {
-            customPassRoutine = StartCoroutine(DoCustomPassThing(particleSystem));
+            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughEnemies)));
+            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughHazards)));
         }
         else
         {
-            StopCoroutine(customPassRoutine);
-            customPassRoutine = StartCoroutine(DoCustomPassThing(particleSystem));
+            foreach (Coroutine coroutine in customPassRoutines)
+            {
+                StopCoroutine(coroutine);
+            }
+            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughEnemies)));
+            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughHazards)));
         }
     }
 
@@ -701,9 +705,9 @@ public class SeamineGalAI : GalAI
         CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
     }
 
-    public IEnumerator DoCustomPassThing(ParticleSystem particleSystem)
+    public IEnumerator DoCustomPassThing(ParticleSystem particleSystem, CustomPassManager.CustomPassType customPassType)
     {
-        if (CustomPassManager.Instance.EnableCustomPass(CustomPassManager.CustomPassType.SeeThroughEnemies, true) is not SeeThroughCustomPass customPass) yield break;
+        if (CustomPassManager.Instance.EnableCustomPass(customPassType, true) is not SeeThroughCustomPass customPass) yield break;
 
         customPass.maxVisibilityDistance = 0f;
 
@@ -711,16 +715,16 @@ public class SeamineGalAI : GalAI
         {
             float percentLifetime = particleSystem.time / particleSystem.main.startLifetime.constant;
             customPass.maxVisibilityDistance =  particleSystem.sizeOverLifetime.size.Evaluate(percentLifetime) * 300; // takes some odd seconds
-            return customPass.maxVisibilityDistance < 300;
+            return customPass.maxVisibilityDistance < 50;
         });
 
         yield return new WaitForSeconds(3);
 
         yield return new WaitWhile(() =>
         {
-            customPass.maxVisibilityDistance -= Time.deltaTime * 300 / 3f; // takes 3s
+            customPass.maxVisibilityDistance -= Time.deltaTime * 50 / 3f; // takes 3s
             return customPass.maxVisibilityDistance > 0f;
         });
-        customPass.enabled = false;
+        CustomPassManager.Instance.RemoveCustomPass(customPassType);
     }
 }

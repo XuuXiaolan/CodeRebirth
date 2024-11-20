@@ -115,7 +115,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
 
         TornadoesWeather = new Weather("Windy", tornadoEffect)
         {
-            DefaultWeight = 50,
+            DefaultWeight = 40,
             DefaultLevelFilters = new string[] { "Gordion" },
             LevelFilteringOption = FilteringOption.Exclude,
             Color = UnityEngine.Color.gray,
@@ -155,8 +155,10 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
 
         MeteorShowerWeather = new Weather("Meteor Shower", meteorEffect)
         {
-            DefaultWeight = 50,
+            DefaultWeight = 30,
             DefaultLevelFilters = new string[] { "Gordion" },
+            ScrapAmountMultiplier = 1.2f,
+            ScrapValueMultiplier = 1.2f,
             LevelFilteringOption = FilteringOption.Exclude,
             Color = new Color(0.5f, 0f, 0f, 1f),
 

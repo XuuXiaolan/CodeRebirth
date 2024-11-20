@@ -74,21 +74,25 @@ public class CodeRebirthWeathers : MonoBehaviour {
 		if (maxZ < minZ) maxZ = minZ;
 		var nextNode = random.NextItem(nodes);
 		Vector3 position = nextNode.transform.position;
-		if (!alreadyUsedNodes.Contains(nextNode)) {
+		if (!alreadyUsedNodes.Contains(nextNode))
+		{
 			alreadyUsedNodes.Add(nextNode);
 		}
 		position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
 		position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
-		if (!Plugin.ModConfig.ConfigMeteorHitShip.Value && Vector3.Distance(position, StartOfRound.Instance.shipBounds.transform.position) <= 16) {
-			for (int i = 0; i < 5; i++) {
+		if (!Plugin.ModConfig.ConfigMeteorHitShip.Value && Vector3.Distance(position, StartOfRound.Instance.shipLandingPosition.transform.position) <= 25)
+		{
+			for (int i = 0; i < 5; i++)
+			{
 				position = nextNode.transform.position;
 				position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
 				position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
-				Plugin.Logger.LogDebug("Selecting random position failed. Trying again.");
-				if (Vector3.Distance(position, StartOfRound.Instance.shipBounds.transform.position) > 16) {
+				if (Vector3.Distance(position, StartOfRound.Instance.shipLandingPosition.transform.position) > 25)
+				{
 					return position;
 				}
-				else if (i == 4) {
+				else if (i == 4)
+				{
 					Plugin.Logger.LogWarning("Selecting random position failed.");
 					return Vector3.zero;
 				}
@@ -96,6 +100,7 @@ public class CodeRebirthWeathers : MonoBehaviour {
 		}
 		return position;
 	}
+
 	public bool IsAuthority()
     {
         return NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;

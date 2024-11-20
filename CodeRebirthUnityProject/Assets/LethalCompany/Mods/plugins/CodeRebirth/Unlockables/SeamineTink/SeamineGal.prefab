@@ -726,7 +726,7 @@ ParticleSystem:
   lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 3
+  cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
@@ -5515,7 +5515,7 @@ ParticleSystemRenderer:
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
-  m_RendererPriority: 0
+  m_RendererPriority: -10
   m_Materials:
   - {fileID: 2100000, guid: 82f3722fe2a0ea74fb9b58625524f32d, type: 2}
   m_StaticBatchInfo:
@@ -5537,7 +5537,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5828,7 +5828,7 @@ ParticleSystem:
   lengthInSec: 10
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 3
+  cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
@@ -10617,7 +10617,7 @@ ParticleSystemRenderer:
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
-  m_RendererPriority: 0
+  m_RendererPriority: -10
   m_Materials:
   - {fileID: 2100000, guid: 4c04e44950c51b84cae6c9a8ad324d75, type: 2}
   m_StaticBatchInfo:
@@ -10639,7 +10639,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -12143,7 +12143,7 @@ ParticleSystem:
   lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 3
+  cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
@@ -16932,7 +16932,7 @@ ParticleSystemRenderer:
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
-  m_RendererPriority: 0
+  m_RendererPriority: -10
   m_Materials:
   - {fileID: 2100000, guid: 82f3722fe2a0ea74fb9b58625524f32d, type: 2}
   m_StaticBatchInfo:
@@ -16954,7 +16954,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -17029,7 +17029,7 @@ ParticleSystem:
   lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 3
+  cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
@@ -21818,7 +21818,7 @@ ParticleSystemRenderer:
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
-  m_RendererPriority: 0
+  m_RendererPriority: -10
   m_Materials:
   - {fileID: 2100000, guid: 82f3722fe2a0ea74fb9b58625524f32d, type: 2}
   m_StaticBatchInfo:
@@ -21840,7 +21840,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0

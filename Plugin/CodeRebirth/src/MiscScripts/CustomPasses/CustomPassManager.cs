@@ -51,7 +51,6 @@ public class CustomPassManager
         _volume.isGlobal = true;
     }
 
-
     private void InitCustomPass(CustomPassType type)
     {
         if (HasCustomPass(type)) return;
@@ -62,10 +61,10 @@ public class CustomPassManager
             case CustomPassType.SeeThroughEnemies:
                 {
                     var seeThrough = new SeeThroughCustomPass();
-                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
+                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.DepthStencil;
                     seeThrough.seeThroughLayer = LayerMask.GetMask("Enemies");
-                    Color darkRed = new(153/255, 0/255, 0/255);
-                    Color lightRed = new(204/255, 0/255, 0/255);
+                    Color darkRed = Color.red;
+                    Color lightRed = new(204/255f, 0/255f, 0/255f, 0.8f);
                     seeThrough.ConfigureMaterial(darkRed, lightRed, 0.04f);
                     customPass = seeThrough;
                     break;
@@ -73,10 +72,10 @@ public class CustomPassManager
             case CustomPassType.SeeThroughItems:
                 {
                     var seeThrough = new SeeThroughCustomPass();
-                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
+                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.DepthStencil;
                     seeThrough.seeThroughLayer = LayerMask.GetMask("Props");
-                    Color darkGreen = new(46/255, 111/255, 64/255);
-                    Color lightGreen = new(168/255, 220/255, 171/255);
+                    Color darkGreen = new(46/255f, 111/255f, 64/255f, 0.9f);
+                    Color lightGreen = new(168/255f, 220/255f, 171/255f, 0.5f);
                     seeThrough.ConfigureMaterial(darkGreen, lightGreen, 0.04f);
                     customPass = seeThrough;
                     break;
@@ -84,10 +83,10 @@ public class CustomPassManager
                 case CustomPassType.SeeThroughPlayers:
                 {
                     var seeThrough = new SeeThroughCustomPass();
-                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
+                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.DepthStencil;
                     seeThrough.seeThroughLayer = LayerMask.GetMask("Player", "PlayerRagdoll");
-                    Color darkBlue = new(0/255, 51/255, 102/255);
-                    Color lightBlue = new(0/255, 76/255, 153/255);
+                    Color darkBlue = new(0/255f, 51/255f, 102/255f, 0.9f);
+                    Color lightBlue = new(0/255f, 76/255f, 153/255f, 0.6f);
                     seeThrough.ConfigureMaterial(darkBlue, lightBlue, 0.04f);
                     customPass = seeThrough;
                     break;
@@ -95,10 +94,10 @@ public class CustomPassManager
                 case CustomPassType.SeeThroughHazards:
                 {
                     var seeThrough = new SeeThroughCustomPass();
-                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
+                    seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.DepthStencil;
                     seeThrough.seeThroughLayer = LayerMask.GetMask("MapHazards");
-                    Color darkRed = new(153/255, 0/255, 0/255);
-                    Color lightRed = new(204/255, 0/255, 0/255);
+                    Color darkRed = Color.red;
+                    Color lightRed = new(204/255f, 0/255f, 0/255f, 0.8f);
                     seeThrough.ConfigureMaterial(darkRed, lightRed, 0.04f);
                     customPass = seeThrough;
                     break;
@@ -113,7 +112,7 @@ public class CustomPassManager
         }
     }
 
-    private void RemoveCustomPass(CustomPassType type)
+    public void RemoveCustomPass(CustomPassType type)
     {
         Volume.customPasses.Remove(_customPasses[type]);
         _customPasses.Remove(type);

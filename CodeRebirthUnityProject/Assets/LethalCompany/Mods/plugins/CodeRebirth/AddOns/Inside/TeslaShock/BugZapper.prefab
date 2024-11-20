@@ -52,10 +52,10 @@ MonoBehaviour:
   m_Script: {fileID: -1996060276, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceFromPlayer: 13
+  distanceFromPlayer: 5
   playerDamageAmount: 40
   playerZapDamageAmount: 10
-  pushMultiplier: 50
+  pushMultiplier: 10
   startChainPoint: {fileID: 5746014561467843648}
   vfx: {fileID: 1341370984318673724}
   teslaIdleAudioSource: {fileID: 5756633147035156919}
@@ -68,7 +68,8 @@ MonoBehaviour:
   teslaConsecutiveChargeSound: {fileID: 8300000, guid: b580014009e90d3499049fff65867d9e,
     type: 3}
   teslaZapSounds:
-  - {fileID: 8300000, guid: 278f0044625f41f42839c4f0ae4b7860, type: 3}
+  - {fileID: 8300000, guid: b390e75e401346b429af2453f8318169, type: 3}
+  - {fileID: 8300000, guid: 316f669c57d67894995481baa163183e, type: 3}
 --- !u!114 &3347043305609170150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,7 +145,7 @@ GameObject:
   - component: {fileID: 3011776691054921050}
   - component: {fileID: 2210279824831009812}
   - component: {fileID: 3686673756797610645}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: VfxBloom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +265,7 @@ GameObject:
   - component: {fileID: 7435403655097093627}
   - component: {fileID: 1341370984318673724}
   - component: {fileID: 3531794077323328526}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: vg_PlasmaSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -606,7 +607,7 @@ GameObject:
   - component: {fileID: 5635796968646058940}
   - component: {fileID: 1277741433826703287}
   - component: {fileID: 772564742550401954}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -689,7 +690,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5312651941209798210}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: vg_PlasmaSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
