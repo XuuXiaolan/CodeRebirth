@@ -63,17 +63,20 @@ public class Tornados : EnemyAI
 
     private TornadoSelector tornadoSelector;
 
-    public void OnEnable() {
+    public void OnEnable()
+    {
         Instance = this;
         tornadoSelector = new TornadoSelector();
     }
 
-    public void OnDisable() {
+    public void OnDisable()
+    {
         Instance = null!;
     }
 
     [ClientRpc]
-    public void SetupTornadoClientRpc(Vector3 origin) {
+    public void SetupTornadoClientRpc(Vector3 origin)
+    {
         outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
         this.origin = origin;
         tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
@@ -95,13 +98,14 @@ public class Tornados : EnemyAI
         UpdateAudio(); // Ensure audio works correctly on the first frame.
     }
 
-    public override void Start() {
+    public override void Start()
+    {
         base.Start();
 #if DEBUG
         isDebugging = true;
 #endif
         initialSpeed = Plugin.ModConfig.ConfigTornadoSpeed.Value;
-        if (TornadoWeather.Instance != null) TornadoWeather.Instance.AddTornado(this);
+        TornadoWeather.Instance?.AddTornado(this);
         timeSinceBeingInsideTornado = 0;
 
         if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20) {
@@ -135,8 +139,10 @@ public class Tornados : EnemyAI
         int i = 0;
         switch (tornadoType) {
             case TornadoType.Fire:
-                foreach (ParticleSystem particleSystem in tornadoParticles) {
-                    if (particleSystem.gameObject.name.Contains("Fire")) {
+                foreach (ParticleSystem particleSystem in tornadoParticles)
+                {
+                    if (particleSystem.gameObject.name.Contains("Fire"))
+                    {
                         particleSystem.gameObject.SetActive(true);
                         i++;
                     }
@@ -144,8 +150,10 @@ public class Tornados : EnemyAI
                 }
                 break;
             case TornadoType.Blood:
-                foreach (ParticleSystem particleSystem in tornadoParticles) {
-                    if (particleSystem.gameObject.name.Contains("Blood")) {
+                foreach (ParticleSystem particleSystem in tornadoParticles)
+                {
+                    if (particleSystem.gameObject.name.Contains("Blood"))
+                    {
                         particleSystem.gameObject.SetActive(true);   
                         i++;
                     }
@@ -153,8 +161,10 @@ public class Tornados : EnemyAI
                 }
                 break;
             case TornadoType.Windy:
-                foreach (ParticleSystem particleSystem in tornadoParticles) {
-                    if (particleSystem.gameObject.name.Contains("Wind")) {
+                foreach (ParticleSystem particleSystem in tornadoParticles)
+                {
+                    if (particleSystem.gameObject.name.Contains("Wind"))
+                    {
                         particleSystem.gameObject.SetActive(true);   
                         i++;
                     }
@@ -162,8 +172,10 @@ public class Tornados : EnemyAI
                 }
                 break;
             case TornadoType.Smoke:
-                foreach (ParticleSystem particleSystem in tornadoParticles) {
-                    if (particleSystem.gameObject.name.Contains("Smoke")) {
+                foreach (ParticleSystem particleSystem in tornadoParticles)
+                {
+                    if (particleSystem.gameObject.name.Contains("Smoke"))
+                    {
                         particleSystem.gameObject.SetActive(true);   
                         i++;
                     }
@@ -172,8 +184,10 @@ public class Tornados : EnemyAI
                 break;
             case TornadoType.Water:
                 waterDrownCollider.gameObject.SetActive(true);
-                foreach (ParticleSystem particleSystem in tornadoParticles) {
-                    if (particleSystem.gameObject.name.Contains("Water")) {
+                foreach (ParticleSystem particleSystem in tornadoParticles)
+                {
+                    if (particleSystem.gameObject.name.Contains("Water"))
+                    {
                         particleSystem.gameObject.SetActive(true);   
                         i++;
                     }
@@ -182,12 +196,15 @@ public class Tornados : EnemyAI
                 initialSpeed /= 2;
                 break;
             case TornadoType.Electric:
-                foreach (ParticleSystem particleSystem in tornadoParticles) {
-                    if (particleSystem.gameObject.name.Contains("Electric")) {
+                foreach (ParticleSystem particleSystem in tornadoParticles)
+                {
+                    if (particleSystem.gameObject.name.Contains("Electric"))
+                    {
                         particleSystem.gameObject.SetActive(true);   
                         i++;
                     }
-                    if (i == 7) {
+                    if (i == 7)
+                    {
                         initialSpeed *= 2;
                         break;
                     }

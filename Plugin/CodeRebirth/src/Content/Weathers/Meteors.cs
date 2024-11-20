@@ -38,7 +38,8 @@ public class Meteors : NetworkBehaviour {
     public float Progress => timeInAir / travelTime;
 
     [ClientRpc]
-    public void SetupMeteorClientRpc(Vector3 origin, Vector3 target) {
+    public void SetupMeteorClientRpc(Vector3 origin, Vector3 target)
+    {
         this.origin = origin;
         this.target = target;
         float distance = Vector3.Distance(origin, target);
@@ -147,7 +148,7 @@ public class Meteors : NetworkBehaviour {
         _onMeteorLand.Invoke();
         
         yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit. <-- Actually i think the meteor just looks cool staying on the ground for an extra 10 seconds.
-        if(IsHost)
+        if (IsHost)
             Destroy(gameObject);
         MeteorShower.Instance?.RemoveMeteor(this);
     }

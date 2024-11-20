@@ -26,7 +26,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
     protected void RegisterScrapWithConfig(string configMoonRarity, Item scrap, int itemWorthMin, int itemWorthMax)
     {
-        if (itemWorthMax == -1 || itemWorthMin == -1)
+        if (itemWorthMax != -1 && itemWorthMin != -1)
         {
             if (itemWorthMax < itemWorthMin)
             {
@@ -35,6 +35,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
             scrap.minValue = (int)(itemWorthMin/0.4f);
             scrap.maxValue = (int)(itemWorthMax/0.4f);
         }
+
         (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
         Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
     }
