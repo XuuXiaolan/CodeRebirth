@@ -17,20 +17,22 @@ public class TornadoWeather : CodeRebirthWeathers {
 	public static TornadoWeather? Instance { get; private set; }
 	public static bool Active => Instance != null;
 
-	private void OnEnable() { // init weather
+	private void OnEnable()
+	{ // init weather
 		Plugin.ExtendedLogging("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name);
 		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 6, dayTimePower: -3);
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);
-		alreadyUsedNodes = new List<GameObject>();
-        nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
+		alreadyUsedNodes = new();
+        nodes = RoundManager.Instance.outsideAINodes.ToList();
 		nodes = CullNodesByProximity(nodes, 5.0f, true, true).ToList();
 		
 		if(!IsAuthority()) return; // Only run on the host.
 		spawnHandler = StartCoroutine(TornadoSpawnerHandler());
 	}
 
-	private void OnDisable() { // clean up weather
+	private void OnDisable()
+	{ // clean up weather
 		try {
 			Plugin.Logger.LogDebug("Cleaning up Weather.");
 			ClearTornados();
@@ -43,6 +45,7 @@ public class TornadoWeather : CodeRebirthWeathers {
 			Plugin.Logger.LogFatal("Cleaning up Weather failed." + e.Message);
 		}
 	}
+
 	private void ClearTornados()
 	{
         foreach (Tornados tornado in tornados)
@@ -54,16 +57,19 @@ public class TornadoWeather : CodeRebirthWeathers {
         tornados.Clear();
     }
 
-	private IEnumerator TornadoSpawnerHandler() {
-		yield return new WaitForSeconds(5f); // inital delay so clients don't get Tornados before theyve inited everything.
+	private IEnumerator TornadoSpawnerHandler()
+	{
+		yield return new WaitForSeconds(5f);
 		SpawnTornado(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 	}
 
-	private void SpawnTornado(Vector3 target) {
+	private void SpawnTornado(Vector3 target)
+	{
 		Vector3 origin = target;
             
 		Tornados tornado = Instantiate(WeatherHandler.Instance.Tornado.TornadoObj.enemyPrefab, origin, Quaternion.identity).GetComponent<Tornados>();
-		tornado.NetworkObject.OnSpawn(() => {
+		tornado.NetworkObject.OnSpawn(() =>
+		{
             tornado.SetupTornadoClientRpc(origin);
         });
 		tornado.NetworkObject.Spawn();

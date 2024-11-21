@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigOnlyOwnerDisablesGal { get; private set; }
     public ConfigEntry<bool> ConfigPjonkTurkeyEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkPlayerModelEnabled { get; private set; }
@@ -161,9 +162,13 @@ public class CodeRebirthConfig
 
         #region Debug
         ConfigDebugMode = configFile.Bind("Debug Options",
-                                            "Debug Mode",
+                                            "Debug Mode | Hazard Spawning Enabled",
                                             false,
-                                            "Whether debug mode is enabled.");
+                                            "Whether debug mode is enabled (for hazard spawning stuff).");
+        ConfigEnableExtendedLogging = configFile.Bind("Debug Mode | Logging Options",
+                                            "Enable Extended Logging",
+                                            false,
+                                            "Whether extended logging is enabled.");
         #endregion
         #region Functional Microwave
         ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",
@@ -234,20 +239,24 @@ public class CodeRebirthConfig
                                             "Air Control Unit | Enabled",
                                             true,
                                             "Whether the air control unit is enabled.");
+        ConfigAirControlUnitAnimationCurve = configFile.Bind("AirControlUnit Options",
+                                            "Air Control Unit | Animation Curve",
+                                            "0:0,0.2:0.04,0.4:0.1,0.6:0.2,0.8:0.5,1:1",
+                                            "Creates an animation curve from 0,0 to 1,1, please don't exceed the value by 1, as the final value is taken from the spawn weight config.");
         ConfigAirControlUnitSpawnWeight = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | SpawnWeight",
                                             "Vanilla:1,Custom:1,Titan:0,Olympus:2",
                                             "The MoonName:Number of air control units to spawn between 0 and number given.");
         #endregion
         #region General
-        ConfigEnableExtendedLogging = configFile.Bind("General",
-                                            "Enable Extended Logging",
-                                            false,
-                                            "Whether extended logging is enabled.");
         ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",
                                             "Allow Power Level Changes From Weather",
                                             true,
                                             "Whether power level changes from CodeRebirth weathers are allowed.");
+        ConfigOnlyOwnerDisablesGal = configFile.Bind("General",
+                                            "Gal AI | Owner Power",
+                                            false,
+                                            "Whether only the current owner of the gal can disable her.");
         #endregion
         #region Shockwave Gal
         ConfigShockwaveBotEnabled = configFile.Bind("Shockwave Options",

@@ -32,8 +32,15 @@ public class Charger : NetworkBehaviour
         if (!NetworkObject.IsSpawned) return;
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (canActivateOnCompanyMoon && RoundManager.Instance.currentLevel.levelID == 3 && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota && !Plugin.ModConfig.ConfigGalBypassQuota.Value)) return;
-        if (!GalAI.Animator.GetBool("activated")) ActivateGirlServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
-        else ActivateGirlServerRpc(-1);
+        if (!GalAI.Animator.GetBool("activated"))
+        {
+            ActivateGirlServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
+        }
+        else
+        {
+            if (Plugin.ModConfig.ConfigOnlyOwnerDisablesGal.Value && playerInteracting != GalAI.ownerPlayer) return;
+            ActivateGirlServerRpc(-1);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]

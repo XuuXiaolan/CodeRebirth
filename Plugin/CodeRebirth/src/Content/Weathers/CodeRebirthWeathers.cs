@@ -26,7 +26,7 @@ public class CodeRebirthWeathers : MonoBehaviour {
 	{
 		var nodeList = new List<GameObject>(nodes);
 		var toCull = new HashSet<GameObject>();
-        Transform shipBoundaries = StartOfRound.Instance.shipBounds.transform;
+        Transform shipBoundaries = StartOfRound.Instance.shipLandingPosition;
 
 		// Compare each node with every other node
 		for (int i = 0; i < nodeList.Count; i++)
@@ -51,7 +51,8 @@ public class CodeRebirthWeathers : MonoBehaviour {
 			nodeList.RemoveAll(n => entrances.Exists(e => Vector3.Distance(n.transform.position, e.transform.position) < minDistance));
 		}
 		
-		if (cullShip) {
+		if (cullShip)
+		{
 			nodeList.RemoveAll(n => Vector3.Distance(n.transform.position, shipBoundaries.position) < 20);
 		}
 

@@ -10,7 +10,10 @@
 - Made meteor shower automatically end at 80% through the day by default and start only after the ship has nearly landed.
 - Made meteor shower strike on ship by default false because I got scolded, and also improved the non-hitting of the ship to be a decent radius around the ship.
 - Made meteor shower scrap amount multiplier and scrap value multiplier 1.2x by default and lowered spawn weight from 50 to 30 (and tornado from 50 to 40).
-- Added a special death interaction for Pjonk, die often for the sake of us.
+- Added a special death interaction for Pjonk, die often for the sake of us (this is a config disabled by default because most people aren't Pjonk).
+- Added a config in general category for the gal ai owner being the only person able to disable her.
+- Probably fixed tornado type desync.
+- Maybe fixed position desync for late-join clients (clients that joined AFTER the gal was bought).
 
 ## v0.7.18
 

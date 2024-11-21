@@ -80,8 +80,6 @@ public class ShockwaveGalAI : GalAI
         ShockwaveCharger shockwaveCharger = shockwaveChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
         shockwaveCharger.GalAI = this;
         this.ShockwaveCharger = shockwaveCharger;
-        transform.position = shockwaveCharger.ChargeTransform.position;
-        transform.rotation = shockwaveCharger.ChargeTransform.rotation;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
         ChestTrigger.onInteract.AddListener(OnChestInteract);
         // Automatic activation if configured
@@ -97,7 +95,7 @@ public class ShockwaveGalAI : GalAI
             trigger.onInteract.AddListener(GrabItemInteract);
         }
         StartCoroutine(CheckForNearbyEnemiesToOwner());
-
+        ResetToChargerStation(galState, galEmotion);
     }
 
     public override void ActivateGal(PlayerControllerB owner)

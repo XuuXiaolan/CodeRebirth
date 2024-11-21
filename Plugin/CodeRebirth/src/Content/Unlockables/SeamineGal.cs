@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -70,8 +72,6 @@ public class SeamineGalAI : GalAI
         SeamineCharger seamineCharger = seamineChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
         seamineCharger.GalAI = this;
         this.SeamineCharger = seamineCharger;
-        transform.position = seamineCharger.ChargeTransform.position;
-        transform.rotation = seamineCharger.ChargeTransform.rotation;
         // Automatic activation if configured
         if (Plugin.ModConfig.ConfigSeamineTinkAutomatic.Value)
         {
@@ -85,11 +85,13 @@ public class SeamineGalAI : GalAI
         SeamineCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(SeamineCharger.OnActivateGal);
         StartCoroutine(CheckForNearbyEnemiesToOwner());
         StartCoroutine(UpdateRidingBruceSound());
+        ResetToChargerStation(galState);
     }
 
     private void OnBeltInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        ownerPlayer.DespawnHeldObjectServerRpc();
         StartBeltInteractServerRpc();
     }
 
@@ -325,7 +327,7 @@ public class SeamineGalAI : GalAI
             return;
         }
 
-        if (!jojoPosing && UnityEngine.Random.Range(0f, 25000f) <= 10f && Agent.velocity.sqrMagnitude <= 0.01f && Vector3.Distance(Agent.transform.position, ownerPlayer.transform.position) <= 5f)
+        if (!jojoPosing && UnityEngine.Random.Range(0f, 2500f) <= 5f && Agent.velocity.sqrMagnitude <= 0.01f && Vector3.Distance(Agent.transform.position, ownerPlayer.transform.position) <= 5f)
         {
             DoJojoPoselol();
             return;
@@ -397,6 +399,7 @@ public class SeamineGalAI : GalAI
         // plays the visual effect from gabriel
         GalVoice.PlayOneShot(hazardPingSound);
         ParticleSystem particleSystem = DoTerrainScan();
+        particleSystem.gameObject.transform.parent.gameObject.SetActive(true);
         if (customPassRoutines.Count <= 0)
         {
             customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughEnemies)));
@@ -451,7 +454,7 @@ public class SeamineGalAI : GalAI
     private IEnumerator WaitUntilStopped()
     {
         yield return new WaitUntil(() => Agent.velocity == Vector3.zero);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(3.2f);
         GalVoice.PlayOneShot(hugSound);
     }
 
@@ -520,6 +523,7 @@ public class SeamineGalAI : GalAI
     private void CheckIfEnemyIsHitAnimEvent()
     {
         GalSFX.PlayOneShot(explosionSound);
+        CRUtilities.CreateExplosion(beltInteractTrigger.gameObject.transform.position, true, 10, 0, 6, 1, CauseOfDeath.Blast, null, null);
         List<EnemyAI> enemiesToKill = new();
         Collider[] colliders = Physics.OverlapSphere(transform.position, 15, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
 
@@ -578,7 +582,7 @@ public class SeamineGalAI : GalAI
     private IEnumerator FlyAnimationDelay()
     {
         smartAgentNavigator.cantMove = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         smartAgentNavigator.cantMove = false;
     }
 

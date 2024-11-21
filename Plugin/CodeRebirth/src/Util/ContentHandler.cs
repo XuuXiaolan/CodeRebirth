@@ -49,7 +49,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         }
     }
 
-    protected void RegisterInsideMapObjectWithConfig(GameObject prefab, string configString)
+    protected void RegisterInsideMapObjectWithConfig(GameObject prefab, string configString, string animationCurveString)
     {
         SpawnableMapObjectDef mapObjDef = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
         mapObjDef.spawnableMapObject = new SpawnableMapObject
@@ -59,15 +59,16 @@ public class ContentHandler<T> where T: ContentHandler<T>
         MapObjectHandler.hazardPrefabs.Add(prefab);
 
         (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configString);
+
         foreach (var entry in spawnRateByLevelType)
         {
-            MapObjects.RegisterMapObject(mapObjDef, entry.Key, (level) => 
-			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(entry.Value, 0, 1000))));
+            AnimationCurve animationCurve = CreateCurveFromString(animationCurveString, entry.Value);
+            MapObjects.RegisterMapObject(mapObjDef, entry.Key, (level) => animationCurve);
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
-            MapObjects.RegisterMapObject(mapObjDef, Levels.LevelTypes.None, [entry.Key], (level) => 
-			new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, Mathf.Clamp(entry.Value, 0, 1000))));
+            AnimationCurve animationCurve = CreateCurveFromString(animationCurveString, entry.Value);
+            MapObjects.RegisterMapObject(mapObjDef, Levels.LevelTypes.None, new string[] { entry.Key }, (level) => animationCurve);
         }
     }
 
@@ -155,5 +156,40 @@ public class ContentHandler<T> where T: ContentHandler<T>
             maxWorthInt = int.Parse(configParts[1]);
         }
         return [minWorthInt, maxWorthInt];
+    }
+
+    public AnimationCurve CreateCurveFromString(string keyValuePairs, float endValue)
+    {
+        // Split the input string into individual key-value pairs
+        string[] pairs = keyValuePairs.Split(',');
+        List<Keyframe> keyframes = new();
+
+        // Iterate over each pair and parse the key and value to create keyframes
+        foreach (string pair in pairs)
+        {
+            string[] splitPair = pair.Split(':');
+            if (splitPair.Length == 2 &&
+                float.TryParse(splitPair[0], out float time) &&
+                float.TryParse(splitPair[1], out float value))
+            {
+                keyframes.Add(new Keyframe(time, value));
+            }
+            else
+            {
+                Debug.LogError($"Invalid key:value pair format: {pair}");
+            }
+        }
+
+        // Add the final keyframe with the provided end value
+        keyframes.Add(new Keyframe(keyframes.Last().time, endValue));
+
+        // Create the animation curve with the generated keyframes and apply smoothing
+        var curve = new AnimationCurve(keyframes.ToArray());
+        for (int i = 0; i < keyframes.Count; i++)
+        {
+            curve.SmoothTangents(i, 0.5f); // Adjust the smoothing as necessary
+        }
+
+        return curve;
     }
 }
