@@ -32,6 +32,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     public Renderer[] renderersToHideIn = [];
     public SmartAgentNavigator smartAgentNavigator = null!;
 
+    [NonSerialized] public static List<GalAI> Instances = new();
     [NonSerialized] public bool boomboxPlaying = false;
     [NonSerialized] public float staringTimer = 0f;
     [NonSerialized] public const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
@@ -50,6 +51,16 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     [NonSerialized] public System.Random galRandom = new();
     [NonSerialized] public bool isInHangarShipRoom = true;
     [NonSerialized] public bool inActive = true;
+
+    public void OnEnable()
+    {
+        Instances.Add(this);
+    }
+
+    public void OnDisable()
+    {
+        Instances.Remove(this);
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void RefillChargesServerRpc()

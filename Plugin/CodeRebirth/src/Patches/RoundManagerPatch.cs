@@ -548,9 +548,9 @@ static class RoundManagerPatch {
 			biome.NetworkObject.Despawn();
 		}
 
-		foreach (ShockwaveGalAI shockwave in GameObject.FindObjectsOfType<ShockwaveGalAI>())
+		foreach (GalAI gal in GalAI.Instances)
 		{
-			shockwave.RefillChargesServerRpc();
+			gal.RefillChargesServerRpc();
 		}
 	}
 
