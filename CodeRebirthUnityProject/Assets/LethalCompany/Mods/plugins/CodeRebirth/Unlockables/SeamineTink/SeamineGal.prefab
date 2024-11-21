@@ -11161,8 +11161,8 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 996.40375
-  m_Range: 77
+  m_Intensity: 664.26917
+  m_Range: 55
   m_SpotAngle: 81
   m_InnerSpotAngle: 8
   m_CookieSize: 10
@@ -11223,7 +11223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Intensity: 1500
+  m_Intensity: 1000
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -22427,6 +22427,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1701686356
+    DestinationState: -1680993007
+    TransitionDuration: 0.25
+    TriggerNameHash: -386941826
+    TransitionIndex: 4
   - IsCrossFadeExit: 0
     Layer: 0
     OriginatingState: 2042295018

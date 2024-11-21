@@ -71,7 +71,7 @@ public class Tornados : EnemyAI
 
     public void OnDisable()
     {
-        Instance = null!;
+        Instance = null;
     }
 
     [ClientRpc]
@@ -231,33 +231,42 @@ public class Tornados : EnemyAI
         StartCoroutine(AutoReEnableKinematicsAfter10Seconds(StartOfRound.Instance.allPlayerScripts[PlayerID]));
     }
 
-    public IEnumerator AutoReEnableKinematicsAfter10Seconds(PlayerControllerB player) {
+    public IEnumerator AutoReEnableKinematicsAfter10Seconds(PlayerControllerB player)
+    {
         yield return new WaitForSeconds(10f);
         player.playerRigidbody.isKinematic = true;
         player.SetFlingingAway(false);
         player.SetFlung(true);
     }
-    public override void Update() {
+
+    public override void Update()
+    {
         base.Update();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
-        
-        var localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.transform.position) <= 10f && !localPlayer.IsFlingingAway() && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water) {
-            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 49f);
-        } else if (Vector3.Distance(localPlayer.transform.position, this.transform.position) > 10f && !localPlayer.IsFlingingAway()) {
-            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 49f);
-        }
 
-        if (timeSinceBeingInsideTornado >= Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value) {
-            SetPlayerFlingingServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
-        }
-
-        if (lightningBoltTimer && tornadoType == TornadoType.Electric) {
+        if (lightningBoltTimer && tornadoType == TornadoType.Electric)
+        {
             lightningBoltTimer = false;
             StartCoroutine(LightningBoltTimer());
             Vector3 strikePosition = GetRandomTargetPosition(tornadoRandom, outsideNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25);
             CRUtilities.CreateExplosion(strikePosition, true, 20, 0, 4, 1, CauseOfDeath.Burning, null, null);
             LightningStrikeScript.SpawnLightningBolt(strikePosition);
+        }
+
+        var localPlayer = GameNetworkManager.Instance.localPlayerController;
+        if (localPlayer == null || !localPlayer.isPlayerControlled || localPlayer.isPlayerDead) return;
+        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.transform.position) <= 10f && !localPlayer.IsFlingingAway() && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water)
+        {
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 49f);
+        }
+        else if (Vector3.Distance(localPlayer.transform.position, this.transform.position) > 10f && !localPlayer.IsFlingingAway())
+        {
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 49f);
+        }
+
+        if (timeSinceBeingInsideTornado >= Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value)
+        {
+            SetPlayerFlingingServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
         }
     }
 
@@ -273,8 +282,10 @@ public class Tornados : EnemyAI
         UpdateAudio();
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
+            if (player == null || player.isPlayerDead || !player.isPlayerControlled) return;
             HandleTornadoActions(player);   
-            if (player.IsFlingingAway() && !player.HasFlung()) {
+            if (player.IsFlingingAway() && !player.HasFlung())
+            {
                 //Plugin.Logger.LogDebug("Tornado is flinging away");
                 Vector3 directionToCenter = (throwingPoint.position - player.transform.position).normalized;
                 Rigidbody playerRigidbody = player.playerRigidbody;
@@ -283,7 +294,8 @@ public class Tornados : EnemyAI
 
                 playerRigidbody.AddForce(spiralForce, ForceMode.Impulse);
 
-                if (player.transform.position.y >= throwingPoint.position.y) {
+                if (player.transform.position.y >= throwingPoint.position.y)
+                {
                     Vector3 verticalForce = CalculateVerticalForce(player.transform.position.y, throwingPoint.position.y, (float)tornadoRandom.NextDouble(10f, 50f), (float)tornadoRandom.NextDouble(1f, 20f)); // Adjust the last two parameters to control vertical and forward force
                     playerRigidbody.AddForce(verticalForce, ForceMode.VelocityChange);
                     if (player == GameNetworkManager.Instance.localPlayerController) timeSinceBeingInsideTornado = 0f;
@@ -319,18 +331,18 @@ public class Tornados : EnemyAI
         }
         if (doesTornadoAffectPlayer)
         {
-            float distanceToTornado = Vector3.Distance(transform.position, player.transform.position);
-            bool hasLineOfSight = TornadoHasLineOfSightToPosition();
-            Vector3 directionToCenter = (transform.position - player.transform.position).normalized;
+            float distanceToTornado = TornadoHasLineOfSightToPosition(100, player);
+            bool hasLineOfSight = distanceToTornado > 0;
             if (player.IsFlingingAway() && player.playerRigidbody.isKinematic)
             {
                 player.playerRigidbody.isKinematic = false;
                 player.playerRigidbody.AddForce(Vector3.up * 10f, ForceMode.Impulse);
             }
-            else if (distanceToTornado <= 75)
+            else if (hasLineOfSight && distanceToTornado <= 100)
             {
+                Vector3 targetPosition = transform.position;                
                 float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, player);
-                player.externalForces += directionToCenter * forceStrength * Time.fixedDeltaTime * 30f;
+                player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, forceStrength * Time.fixedDeltaTime * 30f);
             }
         }
         HandleStatusEffects(player);
@@ -399,7 +411,7 @@ public class Tornados : EnemyAI
 
     private IEnumerator LightningBoltTimer()
     {
-        yield return new WaitForSeconds(tornadoRandom.NextFloat(0f, 1f) * 16f);
+        yield return new WaitForSeconds(tornadoRandom.Next(0, 17));
         lightningBoltTimer = true;
     }
 
@@ -488,50 +500,19 @@ public class Tornados : EnemyAI
         }
     }
     
-    public bool TornadoHasLineOfSightToPosition(int range = 100)
+    public float TornadoHasLineOfSightToPosition(int range, PlayerControllerB player)
     {
-        // Get all colliders within the specified range using a sphere overlap check
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, range, StartOfRound.Instance.playersMask);
-
-        // Iterate through all hit colliders to check for players
-        foreach (var hitCollider in hitColliders)
-        {
-            if (CheckIfAPlayerIsAGivenCollider(hitCollider)) return true;
-        }
-        // If no players were found or there was no clear line of sight to any player, return false
-        return false;
-    }
-
-    private bool CheckIfAPlayerIsAGivenCollider(Collider hitCollider)
-    {
-        // Check if the hit collider is a player by iterating through the list of all player scripts
-        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
-        {
-            if (hitCollider.gameObject == player.gameObject && player.isPlayerControlled)
-            {
-                // Perform a linecast check to see if there is a clear line of sight to the player
-                if (CheckIfPlayerSeenByTornado(player))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public bool CheckIfPlayerSeenByTornado(PlayerControllerB player)
-    {
-        if (player.IsFlingingAway()) return false;
+        if (player.IsFlingingAway()) return -1;
         foreach (Transform eye in eyes)
         {
-            if (Physics.Linecast(eye.position, player.gameplayCamera.transform.position, StartOfRound.Instance.playersMask, queryTriggerInteraction: QueryTriggerInteraction.Ignore))
-            {
-                // If there is a clear line of sight to at least one player, return true
-                return true;
-            }
+            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+            if (distanceToPlayer > range) continue;
+            if (Physics.Raycast(eye.transform.position, (player.transform.position - eye.position).normalized, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore)) continue;
+            return distanceToPlayer;
         }
-        return false;
+        return -1;
     }
+
     public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius)
     {
 		try
