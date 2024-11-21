@@ -380,9 +380,55 @@ static class RoundManagerPatch {
 
 	private static void SpawnCrates()
 	{
-		Plugin.ExtendedLogging("Spawning crates!!!");
-		System.Random random = new();
-		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigWoodenCrateAbundance.Value, 0, 1000)); i++)
+		SpawnMetalCrates();
+		SpawnWoodenCrates();
+	}
+
+	private static void SpawnWoodenCrates()
+	{
+		Plugin.ExtendedLogging("Spawning Wooden Crate!!!");
+
+        // Parse the configuration string to get the spawn counts for different moons
+        Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigWoodenCrateSpawnWeight.Value);
+        foreach (var moonSpawn in moonSpawnCounts.Keys)
+        {
+            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+        }
+
+        // Get the current moon type
+        string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
+        Plugin.ExtendedLogging("Current moon: " + currentMoon);
+
+        // Determine the spawn count based on the current moon configuration
+        if (!moonSpawnCounts.TryGetValue(currentMoon, out int spawnCount)) // Try to get the specific moon spawn count
+        {
+            if (!moonSpawnCounts.TryGetValue("all", out spawnCount)) // If not found, try to get the "all" spawn count
+            {
+                // Determine if it is a vanilla or custom moon and get the appropriate spawn count
+                bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels
+                    .Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
+
+                if (isVanillaMoon)
+                {
+                    moonSpawnCounts.TryGetValue("vanilla", out spawnCount);
+                }
+                else
+                {
+                    moonSpawnCounts.TryGetValue("custom", out spawnCount);
+                }
+            }
+        }
+
+        // Log the determined spawn count
+        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+
+        // If no valid spawn count is found, return
+        if (spawnCount <= 0) return;
+
+        // Check if the current moon configuration is valid
+        System.Random random = new();
+        Plugin.ExtendedLogging($"Spawning {spawnCount} Wooden crates");
+		for (int i = 0; i < spawnCount; i++)
 		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
@@ -402,8 +448,53 @@ static class RoundManagerPatch {
 				spawnedCrate.GetComponent<NetworkObject>().Spawn();
 			}
 		}
+	}
 
-		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(Plugin.ModConfig.ConfigMetalCrateAbundance.Value, 0, 1000)); i++)
+	private static void SpawnMetalCrates()
+	{
+		Plugin.ExtendedLogging("Spawning Metal Crate!!!");
+
+        // Parse the configuration string to get the spawn counts for different moons
+        Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigMetalCrateSpawnWeight.Value);
+        foreach (var moonSpawn in moonSpawnCounts.Keys)
+        {
+            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+        }
+
+        // Get the current moon type
+        string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
+        Plugin.ExtendedLogging("Current moon: " + currentMoon);
+
+        // Determine the spawn count based on the current moon configuration
+        if (!moonSpawnCounts.TryGetValue(currentMoon, out int spawnCount)) // Try to get the specific moon spawn count
+        {
+            if (!moonSpawnCounts.TryGetValue("all", out spawnCount)) // If not found, try to get the "all" spawn count
+            {
+                // Determine if it is a vanilla or custom moon and get the appropriate spawn count
+                bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels
+                    .Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
+
+                if (isVanillaMoon)
+                {
+                    moonSpawnCounts.TryGetValue("vanilla", out spawnCount);
+                }
+                else
+                {
+                    moonSpawnCounts.TryGetValue("custom", out spawnCount);
+                }
+            }
+        }
+
+        // Log the determined spawn count
+        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+
+        // If no valid spawn count is found, return
+        if (spawnCount <= 0) return;
+
+        // Check if the current moon configuration is valid
+        System.Random random = new();
+        Plugin.ExtendedLogging($"Spawning {spawnCount} metal crates");
+		for (int i = 0; i < spawnCount; i++)
 		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
@@ -424,7 +515,7 @@ static class RoundManagerPatch {
 			}
 		}
 	}
-	
+
 	private static void SpawnRandomBiomes()
 	{
 		Plugin.ExtendedLogging("Spawning Biome/s!!!");

@@ -49,7 +49,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         }
     }
 
-    protected void RegisterInsideMapObjectWithConfig(GameObject prefab, string configString, string animationCurveString)
+    protected void RegisterInsideMapObjectWithConfig(GameObject prefab, string configString)
     {
         SpawnableMapObjectDef mapObjDef = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
         mapObjDef.spawnableMapObject = new SpawnableMapObject
@@ -58,16 +58,16 @@ public class ContentHandler<T> where T: ContentHandler<T>
         };
         MapObjectHandler.hazardPrefabs.Add(prefab);
 
-        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configString);
+        (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);
 
         foreach (var entry in spawnRateByLevelType)
         {
-            AnimationCurve animationCurve = CreateCurveFromString(animationCurveString, entry.Value);
+            AnimationCurve animationCurve = CreateCurveFromString(entry.Value);
             MapObjects.RegisterMapObject(mapObjDef, entry.Key, (level) => animationCurve);
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
-            AnimationCurve animationCurve = CreateCurveFromString(animationCurveString, entry.Value);
+            AnimationCurve animationCurve = CreateCurveFromString(entry.Value);
             MapObjects.RegisterMapObject(mapObjDef, Levels.LevelTypes.None, new string[] { entry.Key }, (level) => animationCurve);
         }
     }
@@ -140,6 +140,44 @@ public class ContentHandler<T> where T: ContentHandler<T>
         return (spawnRateByLevelType, spawnRateByCustomLevelType);
     }
 
+    protected (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) ConfigParsingWithCurve(string configMoonRarity)
+    {
+        Dictionary<Levels.LevelTypes, string> spawnRateByLevelType = new();
+        Dictionary<string, string> spawnRateByCustomLevelType = new();
+        foreach (string entry in configMoonRarity.Split('|').Select(s => s.Trim()))
+        {
+            string[] entryParts = entry.Split(':');
+
+            if (entryParts.Length != 2) continue;
+
+            string name = entryParts[0].ToLowerInvariant();
+
+            if (name == "custom")
+            {
+                name = "modded";
+            }
+
+            if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
+            {
+                spawnRateByLevelType[levelType] = entryParts[1];
+            }
+            else
+            {
+                // Try appending "Level" to the name and re-attempt parsing
+                string modifiedName = name + "level";
+                if (System.Enum.TryParse(modifiedName, true, out levelType))
+                {
+                    spawnRateByLevelType[levelType] = entryParts[1];
+                }
+                else
+                {
+                    spawnRateByCustomLevelType[name] = entryParts[1];
+                }
+            }
+        }
+        return (spawnRateByLevelType, spawnRateByCustomLevelType);
+    }
+
     protected int[] ChangeItemValues(string config)
     {
         string[] configParts = config.Split(',');
@@ -158,16 +196,28 @@ public class ContentHandler<T> where T: ContentHandler<T>
         return [minWorthInt, maxWorthInt];
     }
 
-    public AnimationCurve CreateCurveFromString(string keyValuePairs, float endValue)
+    public AnimationCurve CreateCurveFromString(string keyValuePairs)
     {
         // Split the input string into individual key-value pairs
         string[] pairs = keyValuePairs.Split(',');
+        if (pairs.Length == 0)
+        {
+            if (int.TryParse(keyValuePairs, out int result))
+            {
+                return new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, result));
+            }
+            else
+            {
+                Plugin.Logger.LogError($"Invalid key-value pairs format: {keyValuePairs}");
+                return new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+            }
+        }
         List<Keyframe> keyframes = new();
 
         // Iterate over each pair and parse the key and value to create keyframes
         foreach (string pair in pairs)
         {
-            string[] splitPair = pair.Split(':');
+            string[] splitPair = pair.Split(';');
             if (splitPair.Length == 2 &&
                 float.TryParse(splitPair[0], out float time) &&
                 float.TryParse(splitPair[1], out float value))
@@ -179,9 +229,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 Debug.LogError($"Invalid key:value pair format: {pair}");
             }
         }
-
-        // Add the final keyframe with the provided end value
-        keyframes.Add(new Keyframe(keyframes.Last().time, endValue));
 
         // Create the animation curve with the generated keyframes and apply smoothing
         var curve = new AnimationCurve(keyframes.ToArray());

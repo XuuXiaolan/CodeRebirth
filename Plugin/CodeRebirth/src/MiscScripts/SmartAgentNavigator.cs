@@ -21,6 +21,8 @@ public class SmartAgentNavigator : NetworkBehaviour
     private Vector3 pointToGo = Vector3.zero;
     [NonSerialized] public bool isOutside = true;
     private bool usingElevator = false;
+    private bool InElevator => elevatorScript != null && Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) < 7f;
+    private bool wasInElevatorLastFrame = false;
     private Coroutine? searchRoutine = null;
     private Coroutine? searchCoroutine = null;
     private bool isSearching = false;
@@ -73,6 +75,23 @@ public class SmartAgentNavigator : NetworkBehaviour
         positionsOfPlayersBeforeTeleport.Clear();
         lastUsedEntranceTeleport = null;
         elevatorScript = null;
+    }
+
+    public void Update()
+    {
+        if (InElevator)
+        {
+            if (!wasInElevatorLastFrame)
+            {
+                OnEnterOrExitElevator.Invoke(true);
+            }
+            wasInElevatorLastFrame = true;
+        }
+        else if (wasInElevatorLastFrame)
+        {
+            OnEnterOrExitElevator.Invoke(false);
+            wasInElevatorLastFrame = false;
+        }
     }
 
     public bool DoPathingToDestination(Vector3 destination, bool destinationIsInside, bool followingPlayer, PlayerControllerB? playerBeingFollowed)
@@ -271,11 +290,9 @@ public class SmartAgentNavigator : NetworkBehaviour
     private IEnumerator StopUsingElevator(MineshaftElevatorController elevatorScript)
     {
         usingElevator = true;
-        OnEnterOrExitElevator.Invoke(true);
         yield return new WaitForSeconds(2f);
         yield return new WaitUntil(() => elevatorScript.elevatorDoorOpen && elevatorScript.elevatorFinishedMoving);
         Plugin.ExtendedLogging("Stopped using elevator");
-        OnEnterOrExitElevator.Invoke(false);
         usingElevator = false;
     }
 

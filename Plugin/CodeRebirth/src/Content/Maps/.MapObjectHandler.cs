@@ -170,31 +170,31 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		Plugin.samplePrefabs.Add("MicrowaveSpork", FunctionalMicrowave.SporkItem);
 		Plugin.samplePrefabs.Add("MicrowaveFork", FunctionalMicrowave.ForkItem);
 		Plugin.samplePrefabs.Add("MicrowaveCharredBaby", FunctionalMicrowave.CharredBabyItem);
-		RegisterInsideMapObjectWithConfig(FunctionalMicrowave.FunctionalMicrowavePrefab, Plugin.ModConfig.ConfigFunctionalMicrowaveSpawnWeight.Value);
+		RegisterInsideMapObjectWithConfig(FunctionalMicrowave.FunctionalMicrowavePrefab, Plugin.ModConfig.ConfigFunctionalMicrowaveCurveSpawnWeight.Value);
 	}
 
 	public void RegisterTeslaShock()
 	{
 		TeslaShock = new TeslaShockAssets("teslashockassets");
-		RegisterInsideMapObjectWithConfig(TeslaShock.TeslaShockPrefab, Plugin.ModConfig.ConfigTeslaShockSpawnWeight.Value);
+		RegisterInsideMapObjectWithConfig(TeslaShock.TeslaShockPrefab, Plugin.ModConfig.ConfigTeslaShockCurveSpawnWeight.Value);
 	}
 
 	public void RegisterFlashTurret()
 	{
 		FlashTurret = new FlashTurretAssets("flashturretassets");
-		RegisterInsideMapObjectWithConfig(FlashTurret.FlashTurretPrefab, Plugin.ModConfig.ConfigFlashTurretSpawnWeight.Value);
+		RegisterInsideMapObjectWithConfig(FlashTurret.FlashTurretPrefab, Plugin.ModConfig.ConfigFlashTurretCurveSpawnWeight.Value);
 	}
 
 	public void RegisterIndustrialFan()
 	{
 		IndustrialFan = new IndustrialFanAssets("industrialfanassets");
-		RegisterInsideMapObjectWithConfig(IndustrialFan.IndustrialFanPrefab, Plugin.ModConfig.ConfigIndustrialFanSpawnWeight.Value);
+		RegisterInsideMapObjectWithConfig(IndustrialFan.IndustrialFanPrefab, Plugin.ModConfig.ConfigIndustrialFanCurveSpawnWeight.Value);
 	}
 
 	public void RegisterLaserTurret()
 	{
 		GlowingGem = new GlowingGemAssets("glowinggemassets");
-		RegisterInsideMapObjectWithConfig(GlowingGem.LaserTurretPrefab, Plugin.ModConfig.ConfigLaserTurretSpawnWeight.Value);
+		RegisterInsideMapObjectWithConfig(GlowingGem.LaserTurretPrefab, Plugin.ModConfig.ConfigLaserTurretCurveSpawnWeight.Value);
 	}
 
 	public void RegisterInsideMoney()

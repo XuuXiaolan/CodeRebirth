@@ -5,7 +5,6 @@ using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
-using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -91,7 +90,8 @@ public class SeamineGalAI : GalAI
     private void OnBeltInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
-        ownerPlayer.DespawnHeldObjectServerRpc();
+        if (playerInteracting.currentlyHeldObjectServer == null || playerInteracting.currentlyHeldObjectServer.itemProperties.itemName != "Key") return;
+        ownerPlayer.DespawnHeldObject();
         StartBeltInteractServerRpc();
     }
 

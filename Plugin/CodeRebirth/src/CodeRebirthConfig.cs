@@ -57,15 +57,15 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigBearTrapSpawnWeight { get; private set; }
-    public ConfigEntry<int> ConfigMetalCrateAbundance { get; private set; }
-    public ConfigEntry<int> ConfigWoodenCrateAbundance { get; private set; }
-    public ConfigEntry<string> ConfigLaserTurretSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigMetalCrateSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigWoodenCrateSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigLaserTurretCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigFlashTurretSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigIndustrialFanSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigTeslaShockSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigFlashTurretCurveSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigIndustrialFanCurveSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigTeslaShockCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigAirControlUnitSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigFunctionalMicrowaveSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigFunctionalMicrowaveCurveSpawnWeight { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
@@ -175,10 +175,10 @@ public class CodeRebirthConfig
                                             "Functional Microwave | Enabled",
                                             true,
                                             "Whether the Functional Microwave is enabled.");
-        ConfigFunctionalMicrowaveSpawnWeight = configFile.Bind("FunctionalMicrowave Options",
-                                            "Functional Microwave | Abundance",
-                                            "Vanilla:2,Custom:2",
-                                            "The MoonName:Number of Functional Microwaves to spawn between 0 and number given.");
+        ConfigFunctionalMicrowaveCurveSpawnWeight = configFile.Bind("FunctionalMicrowave Options",
+                                            "Functional Microwave | SpawnWeight Curve",
+                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
+                                            "The MoonName:CurveSpawnWeight for the hazard.");
         #endregion
         #region Bear Trap
         ConfigBearTrapEnabled = configFile.Bind("BearTrap Options",
@@ -199,54 +199,50 @@ public class CodeRebirthConfig
                                             "Laser Turret | Enabled",
                                             true,
                                             "Whether the Laser Turret is enabled.");
-        ConfigLaserTurretSpawnWeight = configFile.Bind("LaserTurret Options",
-                                            "Laser Turret | Abundance",
-                                            "Vanilla:2,Custom:2",
-                                            "The MoonName:Number of Laser Turrets to spawn between 0 and number given.");
+        ConfigLaserTurretCurveSpawnWeight = configFile.Bind("LaserTurret Options",
+                                            "Laser Turret | SpawnWeight Curve",
+                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
+                                            "The MoonName:CurveSpawnWeight for the LaserTurret.");
         #endregion
         #region Flash Turret
         ConfigFlashTurretEnabled = configFile.Bind("FlashTurret Options",
                                             "Flash Turret | Enabled",
                                             true,
                                             "Whether the flash turret is enabled.");
-        ConfigFlashTurretSpawnWeight = configFile.Bind("FlashTurret Options",
-                                            "Flash Turret | Abundance",
-                                            "Vanilla:2,Custom:2",
-                                            "The MoonName:Number of flash turrets to spawn between 0 and number given.");
+        ConfigFlashTurretCurveSpawnWeight = configFile.Bind("FlashTurret Options",
+                                            "Flash Turret | SpawnWeight Curve",
+                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
+                                            "The MoonName:CurveSpawnWeight for the FlashTurret.");
         #endregion
         #region Industrial Fan
         ConfigIndustrialFanEnabled = configFile.Bind("IndustrialFan Options",
                                             "Industrial Fan | Enabled",
                                             true,
                                             "Whether the industrial fan is enabled.");
-        ConfigIndustrialFanSpawnWeight = configFile.Bind("IndustrialFan Options",
-                                            "Industrial Fan | Abundance",
-                                            "Vanilla:2,Custom:2",
-                                            "The MoonName:Number of industrial fans to spawn between 0 and number given.");
+        ConfigIndustrialFanCurveSpawnWeight = configFile.Bind("IndustrialFan Options",
+                                            "Industrial Fan | SpawnWeight Curve",
+                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
+                                            "The MoonName:CurveSpawnWeight for the IndustrialFan.");
         #endregion
         #region Tesla Shock
         ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
                                             "Tesla Shock | Enabled",
                                             true,
                                             "Whether the tesla shock is enabled.");
-        ConfigTeslaShockSpawnWeight = configFile.Bind("TeslaShock Options",
-                                            "Tesla Shock | Abundance",
-                                            "Vanilla:2,Custom:2",
-                                            "The MoonName:Number of tesla shocks to spawn between 0 and number given.");
+        ConfigTeslaShockCurveSpawnWeight = configFile.Bind("TeslaShock Options",
+                                            "Tesla Shock | SpawnWeight Curve",
+                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
+                                            "The MoonName:CurveSpawnWeight for the TeslaShock.");
         #endregion
         #region Air Control Unit
         ConfigAirControlUnitEnabled = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | Enabled",
                                             true,
                                             "Whether the air control unit is enabled.");
-        ConfigAirControlUnitAnimationCurve = configFile.Bind("AirControlUnit Options",
-                                            "Air Control Unit | Animation Curve",
-                                            "0:0,0.2:0.04,0.4:0.1,0.6:0.2,0.8:0.5,1:1",
-                                            "Creates an animation curve from 0,0 to 1,1, please don't exceed the value by 1, as the final value is taken from the spawn weight config.");
         ConfigAirControlUnitSpawnWeight = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | SpawnWeight",
-                                            "Vanilla:1,Custom:1,Titan:0,Olympus:2",
-                                            "The MoonName:Number of air control units to spawn between 0 and number given.");
+                                            "Vanilla:2,Custom:2,Titan:0,Olympus:2",
+                                            "The MoonName:CurveSpawnWeight for the AirControlUnit.");
         #endregion
         #region General
         ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",
@@ -790,18 +786,18 @@ public class CodeRebirthConfig
                                             "Crate | Enabled",
                                             true,
                                             "Enables/Disables the Item Crate from spawning.");
-        ConfigMetalCrateAbundance = configFile.Bind("Crate Options",
-                                            "Crate | Metal Abundance",
-                                            3,
-                                            "Abundance of Metal Crates that spawn outside (between 0 and your number).");
+        ConfigMetalCrateSpawnWeight = configFile.Bind("Crate Options",
+                                            "Crate | Metal SpawnWeight",
+                                            "Vanilla:3,Custom:3",
+                                            "MoonName:SpawnWeight of Metal Crates that spawn outside (between 0 and your number).");
         ConfigCrateNumberToSpawn = configFile.Bind("Crate Options",
                                             "Crate | Scrap Number To Spawn",
                                             3,
                                             "Number of items that spawn inside a crate (between 0 and your number).");
-        ConfigWoodenCrateAbundance = configFile.Bind("Crate Options",
-                                            "Crate | Wooden Abundance",
-                                            3,
-                                            "Abundance of Wooden Crates that spawn outside (between 0 and your number).");
+        ConfigWoodenCrateSpawnWeight = configFile.Bind("Crate Options",
+                                            "Crate | Wooden SpawnWeight",
+                                            "Vanilla:3,Custom:3",
+                                            "MoonName:SpawnWeight of Wooden Crates that spawn outside (between 0 and your number).");
         ConfigWoodenCrateHealth = configFile.Bind("Crate Options",
                                             "Crate | Wooden Crate Health",
                                             4,
