@@ -332,17 +332,17 @@ public class Tornados : EnemyAI
         if (doesTornadoAffectPlayer)
         {
             float distanceToTornado = TornadoHasLineOfSightToPosition(100, player);
-            bool hasLineOfSight = distanceToTornado > 0;
+            bool hasLineOfSight = distanceToTornado >= 0;
             if (player.IsFlingingAway() && player.playerRigidbody.isKinematic)
             {
                 player.playerRigidbody.isKinematic = false;
                 player.playerRigidbody.AddForce(Vector3.up * 10f, ForceMode.Impulse);
             }
-            else if (hasLineOfSight && distanceToTornado <= 100)
+            else if (distanceToTornado <= 100)
             {
                 Vector3 targetPosition = transform.position;                
                 float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, player);
-                player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, forceStrength * Time.fixedDeltaTime * 30f);
+                player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, forceStrength * Time.fixedDeltaTime / 40f);
             }
         }
         HandleStatusEffects(player);
@@ -361,6 +361,7 @@ public class Tornados : EnemyAI
                 !player.enteringSpecialAnimation &&
                 !player.isClimbingLadder;
     }
+
     private void HandleStatusEffects(PlayerControllerB player)
     {
         float closeRange = 10f;
@@ -417,7 +418,7 @@ public class Tornados : EnemyAI
 
     private float CalculatePullStrength(float distance, bool hasLineOfSight, PlayerControllerB localPlayerController)
     {
-        float maxDistance = 150f;
+        float maxDistance = 100f;
         float minStrength = 0;
         float maxStrength =
             (hasLineOfSight ? Plugin.ModConfig.ConfigTornadoPullStrength.Value : 0.125f * Plugin.ModConfig.ConfigTornadoPullStrength.Value)
@@ -432,7 +433,8 @@ public class Tornados : EnemyAI
         // Calculate the pull strength based on the falloff
         float pullStrength = Mathf.Lerp(minStrength, maxStrength, strengthFalloff);
 
-        if (distance <= 2.5f && damageTimer && GameNetworkManager.Instance.localPlayerController == localPlayerController) {
+        if (distance <= 2.5f && damageTimer && GameNetworkManager.Instance.localPlayerController == localPlayerController)
+        {
             damageTimer = false;
             StartCoroutine(DamageTimer());
             HandleTornadoTypeDamage(localPlayerController);
@@ -502,15 +504,17 @@ public class Tornados : EnemyAI
     
     public float TornadoHasLineOfSightToPosition(int range, PlayerControllerB player)
     {
-        if (player.IsFlingingAway()) return -1;
+        float distance = Vector3.Distance(transform.position, player.transform.position);
+        if (player.IsFlingingAway()) return distance;
         foreach (Transform eye in eyes)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+            float distanceToPlayer = Vector3.Distance(eye.transform.position, player.transform.position);
             if (distanceToPlayer > range) continue;
-            if (Physics.Raycast(eye.transform.position, (player.transform.position - eye.position).normalized, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore)) continue;
+            if (Physics.Raycast(eye.transform.position, (player.transform.position - eye.position).normalized, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Terrain", "InteractableObject", "MapHazards", "Vehicle", "Railing"), QueryTriggerInteraction.Ignore)) continue;
+            Plugin.Logger.LogInfo("Tornado has line of sight to player");
             return distanceToPlayer;
         }
-        return -1;
+        return distance;
     }
 
     public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius)

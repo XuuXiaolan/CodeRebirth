@@ -30,6 +30,7 @@ public class SeamineGalAI : GalAI
     public List<AudioClip> startOrEndRidingBruceAudioClips = new();
     public AudioClip squeezeFishSound = null!;
 
+    private bool physicsTemporarilyDisabled = false;
     private List<Coroutine> customPassRoutines = new();
     private float hazardRevealTimer = 10f;
     private bool inHugAnimation = false;
@@ -155,7 +156,11 @@ public class SeamineGalAI : GalAI
     private void StartHugInteractClientRpc()
     {
         if (ownerPlayer == null) return;
-        if (physicsEnabled) EnablePhysics(false);
+        if (physicsEnabled)
+        {
+            physicsTemporarilyDisabled = true;
+            EnablePhysics(false);
+        }
         ownerPlayer.enteringSpecialAnimation = true;
         ownerPlayer.disableMoveInput = true;
         huggingOwner = true;
@@ -462,6 +467,8 @@ public class SeamineGalAI : GalAI
     {
         inHugAnimation = false;
         huggingOwner = false;
+        EnablePhysics(!physicsTemporarilyDisabled);
+        physicsTemporarilyDisabled = false;
         if (ownerPlayer == null) return;
         ownerPlayer.enteringSpecialAnimation = false;
         ownerPlayer.disableMoveInput = false;
@@ -682,6 +689,8 @@ public class SeamineGalAI : GalAI
     {
         ownerPlayer = null;
         Agent.enabled = false;
+        GalSFX.PlayOneShot(squeezeFishSound);
+        flashLightLight.SetActive(false);
     }
 
     private void HandleStateActiveChange()
