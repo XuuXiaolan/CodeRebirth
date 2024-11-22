@@ -382,6 +382,10 @@ public class SeamineGalAI : GalAI
             {
                 currentlyAttacking = true;
                 NetworkAnimator.SetTrigger(startExplodeAnimation);
+                if (ridingBruce)
+                {
+                    SetRidingBruce(false);
+                }
             }
         }
     }

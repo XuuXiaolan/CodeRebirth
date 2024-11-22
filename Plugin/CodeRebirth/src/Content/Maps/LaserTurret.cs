@@ -85,14 +85,16 @@ public class LaserTurret : NetworkBehaviour
                 damageTimer -= Time.deltaTime;
                 if (damageTimer <= 0f)
                 {
-                    if (targetPlayer.health > laserDamage) targetPlayer.DamagePlayer((int)laserDamage, true, false, CauseOfDeath.Burning, 0, false, default);
-                    else targetPlayer.KillPlayer(default, false, CauseOfDeath.Burning, 0, default);
-                    damageTimer = 0.1f;
-
-                    if (targetPlayer.isPlayerDead)
+                    if (targetPlayer.health <= laserDamage)
                     {
+                        targetPlayer.KillPlayer(default, !Plugin.ModConfig.ConfigHazardsDeleteBodies.Value, CauseOfDeath.Burning, 0, default);
                         SpawnAshParticle(targetPlayer.transform.position);
                     }
+                    else
+                    {
+                        targetPlayer.DamagePlayer((int)laserDamage, true, false, CauseOfDeath.Burning, 0, false, default);
+                    }
+                    damageTimer = 0.1f;
                 }
             }
         }

@@ -26,7 +26,7 @@ public class IndustrialFan : NetworkBehaviour
         if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
             cutAudioSource.Play();
-            player.KillPlayer(default, false, CauseOfDeath.Fan, 0, default);
+            player.KillPlayer(player.velocityLastFrame, !Plugin.ModConfig.ConfigHazardsDeleteBodies.Value, CauseOfDeath.Fan, 0, default);
             PlayRedMist();
         }
     }

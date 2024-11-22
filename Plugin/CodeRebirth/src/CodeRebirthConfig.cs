@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigHazardsDeleteBodies { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerDisablesGal { get; private set; }
     public ConfigEntry<bool> ConfigPjonkTurkeyEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
@@ -253,6 +254,10 @@ public class CodeRebirthConfig
                                             "Gal AI | Owner Power",
                                             false,
                                             "Whether only the current owner of the gal can disable her.");
+        ConfigHazardsDeleteBodies = configFile.Bind("General",
+                                            "Hazards | Delete Bodies",
+                                            true,
+                                            "Whether hazards like IndustrialFan and LaserTurret should delete player bodies.");
         #endregion
         #region Shockwave Gal
         ConfigShockwaveBotEnabled = configFile.Bind("Shockwave Options",

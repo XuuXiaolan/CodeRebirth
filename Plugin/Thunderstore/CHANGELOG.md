@@ -14,6 +14,8 @@
 - Added a config in general category for the gal ai owner being the only person able to disable her.
 - Probably fixed tornado type desync.
 - Maybe fixed position desync for late-join clients (clients that joined AFTER the gal was bought).
+- Gave All inside hazards an animation curve in the config stuff, have fun.
+- Gave industrial fan and laser turret config to not destroy body.
 
 ## v0.7.18
 
