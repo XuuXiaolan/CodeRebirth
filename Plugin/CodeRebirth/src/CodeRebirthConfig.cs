@@ -177,8 +177,8 @@ public class CodeRebirthConfig
                                             "Whether the Functional Microwave is enabled.");
         ConfigFunctionalMicrowaveCurveSpawnWeight = configFile.Bind("FunctionalMicrowave Options",
                                             "Functional Microwave | SpawnWeight Curve",
-                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
-                                            "The MoonName:CurveSpawnWeight for the hazard.");
+                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2 ",
+                                            "The MoonName - CurveSpawnWeight for the hazard.");
         #endregion
         #region Bear Trap
         ConfigBearTrapEnabled = configFile.Bind("BearTrap Options",
@@ -201,8 +201,8 @@ public class CodeRebirthConfig
                                             "Whether the Laser Turret is enabled.");
         ConfigLaserTurretCurveSpawnWeight = configFile.Bind("LaserTurret Options",
                                             "Laser Turret | SpawnWeight Curve",
-                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
-                                            "The MoonName:CurveSpawnWeight for the LaserTurret.");
+                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2",
+                                            "The MoonName - CurveSpawnWeight for the LaserTurret.");
         #endregion
         #region Flash Turret
         ConfigFlashTurretEnabled = configFile.Bind("FlashTurret Options",
@@ -211,8 +211,8 @@ public class CodeRebirthConfig
                                             "Whether the flash turret is enabled.");
         ConfigFlashTurretCurveSpawnWeight = configFile.Bind("FlashTurret Options",
                                             "Flash Turret | SpawnWeight Curve",
-                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
-                                            "The MoonName:CurveSpawnWeight for the FlashTurret.");
+                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2 ",
+                                            "The MoonName - CurveSpawnWeight for the FlashTurret.");
         #endregion
         #region Industrial Fan
         ConfigIndustrialFanEnabled = configFile.Bind("IndustrialFan Options",
@@ -221,8 +221,8 @@ public class CodeRebirthConfig
                                             "Whether the industrial fan is enabled.");
         ConfigIndustrialFanCurveSpawnWeight = configFile.Bind("IndustrialFan Options",
                                             "Industrial Fan | SpawnWeight Curve",
-                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
-                                            "The MoonName:CurveSpawnWeight for the IndustrialFan.");
+                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2",
+                                            "The MoonName - CurveSpawnWeight for the IndustrialFan.");
         #endregion
         #region Tesla Shock
         ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
@@ -231,8 +231,8 @@ public class CodeRebirthConfig
                                             "Whether the tesla shock is enabled.");
         ConfigTeslaShockCurveSpawnWeight = configFile.Bind("TeslaShock Options",
                                             "Tesla Shock | SpawnWeight Curve",
-                                            "Vanilla:0;0,1;2|Custom:0;0,1;2",
-                                            "The MoonName:CurveSpawnWeight for the TeslaShock.");
+                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2",
+                                            "The MoonName - CurveSpawnWeight for the TeslaShock.");
         #endregion
         #region Air Control Unit
         ConfigAirControlUnitEnabled = configFile.Bind("AirControlUnit Options",

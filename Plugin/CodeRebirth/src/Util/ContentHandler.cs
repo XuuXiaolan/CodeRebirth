@@ -107,7 +107,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         Dictionary<string, int> spawnRateByCustomLevelType = new();
         foreach (string entry in configMoonRarity.Split(',').Select(s => s.Trim()))
         {
-            string[] entryParts = entry.Split(':');
+            string[] entryParts = entry.Split(':').Select(s => s.Trim()).ToArray();
 
             if (entryParts.Length != 2) continue;
 
@@ -146,7 +146,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         Dictionary<string, string> spawnRateByCustomLevelType = new();
         foreach (string entry in configMoonRarity.Split('|').Select(s => s.Trim()))
         {
-            string[] entryParts = entry.Split(':');
+            string[] entryParts = entry.Split('-').Select(s => s.Trim()).ToArray();
 
             if (entryParts.Length != 2) continue;
 
@@ -180,7 +180,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
     protected int[] ChangeItemValues(string config)
     {
-        string[] configParts = config.Split(',');
+        string[] configParts = config.Split(',').Select(s => s.Trim()).ToArray();
         foreach (string configPart in configParts)
         {
             configPart.Trim();
@@ -199,7 +199,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
     public AnimationCurve CreateCurveFromString(string keyValuePairs)
     {
         // Split the input string into individual key-value pairs
-        string[] pairs = keyValuePairs.Split(',');
+        string[] pairs = keyValuePairs.Split(';').Select(s => s.Trim()).ToArray();
         if (pairs.Length == 0)
         {
             if (int.TryParse(keyValuePairs, out int result))
@@ -217,7 +217,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         // Iterate over each pair and parse the key and value to create keyframes
         foreach (string pair in pairs)
         {
-            string[] splitPair = pair.Split(';');
+            string[] splitPair = pair.Split(',').Select(s => s.Trim()).ToArray();
             if (splitPair.Length == 2 &&
                 float.TryParse(splitPair[0], out float time) &&
                 float.TryParse(splitPair[1], out float value))
@@ -226,7 +226,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
             }
             else
             {
-                Debug.LogError($"Invalid key:value pair format: {pair}");
+                Plugin.Logger.LogError($"Invalid key:value pair format: {pair}");
             }
         }
 
