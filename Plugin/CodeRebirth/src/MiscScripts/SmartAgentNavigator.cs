@@ -165,6 +165,7 @@ public class SmartAgentNavigator : NetworkBehaviour
                         pointToGo = nearbyPoint;
                         OnEnableOrDisableAgent.Invoke(false);
                         agent.enabled = false;
+                        Plugin.ExtendedLogging($"Pathing to {destination} failed, going to {nearbyPoint} instead.");
                     }
                 }
             }

@@ -8,7 +8,7 @@ namespace CodeRebirth.src.Content.Items;
 public class Pickable : MonoBehaviour
 {
 	[SerializeField]
-	private AudioSource unlockSFX = null!;
+	private AudioSource? unlockSFX = null;
 	
 	[SerializeField]
 	private UnityEvent onUnlock = null!;

@@ -23,6 +23,10 @@ static class EnemyAIPatch
     {
         orig(self);
         enemyRandom ??= new System.Random(StartOfRound.Instance.randomMapSeed);
+        if (self is CaveDwellerAI)
+        {
+            self.gameObject.transform.Find("BabyMeshContainer").Find("BabyManeaterMesh").gameObject.layer = 19;
+        }
     }
 
     private static void EnemyAI_Update(On.EnemyAI.orig_Update orig, EnemyAI self)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
@@ -29,6 +30,8 @@ public class SeamineGalAI : GalAI
     public List<AudioClip> bruceSwimmingAudioClips = new();
     public List<AudioClip> startOrEndRidingBruceAudioClips = new();
     public AudioClip squeezeFishSound = null!;
+    public Pickable pickable = null!;
+    public Light light = null!;
 
     private bool physicsTemporarilyDisabled = false;
     private List<Coroutine> customPassRoutines = new();
@@ -79,19 +82,19 @@ public class SeamineGalAI : GalAI
         }
 
         // Adding listener for interaction trigger
-        beltInteractTrigger.onInteract.AddListener(OnBeltInteract);
         hugInteractTrigger.onInteract.AddListener(OnHugInteract);
         flashLightInteractTrigger.onInteract.AddListener(OnFlashLightInteract);
         SeamineCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(SeamineCharger.OnActivateGal);
+        pickable.IsLocked = false;
         StartCoroutine(CheckForNearbyEnemiesToOwner());
         StartCoroutine(UpdateRidingBruceSound());
         ResetToChargerStation(galState);
     }
 
-    private void OnBeltInteract(PlayerControllerB playerInteracting)
+    public void OnBeltInteract()
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
-        if (playerInteracting.currentlyHeldObjectServer == null || playerInteracting.currentlyHeldObjectServer.itemProperties.itemName != "Key") return;
+        if (GameNetworkManager.Instance.localPlayerController != ownerPlayer) return;
+        if (ownerPlayer.currentlyHeldObjectServer == null || ownerPlayer.currentlyHeldObjectServer.itemProperties.itemName != "Key") return;
         ownerPlayer.DespawnHeldObject();
         StartBeltInteractServerRpc();
     }
@@ -137,7 +140,7 @@ public class SeamineGalAI : GalAI
     {
         GalSFX.PlayOneShot(squeezeFishSound);
         flashLightLight.SetActive(!flashLightLight.activeSelf);
-        CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
+        CullFactorySoftCompat.TryRefreshDynamicLight(light);
     }
 
     private void OnHugInteract(PlayerControllerB playerInteracting)
@@ -201,6 +204,7 @@ public class SeamineGalAI : GalAI
         bool idleInteractable = galState != State.AttackMode && interactable;
         
         beltInteractTrigger.interactable = idleInteractable && chargeCount <= 0;
+        pickable.IsLocked = beltInteractTrigger.interactable;
         hugInteractTrigger.interactable = idleInteractable;
         flashLightInteractTrigger.interactable = interactable;
     }
@@ -374,7 +378,7 @@ public class SeamineGalAI : GalAI
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
             }
-            if (distanceToTarget <= Agent.stoppingDistance)
+            if (distanceToTarget <= Agent.stoppingDistance || (targetEnemy is CentipedeAI && distanceToTarget <= Agent.stoppingDistance + 5))
             {
                 currentlyAttacking = true;
                 NetworkAnimator.SetTrigger(startExplodeAnimation);
@@ -547,10 +551,14 @@ public class SeamineGalAI : GalAI
                     if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
                     {
                         Plugin.ExtendedLogging("No line of sight to enemy: " + enemyDetected + "| This detected instead: " + hit.collider.name);
+                        if (enemyDetected is CentipedeAI)
+                        {
+                            if (!enemiesToKill.Contains(enemyDetected)) enemiesToKill.Add(enemyDetected);
+                        }
                         continue;
                     }
                     Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
-                    enemiesToKill.Add(enemyDetected);
+                    if (!enemiesToKill.Contains(enemyDetected)) enemiesToKill.Add(enemyDetected);
                 }
             }
             else
@@ -572,6 +580,12 @@ public class SeamineGalAI : GalAI
     {
         currentlyAttacking = false;
         chargeCount--;
+        Animator.SetInteger(chargeCountInt, chargeCount);
+    }
+
+    public override void RefillCharges()
+    {
+        base.RefillCharges();
         Animator.SetInteger(chargeCountInt, chargeCount);
     }
 
@@ -691,6 +705,8 @@ public class SeamineGalAI : GalAI
         Agent.enabled = false;
         GalSFX.PlayOneShot(squeezeFishSound);
         flashLightLight.SetActive(false);
+        Animator.SetBool(inElevatorAnimation, false);
+        Animator.SetBool(ridingBruceAnimation, false);
     }
 
     private void HandleStateActiveChange()
@@ -716,7 +732,7 @@ public class SeamineGalAI : GalAI
     public override void OnUseEntranceTeleport(bool setOutside)
     {
         base.OnUseEntranceTeleport(setOutside);
-        CullFactorySoftCompat.TryRefreshDynamicLight(flashLightLight.GetComponent<Light>());
+        CullFactorySoftCompat.TryRefreshDynamicLight(light);
     }
 
     public override void OnEnterOrExitElevator(bool enteredElevator)
@@ -738,7 +754,7 @@ public class SeamineGalAI : GalAI
             return customPass.maxVisibilityDistance < 50;
         });
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
 
         yield return new WaitWhile(() =>
         {

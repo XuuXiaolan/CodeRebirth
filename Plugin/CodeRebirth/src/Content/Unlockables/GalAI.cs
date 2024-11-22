@@ -74,7 +74,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         RefillCharges();
     }
 
-    public void RefillCharges()
+    public virtual void RefillCharges()
     {
         chargeCount = maxChargeCount;
     }

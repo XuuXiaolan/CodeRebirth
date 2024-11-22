@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2492.4963, g: 2539.5667, b: 3610.4614, a: 1}
+  m_IndirectSpecularColor: {r: 2492.881, g: 2539.844, b: 3610.688, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -389,6 +389,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1670371408
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 29.864958
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00000011920929
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.3995714
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7859705604145919047, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2916711187
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273578112294545693, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_Name
+      value: SeamineGal
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fbfd2005f97f3a84ea32e1cff205eb7e, type: 3}
 --- !u!1 &1752473777
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,79 +568,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1856184781
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.8849438
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -31.10075
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7859705604145919047, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 1494537794
-      objectReference: {fileID: 0}
-    - target: {fileID: 8273578112294545693, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
-        type: 3}
-      propertyPath: m_Name
-      value: SeamineGal
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: fbfd2005f97f3a84ea32e1cff205eb7e, type: 3}
 --- !u!1 &2013410473
 GameObject:
   m_ObjectHideFlags: 1
@@ -624,4 +624,4 @@ SceneRoots:
   - {fileID: 432432461}
   - {fileID: 2013410475}
   - {fileID: 1752473781}
-  - {fileID: 1856184781}
+  - {fileID: 1670371408}

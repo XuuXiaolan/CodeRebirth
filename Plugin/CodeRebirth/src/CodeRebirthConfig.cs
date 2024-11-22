@@ -165,8 +165,8 @@ public class CodeRebirthConfig
                                             "Debug Mode | Hazard Spawning Enabled",
                                             false,
                                             "Whether debug mode is enabled (for hazard spawning stuff).");
-        ConfigEnableExtendedLogging = configFile.Bind("Debug Mode | Logging Options",
-                                            "Enable Extended Logging",
+        ConfigEnableExtendedLogging = configFile.Bind("Debug Mode",
+                                            "Debug Mode | Enable Extended Logging",
                                             false,
                                             "Whether extended logging is enabled.");
         #endregion
@@ -177,7 +177,7 @@ public class CodeRebirthConfig
                                             "Whether the Functional Microwave is enabled.");
         ConfigFunctionalMicrowaveCurveSpawnWeight = configFile.Bind("FunctionalMicrowave Options",
                                             "Functional Microwave | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2 ",
+                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
                                             "The MoonName - CurveSpawnWeight for the hazard.");
         #endregion
         #region Bear Trap
@@ -201,7 +201,7 @@ public class CodeRebirthConfig
                                             "Whether the Laser Turret is enabled.");
         ConfigLaserTurretCurveSpawnWeight = configFile.Bind("LaserTurret Options",
                                             "Laser Turret | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2",
+                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
                                             "The MoonName - CurveSpawnWeight for the LaserTurret.");
         #endregion
         #region Flash Turret
@@ -211,7 +211,7 @@ public class CodeRebirthConfig
                                             "Whether the flash turret is enabled.");
         ConfigFlashTurretCurveSpawnWeight = configFile.Bind("FlashTurret Options",
                                             "Flash Turret | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2 ",
+                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 ",
                                             "The MoonName - CurveSpawnWeight for the FlashTurret.");
         #endregion
         #region Industrial Fan
@@ -221,7 +221,7 @@ public class CodeRebirthConfig
                                             "Whether the industrial fan is enabled.");
         ConfigIndustrialFanCurveSpawnWeight = configFile.Bind("IndustrialFan Options",
                                             "Industrial Fan | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2",
+                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
                                             "The MoonName - CurveSpawnWeight for the IndustrialFan.");
         #endregion
         #region Tesla Shock
@@ -231,7 +231,7 @@ public class CodeRebirthConfig
                                             "Whether the tesla shock is enabled.");
         ConfigTeslaShockCurveSpawnWeight = configFile.Bind("TeslaShock Options",
                                             "Tesla Shock | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 1,2 | Custom - 0,0 ; 1,2",
+                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
                                             "The MoonName - CurveSpawnWeight for the TeslaShock.");
         #endregion
         #region Air Control Unit
@@ -306,12 +306,12 @@ public class CodeRebirthConfig
                                             "Cost of the Seamine Gal.");
         ConfigSeamineTinkCharges = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Charges",
-                                            10,
+                                            3,
                                             "How many charges the Seamine Gal has.");
         ConfigSeamineTinkEnemyBlacklist = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Enemy Blacklist",
-                                            "",
-                                            "Comma separated list of enemies that the Seamine Gal will not target (keep in mind she ONLY targets immortal enemies).");
+                                            "Docile Locust Bees, Manticoil, Nemo, Horse, CutieFly, Shisha, Tornado, Scary",
+                                            "Comma separated list of enemies that the Seamine Gal will not target (keep in mind she targets ALL enemies).");
         ConfigSeamineTinkRidingBruceVolume = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Riding Bruce Volume",
                                             0.75f,

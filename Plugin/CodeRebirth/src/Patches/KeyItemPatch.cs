@@ -12,9 +12,10 @@ static class KeyItemPatch {
 		}
 		if (Physics.Raycast(new Ray(__instance.playerHeldBy.gameplayCamera.transform.position, __instance.playerHeldBy.gameplayCamera.transform.forward), out RaycastHit raycastHit, 3f, 2816))
 		{
-			if (raycastHit.transform.TryGetComponent(out Pickable pickable) && pickable.enabled && pickable.IsLocked) {
+			if (raycastHit.transform.TryGetComponent(out Pickable pickable) && pickable.enabled && pickable.IsLocked)
+			{
 				pickable.Unlock();
-				__instance.playerHeldBy.DespawnHeldObject();
+				if (__instance.playerHeldBy.currentlyHeldObjectServer != null && __instance.playerHeldBy.currentlyHeldObjectServer.IsSpawned) __instance.playerHeldBy.DespawnHeldObject();
 			}
 		}
 	}

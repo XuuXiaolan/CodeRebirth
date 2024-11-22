@@ -213,7 +213,6 @@ GameObject:
   - component: {fileID: 1602280648813672407}
   - component: {fileID: 6281558672129517230}
   - component: {fileID: 4452419613029650349}
-  - component: {fileID: 5105096089338482427}
   m_Layer: 9
   m_Name: InteractBox
   m_TagString: InteractTrigger
@@ -328,29 +327,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.1184654, y: 1.2614, z: 1.0846043}
-  m_Center: {x: -0.007580757, y: -0.13069905, z: 0.015365822}
---- !u!65 &5105096089338482427
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5974106415055769305}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.042614, y: 1.3239591, z: 0.1265564}
-  m_Center: {x: -0.021306992, y: 1.2689705, z: -0.51856273}
+  m_Size: {x: 1.342158, y: 1.3346543, z: 1.3015248}
+  m_Center: {x: -0.007580757, y: -0.041186184, z: 0.015365839}
 --- !u!1 &6475414710699504993
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableObject: 0
-  positionOffset: {x: 3.396, y: 0.1, z: -8.3}
+  positionOffset: {x: 2.65, y: 0.1, z: -6.96}
   rotationOffset: {x: 0, y: 0, z: 0}
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
