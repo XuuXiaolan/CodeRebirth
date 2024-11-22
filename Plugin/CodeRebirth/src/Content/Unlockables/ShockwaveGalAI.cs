@@ -219,36 +219,9 @@ public class ShockwaveGalAI : GalAI
         }
     }
 
-    private void BoomboxUpdate()
-    {
-        if (!boomboxPlaying) return;
-
-        boomboxTimer += Time.deltaTime;
-        if (boomboxTimer >= 2f)
-        {
-            boomboxTimer = 0f;
-            boomboxPlaying = false;
-        }
-    }
-
     private void StoppingDistanceUpdate()
     {
         Agent.stoppingDistance = galState == State.AttackMode ? 6f : 3f;
-    }
-
-    private void IdleUpdate()
-    {
-        idleTimer += Time.deltaTime;
-        if (idleTimer <= idleNeededTimer) return;
-
-        idleTimer = 0f;
-        idleNeededTimer = galRandom.NextFloat(5f, 10f);
-        GalSFX.PlayOneShot(IdleSounds[galRandom.NextInt(0, IdleSounds.Length - 1)]);
-    }
-
-    private void ShipRoomUpdate()
-    {
-        isInHangarShipRoom = StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position);
     }
 
     private void SetIdleDefaultStateForEveryone()
@@ -288,7 +261,6 @@ public class ShockwaveGalAI : GalAI
             return;
         }
         if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
-        if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         StoppingDistanceUpdate();
 
         if (!IsHost) return;

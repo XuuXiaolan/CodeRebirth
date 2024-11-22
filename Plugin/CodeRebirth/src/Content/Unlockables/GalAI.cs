@@ -126,12 +126,20 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         if (isInHangarShipRoom) smartAgentNavigator.isOutside = true;
     }
 
+    private void OwnerPlayerUpdate()
+    {
+        if (ownerPlayer != null && ownerPlayer.isPlayerDead)
+        {
+            ownerPlayer = null;
+        }
+    }
     public virtual void Update()
     {
         InActiveUpdate();
         BoomboxUpdate();
         IdleUpdate();
         ShipRoomUpdate();
+        OwnerPlayerUpdate();
     }
 
     public virtual void ActivateGal(PlayerControllerB owner)
@@ -172,13 +180,10 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     public bool GoToChargerAndDeactivate()
     {
         smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position, false, false, null);
-        if (Vector3.Distance(transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance)
+        if (Vector3.Distance(transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance ||!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
         {
-            if (!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
-            {
-                GalCharger.ActivateGirlServerRpc(-1);
-                return true;
-            }
+            GalCharger.ActivateGirlServerRpc(-1);
+            return true;
         }
         return false;
     }

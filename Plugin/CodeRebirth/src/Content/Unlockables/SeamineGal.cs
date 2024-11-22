@@ -243,13 +243,6 @@ public class SeamineGalAI : GalAI
         base.Update();
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
-        if (inActive && SeamineCharger != null)
-        {
-            this.transform.position = SeamineCharger.transform.position;
-            this.transform.rotation = SeamineCharger.transform.rotation;
-            return;
-        }
-        if (ownerPlayer != null && ownerPlayer.isPlayerDead) ownerPlayer = null;
         StoppingDistanceUpdate();
 
         if (!IsHost) return;
@@ -498,7 +491,7 @@ public class SeamineGalAI : GalAI
         {
             yield return delay;
 
-            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || !smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory || smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory) continue;
+            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory)) continue;
 
             // Use OverlapSphereNonAlloc to reduce garbage collection
             Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
@@ -519,12 +512,13 @@ public class SeamineGalAI : GalAI
                     // First, do a simple direction check to see if the enemy is in front of the player
                     Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
                     // Then check if there's a clear line of sight
-                    if (!Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, 15, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Ignore))
+                    float distanceToEnemy = Vector3.Distance(ownerPlayer.gameplayCamera.transform.position, collider.transform.position);
+                    if (Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
                     {
-                        //Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name);
+                        Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name);
                         continue;
                     }
-                    Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
+                    //Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
 
 
                     SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
@@ -552,7 +546,7 @@ public class SeamineGalAI : GalAI
                     // Ensure there's a line of sight from SeamineGalAI to the enemy
                     Vector3 directionToEnemy = (enemyDetected.transform.position - transform.position).normalized;
                     float distanceToEnemy = Vector3.Distance(transform.position, enemyDetected.transform.position);
-                    if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+                    if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask , QueryTriggerInteraction.Ignore))
                     {
                         Plugin.ExtendedLogging("No line of sight to enemy: " + enemyDetected + "| This detected instead: " + hit.collider.name);
                         if (enemyDetected is CentipedeAI)
