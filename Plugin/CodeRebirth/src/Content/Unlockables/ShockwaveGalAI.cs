@@ -419,6 +419,11 @@ public class ShockwaveGalAI : GalAI
         if (!currentlyAttacking)
         {
             smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside, true, ownerPlayer);
+            if (!smartAgentNavigator.CurrentPathIsValid() || (Vector3.Distance(this.transform.position, ownerPlayer.transform.position) > 15 && Plugin.ModConfig.ConfigDontTargetFarEnemies.Value))
+            {
+                HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
+                return;
+            }
         }
         if (Vector3.Distance(transform.position, targetEnemy.transform.position) <= (Agent.stoppingDistance + 5f) || currentlyAttacking)
         {

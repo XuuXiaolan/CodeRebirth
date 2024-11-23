@@ -201,7 +201,7 @@ public class SeamineGalAI : GalAI
     {
         bool interactable = !inActive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
         bool idleInteractable = galState != State.AttackMode && interactable;
-        
+
         beltInteractTrigger.interactable = idleInteractable && chargeCount <= 0;
         pickable.IsLocked = beltInteractTrigger.interactable;
         hugInteractTrigger.interactable = idleInteractable;
@@ -358,6 +358,11 @@ public class SeamineGalAI : GalAI
         if (!currentlyAttacking)
         {
             smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside, true, ownerPlayer);
+            if (!smartAgentNavigator.CurrentPathIsValid() || (Vector3.Distance(this.transform.position, ownerPlayer.transform.position) > 15 && Plugin.ModConfig.ConfigDontTargetFarEnemies.Value))
+            {
+                HandleStateAnimationSpeedChanges(State.FollowingPlayer);
+                return;
+            }
         }
         float distanceToTarget = Vector3.Distance(transform.position, targetEnemy.transform.position);
         if (distanceToTarget <= Agent.stoppingDistance + 4 && !currentlyAttacking)

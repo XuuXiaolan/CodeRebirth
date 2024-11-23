@@ -423,6 +423,15 @@ public class SmartAgentNavigator : NetworkBehaviour
         agent.Warp(location);
     }
 
+    public bool CurrentPathIsValid()
+    {
+        if (agent.path.status == NavMeshPathStatus.PathPartial || agent.path.status == NavMeshPathStatus.PathInvalid)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void StartSearchRoutine(Vector3 position, float radius)
     {
         if (searchRoutine != null)

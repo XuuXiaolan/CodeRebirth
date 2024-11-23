@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigDontTargetFarEnemies { get; private set; }
     public ConfigEntry<bool> ConfigHazardsDeleteBodies { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerDisablesGal { get; private set; }
     public ConfigEntry<bool> ConfigPjonkTurkeyEnabled { get; private set; }
@@ -254,6 +255,10 @@ public class CodeRebirthConfig
                                             "Gal AI | Owner Power",
                                             false,
                                             "Whether only the current owner of the gal can disable her.");
+        ConfigDontTargetFarEnemies = configFile.Bind("General",
+                                            "Gal AI | Dont Stray Too Far",
+                                            false,
+                                            "Whether the Gal AI should stop targetting enemies when she is far from her owner's position.");
         ConfigHazardsDeleteBodies = configFile.Bind("General",
                                             "Hazards | Delete Bodies",
                                             true,

@@ -1,4 +1,10 @@
-# v0.8.1
+# v0.8.2
+
+- Fixed gal being outside in orbit for late joining clients.
+- Fixed pathing issues with seamine gal if enemy is in an unreachable position.
+- Check the readme for how the hazards config works!!!
+
+## v0.8.1
 
 - Fixed harmless error with MRAPI and CodeRebirth when MRAPI isn't found.
 - Fixed harmless error with gal's chargers when the owner dies.

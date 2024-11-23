@@ -21,6 +21,11 @@ If you're interested in helping with the development of the mod, feel free to re
 
 - Small tidbit on how the hazard config works for the inside hazards such as LaserTurret, FlashTurret, TeslaShock, etc.
 - Config follows this structure: `MoonName - X1,Y1 ; X2,Y2 ; X3,Y3 | MoonName2 - Etc....`.
+- The separators are:
+  - `-` for MoonName and Coordinates
+  - `,` for x and y value of a coordinate.
+  - `;` for separating coordinates.
+  - `|` for separating entries.
 - This follows how vanilla spawns hazards on moons accurately, where vanilla generates a number between 0 and 1 and assigns it to the `X-axis`.
 - Using that X-axis value, it picks the corresponding Y-value, rounds it to an integer and spawns that amount of hazards.
 - It's done as a curve so that, depending on luck, you can have days where you spawn almost no hazards and on some days you have `Microwave Hell`, similar to some moons' `Turret Hell` rare occurance.
