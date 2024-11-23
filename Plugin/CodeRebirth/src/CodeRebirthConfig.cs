@@ -166,7 +166,7 @@ public class CodeRebirthConfig
                                             "Debug Mode | Hazard Spawning Enabled",
                                             false,
                                             "Whether debug mode is enabled (for hazard spawning stuff).");
-        ConfigEnableExtendedLogging = configFile.Bind("Debug Mode",
+        ConfigEnableExtendedLogging = configFile.Bind("Debug Options",
                                             "Debug Mode | Enable Extended Logging",
                                             false,
                                             "Whether extended logging is enabled.");
