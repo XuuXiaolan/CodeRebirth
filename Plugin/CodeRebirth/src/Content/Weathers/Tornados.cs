@@ -255,11 +255,11 @@ public class Tornados : EnemyAI
 
         var localPlayer = GameNetworkManager.Instance.localPlayerController;
         if (localPlayer == null || !localPlayer.isPlayerControlled || localPlayer.isPlayerDead) return;
-        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.transform.position) <= 10f && !localPlayer.IsFlingingAway() && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water)
+        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.eye.transform.position) <= 10f && !localPlayer.IsFlingingAway() && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water)
         {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 49f);
         }
-        else if (Vector3.Distance(localPlayer.transform.position, this.transform.position) > 10f && !localPlayer.IsFlingingAway())
+        else if (Vector3.Distance(localPlayer.transform.position, this.eye.transform.position) > 10f && !localPlayer.IsFlingingAway())
         {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 49f);
         }
@@ -272,7 +272,7 @@ public class Tornados : EnemyAI
 
     private void Init()
     {
-        StartSearch(this.transform.position);
+        StartSearch(this.eye.transform.position);
         agent.speed = initialSpeed;
     }
 
@@ -340,9 +340,10 @@ public class Tornados : EnemyAI
             }
             else if (distanceToTornado <= 100)
             {
-                Vector3 targetPosition = transform.position;                
+                Vector3 targetPosition = this.eye.transform.position;
                 float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, player);
-                player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, forceStrength * Time.fixedDeltaTime / 40f);
+                float step = forceStrength * Time.fixedDeltaTime / 1.75f;
+                player.transform.position = Vector3.MoveTowards(player.transform.position, targetPosition, step);
             }
         }
         HandleStatusEffects(player);
@@ -432,14 +433,12 @@ public class Tornados : EnemyAI
 
         // Calculate the pull strength based on the falloff
         float pullStrength = Mathf.Lerp(minStrength, maxStrength, strengthFalloff);
-
         if (distance <= 2.5f && damageTimer && GameNetworkManager.Instance.localPlayerController == localPlayerController)
         {
             damageTimer = false;
             StartCoroutine(DamageTimer());
             HandleTornadoTypeDamage(localPlayerController);
         }
-        
         return Mathf.Clamp(pullStrength, 0, maxStrength);
     }
 
@@ -504,15 +503,14 @@ public class Tornados : EnemyAI
     
     public float TornadoHasLineOfSightToPosition(int range, PlayerControllerB player)
     {
-        float distance = Vector3.Distance(transform.position, player.transform.position);
+        float distance = Vector3.Distance(this.eye.transform.position, player.transform.position);
         if (player.IsFlingingAway()) return distance;
         foreach (Transform eye in eyes)
         {
-            float distanceToPlayer = Vector3.Distance(eye.transform.position, player.transform.position);
-            if (distanceToPlayer > range) continue;
-            if (Physics.Raycast(eye.transform.position, (player.transform.position - eye.position).normalized, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Terrain", "InteractableObject", "MapHazards", "Vehicle", "Railing"), QueryTriggerInteraction.Ignore)) continue;
-            Plugin.Logger.LogInfo("Tornado has line of sight to player");
-            return distanceToPlayer;
+            distance = Vector3.Distance(eye.transform.position, player.transform.position);
+            if (distance > range) continue;
+            if (Physics.Raycast(eye.transform.position, (player.transform.position - eye.position).normalized, distance, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Terrain", "InteractableObject", "MapHazards", "Vehicle", "Railing"), QueryTriggerInteraction.Ignore)) continue;
+            return distance;
         }
         return distance;
     }

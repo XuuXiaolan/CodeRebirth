@@ -243,6 +243,7 @@ public class SeamineGalAI : GalAI
         base.Update();
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
+        if (inActive) return;
         StoppingDistanceUpdate();
 
         if (!IsHost) return;

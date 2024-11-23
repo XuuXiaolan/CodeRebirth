@@ -94,17 +94,6 @@ public class SmartAgentNavigator : NetworkBehaviour
         }
     }
 
-    private void AdjustVelocityBasedOnTurn(Vector3 destination)
-    {
-        // Calculate the angle between the agent's forward direction and the direction to the destination
-        Vector3 directionToDestination = (destination - transform.position).normalized;
-        float angle = Vector3.Angle(transform.forward, directionToDestination);
-
-        // If the angle is large, reduce the velocity
-        float velocityFactor = Mathf.Clamp01(1 - (angle / 180f)); // Angle affects velocity, 180 degrees is the maximum
-        agent.velocity = agent.velocity.normalized * agent.speed * velocityFactor;  // Maintain direction but scale down speed
-    }
-
     public bool DoPathingToDestination(Vector3 destination, bool destinationIsInside, bool followingPlayer, PlayerControllerB? playerBeingFollowed)
     {
         if (!agent.enabled)
@@ -155,7 +144,6 @@ public class SmartAgentNavigator : NetworkBehaviour
         if (!usingElevator)
         {
             agent.SetDestination(destination);
-            AdjustVelocityBasedOnTurn(agent.nextPosition);
         }
         if (usingElevator && elevatorScript != null) agent.Warp(elevatorScript.elevatorInsidePoint.position);
         return false;
