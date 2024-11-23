@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
 using CodeRebirth.src;
@@ -29,25 +30,14 @@ public class Plugin : BaseUnityPlugin {
 		if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("x753.More_Suits")) {
 			Logger.LogInfo("MoreSuits is not installed, skipping!");
 		}
-		
-		if (CodeRebirth.src.Plugin.ModConfig.ConfigShockwaveGalPlayerModelEnabled.Value)
-		{
-			ExtendedLogging("Delilah is a new model registered!");
-        	GrabbableObjectPatches.Init();
-			PlayerModelAssets.ShockwaveModelAssets = new PlayerModelAssets.ShockwaveModelReplacementAssets("shockwavegalmodelreplacementassets");
-			ModelReplacementAPI.RegisterSuitModelReplacement("Delilah", typeof(ShockwaveGalModel));
-		}
 
-		if (CodeRebirth.src.Plugin.ModConfig.ConfigSeamineTinkPlayerModelEnabled.Value)
-		{
-			ExtendedLogging("Seamine is a new model registered!");
-			PlayerModelAssets.SeamineModelAssets = new PlayerModelAssets.SeamineModelReplacementAssets("seaminegalmodelreplacementassets");
-			ModelReplacementAPI.RegisterSuitModelReplacement("Betty", typeof(SeamineGalModel));
-		}
+		PlayerModelAssets.RegisterSuits();
 		
 		Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded! :3");
 	}
+
 	
+    
 	internal static void ExtendedLogging(object text)
 	{
 		if (CodeRebirth.src.Plugin.ModConfig.ConfigEnableExtendedLogging.Value)
