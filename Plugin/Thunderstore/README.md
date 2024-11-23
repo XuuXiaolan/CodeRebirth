@@ -17,6 +17,15 @@ If you're interested in helping with the development of the mod, feel free to re
 - 4 Custom Outside Objects.
 - 6 Custom Inside Objects.
 
+## Hazard Config
+
+- Small tidbit on how the hazard config works for the inside hazards such as LaserTurret, FlashTurret, TeslaShock, etc.
+- Config follows this structure: `MoonName - X1,Y1 ; X2,Y2 ; X3,Y3 | MoonName2 - Etc....`.
+- This follows how vanilla spawns hazards on moons accurately, where vanilla generates a number between 0 and 1 and assigns it to the `X-axis`.
+- Using that X-axis value, it picks the corresponding Y-value, rounds it to an integer and spawns that amount of hazards.
+- It's done as a curve so that, depending on luck, you can have days where you spawn almost no hazards and on some days you have `Microwave Hell`, similar to some moons' `Turret Hell` rare occurance.
+- Tool for visualising and creating curves easily will be coming soon...
+
 ## Preview (Spoilers ahead!)
 
 <details>
@@ -63,9 +72,16 @@ If you're interested in helping with the development of the mod, feel free to re
 ![ShG1](https://i.postimg.cc/2S37p0YR/SG1.png)
 ![ShG2](https://i.postimg.cc/TwvVDGDf/SG2.png)
 
+> Friendly gal that carries scrap and kills enemies!
+> Rechargable via time after orbit!
+
 #### Seamine Gal
 
-![SeG]()
+![SeG](https://i.postimg.cc/nLK92rFv/image.webp)
+
+> Friendly gal that gives players the ability to detect surrounding hazards and enemies.
+> Reliable big sister for shockwave gal and can kill "unkillable" enemies.
+> Rechargable via time after orbit or with a key on her belt!
 
 </details>
 

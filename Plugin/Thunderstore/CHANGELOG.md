@@ -1,4 +1,9 @@
-# v0.8.0
+# v0.8.1
+
+- Fixed harmless error with MRAPI and CodeRebirth when MRAPI isn't found.
+- Fixed harmless error with gal's chargers when the owner dies.
+
+## v0.8.0
 
 - Added seamine gal.
 - Added seamine gal as a player suit.

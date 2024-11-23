@@ -25,7 +25,8 @@ static class PlayerModelAssets
 	internal static SeamineModelReplacementAssets SeamineModelAssets;
 
 	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-	internal static void RegisterSuits() {
+	internal static void RegisterSuits()
+	{
 		if (CodeRebirth.src.Plugin.ModConfig.ConfigShockwaveGalPlayerModelEnabled.Value)
 		{
 			Plugin.ExtendedLogging("Delilah is a new model registered!");

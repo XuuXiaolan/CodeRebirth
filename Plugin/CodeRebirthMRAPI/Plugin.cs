@@ -18,17 +18,21 @@ public class Plugin : BaseUnityPlugin {
 	public static Plugin Instance { get; private set; }
 	internal new static ManualLogSource Logger { get; private set; }
 
-	private void Awake() {
+	private void Awake()
+	{
 		Logger = base.Logger;
 		Instance = this;
 
-		if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.ModelReplacementAPI")) {
+		if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.ModelReplacementAPI"))
+		{
 			Logger.LogInfo("ModelReplacementAPI is not installed, skipping!");
 			return;
 		}
 
-		if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("x753.More_Suits")) {
+		if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("x753.More_Suits"))
+		{
 			Logger.LogInfo("MoreSuits is not installed, skipping!");
+			return;
 		}
 
 		PlayerModelAssets.RegisterSuits();

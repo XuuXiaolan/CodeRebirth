@@ -21,7 +21,6 @@ public class ShockwaveGalAI : GalAI
     public List<Transform> itemsHeldTransforms = new();
     public AnimationClip CatPoseAnim = null!;
     [NonSerialized] public Emotion galEmotion = Emotion.ClosedEye;
-    [NonSerialized] public ShockwaveCharger ShockwaveCharger = null!;
     public Transform LaserOrigin = null!;
     public AudioSource FlySource = null!;
     public AudioClip PatSound = null!;
@@ -79,17 +78,17 @@ public class ShockwaveGalAI : GalAI
         }
         ShockwaveCharger shockwaveCharger = shockwaveChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
         shockwaveCharger.GalAI = this;
-        this.ShockwaveCharger = shockwaveCharger;
+        GalCharger = shockwaveCharger;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
         ChestTrigger.onInteract.AddListener(OnChestInteract);
         // Automatic activation if configured
         if (Plugin.ModConfig.ConfigShockwaveBotAutomatic.Value)
         {
-            StartCoroutine(ShockwaveCharger.ActivateGalAfterLand());
+            StartCoroutine(GalCharger.ActivateGalAfterLand());
         }
 
         // Adding listener for interaction trigger
-        ShockwaveCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(ShockwaveCharger.OnActivateGal);
+        GalCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(GalCharger.OnActivateGal);
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
             trigger.onInteract.AddListener(GrabItemInteract);
@@ -118,9 +117,9 @@ public class ShockwaveGalAI : GalAI
     private void ResetToChargerStation(State state, Emotion emotion)
     {
         if (!IsServer) return;
-        if (Agent.enabled) Agent.Warp(ShockwaveCharger.ChargeTransform.position);
-        else transform.position = ShockwaveCharger.ChargeTransform.position;
-        transform.rotation = ShockwaveCharger.ChargeTransform.rotation;
+        if (Agent.enabled) Agent.Warp(GalCharger.ChargeTransform.position);
+        else transform.position = GalCharger.ChargeTransform.position;
+        transform.rotation = GalCharger.ChargeTransform.rotation;
         HandleStateAnimationSpeedChanges(state, emotion);
     }
 
@@ -226,7 +225,7 @@ public class ShockwaveGalAI : GalAI
 
     private void SetIdleDefaultStateForEveryone()
     {
-        if (ShockwaveCharger == null)
+        if (GalCharger == null)
         {
             Plugin.Logger.LogInfo("Syncing for client");
             FlySource.Play();
@@ -254,10 +253,10 @@ public class ShockwaveGalAI : GalAI
         base.Update();
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
-        if (galState == State.Inactive && ShockwaveCharger != null)
+        if (galState == State.Inactive && GalCharger != null)
         {
-            this.transform.position = ShockwaveCharger.transform.position;
-            this.transform.rotation = ShockwaveCharger.transform.rotation;
+            this.transform.position = GalCharger.transform.position;
+            this.transform.rotation = GalCharger.transform.rotation;
             return;
         }
         if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
@@ -279,7 +278,7 @@ public class ShockwaveGalAI : GalAI
     {
         if (StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase)
         {
-            ShockwaveCharger.ActivateGirlServerRpc(-1);
+            GalCharger.ActivateGirlServerRpc(-1);
             return;
         }
         if (Agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
@@ -378,12 +377,12 @@ public class ShockwaveGalAI : GalAI
             }
             else
             {
-                ShockwaveCharger.ActivateGirlServerRpc(-1);
+                GalCharger.ActivateGirlServerRpc(-1);
             }
         }
 
-        smartAgentNavigator.DoPathingToDestination(ShockwaveCharger.ChargeTransform.position, false, false, null);
-        if (Vector3.Distance(this.transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
+        smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position, false, false, null);
+        if (Vector3.Distance(this.transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
             if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
             {
@@ -448,7 +447,7 @@ public class ShockwaveGalAI : GalAI
         {
             if (isInHangarShipRoom)
             {
-                Vector3 targetPosition = ShockwaveCharger.ChargeTransform.position;
+                Vector3 targetPosition = GalCharger.ChargeTransform.position;
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
             }
@@ -458,9 +457,9 @@ public class ShockwaveGalAI : GalAI
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
             }
-            if (Vector3.Distance(transform.position, ShockwaveCharger.ChargeTransform.position) <= Agent.stoppingDistance)
+            if (Vector3.Distance(transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance)
             {
-                ShockwaveCharger.ActivateGirlServerRpc(-1);
+                GalCharger.ActivateGirlServerRpc(-1);
             }
             return;
         }

@@ -38,7 +38,6 @@ public class SeamineGalAI : GalAI
     private float hazardRevealTimer = 10f;
     private bool inHugAnimation = false;
     private bool huggingOwner = false;
-    [NonSerialized] public SeamineCharger SeamineCharger = null!;
     private bool ridingBruce = false;
     private State galState = State.Inactive;
     private bool jojoPosing = false;
@@ -74,17 +73,17 @@ public class SeamineGalAI : GalAI
         }
         SeamineCharger seamineCharger = seamineChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
         seamineCharger.GalAI = this;
-        this.SeamineCharger = seamineCharger;
+        GalCharger = seamineCharger;
         // Automatic activation if configured
         if (Plugin.ModConfig.ConfigSeamineTinkAutomatic.Value)
         {
-            StartCoroutine(SeamineCharger.ActivateGalAfterLand());
+            StartCoroutine(GalCharger.ActivateGalAfterLand());
         }
 
         // Adding listener for interaction trigger
         hugInteractTrigger.onInteract.AddListener(OnHugInteract);
         flashLightInteractTrigger.onInteract.AddListener(OnFlashLightInteract);
-        SeamineCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(SeamineCharger.OnActivateGal);
+        GalCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(GalCharger.OnActivateGal);
         pickable.IsLocked = false;
         StartCoroutine(CheckForNearbyEnemiesToOwner());
         StartCoroutine(UpdateRidingBruceSound());
@@ -178,10 +177,10 @@ public class SeamineGalAI : GalAI
     private void ResetToChargerStation(State state)
     {
         if (!IsServer) return;
-        if (Agent.enabled) Agent.Warp(SeamineCharger.ChargeTransform.position);
-        else transform.position = SeamineCharger.ChargeTransform.position;
-        transform.rotation = SeamineCharger.ChargeTransform.rotation;
-        HandleStateAnimationSpeedChanges(state);
+        if (Agent.enabled) Agent.Warp(GalCharger.ChargeTransform.position);
+        else transform.position = GalCharger.ChargeTransform.position;
+        transform.rotation = GalCharger.ChargeTransform.rotation;
+        HandleStateAnimationSpeedChangesServerRpc((int)state);
     }
 
     public override void DeactivateGal()
@@ -193,7 +192,7 @@ public class SeamineGalAI : GalAI
     private IEnumerator ResetSpeedBackToNormal()
     {
         jojoPosing = true;
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(2f);
         Animator.SetInteger(jojoAnimationInt, -1);
         jojoPosing = false;
     }
@@ -216,7 +215,7 @@ public class SeamineGalAI : GalAI
 
     private void SetIdleDefaultStateForEveryone()
     {
-        if (SeamineCharger == null)
+        if (GalCharger == null)
         {
             Plugin.Logger.LogInfo("Syncing for client");
             galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
@@ -243,9 +242,9 @@ public class SeamineGalAI : GalAI
         base.Update();
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
+
         if (inActive) return;
         StoppingDistanceUpdate();
-
         if (!IsHost) return;
         HostSideUpdate();
     }
@@ -261,7 +260,7 @@ public class SeamineGalAI : GalAI
     {
         if (StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.inShipPhase)
         {
-            SeamineCharger.ActivateGirlServerRpc(-1);
+            GalCharger.ActivateGirlServerRpc(-1);
             return;
         }
         if (Agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
