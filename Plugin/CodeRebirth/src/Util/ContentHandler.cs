@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
 using LethalLib.Extras;
@@ -62,12 +63,12 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
         foreach (var entry in spawnRateByLevelType)
         {
-            AnimationCurve animationCurve = CreateCurveFromString(entry.Value);
+            AnimationCurve animationCurve = CreateCurveFromString(entry.Value, prefab.name);
             MapObjects.RegisterMapObject(mapObjDef, entry.Key, (level) => animationCurve);
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
-            AnimationCurve animationCurve = CreateCurveFromString(entry.Value);
+            AnimationCurve animationCurve = CreateCurveFromString(entry.Value, prefab.name);
             MapObjects.RegisterMapObject(mapObjDef, Levels.LevelTypes.None, new string[] { entry.Key }, (level) => animationCurve);
         }
     }
@@ -196,7 +197,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         return [minWorthInt, maxWorthInt];
     }
 
-    public AnimationCurve CreateCurveFromString(string keyValuePairs)
+    public AnimationCurve CreateCurveFromString(string keyValuePairs, string nameOfThing)
     {
         // Split the input string into individual key-value pairs
         string[] pairs = keyValuePairs.Split(';').Select(s => s.Trim()).ToArray();
@@ -219,14 +220,18 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             string[] splitPair = pair.Split(',').Select(s => s.Trim()).ToArray();
             if (splitPair.Length == 2 &&
-                float.TryParse(splitPair[0], out float time) &&
-                float.TryParse(splitPair[1], out float value))
+                float.TryParse(splitPair[0], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float time) &&
+                float.TryParse(splitPair[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float value))
             {
                 keyframes.Add(new Keyframe(time, value));
             }
             else
             {
-                Plugin.Logger.LogError($"Invalid key:value pair format: {pair}");
+                Plugin.Logger.LogError($"Failed config for hazard: {nameOfThing}");
+                Plugin.Logger.LogError($"Split pair length: {splitPair.Length}");
+                Plugin.Logger.LogError($"Could parse first value: {float.TryParse(splitPair[0], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float key1)}, instead got: {key1}, with splitPair0 being: {splitPair[0]}");
+                Plugin.Logger.LogError($"Could parse second value: {float.TryParse(splitPair[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float value2)}, instead got: {value2}, with splitPair1 being: {splitPair[1]}");
+                Plugin.Logger.LogError($"Invalid key,value pair format: {pair}");
             }
         }
 

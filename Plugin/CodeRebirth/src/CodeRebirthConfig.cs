@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
     public ConfigEntry<bool> ConfigDontTargetFarEnemies { get; private set; }
     public ConfigEntry<bool> ConfigHazardsDeleteBodies { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerDisablesGal { get; private set; }
@@ -171,6 +172,10 @@ public class CodeRebirthConfig
                                             "Debug Mode | Enable Extended Logging",
                                             false,
                                             "Whether extended logging is enabled.");
+        ConfigRemoveInteriorFog = configFile.Bind("Debug Options",
+                                            "Debug Mode | Remove Interior Fog",
+                                            true,
+                                            "Whether zeekerss' horrible interior fog is removed.");
         #endregion
         #region Functional Microwave
         ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",

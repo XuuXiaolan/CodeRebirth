@@ -1,4 +1,9 @@
-# v0.8.2
+# v0.8.3
+
+- Fixed very rare config issue with the hazard curve stuff with non english systems(?) and added more error logging.
+- Readded config (true by default) to remove interior fog.
+
+## v0.8.2
 
 - Fixed gal being outside in orbit for late joining clients.
 - Fixed pathing issues with seamine gal if enemy is in an unreachable position.
