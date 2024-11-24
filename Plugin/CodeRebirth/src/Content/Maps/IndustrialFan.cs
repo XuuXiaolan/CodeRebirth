@@ -13,6 +13,11 @@ public class IndustrialFan : NetworkBehaviour
     public float suctionForce = 15f;
     public ParticleSystem redMistEffect = null!;
 
+    private void Start()
+    {
+        Plugin.ExtendedLogging("Industrial fan initialized");
+    }
+
     private void Update()
     {
         if (!IsServer) return;

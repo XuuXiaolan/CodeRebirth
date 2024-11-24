@@ -31,6 +31,7 @@ public class TeslaShock : NetworkBehaviour
 
     private void Start()
     {
+        Plugin.ExtendedLogging("Tesla Turret initialized");
         vfx.SetFloat("SpawnRate", 10f);
         teslaIdleAudioSource.clip = teslaSlowIdleSound;
         teslaIdleAudioSource.Stop();

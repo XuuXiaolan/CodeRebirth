@@ -32,6 +32,7 @@ public class LaserTurret : NetworkBehaviour
 
     private void Start()
     {
+        Plugin.ExtendedLogging("Laser Turret initialized");
         visualEffect.Play();
         originalImpactPositionZ = visualEffect.GetVector3(ImpactPosition).z;
         originalParticlesVelocityZ = visualEffect.GetVector3(ParticlesVelocity).z;

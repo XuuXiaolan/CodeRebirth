@@ -23,6 +23,11 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     private float flashTimer = 0f;
     private float cooldownTimer = 0f;
 
+    private void Start()
+    {
+        Plugin.ExtendedLogging("Flash Turret initialized");
+    }
+
     private void Update()
     {
         // Rotate turret towards player if triggered

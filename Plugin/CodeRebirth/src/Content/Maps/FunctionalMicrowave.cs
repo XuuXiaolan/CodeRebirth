@@ -38,6 +38,7 @@ public class FunctionalMicrowave : NetworkBehaviour
 
     private void Start()
     {
+        Plugin.ExtendedLogging("Functional Microwave initialized");
         microwaveClosing = microwaveClosingTimer;
         microwaveOpening = microwaveOpeningTimer;
         animator.SetBool("isActivated", isOpen);
