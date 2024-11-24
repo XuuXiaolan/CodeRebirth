@@ -262,11 +262,19 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         timeSinceHittingLocalPlayer -= Time.deltaTime;
     }
 
+    private float GetCurrentSpeedMultiplier()
+    {
+        return 0.7f;
+    }
+
     public override void DoAIInterval()
     {
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost) return;
-        
+
+        if (agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
+        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
+
         switch (currentBehaviourStateIndex)
         {
             case (int)State.Wandering:
