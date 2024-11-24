@@ -39,6 +39,15 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     [NonSerialized] public bool isSpawnInside = true;
     private System.Random enemyRandom = null!;
     private bool childCreated = false;
+    private static readonly int GuardingAnimation = Animator.StringToHash("isGuarding"); // bool
+    private static readonly int DeadAnimation = Animator.StringToHash("isDead"); // bool
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // float
+    private static readonly int RunningAnimation = Animator.StringToHash("isRunning"); // bool
+    private static readonly int WalkingAnimation = Animator.StringToHash("isWalking"); // bool
+    private static readonly int OnHitAnimation = Animator.StringToHash("onHit"); // trigger
+    private static readonly int MeleeAnimation = Animator.StringToHash("doMelee"); // trigger
+    private static readonly int SpecialMeleeAnimation = Animator.StringToHash("doSpecialMelee"); // trigger
+    private static readonly int StareAnimation = Animator.StringToHash("doStare"); // trigger
 
     public enum State
     {
