@@ -51,7 +51,6 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     public void BaseOutsideOrInsideStart()
     {
-
         var outsideNodePositions = new Vector3[RoundManager.Instance.outsideAINodes.Length];
         for (int i = 0; i < RoundManager.Instance.outsideAINodes.Length; i++)
         {
