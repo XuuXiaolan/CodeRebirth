@@ -1,4 +1,9 @@
-# v0.8.3
+# v0.8.4
+
+- Made the seamine gal scanner a LOT better, you can put down the pitch forks now.
+- Tried to fix automatic issues with gal.
+
+## v0.8.3
 
 - Fixed very rare config issue with the hazard curve stuff with non english systems(?) and added more error logging.
 - Readded config (true by default) to remove interior fog.
