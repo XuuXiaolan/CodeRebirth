@@ -15,14 +15,16 @@ public class Charger : NetworkBehaviour
 
     public IEnumerator ActivateGalAfterLand()
     {
+        if (!IsServer) yield break;
         while (true)
         {
             yield return new WaitUntil(() => TimeOfDay.Instance.normalizedTimeOfDay <= 0.12f && StartOfRound.Instance.shipHasLanded && !GalAI.Animator.GetBool("activated") && !StartOfRound.Instance.shipIsLeaving && !StartOfRound.Instance.inShipPhase && RoundManager.Instance.currentLevel.levelID != 3);
-            Plugin.Logger.LogInfo("Activating  Gal" + TimeOfDay.Instance.normalizedTimeOfDay);
+            Plugin.ExtendedLogging("Activating  Gal" + TimeOfDay.Instance.normalizedTimeOfDay);
             if (!GalAI.Animator.GetBool("activated"))
             {
-                PlayerControllerB closestPlayer = StartOfRound.Instance.allPlayerScripts.Where(p => p.isPlayerControlled).OrderBy(p => Vector3.Distance(transform.position, p.transform.position)).First();
-                GalAI.ActivateGal(closestPlayer);
+                PlayerControllerB closestPlayer = StartOfRound.Instance.allPlayerScripts.Where(p => p.isPlayerControlled && !p.isPlayerDead).OrderBy(p => Vector3.Distance(transform.position, p.transform.position)).First();
+                int playerIndex = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer);
+                ActivateGirlServerRpc(playerIndex);
             }
         }
     }

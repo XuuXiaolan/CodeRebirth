@@ -40,9 +40,9 @@ public class MeteorShower : CodeRebirthWeathers {
 	private float normalisedTimeToLeave = 1f;
 	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
 	readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
-	
-	private Random random = null!;
-	
+
+	[NonSerialized] public Random random = null!;
+
 	public static MeteorShower? Instance { get; private set; }
 	public static bool Active => Instance != null;
 	
@@ -69,8 +69,6 @@ public class MeteorShower : CodeRebirthWeathers {
 		SpawnOverheadVisualMeteors(random.NextInt(15, 45));
 		
 		if(!IsAuthority()) return; // Only run on the host.
-		random = new Random();
-
 		Direction[] directions = { Direction.Random, Direction.East, Direction.West, Direction.North, Direction.South };
         int index = random.NextInt(0, directions.Length-1);
         direction = directions[index];
@@ -125,7 +123,8 @@ public class MeteorShower : CodeRebirthWeathers {
         craters.Clear();
     }
 
-	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null) {
+	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null)
+	{
         Vector3 averageLocation = CalculateAverageLandNodePosition(nodes);
         Vector3 centralLocation = averageLocation + new Vector3(0, random.NextFloat(150, 200), 0);
 		for (int i = 0; i < amount; i++) {
