@@ -1,4 +1,12 @@
-# v0.8.4
+# v0.8.5
+
+- Buffed redwood giant's kick and jump actions.
+- Laser turret should perform a tiny bit better.
+- Crates should shoot up the same as for host and client now.
+- Completely fixed parenting and position issues with latejoin clients and other clients with the gals and their chargers.
+- Improved redwood giant search routine for clients.
+
+## v0.8.4
 
 - Made the seamine gal scanner a LOT better, you can put down the pitch forks now.
 - Tried to fix automatic issues with gal.
