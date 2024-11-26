@@ -67,6 +67,14 @@ public class ShockwaveGalAI : GalAI
         Happy = 3
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsServer) return;
+
+        NetworkObject.TrySetParent(GalCharger.transform, false);
+        ResetToChargerStation(galState, galEmotion);
+    }
     private void StartUpDelay()
     {
         ShockwaveCharger[] shockwaveChargers = FindObjectsByType<ShockwaveCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
@@ -94,7 +102,6 @@ public class ShockwaveGalAI : GalAI
             trigger.onInteract.AddListener(GrabItemInteract);
         }
         StartCoroutine(CheckForNearbyEnemiesToOwner());
-        ResetToChargerStation(galState, galEmotion);
     }
 
     public override void ActivateGal(PlayerControllerB owner)

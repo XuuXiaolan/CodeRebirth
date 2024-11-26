@@ -93,13 +93,4 @@ static class StartOfRoundPatch {
 		CodeRebirthSave.Current = new CodeRebirthSave(CodeRebirthSave.Current.FileName);
 		if(CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
 	}
-
-	[HarmonyPatch(nameof(StartOfRound.StartGame)), HarmonyPostfix]
-	static void StartGamePatch(StartOfRound __instance)
-	{
-		foreach (GalAI gal in GalAI.Instances)
-		{
-			gal.transform.SetParent(gal.GalCharger.transform, true);
-		}
-	}
 }

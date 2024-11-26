@@ -62,6 +62,15 @@ public class SeamineGalAI : GalAI
         AttackMode = 4,
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsServer) return;
+
+        NetworkObject.TrySetParent(GalCharger.transform, false);
+        ResetToChargerStation(galState);
+    }
+
     private void StartUpDelay()
     {
         SeamineCharger[] seamineChargers = FindObjectsByType<SeamineCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
@@ -87,7 +96,6 @@ public class SeamineGalAI : GalAI
         pickable.IsLocked = false;
         StartCoroutine(CheckForNearbyEnemiesToOwner());
         StartCoroutine(UpdateRidingBruceSound());
-        ResetToChargerStation(galState);
     }
 
     public void OnBeltInteract()
