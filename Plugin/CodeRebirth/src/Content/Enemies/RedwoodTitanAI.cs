@@ -490,8 +490,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (IsServer)
         {
             SetAnimatorMotionBools(chasing: false, walking: true);
+            smartAgentNavigator.StartSearchRoutine(transform.position, 50);
         }
-        smartAgentNavigator.StartSearchRoutine(transform.position, 50);
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
 
@@ -645,9 +645,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (IsServer)
         {
             SetAnimatorMotionBools(chasing: false, walking: true);
+            smartAgentNavigator.StartSearchRoutine(transform.position, 50);
         }
         Plugin.ExtendedLogging("Start Walking Around");
-        smartAgentNavigator.StartSearchRoutine(transform.position, 50);
         agent.speed = walkingSpeed;
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
