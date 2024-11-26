@@ -141,7 +141,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     private IEnumerator UpdateAudio()
     {
-        while (!isEnemyDead) {
+        while (!isEnemyDead)
+        {
             if (GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom)
             {
                 creatureSFX.volume = Plugin.ModConfig.ConfigRedwoodNormalVolume.Value * Plugin.ModConfig.ConfigRedwoodInShipVolume.Value;
@@ -154,7 +155,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
                 creatureSFXFar.volume = Plugin.ModConfig.ConfigRedwoodNormalVolume.Value;
                 creatureVoice.volume = Plugin.ModConfig.ConfigRedwoodNormalVolume.Value;
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1);
         }
     }
 

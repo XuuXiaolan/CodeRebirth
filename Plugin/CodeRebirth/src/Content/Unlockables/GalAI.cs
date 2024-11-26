@@ -52,6 +52,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     [NonSerialized] public System.Random galRandom = new();
     [NonSerialized] public bool isInHangarShipRoom = true;
     [NonSerialized] public bool inActive = true;
+    [NonSerialized] public bool doneOnce = false;
 
     public void OnEnable()
     {

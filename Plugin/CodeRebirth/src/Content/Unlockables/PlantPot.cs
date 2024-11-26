@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -36,11 +37,14 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     PlantPotData _data;
     
     // point to new data structure because i do not feel like changing it
-    public FruitType fruitType {
+    public FruitType fruitType
+    {
         get => _data.fruitType;
         set => _data.fruitType = value;
     }
-    public Stage stage {
+
+    public Stage stage
+    {
         get => _data.stage;
         set => _data.stage = value;
     }
@@ -49,10 +53,12 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     [NonSerialized] public bool grewThisOrbit = true;
     private System.Random random = new System.Random();
 
+    [NonSerialized] public static List<PlantPot> Instances = new();
     internal static int totalSpawnedPlantPots;
     int _thisPlantPotID;
     
-    public IEnumerator Start() {
+    public IEnumerator Start()
+    {
         yield return new WaitUntil(() => CodeRebirthUtils.Instance != null);
         
         _thisPlantPotID = totalSpawnedPlantPots;
@@ -71,7 +77,8 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         Plugin.ExtendedLogging($"stage: {_data.stage}");
         
         totalSpawnedPlantPots++;
-        
+        Instances.Add(this);
+
         random = new System.Random(StartOfRound.Instance.randomMapSeed);
         if (stage != Stage.Zero) enableList[(int)stage].SetActive(true);
         if (stage == Stage.Zero) 
@@ -172,6 +179,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     public override void OnNetworkDespawn() 
     {
         base.OnNetworkDespawn();
+        Instances.Remove(this);
         StopAllCoroutines();
     }
 }

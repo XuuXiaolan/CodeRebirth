@@ -74,8 +74,7 @@ static class StartOfRoundPatch {
 
 		Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
 	
-		var plantpots = GameObject.FindObjectsOfType<PlantPot>();
-		foreach (var plant in plantpots)
+		foreach (var plant in PlantPot.Instances)
 		{
 			plant.grewThisOrbit = false;
 		}
@@ -84,6 +83,11 @@ static class StartOfRoundPatch {
 		{
 			Plugin.ExtendedLogging("Disabling halloween fog");
 			if (RoundManager.Instance.indoorFog.gameObject.activeSelf) RoundManager.Instance.indoorFog.gameObject.SetActive(false);
+		}
+
+		foreach (var gal in GalAI.Instances)
+		{
+			gal.GalVoice.PlayOneShot(gal.IdleSounds[gal.galRandom.Next(0, gal.IdleSounds.Length)]);
 		}
 	}
 

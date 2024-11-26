@@ -75,10 +75,18 @@ public class ShockwaveGalAI : GalAI
         NetworkObject.TrySetParent(GalCharger.transform, false);
         ResetToChargerStation(galState, galEmotion);
     }
+
     private void StartUpDelay()
     {
-        ShockwaveCharger[] shockwaveChargers = FindObjectsByType<ShockwaveCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-        if (shockwaveChargers.Length <= 0)
+        List<ShockwaveCharger> shockwaveChargers = new();
+        foreach (var charger in Charger.Instances)
+        {
+            if (charger is ShockwaveCharger shockwaveCharger1)
+            {
+                shockwaveChargers.Add(shockwaveCharger1);
+            }
+        }
+        if (shockwaveChargers.Count <= 0)
         {
             if (IsServer) NetworkObject.Despawn();
             Plugin.Logger.LogError($"ShockwaveCharger not found in scene. ShockwaveGalAI will not be functional.");
@@ -232,8 +240,9 @@ public class ShockwaveGalAI : GalAI
 
     private void SetIdleDefaultStateForEveryone()
     {
-        if (GalCharger == null)
+        if (GalCharger == null || (IsServer && !doneOnce))
         {
+            doneOnce = true;
             Plugin.Logger.LogInfo("Syncing for client");
             FlySource.Play();
             galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);

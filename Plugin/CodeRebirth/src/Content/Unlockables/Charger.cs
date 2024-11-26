@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -12,6 +13,12 @@ public class Charger : NetworkBehaviour
     public Transform ChargeTransform = null!;
     public bool canActivateOnCompanyMoon;
     [NonSerialized] public GalAI GalAI = null!;
+    [NonSerialized] public static List<Charger> Instances = new();
+
+    public void Start()
+    {
+        Instances.Add(this);
+    }
 
     public IEnumerator ActivateGalAfterLand()
     {
@@ -57,5 +64,11 @@ public class Charger : NetworkBehaviour
     {
         if (index != -1) GalAI.ActivateGal(StartOfRound.Instance.allPlayerScripts[index]);
         else GalAI.DeactivateGal();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        Instances.Remove(this);
     }
 }

@@ -32,7 +32,7 @@ public class ShockwaveFaceController : MonoBehaviour
 
     private Material[] originalMaterials;
 
-    private void Start()
+    public void OnEnable()
     {
         controllerRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 32);
         FaceSkinnedMeshRenderer = ShockwaveGalAI.FaceSkinnedMeshRenderer;

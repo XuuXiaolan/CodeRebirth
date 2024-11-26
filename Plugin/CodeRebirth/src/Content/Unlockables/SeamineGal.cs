@@ -73,8 +73,15 @@ public class SeamineGalAI : GalAI
 
     private void StartUpDelay()
     {
-        SeamineCharger[] seamineChargers = FindObjectsByType<SeamineCharger>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-        if (seamineChargers.Length <= 0)
+        List<SeamineCharger> seamineChargers = new();
+        foreach (var charger in Charger.Instances)
+        {
+            if (charger is SeamineCharger seamineChargers1)
+            {
+                seamineChargers.Add(seamineChargers1);
+            }
+        }
+        if (seamineChargers.Count <= 0)
         {
             if (IsServer) NetworkObject.Despawn();
             Plugin.Logger.LogError($"SeamineCharger not found in scene. SeamineGalAI will not be functional.");
@@ -223,8 +230,9 @@ public class SeamineGalAI : GalAI
 
     private void SetIdleDefaultStateForEveryone()
     {
-        if (GalCharger == null)
+        if (GalCharger == null || (IsServer && !doneOnce))
         {
+            doneOnce = true;
             Plugin.Logger.LogInfo("Syncing for client");
             galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
             chargeCount = Plugin.ModConfig.ConfigSeamineTinkCharges.Value;
