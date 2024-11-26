@@ -80,6 +80,6 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		RegisterScrapWithConfig("", PlantPot.GoldenTomato, gScrapValues[0], gScrapValues[1]);
 		Plugin.samplePrefabs.Add("Golden Tomato", PlantPot.GoldenTomato);
 
-		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigPlantPotPrice.Value, StoreType.ShipUpgrade);
+		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigPlantPotPrice.Value, StoreType.Decor);
 	}
 }

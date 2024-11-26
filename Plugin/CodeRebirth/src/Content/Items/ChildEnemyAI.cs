@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
@@ -21,9 +22,12 @@ public class ChildEnemyAI : GrabbableObject
     [NonSerialized] public ParentEnemyAI parentEevee;
     [NonSerialized] public int health = 4;
     [NonSerialized] public bool mommyAlive = true;
-    [NonSerialized] public float friendShipMeter = 0f;
     [NonSerialized] public float[] friendShipMeterGoals = new float[3] { 0f, 20f, 50f };
+    [NonSerialized] public Dictionary<PlayerControllerB, float> friendShipMeterPlayers = new Dictionary<PlayerControllerB, float>();
     public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 1.5f;
+    private bool isSitting = false;
+    private float sittingTimer = 20f;
+    private float observationCheckTimer = 2f;
     private PlayerControllerB? nearbyPlayer = null;
     private static readonly int isChildDeadAnimation = Animator.StringToHash("isChildDead"); // bool
     private static readonly int childGrabbedAnimation = Animator.StringToHash("childGrabbed"); // bool
@@ -36,6 +40,7 @@ public class ChildEnemyAI : GrabbableObject
     private static readonly int doIdleGestureAnimation = Animator.StringToHash("doIdleGesture"); // trigger
     private static readonly int doSitGesture1Animation = Animator.StringToHash("doSitGesture1"); // trigger
     private static readonly int doSitGesture2Animation = Animator.StringToHash("doSitGesture2"); // trigger
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // float
     private State eeveeState = State.Spawning;
     private FriendState friendEeveeState = FriendState.Neutral;
 
@@ -70,23 +75,42 @@ public class ChildEnemyAI : GrabbableObject
     public override void EquipItem()
     {
         base.EquipItem();
+        HandleStateAnimationSpeedChangesServerRpc((int)State.Grabbed);
     }
 
     public override void DiscardItem()
     {
         base.DiscardItem();
+        // HandleStateAnimationSpeedChangesServerRpc((int)State.Scared);
     }
 
     public override void Update()
     {
         base.Update();
 
+        if (nearbyPlayer != null && (nearbyPlayer.isPlayerDead || !nearbyPlayer.isPlayerControlled || (nearbyPlayer.isInHangarShipRoom && playerHeldBy != nearbyPlayer)))
+        {
+            nearbyPlayer = null;
+        }
+        if (playerHeldBy != null && isHeld)
+        {
+            friendShipMeterPlayers[playerHeldBy] += Time.deltaTime * 2f;
+        }
+
         if (!IsServer) return;
         DoHostSideUpdate();
     }
 
+    private float GetCurrentMultiplierBoost()
+    {
+        if (isSitting) return 0f;
+        return 0.5f;
+    }
+
     private void DoHostSideUpdate()
     {
+        if (agent.enabled) animator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
+        smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentMultiplierBoost());
         switch (eeveeState)
         {
             case State.Spawning:
@@ -106,6 +130,12 @@ public class ChildEnemyAI : GrabbableObject
                 break;
         }
         HandleFriendShipMeter();
+
+        if (!isSitting && sittingTimer <= 0f)
+        {
+            animator.SetBool(isSittingAnimation, true);
+            sittingTimer = UnityEngine.Random.Range(20, 30);
+        }
     }
 
     private void DoSpawning()
@@ -115,17 +145,52 @@ public class ChildEnemyAI : GrabbableObject
 
     private void DoWandering()
     {
-        
+        if (!isSitting) sittingTimer -= Time.deltaTime;
+        observationCheckTimer -= Time.deltaTime;
+
+        if (observationCheckTimer > 0) return;
+        observationCheckTimer = 2f;
+        PlayerControllerB? playerToFollow = DetectNearbyPlayer();
+        if (playerToFollow != null)
+        {
+            SetTargetPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToFollow));
+            HandleStateAnimationSpeedChanges(State.FollowingPlayer);
+        }
+
+        foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
+        {
+            if (LineOfSightAvailable(enemy.transform))
+            {
+                HandleStateAnimationSpeedChanges(State.Scared);
+            }
+        }
     }
 
     private void DoFollowingPlayer()
     {
-        
+        if (nearbyPlayer == null)
+        {
+            SetTargetPlayerServerRpc(-1);
+            HandleStateAnimationSpeedChanges(State.Wandering);
+            return;
+        }
+        if (Vector3.Distance(transform.position, parentEevee.spawnTransform.position) <= 25f)
+        {
+            smartAgentNavigator.DoPathingToDestination(nearbyPlayer.transform.position, nearbyPlayer.isInsideFactory, true, nearbyPlayer);
+        }
+        else
+        {
+            smartAgentNavigator.DoPathingToDestination(parentEevee.spawnTransform.position, parentEevee.isSpawnInside, false, null);
+        }
     }
 
     private void DoScared()
     {
-
+        smartAgentNavigator.DoPathingToDestination(parentEevee.spawnTransform.position, parentEevee.isSpawnInside, false, null);
+        if (Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 5f)
+        {
+            
+        }
     }
 
     private void DoDancing()
@@ -151,33 +216,49 @@ public class ChildEnemyAI : GrabbableObject
 
     private void DoNeutralFriendShip()
     {
+        if (nearbyPlayer == null) return;
+        if (friendShipMeterPlayers[nearbyPlayer] >= friendShipMeterGoals[1])
+        {
+            SwitchFriendShipStateServerRpc((int)FriendState.Friendly);
+        }
     }
 
     private void DoFriendlyFriendShip()
     {
+        if (nearbyPlayer == null) return;
+        if (friendShipMeterPlayers[nearbyPlayer] >= friendShipMeterGoals[2])
+        {
+            SwitchFriendShipStateServerRpc((int)FriendState.Tamed);
+        }
     }
 
     private void DoTamedFriendShip()
     {
     }
 
-    private void DetectNearbyPlayer()
+    private PlayerControllerB? DetectNearbyPlayer()
     {
+        if (isHeld && playerHeldBy != null)
+        {
+            nearbyPlayer = playerHeldBy;
+            return nearbyPlayer;
+        }
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (LineOfSightAvailable(player))
+            if (LineOfSightAvailable(player.transform))
             {
                 nearbyPlayer = player;
-                return;
+                return nearbyPlayer;
             }
         }
+        return null;
     }
 
-    private bool LineOfSightAvailable(PlayerControllerB player)
+    private bool LineOfSightAvailable(Transform PlayerOrEnemy)
     {
-        float distanceToPlayer = Vector3.Distance(player.transform.position, this.transform.position);
+        float distanceToPlayer = Vector3.Distance(PlayerOrEnemy.position, this.transform.position);
         if (distanceToPlayer >= rangeOfDetection) return false;
-        if (Physics.Raycast(player.transform.position, (player.transform.position - this.transform.position).normalized, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("Terrain", "InteractableObject"), QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(PlayerOrEnemy.position, (PlayerOrEnemy.position - this.transform.position).normalized, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("Terrain", "InteractableObject"), QueryTriggerInteraction.Ignore))
         {
             return false;
         }
@@ -196,34 +277,51 @@ public class ChildEnemyAI : GrabbableObject
         switch (state)
         {
             case State.Spawning:
-                SetAnimatorBools(isWalking: false, isRunning: false, isScared: false, isSitting: true, isDancing: false, isGrabbed: false);
+                SetAnimatorBools(isWalking: false, isRunning: false, isScared: false, isDancing: false, isGrabbed: false);
                 break;
             case State.Wandering:
-                SetAnimatorBools(isWalking: true, isRunning: false, isScared: false, isSitting: false, isDancing: false, isGrabbed: false);
+                SetAnimatorBools(isWalking: true, isRunning: false, isScared: false, isDancing: false, isGrabbed: false);
                 break;
             case State.FollowingPlayer:
-                SetAnimatorBools(isWalking: true, isRunning: true, isScared: false, isSitting: false, isDancing: false, isGrabbed: false);
+                SetAnimatorBools(isWalking: true, isRunning: true, isScared: false, isDancing: false, isGrabbed: false);
                 break;
             case State.Scared:
-                SetAnimatorBools(isWalking: animator.GetBool(isWalkingAnimation), isRunning: animator.GetBool(isRunningAnimation), isScared: true, isSitting: false, isDancing: false, isGrabbed: animator.GetBool(childGrabbedAnimation));
+                SetAnimatorBools(isWalking: animator.GetBool(isWalkingAnimation), isRunning: animator.GetBool(isRunningAnimation), isScared: true, isDancing: false, isGrabbed: animator.GetBool(childGrabbedAnimation));
                 break;
             case State.Dancing:
-                SetAnimatorBools(isWalking: false, isRunning: false, isScared: false, isSitting: false, isDancing: true, isGrabbed: false);
+                SetAnimatorBools(isWalking: false, isRunning: false, isScared: false, isDancing: true, isGrabbed: false);
                 break;
             case State.Grabbed:
-                SetAnimatorBools(isWalking: false, isRunning: false, isScared: animator.GetBool(isScaredAnimation), isSitting: false, isDancing: false, isGrabbed: true);
+                SetAnimatorBools(isWalking: false, isRunning: false, isScared: animator.GetBool(isScaredAnimation), isDancing: false, isGrabbed: true);
                 break;
         }
     }
 
-    private void SetAnimatorBools(bool isWalking, bool isRunning, bool isScared, bool isSitting, bool isDancing, bool isGrabbed)
+    private void SetAnimatorBools(bool isWalking, bool isRunning, bool isScared, bool isDancing, bool isGrabbed)
     {
         animator.SetBool(isWalkingAnimation, isWalking);
         animator.SetBool(isRunningAnimation, isRunning);
         animator.SetBool(isScaredAnimation, isScared);
-        animator.SetBool(isSittingAnimation, isSitting);
         animator.SetBool(isDancingAnimation, isDancing);
         animator.SetBool(childGrabbedAnimation, isGrabbed);
+        animator.SetBool(isSittingAnimation, false);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SwitchFriendShipStateServerRpc(int state)
+    {
+        SwitchFriendShipStateClientRpc(state);
+    }
+
+    [ClientRpc]
+    private void SwitchFriendShipStateClientRpc(int state)
+    {
+        SwitchFriendShipState(state);
+    }
+
+    private void SwitchFriendShipState(int state)
+    {
+        friendEeveeState = (FriendState)state;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -241,31 +339,29 @@ public class ChildEnemyAI : GrabbableObject
     private void SwitchState(int state) // this is for everyone.
     {
         State stateToSwitchTo = (State)state;
-        if (state != -1)
+        if (state == -1) return;
+        switch (stateToSwitchTo)
         {
-            switch (stateToSwitchTo)
-            {
-                case State.Spawning:
-                    HandleStateSpawningChange();
-                    break;
-                case State.Wandering:
-                    HandleStateWanderingChange();
-                    break;
-                case State.FollowingPlayer:
-                    HandleStateFollowingPlayerChange();
-                    break;
-                case State.Scared:
-                    HandleStateScaredChange();
-                    break;
-                case State.Dancing:
-                    HandleStateDancingChange();
-                    break;
-                case State.Grabbed:
-                    HandleStateGrabbedChange();
-                    break;
-            }
-            eeveeState = stateToSwitchTo;
+            case State.Spawning:
+                HandleStateSpawningChange();
+                break;
+            case State.Wandering:
+                HandleStateWanderingChange();
+                break;
+            case State.FollowingPlayer:
+                HandleStateFollowingPlayerChange();
+                break;
+            case State.Scared:
+                HandleStateScaredChange();
+                break;
+            case State.Dancing:
+                HandleStateDancingChange();
+                break;
+            case State.Grabbed:
+                HandleStateGrabbedChange();
+                break;
         }
+        eeveeState = stateToSwitchTo;
     }
 
     private IEnumerator SwitchToStateAfterDelay(State state, float delay)
@@ -321,5 +417,22 @@ public class ChildEnemyAI : GrabbableObject
             smartAgentNavigator.ResetAllValues();
         }
         return true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetTargetPlayerServerRpc(int playerToFollowIndex)
+    {
+        SetTargetPlayerClientRpc(playerToFollowIndex);
+    }
+
+    [ClientRpc]
+    private void SetTargetPlayerClientRpc(int playerToFollowIndex)
+    {
+        if (playerToFollowIndex == -1)
+        {
+            nearbyPlayer = null;
+            return;
+        }
+        nearbyPlayer = StartOfRound.Instance.allPlayerScripts[playerToFollowIndex];
     }
 }

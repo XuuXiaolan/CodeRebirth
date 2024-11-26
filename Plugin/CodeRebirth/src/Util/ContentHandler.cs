@@ -190,7 +190,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         int maxWorthInt = -1;
         if (configParts.Length == 2)
         {
-            Plugin.ExtendedLogging("Changing item worth between " + configParts[0] + " and " + configParts[1]);
+            Plugin.ExtendedLogging(" [Scrap Worth] Changing item worth between " + configParts[0] + " and " + configParts[1]);
             minWorthInt = int.Parse(configParts[0]);
             maxWorthInt = int.Parse(configParts[1]);
         }
