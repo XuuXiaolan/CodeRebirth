@@ -247,16 +247,17 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         targetEnemy.transform.localScale = Vector3.Lerp(targetEnemy.transform.localScale, currentScale, Time.deltaTime);
     }
 
-    public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer)
+    public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer, Vector3 closestFootPosition)
     {
         if (kicking || jumping) return;
-        float distanceToClosestPlayer = Vector3.Distance(transform.position, closestPlayer.transform.position);
-        if (distanceToClosestPlayer <= 8f && UnityEngine.Random.Range(0f, 100f) <= 2.5f)
+        float distanceToClosestPlayer = Vector3.Distance(closestFootPosition, closestPlayer.transform.position);
+        float randomFloat = UnityEngine.Random.Range(0f, 100f);
+        if (distanceToClosestPlayer <= 16f && randomFloat <= 5f)
         {
             SetAnimatorMotionBools(chasing: false, walking: false);
             JumpInPlace();
         }
-        else if (distanceToClosestPlayer <= 16f && UnityEngine.Random.Range(0f, 100f) <= 2.5f && currentBehaviourStateIndex == (int)State.Wandering)
+        else if (distanceToClosestPlayer <= 16f && randomFloat <= 5f)
         {
             SetAnimatorMotionBools(chasing: false, walking: false);
             DoKickTargetPlayer(closestPlayer);
@@ -346,10 +347,27 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             return;
         } // Look for Giants
         PlayerControllerB closestPlayer = GetClosestPlayerToRedwood();
+        Vector3 closestFootPosition = GetClosestFootPositionToPlayer(closestPlayer);
         if (closestPlayer != null)
         {
-            DoFunnyThingWithNearestPlayer(closestPlayer);
+            DoFunnyThingWithNearestPlayer(closestPlayer, closestFootPosition);
         }
+    }
+
+    public Vector3 GetClosestFootPositionToPlayer(PlayerControllerB player)
+    {
+        float distanceToRightFoot = Vector3.Distance(CollisionFootR.transform.position, player.transform.position);
+        float distanceToLeftFoot = Vector3.Distance(CollisionFootL.transform.position, player.transform.position);
+        Vector3 closestFootPosition;
+        if (distanceToRightFoot > distanceToLeftFoot)
+        {
+            closestFootPosition = CollisionFootL.transform.position;
+        }
+        else
+        {
+            closestFootPosition = CollisionFootR.transform.position;
+        }
+        return closestFootPosition;
     }
 
     public IEnumerator SetSpeedForChasingGiant()
@@ -456,10 +474,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public IEnumerator EatTargetEnemy(EnemyAI targetEnemy)
     {
-        foreach (AudioSource audioSource in targetEnemy.GetComponents<AudioSource>())
-        {
-            audioSource.mute = true;
-        }
         foreach (AudioSource audioSource in targetEnemy.GetComponentsInChildren<AudioSource>())
         {
             audioSource.mute = true;
@@ -656,7 +670,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public void OnLandFromJump()
     { // AnimEvent
         var localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (Vector3.Distance(CollisionFootL.transform.position, localPlayer.transform.position) <= 10f || Vector3.Distance(CollisionFootR.transform.position, localPlayer.transform.position) <= 10f)
+        if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.isInHangarShipRoom) return;
+        if (Vector3.Distance(CollisionFootL.transform.position, localPlayer.transform.position) <= 20f || Vector3.Distance(CollisionFootR.transform.position, localPlayer.transform.position) <= 20f)
         {
             localPlayer.DamagePlayer(200, false, true, CauseOfDeath.Crushing, 0, false, localPlayer.velocityLastFrame);
             PlayMiscSoundsServerRpc(2);
