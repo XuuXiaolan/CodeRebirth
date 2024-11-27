@@ -1,4 +1,8 @@
-# v0.8.6
+# v0.8.7
+
+- Fixed redwood explosion.
+
+## v0.8.6
 
 - Fixed position desync of laser turret.
 

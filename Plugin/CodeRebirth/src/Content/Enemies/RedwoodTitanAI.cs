@@ -346,7 +346,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             StartCoroutine(SetSpeedForChasingGiant());
             return;
         } // Look for Giants
-        PlayerControllerB closestPlayer = GetClosestPlayerToRedwood();
+        PlayerControllerB? closestPlayer = GetClosestPlayerToRedwood();
+        if (closestPlayer == null) return;
         Vector3 closestFootPosition = GetClosestFootPositionToPlayer(closestPlayer);
         if (closestPlayer != null)
         {
@@ -423,7 +424,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         Plugin.ExtendedLogging($"Distance: {distanceFromEnemy} HP: {enemy.enemyHP}");
     }
 
-    public PlayerControllerB GetClosestPlayerToRedwood()
+    public PlayerControllerB? GetClosestPlayerToRedwood()
     {
         return StartOfRound.Instance.allPlayerScripts
             .Where(player => player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead)
