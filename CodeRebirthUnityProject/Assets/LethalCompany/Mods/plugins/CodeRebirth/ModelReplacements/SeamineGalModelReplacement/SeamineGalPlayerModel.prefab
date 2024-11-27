@@ -97,7 +97,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.274212
+      value: 6.2337155
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
@@ -107,7 +107,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -84.012985
+      value: 3.9086218
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
@@ -296,8 +296,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -3228815673668685190, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
+      propertyPath: m_Bones.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: -3228815673668685190, guid: dcaf6e97be2011c40b38d3f0275ff065,
+        type: 3}
       propertyPath: m_UpdateWhenOffscreen
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3228815673668685190, guid: dcaf6e97be2011c40b38d3f0275ff065,
+        type: 3}
+      propertyPath: m_Bones.Array.data[33]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: -3009515206518420959, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
@@ -322,17 +332,17 @@ PrefabInstance:
     - target: {fileID: -2928066888759363405, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.009630185
+      value: -0.003930274
       objectReference: {fileID: 0}
     - target: {fileID: -2928066888759363405, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.011329204
+      value: 0.011329194
       objectReference: {fileID: 0}
     - target: {fileID: -2928066888759363405, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.05211214
+      value: -0.0033212602
       objectReference: {fileID: 0}
     - target: {fileID: -2928066888759363405, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
@@ -646,8 +656,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6641163360038411175, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
+      propertyPath: m_Bones.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6641163360038411175, guid: dcaf6e97be2011c40b38d3f0275ff065,
+        type: 3}
       propertyPath: m_UpdateWhenOffscreen
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6641163360038411175, guid: dcaf6e97be2011c40b38d3f0275ff065,
+        type: 3}
+      propertyPath: m_Bones.Array.data[33]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7091992118999334881, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}
@@ -792,6 +812,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 904147583635268967, guid: dcaf6e97be2011c40b38d3f0275ff065, type: 3}
+    - {fileID: -8061148331809739702, guid: dcaf6e97be2011c40b38d3f0275ff065, type: 3}
+    - {fileID: 4429706857202778673, guid: dcaf6e97be2011c40b38d3f0275ff065, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2925241209770769142, guid: dcaf6e97be2011c40b38d3f0275ff065,
         type: 3}

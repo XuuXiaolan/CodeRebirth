@@ -42,21 +42,13 @@ public class LaserTurret : NetworkBehaviour
         originalDarkBeamScaleY = visualEffect.GetVector3(DarkBeamScale).y;
         originalElectricBeamScaleY = visualEffect.GetVector3(ElectricBeamScale).y;
         originalBeamCoreScaleY = visualEffect.GetVector3(BeamCoreScale).y;
-        StartCoroutine(StartDelay());
 
+        if (!IsServer) return;
         ValidateSpawnPosition();
-    }
-
-    private IEnumerator StartDelay()
-    {
-        System.Random random = new(StartOfRound.Instance.randomMapSeed + 85);
-        yield return new WaitForSeconds(random.NextFloat(0, 2));
-        started = true;
     }
 
     private void Update()
     {
-        if (!started) return;
         // Rotate the turret
         turretTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 

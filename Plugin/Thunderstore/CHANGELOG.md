@@ -1,4 +1,8 @@
-# v0.8.5
+# v0.8.6
+
+- Fixed position desync of laser turret.
+
+## v0.8.5
 
 - Buffed redwood giant's kick and jump actions.
 - Laser turret should perform a tiny bit better.
