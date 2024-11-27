@@ -16,6 +16,7 @@ body:
       options:
         - Thunderstore App
         - r2modman / r2mm
+        - Gale
         - Manual Download
         - "Friend told me to extract it"
       default: 1
@@ -51,8 +52,10 @@ body:
       label: Version
       description: What version of the game are you running?
       options:
-        - v49
-        - v45
+        - v68
+        - v64
+        - v55
+        - v50
       default: 0
     validations:
       required: true
