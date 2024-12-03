@@ -1,4 +1,8 @@
-# v0.8.8
+# v0.8.9
+
+- Added christmas texture for shockwave gal and seamine gal.
+
+## v0.8.8
 
 - Fixed icy hammer and made it have a 75% chance to slow.
 - Fixed microwave scrap not following microwave for clients (maybe).
