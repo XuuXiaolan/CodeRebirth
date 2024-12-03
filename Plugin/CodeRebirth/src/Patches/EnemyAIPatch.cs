@@ -8,7 +8,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Patches;
 static class EnemyAIPatch
 {
-    private static Dictionary<EnemyAI, float> speedOfEnemies = new Dictionary<EnemyAI, float>();
     private static Dictionary<EnemyAI, Coroutine> slowedEnemies = new Dictionary<EnemyAI, Coroutine>();
     private static System.Random enemyRandom = null;
 
@@ -31,20 +30,20 @@ static class EnemyAIPatch
 
     private static void EnemyAI_Update(On.EnemyAI.orig_Update orig, EnemyAI self)
     {
+        orig(self);
         if (slowedEnemies.ContainsKey(self) && slowedEnemies[self] != null)
         {
-            self.agent.speed = 0f;
+            self.agent.velocity = Vector3.zero;
         }
-        orig(self);
     }
 
     private static void EnemyAI_HitEnemy(On.EnemyAI.orig_HitEnemy orig, EnemyAI self, int force, PlayerControllerB playerWhoHit, bool playHitSFX, int hitID)
     {
         if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is IcyHammer)
-        {   
-            if (enemyRandom.NextFloat(0, 100) <= 25) {
+        {
+            if (enemyRandom.NextFloat(0, 100) <= 75f)
+            {
                 Plugin.ExtendedLogging("Slowed enemy");
-                if (!speedOfEnemies.ContainsKey(self)) speedOfEnemies[self] = self.agent.speed;
                 if (slowedEnemies.ContainsKey(self) && slowedEnemies[self] != null)
                 {
                     self.StopCoroutine(slowedEnemies[self]);
@@ -53,20 +52,19 @@ static class EnemyAIPatch
             }
         }
 
-        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is NaturesMace) {
+        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is NaturesMace)
+        {
             force = 0;
             self.enemyHP++;
             Plugin.ExtendedLogging($"Enemy HP: {self.enemyHP}");
         }
-        
+
         orig(self, force, playerWhoHit, playHitSFX, hitID);
     }
 
     private static IEnumerator DelayResetSpeed(EnemyAI self)
     {
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(4f);
         slowedEnemies.Remove(self);
-        self.agent.speed = speedOfEnemies[self];
-        speedOfEnemies.Remove(self);
     }
 }

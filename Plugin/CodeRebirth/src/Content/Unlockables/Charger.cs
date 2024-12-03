@@ -15,8 +15,9 @@ public class Charger : NetworkBehaviour
     [NonSerialized] public GalAI GalAI = null!;
     [NonSerialized] public static List<Charger> Instances = new();
 
-    public void Start()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         Instances.Add(this);
     }
 

@@ -43,7 +43,7 @@ public class IndustrialFanFrontCollider : NetworkBehaviour
                 Vector3 targetPosition = player.transform.position + (pushDirection * industrialFan.pushForce);
 
                 // Check if the target position is valid using a raycast or other collision checks
-                if (!Physics.Raycast(player.transform.position, pushDirection, industrialFan.pushForce, StartOfRound.Instance.collidersAndRoomMask))
+                if (!Physics.Raycast(player.transform.position, pushDirection, industrialFan.pushForce, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject", "Railing"), QueryTriggerInteraction.Ignore))
                 {
                     // Interpolate smoothly between the current position and the target position
                     player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, industrialFan.pushForce * Time.fixedDeltaTime);

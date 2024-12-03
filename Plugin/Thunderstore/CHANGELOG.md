@@ -1,4 +1,18 @@
-# v0.8.7
+# v0.8.8
+
+- Fixed icy hammer and made it have a 75% chance to slow.
+- Fixed microwave scrap not following microwave for clients (maybe).
+- Fan doesn't push you through railing now :<.
+- Added redwood spawning with breaking trees sometimes.
+- Fixed seamine gal dance anim.
+- Changed weights of all the weapons to be less and gave them a small sound when grabbing dropping etc.
+- Fixed hazard spawning for non host clients in debug mode.
+- Fixed item spawning value for microwave scrap.
+- Fixed wooden seed spawning (maybe).
+- Got rid of lineofsight check for seamine gal's explosion.
+- Fixed bug with gals where they'd disappear when lobby was reloaded.
+
+## v0.8.7
 
 - Fixed redwood explosion.
 

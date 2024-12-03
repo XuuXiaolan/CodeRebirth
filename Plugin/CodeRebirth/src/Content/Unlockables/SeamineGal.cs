@@ -225,7 +225,7 @@ public class SeamineGalAI : GalAI
 
     private void StoppingDistanceUpdate()
     {
-        Agent.stoppingDistance = galState == State.AttackMode ? 6f : 3f * (huggingOwner ? 0.33f : 1f);
+        Agent.stoppingDistance = galState == State.AttackMode ? 1f : 3f * (huggingOwner ? 0.33f : 1f);
     }
 
     private void SetIdleDefaultStateForEveryone()
@@ -565,17 +565,6 @@ public class SeamineGalAI : GalAI
                 if (enemyDetected != null && !enemyDetected.isEnemyDead)
                 {
                     // Ensure there's a line of sight from SeamineGalAI to the enemy
-                    Vector3 directionToEnemy = (enemyDetected.transform.position - transform.position).normalized;
-                    float distanceToEnemy = Vector3.Distance(transform.position, enemyDetected.transform.position);
-                    if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask , QueryTriggerInteraction.Ignore))
-                    {
-                        Plugin.ExtendedLogging("No line of sight to enemy: " + enemyDetected + "| This detected instead: " + hit.collider.name);
-                        if (enemyDetected is CentipedeAI)
-                        {
-                            if (!enemiesToKill.Contains(enemyDetected)) enemiesToKill.Add(enemyDetected);
-                        }
-                        continue;
-                    }
                     Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
                     if (!enemiesToKill.Contains(enemyDetected)) enemiesToKill.Add(enemyDetected);
                 }
@@ -591,7 +580,14 @@ public class SeamineGalAI : GalAI
             if (enemy == null || enemy.isEnemyDead || !enemy.IsOwner)
                 continue;
 
-            enemy.KillEnemyOnOwnerClient(true);
+            if (enemy.enemyType.canDie && !enemy.enemyType.destroyOnDeath)
+            {
+                enemy.KillEnemyOnOwnerClient();
+            }
+            else
+            {
+                enemy.KillEnemyOnOwnerClient(true);
+            }
         }
     }
 

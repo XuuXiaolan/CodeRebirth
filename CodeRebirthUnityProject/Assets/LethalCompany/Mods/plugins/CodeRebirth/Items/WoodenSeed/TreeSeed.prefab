@@ -205,7 +205,7 @@ MonoBehaviour:
   targetFloorPosition: {x: 0, y: 0, z: 0}
   startFallingPosition: {x: 0, y: 0, z: 0}
   floorYRot: 0
-  fallTime: 0
+  fallTime: 1
   hasHitGround: 0
   scrapValue: 0
   itemUsedUp: 0
@@ -214,7 +214,7 @@ MonoBehaviour:
   isBeingUsed: 0
   isInElevator: 0
   isInShipRoom: 0
-  isInFactory: 0
+  isInFactory: 1
   useCooldown: 0
   currentUseCooldown: 0
   itemProperties: {fileID: 11400000, guid: f3618b28ed9ebd64d8e7931efcf9e4a8, type: 2}
@@ -234,7 +234,7 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
-  fruitType: -1
+  fruitType: 0
 --- !u!114 &4272524571002665390
 MonoBehaviour:
   m_ObjectHideFlags: 0

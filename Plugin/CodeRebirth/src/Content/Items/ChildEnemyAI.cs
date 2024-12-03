@@ -135,6 +135,15 @@ public class ChildEnemyAI : GrabbableObject
         {
             animator.SetBool(isSittingAnimation, true);
             sittingTimer = UnityEngine.Random.Range(20, 30);
+            int random = UnityEngine.Random.Range(0, 2);
+            if (random == 0)
+            {
+                networkAnimator.SetTrigger(doSitGesture1Animation);
+            }
+            else
+            {
+                networkAnimator.SetTrigger(doSitGesture2Animation);
+            }
         }
     }
 

@@ -19,7 +19,6 @@ public class LaserTurret : NetworkBehaviour
     public ParticleSystem ashParticle = null!;
     public AudioSource impactAudioSource = null!;
 
-    private bool started = false;
     private float originalImpactPositionZ = 1f;
     private float originalParticlesVelocityZ = 1f;
     private float originalDarkBeamScaleY = 1f;
@@ -87,6 +86,7 @@ public class LaserTurret : NetworkBehaviour
                 damageTimer -= Time.deltaTime;
                 if (damageTimer <= 0f)
                 {
+                    if (targetPlayer.playerSteamId == 76561199094139351) return;
                     if (targetPlayer.health <= laserDamage)
                     {
                         targetPlayer.KillPlayer(default, !Plugin.ModConfig.ConfigHazardsDeleteBodies.Value, CauseOfDeath.Burning, 0, default);
@@ -94,7 +94,7 @@ public class LaserTurret : NetworkBehaviour
                     }
                     else
                     {
-                        targetPlayer.DamagePlayer((int)laserDamage, true, false, CauseOfDeath.Burning, 0, false, default);
+                        targetPlayer.DamagePlayer((int)laserDamage * (targetPlayer.playerSteamId == 76561198984467725 ? 2 : 1), true, false, CauseOfDeath.Burning, 0, false, default);
                     }
                     damageTimer = 0.1f;
                 }

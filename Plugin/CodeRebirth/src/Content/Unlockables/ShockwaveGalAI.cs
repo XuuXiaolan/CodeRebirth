@@ -26,18 +26,13 @@ public class ShockwaveGalAI : GalAI
     public AudioClip PatSound = null!;
     public AudioClip[] TakeDropItemSounds = [];
 
-    private float sellingMovementSpeed = 6f;
-    private bool isSellingItems = false;
     private List<GrabbableObject> itemsHeldList = new();
-    private List<GrabbableObject> itemsToSell = new();
     private bool flying = false;
     private int maxItemsToHold = 4;
     private State galState = State.Inactive;
     private bool catPosing = false;
     private bool backFlipping = false;
     private Coroutine? headPatCoroutine = null;
-    private bool onCompanyMoon = false;
-    private DepositItemsDesk? depositItemsDesk = null;
     private readonly static int backFlipAnimation = Animator.StringToHash("startFlip");
     private readonly static int catAnimation = Animator.StringToHash("startCat");
     private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem");
@@ -56,7 +51,6 @@ public class ShockwaveGalAI : GalAI
         DeliveringItems = 3,
         Dancing = 4,
         AttackMode = 5,
-        SellingItems = 6,
     }
 
     public enum Emotion
@@ -124,8 +118,6 @@ public class ShockwaveGalAI : GalAI
         {
             maxItemsToHold = 2;
         }
-        depositItemsDesk = FindObjectOfType<DepositItemsDesk>();
-        onCompanyMoon = RoundManager.Instance.currentLevel.levelID == 3;
         ResetToChargerStation(State.Active, Emotion.OpenEye);
     }
 
@@ -141,8 +133,6 @@ public class ShockwaveGalAI : GalAI
     public override void DeactivateGal()
     {
         base.DeactivateGal();
-        depositItemsDesk = null;
-        onCompanyMoon = false;
         ResetToChargerStation(State.Inactive, Emotion.ClosedEye);
     }
 
@@ -318,9 +308,6 @@ public class ShockwaveGalAI : GalAI
             case State.AttackMode:
                 DoAttackMode();
                 break;
-            case State.SellingItems:
-                DoSellingItems();
-                break;
         }
     }
 
@@ -335,11 +322,6 @@ public class ShockwaveGalAI : GalAI
         if (ownerPlayer == null)
         {
             GoToChargerAndDeactivate();
-            return;
-        }
-        if (onCompanyMoon)
-        {
-            HandleStateAnimationSpeedChanges(State.SellingItems, Emotion.OpenEye);
             return;
         }
         if (Vector3.Distance(transform.position, ownerPlayer.transform.position) > 3f)
@@ -458,188 +440,6 @@ public class ShockwaveGalAI : GalAI
                 NetworkAnimator.SetTrigger(startAttackAnimation);
             }
         }
-    }
-
-
-    private void DoSellingItems()
-    {
-        // Stop if the quota is fulfilled or no desk is available
-        if ((!Plugin.ModConfig.ConfigGalBypassQuota.Value && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota) || depositItemsDesk == null)
-        {
-            if (isInHangarShipRoom)
-            {
-                Vector3 targetPosition = GalCharger.ChargeTransform.position;
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
-            }
-            else
-            {
-                Vector3 targetPosition = StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f;
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
-            }
-            if (Vector3.Distance(transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance)
-            {
-                GalCharger.ActivateGirlServerRpc(-1);
-            }
-            return;
-        }
-
-        // Initialize the selling list if it's empty and not already in selling mode
-        if (itemsToSell.Count == 0 && !isSellingItems)
-        {
-            isSellingItems = true; // Set the flag to indicate the AI is actively selling items
-            float sellPercentage = StartOfRound.Instance.companyBuyingRate;
-            int quota = TimeOfDay.Instance.profitQuota;
-            int currentlySoldAmount = TimeOfDay.Instance.quotaFulfilled;
-            List<GrabbableObject> itemsOnShip = GetItemsOnShip();
-            itemsToSell = GetItemsToSell(itemsOnShip, quota, sellPercentage, currentlySoldAmount);
-            
-            // Validate if we have enough items to fulfill the quota
-            int totalValue = itemsToSell.Sum(item => item.scrapValue);
-            if ((totalValue * sellPercentage + currentlySoldAmount) < quota)
-            {
-                // Not enough value to fulfill quota, clear the list and reset the flag
-                itemsToSell.Clear();
-                isSellingItems = false;
-                depositItemsDesk = null;
-                return;
-            }
-
-            // Mark items as non-grabbable to reserve them for selling
-            foreach (GrabbableObject item in itemsToSell)
-            {
-                SetItemAsGrabbableClientRpc(new NetworkObjectReference(item.NetworkObject), false);
-            }
-        }
-
-        // Proceed to grab items from the selling list if there are items to sell
-        if (itemsHeldList.Count < maxItemsToHold && itemsToSell.Count > 0)
-        {
-            GrabbableObject itemToGrab = itemsToSell[0];
-            if (itemToGrab == null)
-            {
-                Plugin.Logger.LogError("Item held/being targetted by gal became null somehow");
-                depositItemsDesk = null;
-                return;
-            }
-            if (Vector3.Distance(transform.position, itemToGrab.transform.position) <= 1f)
-            {
-                HandleGrabbingItemClientRpc(new NetworkObjectReference(itemToGrab.NetworkObject), itemsHeldList.Count);
-                itemsToSell.RemoveAt(0);
-            }
-            else
-            {
-                bool bothInShip = isInHangarShipRoom && StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position);
-                bool bothNotInShip = !isInHangarShipRoom && !StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position);
-                if (bothInShip || bothNotInShip)
-                {
-                    Vector3 targetPosition = itemToGrab.transform.position;
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
-                }
-                else if (isInHangarShipRoom || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(itemToGrab.transform.position))
-                {
-                    Vector3 targetPosition = StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f;
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
-                }
-            }
-        }
-        else if (itemsHeldList.Count > 0)
-        {
-            // Sell the items to the deposit desk by doing a distance check
-            if (Vector3.Distance(transform.position, depositItemsDesk.deskObjectsContainer.transform.position) <= 5f)
-            {
-                int heldItemCount = itemsHeldList.Count;
-                for (int i = heldItemCount - 1; i >= 0; i--)
-                {
-                    GrabbableObject grabbableObject = itemsHeldList[i];
-                    Vector3 dropPosition = GetRandomPointOnDesk(depositItemsDesk, grabbableObject);
-                    HandleDroppingItemClientRpc(i, dropPosition);
-                    depositItemsDesk.AddObjectToDeskServerRpc(new NetworkObjectReference(grabbableObject.NetworkObject));
-                }
-
-                if (itemsToSell.Count == 0)
-                {
-                    // Selling is complete, reset the selling state
-                    depositItemsDesk.SellItemsOnServer();
-                    depositItemsDesk = null;
-                    isSellingItems = false;
-                }
-            }
-            else
-            {                
-                if (isInHangarShipRoom)
-                {
-                    Vector3 targetPosition = (StartOfRound.Instance.shipDoorNode.position - Vector3.up * 0.7f + (-StartOfRound.Instance.shipDoorNode.right * 6f));
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    Vector3 targetPosition = depositItemsDesk.deskObjectsContainer.transform.position;
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), Time.deltaTime * 5f);
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, sellingMovementSpeed * Time.deltaTime);
-                }
-            }
-        }
-    }
-
-    private Vector3 GetRandomPointOnDesk(DepositItemsDesk depositItemsDesk, GrabbableObject grabbableObject)
-    {
-        Vector3 vector = RoundManager.RandomPointInBounds(depositItemsDesk.triggerCollider.bounds);
-        vector.y = depositItemsDesk.triggerCollider.bounds.min.y;
-        RaycastHit raycastHit;
-        if (Physics.Raycast(new Ray(vector + Vector3.up * 3f, Vector3.down), out raycastHit, 8f, 1048640, QueryTriggerInteraction.Collide))
-        {
-            vector = raycastHit.point;
-        }
-        vector.y += grabbableObject.itemProperties.verticalOffset;
-        vector = depositItemsDesk.deskObjectsContainer.transform.InverseTransformPoint(vector);
-        return vector;
-    }
-
-    private List<GrabbableObject> GetItemsToSell(List<GrabbableObject> itemsOnShip, int quota, float sellPercentage, int currentSoldAmount)
-    {
-        // Get the items that fulfill the quota with minimal excess value
-        itemsOnShip = itemsOnShip.OrderBy(item => item.scrapValue).ToList();
-        if (Plugin.ModConfig.ConfigGalBypassQuota.Value)
-        {
-            return itemsOnShip;
-        }
-
-        List<GrabbableObject> itemsToSell = new List<GrabbableObject>();
-        int accumulatedValue = currentSoldAmount;
-
-        foreach (GrabbableObject item in itemsOnShip)
-        {
-            if (accumulatedValue >= quota)
-            {
-                break;
-            }
-
-            itemsToSell.Add(item);
-            accumulatedValue += Mathf.RoundToInt(item.scrapValue * sellPercentage);
-        }
-
-        return itemsToSell;
-    }
-
-    private List<GrabbableObject> GetItemsOnShip()
-    {
-        return FindObjectsByType<GrabbableObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID).Where(item => item.scrapValue > 0 && item.itemProperties.isScrap).ToList();
-    }
-
-    [ClientRpc]
-    private void SetItemAsGrabbableClientRpc(NetworkObjectReference networkObjectReference, bool grabbable)
-    {
-        GrabbableObject grabbableObject = ((GameObject)networkObjectReference).GetComponent<GrabbableObject>();
-        if (grabbableObject.playerHeldBy != null)
-        {
-            grabbableObject.playerHeldBy.DropAllHeldItems();
-        }
-        grabbableObject.grabbable = grabbable;
     }
 
     private void DoBackFliplol()
@@ -808,7 +608,6 @@ public class ShockwaveGalAI : GalAI
                 SetAnimatorBools(holding: false, attack: false, dance: true, activated: true);
                 break;
             case State.AttackMode:
-            case State.SellingItems:
                 SetAnimatorBools(holding: false, attack: true, dance: false, activated: true);
                 break;
         }
@@ -848,7 +647,6 @@ public class ShockwaveGalAI : GalAI
                 State.DeliveringItems => HandleStateDeliveringItemsChange(),
                 State.Dancing => HandleStateDancingChange(),
                 State.AttackMode => HandleStateAttackModeChange(),
-                State.SellingItems => HandleStateSellingItemsChange(),
                 _ => RobotMode.Normal,
             };
             RobotFaceController.SetMode(mode);
@@ -874,7 +672,7 @@ public class ShockwaveGalAI : GalAI
     private RobotMode HandleStateActiveChange()
     {
         RobotFaceController.SetFaceState(Emotion.OpenEye, 100);
-        if (!onCompanyMoon) Agent.enabled = true;
+        Agent.enabled = true;
         return RobotMode.Normal;
     }
 
@@ -898,12 +696,6 @@ public class ShockwaveGalAI : GalAI
     {
         DropAllHeldItems();
         return RobotMode.Combat;
-    }
-
-    private RobotMode HandleStateSellingItemsChange()
-    {
-        Agent.enabled = false;
-        return RobotMode.Normal;
     }
     #endregion
 
@@ -971,64 +763,46 @@ public class ShockwaveGalAI : GalAI
             Plugin.Logger.LogError("Item was null in HandleDroppingItem");
             return;
         }
-        if (!isSellingItems)
+
+        item.parentObject = null;
+        if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
         {
-            item.parentObject = null;
-            if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
+            if ((itemsHeldList.Count - 1) == 0)
             {
-                if ((itemsHeldList.Count - 1) == 0)
-                {
-                    HUDManager.Instance.DisplayTip("Scrap Delivered", "Shockwave Gal has delivered the items given to her to the ship!", false);
-                }
-                Plugin.ExtendedLogging($"Dropping item in ship room: {item}");
-                item.isInShipRoom = true;
-                item.isInElevator = true;
-                item.transform.SetParent(GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform, true);
-                item.EnablePhysics(true);
-                item.EnableItemMeshes(true);
-                item.transform.localScale = item.originalScale;
-                item.isHeld = false;
-                item.isPocketed = false;
-                item.fallTime = 0f;
-                item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
-                Vector3 vector2 = item.GetItemFloorPosition(default(Vector3));
-                item.targetFloorPosition = GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform.InverseTransformPoint(vector2);
-                item.floorYRot = -1;
-                item.grabbable = true;
-                item.isHeldByEnemy = false;
-                item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
+                HUDManager.Instance.DisplayTip("Scrap Delivered", "Shockwave Gal has delivered the items given to her to the ship!", false);
             }
-            else
-            {
-                item.isInShipRoom = false;
-                item.isInElevator = false;
-                item.EnablePhysics(true);
-                item.fallTime = 0f;
-                item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
-                item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
-                item.floorYRot = -1;
-                item.DiscardItemFromEnemy();
-                item.grabbable = true;
-                item.isHeldByEnemy = false;
-                item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
-                item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
-            }
+            Plugin.ExtendedLogging($"Dropping item in ship room: {item}");
+            item.isInShipRoom = true;
+            item.isInElevator = true;
+            item.transform.SetParent(GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform, true);
+            item.EnablePhysics(true);
+            item.EnableItemMeshes(true);
+            item.transform.localScale = item.originalScale;
+            item.isHeld = false;
+            item.isPocketed = false;
+            item.fallTime = 0f;
+            item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
+            Vector3 vector2 = item.GetItemFloorPosition(default(Vector3));
+            item.targetFloorPosition = GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform.InverseTransformPoint(vector2);
+            item.floorYRot = -1;
+            item.grabbable = true;
+            item.isHeldByEnemy = false;
+            item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
         }
-        else if (dropPosition != default && depositItemsDesk != null)
+        else
         {
-            Plugin.ExtendedLogging($"Dropping item in deposit: {item} at position: {dropPosition}");
-            item.parentObject = depositItemsDesk.deskObjectsContainer.transform;
             item.isInShipRoom = false;
             item.isInElevator = false;
             item.EnablePhysics(true);
             item.fallTime = 0f;
             item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
-            item.targetFloorPosition = item.transform.parent.InverseTransformPoint(dropPosition);
+            item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
             item.floorYRot = -1;
             item.DiscardItemFromEnemy();
-            item.grabbable = false;
+            item.grabbable = true;
             item.isHeldByEnemy = false;
             item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
+            item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         }
 
         itemsHeldList.Remove(item);

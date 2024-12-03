@@ -31,7 +31,8 @@ static class StartOfRoundPatch {
 	}
 
 	[HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
-	static void SaveCodeRebirthData() {
+	static void SaveCodeRebirthData()
+	{
 		if(CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
 	}
 	
@@ -39,13 +40,16 @@ static class StartOfRoundPatch {
 	{
 		if (StartOfRound.Instance.IsServer || StartOfRound.Instance.IsHost)
 		{
-			if (CodeRebirthUtils.Instance == null) {
+			if (CodeRebirthUtils.Instance == null)
+			{
 				GameObject utilsInstance = GameObject.Instantiate(Plugin.Assets.UtilsPrefab);
 				SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
 				utilsInstance.GetComponent<NetworkObject>().Spawn();
 				utilsInstance.AddComponent<CodeRebirthPlayerManager>();
 				Plugin.ExtendedLogging($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
-			} else {
+			}
+			else
+			{
 				Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");
 			}
 		}

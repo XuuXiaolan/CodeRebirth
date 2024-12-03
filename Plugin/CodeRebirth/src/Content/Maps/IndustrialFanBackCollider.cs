@@ -38,7 +38,17 @@ public class IndustrialFanBackCollider : NetworkBehaviour
             {
                 // Calculate the new position by interpolating between the player's current position and the fan's position
                 Vector3 targetPosition = industrialFan.fanTransform.position;
-                player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, industrialFan.suctionForce * Time.fixedDeltaTime);
+                Vector3 direction = (targetPosition - player.transform.position).normalized;
+                float step = industrialFan.suctionForce * Time.fixedDeltaTime;
+
+                if (Vector3.Distance(player.transform.position, targetPosition) > step)
+                {
+                    player.transform.position += direction * step;
+                }
+                else
+                {
+                    player.transform.position = targetPosition;
+                }
             }
         }
     }

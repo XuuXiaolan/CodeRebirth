@@ -8,6 +8,9 @@ using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util.Extensions;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using CodeRebirth.src.Content.Maps;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -15,6 +18,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public Material WireframeMaterial = null!;
     public Shader SeeThroughShader = null!;
 
+    [NonSerialized] public static List<EnemyType> EnemyTypes = new();
     private static Random random = null!;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
@@ -24,16 +28,69 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
+    public void SpawnHazardServerRpc(Vector3 position)
+    {
+        // Get a random prefab to spawn from the hazard prefabs list
+        GameObject prefabToSpawn = MapObjectHandler.hazardPrefabs[0];
+
+        // Remove the prefab from the list to prevent re-spawning it directly
+        MapObjectHandler.hazardPrefabs.RemoveAt(0);
+
+        // Get a random position on the NavMesh
+        NavMeshHit hit = default;
+        Vector3 positionToSpawn = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(position, 2f, hit);
+
+        // Instantiate a new instance of the prefab
+        GameObject spawnedObject = GameObject.Instantiate(prefabToSpawn, positionToSpawn, Quaternion.identity);
+        
+        // Align the object's up direction with the hit normal
+        spawnedObject.transform.up = hit.normal;
+
+        // Get the NetworkObject component and spawn it on the network
+        NetworkObject networkObject = spawnedObject.GetComponent<NetworkObject>();
+        if (networkObject != null)
+        {
+            networkObject.Spawn();
+        }
+        
+        // Optionally, you can re-add the prefab back to the list if needed
+        MapObjectHandler.hazardPrefabs.Add(prefabToSpawn);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SpawnEnemyServerRpc(Vector3 position, string enemyName)
+    {
+        if (position == Vector3.zero)
+        {
+            Plugin.Logger.LogError("Trying to spawn an enemy at Vector3.zero!");
+            return;
+        }
+
+        foreach (EnemyType enemyType in EnemyTypes)
+        {
+            Plugin.ExtendedLogging("Trying to spawn: " + enemyType.enemyName);
+            if (enemyType.enemyName == enemyName)
+            {
+                RoundManager.Instance.SpawnEnemyGameObject(position, -1, 0, enemyType);
+                return;
+            }
+        }
+        Plugin.Logger.LogError($"Couldn't find enemy of name '{enemyName}'!");
+    }
+
+    [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
     {
-        if (itemName == string.Empty) {
+        if (itemName == string.Empty)
+        {
             return;
         }
         Plugin.samplePrefabs.TryGetValue(itemName, out Item item);
         if (item == null)
         {
             // throw for stacktrace
-            throw new NullReferenceException($"'{itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
+            Plugin.Logger.LogError($"'{itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
+            return;
         }
         SpawnScrap(item, position, isQuest, defaultRotation, valueIncrease);
     }
@@ -54,7 +111,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
         GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
         go.GetComponent<NetworkObject>().Spawn();
-        int value = random.NextInt(item.minValue + valueIncrease, item.maxValue + valueIncrease);
+        int value = (int)(random.NextInt(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
         var scanNode = go.GetComponentInChildren<ScanNodeProperties>();
         scanNode.scrapValue = value;
         scanNode.subText = $"Value: ${value}";
