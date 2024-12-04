@@ -1,4 +1,10 @@
-# v0.8.9
+# v0.8.10
+
+- Actually added the seamine and shockwave gal christmas textures.
+- Fixed rare animation bug for seamine gal.
+- Increased range seamine gal needs to stop to explode at an enemy.
+
+## v0.8.9
 
 - Added christmas texture for shockwave gal and seamine gal.
 

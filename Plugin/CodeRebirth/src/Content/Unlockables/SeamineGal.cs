@@ -225,7 +225,7 @@ public class SeamineGalAI : GalAI
 
     private void StoppingDistanceUpdate()
     {
-        Agent.stoppingDistance = galState == State.AttackMode ? 1f : 3f * (huggingOwner ? 0.33f : 1f);
+        Agent.stoppingDistance = galState == State.AttackMode ? 2.5f : 3f * (huggingOwner ? 0.33f : 1f);
     }
 
     private void SetIdleDefaultStateForEveryone()
