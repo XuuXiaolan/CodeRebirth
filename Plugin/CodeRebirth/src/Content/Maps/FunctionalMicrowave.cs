@@ -78,6 +78,7 @@ public class FunctionalMicrowave : NetworkBehaviour
 
     private void Update()
     {
+        UpdateAudio();
         damageTimerDecrease -= Time.deltaTime;
         movingTimer -= Time.deltaTime;
         if (scrapSpawned != null && (scrapSpawned.isHeld || scrapSpawned.playerHeldBy != null))
@@ -131,6 +132,11 @@ public class FunctionalMicrowave : NetworkBehaviour
             agent.SetDestination(newDestination);
             newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
         }
+    }
+
+    private void UpdateAudio()
+    {
+        microwaveAudioSource.volume = Plugin.ModConfig.ConfigMicrowaveVolume.Value;
     }
 
     public void OnColliderEnter(Collider other)

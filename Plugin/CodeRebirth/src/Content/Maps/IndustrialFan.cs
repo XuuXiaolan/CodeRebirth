@@ -20,9 +20,15 @@ public class IndustrialFan : NetworkBehaviour
 
     private void Update()
     {
+        UpdateAudio();
         if (!IsServer) return;
         // Rotate the fan continuously
         fanTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+    }
+
+    private void UpdateAudio()
+    {
+        windAudioSource.volume = Plugin.ModConfig.ConfigIndustrialFanVolume.Value;
     }
 
     private void OnTriggerEnter(Collider other)

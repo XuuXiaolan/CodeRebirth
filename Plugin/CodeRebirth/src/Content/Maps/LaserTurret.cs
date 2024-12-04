@@ -1,5 +1,3 @@
-using System.Collections;
-using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -48,11 +46,17 @@ public class LaserTurret : NetworkBehaviour
 
     private void Update()
     {
+        UpdateAudio();
         // Rotate the turret
         turretTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 
         // Fire laser continuously
         FireLaser();
+    }
+
+    private void UpdateAudio()
+    {
+        impactAudioSource.volume = Plugin.ModConfig.ConfigLaserTurretVolume.Value;
     }
 
     private void FireLaser()

@@ -57,6 +57,7 @@ public class TeslaShock : NetworkBehaviour
 
     private void Update()
     {
+        UpdateAudio();
         if (targetPlayer != null) return;
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
@@ -68,6 +69,12 @@ public class TeslaShock : NetworkBehaviour
             StartCoroutine(ExplodePlayerAfterDelay(player));
             break;
         }
+    }
+
+    private void UpdateAudio()
+    {
+        teslaIdleAudioSource.volume = Plugin.ModConfig.ConfigTeslaShockVolume.Value;
+        teslaAudioSource.volume = Plugin.ModConfig.ConfigTeslaShockVolume.Value;
     }
 
     private void OnTriggerEnter(Collider other)

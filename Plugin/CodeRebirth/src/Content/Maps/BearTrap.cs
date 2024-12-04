@@ -67,6 +67,7 @@ public class BearTrap : NetworkBehaviour
     private void Update()
     {
         trapTrigger.interactable = isTriggered;
+        UpdateAudio();
         if (playerCaught != null)
         {
             float distanceToPlayer = Vector3.Distance(playerCaught.transform.position, this.transform.position);
@@ -80,6 +81,12 @@ public class BearTrap : NetworkBehaviour
         if (enemyCaught == null) return;
 
         enemyCaught.agent.speed = 0f;
+    }
+
+
+    private void UpdateAudio()
+    {
+        trapAudioSource.volume = Plugin.ModConfig.ConfigBearTrapVolume.Value;
     }
 
     private void OnTriggerEnter(Collider other)

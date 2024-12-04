@@ -52,6 +52,16 @@ public class AirControlUnit : NetworkBehaviour
             FireProjectile();
             fireTimer = fireRate;
         }
+        UpdateAudio();
+    }
+
+    private void UpdateAudio()
+    {
+        float volume = Plugin.ModConfig.ConfigACUVolume.Value;
+        ACUAudioSource.volume = volume;
+        ACUClickingAudioSource.volume = volume;
+        DetectPlayerAudioSound.volume = volume;
+        ACUTurnAudioSource.volume = volume;
     }
 
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)

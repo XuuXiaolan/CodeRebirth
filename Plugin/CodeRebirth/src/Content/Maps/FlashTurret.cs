@@ -30,6 +30,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
 
     private void Update()
     {
+        UpdateAudio();
         // Rotate turret towards player if triggered
         if (isTriggered && detectedPlayer != null)
         {
@@ -67,6 +68,11 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
         {
             cooldownTimer -= Time.deltaTime;
         }
+    }
+
+    private void UpdateAudio()
+    {
+        cameraAudioSource.volume = Plugin.ModConfig.ConfigFlashTurretVolume.Value;
     }
 
     public void OnNoiseDetected(Vector3 noisePosition, int noiseID)

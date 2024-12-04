@@ -143,6 +143,14 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigSeamineTinkEnemyBlacklist { get; private set; }
     public ConfigEntry<float> ConfigSeamineTinkRidingBruceVolume { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkAutomatic { get; private set; }
+    public ConfigEntry<float> ConfigMicrowaveVolume { get; private set; }
+    public ConfigEntry<float> ConfigBearTrapVolume { get; private set; }
+    public ConfigEntry<float> ConfigLaserTurretVolume { get; private set; }
+    public ConfigEntry<float> ConfigFlashTurretVolume { get; private set; }
+    public ConfigEntry<float> ConfigIndustrialFanVolume { get; private set; }
+    public ConfigEntry<float> ConfigTeslaShockVolume { get; private set; }
+    public ConfigEntry<float> ConfigACUVolume { get; private set; }
+
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -186,6 +194,10 @@ public class CodeRebirthConfig
                                             "Functional Microwave | SpawnWeight Curve",
                                             "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
                                             "The MoonName - CurveSpawnWeight for the hazard.");
+        ConfigMicrowaveVolume = configFile.Bind("FunctionalMicrowave Options",
+                                            "Functional Microwave | Volume",
+                                            1f,
+                                            "The volume of the Functional Microwave.");
         #endregion
         #region Bear Trap
         ConfigBearTrapEnabled = configFile.Bind("BearTrap Options",
@@ -200,6 +212,10 @@ public class CodeRebirthConfig
                                             "Bear Trap | Spawn Abundance",
                                             "Vanilla:10,Custom:10",
                                             "The MoonName:Number Spawn Abundance (where it will spawn between 0 and 10) of bear trap clusters to spawn per round (clusters means that theres 1 primary bear trap that spawns more (0 to 5) around it).");
+        ConfigBearTrapVolume = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Volume",
+                                            1f,
+                                            "The volume of the Bear Trap.");
         #endregion
         #region Laser Turret
         ConfigLaserTurretEnabled = configFile.Bind("LaserTurret Options",
@@ -210,6 +226,10 @@ public class CodeRebirthConfig
                                             "Laser Turret | SpawnWeight Curve",
                                             "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
                                             "The MoonName - CurveSpawnWeight for the LaserTurret.");
+        ConfigLaserTurretVolume = configFile.Bind("LaserTurret Options",
+                                            "Laser Turret | Volume",
+                                            1f,
+                                            "The volume of the Laser Turret.");
         #endregion
         #region Flash Turret
         ConfigFlashTurretEnabled = configFile.Bind("FlashTurret Options",
@@ -220,6 +240,10 @@ public class CodeRebirthConfig
                                             "Flash Turret | SpawnWeight Curve",
                                             "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 ",
                                             "The MoonName - CurveSpawnWeight for the FlashTurret.");
+        ConfigFlashTurretVolume = configFile.Bind("FlashTurret Options",
+                                            "Flash Turret | Volume",
+                                            1f,
+                                            "The volume of the Flash Turret.");
         #endregion
         #region Industrial Fan
         ConfigIndustrialFanEnabled = configFile.Bind("IndustrialFan Options",
@@ -230,6 +254,10 @@ public class CodeRebirthConfig
                                             "Industrial Fan | SpawnWeight Curve",
                                             "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
                                             "The MoonName - CurveSpawnWeight for the IndustrialFan.");
+        ConfigIndustrialFanVolume = configFile.Bind("IndustrialFan Options",
+                                            "Industrial Fan | Volume",
+                                            1f,
+                                            "The volume of the Industrial Fan.");
         #endregion
         #region Tesla Shock
         ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
@@ -240,6 +268,11 @@ public class CodeRebirthConfig
                                             "Tesla Shock | SpawnWeight Curve",
                                             "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
                                             "The MoonName - CurveSpawnWeight for the TeslaShock.");
+        ConfigTeslaShockVolume = configFile.Bind("TeslaShock Options",
+                                            "Tesla Shock | Volume",
+                                            1f,
+                                            "The volume of the Tesla Shock.");
+
         #endregion
         #region Air Control Unit
         ConfigAirControlUnitEnabled = configFile.Bind("AirControlUnit Options",
@@ -250,6 +283,10 @@ public class CodeRebirthConfig
                                             "Air Control Unit | SpawnWeight",
                                             "Vanilla:2,Custom:2,Titan:0,Olympus:2",
                                             "The MoonName:CurveSpawnWeight for the AirControlUnit.");
+        ConfigACUVolume = configFile.Bind("AirControlUnit Options",
+                                            "Air Control Unit | Volume",
+                                            1f,
+                                            "The volume of the Air Control Unit.");
         #endregion
         #region General
         ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",
