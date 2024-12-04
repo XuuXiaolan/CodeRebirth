@@ -60,8 +60,6 @@ public class AirControlUnit : NetworkBehaviour
         float volume = Plugin.ModConfig.ConfigACUVolume.Value;
         ACUAudioSource.volume = volume;
         ACUClickingAudioSource.volume = volume;
-        DetectPlayerAudioSound.volume = volume;
-        ACUTurnAudioSource.volume = volume;
     }
 
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
@@ -129,12 +127,12 @@ public class AirControlUnit : NetworkBehaviour
                 lastPlayerTargetted = playerControllerB;
                 if (ACUClickingAudioSource.clip == null)
                 {
-                    DetectPlayerAudioSound.volume = 1f;
+                    DetectPlayerAudioSound.volume = Plugin.ModConfig.ConfigACUVolume.Value;
                     ACUClickingAudioSource.Stop();
                     ACUClickingAudioSource.clip = ACUStartOrEndSound;
                     ACUClickingAudioSource.Play();
                 }
-                ACUTurnAudioSource.volume = 1f;
+                ACUTurnAudioSource.volume = Plugin.ModConfig.ConfigACUVolume.Value;
                 currentAngle = angle;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                 targetRotation.z = 0f;

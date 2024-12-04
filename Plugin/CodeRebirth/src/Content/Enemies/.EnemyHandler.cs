@@ -85,7 +85,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         [LoadFromBundle("LeafeonObj.asset")]
         public EnemyType LeafeonEnemyType { get; private set; } = null!;
 
-        [LoadFromBundle("EeveeObj.asset")]
+        [LoadFromBundle("ChildEeveeObj.asset")]
         public Item ChildEeveeItem { get; private set; } = null!;
     }
 
@@ -121,6 +121,13 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         {
             SnailCat = new SnailCatAssets("snailcatassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
+        }
+
+        if (true)
+        {
+            PokemonEnemies = new PokemonEnemyAssets("eeveelutionassets");
+            RegisterScrapWithConfig("", PokemonEnemies.ChildEeveeItem, -1, -1);
+            RegisterEnemyWithConfig("", PokemonEnemies.UmbreonEnemyType, null, null, 2, 1);
         }
     }
 }

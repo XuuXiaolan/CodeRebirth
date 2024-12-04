@@ -141,6 +141,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         childCreated = true;
         ChildEnemyAI _childEevee = ((GameObject)go).GetComponent<ChildEnemyAI>();
         _childEevee.mommyAlive = !isEnemyDead;
+        _childEevee.parentEevee = this;
         _childEevee.NetworkObject.OnSpawn(() => {
             childEevee = _childEevee;
             childEevee.transform.SetParent(StartOfRound.Instance.propsContainer, true);

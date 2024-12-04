@@ -1,8 +1,13 @@
-# v0.8.10
+# V0.8.11
+
+- Fixed ACUnit sound continuously playing.
+
+## v0.8.10
 
 - Actually added the seamine and shockwave gal christmas textures.
 - Fixed rare animation bug for seamine gal.
 - Increased range seamine gal needs to stop to explode at an enemy.
+- Added config for sounds of hazards.
 
 ## v0.8.9
 

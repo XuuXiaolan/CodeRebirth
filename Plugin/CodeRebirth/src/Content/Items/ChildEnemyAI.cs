@@ -64,10 +64,15 @@ public class ChildEnemyAI : GrabbableObject
     public override void Start()
     {
         base.Start();
+        fallTime = 0f;
         smartAgentNavigator.OnEnterOrExitElevator.AddListener(OnEnterOrExitElevator);
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         smartAgentNavigator.SetAllValues(parentEevee.isOutside);
-
+        isInFactory = !parentEevee.isOutside;
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        {
+            friendShipMeterPlayers.Add(player, 0f);
+        }
         if (!IsServer) return;
         HandleStateAnimationSpeedChanges(State.Spawning);
     }
@@ -84,10 +89,86 @@ public class ChildEnemyAI : GrabbableObject
         // HandleStateAnimationSpeedChangesServerRpc((int)State.Scared);
     }
 
+    private void BaseUpdate()
+    {
+        if (this.currentUseCooldown >= 0f)
+		{
+			this.currentUseCooldown -= Time.deltaTime;
+		}
+		if (base.IsOwner)
+		{
+			if (this.isBeingUsed && this.itemProperties.requiresBattery)
+			{
+				if (this.insertedBattery.charge > 0f)
+				{
+					if (!this.itemProperties.itemIsTrigger)
+					{
+						this.insertedBattery.charge -= Time.deltaTime / this.itemProperties.batteryUsage;
+					}
+				}
+				else if (!this.insertedBattery.empty)
+				{
+					this.insertedBattery.empty = true;
+					if (this.isBeingUsed)
+					{
+						Debug.Log("Use up batteries local");
+						this.isBeingUsed = false;
+						this.UseUpBatteries();
+						this.isSendingItemRPC++;
+						this.UseUpItemBatteriesServerRpc();
+					}
+				}
+			}
+			if (!this.wasOwnerLastFrame)
+			{
+				this.wasOwnerLastFrame = true;
+			}
+		}
+		else if (this.wasOwnerLastFrame)
+		{
+			this.wasOwnerLastFrame = false;
+		}
+		if (!this.isHeld && this.parentObject == null)
+		{
+			if (this.fallTime >= 1f)
+			{
+				if (!this.reachedFloorTarget)
+				{
+					if (!this.hasHitGround)
+					{
+						this.PlayDropSFX();
+						this.OnHitGround();
+					}
+					this.reachedFloorTarget = true;
+					if (this.floorYRot == -1)
+					{
+						base.transform.rotation = Quaternion.Euler(this.itemProperties.restingRotation.x, base.transform.eulerAngles.y, this.itemProperties.restingRotation.z);
+					}
+					else
+					{
+						base.transform.rotation = Quaternion.Euler(this.itemProperties.restingRotation.x, (float)(this.floorYRot + this.itemProperties.floorYOffset) + 90f, this.itemProperties.restingRotation.z);
+					}
+				}
+				base.transform.localPosition = this.targetFloorPosition;
+				return;
+			}
+			this.reachedFloorTarget = false;
+			if (base.transform.localPosition.y - this.targetFloorPosition.y < 0.05f && !this.hasHitGround)
+			{
+				this.PlayDropSFX();
+				this.OnHitGround();
+				return;
+			}
+		}
+		else if (this.isHeld || this.isHeldByEnemy)
+		{
+			this.reachedFloorTarget = false;
+		}
+    }
+
     public override void Update()
     {
-        base.Update();
-
+        BaseUpdate();
         if (nearbyPlayer != null && (nearbyPlayer.isPlayerDead || !nearbyPlayer.isPlayerControlled || (nearbyPlayer.isInHangarShipRoom && playerHeldBy != nearbyPlayer)))
         {
             nearbyPlayer = null;
@@ -349,6 +430,7 @@ public class ChildEnemyAI : GrabbableObject
     {
         State stateToSwitchTo = (State)state;
         if (state == -1) return;
+        smartAgentNavigator.StopSearchRoutine();
         switch (stateToSwitchTo)
         {
             case State.Spawning:
@@ -376,7 +458,7 @@ public class ChildEnemyAI : GrabbableObject
     private IEnumerator SwitchToStateAfterDelay(State state, float delay)
     {
         yield return new WaitForSeconds(delay);
-        HandleStateAnimationSpeedChanges(state);
+        if (IsServer) HandleStateAnimationSpeedChangesServerRpc((int)state);
     }
 
     #region State Changes
@@ -387,6 +469,7 @@ public class ChildEnemyAI : GrabbableObject
 
     private void HandleStateWanderingChange()
     {
+        if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 40);
     }
 
     private void HandleStateFollowingPlayerChange()
