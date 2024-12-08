@@ -1,4 +1,8 @@
-# v0.8.12
+# v0.8.13
+
+- Forgot to include bellcrabgal assets.
+
+## v0.8.12
 
 - Fixed shockwave gal textures for crismas.
 - Made some of wesley's interiors in toy store scan for hazards properly like the cake and stuff.

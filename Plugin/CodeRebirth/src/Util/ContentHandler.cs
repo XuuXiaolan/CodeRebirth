@@ -63,12 +63,12 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
         foreach (var entry in spawnRateByLevelType)
         {
-            AnimationCurve animationCurve = CreateCurveFromString(entry.Value, prefab.name);
+            AnimationCurve animationCurve = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
             MapObjects.RegisterMapObject(mapObjDef, entry.Key, (level) => animationCurve);
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
-            AnimationCurve animationCurve = CreateCurveFromString(entry.Value, prefab.name);
+            AnimationCurve animationCurve = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
             MapObjects.RegisterMapObject(mapObjDef, Levels.LevelTypes.None, new string[] { entry.Key }, (level) => animationCurve);
         }
     }
@@ -197,9 +197,10 @@ public class ContentHandler<T> where T: ContentHandler<T>
         return [minWorthInt, maxWorthInt];
     }
 
-    public AnimationCurve CreateCurveFromString(string keyValuePairs, string nameOfThing)
+    public AnimationCurve CreateCurveFromString(string keyValuePairs, string nameOfThing, string MoonName)
     {
         // Split the input string into individual key-value pairs
+        Plugin.ExtendedLogging($"Creating curve for {nameOfThing} on moon {MoonName} with key-value pairs: {keyValuePairs}");
         string[] pairs = keyValuePairs.Split(';').Select(s => s.Trim()).ToArray();
         if (pairs.Length == 0)
         {
@@ -223,6 +224,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 float.TryParse(splitPair[0], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float time) &&
                 float.TryParse(splitPair[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float value))
             {
+                Plugin.ExtendedLogging($"Adding keyframe for {nameOfThing} at time {time} with value {value}");
                 keyframes.Add(new Keyframe(time, value));
             }
             else
@@ -237,10 +239,10 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
         // Create the animation curve with the generated keyframes and apply smoothing
         var curve = new AnimationCurve(keyframes.ToArray());
-        for (int i = 0; i < keyframes.Count; i++)
+        /*for (int i = 0; i < keyframes.Count; i++)
         {
             curve.SmoothTangents(i, 0.5f); // Adjust the smoothing as necessary
-        }
+        }*/
 
         return curve;
     }
