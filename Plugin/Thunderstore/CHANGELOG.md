@@ -1,4 +1,13 @@
-# V0.8.11
+# v0.8.12
+
+- Fixed shockwave gal textures for crismas.
+- Made some of wesley's interiors in toy store scan for hazards properly like the cake and stuff.
+- Made spikerooftrap on hazard layer so seamine gal scans it.
+- Added bellcrab gal (she's purely decor with some luck value added).
+- Fixed bugs with seamine and shockwave hug and pat bug with doing it after directly getting out of charger.
+- Added config for seamine gal only owner sees scan results.
+
+## v0.8.11
 
 - Fixed ACUnit sound continuously playing.
 

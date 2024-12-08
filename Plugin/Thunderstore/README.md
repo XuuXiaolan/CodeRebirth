@@ -29,7 +29,7 @@ If you're interested in helping with the development of the mod, feel free to re
 - This follows how vanilla spawns hazards on moons accurately, where vanilla generates a number between 0 and 1 and assigns it to the `X-axis`.
 - Using that X-axis value, it picks the corresponding Y-value, rounds it to an integer and spawns that amount of hazards.
 - It's done as a curve so that, depending on luck, you can have days where you spawn almost no hazards and on some days you have `Microwave Hell`, similar to some moons' `Turret Hell` rare occurance.
-- Tool for visualising and creating curves easily will be coming soon...
+- Tool for visualising and creating curves easily <https://cosmobrain0.github.io/graph-generation/>.
 
 ## Preview (Spoilers ahead!)
 

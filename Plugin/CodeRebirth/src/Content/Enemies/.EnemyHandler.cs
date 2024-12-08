@@ -123,11 +123,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
         }
 
-        if (true)
+        if (false)
         {
             PokemonEnemies = new PokemonEnemyAssets("eeveelutionassets");
             RegisterScrapWithConfig("", PokemonEnemies.ChildEeveeItem, -1, -1);
             RegisterEnemyWithConfig("", PokemonEnemies.UmbreonEnemyType, null, null, 2, 1);
+            RegisterEnemyWithConfig("", PokemonEnemies.VaporeonEnemyType, null, null, 2, 1);
         }
     }
 }

@@ -9,6 +9,7 @@ using WeatherRegistry;
 using CodeRebirth.src.Util.Extensions;
 using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
+using System.Linq;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -65,8 +66,10 @@ static class StartOfRoundPatch {
 		var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 		int FoundObject = 0;
 		LayerMask layerMask = LayerMask.NameToLayer("Foliage");
+		Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
 		foreach (var item in objs)
 		{
+			HandleWesleyChangesCuzHeIsStupid(item);
 			if (item.layer == layerMask)
 			{
 				item.AddComponent<BoxCollider>().isTrigger = true;
@@ -92,6 +95,16 @@ static class StartOfRoundPatch {
 		foreach (var gal in GalAI.Instances)
 		{
 			gal.GalVoice.PlayOneShot(gal.IdleSounds[gal.galRandom.Next(0, gal.IdleSounds.Length)]);
+		}
+	}
+
+	public static void HandleWesleyChangesCuzHeIsStupid(GameObject gameObject)
+	{
+		string[] stringsToCompare = ["GunBarrel", "GunBarrel (9)", "Cake", "Cake 0", "Cake (1)", "Cake (2)", "Cake (3)", "coilmesh", "MaskMesh", "MaskMesh (1)"];
+		if (stringsToCompare.Contains(gameObject.name) && gameObject.GetComponent<MeshRenderer>() != null && gameObject.layer != 21 && gameObject.layer != 19)
+		{
+			Plugin.ExtendedLogging("Changing layer of " + gameObject.name + "To layer MapHazards (21)");
+			gameObject.layer = 21;
 		}
 	}
 

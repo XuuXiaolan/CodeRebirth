@@ -43,6 +43,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public GameObject SeamineGalPrefab { get; private set; } = null!;
 	}
 
+	public class BellCrabAssets(string bundleName) : AssetBundleLoader<BellCrabAssets>(bundleName)
+	{
+		[LoadFromBundle("BellCrabUnlockable.asset")]
+		public UnlockableItemDef BellCrabUnlockable { get; private set; } = null!;
+	}
+
+	public BellCrabAssets BellCrab { get; private set; } = null!;
 	public SeamineTinkAssets SeamineTink { get; private set; } = null!;
 	public PlantPotAssets PlantPot { get; private set; } = null!;
 	public ShockwaveBotAssets ShockwaveBot { get; private set; } = null!;
@@ -52,6 +59,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		if (Plugin.ModConfig.ConfigShockwaveBotEnabled.Value) RegisterShockWaveGal();
 		if (Plugin.ModConfig.ConfigFarmingEnabled.Value) RegisterPlantPot();
 		if (Plugin.ModConfig.ConfigSeamineTinkEnabled.Value) RegisterSeamineTink();
+		if (Plugin.ModConfig.ConfigBellCrabGalEnabled.Value) RegisterBellCrab();
+	}
+
+	private void RegisterBellCrab()
+	{
+		BellCrab = new BellCrabAssets("bellcrabgalassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(BellCrab.BellCrabUnlockable, Plugin.ModConfig.ConfigBellCrabGalCost.Value, StoreType.ShipUpgrade);
 	}
 
     private void RegisterShockWaveGal()

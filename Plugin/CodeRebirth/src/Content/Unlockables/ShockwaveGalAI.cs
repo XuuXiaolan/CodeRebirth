@@ -324,7 +324,7 @@ public class ShockwaveGalAI : GalAI
             GoToChargerAndDeactivate();
             return;
         }
-        if (Vector3.Distance(transform.position, ownerPlayer.transform.position) > 3f)
+        else
         {
             HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
         }

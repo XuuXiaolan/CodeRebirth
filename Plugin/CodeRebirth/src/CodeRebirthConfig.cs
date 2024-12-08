@@ -46,6 +46,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigBellCrabGalEnabled { get; private set; }
     #endregion
     #region Spawn Weights
     public ConfigEntry<string> ConfigWoodenSeedSpawnWeights { get; private set; }
@@ -106,6 +107,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<bool> ConfigOnlyOwnerSeesScanEffects { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCharges { get; private set; }
     public ConfigEntry<float> ConfigWoodenSeedTreeSpawnChance { get; private set; }
     public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
@@ -150,7 +152,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigIndustrialFanVolume { get; private set; }
     public ConfigEntry<float> ConfigTeslaShockVolume { get; private set; }
     public ConfigEntry<float> ConfigACUVolume { get; private set; }
-
+    public ConfigEntry<int> ConfigBellCrabGalCost { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -375,10 +377,26 @@ public class CodeRebirthConfig
                                             "Seamine Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Seamine Gal will automatically wake up and choose the nearest player as the owner.");
+        ConfigOnlyOwnerSeesScanEffects = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Only Owner Sees Scan Effects",
+                                            false,
+                                            "Whether only the owner of the Seamine Gal can see the scan effects.");
         ConfigSeamineTinkPlayerModelEnabled = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Player Model",
                                             true,
                                             "Whether the Seamine Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
+        #endregion
+        #region Bell Crab Gal
+        ConfigBellCrabGalEnabled = configFile.Bind("Bell Crab Options",
+                                            "Bell Crab Gal | Enabled",
+                                            true,
+                                            "Whether the Bell Crab Gal is enabled.");
+        ConfigBellCrabGalCost = configFile.Bind("Bell Crab Options",
+                                            "Bell Crab Gal | Cost",
+                                            250,
+                                            "Cost of the Bell Crab Gal.");
+        #endregion
+        #region SCP 999 Gal
         #endregion
         #region Biomes
         ConfigBiomesEnabled = configFile.Bind("Biome Options",

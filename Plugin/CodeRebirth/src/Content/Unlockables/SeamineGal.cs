@@ -313,7 +313,7 @@ public class SeamineGalAI : GalAI
             GoToChargerAndDeactivate();
             return;
         }
-        if (Vector3.Distance(transform.position, ownerPlayer.transform.position) > 3f)
+        else
         {
             HandleStateAnimationSpeedChanges(State.FollowingPlayer);
         }
@@ -425,6 +425,7 @@ public class SeamineGalAI : GalAI
     {
         // plays the visual effect from gabriel
         GalVoice.PlayOneShot(hazardPingSound);
+        if (Plugin.ModConfig.ConfigOnlyOwnerSeesScanEffects.Value && GameNetworkManager.Instance.localPlayerController != ownerPlayer) return;
         ParticleSystem particleSystem = DoTerrainScan();
         particleSystem.gameObject.transform.parent.gameObject.SetActive(true);
         if (customPassRoutines.Count <= 0)

@@ -140,10 +140,10 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     {
         childCreated = true;
         ChildEnemyAI _childEevee = ((GameObject)go).GetComponent<ChildEnemyAI>();
+        childEevee = _childEevee;
         _childEevee.mommyAlive = !isEnemyDead;
         _childEevee.parentEevee = this;
         _childEevee.NetworkObject.OnSpawn(() => {
-            childEevee = _childEevee;
             childEevee.transform.SetParent(StartOfRound.Instance.propsContainer, true);
             Plugin.ExtendedLogging($"Spawned eevee: {this.transform.position}");
         });
@@ -165,26 +165,26 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
                 SetAnimatorBools(false, false, false, false);
                 break;
             case State.Wandering:
-                SetAnimatorBools(false, false, false, false);
+                SetAnimatorBools(true, false, false, false);
                 break;
             case State.Guarding:
-                SetAnimatorBools(false, false, false, false);
+                SetAnimatorBools(false, false, true, false);
                 break;
             case State.ChasingPlayer:
-                SetAnimatorBools(false, false, false, false);
+                SetAnimatorBools(true, true, false, false);
                 break;
             case State.Death:
-                SetAnimatorBools(false, false, false, false);
+                SetAnimatorBools(false, false, false, true);
                 break;
         }
     }
 
-    private void SetAnimatorBools(bool holding, bool attack, bool dance, bool activated)
+    private void SetAnimatorBools(bool walking, bool running, bool guarding, bool dead)
     {
-        creatureAnimator.SetBool("", holding);
-        creatureAnimator.SetBool("", attack);
-        creatureAnimator.SetBool("", dance);
-        creatureAnimator.SetBool("", activated);
+        creatureAnimator.SetBool(WalkingAnimation, walking);
+        creatureAnimator.SetBool(RunningAnimation, running);
+        creatureAnimator.SetBool(GuardingAnimation, guarding);
+        creatureAnimator.SetBool(DeadAnimation, dead);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -246,6 +246,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     private void HandleStateChasingPlayerChange()
     {
+        agent.speed = SprintingSpeed;
         smartAgentNavigator.StopSearchRoutine();
     }
 
@@ -263,17 +264,11 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         timeSinceHittingLocalPlayer -= Time.deltaTime;
     }
 
-    private float GetCurrentSpeedMultiplier()
-    {
-        return 0.7f;
-    }
-
     public override void DoAIInterval()
     {
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost) return;
 
-        if (agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
 
         switch (currentBehaviourStateIndex)

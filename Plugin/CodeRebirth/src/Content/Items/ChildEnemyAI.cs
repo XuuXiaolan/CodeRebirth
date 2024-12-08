@@ -25,6 +25,8 @@ public class ChildEnemyAI : GrabbableObject
     [NonSerialized] public float[] friendShipMeterGoals = new float[3] { 0f, 20f, 50f };
     [NonSerialized] public Dictionary<PlayerControllerB, float> friendShipMeterPlayers = new Dictionary<PlayerControllerB, float>();
     public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 1.5f;
+    private bool isScared = false;
+    private bool isRunning = false;
     private bool isSitting = false;
     private float sittingTimer = 20f;
     private float observationCheckTimer = 2f;
@@ -86,7 +88,14 @@ public class ChildEnemyAI : GrabbableObject
     public override void DiscardItem()
     {
         base.DiscardItem();
-        // HandleStateAnimationSpeedChangesServerRpc((int)State.Scared);
+        if (isScared)
+        {
+            HandleStateAnimationSpeedChangesServerRpc((int)State.Scared);
+        }
+        else
+        {
+            HandleStateAnimationSpeedChangesServerRpc((int)State.Wandering);
+        }
     }
 
     private void BaseUpdate()
@@ -185,13 +194,18 @@ public class ChildEnemyAI : GrabbableObject
     private float GetCurrentMultiplierBoost()
     {
         if (isSitting) return 0f;
-        return 0.5f;
+        if (isScared) return 2f;
+        if (isRunning) return 2f;
+        return 1f;
     }
 
     private void DoHostSideUpdate()
     {
-        if (agent.enabled) animator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
-        smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentMultiplierBoost());
+        if (agent.enabled)
+        {
+            animator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
+            agent.speed = 4f * GetCurrentMultiplierBoost();
+        }
         switch (eeveeState)
         {
             case State.Spawning:
@@ -249,6 +263,7 @@ public class ChildEnemyAI : GrabbableObject
 
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
+            if (enemy is ParentEnemyAI) continue;
             if (LineOfSightAvailable(enemy.transform))
             {
                 HandleStateAnimationSpeedChanges(State.Scared);
@@ -376,22 +391,25 @@ public class ChildEnemyAI : GrabbableObject
                 SetAnimatorBools(isWalking: true, isRunning: true, isScared: false, isDancing: false, isGrabbed: false);
                 break;
             case State.Scared:
-                SetAnimatorBools(isWalking: animator.GetBool(isWalkingAnimation), isRunning: animator.GetBool(isRunningAnimation), isScared: true, isDancing: false, isGrabbed: animator.GetBool(childGrabbedAnimation));
+                SetAnimatorBools(isWalking: animator.GetBool(isWalkingAnimation), isRunning: this.isRunning, isScared: true, isDancing: false, isGrabbed: isHeld);
                 break;
             case State.Dancing:
                 SetAnimatorBools(isWalking: false, isRunning: false, isScared: false, isDancing: true, isGrabbed: false);
                 break;
             case State.Grabbed:
-                SetAnimatorBools(isWalking: false, isRunning: false, isScared: animator.GetBool(isScaredAnimation), isDancing: false, isGrabbed: true);
+                SetAnimatorBools(isWalking: false, isRunning: false, isScared: this.isScared, isDancing: false, isGrabbed: true);
                 break;
         }
     }
 
     private void SetAnimatorBools(bool isWalking, bool isRunning, bool isScared, bool isDancing, bool isGrabbed)
     {
+        Plugin.ExtendedLogging($"Setting animator bools: isWalking: {isWalking}, isRunning: {isRunning}, isScared: {isScared}, isDancing: {isDancing}, isGrabbed: {isGrabbed}");
         animator.SetBool(isWalkingAnimation, isWalking);
         animator.SetBool(isRunningAnimation, isRunning);
+        this.isRunning = isRunning;
         animator.SetBool(isScaredAnimation, isScared);
+        this.isScared = isScared;
         animator.SetBool(isDancingAnimation, isDancing);
         animator.SetBool(childGrabbedAnimation, isGrabbed);
         animator.SetBool(isSittingAnimation, false);
@@ -431,6 +449,7 @@ public class ChildEnemyAI : GrabbableObject
         State stateToSwitchTo = (State)state;
         if (state == -1) return;
         smartAgentNavigator.StopSearchRoutine();
+        agent.enabled = true;
         switch (stateToSwitchTo)
         {
             case State.Spawning:
@@ -486,6 +505,7 @@ public class ChildEnemyAI : GrabbableObject
 
     private void HandleStateGrabbedChange()
     {
+        agent.enabled = false;
     }
     #endregion
 
