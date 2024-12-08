@@ -66,10 +66,10 @@ static class StartOfRoundPatch {
 		var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 		int FoundObject = 0;
 		LayerMask layerMask = LayerMask.NameToLayer("Foliage");
-		Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
+		if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null) Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
 		foreach (var item in objs)
 		{
-			HandleWesleyChangesCuzHeIsStupid(item);
+			if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null && LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name == "Toy Store") HandleWesleyChangesCuzHeIsStupid(item);
 			if (item.layer == layerMask)
 			{
 				item.AddComponent<BoxCollider>().isTrigger = true;
