@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> Config999GalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
     public ConfigEntry<bool> ConfigDontTargetFarEnemies { get; private set; }
     public ConfigEntry<bool> ConfigHazardsDeleteBodies { get; private set; }
@@ -153,6 +154,12 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigTeslaShockVolume { get; private set; }
     public ConfigEntry<float> ConfigACUVolume { get; private set; }
     public ConfigEntry<int> ConfigBellCrabGalCost { get; private set; }
+    public ConfigEntry<int> Config999GalCost { get; private set; }
+    public ConfigEntry<float> Config999GalHealCooldown { get; private set; }
+    public ConfigEntry<int> Config999GalHealAmount { get; private set; }
+    public ConfigEntry<float> Config999GalHealSpeed { get; private set; }
+    public ConfigEntry<bool> Config999GalHealOnlyInteractedPlayer { get; private set; }
+    public ConfigEntry<bool> Config999GalReviveNearbyDeadPlayers { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -397,6 +404,34 @@ public class CodeRebirthConfig
                                             "Cost of the Bell Crab Gal.");
         #endregion
         #region SCP 999 Gal
+        Config999GalEnabled = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Enabled",
+                                            true,
+                                            "Whether the SCP 999 Gal is enabled.");
+        Config999GalCost = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Cost",
+                                            999,
+                                            "Cost of the SCP 999 Gal.");
+        Config999GalHealCooldown = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Heal Cooldown",
+                                            10f,
+                                            "Cooldown between heals by interacting on the gal.");
+        Config999GalHealAmount = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Heal Amount",
+                                            100,
+                                            "Amount healed by interacting on the gal.");
+        Config999GalHealSpeed = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Heal Speed",
+                                            5f,
+                                            "Speed of healing by interacting on the gal (amount of time in seconds it for the gal to finish healing).");
+        Config999GalHealOnlyInteractedPlayer = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Heal Only Interacted Player",
+                                            false,
+                                            "Whether the gal can heal only the player that interacts with her.");
+        Config999GalReviveNearbyDeadPlayers = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Revive Nearby Dead Players",
+                                            true,
+                                            "Whether the gal can revive nearby dead bodies.");
         #endregion
         #region Biomes
         ConfigBiomesEnabled = configFile.Bind("Biome Options",

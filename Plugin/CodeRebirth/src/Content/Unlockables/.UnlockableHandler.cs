@@ -49,6 +49,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public UnlockableItemDef BellCrabUnlockable { get; private set; } = null!;
 	}
 
+	public class SCP999Assets(string bundleName) : AssetBundleLoader<SCP999Assets>(bundleName)
+	{
+		[LoadFromBundle("SCP999Unlockable.asset")]
+		public UnlockableItemDef SCP999Unlockable { get; private set; } = null!;
+	}
+
+	public SCP999Assets SCP999 { get; private set; } = null!;
 	public BellCrabAssets BellCrab { get; private set; } = null!;
 	public SeamineTinkAssets SeamineTink { get; private set; } = null!;
 	public PlantPotAssets PlantPot { get; private set; } = null!;
@@ -60,6 +67,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		if (Plugin.ModConfig.ConfigFarmingEnabled.Value) RegisterPlantPot();
 		if (Plugin.ModConfig.ConfigSeamineTinkEnabled.Value) RegisterSeamineTink();
 		if (Plugin.ModConfig.ConfigBellCrabGalEnabled.Value) RegisterBellCrab();
+		if (Plugin.ModConfig.Config999GalEnabled.Value) Register999Gal();
+	}
+
+	private void Register999Gal()
+	{
+		SCP999 = new SCP999Assets("scp999galassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(SCP999.SCP999Unlockable, Plugin.ModConfig.Config999GalCost.Value, StoreType.ShipUpgrade);
 	}
 
 	private void RegisterBellCrab()
