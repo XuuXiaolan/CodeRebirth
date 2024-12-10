@@ -87,16 +87,22 @@ public class ContentHandler<T> where T: ContentHandler<T>
             curvesByCustomLevelType.Keys.ToArray(),
             level =>
             {
+                if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
                 Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}");
-                Plugin.ExtendedLogging($"Level type: {LevelToLevelType(level)}");
-                Plugin.ExtendedLogging($"Contained: {curvesByLevelType.Keys.Contains(LevelToLevelType(level))}");
-                if (level != null && curvesByLevelType.TryGetValue(LevelToLevelType(level), out AnimationCurve curve))
+                Levels.LevelTypes levelType = LevelToLevelType(level);
+                Plugin.ExtendedLogging($"Output Level type: {levelType}");
+                Plugin.ExtendedLogging($"is Level Contained in Curves: {curvesByLevelType.Keys.Contains(levelType)}");
+                if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
                 {
-                    Plugin.ExtendedLogging($"{level} {curve}");
+                    Plugin.ExtendedLogging($"Managed to find curve for level: {level} | with given curve: ");
+                    foreach (Keyframe keyframe in curve.keys)
+                    {
+                        Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
+                    }
                     return curve;
                 }
 
-                if (level != null && curvesByCustomLevelType.TryGetValue(LethalLevelLoader.LevelManager.GetExtendedLevel(level).NumberlessPlanetName, out curve))
+                if (curvesByCustomLevelType.TryGetValue(LethalLevelLoader.LevelManager.GetExtendedLevel(level).NumberlessPlanetName, out curve))
                 {
                     return curve;
                 }
@@ -107,8 +113,8 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
     protected Levels.LevelTypes LevelToLevelType(SelectableLevel level)
     {
-        Plugin.ExtendedLogging($"Level type: {level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 18))}");
-        return level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 18)) switch
+        Plugin.ExtendedLogging($"Cutup Level type: {level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 18))}");
+        return level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 18)).Trim() switch
         {
             "ExperimentationLevel" => Levels.LevelTypes.ExperimentationLevel,
             "AssuranceLevel" => Levels.LevelTypes.AssuranceLevel,
