@@ -51,7 +51,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
 	public class SCP999Assets(string bundleName) : AssetBundleLoader<SCP999Assets>(bundleName)
 	{
-		[LoadFromBundle("SCP999Unlockable.asset")]
+		[LoadFromBundle("SCP999GalUnlockable.asset")]
 		public UnlockableItemDef SCP999Unlockable { get; private set; } = null!;
 	}
 

@@ -160,6 +160,11 @@ public class CodeRebirthConfig
     public ConfigEntry<float> Config999GalHealSpeed { get; private set; }
     public ConfigEntry<bool> Config999GalHealOnlyInteractedPlayer { get; private set; }
     public ConfigEntry<bool> Config999GalReviveNearbyDeadPlayers { get; private set; }
+    public ConfigEntry<int> Config999GalHealCharges { get; private set; }
+    public ConfigEntry<int> Config999GalReviveCharges { get; private set; }
+    public ConfigEntry<bool> Config999GalCompanyMoonRecharge { get; private set; }
+    public ConfigEntry<float> Config999GalFailureChance { get; private set; }
+
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -175,6 +180,7 @@ public class CodeRebirthConfig
     #endregion
     #region Debug
     public ConfigEntry<bool> ConfigDebugMode { get; private set; }
+
     #endregion
     public CodeRebirthConfig(ConfigFile configFile)
     {
@@ -191,7 +197,7 @@ public class CodeRebirthConfig
                                             "Whether extended logging is enabled.");
         ConfigRemoveInteriorFog = configFile.Bind("Debug Options",
                                             "Debug Mode | Remove Interior Fog",
-                                            true,
+                                            false,
                                             "Whether zeekerss' horrible interior fog is removed.");
         #endregion
         #region Functional Microwave
@@ -424,6 +430,22 @@ public class CodeRebirthConfig
                                             "SCP 999 Gal | Heal Speed",
                                             5f,
                                             "Speed of healing by interacting on the gal (amount of time in seconds it for the gal to finish healing).");
+        Config999GalHealCharges = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Healing Charges",
+                                            4,
+                                            "How many healing charges the SCP 999 Gal has per orbit.");
+        Config999GalReviveCharges = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Revive Charges",
+                                            2,
+                                            "How many revive charges the SCP 999 Gal has per orbit.");
+        Config999GalCompanyMoonRecharge = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Company Moon Recharge",
+                                            false,
+                                            "Whether the SCP 999 Gal recharges once per visiting company moon on last day.");
+        Config999GalFailureChance = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Failure Chance",
+                                            15f,
+                                            "Failure chance of the SCP 999 Gal.");
         Config999GalHealOnlyInteractedPlayer = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Heal Only Interacted Player",
                                             false,

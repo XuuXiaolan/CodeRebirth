@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class SCP999GalAI : NetworkBehaviour
+public class SCP999GalAI : NetworkBehaviour, INoiseListener
 {
     public Animator animator = null!;
     public NetworkAnimator networkAnimator = null!;
@@ -15,37 +16,86 @@ public class SCP999GalAI : NetworkBehaviour
     public GameObject particleSystemGameObject = null!;
     public List<Transform> revivePositions = new();
 
+    [NonSerialized] public float boomboxTimer = 0f;
+    [NonSerialized] public bool boomboxPlaying = false;
     private System.Random random = new();
     private List<GameObject> particlesSpawned = new();
     private bool currentlyHealing = false;
-    private float cooldownTimer = 0f;
-    private bool nearbyPlayer = false;
+    private float cooldownTimer = 5f;
+    private static readonly int playerIsNearby = Animator.StringToHash("playerIsNearby"); // bool
+    private static readonly int isDancing = Animator.StringToHash("isDancing"); // bool
+    private static readonly int doSquishAnimation = Animator.StringToHash("doSquish"); // trigger
+    private static readonly int doSucceedAnimation = Animator.StringToHash("doSucceed"); // trigger
+    private static readonly int doFailAnimation = Animator.StringToHash("doFail"); // trigger
+    private int healChargeCount = 0;
+    private int reviveChargeCount = 0;
+    public Dictionary<PlayerControllerB, float> playerMaxHealthDict = new();
+
+    public static List<SCP999GalAI> Instances = new();
 
     public void Start()
     {
+        Instances.Add(this);
+        UpdatePlayerHealths();
+        RechargeGalHealsAndRevives(true, true);
         random = new System.Random(StartOfRound.Instance.randomMapSeed + 40);
         StartCoroutine(DetectingNearbyPlayer());
         HealTrigger.onInteract.AddListener(HealPlayerInteraction);
     }
 
-    private void Update()
+    public void Update()
     {
-        if (!currentlyHealing) cooldownTimer -= Time.deltaTime;
+        if (!currentlyHealing && cooldownTimer >= 0f)
+        {
+            // Plugin.ExtendedLogging($"Cooldown timer: {cooldownTimer}");
+            cooldownTimer -= Time.deltaTime;
+        }
+        BoomboxUpdate();
+    }
+
+    private void BoomboxUpdate()
+    {
+        if (!boomboxPlaying || !IsServer) return;
+
+        boomboxTimer += Time.deltaTime;
+        if (boomboxTimer >= 2f)
+        {
+            boomboxTimer = 0f;
+            boomboxPlaying = false;
+            animator.SetBool(isDancing, false);
+        }
+    }
+
+    public void UpdatePlayerHealths()
+    {
+        playerMaxHealthDict.Clear();
+        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+        {
+            int maxHealth = GrabMaxHealthForPlayer(player);
+            playerMaxHealthDict.Add(player, maxHealth);
+        }
+    }
+
+    public int GrabMaxHealthForPlayer(PlayerControllerB player)
+    {
+        return 100;
     }
 
     private IEnumerator DetectingNearbyPlayer()
     {
         while (true)
         {
+            bool foundPlayer = false;
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
             {
                 if (player.isPlayerDead || !player.isPlayerControlled || !player.isInHangarShipRoom) continue;
                 if (Vector3.Distance(transform.position, player.transform.position) <= 10f)
                 {
-                    nearbyPlayer = true;
+                    foundPlayer = true;
+                    break;
                 }
             }
-            nearbyPlayer = false;
+            animator.SetBool(playerIsNearby, foundPlayer);
             yield return new WaitForSeconds(1f);
             yield return new WaitForEndOfFrame();
         }
@@ -53,7 +103,14 @@ public class SCP999GalAI : NetworkBehaviour
 
     private void HealPlayerInteraction(PlayerControllerB playerInteracting)
     {
-        if (cooldownTimer > 0f) return;
+        Plugin.ExtendedLogging($"Healing player is null: {playerInteracting == null} | Cooldown timer: {cooldownTimer} | Heal Charge count: {healChargeCount} | Revive Charge count: {reviveChargeCount}");
+        if (boomboxPlaying) return;
+        if (cooldownTimer > 0f || (healChargeCount <= 0 && reviveChargeCount <= 0))
+        {
+            Plugin.ExtendedLogging($"triggering squish animation.");
+            if (IsServer) networkAnimator.SetTrigger(doSquishAnimation);
+            return;
+        }
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
         DoHealingStuffServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
     }
@@ -67,45 +124,77 @@ public class SCP999GalAI : NetworkBehaviour
     [ClientRpc]
     private void DoHealingStuffClientRpc(int playerInteractingIndex)
     {
-        cooldownTimer = Plugin.ModConfig.Config999GalHealCooldown.Value;
+        Plugin.ExtendedLogging($"Player who poked index: {playerInteractingIndex}");
+        bool galDidSomething = false;
         PlayerControllerB playerInteracting = StartOfRound.Instance.allPlayerScripts[playerInteractingIndex];
         bool onlyInteractedPlayerHealed = Plugin.ModConfig.Config999GalHealOnlyInteractedPlayer.Value;
         int healAmount = Plugin.ModConfig.Config999GalHealAmount.Value;
         float healingSpeed = Plugin.ModConfig.Config999GalHealSpeed.Value;
         bool reviveNearbyDeadPlayers = Plugin.ModConfig.Config999GalReviveNearbyDeadPlayers.Value;
-        if (reviveNearbyDeadPlayers)
+        bool fail = false;
+        if (random.NextFloat(0, 100) <= Plugin.ModConfig.Config999GalFailureChance.Value)
+        {
+            fail = true;
+            // Do animation stuff
+        }
+        if (reviveNearbyDeadPlayers && reviveChargeCount > 0)
         {
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
+                Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}");
                 if (!player.isPlayerDead) continue;
                 float distanceFromGal = Vector3.Distance(transform.position, player.deadBody.transform.position);
-                if (distanceFromGal <= 5)
-                {
-                    DoALotOfShitToRevivePlayer(player);
-                }
+                Plugin.ExtendedLogging($"Distance from gal: {distanceFromGal}");
+                if (distanceFromGal > 5) continue;
+                reviveChargeCount--;
+                galDidSomething = true;
+                DoALotOfShitToRevivePlayer(player, player.deadBody, fail);
             }
         }
         if (onlyInteractedPlayerHealed)
         {
-            if (playerInteracting == null || playerInteracting.isPlayerDead || !playerInteracting.isPlayerControlled) return;
-            StartCoroutine(HealPlayerOverTime(playerInteracting, healAmount, healingSpeed));
+            if (healChargeCount <= 0 || playerInteracting == null || playerInteracting.isPlayerDead || !playerInteracting.isPlayerControlled || playerInteracting.health >= playerMaxHealthDict[playerInteracting]) return;
+            healChargeCount--;
+            galDidSomething = true;
+            StartCoroutine(HealPlayerOverTime(playerInteracting, healAmount, healingSpeed, fail));
         }
         else
         {
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
-                if (player.isPlayerDead || !player.isPlayerControlled) continue;
-                StartCoroutine(HealPlayerOverTime(player, healAmount, healingSpeed));
+                Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}");
+                if (healChargeCount <= 0 || player == null || player.isPlayerDead || !player.isPlayerControlled || player.health >= playerMaxHealthDict[player]) continue;
+                if (Vector3.Distance(transform.position, player.transform.position) > 5) continue;
+                healChargeCount--;
+                galDidSomething = true;
+                StartCoroutine(HealPlayerOverTime(player, healAmount, healingSpeed, fail));
             }
+        }
+
+        if (galDidSomething)
+        {
+            if (!fail)
+            {
+                networkAnimator.SetTrigger(doSucceedAnimation);
+                // do success animation.
+            }
+            cooldownTimer = Plugin.ModConfig.Config999GalHealCooldown.Value;
         }
     }
 
-    private IEnumerator HealPlayerOverTime(PlayerControllerB player, int healAmount, float healingSpeed)
+    private IEnumerator HealPlayerOverTime(PlayerControllerB player, int healAmount, float healingSpeed, bool failed)
     {
+        if (failed)
+        {
+            networkAnimator.SetTrigger(doFailAnimation);
+            Plugin.ExtendedLogging("Failed to heal player.");
+            yield break;
+        }
         currentlyHealing = true;
         
         // Instantiate the particle system at the player's position.
         var newParticles = GameObject.Instantiate(particleSystemGameObject, player.transform.position, Quaternion.identity);
+        newParticles.SetActive(true);
         particlesSpawned.Add(newParticles);
         
         int totalHealthToHeal = healAmount;
@@ -115,7 +204,7 @@ public class SCP999GalAI : NetworkBehaviour
         float timeElapsed = 0f;
 
         // While we haven't healed the full amount yet.
-        while (healthHealed < totalHealthToHeal)
+        while (healthHealed < totalHealthToHeal && player.health < playerMaxHealthDict[player])
         {
             // Accumulate time.
             timeElapsed += Time.deltaTime;
@@ -136,7 +225,7 @@ public class SCP999GalAI : NetworkBehaviour
         }
         
         // Ensure we do not heal more than the target amount.
-        if (healthHealed < totalHealthToHeal)
+        if (healthHealed < totalHealthToHeal && player.health < playerMaxHealthDict[player])
         {
             player.health += (totalHealthToHeal - healthHealed);
             SetVisualChangesToPlayer(player);
@@ -164,8 +253,15 @@ public class SCP999GalAI : NetworkBehaviour
         }
     }
 
-    private void DoALotOfShitToRevivePlayer(PlayerControllerB PlayerScript)
+    private void DoALotOfShitToRevivePlayer(PlayerControllerB PlayerScript, DeadBodyInfo deadBodyInfo, bool failed)
     {
+
+        if (failed)
+        {
+            Plugin.ExtendedLogging("Failed to revive player.");
+            networkAnimator.SetTrigger(doFailAnimation);
+            return;
+        }
         PlayerScript.isInsideFactory = false;
         PlayerScript.isInElevator = true;
         PlayerScript.isInHangarShipRoom = true;
@@ -182,7 +278,7 @@ public class SCP999GalAI : NetworkBehaviour
         PlayerScript.thisController.enabled = true;
         if (PlayerScript.isPlayerDead)
         {
-            print("playerInital is dead, reviving them.");
+            Plugin.ExtendedLogging("playerInital is dead, reviving them.");
             PlayerScript.thisController.enabled = true;
             PlayerScript.isPlayerDead = false;
             PlayerScript.isPlayerControlled = true;
@@ -272,10 +368,40 @@ public class SCP999GalAI : NetworkBehaviour
         StartOfRound.Instance.livingPlayers++;
         StartOfRound.Instance.UpdatePlayerVoiceEffects();  
 
-        if (GameNetworkManager.Instance.localPlayerController.isPlayerDead)
+        deadBodyInfo.DeactivateBody(false);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RechargeGalHealsAndRevivesServerRpc(bool heal, bool revive)
+    {
+        RechargeGalHealsAndRevivesClientRpc(heal, revive);
+    }
+
+    [ClientRpc]
+    public void RechargeGalHealsAndRevivesClientRpc(bool heal, bool revive)
+    {
+        RechargeGalHealsAndRevives(heal, revive);
+    }
+
+    public void RechargeGalHealsAndRevives(bool heal, bool revive)
+    {
+        if (heal)
         {
-            HUDManager.Instance.UpdateBoxesSpectateUI();
-            HUDManager.Instance.UpdateSpectateBoxSpeakerIcons();
-        }      
+            healChargeCount = Plugin.ModConfig.Config999GalHealCharges.Value;
+        }
+        if (revive)
+        {
+            reviveChargeCount = Plugin.ModConfig.Config999GalReviveCharges.Value;
+        }
+    }
+
+    public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)
+    {
+		if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
+		{
+            boomboxTimer = 0f;
+			boomboxPlaying = true;
+            animator.SetBool(isDancing, true);
+		}
     }
 }

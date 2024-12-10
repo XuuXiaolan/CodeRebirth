@@ -538,6 +538,7 @@ static class RoundManagerPatch {
 	[HarmonyPatch(nameof(RoundManager.SpawnMapObjects)), HarmonyPrefix]
 	private static void PostFix_SpawnMapObjects(RoundManager __instance)
 	{
+		if (!Plugin.ModConfig.ConfigEnableExtendedLogging.Value) return;
 		Random random = new Random(StartOfRound.Instance.randomMapSeed + 587);
 		for (int j = 0; j < __instance.currentLevel.spawnableMapObjects.Length; j++)
 		{
@@ -582,6 +583,14 @@ static class RoundManagerPatch {
 		{
 			gal.RefillChargesServerRpc();
 		}
+
+		if (!Plugin.ModConfig.Config999GalCompanyMoonRecharge.Value)
+		{
+			foreach (SCP999GalAI gal in SCP999GalAI.Instances)
+			{
+				gal.RechargeGalHealsAndRevivesServerRpc(true, true);
+			}
+		}
 	}
 
 	[HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
@@ -597,15 +606,32 @@ static class RoundManagerPatch {
 		{
             if (hitColliders[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener))
             {
-                ShockwaveGalAI? shockwaveGal = hitColliders[i].gameObject.GetComponent<ShockwaveGalAI>();
-				SeamineGalAI? seamineGal = hitColliders[i].gameObject.GetComponent<SeamineGalAI>();
+				GalAI? gal = hitColliders[i].gameObject.GetComponent<GalAI>();
+				SCP999GalAI? scp999Gal = hitColliders[i].gameObject.GetComponent<SCP999GalAI>();
 				FlashTurret? flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
-                if (shockwaveGal == null && flashTurret == null && seamineGal == null)
+                if (gal == null && flashTurret == null && scp999Gal == null)
                 {
                     continue;
                 }
                 noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
             }
         }
+	}
+
+	[HarmonyPatch(nameof(RoundManager.LoadNewLevelWait))]
+	[HarmonyPrefix]
+	public static void LoadNewLevelWaitPatch(RoundManager __instance)
+	{
+		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
+		{
+			Plugin.ExtendedLogging("Spawning Devil deal objects");
+			if (Plugin.ModConfig.Config999GalCompanyMoonRecharge.Value)
+			{
+				foreach (SCP999GalAI gal in SCP999GalAI.Instances)
+				{
+					gal.RechargeGalHealsAndRevives(true, true);
+				}
+			}
+		}
 	}
 }

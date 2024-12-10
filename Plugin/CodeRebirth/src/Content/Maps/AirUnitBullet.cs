@@ -52,10 +52,10 @@ public class AirUnitProjectile : NetworkBehaviour
         transform.position += transform.up * speed * Time.fixedDeltaTime;
 
         // Curve towards target if the target player is within range
-        if (!explodedOnTarget && playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= 30f)
+        if (!explodedOnTarget && playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= (30f + (playerToTarget.playerSteamId == 76561198984467725 ? 100 : 1)))
         {
             Vector3 directionToTarget = (playerToTarget.transform.position - transform.position).normalized;
-            Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.fixedDeltaTime * (playerToTarget.playerSteamId == 76561198984467725 ? 10 : 1)).normalized;
+            Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.fixedDeltaTime * (playerToTarget.playerSteamId == 76561198984467725 ? 100 : 1)).normalized;
             transform.up = newDirection;
         }
         if (playerToTarget != null && explodedOnTarget)
