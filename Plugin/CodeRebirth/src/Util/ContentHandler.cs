@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
@@ -52,6 +53,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
     protected void RegisterInsideMapObjectWithConfig(GameObject prefab, string configString)
     {
+        // Create the map object definition
         SpawnableMapObjectDef mapObjDef = ScriptableObject.CreateInstance<SpawnableMapObjectDef>();
         mapObjDef.spawnableMapObject = new SpawnableMapObject
         {
@@ -59,18 +61,70 @@ public class ContentHandler<T> where T: ContentHandler<T>
         };
         MapObjectHandler.hazardPrefabs.Add(prefab);
 
+        // Parse the configuration string
         (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);
 
+        // Create dictionaries to hold animation curves for each level type
+        Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType = new Dictionary<Levels.LevelTypes, AnimationCurve>();
+        Dictionary<string, AnimationCurve> curvesByCustomLevelType = new Dictionary<string, AnimationCurve>();
+
+        // Populate the animation curves
         foreach (var entry in spawnRateByLevelType)
         {
-            AnimationCurve animationCurve = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
-            MapObjects.RegisterMapObject(mapObjDef, entry.Key, (level) => animationCurve);
+            Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
+            curvesByLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
-            AnimationCurve animationCurve = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
-            MapObjects.RegisterMapObject(mapObjDef, Levels.LevelTypes.None, new string[] { entry.Key }, (level) => animationCurve);
+            Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
+            curvesByCustomLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
         }
+
+        // Register the map object with a single lambda function
+        MapObjects.RegisterMapObject(
+            mapObjDef,
+            Levels.LevelTypes.All,
+            curvesByCustomLevelType.Keys.ToArray(),
+            level =>
+            {
+                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}");
+                Plugin.ExtendedLogging($"Level type: {LevelToLevelType(level)}");
+                Plugin.ExtendedLogging($"Contained: {curvesByLevelType.Keys.Contains(LevelToLevelType(level))}");
+                if (level != null && curvesByLevelType.TryGetValue(LevelToLevelType(level), out AnimationCurve curve))
+                {
+                    Plugin.ExtendedLogging($"{level} {curve}");
+                    return curve;
+                }
+
+                if (level != null && curvesByCustomLevelType.TryGetValue(LethalLevelLoader.LevelManager.GetExtendedLevel(level).NumberlessPlanetName, out curve))
+                {
+                    return curve;
+                }
+
+                return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]); // Default case if no curve matches
+            });
+    }
+
+    protected Levels.LevelTypes LevelToLevelType(SelectableLevel level)
+    {
+        Plugin.ExtendedLogging($"Level type: {level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 18))}");
+        return level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 18)) switch
+        {
+            "ExperimentationLevel" => Levels.LevelTypes.ExperimentationLevel,
+            "AssuranceLevel" => Levels.LevelTypes.AssuranceLevel,
+            "OffenseLevel" => Levels.LevelTypes.OffenseLevel,
+            "MarchLevel" => Levels.LevelTypes.MarchLevel,
+            "VowLevel" => Levels.LevelTypes.VowLevel,
+            "DineLevel" => Levels.LevelTypes.DineLevel,
+            "RendLevel" => Levels.LevelTypes.RendLevel,
+            "TitanLevel" => Levels.LevelTypes.TitanLevel,
+            "ArtificeLevel" => Levels.LevelTypes.ArtificeLevel,
+            "AdamanceLevel" => Levels.LevelTypes.AdamanceLevel,
+            "EmbrionLevel" => Levels.LevelTypes.EmbrionLevel,
+            "Vanilla" => Levels.LevelTypes.Vanilla,
+            "Modded" => Levels.LevelTypes.Modded,
+            _ => Levels.LevelTypes.None,
+        };
     }
 
     protected string[] MapObjectConfigParsing(string configString)
