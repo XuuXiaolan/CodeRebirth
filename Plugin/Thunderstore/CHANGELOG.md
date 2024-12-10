@@ -1,4 +1,9 @@
-# v0.8.14
+# v0.8.15
+
+- Fixed hazard stuff fully, assuming LethalLib updated before i put out this update, which i hope it did.
+- Added new gal, SCP 999 Gal, with keyword LIZ-ZIE, this one is a very configurable healer type gal, have fun.
+
+## v0.8.14
 
 - Forgot to check if company moon didnt have an interior.
 

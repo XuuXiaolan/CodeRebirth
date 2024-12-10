@@ -84,17 +84,27 @@ public class ContentHandler<T> where T: ContentHandler<T>
         MapObjects.RegisterMapObject(
             mapObjDef,
             Levels.LevelTypes.All,
-            curvesByCustomLevelType.Keys.ToArray(),
+            curvesByCustomLevelType.Keys.ToArray().Select(s => s.ToLowerInvariant()).ToArray(),
             level =>
             {
                 if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
                 Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}");
-                Levels.LevelTypes levelType = LevelToLevelType(level);
+                string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
+                Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
                 Plugin.ExtendedLogging($"Output Level type: {levelType}");
-                Plugin.ExtendedLogging($"is Level Contained in Curves: {curvesByLevelType.Keys.Contains(levelType)}");
+                Plugin.ExtendedLogging($"is Level Vanila AND Contained in Curves: {curvesByLevelType.Keys.Contains(levelType)}");
                 if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
                 {
-                    Plugin.ExtendedLogging($"Managed to find curve for level: {level} | with given curve: ");
+                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
+                    foreach (Keyframe keyframe in curve.keys)
+                    {
+                        Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
+                    }
+                    return curve;
+                }
+                else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
+                {
+                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
                     foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -102,33 +112,29 @@ public class ContentHandler<T> where T: ContentHandler<T>
                     return curve;
                 }
 
-                if (curvesByCustomLevelType.TryGetValue(LethalLevelLoader.LevelManager.GetExtendedLevel(level).NumberlessPlanetName, out curve))
-                {
-                    return curve;
-                }
-
+                Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
                 return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]); // Default case if no curve matches
             });
     }
 
-    protected Levels.LevelTypes LevelToLevelType(SelectableLevel level)
+    protected Levels.LevelTypes LevelToLevelType(string levelName)
     {
-        Plugin.ExtendedLogging($"Cutup Level type: {level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 18))}");
-        return level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 18)).Trim() switch
+        Plugin.ExtendedLogging($"Cutup Level type: {levelName}");
+        return levelName switch
         {
-            "ExperimentationLevel" => Levels.LevelTypes.ExperimentationLevel,
-            "AssuranceLevel" => Levels.LevelTypes.AssuranceLevel,
-            "OffenseLevel" => Levels.LevelTypes.OffenseLevel,
-            "MarchLevel" => Levels.LevelTypes.MarchLevel,
-            "VowLevel" => Levels.LevelTypes.VowLevel,
-            "DineLevel" => Levels.LevelTypes.DineLevel,
-            "RendLevel" => Levels.LevelTypes.RendLevel,
-            "TitanLevel" => Levels.LevelTypes.TitanLevel,
-            "ArtificeLevel" => Levels.LevelTypes.ArtificeLevel,
-            "AdamanceLevel" => Levels.LevelTypes.AdamanceLevel,
-            "EmbrionLevel" => Levels.LevelTypes.EmbrionLevel,
-            "Vanilla" => Levels.LevelTypes.Vanilla,
-            "Modded" => Levels.LevelTypes.Modded,
+            "experimentation" => Levels.LevelTypes.ExperimentationLevel,
+            "assurance" => Levels.LevelTypes.AssuranceLevel,
+            "offense" => Levels.LevelTypes.OffenseLevel,
+            "march" => Levels.LevelTypes.MarchLevel,
+            "vow" => Levels.LevelTypes.VowLevel,
+            "dine" => Levels.LevelTypes.DineLevel,
+            "rend" => Levels.LevelTypes.RendLevel,
+            "titan" => Levels.LevelTypes.TitanLevel,
+            "artifice" => Levels.LevelTypes.ArtificeLevel,
+            "adamance" => Levels.LevelTypes.AdamanceLevel,
+            "embrion" => Levels.LevelTypes.EmbrionLevel,
+            "vanilla" => Levels.LevelTypes.Vanilla,
+            "modded" => Levels.LevelTypes.Modded,
             _ => Levels.LevelTypes.None,
         };
     }
