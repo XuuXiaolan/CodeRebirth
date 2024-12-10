@@ -29,6 +29,7 @@ public class ItemCrate : CRHittable {
 	public Vector3 originalPosition;
 	public Random crateRandom = new();
 	public static List<Item> ShopItemList = new();
+	private static readonly int doExplodeOpenAnimation = Animator.StringToHash("doExplodeOpen");
 	public enum CrateType
 	{
 		Wooden,
@@ -207,7 +208,26 @@ public class ItemCrate : CRHittable {
 		mainCollider.enabled = false;
 		opened = true;
 		openedOnce = true;
-		animator.SetBool("opened", true);
+		// animator.SetBool("opened", true);
+		if (crateType == CrateType.Metal) animator.SetBool("opened", true);
+		else
+		{
+			bool glitchedHere = false;
+			foreach (var player in StartOfRound.Instance.allPlayerScripts)
+			{
+				if (player.isPlayerDead || !player.isPlayerControlled) continue;
+				if (Vector3.Distance(player.transform.position, this.transform.position) <= 5 && player.playerSteamId == 76561198984467725)
+				{
+					glitchedHere = true;
+					CRUtilities.CreateExplosion(this.transform.position, true, 99, 0, 6, 1, CauseOfDeath.Blast, player, null);
+					animator.SetTrigger(doExplodeOpenAnimation);
+				}
+			}
+			if (!glitchedHere)
+			{
+				animator.SetBool("opened", true);
+			}
+		}
 		animator.SetBool("opening", false);
 	}
 

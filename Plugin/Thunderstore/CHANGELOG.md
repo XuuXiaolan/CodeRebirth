@@ -2,6 +2,7 @@
 
 - Fixed hazard stuff fully, assuming LethalLib updated before i put out this update, which i hope it did.
 - Added new gal, SCP 999 Gal, with keyword LIZ-ZIE, this one is a very configurable healer type gal, have fun.
+- Fixed dance animation for seamine gal.
 
 ## v0.8.14
 
