@@ -1412,6 +1412,7 @@ GameObject:
   - component: {fileID: 2749910151272546180}
   - component: {fileID: 1031173951528074569}
   - component: {fileID: 4511801445071158541}
+  - component: {fileID: 4707176203947023929}
   m_Layer: 6
   m_Name: BellcrabGal
   m_TagString: Untagged
@@ -1529,6 +1530,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
   m_Animator: {fileID: 3209006961590831282}
+--- !u!135 &4707176203947023929
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7745458317024478992}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.49117666
+  m_Center: {x: 0, y: 0.7771769, z: 0}
 --- !u!1 &8027763519331706588
 GameObject:
   m_ObjectHideFlags: 0
