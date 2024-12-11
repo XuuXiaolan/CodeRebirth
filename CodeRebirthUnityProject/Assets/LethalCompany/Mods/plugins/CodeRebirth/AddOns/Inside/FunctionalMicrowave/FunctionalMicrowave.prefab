@@ -214,7 +214,7 @@ Transform:
   m_GameObject: {fileID: 1390466990876600544}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.275, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -239,8 +239,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5300975, y: 0.32854378, z: 0.59989095}
-  m_Center: {x: 0.059669018, y: 1.4237112, z: -0.0018578768}
+  m_Size: {x: 0.5300975, y: 0.5147675, z: 0.59989095}
+  m_Center: {x: 0.059669018, y: 1.3306005, z: -0.0018578768}
 --- !u!114 &4311652880949629475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,7 +543,7 @@ Transform:
   m_GameObject: {fileID: 3646544522324304701}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.275, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -568,8 +568,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5300975, y: 0.32854378, z: 0.59989095}
-  m_Center: {x: 0.059669018, y: 1.4237112, z: -0.0018578768}
+  m_Size: {x: 0.5300975, y: 0.52306944, z: 0.59989095}
+  m_Center: {x: 0.059669018, y: 1.3264495, z: -0.0018578768}
 --- !u!1 &4067025197709915888
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,7 +918,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7210297945909350449}
-  m_Layer: 21
+  - component: {fileID: 3359350527132817819}
+  m_Layer: 8
   m_Name: ScrapSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -934,7 +935,7 @@ Transform:
   m_GameObject: {fileID: 5587319296503239577}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -942,6 +943,27 @@ Transform:
   - {fileID: 5063998100308039714}
   m_Father: {fileID: 8565336780344890789}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3359350527132817819
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5587319296503239577}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5415218, y: 0.107495934, z: 0.6200858}
+  m_Center: {x: 0.050977834, y: -0.2, z: -0.009187814}
 --- !u!1 &5629861911091426412
 GameObject:
   m_ObjectHideFlags: 0

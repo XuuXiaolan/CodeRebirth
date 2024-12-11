@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -35,6 +36,7 @@ public class FunctionalMicrowave : NetworkBehaviour
     private float damageTimerDecrease = 0f;
     private Vector3 newDestination = default;
     private List<PlayerControllerB> playersAffected = new();
+    private System.Random microwaveRandom = new System.Random();
 
     private void Start()
     {
@@ -45,22 +47,33 @@ public class FunctionalMicrowave : NetworkBehaviour
         agent.speed = Speed;
         agent.acceleration = 5f;
         agent.angularSpeed = TurnSpeed;
-        if (!IsServer) return;
         Item? scrapToSpawn = ChooseRandomMicrowaveScrap();
         if (scrapToSpawn == null) return;
         spawnedWithScrap = true;
         originalDamageAmount = damageAmount;
         damageAmount = 10;
-        NetworkObjectReference spawnedScrap = CodeRebirthUtils.Instance.SpawnScrap(scrapToSpawn, scrapSpawnPoint.position, false, false, 0);
+        if (IsServer)
+        {
+            NetworkObjectReference spawnedScrap = CodeRebirthUtils.Instance.SpawnScrap(scrapToSpawn, scrapSpawnPoint.position, false, false, 0);
+            scrapSpawned = ((GameObject)spawnedScrap).GetComponent<GrabbableObject>();
+            scrapSpawned.grabbable = false;
+            scrapSpawned.parentObject = scrapSpawnPoint;
+            newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
+            SyncScrapStuffClientRpc(spawnedScrap);
+        }
+    }
+
+    [ClientRpc]
+    private void SyncScrapStuffClientRpc(NetworkObjectReference spawnedScrap)
+    {
         scrapSpawned = ((GameObject)spawnedScrap).GetComponent<GrabbableObject>();
         scrapSpawned.grabbable = false;
         scrapSpawned.parentObject = scrapSpawnPoint;
-        newDestination = RoundManager.Instance.insideAINodes[Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
     }
 
     private Item? ChooseRandomMicrowaveScrap()
     {
-        int result = UnityEngine.Random.Range(0, 4);
+        int result = microwaveRandom.NextInt(0, 3);
         if (result == 0)
         {
             return Plugin.samplePrefabs["MicrowaveSpork"];
