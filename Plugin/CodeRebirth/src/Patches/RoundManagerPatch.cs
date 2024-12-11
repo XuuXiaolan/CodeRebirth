@@ -607,8 +607,9 @@ static class RoundManagerPatch {
             {
 				GalAI? gal = hitColliders[i].gameObject.GetComponent<GalAI>();
 				SCP999GalAI? scp999Gal = hitColliders[i].gameObject.GetComponent<SCP999GalAI>();
+				BellCrabGalAI? bellCrabGal = hitColliders[i].gameObject.GetComponent<BellCrabGalAI>();
 				FlashTurret? flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
-                if (gal == null && flashTurret == null && scp999Gal == null)
+                if (gal == null && flashTurret == null && scp999Gal == null && bellCrabGal == null)
                 {
                     continue;
                 }
