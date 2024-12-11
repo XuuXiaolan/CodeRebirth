@@ -5,8 +5,6 @@ using GameNetcodeStuff;
 using System;
 using CodeRebirth.src.Util;
 using UnityEngine;
-using CodeRebirth.src.Content.Maps;
-using UnityEngine.AI;
 using Unity.Netcode;
 using CodeRebirth.src.Content.Enemies;
 

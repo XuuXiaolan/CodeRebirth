@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.ModCompats;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,7 +12,6 @@ public class Charger : NetworkBehaviour
 {
     public InteractTrigger ActivateOrDeactivateTrigger = null!;
     public Transform ChargeTransform = null!;
-    public bool canActivateOnCompanyMoon;
     [NonSerialized] public GalAI GalAI = null!;
     [NonSerialized] public static List<Charger> Instances = new();
 
@@ -41,7 +41,7 @@ public class Charger : NetworkBehaviour
     {
         if (!NetworkObject.IsSpawned) return;
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
-        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (canActivateOnCompanyMoon && RoundManager.Instance.currentLevel.levelID == 3 && TimeOfDay.Instance.quotaFulfilled >= TimeOfDay.Instance.profitQuota && !Plugin.ModConfig.ConfigGalBypassQuota.Value)) return;
+        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && NavmeshInCompanyCompat.Enabled)) return;
         if (!GalAI.Animator.GetBool("activated"))
         {
             ActivateGirlServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));

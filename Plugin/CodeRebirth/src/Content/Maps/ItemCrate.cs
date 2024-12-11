@@ -7,7 +7,6 @@ using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-using Random = System.Random;
 using System;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -27,7 +26,7 @@ public class ItemCrate : CRHittable {
 	private float digProgress = 0;
 	public int health = 4;
 	public Vector3 originalPosition;
-	public Random crateRandom = new();
+	public System.Random crateRandom = new();
 	public static List<Item> ShopItemList = new();
 	private static readonly int doExplodeOpenAnimation = Animator.StringToHash("doExplodeOpen");
 	public enum CrateType
@@ -42,7 +41,7 @@ public class ItemCrate : CRHittable {
 
     private void Start()
 	{
-		crateRandom = new Random(StartOfRound.Instance.randomMapSeed);
+		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
 		health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
 		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
 
@@ -208,25 +207,16 @@ public class ItemCrate : CRHittable {
 		mainCollider.enabled = false;
 		opened = true;
 		openedOnce = true;
-		// animator.SetBool("opened", true);
+
 		if (crateType == CrateType.Metal) animator.SetBool("opened", true);
 		else
 		{
-			bool glitchedHere = false;
-			foreach (var player in StartOfRound.Instance.allPlayerScripts)
+			if (crateRandom.Next(1, 101) <= 10)
 			{
-				if (player.isPlayerDead || !player.isPlayerControlled) continue;
-				if (Vector3.Distance(player.transform.position, this.transform.position) <= 5 && player.playerSteamId == 76561198984467725)
-				{
-					glitchedHere = true;
-					CRUtilities.CreateExplosion(this.transform.position, true, 99, 0, 6, 1, CauseOfDeath.Blast, player, null);
-					animator.SetTrigger(doExplodeOpenAnimation);
-				}
+				CRUtilities.CreateExplosion(this.transform.position, true, 30, 0, 6, 1, CauseOfDeath.Blast, null, null);
+				animator.SetTrigger(doExplodeOpenAnimation);
 			}
-			if (!glitchedHere)
-			{
-				animator.SetBool("opened", true);
-			}
+			else animator.SetBool("opened", true);
 		}
 		animator.SetBool("opening", false);
 	}

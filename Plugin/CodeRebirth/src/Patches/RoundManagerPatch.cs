@@ -535,11 +535,10 @@ static class RoundManagerPatch {
 		}
 	}
 
-	[HarmonyPatch(nameof(RoundManager.SpawnMapObjects)), HarmonyPrefix]
+	/*[HarmonyPatch(nameof(RoundManager.SpawnMapObjects)), HarmonyPrefix]
 	private static void PostFix_SpawnMapObjects(RoundManager __instance)
 	{
 		if (!Plugin.ModConfig.ConfigEnableExtendedLogging.Value) return;
-		Random random = new Random(StartOfRound.Instance.randomMapSeed + 587);
 		for (int j = 0; j < __instance.currentLevel.spawnableMapObjects.Length; j++)
 		{
 			Plugin.ExtendedLogging("Deciding spawn stuff for: " + __instance.currentLevel.spawnableMapObjects[j].prefabToSpawn.name);
@@ -550,7 +549,7 @@ static class RoundManagerPatch {
 				Plugin.ExtendedLogging("Possible number to spawn: " + numberToSpawnOfThisHazard);
 			}
 		}
-		/*for (int i = 0; i < __instance.currentLevel.spawnableMapObjects.Length; i++)
+		/* for (int i = 0; i < __instance.currentLevel.spawnableMapObjects.Length; i++)
 		{
 			Plugin.ExtendedLogging("Deciding spawn stuff for: " + __instance.currentLevel.spawnableMapObjects[i].prefabToSpawn.name);
 			int numberToSpawnOfThisHazard = (int)__instance.currentLevel.spawnableMapObjects[i].numberToSpawn.Evaluate((float)random.NextDouble());
@@ -563,8 +562,8 @@ static class RoundManagerPatch {
 					Plugin.ExtendedLogging("Adding this to list of Spawners: " + possibleSpawner.spawnablePrefabs + " - Because it contains this prefab: " + __instance.currentLevel.spawnableMapObjects[i].prefabToSpawn.name);
 				}
 			}
-		}*/
-	}
+		}
+	}*/
 
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	private static void PatchFix_DespawnOldCrates()

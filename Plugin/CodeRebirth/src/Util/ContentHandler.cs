@@ -96,19 +96,19 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
                 {
                     Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
-                    foreach (Keyframe keyframe in curve.keys)
+                    /*foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }
+                    }*/
                     return curve;
                 }
                 else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
                 {
                     Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
-                    foreach (Keyframe keyframe in curve.keys)
+                    /*foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }
+                    }*/
                     return curve;
                 }
 
