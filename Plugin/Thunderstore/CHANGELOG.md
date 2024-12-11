@@ -1,4 +1,9 @@
-# v0.8.15
+# v0.8.16
+
+- Fixed lethal hands damage with crate.
+- Forgot something.
+
+## v0.8.15
 
 - Fixed hazard stuff fully, assuming LethalLib updated before i put out this update, which i hope it did.
 - Added new gal, SCP 999 Gal, with keyword LIZ-ZIE, this one is a very configurable healer type gal, have fun.

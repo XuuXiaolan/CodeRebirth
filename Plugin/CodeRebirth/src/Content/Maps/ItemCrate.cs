@@ -279,7 +279,7 @@ public class ItemCrate : CRHittable {
 		}
 
 		// If damage should apply and meets specific conditions, apply player damage
-		if (shouldDamage && force == 22)
+		if (force == 22 || (playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer == null))
 		{
 			playerWhoHit.DamagePlayer(5, true, true, CauseOfDeath.Crushing, 0, false, default);
 		}
