@@ -26,6 +26,7 @@ public class ChildEnemyAI : GrabbableObject
     [NonSerialized] public Dictionary<PlayerControllerB, float> friendShipMeterPlayers = new Dictionary<PlayerControllerB, float>();
     public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 1.5f;
     private List<Vector3> scaryPositionsList = new();
+    private float scaredTimer = 10f;
     private bool isScared = false;
     private bool isRunning = false;
     private bool isSitting = false;
@@ -339,7 +340,12 @@ public class ChildEnemyAI : GrabbableObject
                 positionAwayFromScaryPositions = hit.position;
             }
         }
-        
+        scaredTimer -= Time.deltaTime;
+        if (scaredTimer <= 0f)
+        {
+            scaredTimer = 10f;
+            HandleStateAnimationSpeedChanges(State.Wandering);
+        }
         // Set the calculated position as the agent's destination
         agent.SetDestination(positionAwayFromScaryPositions);
     }
