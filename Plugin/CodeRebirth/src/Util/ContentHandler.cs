@@ -88,16 +88,17 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 vanillaCurveExists = true;
                 vanillaAnimationCurve = curvesByLevelType[entry.Key];
             }
+            else if (entry.Key.ToString().ToLowerInvariant() == "modded" || entry.Key.ToString().ToLowerInvariant() == "custom")
+            {
+                Plugin.ExtendedLogging($"Registering via Modded curve because this is modded");
+                moddedCurveExists = true;
+                moddedAnimationCurve = curvesByLevelType[Levels.LevelTypes.Modded];
+            }
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
             Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
             curvesByCustomLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
-            if (entry.Key.ToString().ToLowerInvariant() == "modded")
-            {
-                moddedCurveExists = true;
-                moddedAnimationCurve = curvesByCustomLevelType[entry.Key];
-            }
         }
 
         // Register the map object with a single lambda function
@@ -122,47 +123,46 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
                 {
                     Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
-                    foreach (Keyframe keyframe in curve.keys)
+                    /*foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }
+                    }*/
                     return curve;
                 }
                 else if (isVanilla && vanillaCurveExists)
                 {
                     Plugin.ExtendedLogging("Managed to find curve for level: Vanilla | with given curve: ");
-                    foreach (Keyframe keyframe in vanillaAnimationCurve.keys)
+                    /*foreach (Keyframe keyframe in vanillaAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }
+                    }*/
                     return vanillaAnimationCurve;
                 }
                 else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
                 {
                     Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
-                    foreach (Keyframe keyframe in curve.keys)
+                    /*foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }
+                    }*/
                     return curve;
                 }
                 else if (moddedCurveExists)
                 {
                     Plugin.ExtendedLogging("Managed to find curve for level: Modded | with given curve: ");
-                    foreach (Keyframe keyframe in moddedAnimationCurve.keys)
+                    /*foreach (Keyframe keyframe in moddedAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }
+                    }*/
                     return moddedAnimationCurve;
                 }
-
-                if (allCurveExists)
+                else if (allCurveExists)
                 {
                     Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} with type ALL | with given curve: ");
-                    foreach (Keyframe keyframe in allAnimationCurve.keys)
+                    /*foreach (Keyframe keyframe in allAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }
+                    }*/
                     return allAnimationCurve;
                 }
                 Plugin.ExtendedLogging($"Failed to find curve for level: {level}");

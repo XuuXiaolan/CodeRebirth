@@ -147,7 +147,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
                 if (distanceFromGal > 5) continue;
                 reviveChargeCount.Value--;
                 galDidSomething = true;
-                DoALotOfShitToRevivePlayerClientRpc(player, player.deadBody, fail);
+                DoALotOfShitToRevivePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), fail);
             }
         }
         if (onlyInteractedPlayerHealed)
@@ -256,8 +256,10 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     }
 
     [ClientRpc]
-    private void DoALotOfShitToRevivePlayerClientRpc(PlayerControllerB PlayerScript, DeadBodyInfo deadBodyInfo, bool failed)
+    private void DoALotOfShitToRevivePlayerClientRpc(int PlayerScriptIndex, bool failed)
     {
+        PlayerControllerB PlayerScript = StartOfRound.Instance.allPlayerScripts[PlayerScriptIndex];
+        DeadBodyInfo deadBodyInfo = PlayerScript.deadBody;
 
         if (failed)
         {

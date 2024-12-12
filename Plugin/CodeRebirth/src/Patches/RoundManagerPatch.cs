@@ -622,6 +622,7 @@ static class RoundManagerPatch {
 	[HarmonyPrefix]
 	public static void LoadNewLevelWaitPatch(RoundManager __instance)
 	{
+		if (!NetworkManager.Singleton.IsServer) return;
 		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
 		{
 			Plugin.ExtendedLogging("Spawning Devil deal objects");
@@ -629,7 +630,7 @@ static class RoundManagerPatch {
 			{
 				foreach (SCP999GalAI gal in SCP999GalAI.Instances)
 				{
-					gal.RechargeGalHealsAndRevives(true, true);
+					gal.RechargeGalHealsAndRevivesServerRpc(true, true);
 				}
 			}
 		}
