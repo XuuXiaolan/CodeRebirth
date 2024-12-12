@@ -83,6 +83,28 @@ public class BearTrap : NetworkBehaviour
         enemyCaught.agent.speed = 0f;
     }
 
+    public void SetWheelFriction(GameObject wheelHitGameObject)
+    {
+        if (!Plugin.ModConfig.ConfigBearTrapsPopTires.Value) return;
+        WheelCollider wheelCollider = wheelHitGameObject.GetComponent<WheelCollider>();
+
+        WheelFrictionCurve sidewaysFriction = wheelCollider.sidewaysFriction;
+        sidewaysFriction.stiffness = 0.1f;  // Decrease stiffness to simulate reduced grip
+        sidewaysFriction.extremumValue = 0.1f;  // Very little grip at the extremum point
+        sidewaysFriction.asymptoteValue = 0.05f;  // Even less grip at the asymptote point
+        sidewaysFriction.extremumSlip = 0.2f;  // The point where grip drops sharply (this could vary based on how flat the tire is)
+        sidewaysFriction.asymptoteSlip = 0.5f;  // Adjust based on how you want the tire to behave at high slip
+
+        WheelFrictionCurve forwardFriction = wheelCollider.forwardFriction;
+        forwardFriction.stiffness = 0.1f;  // Similar to sideways friction, reduce stiffness
+        forwardFriction.extremumValue = 0.1f;  // Reduce friction at extremum
+        forwardFriction.asymptoteValue = 0.05f;  // Further reduce friction at asymptote
+        forwardFriction.extremumSlip = 0.2f;  // Lower slip for the point where the tire loses traction
+        forwardFriction.asymptoteSlip = 0.5f;  // Lower this for when traction is very reduced
+
+        wheelCollider.sidewaysFriction = sidewaysFriction;
+        wheelCollider.forwardFriction = forwardFriction;
+    }
 
     private void UpdateAudio()
     {
@@ -92,8 +114,12 @@ public class BearTrap : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (isTriggered || !canTrigger) return;
-        
-        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
+
+        if (other.gameObject.layer == 30 && other.TryGetComponent(out WheelCollider wheel))
+        {
+            SetWheelFriction(wheel.gameObject);
+        }
+        else if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
         {
             TriggerTrapServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }

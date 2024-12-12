@@ -25,6 +25,7 @@ public class ChildEnemyAI : GrabbableObject
     [NonSerialized] public float[] friendShipMeterGoals = new float[3] { 0f, 20f, 50f };
     [NonSerialized] public Dictionary<PlayerControllerB, float> friendShipMeterPlayers = new Dictionary<PlayerControllerB, float>();
     public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 1.5f;
+    private List<Vector3> scaryPositionsList = new();
     private bool isScared = false;
     private bool isRunning = false;
     private bool isSitting = false;
@@ -186,6 +187,21 @@ public class ChildEnemyAI : GrabbableObject
         {
             friendShipMeterPlayers[playerHeldBy] += Time.deltaTime * 2f;
         }
+        else
+        {
+            foreach (var player in friendShipMeterPlayers.Keys)
+            {
+                if (player == null || player.isPlayerDead || !player.isPlayerControlled) continue;
+                
+                if (Vector3.Distance(player.transform.position, transform.position) <= 10f)
+                {
+                    friendShipMeterPlayers[player] += Time.deltaTime * 0.25f;
+                    continue;
+                }
+                if (friendShipMeterPlayers[player] <= 0) continue;
+                friendShipMeterPlayers[player] -= Time.deltaTime * 0.25f;
+            }
+        }
 
         if (!IsServer) return;
         DoHostSideUpdate();
@@ -289,13 +305,43 @@ public class ChildEnemyAI : GrabbableObject
         }
     }
 
+    public void BecomeScared(List<Vector3> scaryPositions)
+    {
+        scaryPositionsList.Clear();
+        scaryPositionsList.AddRange(scaryPositions);
+        HandleStateAnimationSpeedChanges(State.Scared);
+    }
+
     private void DoScared()
     {
-        smartAgentNavigator.DoPathingToDestination(parentEevee.spawnTransform.position, parentEevee.isSpawnInside, false, null);
-        if (Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 5f)
+        List<Vector3> scaryPositions = new List<Vector3>(scaryPositionsList); // Assuming you have a list of scary positions.
+        Vector3 positionAwayFromScaryPositions = Vector3.zero;
+
+        // If there are scary positions, try to move away from them
+        if (scaryPositions.Count > 0)
         {
-            
+            // Find a point far away from all scary positions
+            Vector3 directionAwayFromScary = Vector3.zero;
+
+            // Sum up vectors pointing away from each scary position
+            foreach (Vector3 scaryPosition in scaryPositions)
+            {
+                directionAwayFromScary += (transform.position - scaryPosition).normalized; // Normalize to get direction
+            }
+
+            // Use the direction to set the destination
+            positionAwayFromScaryPositions = transform.position + directionAwayFromScary * 10f; // You can adjust the multiplier (10f) as needed
+
+            // Ensure the destination is on the NavMesh
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(positionAwayFromScaryPositions, out hit, 10f, NavMesh.AllAreas))
+            {
+                positionAwayFromScaryPositions = hit.position;
+            }
         }
+        
+        // Set the calculated position as the agent's destination
+        agent.SetDestination(positionAwayFromScaryPositions);
     }
 
     private void DoDancing()

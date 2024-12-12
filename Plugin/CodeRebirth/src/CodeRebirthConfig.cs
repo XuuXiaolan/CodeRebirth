@@ -108,6 +108,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<bool> ConfigBearTrapsPopTires { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerSeesScanEffects { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCharges { get; private set; }
     public ConfigEntry<float> ConfigWoodenSeedTreeSpawnChance { get; private set; }
@@ -223,6 +224,10 @@ public class CodeRebirthConfig
                                             "Bear Trap | Interior Spawn",
                                             false,
                                             "Whether the bear traps can spawn in the interior.");
+        ConfigBearTrapsPopTires = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | Pop Tires",
+                                            true,
+                                            "Whether the bear trap can pop tires.");
         ConfigBearTrapSpawnWeight = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Spawn Abundance",
                                             "Vanilla:10,Custom:10",

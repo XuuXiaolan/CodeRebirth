@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class ParentEnemyAI : CodeRebirthEnemyAI
@@ -29,6 +32,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public AudioClip[] hitSounds = null!;
     public AudioClip[] deathSounds = null!;
     public Transform MouthTransform = null!;
+    public NetworkAnimator creatureNetworkAnimator = null!;
 
     private float specialAttackTimer = 15f;
     private bool CloseToEevee => Vector3.Distance(childEevee.transform.position, this.transform.position) <= 10;
@@ -299,7 +303,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
                     smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
                     this.transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position);
                     // player is close and looking at eevee's direction.
-                    if (distance < 5 && Vector3.Distance(player.transform.position, spawnTransform.position) <= 30)
+                    if (distance <= 8 && Vector3.Distance(player.transform.position, spawnTransform.position) <= 30)
                     {
                         SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
                         HandleStateAnimationSpeedChanges(State.ChasingPlayer);
@@ -318,17 +322,24 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     public void DoGuarding()
     {
-        if (!holdingChild && specialAttackTimer <= 0) // come to this state after hitting a player and making them drop the eevee, so eevee wont be held by anyone really
+        if (holdingChild)
         {
-            smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
-            if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
+            smartAgentNavigator.DoPathingToDestination(spawnTransform.position, isSpawnInside, false, null);
+            if (Vector3.Distance(spawnTransform.position, this.transform.position) <= 2.5)
             {
-                // do special attack
-                specialAttackTimer = 10f;
+                DropChildServerRpc(false);
+                HandleStateAnimationSpeedChanges(State.Wandering);
             }
+            return;
         }
-        smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, true, null);
-        
+        else // come to this state after hitting a player and making them drop the eevee, so eevee wont be held by anyone really
+        {
+            if (Vector3.Distance(childEevee.transform.position, this.transform.position) <= 2.5)
+            {
+                GrabChildServerRpc();
+            }
+            smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
+        }
     }
 
     public void DoChasingPlayer()
@@ -344,7 +355,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
         if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
         {
-            // do attacks and animation stuff.
+            creatureNetworkAnimator.SetTrigger(MeleeAnimation);
         }
     }
 
@@ -362,6 +373,10 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             return;
         }
 
+        if (IsServer)
+        {
+            creatureNetworkAnimator.SetTrigger(OnHitAnimation);
+        }
         if (holdingChild)
         {
             DropChild(true);
@@ -372,7 +387,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             if (specialAttackTimer <= 0)
             {
                 specialAttackTimer = 15f;
-                // Do animation for special attack
+                creatureNetworkAnimator.SetTrigger(SpecialMeleeAnimation);
             }
             if (currentBehaviourStateIndex != (int)State.ChasingPlayer)
             {
@@ -420,6 +435,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public void DropChild(bool wasHurt)
     {
         childEevee.parentObject = null;
+        holdingChild = false;
         if (StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position))
         {
             Plugin.ExtendedLogging($"Dropping childEevee in ship room: {childEevee}");
@@ -457,7 +473,10 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         }
         if (wasHurt)
         {
-            // run an event on eevee that makes her run away.
+            List<Vector3> scaryPositions = StartOfRound.Instance.allPlayerScripts.Select(x => x.transform.position).ToList();
+            scaryPositions.Add(this.transform.position);
+            childEevee.BecomeScared(scaryPositions);
+            // todo: run an event on eevee that makes her run away.
         }
         // creatureVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
     }
@@ -505,46 +524,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         child.EnablePhysics(false);
         holdingChild = true;
         // creatureVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
-        HoarderBugAI.grabbableObjectsInMap.Remove(child.gameObject);
-    }
-
-    public void OnCollideMeleeAttack(Collider other)
-    {
-        if (timeSinceHittingLocalPlayer > 0f || isEnemyDead) return;
-        PlayerControllerB player = other.GetComponent<PlayerControllerB>();
-        if (targetPlayer == null || player == null)
-        {
-            return;
-        }
-
-        timeSinceHittingLocalPlayer = 1.5f;
-        Plugin.ExtendedLogging("Hitting player with normal melee attack");
-        player.DamagePlayer(MeleeDamage, true, false, CauseOfDeath.Bludgeoning, 0, false, default);
-        if (player.isPlayerDead)
-        {
-            Plugin.ExtendedLogging("Player is dead");
-            SetTargetServerRpc(-1);
-        }
-    }
-
-    public void OnCollideSpecialAttack(PlayerControllerB player)
-    {
-        HandleAttack(new List<PlayerControllerB> { player }, default, SpecialMeleeDamage);
-    }
-
-    public void OnCollideSpecialAOEAttackAnimEvent()
-    {
-        List<PlayerControllerB> playersToHit = new List<PlayerControllerB>();
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 5, LayerMask.GetMask("Player"));
-        foreach (Collider collider in colliders)
-        {
-            if (collider.TryGetComponent(out PlayerControllerB player))
-            {
-                playersToHit.Add(player);
-            }
-        }
-        // do a spherecast, pass it onto handleattack
-        HandleAttack(playersToHit, SpecialAttackPushForce, SpecialAOEDamage);
+        if (HoarderBugAI.grabbableObjectsInMap.Contains(child.gameObject)) HoarderBugAI.grabbableObjectsInMap.Remove(child.gameObject);
     }
 
     private void HandleAttack(List<PlayerControllerB> playersHit, float force, int damage)
@@ -557,10 +537,22 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             Vector3 direction = (player.transform.position - transform.position).normalized;
             player.externalForces += direction * force;
             player.DamagePlayer(damage, true, false, CauseOfDeath.Bludgeoning, 0, false, direction * force);
+            bool eeveeDropped = false;
             if (player.isPlayerDead)
             {
                 Plugin.ExtendedLogging("Player is dead");
+                eeveeDropped = true;
                 SetTargetServerRpc(-1);
+            }
+            else if (childEevee.isHeld && childEevee.playerHeldBy != null && childEevee.playerHeldBy == player)
+            {
+                eeveeDropped = true;
+                player.DiscardHeldObject();
+            }
+
+            if (eeveeDropped)
+            {
+                HandleStateAnimationSpeedChangesServerRpc((int)State.Guarding);
             }
         }
     }
@@ -574,6 +566,53 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public void PlayFastFootstepSound()
     {
         creatureSFX.PlayOneShot(FastFootstepSounds[enemyRandom.Next(0, FastFootstepSounds.Length)]);
+    } // Animation Event
+
+    public void OnSpecialAOEAttack()
+    {
+        List<PlayerControllerB> playersToHit = new List<PlayerControllerB>();
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 5, LayerMask.GetMask("Player"));
+        foreach (Collider collider in colliders)
+        {
+            if (collider.TryGetComponent(out PlayerControllerB player))
+            {
+                playersToHit.Add(player);
+            }
+        }
+        // do a spherecast, pass it onto handleattack
+        PlayerControllerB specialPlayer = playersToHit.Where(x => Vector3.Distance(x.transform.position, transform.position) < 5f).OrderBy(x => Vector3.Distance(x.transform.position, transform.position)).FirstOrDefault();
+        playersToHit.Remove(specialPlayer);
+        HandleAttack(playersToHit, SpecialAttackPushForce, SpecialAOEDamage);
+
+        HandleAttack(new List<PlayerControllerB> { specialPlayer }, default, SpecialMeleeDamage);
+    } // Animation Event
+
+    public void OnCollideMeleeAttack()
+    {
+        if (timeSinceHittingLocalPlayer > 0f || isEnemyDead) return;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 5, LayerMask.GetMask("Player"));
+        colliders = colliders.Where(x => Vector3.Distance(x.transform.position, transform.position) < 5f).ToArray();
+        PlayerControllerB? player = null;
+        foreach (Collider collider in colliders)
+        {
+            if (collider.gameObject.TryGetComponent(out PlayerControllerB playerController))
+            {
+                player = playerController;
+            }
+        }
+        if (targetPlayer == null || player == null)
+        {
+            return;
+        }
+
+        timeSinceHittingLocalPlayer = 1.5f;
+        Plugin.ExtendedLogging("Hitting player with normal melee attack");
+        player.DamagePlayer(MeleeDamage, true, false, CauseOfDeath.Bludgeoning, 0, false, default);
+        if (player.health <= 0 || player.isPlayerDead || player.health - MeleeDamage <= 0)
+        {
+            Plugin.ExtendedLogging("Player is dead");
+            SetTargetServerRpc(-1);
+        }
     } // Animation Event
     #endregion
 }

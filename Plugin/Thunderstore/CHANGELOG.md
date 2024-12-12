@@ -9,6 +9,7 @@
 - Fixed "Vanilla" and "Modded" for hazard curves.
 - Fixed microwave scannode not having a box collider.
 - Gave 999 Gal and BellCrab Gal a ScanNode.
+- Added config for bear traps, they can now pop the cruiser's tires, fuck you cruiser drivers, burn and die.
 
 ## v0.8.16
 
