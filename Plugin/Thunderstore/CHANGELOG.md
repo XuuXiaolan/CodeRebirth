@@ -1,4 +1,16 @@
-# v0.8.16
+# v0.8.17
+
+- Added 15% chance event for wooden crate's to explode and damage the player.
+- Gave bellcrab gal a dancing animation.
+- Fixed 999 Gal not being interactable by players other than host.
+- Fixed microwave scrap being on the bottom.
+- Fixed microwave explosion not showing on client's end.
+- Fixed microwave scrap always being grabbable despite microwave closed.
+- Fixed "Vanilla" and "Modded" for hazard curves.
+- Fixed microwave scannode not having a box collider.
+- Gave 999 Gal and BellCrab Gal a ScanNode.
+
+## v0.8.16
 
 - Fixed lethal hands damage with crate.
 - Forgot something.
