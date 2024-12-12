@@ -4,7 +4,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class FloorSpikeTrap : MonoBehaviour
+public class FloorSpikeTrap : NetworkBehaviour
 {
     public enum DeathAnimation
     {
@@ -40,7 +40,7 @@ public class FloorSpikeTrap : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (!NetworkManager.Singleton.IsServer || animationTimer > 0f) return;
+        if (!IsServer || animationTimer > 0f) return;
 
         PlayerControllerB player = other.GetComponent<PlayerControllerB>();
         if (player != null)
@@ -60,7 +60,7 @@ public class FloorSpikeTrap : MonoBehaviour
                 internalDamageTimer = 0f;
             }
         }
-        if (animationTimer <= 0 || !NetworkManager.Singleton.IsServer) return;
+        if (animationTimer <= 0 || !IsServer) return;
 
         internalAnimationTimer += Time.deltaTime;
         if (internalAnimationTimer >= animationTimer)
