@@ -405,4 +405,10 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             animator.SetBool(isDancing, true);
 		}
     }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        Instances.Remove(this);
+    }
 }
