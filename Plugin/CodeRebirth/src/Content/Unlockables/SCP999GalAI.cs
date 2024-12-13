@@ -37,6 +37,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     {
         Instances.Add(this);
         UpdatePlayerHealths();
+        QualitySettings.skinWeights = SkinWeights.FourBones;
         random = new System.Random(StartOfRound.Instance.randomMapSeed + 40);
         if (IsServer)
         {
