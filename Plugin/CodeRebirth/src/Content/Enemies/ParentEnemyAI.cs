@@ -9,7 +9,6 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class ParentEnemyAI : CodeRebirthEnemyAI
@@ -149,6 +148,13 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         _childEevee.parentEevee = this;
         _childEevee.NetworkObject.OnSpawn(() => {
             childEevee.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+            foreach (var childCollider in childEevee.GetComponentsInChildren<Collider>())
+            {
+                foreach (var parentCollider in this.GetComponentsInChildren<Collider>())
+                {
+                    Physics.IgnoreCollision(childCollider, parentCollider, true);
+                }
+            }
             Plugin.ExtendedLogging($"Spawned eevee: {this.transform.position}");
         });
     }
@@ -172,7 +178,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
                 SetAnimatorBools(true, false, false, false);
                 break;
             case State.Guarding:
-                SetAnimatorBools(false, false, true, false);
+                SetAnimatorBools(true, true, false, false);
                 break;
             case State.ChasingPlayer:
                 SetAnimatorBools(true, true, false, false);
@@ -185,6 +191,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     private void SetAnimatorBools(bool walking, bool running, bool guarding, bool dead)
     {
+        Plugin.ExtendedLogging($"Changing animator parameters for parent enemy | Walking: {walking}, Running: {running}, Guarding: {guarding}, Dead: {dead}");
         creatureAnimator.SetBool(WalkingAnimation, walking);
         creatureAnimator.SetBool(RunningAnimation, running);
         creatureAnimator.SetBool(GuardingAnimation, guarding);
@@ -206,6 +213,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     private void SwitchStateOrEmotion(int state) // this is for everyone.
     {
         State stateToSwitchTo = (State)state;
+        smartAgentNavigator.StopSearchRoutine();
         if (state != -1)
         {
             switch (stateToSwitchTo)
@@ -244,19 +252,15 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     private void HandleStateGuardingChange()
     {
-        smartAgentNavigator.StopSearchRoutine();
-        GrabChild(childEevee, MouthTransform);
     }
 
     private void HandleStateChasingPlayerChange()
     {
         agent.speed = SprintingSpeed;
-        smartAgentNavigator.StopSearchRoutine();
     }
 
     private void HandleStateDeathChange()
     {
-        smartAgentNavigator.StopSearchRoutine();
     }
     #endregion
 
@@ -334,11 +338,13 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         }
         else // come to this state after hitting a player and making them drop the eevee, so eevee wont be held by anyone really
         {
+            smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
             if (Vector3.Distance(childEevee.transform.position, this.transform.position) <= 2.5)
             {
+                holdingChild = true;
                 GrabChildServerRpc();
+                return;
             }
-            smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
         }
     }
 
@@ -404,7 +410,6 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         HandleStateAnimationSpeedChanges(State.ChasingPlayer);
     }
 
-
     public override void KillEnemy(bool destroy = false) 
     {
         base.KillEnemy(destroy);
@@ -442,16 +447,9 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             childEevee.isInShipRoom = true;
             childEevee.isInElevator = true;
             childEevee.transform.SetParent(GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform, true);
-            childEevee.EnablePhysics(true);
-            childEevee.EnableItemMeshes(true);
             childEevee.transform.localScale = childEevee.originalScale;
             childEevee.isHeld = false;
             childEevee.isPocketed = false;
-            childEevee.fallTime = 0f;
-            childEevee.startFallingPosition = childEevee.transform.parent.InverseTransformPoint(childEevee.transform.position);
-            Vector3 vector2 = childEevee.GetItemFloorPosition(default(Vector3));
-            childEevee.targetFloorPosition = GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform.InverseTransformPoint(vector2);
-            childEevee.floorYRot = -1;
             childEevee.grabbable = true;
             childEevee.isHeldByEnemy = false;
             childEevee.transform.rotation = Quaternion.Euler(childEevee.itemProperties.restingRotation);
@@ -461,22 +459,23 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             childEevee.isInShipRoom = false;
             childEevee.isInElevator = false;
             childEevee.EnablePhysics(true);
-            childEevee.fallTime = 0f;
-            childEevee.startFallingPosition = childEevee.transform.parent.InverseTransformPoint(childEevee.transform.position);
-            childEevee.targetFloorPosition = childEevee.transform.parent.InverseTransformPoint(childEevee.GetItemFloorPosition(default(Vector3)));
-            childEevee.floorYRot = -1;
-            childEevee.DiscardItemFromEnemy();
             childEevee.grabbable = true;
             childEevee.isHeldByEnemy = false;
             childEevee.transform.rotation = Quaternion.Euler(childEevee.itemProperties.restingRotation);
             childEevee.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         }
+
+        if (!IsServer) return;
         if (wasHurt)
         {
             List<Vector3> scaryPositions = StartOfRound.Instance.allPlayerScripts.Select(x => x.transform.position).ToList();
             scaryPositions.Add(this.transform.position);
             childEevee.BecomeScared(scaryPositions);
             // todo: run an event on eevee that makes her run away.
+        }
+        else
+        {
+            childEevee.HandleStateAnimationSpeedChangesServerRpc((int)ChildEnemyAI.State.Wandering);
         }
         // creatureVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
     }
@@ -523,8 +522,14 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         child.parentObject = mouthTransform;
         child.EnablePhysics(false);
         holdingChild = true;
+        child.transform.rotation = Quaternion.Euler(childEevee.itemProperties.rotationOffset);
+
         // creatureVoice.PlayOneShot(TakeDropItemSounds[galRandom.NextInt(0, TakeDropItemSounds.Length - 1)]);
         if (HoarderBugAI.grabbableObjectsInMap.Contains(child.gameObject)) HoarderBugAI.grabbableObjectsInMap.Remove(child.gameObject);
+        if (IsServer)
+        {
+            childEevee.HandleStateAnimationSpeedChangesServerRpc((int)ChildEnemyAI.State.Grabbed);
+        }
     }
 
     private void HandleAttack(List<PlayerControllerB> playersHit, float force, int damage)
@@ -532,27 +537,23 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         if (timeSinceHittingLocalPlayer > 0f || isEnemyDead || currentBehaviourStateIndex != (int)State.ChasingPlayer) return;
         foreach (PlayerControllerB player in playersHit)
         {
+            if (player == null) continue;
             if (player == GameNetworkManager.Instance.localPlayerController) timeSinceHittingLocalPlayer = 1.5f;
             Plugin.ExtendedLogging("Hitting player with special melee attack");
             Vector3 direction = (player.transform.position - transform.position).normalized;
             player.externalForces += direction * force;
             player.DamagePlayer(damage, true, false, CauseOfDeath.Bludgeoning, 0, false, direction * force);
-            bool eeveeDropped = false;
             if (player.isPlayerDead)
             {
                 Plugin.ExtendedLogging("Player is dead");
-                eeveeDropped = true;
+                HandleStateAnimationSpeedChangesServerRpc((int)State.Guarding);
                 SetTargetServerRpc(-1);
             }
             else if (childEevee.isHeld && childEevee.playerHeldBy != null && childEevee.playerHeldBy == player)
             {
-                eeveeDropped = true;
-                player.DiscardHeldObject();
-            }
-
-            if (eeveeDropped)
-            {
                 HandleStateAnimationSpeedChangesServerRpc((int)State.Guarding);
+                player.DiscardHeldObject();
+                SetTargetServerRpc(-1);
             }
         }
     }
@@ -576,12 +577,12 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         {
             if (collider.TryGetComponent(out PlayerControllerB player))
             {
+                Plugin.ExtendedLogging($"Player to hit: {player.name}");
                 playersToHit.Add(player);
             }
         }
         // do a spherecast, pass it onto handleattack
-        PlayerControllerB specialPlayer = playersToHit.Where(x => Vector3.Distance(x.transform.position, transform.position) < 5f).OrderBy(x => Vector3.Distance(x.transform.position, transform.position)).FirstOrDefault();
-        playersToHit.Remove(specialPlayer);
+        PlayerControllerB specialPlayer = playersToHit.OrderBy(x => Vector3.Distance(x.transform.position, transform.position)).FirstOrDefault();
         HandleAttack(playersToHit, SpecialAttackPushForce, SpecialAOEDamage);
 
         HandleAttack(new List<PlayerControllerB> { specialPlayer }, default, SpecialMeleeDamage);
@@ -611,6 +612,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         if (player.health <= 0 || player.isPlayerDead || player.health - MeleeDamage <= 0)
         {
             Plugin.ExtendedLogging("Player is dead");
+            HandleStateAnimationSpeedChangesServerRpc((int)State.Guarding);
             SetTargetServerRpc(-1);
         }
     } // Animation Event

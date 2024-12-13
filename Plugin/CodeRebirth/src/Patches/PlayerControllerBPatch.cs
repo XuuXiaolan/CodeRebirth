@@ -90,7 +90,8 @@ static class PlayerControllerBPatch {
         if (self.ContainsCRPlayerData() && ((self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
         {
             Hoverboard? hoverboard = self.TryGetHoverboardRiding();
-            if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self == GameNetworkManager.Instance.localPlayerController) {
+            if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self == GameNetworkManager.Instance.localPlayerController)
+            {
                 HUDManager.Instance.batteryMeter.fillAmount = hoverboard.insertedBattery.charge / 1.3f;
                 HUDManager.Instance.batteryMeter.gameObject.SetActive(true);
                 HUDManager.Instance.batteryIcon.enabled = true;
