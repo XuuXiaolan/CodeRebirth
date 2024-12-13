@@ -1,4 +1,4 @@
-# v0.8.17
+# v0.9.0
 
 - Added 15% chance event for wooden crate's to explode and damage the player.
 - Gave bellcrab gal a dancing animation.
