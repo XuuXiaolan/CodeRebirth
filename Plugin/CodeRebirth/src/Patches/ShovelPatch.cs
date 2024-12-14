@@ -9,7 +9,8 @@ using Unity.Netcode;
 using CodeRebirth.src.Content.Enemies;
 
 namespace CodeRebirth.src.Patches;
-static class ShovelPatch {
+static class ShovelPatch
+{
 	static System.Random? random;
 	
 	public static void Init() {
