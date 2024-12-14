@@ -32,6 +32,7 @@ public class Charger : NetworkBehaviour
             {
                 PlayerControllerB closestPlayer = StartOfRound.Instance.allPlayerScripts.Where(p => p.isPlayerControlled && !p.isPlayerDead).OrderBy(p => Vector3.Distance(transform.position, p.transform.position)).First();
                 int playerIndex = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer);
+                if (!NetworkObject.IsSpawned) yield break;
                 ActivateGirlServerRpc(playerIndex);
             }
         }
@@ -41,7 +42,7 @@ public class Charger : NetworkBehaviour
     {
         if (!NetworkObject.IsSpawned) return;
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
-        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && NavmeshInCompanyCompat.Enabled)) return;
+        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || !(RoundManager.Instance.currentLevel.levelID == 3 && NavmeshInCompanyCompat.Enabled)) return;
         if (!GalAI.Animator.GetBool("activated"))
         {
             ActivateGirlServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));

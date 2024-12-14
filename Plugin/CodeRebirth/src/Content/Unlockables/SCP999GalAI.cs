@@ -17,7 +17,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     public List<Transform> revivePositions = new();
 
     [NonSerialized] public float boomboxTimer = 0f;
-    [NonSerialized] public bool boomboxPlaying = false;
+    [NonSerialized] public NetworkVariable<bool> boomboxPlaying = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private System.Random random = new();
     private List<GameObject> particlesSpawned = new();
     private bool currentlyHealing = false;
@@ -37,6 +37,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     {
         Instances.Add(this);
         UpdatePlayerHealths();
+        QualitySettings.skinWeights = SkinWeights.FourBones;
         random = new System.Random(StartOfRound.Instance.randomMapSeed + 40);
         if (IsServer)
         {
@@ -59,13 +60,13 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
     private void BoomboxUpdate()
     {
-        if (!boomboxPlaying) return;
+        if (!boomboxPlaying.Value) return;
 
         boomboxTimer += Time.deltaTime;
         if (boomboxTimer >= 2f)
         {
             boomboxTimer = 0f;
-            boomboxPlaying = false;
+            boomboxPlaying.Value = false;
             animator.SetBool(isDancing, false);
         }
     }
@@ -107,18 +108,23 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
     private void HealPlayerInteraction(PlayerControllerB playerInteracting)
     {
-        Plugin.ExtendedLogging($"Healing player: {playerInteracting} | Cooldown timer: {cooldownTimer} | Heal Charge count: {healChargeCount} | Revive Charge count: {reviveChargeCount}");
-        if (!IsServer) return;
-        if (boomboxPlaying) return;
+        Plugin.ExtendedLogging($"Healing player: {playerInteracting} | Cooldown timer: {cooldownTimer.Value} | Heal Charge count: {healChargeCount.Value} | Revive Charge count: {reviveChargeCount.Value}");
+        if (boomboxPlaying.Value) return;
         if (cooldownTimer.Value > 0f || (healChargeCount.Value <= 0 && reviveChargeCount.Value <= 0))
         {
             Plugin.ExtendedLogging($"triggering squish animation.");
-            networkAnimator.SetTrigger(doSquishAnimation);
+            TriggerAnimationServerRpc(doSquishAnimation);
             return;
         }
 
         // this being on the host's end sucks ass, see if i can make it local, and i dont even know if this works.
         DoHealingStuffServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void TriggerAnimationServerRpc(int triggerHash)
+    {
+        networkAnimator.SetTrigger(triggerHash);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -395,8 +401,14 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 		if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
 		{
             boomboxTimer = 0f;
-			boomboxPlaying = true;
+			boomboxPlaying.Value = true;
             animator.SetBool(isDancing, true);
 		}
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        Instances.Remove(this);
     }
 }

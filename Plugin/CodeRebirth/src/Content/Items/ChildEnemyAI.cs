@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
@@ -23,7 +25,7 @@ public class ChildEnemyAI : GrabbableObject
     [NonSerialized] public int health = 4;
     [NonSerialized] public bool mommyAlive = true;
     [NonSerialized] public float[] friendShipMeterGoals = new float[3] { 0f, 20f, 50f };
-    [NonSerialized] public Dictionary<PlayerControllerB, float> friendShipMeterPlayers = new Dictionary<PlayerControllerB, float>();
+    private Dictionary<PlayerControllerB, float> friendShipMeterPlayers = new Dictionary<PlayerControllerB, float>();
     public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 1.5f;
     private List<Vector3> scaryPositionsList = new();
     private float scaredTimer = 10f;
@@ -65,6 +67,17 @@ public class ChildEnemyAI : GrabbableObject
         Grabbed,
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        {
+            if (friendShipMeterPlayers.ContainsKey(player)) continue;
+            Plugin.ExtendedLogging($"Adding player {player.name} to friendShipMeterPlayers");
+            friendShipMeterPlayers.TryAdd(player, 0f);
+        }
+    }
+
     public override void Start()
     {
         base.Start();
@@ -73,10 +86,7 @@ public class ChildEnemyAI : GrabbableObject
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         smartAgentNavigator.SetAllValues(parentEevee.isOutside);
         isInFactory = !parentEevee.isOutside;
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
-        {
-            friendShipMeterPlayers.Add(player, 0f);
-        }
+
         if (!IsServer) return;
         HandleStateAnimationSpeedChanges(State.Spawning);
     }
@@ -89,7 +99,8 @@ public class ChildEnemyAI : GrabbableObject
 
     public override void DiscardItem()
     {
-        base.DiscardItem();
+        base.DiscardItem(); // todo: fix this with parent chasing player.
+        if (parentEevee.currentBehaviourStateIndex == (int)ParentEnemyAI.State.Guarding) return;
         if (isScared)
         {
             HandleStateAnimationSpeedChangesServerRpc((int)State.Scared);
@@ -122,7 +133,7 @@ public class ChildEnemyAI : GrabbableObject
 					this.insertedBattery.empty = true;
 					if (this.isBeingUsed)
 					{
-						Debug.Log("Use up batteries local");
+						Plugin.ExtendedLogging("Use up batteries local");
 						this.isBeingUsed = false;
 						this.UseUpBatteries();
 						this.isSendingItemRPC++;
@@ -190,7 +201,7 @@ public class ChildEnemyAI : GrabbableObject
         }
         else
         {
-            foreach (var player in friendShipMeterPlayers.Keys)
+            foreach (var player in friendShipMeterPlayers.Keys.ToArray())
             {
                 if (player == null || player.isPlayerDead || !player.isPlayerControlled) continue;
                 
@@ -243,9 +254,11 @@ public class ChildEnemyAI : GrabbableObject
         }
         HandleFriendShipMeter();
 
+        if (isHeldByEnemy || isHeld) return;
         if (!isSitting && sittingTimer <= 0f)
         {
             animator.SetBool(isSittingAnimation, true);
+            isSitting = true;
             sittingTimer = UnityEngine.Random.Range(20, 30);
             int random = UnityEngine.Random.Range(0, 2);
             if (random == 0)
@@ -256,7 +269,15 @@ public class ChildEnemyAI : GrabbableObject
             {
                 networkAnimator.SetTrigger(doSitGesture2Animation);
             }
+            StartCoroutine(StopSittingTimer());
         }
+    }
+
+    private IEnumerator StopSittingTimer()
+    {
+        yield return new WaitForSeconds(1.5f);
+        animator.SetBool(isSittingAnimation, false);
+        isSitting = false;
     }
 
     private void DoSpawning()
@@ -283,6 +304,7 @@ public class ChildEnemyAI : GrabbableObject
             if (enemy is ParentEnemyAI) continue;
             if (LineOfSightAvailable(enemy.transform))
             {
+                BecomeScared(new List<Vector3> { enemy.transform.position });
                 HandleStateAnimationSpeedChanges(State.Scared);
             }
         }
@@ -302,7 +324,7 @@ public class ChildEnemyAI : GrabbableObject
         }
         else
         {
-            smartAgentNavigator.DoPathingToDestination(parentEevee.spawnTransform.position, parentEevee.isSpawnInside, false, null);
+            nearbyPlayer = null;
         }
     }
 
@@ -423,13 +445,19 @@ public class ChildEnemyAI : GrabbableObject
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void HandleStateAnimationSpeedChangesServerRpc(int state)
+    public void HandleStateAnimationSpeedChangesServerRpc(int state)
     {
         HandleStateAnimationSpeedChanges((State)state);
     }
 
-    private void HandleStateAnimationSpeedChanges(State state) // This is for host
+    public void DisableOrEnableAllCollidersAndAgent(bool enable)
     {
+        agent.enabled = enable;
+    }
+
+    public void HandleStateAnimationSpeedChanges(State state) // This is for host
+    {
+        Plugin.ExtendedLogging($"HandleStateAnimationSpeedChanges {state}");
         SwitchStateClientRpc((int)state);
         switch (state)
         {
@@ -456,7 +484,7 @@ public class ChildEnemyAI : GrabbableObject
 
     private void SetAnimatorBools(bool isWalking, bool isRunning, bool isScared, bool isDancing, bool isGrabbed)
     {
-        Plugin.ExtendedLogging($"Setting animator bools: isWalking: {isWalking}, isRunning: {isRunning}, isScared: {isScared}, isDancing: {isDancing}, isGrabbed: {isGrabbed}");
+        Plugin.ExtendedLogging($"Setting animator bools for child: isWalking: {isWalking}, isRunning: {isRunning}, isScared: {isScared}, isDancing: {isDancing}, isGrabbed: {isGrabbed}");
         animator.SetBool(isWalkingAnimation, isWalking);
         animator.SetBool(isRunningAnimation, isRunning);
         this.isRunning = isRunning;
@@ -465,6 +493,7 @@ public class ChildEnemyAI : GrabbableObject
         animator.SetBool(isDancingAnimation, isDancing);
         animator.SetBool(childGrabbedAnimation, isGrabbed);
         animator.SetBool(isSittingAnimation, false);
+        isSitting = false;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -501,7 +530,7 @@ public class ChildEnemyAI : GrabbableObject
         State stateToSwitchTo = (State)state;
         if (state == -1) return;
         smartAgentNavigator.StopSearchRoutine();
-        agent.enabled = true;
+        DisableOrEnableAllCollidersAndAgent(true);
         switch (stateToSwitchTo)
         {
             case State.Spawning:
@@ -557,7 +586,7 @@ public class ChildEnemyAI : GrabbableObject
 
     private void HandleStateGrabbedChange()
     {
-        agent.enabled = false;
+        DisableOrEnableAllCollidersAndAgent(false);
     }
     #endregion
 
