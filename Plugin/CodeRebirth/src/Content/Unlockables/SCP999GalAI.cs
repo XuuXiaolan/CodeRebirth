@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -43,6 +44,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         {
             RechargeGalHealsAndRevivesServerRpc(true, true);
             StartCoroutine(DetectingNearbyPlayer());
+            MakeTriggerInteractableServerRpc(false);
         }
         HealTrigger.onInteract.AddListener(HealPlayerInteraction);
     }
@@ -159,7 +161,6 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         if (onlyInteractedPlayerHealed)
         {
             if (healChargeCount.Value <= 0 || playerInteracting == null || playerInteracting.isPlayerDead || !playerInteracting.isPlayerControlled || playerInteracting.health >= playerMaxHealthDict[playerInteracting]) return;
-            healChargeCount.Value--;
             galDidSomething = true;
             HealPlayersClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting), healAmount, healingSpeed, fail);
         }
@@ -170,7 +171,6 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
                 Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}");
                 if (healChargeCount.Value <= 0 || player == null || player.isPlayerDead || !player.isPlayerControlled || player.health >= playerMaxHealthDict[player]) continue;
                 if (Vector3.Distance(transform.position, player.transform.position) > 5) continue;
-                healChargeCount.Value--;
                 galDidSomething = true;
                 HealPlayersClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), healAmount, healingSpeed, fail);
             }
@@ -241,7 +241,11 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
         // Done healing.
         currentlyHealing = false;
-        
+
+        if (IsServer)
+        {
+            healChargeCount.Value -= healthHealed;
+        }
         // Clean up the particles.
         particlesSpawned.Remove(newParticles);
         Destroy(newParticles);
@@ -385,14 +389,28 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     [ServerRpc(RequireOwnership = false)]
     public void RechargeGalHealsAndRevivesServerRpc(bool heal, bool revive)
     {
+        MakeTriggerInteractableClientRpc(true);
+        int ActivePlayerAmount = StartOfRound.Instance.connectedPlayersAmount;
         if (heal)
         {
-            healChargeCount.Value = Plugin.ModConfig.Config999GalHealCharges.Value;
+            healChargeCount.Value = Plugin.ModConfig.Config999GalHealTotalAmount.Value * (Plugin.ModConfig.Config999GalScaleHealAndReviveWithPlayerCount.Value ? ActivePlayerAmount : 1 );
         }
         if (revive)
         {
-            reviveChargeCount.Value = Plugin.ModConfig.Config999GalReviveCharges.Value;
+            reviveChargeCount.Value = Plugin.ModConfig.Config999GalReviveCharges.Value * (Plugin.ModConfig.Config999GalScaleHealAndReviveWithPlayerCount.Value ? ActivePlayerAmount : 1 );
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MakeTriggerInteractableServerRpc(bool interactable)
+    {
+        MakeTriggerInteractableClientRpc(interactable);
+    }
+
+    [ClientRpc]
+    public void MakeTriggerInteractableClientRpc(bool interactable)
+    {
+        HealTrigger.interactable = interactable;
     }
 
     public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)

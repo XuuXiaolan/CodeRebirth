@@ -583,12 +583,9 @@ static class RoundManagerPatch {
 			gal.RefillChargesServerRpc();
 		}
 
-		if (!Plugin.ModConfig.Config999GalCompanyMoonRecharge.Value)
+		foreach (SCP999GalAI gal in SCP999GalAI.Instances)
 		{
-			foreach (SCP999GalAI gal in SCP999GalAI.Instances)
-			{
-				gal.RechargeGalHealsAndRevivesServerRpc(true, true);
-			}
+			gal.MakeTriggerInteractableServerRpc(false);
 		}
 	}
 
@@ -631,6 +628,14 @@ static class RoundManagerPatch {
 				{
 					gal.RechargeGalHealsAndRevivesServerRpc(true, true);
 				}
+			}
+		}
+
+		if (!Plugin.ModConfig.Config999GalCompanyMoonRecharge.Value)
+		{
+			foreach (SCP999GalAI gal in SCP999GalAI.Instances)
+			{
+				gal.RechargeGalHealsAndRevivesServerRpc(true, true);
 			}
 		}
 	}

@@ -161,10 +161,11 @@ public class CodeRebirthConfig
     public ConfigEntry<float> Config999GalHealSpeed { get; private set; }
     public ConfigEntry<bool> Config999GalHealOnlyInteractedPlayer { get; private set; }
     public ConfigEntry<bool> Config999GalReviveNearbyDeadPlayers { get; private set; }
-    public ConfigEntry<int> Config999GalHealCharges { get; private set; }
+    public ConfigEntry<int> Config999GalHealTotalAmount { get; private set; }
     public ConfigEntry<int> Config999GalReviveCharges { get; private set; }
     public ConfigEntry<bool> Config999GalCompanyMoonRecharge { get; private set; }
     public ConfigEntry<float> Config999GalFailureChance { get; private set; }
+    public ConfigEntry<bool> Config999GalScaleHealAndReviveWithPlayerCount { get; private set; }
 
     #endregion 
     #region Worth
@@ -435,13 +436,13 @@ public class CodeRebirthConfig
                                             "SCP 999 Gal | Heal Speed",
                                             5f,
                                             "Speed of healing by interacting on the gal (amount of time in seconds it for the gal to finish healing).");
-        Config999GalHealCharges = configFile.Bind("SCP 999 Gal Options",
+        Config999GalHealTotalAmount = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Healing Charges",
-                                            4,
+                                            1000,
                                             "How many healing charges the SCP 999 Gal has per orbit.");
         Config999GalReviveCharges = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Revive Charges",
-                                            2,
+                                            3,
                                             "How many revive charges the SCP 999 Gal has per orbit.");
         Config999GalCompanyMoonRecharge = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Company Moon Recharge",
@@ -459,6 +460,10 @@ public class CodeRebirthConfig
                                             "SCP 999 Gal | Revive Nearby Dead Players",
                                             true,
                                             "Whether the gal can revive nearby dead bodies.");
+        Config999GalScaleHealAndReviveWithPlayerCount = configFile.Bind("SCP 999 Gal Options",
+                                            "SCP 999 Gal | Scale Heal and Revive with Player Count",
+                                            true,
+                                            "Whether the gal scales the heals and revives with player count.");
         #endregion
         #region Biomes
         ConfigBiomesEnabled = configFile.Bind("Biome Options",

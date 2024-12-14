@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
@@ -68,9 +69,15 @@ static class PlayerControllerBPatch {
     private static void PlayerControllerB_DamagePlayer(On.GameNetcodeStuff.PlayerControllerB.orig_DamagePlayer orig, PlayerControllerB self, int damageNumber, bool hasDamageSFX, bool callRPC, CauseOfDeath causeOfDeath, int deathAnimation, bool fallDamage, Vector3 force)
     {
         orig(self, damageNumber, hasDamageSFX, callRPC, causeOfDeath, deathAnimation, fallDamage, force);
-        if (self.currentlyHeldObjectServer is ChildEnemyAI childEnemyAI)
+        Plugin.ExtendedLogging($"PlayerControllerB_DamagePlayer called on client: {self.playerUsername} with caller: {self.playerUsername}");
+        if (self.currentlyHeldObjectServer is ChildEnemyAI childEnemyAI && self == GameNetworkManager.Instance.localPlayerController)
         {
             self.StartCoroutine(self.waitToEndOfFrameToDiscard());
+            if (childEnemyAI.mommyAlive)
+            {
+                childEnemyAI.parentEevee.HandleStateAnimationSpeedChangesServerRpc((int)ParentEnemyAI.State.Guarding);
+                childEnemyAI.parentEevee.SetTargetServerRpc(-1);
+            }
         }
     }
 

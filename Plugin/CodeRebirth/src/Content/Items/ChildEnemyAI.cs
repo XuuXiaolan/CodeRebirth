@@ -26,7 +26,7 @@ public class ChildEnemyAI : GrabbableObject
     [NonSerialized] public bool mommyAlive = true;
     [NonSerialized] public float[] friendShipMeterGoals = new float[3] { 0f, 20f, 50f };
     private Dictionary<PlayerControllerB, float> friendShipMeterPlayers = new Dictionary<PlayerControllerB, float>();
-    public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnTransform.position) < 1.5f;
+    public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnPosition) < 1.5f;
     private List<Vector3> scaryPositionsList = new();
     private float scaredTimer = 10f;
     private bool isScared = false;
@@ -47,6 +47,7 @@ public class ChildEnemyAI : GrabbableObject
     private static readonly int doSitGesture1Animation = Animator.StringToHash("doSitGesture1"); // trigger
     private static readonly int doSitGesture2Animation = Animator.StringToHash("doSitGesture2"); // trigger
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // float
+    private Coroutine? grabbingRoutine = null;
     private State eeveeState = State.Spawning;
     private FriendState friendEeveeState = FriendState.Neutral;
 
@@ -99,8 +100,16 @@ public class ChildEnemyAI : GrabbableObject
 
     public override void DiscardItem()
     {
-        base.DiscardItem(); // todo: fix this with parent chasing player.
-        if (parentEevee.currentBehaviourStateIndex == (int)ParentEnemyAI.State.Guarding) return;
+        base.DiscardItem();
+        parentEevee.canGrabChild = false;
+        if (grabbingRoutine != null)
+        {
+            StopCoroutine(grabbingRoutine);
+            grabbingRoutine = null;
+        }
+        grabbingRoutine = StartCoroutine(ChildGrabbableCooldown());
+
+        if (parentEevee.holdingChild) return;
         if (isScared)
         {
             HandleStateAnimationSpeedChangesServerRpc((int)State.Scared);
@@ -109,6 +118,12 @@ public class ChildEnemyAI : GrabbableObject
         {
             HandleStateAnimationSpeedChangesServerRpc((int)State.Wandering);
         }
+    }
+
+    private IEnumerator ChildGrabbableCooldown()
+    {
+        yield return new WaitForSeconds(2);
+        parentEevee.canGrabChild = true;
     }
 
     private void BaseUpdate()
@@ -318,7 +333,7 @@ public class ChildEnemyAI : GrabbableObject
             HandleStateAnimationSpeedChanges(State.Wandering);
             return;
         }
-        if (Vector3.Distance(transform.position, parentEevee.spawnTransform.position) <= 25f)
+        if (Vector3.Distance(transform.position, parentEevee.spawnPosition) <= 25f)
         {
             smartAgentNavigator.DoPathingToDestination(nearbyPlayer.transform.position, nearbyPlayer.isInsideFactory, true, nearbyPlayer);
         }
@@ -457,7 +472,7 @@ public class ChildEnemyAI : GrabbableObject
 
     public void HandleStateAnimationSpeedChanges(State state) // This is for host
     {
-        Plugin.ExtendedLogging($"HandleStateAnimationSpeedChanges {state}");
+        Plugin.ExtendedLogging($"HandleStateAnimationSpeedChanges for CHILD {state}");
         SwitchStateClientRpc((int)state);
         switch (state)
         {
