@@ -55,7 +55,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public UnlockableItemDef SCP999Unlockable { get; private set; } = null!;
 	}
 
-	public class ShrimpDispenserAssets(string bundleName) : AssetBundleLoader<ShrimpDispenserAssets>(bundleName)
+	public class Fishdispenserassets(string bundleName) : AssetBundleLoader<Fishdispenserassets>(bundleName)
 	{
 		[LoadFromBundle("ShrimpDispenserUnlockable.asset")]
 		public UnlockableItemDef ShrimpDispenserUnlockable { get; private set; } = null!;
@@ -64,7 +64,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public Item ShrimpWeapon { get; private set; } = null!;
 	}
 
-	public ShrimpDispenserAssets ShrimpDispenser { get; private set; } = null!;
+	public Fishdispenserassets ShrimpDispenser { get; private set; } = null!;
 	public SCP999Assets SCP999 { get; private set; } = null!;
 	public BellCrabAssets BellCrab { get; private set; } = null!;
 	public SeamineTinkAssets SeamineTink { get; private set; } = null!;
@@ -83,7 +83,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
 	private void RegisterShrimpDispenser()
 	{
-		ShrimpDispenser = new ShrimpDispenserAssets("shrimpdispenserassets");
+		ShrimpDispenser = new Fishdispenserassets("fishdispenserassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(ShrimpDispenser.ShrimpDispenserUnlockable, Plugin.ModConfig.ConfigShrimpDispenserCost.Value, StoreType.ShipUpgrade);
 
 		RegisterScrapWithConfig("", ShrimpDispenser.ShrimpWeapon, 0, 0);

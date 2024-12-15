@@ -12,17 +12,18 @@ public class ShrimpDispenser : NetworkBehaviour
     public AudioSource audioSource = null!;
     public AudioClip dispenseSound = null!;
     public AudioClip buttonSound = null!;
-    public GameObject particleSystemGameObject = null!;
+    //public GameObject particleSystemGameObject = null!;
     public Transform dispenseTransform = null!;
     public InteractTrigger dispenserTrigger = null!;
 
     private ScaryShrimp? lastShrimpDispensed = null;
     private bool ItemPickedUp => lastShrimpDispensed != null && Vector3.Distance(dispenseTransform.position, lastShrimpDispensed.transform.position) >= 1.5f;
     private bool currentlyDispensing = false;
-    private readonly Item itemToSpawn = UnlockableHandler.Instance.ShrimpDispenser.ShrimpWeapon;
+    private Item itemToSpawn = null!;
 
     public void Start()
     {
+        itemToSpawn = UnlockableHandler.Instance.ShrimpDispenser.ShrimpWeapon;
         dispenserTrigger.onInteract.AddListener(OnDispenserInteract);
     }
 
@@ -61,11 +62,14 @@ public class ShrimpDispenser : NetworkBehaviour
     private IEnumerator PlayDispenserAnimation()
     {
         currentlyDispensing = true;
-        var newParticles = GameObject.Instantiate(particleSystemGameObject, dispenseTransform.position, Quaternion.identity, this.transform);
-        newParticles.SetActive(true);
-        Destroy(newParticles, newParticles.GetComponent<ParticleSystem>().main.duration);
+        //var newParticles = GameObject.Instantiate(particleSystemGameObject, dispenseTransform.position, Quaternion.identity, this.transform);
+        //newParticles.SetActive(true);
+        //Destroy(newParticles, newParticles.GetComponent<ParticleSystem>().main.duration);
         audioSource.PlayOneShot(dispenseSound);
         yield return new WaitForSeconds(1f);
+        Plugin.ExtendedLogging($"Current y rotation {this.transform.rotation.y} for this gameobject: {this.gameObject.name}");
+        itemToSpawn.restingRotation.y = this.transform.rotation.eulerAngles.y + 180; // todo: fix rotation not working when dispensing, it needs to face the machine.
+        Plugin.ExtendedLogging($"Spawning {itemToSpawn} at {dispenseTransform.position} with y rotation {itemToSpawn.restingRotation.y}");
         if (IsServer)
         {
             if (lastShrimpDispensed != null && !ItemPickedUp)

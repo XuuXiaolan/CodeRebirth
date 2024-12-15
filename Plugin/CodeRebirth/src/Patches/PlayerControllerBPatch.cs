@@ -58,6 +58,10 @@ static class PlayerControllerBPatch
             {
                 playerWhoHit.itemAudio.PlayOneShot(scaryShrimp.killClip, 1f);
             }
+            else
+            {
+                self.DropAllHeldItemsServerRpc();
+            }
             playerWhoHit.DespawnHeldObjectServerRpc();
             return false;
         }
