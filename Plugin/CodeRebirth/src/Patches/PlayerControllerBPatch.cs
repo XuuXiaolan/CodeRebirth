@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -12,7 +13,8 @@ using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
-static class PlayerControllerBPatch {
+static class PlayerControllerBPatch
+{
     public static List<SmartAgentNavigator> smartAgentNavigators = new();
 
     [HarmonyPatch(nameof(PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]
@@ -44,6 +46,22 @@ static class PlayerControllerBPatch {
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
         On.GameNetcodeStuff.PlayerControllerB.KillPlayer += PlayerControllerB_KillPlayer;
+        On.GameNetcodeStuff.PlayerControllerB.IHittable_Hit += PlayerControllerB_IHittable_Hit;
+    }
+
+    private static bool PlayerControllerB_IHittable_Hit(On.GameNetcodeStuff.PlayerControllerB.orig_IHittable_Hit orig, PlayerControllerB self, int force, Vector3 hitDirection, PlayerControllerB playerWhoHit, bool playHitSFX, int hitID)
+    {
+        if (playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer is ScaryShrimp scaryShrimp)
+        {
+            self.DamagePlayerFromOtherClientServerRpc(60, hitDirection, (int)playerWhoHit.playerClientId);
+            if (self.isPlayerDead || self.health - 60 <= 0)
+            {
+                playerWhoHit.itemAudio.PlayOneShot(scaryShrimp.killClip, 1f);
+            }
+            playerWhoHit.DespawnHeldObjectServerRpc();
+            return false;
+        }
+        return orig(self, force, hitDirection, playerWhoHit, playHitSFX, hitID);
     }
 
     private static void PlayerControllerB_KillPlayer(On.GameNetcodeStuff.PlayerControllerB.orig_KillPlayer orig, PlayerControllerB self, Vector3 bodyVelocity, bool spawnBody, CauseOfDeath causeOfDeath, int deathAnimation, Vector3 positionOffset)

@@ -1,4 +1,13 @@
-# v0.9.0
+# v0.9.2
+
+- Fixed bug with gals not being activatable on company moon with navmeshcompany mod.
+- Added a new unlockable dispenser, costs only 150, something from lockdown protocol, one of my favourite games recently.
+
+## v0.9.1
+
+- Rebuilt mod for latest game version.
+
+## v0.9.0
 
 - Added 15% chance event for wooden crate's to explode and damage the player.
 - Gave bellcrab gal a dancing animation.

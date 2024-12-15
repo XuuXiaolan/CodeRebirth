@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigShrimpDispenserEnabled { get; private set; }
     public ConfigEntry<bool> Config999GalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
     public ConfigEntry<bool> ConfigDontTargetFarEnemies { get; private set; }
@@ -166,6 +167,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> Config999GalCompanyMoonRecharge { get; private set; }
     public ConfigEntry<float> Config999GalFailureChance { get; private set; }
     public ConfigEntry<bool> Config999GalScaleHealAndReviveWithPlayerCount { get; private set; }
+    public ConfigEntry<int> ConfigShrimpDispenserCost { get; private set; }
 
     #endregion 
     #region Worth
@@ -201,6 +203,16 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region Shrimp Dispenser
+        ConfigShrimpDispenserEnabled = configFile.Bind("ShrimpDispenser Options",
+                                            "Shrimp Dispenser | Enabled",
+                                            true,
+                                            "Whether the Shrimp Dispenser is enabled.");
+        ConfigShrimpDispenserCost = configFile.Bind("ShrimpDispenser Options",
+                                            "Shrimp Dispenser | Cost",
+                                            150,
+                                            "The cost of the Shrimp Dispenser.");
         #endregion
         #region Functional Microwave
         ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",

@@ -1,8 +1,3 @@
-using System;
-using CodeRebirth.src.Content.Unlockables;
-using Unity.Netcode;
-using UnityEngine;
-
 namespace CodeRebirth.src.Patches;
 public static class SpikeTrapPatch
 {

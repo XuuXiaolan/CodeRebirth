@@ -42,7 +42,7 @@ public class Charger : NetworkBehaviour
     {
         if (!NetworkObject.IsSpawned) return;
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
-        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || !(RoundManager.Instance.currentLevel.levelID == 3 && NavmeshInCompanyCompat.Enabled)) return;
+        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && !NavmeshInCompanyCompat.Enabled)) return;
         if (!GalAI.Animator.GetBool("activated"))
         {
             ActivateGirlServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
