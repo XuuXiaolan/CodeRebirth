@@ -11,6 +11,7 @@ public class ShrimpDispenser : NetworkBehaviour
 {
     public AudioSource audioSource = null!;
     public AudioClip dispenseSound = null!;
+    public AudioClip buttonSound = null!;
     public GameObject particleSystemGameObject = null!;
     public Transform dispenseTransform = null!;
     public InteractTrigger dispenserTrigger = null!;
@@ -27,9 +28,22 @@ public class ShrimpDispenser : NetworkBehaviour
 
     private void OnDispenserInteract(PlayerControllerB playerInteracting)
     {
+        PlayButtonSoundServerRpc();
         if (currentlyDispensing) return;
         currentlyDispensing = true;
         PlayDispenserAnimationServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void PlayButtonSoundServerRpc()
+    {
+        PlayButtonSoundClientRpc();
+    }
+
+    [ClientRpc]
+    private void PlayButtonSoundClientRpc()
+    {
+        audioSource.PlayOneShot(buttonSound, 1f);
     }
 
     [ServerRpc(RequireOwnership = false)]
