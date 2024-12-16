@@ -2,6 +2,9 @@
 
 - Fixed bug with gals not being activatable on company moon with navmeshcompany mod.
 - Added a new unlockable dispenser, costs only 150, something from lockdown protocol, one of my favourite games recently.
+- Messed with seamine gal range when outside for attacking.
+- Changed interact message for scp 999 gal.
+- Fixed scannode for hoverboard, bell crab and scp 999 gal.
 
 ## v0.9.1
 

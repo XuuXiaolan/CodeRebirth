@@ -51,6 +51,32 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
     public void Update()
     {
+        if (cooldownTimer.Value <= 0f)
+        {
+            bool moreThan0HealCapacity = healChargeCount.Value > 0;
+            bool moreThan0ReviveCapacity = reviveChargeCount.Value > 0;
+            if (moreThan0HealCapacity && moreThan0ReviveCapacity)
+            {
+                HealTrigger.hoverTip =  "Heals Left: " + healChargeCount.Value + "\nRevives Left: " + reviveChargeCount.Value;
+            }
+            else if (moreThan0HealCapacity)
+            {
+                HealTrigger.hoverTip = "Heals Left: " + healChargeCount.Value;
+            }
+            else if (moreThan0ReviveCapacity)
+            {
+                HealTrigger.hoverTip = "Revives Left: " + reviveChargeCount.Value;
+            }
+            else
+            {
+                HealTrigger.hoverTip = "Not enough charges!";
+            }
+        }
+        else
+        {
+            HealTrigger.hoverTip = "Healing Cooldown: " + Math.Round(cooldownTimer.Value, 2);
+        }
+
         if (!IsServer) return;
         if (!currentlyHealing)
         {
@@ -224,6 +250,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             if (healthThisFrame > 0)
             {
                 healthHealed += healthThisFrame;
+                if (IsServer) healChargeCount.Value -= healthThisFrame;
                 player.health += healthThisFrame;
                 SetVisualChangesToPlayer(player);
             }
@@ -242,10 +269,6 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         // Done healing.
         currentlyHealing = false;
 
-        if (IsServer)
-        {
-            healChargeCount.Value -= healthHealed;
-        }
         // Clean up the particles.
         particlesSpawned.Remove(newParticles);
         Destroy(newParticles);
@@ -253,7 +276,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
     private void SetVisualChangesToPlayer(PlayerControllerB player)
     {
-        if (player.health > 20)
+        if (player.health >= 20)
         {
             if (player.criticallyInjured || player.bleedingHeavily)
             {
@@ -390,7 +413,16 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     public void RechargeGalHealsAndRevivesServerRpc(bool heal, bool revive)
     {
         MakeTriggerInteractableClientRpc(true);
-        int ActivePlayerAmount = StartOfRound.Instance.connectedPlayersAmount;
+        int ActivePlayerAmount = 0;
+        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+        {
+            if (player.isPlayerControlled)
+            {
+                ActivePlayerAmount++;
+            }
+        }
+        Plugin.ExtendedLogging("Active Amount with dict: " + StartOfRound.Instance.ClientPlayerList.Count);
+        Plugin.ExtendedLogging($"ActivePlayerAmount: {ActivePlayerAmount} | heal: {heal} | revive: {revive}");
         if (heal)
         {
             healChargeCount.Value = Plugin.ModConfig.Config999GalHealTotalAmount.Value * (Plugin.ModConfig.Config999GalScaleHealAndReviveWithPlayerCount.Value ? ActivePlayerAmount : 1 );

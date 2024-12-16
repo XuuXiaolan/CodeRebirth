@@ -449,12 +449,12 @@ public class CodeRebirthConfig
                                             5f,
                                             "Speed of healing by interacting on the gal (amount of time in seconds it for the gal to finish healing).");
         Config999GalHealTotalAmount = configFile.Bind("SCP 999 Gal Options",
-                                            "SCP 999 Gal | Healing Charges",
-                                            1000,
-                                            "How many healing charges the SCP 999 Gal has per orbit.");
+                                            "SCP 999 Gal | Healing Capacity",
+                                            150,
+                                            "How much healing the SCP 999 Gal has per orbit.");
         Config999GalReviveCharges = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Revive Charges",
-                                            3,
+                                            1,
                                             "How many revive charges the SCP 999 Gal has per orbit.");
         Config999GalCompanyMoonRecharge = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Company Moon Recharge",

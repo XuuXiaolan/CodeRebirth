@@ -381,7 +381,7 @@ public class SeamineGalAI : GalAI
             }
         }
         float distanceToTarget = Vector3.Distance(transform.position, targetEnemy.transform.position);
-        if (distanceToTarget <= Agent.stoppingDistance + 4 && !currentlyAttacking)
+        if (distanceToTarget <= (Agent.stoppingDistance + 4 + (targetEnemy is CentipedeAI || smartAgentNavigator.isOutside ? 5 : 0)) && !currentlyAttacking)
         {
             Vector3 targetPosition = targetEnemy.transform.position;
             Vector3 direction = (targetPosition - this.transform.position).normalized;
@@ -392,7 +392,7 @@ public class SeamineGalAI : GalAI
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
             }
-            if (distanceToTarget <= Agent.stoppingDistance || (targetEnemy is CentipedeAI && distanceToTarget <= Agent.stoppingDistance + 5))
+            if (distanceToTarget <= (targetEnemy is CentipedeAI || smartAgentNavigator.isOutside ? 5 : 0))
             {
                 currentlyAttacking = true;
                 NetworkAnimator.SetTrigger(startExplodeAnimation);

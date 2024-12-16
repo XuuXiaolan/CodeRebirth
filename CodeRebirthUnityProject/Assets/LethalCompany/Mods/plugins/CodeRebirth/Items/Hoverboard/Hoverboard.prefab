@@ -407,6 +407,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5992282587606038134}
   - component: {fileID: 3818497019440573442}
+  - component: {fileID: 9143546063759940374}
   m_Layer: 22
   m_Name: ScanNode
   m_TagString: Untagged
@@ -423,7 +424,7 @@ Transform:
   m_GameObject: {fileID: 3718407623615643970}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.606, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -449,6 +450,27 @@ MonoBehaviour:
   scrapValue: 0
   creatureScanID: -1
   nodeType: 1
+--- !u!65 &9143546063759940374
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3718407623615643970}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5677648857109473811
 GameObject:
   m_ObjectHideFlags: 0
