@@ -63,4 +63,35 @@ public class ScaryShrimp : Shovel
         grabbableObject.transform.localScale = Vector3.zero;
         StartCoroutine(DespawnHeldObject(playerHeldBy));
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PastHitPlayerServerRpc(int playerIndex)
+    {
+        PlayerControllerB playerHit = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        PastHitPlayerClientRpc(playerIndex, playerHit.health, playerHit.isPlayerDead);
+    }
+
+    [ClientRpc]
+    public void PastHitPlayerClientRpc(int playerIndex, int playerHp, bool isDead)
+    {
+        Plugin.ExtendedLogging($"Hit player {playerIndex} with {playerHp} hp and dead: {isDead}");
+        
+        PlayerControllerB playerHit = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        if (playerHp - 60 <= 0 || isDead) lastPlayerHeld.itemAudio.PlayOneShot(killClip);
+        else
+        {
+            playerHit.drunknessInertia = Mathf.Clamp(playerHit.drunknessInertia + 5f * playerHit.drunknessSpeed, 0.1f, 3f);
+            playerHit.increasingDrunknessThisFrame = true;
+            playerHit.DropAllHeldItems();
+        }
+        if (playerHeldBy.currentlyHeldObjectServer == null)
+        {
+            Plugin.ExtendedLogging("No held object");
+            return;
+        }
+        GrabbableObject grabbableObject = playerHeldBy.currentlyHeldObjectServer;
+        grabbableObject.originalScale = Vector3.zero;
+        grabbableObject.transform.localScale = Vector3.zero;
+        StartCoroutine(DespawnHeldObject(playerHeldBy));
+    }
 }

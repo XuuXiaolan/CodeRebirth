@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -20,9 +21,11 @@ public class ShrimpDispenser : NetworkBehaviour
     private bool ItemPickedUp => lastShrimpDispensed != null && Vector3.Distance(dispenseTransform.position, lastShrimpDispensed.transform.position) >= 1.5f;
     private bool currentlyDispensing = false;
     private Item itemToSpawn = null!;
+    private System.Random shrimpRandom = new();
 
     public void Start()
     {
+        shrimpRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
         itemToSpawn = UnlockableHandler.Instance.ShrimpDispenser.ShrimpWeapon;
         dispenserTrigger.onInteract.AddListener(OnDispenserInteract);
     }
@@ -65,7 +68,8 @@ public class ShrimpDispenser : NetworkBehaviour
         //var newParticles = GameObject.Instantiate(particleSystemGameObject, dispenseTransform.position, Quaternion.identity, this.transform);
         //newParticles.SetActive(true);
         //Destroy(newParticles, newParticles.GetComponent<ParticleSystem>().main.duration);
-        audioSource.PlayOneShot(dispenseSound);
+
+        if (shrimpRandom.Next(0, 10) <= 0 || Plugin.ModConfig.ConfigDebugMode.Value) audioSource.PlayOneShot(dispenseSound);
         yield return new WaitForSeconds(1f);
         Plugin.ExtendedLogging($"Current y rotation {this.transform.rotation.y} for this gameobject: {this.gameObject.name}");
         itemToSpawn.restingRotation.y = this.transform.rotation.eulerAngles.y + 180;
@@ -84,9 +88,21 @@ public class ShrimpDispenser : NetworkBehaviour
                 }
             }
             NetworkObjectReference shrimp = CodeRebirthUtils.Instance.SpawnScrap(itemToSpawn, dispenseTransform.position, false, true, 0);
-            lastShrimpDispensed = ((GameObject)shrimp).GetComponent<ScaryShrimp>();
-            lastShrimpDispensed.parentObject = dispenseTransform;
+            SetParentObjectServerRpc(shrimp);
         }
         currentlyDispensing = false;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetParentObjectServerRpc(NetworkObjectReference shrimp)
+    {
+        SetParentObjectClientRpc(shrimp);
+    }
+
+    [ClientRpc]
+    private void SetParentObjectClientRpc(NetworkObjectReference shrimp)
+    {
+        lastShrimpDispensed = ((GameObject)shrimp).GetComponent<ScaryShrimp>();
+        lastShrimpDispensed.parentObject = dispenseTransform;
     }
 }

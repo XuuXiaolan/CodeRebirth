@@ -53,16 +53,8 @@ static class PlayerControllerBPatch
     {
         if (playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer is ScaryShrimp scaryShrimp)
         {
+            scaryShrimp.PastHitPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self));
             self.DamagePlayerFromOtherClientServerRpc(60, hitDirection, (int)playerWhoHit.playerClientId);
-            if (self.isPlayerDead || self.health - 60 <= 0)
-            {
-                playerWhoHit.itemAudio.PlayOneShot(scaryShrimp.killClip, 1f);
-            }
-            else
-            {
-                self.DropAllHeldItemsServerRpc();
-            }
-            playerWhoHit.DespawnHeldObjectServerRpc();
             return false;
         }
         return orig(self, force, hitDirection, playerWhoHit, playHitSFX, hitID);
