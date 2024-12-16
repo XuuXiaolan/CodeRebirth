@@ -21,7 +21,7 @@ static class ShovelPatch
     {
         PreHitShovel(ref self);
 
-        if (self.IsSpawned) orig(self, cancel);
+        orig(self, cancel);
 
         PostHitShovel(ref self);
     }
@@ -36,6 +36,11 @@ static class ShovelPatch
 
     static void PostHitShovel(ref Shovel self)
     {
+        if (self is ScaryShrimp scaryShrimp)
+        {
+            scaryShrimp.playerHeldBy.twoHanded = true;
+            return;
+        }
         if (self is not CodeRebirthWeapons CRWeapon) return;
         ResetWeaponDamage(ref CRWeapon);
         TryBreakTrees(ref CRWeapon);

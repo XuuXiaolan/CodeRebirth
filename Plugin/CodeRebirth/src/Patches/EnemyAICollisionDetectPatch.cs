@@ -15,34 +15,15 @@ public static class EnemyAICollisionDetectPatch
     {
         if (playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer is ScaryShrimp scaryShrimp)
         {
-            if (scaryShrimp.hitEnemy)
+            if (scaryShrimp.hitEnemy.Value)
             {
                 return false;
             }
-            scaryShrimp.hitEnemy = true;
+            scaryShrimp.hitEnemy.Value = true;
+            scaryShrimp.PastHitEnemyServerRpc(self.mainScript.enemyHP);
             self.mainScript.HitEnemyOnLocalClient(3, hitDirection, playerWhoHit, playHitSFX, hitID);
-            if (self.mainScript.isEnemyDead || self.mainScript.enemyHP - 3 <= 0)
-            {
-                playerWhoHit.itemAudio.PlayOneShot(scaryShrimp.killClip); // network this.
-            }
-            self.StartCoroutine(DespawnHeldObject(playerWhoHit));
             return false;
         }
         return orig(self, force, hitDirection, playerWhoHit, playHitSFX, hitID);
-    }
-
-    private static IEnumerator DespawnHeldObject(PlayerControllerB playerWhoHit)
-    {
-        if (playerWhoHit.currentlyHeldObjectServer == null)
-        {
-            Plugin.ExtendedLogging("No held object");
-            yield break;
-        }
-        GrabbableObject grabbableObject = playerWhoHit.currentlyHeldObjectServer;
-        grabbableObject.originalScale = Vector3.zero;
-        grabbableObject.transform.localScale = Vector3.zero;
-        yield return new WaitForSeconds(0.1f);
-        Plugin.ExtendedLogging("Despawned held object");
-        playerWhoHit.DiscardHeldObject();
     }
 }
