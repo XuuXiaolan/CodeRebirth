@@ -21,16 +21,17 @@ static class ShovelPatch
     {
         PreHitShovel(ref self);
 
-        orig(self, cancel);
+        if (self.IsSpawned) orig(self, cancel);
 
         PostHitShovel(ref self);
     }
 
     static void PreHitShovel(ref Shovel self)
     {
+        if (self is not CodeRebirthWeapons CRWeapon) return;
         random ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
-        TryCritWeapon(ref self);
-        TryHealNatureMace(ref self);
+        TryCritWeapon(ref CRWeapon);
+        TryHealNatureMace(ref CRWeapon);
     }
 
     static void PostHitShovel(ref Shovel self)
@@ -70,17 +71,15 @@ static class ShovelPatch
         CodeRebirthUtils.Instance.SpawnHazardServerRpc(CRWeapon.weaponTip.position);
     }
 
-    static void TryCritWeapon(ref Shovel self)
+    static void TryCritWeapon(ref CodeRebirthWeapons self)
 	{
-		if (self is not CodeRebirthWeapons CRWeapon) return;
+        self.defaultForce = self.shovelHitForce;
+		if (!Plugin.ModConfig.ConfigAllowCrits.Value || !self.critPossible) return;
 
-        CRWeapon.defaultForce = CRWeapon.shovelHitForce;
-		if (!Plugin.ModConfig.ConfigAllowCrits.Value || !CRWeapon.critPossible) return;
-
-        CRWeapon.shovelHitForce = ShovelExtensions.CriticalHit(CRWeapon.shovelHitForce, random, CRWeapon.critChance);
+        self.shovelHitForce = ShovelExtensions.CriticalHit(self.shovelHitForce, random, self.critChance);
     }
 
-    static void TryHealNatureMace(ref Shovel self)
+    static void TryHealNatureMace(ref CodeRebirthWeapons self)
     {
         if (self.playerHeldBy == null || self is not NaturesMace naturesMace || GameNetworkManager.Instance.localPlayerController != self.playerHeldBy) return;
 

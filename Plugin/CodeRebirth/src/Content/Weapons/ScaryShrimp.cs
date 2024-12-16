@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weapons;
@@ -6,6 +7,7 @@ public class ScaryShrimp : Shovel
     public AudioClip killClip = null!;
     public GameObject particleEffectGameObject = null!;
 
+    [NonSerialized] public bool hitEnemy = false;
     public override void Start()
     {
         base.Start();

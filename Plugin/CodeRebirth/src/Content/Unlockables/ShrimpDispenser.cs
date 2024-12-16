@@ -68,16 +68,24 @@ public class ShrimpDispenser : NetworkBehaviour
         audioSource.PlayOneShot(dispenseSound);
         yield return new WaitForSeconds(1f);
         Plugin.ExtendedLogging($"Current y rotation {this.transform.rotation.y} for this gameobject: {this.gameObject.name}");
-        itemToSpawn.restingRotation.y = this.transform.rotation.eulerAngles.y + 180; // todo: fix rotation not working when dispensing, it needs to face the machine.
+        itemToSpawn.restingRotation.y = this.transform.rotation.eulerAngles.y + 180;
         Plugin.ExtendedLogging($"Spawning {itemToSpawn} at {dispenseTransform.position} with y rotation {itemToSpawn.restingRotation.y}");
         if (IsServer)
         {
             if (lastShrimpDispensed != null && !ItemPickedUp)
             {
-                lastShrimpDispensed.NetworkObject.Despawn();
+                if (lastShrimpDispensed.isHeld && lastShrimpDispensed.playerHeldBy != null)
+                {
+                    // do nothing.
+                }
+                else
+                {
+                    if (lastShrimpDispensed.IsSpawned) lastShrimpDispensed.NetworkObject.Despawn();
+                }
             }
             NetworkObjectReference shrimp = CodeRebirthUtils.Instance.SpawnScrap(itemToSpawn, dispenseTransform.position, false, true, 0);
             lastShrimpDispensed = ((GameObject)shrimp).GetComponent<ScaryShrimp>();
+            lastShrimpDispensed.parentObject = dispenseTransform;
         }
         currentlyDispensing = false;
     }
