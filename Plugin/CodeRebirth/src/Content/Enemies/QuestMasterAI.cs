@@ -40,8 +40,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     [SerializeField]
     public AudioSource creatureUltraVoice = null!;
     [SerializeField]
-    public AudioSource KarokeSource = null!;
-    [SerializeField]
     public AudioClip questGiveClip = null!;
     [SerializeField]
     public AudioClip questSucceedClip = null!;
@@ -59,7 +57,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     [Tooltip("Dead Body Prefabs")]
     public List<GameObject> deadBodies = new();
     [Tooltip("Bloody Duck Mat")]
-    public Material bloodyMaterial = null!;
+    public Material[] bloodyMaterials = new Material[3];
     [Space(5f)]
 
     [Header("Speeds")]
@@ -95,7 +93,14 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public List<GameObject> spawnedBodies = new();
     [HideInInspector]
     public float internalQuestTimer = 0f;
-
+    [HideInInspector]
+    public int questsFailed = 0; 
+    [HideInInspector]
+    public List<GameObject> questItemsList = new();
+    [HideInInspector]
+    public List<GameObject> deadBodiesList = new();
+    [HideInInspector]
+    public bool changingState = false;
     public enum State
     {
         Spawning,
@@ -129,13 +134,13 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         if (!IsHost) return;
         ChangeSpeedClientRpc(spawnSpeed);
 
-        StartCoroutine(DoSpawning());
+        StartCoroutine(DoSpawning(true));
         SwitchToBehaviourClientRpc((int)State.Spawning);
     }
 
-    protected virtual IEnumerator DoSpawning()
+    protected virtual IEnumerator DoSpawning(bool playBigSound)
     {
-        creatureUltraVoice.Play();
+        if (playBigSound) creatureUltraVoice.Play();
         yield return new WaitForSeconds(spawnAnimation.length);
         smartAgentNavigator.StartSearchRoutine(transform.position, 40);
         ChangeSpeedClientRpc(walkSpeed);
@@ -145,7 +150,19 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     protected virtual void DoWandering()
     {
-        if (!FindClosestPlayerInRange(range)) return;
+        if (changingState || !FindClosestPlayerInRange(range)) return;
+        SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
+        StartCoroutine(ChangingToApproaching(questCompleted.Value));
+    }
+
+    protected virtual IEnumerator ChangingToApproaching(bool doDelay)
+    {
+        if (doDelay)
+        {
+            changingState = true;
+            yield return new WaitForSeconds(1f);
+            changingState = false;
+        }
         ChangeSpeedClientRpc(approachSpeed);
         smartAgentNavigator.StopSearchRoutine();
         SwitchToBehaviourClientRpc((int)State.Approaching);
@@ -162,6 +179,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
     }
 
+    [ClientRpc]
     public void PlayMiscSoundsClientRpc(int soundIndex)
     {
         AudioClip? soundToPlay = null;
@@ -191,11 +209,11 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     protected virtual IEnumerator DoGiveQuest()
     {
         Plugin.ExtendedLogging("Starting Quest: " + questName);
-        DuckUI.Instance.SetTextManually("");
+        SetDuckTextManuallyClientRpc("");
         if (questCompleted.Value)
         {
             PlayMiscSoundsClientRpc(0);
-            DuckUI.Instance.StartTalking("And one more thing for you!", 0.13f, targetPlayer);
+            SetDuckStartTalkingClientRpc("And one more thing for you!", 0.13f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, false);
         }
         else
         {
@@ -210,21 +228,22 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         Vector3 randomSpawnPosition = this.transform.position;
         if (RoundManager.Instance.insideAINodes.Length != 0)
         {
-            randomSpawnPosition = RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length-1)].transform.position;
+            randomSpawnPosition = RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
         }
-        DuckUI.Instance.SetUIVisible(true);
-        DuckUI.Instance.StartTalking($"Find the {questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]}!!!", 0.12f, targetPlayer);
-        NetworkObjectReference item = CodeRebirthUtils.Instance.SpawnScrap(Plugin.samplePrefabs[questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]], randomSpawnPosition, true, true, 0);
-
-        KarokeSource.Play();
-        currentQuestOrder.Value = Math.Clamp(questOrder.Value, 0, questItems.Length - 1);
-        questOrder.Value++;
-        StartCoroutine(QuestTimer(0.5f));
+        SetDuckUIVisibleClientRpc(true);
+        SetDuckStartTalkingClientRpc($"Find the {questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]}!!!", 0.12f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, false);
+        StartCoroutine(QuestTimer(randomSpawnPosition, 0.5f));
     }
 
-    protected virtual IEnumerator QuestTimer(float delay = 5f)
+    protected virtual IEnumerator QuestTimer(Vector3 randomSpawnPosition, float delay = 5f)
     {
-        yield return new WaitForSeconds(delay);
+        SetDuckUIItemUIPlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
+        yield return new WaitForSeconds(delay/5);
+        NetworkObjectReference item = CodeRebirthUtils.Instance.SpawnScrap(Plugin.samplePrefabs[questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]], randomSpawnPosition, true, true, 0);
+        questItemsList.Add(item);
+        currentQuestOrder.Value = Math.Clamp(questOrder.Value, 0, questItems.Length - 1);
+        questOrder.Value++;
+        yield return new WaitForSeconds(delay/5*4);
         SwitchToBehaviourClientRpc((int)State.OngoingQuest);
         while (internalQuestTimer <= questTimer)
         {
@@ -232,6 +251,12 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             yield return null;
         }
         questTimedOut.Value = true;
+    }
+
+    [ClientRpc]
+    public void SetDuckUIItemUIPlayerClientRpc(int playerIndex)
+    {
+        DuckUI.Instance.itemUI.player = StartOfRound.Instance.allPlayerScripts[playerIndex];
     }
 
     private Coroutine? completionRoutine = null;
@@ -244,10 +269,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         }
         if (questTimedOut.Value)
         {
-            DuckUI.Instance.StartTalking("Too bad!!!", 0.05f, targetPlayer, onFinishTalking: delegate
-            {
-                DuckUI.Instance.SetUIVisible(false);
-            });
+            SetDuckStartTalkingClientRpc("Too bad!!!", 0.05f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, true);
             DoCompleteQuest(QuestCompletion.TimedOut);
             return;
         }
@@ -261,17 +283,14 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     protected virtual IEnumerator TryCompleteQuest()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.3f);
         if (targetPlayer != null && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder.Value])
         {
-            targetPlayer.DespawnHeldObject();
+            targetPlayer.currentlyHeldObjectServer.grabbable = false;
             Plugin.ExtendedLogging("completed!");
             DoCompleteQuest(QuestCompletion.Completed);
             questStarted.Value = false;
-            DuckUI.Instance.StartTalking("Good Job!!", 0.05f, targetPlayer, onFinishTalking: delegate
-            {
-                DuckUI.Instance.SetUIVisible(false);
-            });
+            SetDuckStartTalkingClientRpc("Good Job!!", 0.05f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, true);
         }
         completionRoutine = null;
     }
@@ -314,10 +333,10 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         questCompleted.Value = true;
         ChangeSpeedClientRpc(docileSpeed);
         SwitchToBehaviourClientRpc((int)State.Docile);
-        float redoTimer = UnityEngine.Random.Range(45, 60);
+        float redoTimer = UnityEngine.Random.Range(45, 61);
         if (reason == QuestCompletion.Completed)
         {
-            redoTimer = UnityEngine.Random.Range(180, 300);
+            redoTimer = UnityEngine.Random.Range(180, 301);
         }
         StartCoroutine(RestartEnemy(redoTimer));
         smartAgentNavigator.StartSearchRoutine(transform.position, 40);
@@ -338,6 +357,9 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         questStarted.Value = false;
         questOrder.Value = 0;
         internalQuestTimer = 0f;
+        ChangeSpeedClientRpc(spawnSpeed);
+        StartCoroutine(DoSpawning(false));
+        SwitchToBehaviourClientRpc((int)State.Spawning);
     }
 
     protected virtual IEnumerator QuestSucceedSequence()
@@ -350,21 +372,41 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
         networkAnimator.SetTrigger(startFailQuestAnimation);
         yield return new WaitForSeconds(1f);
-        var bodyIndexToSpawn = UnityEngine.Random.Range(0, deadBodies.Count-1);
-        SpawnDeadBodyClientRpc(bodyIndexToSpawn, failure.transform.position);
-        failure.KillPlayer(Vector3.zero, spawnBody: false, CauseOfDeath.Unknown, 1);
+        var bodyIndexToSpawn = UnityEngine.Random.Range(0, deadBodies.Count);
+        SpawnDeadBodyClientRpc(bodyIndexToSpawn, failure.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, failure));
+        foreach (var gameobject in questItemsList)
+        {
+            if (gameobject == null)
+            {
+                continue;
+            }
+            var grabbableObject = gameobject.GetComponent<GrabbableObject>();
+            grabbableObject.playerHeldBy?.DropAllHeldItemsAndSync();
+            StartCoroutine(DespawnAfterSmallWait(grabbableObject));
+        }
+        questItemsList.Clear();
         PlayMiscSoundsClientRpc(4);
         yield return null;
     }
 
-    [ClientRpc]
-    public void SpawnDeadBodyClientRpc(int bodyIndexToSpawn, Vector3 deadPosition)
+    public IEnumerator DespawnAfterSmallWait(GrabbableObject itemToDestroy)
     {
+        yield return new WaitForSeconds(0.2f);
+        itemToDestroy.NetworkObject.Despawn();
+    }
+
+    [ClientRpc]
+    public void SpawnDeadBodyClientRpc(int bodyIndexToSpawn, Vector3 deadPosition, int failureIndex)
+    {
+        questsFailed++;
         var bodyToSpawn = deadBodies[bodyIndexToSpawn];
         var body = GameObject.Instantiate(bodyToSpawn, deadPosition, default, null);
         spawnedBodies.Add(body);
         body.gameObject.SetActive(true);
-        skinnedMeshRenderers[0].SetMaterial(bloodyMaterial);
+        StartOfRound.Instance.allPlayerScripts[failureIndex].KillPlayer(Vector3.zero, spawnBody: false, CauseOfDeath.Unknown, 1);
+        Plugin.ExtendedLogging($"Spawning Deadbody, with questsFailed: {questsFailed} and this many stages of bloodiness {bloodyMaterials.Length}");
+        if (questsFailed > bloodyMaterials.Length) return;
+        skinnedMeshRenderers[0].SetMaterial(bloodyMaterials[questsFailed - 1]);
     }
 
     protected IEnumerator StartAnimation(int animationInt, int layerIndex = 0, string stateName = "Walking Animation")
@@ -376,7 +418,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     protected virtual void DoDocile()
     {
-        // Todo: Kill the enemy and respawn em at the same position but don't play the spawn music to reset it after a cooldown of 1 or 5 minutes, set notFirstSpawn = true to other duck;
         // Generic behaviour stuff for any type of quest giver when docile
     }
 
@@ -384,8 +425,34 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         DuckUI.Instance.SetUIVisible(false);
         DuckUI.Instance.SetTextManually("");
+        foreach (var body in spawnedBodies)
+        {
+            Destroy(body);
+        }
         if (!IsHost) return;
+        foreach (var gameobject in questItemsList)
+        {
+            if (gameobject == null) continue;
+            var grabbableObject = gameobject.GetComponent<GrabbableObject>();
+            grabbableObject.playerHeldBy?.DropAllHeldItemsAndSync();
+            StartCoroutine(DespawnAfterSmallWait(grabbableObject));
+        }
+        questItemsList.Clear();
         // delete all the items with the Quest component
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if (creatureSFX.isPlaying || currentBehaviourStateIndex == (int)State.Wandering || currentBehaviourStateIndex == (int)State.Docile)
+        {
+            creatureVoice.volume = 0;
+            return;
+        }
+        else
+        {
+            creatureVoice.volume = 0.39f;
+        }
     }
 
     public override void DoAIInterval()
@@ -420,6 +487,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+        if (!IsServer) return;
         if (currentBehaviourStateIndex == (int)State.OngoingQuest)
         {
             internalQuestTimer += force;
@@ -429,6 +497,39 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+    }
+
+    [ClientRpc]
+    public void SetDuckTextManuallyClientRpc(string text)
+    {
+        if (GameNetworkManager.Instance.localPlayerController == targetPlayer) DuckUI.Instance.SetTextManually(text);
+    }
+
+    [ClientRpc]
+    public void SetDuckStartTalkingClientRpc(string text, float talkspeed, int targetPlayerIndex, bool isGlobal, bool setUIInvisibleAfter)
+    {
+        PlayerControllerB _targetPlayer = StartOfRound.Instance.allPlayerScripts[targetPlayerIndex];
+        if (text == "Good Job!!")
+        {
+            _targetPlayer.waitToEndOfFrameToDiscard();
+        }
+        if (setUIInvisibleAfter)
+        {
+            DuckUI.Instance.StartTalking(text, talkspeed, _targetPlayer, isGlobal, delegate
+            {
+                DuckUI.Instance.SetUIVisible(false);
+            });
+        }
+        else
+        {
+            DuckUI.Instance.StartTalking(text, talkspeed, _targetPlayer, isGlobal, null);
+        }
+    }
+
+    [ClientRpc]
+    public void SetDuckUIVisibleClientRpc(bool visible)
+    {
+        if (GameNetworkManager.Instance.localPlayerController == targetPlayer) DuckUI.Instance.SetUIVisible(visible);
     }
 }
 

@@ -38,6 +38,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   spawningDisabled: 0
+  spawnFromWeeds: 0
   numberSpawnedFalloff:
     serializedVersion: 2
     m_Curve: []
@@ -49,18 +50,20 @@ MonoBehaviour:
   requireNestObjectsToSpawn: 0
   enemyPrefab: {fileID: 8752229204695655941, guid: fd32d0c626e293842af2e72bd0e23d32,
     type: 3}
-  PowerLevel: 0
+  PowerLevel: 3
   MaxCount: 1
   numberSpawned: 0
   nestsSpawned: 0
   isOutsideEnemy: 0
   isDaytimeEnemy: 0
+  increasedChanceInterior: -1
   normalizedTimeInDayToLeave: 0
   stunTimeMultiplier: 0
   doorSpeedMultiplier: 1
   stunGameDifficultyMultiplier: 0
   canBeStunned: 0
   canDie: 0
+  canBeDestroyed: 1
   destroyOnDeath: 1
   canSeeThroughFog: 1
   pushPlayerForce: 0.16

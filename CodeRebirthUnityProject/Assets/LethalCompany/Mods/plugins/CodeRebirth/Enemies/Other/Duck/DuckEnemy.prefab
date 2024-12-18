@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2368538836778372236}
-  - component: {fileID: 7334535622849249036}
-  - component: {fileID: 3280598622852853248}
   m_Layer: 20
   m_Name: DeadBodyJesus
   m_TagString: PlayerRagdoll
@@ -34,48 +32,6 @@ Transform:
   - {fileID: 3198358174843655666}
   m_Father: {fileID: 5363147478031748054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7334535622849249036
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 608526231407150698}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.265854, y: 0.41291046, z: 0.3902588}
-  m_Center: {x: 0.015548706, y: 2.3819542, z: -0.21740723}
---- !u!65 &3280598622852853248
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 608526231407150698}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.35416412, y: 2.658165, z: 0.43292236}
-  m_Center: {x: 0.053844452, y: 1.318264, z: -0.28353882}
 --- !u!1 &1299717648771803171
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,7 +108,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 12bf9096aa8c75f4a8b5aeba8abac1c1, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.01
+  m_Volume: 0
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -504,7 +460,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7660710615724091248}
-  - component: {fileID: 3926551229934637990}
   m_Layer: 20
   m_Name: DeadBodyGraped
   m_TagString: PlayerRagdoll
@@ -528,27 +483,6 @@ Transform:
   - {fileID: 7464799414143801714}
   m_Father: {fileID: 5363147478031748054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3926551229934637990
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3855152522453164864}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.2957306, y: 0.5327301, z: 2.1200562}
-  m_Center: {x: -0.1478653, y: 0.028015137, z: -0.012573242}
 --- !u!1 &4654832580357861514
 GameObject:
   m_ObjectHideFlags: 0
@@ -887,8 +821,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6727800423657012143}
-  - component: {fileID: 6849356470478393037}
-  - component: {fileID: 1196509497500879795}
   m_Layer: 20
   m_Name: DeadBodyLemonadeStand
   m_TagString: PlayerRagdoll
@@ -912,48 +844,6 @@ Transform:
   - {fileID: 4545657085593749771}
   m_Father: {fileID: 5363147478031748054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6849356470478393037
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5783074467597876188}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.796997, y: 1.4145508, z: 1.0462646}
-  m_Center: {x: -0.02696991, y: 0.6626587, z: 0.25030518}
---- !u!65 &1196509497500879795
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5783074467597876188}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.8129349, y: 0.9334259, z: 0.27490234}
-  m_Center: {x: 0.01468277, y: 3.223137, z: 0.5132446}
 --- !u!1 &5783691647840183125
 GameObject:
   m_ObjectHideFlags: 0
@@ -1731,7 +1621,7 @@ MonoBehaviour:
   questTimer: 120
   questItems:
   - Grape
-  - Grape
+  - Lemonade Pitcher
   questName: Duck Quest
   questRepeatChance: 99
   questRepeats: 1
@@ -1749,18 +1639,27 @@ MonoBehaviour:
   - {fileID: 3855152522453164864}
   - {fileID: 608526231407150698}
   - {fileID: 5783074467597876188}
-  bloodyMaterial: {fileID: 2100000, guid: 5fb32fecb3fcdd443a57b0c68bd53fc9, type: 2}
+  bloodyMaterials:
+  - {fileID: 2100000, guid: 5fb32fecb3fcdd443a57b0c68bd53fc9, type: 2}
+  - {fileID: 2100000, guid: 8c68527698f8a734498fbcfa18692050, type: 2}
+  - {fileID: 2100000, guid: 59eea6b1b979059469a3ae36da8cb838, type: 2}
   spawnSpeed: 3
   walkSpeed: 5
   approachSpeed: 6
   questSpeed: 7
   docileSpeed: 3
-  questCompletionTimes: 0
-  currentQuestOrder: 0
-  questTimedOut: 0
-  questCompleted: 0
-  questStarted: 0
-  questOrder: 0
+  questCompletionTimes:
+    m_InternalValue: 0
+  currentQuestOrder:
+    m_InternalValue: 0
+  questTimedOut:
+    m_InternalValue: 0
+  questCompleted:
+    m_InternalValue: 0
+  questStarted:
+    m_InternalValue: 0
+  questOrder:
+    m_InternalValue: 0
   spawnedBodies: []
   internalQuestTimer: 0
 --- !u!114 &6607607558369177806

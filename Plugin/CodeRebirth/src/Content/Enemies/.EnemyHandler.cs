@@ -68,6 +68,9 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         [LoadFromBundle("GrapeObj.asset")]
         public Item GrapeItem { get; private set; } = null!;
 
+        [LoadFromBundle("LemonadePitcherObj.asset")]
+        public Item LemonadePitcherItem { get; private set; } = null!;
+
         [LoadFromBundle("DuckTN.asset")]
         public TerminalNode DuckSongTerminalNode { get; private set; } = null!;
 
@@ -147,8 +150,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         {
             DuckSong = new DuckSongAssets("ducksongassets");
             RegisterScrapWithConfig("", DuckSong.GrapeItem, -1, -1);
+            RegisterScrapWithConfig("", DuckSong.LemonadePitcherItem, -1, -1);
             RegisterEnemyWithConfig("", DuckSong.DuckSongEnemyType, DuckSong.DuckSongTerminalNode, DuckSong.DuckSongTerminalKeyword, 2, 1);
             Plugin.samplePrefabs.Add(DuckSong.GrapeItem.itemName, DuckSong.GrapeItem);
+            Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
         }
 
         if (false)

@@ -57,11 +57,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     private static readonly int eatEnemyGiant = Animator.StringToHash("eatEnemyGiant");
     private static readonly int startDeath = Animator.StringToHash("startDeath");
 
-    [NonSerialized]
+    [HideInInspector]
     public bool kickingOut = false;
-    [NonSerialized]
+    [HideInInspector]
     public bool kicking = false;
-    [NonSerialized]
+    [HideInInspector]
     public bool jumping = false;
 
     #region ThreatType

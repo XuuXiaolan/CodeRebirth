@@ -20,6 +20,7 @@ static class StartOfRoundPatch
 	[HarmonyPostfix]
 	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
+		Plugin.ExtendedLogging("StartOfRound.Awake");
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
 	}
 
@@ -37,7 +38,7 @@ static class StartOfRoundPatch
 	[HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
 	static void SaveCodeRebirthData()
 	{
-		if(CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
+		if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
 	}
 	
 	private static void CreateNetworkManager()
@@ -56,14 +57,13 @@ static class StartOfRoundPatch
 			{
 				Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");
 			}
+		}
 
-			if (EnemyHandler.Instance.DuckSong != null)
-			{
-				Plugin.ExtendedLogging("Creating duck UI");
-				var canvasObject = GameObject.Find("Systems/UI/Canvas");
-				var duckUI = GameObject.Instantiate(EnemyHandler.Instance.DuckSong.DuckUIPrefab, Vector3.zero, Quaternion.identity, canvasObject.transform);
-				duckUI.GetComponent<NetworkObject>().Spawn();
-			}
+		if (EnemyHandler.Instance.DuckSong != null)
+		{
+			Plugin.ExtendedLogging("Creating duck UI");
+			var canvasObject = GameObject.Find("Systems/UI/Canvas");
+			var duckUI = GameObject.Instantiate(EnemyHandler.Instance.DuckSong.DuckUIPrefab, Vector3.zero, Quaternion.identity, canvasObject.transform);
 		}
 	}
 

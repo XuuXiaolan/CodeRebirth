@@ -1,3 +1,4 @@
+using GameNetcodeStuff;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,16 +13,17 @@ public class ItemUI : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup = null!;
 
     [HideInInspector] public Camera mainCamera = null!;
+    [HideInInspector] public PlayerControllerB? player = null;
     private PhysicsProp? parentItem = null;
 
     public void StartUIforItem(PhysicsProp item)
     {
+        if (GameNetworkManager.Instance.localPlayerController != player) return;
         parentItem = item;
 
         itemImage.sprite = item.itemProperties.itemIcon;
         itemName.text = item.itemProperties.itemName;
         mainCamera = GameNetworkManager.Instance.localPlayerController.gameplayCamera;
-
     }
 
     public void Update()

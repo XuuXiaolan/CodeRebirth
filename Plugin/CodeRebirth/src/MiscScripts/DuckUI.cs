@@ -1,14 +1,13 @@
 using GameNetcodeStuff;
 using System.Collections;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
 public delegate void OnFinishTalking();
-
-public class DuckUI : MonoBehaviour
+public class DuckUI : NetworkBehaviour
 {
-
     public ItemUI itemUI = null!;
     [SerializeField] private TextMeshProUGUI uiText = null!;
     [SerializeField] private Transform duckTransform = null!;
@@ -19,11 +18,10 @@ public class DuckUI : MonoBehaviour
     private string fullText = string.Empty;
     private Vector3 originalDuckPos;
     private Vector3 originalLocalDuckPos;
-    private bool isTalking = false;
+    [HideInInspector] public bool isTalking = false;
     private float bobTimer = 0f;
     private AnimationCurve bobCurve = null!;
     private Coroutine? duckCoroutine = null;
-
     public static DuckUI Instance;
 
     private void Awake()
@@ -63,7 +61,7 @@ public class DuckUI : MonoBehaviour
     {
         if (isTalking)
         {
-            duckTransform.position = originalDuckPos; //what the fuck
+            duckTransform.position = originalDuckPos; // what the fuck
             bobTimer += Time.deltaTime * 2.2f;
             if (bobTimer > bobDuration)
             {
@@ -110,7 +108,7 @@ public class DuckUI : MonoBehaviour
         canvasGroup.alpha = endAlpha;
     }
 
-    public void StartTalking(string text, float talkspeed,  PlayerControllerB targetPlayer, bool isGlobal = false, OnFinishTalking? onFinishTalking = null)
+    public void StartTalking(string text, float talkspeed, PlayerControllerB targetPlayer, bool isGlobal = false, OnFinishTalking? onFinishTalking = null)
     {
         if (targetPlayer == null) return;
 

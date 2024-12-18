@@ -120,10 +120,16 @@ internal class CodeRebirthUtils : NetworkBehaviour
         UpdateScanNodeClientRpc(new NetworkObjectReference(go), value);
         if (isQuest)
         {
-            DuckUI.Instance.itemUI.StartUIforItem(go.GetComponent<PhysicsProp>());
+            StartUIForItemClientRpc(go);
             go.AddComponent<QuestItem>();
         }
         return new NetworkObjectReference(go);
+    }
+
+    [ClientRpc]
+    public void StartUIForItemClientRpc(NetworkObjectReference go)
+    {
+        DuckUI.Instance.itemUI.StartUIforItem(((GameObject)go).GetComponent<PhysicsProp>());
     }
 
     [ClientRpc]
