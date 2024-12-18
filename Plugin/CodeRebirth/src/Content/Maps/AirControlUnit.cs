@@ -12,7 +12,6 @@ public class AirControlUnit : NetworkBehaviour
     public float rotationSpeed = 45f;
     public float fireRate = 1f;
     public float detectionRange = 50f;
-    public float damageAmount = 50f;
     public AudioSource ACUAudioSource = null!;
     public AudioClip ACUFireSound = null!;
     public AudioClip ACURechargeSound = null!;
@@ -163,7 +162,7 @@ public class AirControlUnit : NetworkBehaviour
             NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
             networkObject?.Spawn();
             AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
-            projectileComponent.Initialize(damageAmount, currentAngle, lastPlayerTargetted);
+            projectileComponent.Initialize(Plugin.ModConfig.ConfigAirControlUnitDamage.Value, currentAngle, lastPlayerTargetted);
 
             // Rattle the cannon's transform to emulate a shake effect
             StartCoroutine(RattleCannon());

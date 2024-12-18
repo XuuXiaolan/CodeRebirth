@@ -1,10 +1,14 @@
-# v0.9.3
+# v0.9.4
+
+- Added configs to the new thing I added.
+- Added configs for acu for strength and knockback power.
+
+## v0.9.3
 
 - Fixed bug with seamine gal targetting inside enemies.
 - Made craters in meteor shower disappear after 20 seconds to help performance.
 - Bam bam bam ba rum da dum......
 - Helped performance a bit when loading into orbit and despawning crates etc.
-- Updated Readme.
 - Made crates not spawn the same items if more than one is broken in a moon.
 - Fixed 999 not working with company config.
 - Added sound to cruiser tires popping from bear trap.

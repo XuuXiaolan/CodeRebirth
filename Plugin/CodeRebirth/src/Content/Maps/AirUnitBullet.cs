@@ -74,7 +74,7 @@ public class AirUnitProjectile : NetworkBehaviour
     {
         if (!explodedOnTarget && other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
-            Vector3 forceFlung = transform.up * 250f;
+            Vector3 forceFlung = transform.up * Plugin.ModConfig.ConfigAirControlUnitKnockbackPower.Value;
             CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, CauseOfDeath.Blast, null, null);
             player.DamagePlayer((int)damage, true, false, CauseOfDeath.Blast, 0, false, forceFlung);
             playerHitSoundSource.Play();

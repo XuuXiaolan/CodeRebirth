@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
 
@@ -49,8 +48,10 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBellCrabGalEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigDuckSongEnabled { get; private set; }
     #endregion
     #region Spawn Weights
+    public ConfigEntry<string> ConfigDuckSongSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigWoodenSeedSpawnWeights { get; private set; }
     public ConfigEntry<float> ConfigBiomesSpawnChance { get; private set; }
     public ConfigEntry<string> ConfigCarnivorousSpawnWeights { get; private set; }
@@ -168,7 +169,8 @@ public class CodeRebirthConfig
     public ConfigEntry<float> Config999GalFailureChance { get; private set; }
     public ConfigEntry<bool> Config999GalScaleHealAndReviveWithPlayerCount { get; private set; }
     public ConfigEntry<int> ConfigShrimpDispenserCost { get; private set; }
-
+    public ConfigEntry<float> ConfigAirControlUnitKnockbackPower { get; private set; }
+    public ConfigEntry<int> ConfigAirControlUnitDamage { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -203,6 +205,16 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region Duck Song
+        ConfigDuckSongEnabled = configFile.Bind("DuckSong Options",
+                                            "Duck Song | Enabled",
+                                            true,
+                                            "Whether the Duck Song is enabled.");
+        ConfigDuckSongSpawnWeights = configFile.Bind("DuckSong Options",
+                                            "Duck Song | SpawnWeights",
+                                            "Vanilla:20,Custom:20",
+                                            "The MoonName - SpawnWeight for the Duck.");
         #endregion
         #region Shrimp Dispenser
         ConfigShrimpDispenserEnabled = configFile.Bind("ShrimpDispenser Options",
@@ -316,6 +328,14 @@ public class CodeRebirthConfig
                                             "Air Control Unit | SpawnWeight",
                                             "Vanilla:2,Custom:2,Titan:0,Olympus:2",
                                             "The MoonName:CurveSpawnWeight for the AirControlUnit.");
+        ConfigAirControlUnitDamage = configFile.Bind("AirControlUnit Options",
+                                            "Air Control Unit | Damage",
+                                            15,
+                                            "Damage that the ACUnit deals to a player on hit");
+        ConfigAirControlUnitKnockbackPower = configFile.Bind("AirControlUnit Options",
+                                            "Air Control Unit | Knockback Power",
+                                            250f,
+                                            "The knockback power of the ACUnit.");
         ConfigACUVolume = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | Volume",
                                             1f,

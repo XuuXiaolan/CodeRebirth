@@ -146,12 +146,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
         }
 
-        if (true)
+        if (Plugin.ModConfig.ConfigDuckSongEnabled.Value)
         {
             DuckSong = new DuckSongAssets("ducksongassets");
             RegisterScrapWithConfig("", DuckSong.GrapeItem, -1, -1);
             RegisterScrapWithConfig("", DuckSong.LemonadePitcherItem, -1, -1);
-            RegisterEnemyWithConfig("", DuckSong.DuckSongEnemyType, DuckSong.DuckSongTerminalNode, DuckSong.DuckSongTerminalKeyword, 2, 1);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDuckSongSpawnWeights.Value, DuckSong.DuckSongEnemyType, DuckSong.DuckSongTerminalNode, DuckSong.DuckSongTerminalKeyword, 2, 1);
             Plugin.samplePrefabs.Add(DuckSong.GrapeItem.itemName, DuckSong.GrapeItem);
             Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
         }
