@@ -1,4 +1,14 @@
-# v0.9.2
+# v0.9.3
+
+- Fixed bug with seamine gal targetting inside enemies.
+- Made craters in meteor shower disappear after 20 seconds to help performance.
+- Bam bam bam ba rum da dum......
+- Helped performance a bit when loading into orbit and despawning crates etc.
+- Updated Readme.
+- Made crates not spawn the same items if more than one is broken in a moon.
+- Fixed 999 not working with company config.
+
+## v0.9.2
 
 - Fixed bug with gals not being activatable on company moon with navmeshcompany mod.
 - Added a new unlockable dispenser, costs only 150, something from lockdown protocol, one of my favourite games recently.

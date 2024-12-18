@@ -20,8 +20,8 @@ public class BiomeManager : NetworkBehaviour
     private static int combinedLayerMask = 0;
     private List<Collider> foliageOrTreeColliderList = new();
 
-	public static BiomeManager? Instance { get; private set; }
-	public static bool Active => Instance != null;
+	public static List<BiomeManager> Instances = new();
+	public static bool Active => Instances.Count > 0;
 
     public void Start()
     {

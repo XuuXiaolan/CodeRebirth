@@ -392,7 +392,7 @@ public class SeamineGalAI : GalAI
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
             }
-            if (distanceToTarget <= (targetEnemy is CentipedeAI || smartAgentNavigator.isOutside ? 5 : 0))
+            if (distanceToTarget <= (Agent.stoppingDistance + (targetEnemy is CentipedeAI || smartAgentNavigator.isOutside ? 5 : 0)))
             {
                 currentlyAttacking = true;
                 NetworkAnimator.SetTrigger(startExplodeAnimation);

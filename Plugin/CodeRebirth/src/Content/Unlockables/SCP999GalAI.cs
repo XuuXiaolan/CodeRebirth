@@ -442,6 +442,11 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     [ClientRpc]
     public void MakeTriggerInteractableClientRpc(bool interactable)
     {
+        MakeTriggerInteractable(interactable);
+    }
+
+    public void MakeTriggerInteractable(bool interactable)
+    {
         HealTrigger.interactable = interactable;
     }
 

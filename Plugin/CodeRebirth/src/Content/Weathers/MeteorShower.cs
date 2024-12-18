@@ -39,7 +39,7 @@ public class MeteorShower : CodeRebirthWeathers {
 	private Direction direction = Direction.Random;
 	private float normalisedTimeToLeave = 1f;
 	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
-	readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
+	[HideInInspector] public readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
 
 	[NonSerialized] public Random random = null!;
 

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Maps;
 using UnityEngine.AI;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -117,7 +118,11 @@ internal class CodeRebirthUtils : NetworkBehaviour
         scanNode.subText = $"Value: ${value}";
         go.GetComponent<GrabbableObject>().scrapValue = value;
         UpdateScanNodeClientRpc(new NetworkObjectReference(go), value);
-        if (isQuest) go.AddComponent<QuestItem>();
+        if (isQuest)
+        {
+            DuckUI.Instance.itemUI.StartUIforItem(go.GetComponent<PhysicsProp>());
+            go.AddComponent<QuestItem>();
+        }
         return new NetworkObjectReference(go);
     }
 

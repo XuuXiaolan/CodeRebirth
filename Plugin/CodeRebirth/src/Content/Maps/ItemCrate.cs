@@ -10,7 +10,8 @@ using UnityEngine;
 using System;
 
 namespace CodeRebirth.src.Content.Maps;
-public class ItemCrate : CRHittable {
+public class ItemCrate : CRHittable
+{
 
 	[Header("Hover Tooltips")]
 	public string keyHoverTip = "Open : [LMB]";
@@ -39,9 +40,18 @@ public class ItemCrate : CRHittable {
 	private bool openable = false;
 	private bool openedOnce = false;
 
+	[HideInInspector] public static List<ItemCrate> Instances = new();
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+		Instances.Remove(this);
+    }
+
     private void Start()
 	{
-		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
+		Instances.Add(this);
+		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed + Instances.Count);
 		health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
 		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
 

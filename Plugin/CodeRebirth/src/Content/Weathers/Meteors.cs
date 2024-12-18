@@ -137,11 +137,11 @@ public class Meteors : NetworkBehaviour {
             else if (UnityEngine.Random.Range(0, 100) <= 33.33f ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Emerald Meteorite", target);
             else CodeRebirthUtils.Instance.SpawnScrapServerRpc("Ruby Meteorite", target);
         }
-            
+
         GameObject craterInstance = Instantiate(WeatherHandler.Instance.Meteorite.CraterPrefab, target, Quaternion.identity);
         CraterController craterController = craterInstance.GetComponent<CraterController>();
-        craterController?.ShowCrater(target);
-        
+        craterController.ShowCrater(target);
+
         FireTrail?.SetActive(false);
         
         CRUtilities.CreateExplosion(transform.position, true, 100, 0, 15, 4, CauseOfDeath.Blast, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab);
@@ -159,7 +159,16 @@ public class CraterController : MonoBehaviour
 
     private void Awake()
     {
+        StartCoroutine(DespawnAfter20Seconds());
         MeteorShower.Instance?.AddCrater(this);
+    }
+
+    private IEnumerator DespawnAfter20Seconds()
+    {
+        yield return new WaitForSeconds(20);
+        if (NetworkManager.Singleton.IsHost)
+            Destroy(this.gameObject);
+        MeteorShower.Instance?.RemoveCrater(this);
     }
 
     public void ShowCrater(Vector3 impactLocation)

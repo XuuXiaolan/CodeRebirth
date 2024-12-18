@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
-using GameNetcodeStuff;
-using UnityEngine;
+using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using GameNetcodeStuff;
+using Unity.Netcode;
+using Unity.Netcode.Components;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
 public abstract class QuestMasterAI : CodeRebirthEnemyAI
@@ -13,13 +17,13 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public float questTimer = 120f;
     [Tooltip("List of items' names the player needs to collect to complete the quest")]
     [SerializeField]
-    public string[] questItems = null!;
+    public string[] questItems;
     [Tooltip("Name of the given quest")]
     [SerializeField]
-    public string questName = null!;
+    public string questName;
     [Tooltip("Chance of the player receiving another quest after completing the current one")]
     [SerializeField]
-    public float questRepeatChance = 10f;
+    public float questRepeatChance = 30f;
     [Tooltip("Number of possible quest repeats")]
     [SerializeField]
     public int questRepeats = 1;
@@ -27,12 +31,16 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     [Header("Animations")]
     [SerializeField]
+    public NetworkAnimator networkAnimator = null!;
+    [SerializeField]
     public AnimationClip spawnAnimation = null!;
     [Space(5f)]
 
     [Header("Audio")]
     [SerializeField]
     public AudioSource creatureUltraVoice = null!;
+    [SerializeField]
+    public AudioSource KarokeSource = null!;
     [SerializeField]
     public AudioClip questGiveClip = null!;
     [SerializeField]
@@ -43,10 +51,15 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public AudioClip questGiveAgainClip = null!;
     [SerializeField]
     public AudioClip questAfterFailClip = null!;
+
     [Header("Behaviour")]
     [Tooltip("Detection Range")]
     [SerializeField]
     public float range = 20f;
+    [Tooltip("Dead Body Prefabs")]
+    public List<GameObject> deadBodies = new();
+    [Tooltip("Bloody Duck Mat")]
+    public Material bloodyMaterial = null!;
     [Space(5f)]
 
     [Header("Speeds")]
@@ -65,18 +78,26 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     [Tooltip("Speed for the docile state")]
     [SerializeField]
     public float docileSpeed;
+
     [HideInInspector]
-    public int questCompletionTimes = 0;
+    public NetworkVariable<int> questCompletionTimes = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public int currentQuestOrder = 0;
+    public NetworkVariable<int> currentQuestOrder = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public bool questTimedOut = false;
+    public NetworkVariable<bool> questTimedOut = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public bool questCompleted = false;
+    public NetworkVariable<bool> questCompleted = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public bool questStarted = false;
+    public NetworkVariable<bool> questStarted = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public int questOrder = 0;
+    public NetworkVariable<int> questOrder = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [HideInInspector]
+    public NetworkVariable<bool> notFirstSpawn = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [HideInInspector]
+    public List<GameObject> spawnedBodies = new();
+    [HideInInspector]
+    public float internalQuestTimer = 0f;
+
     public enum State
     {
         Spawning,
@@ -93,85 +114,129 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         Null,
     }
 
-    public enum Animations
-    {
-        startSpawn,
-        startWalk,
-        startApproach,
-        startGiveQuest,
-        startQuest,
-        startFailQuest,
-        startSucceedQuest
-    }
-    
+    private readonly static int startWalkAnimation = Animator.StringToHash("startWalk"); // Trigger
+    private readonly static int startGiveQuestAnimation = Animator.StringToHash("startGiveQuest"); // Trigger
+    private readonly static int startQuestAnimation = Animator.StringToHash("startQuest"); // Trigger
+    private static readonly int startFailQuestAnimation = Animator.StringToHash("startFailQuest"); // Trigger
+    private static readonly int startSucceedQuestAnimation = Animator.StringToHash("startSucceedQuest"); // Trigger
+    private static readonly int isTalkingAnimation = Animator.StringToHash("isTalking"); // Bool
+    private static readonly int isSittingAnimation = Animator.StringToHash("isSitting"); // Bool
+    private static readonly int runSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+
     public override void Start()
-    {
+    { // Animations and sounds arent here yet so you might get bugs probably lol.
         base.Start();
+
+        smartAgentNavigator.SetAllValues(this.isOutside);
         if (!IsHost) return;
         ChangeSpeedClientRpc(spawnSpeed);
-        TriggerAnimationClientRpc(Animations.startSpawn.ToString());
+
         StartCoroutine(DoSpawning());
-        SwitchToBehaviourStateOnLocalClient((int)State.Spawning);
+        SwitchToBehaviourClientRpc((int)State.Spawning);
     }
 
     protected virtual IEnumerator DoSpawning()
     {
-        creatureUltraVoice.Play();
+        if (!notFirstSpawn.Value) creatureUltraVoice.Play();
         yield return new WaitForSeconds(spawnAnimation.length);
-        StartSearch(transform.position);
+        smartAgentNavigator.StartSearchRoutine(transform.position, 40);
         ChangeSpeedClientRpc(walkSpeed);
-        TriggerAnimationClientRpc(Animations.startWalk.ToString());
-        SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
+        networkAnimator.SetTrigger(startWalkAnimation);
+        SwitchToBehaviourClientRpc((int)State.Wandering);
     }
 
     protected virtual void DoWandering()
     {
         if (!FindClosestPlayerInRange(range)) return;
-        TriggerAnimationClientRpc(Animations.startApproach.ToString());
         ChangeSpeedClientRpc(approachSpeed);
-        StopSearch(currentSearch);
-        SwitchToBehaviourStateOnLocalClient((int)State.Approaching);
+        smartAgentNavigator.StopSearchRoutine();
+        SwitchToBehaviourClientRpc((int)State.Approaching);
     }
 
     protected virtual void DoApproaching()
     {
-        if (Vector3.Distance(transform.position, targetPlayer.transform.position) < 3f && !questStarted)
+        if (Vector3.Distance(transform.position, targetPlayer.transform.position) < 3f && !questStarted.Value)
         {
-            questStarted = true;
-            TriggerAnimationClientRpc(Animations.startGiveQuest.ToString());
+            questStarted.Value = true;
+            networkAnimator.SetTrigger(startGiveQuestAnimation);
             StartCoroutine(DoGiveQuest());
         }
-        SetDestinationToPosition(targetPlayer.transform.position);
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
+    }
+
+    public void PlayMiscSoundsClientRpc(int soundIndex)
+    {
+        AudioClip? soundToPlay = null;
+        switch (soundIndex)
+        {
+            case 0:
+                soundToPlay = questGiveAgainClip;
+                break;
+            case 1:
+                soundToPlay = questGiveClip;
+                break;
+            case 2:
+                soundToPlay = questFailClip;
+                break;
+            case 3:
+                soundToPlay = questSucceedClip;
+                break;
+            case 4:
+                soundToPlay = questAfterFailClip;
+                break;
+            default:
+                break;
+        }
+        creatureSFX.PlayOneShot(soundToPlay);
     }
 
     protected virtual IEnumerator DoGiveQuest()
     {
         Plugin.ExtendedLogging("Starting Quest: " + questName);
-        if (!questCompleted) creatureSFX.PlayOneShot(questGiveClip);
-        if (questCompleted) creatureSFX.PlayOneShot(questGiveAgainClip);
-        yield return new WaitUntil(() => !creatureSFX.isPlaying);
-        TriggerAnimationClientRpc(Animations.startQuest.ToString());
-        questStarted = true;
-        ChangeSpeedClientRpc(questSpeed);
-        if (RoundManager.Instance.allEnemyVents.Length == 0)
+        DuckUI.Instance.SetTextManually("");
+        if (questCompleted.Value)
         {
-            DoCompleteQuest(QuestCompletion.Null);
-            yield break;
+            PlayMiscSoundsClientRpc(0);
+            DuckUI.Instance.StartTalking("And one more thing for you!", 0.13f, targetPlayer);
         }
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(questItems[Math.Clamp(questOrder, 0, questItems.Length - 1)], RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position);
-        currentQuestOrder = Math.Clamp(questOrder, 0, questItems.Length - 1);
-        questOrder++;
-        StartCoroutine(QuestTimer());
+        else
+        {
+            PlayMiscSoundsClientRpc(1);
+        }
+        creatureAnimator.SetBool(isTalkingAnimation, true);
+        yield return new WaitUntil(() => !creatureSFX.isPlaying);
+        creatureAnimator.SetBool(isTalkingAnimation, false);
+        networkAnimator.SetTrigger(startQuestAnimation);
+        questStarted.Value = true;
+        ChangeSpeedClientRpc(questSpeed);
+        Vector3 randomSpawnPosition = this.transform.position;
+        if (RoundManager.Instance.insideAINodes.Length != 0)
+        {
+            randomSpawnPosition = RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length-1)].transform.position;
+        }
+        DuckUI.Instance.SetUIVisible(true);
+        DuckUI.Instance.StartTalking($"Find the {questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]}!!!", 0.12f, targetPlayer);
+        NetworkObjectReference item = CodeRebirthUtils.Instance.SpawnScrap(Plugin.samplePrefabs[questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]], randomSpawnPosition, true, true, 0);
+
+        KarokeSource.Play();
+        currentQuestOrder.Value = Math.Clamp(questOrder.Value, 0, questItems.Length - 1);
+        questOrder.Value++;
+        StartCoroutine(QuestTimer(0.5f));
     }
 
     protected virtual IEnumerator QuestTimer(float delay = 5f)
     {
         yield return new WaitForSeconds(delay);
-        SwitchToBehaviourStateOnLocalClient((int)State.OngoingQuest);
-        yield return new WaitForSeconds(questTimer);
-        questTimedOut = true;
+        SwitchToBehaviourClientRpc((int)State.OngoingQuest);
+        while (internalQuestTimer <= questTimer)
+        {
+            internalQuestTimer += Time.deltaTime;
+            yield return null;
+        }
+        questTimedOut.Value = true;
     }
 
+    private Coroutine? completionRoutine = null;
     protected virtual void DoOngoingQuest()
     {
         if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.IsSpawned || !targetPlayer.isPlayerControlled)
@@ -179,82 +244,125 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             DoCompleteQuest(QuestCompletion.Null);
             return;
         }
-        if (questTimedOut)
+        if (questTimedOut.Value)
         {
+            DuckUI.Instance.StartTalking("Too bad!!!", 0.05f, targetPlayer, onFinishTalking: delegate
+            {
+                DuckUI.Instance.SetUIVisible(false);
+            });
             DoCompleteQuest(QuestCompletion.TimedOut);
             return;
         }
-        if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder] && targetPlayer.currentlyHeldObjectServer.TryGetComponent<QuestItem>(out QuestItem questItem))
+        if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder.Value])
         {
-            Plugin.ExtendedLogging("completed!");
-            targetPlayer.DespawnHeldObject();
-            DoCompleteQuest(QuestCompletion.Completed);
+            completionRoutine ??= StartCoroutine(TryCompleteQuest());
             return;
         }
-        SetDestinationToPosition(targetPlayer.transform.position, true);
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
     }
 
+    protected virtual IEnumerator TryCompleteQuest()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (targetPlayer != null && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder.Value])
+        {
+            targetPlayer.DespawnHeldObject();
+            Plugin.ExtendedLogging("completed!");
+            DoCompleteQuest(QuestCompletion.Completed);
+            questStarted.Value = false;
+            DuckUI.Instance.StartTalking("Good Job!!", 0.05f, targetPlayer, onFinishTalking: delegate
+            {
+                DuckUI.Instance.SetUIVisible(false);
+            });
+        }
+        completionRoutine = null;
+    }
     protected virtual void DoCompleteQuest(QuestCompletion reason)
     {
         switch (reason)
         {
             case QuestCompletion.TimedOut:
                 {
-                    creatureSFX.PlayOneShot(questFailClip);
+                    PlayMiscSoundsClientRpc(2);
                     StartCoroutine(QuestFailSequence(targetPlayer));
                     break;
                 }
             case QuestCompletion.Completed:
                 {
-                    creatureSFX.PlayOneShot(questSucceedClip);
                     StartCoroutine(QuestSucceedSequence());
-                    questCompletionTimes++;
+                    questCompletionTimes.Value++;
                     break;
                 }
             case QuestCompletion.Null:
                 {
-                    Plugin.Logger.LogWarning("Target Player or Enemy vents is null?");
+                    Plugin.ExtendedLogging("Target Player or Enemy vents is null?");
                     break;
                 }
         }
-        if (IsHost && UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes <= questRepeats)
+        bool doOtherQuest = false;
+        if (IsHost && UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes.Value <= questRepeats)
         {
-            questStarted = false;
-            questTimedOut = false;
-            SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
+            doOtherQuest = true;
+            questStarted.Value = false;
+            questTimedOut.Value = false;
+            questCompleted.Value = true;
+            SwitchToBehaviourClientRpc((int)State.Wandering);
             return;
         }
-        questCompleted = true;
+        else if (reason  == QuestCompletion.Completed && !doOtherQuest)
+        {
+            PlayMiscSoundsClientRpc(3);
+        }
+        questCompleted.Value = true;
         ChangeSpeedClientRpc(docileSpeed);
-        SwitchToBehaviourStateOnLocalClient((int)State.Docile);
-        StartSearch(transform.position);
+        SwitchToBehaviourClientRpc((int)State.Docile);
+        smartAgentNavigator.StartSearchRoutine(transform.position, 40);
     }
 
     protected virtual IEnumerator QuestSucceedSequence()
     {
-        yield return StartAnimation(Animations.startSucceedQuest);
+        yield return StartAnimation(startSucceedQuestAnimation);
     }
 
     protected virtual IEnumerator QuestFailSequence(PlayerControllerB failure)
     {
-        yield return StartAnimation(Animations.startFailQuest);
-        failure.DamagePlayer(500, true, true, CauseOfDeath.Strangulation, 0, false, default);
-        creatureSFX.PlayOneShot(questAfterFailClip);
+        yield return new WaitUntil(() => !creatureSFX.isPlaying);
+        networkAnimator.SetTrigger(startFailQuestAnimation);
+        yield return new WaitForSeconds(1f);
+        var bodyIndexToSpawn = UnityEngine.Random.Range(0, deadBodies.Count-1);
+        SpawnDeadBodyClientRpc(bodyIndexToSpawn, failure.transform.position);
+        failure.KillPlayer(Vector3.zero, spawnBody: false, CauseOfDeath.Unknown, 1);
+        PlayMiscSoundsClientRpc(4);
+        yield return null;
     }
 
-    protected IEnumerator StartAnimation(Animations animation, int layerIndex = 0, string stateName = "Walking Animation")
+    [ClientRpc]
+    public void SpawnDeadBodyClientRpc(int bodyIndexToSpawn, Vector3 deadPosition)
+    {
+        var bodyToSpawn = deadBodies[bodyIndexToSpawn];
+        var body = GameObject.Instantiate(bodyToSpawn, deadPosition, default, null);
+        spawnedBodies.Add(body);
+        body.gameObject.SetActive(true);
+        skinnedMeshRenderers[0].SetMaterial(bloodyMaterial);
+    }
+
+    protected IEnumerator StartAnimation(int animationInt, int layerIndex = 0, string stateName = "Walking Animation")
     {
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
-        TriggerAnimationClientRpc(animation.ToString());
+        networkAnimator.SetTrigger(animationInt);
         yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName));
     }
 
     protected virtual void DoDocile()
     {
+        // Todo: Kill the enemy and respawn em at the same position but don't play the spawn music to reset it after a cooldown of 1 or 5 minutes, set notFirstSpawn = true to other duck;
         // Generic behaviour stuff for any type of quest giver when docile
     }
 
-    protected virtual void OnDisable() {
+    protected virtual void OnDisable()
+    {
+        DuckUI.Instance.SetUIVisible(false);
+        DuckUI.Instance.SetTextManually("");
         if (!IsHost) return;
         // delete all the items with the Quest component
     }
@@ -265,6 +373,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
         if (!IsHost) return;
 
+        creatureAnimator.SetFloat(runSpeedFloat, agent.velocity.magnitude / 2f);
         switch (currentBehaviourStateIndex)
         {
             case (int)State.Spawning:
@@ -281,7 +390,24 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             case (int)State.Docile:
                 DoDocile();
                 break;
+            default:
+                Plugin.ExtendedLogging("This Behavior State doesn't exist!");
+                break;
         }
+    }
+
+    public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+        if (currentBehaviourStateIndex == (int)State.OngoingQuest)
+        {
+            internalQuestTimer += force;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
     }
 }
 

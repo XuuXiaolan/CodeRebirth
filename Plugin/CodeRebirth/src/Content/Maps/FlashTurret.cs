@@ -121,6 +121,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
         {
             StunGrenadeItem.StunExplosion(detectedPlayer.transform.position, true, 0.5f, 5f, 1f, false, null, null, 0);
         }
+        RoundManager.Instance.PlayAudibleNoise(this.transform.position, 20, 0.5f, 0, false, 75);
     }
 
     private void ResetTurret()

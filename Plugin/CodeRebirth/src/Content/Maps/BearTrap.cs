@@ -16,6 +16,7 @@ public class BearTrap : NetworkBehaviour
     public AudioClip resetTrapEndSound = null!;
     public AudioClip triggerSound = null!;
     public AudioClip resetTrapSound = null!;
+    public AudioClip poppingTireSound = null!;
 
     private Vector3 caughtPosition = Vector3.zero;
     private PlayerControllerB? playerCaught = null;
@@ -117,6 +118,7 @@ public class BearTrap : NetworkBehaviour
 
         if (other.gameObject.layer == 30 && other.TryGetComponent(out WheelCollider wheel))
         {
+            trapAudioSource.PlayOneShot(poppingTireSound);
             SetWheelFriction(wheel.gameObject);
         }
         else if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)

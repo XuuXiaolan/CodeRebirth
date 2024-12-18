@@ -70,7 +70,12 @@ public class ShrimpDispenser : NetworkBehaviour
         //Destroy(newParticles, newParticles.GetComponent<ParticleSystem>().main.duration);
 
         if (shrimpRandom.Next(0, 10) <= 0 || Plugin.ModConfig.ConfigDebugMode.Value) audioSource.PlayOneShot(dispenseSound);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.6f);
+        if (lastShrimpDispensed != null && !ItemPickedUp)
+        {
+            lastShrimpDispensed.grabbable = false;
+        }
+        yield return new WaitForSeconds(0.4f);
         Plugin.ExtendedLogging($"Current y rotation {this.transform.rotation.y} for this gameobject: {this.gameObject.name}");
         itemToSpawn.restingRotation.y = this.transform.rotation.eulerAngles.y + 180;
         Plugin.ExtendedLogging($"Spawning {itemToSpawn} at {dispenseTransform.position} with y rotation {itemToSpawn.restingRotation.y}");
@@ -80,6 +85,7 @@ public class ShrimpDispenser : NetworkBehaviour
             {
                 if (lastShrimpDispensed.isHeld && lastShrimpDispensed.playerHeldBy != null)
                 {
+                    if (!lastShrimpDispensed.grabbable) lastShrimpDispensed.grabbable = true;
                     // do nothing.
                 }
                 else

@@ -18,7 +18,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
 		Instance = (T)this;
 	}
 	
-    protected void RegisterEnemyWithConfig(string configMoonRarity, EnemyType enemy, TerminalNode terminalNode, TerminalKeyword terminalKeyword, float powerLevel, int spawnCount)
+    protected void RegisterEnemyWithConfig(string configMoonRarity, EnemyType enemy, TerminalNode? terminalNode, TerminalKeyword? terminalKeyword, float powerLevel, int spawnCount)
     {
         enemy.MaxCount = spawnCount;
         enemy.PowerLevel = powerLevel;

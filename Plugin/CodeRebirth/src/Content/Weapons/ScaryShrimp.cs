@@ -80,7 +80,7 @@ public class ScaryShrimp : Shovel
         if (playerHp - 60 <= 0 || isDead) lastPlayerHeld.itemAudio.PlayOneShot(killClip);
         else
         {
-            playerHit.drunknessInertia = Mathf.Clamp(playerHit.drunknessInertia + 5f * playerHit.drunknessSpeed, 0.1f, 3f);
+            playerHit.drunknessInertia = Mathf.Clamp(playerHit.drunknessInertia + 3f * playerHit.drunknessSpeed, 0.1f, 3f);
             playerHit.increasingDrunknessThisFrame = true;
             playerHit.DropAllHeldItems();
         }

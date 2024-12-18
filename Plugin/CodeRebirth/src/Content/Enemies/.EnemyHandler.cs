@@ -1,5 +1,6 @@
 ﻿﻿using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
 
@@ -59,6 +60,24 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public Item RedwoodWhistle { get; private set; } = null!;*/
     }
 
+    public class DuckSongAssets(string bundleName) : AssetBundleLoader<DuckSongAssets>(bundleName)
+    {
+        [LoadFromBundle("DuckObj.asset")]
+        public EnemyType DuckSongEnemyType { get; private set; } = null!;
+
+        [LoadFromBundle("GrapeObj.asset")]
+        public Item GrapeItem { get; private set; } = null!;
+
+        [LoadFromBundle("DuckTN.asset")]
+        public TerminalNode DuckSongTerminalNode { get; private set; } = null!;
+
+        [LoadFromBundle("DuckTK.asset")]
+        public TerminalKeyword DuckSongTerminalKeyword { get; private set; } = null!;
+
+        [LoadFromBundle("DuckHolder.prefab")]
+        public GameObject DuckUIPrefab { get; private set; } = null!;
+    }
+
     public class PokemonEnemyAssets(string bundleName) : AssetBundleLoader<PokemonEnemyAssets>(bundleName)
     {
         [LoadFromBundle("FlareonObj.asset")]
@@ -89,6 +108,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public Item ChildEeveeItem { get; private set; } = null!;
     }
 
+    public DuckSongAssets DuckSong { get; private set; } = null!;
     public PokemonEnemyAssets PokemonEnemies { get; private set; } = null!;
     public ButterflyAssets Butterfly { get; private set; } = null!;
     public SnailCatAssets SnailCat { get; private set; } = null!;
@@ -121,6 +141,14 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         {
             SnailCat = new SnailCatAssets("snailcatassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
+        }
+
+        if (true)
+        {
+            DuckSong = new DuckSongAssets("ducksongassets");
+            RegisterScrapWithConfig("", DuckSong.GrapeItem, -1, -1);
+            RegisterEnemyWithConfig("", DuckSong.DuckSongEnemyType, DuckSong.DuckSongTerminalNode, DuckSong.DuckSongTerminalKeyword, 2, 1);
+            Plugin.samplePrefabs.Add(DuckSong.GrapeItem.itemName, DuckSong.GrapeItem);
         }
 
         if (false)

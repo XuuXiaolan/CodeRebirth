@@ -10,22 +10,25 @@ using CodeRebirth.src.Util.Extensions;
 using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
+using CodeRebirth.src.Content.Enemies;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
-static class StartOfRoundPatch {
+static class StartOfRoundPatch
+{
 	[HarmonyPatch(nameof(StartOfRound.Awake))]
 	[HarmonyPostfix]
 	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
-		
 	}
 
 	[HarmonyPatch(nameof(StartOfRound.ArriveAtLevel)), HarmonyPostfix]
-	static void DisplayWindyWarning(StartOfRound __instance) {
+	static void DisplayWindyWarning(StartOfRound __instance)
+	{
         if(__instance == null || WeatherHandler.Instance.TornadoesWeather == null) return; // tornado weather didn't load
-		if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) == WeatherHandler.Instance.TornadoesWeather) {
+		if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) == WeatherHandler.Instance.TornadoesWeather)
+		{
 			Plugin.Logger.LogWarning("Displaying Windy Weather Warning.");
 			HUDManager.Instance.DisplayTip("Weather alert!", "You have routed to a Windy moon. Exercise caution if you are sensitive to flashing lights!", true, true, "CR_WindyTip");
 		}
@@ -52,6 +55,14 @@ static class StartOfRoundPatch {
 			else
 			{
 				Plugin.Logger.LogWarning("CodeRebirthUtils already exists?");
+			}
+
+			if (EnemyHandler.Instance.DuckSong != null)
+			{
+				Plugin.ExtendedLogging("Creating duck UI");
+				var canvasObject = GameObject.Find("Systems/UI/Canvas");
+				var duckUI = GameObject.Instantiate(EnemyHandler.Instance.DuckSong.DuckUIPrefab, Vector3.zero, Quaternion.identity, canvasObject.transform);
+				duckUI.GetComponent<NetworkObject>().Spawn();
 			}
 		}
 	}
@@ -84,6 +95,11 @@ static class StartOfRoundPatch {
 		foreach (var plant in PlantPot.Instances)
 		{
 			plant.grewThisOrbit = false;
+		}
+
+		foreach (SCP999GalAI gal in SCP999GalAI.Instances)
+		{
+			gal.MakeTriggerInteractable(false);
 		}
 
 		if (Plugin.ModConfig.ConfigRemoveInteriorFog.Value)
