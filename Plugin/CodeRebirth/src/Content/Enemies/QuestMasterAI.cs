@@ -92,8 +92,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     [HideInInspector]
     public NetworkVariable<int> questOrder = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public NetworkVariable<bool> notFirstSpawn = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    [HideInInspector]
     public List<GameObject> spawnedBodies = new();
     [HideInInspector]
     public float internalQuestTimer = 0f;
@@ -137,7 +135,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     protected virtual IEnumerator DoSpawning()
     {
-        if (!notFirstSpawn.Value) creatureUltraVoice.Play();
+        creatureUltraVoice.Play();
         yield return new WaitForSeconds(spawnAnimation.length);
         smartAgentNavigator.StartSearchRoutine(transform.position, 40);
         ChangeSpeedClientRpc(walkSpeed);
@@ -316,7 +314,30 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         questCompleted.Value = true;
         ChangeSpeedClientRpc(docileSpeed);
         SwitchToBehaviourClientRpc((int)State.Docile);
+        float redoTimer = UnityEngine.Random.Range(45, 60);
+        if (reason == QuestCompletion.Completed)
+        {
+            redoTimer = UnityEngine.Random.Range(180, 300);
+        }
+        StartCoroutine(RestartEnemy(redoTimer));
         smartAgentNavigator.StartSearchRoutine(transform.position, 40);
+    }
+
+    protected virtual IEnumerator RestartEnemy(float timer)
+    {
+        yield return new WaitForSeconds(timer);
+        ResetEverything();
+    }
+
+    protected virtual void ResetEverything()
+    {
+        questCompletionTimes.Value = 0;
+        currentQuestOrder.Value = 0;
+        questTimedOut.Value = false;
+        questCompleted.Value = false;
+        questStarted.Value = false;
+        questOrder.Value = 0;
+        internalQuestTimer = 0f;
     }
 
     protected virtual IEnumerator QuestSucceedSequence()

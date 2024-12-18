@@ -7,6 +7,7 @@
 - Updated Readme.
 - Made crates not spawn the same items if more than one is broken in a moon.
 - Fixed 999 not working with company config.
+- Added sound to cruiser tires popping from bear trap.
 
 ## v0.9.2
 
