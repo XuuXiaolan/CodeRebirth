@@ -44,7 +44,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         {
             RechargeGalHealsAndRevivesServerRpc(true, true);
             StartCoroutine(DetectingNearbyPlayer());
-            MakeTriggerInteractableServerRpc(false);
+            MakeTriggerInteractableServerRpc(!StartOfRound.Instance.inShipPhase);
         }
         HealTrigger.onInteract.AddListener(HealPlayerInteraction);
     }
@@ -175,7 +175,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
                 Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}");
-                if (!player.isPlayerDead) continue;
+                if (player == null || !player.isPlayerDead || player.deadBody == null) continue;
                 float distanceFromGal = Vector3.Distance(transform.position, player.deadBody.transform.position);
                 Plugin.ExtendedLogging($"Distance from gal: {distanceFromGal}");
                 if (distanceFromGal > 5) continue;
@@ -412,7 +412,6 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     [ServerRpc(RequireOwnership = false)]
     public void RechargeGalHealsAndRevivesServerRpc(bool heal, bool revive)
     {
-        MakeTriggerInteractableClientRpc(true);
         int ActivePlayerAmount = 0;
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {

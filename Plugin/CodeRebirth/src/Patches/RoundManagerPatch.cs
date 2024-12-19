@@ -568,12 +568,12 @@ static class RoundManagerPatch {
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	private static void PatchFix_DespawnOldCrates()
 	{
-		foreach (ItemCrate crate in ItemCrate.Instances)
+		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>())
 		{
 			crate.NetworkObject.Despawn();
 		}
 
-		foreach (BiomeManager biome in BiomeManager.Instances)
+		foreach (BiomeManager biome in GameObject.FindObjectsOfType<BiomeManager>())
 		{
 			biome.NetworkObject.Despawn();
 		}

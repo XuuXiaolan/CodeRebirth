@@ -99,7 +99,7 @@ static class StartOfRoundPatch
 
 		foreach (SCP999GalAI gal in SCP999GalAI.Instances)
 		{
-			gal.MakeTriggerInteractable(false);
+			gal.MakeTriggerInteractable(true);
 		}
 
 		if (Plugin.ModConfig.ConfigRemoveInteriorFog.Value)
