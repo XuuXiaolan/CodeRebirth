@@ -64,6 +64,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public Item ShrimpWeapon { get; private set; } = null!;
 	}
 
+    public class FriendAssets(string bundleName) : AssetBundleLoader<FriendAssets>(bundleName)
+    {
+        [LoadFromBundle("GlitchedPlushieUnlockable.asset")]
+        public UnlockableItemDef GlitchedPlushieUnlockable { get; private set; } = null!;
+    }
+
+    public FriendAssets Friend { get; private set; } = null!;
 	public Fishdispenserassets ShrimpDispenser { get; private set; } = null!;
 	public SCP999Assets SCP999 { get; private set; } = null!;
 	public BellCrabAssets BellCrab { get; private set; } = null!;
@@ -79,6 +86,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		if (Plugin.ModConfig.ConfigBellCrabGalEnabled.Value) RegisterBellCrab();
 		if (Plugin.ModConfig.Config999GalEnabled.Value) Register999Gal();
 		if (Plugin.ModConfig.ConfigShrimpDispenserEnabled.Value) RegisterShrimpDispenser();
+        if (Plugin.ModConfig.ConfigFriendStuffEnabled.Value) RegisterFriendStuff();
+	}
+
+	private void RegisterFriendStuff()
+	{
+		Friend = new FriendAssets("friendassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(Friend.GlitchedPlushieUnlockable, Plugin.ModConfig.ConfigGlitchedPlushieCost.Value, StoreType.Decor);
 	}
 
 	private void RegisterShrimpDispenser()
@@ -99,7 +113,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	private void RegisterBellCrab()
 	{
 		BellCrab = new BellCrabAssets("bellcrabgalassets");
-		LethalLib.Modules.Unlockables.RegisterUnlockable(BellCrab.BellCrabUnlockable, Plugin.ModConfig.ConfigBellCrabGalCost.Value, StoreType.ShipUpgrade);
+		LethalLib.Modules.Unlockables.RegisterUnlockable(BellCrab.BellCrabUnlockable, Plugin.ModConfig.ConfigBellCrabGalCost.Value, StoreType.Decor);
 	}
 
     private void RegisterShockWaveGal()
@@ -128,6 +142,6 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		RegisterScrapWithConfig("", PlantPot.GoldenTomato, gScrapValues[0], gScrapValues[1]);
 		Plugin.samplePrefabs.Add("Golden Tomato", PlantPot.GoldenTomato);
 
-		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigPlantPotPrice.Value, StoreType.Decor);
+		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigPlantPotPrice.Value, StoreType.ShipUpgrade);
 	}
 }

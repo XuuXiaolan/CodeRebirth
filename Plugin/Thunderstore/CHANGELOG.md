@@ -3,6 +3,8 @@
 - Fixed inside bear traps.
 - Change defaults of hazards to be more vanilla friendly and more like how zeekerss does turrets and landmines etc.
 - Gave duck song enemy more configs.
+- Lowered repeat quest chance to 15% from 99%.
+- Added a thing for someone.
 
 ## v0.9.5
 

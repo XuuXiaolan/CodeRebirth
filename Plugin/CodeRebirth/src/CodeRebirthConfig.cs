@@ -7,6 +7,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigFriendStuffEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShrimpDispenserEnabled { get; private set; }
     public ConfigEntry<bool> Config999GalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
@@ -74,6 +75,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigTeslaShockCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigAirControlUnitSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigFunctionalMicrowaveCurveSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigBearTrapInsideSpawnWeight { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
@@ -132,6 +134,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigShovelCratesOnly { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCost { get; private set; }
     public ConfigEntry<int> ConfigShockwaveBotCost { get; private set; }
+    public ConfigEntry<int> ConfigGlitchedPlushieCost { get; private set; }
     public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
     public ConfigEntry<bool> ConfigEnableExtendedLogging { get; private set; }
@@ -172,7 +175,6 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigShrimpDispenserCost { get; private set; }
     public ConfigEntry<float> ConfigAirControlUnitKnockbackPower { get; private set; }
     public ConfigEntry<int> ConfigAirControlUnitDamage { get; private set; }
-    public ConfigEntry<string> ConfigBearTrapInsideSpawnWeight { get; private set; }
     public ConfigEntry<int> ConfigDuckSongPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigDuckSongMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigDuckSongTimer { get; private set; }
@@ -210,6 +212,16 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region Friend Stuff
+        ConfigFriendStuffEnabled = configFile.Bind("FriendStuff Options",
+                                            "Friend Stuff | Enabled",
+                                            true,
+                                            "Whether friend stuff is enabled, unrelated to this mod, just stuff for my friends.");
+        ConfigGlitchedPlushieCost = configFile.Bind("FriendStuff Options",
+                                            "Friend Stuff | Glitched Plushie SpawnWeights",
+                                            69,
+                                            "The MoonName - SpawnWeight for the Glitched Plushie.");
         #endregion
         #region Duck Song
         ConfigDuckSongEnabled = configFile.Bind("DuckSong Options",
