@@ -1623,7 +1623,7 @@ MonoBehaviour:
   - Grape
   - Lemonade Pitcher
   questName: Duck Quest
-  questRepeatChance: 99
+  questRepeatChance: 25
   questRepeats: 1
   networkAnimator: {fileID: 7652632877655664251}
   spawnAnimation: {fileID: 7400000, guid: 24097196dbe60384cb01d223125a9ac8, type: 2}
@@ -1662,6 +1662,10 @@ MonoBehaviour:
     m_InternalValue: 0
   spawnedBodies: []
   internalQuestTimer: 0
+  questsFailed: 0
+  questItemsList: []
+  deadBodiesList: []
+  changingState: 0
 --- !u!114 &6607607558369177806
 MonoBehaviour:
   m_ObjectHideFlags: 0

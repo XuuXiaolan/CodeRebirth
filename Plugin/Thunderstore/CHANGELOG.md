@@ -1,9 +1,12 @@
-# v0.9.5
+# v0.9.6
+
+- Lowered repeat quest chance to 15% from 99%.
+
+## v0.9.5
 
 - Apparently despawning of crates was broken, no idea how, but reverted to how they despawned in previous versions.
 - SCP 999 gal had a bug when somebody died and lost their corpse, this has been fixed.
 - SCP 999 gal was also not interactable for quite a while because of a false/true accident.
--
 
 ## v0.9.4
 

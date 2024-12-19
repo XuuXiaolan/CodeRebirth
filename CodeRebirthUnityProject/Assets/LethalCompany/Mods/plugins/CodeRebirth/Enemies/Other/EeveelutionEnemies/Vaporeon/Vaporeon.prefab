@@ -3047,26 +3047,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
   - IsCrossFadeExit: 0
-    Layer: 1
-    OriginatingState: -1459219776
+    Layer: 0
+    OriginatingState: -17731645
     DestinationState: -394486307
-    TransitionDuration: 0
+    TransitionDuration: 0.23882386
     TriggerNameHash: -751588929
-    TransitionIndex: 0
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -17731645
+    DestinationState: -106600266
+    TransitionDuration: 0.25
+    TriggerNameHash: -537309540
+    TransitionIndex: 2
   - IsCrossFadeExit: 0
     Layer: 1
     OriginatingState: -1459219776
     DestinationState: -766340351
     TransitionDuration: 0
     TriggerNameHash: -383932573
-    TransitionIndex: 1
-  - IsCrossFadeExit: 0
-    Layer: 1
-    OriginatingState: -1459219776
-    DestinationState: -106600266
-    TransitionDuration: 0
-    TriggerNameHash: -537309540
-    TransitionIndex: 2
+    TransitionIndex: 0
   m_Animator: {fileID: 6135891503134325517}
 --- !u!114 &1027817919576648873
 MonoBehaviour:
@@ -3232,6 +3232,7 @@ MonoBehaviour:
   hitSounds: []
   deathSounds: []
   MouthTransform: {fileID: 8368167285095603301}
+  creatureNetworkAnimator: {fileID: 0}
 --- !u!1 &5787947559326185160
 GameObject:
   m_ObjectHideFlags: 0

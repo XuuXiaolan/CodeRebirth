@@ -313,6 +313,8 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             case QuestCompletion.Null:
                 {
                     Plugin.ExtendedLogging("Target Player or Enemy vents is null?");
+                    PlayMiscSoundsClientRpc(2);
+                    StartCoroutine(QuestFailSequence(targetPlayer));
                     break;
                 }
         }
@@ -367,13 +369,13 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         yield return StartAnimation(startSucceedQuestAnimation);
     }
 
-    protected virtual IEnumerator QuestFailSequence(PlayerControllerB failure)
+    protected virtual IEnumerator QuestFailSequence(PlayerControllerB? failure)
     {
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
         networkAnimator.SetTrigger(startFailQuestAnimation);
         yield return new WaitForSeconds(1f);
         var bodyIndexToSpawn = UnityEngine.Random.Range(0, deadBodies.Count);
-        SpawnDeadBodyClientRpc(bodyIndexToSpawn, failure.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, failure));
+        if (failure != null) SpawnDeadBodyClientRpc(bodyIndexToSpawn, failure.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, failure));
         foreach (var gameobject in questItemsList)
         {
             if (gameobject == null)
