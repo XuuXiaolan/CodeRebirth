@@ -158,7 +158,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public void RegisterInsideBearTraps()
 	{
-		RegisterInsideMapObjectWithConfig(BearTrap.GrassMatPrefab, Plugin.ModConfig.ConfigBearTrapSpawnWeight.Value);
+		RegisterInsideMapObjectWithConfig(BearTrap.GrassMatPrefab, Plugin.ModConfig.ConfigBearTrapInsideSpawnWeight.Value);
 	}
 
 	public void RegisterFunctionalMicrowave()
@@ -244,7 +244,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public void RegisterFlora(GameObject prefab, AnimationCurve curve, string[] moonWhiteList, FloraTag tag, string[] moonBlackList)
 	{
-		RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora() {
+		RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora()
+		{
 			prefab = prefab,
 			moonsWhiteList = moonWhiteList,
 			spawnCurve = curve,

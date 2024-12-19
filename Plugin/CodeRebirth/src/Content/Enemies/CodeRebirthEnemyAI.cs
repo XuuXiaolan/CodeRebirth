@@ -106,7 +106,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         agent.speed = speed;
     }
 
-    public bool FindClosestPlayerInRange(float range)
+    public bool FindClosestPlayerInRange(float range, bool targetAlreadyTargettedPerson = true)
     {
         PlayerControllerB? closestPlayer = null;
         float minDistance = float.MaxValue;
@@ -116,6 +116,8 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             bool onSight = player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom && EnemyHasLineOfSightToPosition(player.transform.position, 60f, range);
             if (!onSight) continue;
 
+            if (CheckIfPersonAlreadyTargetted(targetAlreadyTargettedPerson, player)) continue;
+            
             float distance = Vector3.Distance(transform.position, player.transform.position);
             bool closer = distance < minDistance;
             if (!closer) continue;
@@ -127,6 +129,20 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
         targetPlayer = closestPlayer;
         return true;
+    }
+
+    public bool CheckIfPersonAlreadyTargetted(bool targetAlreadyTargettedPerson, PlayerControllerB playerToCheck)
+    {
+        if (!targetAlreadyTargettedPerson) return false;
+        foreach (var enemy in RoundManager.Instance.SpawnedEnemies.ToArray())
+        {
+            if (enemy is CodeRebirthEnemyAI codeRebirthEnemyAI)
+            {
+                if (codeRebirthEnemyAI.targetPlayer == playerToCheck)
+                return true;
+            }
+        }
+        return false;
     }
 
     public bool EnemyHasLineOfSightToPosition(Vector3 pos, float width = 60f, float range = 20f, float proximityAwareness = 5f)

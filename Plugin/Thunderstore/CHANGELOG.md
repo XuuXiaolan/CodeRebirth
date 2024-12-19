@@ -1,9 +1,14 @@
-# v0.9.5
+# v0.9.6
+
+- Fixed inside bear traps.
+- Change defaults of hazards to be more vanilla friendly and more like how zeekerss does turrets and landmines etc.
+- Gave duck song enemy more configs.
+
+## v0.9.5
 
 - Apparently despawning of crates was broken, no idea how, but reverted to how they despawned in previous versions.
 - SCP 999 gal had a bug when somebody died and lost their corpse, this has been fixed.
 - SCP 999 gal was also not interactable for quite a while because of a false/true accident.
--
 
 ## v0.9.4
 
