@@ -3183,7 +3183,7 @@ MonoBehaviour:
   ventAnimationFinished: 0
   isEnemyDead: 0
   daytimeEnemyLeaving: 0
-  enemyHP: 6
+  enemyHP: 16
   nodesTempArray: []
   openDoorSpeedMultiplier: 1
   useSecondaryAudiosOnAnimatedObjects: 0
@@ -3216,11 +3216,11 @@ MonoBehaviour:
   smartAgentNavigator: {fileID: 1027817919576648873}
   Acceleration: 20
   WalkingSpeed: 4
-  SprintingSpeed: 8
+  SprintingSpeed: 6
   MeleeDamage: 20
-  SpecialMeleeDamage: 50
-  SpecialAOEDamage: 40
-  SpecialAttackPushForce: 20
+  SpecialMeleeDamage: 25
+  SpecialAOEDamage: 10
+  SpecialAttackPushForce: 15
   ShinyMaterials: []
   NormalAttackSound: {fileID: 0}
   SpecialAttackSound: {fileID: 0}

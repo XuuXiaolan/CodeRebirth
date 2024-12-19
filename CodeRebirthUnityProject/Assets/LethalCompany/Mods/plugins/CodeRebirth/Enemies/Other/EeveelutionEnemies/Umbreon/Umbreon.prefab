@@ -1498,7 +1498,7 @@ MonoBehaviour:
   ventAnimationFinished: 0
   isEnemyDead: 0
   daytimeEnemyLeaving: 0
-  enemyHP: 6
+  enemyHP: 12
   nodesTempArray: []
   openDoorSpeedMultiplier: 1
   useSecondaryAudiosOnAnimatedObjects: 0
@@ -1533,9 +1533,9 @@ MonoBehaviour:
   WalkingSpeed: 4
   SprintingSpeed: 8
   MeleeDamage: 20
-  SpecialMeleeDamage: 50
-  SpecialAOEDamage: 40
-  SpecialAttackPushForce: 20
+  SpecialMeleeDamage: 30
+  SpecialAOEDamage: 20
+  SpecialAttackPushForce: 12
   ShinyMaterials: []
   NormalAttackSound: {fileID: 8300000, guid: 3b69505f79247c34b823c58522d97b2f, type: 3}
   SpecialAttackSound: {fileID: 8300000, guid: 9ed2b4456c30e2542a4efa519244905c, type: 3}

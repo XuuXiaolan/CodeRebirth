@@ -162,6 +162,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             RegisterScrapWithConfig("", PokemonEnemies.ChildEeveeItem, -1, -1);
             RegisterEnemyWithConfig("", PokemonEnemies.UmbreonEnemyType, null, null, 2, 1);
             RegisterEnemyWithConfig("", PokemonEnemies.VaporeonEnemyType, null, null, 2, 1);
+            RegisterEnemyWithConfig("", PokemonEnemies.JolteonEnemyType, null, null, 2, 1);
+            RegisterEnemyWithConfig("", PokemonEnemies.EspeonEnemyType, null, null, 2, 1);
+            RegisterEnemyWithConfig("", PokemonEnemies.GlaceonEnemyType, null, null, 2, 1);
+            RegisterEnemyWithConfig("", PokemonEnemies.MechaSylveonEnemyType, null, null, 2, 1);
+            RegisterEnemyWithConfig("", PokemonEnemies.FlareonEnemyType, null, null, 2, 1);
+            RegisterEnemyWithConfig("", PokemonEnemies.LeafeonEnemyType, null, null, 2, 1);
         }
     }
 }
