@@ -151,10 +151,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             DuckSong = new DuckSongAssets("ducksongassets");
             RegisterScrapWithConfig("", DuckSong.GrapeItem, -1, -1);
             RegisterScrapWithConfig("", DuckSong.LemonadePitcherItem, -1, -1);
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDuckSongSpawnWeights.Value, DuckSong.DuckSongEnemyType, DuckSong.DuckSongTerminalNode, DuckSong.DuckSongTerminalKeyword, 2, 1);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDuckSongSpawnWeights.Value, DuckSong.DuckSongEnemyType, DuckSong.DuckSongTerminalNode, DuckSong.DuckSongTerminalKeyword, Plugin.ModConfig.ConfigDuckSongPowerLevel.Value, Plugin.ModConfig.ConfigDuckSongMaxSpawnCount.Value);
             Plugin.samplePrefabs.Add(DuckSong.GrapeItem.itemName, DuckSong.GrapeItem);
             Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
-        }
+        } // configurable quest time, max amount of ducks to spawn.
 
         if (false)
         {

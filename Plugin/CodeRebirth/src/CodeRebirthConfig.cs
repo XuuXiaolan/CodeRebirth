@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
+using CullFactory;
 
 namespace CodeRebirth.src;
 public class CodeRebirthConfig
@@ -171,6 +172,10 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigShrimpDispenserCost { get; private set; }
     public ConfigEntry<float> ConfigAirControlUnitKnockbackPower { get; private set; }
     public ConfigEntry<int> ConfigAirControlUnitDamage { get; private set; }
+    public ConfigEntry<string> ConfigBearTrapInsideSpawnWeight { get; private set; }
+    public ConfigEntry<int> ConfigDuckSongPowerLevel { get; private set; }
+    public ConfigEntry<int> ConfigDuckSongMaxSpawnCount { get; private set; }
+    public ConfigEntry<float> ConfigDuckSongTimer { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -215,6 +220,18 @@ public class CodeRebirthConfig
                                             "Duck Song | SpawnWeights",
                                             "Vanilla:20,Custom:20",
                                             "The MoonName - SpawnWeight for the Duck.");
+        ConfigDuckSongPowerLevel = configFile.Bind("DuckSong Options",
+                                            "Duck Song | Power Level",
+                                            3,
+                                            "The Power Level of the Duck Song enemy.");
+        ConfigDuckSongMaxSpawnCount = configFile.Bind("DuckSong Options",
+                                            "Duck Song | Max Spawn Count",
+                                            2,
+                                            "The Max Spawn Count of the Duck Song enemy.");
+        ConfigDuckSongTimer = configFile.Bind("DuckSong Options",
+                                            "Duck Song | Timer",
+                                            120f,
+                                            "The Quest Timer of the Duck Song enemy.");
         #endregion
         #region Shrimp Dispenser
         ConfigShrimpDispenserEnabled = configFile.Bind("ShrimpDispenser Options",
@@ -233,7 +250,7 @@ public class CodeRebirthConfig
                                             "Whether the Functional Microwave is enabled.");
         ConfigFunctionalMicrowaveCurveSpawnWeight = configFile.Bind("FunctionalMicrowave Options",
                                             "Functional Microwave | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
+                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
                                             "The MoonName - CurveSpawnWeight for the hazard.");
         ConfigMicrowaveVolume = configFile.Bind("FunctionalMicrowave Options",
                                             "Functional Microwave | Volume",
@@ -254,9 +271,13 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether the bear trap can pop tires.");
         ConfigBearTrapSpawnWeight = configFile.Bind("BearTrap Options",
-                                            "Bear Trap | Spawn Abundance",
+                                            "Bear Trap | OUTSIDE Spawn Abundance",
                                             "Vanilla:10,Custom:10",
                                             "The MoonName:Number Spawn Abundance (where it will spawn between 0 and 10) of bear trap clusters to spawn per round (clusters means that theres 1 primary bear trap that spawns more (0 to 5) around it).");
+        ConfigBearTrapInsideSpawnWeight = configFile.Bind("BearTrap Options",
+                                            "Bear Trap | INSIDE Spawn Weight",
+                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
+                                            "The MoonName - CurveSpawnWeight for the INSIDE BearTrap.");
         ConfigBearTrapVolume = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Volume",
                                             1f,
@@ -269,7 +290,7 @@ public class CodeRebirthConfig
                                             "Whether the Laser Turret is enabled.");
         ConfigLaserTurretCurveSpawnWeight = configFile.Bind("LaserTurret Options",
                                             "Laser Turret | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
+                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
                                             "The MoonName - CurveSpawnWeight for the LaserTurret.");
         ConfigLaserTurretVolume = configFile.Bind("LaserTurret Options",
                                             "Laser Turret | Volume",
@@ -283,7 +304,7 @@ public class CodeRebirthConfig
                                             "Whether the flash turret is enabled.");
         ConfigFlashTurretCurveSpawnWeight = configFile.Bind("FlashTurret Options",
                                             "Flash Turret | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 ",
+                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 ",
                                             "The MoonName - CurveSpawnWeight for the FlashTurret.");
         ConfigFlashTurretVolume = configFile.Bind("FlashTurret Options",
                                             "Flash Turret | Volume",
@@ -297,7 +318,7 @@ public class CodeRebirthConfig
                                             "Whether the industrial fan is enabled.");
         ConfigIndustrialFanCurveSpawnWeight = configFile.Bind("IndustrialFan Options",
                                             "Industrial Fan | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
+                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
                                             "The MoonName - CurveSpawnWeight for the IndustrialFan.");
         ConfigIndustrialFanVolume = configFile.Bind("IndustrialFan Options",
                                             "Industrial Fan | Volume",
@@ -311,7 +332,7 @@ public class CodeRebirthConfig
                                             "Whether the tesla shock is enabled.");
         ConfigTeslaShockCurveSpawnWeight = configFile.Bind("TeslaShock Options",
                                             "Tesla Shock | SpawnWeight Curve",
-                                            "Vanilla - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8 | Custom - 0,0 ; 0.5,1 ; 0.8,3 ; 1,8",
+                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
                                             "The MoonName - CurveSpawnWeight for the TeslaShock.");
         ConfigTeslaShockVolume = configFile.Bind("TeslaShock Options",
                                             "Tesla Shock | Volume",

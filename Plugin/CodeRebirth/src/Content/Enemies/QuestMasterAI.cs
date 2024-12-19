@@ -101,6 +101,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public List<GameObject> deadBodiesList = new();
     [HideInInspector]
     public bool changingState = false;
+
     public enum State
     {
         Spawning,
@@ -332,6 +333,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         {
             PlayMiscSoundsClientRpc(3);
         }
+        SetTargetClientRpc(-1);
         questCompleted.Value = true;
         ChangeSpeedClientRpc(docileSpeed);
         SwitchToBehaviourClientRpc((int)State.Docile);
