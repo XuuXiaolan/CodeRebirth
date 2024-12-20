@@ -54,7 +54,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.23293996, y: 0.48311996, z: 1.9349058}
-  m_Center: {x: 0.04863873, y: -0.008331031, z: 0.47808707}
+  m_Center: {x: 0, y: 0, z: 0.5}
 --- !u!114 &6325618682049242210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -544,7 +544,7 @@ GameObject:
   - component: {fileID: 3662388226964992474}
   - component: {fileID: 4955149342865029584}
   - component: {fileID: 5752655030346395012}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: GlitchUnlockable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -590,6 +590,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f39979a2814255c49b6f646389c788de, type: 3}
   - {fileID: 8300000, guid: 04df9118e0837684ca1a433e85088da4, type: 3}
   - {fileID: 8300000, guid: 8275b0d87be7ec64d9d6e6c37405033b, type: 3}
+  - {fileID: 8300000, guid: f5b0e461ece6b1b458f49ce4680ade83, type: 3}
+  - {fileID: 8300000, guid: cced99f36908c494293de0a3db76be78, type: 3}
   interactTrigger: {fileID: 2926610575093406021}
 --- !u!114 &4955149342865029584
 MonoBehaviour:

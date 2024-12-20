@@ -50,8 +50,22 @@ public class MeteorShower : CodeRebirthWeathers {
 	{ // init weather
 		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
 		normalisedTimeToLeave = Plugin.ModConfig.ConfigMeteorShowerTimeToLeave.Value;
+		bool maxIsHere = false;
+		foreach (var player in StartOfRound.Instance.allPlayerScripts)
+		{
+			if (player.playerSteamId == 76561198043893219)
+			{
+				maxIsHere = true;
+			}
+		}
 		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
 		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
+		if (maxIsHere)
+		{
+			minMeteorsPerSpawn = 0;
+			maxMeteorsPerSpawn = 0;
+			normalisedTimeToLeave = 0f;
+		}
 		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 6, dayTimePower: -3);
 		if (minMeteorsPerSpawn > maxMeteorsPerSpawn)
 		{

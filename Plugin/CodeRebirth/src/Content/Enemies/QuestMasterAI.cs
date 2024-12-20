@@ -260,7 +260,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         DuckUI.Instance.itemUI.player = StartOfRound.Instance.allPlayerScripts[playerIndex];
     }
 
-    private Coroutine? completionRoutine = null;
     protected virtual void DoOngoingQuest()
     {
         if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.IsSpawned || !targetPlayer.isPlayerControlled)
@@ -276,24 +275,21 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         }
         if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder.Value])
         {
-            completionRoutine ??= StartCoroutine(TryCompleteQuest());
+            TryCompleteQuest();
             return;
         }
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
     }
 
-    protected virtual IEnumerator TryCompleteQuest()
+    protected virtual void TryCompleteQuest()
     {
-        yield return new WaitForSeconds(0.3f);
         if (targetPlayer != null && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder.Value])
         {
-            targetPlayer.currentlyHeldObjectServer.grabbable = false;
             Plugin.ExtendedLogging("completed!");
+            SetDuckStartTalkingClientRpc("Good Job!!", 0.05f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, true);
             DoCompleteQuest(QuestCompletion.Completed);
             questStarted.Value = false;
-            SetDuckStartTalkingClientRpc("Good Job!!", 0.05f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, true);
         }
-        completionRoutine = null;
     }
     protected virtual void DoCompleteQuest(QuestCompletion reason)
     {
@@ -333,7 +329,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         {
             PlayMiscSoundsClientRpc(3);
         }
-        SetTargetClientRpc(-1);
         questCompleted.Value = true;
         ChangeSpeedClientRpc(docileSpeed);
         SwitchToBehaviourClientRpc((int)State.Docile);
@@ -378,25 +373,8 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         yield return new WaitForSeconds(1f);
         var bodyIndexToSpawn = UnityEngine.Random.Range(0, deadBodies.Count);
         if (failure != null) SpawnDeadBodyClientRpc(bodyIndexToSpawn, failure.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, failure));
-        foreach (var gameobject in questItemsList)
-        {
-            if (gameobject == null)
-            {
-                continue;
-            }
-            var grabbableObject = gameobject.GetComponent<GrabbableObject>();
-            grabbableObject.playerHeldBy?.DropAllHeldItemsAndSync();
-            StartCoroutine(DespawnAfterSmallWait(grabbableObject));
-        }
-        questItemsList.Clear();
         PlayMiscSoundsClientRpc(4);
         yield return null;
-    }
-
-    public IEnumerator DespawnAfterSmallWait(GrabbableObject itemToDestroy)
-    {
-        yield return new WaitForSeconds(0.2f);
-        itemToDestroy.NetworkObject.Despawn();
     }
 
     [ClientRpc]
@@ -433,15 +411,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         {
             Destroy(body);
         }
-        if (!IsHost) return;
-        foreach (var gameobject in questItemsList)
-        {
-            if (gameobject == null) continue;
-            var grabbableObject = gameobject.GetComponent<GrabbableObject>();
-            grabbableObject.playerHeldBy?.DropAllHeldItemsAndSync();
-            StartCoroutine(DespawnAfterSmallWait(grabbableObject));
-        }
-        questItemsList.Clear();
         // delete all the items with the Quest component
     }
 
@@ -498,11 +467,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         }
     }
 
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-    }
-
     [ClientRpc]
     public void SetDuckTextManuallyClientRpc(string text)
     {
@@ -513,10 +477,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public void SetDuckStartTalkingClientRpc(string text, float talkspeed, int targetPlayerIndex, bool isGlobal, bool setUIInvisibleAfter)
     {
         PlayerControllerB _targetPlayer = StartOfRound.Instance.allPlayerScripts[targetPlayerIndex];
-        if (text == "Good Job!!")
-        {
-            _targetPlayer.waitToEndOfFrameToDiscard();
-        }
         if (setUIInvisibleAfter)
         {
             DuckUI.Instance.StartTalking(text, talkspeed, _targetPlayer, isGlobal, delegate

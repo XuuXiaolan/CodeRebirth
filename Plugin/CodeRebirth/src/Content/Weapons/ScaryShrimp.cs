@@ -24,6 +24,12 @@ public class ScaryShrimp : Shovel
         lastPlayerHeld = playerHeldBy;
     }
 
+    public override void DiscardItem()
+    {
+        base.DiscardItem();
+        this.grabbable = false;
+    }
+
     public override void OnHitGround()
     {
         base.OnHitGround();

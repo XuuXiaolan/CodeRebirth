@@ -411,7 +411,7 @@ public class CodeRebirthConfig
                                             "Whether the Shockwave Gal holds four items regardless of singleplayer or multiplayer.");
         ConfigShockwaveBotEnemyBlacklist = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Enemy Blacklist",
-                                            "Centipede, Red Locust Bees, Docile Locust Bees, Manticoil, CutieFly, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
+                                            "Pikmin, Centipede, Red Locust Bees, Docile Locust Bees, Manticoil, CutieFly, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
                                             "Comma separated list of enemies that the Shockwave Gal will not target (immortal enemies should be counted by default, just not in config).");
         ConfigShockwaveBotPropellerVolume = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Propeller Volume",
@@ -448,7 +448,7 @@ public class CodeRebirthConfig
                                             "How many charges the Seamine Gal has.");
         ConfigSeamineTinkEnemyBlacklist = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Enemy Blacklist",
-                                            "Docile Locust Bees, Manticoil, Nemo, Horse, CutieFly, Shisha, Tornado, Scary",
+                                            "Pikmin, Docile Locust Bees, Manticoil, Nemo, Horse, CutieFly, Shisha, Tornado, Scary",
                                             "Comma separated list of enemies that the Seamine Gal will not target (keep in mind she targets ALL enemies).");
         ConfigSeamineTinkRidingBruceVolume = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Riding Bruce Volume",

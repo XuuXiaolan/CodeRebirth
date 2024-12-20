@@ -1,4 +1,13 @@
-# v0.9.6
+# v0.9.7
+
+- Fixed meteor shower craters not disappearing for clients.
+- Fixed blue shrimp bug with dropping and grabbing in midair.
+- Added pikmin to shockwave and seamine gal blacklist config.
+- Added voicelines to bald man.
+- Fixed some UI issues with duck.
+- Gave value to grape and lemonade pitcher.
+
+## v0.9.6
 
 - Fixed inside bear traps.
 - Change defaults of hazards to be more vanilla friendly and more like how zeekerss does turrets and landmines etc.

@@ -166,8 +166,7 @@ public class CraterController : MonoBehaviour
     private IEnumerator DespawnAfter20Seconds()
     {
         yield return new WaitForSeconds(20);
-        if (NetworkManager.Singleton.IsHost)
-            Destroy(this.gameObject);
+        Destroy(this.gameObject);
         MeteorShower.Instance?.RemoveCrater(this);
     }
 

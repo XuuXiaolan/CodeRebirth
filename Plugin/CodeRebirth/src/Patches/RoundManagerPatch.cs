@@ -269,7 +269,6 @@ static class RoundManagerPatch {
 		return true;
 	}
 
-	// todo: change this so that it takes a moon's content tag and checks whether it fits for custom moons and vanilla moons a specific tag using FloraTag.
 	private static IEnumerable<IGrouping<FloraTag, SpawnableFlora>> GetValidFlora()
 	{
 		// Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
