@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 138234278578575194}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5000328, y: 0.49996728, z: 0.49996737, w: 0.50003266}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -53,8 +53,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.23293996, y: 0.48311996, z: 1.9349058}
-  m_Center: {x: 0, y: 0, z: 0.5}
+  m_Size: {x: 0.25, y: 0.5, z: 2}
+  m_Center: {x: 0, y: 0, z: 1}
 --- !u!114 &6325618682049242210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
   mainMesh: {fileID: 3643469287609094424}
   mainTransform: {fileID: 6545321679438466916}
   placeObjectCollider: {fileID: 6645809388262128439}
-  yOffset: 0.5
+  yOffset: 0
   overrideWallOffset: 0
   wallOffset: 0
   collisionPointCheck: {x: 0, y: 0, z: 0}
@@ -286,7 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 588223410340939933}
   - component: {fileID: 1287026714835562660}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.11
+  m_Radius: 0.15
   m_Height: 1.78
   m_Direction: 1
   m_Center: {x: 0, y: 0.7383127, z: 0}
@@ -544,7 +544,7 @@ GameObject:
   - component: {fileID: 3662388226964992474}
   - component: {fileID: 4955149342865029584}
   - component: {fileID: 5752655030346395012}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GlitchUnlockable
   m_TagString: Untagged
   m_Icon: {fileID: 0}

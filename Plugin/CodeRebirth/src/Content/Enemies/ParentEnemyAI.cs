@@ -20,11 +20,12 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public int SpecialMeleeDamage = 0;
     public int SpecialAOEDamage = 0;
     public float SpecialAttackPushForce = 0f;
-    public List<Material> ShinyMaterials = new();
-    public AudioClip NormalAttackSound = null!;
-    public AudioClip SpecialAttackSound = null!;
+    public Material[] ShinyMaterials = null!;
+    public AudioClip[] NormalAttackSounds = null!;
+    public AudioClip[] SpecialAttackSounds = null!;
     public AudioClip SpawnSound = null!;
     public AudioClip EnrageSound = null!;
+    public AudioClip StartSpecialAttackSound = null!;
     public AudioClip[] IdleSounds = null!;
     public AudioClip[] FootstepSounds = null!;
     public AudioClip[] FastFootstepSounds = null!;
@@ -33,6 +34,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public Transform MouthTransform = null!;
     public NetworkAnimator creatureNetworkAnimator = null!;
 
+    private float idleTimer = 10f;
     [NonSerialized] public bool canGrabChild = false;
     private float specialAttackTimer = 15f;
     private bool CloseToEevee => Vector3.Distance(childEevee.transform.position, this.transform.position) <= 10;
@@ -114,7 +116,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         agent.speed = 0f;
         agent.acceleration = 0f;
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 323);
-        if (enemyRandom.NextInt(1, 100) <= 5 && ShinyMaterials.Count != 0)
+        if (enemyRandom.NextInt(1, 100) <= 5 && ShinyMaterials.Length != 0)
         {
             this.skinnedMeshRenderers[0].materials = ShinyMaterials.ToArray();
         }
@@ -158,7 +160,6 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
             Plugin.ExtendedLogging($"Spawned eevee: {this.transform.position}");
         });
     }
-
 
     [ServerRpc(RequireOwnership = false)]
     public void HandleStateAnimationSpeedChangesServerRpc(int state)
@@ -257,6 +258,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
     private void HandleStateChasingPlayerChange()
     {
+        creatureSFX.PlayOneShot(EnrageSound);
         agent.speed = SprintingSpeed;
     }
 
@@ -270,6 +272,15 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     {
         base.Update();
         if (isEnemyDead) return;
+        if (currentBehaviourStateIndex == (int)State.Wandering)
+        {
+            idleTimer -= Time.deltaTime;
+            if (idleTimer <= 0)
+            {
+                creatureVoice.PlayOneShot(IdleSounds[enemyRandom.Next(0, IdleSounds.Length)]);
+                idleTimer = 10;
+            }
+        }
         specialAttackTimer -= Time.deltaTime;
         timeSinceHittingLocalPlayer -= Time.deltaTime;
     }
@@ -278,7 +289,6 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     {
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost) return;
-        Plugin.ExtendedLogging($"DoAIInterval for this state: {currentBehaviourStateIndex}");
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
 
         switch (currentBehaviourStateIndex)
@@ -301,10 +311,12 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         {
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
+                if (player.isPlayerDead || !player.isPlayerControlled) continue;
                 Vector3 directionToEevee = (childEevee.transform.position - player.gameplayCamera.transform.position).normalized;
                 float dotProduct = Vector3.Dot(player.gameplayCamera.transform.forward, directionToEevee);
                 float distance = Vector3.Distance(player.gameplayCamera.transform.position, childEevee.transform.position);
-                if (distance <= 10 && dotProduct <= 0.5)
+                Plugin.ExtendedLogging($"dotProduct: {dotProduct}, distance: {distance}");
+                if (distance <= 10 && dotProduct > 0.5)
                 {
                     smartAgentNavigator.DoPathingToDestination(childEevee.transform.position, childEevee.isInFactory, false, null);
                     this.transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position);
@@ -362,7 +374,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
         }
 
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
-        if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 5)
+        if (Vector3.Distance(targetPlayer.transform.position, this.transform.position) <= 3)
         {
             creatureNetworkAnimator.SetTrigger(MeleeAnimation);
         }
@@ -398,6 +410,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
                 Plugin.ExtendedLogging("Special attack");
                 specialAttackTimer = 15f;
                 creatureNetworkAnimator.SetTrigger(SpecialMeleeAnimation);
+                creatureVoice.PlayOneShot(StartSpecialAttackSound);
             }
             if (currentBehaviourStateIndex != (int)State.ChasingPlayer)
             {
@@ -563,7 +576,7 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
     public void OnSpecialAOEAttack()
     {
         List<PlayerControllerB> playersToHit = new List<PlayerControllerB>();
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 5, LayerMask.GetMask("Player"));
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 8, LayerMask.GetMask("Player"));
         foreach (Collider collider in colliders)
         {
             if (collider.TryGetComponent(out PlayerControllerB player))
@@ -572,18 +585,16 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
                 playersToHit.Add(player);
             }
         }
+        if (playersToHit.Count == 0) return;
         // do a spherecast, pass it onto handleattack
-        PlayerControllerB specialPlayer = playersToHit.OrderBy(x => Vector3.Distance(x.transform.position, transform.position)).FirstOrDefault();
+        creatureSFX.PlayOneShot(SpecialAttackSounds[enemyRandom.Next(0, SpecialAttackSounds.Length)]);
         HandleAttack(playersToHit, SpecialAttackPushForce, SpecialAOEDamage);
-
-        HandleAttack(new List<PlayerControllerB> { specialPlayer }, default, SpecialMeleeDamage);
     } // Animation Event
 
     public void OnCollideMeleeAttack()
     {
         if (timeSinceHittingLocalPlayer > 0f || isEnemyDead) return;
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 5, LayerMask.GetMask("Player"));
-        colliders = colliders.Where(x => Vector3.Distance(x.transform.position, transform.position) < 5f).ToArray();
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 3, LayerMask.GetMask("Player"));
         PlayerControllerB? player = null;
         foreach (Collider collider in colliders)
         {
@@ -599,7 +610,31 @@ public class ParentEnemyAI : CodeRebirthEnemyAI
 
         timeSinceHittingLocalPlayer = 1.5f;
         Plugin.ExtendedLogging("Hitting player with normal melee attack");
+        creatureSFX.PlayOneShot(NormalAttackSounds[enemyRandom.Next(0, NormalAttackSounds.Length)]);
         player.DamagePlayer(MeleeDamage, true, false, CauseOfDeath.Bludgeoning, 0, false, default);
+    } // Animation Event
+
+    public void OnCollideSpecialMeleeAttack()
+    {
+        if (isEnemyDead) return;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 3, LayerMask.GetMask("Player"));
+        PlayerControllerB? player = null;
+        foreach (Collider collider in colliders)
+        {
+            if (collider.gameObject.TryGetComponent(out PlayerControllerB playerController))
+            {
+                player = playerController;
+            }
+        }
+        if (targetPlayer == null || player == null)
+        {
+            return;
+        }
+
+        timeSinceHittingLocalPlayer = 1.5f;
+        Plugin.ExtendedLogging("Hitting player with special melee attack");
+        creatureSFX.PlayOneShot(SpecialAttackSounds[enemyRandom.Next(0, SpecialAttackSounds.Length)]);
+        player.DamagePlayer(SpecialMeleeDamage, true, false, CauseOfDeath.Bludgeoning, 0, false, default);
     } // Animation Event
     #endregion
 }
