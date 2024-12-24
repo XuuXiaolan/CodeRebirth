@@ -43,6 +43,15 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public GameObject SeamineGalPrefab { get; private set; } = null!;
 	}
 
+	public class TerminalBotAssets(string bundleName) : AssetBundleLoader<TerminalBotAssets>(bundleName)
+	{
+		[LoadFromBundle("TerminalBotUnlockable.asset")]
+		public UnlockableItemDef TerminalBotUnlockable { get; private set; } = null!;
+
+		[LoadFromBundle("TerminalGalPrefab.prefab")]
+		public GameObject TerminalGalPrefab { get; private set; } = null!;
+	}
+
 	public class BellCrabAssets(string bundleName) : AssetBundleLoader<BellCrabAssets>(bundleName)
 	{
 		[LoadFromBundle("BellCrabUnlockable.asset")]
@@ -75,6 +84,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	public SCP999Assets SCP999 { get; private set; } = null!;
 	public BellCrabAssets BellCrab { get; private set; } = null!;
 	public SeamineTinkAssets SeamineTink { get; private set; } = null!;
+	public TerminalBotAssets TerminalBot { get; private set; } = null!;
 	public PlantPotAssets PlantPot { get; private set; } = null!;
 	public ShockwaveBotAssets ShockwaveBot { get; private set; } = null!;
 
@@ -83,6 +93,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		if (Plugin.ModConfig.ConfigShockwaveBotEnabled.Value) RegisterShockWaveGal();
 		if (Plugin.ModConfig.ConfigFarmingEnabled.Value) RegisterPlantPot();
 		if (Plugin.ModConfig.ConfigSeamineTinkEnabled.Value) RegisterSeamineTink();
+		if (Plugin.ModConfig.ConfigTerminalBotEnabled.Value) RegisterTerminalBot();
 		if (Plugin.ModConfig.ConfigBellCrabGalEnabled.Value) RegisterBellCrab();
 		if (Plugin.ModConfig.Config999GalEnabled.Value) Register999Gal();
 		if (Plugin.ModConfig.ConfigShrimpDispenserEnabled.Value) RegisterShrimpDispenser();
@@ -126,6 +137,12 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		SeamineTink = new SeamineTinkAssets("seaminetinkassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(SeamineTink.SeamineTinkUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.ShipUpgrade);
+	}
+
+	private void RegisterTerminalBot()
+	{
+		TerminalBot = new TerminalBotAssets("terminalbotassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(TerminalBot.TerminalBotUnlockable, Plugin.ModConfig.ConfigTerminalBotCost.Value, StoreType.ShipUpgrade);
 	}
 
 	private void RegisterPlantPot()

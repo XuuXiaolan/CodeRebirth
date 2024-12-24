@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
-using CullFactory;
 
 namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigTerminalBotEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigTerminalBotPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFriendStuffEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShrimpDispenserEnabled { get; private set; }
     public ConfigEntry<bool> Config999GalEnabled { get; private set; }
@@ -116,6 +117,10 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigBearTrapsPopTires { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerSeesScanEffects { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCharges { get; private set; }
+    public ConfigEntry<bool> ConfigOnlyOwnerSeesScanEffectsTerminalGal { get; private set; }
+    public ConfigEntry<float> ConfigTerminalBotFlyingVolume { get; private set; }
+    public ConfigEntry<bool> ConfigTerminalBotAutomatic { get; private set; }
+    public ConfigEntry<int> ConfigTerminalBotCost { get; private set; }
     public ConfigEntry<float> ConfigWoodenSeedTreeSpawnChance { get; private set; }
     public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
     public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
@@ -469,6 +474,32 @@ public class CodeRebirthConfig
                                             "Seamine Gal | Player Model",
                                             true,
                                             "Whether the Seamine Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
+        #endregion
+        #region Terminal Gal
+        ConfigTerminalBotEnabled = configFile.Bind("Terminal Options",
+                                            "Terminal Gal | Enabled",
+                                            true,
+                                            "Whether the Terminal Gal is enabled.");
+        ConfigTerminalBotCost = configFile.Bind("Terminal Options",
+                                            "Terminal Gal | Cost",
+                                            1500,
+                                            "Cost of the Terminal Gal.");
+        ConfigTerminalBotAutomatic = configFile.Bind("Terminal Options",
+                                            "Terminal Gal | Automatic Behaviour",
+                                            false,
+                                            "Whether the Terminal Gal will automatically wake up and choose the nearest player as the owner.");
+        ConfigTerminalBotPlayerModelEnabled = configFile.Bind("Terminal Options",
+                                            "Terminal Gal | Player Model",
+                                            true,
+                                            "Whether the Terminal Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
+        ConfigOnlyOwnerSeesScanEffectsTerminalGal = configFile.Bind("Terminal Options",
+                                            "Terminal Gal | Only Owner Sees Scan Effects",
+                                            false,
+                                            "Whether only the owner of the Terminal Gal can see the scan effects.");
+        ConfigTerminalBotFlyingVolume = configFile.Bind("Terminal Options",
+                                            "Terminal Gal | Flying Volume",
+                                            0.75f,
+                                            "Volume of the Terminal Gal's Flying animation.");
         #endregion
         #region Bell Crab Gal
         ConfigBellCrabGalEnabled = configFile.Bind("Bell Crab Options",
