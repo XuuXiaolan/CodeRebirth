@@ -21,8 +21,15 @@ static class PlayerModelAssets
 		public GameObject SeamineModelPrefab { get; private set; } = null!;
 	}
 
+	internal class ZortModelReplacementAssets(string bundleName) : AssetBundleLoader<ZortModelReplacementAssets>(bundleName)
+	{
+		[LoadFromBundle("ZortPlayerModel.prefab")]
+		public GameObject ZortModelPrefab { get; private set; } = null!;
+	}
+
 	internal static ShockwaveModelReplacementAssets ShockwaveModelAssets;
 	internal static SeamineModelReplacementAssets SeamineModelAssets;
+	internal static ZortModelReplacementAssets ZortModelAssets;
 
 	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	internal static void RegisterSuits()
@@ -40,6 +47,13 @@ static class PlayerModelAssets
 			Plugin.ExtendedLogging("Seamine is a new model registered!");
 			SeamineModelAssets = new SeamineModelReplacementAssets("seaminegalmodelreplacementassets");
 			ModelReplacementAPI.RegisterSuitModelReplacement("Betty", typeof(SeamineGalModel));
+		}
+
+		if (true)
+		{
+			Plugin.ExtendedLogging("Zort is a new model registered!");
+			ZortModelAssets = new ZortModelReplacementAssets("zortmodelreplacementassets");
+			ModelReplacementAPI.RegisterSuitModelReplacement("Zort", typeof(ZortModel));
 		}
 	}
 }
