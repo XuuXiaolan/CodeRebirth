@@ -21,12 +21,11 @@ public class ChildEnemyAI : GrabbableObject
     public SmartAgentNavigator smartAgentNavigator = null!;
     public float rangeOfDetection = 20f;
 
-    [NonSerialized] public ParentEnemyAI parentEevee;
+    [NonSerialized] public ParentEnemyAI? parentEevee;
     [NonSerialized] public int health = 4;
     [NonSerialized] public bool mommyAlive = true;
     [NonSerialized] public float[] friendShipMeterGoals = new float[3] { 0f, 20f, 50f };
     private Dictionary<PlayerControllerB, float> friendShipMeterPlayers = new Dictionary<PlayerControllerB, float>();
-    public bool CloseToSpawn => Vector3.Distance(transform.position, parentEevee.spawnPosition) < 1.5f;
     private List<Vector3> scaryPositionsList = new();
     private float scaredTimer = 10f;
     private bool isScared = false;
@@ -85,9 +84,17 @@ public class ChildEnemyAI : GrabbableObject
         fallTime = 0f;
         smartAgentNavigator.OnEnterOrExitElevator.AddListener(OnEnterOrExitElevator);
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
-        smartAgentNavigator.SetAllValues(parentEevee.isOutside);
-        isInFactory = !parentEevee.isOutside;
-
+        if (parentEevee != null) 
+        {
+            smartAgentNavigator.SetAllValues(parentEevee.isOutside);
+            isInFactory = !parentEevee.isOutside;
+        }
+        else
+        {
+            smartAgentNavigator.SetAllValues(true);
+            isInFactory = false;
+            friendEeveeState = FriendState.Tamed;
+        }
         if (!IsServer) return;
         HandleStateAnimationSpeedChanges(State.Spawning);
     }
@@ -101,13 +108,14 @@ public class ChildEnemyAI : GrabbableObject
     public override void DiscardItem()
     {
         base.DiscardItem();
+        if (parentEevee == null) return;
         parentEevee.canGrabChild = false;
         if (grabbingRoutine != null)
         {
             StopCoroutine(grabbingRoutine);
             grabbingRoutine = null;
         }
-        grabbingRoutine = StartCoroutine(ChildGrabbableCooldown());
+        grabbingRoutine = StartCoroutine(ChildGrabbableCooldown(parentEevee));
 
         if (parentEevee.holdingChild) return;
         if (isScared)
@@ -120,10 +128,10 @@ public class ChildEnemyAI : GrabbableObject
         }
     }
 
-    private IEnumerator ChildGrabbableCooldown()
+    private IEnumerator ChildGrabbableCooldown(ParentEnemyAI _parentEevee)
     {
         yield return new WaitForSeconds(2);
-        parentEevee.canGrabChild = true;
+        _parentEevee.canGrabChild = true;
     }
 
     private void BaseUpdate()
@@ -333,6 +341,11 @@ public class ChildEnemyAI : GrabbableObject
             HandleStateAnimationSpeedChanges(State.Wandering);
             return;
         }
+        if (parentEevee == null || friendEeveeState != FriendState.Neutral)
+        {
+            smartAgentNavigator.DoPathingToDestination(nearbyPlayer.transform.position, nearbyPlayer.isInsideFactory, true, nearbyPlayer);
+            return;
+        }
         if (Vector3.Distance(transform.position, parentEevee.spawnPosition) <= 25f)
         {
             smartAgentNavigator.DoPathingToDestination(nearbyPlayer.transform.position, nearbyPlayer.isInsideFactory, true, nearbyPlayer);
@@ -414,20 +427,22 @@ public class ChildEnemyAI : GrabbableObject
         if (friendShipMeterPlayers[nearbyPlayer] >= friendShipMeterGoals[1])
         {
             SwitchFriendShipStateServerRpc((int)FriendState.Friendly);
+            StartCoroutine(WaitUntilLeavingMoon());
         }
     }
 
     private void DoFriendlyFriendShip()
     {
-        if (nearbyPlayer == null) return;
-        if (friendShipMeterPlayers[nearbyPlayer] >= friendShipMeterGoals[2])
-        {
-            SwitchFriendShipStateServerRpc((int)FriendState.Tamed);
-        }
     }
 
     private void DoTamedFriendShip()
     {
+    }
+
+    private IEnumerator WaitUntilLeavingMoon()
+    {
+        yield return new WaitUntil(() => StartOfRound.Instance.shipIsLeaving || StartOfRound.Instance.inShipPhase);
+        if (friendEeveeState == FriendState.Friendly) SwitchFriendShipStateServerRpc((int)FriendState.Tamed);
     }
 
     private PlayerControllerB? DetectNearbyPlayer()
