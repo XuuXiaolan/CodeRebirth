@@ -1,8 +1,11 @@
 using Unity.Netcode;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class TerminalCharger : Charger
 {
+    public Animator animator = null!;
+    private static readonly int isOpenedAnimation = Animator.StringToHash("isOpened");
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();

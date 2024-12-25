@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,22 +8,28 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
-
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class TerminalGalAI : GalAI
 {
+    public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
     public TerrainScanner terrainScanner = null!;
-    // public InteractTrigger hugInteractTrigger = null!; keyboard?
+    public InteractTrigger keyboardInteractTrigger = null!;
+    public InteractTrigger zapperInteractTrigger = null!;
+    public InteractTrigger keyInteractTrigger = null!;
     public AudioSource FlyingSource = null!;
     public AudioClip scrapPingSound = null!;
     public List<AudioClip> flyingAudioClips = new();
     public List<AudioClip> startOrEndFlyingAudioClips = new();
+    public TerminalFaceController terminalFaceController = null!;
 
     private List<Coroutine> customPassRoutines = new();
+    private List<Vector3> pointsOfInterest = new();
     private float scrapRevealTimer = 10f;
     private bool flying = false;
     private State galState = State.Inactive;
+    [HideInInspector] public Emotion galEmotion = Emotion.Sleeping;
     private readonly static int inElevatorAnimation = Animator.StringToHash("inElevator"); // bool
     private readonly static int revealScrapAnimation = Animator.StringToHash("revealScrap"); // trigger
     private readonly static int flyingAnimation = Animator.StringToHash("Flying"); // bool
@@ -36,6 +43,20 @@ public class TerminalGalAI : GalAI
         Active = 1,
         FollowingPlayer = 2,
         Dancing = 3,
+        UnlockingObjects = 4,
+    }
+
+    public enum Emotion
+    {
+        Basis = -1,
+        VeryHappy = 0,
+        Mood = 1,
+        Angy = 2,
+        Winky = 3,
+        Crying = 4,
+        Sleeping = 5,
+        Flustered = 6,
+        Love = 7,
     }
 
     public override void OnNetworkSpawn()
@@ -44,7 +65,7 @@ public class TerminalGalAI : GalAI
         if (!IsServer) return;
 
         NetworkObject.TrySetParent(GalCharger.transform, false);
-        ResetToChargerStation(galState);
+        ResetToChargerStation(galState, galEmotion);
     }
 
     private void StartUpDelay()
@@ -87,43 +108,78 @@ public class TerminalGalAI : GalAI
         }
     }
 
-    /*private void OnHugInteract(PlayerControllerB playerInteracting)
+    private void OnKeyboardInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
-        StartHugInteractServerRpc();
+        KeyboardInteractServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void StartHugInteractServerRpc()
+    private void KeyboardInteractServerRpc()
     {
-        StartHugInteractClientRpc();
+        KeyboardInteractClientRpc();
     }
 
     [ClientRpc]
-    private void StartHugInteractClientRpc()
+    private void KeyboardInteractClientRpc()
     {
         EnablePhysics(!physicsEnabled);
-    }*/
+    }
 
+    private void OnKeyHandInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        KeyHandInteractServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void KeyHandInteractServerRpc()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 25, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
+        pointsOfInterest.Clear();
+        foreach (Collider collider in colliders)
+        {
+            NavMesh.CalculatePath(this.transform.position, collider.transform.position, NavMesh.AllAreas, smartAgentNavigator.agent.path);
+            if (DoCalculatePathDistance(smartAgentNavigator.agent.path) > 20) continue;
+            pointsOfInterest.Add(collider.transform.position);
+        }
+        if (pointsOfInterest.Count <= 0) return;
+        HandleStateAnimationSpeedChanges(State.UnlockingObjects, Emotion.Basis);
+    }
+
+    public float DoCalculatePathDistance(NavMeshPath path)
+    {
+        float length = 0.0f;
+      
+        if (path.status != NavMeshPathStatus.PathInvalid && path.corners.Length >= 1)
+        {
+            for ( int i = 1; i < path.corners.Length; ++i )
+            {
+                length += Vector3.Distance(path.corners[i-1], path.corners[i]);
+            }
+        }
+        Plugin.ExtendedLogging($"Path distance: {length}");
+        return length;
+    }
     public override void ActivateGal(PlayerControllerB owner)
     {
         base.ActivateGal(owner);
-        ResetToChargerStation(State.Active);
+        ResetToChargerStation(State.Active, Emotion.Basis);
     }
 
-    private void ResetToChargerStation(State state)
+    private void ResetToChargerStation(State state, Emotion emotion)
     {
         if (!IsServer) return;
         if (Agent.enabled) Agent.Warp(GalCharger.ChargeTransform.position);
         else transform.position = GalCharger.ChargeTransform.position;
         transform.rotation = GalCharger.ChargeTransform.rotation;
-        HandleStateAnimationSpeedChangesServerRpc((int)state);
+        HandleStateAnimationSpeedChangesServerRpc((int)state, (int)emotion);
     }
 
     public override void DeactivateGal()
     {
         base.DeactivateGal();
-        ResetToChargerStation(State.Inactive);
+        ResetToChargerStation(State.Inactive, Emotion.Sleeping);
     }
 
     private void InteractTriggersUpdate()
@@ -213,7 +269,7 @@ public class TerminalGalAI : GalAI
         }
         else
         {
-            HandleStateAnimationSpeedChanges(State.FollowingPlayer);
+            HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Basis);
         }
     }
 
@@ -284,7 +340,7 @@ public class TerminalGalAI : GalAI
     {
         if (boomboxPlaying)
         {
-            HandleStateAnimationSpeedChanges(State.Dancing);
+            HandleStateAnimationSpeedChanges(State.Dancing, Emotion.VeryHappy);
             StartCoroutine(StopDancingDelay());
             return true;
         }
@@ -295,7 +351,7 @@ public class TerminalGalAI : GalAI
     {
         yield return new WaitUntil(() => !boomboxPlaying || galState != State.Dancing);
         if (galState != State.Dancing) yield break;  
-        HandleStateAnimationSpeedChanges(State.FollowingPlayer);
+        HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Basis);
     }
 
     private void PlayFootstepSoundAnimEvent()
@@ -333,14 +389,14 @@ public class TerminalGalAI : GalAI
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void HandleStateAnimationSpeedChangesServerRpc(int state)
+    private void HandleStateAnimationSpeedChangesServerRpc(int state, int emotion)
     {
-        HandleStateAnimationSpeedChanges((State)state);
+        HandleStateAnimationSpeedChanges((State)state, (Emotion)emotion);
     }
 
-    private void HandleStateAnimationSpeedChanges(State state) // This is for host
+    private void HandleStateAnimationSpeedChanges(State state, Emotion emotion) // This is for host
     {
-        SwitchStateClientRpc((int)state);
+        SwitchStateClientRpc((int)state, (int)emotion);
         switch (state)
         {
             case State.Inactive:
@@ -365,20 +421,22 @@ public class TerminalGalAI : GalAI
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void SwitchStateServerRpc(int state)
+    private void SwitchStateServerRpc(int state, int emotion)
     {
-        SwitchStateClientRpc(state);
+        SwitchStateClientRpc(state, emotion);
     }
 
     [ClientRpc]
-    private void SwitchStateClientRpc(int state)
+    private void SwitchStateClientRpc(int state, int emotion)
     {
-        SwitchState(state);
+        SwitchState(state, emotion);
     }
 
-    private void SwitchState(int state) // this is for everyone.
+    private void SwitchState(int state, int emotion) // this is for everyone.
     {
         State stateToSwitchTo = (State)state;
+        Emotion emotionToSwitchTo = (Emotion)emotion;
+
         if (state != -1)
         {
             switch (stateToSwitchTo)
@@ -397,6 +455,18 @@ public class TerminalGalAI : GalAI
                     break;
             }
             galState = stateToSwitchTo;
+        }
+
+        if (emotion != -1)
+        {
+            terminalFaceController.SetFaceState(emotionToSwitchTo, 100);
+        }
+        else
+        {
+            foreach (Emotion emotionInEnum in Enum.GetValues(typeof(Emotion)))
+            {
+                terminalFaceController.SetFaceState(emotionInEnum, 0);
+            }
         }
     }
 
@@ -456,5 +526,17 @@ public class TerminalGalAI : GalAI
             return customPass.maxVisibilityDistance > 0f;
         });
         CustomPassManager.Instance.RemoveCustomPass(customPassType);
+    }
+
+    public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        base.Hit(force, hitDirection, playerWhoHit, playHitSFX, hitID);
+        if (terminalFaceController.TemporarySwitchCoroutine != null)
+        {
+            StopCoroutine(terminalFaceController.TemporarySwitchCoroutine);
+        }
+        terminalFaceController.TemporarySwitchCoroutine = StartCoroutine(terminalFaceController.TemporarySwitchEffect((int)Emotion.Angy));
+        terminalFaceController.glitchTimer = terminalFaceController.controllerRandom.NextFloat(4f, 8f);
+        return true;
     }
 }

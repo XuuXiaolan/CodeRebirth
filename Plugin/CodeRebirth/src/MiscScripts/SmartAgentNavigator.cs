@@ -17,7 +17,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     [NonSerialized] public UnityEvent<bool> OnEnterOrExitElevator = new();
 
     private float nonAgentMovementSpeed = 10f;
-    private NavMeshAgent agent = null!;
+    [NonSerialized] public NavMeshAgent agent = null!;
     private Vector3 pointToGo = Vector3.zero;
     [NonSerialized] public bool isOutside = true;
     private bool usingElevator = false;
