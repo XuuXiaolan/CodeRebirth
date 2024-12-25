@@ -110,7 +110,7 @@ public class CRUtilities
     // todo: this is cooked, redo it.
     public static void CreateExplosion(Vector3 explosionPosition = default, bool spawnExplosionEffect = false, int damage = 20, float minDamageRange = 0f, float maxDamageRange = 1f, int enemyHitForce = 6, CauseOfDeath causeOfDeath = CauseOfDeath.Blast, PlayerControllerB? attacker = null, GameObject? overridePrefab = null)
     {
-        // Plugin.Logger.LogDebug($"Spawning explosion at pos: {explosionPosition}");
+        Plugin.ExtendedLogging($"Spawning explosion at pos: {explosionPosition}");
 
         Transform? holder = null;
 
