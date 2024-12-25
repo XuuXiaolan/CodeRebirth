@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -25,9 +26,10 @@ public class TerminalGalAI : GalAI
     public TerminalFaceController terminalFaceController = null!;
 
     private List<Coroutine> customPassRoutines = new();
-    private List<Vector3> pointsOfInterest = new();
+    private Dictionary<Vector3, GameObject> pointsOfInterest = new();
     private float scrapRevealTimer = 10f;
     private bool flying = false;
+    private Coroutine? unlockingSomething = null;
     private State galState = State.Inactive;
     [HideInInspector] public Emotion galEmotion = Emotion.Sleeping;
     private readonly static int inElevatorAnimation = Animator.StringToHash("inElevator"); // bool
@@ -141,7 +143,7 @@ public class TerminalGalAI : GalAI
         {
             NavMesh.CalculatePath(this.transform.position, collider.transform.position, NavMesh.AllAreas, smartAgentNavigator.agent.path);
             if (DoCalculatePathDistance(smartAgentNavigator.agent.path) > 20) continue;
-            pointsOfInterest.Add(collider.transform.position);
+            pointsOfInterest.Add(collider.transform.position, collider.gameObject);
         }
         if (pointsOfInterest.Count <= 0) return;
         HandleStateAnimationSpeedChanges(State.UnlockingObjects, Emotion.Basis);
@@ -251,6 +253,9 @@ public class TerminalGalAI : GalAI
             case State.Dancing:
                 DoDancing();
                 break;
+            case State.UnlockingObjects:
+                DoUnlockingObjects();
+                break;
         }
     }
 
@@ -299,6 +304,42 @@ public class TerminalGalAI : GalAI
     {
     }
 
+    private void DoUnlockingObjects()
+    {
+        if (pointsOfInterest.Count <= 0)
+        {
+            HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Basis);
+            return;
+        }
+    
+        if (unlockingSomething != null) return;
+        smartAgentNavigator.DoPathingToDestination(pointsOfInterest.Keys.First(), false, false, null);
+        if (Agent.remainingDistance <= Agent.stoppingDistance)
+        {
+            unlockingSomething = StartCoroutine(DoUnlockingObjectsRoutine(pointsOfInterest.Keys.First()));
+            pointsOfInterest.Remove(pointsOfInterest.Keys.First());
+        }
+    }
+
+    private IEnumerator DoUnlockingObjectsRoutine(Vector3 pointOfInterest)
+    {
+        if (pointsOfInterest[pointOfInterest].TryGetComponent(out Pickable pickable))
+        {
+            if (!pickable.IsLocked) yield break;
+            // play animation.
+            yield return new WaitForSeconds(3f);
+            pickable.UnlockStuffClientRpc();
+        }
+        else if (pointsOfInterest[pointOfInterest].TryGetComponent(out DoorLock doorLock))
+        {
+            // play animation.
+            yield return new WaitForSeconds(3f);
+            doorLock.UnlockDoorClientRpc();
+        }
+        pointsOfInterest.Remove(pointOfInterest);
+        unlockingSomething = null;
+    }
+
     private void DoRevealingScrap()
     {
         scrapRevealTimer -= Time.deltaTime;
@@ -309,7 +350,7 @@ public class TerminalGalAI : GalAI
         }
     }
 
-    private void DoHazardActionsAnimEvent()
+    private void DoScrapActionsAnimEvent()
     {
         // plays the visual effect from gabriel
         GalVoice.PlayOneShot(scrapPingSound);
