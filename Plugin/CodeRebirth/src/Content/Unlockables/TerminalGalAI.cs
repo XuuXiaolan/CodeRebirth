@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -19,6 +20,7 @@ public class TerminalGalAI : GalAI
     public InteractTrigger keyboardInteractTrigger = null!;
     public InteractTrigger zapperInteractTrigger = null!;
     public InteractTrigger keyInteractTrigger = null!;
+    public InteractTrigger teleporterInteractTrigger = null!;
     public AudioSource FlyingSource = null!;
     public AudioClip scrapPingSound = null!;
     public List<AudioClip> flyingAudioClips = new();
@@ -26,19 +28,19 @@ public class TerminalGalAI : GalAI
     public TerminalFaceController terminalFaceController = null!;
 
     private List<Coroutine> customPassRoutines = new();
-    private Dictionary<Vector3, GameObject> pointsOfInterest = new();
+    private List<GameObject> pointsOfInterest = new();
     private float scrapRevealTimer = 10f;
     private bool flying = false;
     private Coroutine? unlockingSomething = null;
     private Coroutine? zapperRoutine = null;
     private State galState = State.Inactive;
     [HideInInspector] public Emotion galEmotion = Emotion.Sleeping;
-    private readonly static int inElevatorAnimation = Animator.StringToHash("inElevator"); // bool
     private readonly static int revealScrapAnimation = Animator.StringToHash("revealScrap"); // trigger
-    private readonly static int flyingAnimation = Animator.StringToHash("Flying"); // bool
+    private readonly static int flyingAnimation = Animator.StringToHash("flying"); // bool
     private readonly static int danceAnimation = Animator.StringToHash("dancing"); // bool
     private readonly static int activatedAnimation = Animator.StringToHash("activated"); // bool
     private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed"); // float
+    private readonly static int specialAnimationInt = Animator.StringToHash("specialAnimationInt"); // int (-1 is nothing, 0 is DoorUnlock, 1 is RechargeItem, 2 is Teleport).
 
     public enum State
     {
@@ -100,6 +102,8 @@ public class TerminalGalAI : GalAI
         GalCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(GalCharger.OnActivateGal);
         keyboardInteractTrigger.onInteract.AddListener(OnKeyboardInteract);
         keyInteractTrigger.onInteract.AddListener(OnKeyHandInteract);
+        zapperInteractTrigger.onInteract.AddListener(OnZapperInteract);
+        teleporterInteractTrigger.onInteract.AddListener(OnTeleporterInteract);
         StartCoroutine(UpdateFlyingSound());
     }
 
@@ -108,9 +112,28 @@ public class TerminalGalAI : GalAI
         while (true)
         {
             yield return new WaitUntil(() => !FlyingSource.isPlaying);
-            FlyingSource.clip = flyingAudioClips[UnityEngine.Random.Range(0, flyingAudioClips.Count)];
+            // FlyingSource.clip = flyingAudioClips[UnityEngine.Random.Range(0, flyingAudioClips.Count)];
             FlyingSource.Play();
         }
+    }
+
+    private void OnTeleporterInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        TeleporterInteractServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void TeleporterInteractServerRpc(int playerIndex)
+    {
+        TeleporterInteractClientRpc(playerIndex);
+    }
+
+    [ClientRpc]
+    private void TeleporterInteractClientRpc(int playerIndex)
+    {
+        ResetToChargerStation(galState, galEmotion);
+        CRUtilities.TeleportPlayerToShip(playerIndex, GalCharger.transform.position);
     }
 
     private void OnZapperInteract(PlayerControllerB playerInteracting)
@@ -142,9 +165,11 @@ public class TerminalGalAI : GalAI
         {
             bool usedToBeTwoHanded = playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded;
             playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded = true;
-            yield return new WaitForSeconds(3f);
+            while (playerToRecharge.currentlyHeldObjectServer.insertedBattery.charge < 1f)
+            {
+                playerToRecharge.currentlyHeldObjectServer.insertedBattery.charge += 1 * (Time.deltaTime / playerToRecharge.currentlyHeldObjectServer.itemProperties.batteryUsage);
+            }
             playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded = usedToBeTwoHanded;
-            // Ask fumo for help on smoothly increasing something's battery charge over x period of time.
         }
     }
 
@@ -166,7 +191,7 @@ public class TerminalGalAI : GalAI
         EnablePhysics(!physicsEnabled);
     }
 
-    private void OnKeyHandInteract(PlayerControllerB playerInteracting)
+    private void OnKeyHandInteract(PlayerControllerB playerInteracting) // this doesn't entirely work.
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
         KeyHandInteractServerRpc();
@@ -177,13 +202,14 @@ public class TerminalGalAI : GalAI
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, 25, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
         pointsOfInterest.Clear();
-        foreach (Collider collider in colliders)
-        {
-            NavMesh.CalculatePath(this.transform.position, collider.transform.position, NavMesh.AllAreas, smartAgentNavigator.agent.path);
-            if (DoCalculatePathDistance(smartAgentNavigator.agent.path) > 20) continue;
-            pointsOfInterest.Add(collider.transform.position, collider.gameObject);
-        }
-        if (pointsOfInterest.Count <= 0) return;
+        pointsOfInterest = colliders
+        .Select(collider => collider.gameObject)
+        .Where(gameObject => {
+            NavMesh.CalculatePath(transform.position, gameObject.transform.position, NavMesh.AllAreas, smartAgentNavigator.agent.path);
+            if (DoCalculatePathDistance(smartAgentNavigator.agent.path) > 20) return false;
+            else return true;
+        })
+        .OrderBy(it => DoCalculatePathDistance(smartAgentNavigator.agent.path)).ToList();
         HandleStateAnimationSpeedChanges(State.UnlockingObjects, Emotion.Basis);
     }
 
@@ -193,7 +219,7 @@ public class TerminalGalAI : GalAI
       
         if (path.status != NavMeshPathStatus.PathInvalid && path.corners.Length >= 1)
         {
-            for ( int i = 1; i < path.corners.Length; ++i )
+            for (int i = 1; i < path.corners.Length; i++)
             {
                 length += Vector3.Distance(path.corners[i-1], path.corners[i]);
             }
@@ -201,10 +227,15 @@ public class TerminalGalAI : GalAI
         Plugin.ExtendedLogging($"Path distance: {length}");
         return length;
     }
+
     public override void ActivateGal(PlayerControllerB owner)
     {
         base.ActivateGal(owner);
         ResetToChargerStation(State.Active, Emotion.Basis);
+        if (GalCharger is TerminalCharger terminalCharger)
+        {
+            terminalCharger.animator.SetBool(TerminalCharger.isOpenedAnimation, true);
+        }
     }
 
     private void ResetToChargerStation(State state, Emotion emotion)
@@ -220,12 +251,20 @@ public class TerminalGalAI : GalAI
     {
         base.DeactivateGal();
         ResetToChargerStation(State.Inactive, Emotion.Sleeping);
+        if (GalCharger is TerminalCharger terminalCharger)
+        {
+            terminalCharger.animator.SetBool(TerminalCharger.isOpenedAnimation, false);
+        }
     }
 
     private void InteractTriggersUpdate()
     {
         bool interactable = !inActive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
-        // bool idleInteractable = galState != State.AttackMode && interactable;
+        bool idleInteractable = galState != State.UnlockingObjects && interactable;
+        keyboardInteractTrigger.interactable = interactable;
+        keyInteractTrigger.interactable = idleInteractable;
+        zapperInteractTrigger.interactable = idleInteractable;
+        teleporterInteractTrigger.interactable = idleInteractable;
     }
 
     private void StoppingDistanceUpdate()
@@ -351,24 +390,24 @@ public class TerminalGalAI : GalAI
         }
     
         if (unlockingSomething != null) return;
-        smartAgentNavigator.DoPathingToDestination(pointsOfInterest.Keys.First(), false, false, null);
+        smartAgentNavigator.DoPathingToDestination(pointsOfInterest[0].transform.position, false, false, null);
         if (Agent.remainingDistance <= Agent.stoppingDistance)
         {
-            unlockingSomething = StartCoroutine(DoUnlockingObjectsRoutine(pointsOfInterest.Keys.First()));
-            pointsOfInterest.Remove(pointsOfInterest.Keys.First());
+            unlockingSomething = StartCoroutine(DoUnlockingObjectsRoutine(pointsOfInterest[0]));
+            pointsOfInterest.Remove(pointsOfInterest[0]);
         }
     }
 
-    private IEnumerator DoUnlockingObjectsRoutine(Vector3 pointOfInterest)
+    private IEnumerator DoUnlockingObjectsRoutine(GameObject pointOfInterest)
     {
-        if (pointsOfInterest[pointOfInterest].TryGetComponent(out Pickable pickable))
+        if (pointOfInterest.TryGetComponent(out Pickable pickable))
         {
             if (!pickable.IsLocked) yield break;
             // play animation.
             yield return new WaitForSeconds(3f);
             pickable.UnlockStuffClientRpc();
         }
-        else if (pointsOfInterest[pointOfInterest].TryGetComponent(out DoorLock doorLock))
+        else if (pointOfInterest.TryGetComponent(out DoorLock doorLock))
         {
             // play animation.
             yield return new WaitForSeconds(3f);
@@ -554,7 +593,6 @@ public class TerminalGalAI : GalAI
     {
         ownerPlayer = null;
         Agent.enabled = false;
-        Animator.SetBool(inElevatorAnimation, false);
         Animator.SetBool(flyingAnimation, false);
     }
 
@@ -581,7 +619,6 @@ public class TerminalGalAI : GalAI
     public override void OnEnterOrExitElevator(bool enteredElevator)
     {
         base.OnEnterOrExitElevator(enteredElevator);
-        Animator.SetBool(inElevatorAnimation, enteredElevator);
     }
 
     public IEnumerator DoCustomPassThing(ParticleSystem particleSystem, CustomPassManager.CustomPassType customPassType)

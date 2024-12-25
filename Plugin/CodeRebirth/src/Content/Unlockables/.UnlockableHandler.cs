@@ -45,10 +45,10 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
 	public class TerminalBotAssets(string bundleName) : AssetBundleLoader<TerminalBotAssets>(bundleName)
 	{
-		[LoadFromBundle("TerminalBotUnlockable.asset")]
+		[LoadFromBundle("TerminalGalUnlockable.asset")]
 		public UnlockableItemDef TerminalBotUnlockable { get; private set; } = null!;
 
-		[LoadFromBundle("TerminalGalPrefab.prefab")]
+		[LoadFromBundle("TerminalGalDaisy.prefab")]
 		public GameObject TerminalGalPrefab { get; private set; } = null!;
 	}
 

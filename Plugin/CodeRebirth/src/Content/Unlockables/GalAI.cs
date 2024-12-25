@@ -156,14 +156,17 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
 
     public virtual void OnEnterOrExitElevator(bool enteredElevator)
     {
+        Plugin.ExtendedLogging($"Entered Elevator: {enteredElevator}");
     }
 
     public virtual void OnEnableOrDisableAgent(bool agentEnabled)
     {
+        Plugin.ExtendedLogging($"Enabled Agent: {agentEnabled}");
     }
 
     public virtual void OnUseEntranceTeleport(bool setOutside)
     {
+        Plugin.ExtendedLogging($"Used Entrance Teleport and should be set outside: {setOutside}");
         if (physicsEnabled) EnablePhysics(false);
     }
 

@@ -31,7 +31,7 @@ Transform:
   m_Children:
   - {fileID: 2595988423569744807}
   m_Father: {fileID: 6930675192853117932}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &550390740858603231
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +148,7 @@ Transform:
   m_Children:
   - {fileID: 3203677651973448354}
   m_Father: {fileID: 6930675192853117932}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -14.051054, y: -37.718513, z: 10.634711}
 --- !u!1 &2635398886424815101
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,7 +653,7 @@ Transform:
   m_Children:
   - {fileID: 5534739227865679246}
   m_Father: {fileID: 6930675192853117932}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -17.223347, y: 0, z: 0}
 --- !u!1 &7107159892306049404
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,7 +667,9 @@ GameObject:
   - component: {fileID: 4473232862803909957}
   - component: {fileID: 4764722177586228505}
   - component: {fileID: 7968475419990008654}
-  m_Layer: 0
+  - component: {fileID: 1893252445719752278}
+  - component: {fileID: 883883947009691920}
+  m_Layer: 8
   m_Name: TerminalGalCharger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -768,6 +770,51 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1893252445719752278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7107159892306049404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1645404685, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActivateOrDeactivateTrigger: {fileID: 4353109302830889575}
+  ChargeTransform: {fileID: 3805374668872470121}
+  animator: {fileID: 5486768617633350227}
+--- !u!114 &883883947009691920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7107159892306049404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &7959539267223438497
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,7 +843,7 @@ Transform:
   m_GameObject: {fileID: 7959539267223438497}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5000328, y: 0.49996728, z: 0.49996737, w: 0.50003266}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -821,8 +868,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.61299133, y: 1.0897833, z: 2.0925572}
-  m_Center: {x: 0.013004541, y: 0.01990825, z: 0.5569129}
+  m_Size: {x: 0.61299133, y: 1.0897833, z: 2.1226575}
+  m_Center: {x: 0.013004542, y: 0.01990825, z: 0.46559325}
 --- !u!114 &7306840296927944933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,7 +889,7 @@ MonoBehaviour:
   mainMesh: {fileID: 3646430132880171758}
   mainTransform: {fileID: 5113469414940780508}
   placeObjectCollider: {fileID: 2625446838881134749}
-  yOffset: 0.5
+  yOffset: 0.6
   overrideWallOffset: 0
   wallOffset: 0
   collisionPointCheck: {x: 0, y: 0, z: 0}
@@ -978,4 +1025,4 @@ Transform:
   m_Children:
   - {fileID: 7495527857914445858}
   m_Father: {fileID: 6930675192853117932}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -14.051052, y: 37.718513, z: -10.634709}

@@ -9,6 +9,7 @@ namespace CodeRebirth.src.MiscScripts;
 public class CRUtilities
 {
     private static Dictionary<int, int> _masksByLayer = new();
+    private static AudioReverbPresets? audioReverbPreset = null;
     public static void Init()
     {
         GenerateLayerMap();
@@ -46,18 +47,22 @@ public class CRUtilities
         return _masksByLayer[layer];
     }
 
-    public static void TeleportPlayer(int playerObj, Vector3 teleportPos)
+    public static void TeleportPlayerToShip(int playerObj, Vector3 teleportPos)
     {
         PlayerControllerB playerControllerB = StartOfRound.Instance.allPlayerScripts[playerObj];
-        // no item dropping woooo
-        //playerControllerB.DropAllHeldItems();
-        if ((bool)UnityEngine.Object.FindObjectOfType<AudioReverbPresets>())
+
+        if (audioReverbPreset != null)
         {
-            UnityEngine.Object.FindObjectOfType<AudioReverbPresets>().audioPresets[2].ChangeAudioReverbForPlayer(playerControllerB);
+            audioReverbPreset.audioPresets[3].ChangeAudioReverbForPlayer(playerControllerB);
         }
-        playerControllerB.isInElevator = false;
-        playerControllerB.isInHangarShipRoom = false;
-        playerControllerB.isInsideFactory = true;
+        else
+        {
+            audioReverbPreset = UnityEngine.Object.FindObjectOfType<AudioReverbPresets>();
+            audioReverbPreset.audioPresets[3].ChangeAudioReverbForPlayer(playerControllerB);
+        }
+        playerControllerB.isInElevator = true;
+        playerControllerB.isInHangarShipRoom = true;
+        playerControllerB.isInsideFactory = false;
         playerControllerB.averageVelocity = 0f;
         playerControllerB.velocityLastFrame = Vector3.zero;
         StartOfRound.Instance.allPlayerScripts[playerObj].TeleportPlayer(teleportPos);

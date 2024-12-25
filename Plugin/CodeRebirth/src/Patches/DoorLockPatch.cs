@@ -33,16 +33,11 @@ public static class DoorLockPatch
         }
         if (other.gameObject.layer == 19 && other.gameObject.name == "ShockwaveGalDoorCollider")
         {
-            float openDoorSpeedMultiplier = 1f;
-            ShockwaveGalAI? shockwave = other.gameObject.transform.parent.GetComponent<ShockwaveGalAI>();
-            SeamineGalAI? seamine = other.gameObject.transform.parent.GetComponent<SeamineGalAI>();
-            if (shockwave != null)
+            float openDoorSpeedMultiplier = 0f;
+            GalAI? gal = other.gameObject.transform.parent.GetComponent<GalAI>();
+            if (gal != null)
             {
-                openDoorSpeedMultiplier = shockwave.DoorOpeningSpeed;
-            }
-            else if (seamine != null)
-            {
-                openDoorSpeedMultiplier = seamine.DoorOpeningSpeed;
+                openDoorSpeedMultiplier = gal.DoorOpeningSpeed;
             }
             self.enemyDoorMeter += Time.deltaTime * openDoorSpeedMultiplier;
     		if (self.enemyDoorMeter > 1f)
