@@ -30,6 +30,7 @@ public class TerminalGalAI : GalAI
     private float scrapRevealTimer = 10f;
     private bool flying = false;
     private Coroutine? unlockingSomething = null;
+    private Coroutine? zapperRoutine = null;
     private State galState = State.Inactive;
     [HideInInspector] public Emotion galEmotion = Emotion.Sleeping;
     private readonly static int inElevatorAnimation = Animator.StringToHash("inElevator"); // bool
@@ -97,6 +98,8 @@ public class TerminalGalAI : GalAI
 
         // Adding listener for interaction trigger
         GalCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(GalCharger.OnActivateGal);
+        keyboardInteractTrigger.onInteract.AddListener(OnKeyboardInteract);
+        keyInteractTrigger.onInteract.AddListener(OnKeyHandInteract);
         StartCoroutine(UpdateFlyingSound());
     }
 
@@ -107,6 +110,41 @@ public class TerminalGalAI : GalAI
             yield return new WaitUntil(() => !FlyingSource.isPlaying);
             FlyingSource.clip = flyingAudioClips[UnityEngine.Random.Range(0, flyingAudioClips.Count)];
             FlyingSource.Play();
+        }
+    }
+
+    private void OnZapperInteract(PlayerControllerB playerInteracting)
+    {
+        if (zapperRoutine != null || playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        ZapperInteractServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ZapperInteractServerRpc(int playerIndex)
+    {
+        ZapperInteractClientRpc(playerIndex);
+    }
+
+    [ClientRpc]
+    private void ZapperInteractClientRpc(int playerIndex)
+    {
+        zapperRoutine = StartCoroutine(RechargePlayerHeldEquipment(StartOfRound.Instance.allPlayerScripts[playerIndex]));
+    }
+
+    private IEnumerator RechargePlayerHeldEquipment(PlayerControllerB playerToRecharge)
+    {
+        if (playerToRecharge.isPlayerDead || !playerToRecharge.isPlayerControlled || playerToRecharge.currentlyHeldObjectServer == null || !playerToRecharge.currentlyHeldObjectServer.itemProperties.requiresBattery)
+        {
+            if (playerToRecharge == GameNetworkManager.Instance.localPlayerController) HUDManager.Instance.DisplayTip("Error", "What you're holding cannot be charged", false);
+            yield break;
+        }
+        else
+        {
+            bool usedToBeTwoHanded = playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded;
+            playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded = true;
+            yield return new WaitForSeconds(3f);
+            playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded = usedToBeTwoHanded;
+            // Ask fumo for help on smoothly increasing something's battery charge over x period of time.
         }
     }
 
