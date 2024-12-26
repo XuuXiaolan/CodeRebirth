@@ -1,4 +1,11 @@
-# v0.9.7
+# v0.10.0
+
+- Added terminal gal.
+- Added bear trap gal.
+- Added ACUnit gal.
+- Fixed explosions happening outside for clients through microwave.
+
+## v0.9.7
 
 - Fixed meteor shower craters not disappearing for clients.
 - Fixed blue shrimp bug with dropping and grabbing in midair.

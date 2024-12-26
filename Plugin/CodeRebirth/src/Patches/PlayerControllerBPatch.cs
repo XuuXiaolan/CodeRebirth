@@ -87,7 +87,7 @@ static class PlayerControllerBPatch
         if (self.currentlyHeldObjectServer is ChildEnemyAI childEnemyAI && self == GameNetworkManager.Instance.localPlayerController)
         {
             self.StartCoroutine(self.waitToEndOfFrameToDiscard());
-            if (childEnemyAI.mommyAlive)
+            if (childEnemyAI.mommyAlive && childEnemyAI.parentEevee != null)
             {
                 childEnemyAI.parentEevee.HandleStateAnimationSpeedChangesServerRpc((int)ParentEnemyAI.State.Guarding);
                 childEnemyAI.parentEevee.SetTargetServerRpc(-1);

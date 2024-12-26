@@ -274,7 +274,19 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     public virtual bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         if (inActive) return false;
-        GalVoice.PlayOneShot(HitSounds[galRandom.NextInt(0, HitSounds.Length - 1)]);
+        PlayHurtSoundServerRpc();
         return true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public virtual void PlayHurtSoundServerRpc()
+    {
+        PlayHurtSoundClientRpc();
+    }
+
+    [ClientRpc]
+    public virtual void PlayHurtSoundClientRpc()
+    {
+        GalVoice.PlayOneShot(HitSounds[galRandom.NextInt(0, HitSounds.Length - 1)]);
     }
 }

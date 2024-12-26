@@ -109,6 +109,12 @@ public class TerminalGalAI : GalAI
         keyInteractTrigger.onInteract.AddListener(OnKeyHandInteract);
         zapperInteractTrigger.onInteract.AddListener(OnZapperInteract);
         teleporterInteractTrigger.onInteract.AddListener(OnTeleporterInteract);
+
+        foreach (var item in StartOfRound.Instance.allItemsList.itemsList)
+        {
+            if (item == null || item.spawnPrefab == null || !item.spawnPrefab.TryGetComponent(out GrabbableObject grabbableObject)) continue;
+            if (grabbableObject.mainObjectRenderer != null) grabbableObject.mainObjectRenderer.gameObject.layer = 6;
+        }
     }
 
     private void OnTeleporterInteract(PlayerControllerB playerInteracting)
@@ -170,17 +176,17 @@ public class TerminalGalAI : GalAI
         {
             GalVoice.PlayOneShot(zapperSound);
             Animator.SetInteger(specialAnimationInt, 1);
-            bool usedToBeTwoHanded = playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded;
-            playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded = true;
+            playerToRecharge.inSpecialInteractAnimation = true;
+            yield return new WaitForSeconds(0.2f);
+            Animator.SetInteger(specialAnimationInt, -1);
             while (playerToRecharge.currentlyHeldObjectServer.insertedBattery.charge < 1f)
             {
-                Plugin.ExtendedLogging($"Recharging {playerToRecharge.currentlyHeldObjectServer.itemProperties.itemName}");
-                playerToRecharge.currentlyHeldObjectServer.insertedBattery.charge += 1 * (Time.deltaTime / playerToRecharge.currentlyHeldObjectServer.itemProperties.batteryUsage);
+                playerToRecharge.currentlyHeldObjectServer.insertedBattery.charge += Time.deltaTime;
                 yield return null;
             }
-            playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded = usedToBeTwoHanded;
+            playerToRecharge.inSpecialInteractAnimation = false;
         }
-        Animator.SetInteger(specialAnimationInt, -1);
+        zapperRoutine = null;
     }
 
     private void OnKeyboardInteract(PlayerControllerB playerInteracting)
@@ -202,7 +208,7 @@ public class TerminalGalAI : GalAI
         EnablePhysics(!physicsEnabled);
     }
 
-    private void OnKeyHandInteract(PlayerControllerB playerInteracting) // this doesn't entirely work.
+    private void OnKeyHandInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
         KeyHandInteractServerRpc();
@@ -228,21 +234,6 @@ public class TerminalGalAI : GalAI
             else return true;
         })
         .OrderBy(it => DoCalculatePathDistance(smartAgentNavigator.agent.path)).ToList();
-        foreach (GameObject pointOfInterest in pointsOfInterest)
-        {
-            if (pointOfInterest.GetComponent<DoorLock>() != null)
-            {
-                Plugin.ExtendedLogging($"Unlocking Door: {pointOfInterest.name} at {pointOfInterest.transform.position}");
-            }
-            else if (pointOfInterest.GetComponent<Pickable>() != null)
-            {
-                Plugin.ExtendedLogging($"Unlocking Pickable: {pointOfInterest.name} at {pointOfInterest.transform.position}");
-            }
-            else
-            {
-                Plugin.ExtendedLogging("Not a door or pickable");
-            }
-        }
         HandleStateAnimationSpeedChanges(State.UnlockingObjects, Emotion.Basis);
     }
 
@@ -302,6 +293,7 @@ public class TerminalGalAI : GalAI
 
     private void StoppingDistanceUpdate()
     {
+        Agent.stoppingDistance = 3f * (galState == State.UnlockingObjects ? 0.5f : 1f);
     }
 
     private void SetIdleDefaultStateForEveryone()
@@ -330,7 +322,11 @@ public class TerminalGalAI : GalAI
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
 
-        if (inActive) return;
+        if (inActive)
+        {
+            FootstepSource.volume = 0f;
+            return;
+        }
         StoppingDistanceUpdate();
         if (Animator.GetFloat(runSpeedFloat) > 0.01f)
         {
@@ -441,23 +437,26 @@ public class TerminalGalAI : GalAI
     private IEnumerator DoUnlockingObjectsRoutine(GameObject pointOfInterest)
     {
         Animator.SetInteger(specialAnimationInt, 0);
+        yield return new WaitForSeconds(0.5f);
+        Animator.SetInteger(specialAnimationInt, -1);
+        yield return new WaitForSeconds(2.5f);
         if (pointOfInterest.TryGetComponent(out Pickable pickable))
         {
             // play animation.
-            yield return new WaitForSeconds(3f);
-            GalVoice.PlayOneShot(keySound);
-            pickable.UnlockStuffClientRpc();
+            pickable.Unlock();
         }
         else if (pointOfInterest.TryGetComponent(out DoorLock doorLock))
         {
             // play animation.
-            yield return new WaitForSeconds(3f);
-            GalVoice.PlayOneShot(keySound);
             doorLock.UnlockDoorClientRpc();
         }
-        Animator.SetInteger(specialAnimationInt, -1);
         pointsOfInterest.Remove(pointOfInterest);
         unlockingSomething = null;
+    }
+
+    private void PlayKeySoundAnimEvent()
+    {
+        GalVoice.PlayOneShot(keySound);
     }
 
     private void DoRevealingScrap()
@@ -689,12 +688,24 @@ public class TerminalGalAI : GalAI
     public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.Hit(force, hitDirection, playerWhoHit, playHitSFX, hitID);
+        DoAngerGalServerRpc();
+        return true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DoAngerGalServerRpc()
+    {
+        DoAngerGalClientRpc();
+    }
+
+    [ClientRpc]
+    private void DoAngerGalClientRpc()
+    {
         if (terminalFaceController.TemporarySwitchCoroutine != null)
         {
             StopCoroutine(terminalFaceController.TemporarySwitchCoroutine);
         }
         terminalFaceController.TemporarySwitchCoroutine = StartCoroutine(terminalFaceController.TemporarySwitchEffect((int)Emotion.Angy));
         terminalFaceController.glitchTimer = terminalFaceController.controllerRandom.NextFloat(4f, 8f);
-        return true;
     }
 }

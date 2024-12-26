@@ -41,6 +41,7 @@ public class TerminalFaceController : MonoBehaviour
 
     public IEnumerator TemporarySwitchEffect(int shapeKeyIndex)
     {
+
         SetFaceState((Emotion)shapeKeyIndex, 100f);
 
         float Duration = controllerRandom.NextFloat(0.5f, 1f);
@@ -52,10 +53,10 @@ public class TerminalFaceController : MonoBehaviour
     public void SetFaceState(Emotion faceState, float weight)
     {
         ResetFace();
-        
+
         //set the current face state
         Plugin.ExtendedLogging($"{TerminalGalAI} setting face state to: {faceState}");
-        if (faceState != Emotion.Winky) TerminalGalAI.galEmotion = faceState;
+        if (faceState != Emotion.Winky && faceState != Emotion.Angy) TerminalGalAI.galEmotion = faceState;
         if ((int)faceState == -1) return;
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)faceState, Mathf.Clamp(weight, 0f, 100f));
     }
