@@ -37,9 +37,8 @@ public class ItemCrate : CRHittable
 	}
 	public CrateType crateType;
 	public Collider mainCollider = null!;
-	private bool openable = false;
-	private bool openedOnce = false;
 
+	private bool openedOnce = false;
 	[HideInInspector] public static List<ItemCrate> Instances = new();
 
     public override void OnNetworkDespawn()
@@ -91,8 +90,9 @@ public class ItemCrate : CRHittable
 		if (crateType != CrateType.Metal || trigger == null) return;
 		if (trigger != null && pickable != null)
 		{
-			trigger.interactable = digProgress >= 1 && openable && !opened;
-			pickable.enabled = digProgress >= 1 && !openable && !opened;
+			bool dugOut = digProgress >= 1;
+			trigger.interactable = dugOut && !pickable.IsLocked && !opened;
+			pickable.enabled = dugOut && pickable.IsLocked && !opened;
 		}
 	}
 
@@ -140,7 +140,6 @@ public class ItemCrate : CRHittable
 
 	public void AllowCrateToBeOpened()
 	{
-		openable = true;
 		if (pickable != null) pickable.IsLocked = false;
 	}
 
@@ -264,17 +263,13 @@ public class ItemCrate : CRHittable
 	{
 		if (opened || playerWhoHit == null || (playerWhoHit.currentlyHeldObjectServer == null && Plugin.ModConfig.ConfigShovelCratesOnly.Value)) return false;
 
-		bool shouldDamage = false;
-
 		if (digProgress < 1)
 		{
-			shouldDamage = true;
 			float progressChange = crateRandom.NextFloat(0.15f, 0.25f);
 			SetNewDigProgressServerRpc(digProgress + progressChange);
 		}
 		else if (crateType == CrateType.Wooden)
 		{
-			shouldDamage = true;
 			DamageCrateServerRpc(1);
 		}
 
