@@ -436,8 +436,16 @@ static class RoundManagerPatch {
 
 			if (hit.collider != null) // Check to make sure we hit something
 			{
-				GameObject crate = MapObjectHandler.Instance.Crate.WoodenCratePrefab;
+				GameObject crate;
 
+				if (random.Next(0, 100) < 20)
+				{
+					crate = MapObjectHandler.Instance.Crate.MimicWoodenCratePrefab;
+				}
+				else
+				{
+					crate = MapObjectHandler.Instance.Crate.WoodenCratePrefab;
+				}
 				// Adjust the hit point deeper into the ground along the hit.normal direction
 				Vector3 spawnPoint = hit.point + hit.normal * -0.6f; // Adjust -0.6f to control how deep you want it
 
@@ -455,7 +463,7 @@ static class RoundManagerPatch {
 
         // Parse the configuration string to get the spawn counts for different moons
         Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigMetalCrateSpawnWeight.Value);
-        foreach (var moonSpawn in moonSpawnCounts.Keys)
+		foreach (var moonSpawn in moonSpawnCounts.Keys)
         {
             Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
         }
@@ -502,8 +510,16 @@ static class RoundManagerPatch {
 
 			if (hit.collider != null) // Check to make sure we hit something
 			{
-				GameObject crate = MapObjectHandler.Instance.Crate.MetalCratePrefab;
+				GameObject crate;
 
+				if (random.Next(0, 100) < 20)
+				{
+					crate = MapObjectHandler.Instance.Crate.MimicMetalCratePrefab;
+				}
+				else
+				{
+					crate = MapObjectHandler.Instance.Crate.MetalCratePrefab;
+				}
 				// Adjust the hit point deeper into the ground along the hit.normal direction
 				Vector3 spawnPoint = hit.point + hit.normal * -1.1f; // Adjust -1.2f to control how deep you want it
 

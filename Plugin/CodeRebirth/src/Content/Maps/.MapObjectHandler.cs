@@ -24,6 +24,12 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		
 		[LoadFromBundle("Metal Crate")]
 		public GameObject MetalCratePrefab { get; private set; } = null!;
+
+		[LoadFromBundle("Mimic Wooden Crate")]
+		public GameObject MimicWoodenCratePrefab { get; private set; } = null!;
+		
+		[LoadFromBundle("Mimic Metal Crate")]
+		public GameObject MimicMetalCratePrefab { get; private set; } = null!;
 	}
 
 	public class FloraAssets(string bundleName) : AssetBundleLoader<FloraAssets>(bundleName)

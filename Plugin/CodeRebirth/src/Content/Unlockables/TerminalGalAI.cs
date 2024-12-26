@@ -24,6 +24,7 @@ public class TerminalGalAI : GalAI
     public InteractTrigger teleporterInteractTrigger = null!;
     public AudioSource FlyingSource = null!;
     public AudioSource FootstepSource = null!;
+    public AudioSource specialSource = null!;
     public AudioClip scrapPingSound = null!;
     public AudioClip keyboardPressSound = null!;
     public AudioClip zapperSound = null!;
@@ -335,6 +336,11 @@ public class TerminalGalAI : GalAI
         else
         {
             FootstepSource.volume = 0f;
+        }
+        if (galRandom.NextFloat(0f, 25000f) <= 1.5f)
+        {
+            specialSource.Stop();
+            specialSource.Play();
         }
         if (!IsHost) return;
         HostSideUpdate();
