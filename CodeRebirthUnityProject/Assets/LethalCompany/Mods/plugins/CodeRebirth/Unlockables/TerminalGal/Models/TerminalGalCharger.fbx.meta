@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 1b5fe28cd79c3824ca82ed6949550140
+guid: 3e47a845892eb5748b1eea6de4a76576
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Charger
+    second: {fileID: 2100000, guid: 4b083b895e5dcb143839eef272ae8fee, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -33,7 +38,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: CHARGERactivated
+      name: Charger Activated
       takeName: ChargerArmature|CHARGERactivated
       internalID: 8753063214286015678
       firstFrame: 0
@@ -62,7 +67,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: CHARGERclose
+      name: Charger Close
       takeName: ChargerArmature|CHARGERclose
       internalID: -5639879934683435190
       firstFrame: 0
@@ -91,7 +96,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: CHARGERdeactivated
+      name: Charger Deactivated
       takeName: ChargerArmature|CHARGERdeactivated
       internalID: -81742080627495295
       firstFrame: 0
@@ -120,7 +125,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: CHARGERopen
+      name: Charger Open
       takeName: ChargerArmature|CHARGERopen
       internalID: -7274189634607856468
       firstFrame: 0

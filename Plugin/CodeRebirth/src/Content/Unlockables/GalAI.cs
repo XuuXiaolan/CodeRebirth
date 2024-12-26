@@ -22,9 +22,9 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     public AudioSource GalSFX = null!;
     public AudioClip ActivateSound = null!;
     public AudioClip GreetOwnerSound = null!;
-    public AudioClip[] IdleSounds = null!;
+    public AudioClip[] IdleSounds = [];
     public AudioClip DeactivateSound = null!;
-    public AudioClip[] HitSounds = null!;
+    public AudioClip[] HitSounds = [];
     public AudioClip[] FootstepSounds = [];
     public float DoorOpeningSpeed = 1f;
     public Transform GalHead = null!;
@@ -32,26 +32,26 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     public Renderer[] renderersToHideIn = [];
     public SmartAgentNavigator smartAgentNavigator = null!;
 
-    [NonSerialized] public static List<GalAI> Instances = new();
-    [NonSerialized] public bool boomboxPlaying = false;
-    [NonSerialized] public float staringTimer = 0f;
-    [NonSerialized] public const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
-    [NonSerialized] public const float STARE_DOT_THRESHOLD = 0.8f;
-    [NonSerialized] public const float STARE_ROTATION_SPEED = 2f;
-    [NonSerialized] public EnemyAI? targetEnemy;
-    [NonSerialized] public PlayerControllerB? ownerPlayer;
-    [NonSerialized] public List<string> enemyTargetBlacklist = new();
-    [NonSerialized] public int chargeCount = 10;
-    [NonSerialized] public int maxChargeCount;
-    [NonSerialized] public bool currentlyAttacking = false;
-    [NonSerialized] public float boomboxTimer = 0f;
-    [NonSerialized] public bool physicsEnabled = true;
-    [NonSerialized] public float idleNeededTimer = 10f;
-    [NonSerialized] public float idleTimer = 0f;
-    [NonSerialized] public System.Random galRandom = new();
-    [NonSerialized] public bool isInHangarShipRoom = true;
-    [NonSerialized] public bool inActive = true;
-    [NonSerialized] public bool doneOnce = false;
+    [HideInInspector] public static List<GalAI> Instances = new();
+    [HideInInspector] public bool boomboxPlaying = false;
+    [HideInInspector] public float staringTimer = 0f;
+    [HideInInspector] public const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
+    [HideInInspector] public const float STARE_DOT_THRESHOLD = 0.8f;
+    [HideInInspector] public const float STARE_ROTATION_SPEED = 2f;
+    [HideInInspector] public EnemyAI? targetEnemy;
+    [HideInInspector] public PlayerControllerB? ownerPlayer;
+    [HideInInspector] public List<string> enemyTargetBlacklist = new();
+    [HideInInspector] public int chargeCount = 10;
+    [HideInInspector] public int maxChargeCount;
+    [HideInInspector] public bool currentlyAttacking = false;
+    [HideInInspector] public float boomboxTimer = 0f;
+    [HideInInspector] public bool physicsEnabled = true;
+    [HideInInspector] public float idleNeededTimer = 10f;
+    [HideInInspector] public float idleTimer = 0f;
+    [HideInInspector] public System.Random galRandom = new();
+    [HideInInspector] public bool isInHangarShipRoom = true;
+    [HideInInspector] public bool inActive = true;
+    [HideInInspector] public bool doneOnce = false;
 
     public void OnEnable()
     {

@@ -17,13 +17,18 @@ public class TerminalGalAI : GalAI
 {
     public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
     public TerrainScanner terrainScanner = null!;
+    public GameObject boostersGameObject = null!;
     public InteractTrigger keyboardInteractTrigger = null!;
     public InteractTrigger zapperInteractTrigger = null!;
     public InteractTrigger keyInteractTrigger = null!;
     public InteractTrigger teleporterInteractTrigger = null!;
     public AudioSource FlyingSource = null!;
+    public AudioSource FootstepSource = null!;
     public AudioClip scrapPingSound = null!;
-    public List<AudioClip> flyingAudioClips = new();
+    public AudioClip keyboardPressSound = null!;
+    public AudioClip zapperSound = null!;
+    public AudioClip keySound = null!;
+    public AudioClip teleporterSound = null!;
     public List<AudioClip> startOrEndFlyingAudioClips = new();
     public TerminalFaceController terminalFaceController = null!;
 
@@ -104,17 +109,6 @@ public class TerminalGalAI : GalAI
         keyInteractTrigger.onInteract.AddListener(OnKeyHandInteract);
         zapperInteractTrigger.onInteract.AddListener(OnZapperInteract);
         teleporterInteractTrigger.onInteract.AddListener(OnTeleporterInteract);
-        StartCoroutine(UpdateFlyingSound());
-    }
-
-    private IEnumerator UpdateFlyingSound()
-    {
-        while (true)
-        {
-            yield return new WaitUntil(() => !FlyingSource.isPlaying);
-            // FlyingSource.clip = flyingAudioClips[UnityEngine.Random.Range(0, flyingAudioClips.Count)];
-            FlyingSource.Play();
-        }
     }
 
     private void OnTeleporterInteract(PlayerControllerB playerInteracting)
@@ -126,14 +120,25 @@ public class TerminalGalAI : GalAI
     [ServerRpc(RequireOwnership = false)]
     private void TeleporterInteractServerRpc(int playerIndex)
     {
+        Animator.SetInteger(specialAnimationInt, 2);
         TeleporterInteractClientRpc(playerIndex);
     }
 
     [ClientRpc]
     private void TeleporterInteractClientRpc(int playerIndex)
     {
+        StartCoroutine(DelayTeleport(playerIndex));
+    }
+
+    private IEnumerator DelayTeleport(int playerIndex)
+    {
+        GalVoice.PlayOneShot(teleporterSound);
+        yield return new WaitForSeconds(teleporterSound.length/5);
+        Animator.SetInteger(specialAnimationInt, -1);
+        yield return new WaitForSeconds(teleporterSound.length/5*4);
         ResetToChargerStation(galState, galEmotion);
         CRUtilities.TeleportPlayerToShip(playerIndex, GalCharger.transform.position);
+
     }
 
     private void OnZapperInteract(PlayerControllerB playerInteracting)
@@ -163,14 +168,19 @@ public class TerminalGalAI : GalAI
         }
         else
         {
+            GalVoice.PlayOneShot(zapperSound);
+            Animator.SetInteger(specialAnimationInt, 1);
             bool usedToBeTwoHanded = playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded;
             playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded = true;
             while (playerToRecharge.currentlyHeldObjectServer.insertedBattery.charge < 1f)
             {
+                Plugin.ExtendedLogging($"Recharging {playerToRecharge.currentlyHeldObjectServer.itemProperties.itemName}");
                 playerToRecharge.currentlyHeldObjectServer.insertedBattery.charge += 1 * (Time.deltaTime / playerToRecharge.currentlyHeldObjectServer.itemProperties.batteryUsage);
+                yield return null;
             }
             playerToRecharge.currentlyHeldObjectServer.itemProperties.twoHanded = usedToBeTwoHanded;
         }
+        Animator.SetInteger(specialAnimationInt, -1);
     }
 
     private void OnKeyboardInteract(PlayerControllerB playerInteracting)
@@ -188,6 +198,7 @@ public class TerminalGalAI : GalAI
     [ClientRpc]
     private void KeyboardInteractClientRpc()
     {
+        GalVoice.PlayOneShot(keyboardPressSound);
         EnablePhysics(!physicsEnabled);
     }
 
@@ -197,19 +208,41 @@ public class TerminalGalAI : GalAI
         KeyHandInteractServerRpc();
     }
 
+    private bool ObjectIsInteractable(GameObject gameObject)
+    {
+        if (gameObject.GetComponent<DoorLock>() != null) return true;
+        if (gameObject.TryGetComponent(out Pickable pickable) && pickable.IsLocked) return true;
+        return false;
+    }
+
     [ServerRpc(RequireOwnership = false)]
     private void KeyHandInteractServerRpc()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 25, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 7.5f, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
         pointsOfInterest.Clear();
         pointsOfInterest = colliders
         .Select(collider => collider.gameObject)
         .Where(gameObject => {
             NavMesh.CalculatePath(transform.position, gameObject.transform.position, NavMesh.AllAreas, smartAgentNavigator.agent.path);
-            if (DoCalculatePathDistance(smartAgentNavigator.agent.path) > 20) return false;
+            if (DoCalculatePathDistance(smartAgentNavigator.agent.path) > 20 || !ObjectIsInteractable(gameObject)) return false;
             else return true;
         })
         .OrderBy(it => DoCalculatePathDistance(smartAgentNavigator.agent.path)).ToList();
+        foreach (GameObject pointOfInterest in pointsOfInterest)
+        {
+            if (pointOfInterest.GetComponent<DoorLock>() != null)
+            {
+                Plugin.ExtendedLogging($"Unlocking Door: {pointOfInterest.name} at {pointOfInterest.transform.position}");
+            }
+            else if (pointOfInterest.GetComponent<Pickable>() != null)
+            {
+                Plugin.ExtendedLogging($"Unlocking Pickable: {pointOfInterest.name} at {pointOfInterest.transform.position}");
+            }
+            else
+            {
+                Plugin.ExtendedLogging("Not a door or pickable");
+            }
+        }
         HandleStateAnimationSpeedChanges(State.UnlockingObjects, Emotion.Basis);
     }
 
@@ -299,6 +332,14 @@ public class TerminalGalAI : GalAI
 
         if (inActive) return;
         StoppingDistanceUpdate();
+        if (Animator.GetFloat(runSpeedFloat) > 0.01f)
+        {
+            FootstepSource.volume = 1f;
+        }
+        else
+        {
+            FootstepSource.volume = 0f;
+        }
         if (!IsHost) return;
         HostSideUpdate();
     }
@@ -390,29 +431,31 @@ public class TerminalGalAI : GalAI
         }
     
         if (unlockingSomething != null) return;
-        smartAgentNavigator.DoPathingToDestination(pointsOfInterest[0].transform.position, false, false, null);
-        if (Agent.remainingDistance <= Agent.stoppingDistance)
+        smartAgentNavigator.DoPathingToDestination(pointsOfInterest[0].transform.position, !smartAgentNavigator.isOutside, false, null);
+        if (Agent.enabled && Agent.remainingDistance <= Agent.stoppingDistance)
         {
             unlockingSomething = StartCoroutine(DoUnlockingObjectsRoutine(pointsOfInterest[0]));
-            pointsOfInterest.Remove(pointsOfInterest[0]);
         }
     }
 
     private IEnumerator DoUnlockingObjectsRoutine(GameObject pointOfInterest)
     {
+        Animator.SetInteger(specialAnimationInt, 0);
         if (pointOfInterest.TryGetComponent(out Pickable pickable))
         {
-            if (!pickable.IsLocked) yield break;
             // play animation.
             yield return new WaitForSeconds(3f);
+            GalVoice.PlayOneShot(keySound);
             pickable.UnlockStuffClientRpc();
         }
         else if (pointOfInterest.TryGetComponent(out DoorLock doorLock))
         {
             // play animation.
             yield return new WaitForSeconds(3f);
+            GalVoice.PlayOneShot(keySound);
             doorLock.UnlockDoorClientRpc();
         }
+        Animator.SetInteger(specialAnimationInt, -1);
         pointsOfInterest.Remove(pointOfInterest);
         unlockingSomething = null;
     }
@@ -472,11 +515,6 @@ public class TerminalGalAI : GalAI
         HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Basis);
     }
 
-    private void PlayFootstepSoundAnimEvent()
-    {
-        GalSFX.PlayOneShot(FootstepSounds[galRandom.NextInt(0, FootstepSounds.Length - 1)]);
-    }
-
     private void StartFlyingAnimEvent()
     {
         SetFlying(true);
@@ -500,10 +538,16 @@ public class TerminalGalAI : GalAI
         this.flying = Flying;
         if (Flying)
         {
-            GalSFX.PlayOneShot(startOrEndFlyingAudioClips[galRandom.NextInt(0, startOrEndFlyingAudioClips.Count - 1)]);
+            GalSFX.PlayOneShot(startOrEndFlyingAudioClips[0]);
+            boostersGameObject.SetActive(true);
             FlyingSource.volume = Plugin.ModConfig.ConfigTerminalBotFlyingVolume.Value;
         }
-        else FlyingSource.volume = 0f;
+        else
+        {
+            boostersGameObject.SetActive(false);
+            GalSFX.PlayOneShot(startOrEndFlyingAudioClips[1]);
+            FlyingSource.volume = 0f;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -571,21 +615,15 @@ public class TerminalGalAI : GalAI
                 case State.Dancing:
                     HandleStateDancingChange();
                     break;
+                case State.UnlockingObjects:
+                    HandleStateUnlockingObjectsChange();
+                    break;
             }
             galState = stateToSwitchTo;
         }
 
-        if (emotion != -1)
-        {
-            terminalFaceController.SetFaceState(emotionToSwitchTo, 100);
-        }
-        else
-        {
-            foreach (Emotion emotionInEnum in Enum.GetValues(typeof(Emotion)))
-            {
-                terminalFaceController.SetFaceState(emotionInEnum, 0);
-            }
-        }
+        Plugin.ExtendedLogging($"Switching emotion to {emotionToSwitchTo}");
+        terminalFaceController.SetFaceState(emotionToSwitchTo, 100);
     }
 
     #region State Changes
@@ -607,6 +645,10 @@ public class TerminalGalAI : GalAI
     }
 
     private void HandleStateDancingChange()
+    {
+    }
+
+    private void HandleStateUnlockingObjectsChange()
     {
     }
     #endregion

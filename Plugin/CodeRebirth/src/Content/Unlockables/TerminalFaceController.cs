@@ -41,19 +41,12 @@ public class TerminalFaceController : MonoBehaviour
 
     public IEnumerator TemporarySwitchEffect(int shapeKeyIndex)
     {
-        FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)TerminalGalAI.galEmotion, 0f);
-
-        int ShapeKeyIndex = shapeKeyIndex; // todo: set this to be the wink and not a random index.
-        float Weight = controllerRandom.NextFloat(50f, 100f);
-        FaceSkinnedMeshRenderer.SetBlendShapeWeight(ShapeKeyIndex, Weight);
+        SetFaceState((Emotion)shapeKeyIndex, 100f);
 
         float Duration = controllerRandom.NextFloat(0.5f, 1f);
         yield return new WaitForSeconds(Duration);
 
-        FaceSkinnedMeshRenderer.SetBlendShapeWeight(ShapeKeyIndex, 0f);
-        FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)TerminalGalAI.galEmotion, 100f);
-
-        TemporarySwitchCoroutine = null;
+        SetFaceState(TerminalGalAI.galEmotion, 100f);
     }
 
     public void SetFaceState(Emotion faceState, float weight)
@@ -61,7 +54,9 @@ public class TerminalFaceController : MonoBehaviour
         ResetFace();
         
         //set the current face state
-        TerminalGalAI.galEmotion = faceState;
+        Plugin.ExtendedLogging($"{TerminalGalAI} setting face state to: {faceState}");
+        if (faceState != Emotion.Winky) TerminalGalAI.galEmotion = faceState;
+        if ((int)faceState == -1) return;
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)faceState, Mathf.Clamp(weight, 0f, 100f));
     }
 
@@ -69,6 +64,7 @@ public class TerminalFaceController : MonoBehaviour
     {
         foreach (Emotion faceState in System.Enum.GetValues(typeof(Emotion)))
         {
+            if ((int)faceState == -1) continue;
             FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)faceState, 0f);
         }
     }
