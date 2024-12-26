@@ -34,6 +34,8 @@ public class ItemCrate : CRHittable
 	{
 		Wooden,
 		Metal,
+		WoodenMimic,
+		MetalMimic,
 	}
 	public CrateType crateType;
 	public Collider mainCollider = null!;
@@ -53,19 +55,18 @@ public class ItemCrate : CRHittable
 		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed + Instances.Count);
 		health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
 		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
-
 		originalPosition = transform.position;
 		UpdateDigPosition(0, digProgress);
 
 		Plugin.ExtendedLogging("ItemCrate successfully spawned with health: " + health);
-		if (crateType == CrateType.Metal && trigger != null)
+		if ((crateType == CrateType.Metal || crateType == CrateType.MetalMimic) && trigger != null)
 		{
 			trigger.timeToHold = Plugin.ModConfig.ConfigMetalHoldTimer.Value;
 			animator.SetFloat("openingSpeed", 11.875f/trigger.timeToHold);
 			Plugin.ExtendedLogging("Crate time to hold: " + trigger.timeToHold);
 		}
 
-		if (crateType == CrateType.Wooden && ShopItemList.Count == 0)
+		if ((crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic) && ShopItemList.Count == 0)
 		{
 			Terminal terminal = FindObjectOfType<Terminal>();
             
@@ -217,7 +218,10 @@ public class ItemCrate : CRHittable
 		opened = true;
 		openedOnce = true;
 
-		if (crateType == CrateType.Metal) animator.SetBool("opened", true);
+		if (crateType == CrateType.Metal)
+		{
+			animator.SetBool("opened", true);
+		}
 		else
 		{
 			if (crateRandom.Next(1, 101) <= 10)
@@ -225,7 +229,10 @@ public class ItemCrate : CRHittable
 				CRUtilities.CreateExplosion(this.transform.position, true, 30, 0, 6, 1, CauseOfDeath.Blast, null, null);
 				animator.SetTrigger(doExplodeOpenAnimation);
 			}
-			else animator.SetBool("opened", true);
+			else
+			{
+				animator.SetBool("opened", true);
+			}
 		}
 		animator.SetBool("opening", false);
 	}
