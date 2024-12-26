@@ -4,6 +4,7 @@
 - Added bear trap gal.
 - Added ACUnit gal.
 - Fixed explosions happening outside for clients through microwave.
+- Added something suspicious...
 
 ## v0.9.7
 
