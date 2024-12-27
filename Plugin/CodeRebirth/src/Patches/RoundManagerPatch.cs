@@ -438,7 +438,7 @@ static class RoundManagerPatch {
 			{
 				GameObject crate;
 
-				if (random.Next(0, 100) < 0)
+				if (random.Next(0, 100) < 20 && Plugin.ModConfig.ConfigSuspiciousActivityEnabled.Value)
 				{
 					crate = MapObjectHandler.Instance.Crate.MimicWoodenCratePrefab;
 				}
@@ -512,7 +512,7 @@ static class RoundManagerPatch {
 			{
 				GameObject crate;
 
-				if (random.Next(0, 100) < 20)
+				if (random.Next(0, 100) < 20 && Plugin.ModConfig.ConfigSuspiciousActivityEnabled.Value)
 				{
 					crate = MapObjectHandler.Instance.Crate.MimicMetalCratePrefab;
 				}

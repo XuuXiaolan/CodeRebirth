@@ -58,6 +58,18 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public UnlockableItemDef BellCrabUnlockable { get; private set; } = null!;
 	}
 
+	public class ACUnitGalAssets(string bundleName) : AssetBundleLoader<ACUnitGalAssets>(bundleName)
+	{
+		[LoadFromBundle("ACUnitGalUnlockable.asset")]
+		public UnlockableItemDef ACUnitGalUnlockable { get; private set; } = null!;
+	}
+
+	public class BearTrapGalAssets(string bundleName) : AssetBundleLoader<BearTrapGalAssets>(bundleName)
+	{
+		[LoadFromBundle("BearTrapGalUnlockable.asset")]
+		public UnlockableItemDef BearTrapGalUnlockable { get; private set; } = null!;
+	}
+
 	public class SCP999Assets(string bundleName) : AssetBundleLoader<SCP999Assets>(bundleName)
 	{
 		[LoadFromBundle("SCP999GalUnlockable.asset")]
@@ -87,6 +99,8 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	public TerminalBotAssets TerminalBot { get; private set; } = null!;
 	public PlantPotAssets PlantPot { get; private set; } = null!;
 	public ShockwaveBotAssets ShockwaveBot { get; private set; } = null!;
+	public ACUnitGalAssets ACUnitGal { get; private set; } = null!;
+	public BearTrapGalAssets BearTrapGal { get; private set; } = null!;
 
     public UnlockableHandler()
 	{
@@ -98,6 +112,20 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		if (Plugin.ModConfig.Config999GalEnabled.Value) Register999Gal();
 		if (Plugin.ModConfig.ConfigShrimpDispenserEnabled.Value) RegisterShrimpDispenser();
         if (Plugin.ModConfig.ConfigFriendStuffEnabled.Value) RegisterFriendStuff();
+		if (Plugin.ModConfig.ConfigBearTrapGalEnabled.Value) RegisterBearTrapGal();
+		if (Plugin.ModConfig.ConfigACUnitGalEnabled.Value) RegisterACUnitGal();
+	}
+
+	private void RegisterBearTrapGal()
+	{
+		ACUnitGal = new ACUnitGalAssets("acunitgalassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(ACUnitGal.ACUnitGalUnlockable, Plugin.ModConfig.ConfigACUnitGalCost.Value, StoreType.ShipUpgrade);
+	}
+
+	private void RegisterACUnitGal()
+	{
+		BearTrapGal = new BearTrapGalAssets("beartrapgalassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(BearTrapGal.BearTrapGalUnlockable, Plugin.ModConfig.ConfigBearTrapGalCost.Value, StoreType.ShipUpgrade);
 	}
 
 	private void RegisterFriendStuff()

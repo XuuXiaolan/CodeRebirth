@@ -6,6 +6,9 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigBearTrapGalEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigACUnitGalEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigSuspiciousActivityEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTerminalBotEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTerminalBotPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFriendStuffEnabled { get; private set; }
@@ -183,6 +186,8 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigDuckSongPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigDuckSongMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigDuckSongTimer { get; private set; }
+    public ConfigEntry<int> ConfigBearTrapGalCost { get; private set; }
+    public ConfigEntry<int> ConfigACUnitGalCost { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -217,6 +222,26 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region BearTrap Gal
+        ConfigBearTrapGalEnabled = configFile.Bind("BearTrapGal Options",
+                                            "BearTrapGal | Enabled",
+                                            true,
+                                            "Whether the BearTrapGal is enabled.");
+        ConfigBearTrapGalCost = configFile.Bind("BearTrapGal Options",
+                                            "BearTrapGal | Cost",
+                                            200,
+                                            "The cost of the BearTrapGal.");
+        #endregion
+        #region ACUnit Gal
+        ConfigACUnitGalEnabled = configFile.Bind("ACUnitGal Options",
+                                            "ACUnitGal | Enabled",
+                                            true,
+                                            "Whether the ACUnitGal is enabled.");
+        ConfigACUnitGalCost = configFile.Bind("ACUnitGal Options",
+                                            "ACUnitGal | Cost",
+                                            200,
+                                            "The cost of the ACUnitGal.");
         #endregion
         #region Friend Stuff
         ConfigFriendStuffEnabled = configFile.Bind("FriendStuff Options",
@@ -1019,6 +1044,10 @@ public class CodeRebirthConfig
                                             "Crate | Enabled",
                                             true,
                                             "Enables/Disables the Item Crate from spawning.");
+        ConfigSuspiciousActivityEnabled = configFile.Bind("Crate Options",
+                                            "Crate | Suspicious Activity Enabled",
+                                            true,
+                                            "Enables/Disables the Suspicious Activity from happening.");
         ConfigMetalCrateSpawnWeight = configFile.Bind("Crate Options",
                                             "Crate | Metal SpawnWeight",
                                             "Vanilla:3,Custom:3",

@@ -16,7 +16,7 @@ public class ACUnitGalAI : NetworkBehaviour
     public InteractTrigger SwitchPoseTrigger = null!;
 
     private static readonly int ShootingAnimation = Animator.StringToHash("Shoot"); // trigger
-    private static readonly int AnimationStageInt = Animator.StringToHash("AnimationStage"); // int
+    private static readonly int AnimationStageInt = Animator.StringToHash("StageAnimation"); // int
 
     public void Start()
     {

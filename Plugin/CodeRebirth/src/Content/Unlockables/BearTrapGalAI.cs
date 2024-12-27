@@ -15,7 +15,7 @@ public class BearTrapGalAI : NetworkBehaviour
     public InteractTrigger SwitchPoseTrigger = null!;
 
     private static readonly int BitingAnimation = Animator.StringToHash("Biting"); // bool
-    private static readonly int AnimationStageInt = Animator.StringToHash("AnimationStage"); // int
+    private static readonly int AnimationStageInt = Animator.StringToHash("StageAnimation"); // int
 
     public void Start()
     {
