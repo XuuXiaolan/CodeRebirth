@@ -949,6 +949,7 @@ MonoBehaviour:
   animator: {fileID: 8557149345729840933}
   health: 4
   originalPosition: {x: 0, y: 0, z: 0}
+  creepyWarningSound: {fileID: 0}
   crateType: 2
   mainCollider: {fileID: 4954358645330385402}
   grabAndPullPlayerScript: {fileID: 0}
@@ -1157,3 +1158,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pullTransform: {fileID: 1164612458567852454}
+  audioSource: {fileID: 850424377539253765}
+  launchSounds:
+  - {fileID: 8300000, guid: 3712ff694698cfb4fb1714a72405f903, type: 3}
+  - {fileID: 8300000, guid: 3fb2dbc17271c2d4086d35992af116eb, type: 3}
+  - {fileID: 8300000, guid: b80027f2c693c2644b8d35aa00745e71, type: 3}

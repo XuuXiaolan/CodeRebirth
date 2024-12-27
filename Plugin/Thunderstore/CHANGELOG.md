@@ -1,4 +1,16 @@
-# v0.10.0
+# v0.10.2
+
+- Improved detection from terminal gal for scrap and items.
+- Added warning sounds to suspicious thing.
+- Fixed collisions with terminal gal.
+- Added T!tan from rebalanced moons for weight of 0 for ACUnit.
+
+## v0.10.1
+
+- Decreased chance of rare idle song from terminal gal.
+- Accidently included unreleased assets into build.
+
+## v0.10.0
 
 - Added terminal gal.
 - Added bear trap gal.

@@ -30,6 +30,7 @@ public class ItemCrate : CRHittable
 	public Vector3 originalPosition;
 	public System.Random crateRandom = new();
 	public static List<Item> ShopItemList = new();
+	public AudioClip creepyWarningSound = null!;
 	private static readonly int doExplodeOpenAnimation = Animator.StringToHash("doExplodeOpen");
 	public enum CrateType
 	{
@@ -280,6 +281,10 @@ public class ItemCrate : CRHittable
 	private void DamageCrateClientRpc(int damage)
 	{
 		health -= damage;
+		if (health == 1 && crateType == CrateType.WoodenMimic)
+		{
+			PlayCreepySoundAnimEvent();
+		}
 	}
 	
 	public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -437,6 +442,12 @@ public class ItemCrate : CRHittable
 			player.Crouch(true);
 			player.transform.position = grabAndPullPlayerScript.pullTransform.position;
 		}
+	}
+
+	public void PlayCreepySoundAnimEvent()
+	{
+		if (crateType != CrateType.MetalMimic && crateType != CrateType.WoodenMimic) return;
+		openSFX.PlayOneShot(creepyWarningSound);
 	}
 
 	private IEnumerator StartDamagingPlayer(PlayerControllerB player)

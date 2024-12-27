@@ -9,6 +9,8 @@ public class GrabAndPullPlayer : MonoBehaviour
 {
     public Transform pullTransform = null!;
     private Coroutine? pullRoutine = null;
+    public AudioSource audioSource = null!;
+    public AudioClip[] pullSounds = [];
 
     public void OnTriggerStay(Collider other)
     {
@@ -19,6 +21,7 @@ public class GrabAndPullPlayer : MonoBehaviour
 
     private IEnumerator PullAndTrapPlayer(PlayerControllerB player)
     {
+        audioSource.PlayOneShot(pullSounds[UnityEngine.Random.Range(0, pullSounds.Length)]);
         player.disableMoveInput = true;
         ItemCrate crate = this.transform.parent.GetComponent<ItemCrate>();
         crate.CloseCrateOnPlayerLocally(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));

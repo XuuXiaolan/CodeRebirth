@@ -156,7 +156,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
         } // configurable quest time, max amount of ducks to spawn.
 
-        if (true)
+        if (false)
         {
             PokemonEnemies = new PokemonEnemyAssets("eeveelutionassets");
             RegisterScrapWithConfig("", PokemonEnemies.ChildEeveeItem, -1, -1);

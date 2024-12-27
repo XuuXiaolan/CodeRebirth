@@ -114,7 +114,20 @@ public class TerminalGalAI : GalAI
         foreach (var item in StartOfRound.Instance.allItemsList.itemsList)
         {
             if (item == null || item.spawnPrefab == null || !item.spawnPrefab.TryGetComponent(out GrabbableObject grabbableObject)) continue;
-            if (grabbableObject.mainObjectRenderer != null) grabbableObject.mainObjectRenderer.gameObject.layer = 6;
+            if (grabbableObject.mainObjectRenderer != null && grabbableObject.mainObjectRenderer.gameObject.layer == 0)
+            {
+                grabbableObject.mainObjectRenderer.gameObject.layer = 6;
+            }
+            else
+            {
+                foreach (var renderer in grabbableObject.GetComponentsInChildren<Renderer>())
+                {
+                    if (renderer.gameObject.layer == 0)
+                    {
+                        renderer.gameObject.layer = 6;
+                    }
+                }
+            }
         }
     }
 
@@ -337,7 +350,7 @@ public class TerminalGalAI : GalAI
         {
             FootstepSource.volume = 0f;
         }
-        if (galRandom.NextFloat(0f, 25000f) <= 1.5f)
+        if (galRandom.Next(0, 500000) <= 3)
         {
             specialSource.Stop();
             specialSource.Play();
@@ -348,7 +361,7 @@ public class TerminalGalAI : GalAI
 
     private float GetCurrentSpeedMultiplier()
     {
-        return 1f;
+        return 1.3f;
     }
 
     private void HostSideUpdate()

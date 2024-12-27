@@ -396,7 +396,7 @@ public class CodeRebirthConfig
                                             "Whether the air control unit is enabled.");
         ConfigAirControlUnitSpawnWeight = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | SpawnWeight",
-                                            "Vanilla:2,Custom:2,Titan:0,Olympus:2",
+                                            "Vanilla:2,Custom:2,Tіtan:0,Titan:0,Olympus:2",
                                             "The MoonName:CurveSpawnWeight for the AirControlUnit.");
         ConfigAirControlUnitDamage = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | Damage",

@@ -2,7 +2,6 @@ using System.Collections;
 using CodeRebirth.src.Content.Maps;
 using GameNetcodeStuff;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 namespace CodeRebirth.src.MiscScripts;
 public class GrabAndLaunchPlayer : MonoBehaviour
@@ -10,6 +9,8 @@ public class GrabAndLaunchPlayer : MonoBehaviour
     public Transform pullTransform = null!;
     private Coroutine? pullRoutine = null;
     private PlayerControllerB? player = null;
+    public AudioSource audioSource = null!;
+    public AudioClip[] launchSounds = [];
 
     public void OnTriggerStay(Collider other)
     {
@@ -20,6 +21,7 @@ public class GrabAndLaunchPlayer : MonoBehaviour
 
     private IEnumerator PullAndTrapPlayer(PlayerControllerB player)
     {
+        audioSource.PlayOneShot(launchSounds[Random.Range(0, launchSounds.Length)]);
         player.disableMoveInput = true;
         this.player = player;
         ItemCrate crate = this.transform.parent.GetComponent<ItemCrate>();
