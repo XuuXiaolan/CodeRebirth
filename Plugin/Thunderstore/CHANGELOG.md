@@ -2,8 +2,9 @@
 
 - Improved detection from terminal gal for scrap and items.
 - Added warning sounds to suspicious thing.
-- Fixed collisions with terminal gal.
+- Fixed collisions with terminal gal and gave her a new facial expression for it.
 - Added T!tan from rebalanced moons for weight of 0 for ACUnit.
+- Put the suspicious thing into the enemy layer.
 
 ## v0.10.1
 

@@ -56,7 +56,7 @@ public class TerminalFaceController : MonoBehaviour
 
         //set the current face state
         Plugin.ExtendedLogging($"{TerminalGalAI} setting face state to: {faceState}");
-        if (faceState != Emotion.Winky && faceState != Emotion.Angy) TerminalGalAI.galEmotion = faceState;
+        if (faceState != Emotion.Winky && faceState != Emotion.Angy && faceState != Emotion.Flustered) TerminalGalAI.galEmotion = faceState;
         if ((int)faceState == -1) return;
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)faceState, Mathf.Clamp(weight, 0f, 100f));
     }

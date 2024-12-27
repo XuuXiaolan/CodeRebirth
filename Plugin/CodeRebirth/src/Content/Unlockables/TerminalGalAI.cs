@@ -218,6 +218,7 @@ public class TerminalGalAI : GalAI
     [ClientRpc]
     private void KeyboardInteractClientRpc()
     {
+        StartCoroutine(terminalFaceController.TemporarySwitchEffect((int)Emotion.Flustered));
         GalVoice.PlayOneShot(keyboardPressSound);
         EnablePhysics(!physicsEnabled);
     }

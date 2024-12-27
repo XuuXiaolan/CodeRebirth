@@ -231,6 +231,10 @@ public class ItemCrate : CRHittable
 			{
 				CRUtilities.CreateExplosion(this.transform.position, true, 30, 0, 6, 1, CauseOfDeath.Blast, null, null);
 				animator.SetTrigger(doExplodeOpenAnimation);
+				if (crateType == CrateType.WoodenMimic)
+				{
+					animator.SetBool("opened", true);
+				}
 			}
 			else
 			{
@@ -271,7 +275,7 @@ public class ItemCrate : CRHittable
 	private void DamageCrateServerRpc(int damage)
 	{
 		DamageCrateClientRpc(damage);
-		if (health - damage == 0)
+		if (health - damage == -1)
 		{
 			OpenCrate();
 		}
@@ -281,9 +285,11 @@ public class ItemCrate : CRHittable
 	private void DamageCrateClientRpc(int damage)
 	{
 		health -= damage;
-		if (health == 1 && crateType == CrateType.WoodenMimic)
+		Plugin.ExtendedLogging("Crate health: " + health);
+		if (health <= 1)
 		{
-			PlayCreepySoundAnimEvent();
+			if (crateType != CrateType.MetalMimic && crateType != CrateType.WoodenMimic) return;
+			openSFX.PlayOneShot(creepyWarningSound, 1f);
 		}
 	}
 	
@@ -426,6 +432,7 @@ public class ItemCrate : CRHittable
 
 	public void ResetWoodenCrate()
 	{
+		mainCollider.enabled = true;
 		opened = false;
 		health = 4;
 		animator.SetBool("opened", false);
