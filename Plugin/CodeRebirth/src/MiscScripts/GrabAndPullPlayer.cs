@@ -29,5 +29,6 @@ public class GrabAndPullPlayer : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         player.disableMoveInput = false;
+        pullRoutine = null;
     }
 }

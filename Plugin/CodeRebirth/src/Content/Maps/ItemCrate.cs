@@ -41,6 +41,7 @@ public class ItemCrate : CRHittable
 	public CrateType crateType;
 	public Collider mainCollider = null!;
 	public GrabAndPullPlayer? grabAndPullPlayerScript = null;
+	public GrabAndLaunchPlayer? grabAndLaunchPlayerScript = null;
 
 	private bool openedOnce = false;
 	[HideInInspector] public static List<ItemCrate> Instances = new();
@@ -55,6 +56,7 @@ public class ItemCrate : CRHittable
 	{
 		Instances.Add(this);
 		if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = false;
+		if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = false;
 		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed + Instances.Count);
 		health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
 		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
@@ -236,6 +238,19 @@ public class ItemCrate : CRHittable
 		}
 		animator.SetBool("opening", false);
 		if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = true;
+		if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = true;
+		if (crateType == CrateType.WoodenMimic)
+		{
+			StartCoroutine(ResetCrateManually());
+		}
+	}
+
+	private IEnumerator ResetCrateManually()
+	{
+		yield return new WaitForSeconds(2f);
+		if (health > 0 && digProgress == 0) yield break;
+		if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = false;
+		ResetWoodenCrate();
 	}
 
 	[ServerRpc(RequireOwnership = false)]
@@ -276,7 +291,7 @@ public class ItemCrate : CRHittable
 			float progressChange = crateRandom.NextFloat(0.15f, 0.25f);
 			SetNewDigProgressServerRpc(digProgress + progressChange);
 		}
-		else if (crateType == CrateType.Wooden)
+		else if (crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic)
 		{
 			DamageCrateServerRpc(1);
 		}
@@ -383,9 +398,34 @@ public class ItemCrate : CRHittable
 		openedOnce = true;
 		opened = false;
 		animator.SetBool("opened", false);
-		if (crateType != CrateType.MetalMimic) return;
-		StartCoroutine(DisableGrabPullThing(player));
- 		StartCoroutine(StartDamagingPlayer(player));
+		if (crateType == CrateType.MetalMimic)
+		{
+			StartCoroutine(DisableGrabPullThing(player));
+ 			StartCoroutine(StartDamagingPlayer(player));
+		}
+		if (crateType == CrateType.WoodenMimic)
+		{
+			StartCoroutine(DisableGrabLaunchThing());
+		}
+	}
+
+	private IEnumerator DisableGrabLaunchThing()
+	{
+		if (grabAndLaunchPlayerScript != null)
+		{
+			grabAndLaunchPlayerScript.enabled = true;
+			yield return new WaitForSeconds(1.4f);
+			grabAndLaunchPlayerScript.enabled = false;
+		}
+	}
+
+	public void ResetWoodenCrate()
+	{
+		opened = false;
+		health = 4;
+		animator.SetBool("opened", false);
+		UpdateDigPosition(digProgress, 0);
+		digProgress = Mathf.Clamp01(0);
 	}
 
 	private IEnumerator DisableGrabPullThing(PlayerControllerB player)
