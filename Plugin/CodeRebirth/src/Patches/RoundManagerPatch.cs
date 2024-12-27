@@ -438,7 +438,7 @@ static class RoundManagerPatch {
 			{
 				GameObject crate;
 
-				if (random.Next(0, 100) < 20)
+				if (random.Next(0, 100) < 0)
 				{
 					crate = MapObjectHandler.Instance.Crate.MimicWoodenCratePrefab;
 				}

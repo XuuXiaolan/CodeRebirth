@@ -8,6 +8,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using System;
+using System.Collections;
 
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable
@@ -39,6 +40,7 @@ public class ItemCrate : CRHittable
 	}
 	public CrateType crateType;
 	public Collider mainCollider = null!;
+	public GrabAndPullPlayer? grabAndPullPlayerScript = null;
 
 	private bool openedOnce = false;
 	[HideInInspector] public static List<ItemCrate> Instances = new();
@@ -52,6 +54,7 @@ public class ItemCrate : CRHittable
     private void Start()
 	{
 		Instances.Add(this);
+		if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = false;
 		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed + Instances.Count);
 		health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
 		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
@@ -88,13 +91,10 @@ public class ItemCrate : CRHittable
 
 	private void Update()
 	{
-		if (crateType != CrateType.Metal || trigger == null) return;
-		if (trigger != null && pickable != null)
-		{
-			bool dugOut = digProgress >= 1;
-			trigger.interactable = dugOut && !pickable.IsLocked && !opened;
-			pickable.enabled = dugOut && pickable.IsLocked && !opened;
-		}
+		if ((crateType != CrateType.Metal && crateType != CrateType.MetalMimic) || trigger == null || pickable == null) return;
+		bool dugOut = digProgress >= 1;
+		trigger.interactable = dugOut && !pickable.IsLocked && !opened;
+		pickable.enabled = dugOut && pickable.IsLocked && !opened;
 	}
 
 	public void OnInteractEarly()
@@ -152,7 +152,7 @@ public class ItemCrate : CRHittable
 
 	public void OpenCrate()
 	{
-		if (!openedOnce)
+		if (!openedOnce && crateType != CrateType.MetalMimic && crateType != CrateType.WoodenMimic)
 		{
 			for (int i = 0; i < Plugin.ModConfig.ConfigCrateNumberToSpawn.Value; i++)
 			{
@@ -218,7 +218,7 @@ public class ItemCrate : CRHittable
 		opened = true;
 		openedOnce = true;
 
-		if (crateType == CrateType.Metal)
+		if (crateType == CrateType.Metal || crateType == CrateType.MetalMimic)
 		{
 			animator.SetBool("opened", true);
 		}
@@ -235,6 +235,7 @@ public class ItemCrate : CRHittable
 			}
 		}
 		animator.SetBool("opening", false);
+		if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = true;
 	}
 
 	[ServerRpc(RequireOwnership = false)]
@@ -310,7 +311,7 @@ public class ItemCrate : CRHittable
 		}
 		else
 		{
-			if (String.IsNullOrEmpty(woodenCrateItemConfig))
+			if (string.IsNullOrEmpty(woodenCrateItemConfig))
 			{
 				// generate a whitelist and set it to the config
 				Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value = GenerateWhiteList();
@@ -364,6 +365,11 @@ public class ItemCrate : CRHittable
 	[ClientRpc]
 	private void CloseCrateOnPlayerClientRpc(int playerIndex)
 	{
+		CloseCrateOnPlayerLocally(playerIndex);
+	}
+
+	public void CloseCrateOnPlayerLocally(int playerIndex)
+	{
 		PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
 		if (player != GameNetworkManager.Instance.localPlayerController)
 		{
@@ -377,5 +383,32 @@ public class ItemCrate : CRHittable
 		openedOnce = true;
 		opened = false;
 		animator.SetBool("opened", false);
+		if (crateType != CrateType.MetalMimic) return;
+		StartCoroutine(DisableGrabPullThing(player));
+ 		StartCoroutine(StartDamagingPlayer(player));
+	}
+
+	private IEnumerator DisableGrabPullThing(PlayerControllerB player)
+	{
+		yield return new WaitForSeconds(1.5f);
+		if (grabAndPullPlayerScript != null)
+		{
+			grabAndPullPlayerScript.enabled = false;
+			player.Crouch(true);
+			player.transform.position = grabAndPullPlayerScript.pullTransform.position;
+		}
+	}
+
+	private IEnumerator StartDamagingPlayer(PlayerControllerB player)
+	{
+		yield return new WaitForSeconds(1.6f);
+		bool trueing = true;
+		while (trueing)
+		{
+			yield return new WaitForSeconds(4f);
+			if (player.isPlayerDead || Vector3.Distance(transform.position, player.transform.position) > 3f) trueing = false;
+			player.DamagePlayer(10, false, false, CauseOfDeath.Suffocation, 0, false, default);
+			player.Crouch(true);
+		}
 	}
 }
