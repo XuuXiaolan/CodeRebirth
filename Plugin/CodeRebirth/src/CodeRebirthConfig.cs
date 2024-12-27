@@ -6,6 +6,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigACUnitGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSuspiciousActivityEnabled { get; private set; }
@@ -222,6 +223,12 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region Zort Stuff
+        ConfigZortModelReplacementEnabled = configFile.Bind("Zort Options",
+                                            "Zort Model Replacement | Enabled",
+                                            true,
+                                            "Whether the Zort model replacement is enabled.");
         #endregion
         #region BearTrap Gal
         ConfigBearTrapGalEnabled = configFile.Bind("BearTrapGal Options",

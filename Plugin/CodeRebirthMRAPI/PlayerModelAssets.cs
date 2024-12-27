@@ -49,7 +49,7 @@ static class PlayerModelAssets
 			ModelReplacementAPI.RegisterSuitModelReplacement("Betty", typeof(SeamineGalModel));
 		}
 
-		if (true)
+		if (CodeRebirth.src.Plugin.ModConfig.ConfigZortModelReplacementEnabled.Value)
 		{
 			Plugin.ExtendedLogging("Zort is a new model registered!");
 			ZortModelAssets = new ZortModelReplacementAssets("zortmodelreplacementassets");
