@@ -61,6 +61,22 @@ public class ItemHandler : ContentHandler<ItemHandler>
         public Item PjonkTurkeyItem { get; private set; } = null!;
     }
 
+    public class ZortAssets(string bundleName) : AssetBundleLoader<ZortAssets>(bundleName)
+    {
+        [LoadFromBundle("AccordionObj.asset")]
+        public Item AccordionItem { get; private set; } = null!;
+
+        [LoadFromBundle("RecorderObj.asset")]
+        public Item RecorderItem { get; private set; } = null!;
+
+        [LoadFromBundle("GuitarObj.asset")]
+        public Item GuitarItem { get; private set; } = null!;
+
+        [LoadFromBundle("ViolinObj.asset")]
+        public Item ViolinItem { get; private set; } = null!;
+    }
+
+    public ZortAssets Zort { get; private set; } = null!;
     public PjonkTurkeyAssets PjonkTurkey { get; private set; } = null!;
     public WalletAssets Wallet { get; private set; } = null!;
     public HoverboardAssets Hoverboard { get; private set; } = null!;
@@ -70,9 +86,17 @@ public class ItemHandler : ContentHandler<ItemHandler>
     public IcyHammerAssets IcyHammer { get; private set; } = null!;
     public SpikyMaceAssets SpikyMace { get; private set; } = null!;
 
-
     public ItemHandler()
     {
+        if (true)
+        {
+            Zort = new ZortAssets("zortassets");
+            RegisterScrapWithConfig("", Zort.GuitarItem, -1, -1);
+            RegisterScrapWithConfig("", Zort.ViolinItem, -1, -1);
+            RegisterScrapWithConfig("", Zort.RecorderItem, -1, -1);
+            RegisterScrapWithConfig("", Zort.AccordionItem, -1, -1);
+        }
+
         if (Plugin.ModConfig.ConfigWalletEnabled.Value)
         {
             Wallet = new WalletAssets("walletassets");
