@@ -7,14 +7,16 @@ If you're interested in helping with the development of the mod, feel free to re
 ## Current Additions
 
 - 160+ Plant types!!!
-- 1 Custom Model replacement (This needs you to have ModelReplacementAPI and MoreSuits installed!!).
-- 1 Outside Enemy.
-- 2 Helpful Creature.
+- 3 Custom Model replacement (This needs you to have ModelReplacementAPI and MoreSuits installed!!).
+- 1 Inside Enemy.
+- 2 Outside Enemy.
+- 4 (+3 Decor) Helpful Creatures.
+- 1 Shrimp Dispenser.
 - 2 Ambient Enemies.
 - 2 Weather with 7 different events total.
 - 2 Shop Items.
-- 7 Scrap.
-- 4 Custom Outside Objects.
+- 11 Scrap.
+- 6 Custom Outside Objects.
 - 6 Custom Inside Objects.
 
 ## Hazard Config
@@ -57,6 +59,21 @@ If you're interested in helping with the development of the mod, feel free to re
 </details>
 
 <details>
+  <summary><string>Inside Enemies</string></summary>
+
+### Duck Song
+
+![DS](https://i.postimg.cc/1zw6FNrm/image.png)
+![DB1](https://i.postimg.cc/kGpDznvY/image.png)
+![DB2](https://i.postimg.cc/YqThxC9h/image.png)
+![DB3](https://i.postimg.cc/LXhp7jQR/image.png)
+
+> The one and only duck from the hit DUCK song.
+> and he waddled away, waddle waddle waddle... till the very next day bam bam bam bum ba ra ra bam.
+
+</details>
+
+<details>
   <summary><strong>Outside Enemies</strong></summary>
 
 ### Redwood Titan
@@ -71,6 +88,15 @@ If you're interested in helping with the development of the mod, feel free to re
 
 <details>
   <summary><strong>Helpful Enemies</strong></summary>
+
+### Terminal Gal
+
+![TeG](https://i.postimg.cc/kGgd0zJ2/image.png)
+
+> Friendly gal that has a few special abilities!
+> Emergency teleport with a long cooldown.
+> Immediate recharging of any held item.
+> Unlock any door or safe!
 
 ### Shockwave Gal
 
@@ -126,6 +152,30 @@ If you're interested in helping with the development of the mod, feel free to re
 
 <details>
   <summary><strong>Scraps</strong></summary>
+
+### Guitar
+
+![GU](https://i.postimg.cc/5025L276/Guitar-Icon.png)
+
+> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+
+### Recorder
+
+![RE](https://i.postimg.cc/DwStd7Np/Recorder-Icon.png)
+
+> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+
+### Violin
+
+![VI](https://i.postimg.cc/wT7Wn0k7/Violin-Icon.png)
+
+> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+
+### Accordion
+
+![AC](https://i.postimg.cc/4d0ccbHS/Accordion-Icon.png)
+
+> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
 
 ### Snow Globe
 
@@ -271,10 +321,14 @@ If you're interested in helping with the development of the mod, feel free to re
 ### Item Crate
 
 ![ICW](https://i.postimg.cc/3Jz8Lfy1/image.png)
+![ICWM](https://i.postimg.cc/T2nKcWSF/image.png)
 ![ICM](https://i.postimg.cc/g0xR1608/image.png)
+![ICMM](https://i.postimg.cc/K8fLDgKx/image.png)
 
 > Wooden: Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
+> Wooden (Mimic): 20% Chance to replace a normal wooden crate with a mimic'd one...
 > Metal: Similar except you keep bashing it! gives you shop items.
+> Metal (Mimic): Will trap you and digest you slowly...
 
 ### Diverse Flora
 
@@ -316,7 +370,11 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Testing:**
 
-- A Glitched NPC, Rodrigo.
+- A Glitched NPC, Rodrigo, Lizzie, Slayer.
+
+## Credits - Zort
+
+The 4 Instrument models and music from the game "Zort".
 
 ## Credits - Misc Models
 

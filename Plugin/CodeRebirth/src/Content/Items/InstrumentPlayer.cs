@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -42,6 +43,20 @@ public class InstrumentPlayer : GrabbableObject
         {
             audioPlayer.Play();
         }
+    }
+
+    public bool AllInstrumentsArePlaying()
+    {
+        // Define which instruments must be playing
+        var requiredInstruments = new string[] { "Recorder", "Guitar", "Violin", "Accordion" };
+
+        // For each required instrument, check if there's a matching instrument in
+        // the `instrumentPlayers` list whose `audioPlayer.isPlaying` is true
+        bool allRequiredInstrumentsArePlaying = requiredInstruments
+            .All(required => instrumentPlayers.Any(
+                ip => ip.itemProperties.itemName == required && ip.audioPlayer.isPlaying));
+
+        return allRequiredInstrumentsArePlaying;
     }
 
     public override void OnNetworkDespawn()

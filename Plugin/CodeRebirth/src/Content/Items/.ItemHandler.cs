@@ -88,13 +88,13 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public ItemHandler()
     {
-        if (true)
+        if (Plugin.ModConfig.ConfigZortAddonsEnabled.Value)
         {
             Zort = new ZortAssets("zortassets");
-            RegisterScrapWithConfig("", Zort.GuitarItem, -1, -1);
-            RegisterScrapWithConfig("", Zort.ViolinItem, -1, -1);
-            RegisterScrapWithConfig("", Zort.RecorderItem, -1, -1);
-            RegisterScrapWithConfig("", Zort.AccordionItem, -1, -1);
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortGuitarSpawnWeights.Value, Zort.GuitarItem, -1, -1);
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortViolinSpawnWeights.Value, Zort.ViolinItem, -1, -1);
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortRecorderSpawnWeights.Value, Zort.RecorderItem, -1, -1);
+            RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortAccordionSpawnWeights.Value, Zort.AccordionItem, -1, -1);
         }
 
         if (Plugin.ModConfig.ConfigWalletEnabled.Value)

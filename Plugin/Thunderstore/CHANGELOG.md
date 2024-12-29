@@ -1,4 +1,15 @@
-# v0.10.2
+# v0.10.4
+
+- Readme update! woo
+- Forgot to include zort assets into the release build.
+- Added a punishment from the duck abuse.
+- Fixed bug with hoverboard weight not disappearing when dismounting with held.
+
+## v0.10.3
+
+- Added the 4 instruments from zort as scrap, harmonize together with your friends.
+
+## v0.10.2
 
 - Improved detection from terminal gal for scrap and items.
 - Added warning sounds to suspicious thing.

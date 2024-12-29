@@ -455,7 +455,14 @@ public class Hoverboard : GrabbableObject, IHittable
         switch (state)
         {
             case 0:
-                SwitchToNothing();
+                if (playerControlling != null)
+                {
+                    SwitchToNothing(playerControlling);
+                }
+                else
+                {
+                    Plugin.Logger.LogError($"Player controlling is null when switching to nothing...");
+                }
                 break;
             case 1:
                 if (playerControlling != null)
@@ -566,7 +573,7 @@ public class Hoverboard : GrabbableObject, IHittable
         hb.useGravity = false;
         hb.isKinematic = true;
     }
-    public void SwitchToNothing()
+    public void SwitchToNothing(PlayerControllerB playerCurrentlyControlling)
     {
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
         hoverboardMode = HoverboardMode.None;
@@ -581,6 +588,8 @@ public class Hoverboard : GrabbableObject, IHittable
                 this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
             }
         }
+        if (weightApplied) playerCurrentlyControlling.carryWeight = Mathf.Clamp(playerCurrentlyControlling.carryWeight - 0.24f, 1, 1000);
+        weightApplied = false;
         SetupCollidersIgnoringOrIncluding(false);
         turnedOn = false;
         _isHoverForwardHeld = false;

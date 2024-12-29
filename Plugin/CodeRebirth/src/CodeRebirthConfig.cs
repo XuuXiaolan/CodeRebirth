@@ -7,6 +7,7 @@ public class CodeRebirthConfig
 {
     #region Enables/Disables
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigZortAddonsEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigACUnitGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSuspiciousActivityEnabled { get; private set; }
@@ -81,6 +82,10 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigAirControlUnitSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigFunctionalMicrowaveCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigBearTrapInsideSpawnWeight { get; private set; }
+    public ConfigEntry<string> ConfigZortGuitarSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigZortViolinSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigZortRecorderSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigZortAccordionSpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
@@ -225,6 +230,26 @@ public class CodeRebirthConfig
                                             "Whether zeekerss' horrible interior fog is removed.");
         #endregion
         #region Zort Stuff
+        ConfigZortAddonsEnabled = configFile.Bind("Zort Options",
+                                            "Zort Addons | Enabled",
+                                            true,
+                                            "Whether Zort addons are enabled (from the game zort, try the game out it's amazing with 4 people).");
+        ConfigZortGuitarSpawnWeights = configFile.Bind("Zort Options",
+                                            "Zort Guitar | Spawn Weights",
+                                            "Vanilla:10,Custom:10",
+                                            "The spawn weights for the Zort guitar.");
+        ConfigZortViolinSpawnWeights = configFile.Bind("Zort Options",
+                                            "Zort Violin | Spawn Weights",
+                                            "Vanilla:10,Custom:10",
+                                            "The spawn weights for the Zort violin.");
+        ConfigZortRecorderSpawnWeights = configFile.Bind("Zort Options",
+                                            "Zort Recorder | Spawn Weights",
+                                            "Vanilla:10,Custom:10",
+                                            "The spawn weights for the Zort recorder.");
+        ConfigZortAccordionSpawnWeights = configFile.Bind("Zort Options",
+                                            "Zort Accordion | Spawn Weights",
+                                            "Vanilla:10,Custom:10",
+                                            "The spawn weights for the Zort accordion.");
         ConfigZortModelReplacementEnabled = configFile.Bind("Zort Options",
                                             "Zort Model Replacement | Enabled",
                                             true,

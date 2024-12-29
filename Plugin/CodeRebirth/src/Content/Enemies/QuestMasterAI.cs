@@ -275,6 +275,12 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         }
         if (Vector3.Distance(targetPlayer.transform.position, transform.position) < 5f && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder.Value])
         {
+            if (!questItemsList.Contains(targetPlayer.currentlyHeldObjectServer.gameObject))
+            {
+                SetDuckStartTalkingClientRpc("Too bad!!!", 0.05f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, true);
+                DoCompleteQuest(QuestCompletion.TimedOut);
+                return;
+            }
             TryCompleteQuest();
             return;
         }
@@ -315,6 +321,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
                     break;
                 }
         }
+        questItemsList.Clear();
         bool doOtherQuest = false;
         if (IsHost && UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes.Value <= questRepeats)
         {
