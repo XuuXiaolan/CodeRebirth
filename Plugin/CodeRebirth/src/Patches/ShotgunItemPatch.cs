@@ -1,6 +1,4 @@
-using System;
-using CodeRebirth.src.Content.Items;
-using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;

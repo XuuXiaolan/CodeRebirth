@@ -113,7 +113,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1064030460876776458}
   - {fileID: 4619480781770405425}
   - {fileID: 6294148503571356849}
   - {fileID: 4777089451299535934}
@@ -729,6 +728,21 @@ MonoBehaviour:
   renderersToHideIn:
   - {fileID: 9145391281392864541}
   smartAgentNavigator: {fileID: 8023955127254829699}
+  boomboxPlaying: 0
+  staringTimer: 0
+  targetEnemy: {fileID: 0}
+  ownerPlayer: {fileID: 0}
+  enemyTargetBlacklist: []
+  chargeCount: 10
+  maxChargeCount: 0
+  currentlyAttacking: 0
+  boomboxTimer: 0
+  physicsEnabled: 1
+  idleNeededTimer: 10
+  idleTimer: 0
+  isInHangarShipRoom: 1
+  inActive: 1
+  doneOnce: 0
   RobotFaceController: {fileID: 1288711711486736261}
   FaceSkinnedMeshRenderer: {fileID: 9145391281392864541}
   FaceRenderer: {fileID: 5216258533289101653}
@@ -1846,89 +1860,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.04, y: 0.1, z: 0.05}
   m_Center: {x: 0, y: 0.04, z: 0}
---- !u!1 &3787476245688806260
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1064030460876776458}
-  - component: {fileID: 6343342854934207881}
-  - component: {fileID: 8909925159886824435}
-  m_Layer: 0
-  m_Name: ChrismGalHat
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1064030460876776458
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3787476245688806260}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0.00000008429369, z: 0.0000000842937, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0.11, z: 0.1053}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 354448229173011191}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6343342854934207881
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3787476245688806260}
-  m_Mesh: {fileID: -2124705421725058983, guid: 05f4e541aaf0bc04f8964b29302783ff, type: 3}
---- !u!23 &8909925159886824435
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3787476245688806260}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 257
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: cdff8329c9a64704689c70f0e152224c, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &3999942519381431906
 GameObject:
   m_ObjectHideFlags: 0
@@ -2969,9 +2900,9 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: af903309500ad284d930f016d92e526e, type: 2}
-  - {fileID: 2100000, guid: 43d25e3cd967d9a4eb2fdf945d113119, type: 2}
-  - {fileID: 2100000, guid: a6154d4513d214141929980401123be2, type: 2}
+  - {fileID: 2100000, guid: b71d8dd7a705fb34c93701d5f6bd3e62, type: 2}
+  - {fileID: 2100000, guid: 4587e56e15c59084a8152702d9f2685e, type: 2}
+  - {fileID: 2100000, guid: 23e0adb99d5eae14494c726fc0ab2b9d, type: 2}
   - {fileID: 2100000, guid: 92d5444518c407f4a95c489e55aaa1f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

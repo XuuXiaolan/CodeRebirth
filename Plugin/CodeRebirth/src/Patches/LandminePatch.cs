@@ -1,4 +1,4 @@
-using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
@@ -16,6 +16,7 @@ public static class LandminePatch
         {
             float distanceFromMine = Vector3.Distance(voodooDoll.transform.position, explosionPosition);
             if (distanceFromMine > 4f) return;
+            Plugin.ExtendedLogging($"Hit voodoo doll with landmine: {voodooDoll}");
             if (!Physics.Linecast(explosionPosition, voodooDoll.transform.position + Vector3.up * 0.3f, out RaycastHit raycastHit, 1073742080, QueryTriggerInteraction.Ignore))
 			{
                 Vector3 vector = Vector3.Normalize(voodooDoll.transform.position - explosionPosition) * 80f / distanceFromMine;
