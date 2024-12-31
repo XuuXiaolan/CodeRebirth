@@ -16,6 +16,8 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     public NavMeshAgent agent = null!;
     public Animator animator = null!;
     public NetworkAnimator networkAnimator = null!;
+    public Renderer renderer = null!;
+    public Material[] materialVariants = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;
     [Header("Football-Like Kick Settings")]
     [Tooltip("Upward force added on kick.")]
@@ -69,6 +71,12 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     {
         hitTimer = Time.realtimeSinceStartup + 3;
         smartAgentNavigator.SetAllValues(puppeteerCreatedBy.isOutside);
+
+        System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + puppeteerList.Count);
+        if (random.Next(0, 10) == 0)
+        {
+            renderer.SetMaterial(materialVariants[random.Next(0, materialVariants.Length)]);
+        }
     }
 
     public void Init(PlayerControllerB player, Puppeteer puppeteer, int damageTransferMultiplier)
@@ -87,12 +95,17 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
         if (agent.enabled)
         {
+            animator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
             smartAgentNavigator.DoPathingToDestination(
                 playerControlled.transform.position,
                 playerControlled.isInsideFactory,
                 true,
                 playerControlled
             );
+        }
+        else
+        {
+            animator.SetFloat(RunSpeedFloat, 0);
         }
     }
 
@@ -166,8 +179,14 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         KickDollLocalClient(destination);
 
         // If triggered from OnTriggerEnter, don't do the server RPC
-        if (triggerCall) return;
-
+        if (triggerCall)
+        {
+            if (IsServer)
+            {
+                animator.SetBool(IsKickedAnimation, true);
+            }
+            return;
+        }
         // Otherwise, replicate the effect over the network
         int playerID = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController);
         KickDollServerRpc(destination, playerID);
@@ -249,6 +268,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     [ServerRpc(RequireOwnership = false)]
     private void KickDollServerRpc(Vector3 dest, int playerWhoKicked)
     {
+        animator.SetBool(IsKickedAnimation, true);
         // If this server RPC was triggered by another player, run the local effect
         if (playerWhoKicked != Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController))
         {
@@ -337,7 +357,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         {
             RoundManager.PlayRandomClip(dollAudio, ballHitFloorSFX, true, 1f, 10419, 1000);
         }
-
+        if (IsServer) animator.SetBool(IsKickedAnimation, false);
         hasHitGround = true;
         agent.enabled = true;
         smartAgentNavigator.enabled = true;

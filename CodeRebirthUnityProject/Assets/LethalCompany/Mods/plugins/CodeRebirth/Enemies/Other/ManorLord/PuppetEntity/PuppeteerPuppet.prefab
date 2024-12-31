@@ -563,6 +563,8 @@ GameObject:
   - component: {fileID: 6304825348187553974}
   - component: {fileID: 6431333914892556018}
   - component: {fileID: 1619516385171177948}
+  - component: {fileID: 4269174617254375689}
+  - component: {fileID: 3567973626803899908}
   m_Layer: 19
   m_Name: PuppeteerPuppet
   m_TagString: Untagged
@@ -613,6 +615,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 6304825348187553974}
+  animator: {fileID: 4269174617254375689}
+  networkAnimator: {fileID: 3567973626803899908}
+  renderer: {fileID: 2660046018500339588}
+  materialVariants:
+  - {fileID: 2100000, guid: 01e465efa8eabab40ac9aeff767bf91f, type: 2}
+  - {fileID: 2100000, guid: 714c6221806075f43a4b8cb136a68674, type: 2}
+  - {fileID: 2100000, guid: a4356f1ce205bb949b6a509fe6f31f02, type: 2}
+  - {fileID: 2100000, guid: f7976b49d7b9c054a96561ae75550a5d, type: 2}
   smartAgentNavigator: {fileID: 5272573643126423121}
   ballHitUpwardAmount: 0.5
   dollFallCurve:
@@ -865,6 +875,55 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!95 &4269174617254375689
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909732099304660934}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e648f665ca7d9504a9c17dc0568035b2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3567973626803899908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909732099304660934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: 326473335
+    TransitionDuration: 0.22205901
+    TriggerNameHash: -1687736830
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 765711723
+    DestinationState: 2081823275
+    TransitionDuration: 0.23823535
+    TriggerNameHash: -1687736830
+    TransitionIndex: 1
+  m_Animator: {fileID: 4269174617254375689}
 --- !u!1 &6570641537456848073
 GameObject:
   m_ObjectHideFlags: 0
