@@ -5,6 +5,7 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,6 +14,8 @@ namespace CodeRebirth.src.Content.Enemies;
 public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 {
     public NavMeshAgent agent = null!;
+    public Animator animator = null!;
+    public NetworkAnimator networkAnimator = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;
     [Header("Football-Like Kick Settings")]
     [Tooltip("Upward force added on kick.")]
@@ -42,6 +45,11 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private int damageTransferMultiplier = 20; // 20-30 as described
     [HideInInspector] public Puppeteer puppeteerCreatedBy = null!;
     [HideInInspector] public PlayerControllerB playerControlled = null!;
+
+    private static readonly int OnHitAnimation = Animator.StringToHash("onHit"); // Triger
+    private static readonly int IsKickedAnimation = Animator.StringToHash("isKicked"); // Bool
+    private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
     public static List<PuppeteersVoodoo> puppeteerList = new List<PuppeteersVoodoo>();
 
@@ -93,14 +101,21 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         if (playerControlled != null)
         {
             int finalDamage = Mathf.RoundToInt(damage * damageTransferMultiplier);
+            DoHitAnimationServerRpc();
             playerControlled.DamagePlayer(finalDamage, true, true, causeOfDeath);
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void DoHitAnimationServerRpc()
+    {
+        networkAnimator.SetTrigger(OnHitAnimation);
+    }
+
     public IEnumerator BreakDoll()
     {
-        // todo: play death animation
-        yield return new WaitForSeconds(2f);
+        animator.SetBool(IsDeadAnimation, true);
+        yield return new WaitForSeconds(4f);
         CodeRebirthUtils.Instance.SpawnScrapServerRpc("PuppetScrap", transform.position);
         NetworkObject.Despawn();
     }

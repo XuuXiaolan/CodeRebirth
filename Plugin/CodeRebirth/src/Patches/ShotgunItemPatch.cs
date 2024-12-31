@@ -12,11 +12,12 @@ public static class ShotgunItemPatch
     private static void ShotgunItem_ShootGun(On.ShotgunItem.orig_ShootGun orig, ShotgunItem self, Vector3 shotgunPosition, Vector3 shotgunForward)
     {
         orig(self, shotgunPosition, shotgunForward);
-        foreach (var collider in self.enemyColliders)
+        foreach (RaycastHit raycastHit in self.enemyColliders)
         {
-            if (!Physics.Linecast(shotgunPosition, collider.point, out RaycastHit raycastHit, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore) && collider.transform.TryGetComponent(out PuppeteersVoodoo voodooDoll))
+            if (raycastHit.transform == null) continue;
+            if (raycastHit.transform.TryGetComponent(out PuppeteersVoodoo voodooDoll) && !Physics.Linecast(shotgunPosition, raycastHit.point, out _, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
-                float distanceFromShotgun = Vector3.Distance(shotgunPosition, collider.point);
+                float distanceFromShotgun = Vector3.Distance(shotgunPosition, raycastHit.point);
                 int damageAmount = 2;
                 if (distanceFromShotgun < 3.7f)
                 {
@@ -28,6 +29,7 @@ public static class ShotgunItemPatch
                 }
                 voodooDoll.Hit(damageAmount, shotgunForward, self.playerHeldBy, true, -1);
             }
+
         }
     }
 }

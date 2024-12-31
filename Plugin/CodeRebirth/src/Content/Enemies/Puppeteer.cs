@@ -57,6 +57,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     private bool enteredDefensiveModeOnce = false;
     private PlayerControllerB? targetPlayerToNeedle = null;
     private static int instanceCount = 0;
+    private PlayerControllerB? priorityPlayer = null;
 
     private Dictionary<PlayerControllerB, GameObject> playerPuppetMap = new();
     private static readonly int DoStabAnimation = Animator.StringToHash("doStab"); // Trigger
@@ -135,7 +136,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     private void DoIdleUpdate()
     {
         PlayerControllerB? nearestPlayer = GetNearestPlayerWithinRange(detectionRange);
-        if (nearestPlayer != null)
+        if (nearestPlayer != null || priorityPlayer != null)
         {
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)PuppeteerState.Sneaking);
@@ -146,8 +147,13 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     private void DoSneakingUpdate()
     {
         PlayerControllerB? nearestPlayer = GetNearestPlayerWithinRange(detectionRange+10);
+        if (priorityPlayer != null)
+        {
+            nearestPlayer = priorityPlayer;
+        }
         if (nearestPlayer == null)
         {
+            smartAgentNavigator.StartSearchRoutine(this.transform.position, 40);
             SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
             return;
         }
@@ -168,6 +174,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         {
             Plugin.ExtendedLogging("Target player is dead or not controlled, stopping attack.");
             creatureAnimator.SetBool(InCombatAnimation, false);
+            smartAgentNavigator.StartSearchRoutine(this.transform.position, 40);
             SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
             return;
         }
@@ -179,13 +186,13 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         float distance = Vector3.Distance(targetPlayerPuppet.transform.position, transform.position);
         if (distance <= 2f)
         {
-            agent.speed = 0f;
+            agent.speed = chaseSpeed/4;
             networkAnimator.SetTrigger(DoSwipeAnimation);
             isAttacking = true;
         }
         else if (distance <= 5f)
         {
-            agent.speed = 0f;
+            agent.speed = chaseSpeed/4;
             networkAnimator.SetTrigger(DoStabAnimation);
             isAttacking = true;
         }
@@ -282,20 +289,21 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
             }
             else
             {
-                // Do the grab animation and puppet em.
-                agent.speed = 0f; // todo: fix the bug here?
-                if (IsServer) networkAnimator.SetTrigger(DoGrabPlayerAnimation);
-                targetPlayerToNeedle = playerWhoHit;
-                targetPlayerToNeedle.disableMoveInput = true;
-                targetPlayerToNeedle.disableLookInput = true;
-                targetPlayerToNeedle.transform.position = playerStabPosition.position;
-                targetPlayerToNeedle.transform.rotation = playerStabPosition.rotation;
+                priorityPlayer = playerWhoHit;
                 return;
             }
         }
         else
         {
-            targetPlayer = playerWhoHit;
+            if (playerPuppetMap.ContainsKey(playerWhoHit))
+            {
+                targetPlayer = playerWhoHit;
+            }
+            else
+            {
+                priorityPlayer = playerWhoHit;
+                return;
+            }
         }
         enemyHP -= force;
         if (IsServer) networkAnimator.SetTrigger(DoHitAnimation);
@@ -346,6 +354,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
 
     public override void KillEnemy(bool destroy = false)
     {
+        if (enemyHP > 0) return;
         base.KillEnemy(destroy);
         // play death animation.
         creatureVoice.PlayOneShot(puppeteerDeathSound);
@@ -421,6 +430,10 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         }
         targetPlayerToNeedle.disableMoveInput = false;
         targetPlayerToNeedle.disableLookInput = false;
+        if (targetPlayerToNeedle == priorityPlayer)
+        {
+            priorityPlayer = null;
+        }
         targetPlayerToNeedle = null;
         agent.speed = sneakSpeed;
     }
