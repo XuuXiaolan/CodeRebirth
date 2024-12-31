@@ -111,6 +111,22 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public Item ChildEeveeItem { get; private set; } = null!;
     }
 
+    public class ManorLordAssets(string bundleName) : AssetBundleLoader<ManorLordAssets>(bundleName)
+    {
+        [LoadFromBundle("ManorLordObj.asset")]
+        public EnemyType ManorLordEnemyType { get; private set; } = null!;
+
+        [LoadFromBundle("ManorLordTN.asset")]
+        public TerminalNode ManorLordTerminalNode { get; private set; } = null!;
+
+        [LoadFromBundle("ManorLordTK.asset")]
+        public TerminalKeyword ManorLordTerminalKeyword { get; private set; } = null!;
+
+        [LoadFromBundle("PuppeteerPuppet.prefab")]
+        public GameObject PuppeteerPuppetPrefab { get; private set; } = null!;
+    }
+
+    public ManorLordAssets ManorLord { get; private set; } = null!;
     public DuckSongAssets DuckSong { get; private set; } = null!;
     public PokemonEnemyAssets PokemonEnemies { get; private set; } = null!;
     public ButterflyAssets Butterfly { get; private set; } = null!;
@@ -156,6 +172,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
         } // configurable quest time, max amount of ducks to spawn.
 
+        if (true)
+        {
+            ManorLord = new ManorLordAssets("manorlordassets");
+            RegisterEnemyWithConfig("", ManorLord.ManorLordEnemyType, ManorLord.ManorLordTerminalNode, ManorLord.ManorLordTerminalKeyword, 2, 1);
+            // Plugin.samplePrefabs.Add(ManorLord.pupp.itemName, ManorLord.ManorLordItem);
+        }
         if (false)
         {
             PokemonEnemies = new PokemonEnemyAssets("eeveelutionassets");

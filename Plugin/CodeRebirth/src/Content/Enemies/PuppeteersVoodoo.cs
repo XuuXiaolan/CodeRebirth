@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -32,18 +32,14 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     public AudioClip[] ballHitFloorSFX;
     public AudioSource dollAudio;
 
-    [Tooltip("Optional collider transform if you want to scale or manipulate differently.")]
-    public Transform dollCollider;
-
     private Ray dollRay;
     private RaycastHit dollHit;
     private float hitTimer;
     private float fallTime;
     private bool hasHitGround;
-    private int previousPlayerHit;
     private Vector3 startFallingPosition;
     private Vector3 targetFloorPosition;
-    private int damageTransferMultiplier = 20; // 20-30 as described, can be randomized or set
+    private int damageTransferMultiplier = 20; // 20-30 as described
     [HideInInspector] public Puppeteer puppeteerCreatedBy = null!;
     [HideInInspector] public PlayerControllerB playerControlled = null!;
 
@@ -63,6 +59,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
     public void Start()
     {
+        hitTimer = Time.realtimeSinceStartup + 3;
         smartAgentNavigator.SetAllValues(puppeteerCreatedBy.isOutside);
     }
 
@@ -75,10 +72,19 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
     public void Update()
     {
-        // If you want constant "arc" or "fall" behavior, run it here:
         if (!hasHitGround && fallTime < 1f)
         {
             FallWithCurve();
+        }
+
+        if (agent.enabled)
+        {
+            smartAgentNavigator.DoPathingToDestination(
+                playerControlled.transform.position,
+                playerControlled.isInsideFactory,
+                true,
+                playerControlled
+            );
         }
     }
 
@@ -97,7 +103,6 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         yield return new WaitForSeconds(2f);
         CodeRebirthUtils.Instance.SpawnScrapServerRpc("PuppetScrap", transform.position);
         NetworkObject.Despawn();
-        // e.g. some unique break effects or despawn
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -108,83 +113,134 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         // If a player is the cause, also "kick" this doll
         if (playerWhoHit != null)
         {
-            // The "hitDirection" can be used to position from where the doll is "struck"
             Vector3 fromPosition = playerWhoHit.transform.position + Vector3.up;
-
-            // Initiate our new "kick" effect
-            BeginKickDoll(fromPosition, (int)playerWhoHit.playerClientId);
+            BeginKickDoll(fromPosition, triggerCall: false);
         }
         return true;
     }
 
-    private void BeginKickDoll(Vector3 hitFromPosition, int playerId)
+    public void OnTriggerEnter(Collider other)
     {
-        // Avoid spamming the same user in quick succession
-        if (previousPlayerHit == playerId && Time.realtimeSinceStartup - hitTimer < 0.35f)
+        if (Time.realtimeSinceStartup - hitTimer < 0.5f)
             return;
 
-        hitTimer = Time.realtimeSinceStartup;
-        previousPlayerHit = playerId;
+        // If the object is tagged PlayerBody or Enemy
+        if (other.CompareTag("PlayerBody") || other.CompareTag("Enemy"))
+        {
+            // Check line-of-sight
+            if (Physics.Linecast(
+                    other.gameObject.transform.position + Vector3.up,
+                    transform.position + Vector3.up * 0.5f,
+                    StartOfRound.Instance.collidersAndRoomMaskAndDefault,
+                    QueryTriggerInteraction.Ignore))
+            {
+                return;
+            }
 
-        // 1. Determine a “destination” for the arc or bounce
+            BeginKickDoll(other.transform.position + Vector3.up, triggerCall: true);
+        }
+    }
+
+    private void BeginKickDoll(Vector3 hitFromPosition, bool triggerCall)
+    {
+        hitTimer = Time.realtimeSinceStartup;
+
         Vector3 destination = GetKickDestination(hitFromPosition);
         if (destination == Vector3.zero) return;
 
-        // 2. Execute local client effect
         KickDollLocalClient(destination);
 
-        // 3. Call the server RPC so the server can replicate to other clients
-        KickDollServerRpc(destination, playerId);
+        // If triggered from OnTriggerEnter, don't do the server RPC
+        if (triggerCall) return;
+
+        // Otherwise, replicate the effect over the network
+        int playerID = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController);
+        KickDollServerRpc(destination, playerID);
     }
 
     private Vector3 GetKickDestination(Vector3 hitFromPosition)
     {
+        // 1) Simple forward ray
         Vector3 direction = (transform.position - hitFromPosition).normalized;
-        direction.y = 0.2f; // give it some upward angle
+        direction.y = 0.2f; // small upward tilt
         float distanceToTravel = 10f;
 
-        // Setup a ray
         dollRay = new Ray(transform.position + Vector3.up * 0.22f, direction);
+
+        // Attempt a forward ray
         if (Physics.Raycast(dollRay, out dollHit, distanceToTravel, dollBallMask, QueryTriggerInteraction.Ignore))
         {
-            // If we hit something, put the final position slightly before impact
+            // If something is hit, place just before collision
             return dollRay.GetPoint(Mathf.Max(0.1f, dollHit.distance - 0.05f));
         }
         else
         {
-            // No collisions, just pick a point at "distanceToTravel"
+            // Otherwise, go the full distance
             return dollRay.GetPoint(distanceToTravel);
         }
     }
 
     private void KickDollLocalClient(Vector3 destinationPos)
     {
+        // Disable agent/AI to allow “physics” style arc
         smartAgentNavigator.enabled = false;
         agent.enabled = false;
-        // Example SFX
+
+        // SFX
         if (hitBallSFX != null && hitBallSFX.Length > 0 && dollAudio != null)
         {
             RoundManager.PlayRandomClip(dollAudio, hitBallSFX, true, 1f, 10419, 1000);
         }
 
+        // STEP 1) Re-parent to a common props container
+        // (If you had logic for inside/outside, you can adapt below.)
+        transform.SetParent(StartOfRound.Instance.propsContainer, true);
+
         // Reset states for the arc
         fallTime = 0f;
         hasHitGround = false;
 
-        startFallingPosition = transform.position + Vector3.up * 0.07f;
-        targetFloorPosition = destinationPos;
+        // STEP 4) Snap to floor in world space before we switch to local:
+        // (So the final arc won’t float in midair.)
+        Vector3 finalWorldDest = SnapToFloor(destinationPos);
+
+        // STEP 2) Convert everything to local coordinates
+        startFallingPosition = transform.localPosition + Vector3.up * 0.07f;
+        targetFloorPosition   = transform.parent.InverseTransformPoint(finalWorldDest);
+
+        Plugin.ExtendedLogging($"KickDollLocalClient (LOCAL): {startFallingPosition} -> {targetFloorPosition}");
+    }
+
+    /// <summary>
+    /// Rays downward from the desired "forward arc" position to ensure we land on the floor.
+    /// </summary>
+    private Vector3 SnapToFloor(Vector3 desiredWorldPos)
+    {
+        // We cast from slightly above, downward
+        Vector3 castFrom = desiredWorldPos + Vector3.up;
+        Ray downRay = new Ray(castFrom, Vector3.down);
+
+        // Try up to 65f downward (adjust as needed)
+        if (Physics.Raycast(downRay, out RaycastHit downHit, 65f, dollBallMask, QueryTriggerInteraction.Ignore))
+        {
+            // Return the floor point (plus a tiny offset if you like)
+            return downHit.point; 
+        }
+
+        // If no floor found, just return the original
+        return desiredWorldPos;
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void KickDollServerRpc(Vector3 dest, int playerWhoKicked)
     {
-        if (playerWhoKicked != (int)GameNetworkManager.Instance.localPlayerController.playerClientId)
+        // If this server RPC was triggered by another player, run the local effect
+        if (playerWhoKicked != Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController))
         {
             KickDollLocalClient(dest);
-            previousPlayerHit = playerWhoKicked;
         }
 
-        // Now replicate to all clients
+        // Then replicate to all other clients
         KickDollClientRpc(dest, playerWhoKicked);
     }
 
@@ -192,53 +248,68 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private void KickDollClientRpc(Vector3 dest, int playerWhoKicked)
     {
         if (IsServer) return;
-        if (playerWhoKicked == (int)GameNetworkManager.Instance.localPlayerController.playerClientId) return;
+        // If it’s us who kicked, skip
+        if (playerWhoKicked == Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController))
+            return;
 
-        // Otherwise, replicate the local effect
-        previousPlayerHit = playerWhoKicked;
+        // Otherwise replicate the local effect
         KickDollLocalClient(dest);
     }
 
     public void FallWithCurve()
     {
+        // Distance in local space
         float distance = (startFallingPosition - targetFloorPosition).magnitude;
 
-        // Possibly rotate the doll in flight
-        transform.rotation = Quaternion.Lerp(
-            transform.rotation,
-            Quaternion.Euler(0, transform.eulerAngles.y, 0), 
-            14f * Time.deltaTime / distance);
+        // Rotate in local space around the Y-axis, if you prefer
+        // or you could just skip rotation in local space. 
+        // 
+        // If you want "flat" rotation, might do something like:
+        Vector3 euler = transform.localEulerAngles;
+        euler.x = 0f;
+        euler.z = 0f;
+        transform.localEulerAngles = Vector3.Lerp(
+            transform.localEulerAngles,
+            euler,
+            14f * Time.deltaTime / Mathf.Max(distance, 0.01f)
+        );
 
-        // Horizontal movement
+        // STEP 2) Use local position arcs
         Vector3 newPos = Vector3.Lerp(
-            startFallingPosition, 
-            targetFloorPosition, 
-            dollFallCurve.Evaluate(fallTime));
+            startFallingPosition,
+            targetFloorPosition,
+            dollFallCurve.Evaluate(fallTime)
+        );
 
-        // Vertical movement: if short distance => no bounce
+        // Handle the vertical portion
         if (distance < 3f)
         {
-            newPos.y = Mathf.Lerp(
+            // No bounce
+            float yLerp = Mathf.Lerp(
                 startFallingPosition.y,
                 targetFloorPosition.y,
                 dollVerticalFallCurveNoBounce.Evaluate(fallTime)
             );
+            newPos.y = yLerp;
         }
         else
         {
-            newPos.y = Mathf.Lerp(
+            // Standard bounce
+            float yLerp = Mathf.Lerp(
                 startFallingPosition.y,
                 targetFloorPosition.y,
                 dollVerticalFallCurve.Evaluate(fallTime)
             );
-            // Optional vertical offset for a bounce
-            newPos.y += dollVerticalOffset.Evaluate(fallTime) * ballHitUpwardAmount;
+            newPos.y = yLerp + dollVerticalOffset.Evaluate(fallTime) * ballHitUpwardAmount;
         }
 
-        transform.position = newPos;
-        fallTime += Mathf.Abs(Time.deltaTime * 12f / distance);
+        // Actually move in local space
+        transform.localPosition = newPos;
 
-        // If we have basically completed the arc, play "hit ground" SFX
+        // Progress along the curve
+        fallTime += Mathf.Abs(Time.deltaTime * 12f / Mathf.Max(distance, 0.01f));
+
+        // Once the curve is done, trigger “land” logic
         if (fallTime >= 1f && !hasHitGround)
         {
             PlayDropSFX();
@@ -251,6 +322,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         {
             RoundManager.PlayRandomClip(dollAudio, ballHitFloorSFX, true, 1f, 10419, 1000);
         }
+
         hasHitGround = true;
         agent.enabled = true;
         smartAgentNavigator.enabled = true;

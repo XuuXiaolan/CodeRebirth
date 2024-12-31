@@ -42,7 +42,6 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     public float chaseSpeed = 3.0f;
     public float detectionRange = 20f;
     public int puppetDamageToPlayerMultiplier = 20;
-    public GameObject puppetPrefab = null!;   // Assign in the inspector
     public Transform needleAttachPoint = null!; // Where puppet spawns or is pinned
 
     [Header("Audio & Animation")]
@@ -56,7 +55,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
 
     [HideInInspector] public bool isAttacking = false;
     private bool enteredDefensiveModeOnce = false;
-    private PlayerControllerB? currentlyGraspedPlayer = null;
+    private PlayerControllerB? targetPlayerToNeedle = null;
     private static int instanceCount = 0;
 
     private Dictionary<PlayerControllerB, GameObject> playerPuppetMap = new();
@@ -72,6 +71,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     private enum PuppeteerState
     {
         Spawn,
+        Idle,
         Sneaking,
         Attacking,
         DefensiveMask,
@@ -91,17 +91,31 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     {
         base.Update();
         if (isEnemyDead) return;
+        if (targetPlayer == null) return;
+        GameObject? targetPlayerPuppet = playerPuppetMap[targetPlayer];
+        if (targetPlayerPuppet == null) return;
+        Vector3 direction = (targetPlayerPuppet.transform.position - transform.position).normalized;
+        direction.y = 0f; // Flatten the direction so we only rotate on the Y-axis
+        if (direction.sqrMagnitude > 0.001f)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            // Tweak rotation speed as desired:
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+        }
     }
 
     public override void DoAIInterval()
     {
         base.DoAIInterval();
         if (isEnemyDead) return;
-
+        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude);
         switch (currentBehaviourStateIndex)
         {
             case (int)PuppeteerState.Spawn:
                 // Maybe play a spawn animation, or a short delay before we start sneaking
+                break;
+            case (int)PuppeteerState.Idle:
+                DoIdleUpdate();
                 break;
             case (int)PuppeteerState.Sneaking:
                 DoSneakingUpdate();
@@ -118,42 +132,60 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         }
     }
 
-    private void DoSneakingUpdate()
+    private void DoIdleUpdate()
     {
         PlayerControllerB? nearestPlayer = GetNearestPlayerWithinRange(detectionRange);
-        if (nearestPlayer == null) return;
-        // Move toward that player
-        smartAgentNavigator.DoPathingToDestination(nearestPlayer.transform.position, nearestPlayer.isInsideFactory, true, nearestPlayer);
-        if (Vector3.Distance(nearestPlayer.transform.position, this.transform.position) <= 5)
+        if (nearestPlayer != null)
         {
-            // "Stab" (no damage, but spawn puppet)
-            creatureSFX.PlayOneShot(stabSound);
+            smartAgentNavigator.StopSearchRoutine();
+            SwitchToBehaviourServerRpc((int)PuppeteerState.Sneaking);
+            return;
+        }
+    }
 
-            CreatePlayerPuppet(nearestPlayer);
-            TeleportAway();
+    private void DoSneakingUpdate()
+    {
+        PlayerControllerB? nearestPlayer = GetNearestPlayerWithinRange(detectionRange+10);
+        if (nearestPlayer == null)
+        {
+            SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
+            return;
+        }
+        smartAgentNavigator.DoPathingToDestination(nearestPlayer.transform.position, nearestPlayer.isInsideFactory, true, nearestPlayer);
+        if (agent.speed != 0 && Vector3.Distance(nearestPlayer.transform.position, this.transform.position) <= 3)
+        {
+            SetTargetNeedlePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, nearestPlayer));
+            creatureSFX.PlayOneShot(stabSound); // todo: rpc this
+            agent.speed = 0f;
+            Plugin.ExtendedLogging("Grabbing player!");
+            networkAnimator.SetTrigger(DoGrabPlayerAnimation);
         }
     }
 
     private void DoAttackingUpdate()
     {
-        if (isAttacking) return;
         if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.isPlayerControlled)
         {
             Plugin.ExtendedLogging("Target player is dead or not controlled, stopping attack.");
-            SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Sneaking);
+            creatureAnimator.SetBool(InCombatAnimation, false);
+            SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
             return;
         }
-        // Once we get within a certain distance of the player, "stab" them
         GameObject? targetPlayerPuppet = playerPuppetMap[targetPlayer];
         if (targetPlayerPuppet == null) return;
+        if (isAttacking) return;
         smartAgentNavigator.DoPathingToDestination(targetPlayerPuppet.transform.position, true, false, null);
-        if (Vector3.Distance(targetPlayerPuppet.transform.position, this.transform.position) <= 2)
+
+        float distance = Vector3.Distance(targetPlayerPuppet.transform.position, transform.position);
+        if (distance <= 2f)
         {
+            agent.speed = 0f;
             networkAnimator.SetTrigger(DoSwipeAnimation);
             isAttacking = true;
         }
-        else if (Vector3.Distance(targetPlayerPuppet.transform.position, this.transform.position) <= 5)
+        else if (distance <= 5f)
         {
+            agent.speed = 0f;
             networkAnimator.SetTrigger(DoStabAnimation);
             isAttacking = true;
         }
@@ -164,7 +196,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         if (!playerPuppetMap.ContainsKey(player))
         {
             if (!IsServer) return;
-            GameObject puppetObj = Instantiate(puppetPrefab, needleAttachPoint.position, Quaternion.identity);
+            GameObject puppetObj = Instantiate(EnemyHandler.Instance.ManorLord.PuppeteerPuppetPrefab, needleAttachPoint.position, Quaternion.identity);
             puppetObj.GetComponent<NetworkObject>()?.Spawn(true);
             CreatePlayerPuppetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), new NetworkObjectReference(puppetObj));
         }
@@ -198,13 +230,12 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     {
         creatureSFX.PlayOneShot(teleportSound);
 
-        // Simple approach: get a random far point in facility
+        if (!IsServer) return;
         Vector3 randomFarPoint = GetRandomFarPointInFacility(new List<Vector3> { transform.position });
 
         // Teleport
         agent.Warp(randomFarPoint);
-
-        SwitchToBehaviourServerRpc((int)PuppeteerState.Sneaking);
+        SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
     }
 
     public Vector3 GetRandomFarPointInFacility(List<Vector3> pointsToStayAwayFrom)
@@ -244,18 +275,21 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
             {
                 targetPlayer = playerWhoHit;
                 agent.speed = chaseSpeed;
+                if (IsServer) creatureAnimator.SetBool(InCombatAnimation, true);
+                smartAgentNavigator.StopSearchRoutine();
                 SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Attacking);
                 // enters combat mode.
             }
             else
             {
                 // Do the grab animation and puppet em.
-                networkAnimator.SetTrigger(DoGrabPlayerAnimation);
-                currentlyGraspedPlayer = playerWhoHit;
-                currentlyGraspedPlayer.disableMoveInput = true;
-                currentlyGraspedPlayer.disableLookInput = true;
-                currentlyGraspedPlayer.transform.position = playerStabPosition.position;
-                currentlyGraspedPlayer.transform.rotation = playerStabPosition.rotation;
+                agent.speed = 0f; // todo: fix the bug here?
+                if (IsServer) networkAnimator.SetTrigger(DoGrabPlayerAnimation);
+                targetPlayerToNeedle = playerWhoHit;
+                targetPlayerToNeedle.disableMoveInput = true;
+                targetPlayerToNeedle.disableLookInput = true;
+                targetPlayerToNeedle.transform.position = playerStabPosition.position;
+                targetPlayerToNeedle.transform.rotation = playerStabPosition.rotation;
                 return;
             }
         }
@@ -264,6 +298,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
             targetPlayer = playerWhoHit;
         }
         enemyHP -= force;
+        if (IsServer) networkAnimator.SetTrigger(DoHitAnimation);
         if (enemyHP <= 0 && !isEnemyDead)
         {
             if (!enteredDefensiveModeOnce)
@@ -273,7 +308,9 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
                 creatureVoice.PlayOneShot(maskDefensiveSound);
                 agent.speed = 0f;
                 SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.DefensiveMask);
-                StartCoroutine(SwitchToStateAfterDelay(PuppeteerState.Attacking, 2f));
+                if (IsServer) creatureAnimator.SetBool(MaskPhaseAnimation, true);
+                agent.speed = 0f;
+                StartCoroutine(SwitchToStateAfterDelay(PuppeteerState.Attacking, 5f));
             }
             // Check if it's entered defensive mode before, if not, enter it and increase health and make em immune.
             if (IsOwner)
@@ -284,9 +321,25 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         }
     }
 
+    [ClientRpc]
+    public void SetTargetNeedlePlayerClientRpc(int playerIndex)
+    {
+        targetPlayerToNeedle = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        targetPlayerToNeedle.disableMoveInput = true;
+        targetPlayerToNeedle.disableLookInput = true;
+        targetPlayerToNeedle.transform.position = playerStabPosition.position;
+        targetPlayerToNeedle.transform.rotation = playerStabPosition.rotation;
+    }
+
     private IEnumerator SwitchToStateAfterDelay(PuppeteerState state, float delay)
     {
         yield return new WaitForSeconds(delay);
+        if (state == PuppeteerState.Attacking) smartAgentNavigator.StopSearchRoutine();
+        if (IsServer)
+        {
+            creatureAnimator.SetBool(InCombatAnimation, state == PuppeteerState.Attacking);
+            creatureAnimator.SetBool(MaskPhaseAnimation, false);
+        }
         agent.speed = chaseSpeed;
         SwitchToBehaviourStateOnLocalClient((int)state);
     }
@@ -298,7 +351,10 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         creatureVoice.PlayOneShot(puppeteerDeathSound);
 
         // Make all puppets scrap
+        agent.enabled = false;
+        smartAgentNavigator.enabled = false;
         if (!IsServer) return;
+        creatureAnimator.SetBool(DeadAnimation, true);
         foreach (var kvp in playerPuppetMap)
         {
             // We can simply destroy them or spawn scrap items
@@ -340,35 +396,51 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     #region Animation Events
     public void SpawnAnimationTransitionAnimEvent()
     {
+        targetPlayer = null;
         agent.speed = sneakSpeed;
-        SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Sneaking);
+        if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 40);
+        SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Idle);
     }
 
     public void PuppetPlayerAnimEvent()
     {
-        if (currentlyGraspedPlayer == null)
+        if (targetPlayerToNeedle == null)
         {
             Plugin.Logger.LogError("No player to grab???");
             return;
         }
-        CreatePlayerPuppet(currentlyGraspedPlayer);
+        CreatePlayerPuppet(targetPlayerToNeedle);
     }
 
     public void ReleasePlayerAnimEvent()
     {
-        if (currentlyGraspedPlayer == null)
+        if (targetPlayerToNeedle == null)
         {
             Plugin.Logger.LogError("No player to release???");
             return;
         }
-        currentlyGraspedPlayer.disableMoveInput = false;
-        currentlyGraspedPlayer.disableLookInput = false;
-        currentlyGraspedPlayer = null;
+        targetPlayerToNeedle.disableMoveInput = false;
+        targetPlayerToNeedle.disableLookInput = false;
+        targetPlayerToNeedle = null;
+        agent.speed = sneakSpeed;
     }
 
     public void TeleportEnemyAnimEvent()
     {
         TeleportAway();
+    }
+
+    public void EndAttackAnimEvent()
+    {
+        if (currentBehaviourStateIndex == (int)PuppeteerState.Attacking)
+        {
+            agent.speed = chaseSpeed;
+        }
+        else
+        {
+            agent.speed = sneakSpeed;
+        }
+        isAttacking = false;
     }
     #endregion
 }
