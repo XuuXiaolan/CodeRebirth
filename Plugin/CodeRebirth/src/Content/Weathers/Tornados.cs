@@ -249,7 +249,7 @@ public class Tornados : EnemyAI
             lightningBoltTimer = false;
             StartCoroutine(LightningBoltTimer());
             Vector3 strikePosition = GetRandomTargetPosition(tornadoRandom, outsideNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25);
-            CRUtilities.CreateExplosion(strikePosition, true, 20, 0, 4, 1, CauseOfDeath.Burning, null, null);
+            CRUtilities.CreateExplosion(strikePosition, true, 20, 0, 4, 1, null, null);
             LightningStrikeScript.SpawnLightningBolt(strikePosition);
         }
 

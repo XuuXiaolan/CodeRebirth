@@ -554,7 +554,7 @@ public class SeamineGalAI : GalAI
     private void CheckIfEnemyIsHitAnimEvent()
     {
         GalSFX.PlayOneShot(explosionSound);
-        CRUtilities.CreateExplosion(beltInteractTrigger.gameObject.transform.position, true, 10, 0, 6, 1, CauseOfDeath.Blast, null, null);
+        CRUtilities.CreateExplosion(beltInteractTrigger.gameObject.transform.position, true, 10, 0, 6, 1, null, null);
         List<EnemyAI> enemiesToKill = new();
         Collider[] colliders = Physics.OverlapSphere(transform.position, 15, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
 

@@ -116,7 +116,7 @@ public class FunctionalMicrowave : NetworkBehaviour
                 mainCollider.enabled = true;
                 microwaveAudioSource.PlayOneShot(microwaveOpenSound);
                 animator.SetBool("isActivated", isOpen);
-                if (scrapSpawned != null) CRUtilities.CreateExplosion(scrapSpawned.transform.position, true, 20, 0, 3, 2, CauseOfDeath.Blast, null, null);
+                if (scrapSpawned != null) CRUtilities.CreateExplosion(scrapSpawned.transform.position, true, 20, 0, 3, 2, null, null);
             }
         }
         else

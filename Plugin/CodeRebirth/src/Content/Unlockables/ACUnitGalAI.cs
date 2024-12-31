@@ -48,7 +48,7 @@ public class ACUnitGalAI : NetworkBehaviour
         networkAnimator.SetTrigger(ShootingAnimation);
         Physics.Raycast(gunTransform.position, gunTransform.forward, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
         Vector3 endPosition = hit.point;
-        CRUtilities.CreateExplosion(endPosition, true, 50, 0, 1, 5, CauseOfDeath.Blast, affectedPlayer, null);
+        CRUtilities.CreateExplosion(endPosition, true, 50, 0, 1, 5, affectedPlayer, null);
         yield break;
     }
 

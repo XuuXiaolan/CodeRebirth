@@ -229,7 +229,7 @@ public class ItemCrate : CRHittable
 		{
 			if (crateRandom.Next(1, 101) <= 10)
 			{
-				CRUtilities.CreateExplosion(this.transform.position, true, 30, 0, 6, 1, CauseOfDeath.Blast, null, null);
+				CRUtilities.CreateExplosion(this.transform.position, true, 30, 0, 6, 1, null, null);
 				animator.SetTrigger(doExplodeOpenAnimation);
 				if (crateType == CrateType.WoodenMimic)
 				{

@@ -144,7 +144,7 @@ public class Meteors : NetworkBehaviour {
 
         FireTrail?.SetActive(false);
         
-        CRUtilities.CreateExplosion(transform.position, true, 100, 0, 15, 4, CauseOfDeath.Blast, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab);
+        CRUtilities.CreateExplosion(transform.position, true, 100, 0, 15, 4, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab);
         _onMeteorLand.Invoke();
         
         yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit. <-- Actually i think the meteor just looks cool staying on the ground for an extra 10 seconds.

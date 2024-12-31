@@ -107,8 +107,7 @@ public class CRUtilities
         enemy.SyncPositionToClients();
     }
 
-    // todo: this is cooked, redo it.
-    public static void CreateExplosion(Vector3 explosionPosition = default, bool spawnExplosionEffect = false, int damage = 20, float minDamageRange = 0f, float maxDamageRange = 1f, int enemyHitForce = 6, CauseOfDeath causeOfDeath = CauseOfDeath.Blast, PlayerControllerB? attacker = null, GameObject? overridePrefab = null)
+    public static void CreateExplosion(Vector3 explosionPosition, bool spawnExplosionEffect, int damage, float minDamageRange, float maxDamageRange, int enemyHitForce, PlayerControllerB? attacker, GameObject? overridePrefab)
     {
         Plugin.ExtendedLogging($"Spawning explosion at pos: {explosionPosition}");
 
@@ -131,56 +130,61 @@ public class CRUtilities
         }
 
         float playerDistanceFromExplosion = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, explosionPosition);
-        if (playerDistanceFromExplosion < 14f)
+        if (playerDistanceFromExplosion <= 14)
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
-        else if (playerDistanceFromExplosion < 25f)
+        else if (playerDistanceFromExplosion <= 25)
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
         }
 
-        Collider[] array = Physics.OverlapSphere(explosionPosition, maxDamageRange, 2621448, QueryTriggerInteraction.Collide);
-        PlayerControllerB? playerControllerB = null;
-        for (int i = 0; i < array.Length; i++)
+        Collider[] colliders = Physics.OverlapSphere(explosionPosition, maxDamageRange, LayerMask.GetMask("Enemies", "Player", "MapHazard"), QueryTriggerInteraction.Collide);
+        Dictionary<PlayerControllerB, int> playerControllerBToDamage = new();
+        Dictionary<EnemyAICollisionDetect, int> enemyAICollisionDetectToDamage = new();
+        List<Landmine> landmineList = new();
+        foreach (Collider collider in colliders)
         {
-            float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, array[i].transform.position);
-            if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, array[i].transform.position + Vector3.up * 0.3f, 256, QueryTriggerInteraction.Ignore))
+            if (collider.GetComponent<IHittable>() == null) continue;
+            float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, collider.transform.position);
+            if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, collider.transform.position + Vector3.up * 0.3f, out _, 256, QueryTriggerInteraction.Ignore))
             {
                 continue;
             }
 
-            if (array[i].gameObject.layer == 3)
+            if (collider.gameObject.layer == 3 && collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !playerControllerBToDamage.ContainsKey(player))
             {
-                playerControllerB = array[i].gameObject.GetComponent<PlayerControllerB>();
-                if (playerControllerB != null && playerControllerB.IsOwner)
-                {
-                    // calculate damage based on distance, so if player is minDamageRange or closer, they take full damage
-                    // if player is maxDamageRange or further, they take no damage
-                    // distance is distanceOfObjectFromExplosion
-                    float damageMultiplier = 1f - Mathf.Clamp01((distanceOfObjectFromExplosion - minDamageRange) / (maxDamageRange - minDamageRange));
+                playerControllerBToDamage.Add(player, (int)(damage * (1f - Mathf.Clamp01((distanceOfObjectFromExplosion - minDamageRange) / (maxDamageRange - minDamageRange)))));
+                continue;
+            }
 
-                    playerControllerB.DamagePlayer((int)(damage * damageMultiplier), causeOfDeath: causeOfDeath);
-                }
-            }
-            else if (array[i].gameObject.layer == 21)
+            if (collider.gameObject.layer == 19 && collider.TryGetComponent<EnemyAICollisionDetect>(out EnemyAICollisionDetect enemy) && !enemyAICollisionDetectToDamage.ContainsKey(enemy))
             {
-                Landmine componentInChildren = array[i].gameObject.GetComponentInChildren<Landmine>();
-                if (componentInChildren != null && !componentInChildren.hasExploded && distanceOfObjectFromExplosion < 6f)
-                {
-                    // Plugin.Logger.LogDebug("Setting off other mine");
-                    componentInChildren.StartCoroutine(componentInChildren.TriggerOtherMineDelayed(componentInChildren));
-                }
+                enemyAICollisionDetectToDamage.Add(enemy, enemyHitForce);
+                continue;
             }
-            else if (array[i].gameObject.layer == 19)
+
+            if (collider.gameObject.layer != 21) continue;
+            Landmine componentInChildren = collider.gameObject.GetComponentInChildren<Landmine>();
+            if (componentInChildren != null && distanceOfObjectFromExplosion < 6f && !landmineList.Contains(componentInChildren))
             {
-                EnemyAICollisionDetect componentInChildren2 = array[i].gameObject.GetComponentInChildren<EnemyAICollisionDetect>();
-                if (componentInChildren2 != null && componentInChildren2.mainScript.IsOwner && distanceOfObjectFromExplosion < 4.5f)
-                {
-                    if (!componentInChildren2.mainScript.NetworkObject.IsSpawned) continue;
-                    componentInChildren2.mainScript.HitEnemyOnLocalClient(enemyHitForce, playerWhoHit: attacker);
-                }
+                landmineList.Add(componentInChildren);
             }
+        }
+
+        foreach (PlayerControllerB player in playerControllerBToDamage.Keys)
+        {
+            player.DamagePlayer(playerControllerBToDamage[player], true, false, CauseOfDeath.Burning, 6, false, player.velocityLastFrame);
+        }
+
+        foreach (EnemyAICollisionDetect enemy in enemyAICollisionDetectToDamage.Keys)
+        {
+            enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy], playerWhoHit: attacker);
+        }
+
+        foreach (Landmine landmine in landmineList)
+        {
+            landmine.StartCoroutine(landmine.TriggerOtherMineDelayed(landmine));
         }
     }
 }
