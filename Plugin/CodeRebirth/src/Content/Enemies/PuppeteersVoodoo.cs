@@ -129,7 +129,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     {
         animator.SetBool(IsDeadAnimation, true);
         yield return new WaitForSeconds(4f);
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc("PuppetScrap", transform.position);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.PuppetItem.itemName, transform.position);
         NetworkObject.Despawn();
     }
 

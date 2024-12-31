@@ -6,6 +6,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigManorLordEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortAddonsEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapGalEnabled { get; private set; }
@@ -86,6 +87,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigZortViolinSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigZortRecorderSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigZortAccordionSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigManorLordSpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
@@ -194,6 +196,8 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigDuckSongTimer { get; private set; }
     public ConfigEntry<int> ConfigBearTrapGalCost { get; private set; }
     public ConfigEntry<int> ConfigACUnitGalCost { get; private set; }
+    public ConfigEntry<int> ConfigManorLordPowerLevel { get; private set; }
+    public ConfigEntry<int> ConfigManorLordMaxSpawnCount { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -228,6 +232,24 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region Lord Of The Manor
+        ConfigManorLordEnabled = configFile.Bind("Manor Lord Options",
+                                            "Manor Lord | Enabled",
+                                            true,
+                                            "Whether the Manor Lord is enabled.");
+        ConfigManorLordSpawnWeights = configFile.Bind("Manor Lord Options",
+                                            "Manor Lord | Spawn Weights",
+                                            "Vanilla:10,Custom:10",
+                                            "The spawn weights for the Manor Lord.");
+        ConfigManorLordPowerLevel = configFile.Bind("Manor Lord Options",
+                                            "Manor Lord | Power Level",
+                                            2,
+                                            "The power level of the Manor Lord.");
+        ConfigManorLordMaxSpawnCount = configFile.Bind("Manor Lord Options",
+                                            "Manor Lord | Max Spawn Count",
+                                            3,
+                                            "The max spawn count of the Manor Lord.");
         #endregion
         #region Zort Stuff
         ConfigZortAddonsEnabled = configFile.Bind("Zort Options",

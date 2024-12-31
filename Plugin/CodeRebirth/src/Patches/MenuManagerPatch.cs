@@ -10,7 +10,6 @@ static class MenuManagerPatch
 {
     private static bool alreadyPatched = false;
 
-
     [HarmonyPatch(nameof(MenuManager.Start)), HarmonyPostfix]
     static void MenuManagerStartPatch()
     {

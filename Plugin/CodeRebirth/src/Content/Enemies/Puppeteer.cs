@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -12,27 +13,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
 {
-    /*
-        * Puppeteer :
-        * - Spawns in and starts to sneak up on players like a bracken
-        * - Once near player, stabs them with the needle dealing no damage 
-        *   but creating a puppet of said player, then teleports away.
-        * - The player's puppet follows their paired player; each point of damage
-        *   the puppet takes deals 20-30 dmg to the player.
-        * - The puppet can be kicked around like a football (for fun).
-        * - The puppeteer can be killed, a bit tankier than a butler. Once attacked:
-        *   1. Creates a puppet of the attacker and vanishes if a non-puppet 
-        *      player hits them.
-        *   2. Then tries to kill the puppet (cannot directly harm the player).
-        *   Has 2 attacks:
-        *      - Lunge (striking with the needle)
-        *      - Defensive mask that reflects all damage (cannot attack during mask).
-        * - On death: 
-        *   - All current puppets become scrap 
-        *   - Players are freed from the voodoo effect 
-        *   - Drops pin needle weapon 
-        */
-
     [Header("General Configuration")]
     public PuppetDamageDealer puppetDamageDealer = null!;
     public Transform playerStabPosition = null!;
@@ -58,6 +38,8 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     private PlayerControllerB? targetPlayerToNeedle = null;
     private static int instanceCount = 0;
     private PlayerControllerB? priorityPlayer = null;
+    private System.Random enemyRandom = new();
+    private float timeSinceLastTakenDamage = 0f;
 
     private Dictionary<PlayerControllerB, GameObject> playerPuppetMap = new();
     private static readonly int DoStabAnimation = Animator.StringToHash("doStab"); // Trigger
@@ -83,7 +65,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     {
         base.Start();
         instanceCount++;
-
+        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + instanceCount + 69);
         agent.speed = 0f;
         SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Spawn);
     }
@@ -92,6 +74,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     {
         base.Update();
         if (isEnemyDead) return;
+        timeSinceLastTakenDamage += Time.deltaTime;
         if (targetPlayer == null) return;
         GameObject? targetPlayerPuppet = playerPuppetMap[targetPlayer];
         if (targetPlayerPuppet == null) return;
@@ -165,7 +148,14 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
             agent.speed = 0f;
             Plugin.ExtendedLogging("Grabbing player!");
             networkAnimator.SetTrigger(DoGrabPlayerAnimation);
+            StartCoroutine(FixPlayerJustIncase());
         }
+    }
+
+    private IEnumerator FixPlayerJustIncase()
+    {
+        yield return new WaitForSeconds(4f);
+        UnSetTargetNeedlePlayerClientRpc();
     }
 
     private void DoAttackingUpdate()
@@ -268,7 +258,8 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead || playerWhoHit == null) return;
-
+        if (timeSinceLastTakenDamage <= 1f) return;
+        force = 1;
         if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
         {
             // Reflect incoming damage
@@ -309,23 +300,12 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         if (IsServer) networkAnimator.SetTrigger(DoHitAnimation);
         if (enemyHP <= 0 && !isEnemyDead)
         {
-            if (!enteredDefensiveModeOnce)
-            {
-                enteredDefensiveModeOnce = true;
-                enemyHP++;
-                creatureVoice.PlayOneShot(maskDefensiveSound);
-                agent.speed = 0f;
-                SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.DefensiveMask);
-                if (IsServer) creatureAnimator.SetBool(MaskPhaseAnimation, true);
-                agent.speed = 0f;
-                StartCoroutine(SwitchToStateAfterDelay(PuppeteerState.Attacking, 5f));
-            }
+            timeSinceLastTakenDamage = 1f;
             // Check if it's entered defensive mode before, if not, enter it and increase health and make em immune.
             if (IsOwner)
             {
                 KillEnemyOnOwnerClient();
             }
-            return;
         }
     }
 
@@ -339,8 +319,35 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         targetPlayerToNeedle.transform.rotation = playerStabPosition.rotation;
     }
 
+    [ClientRpc]
+    public void UnSetTargetNeedlePlayerClientRpc()
+    {
+        if (targetPlayerToNeedle == null) return;
+        targetPlayerToNeedle.disableMoveInput = false;
+        targetPlayerToNeedle.disableLookInput = false;
+    }
+
     private IEnumerator SwitchToStateAfterDelay(PuppeteerState state, float delay)
     {
+        int randomNumber = enemyRandom.Next(0, 100);
+        Plugin.ExtendedLogging($"Random Number: {randomNumber}");
+        if (randomNumber < 1)
+        {
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Jester").FirstOrDefault());
+        }
+        else if (randomNumber < 20)
+        {
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Nutcracker").FirstOrDefault());
+        }
+        else if (randomNumber < 30)
+        {
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Butler").FirstOrDefault());
+        }
+        else
+        {
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
+        }
+        RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
         yield return new WaitForSeconds(delay);
         if (state == PuppeteerState.Attacking) smartAgentNavigator.StopSearchRoutine();
         if (IsServer)
@@ -354,7 +361,26 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
 
     public override void KillEnemy(bool destroy = false)
     {
-        if (enemyHP > 0) return;
+        Plugin.ExtendedLogging("Puppeteer killed");
+        if (!enteredDefensiveModeOnce)
+        {
+            timeSinceLastTakenDamage = 0f;
+            enteredDefensiveModeOnce = true;
+            enemyHP++;
+            creatureVoice.PlayOneShot(maskDefensiveSound);
+            agent.speed = 0f;
+            SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.DefensiveMask);
+            if (IsServer) creatureAnimator.SetBool(MaskPhaseAnimation, true);
+            agent.speed = 0f;
+            StartCoroutine(SwitchToStateAfterDelay(PuppeteerState.Attacking, enemyRandom.NextFloat(10f, 15f)));
+            return;
+        }
+        if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
+        {
+            // try to reflect to nearest player?
+            return;
+        }
+        if (timeSinceLastTakenDamage < 0.5f) return;
         base.KillEnemy(destroy);
         // play death animation.
         creatureVoice.PlayOneShot(puppeteerDeathSound);
@@ -374,7 +400,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
             }
         }
         playerPuppetMap.Clear();
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc("PuppeteerNeedle", transform.position);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.PinNeedleItem.itemName, transform.position);
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

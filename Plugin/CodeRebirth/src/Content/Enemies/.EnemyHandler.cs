@@ -124,6 +124,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         [LoadFromBundle("PuppeteerPuppet.prefab")]
         public GameObject PuppeteerPuppetPrefab { get; private set; } = null!;
+
+        [LoadFromBundle("PuppetScrapObj.asset")]
+        public Item PuppetItem { get; private set; } = null!;
+
+        [LoadFromBundle("PinNeedleObj.asset")]
+        public Item PinNeedleItem { get; private set; } = null!;
     }
 
     public ManorLordAssets ManorLord { get; private set; } = null!;
@@ -172,11 +178,14 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
         } // configurable quest time, max amount of ducks to spawn.
 
-        if (true)
+        if (Plugin.ModConfig.ConfigManorLordEnabled.Value)
         {
             ManorLord = new ManorLordAssets("manorlordassets");
-            RegisterEnemyWithConfig("", ManorLord.ManorLordEnemyType, ManorLord.ManorLordTerminalNode, ManorLord.ManorLordTerminalKeyword, 2, 1);
-            // Plugin.samplePrefabs.Add(ManorLord.pupp.itemName, ManorLord.ManorLordItem);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigManorLordSpawnWeights.Value, ManorLord.ManorLordEnemyType, ManorLord.ManorLordTerminalNode, ManorLord.ManorLordTerminalKeyword, Plugin.ModConfig.ConfigManorLordPowerLevel.Value, Plugin.ModConfig.ConfigManorLordMaxSpawnCount.Value);
+            RegisterScrapWithConfig("", ManorLord.PuppetItem, -1, -1);
+            RegisterScrapWithConfig("", ManorLord.PinNeedleItem, -1, -1);
+            Plugin.samplePrefabs.Add(ManorLord.PinNeedleItem.itemName, ManorLord.PinNeedleItem);
+            Plugin.samplePrefabs.Add(ManorLord.PuppetItem.itemName, ManorLord.PuppetItem);
         }
         if (false)
         {
