@@ -187,7 +187,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             Plugin.samplePrefabs.Add(ManorLord.PinNeedleItem.itemName, ManorLord.PinNeedleItem);
             Plugin.samplePrefabs.Add(ManorLord.PuppetItem.itemName, ManorLord.PuppetItem);
         }
-        if (false)
+        if (true)
         {
             PokemonEnemies = new PokemonEnemyAssets("eeveelutionassets");
             RegisterScrapWithConfig("", PokemonEnemies.ChildEeveeItem, -1, -1);

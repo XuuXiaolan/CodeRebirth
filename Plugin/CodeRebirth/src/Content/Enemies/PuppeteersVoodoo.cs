@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -23,6 +24,11 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     [Tooltip("Upward force added on kick.")]
     public float ballHitUpwardAmount = 0.5f;
 
+    [Header("Sounds")]
+    public AudioClip[] puppetFootstepSounds = [];
+    public AudioClip[] hitSounds = [];
+    public AudioClip deathSound = null!;
+
     [Header("Curves for the Arc/Fall Behavior")]
     public AnimationCurve dollFallCurve;
     public AnimationCurve dollVerticalFallCurve;
@@ -33,9 +39,9 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     public LayerMask dollBallMask = 369101057;
 
     [Space(5f)]
-    public AudioClip[] hitBallSFX;
-    public AudioClip[] ballHitFloorSFX;
-    public AudioSource dollAudio;
+    public AudioClip[] hitBallSFX = [];
+    public AudioClip[] ballHitFloorSFX = [];
+    public AudioSource dollAudio = null!;
 
     private Ray dollRay;
     private RaycastHit dollHit;
@@ -53,6 +59,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
+    private System.Random puppetRandom = new System.Random(69);
     public static List<PuppeteersVoodoo> puppeteerList = new List<PuppeteersVoodoo>();
 
     public override void OnNetworkSpawn()
@@ -71,11 +78,11 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     {
         hitTimer = Time.realtimeSinceStartup + 3;
         smartAgentNavigator.SetAllValues(puppeteerCreatedBy.isOutside);
+        puppetRandom = new System.Random(StartOfRound.Instance.randomMapSeed + puppeteerList.Count);
 
-        System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + puppeteerList.Count);
-        if (random.Next(0, 10) == 0)
+        if (puppetRandom.Next(0, 10) == 0)
         {
-            renderer.SetMaterial(materialVariants[random.Next(0, materialVariants.Length)]);
+            renderer.SetMaterial(materialVariants[puppetRandom.Next(0, materialVariants.Length)]);
         }
     }
 
@@ -122,11 +129,33 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     [ServerRpc(RequireOwnership = false)]
     private void DoHitAnimationServerRpc()
     {
+        PlayMiscSoundsClientRpc(1);
         networkAnimator.SetTrigger(OnHitAnimation);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void PlayMiscSoundsServerRpc(int soundID)
+    {
+        PlayMiscSoundsClientRpc(soundID);
+    }
+
+    [ClientRpc]
+    private void PlayMiscSoundsClientRpc(int soundID)
+    {
+        switch (soundID)
+        {
+            case 0:
+                dollAudio.PlayOneShot(deathSound);
+                break;
+            case 1:
+                dollAudio.PlayOneShot(hitSounds[puppetRandom.Next(0, hitSounds.Length)]);
+                break;
+        }
     }
 
     public IEnumerator BreakDoll()
     {
+        PlayMiscSoundsServerRpc(0);
         animator.SetBool(IsDeadAnimation, true);
         yield return new WaitForSeconds(4f);
         CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.PuppetItem.itemName, transform.position);
@@ -220,44 +249,29 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         smartAgentNavigator.enabled = false;
         agent.enabled = false;
 
-        // SFX
-        if (hitBallSFX != null && hitBallSFX.Length > 0 && dollAudio != null)
-        {
-            RoundManager.PlayRandomClip(dollAudio, hitBallSFX, true, 1f, 10419, 1000);
-        }
+        dollAudio.PlayOneShot(hitBallSFX[puppetRandom.Next(0, hitBallSFX.Length)]);
 
-        // STEP 1) Re-parent to a common props container
-        // (If you had logic for inside/outside, you can adapt below.)
         transform.SetParent(StartOfRound.Instance.propsContainer, true);
 
         // Reset states for the arc
         fallTime = 0f;
         hasHitGround = false;
 
-        // STEP 4) Snap to floor in world space before we switch to local:
-        // (So the final arc won’t float in midair.)
         Vector3 finalWorldDest = SnapToFloor(destinationPos);
 
-        // STEP 2) Convert everything to local coordinates
         startFallingPosition = transform.localPosition + Vector3.up * 0.07f;
         targetFloorPosition   = transform.parent.InverseTransformPoint(finalWorldDest);
 
         Plugin.ExtendedLogging($"KickDollLocalClient (LOCAL): {startFallingPosition} -> {targetFloorPosition}");
     }
 
-    /// <summary>
-    /// Rays downward from the desired "forward arc" position to ensure we land on the floor.
-    /// </summary>
     private Vector3 SnapToFloor(Vector3 desiredWorldPos)
     {
-        // We cast from slightly above, downward
         Vector3 castFrom = desiredWorldPos + Vector3.up;
         Ray downRay = new Ray(castFrom, Vector3.down);
 
-        // Try up to 65f downward (adjust as needed)
         if (Physics.Raycast(downRay, out RaycastHit downHit, 65f, dollBallMask, QueryTriggerInteraction.Ignore))
         {
-            // Return the floor point (plus a tiny offset if you like)
             return downHit.point; 
         }
 
@@ -269,7 +283,6 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private void KickDollServerRpc(Vector3 dest, int playerWhoKicked)
     {
         animator.SetBool(IsKickedAnimation, true);
-        // If this server RPC was triggered by another player, run the local effect
         if (playerWhoKicked != Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController))
         {
             KickDollLocalClient(dest);
@@ -283,7 +296,6 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private void KickDollClientRpc(Vector3 dest, int playerWhoKicked)
     {
         if (IsServer) return;
-        // If it’s us who kicked, skip
         if (playerWhoKicked == Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController))
             return;
 
@@ -296,10 +308,6 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         // Distance in local space
         float distance = (startFallingPosition - targetFloorPosition).magnitude;
 
-        // Rotate in local space around the Y-axis, if you prefer
-        // or you could just skip rotation in local space. 
-        // 
-        // If you want "flat" rotation, might do something like:
         Vector3 euler = transform.localEulerAngles;
         euler.x = 0f;
         euler.z = 0f;
@@ -309,7 +317,6 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
             14f * Time.deltaTime / Mathf.Max(distance, 0.01f)
         );
 
-        // STEP 2) Use local position arcs
         Vector3 newPos = Vector3.Lerp(
             startFallingPosition,
             targetFloorPosition,
@@ -353,13 +360,62 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
     private void PlayDropSFX()
     {
-        if (ballHitFloorSFX != null && ballHitFloorSFX.Length > 0 && dollAudio != null)
+        // Play the "doll lands" SFX if any
+        dollAudio.PlayOneShot(ballHitFloorSFX[puppetRandom.Next(0, ballHitFloorSFX.Length)]);
+
+        // Only the server should toggle the animation state
+        if (IsServer)
         {
-            RoundManager.PlayRandomClip(dollAudio, ballHitFloorSFX, true, 1f, 10419, 1000);
+            animator.SetBool(IsKickedAnimation, false);
         }
-        if (IsServer) animator.SetBool(IsKickedAnimation, false);
+
         hasHitGround = true;
+
+        // Attempt to snap the doll to a valid NavMesh position
+        SnapToClosestNavmeshPoint();
+
+        // Re-enable the agent and smart navigator
         agent.enabled = true;
         smartAgentNavigator.enabled = true;
+    }
+
+    private void SnapToClosestNavmeshPoint()
+    {
+        float maxSearchRadius = 1f;  // Adjust as necessary
+        Vector3 puppetPosition = transform.position;
+
+        // 1) Try near the puppet's current position
+        if (TryFindClosestNavmeshPoint(puppetPosition, maxSearchRadius, out Vector3 validPoint))
+        {
+            transform.position = validPoint;
+            return;
+        }
+
+        // 2) If not found, and we have a player reference, try near the player
+        if (playerControlled != null)
+        {
+            Vector3 playerPos = playerControlled.transform.position;
+            if (TryFindClosestNavmeshPoint(playerPos, maxSearchRadius, out Vector3 fallbackPoint))
+            {
+                transform.position = fallbackPoint;
+                return;
+            }
+        }
+    }
+
+    private bool TryFindClosestNavmeshPoint(Vector3 origin, float maxDistance, out Vector3 result)
+    {
+        if (NavMesh.SamplePosition(origin, out NavMeshHit navHit, maxDistance, NavMesh.AllAreas))
+        {
+            result = navHit.position;
+            return true;
+        }
+        result = Vector3.zero;
+        return false;
+    }
+
+    public void PlayFootstepSoundAnimEvent()
+    {
+        dollAudio.PlayOneShot(puppetFootstepSounds[puppetRandom.Next(0, puppetFootstepSounds.Length)]);
     }
 }

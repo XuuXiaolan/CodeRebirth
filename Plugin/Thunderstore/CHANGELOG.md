@@ -1,4 +1,8 @@
-# v0.10.4
+# v0.11.0
+
+- Added Lord of the manor.
+
+## v0.10.4
 
 - Readme update! woo
 - Forgot to include zort assets into the release build.

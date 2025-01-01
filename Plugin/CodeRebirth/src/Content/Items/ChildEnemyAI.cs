@@ -81,19 +81,20 @@ public class ChildEnemyAI : GrabbableObject
     public override void Start()
     {
         base.Start();
-        fallTime = 0f;
-        smartAgentNavigator.OnEnterOrExitElevator.AddListener(OnEnterOrExitElevator);
-        smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         if (parentEevee != null) 
         {
+            fallTime = 0f;
+            smartAgentNavigator.OnEnterOrExitElevator.AddListener(OnEnterOrExitElevator);
+            smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
             smartAgentNavigator.SetAllValues(parentEevee.isOutside);
             isInFactory = !parentEevee.isOutside;
         }
         else
         {
-            smartAgentNavigator.SetAllValues(true);
             isInFactory = false;
             friendEeveeState = FriendState.Tamed;
+            agent.enabled = false;
+            smartAgentNavigator.enabled = false;
         }
         if (!IsServer) return;
         HandleStateAnimationSpeedChanges(State.Spawning);
@@ -213,6 +214,16 @@ public class ChildEnemyAI : GrabbableObject
 
     public override void Update()
     {
+        if (parentEevee == null && StartOfRound.Instance.shipBounds.bounds.Contains(this.transform.position))
+        {
+            agent.enabled = false;
+            smartAgentNavigator.enabled = false;
+        }
+        if (!agent.enabled && !smartAgentNavigator.enabled)
+        {
+            base.Update();
+            return;
+        }
         BaseUpdate();
         if (nearbyPlayer != null && (nearbyPlayer.isPlayerDead || !nearbyPlayer.isPlayerControlled || (nearbyPlayer.isInHangarShipRoom && playerHeldBy != nearbyPlayer)))
         {
@@ -599,7 +610,7 @@ public class ChildEnemyAI : GrabbableObject
 
     private void HandleStateWanderingChange()
     {
-        if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 40);
+        if (IsServer && agent.enabled && smartAgentNavigator.enabled) smartAgentNavigator.StartSearchRoutine(transform.position, 40);
     }
 
     private void HandleStateFollowingPlayerChange()

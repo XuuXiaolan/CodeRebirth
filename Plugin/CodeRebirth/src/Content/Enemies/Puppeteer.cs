@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
-public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
+public class Puppeteer : CodeRebirthEnemyAI
 {
     [Header("General Configuration")]
     public PuppetDamageDealer puppetDamageDealer = null!;
@@ -26,12 +25,16 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
 
     [Header("Audio & Animation")]
     public NetworkAnimator networkAnimator = null!;
+    public AudioClip[] normalFootstepSounds = [];
+    public AudioClip[] combatFootstepSounds = [];
+    public AudioClip grabPlayerSound = null!;
+    public AudioClip makePuppetSound = null!;
     public AudioClip stabSound = null!;
-    public AudioClip teleportSound = null!;
+    public AudioClip swipeSound = null!;
     public AudioClip maskDefensiveSound = null!;
-    public AudioClip puppetSpawnSound = null!;
+    public AudioClip[] reflectSounds = null!;
+    public AudioClip[] puppeteerHitSounds = [];
     public AudioClip puppeteerDeathSound = null!;
-    public AudioClip reflectSound = null!;
 
     [HideInInspector] public bool isAttacking = false;
     private bool enteredDefensiveModeOnce = false;
@@ -144,18 +147,18 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         if (agent.speed != 0 && Vector3.Distance(nearestPlayer.transform.position, this.transform.position) <= 3)
         {
             SetTargetNeedlePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, nearestPlayer));
-            creatureSFX.PlayOneShot(stabSound); // todo: rpc this
             agent.speed = 0f;
+            agent.velocity = Vector3.zero;
             Plugin.ExtendedLogging("Grabbing player!");
             networkAnimator.SetTrigger(DoGrabPlayerAnimation);
-            StartCoroutine(FixPlayerJustIncase());
+            StartCoroutine(FixPlayerJustIncase(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, nearestPlayer)));
         }
     }
 
-    private IEnumerator FixPlayerJustIncase()
+    private IEnumerator FixPlayerJustIncase(int playerIndex)
     {
         yield return new WaitForSeconds(4f);
-        UnSetTargetNeedlePlayerClientRpc();
+        UnSetTargetNeedlePlayerClientRpc(playerIndex);
     }
 
     private void DoAttackingUpdate()
@@ -177,14 +180,30 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         if (distance <= 2f)
         {
             agent.speed = chaseSpeed/4;
+            PlayMiscSoundClientRpc(1);
             networkAnimator.SetTrigger(DoSwipeAnimation);
             isAttacking = true;
         }
         else if (distance <= 5f)
         {
             agent.speed = chaseSpeed/4;
+            PlayMiscSoundClientRpc(0);
             networkAnimator.SetTrigger(DoStabAnimation);
             isAttacking = true;
+        }
+    }
+
+    [ClientRpc]
+    private void PlayMiscSoundClientRpc(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                creatureSFX.PlayOneShot(stabSound);
+                break;
+            case 1:
+                creatureSFX.PlayOneShot(swipeSound);
+                break;
         }
     }
 
@@ -192,6 +211,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     {
         if (!playerPuppetMap.ContainsKey(player))
         {
+            creatureSFX.PlayOneShot(makePuppetSound);
             if (!IsServer) return;
             GameObject puppetObj = Instantiate(EnemyHandler.Instance.ManorLord.PuppeteerPuppetPrefab, needleAttachPoint.position, Quaternion.identity);
             puppetObj.GetComponent<NetworkObject>()?.Spawn(true);
@@ -213,10 +233,10 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     private void CreatePlayerPuppetClientRpc(int playerIndex, NetworkObjectReference netObj)
     {
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        creatureVoice.PlayOneShot(puppetSpawnSound);
 
         // Link puppet to player
         GameObject puppetObj = (GameObject)netObj;
+        puppetObj.transform.localScale = this.transform.localScale;
         PuppeteersVoodoo puppetComp = puppetObj.GetComponent<PuppeteersVoodoo>();
         puppetComp?.Init(player, this, puppetDamageToPlayerMultiplier);
 
@@ -225,8 +245,6 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
 
     private void TeleportAway()
     {
-        creatureSFX.PlayOneShot(teleportSound);
-
         if (!IsServer) return;
         Vector3 randomFarPoint = GetRandomFarPointInFacility(new List<Vector3> { transform.position });
 
@@ -263,7 +281,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
         {
             // Reflect incoming damage
-            creatureSFX.PlayOneShot(reflectSound);
+            creatureSFX.PlayOneShot(reflectSounds[enemyRandom.Next(0, reflectSounds.Length)]);
             playerWhoHit.DamagePlayer(force * 25, true, false, CauseOfDeath.Unknown, 0, false, default);
             return;
         }
@@ -297,6 +315,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
             }
         }
         enemyHP -= force;
+        creatureVoice.PlayOneShot(puppeteerHitSounds[enemyRandom.Next(0, puppeteerHitSounds.Length)]);
         if (IsServer) networkAnimator.SetTrigger(DoHitAnimation);
         if (enemyHP <= 0 && !isEnemyDead)
         {
@@ -313,18 +332,23 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     public void SetTargetNeedlePlayerClientRpc(int playerIndex)
     {
         targetPlayerToNeedle = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        if (targetPlayerToNeedle == GameNetworkManager.Instance.localPlayerController) creatureSFX.PlayOneShot(grabPlayerSound);
         targetPlayerToNeedle.disableMoveInput = true;
         targetPlayerToNeedle.disableLookInput = true;
+        targetPlayerToNeedle.inAnimationWithEnemy = this;
         targetPlayerToNeedle.transform.position = playerStabPosition.position;
         targetPlayerToNeedle.transform.rotation = playerStabPosition.rotation;
     }
 
     [ClientRpc]
-    public void UnSetTargetNeedlePlayerClientRpc()
+    public void UnSetTargetNeedlePlayerClientRpc(int playerIndex)
     {
-        if (targetPlayerToNeedle == null) return;
+        PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        if (targetPlayerToNeedle != player) return;
         targetPlayerToNeedle.disableMoveInput = false;
         targetPlayerToNeedle.disableLookInput = false;
+        if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = this;
+        targetPlayerToNeedle = null;
     }
 
     private IEnumerator SwitchToStateAfterDelay(PuppeteerState state, float delay)
@@ -368,19 +392,18 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
             enteredDefensiveModeOnce = true;
             enemyHP++;
             creatureVoice.PlayOneShot(maskDefensiveSound);
-            agent.speed = 0f;
             SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.DefensiveMask);
             if (IsServer) creatureAnimator.SetBool(MaskPhaseAnimation, true);
             agent.speed = 0f;
-            StartCoroutine(SwitchToStateAfterDelay(PuppeteerState.Attacking, enemyRandom.NextFloat(10f, 15f)));
+            StartCoroutine(SwitchToStateAfterDelay(PuppeteerState.Attacking, maskDefensiveSound.length));
             return;
         }
+        if (timeSinceLastTakenDamage < 0.5f) return;
         if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
         {
             // try to reflect to nearest player?
             return;
         }
-        if (timeSinceLastTakenDamage < 0.5f) return;
         base.KillEnemy(destroy);
         // play death animation.
         creatureVoice.PlayOneShot(puppeteerDeathSound);
@@ -429,6 +452,18 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
     }
 
     #region Animation Events
+    public void PlayFootstepSoundAnimEvent()
+    {
+        if (currentBehaviourStateIndex == (int)PuppeteerState.Attacking)
+        {
+            creatureVoice.PlayOneShot(combatFootstepSounds[enemyRandom.Next(0, combatFootstepSounds.Length)]);
+        }
+        else
+        {
+            creatureVoice.PlayOneShot(normalFootstepSounds[enemyRandom.Next(0, normalFootstepSounds.Length)]);
+        }
+    }
+
     public void SpawnAnimationTransitionAnimEvent()
     {
         targetPlayer = null;
@@ -456,6 +491,7 @@ public class Puppeteer : CodeRebirthEnemyAI // todo: unity animation events
         }
         targetPlayerToNeedle.disableMoveInput = false;
         targetPlayerToNeedle.disableLookInput = false;
+        if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = this;
         if (targetPlayerToNeedle == priorityPlayer)
         {
             priorityPlayer = null;
