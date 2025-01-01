@@ -1,3 +1,4 @@
+using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public static class ShotgunItemPatch
     private static void ShotgunItem_ShootGun(On.ShotgunItem.orig_ShootGun orig, ShotgunItem self, Vector3 shotgunPosition, Vector3 shotgunForward)
     {
         orig(self, shotgunPosition, shotgunForward);
-        foreach (RaycastHit raycastHit in self.enemyColliders)
+        foreach (RaycastHit raycastHit in self.enemyColliders.ToArray())
         {
             if (raycastHit.transform == null) continue;
             if (raycastHit.transform.TryGetComponent(out PuppeteersVoodoo voodooDoll) && !Physics.Linecast(shotgunPosition, raycastHit.point, out _, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))

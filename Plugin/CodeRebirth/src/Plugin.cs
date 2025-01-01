@@ -82,6 +82,7 @@ public class Plugin : BaseUnityPlugin {
         EnemyAICollisionDetectPatch.Init();
         LandminePatch.Init();
         ShotgunItemPatch.Init();
+        TurretPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");

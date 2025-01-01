@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -43,6 +42,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     public AudioClip[] ballHitFloorSFX = [];
     public AudioSource dollAudio = null!;
 
+    [HideInInspector] public Coroutine? breakDollRoutine = null;
     private Ray dollRay;
     private RaycastHit dollHit;
     private float hitTimer;
@@ -51,8 +51,9 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private Vector3 startFallingPosition;
     private Vector3 targetFloorPosition;
     private int damageTransferMultiplier = 20; // 20-30 as described
+    [HideInInspector] public float lastTimeTakenDamageFromEnemy = 0f;
     [HideInInspector] public Puppeteer puppeteerCreatedBy = null!;
-    [HideInInspector] public PlayerControllerB playerControlled = null!;
+    [HideInInspector] public PlayerControllerB? playerControlled = null;
 
     private static readonly int OnHitAnimation = Animator.StringToHash("onHit"); // Triger
     private static readonly int IsKickedAnimation = Animator.StringToHash("isKicked"); // Bool
@@ -95,6 +96,26 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
     public void Update()
     {
+        lastTimeTakenDamageFromEnemy += Time.deltaTime;
+        if (IsServer)
+        {
+            if (puppeteerCreatedBy == null && breakDollRoutine == null)
+            {
+                breakDollRoutine = StartCoroutine(BreakDoll());
+                playerControlled = null;
+                return;
+            }
+            if ((playerControlled == null || playerControlled.isPlayerDead) && breakDollRoutine == null)
+            {
+                breakDollRoutine = StartCoroutine(BreakDoll());
+                playerControlled = null;
+                return;
+            }
+        }
+        if (playerControlled == null)
+        {
+            return;
+        }
         if (!hasHitGround && fallTime < 1f)
         {
             FallWithCurve();
@@ -113,6 +134,11 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         else
         {
             animator.SetFloat(RunSpeedFloat, 0);
+            if (hasHitGround)
+            {
+                this.transform.position = playerControlled.transform.position;
+                agent.enabled = true;
+            }
         }
     }
 
@@ -121,15 +147,14 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         if (playerControlled != null)
         {
             int finalDamage = Mathf.RoundToInt(damage * damageTransferMultiplier);
-            DoHitAnimationServerRpc();
-            playerControlled.DamagePlayer(finalDamage, true, true, causeOfDeath);
+            DoHitAnimationServerRpc(finalDamage);
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void DoHitAnimationServerRpc()
+    private void DoHitAnimationServerRpc(int finalDamage)
     {
-        PlayMiscSoundsClientRpc(1);
+        PlayMiscSoundsClientRpc(1, finalDamage);
         networkAnimator.SetTrigger(OnHitAnimation);
     }
 
@@ -140,7 +165,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     }
 
     [ClientRpc]
-    private void PlayMiscSoundsClientRpc(int soundID)
+    private void PlayMiscSoundsClientRpc(int soundID, int finalDamage = 0)
     {
         switch (soundID)
         {
@@ -148,6 +173,15 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
                 dollAudio.PlayOneShot(deathSound);
                 break;
             case 1:
+                lastTimeTakenDamageFromEnemy = 0;
+                if (playerControlled != null)
+                {
+                    playerControlled.DamagePlayer(finalDamage, true, false, CauseOfDeath.Unknown);
+                }
+                else
+                {
+                    Plugin.Logger.LogError("PlayerControlled is null");
+                }
                 dollAudio.PlayOneShot(hitSounds[puppetRandom.Next(0, hitSounds.Length)]);
                 break;
         }
@@ -158,7 +192,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         PlayMiscSoundsServerRpc(0);
         animator.SetBool(IsDeadAnimation, true);
         yield return new WaitForSeconds(4f);
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.PuppetItem.itemName, transform.position);
+        if (playerControlled != null && !playerControlled.isPlayerDead) CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.PuppetItem.itemName, transform.position);
         NetworkObject.Despawn();
     }
 
@@ -180,9 +214,9 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     {
         if (Time.realtimeSinceStartup - hitTimer < 0.5f)
             return;
-
+        Plugin.ExtendedLogging($"OnTriggerEnter: {other.gameObject.name} with tag {other.gameObject.tag}");
         // If the object is tagged PlayerBody or Enemy
-        if (other.CompareTag("PlayerBody") || other.CompareTag("Enemy"))
+        if (other.tag.Contains("PlayerBody") || other.CompareTag("Enemy"))
         {
             // Check line-of-sight
             if (Physics.Linecast(
@@ -384,14 +418,12 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         float maxSearchRadius = 1f;  // Adjust as necessary
         Vector3 puppetPosition = transform.position;
 
-        // 1) Try near the puppet's current position
         if (TryFindClosestNavmeshPoint(puppetPosition, maxSearchRadius, out Vector3 validPoint))
         {
             transform.position = validPoint;
             return;
         }
 
-        // 2) If not found, and we have a player reference, try near the player
         if (playerControlled != null)
         {
             Vector3 playerPos = playerControlled.transform.position;

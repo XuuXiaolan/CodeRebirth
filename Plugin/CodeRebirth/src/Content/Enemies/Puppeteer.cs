@@ -214,7 +214,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             creatureSFX.PlayOneShot(makePuppetSound);
             if (!IsServer) return;
             GameObject puppetObj = Instantiate(EnemyHandler.Instance.ManorLord.PuppeteerPuppetPrefab, needleAttachPoint.position, Quaternion.identity);
-            puppetObj.GetComponent<NetworkObject>()?.Spawn(true);
+            puppetObj.GetComponent<NetworkObject>().Spawn(true);
             CreatePlayerPuppetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), new NetworkObjectReference(puppetObj));
         }
         else
@@ -238,7 +238,8 @@ public class Puppeteer : CodeRebirthEnemyAI
         GameObject puppetObj = (GameObject)netObj;
         puppetObj.transform.localScale = this.transform.localScale;
         PuppeteersVoodoo puppetComp = puppetObj.GetComponent<PuppeteersVoodoo>();
-        puppetComp?.Init(player, this, puppetDamageToPlayerMultiplier);
+        puppetComp.transform.SetParent(StartOfRound.Instance.propsContainer);
+        puppetComp.Init(player, this, puppetDamageToPlayerMultiplier);
 
         playerPuppetMap[player] = puppetObj;
     }
@@ -347,7 +348,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         if (targetPlayerToNeedle != player) return;
         targetPlayerToNeedle.disableMoveInput = false;
         targetPlayerToNeedle.disableLookInput = false;
-        if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = this;
+        if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = null;
         targetPlayerToNeedle = null;
     }
 
@@ -355,23 +356,26 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         int randomNumber = enemyRandom.Next(0, 100);
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");
-        if (randomNumber < 1)
+        if (IsServer)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Jester").FirstOrDefault());
-        }
-        else if (randomNumber < 20)
-        {
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Nutcracker").FirstOrDefault());
-        }
-        else if (randomNumber < 30)
-        {
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Butler").FirstOrDefault());
-        }
-        else
-        {
+            if (randomNumber < 1)
+            {
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Jester").FirstOrDefault());
+            }
+            else if (randomNumber < 20)
+            {
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Nutcracker").FirstOrDefault());
+            }
+            else if (randomNumber < 30)
+            {
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Butler").FirstOrDefault());
+            }
+            else
+            {
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
+            }
             RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
         }
-        RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
         yield return new WaitForSeconds(delay);
         if (state == PuppeteerState.Attacking) smartAgentNavigator.StopSearchRoutine();
         if (IsServer)
@@ -419,7 +423,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             GameObject puppetObj = kvp.Value;
             if (puppetObj != null && puppetObj.TryGetComponent(out PuppeteersVoodoo puppetComp))
             {
-                StartCoroutine(puppetComp.BreakDoll()); // remove link
+                puppetComp.breakDollRoutine = StartCoroutine(puppetComp.BreakDoll()); // remove link
             }
         }
         playerPuppetMap.Clear();
@@ -491,7 +495,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         }
         targetPlayerToNeedle.disableMoveInput = false;
         targetPlayerToNeedle.disableLookInput = false;
-        if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = this;
+        if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = null;
         if (targetPlayerToNeedle == priorityPlayer)
         {
             priorityPlayer = null;

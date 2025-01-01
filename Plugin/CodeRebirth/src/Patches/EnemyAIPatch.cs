@@ -1,6 +1,8 @@
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +18,23 @@ static class EnemyAIPatch
         On.EnemyAI.Start += EnemyAI_Start;
         On.EnemyAI.HitEnemy += EnemyAI_HitEnemy;
         On.EnemyAI.Update += EnemyAI_Update;
+        On.EnemyAI.OnCollideWithPlayer += EnemyAI_OnCollideWithPlayer;
+    }
+
+    private static void EnemyAI_OnCollideWithPlayer(On.EnemyAI.orig_OnCollideWithPlayer orig, EnemyAI self, Collider other)
+    {
+        if (other.gameObject.layer == 19 && other.TryGetComponent(out PuppeteersVoodoo puppet))
+        {
+            if (self.isEnemyDead) return;
+            if (!self.IsServer) return;
+            if (puppet.lastTimeTakenDamageFromEnemy <= 0.5f) return;
+            if (self.enemyType.enemyName.Contains("SCP-999"))
+            {
+                puppet.Hit(-1, self.transform.position, null, false, -1);
+            }
+            puppet.Hit(1, self.transform.position, null, false, -1);
+        }
+        orig(self, other);
     }
 
     private static void EnemyAI_Start(On.EnemyAI.orig_Start orig, EnemyAI self)
