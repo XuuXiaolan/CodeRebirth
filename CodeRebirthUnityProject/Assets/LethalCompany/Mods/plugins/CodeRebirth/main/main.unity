@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2491.4285, g: 2537.6184, b: 3605.6604, a: 1}
+  m_IndirectSpecularColor: {r: 2490.527, g: 2536.763, b: 3604.9163, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -611,6 +611,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &5844473021378437738
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.397892
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00000011920929
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.6222019
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7156877
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.010026324
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.69828
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.009782445
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -1.605
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 88.589
+      objectReference: {fileID: 0}
+    - target: {fileID: 1605821494247057525, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8640331156731437576, guid: d96a427b7d89854439c390929d581a45,
+        type: 3}
+      propertyPath: m_Name
+      value: JaneFoggCleaningDroneGal
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d96a427b7d89854439c390929d581a45, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -620,3 +688,4 @@ SceneRoots:
   - {fileID: 2013410475}
   - {fileID: 1752473781}
   - {fileID: 418988389}
+  - {fileID: 5844473021378437738}
