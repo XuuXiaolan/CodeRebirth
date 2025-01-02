@@ -83,6 +83,7 @@ static class StartOfRoundPatch
 			if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null && LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name == "Toy Store") HandleWesleyChangesCuzHeIsStupid(item);
 			if (item.layer == layerMask)
 			{
+				// figure out a way to make this better against static meshes.
 				item.AddComponent<BoxCollider>().isTrigger = true;
 				FoundObject++;
 			}
