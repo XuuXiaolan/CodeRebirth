@@ -41,7 +41,6 @@ static class PlayerControllerBPatch
     {
         On.GameNetcodeStuff.PlayerControllerB.ConnectClientToPlayerObject += PlayerControllerB_ConnectClientToPlayerObject;
         On.GameNetcodeStuff.PlayerControllerB.TeleportPlayer += PlayerControllerB_TeleportPlayer;
-        On.GameNetcodeStuff.PlayerControllerB.DamagePlayer += PlayerControllerB_DamagePlayer;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
@@ -77,21 +76,6 @@ static class PlayerControllerBPatch
         {
             HUDManager.Instance.DisplayTip("Mod not detected", "Downloading ModelReplacementAPI and MoreSuits adds a new suit as the ShockwaveGal's model");
             Plugin.ModConfig.ConfigFirstLaunchPopup.Value = false;
-        }
-    }
-
-    private static void PlayerControllerB_DamagePlayer(On.GameNetcodeStuff.PlayerControllerB.orig_DamagePlayer orig, PlayerControllerB self, int damageNumber, bool hasDamageSFX, bool callRPC, CauseOfDeath causeOfDeath, int deathAnimation, bool fallDamage, Vector3 force)
-    {
-        orig(self, damageNumber, hasDamageSFX, callRPC, causeOfDeath, deathAnimation, fallDamage, force);
-        Plugin.ExtendedLogging($"PlayerControllerB_DamagePlayer called on client: {self.playerUsername} with caller: {self.playerUsername}");
-        if (self.currentlyHeldObjectServer is ChildEnemyAI childEnemyAI && self == GameNetworkManager.Instance.localPlayerController)
-        {
-            self.StartCoroutine(self.waitToEndOfFrameToDiscard());
-            if (childEnemyAI.mommyAlive && childEnemyAI.parentEevee != null)
-            {
-                childEnemyAI.parentEevee.HandleStateAnimationSpeedChangesServerRpc((int)ParentEnemyAI.State.Guarding);
-                childEnemyAI.parentEevee.SetTargetServerRpc(-1);
-            }
         }
     }
 
