@@ -99,7 +99,7 @@ public class TeslaShock : NetworkBehaviour
             if (!ShouldContinueCharging(affectedPlayer))
             {
                 float distanceFromItem = Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position);
-                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (transform.position - this.transform.position).normalized, out RaycastHit hit, distanceFromItem, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
+                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (chargedItemPlayerWasHolding.transform.position - transform.position).normalized, out _, distanceFromItem, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
                 {
                     validTargets.Add(startChainPoint);
                     validTargets.Add(chargedItemPlayerWasHolding.transform);
@@ -134,22 +134,27 @@ public class TeslaShock : NetworkBehaviour
             && !affectedPlayer.isPlayerDead
             && affectedPlayer.isPlayerControlled
             && PlayerCarryingSomethingConductive(affectedPlayer)
-            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out RaycastHit hit, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide);
+            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out _, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
     }
 
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)
     {
+        float timeToCharge = teslaFirstBigChargeSound.length;
+        if (affectedPlayer.playerSteamId == Plugin.GLITCH_STEAM_ID)
+        {
+            timeToCharge /= 5f;
+        }
         teslaAudioSource.PlayOneShot(teslaFirstBigChargeSound);
         vfx.SetFloat("SpawnRate", 10);
-        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        yield return new WaitForSeconds(timeToCharge/5);
         vfx.SetFloat("SpawnRate", 20);
-        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        yield return new WaitForSeconds(timeToCharge/5);
         vfx.SetFloat("SpawnRate", 40);
-        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        yield return new WaitForSeconds(timeToCharge/5);
         vfx.SetFloat("SpawnRate", 60);
-        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        yield return new WaitForSeconds(timeToCharge/5);
         vfx.SetFloat("SpawnRate", 80);
-        yield return new WaitForSeconds(teslaFirstBigChargeSound.length/5);
+        yield return new WaitForSeconds(timeToCharge/5);
         vfx.SetFloat("SpawnRate", 100);
     }
 
@@ -234,7 +239,7 @@ public class TeslaShock : NetworkBehaviour
             EnemyAI enemy = RoundManager.Instance.SpawnedEnemies.FirstOrDefault(e => e.transform == currentTarget);
             if (player != null)
             {
-                player.DamagePlayer(80, true, false, CauseOfDeath.Burning, 0, false, default);
+                player.DamagePlayer(80 * (player.playerSteamId == Plugin.GLITCH_STEAM_ID ? 2 : 1), true, false, CauseOfDeath.Burning, 0, false, default);
             }
             else if (enemy != null)
             {

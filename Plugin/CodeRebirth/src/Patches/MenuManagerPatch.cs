@@ -10,13 +10,13 @@ static class MenuManagerPatch
 {
     private static bool alreadyPatched = false;
 
-    [HarmonyPatch(nameof(MenuManager.Start)), HarmonyPostfix]
+    [HarmonyPatch(nameof(MenuManager.Start)), HarmonyPostfix] // thanks, funo
     static void MenuManagerStartPatch()
     {
         if (alreadyPatched)
             return;
 
-        var enemyArray = Resources.FindObjectsOfTypeAll<EnemyType>(); //thanks, Zaggy1024
+        var enemyArray = Resources.FindObjectsOfTypeAll<EnemyType>(); // thanks, Zaggy1024
         foreach (EnemyType enemy in enemyArray)
         {
             if (String.IsNullOrEmpty(enemy.enemyName)) continue;

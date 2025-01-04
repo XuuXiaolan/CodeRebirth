@@ -98,7 +98,7 @@ public class LaserTurret : NetworkBehaviour
                     }
                     else
                     {
-                        targetPlayer.DamagePlayer((int)laserDamage * (targetPlayer.playerSteamId == 76561198984467725 ? 2 : 1), true, false, CauseOfDeath.Burning, 0, false, default);
+                        targetPlayer.DamagePlayer((int)laserDamage * (targetPlayer.playerSteamId == Plugin.GLITCH_STEAM_ID ? 2 : 1), true, false, CauseOfDeath.Burning, 0, false, default);
                     }
                     damageTimer = 0.1f;
                 }

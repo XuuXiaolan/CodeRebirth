@@ -12,6 +12,7 @@ using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
+using UnityEngine.UIElements;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -32,7 +33,7 @@ public class Plugin : BaseUnityPlugin {
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
-
+    internal const ulong GLITCH_STEAM_ID = 9;
     internal static MainAssets Assets { get; private set; } = null!;
     internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName) {
         [LoadFromBundle("CodeRebirthUtils.prefab")]

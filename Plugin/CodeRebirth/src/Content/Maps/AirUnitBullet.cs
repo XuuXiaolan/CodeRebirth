@@ -36,7 +36,7 @@ public class AirUnitProjectile : NetworkBehaviour
     private void FixedUpdate()
     {
         Collider[] wallInWay = Physics.OverlapSphere(this.transform.position, 2f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Ignore);
-        if (!explodedOnTarget && wallInWay.Length != 0)
+        if (!explodedOnTarget && wallInWay.Length != 0 && playerToTarget.playerSteamId != Plugin.GLITCH_STEAM_ID)
         {
             CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, null, null);
             playerHitSoundSource.Play();
@@ -52,10 +52,10 @@ public class AirUnitProjectile : NetworkBehaviour
         transform.position += transform.up * speed * Time.fixedDeltaTime;
 
         // Curve towards target if the target player is within range
-        if (!explodedOnTarget && playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= (30f + (playerToTarget.playerSteamId == 76561198984467725 ? 100 : 1)))
+        if (!explodedOnTarget && playerToTarget != null && Vector3.Distance(transform.position, playerToTarget.transform.position) <= (30f + (playerToTarget.playerSteamId == Plugin.GLITCH_STEAM_ID ? 100 : 1)))
         {
             Vector3 directionToTarget = (playerToTarget.transform.position - transform.position).normalized;
-            Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.fixedDeltaTime * (playerToTarget.playerSteamId == 76561198984467725 ? 100 : 1)).normalized;
+            Vector3 newDirection = Vector3.Lerp(transform.up, directionToTarget, curveStrength * Time.fixedDeltaTime * (playerToTarget.playerSteamId == Plugin.GLITCH_STEAM_ID ? 100 : 1)).normalized;
             transform.up = newDirection;
         }
         if (playerToTarget != null && explodedOnTarget)
