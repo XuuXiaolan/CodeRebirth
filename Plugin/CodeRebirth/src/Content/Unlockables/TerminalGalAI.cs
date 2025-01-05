@@ -231,7 +231,7 @@ public class TerminalGalAI : GalAI
 
     private bool ObjectIsInteractable(GameObject gameObject)
     {
-        if (gameObject.GetComponent<DoorLock>() != null) return true;
+        if (gameObject.TryGetComponent(out DoorLock doorlock) && doorlock.isLocked) return true;
         if (gameObject.TryGetComponent(out Pickable pickable) && pickable.IsLocked) return true;
         return false;
     }

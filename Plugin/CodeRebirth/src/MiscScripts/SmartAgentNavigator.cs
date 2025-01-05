@@ -136,9 +136,12 @@ public class SmartAgentNavigator : NetworkBehaviour
         }
 
         bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(destination, elevatorScript.elevatorInsidePoint.position) < 7f;
-        if (!usingElevator && !playerIsInElevator && DetermineIfNeedToDisableAgent(destination))
+        if (!usingElevator && !playerIsInElevator)
         {
-            return true;
+            if (DetermineIfNeedToDisableAgent(destination))
+            {
+                return true;
+            }
         }
 
         if (!usingElevator)
@@ -151,29 +154,34 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     private bool DetermineIfNeedToDisableAgent(Vector3 destination)
     {
+        if (!NavMesh.SamplePosition(destination, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+        {
+            return false;
+        }
+
+        Vector3 finalDestination = hit.position;
+        float distanceToDest = Vector3.Distance(transform.position, finalDestination);
+        if (distanceToDest < agent.stoppingDistance)
+        {
+            return false;
+        }
+
         NavMeshPath path = new NavMeshPath();
-        if ((!agent.CalculatePath(destination, path) || path.status == NavMeshPathStatus.PathPartial) && Vector3.Distance(transform.position, destination) > 7f)
+        bool pathFound = agent.CalculatePath(finalDestination, path);
+        if (!pathFound || path.status != NavMeshPathStatus.PathComplete)
         {
             Vector3 lastValidPoint = FindClosestValidPoint();
             agent.SetDestination(lastValidPoint);
             if (Vector3.Distance(agent.transform.position, lastValidPoint) <= agent.stoppingDistance)
             {
-                agent.SetDestination(destination);
-                if (!agent.CalculatePath(destination, path) || path.status != NavMeshPathStatus.PathComplete)
-                {
-                    Vector3 nearbyPoint;
-                    if (NavMesh.SamplePosition(destination, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-                    {
-                        nearbyPoint = hit.position;
-                        pointToGo = nearbyPoint;
-                        OnEnableOrDisableAgent.Invoke(false);
-                        agent.enabled = false;
-                        Plugin.ExtendedLogging($"Pathing to {destination} failed, going to {nearbyPoint} instead.");
-                    }
-                }
+                pointToGo = finalDestination;
+                OnEnableOrDisableAgent.Invoke(false);
+                agent.enabled = false;
+                Plugin.ExtendedLogging($"Pathing to {destination} failed, going to fallback position {finalDestination} instead.");
+                return true;
             }
-            return true;
         }
+
         return false;
     }
 
