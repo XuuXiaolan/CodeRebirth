@@ -77,13 +77,13 @@ public class LaserTurret : NetworkBehaviour
                     else
                     {
                         // No further hit, end laser
-                        UpdateLaserVisuals(hit.point);
+                        UpdateLaserVisuals(hit.point - laserDirection * 1.912f);
                         return;
                     }
                 }
             }
 
-            UpdateLaserVisuals(hit.point);
+            UpdateLaserVisuals(hit.point - laserDirection * 1.912f);
 
             if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB targetPlayer))
             {
@@ -128,17 +128,17 @@ public class LaserTurret : NetworkBehaviour
         Vector3 impactPosition = visualEffect.GetVector3(ImpactPosition);
         impactPosition.z = originalImpactPositionZ * distance;
 
-        visualEffect.SetVector3(ImpactPosition, impactPosition - new Vector3(0, 0, 2.018f)); // todo: fix this
-        visualEffect.SetVector3(ParticlesVelocity, particlesVelocity - new Vector3(0, 0, 2.018f));
-        visualEffect.SetVector3(DarkBeamScale, darkBeamScale - new Vector3(0, 0, 2.018f));
-        visualEffect.SetVector3(ElectricBeamScale, electricBeamScale - new Vector3(0, 0, 2.018f));
-        visualEffect.SetVector3(BeamCoreScale, beamCoreScale - new Vector3(0, 0, 2.018f));
+        visualEffect.SetVector3(ImpactPosition, impactPosition);
+        visualEffect.SetVector3(ParticlesVelocity, particlesVelocity);
+        visualEffect.SetVector3(DarkBeamScale, darkBeamScale);
+        visualEffect.SetVector3(ElectricBeamScale, electricBeamScale);
+        visualEffect.SetVector3(BeamCoreScale, beamCoreScale);
 
         impactAudioSource.transform.position = laserEndPoint;
         if (!isFiring)
         {
             isFiring = true;
-            //laserLineRenderer.enabled = true;
+            // laserLineRenderer.enabled = true;
         }
     }
 
