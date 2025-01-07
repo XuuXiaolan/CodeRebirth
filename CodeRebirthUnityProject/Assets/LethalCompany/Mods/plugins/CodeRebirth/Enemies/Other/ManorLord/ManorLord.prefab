@@ -2875,6 +2875,8 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
+  targetEnemy: {fileID: 0}
+  creatureNetworkAnimator: {fileID: 2919410584223474381}
   smartAgentNavigator: {fileID: 6396429630971629580}
   puppetDamageDealer: {fileID: 2167556560943370418}
   playerStabPosition: {fileID: 2078151550481931162}
@@ -2883,7 +2885,6 @@ MonoBehaviour:
   detectionRange: 25
   puppetDamageToPlayerMultiplier: 25
   needleAttachPoint: {fileID: 4703563397247396442}
-  networkAnimator: {fileID: 2919410584223474381}
   normalFootstepSounds:
   - {fileID: 8300000, guid: b055e09bceecde14582573ac57de0184, type: 3}
   - {fileID: 8300000, guid: c36024678e34d7b41a2dbe3cbdd60f29, type: 3}

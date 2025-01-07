@@ -24,7 +24,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     public Transform needleAttachPoint = null!; // Where puppet spawns or is pinned
 
     [Header("Audio & Animation")]
-    public NetworkAnimator networkAnimator = null!;
     public AudioClip[] normalFootstepSounds = [];
     public AudioClip[] combatFootstepSounds = [];
     public AudioClip grabPlayerSound = null!;
@@ -150,7 +149,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             agent.speed = 0f;
             agent.velocity = Vector3.zero;
             Plugin.ExtendedLogging("Grabbing player!");
-            networkAnimator.SetTrigger(DoGrabPlayerAnimation);
+            creatureNetworkAnimator.SetTrigger(DoGrabPlayerAnimation);
             StartCoroutine(FixPlayerJustIncase(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, nearestPlayer)));
         }
     }
@@ -181,14 +180,14 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             agent.speed = chaseSpeed/4;
             PlayMiscSoundClientRpc(1);
-            networkAnimator.SetTrigger(DoSwipeAnimation);
+            creatureNetworkAnimator.SetTrigger(DoSwipeAnimation);
             isAttacking = true;
         }
         else if (distance <= 5f)
         {
             agent.speed = chaseSpeed/4;
             PlayMiscSoundClientRpc(0);
-            networkAnimator.SetTrigger(DoStabAnimation);
+            creatureNetworkAnimator.SetTrigger(DoStabAnimation);
             isAttacking = true;
         }
     }
@@ -317,7 +316,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         }
         enemyHP -= force;
         creatureVoice.PlayOneShot(puppeteerHitSounds[enemyRandom.Next(0, puppeteerHitSounds.Length)]);
-        if (IsServer) networkAnimator.SetTrigger(DoHitAnimation);
+        if (IsServer) creatureNetworkAnimator.SetTrigger(DoHitAnimation);
         if (enemyHP <= 0 && !isEnemyDead)
         {
             timeSinceLastTakenDamage = 1f;
@@ -360,21 +359,21 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             if (randomNumber < 1)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Jester").First());
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Jester").FirstOrDefault());
             }
             else if (randomNumber < 20)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Nutcracker").First());
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Nutcracker").FirstOrDefault());
             }
             else if (randomNumber < 30)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Butler").First());
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Butler").FirstOrDefault());
             }
             else
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").First());
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
             }
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").First());
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
         }
         yield return new WaitForSeconds(delay);
         if (state == PuppeteerState.Attacking) smartAgentNavigator.StopSearchRoutine();

@@ -5,13 +5,19 @@ using UnityEngine.AI;
 using System.Linq;
 using System;
 using CodeRebirth.src.MiscScripts;
+using Unity.Netcode.Components;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(NetworkAnimator))]
+[RequireComponent(typeof(NetworkTransform))]
+[RequireComponent(typeof(Collider))]
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
-    [NonSerialized] public EnemyAI? targetEnemy;
+    [HideInInspector] public EnemyAI? targetEnemy;
 
+    public NetworkAnimator creatureNetworkAnimator = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;
 
     public override void Start()

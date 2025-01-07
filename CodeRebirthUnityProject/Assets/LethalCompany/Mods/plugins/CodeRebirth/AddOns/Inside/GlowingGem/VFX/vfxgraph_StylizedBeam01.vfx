@@ -239,7 +239,7 @@ MonoBehaviour:
       x: 422
       y: -2295
       width: 1023
-      height: 1726
+      height: 1902
     contents:
     - model: {fileID: 8926484042661614751}
       id: 3
@@ -284,6 +284,9 @@ MonoBehaviour:
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661616262}
+      id: 0
+      isStickyNote: 0
+    - model: {fileID: 8926484042661616614}
       id: 0
       isStickyNote: 0
   - title: ELECTRIC FLASHES
@@ -649,13 +652,13 @@ MonoBehaviour:
   stickyNoteInfos: []
   categories:
   - name: FIRE POINT
-    collapsed: 0
+    collapsed: 1
   - name: BEAM CORE
     collapsed: 1
   - name: ELECTRIC BEAM
     collapsed: 1
   - name: DARK BEAM
-    collapsed: 0
+    collapsed: 1
   - name: STRETCHED PARTICLES
     collapsed: 1
   - name: IMPACT POINT
@@ -833,6 +836,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616461}
   - {fileID: 8926484042661616463}
   - {fileID: 8926484042661616465}
+  - {fileID: 8926484042661616614}
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
@@ -889,6 +893,20 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: 
       m_SerializableObject: 
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: FlashStartPosition
+    path: FlashStartPosition
+    tooltip: 
+    sheetType: m_Vector3f
+    realType: Vector3
+    defaultValue:
+      m_Type:
+        m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: '{"x":0.0,"y":0.0,"z":0.0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -20754,7 +20772,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615346}
   m_ExposedName: FlashRate
   m_Exposed: 1
-  m_Order: 14
+  m_Order: 2
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -20834,7 +20852,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615348}
   m_ExposedName: FlashTexture
   m_Exposed: 1
-  m_Order: 10
+  m_Order: 1
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -20914,7 +20932,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615350}
   m_ExposedName: FlashSize
   m_Exposed: 1
-  m_Order: 24
+  m_Order: 4
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -21133,7 +21151,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615356}
   m_ExposedName: ElectricFlashTexture
   m_Exposed: 1
-  m_Order: 29
+  m_Order: 5
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -21213,7 +21231,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615358}
   m_ExposedName: ElectricFlashRate
   m_Exposed: 1
-  m_Order: 34
+  m_Order: 6
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -21293,7 +21311,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615360}
   m_ExposedName: ElectricFlashSize
   m_Exposed: 1
-  m_Order: 44
+  m_Order: 8
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -21512,7 +21530,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615366}
   m_ExposedName: FlashLifetime
   m_Exposed: 1
-  m_Order: 20
+  m_Order: 3
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -21731,7 +21749,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615372}
   m_ExposedName: ElectricFlashLifetime
   m_Exposed: 1
-  m_Order: 40
+  m_Order: 7
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -21950,7 +21968,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615378}
   m_ExposedName: DarkFlashTexture
   m_Exposed: 1
-  m_Order: 47
+  m_Order: 9
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -22030,7 +22048,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615380}
   m_ExposedName: DarkFlashRate
   m_Exposed: 1
-  m_Order: 50
+  m_Order: 10
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -22110,7 +22128,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615382}
   m_ExposedName: DarkFlashLifetime
   m_Exposed: 1
-  m_Order: 53
+  m_Order: 11
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -22193,7 +22211,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615384}
   m_ExposedName: DarkFlashSize
   m_Exposed: 1
-  m_Order: 55
+  m_Order: 12
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -29309,7 +29327,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615686}
   m_ExposedName: InitialParticlesTexture
   m_Exposed: 1
-  m_Order: 57
+  m_Order: 13
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -29623,7 +29641,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615695}
   m_ExposedName: InitialParticlesRate
   m_Exposed: 1
-  m_Order: 60
+  m_Order: 14
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -29703,7 +29721,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615697}
   m_ExposedName: InitialParticlesLifetime
   m_Exposed: 1
-  m_Order: 61
+  m_Order: 15
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -29786,7 +29804,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615699}
   m_ExposedName: InitialParticlesSize
   m_Exposed: 1
-  m_Order: 62
+  m_Order: 16
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -29869,7 +29887,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615707}
   m_ExposedName: InitialParticlesScale
   m_Exposed: 1
-  m_Order: 64
+  m_Order: 17
   m_Category: FIRE POINT
   m_Min:
     m_Type:
@@ -45070,7 +45088,8 @@ MonoBehaviour:
       m_SerializableType: UnityEditor.VFX.Position, Unity.VisualEffectGraph.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661616615}
 --- !u!114 &8926484042661616609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45239,4 +45258,186 @@ MonoBehaviour:
       m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
+  m_LinkedSlots: []
+--- !u!114 &8926484042661616614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661616615}
+  m_ExposedName: FlashStartPosition
+  m_Exposed: 1
+  m_Order: 0
+  m_Category: FIRE POINT
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661616615}
+      inputSlot: {fileID: 8926484042661616608}
+    position: {x: 743, y: -1513}
+    expandedSlots: []
+    expanded: 0
+--- !u!114 &8926484042661616615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac39bd03fca81b849929b9c966f1836a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children:
+  - {fileID: 8926484042661616616}
+  - {fileID: 8926484042661616617}
+  - {fileID: 8926484042661616618}
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661616615}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661616614}
+    m_Value:
+      m_Type:
+        m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: 
+    m_Space: 2147483647
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661616608}
+--- !u!114 &8926484042661616616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661616615}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661616615}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: 2147483647
+  m_Property:
+    name: x
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots: []
+--- !u!114 &8926484042661616617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661616615}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661616615}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: 2147483647
+  m_Property:
+    name: y
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots: []
+--- !u!114 &8926484042661616618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661616615}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661616615}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: 2147483647
+  m_Property:
+    name: z
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
   m_LinkedSlots: []

@@ -9,6 +9,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.MiscScripts;
+[RequireComponent(typeof(NavMeshAgent))]
 public class SmartAgentNavigator : NetworkBehaviour
 {
     [NonSerialized] public bool cantMove = false;

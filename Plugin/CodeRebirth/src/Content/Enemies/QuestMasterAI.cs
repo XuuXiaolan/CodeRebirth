@@ -31,8 +31,6 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     [Header("Animations")]
     [SerializeField]
-    public NetworkAnimator networkAnimator = null!;
-    [SerializeField]
     public AnimationClip spawnAnimation = null!;
     [Space(5f)]
 
@@ -145,7 +143,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         yield return new WaitForSeconds(spawnAnimation.length);
         smartAgentNavigator.StartSearchRoutine(transform.position, 40);
         ChangeSpeedClientRpc(walkSpeed);
-        networkAnimator.SetTrigger(startWalkAnimation);
+        creatureNetworkAnimator.SetTrigger(startWalkAnimation);
         SwitchToBehaviourClientRpc((int)State.Wandering);
     }
 
@@ -174,7 +172,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         if (Vector3.Distance(transform.position, targetPlayer.transform.position) < 3f && !questStarted.Value)
         {
             questStarted.Value = true;
-            networkAnimator.SetTrigger(startGiveQuestAnimation);
+            creatureNetworkAnimator.SetTrigger(startGiveQuestAnimation);
             StartCoroutine(DoGiveQuest());
         }
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory, true, targetPlayer);
@@ -223,7 +221,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         creatureAnimator.SetBool(isTalkingAnimation, true);
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
         creatureAnimator.SetBool(isTalkingAnimation, false);
-        networkAnimator.SetTrigger(startQuestAnimation);
+        creatureNetworkAnimator.SetTrigger(startQuestAnimation);
         questStarted.Value = true;
         ChangeSpeedClientRpc(questSpeed);
         Vector3 randomSpawnPosition = this.transform.position;
@@ -376,7 +374,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     protected virtual IEnumerator QuestFailSequence(PlayerControllerB? failure)
     {
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
-        networkAnimator.SetTrigger(startFailQuestAnimation);
+        creatureNetworkAnimator.SetTrigger(startFailQuestAnimation);
         yield return new WaitForSeconds(1f);
         var bodyIndexToSpawn = UnityEngine.Random.Range(0, deadBodies.Count);
         if (failure != null) SpawnDeadBodyClientRpc(bodyIndexToSpawn, failure.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, failure));
@@ -401,7 +399,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     protected IEnumerator StartAnimation(int animationInt, int layerIndex = 0, string stateName = "Walking Animation")
     {
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
-        networkAnimator.SetTrigger(animationInt);
+        creatureNetworkAnimator.SetTrigger(animationInt);
         yield return new WaitUntil(() => creatureAnimator.GetCurrentAnimatorStateInfo(layerIndex).IsName(stateName));
     }
 

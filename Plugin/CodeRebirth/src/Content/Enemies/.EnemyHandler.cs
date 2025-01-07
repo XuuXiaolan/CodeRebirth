@@ -81,36 +81,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public GameObject DuckUIPrefab { get; private set; } = null!;
     }
 
-    public class PokemonEnemyAssets(string bundleName) : AssetBundleLoader<PokemonEnemyAssets>(bundleName)
-    {
-        [LoadFromBundle("FlareonObj.asset")]
-        public EnemyType FlareonEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("MechaSylveonObj.asset")]
-        public EnemyType MechaSylveonEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("GlaceonObj.asset")]
-        public EnemyType GlaceonEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("VaporeonObj.asset")]
-        public EnemyType VaporeonEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("JolteonObj.asset")]
-        public EnemyType JolteonEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("UmbreonObj.asset")]
-        public EnemyType UmbreonEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("EspeonObj.asset")]
-        public EnemyType EspeonEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("LeafeonObj.asset")]
-        public EnemyType LeafeonEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("ChildEeveeObj.asset")]
-        public Item ChildEeveeItem { get; private set; } = null!;
-    }
-
     public class ManorLordAssets(string bundleName) : AssetBundleLoader<ManorLordAssets>(bundleName)
     {
         [LoadFromBundle("ManorLordObj.asset")]
@@ -132,9 +102,15 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public Item PinNeedleItem { get; private set; } = null!;
     }
 
+    public class JanitorAssets(string bundleName) : AssetBundleLoader<JanitorAssets>(bundleName)
+    {
+        [LoadFromBundle("JanitorObj.asset")]
+        public EnemyType JanitorEnemyType { get; private set; } = null!;
+    }
+
+    public JanitorAssets Janitor { get; private set; } = null!;
     public ManorLordAssets ManorLord { get; private set; } = null!;
     public DuckSongAssets DuckSong { get; private set; } = null!;
-    public PokemonEnemyAssets PokemonEnemies { get; private set; } = null!;
     public ButterflyAssets Butterfly { get; private set; } = null!;
     public SnailCatAssets SnailCat { get; private set; } = null!;
     public CarnivorousPlantAssets CarnivorousPlant { get; private set; } = null!;
@@ -187,18 +163,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             Plugin.samplePrefabs.Add(ManorLord.PinNeedleItem.itemName, ManorLord.PinNeedleItem);
             Plugin.samplePrefabs.Add(ManorLord.PuppetItem.itemName, ManorLord.PuppetItem);
         }
-        if (false)
+
+        if (Plugin.ModConfig.ConfigJanitorEnabled.Value)
         {
-            PokemonEnemies = new PokemonEnemyAssets("eeveelutionassets");
-            RegisterScrapWithConfig("", PokemonEnemies.ChildEeveeItem, -1, -1);
-            RegisterEnemyWithConfig("", PokemonEnemies.UmbreonEnemyType, null, null, 2, 1);
-            RegisterEnemyWithConfig("", PokemonEnemies.VaporeonEnemyType, null, null, 2, 1);
-            RegisterEnemyWithConfig("", PokemonEnemies.JolteonEnemyType, null, null, 2, 1);
-            RegisterEnemyWithConfig("", PokemonEnemies.EspeonEnemyType, null, null, 2, 1);
-            RegisterEnemyWithConfig("", PokemonEnemies.GlaceonEnemyType, null, null, 2, 1);
-            RegisterEnemyWithConfig("", PokemonEnemies.MechaSylveonEnemyType, null, null, 2, 1);
-            RegisterEnemyWithConfig("", PokemonEnemies.FlareonEnemyType, null, null, 2, 1);
-            RegisterEnemyWithConfig("", PokemonEnemies.LeafeonEnemyType, null, null, 2, 1);
+            Janitor = new JanitorAssets("janitorassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigJanitorSpawnWeights.Value, Janitor.JanitorEnemyType, null, null, Plugin.ModConfig.ConfigJanitorPowerLevel.Value, Plugin.ModConfig.ConfigJanitorMaxSpawnCount.Value);
         }
     }
 }

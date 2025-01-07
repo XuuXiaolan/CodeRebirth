@@ -13,7 +13,8 @@ static class ShovelPatch
 {
 	static System.Random? random;
 	
-	public static void Init() {
+	public static void Init()
+    {
 		On.Shovel.HitShovel += Shovel_HitShovel;
     }
 

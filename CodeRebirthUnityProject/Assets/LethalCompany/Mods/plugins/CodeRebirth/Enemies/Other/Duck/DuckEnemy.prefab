@@ -1617,6 +1617,8 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
+  targetEnemy: {fileID: 0}
+  creatureNetworkAnimator: {fileID: 7652632877655664251}
   smartAgentNavigator: {fileID: 6547911657122333045}
   questTimer: 120
   questItems:
@@ -1625,10 +1627,8 @@ MonoBehaviour:
   questName: Duck Quest
   questRepeatChance: 25
   questRepeats: 1
-  networkAnimator: {fileID: 7652632877655664251}
   spawnAnimation: {fileID: 7400000, guid: 24097196dbe60384cb01d223125a9ac8, type: 2}
   creatureUltraVoice: {fileID: 3041539220418152922}
-  KarokeSource: {fileID: 1920902777120810730}
   questGiveClip: {fileID: 8300000, guid: 4ad058a02f18c8242bbf2e06e0d25642, type: 3}
   questSucceedClip: {fileID: 8300000, guid: 1afdb5759221c334fb3807fdd4c26d60, type: 3}
   questFailClip: {fileID: 8300000, guid: a5c7d2ad009bb4b42b65101d0c628f65, type: 3}

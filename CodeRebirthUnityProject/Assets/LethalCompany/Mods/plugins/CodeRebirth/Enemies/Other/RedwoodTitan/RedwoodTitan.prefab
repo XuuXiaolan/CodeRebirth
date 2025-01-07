@@ -46554,6 +46554,8 @@ MonoBehaviour:
   isOutside: 1
   hitsPhysicsObjects: 1
   gotFarthestNodeAsync: 0
+  targetEnemy: {fileID: 0}
+  creatureNetworkAnimator: {fileID: 6190392053031910777}
   smartAgentNavigator: {fileID: 2170431374383362112}
   AlbinoMaterials:
   - {fileID: 2100000, guid: b2f4cfae3f887b645b9bc3d5040ef296, type: 2}
@@ -46595,7 +46597,9 @@ MonoBehaviour:
   eatingArea: {fileID: 8502562699440387874}
   eating: {fileID: 7400000, guid: bde4b014909da4d4ab48f5e78949ad7c, type: 2}
   kickAnimation: {fileID: 7400000, guid: 210fe676fc89119429b58c36a07c3603, type: 2}
-  networkAnimator: {fileID: 6190392053031910777}
+  kickingOut: 0
+  kicking: 0
+  jumping: 0
 --- !u!65 &8260936454864110043
 BoxCollider:
   m_ObjectHideFlags: 0

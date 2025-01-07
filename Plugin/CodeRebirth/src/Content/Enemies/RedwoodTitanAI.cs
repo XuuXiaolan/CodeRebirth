@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Linq;
 using CodeRebirth.src.Util;
 using Unity.Netcode.Components;
-using System;
 using Unity.Netcode;
 using CodeRebirth.src.MiscScripts;
 
@@ -35,7 +34,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public GameObject eatingArea = null!;
     public AnimationClip eating = null!;
     public AnimationClip kickAnimation = null!;
-    public NetworkAnimator networkAnimator = null!;
 
     private Vector3 eatPosition = Vector3.zero;
     private bool sizeUp = false;
@@ -132,7 +130,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (IsServer)
         {
             SetAnimatorMotionBools(chasing: false, walking: false);
-            networkAnimator.SetTrigger(startSpawn);
+            creatureNetworkAnimator.SetTrigger(startSpawn);
         }
         SwitchToBehaviourStateOnLocalClient((int)State.Spawn);
         CodeRebirthPlayerManager.OnDoorStateChange += OnShipDoorStateChange;
@@ -266,7 +264,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void JumpInPlace()
     {
-        networkAnimator.SetTrigger(startJump);
+        creatureNetworkAnimator.SetTrigger(startJump);
         PlayMiscSoundsClientRpc(0);
         jumping = true;
         agent.speed = 0.5f;
@@ -277,7 +275,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         kicking = true;
         agent.speed = 0.5f;
-        networkAnimator.SetTrigger(startKick);
+        creatureNetworkAnimator.SetTrigger(startKick);
         playerToKick = closestPlayer;
         PlayMiscSoundsClientRpc(1);
         Plugin.ExtendedLogging("Start Kick");
@@ -374,7 +372,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public IEnumerator SetSpeedForChasingGiant()
     {
         agent.speed = 0f;
-        networkAnimator.SetTrigger(startEnrage);
+        creatureNetworkAnimator.SetTrigger(startEnrage);
         yield return new WaitForSeconds(6.9f);
         SetAnimatorMotionBools(chasing: true, walking: false);
         agent.angularSpeed = 100f;
@@ -482,7 +480,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         creatureVoice.PlayOneShot(eatenSound, 1);
         if (IsServer)
         {
-            networkAnimator.SetTrigger(eatEnemyGiant);
+            creatureNetworkAnimator.SetTrigger(eatEnemyGiant);
             SetAnimatorMotionBools(chasing: false, walking: false);
         }
         SwitchToBehaviourStateOnLocalClient((int)State.EatingTargetGiant);
@@ -600,7 +598,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (IsServer)
         {
             smartAgentNavigator.StopSearchRoutine();
-            networkAnimator.SetTrigger(startDeath);
+            creatureNetworkAnimator.SetTrigger(startDeath);
         }
         if (targetEnemy != null && targetEnemy.agent != null && !targetEnemy.agent.enabled)
         {

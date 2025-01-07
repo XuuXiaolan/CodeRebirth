@@ -6,6 +6,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigJanitorEnabled { get; private set; }
     public ConfigEntry<bool> ConfigManorLordEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortAddonsEnabled { get; private set; }
@@ -88,6 +89,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigZortRecorderSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigZortAccordionSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigManorLordSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigJanitorSpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
@@ -198,6 +200,8 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigACUnitGalCost { get; private set; }
     public ConfigEntry<int> ConfigManorLordPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigManorLordMaxSpawnCount { get; private set; }
+    public ConfigEntry<int> ConfigJanitorPowerLevel { get; private set; }
+    public ConfigEntry<int> ConfigJanitorMaxSpawnCount { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -232,6 +236,24 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region Janitor
+        ConfigJanitorEnabled = configFile.Bind("Janitor Options",
+                                            "Janitor | Enabled",
+                                            true,
+                                            "Whether the Janitor is enabled.");
+        ConfigJanitorSpawnWeights = configFile.Bind("Janitor Options",
+                                            "Janitor | Spawn Weights",
+                                            "Vanilla:10,Custom:10",
+                                            "The spawn weights for the Janitor.");
+        ConfigJanitorPowerLevel = configFile.Bind("Janitor Options",
+                                            "Janitor | Power Level",
+                                            2,
+                                            "The power level of the Janitor.");
+        ConfigJanitorMaxSpawnCount = configFile.Bind("Janitor Options",
+                                            "Janitor | Max Spawn Count",
+                                            3,
+                                            "The max spawn count of the Janitor.");
         #endregion
         #region Lord Of The Manor
         ConfigManorLordEnabled = configFile.Bind("Manor Lord Options",
