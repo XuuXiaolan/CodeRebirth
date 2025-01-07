@@ -133,7 +133,8 @@ public class Wallet : GrabbableObject {
         }
     }
 
-    public void HandleItemSell() {
+    public void HandleItemSell()
+    {
         if (!Plugin.InputActionsInstance.WalletSell.triggered) return;
         if (FindObjectOfType<DepositItemsDesk>() != null && walletHeldBy != null)
         {

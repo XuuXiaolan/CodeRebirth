@@ -11,6 +11,7 @@ using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Content.Maps;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -72,27 +73,30 @@ static class StartOfRoundPatch
 	{
 		Plugin.ExtendedLogging("Starting big object search");
 
-		Stopwatch timer = new();
-		timer.Start();
-		var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-		int FoundObject = 0;
-		LayerMask layerMask = LayerMask.NameToLayer("Foliage");
-		if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null) Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
-		foreach (var item in objs)
+		if (MapObjectHandler.Instance.Biome != null)
 		{
-			if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null && LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name == "Toy Store") HandleWesleyChangesCuzHeIsStupid(item);
-			if (item.layer == layerMask)
+			Stopwatch timer = new();
+			timer.Start();
+			var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+			int FoundObject = 0;
+			LayerMask layerMask = LayerMask.NameToLayer("Foliage");
+			if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null) Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
+			foreach (var item in objs)
 			{
-				// figure out a way to make this better against static meshes.
-				item.AddComponent<BoxCollider>().isTrigger = true;
-				FoundObject++;
+				if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null && LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name == "Toy Store") HandleWesleyChangesCuzHeIsStupid(item);
+				if (item.layer == layerMask)
+				{
+					// figure out a way to make this better against static meshes.
+					item.AddComponent<BoxCollider>().isTrigger = true;
+					FoundObject++;
+				}
 			}
+
+			timer.Stop();
+
+			Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
 		}
 
-		timer.Stop();
-
-		Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
-	
 		foreach (var plant in PlantPot.Instances)
 		{
 			plant.grewThisOrbit = false;

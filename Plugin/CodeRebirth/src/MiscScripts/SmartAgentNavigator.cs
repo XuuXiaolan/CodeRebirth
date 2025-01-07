@@ -67,7 +67,7 @@ public class SmartAgentNavigator : NetworkBehaviour
                 Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
             }
         }
-        elevatorScript = FindObjectOfType<MineshaftElevatorController>();
+        elevatorScript = RoundManager.Instance.currentMineshaftElevator;
     }
 
     public void ResetAllValues()
