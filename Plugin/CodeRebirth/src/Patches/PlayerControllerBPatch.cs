@@ -56,9 +56,9 @@ static class PlayerControllerBPatch
         orig(self, placeObject, parentObjectTo, placePosition, matchRotationOfParent);
         foreach (var janitor in Janitor.janitors)
         {
-            if (janitor == null) continue;
+            if (janitor == null || janitor.targetPlayer != null) continue;
             if (janitor.currentBehaviourStateIndex != (int)JanitorStates.Idle && janitor.currentBehaviourStateIndex != (int)JanitorStates.StoringScrap) return;
-            janitor.DetectDroppedScrap(self);
+            janitor.DetectDroppedScrapServerRpc(self.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self));
         }
     }
 

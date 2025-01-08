@@ -1,4 +1,10 @@
-# v0.12.1
+# v0.12.2
+
+- Made cleanup turn faster.
+- Made him only be able to grab things infront of him.
+- Fixed meteor shower sounds not working.
+
+## v0.12.1
 
 - Some stabilisation fixes to the cleanup crew.
 - picks random trash can.
