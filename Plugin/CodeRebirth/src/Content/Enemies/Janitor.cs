@@ -1,9 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,12 +10,16 @@ namespace CodeRebirth.src.Content.Enemies;
 public class Janitor : CodeRebirthEnemyAI
 {
     public GameObject sirenLights = null!;
-    public Collider[] colliderBlockersFromScrap = [];
     public Transform handTransform = null!;
+    public Transform playerBoneTransform = null!;
     public Transform placeToHideScrap = null!;
 
+    private TrashCan[] trashCans = [];
+    private TrashCan? targetTrashCan = null;
     private GrabbableObject? targetScrap = null;
     private bool currentlyGrabbingScrap = false;
+    private bool currentlyGrabbingPlayer = false;
+    private bool currentlyThrowingPlayer = false;
     private Dictionary<GrabbableObject, int> storedScrapAndValueDict = new();
     // -- Path Info --
     private Vector3[] _pathCorners = [];
@@ -36,7 +39,25 @@ public class Janitor : CodeRebirthEnemyAI
     private static readonly int RightTreadFloat = Animator.StringToHash("RightTreadFloat"); // Float
     private static readonly int LeftTreadFloat  = Animator.StringToHash("LeftTreadFloat"); // Float
     private static readonly int IsAngryAnimation = Animator.StringToHash("isAngry"); // Bool
+    private static readonly int HoldingPlayerAnimation = Animator.StringToHash("holdingPlayer"); // Bool
+    private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int GrabScrapAnimation = Animator.StringToHash("grabScrap"); // Trigger
+    private static readonly int BreakMovementAnimation = Animator.StringToHash("break"); // Trigger
+    private static readonly int ThrowPlayerAnimation = Animator.StringToHash("throwPlayer"); // Trigger
+
+    public static List<Janitor> janitors = new();
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        janitors.Add(this);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        janitors.Remove(this);
+    }
 
     public IEnumerator CheckForScrapNearby()
     {
@@ -45,12 +66,12 @@ public class Janitor : CodeRebirthEnemyAI
             yield return new WaitForSeconds(2f);
             yield return new WaitUntil(() => currentBehaviourStateIndex == (int)JanitorStates.Idle);
             Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max items nearby
-            int numHits = Physics.OverlapSphereNonAlloc(this.transform.position, 20, hitColliders, LayerMask.GetMask("Props"), QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapSphereNonAlloc(this.transform.position, 15, hitColliders, LayerMask.GetMask("Props"), QueryTriggerInteraction.Collide);
             for (int i = 0; i < numHits; i++)
             {
                 if (!hitColliders[i].gameObject.TryGetComponent(out GrabbableObject grabbableObject) || grabbableObject.isHeld || grabbableObject.isHeldByEnemy || grabbableObject.playerHeldBy != null || storedScrapAndValueDict.ContainsKey(grabbableObject)) continue;
                 NavMeshPath path = new NavMeshPath();
-                if (!agent.CalculatePath(hitColliders[i].gameObject.transform.position, path) || path.status != NavMeshPathStatus.PathComplete || DoCalculatePathDistance(path) > 20) continue;
+                if (!agent.CalculatePath(hitColliders[i].gameObject.transform.position, path) || path.status != NavMeshPathStatus.PathComplete || DoCalculatePathDistance(path) > 12.5f) continue;
                 targetScrap = grabbableObject;
                 SetPathAsDestination(path);
                 SwitchToBehaviourServerRpc((int)JanitorStates.StoringScrap);
@@ -82,12 +103,6 @@ public class Janitor : CodeRebirthEnemyAI
 
         if (!IsServer) return;
         StartCoroutine(CheckForScrapNearby());
-        /*
-        // Angry stuff
-        agent.speed = 15f;
-        sirenLights.SetActive(true);
-        creatureAnimator.SetBool(IsAngryAnimation, true);
-        */
     }
 
     public override void Update()
@@ -98,6 +113,43 @@ public class Janitor : CodeRebirthEnemyAI
         {
             HandleRotation();
         }
+    }
+
+    public void LateUpdate()
+    {
+        if (currentBehaviourStateIndex == (int)JanitorStates.ZoomingOff)
+        {
+            if (targetPlayer == null || targetPlayer.isPlayerDead)
+            {
+                targetPlayer = null;
+                sirenLights.SetActive(false);
+                SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
+                if (IsServer)
+                {
+                    agent.speed = 7.5f;
+                    creatureAnimator.SetBool(IsAngryAnimation, false);
+                }
+                skinnedMeshRenderers[0].SetBlendShapeWeight(0, 100);
+                // just go back to idle or smthn idfk
+                return;
+            }
+
+            targetPlayer.transform.position = playerBoneTransform.position;
+            targetPlayer.transform.rotation = playerBoneTransform.rotation;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetBlendShapeWeightServerRpc(int weight)
+    {
+        SetBlendShapeWeightClientRpc(weight);
+    }
+
+    [ClientRpc]
+    public void SetBlendShapeWeightClientRpc(int weight)
+    {
+        sirenLights.SetActive(weight == 100);
+        skinnedMeshRenderers[0].SetBlendShapeWeight(0, weight);
     }
 
     public override void DoAIInterval()
@@ -160,6 +212,8 @@ public class Janitor : CodeRebirthEnemyAI
         {
             // Plugin.ExtendedLogging($"[Janitor] Attempting to calculate a new path because path is invalid: {IsPathInvalid()}.");
             // go back to idle assuming a player picked it up or something, don't get angry?
+            _isPathValid = false;
+            targetScrap = null;
             SwitchToBehaviourServerRpc((int)JanitorStates.Idle);
             return;
         }
@@ -185,7 +239,6 @@ public class Janitor : CodeRebirthEnemyAI
                 currentlyGrabbingScrap = true;
                 SetTargetScrapUngrabbableServerRpc(new NetworkObjectReference(targetScrap.gameObject));
                 // do the animation for collecting scrap.
-                // Anim event that switches back to idle prob.
                 // Add scrap to relevant lists too.
                 // Make the scrap un-grabbable.
             }
@@ -196,12 +249,126 @@ public class Janitor : CodeRebirthEnemyAI
 
     public void DoFollowingPlayer()
     {
+        if (targetPlayer == null || targetPlayer.isPlayerDead)
+        {
+            // go back to idle assuming a died or something, don't get angry?
+            _isPathValid = false;
+            targetPlayer = null;
+            SwitchToBehaviourServerRpc((int)JanitorStates.Idle);
+            agent.speed = 7.5f;
+            creatureAnimator.SetBool(IsAngryAnimation, false);
+            SetBlendShapeWeightServerRpc(0);
+            return;
+        }
 
+        if (!_isPathValid || IsPathInvalid())
+        {
+            Plugin.ExtendedLogging($"[Janitor] Attempting to calculate a new path because path is invalid: {IsPathInvalid()}.");
+            NavMesh.SamplePosition(targetPlayer.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
+            CalculateAndSetNewPath(hit.position);
+            return;
+        }
+
+        if (_isRotating) return;
+        HandleMovement();
+        Plugin.ExtendedLogging($"[Janitor] Corner Length: {_pathCorners.Length}");
+        Plugin.ExtendedLogging($"[Janitor] Current corner index: {_currentCornerIndex}");
+        // If we have corners to traverse...
+        if (_pathCorners.Length <= 0 || _currentCornerIndex >= _pathCorners.Length) return;
+
+        float distToCorner = Vector3.Distance(transform.position, _pathCorners[_currentCornerIndex]);
+        Plugin.ExtendedLogging($"[Janitor] Distance to corner: {distToCorner}");
+        
+        float distToPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
+        if (distToPlayer <= agent.stoppingDistance + 3 && !currentlyGrabbingPlayer)
+        {
+            Plugin.ExtendedLogging($"[Janitor] Player collected!");
+            currentlyGrabbingPlayer = true;
+            SetPlayerImmovableServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
+            return;
+        }
+        else if (distToCorner > _cornerThreshold)
+        {
+            return;
+        }
+        else if (!currentlyGrabbingPlayer && Vector3.Distance(targetPlayer.transform.position, agent.path.corners[agent.path.corners.Length - 1]) > 3f && _currentCornerIndex != 0)
+        {
+            Plugin.ExtendedLogging($"[Janitor] Player too far from corner! {Vector3.Distance(targetPlayer.transform.position, agent.path.corners[agent.path.corners.Length - 1])}");
+            _isPathValid = false;
+            return;
+        }
+        BeginRotation();
     }
 
     public void DoZoomingOff()
     {
+        if (!_isPathValid || IsPathInvalid() || targetTrashCan == null)
+        {
+            if (currentlyThrowingPlayer) return;
+            bool foundAtleastOneViablePath = false;
+            foreach (TrashCan trashCan in trashCans)
+            {
+                // Plugin.ExtendedLogging($"[Janitor] Attempting to calculate a new path because path is invalid: {IsPathInvalid()}.");
+                NavMesh.SamplePosition(trashCan.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
+                if (CalculateAndSetNewPath(hit.position))
+                {
+                    targetTrashCan = trashCan;
+                    foundAtleastOneViablePath = true;
+                    break;
+                }
+            }
+            if (!foundAtleastOneViablePath)
+            {
+                currentlyThrowingPlayer = true;
+                creatureNetworkAnimator.SetTrigger(ThrowPlayerAnimation);
+                // Throw player and go back to being idle.
+            }
+            return;
+        }
 
+        if (_isRotating) return;
+        HandleMovement();
+        // Plugin.ExtendedLogging($"[Janitor] Corner Length: {_pathCorners.Length}");
+        // Plugin.ExtendedLogging($"[Janitor] Current corner index: {_currentCornerIndex}");
+        // If we have corners to traverse...
+        if (_pathCorners.Length <= 0 || _currentCornerIndex >= _pathCorners.Length) return;
+
+        float distToCorner = Vector3.Distance(transform.position, _pathCorners[_currentCornerIndex]);
+        // Plugin.ExtendedLogging($"[Janitor] Distance to corner: {distToCorner}");
+        if (distToCorner > _cornerThreshold) return;
+        // Are we at the final corner? 
+        if (_currentCornerIndex == _pathCorners.Length - 1)
+        {
+            // We reached the actual destination!
+            // Check if scrap is here, if not, set a new destination
+            if (Vector3.Distance(targetTrashCan.transform.position, this.transform.position) <= agent.stoppingDistance + 1.2 && !currentlyThrowingPlayer)
+            {
+                currentlyThrowingPlayer = true;
+                Plugin.ExtendedLogging($"[Janitor] Throwing player into trash!");
+                creatureNetworkAnimator.SetTrigger(ThrowPlayerAnimation);
+                // do the animation for throwing player.
+                // Anim event that switches back to idle prob.
+            }
+            return;
+        }
+        BeginRotation();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetPlayerImmovableServerRpc(int playerIndex)
+    {
+        SetPlayerImmovableClientRpc(playerIndex);
+    }
+
+    [ClientRpc]
+    public void SetPlayerImmovableClientRpc(int playerIndex)
+    {
+        PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        player.inAnimationWithEnemy = this;
+        targetPlayer = player; // if they somehow turned null somewhere through this
+        player.disableMoveInput = true;
+        player.disableLookInput = true;
+        if (IsServer) creatureAnimator.SetBool(HoldingPlayerAnimation, true);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -225,7 +392,9 @@ public class Janitor : CodeRebirthEnemyAI
             targetScrap = null;
             // Freak out
             sirenLights.SetActive(true);
+            _isPathValid = false;
             SwitchToBehaviourStateOnLocalClient((int)JanitorStates.FollowingPlayer);
+            skinnedMeshRenderers[0].SetBlendShapeWeight(0, 100);
             if (!IsServer) return;
             agent.speed = 15f;
             creatureAnimator.SetBool(IsAngryAnimation, true);
@@ -237,7 +406,7 @@ public class Janitor : CodeRebirthEnemyAI
         creatureNetworkAnimator.SetTrigger(GrabScrapAnimation);
     }
 
-    private void CalculateAndSetNewPath(Vector3 targetPosition)
+    private bool CalculateAndSetNewPath(Vector3 targetPosition)
     {
         // Create a new path object
         NavMeshPath path = new NavMeshPath();
@@ -247,12 +416,14 @@ public class Janitor : CodeRebirthEnemyAI
         if (pathFound && path.status == NavMeshPathStatus.PathComplete)
         {
             SetPathAsDestination(path);
+            return true;
         }
         else
         {
             // repeat
             _isPathValid = false;
             agent.ResetPath();
+            return false;
         }
     }
 
@@ -302,6 +473,11 @@ public class Janitor : CodeRebirthEnemyAI
     private void BeginRotation()
     {
         _isRotating = true;
+        Plugin.ExtendedLogging($"[Janitor] Begin Rotation with speed: {agent.velocity.magnitude}");
+        if (agent.velocity.magnitude > 7.5f)
+        {
+            creatureNetworkAnimator.SetTrigger(BreakMovementAnimation);
+        }
         // Stop the agent from moving while rotating
         agent.velocity = Vector3.zero;
         agent.isStopped = true;
@@ -332,7 +508,7 @@ public class Janitor : CodeRebirthEnemyAI
 
         // Rotate
         // Plugin.ExtendedLogging($"[Janitor] Signed angle: {signedAngle} so turning Right: {turningRight}");
-        float rotateDelta = 45 * Time.deltaTime * (turningRight ? 1 : -1) * (creatureAnimator.GetBool(IsAngryAnimation) ? 2 : 1);
+        float rotateDelta = 45 * Time.deltaTime * (turningRight ? 1 : -1) * (sirenLights.activeSelf ? 2 : 1);
         transform.Rotate(Vector3.up, rotateDelta);
 
         // Animate treads
@@ -360,28 +536,74 @@ public class Janitor : CodeRebirthEnemyAI
         }
     }
 
-    public override void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)
+    public void DetectDroppedScrap(PlayerControllerB playerWhoDropped)
     {
-        base.DetectNoise(noisePosition, noiseLoudness, timesPlayedInOneSpot, noiseID);
+        DetectDroppedScrapServerRpc(playerWhoDropped.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoDropped));
     }
 
-    public override void OnCollideWithPlayer(Collider other)
+    [ServerRpc(RequireOwnership = false)]
+    public void DetectDroppedScrapServerRpc(Vector3 noisePosition, int playerWhoDroppedIndex)
     {
-        base.OnCollideWithPlayer(other);
+        NavMesh.SamplePosition(noisePosition, out NavMeshHit hit, 5f, NavMesh.AllAreas);
+        NavMeshPath path = new NavMeshPath();
+        Plugin.ExtendedLogging($"[Janitor] Player {playerWhoDroppedIndex} dropped scrap at {noisePosition}");
+        if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete && DoCalculatePathDistance(path) <= 20f)
+        {
+            SetTargetClientRpc(playerWhoDroppedIndex);
+            targetPlayer = StartOfRound.Instance.allPlayerScripts[playerWhoDroppedIndex];
+            SetBlendShapeWeightClientRpc(100);
+            agent.speed = 15f;
+            creatureAnimator.SetBool(IsAngryAnimation, true);
+            _isPathValid = false;
+            SwitchToBehaviourClientRpc((int)JanitorStates.FollowingPlayer);
+        }
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+        enemyHP -= force;
+        // creatureVoice.PlayOneShot(HitSounds[UnityEngine.Random.Range(0, HitSounds.Length)]);
+
+        if (enemyHP <= 0 && !isEnemyDead)
+        {
+            if (IsOwner)
+            {
+                creatureAnimator.SetBool(IsDeadAnimation, true);
+                KillEnemyOnOwnerClient();
+            }
+        }
     }
 
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        currentlyThrowingPlayer = false;
+        currentlyGrabbingPlayer = false;
+        currentlyGrabbingScrap = false;
+        targetScrap = null;
+        targetTrashCan = null;
+        if (targetPlayer != null && currentBehaviourStateIndex == (int)JanitorStates.ZoomingOff)
+        {
+            targetPlayer.disableMoveInput = false;
+            targetPlayer.disableLookInput = false;
+        }
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Dead);
         foreach (var item in storedScrapAndValueDict.Keys)
         {
+            item.EnableItemMeshes(true);
+            item.EnablePhysics(true);
+            item.grabbable = true;
+            item.grabbableToEnemies = true;
+            if (!HoarderBugAI.grabbableObjectsInMap.Contains(item.gameObject)) HoarderBugAI.grabbableObjectsInMap.Add(item.gameObject);
             // do something which is either regurgitating the item/scrap or custom scrap that's worth the combined value of all stored scraps.
+        }
+
+        if (IsServer)
+        {
+            creatureAnimator.SetBool(HoldingPlayerAnimation, false);
+            creatureAnimator.SetFloat(LeftTreadFloat, 0);
+            creatureAnimator.SetFloat(RightTreadFloat, 0);
         }
     }
 
@@ -408,7 +630,9 @@ public class Janitor : CodeRebirthEnemyAI
             targetScrap.grabbable = true;
             sirenLights.SetActive(true);
             targetPlayer = targetScrap.playerHeldBy;
+            _isPathValid = false;
             SwitchToBehaviourStateOnLocalClient((int)JanitorStates.FollowingPlayer);
+            skinnedMeshRenderers[0].SetBlendShapeWeight(0, 100);
             if (!IsServer) return;
             agent.speed = 15f;
             creatureAnimator.SetBool(IsAngryAnimation, true);
@@ -430,6 +654,33 @@ public class Janitor : CodeRebirthEnemyAI
         _targetScrap.EnablePhysics(false);
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
         currentlyGrabbingScrap = false;
+    }
+
+    public void GrabPlayerAnimEvent()
+    {
+        SwitchToBehaviourStateOnLocalClient((int)JanitorStates.ZoomingOff);
+        currentlyGrabbingPlayer = false;
+    }
+
+    public void ThrowPlayerAnimEvent()
+    {
+        PlayerControllerB previousTargetPlayer = targetPlayer;
+        targetPlayer = null;
+        if (targetTrashCan != null)
+        {
+            Vector3 directionToTrash = (targetTrashCan.transform.position - previousTargetPlayer.transform.position).normalized;
+            previousTargetPlayer.externalForceAutoFade = directionToTrash * 15f;
+        }
+        else
+        {
+            previousTargetPlayer.externalForceAutoFade = this.transform.forward * 15f;
+        }
+        targetTrashCan = null;
+        previousTargetPlayer.disableMoveInput = false;
+        previousTargetPlayer.disableLookInput = false;
+        currentlyThrowingPlayer = false;
+        previousTargetPlayer.inAnimationWithEnemy = null;
+        if (IsServer) creatureAnimator.SetBool(HoldingPlayerAnimation, false);
     }
     #endregion
 }

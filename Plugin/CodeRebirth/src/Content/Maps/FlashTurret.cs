@@ -97,7 +97,7 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
         {
             if (Physics.Raycast(turretTransform.position, (noisePosition - turretTransform.position).normalized, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
             {
-                if (hit.collider != null && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+                if (hit.collider != null && hit.collider.TryGetComponent(out PlayerControllerB player))
                 {
                     detectedPlayer = player;
                     isTriggered = true;

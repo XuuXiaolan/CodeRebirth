@@ -9,7 +9,9 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using Unity.Netcode;
 using UnityEngine;
+using static CodeRebirth.src.Content.Enemies.Janitor;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
@@ -46,6 +48,19 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
         On.GameNetcodeStuff.PlayerControllerB.KillPlayer += PlayerControllerB_KillPlayer;
         On.GameNetcodeStuff.PlayerControllerB.IHittable_Hit += PlayerControllerB_IHittable_Hit;
+        On.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += PlayerControllerB_DiscardHeldObject;
+    }
+
+    private static void PlayerControllerB_DiscardHeldObject(On.GameNetcodeStuff.PlayerControllerB.orig_DiscardHeldObject orig, PlayerControllerB self, bool placeObject, NetworkObject parentObjectTo, Vector3 placePosition, bool matchRotationOfParent)
+    {
+        orig(self, placeObject, parentObjectTo, placePosition, matchRotationOfParent);
+        if (placeObject) return;
+        foreach (var janitor in Janitor.janitors)
+        {
+            if (janitor == null) continue;
+            if (janitor.currentBehaviourStateIndex != (int)JanitorStates.Idle) return;
+            janitor.DetectDroppedScrap(self);
+        }
     }
 
     private static bool PlayerControllerB_IHittable_Hit(On.GameNetcodeStuff.PlayerControllerB.orig_IHittable_Hit orig, PlayerControllerB self, int force, Vector3 hitDirection, PlayerControllerB playerWhoHit, bool playHitSFX, int hitID)
