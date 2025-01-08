@@ -14,6 +14,7 @@ public class Janitor : CodeRebirthEnemyAI
     public Transform handTransform = null!;
     public Transform playerBoneTransform = null!;
     public Transform placeToHideScrap = null!;
+    public GameObject[] headLights = [];
     [Header("Audio and Sounds")]
     public AudioClip spawnSound = null!;
     public AudioClip[] deathSounds = [];
@@ -75,12 +76,16 @@ public class Janitor : CodeRebirthEnemyAI
         while (true)
         {
             yield return new WaitForSeconds(2f);
-            yield return new WaitUntil(() => currentBehaviourStateIndex == (int)JanitorStates.Idle);
+            yield return new WaitUntil(() => currentBehaviourStateIndex == (int)JanitorStates.Idle && targetScrap == null);
             Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max items nearby
             int numHits = Physics.OverlapSphereNonAlloc(this.transform.position, 15, hitColliders, LayerMask.GetMask("Props"), QueryTriggerInteraction.Collide);
             for (int i = 0; i < numHits; i++)
             {
                 if (!hitColliders[i].gameObject.TryGetComponent(out GrabbableObject grabbableObject) || grabbableObject.isHeld || grabbableObject.isHeldByEnemy || grabbableObject.playerHeldBy != null || storedScrapAndValueDict.ContainsKey(grabbableObject)) continue;
+                foreach (var janitor in janitors)
+                {
+                    if (janitor.targetScrap == grabbableObject) continue;
+                }
                 NavMeshPath path = new NavMeshPath();
                 if (!agent.CalculatePath(hitColliders[i].gameObject.transform.position, path) || path.status != NavMeshPathStatus.PathComplete || DoCalculatePathDistance(path) > 12.5f) continue;
                 targetScrap = grabbableObject;
@@ -153,6 +158,7 @@ public class Janitor : CodeRebirthEnemyAI
             {
                 targetPlayer = null;
                 sirenLights.SetActive(false);
+                targetScrap = null;
                 SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
                 if (IsServer)
                 {
@@ -283,6 +289,7 @@ public class Janitor : CodeRebirthEnemyAI
             // go back to idle assuming a died or something, don't get angry?
             _isPathValid = false;
             targetPlayer = null;
+            targetScrap = null;
             SwitchToBehaviourServerRpc((int)JanitorStates.Idle);
             agent.speed = 7.5f;
             creatureAnimator.SetBool(IsAngryAnimation, false);
@@ -413,6 +420,7 @@ public class Janitor : CodeRebirthEnemyAI
         if (targetScrap != _targetScrap)
         {
             Plugin.Logger.LogError("This shouldn't be possible, triggered grabbing an item that wasn't the target item??? report this.");
+            targetScrap = null;
             SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
             return;
         }
@@ -594,6 +602,7 @@ public class Janitor : CodeRebirthEnemyAI
             agent.speed = 15f;
             creatureAnimator.SetBool(IsAngryAnimation, true);
             _isPathValid = false;
+            targetScrap = null;
             SwitchToBehaviourClientRpc((int)JanitorStates.FollowingPlayer);
         }
         PlayDetectScrapSoundClientRpc();
@@ -615,6 +624,7 @@ public class Janitor : CodeRebirthEnemyAI
         {
             DetectDroppedScrap(playerWhoHit);
         }
+
         if (enemyHP <= 0 && !isEnemyDead)
         {
             if (IsOwner)
@@ -643,7 +653,6 @@ public class Janitor : CodeRebirthEnemyAI
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Dead);
         foreach (var item in storedScrapAndValueDict.Keys)
         {
-            item.parentObject = null;
             item.EnableItemMeshes(true);
             item.EnablePhysics(true);
             item.grabbable = true;
@@ -661,6 +670,10 @@ public class Janitor : CodeRebirthEnemyAI
         }
         sirenLights.SetActive(false);
         skinnedMeshRenderers[0].SetBlendShapeWeight(0, 0);
+        foreach (var lights in headLights)
+        {
+            lights.SetActive(false);
+        }
     }
 
     #region Animation Events
@@ -669,6 +682,7 @@ public class Janitor : CodeRebirthEnemyAI
         if (targetScrap == null || Vector3.Distance(targetScrap.transform.position, this.transform.position) > 1.25f)
         {
             Plugin.Logger.LogError("Scrap I was reaching for suddenly fucking vanished, please report this.");
+            targetScrap = null;
             SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
             return;
         }
@@ -676,7 +690,7 @@ public class Janitor : CodeRebirthEnemyAI
         if (currentBehaviourStateIndex != (int)JanitorStates.StoringScrap)
         {
             Plugin.Logger.LogError("I shouldn't be in this animation, report this");
-            SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
+            targetScrap = null;
             return;
         }
 
@@ -687,6 +701,7 @@ public class Janitor : CodeRebirthEnemyAI
             sirenLights.SetActive(true);
             targetPlayer = targetScrap.playerHeldBy;
             _isPathValid = false;
+            targetScrap = null;
             SwitchToBehaviourStateOnLocalClient((int)JanitorStates.FollowingPlayer);
             skinnedMeshRenderers[0].SetBlendShapeWeight(0, 100);
             if (!IsServer) return;
@@ -714,6 +729,7 @@ public class Janitor : CodeRebirthEnemyAI
 
     public void GrabPlayerAnimEvent()
     {
+        targetScrap = null;
         creatureVoice.PlayOneShot(grabPlayerSounds[janitorRandom.Next(0, grabPlayerSounds.Length)]);
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.ZoomingOff);
         currentlyGrabbingPlayer = false;
@@ -727,11 +743,11 @@ public class Janitor : CodeRebirthEnemyAI
         if (targetTrashCan != null)
         {
             Vector3 directionToTrash = (targetTrashCan.transform.position - previousTargetPlayer.transform.position).normalized;
-            previousTargetPlayer.externalForceAutoFade = directionToTrash * 25f;
+            previousTargetPlayer.externalForceAutoFade = Vector3.up * 5f + directionToTrash * 25f;
         }
         else
         {
-            previousTargetPlayer.externalForceAutoFade = this.transform.forward * 25f;
+            previousTargetPlayer.externalForceAutoFade = Vector3.up * 5f + this.transform.forward * 25f;
         }
         targetTrashCan = null;
         previousTargetPlayer.disableMoveInput = false;
@@ -739,6 +755,7 @@ public class Janitor : CodeRebirthEnemyAI
         currentlyThrowingPlayer = false;
         previousTargetPlayer.inAnimationWithEnemy = null;
         previousTargetPlayer.DamagePlayer(20, true, false, CauseOfDeath.Gravity, 0, false, default);
+        targetScrap = null;
         if (IsServer) creatureAnimator.SetBool(HoldingPlayerAnimation, false);
     }
     #endregion

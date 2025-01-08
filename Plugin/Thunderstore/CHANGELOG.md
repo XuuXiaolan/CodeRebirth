@@ -1,4 +1,13 @@
-# v0.11.0
+# v0.12.0
+
+- Added cleanup crew.
+- Cleaned up some assetbundles, if you notice loss of quality let me know and I'll restore some stuff.
+- Fixed a bug with manor lord spawning enemies that its not supposed to know.
+- Optimised navmesh code a bit.
+- Fixed laser turret going through walls (woo fuck interiors that fucked it up, if it fucks up still then I'm gonna be sending you straight to the interior creators).
+- Fixed tesla shock to actually trigger more often.
+
+## v0.11.0
 
 - Added Lord of the manor.
 
