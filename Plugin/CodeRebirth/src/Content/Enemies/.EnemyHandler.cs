@@ -106,6 +106,9 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     {
         [LoadFromBundle("JanitorObj.asset")]
         public EnemyType JanitorEnemyType { get; private set; } = null!;
+
+        [LoadFromBundle("JanitorTrash.prefab")]
+        public GameObject TrashCanPrefab { get; private set; } = null!;
     }
 
     public JanitorAssets Janitor { get; private set; } = null!;
@@ -168,6 +171,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         {
             Janitor = new JanitorAssets("janitorassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigJanitorSpawnWeights.Value, Janitor.JanitorEnemyType, null, null, Plugin.ModConfig.ConfigJanitorPowerLevel.Value, Plugin.ModConfig.ConfigJanitorMaxSpawnCount.Value);
+            RegisterInsideMapObjectWithConfig(Janitor.TrashCanPrefab, "Vanilla - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00 | Custom - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00");
         }
     }
 }

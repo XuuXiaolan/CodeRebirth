@@ -58,7 +58,7 @@ static class PlayerControllerBPatch
         foreach (var janitor in Janitor.janitors)
         {
             if (janitor == null) continue;
-            if (janitor.currentBehaviourStateIndex != (int)JanitorStates.Idle) return;
+            if (janitor.currentBehaviourStateIndex != (int)JanitorStates.Idle && janitor.currentBehaviourStateIndex != (int)JanitorStates.StoringScrap) return;
             janitor.DetectDroppedScrap(self);
         }
     }

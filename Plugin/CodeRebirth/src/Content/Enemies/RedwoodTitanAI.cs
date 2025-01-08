@@ -612,6 +612,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         base.OnDestroy();
         instanceNumbers--;
     }
+
     public bool TargetClosestRadMech(float range)
     {
         EnemyAI? closestEnemy = null;
