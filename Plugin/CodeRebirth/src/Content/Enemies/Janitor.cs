@@ -609,9 +609,9 @@ public class Janitor : CodeRebirthEnemyAI
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead) return;
-        enemyHP -= force;
+        if (targetPlayer == null || (targetPlayer != null && targetPlayer != playerWhoHit)) enemyHP -= force;
 
-        if (playerWhoHit != null && IsServer && (currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer || currentBehaviourStateIndex == (int)JanitorStates.ZoomingOff))
+        if (playerWhoHit != null && IsServer && currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer && currentBehaviourStateIndex != (int)JanitorStates.ZoomingOff)
         {
             DetectDroppedScrap(playerWhoHit);
         }
@@ -636,12 +636,14 @@ public class Janitor : CodeRebirthEnemyAI
         targetTrashCan = null;
         if (targetPlayer != null)
         {
+            targetPlayer.inAnimationWithEnemy = null;
             targetPlayer.disableMoveInput = false;
             targetPlayer.disableLookInput = false;
         }
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Dead);
         foreach (var item in storedScrapAndValueDict.Keys)
         {
+            item.parentObject = null;
             item.EnableItemMeshes(true);
             item.EnablePhysics(true);
             item.grabbable = true;
