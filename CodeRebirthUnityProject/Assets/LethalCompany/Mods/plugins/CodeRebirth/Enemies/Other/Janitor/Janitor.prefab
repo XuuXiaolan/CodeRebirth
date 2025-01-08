@@ -1829,10 +1829,10 @@ NavMeshAgent:
   m_GameObject: {fileID: 3591052539947343789}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 1.2
+  m_Radius: 0.8
   m_Speed: 7.5
   m_Acceleration: 40
-  avoidancePriority: 10
+  avoidancePriority: 0
   m_AngularSpeed: 0
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
@@ -1841,7 +1841,7 @@ NavMeshAgent:
   m_Height: 1.6
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!114 &704313031332245639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2086,6 +2086,7 @@ MonoBehaviour:
   handTransform: {fileID: 5815964725433825710}
   playerBoneTransform: {fileID: 3904122950325406940}
   placeToHideScrap: {fileID: 6013619530164358457}
+  headLights: []
   spawnSound: {fileID: 8300000, guid: 5d8444c48a058b44cae4a43f45d9301f, type: 3}
   deathSounds:
   - {fileID: 8300000, guid: 34d59987882d45a42b90067c87a3d454, type: 3}

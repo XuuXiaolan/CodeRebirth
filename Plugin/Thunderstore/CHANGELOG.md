@@ -1,4 +1,11 @@
-# v0.12.0
+# v0.12.1
+
+- Some stabilisation fixes to the cleanup crew.
+- picks random trash can.
+- Gave it higher priority.
+- Misc fixes to janitor.
+
+## v0.12.0
 
 - Added cleanup crew.
 - Cleaned up some assetbundles, if you notice loss of quality let me know and I'll restore some stuff.

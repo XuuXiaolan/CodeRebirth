@@ -54,7 +54,6 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_DiscardHeldObject(On.GameNetcodeStuff.PlayerControllerB.orig_DiscardHeldObject orig, PlayerControllerB self, bool placeObject, NetworkObject parentObjectTo, Vector3 placePosition, bool matchRotationOfParent)
     {
         orig(self, placeObject, parentObjectTo, placePosition, matchRotationOfParent);
-        if (placeObject) return;
         foreach (var janitor in Janitor.janitors)
         {
             if (janitor == null) continue;

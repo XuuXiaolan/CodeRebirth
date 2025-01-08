@@ -341,23 +341,26 @@ public class Janitor : CodeRebirthEnemyAI
         if (!_isPathValid || IsPathInvalid() || targetTrashCan == null)
         {
             if (currentlyThrowingPlayer) return;
-            bool foundAtleastOneViablePath = false;
+            List<TrashCan> viableTrashCans = new();
             foreach (TrashCan trashCan in trashCans)
             {
                 Plugin.ExtendedLogging($"[Janitor] Attempting to calculate a new path because path is invalid: {IsPathInvalid()}.");
                 NavMesh.SamplePosition(trashCan.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
                 if (CalculateAndSetNewPath(hit.position))
                 {
-                    targetTrashCan = trashCan;
-                    foundAtleastOneViablePath = true;
+                    viableTrashCans.Add(trashCan);
                     break;
                 }
             }
-            if (!foundAtleastOneViablePath)
+            if (viableTrashCans.Count <= 0)
             {
                 currentlyThrowingPlayer = true;
                 creatureNetworkAnimator.SetTrigger(ThrowPlayerAnimation);
                 // Throw player and go back to being idle.
+            }
+            else
+            {
+                targetTrashCan = viableTrashCans[UnityEngine.Random.Range(0, viableTrashCans.Count)];
             }
             return;
         }
@@ -618,7 +621,7 @@ public class Janitor : CodeRebirthEnemyAI
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead) return;
-        if (targetPlayer == null || (targetPlayer != null && targetPlayer != playerWhoHit)) enemyHP -= force;
+        if (targetPlayer == null || (targetPlayer != null && targetPlayer != playerWhoHit) || (targetPlayer != null && targetPlayer == playerWhoHit && !targetPlayer.disableMoveInput)) enemyHP -= force;
 
         if (playerWhoHit != null && IsServer && currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer && currentBehaviourStateIndex != (int)JanitorStates.ZoomingOff)
         {
@@ -743,11 +746,11 @@ public class Janitor : CodeRebirthEnemyAI
         if (targetTrashCan != null)
         {
             Vector3 directionToTrash = (targetTrashCan.transform.position - previousTargetPlayer.transform.position).normalized;
-            previousTargetPlayer.externalForceAutoFade = Vector3.up * 5f + directionToTrash * 25f;
+            previousTargetPlayer.externalForceAutoFade = Vector3.up * 10f + directionToTrash * 25f;
         }
         else
         {
-            previousTargetPlayer.externalForceAutoFade = Vector3.up * 5f + this.transform.forward * 25f;
+            previousTargetPlayer.externalForceAutoFade = Vector3.up * 10f + this.transform.forward * 25f;
         }
         targetTrashCan = null;
         previousTargetPlayer.disableMoveInput = false;
