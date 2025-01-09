@@ -6,6 +6,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigCleanerDroneGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigJanitorEnabled { get; private set; }
     public ConfigEntry<bool> ConfigManorLordEnabled { get; private set; }
@@ -203,6 +204,7 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigManorLordMaxSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigJanitorPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigJanitorMaxSpawnCount { get; private set; }
+    public ConfigEntry<int> ConfigCleanerDroneGalCost { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -237,6 +239,18 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region Transporter
+        #endregion
+        #region Cleaner Drone Gal
+        ConfigCleanerDroneGalEnabled = configFile.Bind("Cleaner Drone Gal Options",
+                                            "Cleaner Drone Gal | Enabled",
+                                            true,
+                                            "Whether the Cleaner Drone Gal is enabled.");
+        ConfigCleanerDroneGalCost = configFile.Bind("Cleaner Drone Gal Options",
+                                            "Cleaner Drone Gal | Cost",
+                                            420,
+                                            "The cost of the Cleaner Drone Gal.");
         #endregion
         #region Janitor
         ConfigJanitorEnabled = configFile.Bind("Janitor Options",

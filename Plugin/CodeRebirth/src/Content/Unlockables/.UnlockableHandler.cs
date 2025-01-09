@@ -91,6 +91,12 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
         public UnlockableItemDef GlitchedPlushieUnlockable { get; private set; } = null!;
     }
 
+	public class CleanerDroneGalAssets(string bundleName) : AssetBundleLoader<CleanerDroneGalAssets>(bundleName)
+	{
+		[LoadFromBundle("JaneFogUnlockable.asset")]
+		public UnlockableItemDef CleanerDroneGalUnlockable { get; private set; } = null!;
+	}
+
     public FriendAssets Friend { get; private set; } = null!;
 	public Fishdispenserassets ShrimpDispenser { get; private set; } = null!;
 	public SCP999Assets SCP999 { get; private set; } = null!;
@@ -101,6 +107,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	public ShockwaveBotAssets ShockwaveBot { get; private set; } = null!;
 	public ACUnitGalAssets ACUnitGal { get; private set; } = null!;
 	public BearTrapGalAssets BearTrapGal { get; private set; } = null!;
+	public CleanerDroneGalAssets CleanerDroneGal { get; private set; } = null!;
 
     public UnlockableHandler()
 	{
@@ -114,6 +121,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
         if (Plugin.ModConfig.ConfigFriendStuffEnabled.Value) RegisterFriendStuff();
 		if (Plugin.ModConfig.ConfigBearTrapGalEnabled.Value) RegisterBearTrapGal();
 		if (Plugin.ModConfig.ConfigACUnitGalEnabled.Value) RegisterACUnitGal();
+		if (Plugin.ModConfig.ConfigCleanerDroneGalEnabled.Value) RegisterCleanerDroneGal();
+	}
+
+	private void RegisterCleanerDroneGal()
+	{
+		CleanerDroneGal = new CleanerDroneGalAssets("cleanerdronegalassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(CleanerDroneGal.CleanerDroneGalUnlockable, Plugin.ModConfig.ConfigCleanerDroneGalCost.Value, StoreType.ShipUpgrade);
 	}
 
 	private void RegisterBearTrapGal()

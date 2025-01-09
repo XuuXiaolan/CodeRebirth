@@ -186,66 +186,152 @@ public class SmartAgentNavigator : NetworkBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Checks if the agent can calculate a valid path to a given target position.
+    /// Returns the path distance if valid, otherwise returns a negative number.
+    /// </summary>
+    private float CheckPathDistance(Vector3 targetPosition)
+    {
+        NavMeshPath path = new NavMeshPath();
+        bool pathFound = agent.CalculatePath(targetPosition, path);
+        if (!pathFound || path.status != NavMeshPathStatus.PathComplete)
+            return -1f;
+
+        // If you want total "as-the-crow-walks-the-path" distance:
+        float length = 0f;
+        for (int i = 1; i < path.corners.Length; i++)
+        {
+            length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+        }
+        return length;
+    }
+
+    /// <summary>
+    /// Finds a viable EntranceTeleport that is pathable (i.e., the agent can actually walk to it).
+    /// Optionally returns the "best" one based on nearest path distance or any custom logic.
+    /// </summary>
+    private EntranceTeleport? FindViableEntranceTeleport(Vector3 ultimateDestination, bool wantInside)
+    {
+        EntranceTeleport? bestTeleport = null;
+        float bestDistance = float.MaxValue;
+
+        foreach (var kvp in exitPoints) 
+        {
+            EntranceTeleport teleport = kvp.Key;
+            // Decide if you want to check teleport.entrancePoint or teleport.exitPoint
+            // If you're outside going in, you might want to path to the entrancePoint.
+            // If you're inside going out, you might want the exitPoint, etc.
+
+            Vector3 pointToCheck = (wantInside) 
+                                ? teleport.entrancePoint.position 
+                                : teleport.exitPoint.position;
+
+            float distance = CheckPathDistance(pointToCheck);
+            if (distance < 0f)
+                continue; // not pathable
+
+            // If you just want the first valid teleport, you can break here.
+            // Or if you want the "closest valid" teleport, store whichever has the shortest path.
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                bestTeleport = teleport;
+            }
+        }
+
+        return bestTeleport;
+    }
+
     private void GoThroughEntrance(bool followingPlayer, PlayerControllerB? playerBeingFollowed)
     {
-        Vector3 destination = Vector3.zero;
-        Vector3 destinationAfterTeleport = Vector3.zero;
-        EntranceTeleport entranceTeleportToUse = null!;
-
+        Vector3 destination;
+        Vector3 destinationAfterTeleport;
+        EntranceTeleport entranceTeleportToUse;
+        // 1) If we are following a specific player, attempt to pick an entrance near them
         if (followingPlayer && playerBeingFollowed != null)
         {
+            // Use your existing logic to get a “candidate” or “desired” position.
             Vector3 positionOfPlayerBeforeTeleport = positionsOfPlayersBeforeTeleport[playerBeingFollowed];
-            // Find the closest entrance to the player
-            EntranceTeleport? closestExitPointToPlayer = null;
-            foreach (var exitpoint in exitPoints.Keys)
+
+            // Instead of just picking the "closest" teleporter by raw distance,
+            // we now pick one that is actually pathable, which was the Janitor logic:
+            var viableTeleport = FindViableEntranceTeleport(positionOfPlayerBeforeTeleport, wantInside: true);
+            if (viableTeleport != null)
             {
-                if (closestExitPointToPlayer == null || Vector3.Distance(positionOfPlayerBeforeTeleport, exitpoint.transform.position) < Vector3.Distance(positionOfPlayerBeforeTeleport, closestExitPointToPlayer.transform.position))
-                {
-                    closestExitPointToPlayer = exitpoint;
-                }
+                entranceTeleportToUse = viableTeleport;
+                destination = viableTeleport.entrancePoint.position;
+                destinationAfterTeleport = viableTeleport.exitPoint.position;
             }
-            if (closestExitPointToPlayer != null)
+            else
             {
-                entranceTeleportToUse = closestExitPointToPlayer;
-                destination = closestExitPointToPlayer.entrancePoint.transform.position;
-                destinationAfterTeleport = closestExitPointToPlayer.exitPoint.transform.position;
+                // fallback: no pathable teleports found, so do something else
+                return;
             }
         }
         else
         {
+            // 2) If we are just toggling inside/outside for ourselves:
+            // Try to pick from the lastUsedEntranceTeleport first
             if (lastUsedEntranceTeleport != null)
             {
-                entranceTeleportToUse = lastUsedEntranceTeleport;
-                destination = !isOutside ? lastUsedEntranceTeleport.exitPoint.transform.position : lastUsedEntranceTeleport.entrancePoint.transform.position;
-                destinationAfterTeleport = !isOutside ? lastUsedEntranceTeleport.entrancePoint.transform.position : lastUsedEntranceTeleport.exitPoint.transform.position;
+                float distance = CheckPathDistance(
+                    isOutside
+                        ? lastUsedEntranceTeleport.entrancePoint.position
+                        : lastUsedEntranceTeleport.exitPoint.position);
+
+                // If it is pathable, use it:
+                if (distance > 0f)
+                {
+                    entranceTeleportToUse = lastUsedEntranceTeleport;
+                    destination = isOutside
+                        ? entranceTeleportToUse.entrancePoint.position
+                        : entranceTeleportToUse.exitPoint.position;
+
+                    destinationAfterTeleport = isOutside
+                        ? entranceTeleportToUse.exitPoint.position
+                        : entranceTeleportToUse.entrancePoint.position;
+                }
+                else
+                {
+                    // fallback: try any other pathable teleport
+                    var viableTeleport = FindViableEntranceTeleport(this.transform.position, !isOutside);
+                    if (viableTeleport == null) return; // no pathable teleports
+                    entranceTeleportToUse = viableTeleport;
+                    destination = isOutside
+                        ? viableTeleport.entrancePoint.position
+                        : viableTeleport.exitPoint.position;
+
+                    destinationAfterTeleport = isOutside
+                        ? viableTeleport.exitPoint.position
+                        : viableTeleport.entrancePoint.position;
+                }
             }
             else
             {
-                EntranceTeleport? closestExitPointToScript = null;
-                foreach (var exitpoint in exitPoints.Keys)
-                {
-                    if (closestExitPointToScript == null || Vector3.Distance(this.transform.position, exitpoint.transform.position) < Vector3.Distance(this.transform.position, closestExitPointToScript.transform.position))
-                    {
-                        closestExitPointToScript = exitpoint;
-                    }
-                }
-                if (closestExitPointToScript != null)
-                {
-                    entranceTeleportToUse = closestExitPointToScript;
-                    destination = closestExitPointToScript.entrancePoint.transform.position;
-                    destinationAfterTeleport = closestExitPointToScript.exitPoint.transform.position;
-                }
+                // fallback: no "lastUsedEntranceTeleport", so do a generic viable search:
+                var viableTeleport = FindViableEntranceTeleport(this.transform.position, !isOutside);
+                if (viableTeleport == null) return;
+                entranceTeleportToUse = viableTeleport;
+                destination = isOutside
+                    ? viableTeleport.entrancePoint.position
+                    : viableTeleport.exitPoint.position;
+
+                destinationAfterTeleport = isOutside
+                    ? viableTeleport.exitPoint.position
+                    : viableTeleport.entrancePoint.position;
             }
         }
 
+        // 3) Handle elevator usage if needed
         if (elevatorScript != null && NeedsElevator(destination, entranceTeleportToUse, elevatorScript))
         {
             UseTheElevator(elevatorScript);
             return;
         }
 
+        // 4) Finally, either walk to the teleport or warp if close enough
         float distanceToDestination = Vector3.Distance(transform.position, destination);
-        if (distanceToDestination <= agent.stoppingDistance || (agent.velocity.sqrMagnitude <= 0.01f && distanceToDestination <= 10f))
+        if (distanceToDestination <= agent.stoppingDistance || (agent.velocity.sqrMagnitude <= 0.01f && distanceToDestination <= 10f * (elevatorScript != null ? 3 : 1)))
         {
             lastUsedEntranceTeleport = entranceTeleportToUse;
             agent.Warp(destinationAfterTeleport);

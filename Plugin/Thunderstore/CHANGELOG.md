@@ -1,4 +1,10 @@
-# v0.12.3
+# v0.13.0
+
+- Extra fix for dropping stuff infront of janitor while he's grabbing an item.
+- Added second member of cleanup crew, the transporter.
+- Added cleaning drone gal.
+
+## v0.12.3
 
 - Fixed shockwave gal spammin error.
 - Balanced cleanup crew faster.

@@ -101,7 +101,6 @@ public class Janitor : CodeRebirthEnemyAI
 
         // Audio & initial setup
         creatureVoice.PlayOneShot(spawnSound);
-        smartAgentNavigator.SetAllValues(isOutside);
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
 
         // If we're the server, start coroutines
