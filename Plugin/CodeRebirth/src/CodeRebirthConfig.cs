@@ -6,6 +6,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigJanitorEnabled { get; private set; }
     public ConfigEntry<bool> ConfigManorLordEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
@@ -254,6 +255,10 @@ public class CodeRebirthConfig
                                             "Janitor | Max Spawn Count",
                                             3,
                                             "The max spawn count of the Janitor.");
+        ConfigDisableTrashCans = configFile.Bind("Janitor Options",
+                                            "Janitor | Disable Trash Cans",
+                                            false,
+                                            "Whether trash cans are disabled.");
         #endregion
         #region Lord Of The Manor
         ConfigManorLordEnabled = configFile.Bind("Manor Lord Options",

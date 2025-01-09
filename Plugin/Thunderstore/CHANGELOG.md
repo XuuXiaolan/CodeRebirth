@@ -1,4 +1,10 @@
-# v0.12.2
+# v0.12.3
+
+- Fixed shockwave gal spammin error.
+- Balanced cleanup crew faster.
+- Fixed misc bugs with him when hitting him mid animation.
+
+## v0.12.2
 
 - Made cleanup turn faster.
 - Made him only be able to grab things infront of him.

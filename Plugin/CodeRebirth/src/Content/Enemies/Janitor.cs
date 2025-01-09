@@ -55,9 +55,9 @@ public class Janitor : CodeRebirthEnemyAI
     // Scrap & Player
     private TrashCan? targetTrashCan = null;
     private GrabbableObject? targetScrap = null;
-    private bool currentlyGrabbingScrap = false;
-    private bool currentlyGrabbingPlayer = false;
-    private bool currentlyThrowingPlayer = false;
+    [HideInInspector] public bool currentlyGrabbingScrap = false;
+    [HideInInspector] public bool currentlyGrabbingPlayer = false;
+    [HideInInspector] public bool currentlyThrowingPlayer = false;
     private readonly Dictionary<GrabbableObject, int> storedScrapAndValueDict = new();
 
     // Animator Hashes
@@ -158,6 +158,12 @@ public class Janitor : CodeRebirthEnemyAI
             // Scan for scrap
             TryFindScrapNearby();
         }
+    }
+
+    public IEnumerator WaitUntilNotDoingAnythingCurrently(PlayerControllerB playerWhoHit)
+    {
+        yield return new WaitUntil(() => !currentlyGrabbingScrap && !currentlyGrabbingPlayer && !currentlyThrowingPlayer);
+        DetectDroppedScrapServerRpc(playerWhoHit.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
     }
 
     #endregion
@@ -498,8 +504,7 @@ public class Janitor : CodeRebirthEnemyAI
         // Ensure the agent is heading to the correct corner
         if (_pathCorners.Length > 0 && _currentCornerIndex < _pathCorners.Length)
         {
-            if (!agent.pathPending &&
-                Vector3.Distance(agent.destination, _pathCorners[_currentCornerIndex]) > 0.1f)
+            if (!agent.pathPending)
             {
                 smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex],
                     !isOutside,
@@ -608,7 +613,7 @@ public class Janitor : CodeRebirthEnemyAI
         previousTargetPlayer.disableLookInput = false;
         currentlyThrowingPlayer = false;
         previousTargetPlayer.inAnimationWithEnemy = null;
-        previousTargetPlayer.DamagePlayer(20, true, false, CauseOfDeath.Gravity, 0, false, default);
+        previousTargetPlayer.DamagePlayer(15, true, false, CauseOfDeath.Gravity, 0, false, default);
 
         if (IsServer)
         {
@@ -635,9 +640,16 @@ public class Janitor : CodeRebirthEnemyAI
         }
 
         // If we’re still alive, chase that player if we’re not already
-        if (!currentlyGrabbingPlayer && !currentlyGrabbingScrap && !currentlyThrowingPlayer && playerWhoHit != null && IsServer && currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer && currentBehaviourStateIndex != (int)JanitorStates.ZoomingOff)
+        if (playerWhoHit != null && IsServer && currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer && currentBehaviourStateIndex != (int)JanitorStates.ZoomingOff)
         {
-            DetectDroppedScrapServerRpc(playerWhoHit.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
+            if (!currentlyGrabbingPlayer && !currentlyGrabbingScrap && !currentlyThrowingPlayer)
+            {
+                DetectDroppedScrapServerRpc(playerWhoHit.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
+            }
+            else
+            {
+                StartCoroutine(WaitUntilNotDoingAnythingCurrently(playerWhoHit));
+            }
         }
 
         // If HP is depleted, kill
@@ -876,7 +888,7 @@ public class Janitor : CodeRebirthEnemyAI
         float dotProduct = Vector3.Dot(transform.forward, directionToPlayer);
         Plugin.ExtendedLogging($"Dot product: {dotProduct} with distance: {distToPlayer}");
         // Player must be within distance AND in front
-        return distToPlayer <= agent.stoppingDistance + 3f && dotProduct > 0f;
+        return distToPlayer <= agent.stoppingDistance + 2f && dotProduct > 0.25f;
     }
 
     private void StartGrabPlayer()
@@ -897,14 +909,19 @@ public class Janitor : CodeRebirthEnemyAI
 
     private bool TryFindAnyValidTrashCan()
     {
+        List<TrashCan> viableTrashCans = new();
         foreach (TrashCan trashCan in trashCans)
         {
             NavMesh.SamplePosition(trashCan.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
             if (CalculateAndSetNewPath(hit.position))
             {
-                targetTrashCan = trashCan;
-                return true;
+                viableTrashCans.Add(trashCan);
             }
+        }
+        if (viableTrashCans.Count > 0)
+        {
+            targetTrashCan = viableTrashCans[UnityEngine.Random.Range(0, viableTrashCans.Count)];
+            return true;
         }
         return false;
     }

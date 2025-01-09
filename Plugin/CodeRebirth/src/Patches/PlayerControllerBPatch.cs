@@ -56,9 +56,19 @@ static class PlayerControllerBPatch
         orig(self, placeObject, parentObjectTo, placePosition, matchRotationOfParent);
         foreach (var janitor in Janitor.janitors)
         {
-            if (janitor == null || janitor.targetPlayer != null) continue;
-            if (janitor.currentBehaviourStateIndex != (int)JanitorStates.Idle && janitor.currentBehaviourStateIndex != (int)JanitorStates.StoringScrap) return;
-            janitor.DetectDroppedScrapServerRpc(self.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self));
+            if (janitor == null) continue;
+            // If we’re still alive, chase that player if we’re not already
+            if (self != null && NetworkManager.Singleton.IsServer && janitor.currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer && janitor.currentBehaviourStateIndex != (int)JanitorStates.ZoomingOff)
+            {
+                if (!janitor.currentlyGrabbingPlayer && !janitor.currentlyGrabbingScrap && !janitor.currentlyThrowingPlayer)
+                {
+                    janitor.DetectDroppedScrapServerRpc(self.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self));
+                }
+                else
+                {
+                    janitor.StartCoroutine(janitor.WaitUntilNotDoingAnythingCurrently(self));
+                }
+            }
         }
     }
 
