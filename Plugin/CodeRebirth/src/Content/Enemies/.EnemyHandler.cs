@@ -111,6 +111,13 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public GameObject TrashCanPrefab { get; private set; } = null!;
     }
 
+    public class TransporterAssets(string bundleName) : AssetBundleLoader<TransporterAssets>(bundleName)
+    {
+        [LoadFromBundle("TransporterObj.asset")]
+        public EnemyType TransporterEnemyType { get; private set; } = null!;
+    }
+
+    public TransporterAssets Transporter { get; private set; } = null!;
     public JanitorAssets Janitor { get; private set; } = null!;
     public ManorLordAssets ManorLord { get; private set; } = null!;
     public DuckSongAssets DuckSong { get; private set; } = null!;
@@ -172,6 +179,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             Janitor = new JanitorAssets("janitorassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigJanitorSpawnWeights.Value, Janitor.JanitorEnemyType, null, null, Plugin.ModConfig.ConfigJanitorPowerLevel.Value, Plugin.ModConfig.ConfigJanitorMaxSpawnCount.Value);
             RegisterInsideMapObjectWithConfig(Janitor.TrashCanPrefab, "Vanilla - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00 | Custom - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00");
+        }
+
+        if (true)
+        {
+            Transporter = new TransporterAssets("transporterassets");
+            RegisterEnemyWithConfig("", Transporter.TransporterEnemyType, null, null, 2, 1);
         }
     }
 }

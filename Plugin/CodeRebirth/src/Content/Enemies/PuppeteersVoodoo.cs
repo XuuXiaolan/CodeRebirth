@@ -126,9 +126,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
             animator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
             smartAgentNavigator.DoPathingToDestination(
                 playerControlled.transform.position,
-                playerControlled.isInsideFactory,
-                true,
-                playerControlled
+                playerControlled.isInsideFactory
             );
         }
         else

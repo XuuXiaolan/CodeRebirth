@@ -1,12 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Maps;
 using GameNetcodeStuff;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class Transporter : CodeRebirthEnemyAI
 {
-    [HideInInspector] public Dictionary<GameObject, bool> objectsToTransport = new(); // Remove object from list once transported.
+    /// <summary>
+    /// Key = GameObject (the object the Transporter wants to move)
+    /// Value = whether it's currently outside (true) or inside (false).
+    /// </summary>
+    [HideInInspector] 
+    public Dictionary<GameObject, bool> objectsToTransport = new();
 
     private GameObject? transportTarget = null;
     private Vector3 currentEndDestination = Vector3.zero;
@@ -21,13 +28,45 @@ public class Transporter : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        foreach (var laser in FindObjectsOfType<ItemCrate>())
+        {
+            objectsToTransport.Add(laser.gameObject, true);
+        }
+        smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
+
+        // 1) Subscribe to SmartAgentNavigator’s OnUseEntranceTeleport event
+        //    so we can update the transported object’s “outside/inside” state
+        //    whenever we use an entrance teleport.
+        smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnEntranceTeleport);
+    }
+
+    // If you unspawn or disable this enemy, you may want to unsubscribe:
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnEntranceTeleport);
+    }
+
+    /// <summary>
+    /// This is called automatically by SmartAgentNavigator when the Transporter
+    /// uses an entrance teleport. The bool indicates the new "isOutside" state
+    /// (true => outside, false => inside).
+    /// </summary>
+    private void OnEntranceTeleport(bool newOutsideState)
+    {
+        // If we are currently carrying a target (transportTarget), update its state.
+        if (transportTarget != null && objectsToTransport.ContainsKey(transportTarget))
+        {
+            objectsToTransport[transportTarget] = newOutsideState;
+            Debug.Log($"Transporter: Updated '{transportTarget.name}' to outside={newOutsideState}");
+        }
     }
 
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-
+        creatureAnimator.SetFloat("RunSpeedFloat", agent.velocity.magnitude); // todo: turn that into static int thing
         switch (currentBehaviourStateIndex)
         {
             case (int)TransporterStates.Idle:
@@ -42,7 +81,9 @@ public class Transporter : CodeRebirthEnemyAI
         }
     }
 
-    public void DoIdle()
+    #region State Behaviors
+
+    private void DoIdle()
     {
         if (objectsToTransport.Count == 0)
         {
@@ -50,117 +91,139 @@ public class Transporter : CodeRebirthEnemyAI
             return;
         }
 
-        // PickRandomTargetToTransport();
-        foreach (var objectToTransport in objectsToTransport.Keys)
-        {
-            if (objectToTransport == null) continue;
-            if (objectsToTransport[objectToTransport]) continue;
+        TryFindAnyTransportableObjectViaEntrances();
+    }
 
-            if (Vector3.Distance(objectToTransport.transform.position, this.transform.position) <= 10)
+    private void TryFindAnyTransportableObjectViaEntrances()
+    {
+        // Gather all valid objects
+        var candidateObjects = objectsToTransport.Keys
+            .Where(kv => kv != null)
+            .ToList();
+
+        // Example: pick them in random order, or just the first that works
+        foreach (var obj in candidateObjects)
+        {
+            bool objectIsOutside = objectsToTransport[obj];
+            if ((isOutside && objectIsOutside) || (!objectIsOutside && !isOutside))
             {
-                transportTarget = objectToTransport;
+                transportTarget = obj;
+
+                // Switch to transporting
+                smartAgentNavigator.StopSearchRoutine();
+                SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
+                return;
+            }
+
+            Plugin.ExtendedLogging($"Transporter: Trying to find a viable entrance for {obj.name}");
+            var viableEntrance = smartAgentNavigator.FindViableEntranceToPath(obj.transform.position);
+            if (viableEntrance != null)
+            {
+                transportTarget = obj;
+
+                // Switch to transporting
+                smartAgentNavigator.StopSearchRoutine();
                 SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
                 return;
             }
         }
     }
 
-    public void DoTransporting()
-    {
-        if (transportTarget == null || Vector3.Distance(transportTarget.transform.position, this.transform.position) > 5)
-        {
-            transportTarget = null;
-            SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
-            return;
-        }
-
-        smartAgentNavigator.DoPathingToDestination(transportTarget.transform.position, !isOutside, false, null);
-        
-    }
-
-    public void DoRepositioning()
+    private void DoTransporting()
     {
         if (transportTarget == null)
         {
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
-        if (Vector3.Distance(transportTarget.transform.position, currentEndDestination) <= agent.stoppingDistance + 1.5f)
+        Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}");
+
+        float dist = Vector3.Distance(transportTarget.transform.position, transform.position);
+
+        // Path to the object's position
+        smartAgentNavigator.DoPathingToDestination(
+            transportTarget.transform.position,
+            !objectsToTransport[transportTarget]
+        );
+
+        // If close enough to "pick up"
+        float pickupRange = 2.5f;
+        if (dist <= pickupRange)
         {
-            // Drop the object down slowly via animation?
+            bool foundRoute = false;
+            while (!foundRoute)
+            {
+                NavMesh.SamplePosition(PickRandomOutsideOrInsideAINode(), out NavMeshHit hit, 5, NavMesh.AllAreas);
+                currentEndDestination = hit.position;
+                if (smartAgentNavigator.CanPathToPoint(this.transform.position, currentEndDestination) > 0)
+                {
+                    foundRoute = true;
+                }
+            }
+            SwitchToBehaviourServerRpc((int)TransporterStates.Repositioning);
+        }
+    }
+
+    private void DoRepositioning()
+    {
+        if (transportTarget == null)
+        {
+            SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
+            return;
+        }
+
+        // Move to that final location
+        smartAgentNavigator.DoPathingToDestination(
+            currentEndDestination,
+            !isOutside
+        );
+
+        // If we reached or nearly reached the drop-off
+        if (Vector3.Distance(transform.position, currentEndDestination) <= agent.stoppingDistance + 1.5f)
+        {
+            currentEndDestination = Vector3.zero;
             transportTarget = null;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
         }
     }
 
-    public void PickRandomTargetToTransport()
-    {
-        List<GameObject> availableTargets = objectsToTransport.Keys
-            .Where(kv => kv != null)
-            .ToList();
+    #endregion
 
-        // We’ll try a certain number of times to pick a target; 
-        // in the worst case, we check every available target once.
-        int attempts = 0;
+    #region Example Utility
 
-        while (attempts < availableTargets.Count)
-        {
-            // 1) Pick a random target.
-            int randomTargetIndex = Random.Range(0, availableTargets.Count);
-            GameObject candidateTarget = availableTargets[randomTargetIndex];
-
-            bool foundViableNode = false;
-
-            for (int i = 0; i < 10; i++)
-            {
-                Vector3 candidateNode = PickRandomOutsideOrInsideAINode();
-                // Replace the "IsPathViable" check with whatever logic 
-                // you use to see if your agent can reach candidateNode.
-                // This example presumes a hypothetical "CanPathToDestination" method.
-                if (smartAgentNavigator.CanPathToDestination(candidateNode, !isOutside, false))
-                {
-                    // 3) Found a valid node for this target: set everything, then exit.
-                    transportTarget = candidateTarget;
-                    currentEndDestination = candidateNode;
-                    foundViableNode = true;
-                    break;
-                }
-            }
-
-            if (foundViableNode)
-            {
-                // As soon as we find a viable target+destination, we’re done.
-                return;
-            }
-            else
-            {
-                // If this particular target had no valid node in 10 tries, 
-                // remove it from our list and try another random target.
-                availableTargets.RemoveAt(randomTargetIndex);
-
-                // If we run out of targets, no luck. Just exit.
-                if (availableTargets.Count == 0) return;
-
-                attempts++;
-            }
-        }
-    }
-
+    /// <summary>
+    /// If you want to pick a random node inside or outside, 
+    /// you can adapt this to use the dictionary's boolean or other logic.
+    /// </summary>
     public Vector3 PickRandomOutsideOrInsideAINode()
     {
-        List<GameObject> listOfNodes = RoundManager.Instance.outsideAINodes.ToList().Concat(RoundManager.Instance.insideAINodes).ToList();
-        // Pick random node, check if it's viable to path to, if not, remove it from list, and repeat.
-        return Vector3.zero;
+        // In your actual game: 
+        // - If you want an outside node, pick from RoundManager.Instance.outsideAINodes
+        // - If you want an inside node, pick from RoundManager.Instance.insideAINodes
+        List<GameObject> allNodes = RoundManager.Instance.outsideAINodes
+            .Concat(RoundManager.Instance.insideAINodes)
+            .ToList();
+        if (allNodes.Count == 0) return transform.position;
+
+        int idx = Random.Range(0, allNodes.Count);
+        return allNodes[idx].transform.position;
     }
+
+    #endregion
+
+    #region Combat / Animation
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        // Play on hit animation.
+        // Possibly trigger an "on hit" animation or effect
     }
 
     public void OnHitAnimEvent()
     {
+        // Example effect: speed up in annoyance
         agent.speed += 0.5f;
     }
+
+    #endregion
 }

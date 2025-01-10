@@ -506,9 +506,7 @@ public class Janitor : CodeRebirthEnemyAI
             if (!agent.pathPending)
             {
                 smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex],
-                    !isOutside,
-                    false,
-                    null
+                    !isOutside
                 );
             }
         }
@@ -527,9 +525,7 @@ public class Janitor : CodeRebirthEnemyAI
         {
             _currentCornerIndex++;
             smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex],
-                !isOutside,
-                false,
-                null
+                !isOutside
             );
         }
 
@@ -633,7 +629,7 @@ public class Janitor : CodeRebirthEnemyAI
         if (isEnemyDead) return;
 
         // If a new player hits us, reduce HP further
-        if (playerWhoHit != null && (targetPlayer == null || targetPlayer != playerWhoHit))
+        if (playerWhoHit != null && targetPlayer != playerWhoHit && targetPlayer.disableMoveInput)
         {
             enemyHP -= force;
         }
@@ -794,9 +790,7 @@ public class Janitor : CodeRebirthEnemyAI
         if (_pathCorners.Length > 0)
         {
             smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex],
-                !isOutside,
-                false,
-                null
+                !isOutside
             );
         }
     }
@@ -818,7 +812,7 @@ public class Janitor : CodeRebirthEnemyAI
 
     private bool IsPathInvalid()
     {
-        return agent.path.status == NavMeshPathStatus.PathInvalid;
+        return agent.path.status == NavMeshPathStatus.PathInvalid || agent.path.status == NavMeshPathStatus.PathPartial;
     }
 
     private bool ReachedCurrentCorner()
@@ -885,7 +879,7 @@ public class Janitor : CodeRebirthEnemyAI
         // and the direction to the player. A value > 0 means "in front"; < 0 means "behind".
         Vector3 directionToPlayer = (targetPlayer.transform.position - transform.position).normalized;
         float dotProduct = Vector3.Dot(transform.forward, directionToPlayer);
-        Plugin.ExtendedLogging($"Dot product: {dotProduct} with distance: {distToPlayer}");
+        // Plugin.ExtendedLogging($"Dot product: {dotProduct} with distance: {distToPlayer}");
         // Player must be within distance AND in front
         return distToPlayer <= agent.stoppingDistance + 2f && dotProduct > 0.25f;
     }
@@ -901,7 +895,7 @@ public class Janitor : CodeRebirthEnemyAI
     {
         float distToLastCorner = Vector3.Distance(
             targetPlayer.transform.position,
-            agent.path.corners[agent.path.corners.Length - 1]
+            agent.path.corners[^1]
         );
         return distToLastCorner > 3f && _currentCornerIndex != 0;
     }
@@ -911,6 +905,7 @@ public class Janitor : CodeRebirthEnemyAI
         List<TrashCan> viableTrashCans = new();
         foreach (TrashCan trashCan in trashCans)
         {
+            if (trashCan == null) continue;
             NavMesh.SamplePosition(trashCan.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
             if (CalculateAndSetNewPath(hit.position))
             {

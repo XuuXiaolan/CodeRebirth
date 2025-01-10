@@ -42,7 +42,6 @@ static class PlayerControllerBPatch
     public static void Init()
     {
         On.GameNetcodeStuff.PlayerControllerB.ConnectClientToPlayerObject += PlayerControllerB_ConnectClientToPlayerObject;
-        On.GameNetcodeStuff.PlayerControllerB.TeleportPlayer += PlayerControllerB_TeleportPlayer;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
@@ -101,16 +100,6 @@ static class PlayerControllerBPatch
             HUDManager.Instance.DisplayTip("Mod not detected", "Downloading ModelReplacementAPI and MoreSuits adds a new suit as the ShockwaveGal's model");
             Plugin.ModConfig.ConfigFirstLaunchPopup.Value = false;
         }
-    }
-
-    private static void PlayerControllerB_TeleportPlayer(On.GameNetcodeStuff.PlayerControllerB.orig_TeleportPlayer orig, PlayerControllerB self, Vector3 pos, bool withRotation, float rot, bool allowInteractTrigger, bool enableController)
-    {
-        foreach (var navigator in smartAgentNavigators)
-        {
-            Plugin.ExtendedLogging($"Setting SmartAgentNavigator.positionsOfPlayersBeforeTeleport[self] to {self.transform.position}");
-            navigator.positionsOfPlayersBeforeTeleport[self] = self.transform.position;
-        }
-        orig(self, pos, withRotation, rot, allowInteractTrigger, enableController);
     }
 
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)

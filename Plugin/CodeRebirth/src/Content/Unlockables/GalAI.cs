@@ -183,7 +183,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
 
     public bool GoToChargerAndDeactivate()
     {
-        smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position, false, false, null);
+        smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position, false);
         if (Vector3.Distance(transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance ||!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
         {
             GalCharger.ActivateGirlServerRpc(-1);

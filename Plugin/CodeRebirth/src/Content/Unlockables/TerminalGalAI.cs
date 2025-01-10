@@ -420,7 +420,7 @@ public class TerminalGalAI : GalAI
             return;
         }
 
-        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position, ownerPlayer.isInsideFactory, true, ownerPlayer))
+        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position, ownerPlayer.isInsideFactory))
         {
             return;
         }
@@ -447,7 +447,7 @@ public class TerminalGalAI : GalAI
         }
     
         if (unlockingSomething != null) return;
-        smartAgentNavigator.DoPathingToDestination(pointsOfInterest[0].transform.position, !smartAgentNavigator.isOutside, false, null);
+        smartAgentNavigator.DoPathingToDestination(pointsOfInterest[0].transform.position, !smartAgentNavigator.isOutside);
         if (Agent.enabled && Agent.remainingDistance <= Agent.stoppingDistance)
         {
             unlockingSomething = StartCoroutine(DoUnlockingObjectsRoutine(pointsOfInterest[0]));

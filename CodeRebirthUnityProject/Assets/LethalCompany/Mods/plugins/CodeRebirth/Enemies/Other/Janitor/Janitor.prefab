@@ -1836,7 +1836,7 @@ NavMeshAgent:
   m_AngularSpeed: 0
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
+  m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1.6
   m_BaseOffset: 0
@@ -1854,6 +1854,19 @@ MonoBehaviour:
   m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
 --- !u!95 &6136572846547076047
 Animator:
   serializedVersion: 5
@@ -2037,7 +2050,7 @@ MonoBehaviour:
   thisNetworkObject: {fileID: 0}
   thisEnemyIndex: 0
   isClientCalculatingAI: 0
-  updatePositionThreshold: 1
+  updatePositionThreshold: 99999
   targetPlayer: {fileID: 0}
   movingTowardsTargetPlayer: 0
   moveTowardsDestination: 0
@@ -2133,6 +2146,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: b5b978aeeebe81f4ba81e8249069cd1d, type: 2}
   - {fileID: 2100000, guid: 6621cbd52c30eba43b0ff10423488f7f, type: 2}
   - {fileID: 2100000, guid: a8ce0116c9e738643a05491e9213e5dc, type: 2}
+  currentlyGrabbingScrap: 0
+  currentlyGrabbingPlayer: 0
+  currentlyThrowingPlayer: 0
 --- !u!114 &6002066471921815620
 MonoBehaviour:
   m_ObjectHideFlags: 0
