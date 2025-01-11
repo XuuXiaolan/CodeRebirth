@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Unity.Jobs.LowLevel.Unsafe;
 using System;
+using System.Collections.Concurrent;
 
 namespace CodeRebirth.src.MiscScripts;
 
@@ -20,6 +21,7 @@ public class FindPathJobWrapper
 
 public struct FindPathJob : IJob, IDisposable
 {
+    private static ConcurrentDictionary<int, object> RunningThreads = [];
     [NativeDisableContainerSafetyRestriction] private static NativeArray<NavMeshQuery> StaticThreadQueries;
 
     private const float MAX_ORIGIN_DISTANCE = 5;
@@ -44,7 +46,7 @@ public struct FindPathJob : IJob, IDisposable
         AreaMask = agent.areaMask;
         Origin = origin;
         Destination = destination;
-        CreateStaticAllocations();
+        CreateQueries();
         ThreadQueriesRef = StaticThreadQueries;
 
         Status = new NativeArray<PathQueryStatus>(1, Allocator.Persistent);
@@ -53,29 +55,46 @@ public struct FindPathJob : IJob, IDisposable
         PathLength[0] = float.MaxValue;
     }
 
-    private static void CreateStaticAllocations()
+    private static void CreateQueries()
     {
-        var threadCount = JobsUtility.ThreadIndexCount;
-        if (StaticThreadQueries.Length == threadCount)
-        {
+        var threadCount = JobsUtility.JobWorkerMaximumCount;
+        if (StaticThreadQueries.Length >= threadCount)
             return;
-        }
 
-        DisposeStaticAllocations();
+        Application.quitting -= DisposeQueries;
 
-        StaticThreadQueries = new(threadCount, Allocator.Persistent);
+        var newQueries = new NativeArray<NavMeshQuery>(threadCount, Allocator.Persistent);
         for (var i = 0; i < StaticThreadQueries.Length; i++)
-            StaticThreadQueries[i] = new NavMeshQuery(NavMeshWorld.GetDefaultWorld(), Allocator.Persistent, Pathfinding.MAX_PATH_SIZE);
+            newQueries[i] = StaticThreadQueries[i];
+        for (var i = StaticThreadQueries.Length; i < threadCount; i++)
+            newQueries[i] = new NavMeshQuery(NavMeshWorld.GetDefaultWorld(), Allocator.Persistent, Pathfinding.MAX_PATH_SIZE);
+        StaticThreadQueries.Dispose();
+        StaticThreadQueries = newQueries;
 
-        Application.quitting += DisposeStaticAllocations;
+        Application.quitting += DisposeQueries;
+    }
+
+    private static void DisposeQueries()
+    {
+        foreach (var query in StaticThreadQueries)
+            query.Dispose();
+
+        StaticThreadQueries.Dispose();
+
+        Application.quitting -= DisposeQueries;
     }
 
     public void Execute()
     {
+        
         var query = ThreadQueriesRef[ThreadIndex];
-
+        if (!RunningThreads.TryAdd(ThreadIndex, new object()))
+        {
+            Plugin.Logger.LogError($"Big problem!!, using {ThreadIndex} twice!!");
+        }
         var originExtents = new Vector3(MAX_ORIGIN_DISTANCE, MAX_ORIGIN_DISTANCE, MAX_ORIGIN_DISTANCE);
         var origin = query.MapLocation(Origin, originExtents, AgentTypeID, AreaMask);
+        // Plugin.ExtendedLogging($"Before failure 1");
         if (!query.IsValid(origin.polygon))
         {
             Status[0] = PathQueryStatus.Failure;
@@ -84,31 +103,44 @@ public struct FindPathJob : IJob, IDisposable
 
         var destinationExtents = new Vector3(MAX_ENDPOINT_DISTANCE, MAX_ENDPOINT_DISTANCE, MAX_ENDPOINT_DISTANCE);
         var destinationLocation = query.MapLocation(Destination, destinationExtents, AgentTypeID, AreaMask);
+        // Plugin.ExtendedLogging($"Before failure 2");
         if (!query.IsValid(destinationLocation))
         {
             Status[0] = PathQueryStatus.Failure;
             return;
         }
 
-        query.BeginFindPath(origin, destinationLocation, AreaMask);
+        var status = query.BeginFindPath(origin, destinationLocation, AreaMask);
+        if (status.GetStatus() != PathQueryStatus.InProgress)
+        {
+            Status[0] = status;
+            return;
+        }
 
-        PathQueryStatus status = PathQueryStatus.InProgress;
         while (status.GetStatus() == PathQueryStatus.InProgress)
             status = query.UpdateFindPath(int.MaxValue, out int _);
 
+        status |= query.EndFindPath(out var pathNodesSize);
+
+        // Plugin.ExtendedLogging($"Before unknown status 1: {status}");
         if (status.GetStatus() != PathQueryStatus.Success)
         {
             Status[0] = status;
             return;
         }
 
-        var pathNodes = new NativeArray<PolygonId>(Pathfinding.MAX_PATH_SIZE, Allocator.Temp);
-        status = query.EndFindPath(out var pathNodesSize);
+        var pathNodes = new NativeArray<PolygonId>(pathNodesSize, Allocator.Temp);
         query.GetPathResult(pathNodes);
 
         using var path = new NativeArray<NavMeshLocation>(Pathfinding.MAX_STRAIGHT_PATH, Allocator.Temp);
         var straightPathStatus = Pathfinding.FindStraightPath(query, Origin, Destination, pathNodes, pathNodesSize, path, out var pathSize);
         pathNodes.Dispose();
+        if (!RunningThreads.TryRemove(ThreadIndex, out _))
+        {
+            Plugin.Logger.LogError($"Thread not running ??? {ThreadIndex}");
+        }
+
+        // Plugin.ExtendedLogging($"Before unknown status 2: {status}");
         if (straightPathStatus.GetStatus() != PathQueryStatus.Success)
         {
             Status[0] = status;
@@ -118,13 +150,13 @@ public struct FindPathJob : IJob, IDisposable
         // Check if the end of the path is close enough to the target.
         var endPosition = path[pathSize - 1].position;
         var endDistance = (endPosition - Destination).sqrMagnitude;
+        // Plugin.ExtendedLogging($"Before failure 3 with end distance: {endDistance} and path size: {pathSize}");
         if (endDistance > MAX_ENDPOINT_DISTANCE_SQR)
         {
             Status[0] = PathQueryStatus.Failure;
             return;
         }
-
-        var firstCorner = path[0];
+        // Plugin.ExtendedLogging($"After failure 3 with path size: {pathSize}");
         var distance = 0f;
         for (var i = 1; i < pathSize; i++)
         {
@@ -133,16 +165,7 @@ public struct FindPathJob : IJob, IDisposable
         PathLength[0] = distance;
 
         Status[0] = PathQueryStatus.Success;
-    }
-
-    private static void DisposeStaticAllocations()
-    {
-        foreach (var query in StaticThreadQueries)
-            query.Dispose();
-
-        StaticThreadQueries.Dispose();
-
-        Application.quitting -= DisposeStaticAllocations;
+        // Plugin.ExtendedLogging($"After success with path length: {PathLength[0]} and status: {Status[0]}");
     }
 
     public void Dispose()
