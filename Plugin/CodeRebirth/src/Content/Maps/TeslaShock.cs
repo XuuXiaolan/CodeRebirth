@@ -26,7 +26,7 @@ public class TeslaShock : NetworkBehaviour
 
     private GrabbableObject chargedItemPlayerWasHolding;
     private PlayerControllerB? targetPlayer;
-    private Dictionary<GameObject, List<LineRenderer>> createdLineRenderers = new();
+    private List<(GameObject obj, LineRenderer[] renderers)> lineRendererObjects;
     private int activeLineRenderers = 0;
 
     private void Start()
@@ -155,7 +155,7 @@ public class TeslaShock : NetworkBehaviour
         yield return new WaitForSeconds(timeToCharge/5);
         vfx.SetFloat("SpawnRate", 80);
         yield return new WaitForSeconds(timeToCharge/5);
-        vfx.SetFloat("SpawnRate", 100);
+        vfx.SetFloat("SpawnRate", 100); // todo: change this to a hash or whatever its called
     }
 
     private List<PlayerControllerB> GetPlayersSortedByDistance(PlayerControllerB affectedPlayer)
@@ -185,45 +185,42 @@ public class TeslaShock : NetworkBehaviour
         return targets.OrderBy(x => Vector3.Distance(x.position, startChainPoint.position)).ToList();
     }
 
-    private List<Transform> GetValidChainTargets(List<Transform> sortedTargets)
+    private List<Transform> GetValidChainTargets(IEnumerable<Transform> sortedTargets)
     {
-        List<Transform> validTargets = new List<Transform> { sortedTargets[0] }; // Start with startChainPoint
+        List<Transform> validTargets = new List<Transform> { sortedTargets.First() }; // Start with startChainPoint
 
-        for (int i = 1; i < sortedTargets.Count; i++)
+        foreach (var target in sortedTargets)
         {
-            if (Vector3.Distance(validTargets.Last().position, sortedTargets[i].position) <= distanceFromPlayer)
-            {
-                validTargets.Add(sortedTargets[i]);
-            }
-            else
-            {
-                break;
-            }
+            if (Vector3.Distance(validTargets.Last().position, target.position) > distanceFromPlayer) break;
+            validTargets.Add(target);
         }
 
         return validTargets;
     }
 
-    private void DrawChainLines(List<Transform> sortedTargets)
+    private void DrawChainLines(IEnumerable<Transform> sortedTargets)
     {
-        int linesNeeded = sortedTargets.Count - 1;
+        int linesNeeded = sortedTargets.Count() - 1;
         EnsureLineRendererPool(linesNeeded);
-
-        for (int i = 0; i < linesNeeded; i++)
+        Vector3? prevPosition = null;
+        int index = 0;
+        foreach (var target in sortedTargets)
         {
-            GameObject lineObject = createdLineRenderers.Keys.ElementAt(i);
-            List<LineRenderer> lineRenderers = createdLineRenderers[lineObject];
-            foreach (LineRenderer lineRenderer in lineRenderers)
+            if (prevPosition != null)
             {
-                lineRenderer.positionCount = 2;
-                lineRenderer.SetPosition(0, sortedTargets[i].position);
-                lineRenderer.SetPosition(1, sortedTargets[i + 1].position);
-                teslaAudioSource.transform.position = sortedTargets[i + 1].position;
-                teslaAudioSource.PlayOneShot(teslaZapSounds[UnityEngine.Random.Range(0, teslaZapSounds.Count - 1)]);
-                //CRUtilities.CreateExplosion(sortedTargets[i + 1].position, true, 0, 0, 0, 0, CauseOfDeath.Blast, null, null);
-                lineRenderer.enabled = true;
-                StartCoroutine(DisableRendererAfterDelay(lineRenderer, 0.5f));
+                LineRenderer[] lineRenderers = lineRendererObjects[index].renderers;
+                foreach (LineRenderer lineRenderer in lineRenderers)
+                {
+                    lineRenderer.positionCount = 2;
+                    lineRenderer.SetPosition(0, prevPosition.Value);
+                    lineRenderer.SetPosition(1, target.position);
+                    teslaAudioSource.transform.position = target.position;
+                    teslaAudioSource.PlayOneShot(teslaZapSounds[UnityEngine.Random.Range(0, teslaZapSounds.Count - 1)]);
+                    lineRenderer.enabled = true;
+                    StartCoroutine(DisableRendererAfterDelay(lineRenderer, 0.5f));
+                }
             }
+            prevPosition = target.position;
         }
 
         DisableExtraLineRenderers(linesNeeded);
@@ -284,8 +281,7 @@ public class TeslaShock : NetworkBehaviour
     {
         for (int i = linesNeeded; i < activeLineRenderers; i++)
         {
-            GameObject lineObject = createdLineRenderers.Keys.ElementAt(i);
-            List<LineRenderer> lineRenderers = createdLineRenderers[lineObject];
+            LineRenderer[] lineRenderers = lineRendererObjects[i].renderers;
             foreach (LineRenderer lineRenderer in lineRenderers)
             {
                 lineRenderer.enabled = false;
@@ -295,9 +291,9 @@ public class TeslaShock : NetworkBehaviour
 
     private void DisableAllLineRenderers()
     {
-        foreach (var lineRendererDict in createdLineRenderers)
+        foreach (var lineRendererDict in lineRendererObjects)
         {
-            foreach (LineRenderer line in lineRendererDict.Value)
+            foreach (LineRenderer line in lineRendererDict.renderers)
             {
                 line.enabled = false;
             }
@@ -312,17 +308,14 @@ public class TeslaShock : NetworkBehaviour
 
     private void EnsureLineRendererPool(int linesNeeded)
     {
-        while (createdLineRenderers.Count < linesNeeded)
+        while (lineRendererObjects.Count < linesNeeded)
         {
             GameObject newLineObject = Instantiate(MapObjectHandler.Instance.TeslaShock.ChainLightningPrefab, this.transform);
-            List<LineRenderer> lineRenderers = newLineObject.GetComponentsInChildren<LineRenderer>().ToList();
-            if (lineRenderers.Count > 0)
+            LineRenderer[] lineRenderers = newLineObject.GetComponentsInChildren<LineRenderer>();
+            lineRendererObjects.Add((newLineObject, lineRenderers));
+            foreach (LineRenderer lineRenderer in lineRenderers)
             {
-                createdLineRenderers.Add(newLineObject, lineRenderers);
-                foreach (LineRenderer lineRenderer in lineRenderers)
-                {
-                    lineRenderer.enabled = false;
-                }
+                lineRenderer.enabled = false;
             }
         }
     }

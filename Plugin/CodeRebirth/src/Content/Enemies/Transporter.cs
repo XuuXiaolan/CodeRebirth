@@ -35,9 +35,6 @@ public class Transporter : CodeRebirthEnemyAI
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
 
-        // 1) Subscribe to SmartAgentNavigator’s OnUseEntranceTeleport event
-        //    so we can update the transported object’s “outside/inside” state
-        //    whenever we use an entrance teleport.
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnEntranceTeleport);
     }
 
@@ -48,11 +45,6 @@ public class Transporter : CodeRebirthEnemyAI
         smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnEntranceTeleport);
     }
 
-    /// <summary>
-    /// This is called automatically by SmartAgentNavigator when the Transporter
-    /// uses an entrance teleport. The bool indicates the new "isOutside" state
-    /// (true => outside, false => inside).
-    /// </summary>
     private void OnEntranceTeleport(bool newOutsideState)
     {
         // If we are currently carrying a target (transportTarget), update its state.
@@ -116,16 +108,12 @@ public class Transporter : CodeRebirthEnemyAI
             }
 
             Plugin.ExtendedLogging($"Transporter: Trying to find a viable entrance for {obj.name}");
-            var viableEntrance = smartAgentNavigator.FindViableEntranceToPath(obj.transform.position);
-            if (viableEntrance != null)
-            {
-                transportTarget = obj;
+            transportTarget = obj;
 
-                // Switch to transporting
-                smartAgentNavigator.StopSearchRoutine();
-                SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
-                return;
-            }
+            // Switch to transporting
+            smartAgentNavigator.StopSearchRoutine();
+            SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
+            return;
         }
     }
 
@@ -175,7 +163,7 @@ public class Transporter : CodeRebirthEnemyAI
         // Move to that final location
         smartAgentNavigator.DoPathingToDestination(
             currentEndDestination,
-            !isOutside
+            (currentEndDestination.y <= -30 ? true : false)
         );
 
         // If we reached or nearly reached the drop-off
@@ -206,7 +194,8 @@ public class Transporter : CodeRebirthEnemyAI
         if (allNodes.Count == 0) return transform.position;
 
         int idx = Random.Range(0, allNodes.Count);
-        return allNodes[idx].transform.position;
+        NavMesh.SamplePosition(allNodes[idx].transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
+        return hit.position;
     }
 
     #endregion

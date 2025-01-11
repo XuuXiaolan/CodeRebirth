@@ -30,7 +30,6 @@ public static class ShotgunItemPatch
                 }
                 voodooDoll.Hit(damageAmount, shotgunForward, self.playerHeldBy, true, -1);
             }
-
         }
     }
 }

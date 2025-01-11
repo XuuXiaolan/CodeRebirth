@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Patches;
 using GameNetcodeStuff;
+using Unity.Jobs;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Experimental.AI;
 
 namespace CodeRebirth.src.MiscScripts;
 [RequireComponent(typeof(NavMeshAgent))]
@@ -30,6 +32,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     private bool isSearching = false;
     private bool reachedDestination = false;
     private MineshaftElevatorController? elevatorScript = null;
+    [HideInInspector] public PathfindingOperation? pathfindingOperation = null;
     [HideInInspector] public EntranceTeleport? entranceToUse = null;
     [HideInInspector] public List<EntranceTeleport> exitPoints = new();
 
@@ -203,49 +206,23 @@ public class SmartAgentNavigator : NetworkBehaviour
         return pathDistance;
     }
 
-    public EntranceTeleport? FindViableEntranceToPath(Vector3 endPosition)
+    internal T ChangePathfindingOperation<T>(Func<T> provider) where T : PathfindingOperation
     {
-        Dictionary<EntranceTeleport, float> validExitPoints = new();
-        foreach (var entrance in exitPoints)
+        if (pathfindingOperation?.HasDisposed() ?? false)
+            pathfindingOperation = null;
+        if (pathfindingOperation is not T specificOperation)
         {
-            if (entrance == null || !entrance.isEntranceToBuilding) 
-                continue;
-
-            // Agent Navigator -> Entrance
-            float canEntranceReachTransporter = CanPathToPoint(
-                isOutside ? entrance.entrancePoint.position : entrance.exitPoint.position, 
-                transform.position
-            );
-            if (canEntranceReachTransporter < 0) 
-                continue;
-
-            // Entrance -> End Position
-            float canObjectReachEntrance = CanPathToPoint(
-                isOutside ? entrance.exitPoint.position : entrance.entrancePoint.position, 
-                endPosition
-            );
-            if (canObjectReachEntrance < 0)
-                continue;
-
-            // If both legs are good, entrance is "viable"
-            validExitPoints.Add(entrance, canEntranceReachTransporter + canObjectReachEntrance);
+            specificOperation = provider();
+            pathfindingOperation?.Dispose();
+            pathfindingOperation = specificOperation;
         }
+        return specificOperation;
+    }
 
-        if (validExitPoints.Count > 0)
-        {
-            float bestDistance = float.MaxValue;
-            EntranceTeleport? bestTeleport = null;
-            foreach (var exitPoint in validExitPoints)
-            {
-                if (exitPoint.Value < bestDistance)
-                {
-                    bestDistance = exitPoint.Value;
-                    bestTeleport = exitPoint.Key;
-                }
-            }
-            return bestTeleport;
-        }
-        return null;
+    public bool TryFindViableEntranceToPath(Vector3 endPosition, out EntranceTeleport? entranceTeleport)
+    {
+        var findPathThroughTeleportsOperation = ChangePathfindingOperation(() => new FindPathThroughTeleportsOperation(exitPoints, transform.position, endPosition, agent));
+        return findPathThroughTeleportsOperation.TryGetClosestEntranceTeleport(out entranceTeleport);
     }
 
     public void GoThroughEntrance(Vector3 actualEndPosition)
@@ -253,29 +230,26 @@ public class SmartAgentNavigator : NetworkBehaviour
         // Attempt to find an entrance that’s viable for (object -> entrance) and (entrance -> agent).
         if (entranceToUse == null)
         {
-            entranceToUse = FindViableEntranceToPath(actualEndPosition);
-        }
-        if (entranceToUse == null) // still null
-        {
-            // Fallback: maybe use lastUsedEntranceTeleport or do nothing
-            Plugin.ExtendedLogging("No viable entrance found for object => doing nothing");
-            return;
+            if (TryFindViableEntranceToPath(actualEndPosition, out entranceToUse))
+            {
+                if (entranceToUse == null) // still null
+                {
+                    // TODO: Fallback: maybe use lastUsedEntranceTeleport or do nothing
+                    Plugin.ExtendedLogging("No viable entrance found for object => doing nothing");
+                    return;
+                }
+            }
+            else
+            {
+
+                Plugin.ExtendedLogging($"Ongoing calculation, returning early");
+                return;
+            }
         }
 
         var viableOutsideEntrance = entranceToUse;
-        Vector3 destination;
-        Vector3 destinationAfterTeleport;
-
-        if (isOutside)
-        {
-            destination = viableOutsideEntrance.entrancePoint.position; // walk here
-            destinationAfterTeleport = viableOutsideEntrance.exitPoint.position; // appear here
-        }
-        else
-        {
-            destination = viableOutsideEntrance.exitPoint.position;
-            destinationAfterTeleport = viableOutsideEntrance.entrancePoint.position;
-        }
+        Vector3 destination = entranceToUse.entrancePoint.position;
+        Vector3 destinationAfterTeleport = entranceToUse.exitPoint.position;
 
         if (elevatorScript != null && NeedsElevator(destination, viableOutsideEntrance, elevatorScript))
         {

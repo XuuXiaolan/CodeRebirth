@@ -907,7 +907,7 @@ public class Janitor : CodeRebirthEnemyAI
         {
             if (trashCan == null) continue;
             NavMesh.SamplePosition(trashCan.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
-            if (CalculateAndSetNewPath(hit.position))
+            if (smartAgentNavigator.CanPathToPoint(this.transform.position, hit.position) >= 0)
             {
                 viableTrashCans.Add(trashCan);
             }

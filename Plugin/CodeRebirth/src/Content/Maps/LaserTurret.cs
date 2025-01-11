@@ -24,11 +24,11 @@ public class LaserTurret : NetworkBehaviour
     private float originalBeamCoreScaleY = 1f;
     private bool isFiring = false;
     private float damageTimer = 0f;
-    private static readonly int ImpactPosition = UnityEngine.Shader.PropertyToID("ImpactPosition");
-    private static readonly int ParticlesVelocity = UnityEngine.Shader.PropertyToID("ParticlesVelocity");
-    private static readonly int DarkBeamScale = UnityEngine.Shader.PropertyToID("DarkBeamScale");
-    private static readonly int ElectricBeamScale = UnityEngine.Shader.PropertyToID("ElectricBeamScale");
-    private static readonly int BeamCoreScale = UnityEngine.Shader.PropertyToID("BeamCoreScale");
+    private static readonly int ImpactPosition = Shader.PropertyToID("ImpactPosition");
+    private static readonly int ParticlesVelocity = Shader.PropertyToID("ParticlesVelocity");
+    private static readonly int DarkBeamScale = Shader.PropertyToID("DarkBeamScale");
+    private static readonly int ElectricBeamScale = Shader.PropertyToID("ElectricBeamScale");
+    private static readonly int BeamCoreScale = Shader.PropertyToID("BeamCoreScale");
 
     private void Start()
     {

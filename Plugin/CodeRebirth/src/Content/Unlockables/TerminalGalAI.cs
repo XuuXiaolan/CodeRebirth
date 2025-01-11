@@ -239,7 +239,8 @@ public class TerminalGalAI : GalAI
     [ServerRpc(RequireOwnership = false)]
     private void KeyHandInteractServerRpc()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 7.5f, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
+        Collider[] colliders = new Collider[10];
+        Physics.OverlapSphereNonAlloc(transform.position, 7.5f, colliders, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
         pointsOfInterest.Clear();
         pointsOfInterest = colliders
         .Select(collider => collider.gameObject)
