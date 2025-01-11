@@ -12471,7 +12471,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7628898115743898758}
-  - component: {fileID: 4293161289285573133}
   - component: {fileID: 5042507987909207723}
   - component: {fileID: 7859705604145919047}
   - component: {fileID: 3430086181622249171}
@@ -12481,6 +12480,7 @@ GameObject:
   - component: {fileID: 5566525298447519921}
   - component: {fileID: 4700214953185172717}
   - component: {fileID: 6377546833133129263}
+  - component: {fileID: 2868968128230755024}
   m_Layer: 6
   m_Name: SeamineGal
   m_TagString: InteractTrigger
@@ -12512,18 +12512,6 @@ Transform:
   - {fileID: 28878009610108298}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4293161289285573133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8273578112294545693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5042507987909207723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12580,7 +12568,7 @@ MonoBehaviour:
   GalEye: {fileID: 0}
   renderersToHideIn:
   - {fileID: 3308942315980270621}
-  smartAgentNavigator: {fileID: 4293161289285573133}
+  smartAgentNavigator: {fileID: 2868968128230755024}
   boomboxPlaying: 0
   staringTimer: 0
   targetEnemy: {fileID: 0}
@@ -12901,6 +12889,31 @@ MonoBehaviour:
   TerrainScannerPrefab: {fileID: 8390653160204047038}
   duration: 8
   size: 500
+--- !u!114 &2868968128230755024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8273578112294545693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
 --- !u!1 &8390653160204047038
 GameObject:
   m_ObjectHideFlags: 0

@@ -210,12 +210,12 @@ GameObject:
   - component: {fileID: 8517122089439447738}
   - component: {fileID: 7115535625288433126}
   - component: {fileID: 3306354151535898502}
-  - component: {fileID: 1140399709899277129}
   - component: {fileID: 4892806555230103814}
   - component: {fileID: 1471202553139122210}
   - component: {fileID: 1332206447354298532}
   - component: {fileID: 6644502847299280838}
   - component: {fileID: 5171524813891045079}
+  - component: {fileID: 4277607290375325627}
   m_Layer: 19
   m_Name: Transporter
   m_TagString: Enemy
@@ -290,31 +290,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 0
---- !u!114 &1140399709899277129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 408929051958555687}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
 --- !u!95 &4892806555230103814
 Animator:
   serializedVersion: 5
@@ -499,7 +474,8 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
   creatureNetworkAnimator: {fileID: 1471202553139122210}
-  smartAgentNavigator: {fileID: 1140399709899277129}
+  smartAgentNavigator: {fileID: 4277607290375325627}
+  objectsToTransport: []
 --- !u!114 &5171524813891045079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -520,6 +496,31 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &4277607290375325627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408929051958555687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
 --- !u!1 &528938990867653846
 GameObject:
   m_ObjectHideFlags: 0

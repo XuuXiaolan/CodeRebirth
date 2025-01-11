@@ -55,7 +55,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             {
                 Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
             }
-            Plugin.ExtendedLogging($"Exit point Entrance: {exit.entrancePoint.position} Exit: {exit.exitPoint.position} and are Entrances: {exit.isEntranceToBuilding}");
+            // Plugin.ExtendedLogging($"Exit point Entrance: {exit.entrancePoint.position} Exit: {exit.exitPoint.position} and are Entrances: {exit.isEntranceToBuilding}");
         }
         elevatorScript = RoundManager.Instance.currentMineshaftElevator;
     }
@@ -93,6 +93,30 @@ public class SmartAgentNavigator : NetworkBehaviour
 
         return GoToDestination(destination);
     }
+
+    public IEnumerator CheckPathsCoroutine<T>(List<(T, Vector3)> points, Action<List<T>> action)
+    {
+        var TList = new List<T>();
+        ClearPathfindingOperation();
+        foreach (var (obj, point) in points)
+        {
+            bool pathFound;
+            while (!TryFindViablePath(point, out pathFound, out _)) yield return null; // Wait for the path to be finished calculating
+            if (pathFound)
+            {
+                TList.Add(obj);
+            }
+        }
+        ClearPathfindingOperation();
+        action(TList);
+    }
+
+    /* CheckPathsCoroutine(listOfTransforms.Select(t => (t, t.position)), DoStuff);
+
+    public void DoStuff(List<Transform> results)
+    {
+
+    }*/
 
     private void HandleDisabledAgentPathing()
     {
@@ -134,7 +158,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             pointToGo = hit.position;
             OnEnableOrDisableAgent.Invoke(false);
             agent.enabled = false;
-            Plugin.ExtendedLogging($"Pathing to initial destination failed, going to fallback position {hit} instead.");
+            // Plugin.ExtendedLogging($"Pathing to initial destination failed, going to fallback position {hit} instead.");
             return true;
         }
 
@@ -162,9 +186,15 @@ public class SmartAgentNavigator : NetworkBehaviour
                 pathDistance += Vector3.Distance(path.corners[i - 1], path.corners[i]);
             }
         }
-        Plugin.ExtendedLogging($"[{this.gameObject.name}] Path distance: {pathDistance}");
+        // Plugin.ExtendedLogging($"[{this.gameObject.name}] Path distance: {pathDistance}");
 
         return pathDistance;
+    }
+
+    public void ClearPathfindingOperation()
+    {
+        pathfindingOperation?.Dispose();
+        pathfindingOperation = null;
     }
 
     internal T ChangePathfindingOperation<T>(Func<T> provider) where T : PathfindingOperation
@@ -245,7 +275,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         Vector3 destinationAfterTeleport = viableEntrance.exitPoint.position;
 
         float distanceToDestination = Vector3.Distance(transform.position, destination);
-        Plugin.ExtendedLogging($"Distance to destination: {distanceToDestination} to destination: {destination}");
+        // Plugin.ExtendedLogging($"Distance to destination: {distanceToDestination} to destination: {destination}");
         if (distanceToDestination <= agent.stoppingDistance + 1f)
         {
             agent.Warp(destinationAfterTeleport);
@@ -307,7 +337,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         usingElevator = true;
         yield return new WaitForSeconds(2f);
         yield return new WaitUntil(() => elevatorScript.elevatorDoorOpen && elevatorScript.elevatorFinishedMoving);
-        Plugin.ExtendedLogging("Stopped using elevator");
+        // Plugin.ExtendedLogging("Stopped using elevator");
         usingElevator = false;
     }
 
@@ -468,7 +498,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         while (isSearching)
         {
             Vector3 positionToTravel = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, radius, default);
-            Plugin.ExtendedLogging($"Search: {positionToTravel}");
+            // Plugin.ExtendedLogging($"Search: {positionToTravel}");
             reachedDestination = false;
 
             while (!reachedDestination && isSearching)

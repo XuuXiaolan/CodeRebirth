@@ -1447,10 +1447,10 @@ GameObject:
   - component: {fileID: 6607607558369177806}
   - component: {fileID: 6339478799976304860}
   - component: {fileID: 2435144523524250237}
-  - component: {fileID: 6547911657122333045}
   - component: {fileID: 685754585422525313}
   - component: {fileID: 7652632877655664251}
   - component: {fileID: 6401324402707796850}
+  - component: {fileID: 3662857952352809596}
   m_Layer: 19
   m_Name: DuckEnemy
   m_TagString: Enemy
@@ -1619,7 +1619,7 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
   creatureNetworkAnimator: {fileID: 7652632877655664251}
-  smartAgentNavigator: {fileID: 6547911657122333045}
+  smartAgentNavigator: {fileID: 3662857952352809596}
   questTimer: 120
   questItems:
   - Grape
@@ -1729,18 +1729,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &6547911657122333045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8752229204695655941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &685754585422525313
 Animator:
   serializedVersion: 5
@@ -1841,3 +1829,28 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &3662857952352809596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8752229204695655941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []

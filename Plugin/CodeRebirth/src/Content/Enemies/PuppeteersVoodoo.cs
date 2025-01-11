@@ -213,7 +213,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
             return;
         Plugin.ExtendedLogging($"OnTriggerEnter: {other.gameObject.name} with tag {other.gameObject.tag}");
         // If the object is tagged PlayerBody or Enemy
-        if (other.tag.Contains("PlayerBody") || other.CompareTag("Enemy"))
+        if (other.tag.StartsWith("PlayerBody") || other.CompareTag("Enemy"))
         {
             // Check line-of-sight
             if (Physics.Linecast(
@@ -237,7 +237,9 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         if (destination == Vector3.zero) return;
 
         KickDollLocalClient(destination);
-
+        Vector3 position = destination;
+        position.y = this.transform.position.y;
+        this.transform.LookAt(position);
         // If triggered from OnTriggerEnter, don't do the server RPC
         if (triggerCall)
         {

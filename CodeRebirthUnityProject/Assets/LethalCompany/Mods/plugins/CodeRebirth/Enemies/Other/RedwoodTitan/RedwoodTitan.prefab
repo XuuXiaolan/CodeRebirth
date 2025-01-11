@@ -46365,7 +46365,7 @@ GameObject:
   - component: {fileID: 6190392053031910777}
   - component: {fileID: 6280165044034835773}
   - component: {fileID: 7240510479046683112}
-  - component: {fileID: 2170431374383362112}
+  - component: {fileID: 7132943189166769425}
   m_Layer: 19
   m_Name: RedwoodTitan
   m_TagString: Enemy
@@ -46556,7 +46556,7 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
   creatureNetworkAnimator: {fileID: 6190392053031910777}
-  smartAgentNavigator: {fileID: 2170431374383362112}
+  smartAgentNavigator: {fileID: 7132943189166769425}
   AlbinoMaterials:
   - {fileID: 2100000, guid: b2f4cfae3f887b645b9bc3d5040ef296, type: 2}
   - {fileID: 2100000, guid: ecbba3b3c81707549abd5460f942000c, type: 2}
@@ -46735,7 +46735,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 927
   m_ObstacleAvoidanceType: 1
---- !u!114 &2170431374383362112
+--- !u!114 &7132943189166769425
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46744,9 +46744,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 6657914976785946626}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
 --- !u!1 &6862261050158760410
 GameObject:
   m_ObjectHideFlags: 0

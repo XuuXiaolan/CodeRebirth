@@ -2509,11 +2509,11 @@ GameObject:
   - component: {fileID: 9033340450420441566}
   - component: {fileID: 8207564787050051961}
   - component: {fileID: 2927971678752276161}
-  - component: {fileID: 6396429630971629580}
   - component: {fileID: 3005707740292644930}
   - component: {fileID: 3712906773473528773}
   - component: {fileID: 2919410584223474381}
   - component: {fileID: 4997557075965351894}
+  - component: {fileID: 1299754130320147181}
   m_Layer: 19
   m_Name: ManorLord
   m_TagString: Enemy
@@ -2608,18 +2608,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.86, z: 0.27}
   m_Center: {x: 0, y: 0.92, z: 0}
---- !u!114 &6396429630971629580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6915492018009237873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &3005707740292644930
 Animator:
   serializedVersion: 5
@@ -2877,7 +2865,7 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
   creatureNetworkAnimator: {fileID: 2919410584223474381}
-  smartAgentNavigator: {fileID: 6396429630971629580}
+  smartAgentNavigator: {fileID: 1299754130320147181}
   puppetDamageDealer: {fileID: 2167556560943370418}
   playerStabPosition: {fileID: 2078151550481931162}
   sneakSpeed: 4
@@ -2906,6 +2894,31 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b88bbef8a6208dd4ba64358acdadc419, type: 3}
   puppeteerDeathSound: {fileID: 8300000, guid: bbc4f6a7ae667be468e54d875710c709, type: 3}
   isAttacking: 0
+--- !u!114 &1299754130320147181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6915492018009237873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
 --- !u!1 &6926373206089999037
 GameObject:
   m_ObjectHideFlags: 0

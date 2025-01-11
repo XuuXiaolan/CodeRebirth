@@ -557,7 +557,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8514601191219114858}
-  - component: {fileID: 5272573643126423121}
   - component: {fileID: 3428245190819249937}
   - component: {fileID: 8614259383637444178}
   - component: {fileID: 6304825348187553974}
@@ -566,6 +565,7 @@ GameObject:
   - component: {fileID: 4269174617254375689}
   - component: {fileID: 3567973626803899908}
   - component: {fileID: -9173766493286187039}
+  - component: {fileID: 3804565374324884659}
   m_Layer: 19
   m_Name: PuppeteerPuppet
   m_TagString: Player
@@ -591,18 +591,6 @@ Transform:
   - {fileID: 4473816908780392880}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5272573643126423121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5909732099304660934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3428245190819249937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,7 +613,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a4356f1ce205bb949b6a509fe6f31f02, type: 2}
   - {fileID: 2100000, guid: f7976b49d7b9c054a96561ae75550a5d, type: 2}
   - {fileID: 2100000, guid: 4e540cb64fc84044f9205165fb7127dc, type: 2}
-  smartAgentNavigator: {fileID: 5272573643126423121}
+  smartAgentNavigator: {fileID: 3804565374324884659}
   ballHitUpwardAmount: 0.5
   puppetFootstepSounds:
   - {fileID: 8300000, guid: be493e6410e234e459dbfe5102683e18, type: 3}
@@ -793,6 +781,7 @@ MonoBehaviour:
   ballHitFloorSFX:
   - {fileID: 8300000, guid: 11ad4880d7ed81b458240a9df6be0746, type: 3}
   dollAudio: {fileID: 5920235072001373206}
+  lastTimeTakenDamageFromEnemy: 0
   puppeteerCreatedBy: {fileID: 0}
   playerControlled: {fileID: 0}
 --- !u!114 &8614259383637444178
@@ -966,6 +955,31 @@ MonoBehaviour:
   InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &3804565374324884659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909732099304660934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
 --- !u!1 &6570641537456848073
 GameObject:
   m_ObjectHideFlags: 0
