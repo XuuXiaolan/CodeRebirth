@@ -26,7 +26,7 @@ public class TeslaShock : NetworkBehaviour
 
     private GrabbableObject chargedItemPlayerWasHolding;
     private PlayerControllerB? targetPlayer;
-    private List<(GameObject obj, LineRenderer[] renderers)> lineRendererObjects;
+    private List<(GameObject obj, LineRenderer[] renderers)> lineRendererObjects = new();
     private int activeLineRenderers = 0;
 
     private void Start()

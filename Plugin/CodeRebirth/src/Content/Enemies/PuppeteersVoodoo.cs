@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.PathFinding;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -125,8 +125,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         {
             animator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
             smartAgentNavigator.DoPathingToDestination(
-                playerControlled.transform.position,
-                playerControlled.isInsideFactory
+                playerControlled.transform.position
             );
         }
         else

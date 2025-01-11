@@ -7,16 +7,22 @@ using Unity.Jobs;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace CodeRebirth.src.MiscScripts;
+namespace CodeRebirth.src.MiscScripts.PathFinding;
 
 public class FindPathThroughTeleportsOperation : PathfindingOperation
 {
+    FindPathJobWrapper? FindDirectPathToDestinationJob;
+    EntranceTeleport[] entranceTeleports;
     FindPathJobWrapper[] FindEntrancePointJobs;
     FindPathJobWrapper[] FindDestinationJobs;
-    EntranceTeleport[] entranceTeleports;
 
     public override void Dispose()
     {
+        if (FindDirectPathToDestinationJob != null)
+        {
+            FindPathJobPool.Release(FindDirectPathToDestinationJob);
+            FindDirectPathToDestinationJob = null;
+        }
         foreach (var jobWrapper in FindEntrancePointJobs)
         {
             FindPathJobPool.Release(jobWrapper);
@@ -32,11 +38,15 @@ public class FindPathThroughTeleportsOperation : PathfindingOperation
 
     public FindPathThroughTeleportsOperation(IEnumerable<EntranceTeleport> entrancePoints, Vector3 startPos, Vector3 endPos, NavMeshAgent agent)
     {
-        Plugin.ExtendedLogging("Starting FindPathThroughTeleportsOperation");
+        // Plugin.ExtendedLogging("Starting FindPathThroughTeleportsOperation");
+        
+        FindDirectPathToDestinationJob = FindPathJobPool.Get();
+        FindDirectPathToDestinationJob.Job.Initialize(startPos, endPos, agent);
+        JobHandle previousJob = FindDirectPathToDestinationJob.Job.ScheduleByRef();
+
         entranceTeleports = entrancePoints.ToArray();
         FindEntrancePointJobs = new FindPathJobWrapper[entranceTeleports.Length];
         FindDestinationJobs = new FindPathJobWrapper[entranceTeleports.Length];
-        JobHandle previousJob = default;
         for (int i = 0; i < entranceTeleports.Length; i++)
         {
             if (entranceTeleports[i] == null) continue;
@@ -48,26 +58,46 @@ public class FindPathThroughTeleportsOperation : PathfindingOperation
             previousJob = findDestinationJob.Job.ScheduleByRef(previousJob);
             FindEntrancePointJobs[i] = findEntrancePointJob;
             FindDestinationJobs[i] = findDestinationJob;
+            // Plugin.ExtendedLogging($"Started job {startPos} -> {entranceTeleports[i].entrancePoint.position}, {entranceTeleports[i].exitPoint.position} -> {endPos}");
         }
     }
 
-    public bool TryGetClosestEntranceTeleport(out EntranceTeleport? entranceTeleport)
+    public bool TryGetShortestPath(out bool foundPath, out EntranceTeleport? entranceTeleport)
     {
         float bestDistance = float.MaxValue;
+        foundPath = false;
         entranceTeleport = null;
+
+        if (FindDirectPathToDestinationJob == null)
+            return false;
+
+        var statusOfDirectPathJob = FindDirectPathToDestinationJob.Job.Status[0].GetStatus();
+        if (statusOfDirectPathJob == PathQueryStatus.InProgress)
+        {
+            // Plugin.ExtendedLogging("Direct path job in progress");
+            return false;
+        }
+        if (statusOfDirectPathJob == PathQueryStatus.Success)
+        {
+            // Plugin.ExtendedLogging("Direct path job success with length: " + FindDirectPathToDestinationJob.Job.PathLength[0]);
+            bestDistance = FindDirectPathToDestinationJob.Job.PathLength[0];
+            foundPath = true;
+        }
+        // Plugin.ExtendedLogging("Starting TryGetShortestPath with this many entrances: " + entranceTeleports.Length);
         for (int i = 0; i < FindEntrancePointJobs.Length; i++)
         {
             if (entranceTeleports[i] == null) continue;
             var statusOfEntranceJob = FindEntrancePointJobs[i].Job.Status[0].GetStatus();
             var statusOfDestinationJob = FindDestinationJobs[i].Job.Status[0].GetStatus();
+            // Plugin.ExtendedLogging($"Entrance job status: {statusOfEntranceJob} and destination job status: {statusOfDestinationJob}");
             if (statusOfEntranceJob == PathQueryStatus.InProgress)
             {
-                Plugin.ExtendedLogging($"Entrance job in progress: {i}");
+                // Plugin.ExtendedLogging($"Entrance job in progress: {i}");
                 return false;
             }
             if (statusOfDestinationJob == PathQueryStatus.InProgress)
             {
-                Plugin.ExtendedLogging($"destination job in progress: {i}");
+                // Plugin.ExtendedLogging($"destination job in progress: {i}");
                 return false;
             }
             if (statusOfEntranceJob == PathQueryStatus.Failure)
@@ -81,20 +111,22 @@ public class FindPathThroughTeleportsOperation : PathfindingOperation
             float pathLengthForEntrance = FindEntrancePointJobs[i].Job.PathLength[0];
             float pathLengthForPoint = FindDestinationJobs[i].Job.PathLength[0];
             float sum = pathLengthForPoint + pathLengthForEntrance;
+            // Plugin.ExtendedLogging($"Found combined total path for {entranceTeleports[i]} with length: {sum} with entrance length: {pathLengthForEntrance} and destination length: {pathLengthForPoint}");
             if (sum < bestDistance)
             {
                 entranceTeleport = entranceTeleports[i];
                 bestDistance = sum;
+                foundPath = true;
             }
         }
         Dispose();
-        Plugin.ExtendedLogging($"Found closest entrance teleport: {entranceTeleport} and is entrance outside: {entranceTeleport?.isEntranceToBuilding}");
+        // Plugin.ExtendedLogging($"Found closest entrance teleport: {entranceTeleport} and is entrance outside: {entranceTeleport?.isEntranceToBuilding}");
         return true;
     }
 
     public override bool HasDisposed()
     {
-        return entranceTeleports.Length == 0;
+        return FindDirectPathToDestinationJob == null;
     }
 }
 

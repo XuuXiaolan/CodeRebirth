@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
-using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.PathFinding;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using HarmonyLib;

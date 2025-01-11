@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.PathFinding;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -183,7 +183,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
 
     public bool GoToChargerAndDeactivate()
     {
-        smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position, false);
+        smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position);
         if (Vector3.Distance(transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance ||!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
         {
             GalCharger.ActivateGirlServerRpc(-1);

@@ -13,7 +13,7 @@ public class Transporter : CodeRebirthEnemyAI
     /// Value = whether it's currently outside (true) or inside (false).
     /// </summary>
     [HideInInspector] 
-    public Dictionary<GameObject, bool> objectsToTransport = new();
+    public List<GameObject> objectsToTransport = new();
 
     private GameObject? transportTarget = null;
     private Vector3 currentEndDestination = Vector3.zero;
@@ -28,31 +28,8 @@ public class Transporter : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        foreach (var laser in FindObjectsOfType<ItemCrate>())
-        {
-            objectsToTransport.Add(laser.gameObject, true);
-        }
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
-
-        smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnEntranceTeleport);
-    }
-
-    // If you unspawn or disable this enemy, you may want to unsubscribe:
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-        smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnEntranceTeleport);
-    }
-
-    private void OnEntranceTeleport(bool newOutsideState)
-    {
-        // If we are currently carrying a target (transportTarget), update its state.
-        if (transportTarget != null && objectsToTransport.ContainsKey(transportTarget))
-        {
-            objectsToTransport[transportTarget] = newOutsideState;
-            Debug.Log($"Transporter: Updated '{transportTarget.name}' to outside={newOutsideState}");
-        }
     }
 
     public override void DoAIInterval()
@@ -89,24 +66,13 @@ public class Transporter : CodeRebirthEnemyAI
     private void TryFindAnyTransportableObjectViaEntrances()
     {
         // Gather all valid objects
-        var candidateObjects = objectsToTransport.Keys
+        var candidateObjects = objectsToTransport
             .Where(kv => kv != null)
             .ToList();
 
         // Example: pick them in random order, or just the first that works
         foreach (var obj in candidateObjects)
         {
-            bool objectIsOutside = objectsToTransport[obj];
-            if ((isOutside && objectIsOutside) || (!objectIsOutside && !isOutside))
-            {
-                transportTarget = obj;
-
-                // Switch to transporting
-                smartAgentNavigator.StopSearchRoutine();
-                SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
-                return;
-            }
-
             Plugin.ExtendedLogging($"Transporter: Trying to find a viable entrance for {obj.name}");
             transportTarget = obj;
 
@@ -130,8 +96,7 @@ public class Transporter : CodeRebirthEnemyAI
 
         // Path to the object's position
         smartAgentNavigator.DoPathingToDestination(
-            transportTarget.transform.position,
-            !objectsToTransport[transportTarget]
+            transportTarget.transform.position
         );
 
         // If close enough to "pick up"
@@ -162,8 +127,7 @@ public class Transporter : CodeRebirthEnemyAI
 
         // Move to that final location
         smartAgentNavigator.DoPathingToDestination(
-            currentEndDestination,
-            (currentEndDestination.y <= -30 ? true : false)
+            currentEndDestination
         );
 
         // If we reached or nearly reached the drop-off

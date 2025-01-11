@@ -3,7 +3,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
-using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.PathFinding;
 using Unity.Netcode.Components;
 
 namespace CodeRebirth.src.Content.Enemies;

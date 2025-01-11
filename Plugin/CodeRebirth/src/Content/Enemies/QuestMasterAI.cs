@@ -175,7 +175,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             creatureNetworkAnimator.SetTrigger(startGiveQuestAnimation);
             StartCoroutine(DoGiveQuest());
         }
-        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory);
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
     }
 
     [ClientRpc]
@@ -282,7 +282,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             TryCompleteQuest();
             return;
         }
-        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position, targetPlayer.isInsideFactory);
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
     }
 
     protected virtual void TryCompleteQuest()

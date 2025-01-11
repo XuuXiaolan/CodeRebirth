@@ -1,17 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CodeRebirth.src.Patches;
-using GameNetcodeStuff;
-using Unity.Jobs;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.Experimental.AI;
 
-namespace CodeRebirth.src.MiscScripts;
+namespace CodeRebirth.src.MiscScripts.PathFinding;
 [RequireComponent(typeof(NavMeshAgent))]
 public class SmartAgentNavigator : NetworkBehaviour
 {
@@ -33,7 +29,6 @@ public class SmartAgentNavigator : NetworkBehaviour
     private bool reachedDestination = false;
     private MineshaftElevatorController? elevatorScript = null;
     [HideInInspector] public PathfindingOperation? pathfindingOperation = null;
-    [HideInInspector] public EntranceTeleport? entranceToUse = null;
     [HideInInspector] public List<EntranceTeleport> exitPoints = new();
 
     public void Start()
@@ -88,93 +83,59 @@ public class SmartAgentNavigator : NetworkBehaviour
         }
     }
 
-    public bool DoPathingToDestination(Vector3 destination, bool destinationIsInside)
+    public bool DoPathingToDestination(Vector3 destination)
     {
         if (!agent.enabled)
         {
-            if (cantMove) return true;
-            Vector3 targetPosition = pointToGo;
-            float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
-            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-
-            // Calculate the new position in an arcing motion
-            float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
-            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * nonAgentMovementSpeed);
-            newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
-
-            transform.position = newPosition;
-            transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
-            if (Vector3.Distance(transform.position, targetPosition) <= 1f)
-            {
-                OnEnableOrDisableAgent.Invoke(true);
-                agent.enabled = true;
-            }
-            return true;
+            HandleDisabledAgentPathing();
+            return false;
         }
 
-        if ((isOutside && destinationIsInside) || (!isOutside && !destinationIsInside))
+        return GoToDestination(destination);
+    }
+
+    private void HandleDisabledAgentPathing()
+    {
+        if (cantMove) return;
+        Vector3 targetPosition = pointToGo;
+        float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
+        float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+
+        // Calculate the new position in an arcing motion
+        float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
+        Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * nonAgentMovementSpeed);
+        newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
+
+        transform.position = newPosition;
+        transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
+        if (Vector3.Distance(transform.position, targetPosition) <= 1f)
         {
-            GoThroughEntrance(destination);
-            return true;
+            OnEnableOrDisableAgent.Invoke(true);
+            agent.enabled = true;
         }
-
-        entranceToUse = null;
-        if (!isOutside && elevatorScript != null && !usingElevator)
-        {
-            bool scriptCloserToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
-            bool destinationCloserToTop = Vector3.Distance(destination, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(destination, elevatorScript.elevatorBottomPoint.position);
-            if (scriptCloserToTop != destinationCloserToTop)
-            {
-                UseTheElevator(elevatorScript);
-                return true;
-            }
-        }
-
-        bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(destination, elevatorScript.elevatorInsidePoint.position) < 7f;
-        if (!usingElevator && !playerIsInElevator)
-        {
-            if (DetermineIfNeedToDisableAgent(destination))
-            {
-                return true;
-            }
-        }
-
-        if (!usingElevator)
-        {
-            agent.SetDestination(destination);
-        }
-        if (usingElevator && elevatorScript != null) agent.Warp(elevatorScript.elevatorInsidePoint.position);
-        return false;
     }
 
     private bool DetermineIfNeedToDisableAgent(Vector3 destination)
     {
-        if (!NavMesh.SamplePosition(destination, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+        float distanceToDest = Vector3.Distance(transform.position, destination);
+        if (distanceToDest <= agent.stoppingDistance)
         {
             return false;
         }
 
-        Vector3 finalDestination = hit.position;
-        float distanceToDest = Vector3.Distance(transform.position, finalDestination);
-        if (distanceToDest < agent.stoppingDistance)
+        if (!NavMesh.SamplePosition(destination, out NavMeshHit hit, 5, NavMesh.AllAreas))
         {
             return false;
         }
-
-        NavMeshPath path = new NavMeshPath();
-        bool pathFound = agent.CalculatePath(finalDestination, path);
-        if (!pathFound || path.status != NavMeshPathStatus.PathComplete)
+        Vector3 lastValidPoint = FindClosestValidPoint();
+        agent.SetDestination(lastValidPoint);
+        if (Vector3.Distance(agent.transform.position, lastValidPoint) <= agent.stoppingDistance)
         {
-            Vector3 lastValidPoint = FindClosestValidPoint();
-            agent.SetDestination(lastValidPoint);
-            if (Vector3.Distance(agent.transform.position, lastValidPoint) <= agent.stoppingDistance)
-            {
-                pointToGo = finalDestination;
-                OnEnableOrDisableAgent.Invoke(false);
-                agent.enabled = false;
-                Plugin.ExtendedLogging($"Pathing to {destination} failed, going to fallback position {finalDestination} instead.");
-                return true;
-            }
+            pointToGo = hit.position;
+            OnEnableOrDisableAgent.Invoke(false);
+            agent.enabled = false;
+            Plugin.ExtendedLogging($"Pathing to initial destination failed, going to fallback position {hit} instead.");
+            return true;
         }
 
         return false;
@@ -219,50 +180,77 @@ public class SmartAgentNavigator : NetworkBehaviour
         return specificOperation;
     }
 
-    public bool TryFindViableEntranceToPath(Vector3 endPosition, out EntranceTeleport? entranceTeleport)
+    public bool TryFindViablePath(Vector3 endPosition, out bool foundPath, out EntranceTeleport? entranceTeleport)
     {
-        var findPathThroughTeleportsOperation = ChangePathfindingOperation(() => new FindPathThroughTeleportsOperation(exitPoints, transform.position, endPosition, agent));
-        return findPathThroughTeleportsOperation.TryGetClosestEntranceTeleport(out entranceTeleport);
+        var findPathThroughTeleportsOperation = ChangePathfindingOperation(() => new FindPathThroughTeleportsOperation(exitPoints, agent.GetPathStartPosition(), endPosition, agent));
+        return findPathThroughTeleportsOperation.TryGetShortestPath(out foundPath, out entranceTeleport);
     }
 
-    public void GoThroughEntrance(Vector3 actualEndPosition)
+    public bool GoToDestination(Vector3 actualEndPosition)
     {
         // Attempt to find an entrance that’s viable for (object -> entrance) and (entrance -> agent).
-        if (entranceToUse == null)
+        if (TryFindViablePath(actualEndPosition, out bool foundPath, out EntranceTeleport? entranceToUse))
         {
-            if (TryFindViableEntranceToPath(actualEndPosition, out entranceToUse))
+            if (entranceToUse == null && !foundPath) // still null after calculating
             {
-                if (entranceToUse == null) // still null
-                {
-                    // TODO: Fallback: maybe use lastUsedEntranceTeleport or do nothing
-                    Plugin.ExtendedLogging("No viable entrance found for object => doing nothing");
-                    return;
-                }
-            }
-            else
-            {
+                HandleElevatorActions(actualEndPosition);
 
-                Plugin.ExtendedLogging($"Ongoing calculation, returning early");
+                bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(actualEndPosition, elevatorScript.elevatorInsidePoint.position) < 7f;
+                if (!usingElevator && !playerIsInElevator)
+                {
+                    DetermineIfNeedToDisableAgent(actualEndPosition);
+                }
+
+                // fallback?
+                return false;
+            }
+            else if (entranceToUse == null)
+            {
+                // Plugin.ExtendedLogging($"No entrance found, but path found");
+                agent.SetDestination(actualEndPosition);
+                return true;
+            }
+        }
+        else
+        {
+            // Plugin.ExtendedLogging($"Ongoing calculation, returning early");
+            return false;
+        }
+
+        DoPathingThroughEntrance(entranceToUse);
+        return false;
+    }
+
+    private void HandleElevatorActions(Vector3 actualEndPosition)
+    {
+        if (!isOutside && elevatorScript != null && !usingElevator)
+        {
+            bool scriptCloserToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
+            bool destinationCloserToTop = Vector3.Distance(actualEndPosition, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(actualEndPosition, elevatorScript.elevatorBottomPoint.position);
+            if (scriptCloserToTop != destinationCloserToTop)
+            {
+                UseTheElevator(elevatorScript);
                 return;
             }
         }
-
-        var viableOutsideEntrance = entranceToUse;
-        Vector3 destination = entranceToUse.entrancePoint.position;
-        Vector3 destinationAfterTeleport = entranceToUse.exitPoint.position;
-
-        if (elevatorScript != null && NeedsElevator(destination, viableOutsideEntrance, elevatorScript))
+        else if (usingElevator && elevatorScript != null)
         {
-            UseTheElevator(elevatorScript);
+            agent.Warp(elevatorScript.elevatorInsidePoint.position);
             return;
         }
+    }
+    private void DoPathingThroughEntrance(EntranceTeleport viableEntrance)
+    {
+        Vector3 destination = viableEntrance.entrancePoint.position;
+        Vector3 destinationAfterTeleport = viableEntrance.exitPoint.position;
 
         float distanceToDestination = Vector3.Distance(transform.position, destination);
+        Plugin.ExtendedLogging($"Distance to destination: {distanceToDestination} to destination: {destination}");
         if (distanceToDestination <= agent.stoppingDistance + 1f)
         {
-            entranceToUse = null;
             agent.Warp(destinationAfterTeleport);
             SetThingOutsideServerRpc(!isOutside);
+            return;
         }
         else
         {

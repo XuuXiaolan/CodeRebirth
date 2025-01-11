@@ -142,7 +142,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
             return;
         }
-        smartAgentNavigator.DoPathingToDestination(nearestPlayer.transform.position, nearestPlayer.isInsideFactory);
+        smartAgentNavigator.DoPathingToDestination(nearestPlayer.transform.position);
         if (agent.speed != 0 && Vector3.Distance(nearestPlayer.transform.position, this.transform.position) <= 3)
         {
             SetTargetNeedlePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, nearestPlayer));
@@ -173,7 +173,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         GameObject? targetPlayerPuppet = playerPuppetMap[targetPlayer];
         if (targetPlayerPuppet == null) return;
         if (isAttacking) return;
-        smartAgentNavigator.DoPathingToDestination(targetPlayerPuppet.transform.position, true);
+        smartAgentNavigator.DoPathingToDestination(targetPlayerPuppet.transform.position);
 
         float distance = Vector3.Distance(targetPlayerPuppet.transform.position, transform.position);
         if (distance <= 2f)

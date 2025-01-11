@@ -379,7 +379,6 @@ public class Janitor : CodeRebirthEnemyAI
         player.inAnimationWithEnemy = this;
         targetPlayer = player; 
         player.disableMoveInput = true;
-        player.disableLookInput = true;
 
         if (IsServer)
         {
@@ -505,9 +504,7 @@ public class Janitor : CodeRebirthEnemyAI
         {
             if (!agent.pathPending)
             {
-                smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex],
-                    !isOutside
-                );
+                smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex]);
             }
         }
     }
@@ -524,8 +521,7 @@ public class Janitor : CodeRebirthEnemyAI
         if (_currentCornerIndex < _pathCorners.Length - 1)
         {
             _currentCornerIndex++;
-            smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex],
-                !isOutside
+            smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex]
             );
         }
 
@@ -605,7 +601,6 @@ public class Janitor : CodeRebirthEnemyAI
         targetTrashCan = null;
         targetPlayer = null;
         previousTargetPlayer.disableMoveInput = false;
-        previousTargetPlayer.disableLookInput = false;
         currentlyThrowingPlayer = false;
         previousTargetPlayer.inAnimationWithEnemy = null;
         previousTargetPlayer.DamagePlayer(15, true, false, CauseOfDeath.Gravity, 0, false, default);
@@ -676,7 +671,6 @@ public class Janitor : CodeRebirthEnemyAI
         {
             targetPlayer.inAnimationWithEnemy = null;
             targetPlayer.disableMoveInput = false;
-            targetPlayer.disableLookInput = false;
         }
 
         // Switch to Dead state
@@ -789,8 +783,7 @@ public class Janitor : CodeRebirthEnemyAI
 
         if (_pathCorners.Length > 0)
         {
-            smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex],
-                !isOutside
+            smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex]
             );
         }
     }

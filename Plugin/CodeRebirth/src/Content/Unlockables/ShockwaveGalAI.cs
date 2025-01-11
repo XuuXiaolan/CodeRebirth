@@ -338,7 +338,7 @@ public class ShockwaveGalAI : GalAI
             return;
         }
 
-        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position, ownerPlayer.isInsideFactory))
+        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position))
         {
             return;
         }
@@ -379,7 +379,7 @@ public class ShockwaveGalAI : GalAI
             }
         }
 
-        smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position, false);
+        smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position);
         if (Vector3.Distance(this.transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
             if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
@@ -416,7 +416,7 @@ public class ShockwaveGalAI : GalAI
 
         if (!currentlyAttacking)
         {
-            smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside);
+            smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position);
             if (!smartAgentNavigator.CurrentPathIsValid() || (Vector3.Distance(this.transform.position, ownerPlayer.transform.position) > 15 && Plugin.ModConfig.ConfigDontTargetFarEnemies.Value))
             {
                 HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);

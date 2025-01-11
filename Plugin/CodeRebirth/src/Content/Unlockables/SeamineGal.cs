@@ -327,7 +327,7 @@ public class SeamineGalAI : GalAI
             return;
         }
 
-        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position, ownerPlayer.isInsideFactory))
+        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position))
         {
             return;
         }
@@ -373,7 +373,7 @@ public class SeamineGalAI : GalAI
         }
         if (!currentlyAttacking)
         {
-            smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position, !targetEnemy.isOutside);
+            smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position);
             if (!smartAgentNavigator.CurrentPathIsValid() || (Vector3.Distance(this.transform.position, ownerPlayer.transform.position) > 15 && Plugin.ModConfig.ConfigDontTargetFarEnemies.Value))
             {
                 HandleStateAnimationSpeedChanges(State.FollowingPlayer);
