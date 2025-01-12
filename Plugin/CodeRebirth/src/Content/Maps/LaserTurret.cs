@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
-public class LaserTurret : NetworkBehaviour
+public class LaserTurret : CodeRebirthHazard
 {
     public Transform turretTransform = null!;
     public Transform laserStartPoint = null!;
@@ -30,8 +30,9 @@ public class LaserTurret : NetworkBehaviour
     private static readonly int ElectricBeamScale = Shader.PropertyToID("ElectricBeamScale");
     private static readonly int BeamCoreScale = Shader.PropertyToID("BeamCoreScale");
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         Plugin.ExtendedLogging("Laser Turret initialized");
         visualEffect.Play();
         originalImpactPositionZ = visualEffect.GetVector3(ImpactPosition).z;

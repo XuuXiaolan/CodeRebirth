@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Patches;
 using Unity.Netcode;
 using UnityEngine;
@@ -28,11 +29,14 @@ public class SmartAgentNavigator : NetworkBehaviour
     private bool isSearching = false;
     private bool reachedDestination = false;
     private MineshaftElevatorController? elevatorScript = null;
+    private Coroutine? checkPathsRoutine = null;
     [HideInInspector] public PathfindingOperation? pathfindingOperation = null;
     [HideInInspector] public List<EntranceTeleport> exitPoints = new();
 
-    public void Start()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+        Plugin.ExtendedLogging("SmartAgentNavigator initialized");
         agent = gameObject.GetComponent<NavMeshAgent>();
         PlayerControllerBPatch.smartAgentNavigators.Add(this);
     }
@@ -94,8 +98,19 @@ public class SmartAgentNavigator : NetworkBehaviour
         return GoToDestination(destination);
     }
 
-    public IEnumerator CheckPathsCoroutine<T>(List<(T, Vector3)> points, Action<List<T>> action)
+    public void CheckPaths<T>(IEnumerable<(T, Vector3)> points, Action<List<T>> action)
     {
+        if (checkPathsRoutine != null)
+        {
+            StopCoroutine(checkPathsRoutine);
+            ClearPathfindingOperation();
+        }
+        checkPathsRoutine = StartCoroutine(CheckPathsCoroutine(points, action));
+    }
+
+    private IEnumerator CheckPathsCoroutine<T>(IEnumerable<(T, Vector3)> points, Action<List<T>> action)
+    {
+        Plugin.ExtendedLogging($"Checking paths for {points.Count()} objects");
         var TList = new List<T>();
         ClearPathfindingOperation();
         foreach (var (obj, point) in points)
@@ -125,6 +140,13 @@ public class SmartAgentNavigator : NetworkBehaviour
         float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
+        if (Vector3.Distance(transform.position, targetPosition) <= 1f)
+        {
+            OnEnableOrDisableAgent.Invoke(true);
+            agent.enabled = true;
+            agent.Warp(targetPosition);
+        }
+
         // Calculate the new position in an arcing motion
         float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
         Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * nonAgentMovementSpeed);
@@ -132,11 +154,6 @@ public class SmartAgentNavigator : NetworkBehaviour
 
         transform.position = newPosition;
         transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
-        if (Vector3.Distance(transform.position, targetPosition) <= 1f)
-        {
-            OnEnableOrDisableAgent.Invoke(true);
-            agent.enabled = true;
-        }
     }
 
     private bool DetermineIfNeedToDisableAgent(Vector3 destination)
@@ -158,7 +175,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             pointToGo = hit.position;
             OnEnableOrDisableAgent.Invoke(false);
             agent.enabled = false;
-            // Plugin.ExtendedLogging($"Pathing to initial destination failed, going to fallback position {hit} instead.");
+            Plugin.ExtendedLogging($"Pathing to initial destination failed, going to fallback position {hit.position} instead.");
             return true;
         }
 

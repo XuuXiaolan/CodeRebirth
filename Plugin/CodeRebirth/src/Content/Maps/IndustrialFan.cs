@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class IndustrialFan : NetworkBehaviour
+public class IndustrialFan : CodeRebirthHazard
 {
     public Transform fanTransform = null!;
     public AudioSource cutAudioSource = null!;
@@ -13,8 +13,9 @@ public class IndustrialFan : NetworkBehaviour
     public float suctionForce = 15f;
     public ParticleSystem redMistEffect = null!;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         Plugin.ExtendedLogging("Industrial fan initialized");
     }
 

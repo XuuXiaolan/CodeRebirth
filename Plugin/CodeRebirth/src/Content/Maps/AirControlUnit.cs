@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class AirControlUnit : NetworkBehaviour
+public class AirControlUnit : CodeRebirthHazard
 {
     public Transform turretTransform = null!;
     public Transform turretCannonTransform = null!;
@@ -27,8 +27,9 @@ public class AirControlUnit : NetworkBehaviour
     private GameObject projectilePrefab = null!;
     private PlayerControllerB? lastPlayerTargetted = null;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         projectilePrefab = MapObjectHandler.Instance.AirControlUnit.ProjectilePrefab;
         lastPlayerTargetted = null;
         DetectPlayerAudioSound.volume = 0f;

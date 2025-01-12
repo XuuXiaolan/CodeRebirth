@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace CodeRebirth.src.Content.Maps;
-public class BiomeManager : NetworkBehaviour
+public class BiomeManager : CodeRebirthHazard
 {
     public DecalProjector corruptionProjector = null!;
     public DecalProjector crimsonProjector = null!;
@@ -23,8 +23,9 @@ public class BiomeManager : NetworkBehaviour
 	public static List<BiomeManager> Instances = new();
 	public static bool Active => Instances.Count > 0;
 
-    public void Start()
+    public override void Start()
     {
+        base.Start();
         foliageLayer = LayerMask.NameToLayer("Foliage");
         terrainLayer = LayerMask.NameToLayer("Terrain");
         combinedLayerMask = (1 << foliageLayer) | (1 << terrainLayer);

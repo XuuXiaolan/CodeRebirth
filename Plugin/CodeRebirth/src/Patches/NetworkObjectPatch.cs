@@ -1,3 +1,4 @@
+using CodeRebirth.src.Content.Enemies;
 using HarmonyLib;
 using Unity.Netcode;
 
@@ -10,7 +11,14 @@ static class NetworkBehaviourPatch
     {
         if (__instance.NetworkObject.IsSpawned && __instance.NetworkObject.gameObject.layer != 21) return;
 
-        
-        // todo: add to a list
+        Transporter.objectsToTransport.Add(__instance.NetworkObject.gameObject);
+    }
+
+    [HarmonyPatch(nameof(NetworkBehaviour.OnNetworkDespawn)), HarmonyPostfix]
+    static void OnNetworkDespawnPatch(NetworkBehaviour __instance)
+    {
+        if (__instance.NetworkObject.gameObject.layer != 21) return;
+
+        if (Transporter.objectsToTransport.Contains(__instance.NetworkObject.gameObject)) Transporter.objectsToTransport.Remove(__instance.NetworkObject.gameObject);
     }
 }

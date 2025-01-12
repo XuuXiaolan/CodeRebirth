@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class FlashTurret : NetworkBehaviour, INoiseListener
+public class FlashTurret : CodeRebirthHazard, INoiseListener
 {
     public Transform turretTransform = null!;
     public Light flashLight = null!;
@@ -23,8 +23,9 @@ public class FlashTurret : NetworkBehaviour, INoiseListener
     private float flashTimer = 0f;
     private float cooldownTimer = 0f;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         Plugin.ExtendedLogging("Flash Turret initialized");
     }
 

@@ -4,7 +4,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class FloorSpikeTrap : NetworkBehaviour
+public class FloorSpikeTrap : CodeRebirthHazard
 {
     public enum DeathAnimation
     {

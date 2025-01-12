@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Maps;
-public class FunctionalMicrowave : NetworkBehaviour
+public class FunctionalMicrowave : CodeRebirthHazard
 {
     public float microwaveOpeningTimer = 15f;
     public float microwaveClosingTimer = 7.5f;
@@ -38,8 +38,9 @@ public class FunctionalMicrowave : NetworkBehaviour
     private List<PlayerControllerB> playersAffected = new();
     private System.Random microwaveRandom = new System.Random();
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         Plugin.ExtendedLogging("Functional Microwave initialized");
         microwaveClosing = microwaveClosingTimer;
         microwaveOpening = microwaveOpeningTimer;

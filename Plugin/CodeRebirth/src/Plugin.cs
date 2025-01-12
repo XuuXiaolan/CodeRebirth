@@ -34,8 +34,17 @@ public class Plugin : BaseUnityPlugin {
     internal static IngameKeybinds InputActionsInstance = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
     internal const ulong GLITCH_STEAM_ID = 9;
+    public enum Logging_Level
+    {
+        None = 0,
+        Low = 1,
+        Medium = 2,
+        High = 3,
+        Highest = 4,
+    }
     internal static MainAssets Assets { get; private set; } = null!;
-    internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName) {
+    internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName)
+    {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
         public GameObject UtilsPrefab { get; private set; } = null!;
     }
@@ -44,9 +53,6 @@ public class Plugin : BaseUnityPlugin {
     {
         Logger = base.Logger;
         ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
-#if DEBUG
-        ModConfig.ConfigEnableExtendedLogging.Value = true;
-#endif
 
         if (SubtitlesAPICompatibilityChecker.Enabled)
         {
@@ -73,6 +79,7 @@ public class Plugin : BaseUnityPlugin {
         _harmony.PatchAll(typeof(KeyItemPatch));
         _harmony.PatchAll(typeof(RoundManagerPatch));
         _harmony.PatchAll(typeof(StartOfRoundPatch));
+        _harmony.PatchAll(typeof(NetworkBehaviourPatch));
 
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
@@ -99,13 +106,13 @@ public class Plugin : BaseUnityPlugin {
     }
 
     public static void RegisterContentHandlers(Assembly assembly) {
-        List<Type> contentHandlers = assembly.GetLoadableTypes().Where(x =>
+        IEnumerable<Type> contentHandlers = assembly.GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
             && x.BaseType.GetGenericTypeDefinition() == typeof(ContentHandler<>)
-        ).ToList();
+        );
         
-        foreach(Type type in contentHandlers)
+        foreach (Type type in contentHandlers)
         {
             type.GetConstructor([]).Invoke([]);
         }
@@ -121,9 +128,10 @@ public class Plugin : BaseUnityPlugin {
         LoadedBundles.Clear();
     }
 
-    internal static void ExtendedLogging(object text)
+    internal static void ExtendedLogging(object text, int loggingLevel = 1)
     {
-        if (ModConfig.ConfigEnableExtendedLogging.Value)
+
+        if (ModConfig.ConfigLoggingLevel.Value >= loggingLevel)
         {
             Logger.LogInfo(text);
         }

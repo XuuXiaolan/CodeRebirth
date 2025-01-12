@@ -157,7 +157,7 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigGlitchedPlushieCost { get; private set; }
     public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
-    public ConfigEntry<bool> ConfigEnableExtendedLogging { get; private set; }
+    public ConfigEntry<int> ConfigLoggingLevel { get; private set; }
     public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; private set; }
     public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
     public ConfigEntry<int> ConfigFloraMinAbundance { get; private set; }
@@ -231,10 +231,10 @@ public class CodeRebirthConfig
                                             "Debug Mode | Hazard Spawning Enabled",
                                             false,
                                             "Whether debug mode is enabled (for hazard spawning stuff).");
-        ConfigEnableExtendedLogging = configFile.Bind("Debug Options",
-                                            "Debug Mode | Enable Extended Logging",
-                                            false,
-                                            "Whether extended logging is enabled.");
+        ConfigLoggingLevel = configFile.Bind("Debug Options",
+                                            "Debug Mode | Extended Logging Level",
+                                            0,
+                                            "Logging Level (0 for None, 1 for Low, 2 for Medium, 3 for High, 4 For Highest).");
         ConfigRemoveInteriorFog = configFile.Bind("Debug Options",
                                             "Debug Mode | Remove Interior Fog",
                                             false,

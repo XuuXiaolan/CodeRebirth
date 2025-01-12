@@ -6,7 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class BearTrap : NetworkBehaviour
+public class BearTrap : CodeRebirthHazard
 {
     public Animator trapAnimator = null!;
     public Collider trapCollider = null!;
@@ -28,8 +28,9 @@ public class BearTrap : NetworkBehaviour
     private static readonly int IsTrapTriggered = Animator.StringToHash("isTrapTriggered");
     private static readonly int IsTrapResetting = Animator.StringToHash("isTrapResetting");
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         if (!IsServer || byProduct) return;
         var random = new System.Random(StartOfRound.Instance.randomMapSeed);
 		Vector3 position = this.transform.position;

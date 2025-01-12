@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
-public class TeslaShock : NetworkBehaviour
+public class TeslaShock : CodeRebirthHazard
 {
     public float distanceFromPlayer = 5f;
     public int playerDamageAmount = 40;
@@ -29,8 +29,9 @@ public class TeslaShock : NetworkBehaviour
     private List<(GameObject obj, LineRenderer[] renderers)> lineRendererObjects = new();
     private int activeLineRenderers = 0;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         Plugin.ExtendedLogging("Tesla Turret initialized");
         vfx.SetFloat("SpawnRate", 10f);
         teslaIdleAudioSource.clip = teslaSlowIdleSound;

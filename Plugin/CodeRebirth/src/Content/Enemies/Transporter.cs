@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Content.Maps;
 using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,12 +7,7 @@ using UnityEngine.AI;
 namespace CodeRebirth.src.Content.Enemies;
 public class Transporter : CodeRebirthEnemyAI
 {
-    /// <summary>
-    /// Key = GameObject (the object the Transporter wants to move)
-    /// Value = whether it's currently outside (true) or inside (false).
-    /// </summary>
-    [HideInInspector] 
-    public List<GameObject> objectsToTransport = new();
+    [HideInInspector] public static List<GameObject> objectsToTransport = new();
 
     private GameObject? transportTarget = null;
     private Vector3 currentEndDestination = Vector3.zero;
@@ -30,6 +24,8 @@ public class Transporter : CodeRebirthEnemyAI
         base.Start();
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
+        if (!IsServer) return;
+        TryFindAnyTransportableObjectViaAsyncPathfinding();
     }
 
     public override void DoAIInterval()
@@ -59,27 +55,26 @@ public class Transporter : CodeRebirthEnemyAI
             transportTarget = null;
             return;
         }
-
-        TryFindAnyTransportableObjectViaEntrances();
     }
 
-    private void TryFindAnyTransportableObjectViaEntrances()
+    private void TryFindAnyTransportableObjectViaAsyncPathfinding()
     {
-        // Gather all valid objects
-        var candidateObjects = objectsToTransport
+        // Gather all valid objects#
+        Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects");
+        IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = objectsToTransport
             .Where(kv => kv != null)
-            .ToList();
+            .Select(kv => (kv, kv.transform.position));
 
-        // Example: pick them in random order, or just the first that works
-        foreach (var obj in candidateObjects)
+        smartAgentNavigator.CheckPaths(candidateObjects, CheckIfNeedToChangeState);
+    }
+
+    public void CheckIfNeedToChangeState(List<GameObject> objects)
+    {
+        if (objects.Count > 0)
         {
-            Plugin.ExtendedLogging($"Transporter: Trying to find a viable entrance for {obj.name}");
-            transportTarget = obj;
-
-            // Switch to transporting
-            smartAgentNavigator.StopSearchRoutine();
+            Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects");
+            transportTarget = objects[UnityEngine.Random.Range(0, objects.Count)];
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
-            return;
         }
     }
 
@@ -90,7 +85,7 @@ public class Transporter : CodeRebirthEnemyAI
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
-        Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}");
+        Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}", 2);
 
         float dist = Vector3.Distance(transportTarget.transform.position, transform.position);
 
@@ -121,7 +116,7 @@ public class Transporter : CodeRebirthEnemyAI
     {
         if (transportTarget == null)
         {
-            SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
+            TryFindAnyTransportableObjectViaAsyncPathfinding();
             return;
         }
 
@@ -133,9 +128,11 @@ public class Transporter : CodeRebirthEnemyAI
         // If we reached or nearly reached the drop-off
         if (Vector3.Distance(transform.position, currentEndDestination) <= agent.stoppingDistance + 1.5f)
         {
+            Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}");
             currentEndDestination = Vector3.zero;
             transportTarget = null;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
+            TryFindAnyTransportableObjectViaAsyncPathfinding();
         }
     }
 
@@ -157,8 +154,8 @@ public class Transporter : CodeRebirthEnemyAI
             .ToList();
         if (allNodes.Count == 0) return transform.position;
 
-        int idx = Random.Range(0, allNodes.Count);
-        NavMesh.SamplePosition(allNodes[idx].transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
+        int index = UnityEngine.Random.Range(0, allNodes.Count);
+        NavMesh.SamplePosition(allNodes[index].transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
         return hit.position;
     }
 
