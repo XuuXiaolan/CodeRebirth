@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
@@ -524,29 +525,27 @@ public class SeamineGalAI : GalAI
                 Collider collider = hitColliders[i];
                 if (!collider.gameObject.activeSelf) continue;
 
-                if (collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect))
+                if (!collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect)) continue;
+                EnemyAI enemy = enemyCollisionDetect.mainScript;
+
+                if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName) || enemy is Transporter)
+                    continue;
+
+                // First, do a simple direction check to see if the enemy is in front of the player
+                Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
+                // Then check if there's a clear line of sight
+                float distanceToEnemy = Vector3.Distance(ownerPlayer.gameplayCamera.transform.position, collider.transform.position);
+                if (Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
                 {
-                    EnemyAI enemy = enemyCollisionDetect.mainScript;
-
-                    if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
-                        continue;
-
-                    // First, do a simple direction check to see if the enemy is in front of the player
-                    Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
-                    // Then check if there's a clear line of sight
-                    float distanceToEnemy = Vector3.Distance(ownerPlayer.gameplayCamera.transform.position, collider.transform.position);
-                    if (Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
-                    {
-                        Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name, (int)Logging_Level.High);
-                        continue;
-                    }
-                    //Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
-
-
-                    SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
-                    HandleStateAnimationSpeedChanges(State.AttackMode);
-                    break;  // Exit loop after targeting one enemy, depending on game logic
+                    Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name, (int)Logging_Level.High);
+                    continue;
                 }
+                //Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
+
+
+                SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
+                HandleStateAnimationSpeedChanges(State.AttackMode);
+                break;
             }
         }
     }

@@ -29,7 +29,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     private bool isSearching = false;
     private bool reachedDestination = false;
     private MineshaftElevatorController? elevatorScript = null;
-    private Coroutine? checkPathsRoutine = null;
+    [HideInInspector] public Coroutine? checkPathsRoutine = null;
     [HideInInspector] public PathfindingOperation? pathfindingOperation = null;
     [HideInInspector] public List<EntranceTeleport> exitPoints = new();
 
@@ -124,6 +124,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         }
         ClearPathfindingOperation();
         action(TList);
+        checkPathsRoutine = null;
     }
 
     /* CheckPathsCoroutine(listOfTransforms.Select(t => (t, t.position)), DoStuff);

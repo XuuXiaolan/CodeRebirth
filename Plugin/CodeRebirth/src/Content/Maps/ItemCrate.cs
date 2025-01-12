@@ -9,6 +9,7 @@ using Unity.Netcode;
 using UnityEngine;
 using System;
 using System.Collections;
+using CodeRebirth.src.Content.Enemies;
 
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable
@@ -47,15 +48,22 @@ public class ItemCrate : CRHittable
 	private bool openedOnce = false;
 	[HideInInspector] public static List<ItemCrate> Instances = new();
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+		Instances.Add(this);
+		Transporter.objectsToTransport.Add(gameObject);
+    }
+
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+		Transporter.objectsToTransport.Remove(gameObject);
 		Instances.Remove(this);
     }
 
     private void Start()
 	{
-		Instances.Add(this);
 		if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = false;
 		if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = false;
 		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed + Instances.Count);

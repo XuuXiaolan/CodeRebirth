@@ -1,16 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class Transporter : CodeRebirthEnemyAI
 {
+    public Transform palletTransform = null!;
+    
     [HideInInspector] public static List<GameObject> objectsToTransport = new();
 
     private GameObject? transportTarget = null;
     private Vector3 currentEndDestination = Vector3.zero;
+    private bool repositioning = false;
+    private float speedIncrease = 0f;
+
+    private readonly static int HoldingObjectAnimation = Animator.StringToHash("holdingObject");
+    private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat");
 
     public enum TransporterStates
     {
@@ -31,7 +38,7 @@ public class Transporter : CodeRebirthEnemyAI
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        creatureAnimator.SetFloat("RunSpeedFloat", agent.velocity.magnitude); // todo: turn that into static int thing
+        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude); // todo: turn that into static int thing
         switch (currentBehaviourStateIndex)
         {
             case (int)TransporterStates.Idle:
@@ -94,21 +101,44 @@ public class Transporter : CodeRebirthEnemyAI
             transportTarget.transform.position
         );
 
-        // If close enough to "pick up"
-        float pickupRange = 2.5f;
-        if (dist <= pickupRange)
+        if (dist <= agent.stoppingDistance + 0.5f && smartAgentNavigator.checkPathsRoutine == null && !repositioning)
         {
-            bool foundRoute = false;
-            while (!foundRoute)
-            {
-                NavMesh.SamplePosition(PickRandomOutsideOrInsideAINode(), out NavMeshHit hit, 5, NavMesh.AllAreas);
-                currentEndDestination = hit.position;
-                if (smartAgentNavigator.CanPathToPoint(this.transform.position, currentEndDestination) > 0)
-                {
-                    foundRoute = true;
-                }
-            }
-            SwitchToBehaviourServerRpc((int)TransporterStates.Repositioning);
+            repositioning = true;
+            // Change from IEnumerable to List
+            List<(GameObject obj, Vector3 position)> candidateObjects = new();
+
+            // Loop 20 times, pick random nodes, add them to the list
+            IEnumerable<GameObject> allNodes = RoundManager.Instance.outsideAINodes
+                .Concat(RoundManager.Instance.insideAINodes);
+
+            candidateObjects = allNodes
+                .Select(kv => (kv, kv.transform.position))    
+                .ToList();
+            smartAgentNavigator.CheckPaths(candidateObjects, CheckIfCanReposition);
+        }
+    }
+
+    public void CheckIfCanReposition(List<GameObject> objects)
+    {
+        if (transportTarget == null)
+        {
+            Plugin.Logger.LogError($"Transporter: transportTarget is null??");
+            SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
+            return;
+        }
+        if (objects.Count > 0)
+        {
+            Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects", (int)Logging_Level.Low);
+            currentEndDestination = objects[UnityEngine.Random.Range(0, objects.Count)].transform.position;
+            creatureAnimator.SetBool(HoldingObjectAnimation, true);
+            agent.speed = 0f;
+            transportTarget.transform.SetParent(palletTransform, true);
+            SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget));
+        }
+        else
+        {
+            repositioning = false;
+            currentEndDestination = Vector3.zero;
         }
     }
 
@@ -126,37 +156,47 @@ public class Transporter : CodeRebirthEnemyAI
         );
 
         // If we reached or nearly reached the drop-off
-        if (Vector3.Distance(transform.position, currentEndDestination) <= agent.stoppingDistance + 1.5f)
+        if (Vector3.Distance(transform.position, currentEndDestination) <= agent.stoppingDistance + 1.5f && currentEndDestination != Vector3.zero)
         {
             Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}", (int)Logging_Level.Low);
             currentEndDestination = Vector3.zero;
-            transportTarget = null;
-            SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
-            TryFindAnyTransportableObjectViaAsyncPathfinding();
+            creatureAnimator.SetBool(HoldingObjectAnimation, false);
         }
+    }
+
+    #endregion
+
+    #region RPC's
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncPositionRotationOfTransportTargetServerRpc(NetworkObjectReference netObjRef)
+    {
+        SyncPositionRotationOfTransportTargetClientRpc(netObjRef);
+    }
+
+    [ClientRpc]
+    public void SyncPositionRotationOfTransportTargetClientRpc(NetworkObjectReference netObjRef)
+    {
+        var _transportTarget = (GameObject)netObjRef;
+        _transportTarget.transform.localPosition = Vector3.zero;
+        _transportTarget.transform.localRotation = Quaternion.identity;
     }
 
     #endregion
 
     #region Example Utility
 
-    /// <summary>
-    /// If you want to pick a random node inside or outside, 
-    /// you can adapt this to use the dictionary's boolean or other logic.
-    /// </summary>
-    public Vector3 PickRandomOutsideOrInsideAINode()
+    public (GameObject obj, Vector3 position) PickRandomOutsideOrInsideAINode()
     {
-        // In your actual game: 
-        // - If you want an outside node, pick from RoundManager.Instance.outsideAINodes
-        // - If you want an inside node, pick from RoundManager.Instance.insideAINodes
-        List<GameObject> allNodes = RoundManager.Instance.outsideAINodes
-            .Concat(RoundManager.Instance.insideAINodes)
-            .ToList();
-        if (allNodes.Count == 0) return transform.position;
+        IEnumerable<GameObject> allNodes = RoundManager.Instance.outsideAINodes
+            .Concat(RoundManager.Instance.insideAINodes);
+        if (allNodes.Count() == 0) return (gameObject, transform.position);
 
-        int index = UnityEngine.Random.Range(0, allNodes.Count);
-        NavMesh.SamplePosition(allNodes[index].transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
-        return hit.position;
+        // Pick one randomly
+        int index = UnityEngine.Random.Range(0, allNodes.Count());
+        GameObject chosenNode = allNodes.ElementAt(index);
+
+        return (chosenNode, chosenNode.transform.position);
     }
 
     #endregion
@@ -175,5 +215,27 @@ public class Transporter : CodeRebirthEnemyAI
         agent.speed += 0.5f;
     }
 
+    public void OnLiftHazardAnimEvent()
+    {
+        repositioning = false;
+        agent.speed = 4 + speedIncrease;
+        SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Repositioning);
+    }
+
+    public void OnReleaseHazardAnimEvent()
+    {
+        if (transportTarget == null)
+        {
+            Plugin.Logger.LogError($"Transporter: transportTarget is null");
+            return;
+        }
+        transportTarget.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+        agent.speed = 4 + speedIncrease;
+        transportTarget = null;
+        SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
+
+        if (!IsServer) return;
+        TryFindAnyTransportableObjectViaAsyncPathfinding();
+    }
     #endregion
 }
