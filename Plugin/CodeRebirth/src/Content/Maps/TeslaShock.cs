@@ -32,7 +32,7 @@ public class TeslaShock : CodeRebirthHazard
     public override void Start()
     {
         base.Start();
-        Plugin.ExtendedLogging("Tesla Turret initialized");
+        Plugin.ExtendedLogging("Tesla Turret initialized", (int)Logging_Level.Medium);
         vfx.SetFloat("SpawnRate", 10f);
         teslaIdleAudioSource.clip = teslaSlowIdleSound;
         teslaIdleAudioSource.Stop();
@@ -94,7 +94,7 @@ public class TeslaShock : CodeRebirthHazard
     {
         while (ShouldContinueCharging(affectedPlayer))
         {
-            Plugin.ExtendedLogging($"Charging {affectedPlayer.playerUsername}");
+            Plugin.ExtendedLogging($"Charging {affectedPlayer.playerUsername}", (int)Logging_Level.Medium);
             yield return StartCoroutine(ChargePlayer(affectedPlayer));
             List<Transform> validTargets = new();
             if (!ShouldContinueCharging(affectedPlayer))
@@ -245,7 +245,7 @@ public class TeslaShock : CodeRebirthHazard
             }
             else
             {
-                Plugin.ExtendedLogging("Shooting non player or non enemy target");
+                Plugin.ExtendedLogging("Shooting non player or non enemy target", (int)Logging_Level.Medium);
             }
         }
     }

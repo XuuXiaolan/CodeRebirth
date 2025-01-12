@@ -211,7 +211,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     {
         if (Time.realtimeSinceStartup - hitTimer < 0.5f)
             return;
-        Plugin.ExtendedLogging($"OnTriggerEnter: {other.gameObject.name} with tag {other.gameObject.tag}");
+        Plugin.ExtendedLogging($"OnTriggerEnter: {other.gameObject.name} with tag {other.gameObject.tag}", (int)Logging_Level.Highest);
         // If the object is tagged PlayerBody or Enemy
         if (other.tag.StartsWith("PlayerBody") || other.CompareTag("Enemy"))
         {
@@ -295,7 +295,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         startFallingPosition = transform.localPosition + Vector3.up * 0.07f;
         targetFloorPosition   = transform.parent.InverseTransformPoint(finalWorldDest);
 
-        Plugin.ExtendedLogging($"KickDollLocalClient (LOCAL): {startFallingPosition} -> {targetFloorPosition}");
+        Plugin.ExtendedLogging($"KickDollLocalClient (LOCAL): {startFallingPosition} -> {targetFloorPosition}", (int)Logging_Level.Medium);
     }
 
     private Vector3 SnapToFloor(Vector3 desiredWorldPos)

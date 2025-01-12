@@ -264,7 +264,7 @@ public class TerminalGalAI : GalAI
                 length += Vector3.Distance(path.corners[i-1], path.corners[i]);
             }
         }
-        Plugin.ExtendedLogging($"Path distance: {length}");
+        Plugin.ExtendedLogging($"Path distance: {length}", (int)Logging_Level.Medium);
         return length;
     }
 
@@ -642,7 +642,7 @@ public class TerminalGalAI : GalAI
             galState = stateToSwitchTo;
         }
 
-        Plugin.ExtendedLogging($"Switching emotion to {emotionToSwitchTo}");
+        Plugin.ExtendedLogging($"Switching emotion to {emotionToSwitchTo}", (int)Logging_Level.Medium);
         terminalFaceController.SetFaceState(emotionToSwitchTo, 100);
     }
 

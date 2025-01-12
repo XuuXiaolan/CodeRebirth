@@ -63,18 +63,21 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         
         _thisPlantPotID = totalSpawnedPlantPots;
         
-        Plugin.ExtendedLogging($"plant pot id: {_thisPlantPotID}");
+        Plugin.ExtendedLogging($"plant pot id: {_thisPlantPotID}", (int)Logging_Level.Low);
 
         
         // Because this is handled via reference it should just work
-        if (!CodeRebirthSave.Current.PlantPotData.TryGetValue(_thisPlantPotID, out _data)) {
+        if (!CodeRebirthSave.Current.PlantPotData.TryGetValue(_thisPlantPotID, out _data))
+        {
             _data = new PlantPotData();
             CodeRebirthSave.Current.PlantPotData[_thisPlantPotID] = _data;
-        } else {
-            Plugin.ExtendedLogging("loaded from save!");
+        }
+        else
+        {
+            Plugin.ExtendedLogging("loaded from save!", (int)Logging_Level.Low);
         }
         
-        Plugin.ExtendedLogging($"stage: {_data.stage}");
+        Plugin.ExtendedLogging($"stage: {_data.stage}", (int)Logging_Level.Low);
         
         totalSpawnedPlantPots++;
         Instances.Add(this);
@@ -100,7 +103,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     {
         WoodenSeed woodenSeed = ((GameObject)netObjRef).GetComponent<WoodenSeed>();
         fruitType = woodenSeed.fruitType;
-        Plugin.ExtendedLogging($"Setting up fruit type {fruitType}");
+        Plugin.ExtendedLogging($"Setting up fruit type {fruitType}", (int)Logging_Level.Medium);
         woodenSeed.playerHeldBy.DespawnHeldObject();
     }
 
@@ -169,7 +172,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     [ClientRpc]
     private void IncreaseStageClientRpc()
     {
-        Plugin.ExtendedLogging($"Increasing stage from {(int)stage} to {(int)stage + 1}");
+        Plugin.ExtendedLogging($"Increasing stage from {(int)stage} to {(int)stage + 1}", (int)Logging_Level.Medium);
         if (stage == Stage.Zero) trigger.onInteract.RemoveListener(OnInteract);
         enableList[(int)stage].SetActive(false);
         stage++;

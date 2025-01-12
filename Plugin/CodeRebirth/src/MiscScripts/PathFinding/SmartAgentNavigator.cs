@@ -36,7 +36,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        Plugin.ExtendedLogging("SmartAgentNavigator initialized");
+        Plugin.ExtendedLogging("SmartAgentNavigator initialized", (int)Logging_Level.Medium);
         agent = gameObject.GetComponent<NavMeshAgent>();
         PlayerControllerBPatch.smartAgentNavigators.Add(this);
     }
@@ -110,7 +110,7 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     private IEnumerator CheckPathsCoroutine<T>(IEnumerable<(T, Vector3)> points, Action<List<T>> action)
     {
-        Plugin.ExtendedLogging($"Checking paths for {points.Count()} objects");
+        Plugin.ExtendedLogging($"Checking paths for {points.Count()} objects", (int)Logging_Level.Low);
         var TList = new List<T>();
         ClearPathfindingOperation();
         foreach (var (obj, point) in points)
@@ -175,7 +175,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             pointToGo = hit.position;
             OnEnableOrDisableAgent.Invoke(false);
             agent.enabled = false;
-            Plugin.ExtendedLogging($"Pathing to initial destination failed, going to fallback position {hit.position} instead.");
+            Plugin.ExtendedLogging($"Pathing to initial destination failed, going to fallback position {hit.position} instead.", (int)Logging_Level.Low);
             return true;
         }
 

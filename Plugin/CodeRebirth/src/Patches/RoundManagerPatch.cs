@@ -30,18 +30,18 @@ static class RoundManagerPatch {
 
 	private static void SpawnAirControlUnit()
 	{
-		Plugin.ExtendedLogging("Spawning air control unit!!!");
+		Plugin.ExtendedLogging("Spawning air control unit!!!", (int)Logging_Level.High);
 
 		// Parse the configuration string to get the spawn counts for different moons
 		Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigAirControlUnitSpawnWeight.Value);
 		foreach (var moonSpawn in moonSpawnCounts.Keys)
 		{
-			Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+			Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}", (int)Logging_Level.High);
 		}
 
 		// Get the current moon type
 		string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
-		Plugin.ExtendedLogging("Current moon: " + currentMoon);
+		Plugin.ExtendedLogging("Current moon: " + currentMoon, (int)Logging_Level.Medium);
 
         // Determine the spawn count based on the current moon configuration
 
@@ -65,14 +65,14 @@ static class RoundManagerPatch {
         }
 
         // Log the determined spawn count
-        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}", (int)Logging_Level.Medium);
 
 		// If no valid spawn count is found, return
 		if (spawnCount <= 0) return;
 
 		// Check if the current moon configuration is valid
 		System.Random random = new();
-		Plugin.ExtendedLogging($"Spawning {spawnCount} air control units");
+		Plugin.ExtendedLogging($"Spawning {spawnCount} air control units", (int)Logging_Level.High);
 		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
 		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
@@ -85,7 +85,7 @@ static class RoundManagerPatch {
 				GameObject aircontrolunit = MapObjectHandler.Instance.AirControlUnit.AirControlUnitPrefab;
 
 				GameObject spawnedAirControlUnit = GameObject.Instantiate(aircontrolunit, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-				Plugin.ExtendedLogging($"Spawning air control unit at: {hit.point}");
+				Plugin.ExtendedLogging($"Spawning air control unit at: {hit.point}", (int)Logging_Level.High);
 				spawnedAirControlUnit.transform.up = hit.normal;
 				spawnedAirControlUnit.GetComponent<NetworkObject>().Spawn();
 			}
@@ -118,18 +118,18 @@ static class RoundManagerPatch {
 
     private static void SpawnBearTrap()
     {
-        Plugin.ExtendedLogging("Spawning bear trap!!!");
+        Plugin.ExtendedLogging("Spawning bear trap!!!", (int)Logging_Level.High);
 
         // Parse the configuration string to get the spawn counts for different moons
         Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigBearTrapSpawnWeight.Value);
         foreach (var moonSpawn in moonSpawnCounts.Keys)
         {
-            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}", (int)Logging_Level.High);
         }
 
         // Get the current moon type
         string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
-        Plugin.ExtendedLogging("Current moon: " + currentMoon);
+        Plugin.ExtendedLogging("Current moon: " + currentMoon, (int)Logging_Level.Medium);
 
         // Determine the spawn count based on the current moon configuration
         if (!moonSpawnCounts.TryGetValue(currentMoon, out int spawnCount)) // Try to get the specific moon spawn count
@@ -152,14 +152,14 @@ static class RoundManagerPatch {
         }
 
         // Log the determined spawn count
-        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}", (int)Logging_Level.Medium);
 
         // If no valid spawn count is found, return
         if (spawnCount <= 0) return;
 
         // Check if the current moon configuration is valid
         System.Random random = new();
-        Plugin.ExtendedLogging($"Spawning {spawnCount} bear traps");
+        Plugin.ExtendedLogging($"Spawning {spawnCount} bear traps", (int)Logging_Level.High);
         for (int i = 0; i < random.NextInt(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
         {
             Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
@@ -184,7 +184,7 @@ static class RoundManagerPatch {
                 }
 
                 GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-                Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
+                Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}", (int)Logging_Level.High);
                 spawnedTrap.transform.up = hit.normal;
                 spawnedTrap.GetComponent<NetworkObject>().Spawn();
             }
@@ -193,7 +193,7 @@ static class RoundManagerPatch {
 
 	private static void SpawnFlora()
 	{
-		Plugin.ExtendedLogging("Spawning flora!!!");
+		Plugin.ExtendedLogging("Spawning flora!!!", (int)Logging_Level.High);
 		System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
 		int spawnCount = 0;
 		
@@ -385,18 +385,18 @@ static class RoundManagerPatch {
 
 	private static void SpawnWoodenCrates()
 	{
-		Plugin.ExtendedLogging("Spawning Wooden Crate!!!");
+		Plugin.ExtendedLogging("Spawning Wooden Crate!!!", (int)Logging_Level.High);
 
         // Parse the configuration string to get the spawn counts for different moons
         Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigWoodenCrateSpawnWeight.Value);
         foreach (var moonSpawn in moonSpawnCounts.Keys)
         {
-            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}", (int)Logging_Level.High);
         }
 
         // Get the current moon type
         string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
-        Plugin.ExtendedLogging("Current moon: " + currentMoon);
+        Plugin.ExtendedLogging("Current moon: " + currentMoon, (int)Logging_Level.Medium);
 
         // Determine the spawn count based on the current moon configuration
         if (!moonSpawnCounts.TryGetValue(currentMoon, out int spawnCount)) // Try to get the specific moon spawn count
@@ -419,14 +419,14 @@ static class RoundManagerPatch {
         }
 
         // Log the determined spawn count
-        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}", (int)Logging_Level.Medium);
 
         // If no valid spawn count is found, return
         if (spawnCount <= 0) return;
 
         // Check if the current moon configuration is valid
         System.Random random = new();
-        Plugin.ExtendedLogging($"Spawning {spawnCount} Wooden crates");
+        Plugin.ExtendedLogging($"Spawning {spawnCount} Wooden crates", (int)Logging_Level.Medium);
 		for (int i = 0; i < spawnCount; i++)
 		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
@@ -450,7 +450,7 @@ static class RoundManagerPatch {
 				Vector3 spawnPoint = hit.point + hit.normal * -0.6f; // Adjust -0.6f to control how deep you want it
 
 				GameObject spawnedCrate = GameObject.Instantiate(crate, spawnPoint, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}");
+				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}", (int)Logging_Level.High);
 				spawnedCrate.transform.up = hit.normal;
 				spawnedCrate.GetComponent<NetworkObject>().Spawn();
 			}
@@ -459,18 +459,18 @@ static class RoundManagerPatch {
 
 	private static void SpawnMetalCrates()
 	{
-		Plugin.ExtendedLogging("Spawning Metal Crate!!!");
+		Plugin.ExtendedLogging("Spawning Metal Crate!!!", (int)Logging_Level.High);
 
         // Parse the configuration string to get the spawn counts for different moons
         Dictionary<string, int> moonSpawnCounts = ParseMoonSpawnConfig(Plugin.ModConfig.ConfigMetalCrateSpawnWeight.Value);
 		foreach (var moonSpawn in moonSpawnCounts.Keys)
         {
-            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}");
+            Plugin.ExtendedLogging($"Moon {moonSpawn} spawn count: {moonSpawnCounts[moonSpawn]}", (int)Logging_Level.High);
         }
 
         // Get the current moon type
         string currentMoon = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLowerInvariant();
-        Plugin.ExtendedLogging("Current moon: " + currentMoon);
+        Plugin.ExtendedLogging("Current moon: " + currentMoon, (int)Logging_Level.Medium);
 
         // Determine the spawn count based on the current moon configuration
         if (!moonSpawnCounts.TryGetValue(currentMoon, out int spawnCount)) // Try to get the specific moon spawn count
@@ -493,14 +493,14 @@ static class RoundManagerPatch {
         }
 
         // Log the determined spawn count
-        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}");
+        Plugin.ExtendedLogging($"Determined spawn count for moon '{currentMoon}': {spawnCount}", (int)Logging_Level.Medium);
 
         // If no valid spawn count is found, return
         if (spawnCount <= 0) return;
 
         // Check if the current moon configuration is valid
         System.Random random = new();
-        Plugin.ExtendedLogging($"Spawning {spawnCount} metal crates");
+        Plugin.ExtendedLogging($"Spawning {spawnCount} metal crates", (int)Logging_Level.Medium);
 		for (int i = 0; i < spawnCount; i++)
 		{
 			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
@@ -524,7 +524,7 @@ static class RoundManagerPatch {
 				Vector3 spawnPoint = hit.point + hit.normal * -1.1f; // Adjust -1.2f to control how deep you want it
 
 				GameObject spawnedCrate = GameObject.Instantiate(crate, spawnPoint, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}");
+				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}", (int)Logging_Level.High);
 				spawnedCrate.transform.up = hit.normal;
 				spawnedCrate.GetComponent<NetworkObject>().Spawn();
 			}
@@ -533,7 +533,7 @@ static class RoundManagerPatch {
 
 	private static void SpawnRandomBiomes()
 	{
-		Plugin.ExtendedLogging("Spawning Biome/s!!!");
+		Plugin.ExtendedLogging("Spawning Biome/s!!!", (int)Logging_Level.High);
 		System.Random random = new();
 		if (random.NextFloat(0f, 1f) <= Plugin.ModConfig.ConfigBiomesSpawnChance.Value) return;
 		int minValue = 1;
@@ -545,7 +545,7 @@ static class RoundManagerPatch {
 			GameObject biome = MapObjectHandler.Instance.Biome.BiomePrefab;
 			
 			GameObject spawnedBiome = GameObject.Instantiate(biome, vector, Quaternion.identity);
-			Plugin.ExtendedLogging($"Spawning biome at {vector}");
+			Plugin.ExtendedLogging($"Spawning biome at {vector}", (int)Logging_Level.High);
 			spawnedBiome.GetComponent<NetworkObject>().Spawn();
 		}
 	}

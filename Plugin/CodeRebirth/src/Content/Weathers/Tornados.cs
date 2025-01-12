@@ -93,7 +93,7 @@ public class Tornados : EnemyAI
         this.tornadoType = (TornadoType)typeIndex;
 
         WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
-        Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}");
+        Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}", (int)Logging_Level.Medium);
         SetupTornadoType();
         UpdateAudio(); // Ensure audio works correctly on the first frame.
     }
@@ -113,7 +113,7 @@ public class Tornados : EnemyAI
         }
 
         if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) != WeatherHandler.Instance.TornadoesWeather) {
-            Plugin.ExtendedLogging("Tornado spawned as an enemy?");
+            Plugin.ExtendedLogging("Tornado spawned as an enemy?", (int)Logging_Level.Low);
             outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
             tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
             origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: Vector3.zero, radius: 100f, randomSeed: tornadoRandom);
@@ -129,7 +129,7 @@ public class Tornados : EnemyAI
             tornadoType = (TornadoType)typeIndex;
 
             WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
-            Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}");
+            Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}", (int)Logging_Level.Medium);
             SetupTornadoType();
             UpdateAudio(); // Ensure audio works correctly on the first frame.
         }

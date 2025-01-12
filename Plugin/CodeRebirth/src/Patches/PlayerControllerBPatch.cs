@@ -94,7 +94,7 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_ConnectClientToPlayerObject(On.GameNetcodeStuff.PlayerControllerB.orig_ConnectClientToPlayerObject orig, PlayerControllerB self)
     {
         orig(self);
-        Plugin.ExtendedLogging("PlayerControllerB_ConnectClientToPlayerObject called");
+        Plugin.ExtendedLogging("PlayerControllerB_ConnectClientToPlayerObject called", (int)Logging_Level.Low);
         if (self.IsServer && Plugin.ModConfig.ConfigFirstLaunchPopup.Value && (!Plugin.ModelReplacementAPIIsOn || !Plugin.MoreSuitsIsOn))
         {
             HUDManager.Instance.DisplayTip("Mod not detected", "Downloading ModelReplacementAPI and MoreSuits adds a new suit as the ShockwaveGal's model");

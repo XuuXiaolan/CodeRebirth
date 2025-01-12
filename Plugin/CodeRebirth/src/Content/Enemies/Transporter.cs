@@ -60,7 +60,7 @@ public class Transporter : CodeRebirthEnemyAI
     private void TryFindAnyTransportableObjectViaAsyncPathfinding()
     {
         // Gather all valid objects#
-        Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects");
+        Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects", (int)Logging_Level.Medium);
         IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = objectsToTransport
             .Where(kv => kv != null)
             .Select(kv => (kv, kv.transform.position));
@@ -72,7 +72,7 @@ public class Transporter : CodeRebirthEnemyAI
     {
         if (objects.Count > 0)
         {
-            Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects");
+            Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects", (int)Logging_Level.Low);
             transportTarget = objects[UnityEngine.Random.Range(0, objects.Count)];
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
         }
@@ -85,7 +85,7 @@ public class Transporter : CodeRebirthEnemyAI
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
-        Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}", 2);
+        Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}", (int)Logging_Level.Highest);
 
         float dist = Vector3.Distance(transportTarget.transform.position, transform.position);
 
@@ -128,7 +128,7 @@ public class Transporter : CodeRebirthEnemyAI
         // If we reached or nearly reached the drop-off
         if (Vector3.Distance(transform.position, currentEndDestination) <= agent.stoppingDistance + 1.5f)
         {
-            Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}");
+            Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}", (int)Logging_Level.Low);
             currentEndDestination = Vector3.zero;
             transportTarget = null;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);

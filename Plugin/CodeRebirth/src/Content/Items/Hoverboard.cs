@@ -248,7 +248,7 @@ public class Hoverboard : GrabbableObject, IHittable
         if (hoverboardMode == HoverboardMode.Mounted && playerControlling.transform.GetParent() != hoverboardSeat.transform)
         {
             playerControlling.transform.SetParent(hoverboardSeat.transform, true);
-            Plugin.ExtendedLogging($"Setting parent of {playerControlling} to {playerControlling.transform.GetParent()}");
+            Plugin.ExtendedLogging($"Setting parent of {playerControlling} to {playerControlling.transform.GetParent()}", (int)Logging_Level.Medium);
         }
         if (playerControlling.inAnimationWithEnemy || playerControlling.isClimbingLadder || (hoverboardMode == HoverboardMode.Mounted && playerControlling.isClimbingLadder))
         {
@@ -373,7 +373,7 @@ public class Hoverboard : GrabbableObject, IHittable
                 playerControlling.transform.SetParent(playerControlling.playersManager.playersContainer, true);
             }
             playerControlling = null;
-            Plugin.ExtendedLogging($"Clearing target on {this}");
+            Plugin.ExtendedLogging($"Clearing target on {this}", (int)Logging_Level.Medium);
             return;
         }
         if (StartOfRound.Instance.allPlayerScripts[PlayerID] == null)
@@ -383,7 +383,7 @@ public class Hoverboard : GrabbableObject, IHittable
         }
         if (playerControlling == StartOfRound.Instance.allPlayerScripts[PlayerID])
         {
-            Plugin.ExtendedLogging($"{this} already targeting: {playerControlling.playerUsername}");
+            Plugin.ExtendedLogging($"{this} already targeting: {playerControlling.playerUsername}", (int)Logging_Level.Medium);
             return;
         }
         hoverboardChild.rotation = resetChildRotation;
@@ -401,7 +401,7 @@ public class Hoverboard : GrabbableObject, IHittable
         playerControlling.GetCRPlayerData().hoverboardRiding = this;
         playerControlling.transform.position = hoverboardSeat.transform.position;
         playerControlling.transform.rotation = hoverboardSeat.transform.rotation * Quaternion.Euler(0, 90, 0);
-        Plugin.ExtendedLogging($"{this} setting target to: {playerControlling.playerUsername}");
+        Plugin.ExtendedLogging($"{this} setting target to: {playerControlling.playerUsername}", (int)Logging_Level.Medium);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -508,7 +508,7 @@ public class Hoverboard : GrabbableObject, IHittable
         }
         // Reset hoverboardChild's rotation and position
         hoverboardChild.rotation = resetChildRotation;
-        Plugin.ExtendedLogging($"Rotation: {hoverboardChild.rotation}");
+        Plugin.ExtendedLogging($"Rotation: {hoverboardChild.rotation}", (int)Logging_Level.Medium);
         /*if (hoverboardMode == HoverboardMode.Held) {
             hoverboardChild.rotation = playerCurrentlyControlling.transform.rotation * Quaternion.Euler(0, -90, 0);
         }*/

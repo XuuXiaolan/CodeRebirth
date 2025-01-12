@@ -41,7 +41,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
     public override void Start()
     {
         base.Start();
-        Plugin.ExtendedLogging("Functional Microwave initialized");
+        Plugin.ExtendedLogging("Functional Microwave initialized", (int)Logging_Level.Medium);
         microwaveClosing = microwaveClosingTimer;
         microwaveOpening = microwaveOpeningTimer;
         animator.SetBool("isActivated", isOpen);

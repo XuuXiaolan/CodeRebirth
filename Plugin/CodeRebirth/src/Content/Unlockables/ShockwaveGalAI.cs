@@ -164,7 +164,7 @@ public class ShockwaveGalAI : GalAI
     private void DropAllHeldItems()
     {
         int heldItemCount = itemsHeldList.Count;
-        Plugin.ExtendedLogging($"Items held: {heldItemCount}");
+        Plugin.ExtendedLogging($"Items held: {heldItemCount}", (int)Logging_Level.Low);
         for (int i = heldItemCount - 1; i >= 0; i--)
         {
             HandleDroppingItem(itemsHeldList[i]);
@@ -771,7 +771,7 @@ public class ShockwaveGalAI : GalAI
             {
                 HUDManager.Instance.DisplayTip("Scrap Delivered", "Shockwave Gal has delivered the items given to her to the ship!", false);
             }
-            Plugin.ExtendedLogging($"Dropping item in ship room: {item}");
+            Plugin.ExtendedLogging($"Dropping item in ship room: {item}", (int)Logging_Level.Medium);
             item.isInShipRoom = true;
             item.isInElevator = true;
             item.transform.SetParent(GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform, true);

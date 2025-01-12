@@ -26,7 +26,7 @@ public class FlashTurret : CodeRebirthHazard, INoiseListener
     public override void Start()
     {
         base.Start();
-        Plugin.ExtendedLogging("Flash Turret initialized");
+        Plugin.ExtendedLogging("Flash Turret initialized", (int)Logging_Level.Medium);
     }
 
     private void Update()

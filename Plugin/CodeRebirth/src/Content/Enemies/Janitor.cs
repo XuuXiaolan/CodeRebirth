@@ -796,10 +796,10 @@ public class Janitor : CodeRebirthEnemyAI
             for (int i = 1; i < path.corners.Length; i++)
             {
                 length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
-                Plugin.ExtendedLogging($"Distance: {Vector3.Distance(path.corners[i - 1], path.corners[i])}");
+                Plugin.ExtendedLogging($"Distance: {Vector3.Distance(path.corners[i - 1], path.corners[i])}", (int)Logging_Level.High);
             }
         }
-        Plugin.ExtendedLogging($"Path distance: {length}");
+        Plugin.ExtendedLogging($"Path distance: {length}", (int)Logging_Level.Medium);
         return length;
     }
 

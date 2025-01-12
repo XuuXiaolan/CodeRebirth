@@ -12,9 +12,16 @@ using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
-using UnityEngine.UIElements;
 
 namespace CodeRebirth.src;
+public enum Logging_Level
+{
+    None = 0,
+    Low = 1,
+    Medium = 2,
+    High = 3,
+    Highest = 4,
+}
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
@@ -22,7 +29,8 @@ namespace CodeRebirth.src;
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
-public class Plugin : BaseUnityPlugin {
+public class Plugin : BaseUnityPlugin
+{
     internal static new ManualLogSource Logger = null!;
     internal static readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
@@ -34,14 +42,6 @@ public class Plugin : BaseUnityPlugin {
     internal static IngameKeybinds InputActionsInstance = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
     internal const ulong GLITCH_STEAM_ID = 9;
-    public enum Logging_Level
-    {
-        None = 0,
-        Low = 1,
-        Medium = 2,
-        High = 3,
-        Highest = 4,
-    }
     internal static MainAssets Assets { get; private set; } = null!;
     internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName)
     {
@@ -128,7 +128,7 @@ public class Plugin : BaseUnityPlugin {
         LoadedBundles.Clear();
     }
 
-    internal static void ExtendedLogging(object text, int loggingLevel = 1)
+    internal static void ExtendedLogging(object text, int loggingLevel)
     {
 
         if (ModConfig.ConfigLoggingLevel.Value >= loggingLevel)

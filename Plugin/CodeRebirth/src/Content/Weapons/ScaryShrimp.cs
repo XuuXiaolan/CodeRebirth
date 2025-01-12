@@ -45,7 +45,7 @@ public class ScaryShrimp : Shovel
     private IEnumerator DespawnHeldObject(PlayerControllerB playerWhoHit)
     {
         yield return new WaitForSeconds(0.1f);
-        Plugin.ExtendedLogging("Despawned held object");
+        Plugin.ExtendedLogging("Despawned held object", (int)Logging_Level.Medium);
         playerWhoHit.DiscardHeldObject();
     }
 
@@ -61,7 +61,7 @@ public class ScaryShrimp : Shovel
         if (enemyHp - 3 <= 0) lastPlayerHeld.itemAudio.PlayOneShot(killClip);
         if (playerHeldBy.currentlyHeldObjectServer == null)
         {
-            Plugin.ExtendedLogging("No held object");
+            Plugin.ExtendedLogging("No held object", (int)Logging_Level.Medium);
             return;
         }
         GrabbableObject grabbableObject = playerHeldBy.currentlyHeldObjectServer;
@@ -80,7 +80,7 @@ public class ScaryShrimp : Shovel
     [ClientRpc]
     public void PastHitPlayerClientRpc(int playerIndex, int playerHp, bool isDead)
     {
-        Plugin.ExtendedLogging($"Hit player {playerIndex} with {playerHp} hp and dead: {isDead}");
+        Plugin.ExtendedLogging($"Hit player {playerIndex} with {playerHp} hp and dead: {isDead}", (int)Logging_Level.Medium);
         
         PlayerControllerB playerHit = StartOfRound.Instance.allPlayerScripts[playerIndex];
         if (playerHp - 60 <= 0 || isDead) lastPlayerHeld.itemAudio.PlayOneShot(killClip);
@@ -92,7 +92,7 @@ public class ScaryShrimp : Shovel
         }
         if (playerHeldBy.currentlyHeldObjectServer == null)
         {
-            Plugin.ExtendedLogging("No held object");
+            Plugin.ExtendedLogging("No held object", (int)Logging_Level.Medium);
             return;
         }
         GrabbableObject grabbableObject = playerHeldBy.currentlyHeldObjectServer;

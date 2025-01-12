@@ -21,7 +21,7 @@ static class StartOfRoundPatch
 	[HarmonyPostfix]
 	public static void StartOfRound_Awake(ref StartOfRound __instance)
 	{
-		Plugin.ExtendedLogging("StartOfRound.Awake");
+		Plugin.ExtendedLogging("StartOfRound.Awake", (int)Logging_Level.Low);
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
 	}
 
@@ -52,7 +52,7 @@ static class StartOfRoundPatch
 				SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
 				utilsInstance.GetComponent<NetworkObject>().Spawn();
 				utilsInstance.AddComponent<CodeRebirthPlayerManager>();
-				Plugin.ExtendedLogging($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
+				Plugin.ExtendedLogging($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'", (int)Logging_Level.Low);
 			}
 			else
 			{
@@ -62,7 +62,7 @@ static class StartOfRoundPatch
 
 		if (EnemyHandler.Instance.DuckSong != null)
 		{
-			Plugin.ExtendedLogging("Creating duck UI");
+			Plugin.ExtendedLogging("Creating duck UI", (int)Logging_Level.Low);
 			var canvasObject = GameObject.Find("Systems/UI/Canvas");
 			var duckUI = GameObject.Instantiate(EnemyHandler.Instance.DuckSong.DuckUIPrefab, Vector3.zero, Quaternion.identity, canvasObject.transform);
 		}
@@ -71,7 +71,7 @@ static class StartOfRoundPatch
 	[HarmonyPatch(nameof(StartOfRound.OnShipLandedMiscEvents)), HarmonyPostfix]
 	public static void OnShipLandedMiscEventsPatch(StartOfRound __instance)
 	{
-		Plugin.ExtendedLogging("Starting big object search");
+		Plugin.ExtendedLogging("Starting big object search", (int)Logging_Level.Medium);
 
 		if (MapObjectHandler.Instance.Biome != null)
 		{
@@ -80,7 +80,7 @@ static class StartOfRoundPatch
 			var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 			int FoundObject = 0;
 			LayerMask layerMask = LayerMask.NameToLayer("Foliage");
-			if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null) Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
+			if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null) Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name, (int)Logging_Level.Medium);
 			foreach (var item in objs)
 			{
 				if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null && LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name == "Toy Store") HandleWesleyChangesCuzHeIsStupid(item);
@@ -94,7 +94,7 @@ static class StartOfRoundPatch
 
 			timer.Stop();
 
-			Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
+			Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}", (int)Logging_Level.Medium);
 		}
 
 		foreach (var plant in PlantPot.Instances)
@@ -109,7 +109,7 @@ static class StartOfRoundPatch
 
 		if (Plugin.ModConfig.ConfigRemoveInteriorFog.Value)
 		{
-			Plugin.ExtendedLogging("Disabling halloween fog");
+			Plugin.ExtendedLogging("Disabling halloween fog", (int)Logging_Level.High);
 			if (RoundManager.Instance.indoorFog.gameObject.activeSelf) RoundManager.Instance.indoorFog.gameObject.SetActive(false);
 		}
 
@@ -124,7 +124,7 @@ static class StartOfRoundPatch
 		string[] stringsToCompare = ["GunBarrel", "GunBarrel (9)", "Cake", "Cake 0", "Cake (1)", "Cake (2)", "Cake (3)", "coilmesh", "MaskMesh", "MaskMesh (1)"];
 		if (stringsToCompare.Contains(gameObject.name) && gameObject.GetComponent<MeshRenderer>() != null && gameObject.layer != 21 && gameObject.layer != 19)
 		{
-			Plugin.ExtendedLogging("Changing layer of " + gameObject.name + "To layer MapHazards (21)");
+			Plugin.ExtendedLogging("Changing layer of " + gameObject.name + "To layer MapHazards (21)", (int)Logging_Level.High);
 			gameObject.layer = 21;
 		}
 	}

@@ -24,7 +24,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         base.Start();
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside);
         smartAgentNavigator.SetAllValues(isOutside);
-        Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
+        Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.", (int)Logging_Level.Low);
         GrabEnemyRarity(enemyType.enemyName);
     }
 
@@ -45,7 +45,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         // Log the result
         if (enemy != null)
         {
-            Plugin.ExtendedLogging(enemyName + " has Rarity: " + enemy.rarity.ToString());
+            Plugin.ExtendedLogging(enemyName + " has Rarity: " + enemy.rarity.ToString(), (int)Logging_Level.Low);
         }
         else
         {
@@ -61,7 +61,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     public void SetFloatAnimationOnLocalClient(string name, float value)
     {
-        Plugin.ExtendedLogging(name + " " + value);
+        Plugin.ExtendedLogging(name + " " + value, (int)Logging_Level.Medium);
         creatureAnimator.SetFloat(name, value);
     }
 
@@ -90,7 +90,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     public void TriggerAnimationOnLocalClient(string triggerName)
     {
-        Plugin.ExtendedLogging(triggerName);
+        Plugin.ExtendedLogging(triggerName, (int)Logging_Level.Medium);
         creatureAnimator.SetTrigger(triggerName);
     }
 
@@ -171,12 +171,12 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         Vector3 Position = RoundManager.Instance.GetNavMeshPosition(PlayerToCheck.transform.position, RoundManager.Instance.navHit, 2.7f);
         if (!RoundManager.Instance.GotNavMeshPositionResult)
         {
-            Plugin.ExtendedLogging("Player Reach Test: No Navmesh position");
+            Plugin.ExtendedLogging("Player Reach Test: No Navmesh position", (int)Logging_Level.Low);
             return false; 
         }
         agent.CalculatePath(Position, agent.path);
         bool HasPath = (agent.path.status == NavMeshPathStatus.PathComplete);
-        Plugin.ExtendedLogging($"Player Reach Test: {HasPath}");
+        Plugin.ExtendedLogging($"Player Reach Test: {HasPath}", (int)Logging_Level.Low);
         return HasPath;
     }
 
@@ -184,7 +184,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     {
         if(PlayerToCheck == null) return -1;
         float DistanceFromShip = Vector3.Distance(PlayerToCheck.transform.position, StartOfRound.Instance.shipBounds.transform.position);
-        Plugin.ExtendedLogging($"PlayerNearShip check: {DistanceFromShip}");
+        Plugin.ExtendedLogging($"PlayerNearShip check: {DistanceFromShip}", (int)Logging_Level.Medium);
         return DistanceFromShip;
     }
 
@@ -204,7 +204,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     {
         if (!creatureAnimator.GetCurrentAnimatorStateInfo(0).IsName(AnimName))
         {
-            Plugin.ExtendedLogging(__getTypeName() + ": Checking for animation " + AnimName + ", but current animation is " + creatureAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+            Plugin.ExtendedLogging(__getTypeName() + ": Checking for animation " + AnimName + ", but current animation is " + creatureAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name, (int)Logging_Level.Medium);
             return true;
         }
         return (creatureAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
@@ -222,16 +222,16 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         if (PlayerID == -1)
         {
             targetPlayer = null;
-            Plugin.ExtendedLogging($"Clearing target on {this}");
+            Plugin.ExtendedLogging($"Clearing target on {this}", (int)Logging_Level.High);
             return;
         }
         if (StartOfRound.Instance.allPlayerScripts[PlayerID] == null)
         {
-            Plugin.ExtendedLogging($"Index invalid! {this}");
+            Plugin.ExtendedLogging($"Index invalid! {this}", (int)Logging_Level.High);
             return;
         }
         targetPlayer = StartOfRound.Instance.allPlayerScripts[PlayerID];
-        Plugin.ExtendedLogging($"{this} setting target to: {targetPlayer.playerUsername}");
+        Plugin.ExtendedLogging($"{this} setting target to: {targetPlayer.playerUsername}", (int)Logging_Level.High);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -246,15 +246,15 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         if (enemyID == -1)
         {
             targetEnemy = null;
-            Plugin.ExtendedLogging($"Clearing Enemy target on {this}");
+            Plugin.ExtendedLogging($"Clearing Enemy target on {this}", (int)Logging_Level.High);
             return;
         }
         if (RoundManager.Instance.SpawnedEnemies[enemyID] == null)
         {
-            Plugin.ExtendedLogging($"Enemy Index invalid! {this}");
+            Plugin.ExtendedLogging($"Enemy Index invalid! {this}", (int)Logging_Level.High);
             return;
         }
         targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
-        Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
+        Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}", (int)Logging_Level.High);
     }
 }

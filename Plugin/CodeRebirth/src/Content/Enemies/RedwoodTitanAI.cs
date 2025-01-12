@@ -268,7 +268,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         PlayMiscSoundsClientRpc(0);
         jumping = true;
         agent.speed = 0.5f;
-        Plugin.ExtendedLogging("Start Jump"); 
+        Plugin.ExtendedLogging("Start Jump", (int)Logging_Level.Medium); 
     }
 
     public void DoKickTargetPlayer(PlayerControllerB closestPlayer)
@@ -278,7 +278,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         creatureNetworkAnimator.SetTrigger(startKick);
         playerToKick = closestPlayer;
         PlayMiscSoundsClientRpc(1);
-        Plugin.ExtendedLogging("Start Kick");
+        Plugin.ExtendedLogging("Start Kick", (int)Logging_Level.Medium);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -338,7 +338,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (FindClosestAliveGiantInRange(seeableDistance))
         {
             SetAnimatorMotionBools(chasing: false, walking: false);
-            Plugin.ExtendedLogging("Start Target Giant");
+            Plugin.ExtendedLogging("Start Target Giant", (int)Logging_Level.Low);
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)State.RunningToTarget);
             StartCoroutine(SetSpeedForChasingGiant());
@@ -385,7 +385,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (targetEnemy == null || targetEnemy.isEnemyDead)
         {
             targetEnemy = null;
-            Plugin.ExtendedLogging("Stop Target Giant");
+            Plugin.ExtendedLogging("Stop Target Giant", (int)Logging_Level.Low);
             SetAnimatorMotionBools(chasing: false, walking: true);
             agent.angularSpeed = 40f;
             smartAgentNavigator.StartSearchRoutine(transform.position, 50);
@@ -395,7 +395,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         if (Vector3.Distance(transform.position, targetEnemy.transform.position) >= seeableDistance+10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5))
         {
-            Plugin.ExtendedLogging("Stop Target Giant");
+            Plugin.ExtendedLogging("Stop Target Giant", (int)Logging_Level.Low);
             agent.angularSpeed = 40f;
             SetAnimatorMotionBools(chasing: false, walking: true);
             smartAgentNavigator.StartSearchRoutine(transform.position, 50);
@@ -419,7 +419,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         // Optional: Log the distance and remaining HP for debugging
-        Plugin.ExtendedLogging($"Distance: {distanceFromEnemy} HP: {enemy.enemyHP}");
+        Plugin.ExtendedLogging($"Distance: {distanceFromEnemy} HP: {enemy.enemyHP}", (int)Logging_Level.High);
     }
 
     public PlayerControllerB? GetClosestPlayerToRedwood()
@@ -443,7 +443,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             OldBirdParticles.Play();
         }
-        Plugin.ExtendedLogging("Ate: " + targetEnemy.enemyType.enemyName);
+        Plugin.ExtendedLogging("Ate: " + targetEnemy.enemyType.enemyName, (int)Logging_Level.Low);
         targetEnemy.KillEnemyOnOwnerClient(overrideDestroy: true);
     }
 
@@ -494,7 +494,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             rad.TryGetComponent(out IVisibleThreat threat);
             if (threat != null && rad.focusedThreatTransform == threat.GetThreatTransform())
             {
-                Plugin.ExtendedLogging("Stuff is happening!!");
+                Plugin.ExtendedLogging("Stuff is happening!!", (int)Logging_Level.Low);
                 rad.targetedThreatCollider = null;
                 rad.CheckSightForThreat();
             }
@@ -534,7 +534,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 enemyCollider.enabled = false;
             }
-            Plugin.ExtendedLogging("Eating Giant");
+            Plugin.ExtendedLogging("Eating Giant", (int)Logging_Level.Low);
             StartCoroutine(EatTargetEnemy(collidedEnemy));
         }
     }
@@ -567,14 +567,15 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
                     SetAnimatorMotionBools(chasing: false, walking: false);
                     StartCoroutine(SetSpeedForChasingGiant());
                 }
-                Plugin.ExtendedLogging("Start Target Giant");
+                Plugin.ExtendedLogging("Start Target Giant", (int)Logging_Level.Low);
                 SwitchToBehaviourStateOnLocalClient((int)State.RunningToTarget);
             }
         }
 
         enemyHP -= force;
 
-        if (enemyHP <= 0 && !isEnemyDead) {
+        if (enemyHP <= 0 && !isEnemyDead)
+        {
             if (currentBehaviourStateIndex == (int)State.EatingTargetGiant)
             {
                 enemyHP++;
@@ -587,7 +588,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
                 }
             }
         }
-        Plugin.ExtendedLogging(enemyHP.ToString());
+        Plugin.ExtendedLogging(enemyHP.ToString(), (int)Logging_Level.High);
     }
 
     public override void KillEnemy(bool destroy = false)
@@ -641,7 +642,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     { // AnimEvent
         kicking = false;
         kickingOut = false;
-        Plugin.ExtendedLogging("Kick ended");
+        Plugin.ExtendedLogging("Kick ended", (int)Logging_Level.Low);
         if (IsServer)
         {
             SetAnimatorMotionBools(chasing: false, walking: true);
@@ -662,7 +663,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             SetAnimatorMotionBools(chasing: false, walking: true);
             smartAgentNavigator.StartSearchRoutine(transform.position, 50);
         }
-        Plugin.ExtendedLogging("Start Walking Around");
+        Plugin.ExtendedLogging("Start Walking Around", (int)Logging_Level.Low);
         agent.speed = walkingSpeed;
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
@@ -678,7 +679,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         jumping = false;
         BigSmokeEffect.Play();
-        Plugin.ExtendedLogging("End Jump");
+        Plugin.ExtendedLogging("End Jump", (int)Logging_Level.Low);
         if (IsServer)
         {
             SetAnimatorMotionBools(chasing: false, walking: true);

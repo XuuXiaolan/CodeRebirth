@@ -1,12 +1,5 @@
-using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
-using CodeRebirth.src;
-using CodeRebirthMRAPI.Models;
-using HarmonyLib;
-using ModelReplacement;
 
 namespace CodeRebirthMRAPI;
 
@@ -40,11 +33,10 @@ public class Plugin : BaseUnityPlugin {
 		Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded! :3");
 	}
 
-	
     
 	internal static void ExtendedLogging(object text)
 	{
-		if (CodeRebirth.src.Plugin.ModConfig.ConfigEnableExtendedLogging.Value)
+		if (CodeRebirth.src.Plugin.ModConfig.ConfigLoggingLevel.Value >= 1)
 		{
 			Logger.LogInfo(text);
 		}

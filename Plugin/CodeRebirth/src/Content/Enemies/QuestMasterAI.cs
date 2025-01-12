@@ -207,7 +207,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     protected virtual IEnumerator DoGiveQuest()
     {
-        Plugin.ExtendedLogging("Starting Quest: " + questName);
+        Plugin.ExtendedLogging("Starting Quest: " + questName, (int)Logging_Level.Low);
         SetDuckTextManuallyClientRpc("");
         if (questCompleted.Value)
         {
@@ -289,7 +289,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         if (targetPlayer != null && targetPlayer.currentlyHeldObjectServer != null && targetPlayer.currentlyHeldObjectServer.itemProperties.itemName == questItems[currentQuestOrder.Value])
         {
-            Plugin.ExtendedLogging("completed!");
+            Plugin.ExtendedLogging("completed!", (int)Logging_Level.Low);
             SetDuckStartTalkingClientRpc("Good Job!!", 0.05f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, true);
             DoCompleteQuest(QuestCompletion.Completed);
             questStarted.Value = false;
@@ -313,7 +313,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
                 }
             case QuestCompletion.Null:
                 {
-                    Plugin.ExtendedLogging("Target Player or Enemy vents is null?");
+                    Plugin.ExtendedLogging("Target Player or Enemy vents is null?", (int)Logging_Level.Low);
                     PlayMiscSoundsClientRpc(2);
                     StartCoroutine(QuestFailSequence(targetPlayer));
                     break;
@@ -391,7 +391,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         spawnedBodies.Add(body);
         body.gameObject.SetActive(true);
         StartOfRound.Instance.allPlayerScripts[failureIndex].KillPlayer(Vector3.zero, spawnBody: false, CauseOfDeath.Unknown, 1);
-        Plugin.ExtendedLogging($"Spawning Deadbody, with questsFailed: {questsFailed} and this many stages of bloodiness {bloodyMaterials.Length}");
+        Plugin.ExtendedLogging($"Spawning Deadbody, with questsFailed: {questsFailed} and this many stages of bloodiness {bloodyMaterials.Length}", (int)Logging_Level.Low);
         if (questsFailed > bloodyMaterials.Length) return;
         skinnedMeshRenderers[0].SetMaterial(bloodyMaterials[questsFailed - 1]);
     }
@@ -457,7 +457,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
                 DoDocile();
                 break;
             default:
-                Plugin.ExtendedLogging("This Behavior State doesn't exist!");
+                Plugin.ExtendedLogging("This Behavior State doesn't exist!", (int)Logging_Level.Highest);
                 break;
         }
     }

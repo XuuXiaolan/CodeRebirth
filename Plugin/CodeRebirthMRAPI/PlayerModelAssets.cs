@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirthMRAPI.Models;
 using ModelReplacement;

@@ -19,7 +19,7 @@ public class TornadoWeather : CodeRebirthWeathers {
 
 	private void OnEnable()
 	{ // init weather
-		Plugin.ExtendedLogging("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name);
+		Plugin.ExtendedLogging("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name, (int)Logging_Level.Low);
 		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 6, dayTimePower: -3);
 		Instance = this;
         random = new Random(StartOfRound.Instance.randomMapSeed);

@@ -12,7 +12,7 @@ public static class OpenBodyCamCompatibilityChecker
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void Init()
     {
-        Plugin.ExtendedLogging("No way openbodycams is on?!");
+        Plugin.ExtendedLogging("No way openbodycams is on?!", (int)Logging_Level.Medium);
         Plugin.OpenBodyCamsIsOn = true;
         InitializeImpl();
     }

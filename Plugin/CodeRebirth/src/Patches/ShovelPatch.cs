@@ -89,11 +89,11 @@ static class ShovelPatch
 		RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
         if (num > 0 && random.NextFloat(0f, 1f) <= 0.05f && EnemyHandler.Instance.RedwoodTitan.RedwoodTitanEnemyType != null)
         {
-            Plugin.ExtendedLogging("Spawning redwood titan");
+            Plugin.ExtendedLogging("Spawning redwood titan", (int)Logging_Level.Medium);
             CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.RedwoodTitanEnemyType.enemyName);
         }
         if (!Plugin.ModConfig.ConfigFarmingEnabled.Value || num <= 0|| random.NextFloat(0f, 1f) >= Plugin.ModConfig.ConfigWoodenSeedTreeSpawnChance.Value/100f || CRWeapon.playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
-        Plugin.ExtendedLogging("Tree Destroyed with luck");
+        Plugin.ExtendedLogging("Tree Destroyed with luck", (int)Logging_Level.Medium);
         CodeRebirthUtils.Instance.SpawnScrapServerRpc("Wooden Seed", CRWeapon.weaponTip.position, false, true, 5);
     }
 
@@ -115,7 +115,7 @@ static class ShovelPatch
         if (self.playerHeldBy == null || self is not NaturesMace naturesMace || GameNetworkManager.Instance.localPlayerController != self.playerHeldBy) return;
 
         List<PlayerControllerB> playerList = naturesMace.HitNaturesMace();
-        Plugin.ExtendedLogging("playerList: " + playerList.Count);
+        Plugin.ExtendedLogging("playerList: " + playerList.Count, (int)Logging_Level.Medium);
         foreach (PlayerControllerB player in playerList)
         {
             naturesMace.HealServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));

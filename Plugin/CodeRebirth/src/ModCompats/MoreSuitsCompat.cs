@@ -9,7 +9,7 @@ public static class MoreSuitsCompatibilityChecker
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void Init()
     {
-        Plugin.ExtendedLogging("No way More Suits is on?!");
+        Plugin.ExtendedLogging("No way More Suits is on?!", (int)Logging_Level.Medium);
         Plugin.MoreSuitsIsOn = true;
     }
 }

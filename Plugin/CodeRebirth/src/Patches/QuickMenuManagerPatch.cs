@@ -19,7 +19,7 @@ static class QuickMenuManagerPatch
         foreach (EnemyType enemy in enemyArray)
         {
             if (String.IsNullOrEmpty(enemy.enemyName)) continue;
-            Plugin.ExtendedLogging($"{enemy.enemyName} has been found!");
+            Plugin.ExtendedLogging($"{enemy.enemyName} has been found!", (int)Logging_Level.High);
 
             if (!CodeRebirthUtils.EnemyTypes.Contains(enemy)) CodeRebirthUtils.EnemyTypes.Add(enemy);
         }

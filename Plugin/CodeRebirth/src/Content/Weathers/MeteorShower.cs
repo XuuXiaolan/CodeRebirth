@@ -48,7 +48,7 @@ public class MeteorShower : CodeRebirthWeathers {
 	
 	private void OnEnable()
 	{ // init weather
-		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
+		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name, (int)Logging_Level.Low);
 		normalisedTimeToLeave = Plugin.ModConfig.ConfigMeteorShowerTimeToLeave.Value;
 		bool maxIsHere = false;
 		foreach (var player in StartOfRound.Instance.allPlayerScripts)
