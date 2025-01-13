@@ -293,8 +293,8 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &5629450085371556831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +313,6 @@ MonoBehaviour:
   rotationSpeed: 125
   fireRate: 3
   detectionRange: 400
-  damageAmount: 10
   ACUAudioSource: {fileID: 6783464174544928357}
   ACUFireSound: {fileID: 8300000, guid: 3ee3f9ad28f62ac40981a57364e51e43, type: 3}
   ACURechargeSound: {fileID: 8300000, guid: 1b8a68f403d28a44d827a08fadd8d47f, type: 3}

@@ -1,23 +1,38 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class Transporter : CodeRebirthEnemyAI
 {
+    public AudioClip[] engineAndIdleSounds = null!;
+    public AudioClip dumpHazardSound = null!;
+    public AudioClip hitJimothySound = null!;
+    public AudioClip jimHonkSound = null!;
+    public AudioClip pickUpHazardSound = null!;
+
     public Transform palletTransform = null!;
-    
+    public Transform jimothyTransform = null!;
+
     [HideInInspector] public static List<GameObject> objectsToTransport = new();
 
+    private float idleTimer = 20f;
+    private Coroutine? onHitRoutine = null;
     private GameObject? transportTarget = null;
-    private Vector3 currentEndDestination = Vector3.zero;
+    private bool droppingObject = false;
+    private NavMeshHit currentEndHit = new();
     private bool repositioning = false;
     private float speedIncrease = 0f;
 
-    private readonly static int HoldingObjectAnimation = Animator.StringToHash("holdingObject");
-    private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat");
+    private readonly static int PickUpObjectAnimation = Animator.StringToHash("pickUpObject"); // Trigger
+    private readonly static int DropObjectAnimation = Animator.StringToHash("dropObject"); // Trigger
+    private readonly static int OnHitAnim = Animator.StringToHash("onHit"); // Trigger
+    private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
+    private readonly static int RotationSpeed = Animator.StringToHash("RotationSpeed"); // Float
 
     public enum TransporterStates
     {
@@ -29,16 +44,56 @@ public class Transporter : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
         if (!IsServer) return;
+        smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
+        var emptyNetworkObject = GameObject.Instantiate(Plugin.Assets.EmptyNetworkObject, palletTransform.position, Quaternion.identity);
+        emptyNetworkObject.GetComponent<NetworkObject>().Spawn();
+        SyncNetworkObjectParentServerRpc(new NetworkObjectReference(emptyNetworkObject));
+        palletTransform = emptyNetworkObject.transform;
         TryFindAnyTransportableObjectViaAsyncPathfinding();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncNetworkObjectParentServerRpc(NetworkObjectReference netObjRef)
+    {
+        SyncNetworkObjectParentClientRpc(netObjRef);
+    }
+
+    [ClientRpc]
+    public void SyncNetworkObjectParentClientRpc(NetworkObjectReference netObjRef)
+    {
+        var emptyNetworkObject = (GameObject)netObjRef;
+        emptyNetworkObject.transform.SetParent(palletTransform, true);
+        emptyNetworkObject.transform.position = palletTransform.position;
+        emptyNetworkObject.transform.rotation = palletTransform.rotation;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if (agent.velocity.magnitude > 0.5f)
+        {
+            creatureSFX.clip = engineAndIdleSounds[0];
+        }
+        else
+        {
+            creatureSFX.clip = engineAndIdleSounds[1];
+        }
+
+        idleTimer -= Time.deltaTime;
+        if (idleTimer <= 0)
+        {
+            idleTimer = 25;
+            creatureVoice.PlayOneShot(jimHonkSound);
+        }
+        if (!IsServer) return;
+        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude);
     }
 
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude); // todo: turn that into static int thing
         switch (currentBehaviourStateIndex)
         {
             case (int)TransporterStates.Idle:
@@ -81,6 +136,7 @@ public class Transporter : CodeRebirthEnemyAI
         {
             Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects", (int)Logging_Level.Low);
             transportTarget = objects[UnityEngine.Random.Range(0, objects.Count)];
+            smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
         }
     }
@@ -89,6 +145,7 @@ public class Transporter : CodeRebirthEnemyAI
     {
         if (transportTarget == null)
         {
+            smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
@@ -101,7 +158,7 @@ public class Transporter : CodeRebirthEnemyAI
             transportTarget.transform.position
         );
 
-        if (dist <= agent.stoppingDistance + 0.5f && smartAgentNavigator.checkPathsRoutine == null && !repositioning)
+        if (dist <= agent.stoppingDistance && smartAgentNavigator.checkPathsRoutine == null && !repositioning)
         {
             repositioning = true;
             // Change from IEnumerable to List
@@ -123,22 +180,24 @@ public class Transporter : CodeRebirthEnemyAI
         if (transportTarget == null)
         {
             Plugin.Logger.LogError($"Transporter: transportTarget is null??");
+            smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
         if (objects.Count > 0)
         {
             Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects", (int)Logging_Level.Low);
-            currentEndDestination = objects[UnityEngine.Random.Range(0, objects.Count)].transform.position;
-            creatureAnimator.SetBool(HoldingObjectAnimation, true);
+            Vector3 currentEndDestination = objects[UnityEngine.Random.Range(0, objects.Count)].transform.position;
+            creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
             agent.speed = 0f;
+            agent.velocity = Vector3.zero;
             transportTarget.transform.SetParent(palletTransform, true);
-            SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget));
+            SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget), currentEndDestination);
         }
         else
         {
             repositioning = false;
-            currentEndDestination = Vector3.zero;
+            currentEndHit.position = Vector3.zero;
         }
     }
 
@@ -152,15 +211,19 @@ public class Transporter : CodeRebirthEnemyAI
 
         // Move to that final location
         smartAgentNavigator.DoPathingToDestination(
-            currentEndDestination
+            currentEndHit.position
         );
 
         // If we reached or nearly reached the drop-off
-        if (Vector3.Distance(transform.position, currentEndDestination) <= agent.stoppingDistance + 1.5f && currentEndDestination != Vector3.zero)
+        if (Vector3.Distance(transform.position, currentEndHit.position) <= agent.stoppingDistance && !droppingObject)
         {
             Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}", (int)Logging_Level.Low);
-            currentEndDestination = Vector3.zero;
-            creatureAnimator.SetBool(HoldingObjectAnimation, false);
+            var directionToLookAt = (currentEndHit.position - transform.position).normalized;
+            directionToLookAt.y = 0f;
+            transform.LookAt(directionToLookAt);
+            agent.velocity = Vector3.zero;
+            creatureNetworkAnimator.SetTrigger(DropObjectAnimation);
+            droppingObject = true;
         }
     }
 
@@ -169,17 +232,18 @@ public class Transporter : CodeRebirthEnemyAI
     #region RPC's
 
     [ServerRpc(RequireOwnership = false)]
-    public void SyncPositionRotationOfTransportTargetServerRpc(NetworkObjectReference netObjRef)
+    public void SyncPositionRotationOfTransportTargetServerRpc(NetworkObjectReference netObjRef, Vector3 currentEndPosition)
     {
-        SyncPositionRotationOfTransportTargetClientRpc(netObjRef);
+        SyncPositionRotationOfTransportTargetClientRpc(netObjRef, currentEndPosition);
     }
 
     [ClientRpc]
-    public void SyncPositionRotationOfTransportTargetClientRpc(NetworkObjectReference netObjRef)
+    public void SyncPositionRotationOfTransportTargetClientRpc(NetworkObjectReference netObjRef, Vector3 currentEndPosition)
     {
         var _transportTarget = (GameObject)netObjRef;
         _transportTarget.transform.localPosition = Vector3.zero;
         _transportTarget.transform.localRotation = Quaternion.identity;
+        NavMesh.SamplePosition(currentEndPosition, out currentEndHit, 1f, NavMesh.AllAreas);
     }
 
     #endregion
@@ -206,20 +270,48 @@ public class Transporter : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        // Possibly trigger an "on hit" animation or effect
+        creatureVoice.PlayOneShot(hitJimothySound);
+        if (onHitRoutine != null || playerWhoHit == null || !IsServer) return;
+        onHitRoutine = StartCoroutine(OnHitAnimation(playerWhoHit));
     }
 
-    public void OnHitAnimEvent()
+    public IEnumerator OnHitAnimation(PlayerControllerB playerWhoHit)
     {
-        // Example effect: speed up in annoyance
-        agent.speed += 0.5f;
+        creatureNetworkAnimator.SetTrigger(OnHitAnim);
+        agent.speed = 0f;
+        agent.velocity = Vector3.zero;
+
+        Vector3 direction = (playerWhoHit.transform.position - jimothyTransform.position).normalized;
+        direction.y = 0f;
+
+        float angleToPlayer = 10 + Vector3.SignedAngle(jimothyTransform.forward, direction, Vector3.up);
+
+        float timeToLookAtPlayer = angleToPlayer <= 0
+            ? (angleToPlayer * -1) / 360f
+            : (360f - angleToPlayer) / 360f;
+
+        Plugin.ExtendedLogging($"Looking at player for {timeToLookAtPlayer} seconds", (int)Logging_Level.Medium);
+        creatureAnimator.SetFloat(RotationSpeed, 1f);
+        yield return new WaitForSeconds(timeToLookAtPlayer);
+        creatureAnimator.SetFloat(RotationSpeed, 0f);
+        yield return new WaitForSeconds(0.5f);
+        speedIncrease += 0.5f;
+        agent.speed = 4 + speedIncrease;
+        creatureAnimator.SetFloat(RotationSpeed, 1f);
+        yield return new WaitForSeconds(1 - timeToLookAtPlayer);
+        creatureAnimator.SetFloat(RotationSpeed, 0f);
+
+        onHitRoutine = null;
     }
 
     public void OnLiftHazardAnimEvent()
     {
+        creatureVoice.PlayOneShot(pickUpHazardSound);
         repositioning = false;
         agent.speed = 4 + speedIncrease;
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Repositioning);
+        if (!IsServer) return;
+        smartAgentNavigator.StopSearchRoutine();
     }
 
     public void OnReleaseHazardAnimEvent()
@@ -229,12 +321,20 @@ public class Transporter : CodeRebirthEnemyAI
             Plugin.Logger.LogError($"Transporter: transportTarget is null");
             return;
         }
+        creatureVoice.PlayOneShot(dumpHazardSound);
         transportTarget.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+
+        transportTarget.transform.position = currentEndHit.position;
+        transportTarget.transform.up = currentEndHit.normal;
+        currentEndHit = new();
         agent.speed = 4 + speedIncrease;
         transportTarget = null;
+        droppingObject = false;
+
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
 
         if (!IsServer) return;
+        smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
         TryFindAnyTransportableObjectViaAsyncPathfinding();
     }
     #endregion

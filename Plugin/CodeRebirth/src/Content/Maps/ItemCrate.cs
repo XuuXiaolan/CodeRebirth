@@ -275,6 +275,11 @@ public class ItemCrate : CRHittable
 	[ClientRpc]
 	private void SetNewDigProgressClientRpc(float newDigProgress)
 	{
+		if (Vector3.Distance(transform.position, originalPosition + (transform.up * newDigProgress * 0.5f)) > 0.5f)
+		{
+			digProgress = 1f;
+			return;
+		}
 		UpdateDigPosition(digProgress, newDigProgress);
 		digProgress = Mathf.Clamp01(newDigProgress);
 	}

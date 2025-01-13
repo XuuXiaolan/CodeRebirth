@@ -47,6 +47,9 @@ public class Plugin : BaseUnityPlugin
     {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
         public GameObject UtilsPrefab { get; private set; } = null!;
+
+        [LoadFromBundle("EmptyNetworkObject.prefab")]
+        public GameObject EmptyNetworkObject { get; private set; } = null!;
     }
     
     private void Awake()
