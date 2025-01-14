@@ -146,6 +146,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             OnEnableOrDisableAgent.Invoke(true);
             agent.enabled = true;
             agent.Warp(targetPosition);
+            return;
         }
 
         // Calculate the new position in an arcing motion
@@ -165,7 +166,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             return false;
         }
 
-        if (!NavMesh.SamplePosition(destination, out NavMeshHit hit, 5, NavMesh.AllAreas))
+        if (!NavMesh.SamplePosition(destination, out NavMeshHit hit, 3, NavMesh.AllAreas))
         {
             return false;
         }
@@ -176,7 +177,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             pointToGo = hit.position;
             OnEnableOrDisableAgent.Invoke(false);
             agent.enabled = false;
-            Plugin.ExtendedLogging($"Pathing to initial destination failed, going to fallback position {hit.position} instead.", (int)Logging_Level.Low);
+            Plugin.ExtendedLogging($"Pathing to initial destination {destination} failed, going to fallback position {hit.position} instead.", (int)Logging_Level.Low);
             return true;
         }
 

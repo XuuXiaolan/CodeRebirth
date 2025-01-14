@@ -41,6 +41,20 @@ public class Transporter : CodeRebirthEnemyAI
         Repositioning
     }
 
+    [HideInInspector] public static List<Transporter> transporters = new();
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        transporters.Add(this);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        transporters.Remove(this);
+    }
+
     public override void Start()
     {
         base.Start();
@@ -124,7 +138,7 @@ public class Transporter : CodeRebirthEnemyAI
         // Gather all valid objects#
         Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects", (int)Logging_Level.Medium);
         IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = objectsToTransport
-            .Where(kv => kv != null)
+            .Where(kv => kv != null && !transporters.Any(t => t.transportTarget == kv))
             .Select(kv => (kv, kv.transform.position));
 
         smartAgentNavigator.CheckPaths(candidateObjects, CheckIfNeedToChangeState);

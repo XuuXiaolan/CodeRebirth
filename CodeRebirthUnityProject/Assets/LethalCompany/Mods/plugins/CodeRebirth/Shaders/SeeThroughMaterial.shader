@@ -80,7 +80,7 @@
             #endif // TESSELLATION_ON
 
             float _MaxVisibilityDistance;
-            float _AlphaCutoff;
+            float _AlphaCutoffa;
 
             float4 Frag(PackedVaryingsToPS packedInput) : SV_Target
             {
@@ -106,7 +106,7 @@
                 outColor.a *= fadeAlpha;
 
                 // Apply alpha cutoff
-                if (outColor.a <= _AlphaCutoff)
+                if (outColor.a <= _AlphaCutoffa)
                 {
                     discard;
                 }
