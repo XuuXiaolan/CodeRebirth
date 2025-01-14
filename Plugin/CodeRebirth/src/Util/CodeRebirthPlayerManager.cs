@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.MiscScripts.PathFinding;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
 {
     private bool previousDoorClosed;
     internal static Dictionary<PlayerControllerB, CRPlayerData> dataForPlayer = new Dictionary<PlayerControllerB, CRPlayerData>();
-    public static GameObject[] playerParticles = new GameObject[6];
+    public static List<SmartAgentNavigator> smartAgentNavigators = new();
     public static event EventHandler<bool>? OnDoorStateChange;
     public void Awake()
     {
@@ -36,7 +37,7 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
         if (StartOfRound.Instance == null) return;
         if (previousDoorClosed != StartOfRound.Instance.hangarDoorsClosed)
         {
-            Plugin.Logger.LogDebug("Door opened/closed!!");
+            Plugin.ExtendedLogging("Door opened/closed!!", (int)Logging_Level.High);
             OnDoorStateChange?.Invoke(null, StartOfRound.Instance.hangarDoorsClosed);
         }
         previousDoorClosed = StartOfRound.Instance.hangarDoorsClosed;
@@ -57,7 +58,6 @@ public class CRPlayerData
     public bool flung = false;
     public Hoverboard? hoverboardRiding;
     public List<Collider> playerColliders = new();
-    public AnimatorOverrideController? playerOverrideController;
 
     internal CodeRebirthLocalSave persistentData => CodeRebirthSave.Current.PlayerData[CodeRebirthPlayerManager.dataForPlayer.FirstOrDefault(it => it.Value == this).Key.playerSteamId];
 }
@@ -70,6 +70,7 @@ internal static class PlayerControllerBExtensions
         Removed,
         None,
     }
+
     internal static ApplyEffectResults ApplyStatusEffect(this PlayerControllerB player, CodeRebirthStatusEffects effect, float range, float distance)
     {
         if (distance < range && !player.HasEffectActive(effect))
@@ -84,6 +85,7 @@ internal static class PlayerControllerBExtensions
         }
         return ApplyEffectResults.None;
     }
+
     internal static void ApplyStatusEffect(this PlayerControllerB player, CodeRebirthStatusEffects effect, bool isActive)
     {
         if (!player.ContainsCRPlayerData()) return;
@@ -117,22 +119,16 @@ internal static class PlayerControllerBExtensions
         if (!player.ContainsCRPlayerData()) return false;
         CRPlayerData playerData = player.GetCRPlayerData();
 
-        switch(effect)
+        return effect switch
         {
-            case CodeRebirthStatusEffects.Water:
-                return playerData.Water;
-            case CodeRebirthStatusEffects.Electric:
-                return playerData.Electric;
-            case CodeRebirthStatusEffects.Fire:
-                return playerData.Fire;
-            case CodeRebirthStatusEffects.Smoke:
-                return playerData.Smoke;
-            case CodeRebirthStatusEffects.Windy:
-                return playerData.Windy;
-            case CodeRebirthStatusEffects.Blood:
-                return playerData.Blood;
-        }
-        return false;
+            CodeRebirthStatusEffects.Water => playerData.Water,
+            CodeRebirthStatusEffects.Electric => playerData.Electric,
+            CodeRebirthStatusEffects.Fire => playerData.Fire,
+            CodeRebirthStatusEffects.Smoke => playerData.Smoke,
+            CodeRebirthStatusEffects.Windy => playerData.Windy,
+            CodeRebirthStatusEffects.Blood => playerData.Blood,
+            _ => false,
+        };
     }
     internal static CRPlayerData GetCRPlayerData(this PlayerControllerB player) =>
         CodeRebirthPlayerManager.dataForPlayer[player];

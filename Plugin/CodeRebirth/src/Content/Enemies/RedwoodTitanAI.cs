@@ -578,7 +578,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             if (currentBehaviourStateIndex == (int)State.EatingTargetGiant)
             {
-                enemyHP++;
+                enemyHP = 1;
             }
             else
             {

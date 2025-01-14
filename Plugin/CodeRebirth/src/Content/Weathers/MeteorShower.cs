@@ -4,32 +4,30 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
-using Random = System.Random;
 
 namespace CodeRebirth.src.Content.Weathers;
-public class MeteorShower : CodeRebirthWeathers {
+public class MeteorShower : CodeRebirthWeathers
+{
 	private Coroutine spawnHandler = null!;
+	private List<GameObject> nodes = new();
 
-	private List<GameObject> nodes = new List<GameObject>();
     [Space(5f)]
     [Header("Time between Meteor Spawns")]
-	[SerializeField]
 	[Tooltip("Minimum Time between Meteor Spawns")]
-    private float minTimeBetweenSpawns = 1;
+    public float minTimeBetweenSpawns = 1;
     [Space(5f)]
-    [SerializeField]
     [Tooltip("Maximum Time between Meteor Spawns")]
-    private float maxTimeBetweenSpawns = 3;
+    public float maxTimeBetweenSpawns = 3;
     [Space(5f)]
-    [SerializeField]
     [Tooltip("Minimum Amount of Meteors per Spawn")]
-    private int minMeteorsPerSpawn = 1;
+    public int minMeteorsPerSpawn = 1;
     [Space(5f)]
-    [SerializeField]
     [Tooltip("Maximum Amount of Meteors per Spawn")]
-    private int maxMeteorsPerSpawn = 3;
-    private List<GameObject> alreadyUsedNodes = new List<GameObject>();
-	private enum Direction {
+    public int maxMeteorsPerSpawn = 3;
+    
+	private List<GameObject> alreadyUsedNodes = new();
+	private enum Direction
+	{
 		Random,
 		East,
 		West,
@@ -38,10 +36,10 @@ public class MeteorShower : CodeRebirthWeathers {
 	}
 	private Direction direction = Direction.Random;
 	private float normalisedTimeToLeave = 1f;
-	readonly List<Meteors> meteors = new List<Meteors>(); // Proper initialization
-	[HideInInspector] public readonly List<CraterController> craters = new List<CraterController>(); // Similarly for craters
+	private readonly List<Meteors> meteors = new();
+	private readonly List<CraterController> craters = new();
 
-	[NonSerialized] public Random random = null!;
+	[NonSerialized] public System.Random random = null!;
 
 	public static MeteorShower? Instance { get; private set; }
 	public static bool Active => Instance != null;
@@ -50,22 +48,8 @@ public class MeteorShower : CodeRebirthWeathers {
 	{ // init weather
 		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name, (int)Logging_Level.Low);
 		normalisedTimeToLeave = Plugin.ModConfig.ConfigMeteorShowerTimeToLeave.Value;
-		bool maxIsHere = false;
-		foreach (var player in StartOfRound.Instance.allPlayerScripts)
-		{
-			if (player.playerSteamId == 76561198043893219)
-			{
-				maxIsHere = true;
-			}
-		}
 		minMeteorsPerSpawn = Plugin.ModConfig.ConfigMinMeteorSpawnCount.Value;
 		maxMeteorsPerSpawn = Plugin.ModConfig.ConfigMaxMeteorSpawnCount.Value;
-		if (maxIsHere)
-		{
-			minMeteorsPerSpawn = 0;
-			maxMeteorsPerSpawn = 0;
-			normalisedTimeToLeave = 0f;
-		}
 		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 6, dayTimePower: -3);
 		if (minMeteorsPerSpawn > maxMeteorsPerSpawn)
 		{
@@ -75,16 +59,15 @@ public class MeteorShower : CodeRebirthWeathers {
 			maxMeteorsPerSpawn = temp.Item1;
 		}
 		Instance = this;
-        random = new Random(StartOfRound.Instance.randomMapSeed);
-		alreadyUsedNodes = new List<GameObject>();
+        random = new System.Random(StartOfRound.Instance.randomMapSeed);
         nodes = GameObject.FindGameObjectsWithTag("OutsideAINode").ToList();
 		nodes = CullNodesByProximity(nodes, 5.0f, true).ToList();
 		// eventually gonna have a config bool to turn on override prefabs and maybe have more prefab options.
-		SpawnOverheadVisualMeteors(random.NextInt(15, 45));
+		SpawnOverheadVisualMeteors(random.Next(15, 45));
 		
 		if(!IsAuthority()) return; // Only run on the host.
 		Direction[] directions = { Direction.Random, Direction.East, Direction.West, Direction.North, Direction.South };
-        int index = random.NextInt(0, directions.Length-1);
+        int index = random.Next(0, directions.Length-1);
         direction = directions[index];
 
 		spawnHandler = StartCoroutine(MeteorSpawnerHandler());
@@ -171,14 +154,14 @@ public class MeteorShower : CodeRebirthWeathers {
 
 	private IEnumerator MeteorSpawnerHandler()
 	{
-		yield return new WaitForSeconds(10f); // inital delay so clients don't get meteors before theyve inited everything.
+		yield return new WaitForSeconds(25f); // inital delay to get everything started
 		while (true)
-		{ // this is fine because it gets stopped in OnDisable.
+		{
 
-			for (int i = 0; i < random.NextInt(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++)
+			for (int i = 0; i < random.Next(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++)
 			{
-				SpawnMeteor(GetRandomTargetPosition(random, nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
-				yield return new WaitForEndOfFrame();
+				SpawnMeteor(GetRandomTargetPosition(nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
+				yield return null;
 			}
 			float delay = random.NextFloat(minTimeBetweenSpawns, maxTimeBetweenSpawns);
 			yield return new WaitForSeconds(delay);
@@ -240,7 +223,7 @@ public class MeteorShower : CodeRebirthWeathers {
 		meteor.NetworkObject.Spawn();
 	}
 
-    private void AddRandomMovement(Meteors meteor, float speed)
+    private void AddRandomMovement(Meteors meteor, float speed) // todo: garbage, get rid of this
     {
         var rb = meteor.GetComponent<Rigidbody>();
         if (rb == null)

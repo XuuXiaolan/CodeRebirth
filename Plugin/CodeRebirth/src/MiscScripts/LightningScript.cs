@@ -1,29 +1,25 @@
 using CodeRebirth.src.Util.Extensions;
 using DigitalRuby.ThunderAndLightning;
 using UnityEngine;
-using Object = UnityEngine.Object;
-using Vector3 = UnityEngine.Vector3;
 
 namespace CodeRebirth.src.MiscScripts;
 public class LightningStrikeScript
 {
-
-    public static void SpawnLightningBolt(Vector3 strikePosition)
+    public static StormyWeather? stormyWeather = null;
+    public static void SpawnLightningBolt(Vector3 strikePosition, System.Random lightningRandom, AudioSource lightningSource)
     {
-        System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
-        Vector3 offset = new Vector3(random.NextFloat(-32, 32), 0f, random.NextFloat(-32, 32));
+        Vector3 offset = new(lightningRandom.NextFloat(-32, 32), 0f, lightningRandom.NextFloat(-32, 32));
         Vector3 vector = strikePosition + Vector3.up * 160f + offset;
 
-        StormyWeather stormy = UnityEngine.Object.FindObjectOfType<StormyWeather>(true);
-        if (stormy == null)
+        if (stormyWeather == null)
         {
-            Plugin.Logger.LogWarning("StormyWeather not found");
-            return;
+            stormyWeather = UnityEngine.Object.FindObjectOfType<StormyWeather>(true);
+            Plugin.ExtendedLogging("Getting stormy weather for the first time", (int)Logging_Level.Low);
         }
 
         // Plugin.ExtendedLogging($"{vector} -> {strikePosition}");
 
-        LightningBoltPrefabScript localLightningBoltPrefabScript = Object.Instantiate(stormy.targetedThunder);
+        LightningBoltPrefabScript localLightningBoltPrefabScript = UnityEngine.Object.Instantiate(stormyWeather.targetedThunder);
         localLightningBoltPrefabScript.enabled = true;
 
         if (localLightningBoltPrefabScript == null)
@@ -42,17 +38,15 @@ public class LightningStrikeScript
         localLightningBoltPrefabScript.Generations = 8;
         localLightningBoltPrefabScript.CreateLightningBoltsNow();
 
-        AudioSource audioSource = Object.Instantiate(stormy.targetedStrikeAudio);
-        audioSource.transform.position = strikePosition + Vector3.up * 0.5f;
-        audioSource.enabled = true;
+        lightningSource.transform.position = strikePosition + Vector3.up * 0.5f;
         if (GameNetworkManager.Instance.localPlayerController.isInsideFactory)
         {
-            audioSource.volume = 0f;
+            lightningSource.volume = 0f;
         }
         else
         {
-            audioSource.volume = 0.20f;
+            lightningSource.volume = 0.20f;
         }
-        stormy.PlayThunderEffects(strikePosition, audioSource);
+        stormyWeather.PlayThunderEffects(strikePosition, lightningSource);
     }
 }

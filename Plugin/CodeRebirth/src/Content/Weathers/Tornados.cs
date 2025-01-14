@@ -4,43 +4,34 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using CodeRebirth.src.MiscScripts;
-using Random = System.Random;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using System;
-using WeatherRegistry;
 using static CodeRebirth.src.Content.Weathers.Tornados;
 using static CodeRebirth.src.Util.PlayerControllerBExtensions;
+using CodeRebirth.src.Content.Enemies;
 
 namespace CodeRebirth.src.Content.Weathers;
-public class Tornados : EnemyAI
+public class Tornados : CodeRebirthEnemyAI
 {
     [Header("Properties")]
-    [SerializeField]
-    private float initialSpeed = 5f;
-    [SerializeField]
-    private BoxCollider waterDrownCollider = null!;
+    public float initialSpeed = 5f;
+    public BoxCollider waterDrownCollider = null!;
 
     [Space(5f)]
     [Header("Audio")]
-    [SerializeField]
-    private AudioSource normalTravelAudio = null!;
-    [SerializeField]
-    private AudioSource closeTravelAudio = null!;
-    [SerializeField]
-    private AudioSource yeetAudio = null!;
+    public AudioSource normalTravelAudio = null!;
+    public AudioSource closeTravelAudio = null!;
+    public AudioSource lightningSource = null!;
     
     [Space(5f)]
     [Header("Graphics")]
-    [SerializeField]
-    private ParticleSystem[] tornadoParticles = null!;
+    public ParticleSystem[] tornadoParticles = null!;
 
-    private List<GameObject> outsideNodes = new List<GameObject>();
-    private Vector3 origin;
+    private GameObject[] outsideNodes = [];
     public Transform[] eyes = null!;
     public Transform throwingPoint = null!;
-    private List<string> WhitelistedTornados = new List<string>();
 
     public enum TornadoType
     {
@@ -55,178 +46,78 @@ public class Tornados : EnemyAI
     private TornadoType tornadoType = TornadoType.Fire;
     private bool damageTimer = true;
     private float originalPlayerSpeed = 0;
-    private bool lightningBoltTimer = true;
-    private Random tornadoRandom = new Random();
-    private bool isDebugging = false;
+    private bool lightningBoltTimer = false;
+    private System.Random tornadoRandom = new System.Random();
     private float timeSinceBeingInsideTornado = 0;
-    public static Tornados? Instance { get; private set; }
-
-    private TornadoSelector tornadoSelector;
-
-    public void OnEnable()
-    {
-        Instance = this;
-        tornadoSelector = new TornadoSelector();
-    }
-
-    public void OnDisable()
-    {
-        Instance = null;
-    }
-
-    [ClientRpc]
-    public void SetupTornadoClientRpc(Vector3 origin)
-    {
-        outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
-        this.origin = origin;
-        tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
-        this.origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: origin, radius: 10f, randomSeed: tornadoRandom);
-        this.transform.position = this.origin;
-
-        // Use the TornadoSelector class to select the tornado type based on config
-        int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
-        if (typeIndex < 0)
-        {
-            typeIndex = (int)TornadoType.Smoke;
-            Plugin.Logger.LogWarning("Your config is poorly done. Tornado type index is out of bounds. Defaulting to Smoke tornado.");
-        }
-        this.tornadoType = (TornadoType)typeIndex;
-
-        WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
-        Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}", (int)Logging_Level.Medium);
-        SetupTornadoType();
-        UpdateAudio(); // Ensure audio works correctly on the first frame.
-    }
+    private TornadoSelector tornadoSelector = new();
 
     public override void Start()
     {
         base.Start();
-#if DEBUG
-        isDebugging = true;
-#endif
+        tornadoRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 325);
         initialSpeed = Plugin.ModConfig.ConfigTornadoSpeed.Value;
-        TornadoWeather.Instance?.AddTornado(this);
-        timeSinceBeingInsideTornado = 0;
+        outsideNodes = RoundManager.Instance.outsideAINodes;
+        int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
+        tornadoType = (TornadoType)typeIndex;
 
-        if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20) {
+        if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20)
+        {
             SetDestinationToPosition(ChooseFarthestNodeFromPosition(transform.position, avoidLineOfSight: false).position, true);
         }
 
-        if (WeatherManager.GetCurrentWeather(StartOfRound.Instance.currentLevel) != WeatherHandler.Instance.TornadoesWeather) {
-            Plugin.ExtendedLogging("Tornado spawned as an enemy?", (int)Logging_Level.Low);
-            outsideNodes = RoundManager.Instance.outsideAINodes.ToList();
-            tornadoRandom = new Random(StartOfRound.Instance.randomMapSeed + 325);
-            origin = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: Vector3.zero, radius: 100f, randomSeed: tornadoRandom);
-            transform.position = origin;
-
-            // Use the TornadoSelector class to select the tornado type based on config
-            int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
-            if (typeIndex < 0)
-            {
-                typeIndex = (int)TornadoType.Smoke;
-                Plugin.Logger.LogWarning("Your config is poorly done. Tornado type index is out of bounds. Defaulting to Smoke tornado.");
-            }
-            tornadoType = (TornadoType)typeIndex;
-
-            WhitelistedTornados = Plugin.ModConfig.ConfigTornadoCanFlyYouAwayWeatherTypes.Value.ToLower().Split(',').Select(s => s.Trim()).ToList();
-            Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {origin}", (int)Logging_Level.Medium);
-            SetupTornadoType();
-            UpdateAudio(); // Ensure audio works correctly on the first frame.
-        }
+        Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {transform.position}", (int)Logging_Level.Medium);
+        SetupTornadoType();
     }
 
     private void SetupTornadoType()
     {
         int i = 0;
+        foreach (ParticleSystem particleSystem in tornadoParticles)
+        {
+            if (!particleSystem.gameObject.name.StartsWith(tornadoType.ToString())) continue;
+            particleSystem.gameObject.SetActive(true);
+            i++;
+            if (i >= 7) break;
+        }
         switch (tornadoType)
         {
             case TornadoType.Fire:
-                foreach (ParticleSystem particleSystem in tornadoParticles)
-                {
-                    if (particleSystem.gameObject.name.Contains("Fire"))
-                    {
-                        particleSystem.gameObject.SetActive(true);
-                        i++;
-                    }
-                    if (i == 7) break;
-                }
                 break;
             case TornadoType.Blood:
-                foreach (ParticleSystem particleSystem in tornadoParticles)
-                {
-                    if (particleSystem.gameObject.name.Contains("Blood"))
-                    {
-                        particleSystem.gameObject.SetActive(true);   
-                        i++;
-                    }
-                    if (i == 7) break;
-                }
                 break;
             case TornadoType.Windy:
-                foreach (ParticleSystem particleSystem in tornadoParticles)
-                {
-                    if (particleSystem.gameObject.name.Contains("Wind"))
-                    {
-                        particleSystem.gameObject.SetActive(true);   
-                        i++;
-                    }
-                    if (i == 7) break;
-                }
                 break;
             case TornadoType.Smoke:
-                foreach (ParticleSystem particleSystem in tornadoParticles)
-                {
-                    if (particleSystem.gameObject.name.Contains("Smoke"))
-                    {
-                        particleSystem.gameObject.SetActive(true);   
-                        i++;
-                    }
-                    if (i == 7) break;
-                }
                 break;
             case TornadoType.Water:
                 waterDrownCollider.gameObject.SetActive(true);
-                foreach (ParticleSystem particleSystem in tornadoParticles)
-                {
-                    if (particleSystem.gameObject.name.Contains("Water"))
-                    {
-                        particleSystem.gameObject.SetActive(true);   
-                        i++;
-                    }
-                    if (i == 7) break;
-                }
                 initialSpeed /= 2;
                 break;
             case TornadoType.Electric:
-                foreach (ParticleSystem particleSystem in tornadoParticles)
-                {
-                    if (particleSystem.gameObject.name.Contains("Electric"))
-                    {
-                        particleSystem.gameObject.SetActive(true);   
-                        i++;
-                    }
-                    if (i == 7)
-                    {
-                        initialSpeed *= 2;
-                        break;
-                    }
-                }
+                lightningSource.gameObject.SetActive(true);
+                StartCoroutine(LightningBoltTimer());
+                initialSpeed *= 2;
+
                 break;
         }
         Init();
     }
 
+    private void Init()
+    {
+        smartAgentNavigator.StartSearchRoutine(agent.transform.position, 200);
+        agent.speed = initialSpeed;
+    }
+
     [ServerRpc(RequireOwnership = false)]
-    public void SetPlayerFlingingServerRpc(int PlayerID) {
+    public void SetPlayerFlingingServerRpc(int PlayerID)
+    {
         SetPlayerFlingingClientRpc(PlayerID);
     }
 
     [ClientRpc]
-    public void SetPlayerFlingingClientRpc(int PlayerID) {
-        if (PlayerID == -1) {
-            Plugin.Logger.LogError("PlayerID is -1, this should never happen!");
-            return;
-        }
+    public void SetPlayerFlingingClientRpc(int PlayerID)
+    {
         StartOfRound.Instance.allPlayerScripts[PlayerID].SetFlingingAway(true);
         StartCoroutine(AutoReEnableKinematicsAfter10Seconds(StartOfRound.Instance.allPlayerScripts[PlayerID]));
     }
@@ -235,31 +126,25 @@ public class Tornados : EnemyAI
     {
         yield return new WaitForSeconds(10f);
         player.playerRigidbody.isKinematic = true;
-        player.SetFlingingAway(false);
-        player.SetFlung(true);
+        player.SetFlung(false);
     }
 
     public override void Update()
     {
         base.Update();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+        HandleLocalPlayerInsideTornado(GameNetworkManager.Instance.localPlayerController);
+    }
 
-        if (lightningBoltTimer && tornadoType == TornadoType.Electric)
-        {
-            lightningBoltTimer = false;
-            StartCoroutine(LightningBoltTimer());
-            Vector3 strikePosition = GetRandomTargetPosition(tornadoRandom, outsideNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25);
-            CRUtilities.CreateExplosion(strikePosition, true, 20, 0, 4, 1, null, null);
-            LightningStrikeScript.SpawnLightningBolt(strikePosition);
-        }
-
-        var localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (localPlayer == null || !localPlayer.isPlayerControlled || localPlayer.isPlayerDead) return;
-        if (TornadoConditionsAreMet(localPlayer) && Vector3.Distance(localPlayer.transform.position, this.eye.transform.position) <= 10f && !localPlayer.IsFlingingAway() && (WhitelistedTornados.Contains(tornadoType.ToString().ToLower()) || WhitelistedTornados.Contains("all")) && tornadoType != TornadoType.Water)
+    private void HandleLocalPlayerInsideTornado(PlayerControllerB localPlayer)
+    {
+        if (localPlayer == null || !localPlayer.isPlayerControlled || localPlayer.isPlayerDead || localPlayer.IsFlingingAway() || tornadoType == TornadoType.Water) return;
+        float distanceOfLocalPlayerToTornado = Vector3.Distance(localPlayer.transform.position, eye.transform.position);
+        if (TornadoConditionsAreMet(localPlayer) && distanceOfLocalPlayerToTornado <= 10f)
         {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 49f);
         }
-        else if (Vector3.Distance(localPlayer.transform.position, this.eye.transform.position) > 10f && !localPlayer.IsFlingingAway())
+        else if (distanceOfLocalPlayerToTornado > 10f)
         {
             timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 49f);
         }
@@ -270,41 +155,29 @@ public class Tornados : EnemyAI
         }
     }
 
-    private void Init()
-    {
-        StartSearch(this.eye.transform.position);
-        agent.speed = initialSpeed;
-    }
-
     private void FixedUpdate()
     {
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+
         UpdateAudio();
-        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
-        {
-            if (player == null || player.isPlayerDead || !player.isPlayerControlled) return;
-            HandleTornadoActions(player);   
-            if (player.IsFlingingAway() && !player.HasFlung())
-            {
-                //Plugin.Logger.LogDebug("Tornado is flinging away");
-                Vector3 directionToCenter = (throwingPoint.position - player.transform.position).normalized;
-                Rigidbody playerRigidbody = player.playerRigidbody;
+        PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
+        if (localPlayer == null || localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || !localPlayer.IsFlingingAway() || localPlayer.HasFlung()) return;
 
-                Vector3 spiralForce = CalculateSpiralForce(directionToCenter, 3f); // Adjust the second parameter to control spiral intensity
+        HandleTornadoDamageAndPulling(localPlayer);
+        HandleStatusEffects(localPlayer);
+        if (!localPlayer.IsFlingingAway() || localPlayer.HasFlung()) return;
 
-                playerRigidbody.AddForce(spiralForce, ForceMode.Impulse);
+        //Plugin.ExtendedLogging("Tornado is flinging away");
+        Vector3 directionToCenter = (throwingPoint.position - localPlayer.transform.position).normalized;
+        Vector3 spiralForce = CalculateSpiralForce(directionToCenter, 3f); // Adjust the second parameter to control spiral intensity
+        localPlayer.externalForceAutoFade = spiralForce; // maybe += ?
+        if (localPlayer.transform.position.y < throwingPoint.position.y) return;
 
-                if (player.transform.position.y >= throwingPoint.position.y)
-                {
-                    Vector3 verticalForce = CalculateVerticalForce(player.transform.position.y, throwingPoint.position.y, (float)tornadoRandom.NextDouble(10f, 50f), (float)tornadoRandom.NextDouble(1f, 20f)); // Adjust the last two parameters to control vertical and forward force
-                    playerRigidbody.AddForce(verticalForce, ForceMode.VelocityChange);
-                    if (player == GameNetworkManager.Instance.localPlayerController) timeSinceBeingInsideTornado = 0f;
-                    if (Plugin.ModConfig.ConfigTornadoYeetSFX.Value) yeetAudio.Play();
-                    player.SetFlung(true);
-                    player.SetFlingingAway(false);
-                }
-            }
-        }
+        Vector3 verticalForce = CalculateVerticalForce(tornadoRandom.NextFloat(10f, 50f), tornadoRandom.NextFloat(1f, 20f)); // Adjust the last two parameters to control vertical and forward force
+        localPlayer.externalForceAutoFade = verticalForce;
+        timeSinceBeingInsideTornado = 0f;
+        localPlayer.SetFlung(true);
+        localPlayer.SetFlingingAway(false);
     }
 
     private Vector3 CalculateSpiralForce(Vector3 directionToCenter, float spiralIntensity)
@@ -313,40 +186,28 @@ public class Tornados : EnemyAI
         return spiralDirection * spiralIntensity + directionToCenter * spiralIntensity;
     }
 
-    private Vector3 CalculateVerticalForce(float playerY, float throwingPointY, float upwardForce, float forwardForce)
+    private Vector3 CalculateVerticalForce(float upwardForce, float forwardForce)
     {
-        if (playerY >= throwingPointY)
-        {
-            return (Vector3.up * upwardForce + Vector3.forward * forwardForce).normalized;
-        }
-        return Vector3.zero;
+        return Vector3.up * upwardForce + Vector3.forward * forwardForce;
     }
 
-    private void HandleTornadoActions(PlayerControllerB player)
+    private void HandleTornadoDamageAndPulling(PlayerControllerB player)
     {
         bool doesTornadoAffectPlayer = TornadoConditionsAreMet(player);
-        if (isDebugging && player.currentlyHeldObjectServer != null && player.currentlyHeldObjectServer.itemProperties.itemName == "Key")
-        {
-            doesTornadoAffectPlayer = false;
-        }
-        if (doesTornadoAffectPlayer)
-        {
-            float distanceToTornado = TornadoHasLineOfSightToPosition(100, player);
-            bool hasLineOfSight = distanceToTornado >= 0;
-            if (player.IsFlingingAway() && player.playerRigidbody.isKinematic)
-            {
-                player.playerRigidbody.isKinematic = false;
-                player.playerRigidbody.AddForce(Vector3.up * 10f, ForceMode.Impulse);
-            }
-            else if (distanceToTornado <= 100)
-            {
-                Vector3 targetPosition = this.eye.transform.position;
-                float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, player);
-                float step = forceStrength * Time.fixedDeltaTime / 1.75f;
-                player.transform.position = Vector3.MoveTowards(player.transform.position, targetPosition, step);
-            }
-        }
-        HandleStatusEffects(player);
+        if (!doesTornadoAffectPlayer) return;
+
+        float distanceToTornado = TornadoHasLineOfSightToPosition(100, player);
+        if (distanceToTornado > 100) return;
+
+        bool hasLineOfSight = distanceToTornado >= 0;
+        Vector3 targetPosition = this.eye.transform.position;
+        float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, player);
+        player.externalForceAutoFade += targetPosition * forceStrength * Time.fixedDeltaTime / 1.75f; // todo: test this with different fps
+
+        if (distanceToTornado > 2.5f || !damageTimer) return;
+        damageTimer = false;
+        StartCoroutine(DamageTimer());
+        HandleTornadoTypeDamage(player);
     }
 
     public bool TornadoConditionsAreMet(PlayerControllerB player)
@@ -360,7 +221,8 @@ public class Tornados : EnemyAI
                 !player.isInHangarShipRoom &&
                 !player.inAnimationWithEnemy &&
                 !player.enteringSpecialAnimation &&
-                !player.isClimbingLadder;
+                !player.isClimbingLadder &&
+                !player.IsFlingingAway();
     }
 
     private void HandleStatusEffects(PlayerControllerB player)
@@ -379,7 +241,7 @@ public class Tornados : EnemyAI
                 player.ApplyStatusEffect(CodeRebirthStatusEffects.Blood, closeRange, distance);
                 break;
             case TornadoType.Windy:
-                player.ApplyStatusEffect(CodeRebirthStatusEffects.Windy, 110f, distance);
+                player.ApplyStatusEffect(CodeRebirthStatusEffects.Windy, closeRange, distance);
                 break;
             case TornadoType.Smoke:
                 player.ApplyStatusEffect(CodeRebirthStatusEffects.Smoke, longRange, distance);
@@ -395,37 +257,35 @@ public class Tornados : EnemyAI
 
     private void ApplyElectricStatusEffect(PlayerControllerB player, float range, float distance)
     {
-        switch(player.ApplyStatusEffect(CodeRebirthStatusEffects.Electric, range, distance))
+        switch (player.ApplyStatusEffect(CodeRebirthStatusEffects.Electric, range, distance))
         {
             case ApplyEffectResults.Applied:
-                {
-                    originalPlayerSpeed = player.movementSpeed;
-                    player.movementSpeed *= 1.5f;
-                    break;
-                }
+                originalPlayerSpeed = player.movementSpeed;
+                player.movementSpeed *= 1.5f;
+                break;
             case ApplyEffectResults.Removed:
-                {
-                    player.movementSpeed = originalPlayerSpeed;
-                    break;
-                }
+                player.movementSpeed = originalPlayerSpeed;
+                break;
         }
     }
 
     private IEnumerator LightningBoltTimer()
     {
-        yield return new WaitForSeconds(tornadoRandom.Next(0, 17));
-        lightningBoltTimer = true;
+        while (true)
+        {
+            Vector3 strikePosition = GetRandomTargetPosition(tornadoRandom, outsideNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25);
+            CRUtilities.CreateExplosion(strikePosition, true, 20, 0, 4, 1, null, null);
+            LightningStrikeScript.SpawnLightningBolt(strikePosition, tornadoRandom, lightningSource);
+            yield return new WaitForSeconds(tornadoRandom.NextFloat(0, 17));
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     private float CalculatePullStrength(float distance, bool hasLineOfSight, PlayerControllerB localPlayerController)
     {
         float maxDistance = 100f;
         float minStrength = 0;
-        float maxStrength =
-            (hasLineOfSight ? Plugin.ModConfig.ConfigTornadoPullStrength.Value : 0.125f * Plugin.ModConfig.ConfigTornadoPullStrength.Value)
-            * (tornadoType == TornadoType.Smoke ? 1.25f : 1f)
-            * (localPlayerController.HasEffectActive(CodeRebirthStatusEffects.Water) ? 0.25f : 1f)
-            * (tornadoType == TornadoType.Fire && localPlayerController.health <= 20 ? 0.25f : 1f);
+        float maxStrength = DetermineTornadoMaxStrength(hasLineOfSight, localPlayerController);
 
         // Calculate the normalized distance and apply an exponential falloff
         float normalizedDistance = distance / maxDistance;
@@ -433,16 +293,18 @@ public class Tornados : EnemyAI
 
         // Calculate the pull strength based on the falloff
         float pullStrength = Mathf.Lerp(minStrength, maxStrength, strengthFalloff);
-        if (distance <= 2.5f && damageTimer && GameNetworkManager.Instance.localPlayerController == localPlayerController)
-        {
-            damageTimer = false;
-            StartCoroutine(DamageTimer());
-            HandleTornadoTypeDamage(localPlayerController);
-        }
-        return Mathf.Clamp(pullStrength, 0, maxStrength);
+        return pullStrength;
     }
 
-    private void HandleTornadoTypeDamage(PlayerControllerB localPlayerController)
+    private float DetermineTornadoMaxStrength(bool hasLineOfSight, PlayerControllerB localPlayerController)
+    {
+        return (hasLineOfSight ? Plugin.ModConfig.ConfigTornadoPullStrength.Value : 0.125f * Plugin.ModConfig.ConfigTornadoPullStrength.Value)
+            * (tornadoType == TornadoType.Smoke ? 1.25f : 1f)
+            * (localPlayerController.HasEffectActive(CodeRebirthStatusEffects.Water) ? 0.5f : 1f)
+            * (localPlayerController.HasEffectActive(CodeRebirthStatusEffects.Fire) ? 0.5f : 1f);
+    }
+
+    private void HandleTornadoTypeDamage(PlayerControllerB localPlayerController) // todo: redo this mess.
     {
         if (localPlayerController == null) return;
         switch (tornadoType)
@@ -455,7 +317,7 @@ public class Tornados : EnemyAI
                 }
                 break;
             case TornadoType.Blood:
-                localPlayerController.DamagePlayer(Math.Clamp(tornadoRandom.NextInt(-5, 5), 0, 100));
+                localPlayerController.DamagePlayer(tornadoRandom.Next(-5, 6));
                 break;
             case TornadoType.Windy:
                 break;
@@ -464,6 +326,7 @@ public class Tornados : EnemyAI
                 // make the player screen a smokey mess.
                 break;
             case TornadoType.Water:
+                // Drown the player.
                 break;
             case TornadoType.Electric:
                 // spawn lightning around
@@ -480,7 +343,6 @@ public class Tornados : EnemyAI
         yield return new WaitForSeconds(0.5f);
         damageTimer = true;
     }
-
 
     private void UpdateAudio()
     {
@@ -503,42 +365,35 @@ public class Tornados : EnemyAI
     
     public float TornadoHasLineOfSightToPosition(int range, PlayerControllerB player)
     {
-        float distance = Vector3.Distance(this.eye.transform.position, player.transform.position);
-        if (player.IsFlingingAway()) return distance;
+        float bestDistance = float.MaxValue;
         foreach (Transform eye in eyes)
         {
-            distance = Vector3.Distance(eye.transform.position, player.transform.position);
+            float distance = Vector3.Distance(eye.transform.position, player.transform.position);
             if (distance > range) continue;
             if (Physics.Raycast(eye.transform.position, (player.transform.position - eye.position).normalized, distance, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Terrain", "InteractableObject", "MapHazards", "Vehicle", "Railing"), QueryTriggerInteraction.Ignore)) continue;
-            return distance;
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+            }
         }
-        return distance;
+        return bestDistance;
     }
 
-    public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius)
+    public Vector3 GetRandomTargetPosition(System.Random random, IEnumerable<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius)
     {
-		try
-        {
-			var nextNode = random.NextItem(nodes);
-			Vector3 position = nextNode.transform.position;
+		int randomNodeIndex = random.Next(0, nodes.Count());
+        GameObject nextNode = nodes.ElementAt(randomNodeIndex);
+        Vector3 position = nextNode.transform.position;
 
-			position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
-			position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
-		    return position;
-		}
-        catch
-        {
-			Plugin.Logger.LogFatal("Selecting random position failed.");
-			return new Vector3(0,0,0);
-		}
+        position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
+        position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
+        return position;
 	}
 }
 
 public class TornadoSelector
 {
-    private string currentMoonName = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName; // Dummy current moon, replace with actual value
-
-    private Dictionary<string, TornadoType> tornadoTypeMapping = new Dictionary<string, TornadoType>
+    private readonly Dictionary<string, TornadoType> tornadoTypeMapping = new()
     {
         { "Fire", TornadoType.Fire },
         { "Blood", TornadoType.Blood },
@@ -566,9 +421,8 @@ public class TornadoSelector
                 TornadoType tornadoType = tornadoTypeMapping[tornadoName];
 
                 // Split moonConditions by comma and loop through them
-                string[] moonConditionsArray = moonConditions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                                            .Select(m => m.Trim())
-                                                            .ToArray();
+                IEnumerable<string> moonConditionsArray = moonConditions.Split([','], StringSplitOptions.RemoveEmptyEntries)
+                                                                        .Select(m => m.Trim());
 
                 foreach (string moonCondition in moonConditionsArray)
                 {
@@ -587,17 +441,20 @@ public class TornadoSelector
             int randomIndex = rand.Next(validTornadoTypes.Count);
             return (int)validTornadoTypes[randomIndex];
         }
-
-        return -1; // Or another default value indicating no valid tornado types found
+        else
+        {
+            Plugin.Logger.LogWarning("Your config is poorly done. Tornado type index is out of bounds. Defaulting to Smoke tornado.");
+            return (int)TornadoType.Smoke;
+        }
     }
 
     private bool IsValidForMoon(string moonCondition)
     {
-        if (moonCondition == "All")
+        if (moonCondition.ToLowerInvariant() == "all")
         {
             return true;
         }
-        else if ((moonCondition == "Vanilla" && LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel))) || (moonCondition == "Custom" && LethalLevelLoader.PatchedContent.CustomExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel))))
+        else if ((moonCondition.ToLowerInvariant() == "vanilla" && LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel))) || (moonCondition.ToLowerInvariant() == "custom" && LethalLevelLoader.PatchedContent.CustomExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel))))
         {
             // Dummy logic for Vanilla or Custom
             return true;
@@ -605,7 +462,7 @@ public class TornadoSelector
         else
         {
             // MoonName logic, for now just checks if the current moon matches the condition
-            return currentMoonName.Equals(moonCondition, StringComparison.OrdinalIgnoreCase);
+            return LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.Equals(moonCondition, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

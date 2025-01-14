@@ -34,7 +34,7 @@ public class BearTrap : CodeRebirthHazard
         if (!IsServer || byProduct) return;
         var random = new System.Random(StartOfRound.Instance.randomMapSeed);
 		Vector3 position = this.transform.position;
-		for (int i = 0; i < random.NextInt(3, 6); i++)
+		for (int i = 0; i < random.Next(3, 7); i++)
 		{
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
 

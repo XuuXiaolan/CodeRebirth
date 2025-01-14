@@ -73,9 +73,9 @@ static class RoundManagerPatch {
 		// Check if the current moon configuration is valid
 		System.Random random = new();
 		Plugin.ExtendedLogging($"Spawning {spawnCount} air control units", (int)Logging_Level.High);
-		for (int i = 0; i < random.NextInt(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
+		for (int i = 0; i < random.Next(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
 		{
-			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
@@ -160,9 +160,9 @@ static class RoundManagerPatch {
         // Check if the current moon configuration is valid
         System.Random random = new();
         Plugin.ExtendedLogging($"Spawning {spawnCount} bear traps", (int)Logging_Level.High);
-        for (int i = 0; i < random.NextInt(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
+        for (int i = 0; i < random.Next(0, Mathf.Clamp(spawnCount, 0, 1000)); i++)
         {
-            Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+            Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
             Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
             Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
@@ -429,7 +429,7 @@ static class RoundManagerPatch {
         Plugin.ExtendedLogging($"Spawning {spawnCount} Wooden crates", (int)Logging_Level.Medium);
 		for (int i = 0; i < spawnCount; i++)
 		{
-			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
@@ -503,7 +503,7 @@ static class RoundManagerPatch {
         Plugin.ExtendedLogging($"Spawning {spawnCount} metal crates", (int)Logging_Level.Medium);
 		for (int i = 0; i < spawnCount; i++)
 		{
-			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length - 1)].transform.position;
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1) + (Vector3.up * 2);
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
@@ -537,9 +537,9 @@ static class RoundManagerPatch {
 		System.Random random = new();
 		if (random.NextFloat(0f, 1f) <= Plugin.ModConfig.ConfigBiomesSpawnChance.Value) return;
 		int minValue = 1;
-		for (int i = 0; i < random.NextInt(minValue, 1); i++)
+		for (int i = 0; i < random.Next(minValue, 1); i++)
 		{
-			Vector3 position = RoundManager.Instance.outsideAINodes[random.NextInt(0, RoundManager.Instance.outsideAINodes.Length-1)].transform.position;
+			Vector3 position = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, default, random, -1);
 
 			GameObject biome = MapObjectHandler.Instance.Biome.BiomePrefab;

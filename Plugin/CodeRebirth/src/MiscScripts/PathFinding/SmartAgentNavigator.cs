@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Patches;
+using CodeRebirth.src.Util;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -38,13 +39,13 @@ public class SmartAgentNavigator : NetworkBehaviour
         base.OnNetworkSpawn();
         Plugin.ExtendedLogging("SmartAgentNavigator initialized", (int)Logging_Level.Medium);
         agent = gameObject.GetComponent<NavMeshAgent>();
-        PlayerControllerBPatch.smartAgentNavigators.Add(this);
+        CodeRebirthPlayerManager.smartAgentNavigators.Add(this);
     }
 
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        PlayerControllerBPatch.smartAgentNavigators.Remove(this);
+        CodeRebirthPlayerManager.smartAgentNavigators.Remove(this);
     }
 
     public void SetAllValues(bool isOutside)
@@ -532,6 +533,6 @@ public class SmartAgentNavigator : NetworkBehaviour
             }
         }
 
-        searchRoutine = null; // Clear the coroutine reference when it finishes
+        searchRoutine = null;
     }
 }

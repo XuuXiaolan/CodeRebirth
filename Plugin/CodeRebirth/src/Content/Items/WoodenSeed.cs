@@ -10,6 +10,6 @@ public class WoodenSeed : GrabbableObject
         base.Start();
         System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed);
 
-        fruitType = (FruitType)random.NextInt(1, 2);
+        fruitType = (FruitType)random.Next(1, 3);
     }
 }

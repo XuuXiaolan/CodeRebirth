@@ -284,7 +284,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     [ClientRpc]
     public virtual void PlayHurtSoundClientRpc()
     {
-        GalVoice.PlayOneShot(HitSounds[galRandom.NextInt(0, HitSounds.Length - 1)]);
+        GalVoice.PlayOneShot(HitSounds[galRandom.Next(0, HitSounds.Length)]);
     }
 
     public override void OnNetworkDespawn()
@@ -293,7 +293,6 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         Instances.Remove(this);
         if (inActive) return;
         DoGalRadarAction(false);
-        GalVoice.PlayOneShot(DeactivateSound);
         smartAgentNavigator.ResetAllValues();
         smartAgentNavigator.OnEnterOrExitElevator.RemoveListener(OnEnterOrExitElevator);
         smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnUseEntranceTeleport);

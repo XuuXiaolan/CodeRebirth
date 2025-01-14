@@ -74,7 +74,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
 
     private Item? ChooseRandomMicrowaveScrap()
     {
-        int result = microwaveRandom.NextInt(0, 3);
+        int result = microwaveRandom.Next(0, 4);
         if (result == 0)
         {
             return Plugin.samplePrefabs["MicrowaveSpork"];

@@ -34,7 +34,7 @@ public class BiomeManager : CodeRebirthHazard
             biomeRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
         }
 
-        switch (biomeRandom.NextInt(0, 2))
+        switch (biomeRandom.Next(0, 3))
         {
             case 0:
                 corruptionProjector.gameObject.SetActive(true);
@@ -143,7 +143,7 @@ public class BiomeManager : CodeRebirthHazard
         }
 
         // Instantiate dead particles at the position of the destroyed object
-        if ((colliderCount != 0 && biomeRandom.NextInt(1, colliderCount) <= 5) || biomeRandom.NextInt(1, 100) <= 20) {
+        if ((colliderCount != 0 && biomeRandom.Next(1, colliderCount+1) <= 5) || biomeRandom.Next(1, 101) <= 20) {
             ParticleSystem particles = Instantiate(deathParticles, hitPosition, hitRotation);
             particles.Play();
             Destroy(particles.gameObject, particles.main.duration + particles.main.startLifetime.constantMax);

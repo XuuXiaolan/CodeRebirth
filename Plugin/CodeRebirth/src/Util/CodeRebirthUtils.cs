@@ -112,7 +112,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
         GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
         go.GetComponent<NetworkObject>().Spawn();
-        int value = (int)(random.NextInt(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
+        int value = (int)(random.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
         var scanNode = go.GetComponentInChildren<ScanNodeProperties>();
         scanNode.scrapValue = value;
         scanNode.subText = $"Value: ${value}";

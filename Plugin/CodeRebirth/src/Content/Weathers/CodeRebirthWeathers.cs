@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Util.Extensions;
 using Unity.Netcode;
 using UnityEngine;
-using Random = System.Random;
 
 namespace CodeRebirth.src.Content.Weathers;
-public class CodeRebirthWeathers : MonoBehaviour {
+public class CodeRebirthWeathers : MonoBehaviour
+{
 
     public Vector3 CalculateAverageLandNodePosition(List<GameObject> nodes)
     {
@@ -22,7 +21,7 @@ public class CodeRebirthWeathers : MonoBehaviour {
         return count > 0 ? sumPosition / count : Vector3.zero;
     }
 	
-	public IEnumerable<GameObject> CullNodesByProximity(List<GameObject> nodes, float minDistance = 5f, bool cullDoors = true, bool cullShip = false)
+	public IEnumerable<GameObject> CullNodesByProximity(IEnumerable<GameObject> nodes, float minDistance = 5f, bool cullDoors = true, bool cullShip = false, float shipCullDistance = 20f)
 	{
 		var nodeList = new List<GameObject>(nodes);
 		var toCull = new HashSet<GameObject>();
@@ -43,7 +42,7 @@ public class CodeRebirthWeathers : MonoBehaviour {
 		}
 
 		// Remove the marked nodes
-		nodeList.RemoveAll(n => toCull.Contains(n));
+		nodeList.RemoveAll(toCull.Contains);
 
 		if (cullDoors)
 		{
@@ -53,7 +52,7 @@ public class CodeRebirthWeathers : MonoBehaviour {
 		
 		if (cullShip)
 		{
-			nodeList.RemoveAll(n => Vector3.Distance(n.transform.position, shipBoundaries.position) < 20);
+			nodeList.RemoveAll(n => Vector3.Distance(n.transform.position, shipBoundaries.position) < shipCullDistance);
 		}
 
 		return nodeList;
@@ -67,27 +66,23 @@ public class CodeRebirthWeathers : MonoBehaviour {
         RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount = Mathf.Clamp(RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount + dayTimePower, 0, 999);
     }
 
-	public Vector3 GetRandomTargetPosition(Random random, List<GameObject> nodes, List<GameObject> alreadyUsedNodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
-		if (StartOfRound.Instance.inShipPhase) return Vector3.zero;
-		if (nodes.Count == 0) return Vector3.zero;
-		if (maxX < minX) maxX = minX;
-		if (maxY < minY) maxY = minY;
-		if (maxZ < minZ) maxZ = minZ;
-		var nextNode = random.NextItem(nodes);
+	public Vector3 GetRandomTargetPosition(IEnumerable<GameObject> nodes, List<GameObject> alreadyUsedNodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius) {
+		if (nodes.Count() == 0) return Vector3.zero;
+		GameObject nextNode = nodes.ElementAt(UnityEngine.Random.Range(0, nodes.Count()));
 		Vector3 position = nextNode.transform.position;
 		if (!alreadyUsedNodes.Contains(nextNode))
 		{
 			alreadyUsedNodes.Add(nextNode);
 		}
-		position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
-		position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
+		position += new Vector3(UnityEngine.Random.Range(minX, maxX), UnityEngine.Random.Range(minY, maxY), UnityEngine.Random.Range(minZ, maxZ));
+		position = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, radius);
 		if (!Plugin.ModConfig.ConfigMeteorHitShip.Value && Vector3.Distance(position, StartOfRound.Instance.shipLandingPosition.transform.position) <= 25)
 		{
 			for (int i = 0; i < 5; i++)
 			{
 				position = nextNode.transform.position;
-				position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
-				position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
+				position += new Vector3(UnityEngine.Random.Range(minX, maxX), UnityEngine.Random.Range(minY, maxY), UnityEngine.Random.Range(minZ, maxZ));
+				position = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, radius);
 				if (Vector3.Distance(position, StartOfRound.Instance.shipLandingPosition.transform.position) > 25)
 				{
 					return position;

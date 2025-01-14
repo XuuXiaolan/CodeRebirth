@@ -17,10 +17,9 @@ namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
 static class PlayerControllerBPatch
 {
-    public static List<SmartAgentNavigator> smartAgentNavigators = new();
-
     [HarmonyPatch(nameof(PlayerControllerB.PlayerHitGroundEffects)), HarmonyPrefix]
-    public static void PlayerHitGroundEffects(PlayerControllerB __instance) {
+    public static void PlayerHitGroundEffects(PlayerControllerB __instance)
+    {
         if (!__instance.ContainsCRPlayerData()) return;
         if (!__instance.HasFlung()) return;
         __instance.SetFlung(false);

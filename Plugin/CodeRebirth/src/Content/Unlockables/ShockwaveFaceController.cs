@@ -67,7 +67,7 @@ public class ShockwaveFaceController : MonoBehaviour
     {
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)ShockwaveGalAI.galEmotion, 0f);
 
-        int glitchShapeKeyIndex = controllerRandom.NextInt(0, FaceSkinnedMeshRenderer.sharedMesh.blendShapeCount - 1);
+        int glitchShapeKeyIndex = controllerRandom.Next(0, FaceSkinnedMeshRenderer.sharedMesh.blendShapeCount);
         float glitchWeight = controllerRandom.NextFloat(0f, 100f);
         FaceSkinnedMeshRenderer.SetBlendShapeWeight(glitchShapeKeyIndex, glitchWeight);
 
