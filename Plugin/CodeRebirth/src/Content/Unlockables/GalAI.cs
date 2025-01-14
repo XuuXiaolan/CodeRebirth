@@ -53,14 +53,10 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     [HideInInspector] public bool inActive = true;
     [HideInInspector] public bool doneOnce = false;
 
-    public void OnEnable()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         Instances.Add(this);
-    }
-
-    public void OnDisable()
-    {
-        Instances.Remove(this);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -136,6 +132,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     }
     public virtual void Update()
     {
+        if (!NetworkObject.IsSpawned) return;
         InActiveUpdate();
         BoomboxUpdate();
         IdleUpdate();
@@ -288,5 +285,18 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     public virtual void PlayHurtSoundClientRpc()
     {
         GalVoice.PlayOneShot(HitSounds[galRandom.NextInt(0, HitSounds.Length - 1)]);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        Instances.Remove(this);
+        if (inActive) return;
+        DoGalRadarAction(false);
+        GalVoice.PlayOneShot(DeactivateSound);
+        smartAgentNavigator.ResetAllValues();
+        smartAgentNavigator.OnEnterOrExitElevator.RemoveListener(OnEnterOrExitElevator);
+        smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnUseEntranceTeleport);
+        smartAgentNavigator.OnEnableOrDisableAgent.RemoveListener(OnEnableOrDisableAgent);
     }
 }

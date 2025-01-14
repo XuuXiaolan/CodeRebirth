@@ -247,7 +247,7 @@ public class SmartAgentNavigator : NetworkBehaviour
                 bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(actualEndPosition, elevatorScript.elevatorInsidePoint.position) < 7f;
                 if (!usingElevator && !playerIsInElevator)
                 {
-                    DetermineIfNeedToDisableAgent(actualEndPosition);
+                    // DetermineIfNeedToDisableAgent(actualEndPosition);
                 }
 
                 // fallback?
