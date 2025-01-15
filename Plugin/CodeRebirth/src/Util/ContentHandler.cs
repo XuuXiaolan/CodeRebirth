@@ -80,24 +80,24 @@ public class ContentHandler<T> where T: ContentHandler<T>
         // Populate the animation curves
         foreach (var entry in spawnRateByLevelType)
         {
-            Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}", (int)Logging_Level.Highest);
+            Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
             curvesByLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
             if (entry.Key.ToString().ToLowerInvariant() == "vanilla")
             {
-                Plugin.ExtendedLogging($"Registering via Vanilla curve because this is vanilla", (int)Logging_Level.Highest);
+                Plugin.ExtendedLogging($"Registering via Vanilla curve because this is vanilla");
                 vanillaCurveExists = true;
                 vanillaAnimationCurve = curvesByLevelType[entry.Key];
             }
             else if (entry.Key.ToString().ToLowerInvariant() == "modded" || entry.Key.ToString().ToLowerInvariant() == "custom")
             {
-                Plugin.ExtendedLogging($"Registering via Modded curve because this is modded", (int)Logging_Level.Highest);
+                Plugin.ExtendedLogging($"Registering via Modded curve because this is modded");
                 moddedCurveExists = true;
                 moddedAnimationCurve = curvesByLevelType[Levels.LevelTypes.Modded];
             }
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
-            Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}", (int)Logging_Level.Highest);
+            Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
             curvesByCustomLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
         }
 
@@ -109,20 +109,20 @@ public class ContentHandler<T> where T: ContentHandler<T>
             level =>
             {
                 if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
-                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}", (int)Logging_Level.Highest);
+                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}");
                 string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
                 Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
-                Plugin.ExtendedLogging($"Output Level type: {levelType}", (int)Logging_Level.Highest);
-                Plugin.ExtendedLogging($"is Level Vanilla AND Contained in Curves: {curvesByLevelType.Keys.Contains(levelType)}", (int)Logging_Level.Highest);
+                Plugin.ExtendedLogging($"Output Level type: {levelType}");
+                Plugin.ExtendedLogging($"is Level Vanilla AND Contained in Curves: {curvesByLevelType.Keys.Contains(levelType)}");
                 bool isVanilla = false;
                 if (levelType != Levels.LevelTypes.None && levelType != Levels.LevelTypes.Modded)
                 {
-                    Plugin.ExtendedLogging($"is Level Vanilla: true", (int)Logging_Level.Highest);
+                    Plugin.ExtendedLogging($"is Level Vanilla: true");
                     isVanilla = true;
                 }
                 if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
                 {
-                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ", (int)Logging_Level.Highest);
+                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
                     /*foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -131,7 +131,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else if (isVanilla && vanillaCurveExists)
                 {
-                    Plugin.ExtendedLogging("Managed to find curve for level: Vanilla | with given curve: ", (int)Logging_Level.Highest);
+                    Plugin.ExtendedLogging("Managed to find curve for level: Vanilla | with given curve: ");
                     /*foreach (Keyframe keyframe in vanillaAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -140,7 +140,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
                 {
-                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ", (int)Logging_Level.Highest);
+                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
                     /*foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -149,7 +149,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else if (moddedCurveExists)
                 {
-                    Plugin.ExtendedLogging("Managed to find curve for level: Modded | with given curve: ", (int)Logging_Level.Highest);
+                    Plugin.ExtendedLogging("Managed to find curve for level: Modded | with given curve: ");
                     /*foreach (Keyframe keyframe in moddedAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -158,21 +158,21 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else if (allCurveExists)
                 {
-                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} with type ALL | with given curve: ", (int)Logging_Level.Highest);
+                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} with type ALL | with given curve: ");
                     /*foreach (Keyframe keyframe in allAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
                     }*/
                     return allAnimationCurve;
                 }
-                Plugin.ExtendedLogging($"Failed to find curve for level: {level}", (int)Logging_Level.Highest);
+                Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
                 return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]); // Default case if no curve matches
             });
     }
 
     protected Levels.LevelTypes LevelToLevelType(string levelName)
     {
-        Plugin.ExtendedLogging($"Cutup Level type: {levelName}", (int)Logging_Level.Highest);
+        Plugin.ExtendedLogging($"Cutup Level type: {levelName}");
         return levelName switch
         {
             "experimentation" => Levels.LevelTypes.ExperimentationLevel,
@@ -309,7 +309,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         int maxWorthInt = -1;
         if (configParts.Length == 2)
         {
-            Plugin.ExtendedLogging("[Scrap Worth] Changing item worth between " + configParts[0] + " and " + configParts[1], (int)Logging_Level.Highest);
+            Plugin.ExtendedLogging("[Scrap Worth] Changing item worth between " + configParts[0] + " and " + configParts[1]);
             minWorthInt = int.Parse(configParts[0]);
             maxWorthInt = int.Parse(configParts[1]);
         }
@@ -319,7 +319,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
     public AnimationCurve CreateCurveFromString(string keyValuePairs, string nameOfThing, string MoonName)
     {
         // Split the input string into individual key-value pairs
-        Plugin.ExtendedLogging($"Creating curve for {nameOfThing} on moon {MoonName} with key-value pairs: {keyValuePairs}", (int)Logging_Level.Highest);
+        Plugin.ExtendedLogging($"Creating curve for {nameOfThing} on moon {MoonName} with key-value pairs: {keyValuePairs}");
         string[] pairs = keyValuePairs.Split(';').Select(s => s.Trim()).ToArray();
         if (pairs.Length == 0)
         {
@@ -343,7 +343,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 float.TryParse(splitPair[0], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float time) &&
                 float.TryParse(splitPair[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float value))
             {
-                Plugin.ExtendedLogging($"Adding keyframe for {nameOfThing} at time {time} with value {value}", (int)Logging_Level.Highest);
+                Plugin.ExtendedLogging($"Adding keyframe for {nameOfThing} at time {time} with value {value}");
                 keyframes.Add(new Keyframe(time, value));
             }
             else

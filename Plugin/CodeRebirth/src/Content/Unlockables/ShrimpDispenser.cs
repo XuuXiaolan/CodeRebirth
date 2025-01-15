@@ -76,9 +76,9 @@ public class ShrimpDispenser : NetworkBehaviour
             lastShrimpDispensed.grabbable = false;
         }
         yield return new WaitForSeconds(0.4f);
-        Plugin.ExtendedLogging($"Current y rotation {this.transform.rotation.y} for this gameobject: {this.gameObject.name}", (int)Logging_Level.High);
+        Plugin.ExtendedLogging($"Current y rotation {this.transform.rotation.y} for this gameobject: {this.gameObject.name}");
         itemToSpawn.restingRotation.y = this.transform.rotation.eulerAngles.y + 180;
-        Plugin.ExtendedLogging($"Spawning {itemToSpawn} at {dispenseTransform.position} with y rotation {itemToSpawn.restingRotation.y}", (int)Logging_Level.High);
+        Plugin.ExtendedLogging($"Spawning {itemToSpawn} at {dispenseTransform.position} with y rotation {itemToSpawn.restingRotation.y}");
         if (IsServer)
         {
             if (lastShrimpDispensed != null && !ItemPickedUp)

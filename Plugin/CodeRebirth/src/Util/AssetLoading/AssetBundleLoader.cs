@@ -47,17 +47,17 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
 			if (fixMixerGroups)
 			{
 				Utilities.FixMixerGroups(gameObject);
-				Plugin.ExtendedLogging($"[AssetBundle Loading] Fixed Mixer Groups: {gameObject.name}", (int)Logging_Level.Highest);
+				Plugin.ExtendedLogging($"[AssetBundle Loading] Fixed Mixer Groups: {gameObject.name}");
 			}
 			if (!registerNetworkPrefabs || gameObject.GetComponent<NetworkObject>() == null) continue;
 			NetworkPrefabs.RegisterNetworkPrefab(gameObject);
-			Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {gameObject.name}", (int)Logging_Level.Highest);
+			Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {gameObject.name}");
 		}
 		foreach (Item item in bundle.LoadAllAssets<Item>())
 		{
 			if (!registerNetworkPrefabs || item.spawnPrefab == null || item.spawnPrefab.GetComponent<NetworkObject>() == null) continue;
 			NetworkPrefabs.RegisterNetworkPrefab(item.spawnPrefab);
-			Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {item.name}", (int)Logging_Level.Highest);
+			Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {item.name}");
 		}
 	}
 

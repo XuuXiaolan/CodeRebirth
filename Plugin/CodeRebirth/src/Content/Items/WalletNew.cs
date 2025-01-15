@@ -289,7 +289,7 @@ public class Wallet : GrabbableObject {
                     this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
                 }
             }
-            Plugin.ExtendedLogging($"Clearing target on {this}", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging($"Clearing target on {this}");
             
             isHeld = false;
             if (walletMode == WalletModes.Sold)

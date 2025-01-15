@@ -16,7 +16,7 @@ public class IndustrialFan : CodeRebirthHazard
     public override void Start()
     {
         base.Start();
-        Plugin.ExtendedLogging("Industrial fan initialized", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging("Industrial fan initialized");
     }
 
     private void Update()

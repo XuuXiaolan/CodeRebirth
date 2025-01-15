@@ -537,7 +537,7 @@ public class SeamineGalAI : GalAI
                 float distanceToEnemy = Vector3.Distance(ownerPlayer.gameplayCamera.transform.position, collider.transform.position);
                 if (Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
                 {
-                    Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name, (int)Logging_Level.High);
+                    Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name);
                     continue;
                 }
                 //Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
@@ -565,13 +565,13 @@ public class SeamineGalAI : GalAI
                 if (enemyDetected != null && !enemyDetected.isEnemyDead)
                 {
                     // Ensure there's a line of sight from SeamineGalAI to the enemy
-                    Plugin.ExtendedLogging("Enemy hit: " + enemyDetected, (int)Logging_Level.High);
+                    Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
                     if (!enemiesToKill.Contains(enemyDetected)) enemiesToKill.Add(enemyDetected);
                 }
             }
             else
             {
-                Plugin.ExtendedLogging("Thing hit: " + collider.name, (int)Logging_Level.High);
+                Plugin.ExtendedLogging("Thing hit: " + collider.name);
             }
         }
 

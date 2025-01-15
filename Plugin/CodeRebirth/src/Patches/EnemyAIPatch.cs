@@ -62,7 +62,7 @@ static class EnemyAIPatch
         {
             if (enemyRandom.NextFloat(0, 100) <= 75f)
             {
-                Plugin.ExtendedLogging("Slowed enemy", (int)Logging_Level.Medium);
+                Plugin.ExtendedLogging("Slowed enemy");
                 if (slowedEnemies.ContainsKey(self) && slowedEnemies[self] != null)
                 {
                     self.StopCoroutine(slowedEnemies[self]);
@@ -75,7 +75,7 @@ static class EnemyAIPatch
         {
             force = 0;
             self.enemyHP++;
-            Plugin.ExtendedLogging($"Enemy HP: {self.enemyHP}", (int)Logging_Level.High);
+            Plugin.ExtendedLogging($"Enemy HP: {self.enemyHP}");
         }
 
         orig(self, force, playerWhoHit, playHitSFX, hitID);

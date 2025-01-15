@@ -109,7 +109,7 @@ public class CRUtilities
 
     public static void CreateExplosion(Vector3 explosionPosition, bool spawnExplosionEffect, int damage, float minDamageRange, float maxDamageRange, int enemyHitForce, PlayerControllerB? attacker, GameObject? overridePrefab)
     {
-        Plugin.ExtendedLogging($"Spawning explosion at pos: {explosionPosition}", (int)Logging_Level.High);
+        Plugin.ExtendedLogging($"Spawning explosion at pos: {explosionPosition}");
 
         Transform? holder = null;
 

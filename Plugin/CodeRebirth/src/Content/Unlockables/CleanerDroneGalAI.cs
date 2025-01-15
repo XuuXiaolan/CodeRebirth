@@ -28,7 +28,7 @@ public class CleanerDroneGalAI : NetworkBehaviour
     private void IncreaseOrDecreaseStageServerRpc()
     {
         int currentStage = animator.GetInteger(AnimationStageInt);
-        Plugin.ExtendedLogging("Current Stage: " + currentStage, (int)Logging_Level.High);
+        Plugin.ExtendedLogging("Current Stage: " + currentStage);
         if (currentStage >= 2)
         {
             animator.SetInteger(AnimationStageInt, 0);

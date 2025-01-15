@@ -33,14 +33,14 @@ public static class PersistentDataHandler
 
 		if (!File.Exists(fullPath))
 		{
-			Plugin.ExtendedLogging("Data does not exist! Using default constructor!", (int)Logging_Level.Medium);
+			Plugin.ExtendedLogging("Data does not exist! Using default constructor!");
 			T result = (T) typeof(T).GetConstructor([typeof(string)]).Invoke([fileName]);
 			Save(fileName, result);
 			return result;
 		}
 		else
 		{
-			Plugin.ExtendedLogging("Save exists! Attempting to load!", (int)Logging_Level.Medium);
+			Plugin.ExtendedLogging("Save exists! Attempting to load!");
 			
 			// maybe add more error handling here?
 			return JsonConvert.DeserializeObject<T>(File.ReadAllText(fullPath), new JsonSerializerSettings

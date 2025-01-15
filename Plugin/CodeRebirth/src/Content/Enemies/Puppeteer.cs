@@ -148,7 +148,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             SetTargetNeedlePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, nearestPlayer));
             agent.speed = 0f;
             agent.velocity = Vector3.zero;
-            Plugin.ExtendedLogging("Grabbing player!", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging("Grabbing player!");
             creatureNetworkAnimator.SetTrigger(DoGrabPlayerAnimation);
             StartCoroutine(FixPlayerJustIncase(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, nearestPlayer)));
         }
@@ -164,7 +164,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.isPlayerControlled)
         {
-            Plugin.ExtendedLogging("Target player is dead or not controlled, stopping attack.", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging("Target player is dead or not controlled, stopping attack.");
             creatureAnimator.SetBool(InCombatAnimation, false);
             smartAgentNavigator.StartSearchRoutine(this.transform.position, 40);
             SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
@@ -354,7 +354,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     private IEnumerator SwitchToStateAfterDelay(PuppeteerState state, float delay)
     {
         int randomNumber = enemyRandom.Next(0, 100);
-        Plugin.ExtendedLogging($"Random Number: {randomNumber}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Random Number: {randomNumber}");
         if (IsServer)
         {
             if (randomNumber < 1)
@@ -388,7 +388,7 @@ public class Puppeteer : CodeRebirthEnemyAI
 
     public override void KillEnemy(bool destroy = false)
     {
-        Plugin.ExtendedLogging("Puppeteer killed", (int)Logging_Level.Low);
+        Plugin.ExtendedLogging("Puppeteer killed");
         if (!enteredDefensiveModeOnce)
         {
             timeSinceLastTakenDamage = 0f;

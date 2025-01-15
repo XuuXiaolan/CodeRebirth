@@ -33,7 +33,7 @@ public class LaserTurret : CodeRebirthHazard
     public override void Start()
     {
         base.Start();
-        Plugin.ExtendedLogging("Laser Turret initialized", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging("Laser Turret initialized");
         visualEffect.Play();
         originalImpactPositionZ = visualEffect.GetVector3(ImpactPosition).z;
         originalParticlesVelocityZ = visualEffect.GetVector3(ParticlesVelocity).z;

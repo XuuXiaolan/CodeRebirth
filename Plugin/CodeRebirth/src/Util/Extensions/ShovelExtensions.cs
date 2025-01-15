@@ -7,7 +7,7 @@ public static class ShovelExtensions {
     {
 		if (random.NextDouble(0, 100) < Math.Clamp(critChance, 0, 100))
         {
-            Plugin.ExtendedLogging("Critical Hit!", (int)Logging_Level.High);
+            Plugin.ExtendedLogging("Critical Hit!");
             return force * 2;
         }
         return force;

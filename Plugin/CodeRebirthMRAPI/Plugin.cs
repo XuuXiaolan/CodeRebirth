@@ -36,7 +36,7 @@ public class Plugin : BaseUnityPlugin {
     
 	internal static void ExtendedLogging(object text)
 	{
-		if (CodeRebirth.src.Plugin.ModConfig.ConfigLoggingLevel.Value >= 1)
+		if (CodeRebirth.src.Plugin.ModConfig.ConfigExtendedLogging.Value)
 		{
 			Logger.LogInfo(text);
 		}

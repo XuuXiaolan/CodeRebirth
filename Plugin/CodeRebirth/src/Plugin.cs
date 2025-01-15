@@ -131,10 +131,10 @@ public class Plugin : BaseUnityPlugin
         LoadedBundles.Clear();
     }
 
-    internal static void ExtendedLogging(object text, int loggingLevel)
+    internal static void ExtendedLogging(object text)
     {
 
-        if (ModConfig.ConfigLoggingLevel.Value >= loggingLevel)
+        if (ModConfig.ConfigExtendedLogging.Value)
         {
             Logger.LogInfo(text);
         }

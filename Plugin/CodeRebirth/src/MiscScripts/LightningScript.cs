@@ -14,7 +14,7 @@ public class LightningStrikeScript
         if (stormyWeather == null)
         {
             stormyWeather = UnityEngine.Object.FindObjectOfType<StormyWeather>(true);
-            Plugin.ExtendedLogging("Getting stormy weather for the first time", (int)Logging_Level.Low);
+            Plugin.ExtendedLogging("Getting stormy weather for the first time");
         }
 
         // Plugin.ExtendedLogging($"{vector} -> {strikePosition}");

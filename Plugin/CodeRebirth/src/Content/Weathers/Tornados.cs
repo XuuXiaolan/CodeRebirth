@@ -32,6 +32,7 @@ public class Tornados : CodeRebirthEnemyAI
     private GameObject[] outsideNodes = [];
     public Transform[] eyes = null!;
     public Transform throwingPoint = null!;
+    public float spiralIntensityAdjuster = 30f;
 
     public enum TornadoType
     {
@@ -46,10 +47,8 @@ public class Tornados : CodeRebirthEnemyAI
     private TornadoType tornadoType = TornadoType.Fire;
     private bool damageTimer = true;
     private float originalPlayerSpeed = 0;
-    private bool lightningBoltTimer = false;
     private System.Random tornadoRandom = new System.Random();
     private float timeSinceBeingInsideTornado = 0;
-    private TornadoSelector tornadoSelector = new();
 
     public override void Start()
     {
@@ -57,7 +56,7 @@ public class Tornados : CodeRebirthEnemyAI
         tornadoRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 325);
         initialSpeed = Plugin.ModConfig.ConfigTornadoSpeed.Value;
         outsideNodes = RoundManager.Instance.outsideAINodes;
-        int typeIndex = tornadoSelector.SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
+        int typeIndex = new TornadoSelector().SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
         tornadoType = (TornadoType)typeIndex;
 
         if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20)
@@ -65,7 +64,7 @@ public class Tornados : CodeRebirthEnemyAI
             SetDestinationToPosition(ChooseFarthestNodeFromPosition(transform.position, avoidLineOfSight: false).position, true);
         }
 
-        Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {transform.position}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {transform.position}");
         SetupTornadoType();
     }
 
@@ -105,7 +104,7 @@ public class Tornados : CodeRebirthEnemyAI
 
     private void Init()
     {
-        smartAgentNavigator.StartSearchRoutine(agent.transform.position, 200);
+        smartAgentNavigator.StartSearchRoutine(eye.transform.position, 40f);
         agent.speed = initialSpeed;
     }
 
@@ -155,22 +154,22 @@ public class Tornados : CodeRebirthEnemyAI
         }
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
 
         UpdateAudio();
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (localPlayer == null || localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || !localPlayer.IsFlingingAway() || localPlayer.HasFlung()) return;
+        if (localPlayer == null || localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.HasFlung()) return;
 
         HandleTornadoDamageAndPulling(localPlayer);
         HandleStatusEffects(localPlayer);
         if (!localPlayer.IsFlingingAway() || localPlayer.HasFlung()) return;
 
-        //Plugin.ExtendedLogging("Tornado is flinging away");
+        // Plugin.ExtendedLogging("Tornado is flinging away");
         Vector3 directionToCenter = (throwingPoint.position - localPlayer.transform.position).normalized;
-        Vector3 spiralForce = CalculateSpiralForce(directionToCenter, 3f); // Adjust the second parameter to control spiral intensity
-        localPlayer.externalForceAutoFade = spiralForce; // maybe += ?
+        Vector3 spiralForce = CalculateSpiralForce(directionToCenter, spiralIntensityAdjuster); // Adjust the second parameter to control spiral intensity
+        localPlayer.externalForceAutoFade += spiralForce; // maybe += ?
         if (localPlayer.transform.position.y < throwingPoint.position.y) return;
 
         Vector3 verticalForce = CalculateVerticalForce(tornadoRandom.NextFloat(10f, 50f), tornadoRandom.NextFloat(1f, 20f)); // Adjust the last two parameters to control vertical and forward force
@@ -196,15 +195,17 @@ public class Tornados : CodeRebirthEnemyAI
         bool doesTornadoAffectPlayer = TornadoConditionsAreMet(player);
         if (!doesTornadoAffectPlayer) return;
 
-        float distanceToTornado = TornadoHasLineOfSightToPosition(100, player);
-        if (distanceToTornado > 100) return;
+        CalculateTornadoLineOfSights(100, player, out float bestDistanceLOS, out float bestDistanceOverall);
+        if (bestDistanceOverall == float.PositiveInfinity) return;
 
-        bool hasLineOfSight = distanceToTornado >= 0;
-        Vector3 targetPosition = this.eye.transform.position;
-        float forceStrength = CalculatePullStrength(distanceToTornado, hasLineOfSight, player);
-        player.externalForceAutoFade += targetPosition * forceStrength * Time.fixedDeltaTime / 1.75f; // todo: test this with different fps
+        Vector3 targetPosition = (eye.transform.position - player.transform.position).normalized;
+        float forceStrengthWithLOS = CalculatePullStrength(bestDistanceLOS, true, player);
+        float forceStrengthOverall = CalculatePullStrength(bestDistanceOverall, false, player);
+        float forceStrength = Mathf.Max(forceStrengthWithLOS, forceStrengthOverall);
+        Plugin.ExtendedLogging($"Force strength: {forceStrength}");
+        player.externalForceAutoFade += targetPosition * forceStrength * Time.fixedDeltaTime / 0.5f; // todo: test this with different fps
 
-        if (distanceToTornado > 2.5f || !damageTimer) return;
+        if (bestDistanceLOS > 2.5f || !damageTimer) return;
         damageTimer = false;
         StartCoroutine(DamageTimer());
         HandleTornadoTypeDamage(player);
@@ -288,10 +289,11 @@ public class Tornados : CodeRebirthEnemyAI
         float maxStrength = DetermineTornadoMaxStrength(hasLineOfSight, localPlayerController);
 
         // Calculate the normalized distance and apply an exponential falloff
-        float normalizedDistance = distance / maxDistance;
-        float strengthFalloff = (1-normalizedDistance)*(1-normalizedDistance); // Use an exponential falloff for smoother results
+        float normalizedDistance = Mathf.Clamp01(1 - distance / maxDistance);
+        float strengthFalloff = normalizedDistance*normalizedDistance; // Use an exponential falloff for smoother results
 
         // Calculate the pull strength based on the falloff
+        Plugin.ExtendedLogging($"Pull strength falloff: {strengthFalloff}");
         float pullStrength = Mathf.Lerp(minStrength, maxStrength, strengthFalloff);
         return pullStrength;
     }
@@ -363,20 +365,19 @@ public class Tornados : CodeRebirthEnemyAI
         }
     }
     
-    public float TornadoHasLineOfSightToPosition(int range, PlayerControllerB player)
+    public void CalculateTornadoLineOfSights(int range, PlayerControllerB player, out float bestDistanceLOS, out float bestDistanceOverall)
     {
-        float bestDistance = float.MaxValue;
+        bestDistanceLOS = float.PositiveInfinity;
+        bestDistanceOverall = float.PositiveInfinity;
         foreach (Transform eye in eyes)
         {
             float distance = Vector3.Distance(eye.transform.position, player.transform.position);
             if (distance > range) continue;
+            bestDistanceOverall = Mathf.Min(bestDistanceOverall, distance);
             if (Physics.Raycast(eye.transform.position, (player.transform.position - eye.position).normalized, distance, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Terrain", "InteractableObject", "MapHazards", "Vehicle", "Railing"), QueryTriggerInteraction.Ignore)) continue;
-            if (distance < bestDistance)
-            {
-                bestDistance = distance;
-            }
+            bestDistanceLOS = Mathf.Min(bestDistanceLOS, distance);
         }
-        return bestDistance;
+        Plugin.ExtendedLogging($"Best distance with LOS: {bestDistanceLOS} and overall: {bestDistanceOverall}");
     }
 
     public Vector3 GetRandomTargetPosition(System.Random random, IEnumerable<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius)

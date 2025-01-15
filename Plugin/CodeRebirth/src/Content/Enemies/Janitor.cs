@@ -796,10 +796,10 @@ public class Janitor : CodeRebirthEnemyAI
             for (int i = 1; i < path.corners.Length; i++)
             {
                 length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
-                Plugin.ExtendedLogging($"Distance: {Vector3.Distance(path.corners[i - 1], path.corners[i])}", (int)Logging_Level.High);
+                Plugin.ExtendedLogging($"Distance: {Vector3.Distance(path.corners[i - 1], path.corners[i])}");
             }
         }
-        Plugin.ExtendedLogging($"Path distance: {length}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Path distance: {length}");
         return length;
     }
 
@@ -872,7 +872,7 @@ public class Janitor : CodeRebirthEnemyAI
         // and the direction to the player. A value > 0 means "in front"; < 0 means "behind".
         Vector3 directionToPlayer = (targetPlayer.transform.position - transform.position).normalized;
         float dotProduct = Vector3.Dot(transform.forward, directionToPlayer);
-        // Plugin.ExtendedLogging($"Dot product: {dotProduct} with distance: {distToPlayer}");
+        Plugin.ExtendedLogging($"Dot product: {dotProduct} with distance: {distToPlayer}");
         // Player must be within distance AND in front
         return distToPlayer <= agent.stoppingDistance + 2f && dotProduct > 0.25f;
     }

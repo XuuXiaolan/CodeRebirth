@@ -26,7 +26,7 @@ public class InstrumentPlayer : GrabbableObject
         AudioSource? audioSourcePlaying = null;
         foreach (var instrumentPlayer in instrumentPlayers)
         {
-            Plugin.ExtendedLogging($"Instrument Player: {instrumentPlayer.name}", (int)Logging_Level.Low);
+            Plugin.ExtendedLogging($"Instrument Player: {instrumentPlayer.name}");
             if (!instrumentPlayer.audioPlayer.isPlaying) continue;
             audioSourcePlaying = instrumentPlayer.audioPlayer;
             break;
@@ -35,7 +35,7 @@ public class InstrumentPlayer : GrabbableObject
         if (audioSourcePlaying != null)
         {
             float time = audioSourcePlaying.time;
-            Plugin.ExtendedLogging($"Starting at Time: {time}", (int)Logging_Level.Low);
+            Plugin.ExtendedLogging($"Starting at Time: {time}");
             audioPlayer.Play();
             audioPlayer.time = time;
         }

@@ -63,7 +63,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         
         _thisPlantPotID = totalSpawnedPlantPots;
         
-        Plugin.ExtendedLogging($"plant pot id: {_thisPlantPotID}", (int)Logging_Level.Low);
+        Plugin.ExtendedLogging($"plant pot id: {_thisPlantPotID}");
 
         
         // Because this is handled via reference it should just work
@@ -74,10 +74,10 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         }
         else
         {
-            Plugin.ExtendedLogging("loaded from save!", (int)Logging_Level.Low);
+            Plugin.ExtendedLogging("loaded from save!");
         }
         
-        Plugin.ExtendedLogging($"stage: {_data.stage}", (int)Logging_Level.Low);
+        Plugin.ExtendedLogging($"stage: {_data.stage}");
         
         totalSpawnedPlantPots++;
         Instances.Add(this);
@@ -103,7 +103,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     {
         WoodenSeed woodenSeed = ((GameObject)netObjRef).GetComponent<WoodenSeed>();
         fruitType = woodenSeed.fruitType;
-        Plugin.ExtendedLogging($"Setting up fruit type {fruitType}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Setting up fruit type {fruitType}");
         woodenSeed.playerHeldBy.DespawnHeldObject();
     }
 
@@ -172,7 +172,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     [ClientRpc]
     private void IncreaseStageClientRpc()
     {
-        Plugin.ExtendedLogging($"Increasing stage from {(int)stage} to {(int)stage + 1}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Increasing stage from {(int)stage} to {(int)stage + 1}");
         if (stage == Stage.Zero) trigger.onInteract.RemoveListener(OnInteract);
         enableList[(int)stage].SetActive(false);
         stage++;

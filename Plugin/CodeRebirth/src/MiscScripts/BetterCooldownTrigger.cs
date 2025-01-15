@@ -230,7 +230,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
                 {
                     playerClosestAudioSources[player] = GetClosestAudioSource(player.transform);
                 }
-                Plugin.ExtendedLogging("Player Coroutine Started", (int)Logging_Level.Medium);
+                Plugin.ExtendedLogging("Player Coroutine Started");
                 StartCoroutine(DamagePlayerCoroutine(player));
             }
         }
@@ -258,7 +258,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
         if (triggerForPlayers && other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && GameNetworkManager.Instance.localPlayerController == player)
         {
-            Plugin.ExtendedLogging("Player Coroutine Stopped", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging("Player Coroutine Stopped");
             RemovePlayerFromList(player);
             playerClosestAudioSources.Remove(player);
         }

@@ -17,7 +17,7 @@ public class RedwoodFeetCollision : MonoBehaviour
             playersBeingKicked.Add(player);
             StartCoroutine(KickingPlayer(player));
             player.DamagePlayer(20, true, true, CauseOfDeath.Bludgeoning, 0, false);
-            Plugin.ExtendedLogging("Kicked player...", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging("Kicked player...");
         }
     }
 

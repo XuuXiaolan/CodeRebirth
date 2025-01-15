@@ -16,18 +16,18 @@ public static class TurretPatch
         if (self.turretMode == TurretMode.Firing || self.turretMode == TurretMode.Berserk)
         {
 			var shootRay = new Ray(self.centerPoint.position - Vector3.up * 0.3f, self.aimPoint.forward - Vector3.up * 0.3f);
-            Plugin.ExtendedLogging($"Raycast from {self.centerPoint.position} to {self.aimPoint.forward}", (int)Logging_Level.High);
+            Plugin.ExtendedLogging($"Raycast from {self.centerPoint.position} to {self.aimPoint.forward}");
 			if (!Physics.Raycast(shootRay, out var hit, 30f, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide))
 			{
                 goto ret;
 			}
-            Plugin.ExtendedLogging($"Raycast hit {hit.transform.name}", (int)Logging_Level.High);
+            Plugin.ExtendedLogging($"Raycast hit {hit.transform.name}");
 			if (hit.transform.CompareTag("Player") && hit.transform.TryGetComponent(out PuppeteersVoodoo puppet) && puppet.playerControlled != null)
 			{
-                Plugin.ExtendedLogging($"Hit player {puppet.playerControlled.name}", (int)Logging_Level.High);
+                Plugin.ExtendedLogging($"Hit player {puppet.playerControlled.name}");
                 if (angleRangeCheck && Vector3.Angle(puppet.transform.position + Vector3.up * 1.75f - self.centerPoint.position, self.forwardFacingPos.forward) > self.rotationRange)
                 {
-                    Plugin.ExtendedLogging($"Angle too far", (int)Logging_Level.High);
+                    Plugin.ExtendedLogging($"Angle too far");
                     goto ret;
                 }
                 return puppet.playerControlled;

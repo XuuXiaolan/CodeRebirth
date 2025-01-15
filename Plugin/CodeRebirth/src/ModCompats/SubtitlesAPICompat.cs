@@ -8,7 +8,7 @@ public static class SubtitlesAPICompatibilityChecker
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void Init()
     {
-        Plugin.ExtendedLogging("No way subtitlesapi is on?!", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging("No way subtitlesapi is on?!");
         Plugin.SubtitlesAPIIsOn = true;
         InitSounds();
     }

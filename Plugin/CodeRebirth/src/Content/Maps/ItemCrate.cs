@@ -72,12 +72,12 @@ public class ItemCrate : CRHittable
 		originalPosition = transform.position;
 		UpdateDigPosition(0, digProgress);
 
-		Plugin.ExtendedLogging("ItemCrate successfully spawned with health: " + health, (int)Logging_Level.Medium);
+		Plugin.ExtendedLogging("ItemCrate successfully spawned with health: " + health);
 		if ((crateType == CrateType.Metal || crateType == CrateType.MetalMimic) && trigger != null)
 		{
 			trigger.timeToHold = Plugin.ModConfig.ConfigMetalHoldTimer.Value;
 			animator.SetFloat("openingSpeed", 11.875f/trigger.timeToHold);
-			Plugin.ExtendedLogging("Crate time to hold: " + trigger.timeToHold, (int)Logging_Level.Medium);
+			Plugin.ExtendedLogging("Crate time to hold: " + trigger.timeToHold);
 		}
 
 		if ((crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic) && ShopItemList.Count == 0)
@@ -97,7 +97,7 @@ public class ItemCrate : CRHittable
 	private void UpdateDigPosition(float old, float newValue)
 	{
 		transform.position = originalPosition + (transform.up * newValue * 0.5f);
-		Plugin.ExtendedLogging($"ItemCrate was hit! New digProgress: {newValue}", (int)Logging_Level.Medium);
+		Plugin.ExtendedLogging($"ItemCrate was hit! New digProgress: {newValue}");
 	}
 
 	private void Update()
@@ -179,7 +179,7 @@ public class ItemCrate : CRHittable
 						List<SpawnableItemWithRarity> acceptableItems = new();
 						foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
 						{
-							Plugin.ExtendedLogging("Moon's item pool: " + spawnableItemWithRarity.spawnableItem.itemName, (int)Logging_Level.High);
+							Plugin.ExtendedLogging("Moon's item pool: " + spawnableItemWithRarity.spawnableItem.itemName);
 							if (!blackListedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
 							{
 								acceptableItems.Add(spawnableItemWithRarity);
@@ -298,7 +298,7 @@ public class ItemCrate : CRHittable
 	private void DamageCrateClientRpc(int damage)
 	{
 		health -= damage;
-		Plugin.ExtendedLogging("Crate health: " + health, (int)Logging_Level.Medium);
+		Plugin.ExtendedLogging("Crate health: " + health);
 		if (health <= 1)
 		{
 			if (crateType != CrateType.MetalMimic && crateType != CrateType.WoodenMimic) return;
@@ -341,7 +341,7 @@ public class ItemCrate : CRHittable
 			blackListedScrap = woodenCrateItemConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
 			foreach (Item item in ShopItemList)
 			{
-				Plugin.ExtendedLogging("Shop item: " + item.itemName, (int)Logging_Level.High);
+				Plugin.ExtendedLogging("Shop item: " + item.itemName);
 				if (!blackListedScrap.Contains(item.itemName.ToLowerInvariant()))
 				{
 					acceptableItems.Add(item);

@@ -58,7 +58,7 @@ public class BearTrap : CodeRebirthHazard
 
 				GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
                 spawnedTrap.GetComponent<BearTrap>().byProduct = true;
-				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}", (int)Logging_Level.High);
+				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
 				spawnedTrap.transform.up = hit.normal;
 				spawnedTrap.GetComponent<NetworkObject>().Spawn();
                 position = spawnedTrap.transform.position;
@@ -189,7 +189,7 @@ public class BearTrap : CodeRebirthHazard
 
     public void ReleaseTrapEarly()
     {
-        Plugin.ExtendedLogging("release trap early", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging("release trap early");
         DoReleaseTrapEarlyServerRpc();
     }
 
@@ -211,7 +211,7 @@ public class BearTrap : CodeRebirthHazard
 
     public void OnCancelReleaseTrap()
     {
-        Plugin.ExtendedLogging("Canceling trap release", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging("Canceling trap release");
         DoOnCancelReleaseTrapServerRpc();
     }
 
@@ -232,7 +232,7 @@ public class BearTrap : CodeRebirthHazard
     public void ReleaseTrap(PlayerControllerB player)
     {
         if (GameNetworkManager.Instance.localPlayerController != player) return;
-        Plugin.ExtendedLogging("release trap", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging("release trap");
         DoReleaseTrapServerRpc();
     }
 

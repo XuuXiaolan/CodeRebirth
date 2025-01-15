@@ -50,9 +50,9 @@ public class LaserShockBlast : NetworkBehaviour
         {
             bool hit = HandleHit(raycastHit);
             finalHitPoint = raycastHit.point; // Update final hit point
-            Plugin.ExtendedLogging($"Raycast Hit: {raycastHit.collider.name}", (int)Logging_Level.Medium);
-            Plugin.ExtendedLogging($"Final Hit Point: {finalHitPoint}", (int)Logging_Level.Medium);
-            Plugin.ExtendedLogging($"Hit: {hit}", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging($"Raycast Hit: {raycastHit.collider.name}");
+            Plugin.ExtendedLogging($"Final Hit Point: {finalHitPoint}");
+            Plugin.ExtendedLogging($"Hit: {hit}");
             if (hit)
                 break; // Stop if we have hit a target
         }

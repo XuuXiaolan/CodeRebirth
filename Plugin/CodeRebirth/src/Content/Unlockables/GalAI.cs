@@ -153,17 +153,17 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
 
     public virtual void OnEnterOrExitElevator(bool enteredElevator)
     {
-        Plugin.ExtendedLogging($"Entered Elevator: {enteredElevator}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Entered Elevator: {enteredElevator}");
     }
 
     public virtual void OnEnableOrDisableAgent(bool agentEnabled)
     {
-        Plugin.ExtendedLogging($"Enabled Agent: {agentEnabled}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Enabled Agent: {agentEnabled}");
     }
 
     public virtual void OnUseEntranceTeleport(bool setOutside)
     {
-        Plugin.ExtendedLogging($"Used Entrance Teleport and should be set outside: {setOutside}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Used Entrance Teleport and should be set outside: {setOutside}");
         if (physicsEnabled) EnablePhysics(false);
     }
 
@@ -246,16 +246,16 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         if (enemyID == -1)
         {
             targetEnemy = null;
-            Plugin.ExtendedLogging($"Clearing Enemy target on {this}", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging($"Clearing Enemy target on {this}");
             return;
         }
         if (RoundManager.Instance.SpawnedEnemies[enemyID] == null)
         {
-            Plugin.ExtendedLogging($"Enemy Index invalid! {this}", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging($"Enemy Index invalid! {this}");
             return;
         }
         targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
-        Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
 
 	public virtual void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)

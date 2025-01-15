@@ -27,7 +27,7 @@ public static class LandminePatch
         {
             float distanceFromMine = Vector3.Distance(voodooDoll.transform.position, explosionPosition);
             if (distanceFromMine > 5f) return;
-            Plugin.ExtendedLogging($"Hit voodoo doll with landmine: {voodooDoll}", (int)Logging_Level.High);
+            Plugin.ExtendedLogging($"Hit voodoo doll with landmine: {voodooDoll}");
             if (!Physics.Linecast(explosionPosition, voodooDoll.transform.position + Vector3.up * 0.3f, out _, 1073742080, QueryTriggerInteraction.Ignore))
 			{
                 Vector3 vector = Vector3.Normalize(voodooDoll.transform.position - explosionPosition) * 80f / distanceFromMine;

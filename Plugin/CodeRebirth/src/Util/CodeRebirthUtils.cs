@@ -69,7 +69,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
         foreach (EnemyType enemyType in EnemyTypes)
         {
-            Plugin.ExtendedLogging("Trying to spawn: " + enemyType.enemyName, (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging("Trying to spawn: " + enemyType.enemyName);
             if (enemyType.enemyName == enemyName)
             {
                 RoundManager.Instance.SpawnEnemyGameObject(position, -1, 0, enemyType);
@@ -141,7 +141,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             if (netObj.gameObject.TryGetComponent(out GrabbableObject grabbableObject))
             {
                 grabbableObject.SetScrapValue(value);
-                Plugin.ExtendedLogging($"Scrap Value: {value}", (int)Logging_Level.Medium);
+                Plugin.ExtendedLogging($"Scrap Value: {value}");
             }
         }
     }
@@ -157,7 +157,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [ClientRpc]
     private void SetSaveDataClientRPC(int playerID, string saveData)
     {
-        Plugin.ExtendedLogging("Received save data from host!", (int)Logging_Level.Low);
+        Plugin.ExtendedLogging("Received save data from host!");
 
         if (!IsHost && !IsServer)
         {
@@ -171,16 +171,16 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             CodeRebirthSave.Current = PersistentDataHandler.Load<CodeRebirthSave>($"CRSave{GameNetworkManager.Instance.saveFileNum}");
         }
-        Plugin.ExtendedLogging($"Attempting to get save data over RPC!", (int)Logging_Level.Low);
-        Plugin.ExtendedLogging($"LocalClientId: {NetworkManager.Singleton.LocalClientId}", (int)Logging_Level.Low);
-        Plugin.ExtendedLogging($"StartOfRound.Instance.ClientPlayerList: {{{string.Join(", ",StartOfRound.Instance.ClientPlayerList)}}}", (int)Logging_Level.Low);
+        Plugin.ExtendedLogging($"Attempting to get save data over RPC!");
+        Plugin.ExtendedLogging($"LocalClientId: {NetworkManager.Singleton.LocalClientId}");
+        Plugin.ExtendedLogging($"StartOfRound.Instance.ClientPlayerList: {{{string.Join(", ",StartOfRound.Instance.ClientPlayerList)}}}");
 
         if (!StartOfRound.Instance.ClientPlayerList.ContainsKey(NetworkManager.Singleton.LocalClientId)) {
             StartCoroutine(DelayLoadRequestRPC());
             return;
         }
         
-        Plugin.ExtendedLogging("ClientPlayerList already contained the local client id, hooray :3", (int)Logging_Level.Low);
+        Plugin.ExtendedLogging("ClientPlayerList already contained the local client id, hooray :3");
         RequestLoadSaveDataServerRPC(StartOfRound.Instance.ClientPlayerList[NetworkManager.Singleton.LocalClientId]);
     }
 

@@ -136,9 +136,9 @@ public class Transporter : CodeRebirthEnemyAI
     private void TryFindAnyTransportableObjectViaAsyncPathfinding()
     {
         // Gather all valid objects#
-        Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects");
         IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = objectsToTransport
-            .Where(kv => kv != null && !transporters.Any(t => t.transportTarget == kv))
+            .Where(kv => kv != null)
             .Select(kv => (kv, kv.transform.position));
 
         smartAgentNavigator.CheckPaths(candidateObjects, CheckIfNeedToChangeState);
@@ -148,8 +148,9 @@ public class Transporter : CodeRebirthEnemyAI
     {
         if (objects.Count > 0)
         {
-            Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects", (int)Logging_Level.Low);
+            Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects");
             transportTarget = objects[UnityEngine.Random.Range(0, objects.Count)];
+            objectsToTransport.Remove(transportTarget);
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
         }
@@ -163,7 +164,7 @@ public class Transporter : CodeRebirthEnemyAI
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
-        Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}", (int)Logging_Level.Highest);
+        // Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}");
 
         float dist = Vector3.Distance(transportTarget.transform.position, transform.position);
 
@@ -200,7 +201,7 @@ public class Transporter : CodeRebirthEnemyAI
         }
         if (objects.Count > 0)
         {
-            Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects", (int)Logging_Level.Low);
+            // Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects");
             Vector3 currentEndDestination = objects[UnityEngine.Random.Range(0, objects.Count)].transform.position;
             creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
             agent.speed = 0f;
@@ -231,7 +232,7 @@ public class Transporter : CodeRebirthEnemyAI
         // If we reached or nearly reached the drop-off
         if (Vector3.Distance(transform.position, currentEndHit.position) <= agent.stoppingDistance && !droppingObject)
         {
-            Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}", (int)Logging_Level.Low);
+            // Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}");
             var directionToLookAt = (currentEndHit.position - transform.position).normalized;
             directionToLookAt.y = 0f;
             transform.LookAt(directionToLookAt);
@@ -304,7 +305,7 @@ public class Transporter : CodeRebirthEnemyAI
             ? (angleToPlayer * -1) / 360f
             : (360f - angleToPlayer) / 360f;
 
-        Plugin.ExtendedLogging($"Looking at player for {timeToLookAtPlayer} seconds", (int)Logging_Level.Medium);
+        // Plugin.ExtendedLogging($"Looking at player for {timeToLookAtPlayer} seconds");
         creatureAnimator.SetFloat(RotationSpeed, 1f);
         yield return new WaitForSeconds(timeToLookAtPlayer);
         creatureAnimator.SetFloat(RotationSpeed, 0f);
@@ -342,12 +343,13 @@ public class Transporter : CodeRebirthEnemyAI
         transportTarget.transform.up = currentEndHit.normal;
         currentEndHit = new();
         agent.speed = 4 + speedIncrease;
-        transportTarget = null;
         droppingObject = false;
 
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
 
         if (!IsServer) return;
+        objectsToTransport.Add(transportTarget);
+        transportTarget = null;
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
         TryFindAnyTransportableObjectViaAsyncPathfinding();
     }

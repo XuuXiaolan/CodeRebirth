@@ -9,7 +9,7 @@ public class TornadoWeather : CodeRebirthWeathers
     private List<GameObject> alreadyUsedNodes = new();
 	private void OnEnable()
 	{
-		Plugin.ExtendedLogging("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name, (int)Logging_Level.Low);
+		Plugin.ExtendedLogging("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name);
 		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 6, dayTimePower: -3);
         nodes = RoundManager.Instance.outsideAINodes;
 		nodes = CullNodesByProximity(nodes, 5.0f, true, true);
@@ -20,7 +20,7 @@ public class TornadoWeather : CodeRebirthWeathers
 
 	private void OnDisable()
 	{
-		Plugin.ExtendedLogging("Cleaning up Weather.", (int)Logging_Level.Low);
+		Plugin.ExtendedLogging("Cleaning up Weather.");
 		ChangeCurrentLevelMaximumPower(outsidePower: 3, insidePower: -6, dayTimePower: 3);
 
 		if(!IsAuthority()) return;

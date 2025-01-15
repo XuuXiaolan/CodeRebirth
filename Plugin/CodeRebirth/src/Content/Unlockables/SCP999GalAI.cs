@@ -136,11 +136,11 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
     private void HealPlayerInteraction(PlayerControllerB playerInteracting)
     {
-        Plugin.ExtendedLogging($"Healing player: {playerInteracting} | Cooldown timer: {cooldownTimer.Value} | Heal Charge count: {healChargeCount.Value} | Revive Charge count: {reviveChargeCount.Value}", (int)Logging_Level.High);
+        Plugin.ExtendedLogging($"Healing player: {playerInteracting} | Cooldown timer: {cooldownTimer.Value} | Heal Charge count: {healChargeCount.Value} | Revive Charge count: {reviveChargeCount.Value}");
         if (boomboxPlaying.Value) return;
         if (cooldownTimer.Value > 0f || (healChargeCount.Value <= 0 && reviveChargeCount.Value <= 0))
         {
-            Plugin.ExtendedLogging($"triggering squish animation.", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging($"triggering squish animation.");
             TriggerAnimationServerRpc(doSquishAnimation);
             return;
         }
@@ -158,7 +158,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     [ServerRpc(RequireOwnership = false)]
     private void DoHealingStuffServerRpc(int playerInteractingIndex)
     {
-        Plugin.ExtendedLogging($"Player who poked index: {playerInteractingIndex}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging($"Player who poked index: {playerInteractingIndex}");
         bool galDidSomething = false;
         PlayerControllerB playerInteracting = StartOfRound.Instance.allPlayerScripts[playerInteractingIndex];
         bool onlyInteractedPlayerHealed = Plugin.ModConfig.Config999GalHealOnlyInteractedPlayer.Value;
@@ -174,10 +174,10 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         {
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
-                Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}", (int)Logging_Level.High);
+                Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}");
                 if (player == null || !player.isPlayerDead || player.deadBody == null) continue;
                 float distanceFromGal = Vector3.Distance(transform.position, player.deadBody.transform.position);
-                Plugin.ExtendedLogging($"Distance from gal: {distanceFromGal}", (int)Logging_Level.High);
+                Plugin.ExtendedLogging($"Distance from gal: {distanceFromGal}");
                 if (distanceFromGal > 5) continue;
                 reviveChargeCount.Value--;
                 galDidSomething = true;
@@ -194,7 +194,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         {
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
-                Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}", (int)Logging_Level.High);
+                Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}");
                 if (healChargeCount.Value <= 0 || player == null || player.isPlayerDead || !player.isPlayerControlled || player.health >= playerMaxHealthDict[player]) continue;
                 if (Vector3.Distance(transform.position, player.transform.position) > 5) continue;
                 galDidSomething = true;
@@ -221,7 +221,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         if (failed)
         {
             if (IsServer) networkAnimator.SetTrigger(doFailAnimation);
-            Plugin.ExtendedLogging("Failed to heal player.", (int)Logging_Level.Low);
+            Plugin.ExtendedLogging("Failed to heal player.");
             yield break;
         }
         currentlyHealing = true;
@@ -296,7 +296,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
         if (failed)
         {
-            Plugin.ExtendedLogging("Failed to revive player.", (int)Logging_Level.Low);
+            Plugin.ExtendedLogging("Failed to revive player.");
             if (IsServer) networkAnimator.SetTrigger(doFailAnimation);
             return;
         }
@@ -316,7 +316,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         PlayerScript.thisController.enabled = true;
         if (PlayerScript.isPlayerDead)
         {
-            Plugin.ExtendedLogging("playerInital is dead, reviving them.", (int)Logging_Level.Medium);
+            Plugin.ExtendedLogging("playerInital is dead, reviving them.");
             PlayerScript.thisController.enabled = true;
             PlayerScript.isPlayerDead = false;
             PlayerScript.isPlayerControlled = true;
@@ -420,8 +420,8 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
                 ActivePlayerAmount++;
             }
         }
-        Plugin.ExtendedLogging("Active Amount with dict: " + StartOfRound.Instance.ClientPlayerList.Count, (int)Logging_Level.Medium);
-        Plugin.ExtendedLogging($"ActivePlayerAmount: {ActivePlayerAmount} | heal: {heal} | revive: {revive}", (int)Logging_Level.Medium);
+        Plugin.ExtendedLogging("Active Amount with dict: " + StartOfRound.Instance.ClientPlayerList.Count);
+        Plugin.ExtendedLogging($"ActivePlayerAmount: {ActivePlayerAmount} | heal: {heal} | revive: {revive}");
         if (heal)
         {
             healChargeCount.Value = Plugin.ModConfig.Config999GalHealTotalAmount.Value * (Plugin.ModConfig.Config999GalScaleHealAndReviveWithPlayerCount.Value ? ActivePlayerAmount : 1 );
