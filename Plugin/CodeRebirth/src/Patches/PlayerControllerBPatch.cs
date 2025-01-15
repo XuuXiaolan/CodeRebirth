@@ -21,9 +21,20 @@ static class PlayerControllerBPatch
     public static void PlayerHitGroundEffects(PlayerControllerB __instance)
     {
         if (!__instance.ContainsCRPlayerData()) return;
-        if (!__instance.HasFlung()) return;
-        __instance.SetFlung(false);
-        __instance.playerRigidbody.isKinematic = true;
+        if (__instance.HasFlung())
+        {
+            Plugin.ExtendedLogging($"{__instance.playerUsername} is flinging away with fallvalue: {__instance.fallValue} and fallvalueuncapped: {__instance.fallValueUncapped}!");
+            if (__instance.fallValueUncapped <= -50)
+            {
+                __instance.DamagePlayer(10, true, true, CauseOfDeath.Gravity, 0, false, default(Vector3));
+            }
+            __instance.fallValue = 0f;
+            __instance.fallValueUncapped = 0f;
+        }
+        if (!__instance.IsFlingingAway() && __instance.HasFlung())
+        {
+            __instance.SetFlung(false);
+        }
     }
 
 	[HarmonyPatch(nameof(PlayerControllerB.PlayFootstepSound)), HarmonyPrefix]

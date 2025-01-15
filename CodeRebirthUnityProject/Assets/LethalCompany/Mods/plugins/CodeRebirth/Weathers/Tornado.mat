@@ -152,12 +152,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - AlphaClipThreshold: 0.7
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
-    - _Alpha: 0.9
+    - _Alpha: 1
     - _AlphaCutoff: 0
     - _AlphaCutoffEnable: 1
     - _AlphaCutoffPostpass: 0.5
@@ -185,6 +186,8 @@ Material:
     - _DisplacementLockObjectScale: 1
     - _DisplacementLockTilingScale: 1
     - _DisplacementMode: 0
+    - _Dither_Size: 1
+    - _Dither_Size_1: 0.95
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 0
