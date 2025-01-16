@@ -11,6 +11,7 @@ using System;
 using static CodeRebirth.src.Content.Weathers.Tornados;
 using static CodeRebirth.src.Util.PlayerControllerBExtensions;
 using CodeRebirth.src.Content.Enemies;
+using static UnityEngine.ParticleSystem;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Tornados : CodeRebirthEnemyAI
@@ -28,6 +29,7 @@ public class Tornados : CodeRebirthEnemyAI
     [Space(5f)]
     [Header("Graphics")]
     public ParticleSystem[] tornadoParticles = null!;
+    public Material mainMaterial = null!;
 
     private GameObject[] outsideNodes = [];
     public Transform[] eyes = null!;
@@ -48,20 +50,25 @@ public class Tornados : CodeRebirthEnemyAI
     private float originalPlayerSpeed = 0;
     private System.Random tornadoRandom = new System.Random();
     private float timeSinceBeingInsideTornado = 0;
+    private Dictionary<TornadoType, Color> tornadoTypeColourMapping = new();
 
     public override void Start()
     {
         base.Start();
+        tornadoTypeColourMapping = new()
+        {
+            { TornadoType.Fire, new Color(1, 54/255, 0, 1)},
+            { TornadoType.Blood, new Color(238/255, 0, 0, 1)},
+            { TornadoType.Windy, new Color(42/255, 1, 0, 1)},
+            { TornadoType.Smoke, new Color(1, 1, 1, 1)},
+            { TornadoType.Water, new Color(0, 169/255, 1, 1)},
+            { TornadoType.Electric, new Color(1, 1, 118/255, 1)},
+        };
         tornadoRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 325);
         initialSpeed = Plugin.ModConfig.ConfigTornadoSpeed.Value;
         outsideNodes = RoundManager.Instance.outsideAINodes;
         int typeIndex = new TornadoSelector().SelectTornadoIndex(Plugin.ModConfig.ConfigTornadoMoonWeatherTypes.Value);
         tornadoType = (TornadoType)typeIndex;
-
-        if (Vector3.Distance(transform.position, StartOfRound.Instance.shipBounds.transform.position) <= 20)
-        {
-            SetDestinationToPosition(ChooseFarthestNodeFromPosition(transform.position, avoidLineOfSight: false).position, true);
-        }
 
         Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} at {transform.position}");
         SetupTornadoType();
@@ -69,14 +76,13 @@ public class Tornados : CodeRebirthEnemyAI
 
     private void SetupTornadoType()
     {
-        int i = 0;
-        foreach (ParticleSystem particleSystem in tornadoParticles)
+        foreach (var particleSystem in tornadoParticles)
         {
-            if (!particleSystem.gameObject.name.StartsWith(tornadoType.ToString())) continue;
-            particleSystem.gameObject.SetActive(true);
-            i++;
-            if (i >= 7) break;
+            var main = particleSystem.main;
+            main.startColor = tornadoTypeColourMapping[tornadoType];
         }
+        Plugin.ExtendedLogging($"Setting up tornado of type: {tornadoType} with previous color {mainMaterial.GetColor("_BaseColor")} into new color {tornadoTypeColourMapping[tornadoType]}");
+        mainMaterial.SetColor("_BaseColor", tornadoTypeColourMapping[tornadoType]);
         switch (tornadoType)
         {
             case TornadoType.Fire:
@@ -177,11 +183,6 @@ public class Tornados : CodeRebirthEnemyAI
         return spiralDirection * spiralIntensity + directionToCenter * spiralIntensity;
     }
 
-    private Vector3 CalculateVerticalForce(float upwardForce, float forwardForce)
-    {
-        return Vector3.up * upwardForce + Vector3.forward * forwardForce;
-    }
-
     private void HandleTornadoDamageAndPulling(PlayerControllerB player)
     {
         bool doesTornadoAffectPlayer = TornadoConditionsAreMet(player);
@@ -195,7 +196,7 @@ public class Tornados : CodeRebirthEnemyAI
         float forceStrengthOverall = CalculatePullStrength(bestDistanceOverall, false, player);
         float forceStrength = Mathf.Max(forceStrengthWithLOS, forceStrengthOverall);
         // Plugin.ExtendedLogging($"Force strength: {forceStrength}");
-        player.externalForceAutoFade += targetPosition * forceStrength * Time.fixedDeltaTime / 0.375f; // todo: test this with different fps
+        player.externalForceAutoFade += targetPosition * forceStrength * Time.fixedDeltaTime / 0.25f; // todo: test this with different fps
 
         if (bestDistanceLOS > 4f || !damageTimer) return;
         damageTimer = false;
