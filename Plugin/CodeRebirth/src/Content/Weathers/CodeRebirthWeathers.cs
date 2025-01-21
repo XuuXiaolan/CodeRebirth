@@ -7,7 +7,7 @@ namespace CodeRebirth.src.Content.Weathers;
 public class CodeRebirthWeathers : MonoBehaviour
 {
 
-    public Vector3 CalculateAverageLandNodePosition(List<GameObject> nodes)
+    public Vector3 CalculateAverageLandNodePosition(IEnumerable<GameObject> nodes)
     {
         Vector3 sumPosition = Vector3.zero;
         int count = 0;

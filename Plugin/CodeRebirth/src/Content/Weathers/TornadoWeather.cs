@@ -22,8 +22,6 @@ public class TornadoWeather : CodeRebirthWeathers
 	{
 		Plugin.ExtendedLogging("Cleaning up Weather.");
 		ChangeCurrentLevelMaximumPower(outsidePower: 3, insidePower: -6, dayTimePower: 3);
-
-		if(!IsAuthority()) return;
 	}
 
 	private IEnumerator TornadoSpawnerHandler()

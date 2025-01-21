@@ -6,34 +6,30 @@ using CodeRebirth.src.MiscScripts;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Weathers;
-public class Meteors : NetworkBehaviour {
-    #pragma warning disable CS0649    
+public class Meteors : NetworkBehaviour
+{
     [Header("Properties")]
-    [SerializeField] private float initialSpeed = 50f;
-    [SerializeField] private float chanceToSpawnScrap;
+    public float initialSpeed = 50f;
+    public float chanceToSpawnScrap;
 
     [Header("Audio")]
-    [SerializeField]
-    private AudioSource ImpactAudio = null!;
-
-    [SerializeField]
-    private AudioSource NormalTravelAudio = null!, CloseTravelAudio = null!;
+    public AudioSource ImpactAudio = null!;
+    public AudioSource NormalTravelAudio = null!;
+    public AudioSource CloseTravelAudio = null!;
 
     [Header("Graphics")]
-    [SerializeField]
-    private GameObject? FireTrail = null;
-    [SerializeField]
-    AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
+    public GameObject? FireTrail = null;
+    public AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
 
     [Header("Events")]
-    [SerializeField]
-    UnityEvent _onMeteorLand;
+    public UnityEvent _onMeteorLand;
     
-    Vector3 origin, target;
+    private Vector3 origin = Vector3.zero;
+    private Vector3 target = Vector3.zero;
 
-    float timeInAir, travelTime;
-    bool isMoving;
-    bool isBig;
+    private float timeInAir = 0;
+    private float travelTime = 0;
+    private bool isMoving = false;
 
     public float Progress => timeInAir / travelTime;
 
@@ -54,13 +50,17 @@ public class Meteors : NetworkBehaviour {
     public void SetupAsLooping(bool isBig)
     {
         isMoving = false;
-        this.isBig = isBig;
+        if (!isBig)
+        {
+            NormalTravelAudio.volume = 0f;
+            CloseTravelAudio.volume = 0f;
+            return;
+        }
         StartCoroutine(UpdateAudio()); // Make sure audio works correctly on the first frame.
     }
     
-    private void Awake()
+    public void Start()
     {
-        MeteorShower.Instance?.AddMeteor(this);
         NormalTravelAudio.Play();
         FireTrail?.SetActive(false);
 
@@ -79,10 +79,10 @@ public class Meteors : NetworkBehaviour {
     {
         float progress = Progress;
         if (progress >= 1.0f)
-        { // Checks if the progress is 100% or more
-            transform.position = target; // Ensures the meteor position is set to the target at impact
+        {
+            transform.position = target;
             StartCoroutine(Impact()); // Start the impact effects
-            return; // Exit to prevent further execution in this update
+            return;
         }
 
         Vector3 nextPosition = Vector3.Lerp(origin, target, animationCurve.Evaluate(progress));
@@ -117,11 +117,6 @@ public class Meteors : NetworkBehaviour {
                 NormalTravelAudio.volume = Mathf.Clamp01(0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
                 CloseTravelAudio.Play();
             }
-            if (!isMoving && !isBig)
-            {
-                NormalTravelAudio.volume = 0f;
-                CloseTravelAudio.volume = 0f;
-            }
         }
     }
 
@@ -131,7 +126,7 @@ public class Meteors : NetworkBehaviour {
 
         ImpactAudio.Play();
             
-        if (IsHost && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap)
+        if (IsServer && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap)
         {
             if (UnityEngine.Random.Range(0, 100) <= 33.33f ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Sapphire Meteorite", target);
             else if (UnityEngine.Random.Range(0, 100) <= 33.33f ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Emerald Meteorite", target);
@@ -147,27 +142,24 @@ public class Meteors : NetworkBehaviour {
         CRUtilities.CreateExplosion(transform.position, true, 100, 0, 15, 4, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab);
         _onMeteorLand.Invoke();
         
-        yield return new WaitForSeconds(10f); // allow the last particles from the fire trail to still emit. <-- Actually i think the meteor just looks cool staying on the ground for an extra 10 seconds.
-        if (IsHost)
-            Destroy(gameObject);
-        MeteorShower.Instance?.RemoveMeteor(this);
+        if (!IsServer) yield break;
+        yield return new WaitForSeconds(10f);
+        NetworkObject.Despawn();
     }
 }
 
 public class CraterController : MonoBehaviour
 {
-
-    private void Awake()
+    public void Start()
     {
         StartCoroutine(DespawnAfter20Seconds());
-        MeteorShower.Instance?.AddCrater(this);
     }
 
     private IEnumerator DespawnAfter20Seconds()
     {
-        yield return new WaitForSeconds(20);
+        float timeWhenSpawned = Time.time;
+        yield return new WaitUntil(() => (StartOfRound.Instance.shipIsLeaving && Time.time >= timeWhenSpawned + 10f) || (Time.time >= timeWhenSpawned + 30f));
         Destroy(this.gameObject);
-        MeteorShower.Instance?.RemoveCrater(this);
     }
 
     public void ShowCrater(Vector3 impactLocation)
