@@ -31,8 +31,10 @@ static class EnemyAIPatch
             if (self.enemyType.enemyName.Contains("SCP-999"))
             {
                 puppet.Hit(-1, self.transform.position, null, false, -1);
+                return;
             }
             puppet.Hit(1, self.transform.position, null, false, -1);
+            return;
         }
         orig(self, other);
     }

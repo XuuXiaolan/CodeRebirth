@@ -26,6 +26,7 @@ public class Meteors : NetworkBehaviour
     
     private Vector3 origin = Vector3.zero;
     private Vector3 target = Vector3.zero;
+    private Vector3 normal = Vector3.zero;
 
     private float timeInAir = 0;
     private float travelTime = 0;
@@ -34,11 +35,16 @@ public class Meteors : NetworkBehaviour
     public float Progress => timeInAir / travelTime;
 
     [ClientRpc]
-    public void SetupMeteorClientRpc(Vector3 origin, Vector3 target)
+    public void SetupMeteorClientRpc(Vector3 _origin, Vector3 _target)
     {
-        this.origin = origin;
-        this.target = target;
+        origin = _origin;
+        target = _target;
         float distance = Vector3.Distance(origin, target);
+        Physics.Raycast(origin, (target - origin).normalized, out RaycastHit hit, distance + 5f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
+        Plugin.ExtendedLogging($"Raycast hit: {hit.point} with normal: {hit.normal}");
+        target = hit.point;
+        normal = hit.normal;
+        distance = Vector3.Distance(origin, target);
         initialSpeed = Plugin.ModConfig.ConfigMeteorSpeed.Value;
         travelTime = Mathf.Sqrt(2 * distance / initialSpeed);  // Time to reach the target, adjusted for acceleration
         isMoving = true;
@@ -58,16 +64,17 @@ public class Meteors : NetworkBehaviour
         }
         StartCoroutine(UpdateAudio()); // Make sure audio works correctly on the first frame.
     }
-    
+
     public void Start()
     {
+        MeteorShower.meteors.Add(this);
         NormalTravelAudio.Play();
         FireTrail?.SetActive(false);
 
         chanceToSpawnScrap = Plugin.ModConfig.ConfigMeteorShowerMeteoriteSpawnChance.Value;
     }
 
-    private void Update()
+    public void Update()
     {
         if (!isMoving) return;
 
@@ -128,22 +135,25 @@ public class Meteors : NetworkBehaviour
             
         if (IsServer && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap)
         {
-            if (UnityEngine.Random.Range(0, 100) <= 33.33f ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Sapphire Meteorite", target);
-            else if (UnityEngine.Random.Range(0, 100) <= 33.33f ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Emerald Meteorite", target);
+            int randomNumber = UnityEngine.Random.Range(0, 3);
+            if (randomNumber == 0 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Sapphire Meteorite", target);
+            else if (randomNumber == 1 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Emerald Meteorite", target);
             else CodeRebirthUtils.Instance.SpawnScrapServerRpc("Ruby Meteorite", target);
         }
 
         GameObject craterInstance = Instantiate(WeatherHandler.Instance.Meteorite.CraterPrefab, target, Quaternion.identity);
+        craterInstance.transform.up = normal;
         CraterController craterController = craterInstance.GetComponent<CraterController>();
-        craterController.ShowCrater(target);
+        craterController.ShowCrater(target, normal);
 
         FireTrail?.SetActive(false);
         
-        CRUtilities.CreateExplosion(transform.position, true, 100, 0, 15, 4, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab);
+        CRUtilities.CreateExplosion(transform.position, true, 100, 0, 15, 4, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab, 25f);
         _onMeteorLand.Invoke();
-        
+
         if (!IsServer) yield break;
         yield return new WaitForSeconds(10f);
+        MeteorShower.meteors.Remove(this);
         NetworkObject.Despawn();
     }
 }
@@ -152,20 +162,22 @@ public class CraterController : MonoBehaviour
 {
     public void Start()
     {
-        StartCoroutine(DespawnAfter20Seconds());
+        MeteorShower.craters.Add(this);
+        StartCoroutine(DespawnAfterDelay(60f));
     }
 
-    private IEnumerator DespawnAfter20Seconds()
+    private IEnumerator DespawnAfterDelay(float delay)
     {
-        float timeWhenSpawned = Time.time;
-        yield return new WaitUntil(() => (StartOfRound.Instance.shipIsLeaving && Time.time >= timeWhenSpawned + 10f) || (Time.time >= timeWhenSpawned + 30f));
+        yield return new WaitForSeconds(delay);
+        MeteorShower.craters.Remove(this);
         Destroy(this.gameObject);
     }
 
-    public void ShowCrater(Vector3 impactLocation)
+    public void ShowCrater(Vector3 impactLocation, Vector3 normal)
     {
         transform.position = impactLocation + new Vector3(0, 3f, 0); // Position the crater at the impact location
-
+        transform.up = normal;
+        Plugin.ExtendedLogging($"Crater position: {transform.position} with normal: {normal}");
         this.gameObject.SetActive(true);
     }
 }

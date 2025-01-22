@@ -1,11 +1,15 @@
 # v0.13.0
 
+- Damage fix for janitor when you hit him.
 - Extra fix for dropping stuff infront of janitor while he's grabbing an item.
-- Added second member of cleanup crew, the transporter.
+- Added second member of cleanup crew, jimothy the transporter.
 - Added cleaning drone gal.
 - Improved pathfinding completely in all CodeRebirth entities, this makes them able to fluidly use all fire exits, entrances, anything they need to reach you no matter where you are, should preform better than usual too.
 - Hazards despawn if they spawn on top of doors.
-- Changed the extended logging config to be a level of logging, keep it at 0 if you don't want unnecessary logs.
+- New weight defaults for manor lord, redwood titan and janitor.
+- Did some fixing with tesla shock.
+- Redid the tornado visuals entirely.
+- Rewrote a lot of the code for tornados and meteor shower, let me know if anything breaks.
 
 ## v0.12.3
 

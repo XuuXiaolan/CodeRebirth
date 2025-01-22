@@ -117,7 +117,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
                 mainCollider.enabled = true;
                 microwaveAudioSource.PlayOneShot(microwaveOpenSound);
                 animator.SetBool("isActivated", isOpen);
-                if (scrapSpawned != null) CRUtilities.CreateExplosion(scrapSpawned.transform.position, true, 20, 0, 3, 2, null, null);
+                if (scrapSpawned != null) CRUtilities.CreateExplosion(scrapSpawned.transform.position, true, 20, 0, 3, 2, null, null, 5f);
             }
         }
         else

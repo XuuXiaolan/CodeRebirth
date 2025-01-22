@@ -22,6 +22,7 @@ public class ACUnitGalAI : NetworkBehaviour
     {
         gunTrigger.onInteract.AddListener(ShootPlayer);
         SwitchPoseTrigger.onInteract.AddListener(SwitchPose);
+        gunTransform.localRotation = Quaternion.Euler(280, 180, 180);
     }
 
     private void ShootPlayer(PlayerControllerB playerInteracting)
@@ -45,10 +46,10 @@ public class ACUnitGalAI : NetworkBehaviour
     private IEnumerator ShootAnimationDelay(int playerIndex)
     {
         PlayerControllerB affectedPlayer = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        networkAnimator.SetTrigger(ShootingAnimation);
-        Physics.Raycast(gunTransform.position, gunTransform.forward, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
+        Physics.Raycast(gunTransform.position, gunTransform.forward.normalized, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
         Vector3 endPosition = hit.point;
-        CRUtilities.CreateExplosion(endPosition, true, 50, 0, 1, 5, affectedPlayer, null);
+        CRUtilities.CreateExplosion(endPosition, true, 50, 0, 1, 5, affectedPlayer, null, 10f);
+        networkAnimator.SetTrigger(ShootingAnimation);
         yield break;
     }
 

@@ -5,6 +5,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class Transporter : CodeRebirthEnemyAI
@@ -23,6 +24,7 @@ public class Transporter : CodeRebirthEnemyAI
     private float idleTimer = 20f;
     private Coroutine? onHitRoutine = null;
     private GameObject? transportTarget = null;
+    private Scene previousSceneOfTransportTarget = new();
     private bool droppingObject = false;
     private NavMeshHit currentEndHit = new();
     private bool repositioning = false;
@@ -52,6 +54,18 @@ public class Transporter : CodeRebirthEnemyAI
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+        if (transportTarget != null && currentBehaviourStateIndex == (int)TransporterStates.Repositioning)
+        {
+            var networkObject = transportTarget.GetComponent<NetworkObject>();
+            if (networkObject.IsSpawned)
+            {
+                if (IsServer) networkObject.Despawn();
+            }
+            else
+            {
+                Destroy(transportTarget);
+            }
+        }
         transporters.Remove(this);
     }
 
@@ -206,6 +220,7 @@ public class Transporter : CodeRebirthEnemyAI
             creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
             agent.speed = 0f;
             agent.velocity = Vector3.zero;
+            previousSceneOfTransportTarget = transportTarget.scene;
             transportTarget.transform.SetParent(palletTransform, true);
             SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget), currentEndDestination);
         }
@@ -299,12 +314,13 @@ public class Transporter : CodeRebirthEnemyAI
         Vector3 direction = (playerWhoHit.transform.position - jimothyTransform.position).normalized;
         direction.y = 0f;
 
-        float angleToPlayer = 10 + Vector3.SignedAngle(jimothyTransform.forward, direction, Vector3.up);
+        float angleToPlayer = Vector3.SignedAngle(jimothyTransform.forward, direction, Vector3.up);
 
         float timeToLookAtPlayer = angleToPlayer <= 0
             ? (angleToPlayer * -1) / 360f
             : (360f - angleToPlayer) / 360f;
 
+        // todo: maybe override animation by doing this in late update
         // Plugin.ExtendedLogging($"Looking at player for {timeToLookAtPlayer} seconds");
         creatureAnimator.SetFloat(RotationSpeed, 1f);
         yield return new WaitForSeconds(timeToLookAtPlayer);
@@ -337,7 +353,9 @@ public class Transporter : CodeRebirthEnemyAI
             return;
         }
         creatureVoice.PlayOneShot(dumpHazardSound);
-        transportTarget.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+
+        transportTarget.transform.SetParent(null, true);
+        SceneManager.MoveGameObjectToScene(transportTarget, previousSceneOfTransportTarget);
 
         transportTarget.transform.position = currentEndHit.position;
         transportTarget.transform.up = currentEndHit.normal;

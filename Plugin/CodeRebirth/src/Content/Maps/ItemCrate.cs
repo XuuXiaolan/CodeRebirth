@@ -32,7 +32,6 @@ public class ItemCrate : CRHittable
 	public System.Random crateRandom = new();
 	public static List<Item> ShopItemList = new();
 	public AudioClip creepyWarningSound = null!;
-	private static readonly int doExplodeOpenAnimation = Animator.StringToHash("doExplodeOpen");
 	public enum CrateType
 	{
 		Wooden,
@@ -96,6 +95,7 @@ public class ItemCrate : CRHittable
 
 	private void UpdateDigPosition(float old, float newValue)
 	{
+		if (newValue == 0) originalPosition = transform.position - (transform.up * 0.5f);
 		transform.position = originalPosition + (transform.up * newValue * 0.5f);
 		Plugin.ExtendedLogging($"ItemCrate was hit! New digProgress: {newValue}");
 	}
@@ -235,19 +235,7 @@ public class ItemCrate : CRHittable
 		}
 		else
 		{
-			if (crateRandom.Next(1, 101) <= 10)
-			{
-				CRUtilities.CreateExplosion(this.transform.position, true, 30, 0, 6, 1, null, null);
-				animator.SetTrigger(doExplodeOpenAnimation);
-				if (crateType == CrateType.WoodenMimic)
-				{
-					animator.SetBool("opened", true);
-				}
-			}
-			else
-			{
-				animator.SetBool("opened", true);
-			}
+			animator.SetBool("opened", true);
 		}
 		animator.SetBool("opening", false);
 		if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = true;

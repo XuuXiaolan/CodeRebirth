@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
+using PathfindingLib.Utilities;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -114,7 +114,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         Plugin.ExtendedLogging($"Checking paths for {points.Count()} objects");
         var TList = new List<T>();
         ClearPathfindingOperation();
-        foreach (var (obj, point) in points)
+        foreach (var (obj, point) in points.ToArray())
         {
             bool pathFound;
             while (!TryFindViablePath(point, out pathFound, out _)) yield return null; // Wait for the path to be finished calculating
@@ -232,7 +232,7 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     public bool TryFindViablePath(Vector3 endPosition, out bool foundPath, out EntranceTeleport? entranceTeleport)
     {
-        var findPathThroughTeleportsOperation = ChangePathfindingOperation(() => new FindPathThroughTeleportsOperation(exitPoints, agent.GetPathStartPosition(), endPosition, agent));
+        var findPathThroughTeleportsOperation = ChangePathfindingOperation(() => new FindPathThroughTeleportsOperation(exitPoints, agent.GetPathOrigin(), endPosition, agent));
         return findPathThroughTeleportsOperation.TryGetShortestPath(out foundPath, out entranceTeleport);
     }
 
@@ -248,7 +248,7 @@ public class SmartAgentNavigator : NetworkBehaviour
                 bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(actualEndPosition, elevatorScript.elevatorInsidePoint.position) < 7f;
                 if (!usingElevator && !playerIsInElevator)
                 {
-                    // DetermineIfNeedToDisableAgent(actualEndPosition);
+                    DetermineIfNeedToDisableAgent(actualEndPosition);
                 }
 
                 // fallback?
@@ -431,17 +431,6 @@ public class SmartAgentNavigator : NetworkBehaviour
         // If no valid point is found after multiple attempts, return zero vector
         Plugin.Logger.LogWarning("Unable to find valid point on NavMesh by warping forward.");
         return Vector3.zero;
-    }
-
-    /// <summary>
-    /// Sets a destination and adjusts the agent's speed based on the distance to the target.
-    /// The farther the distance, the faster the agent moves.
-    /// </summary>
-    /// <param name="destination">The target destination.</param>
-    public void SetDestinationWithSpeedAdjustment(Vector3 destination)
-    {
-        agent.SetDestination(destination);
-        AdjustSpeedBasedOnDistance(agent.remainingDistance);
     }
 
     /// <summary>

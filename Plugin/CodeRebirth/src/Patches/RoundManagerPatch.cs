@@ -512,7 +512,7 @@ static class RoundManagerPatch {
 			{
 				GameObject crate;
 
-				if (random.Next(0, 100) < 20 && Plugin.ModConfig.ConfigSuspiciousActivityEnabled.Value)
+				if (random.Next(0, 100) < 100 && Plugin.ModConfig.ConfigSuspiciousActivityEnabled.Value)
 				{
 					crate = MapObjectHandler.Instance.Crate.MimicMetalCratePrefab;
 				}
@@ -585,12 +585,16 @@ static class RoundManagerPatch {
 	{
 		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>())
 		{
-			crate.NetworkObject.Despawn();
+			if (crate.NetworkObject.IsSpawned) crate.NetworkObject.Despawn();
+			else GameObject.Destroy(crate.gameObject);
 		}
 
-		foreach (BiomeManager biome in GameObject.FindObjectsOfType<BiomeManager>())
+		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
 		{
-			biome.NetworkObject.Despawn();
+			foreach (BiomeManager biome in GameObject.FindObjectsOfType<BiomeManager>())
+			{
+				biome.NetworkObject.Despawn();
+			}
 		}
 
 		foreach (GalAI gal in GalAI.Instances)

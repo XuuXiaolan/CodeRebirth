@@ -40,12 +40,9 @@ public class LaserTurret : CodeRebirthHazard
         originalDarkBeamScaleY = visualEffect.GetVector3(DarkBeamScale).y;
         originalElectricBeamScaleY = visualEffect.GetVector3(ElectricBeamScale).y;
         originalBeamCoreScaleY = visualEffect.GetVector3(BeamCoreScale).y;
-
-        if (!IsServer) return;
-        ValidateSpawnPosition();
     }
 
-    private void Update()
+    public void FixedUpdate()
     {
         UpdateAudio();
         // Rotate the turret
@@ -146,31 +143,5 @@ public class LaserTurret : CodeRebirthHazard
     private void SpawnAshParticle(Vector3 position)
     {
         Instantiate(ashParticle, position, Quaternion.identity).Play();
-    }
-
-    private void ValidateSpawnPosition()
-    {
-        Vector3 averagePosition = Vector3.zero;
-        int validRaycastCount = 0;
-        int raycastCount = 16;
-        for (int i = 0; i < raycastCount; i++)
-        {
-            float angle = i * (360 / raycastCount);
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * Vector3.forward;
-            if (Physics.Raycast(turretTransform.position, direction, out RaycastHit hit, laserRange))
-            {
-                averagePosition += hit.point;
-                validRaycastCount++;
-            }
-        }
-
-        if (validRaycastCount > 0)
-        {
-            averagePosition /= validRaycastCount;
-            averagePosition.y = this.transform.position.y; // Keep the original height
-            this.transform.position = Vector3.Lerp(this.transform.position, averagePosition, 0.8f);
-            NavMesh.SamplePosition(this.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas);
-            this.transform.position = hit.position;
-        }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class MeteorShower : CodeRebirthWeathers
@@ -34,13 +35,13 @@ public class MeteorShower : CodeRebirthWeathers
 	}
 	private Direction direction = Direction.Random;
 	private float normalisedTimeToLeave = 1f;
-	private readonly List<Meteors> meteors = new();
-	private readonly List<CraterController> craters = new();
+	[HideInInspector] public static List<Meteors> meteors = new();
+	[HideInInspector] public static List<CraterController> craters = new();
 
 	[HideInInspector] public System.Random random = new();
 	
 	private void OnEnable()
-	{ // init weather
+	{
 		Plugin.ExtendedLogging("Initing Meteor Shower Weather on " + RoundManager.Instance.currentLevel.name);
 		alreadyUsedNodes = new();
 		normalisedTimeToLeave = Plugin.ModConfig.ConfigMeteorShowerTimeToLeave.Value;
@@ -72,8 +73,34 @@ public class MeteorShower : CodeRebirthWeathers
 		Plugin.ExtendedLogging("Cleaning up Weather.");
 		ChangeCurrentLevelMaximumPower(outsidePower: 3, insidePower: -6, dayTimePower: 3);
 
+		ClearCraters();
+		ClearMeteors();
+		if (!IsAuthority()) return;
+
 		if (spawnHandler != null) StopCoroutine(spawnHandler);
+		spawnHandler = null;
 	}
+
+	private void ClearMeteors()
+	{
+		foreach (var meteor in meteors.ToArray())
+		{
+			if (meteor == null) continue;
+			if (meteor.NetworkObject.IsSpawned) meteor.NetworkObject.Despawn();
+			else Destroy(meteor.gameObject);
+		}
+		meteors.Clear();
+	}
+
+	private void ClearCraters()
+	{
+		foreach (var crater in craters.ToArray())
+		{
+			Destroy(crater.gameObject);
+		}
+		craters.Clear();
+	}
+
 	private void Update()
 	{
 		if (spawnHandler != null && TimeOfDay.Instance.timeHasStarted && normalisedTimeToLeave <= TimeOfDay.Instance.normalizedTimeOfDay)

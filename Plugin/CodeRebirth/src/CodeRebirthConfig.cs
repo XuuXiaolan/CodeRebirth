@@ -259,7 +259,7 @@ public class CodeRebirthConfig
                                             "Whether the Janitor is enabled.");
         ConfigJanitorSpawnWeights = configFile.Bind("Janitor Options",
                                             "Janitor | Spawn Weights",
-                                            "Vanilla:10,Custom:10",
+                                            "Experimentation:20,Assurance:20,Vow:10,Offense:20,March:10,Adamance:5,Rend:10,Dine:10,Titan:60,Artifice:80,Embrion:90,Modded:20",
                                             "The spawn weights for the Janitor.");
         ConfigJanitorPowerLevel = configFile.Bind("Janitor Options",
                                             "Janitor | Power Level",
@@ -281,7 +281,7 @@ public class CodeRebirthConfig
                                             "Whether the Manor Lord is enabled.");
         ConfigManorLordSpawnWeights = configFile.Bind("Manor Lord Options",
                                             "Manor Lord | Spawn Weights",
-                                            "Vanilla:10,Custom:10",
+                                            "Experimentation:2,Assurance:5,Vow:5,Offense:10,March:10,Adamance:10,Rend:50,Dine:80,Titan:20,Artifice:60,Embrion:10,Modded:10 ",
                                             "The spawn weights for the Manor Lord.");
         ConfigManorLordPowerLevel = configFile.Bind("Manor Lord Options",
                                             "Manor Lord | Power Level",
@@ -911,7 +911,7 @@ public class CodeRebirthConfig
                                             ));
         ConfigRedwoodSpawnWeights = configFile.Bind("Redwood Options",
                                             "Redwood | Spawn Weights",
-                                            "Modded:50,Vanilla:50",
+                                            "Experimentation:1,Assurance:10,Vow:90,Offense:20,March:90,Adamance:60,Rend:5,Dine:10,Titan:2,Artifice:30,Embrion:10,Modded:50",
                                             "Redwood spawn weights.");
         ConfigRedwoodSpeed = configFile.Bind("Redwood Options",
                                             "Redwood | Speed",

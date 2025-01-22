@@ -367,6 +367,7 @@ If you're interested in helping with the development of the mod, feel free to re
 **Misc/Organisation:**
 
 - Smxrez
+- [MelanieMelicious](https://i.postimg.cc/xd3PhrJ0/grinning-face.png)
 
 **Testing:**
 

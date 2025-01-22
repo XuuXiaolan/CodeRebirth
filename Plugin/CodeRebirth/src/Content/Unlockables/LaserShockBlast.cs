@@ -83,7 +83,7 @@ public class LaserShockBlast : NetworkBehaviour
         if (impactEffect != null)
         {
             impactEffect.transform.position = hitPoint;
-            CRUtilities.CreateExplosion(hitPoint, false, 40, 1, 4, 2, null, null);
+            CRUtilities.CreateExplosion(hitPoint, false, 40, 1, 4, 2, null, null, 5f);
             impactEffect.Play();
             AudioSource.gameObject.transform.position = hitPoint;
             AudioSource.PlayOneShot(ImpactEffectSound);

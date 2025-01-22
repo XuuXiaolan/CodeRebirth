@@ -196,7 +196,7 @@ public class Tornados : CodeRebirthEnemyAI
         float forceStrengthOverall = CalculatePullStrength(bestDistanceOverall, false, player);
         float forceStrength = Mathf.Max(forceStrengthWithLOS, forceStrengthOverall);
         // Plugin.ExtendedLogging($"Force strength: {forceStrength}");
-        player.externalForceAutoFade += targetPosition * forceStrength * Time.fixedDeltaTime / 0.25f; // todo: test this with different fps
+        player.externalForceAutoFade += targetPosition * forceStrength * Time.fixedDeltaTime / 0.5f; // todo: test this with different fps
 
         if (bestDistanceLOS > 4f || !damageTimer) return;
         damageTimer = false;
@@ -268,7 +268,7 @@ public class Tornados : CodeRebirthEnemyAI
         while (true)
         {
             Vector3 strikePosition = GetRandomTargetPosition(tornadoRandom, outsideNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25);
-            CRUtilities.CreateExplosion(strikePosition, true, 20, 0, 4, 1, null, null);
+            CRUtilities.CreateExplosion(strikePosition, true, 20, 0, 4, 1, null, null, 1f);
             LightningStrikeScript.SpawnLightningBolt(strikePosition, tornadoRandom, lightningSource);
             yield return new WaitForSeconds(tornadoRandom.NextFloat(0, 17));
             yield return new WaitForEndOfFrame();

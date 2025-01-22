@@ -1,6 +1,8 @@
 ﻿using GameNetcodeStuff;
+using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -107,7 +109,7 @@ public class CRUtilities
         enemy.SyncPositionToClients();
     }
 
-    public static void CreateExplosion(Vector3 explosionPosition, bool spawnExplosionEffect, int damage, float minDamageRange, float maxDamageRange, int enemyHitForce, PlayerControllerB? attacker, GameObject? overridePrefab)
+    public static void CreateExplosion(Vector3 explosionPosition, bool spawnExplosionEffect, int damage, float minDamageRange, float maxDamageRange, int enemyHitForce, PlayerControllerB? attacker, GameObject? overridePrefab, float pushForce)
     {
         Plugin.ExtendedLogging($"Spawning explosion at pos: {explosionPosition}");
 
@@ -142,7 +144,7 @@ public class CRUtilities
         Collider[] colliders = Physics.OverlapSphere(explosionPosition, maxDamageRange, LayerMask.GetMask("Enemies", "Player", "MapHazard"), QueryTriggerInteraction.Collide);
         Dictionary<PlayerControllerB, int> playerControllerBToDamage = new();
         Dictionary<EnemyAICollisionDetect, int> enemyAICollisionDetectToDamage = new();
-        List<Landmine> landmineList = new();
+        IEnumerable<Landmine> landmineList = [];
         foreach (Collider collider in colliders)
         {
             if (collider.GetComponent<IHittable>() == null) continue;
@@ -168,13 +170,15 @@ public class CRUtilities
             Landmine componentInChildren = collider.gameObject.GetComponentInChildren<Landmine>();
             if (componentInChildren != null && distanceOfObjectFromExplosion < 6f && !landmineList.Contains(componentInChildren))
             {
-                landmineList.Add(componentInChildren);
+                landmineList.AddItem(componentInChildren);
             }
         }
 
         foreach (PlayerControllerB player in playerControllerBToDamage.Keys)
         {
-            player.DamagePlayer(playerControllerBToDamage[player], true, false, CauseOfDeath.Burning, 6, false, player.velocityLastFrame);
+            Vector3 directionFromCenter = (player.transform.position - explosionPosition).normalized;
+            player.DamagePlayer(playerControllerBToDamage[player], true, false, CauseOfDeath.Burning, 6, false, directionFromCenter * pushForce * 5f);
+            player.externalForceAutoFade += directionFromCenter * pushForce;
         }
 
         foreach (EnemyAICollisionDetect enemy in enemyAICollisionDetectToDamage.Keys)

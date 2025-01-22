@@ -38,7 +38,7 @@ public class AirUnitProjectile : NetworkBehaviour
         Collider[] wallInWay = Physics.OverlapSphere(this.transform.position, 2f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Ignore);
         if (!explodedOnTarget && wallInWay.Length != 0 && playerToTarget.playerSteamId != Plugin.GLITCH_STEAM_ID)
         {
-            CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, null, null);
+            CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, null, null, 5f);
             playerHitSoundSource.Play();
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
@@ -75,7 +75,7 @@ public class AirUnitProjectile : NetworkBehaviour
         if (!explodedOnTarget && other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
             Vector3 forceFlung = transform.up * Plugin.ModConfig.ConfigAirControlUnitKnockbackPower.Value;
-            CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, null, null);
+            CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, null, null, 5f);
             player.DamagePlayer((int)damage, true, false, CauseOfDeath.Blast, 0, false, forceFlung);
             playerHitSoundSource.Play();
             if (player == GameNetworkManager.Instance.localPlayerController)
