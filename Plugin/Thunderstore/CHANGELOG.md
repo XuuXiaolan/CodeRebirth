@@ -10,6 +10,9 @@
 - Did some fixing with tesla shock.
 - Redid the tornado visuals entirely.
 - Rewrote a lot of the code for tornados and meteor shower, let me know if anything breaks.
+- Removed a meh performance thingy when you leave a moon for the crates and biomes.
+- Crates opened by terminal gal should be sync'd with everyone.
+- Fixed abuse of puppeteer's on hit animation.
 
 ## v0.12.3
 

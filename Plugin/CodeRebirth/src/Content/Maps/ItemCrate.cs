@@ -150,11 +150,6 @@ public class ItemCrate : CRHittable
 		animator.SetBool("opening", false);
 	}
 
-	public void AllowCrateToBeOpened()
-	{
-		if (pickable != null) pickable.IsLocked = false;
-	}
-
 	[ServerRpc(RequireOwnership = false)]
 	public void OpenCrateServerRpc()
 	{

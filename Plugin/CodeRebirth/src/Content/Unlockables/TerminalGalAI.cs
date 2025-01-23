@@ -231,6 +231,7 @@ public class TerminalGalAI : GalAI
 
     private bool ObjectIsInteractable(GameObject gameObject)
     {
+        Plugin.ExtendedLogging($"Checking if {gameObject.name} is interactable");
         if (gameObject.TryGetComponent(out DoorLock doorlock) && doorlock.isLocked) return true;
         if (gameObject.TryGetComponent(out Pickable pickable) && pickable.IsLocked) return true;
         return false;
@@ -241,15 +242,27 @@ public class TerminalGalAI : GalAI
     {
         Collider[] colliders = new Collider[10];
         Physics.OverlapSphereNonAlloc(transform.position, 7.5f, colliders, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
-        pointsOfInterest.Clear();
-        pointsOfInterest = colliders
-        .Select(collider => collider.gameObject)
-        .Where(gameObject => {
+
+        HashSet<GameObject> pointsOfInterestSet = new HashSet<GameObject>();
+        Plugin.ExtendedLogging($"Found {colliders.Length} interactable objects");
+
+        foreach (var collider in colliders)
+        {
+            if (collider == null) continue;
+            
+            GameObject gameObject = collider.gameObject;
+            
+            if (!ObjectIsInteractable(gameObject)) continue;
+            
             NavMesh.CalculatePath(transform.position, gameObject.transform.position, NavMesh.AllAreas, smartAgentNavigator.agent.path);
-            if (DoCalculatePathDistance(smartAgentNavigator.agent.path) > 20 || !ObjectIsInteractable(gameObject)) return false;
-            else return true;
-        })
-        .OrderBy(it => DoCalculatePathDistance(smartAgentNavigator.agent.path)).ToList();
+            
+            if (DoCalculatePathDistance(smartAgentNavigator.agent.path) <= 20)
+            {
+                pointsOfInterestSet.Add(gameObject);
+            }
+        }
+
+        pointsOfInterest = pointsOfInterestSet.ToList();
         HandleStateAnimationSpeedChanges(State.UnlockingObjects, Emotion.Basis);
     }
 
@@ -441,17 +454,17 @@ public class TerminalGalAI : GalAI
 
     private void DoUnlockingObjects()
     {
-        if (pointsOfInterest.Count <= 0)
+        if (pointsOfInterest.Count() <= 0)
         {
             HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Basis);
             return;
         }
     
         if (unlockingSomething != null) return;
-        smartAgentNavigator.DoPathingToDestination(pointsOfInterest[0].transform.position);
+        smartAgentNavigator.DoPathingToDestination(pointsOfInterest.First().transform.position);
         if (Agent.enabled && Agent.remainingDistance <= Agent.stoppingDistance)
         {
-            unlockingSomething = StartCoroutine(DoUnlockingObjectsRoutine(pointsOfInterest[0]));
+            unlockingSomething = StartCoroutine(DoUnlockingObjectsRoutine(pointsOfInterest.First()));
         }
     }
 

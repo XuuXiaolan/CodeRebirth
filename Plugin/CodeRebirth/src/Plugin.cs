@@ -14,14 +14,6 @@ using CodeRebirth.src.Util;
 using Unity.Netcode;
 
 namespace CodeRebirth.src;
-public enum Logging_Level
-{
-    None = 0,
-    Low = 1,
-    Medium = 2,
-    High = 3,
-    Highest = 4,
-}
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]

@@ -583,7 +583,7 @@ static class RoundManagerPatch {
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	private static void PatchFix_DespawnOldCrates()
 	{
-		foreach (ItemCrate crate in GameObject.FindObjectsOfType<ItemCrate>())
+		foreach (ItemCrate crate in ItemCrate.Instances.ToArray())
 		{
 			if (crate.NetworkObject.IsSpawned) crate.NetworkObject.Despawn();
 			else GameObject.Destroy(crate.gameObject);

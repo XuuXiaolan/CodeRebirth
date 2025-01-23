@@ -5,22 +5,18 @@ using UnityEngine.Events;
 namespace CodeRebirth.src.Content.Items;
 
 [RequireComponent(typeof(InteractTrigger))]
-public class Pickable : MonoBehaviour
+public class Pickable : NetworkBehaviour
 {
 	[SerializeField]
 	private AudioSource? unlockSFX = null;
 	
 	[SerializeField]
-	private UnityEvent onUnlock = null!;
+	private UnityEvent? onUnlock = null;
 
 	public bool IsLocked { get; set; } = true;
 
-	public InteractTrigger trigger = null!;
-
 	public void Unlock()
 	{
-		if (!IsLocked) return;
-
         UnlockStuffServerRpc();
 	}
 
@@ -33,11 +29,17 @@ public class Pickable : MonoBehaviour
 	[ClientRpc]
 	public void UnlockStuffClientRpc()
 	{
+		UnlockStuffLocally();
+	}
+
+	public void UnlockStuffLocally()
+	{
 		if (!IsLocked) return;
 
+		Plugin.ExtendedLogging($"Unlocking {this}");
 		unlockSFX?.Play();
         
-		onUnlock.Invoke();
+		onUnlock?.Invoke();
 		IsLocked = false;
 	}
 }

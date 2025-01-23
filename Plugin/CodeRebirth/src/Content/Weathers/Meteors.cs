@@ -153,6 +153,7 @@ public class Meteors : NetworkBehaviour
 
         if (!IsServer) yield break;
         yield return new WaitForSeconds(10f);
+        if (!NetworkObject.IsSpawned) yield break;
         MeteorShower.meteors.Remove(this);
         NetworkObject.Despawn();
     }
