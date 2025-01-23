@@ -175,7 +175,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
                 Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}");
-                if (player == null || !player.isPlayerDead || player.deadBody == null) continue;
+                if (player == null || !player.isPlayerDead || player.deadBody == null || !player.deadBody.gameObject.activeSelf || reviveChargeCount.Value <= 0) continue;
                 float distanceFromGal = Vector3.Distance(transform.position, player.deadBody.transform.position);
                 Plugin.ExtendedLogging($"Distance from gal: {distanceFromGal}");
                 if (distanceFromGal > 5) continue;

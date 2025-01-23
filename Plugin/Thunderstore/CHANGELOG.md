@@ -14,6 +14,7 @@
 - Crates opened by terminal gal should be sync'd with everyone.
 - Fixed abuse of puppeteer's on hit animation.
 - Probably fixed laser turret desync, let me know if i have not.
+- Fixed bug with SCP 999 gal reviving body-less dead bodies and reviving more people than it should be able to via group revives.
 
 ## v0.12.3
 
