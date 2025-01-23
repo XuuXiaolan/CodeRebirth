@@ -13,6 +13,7 @@
 - Removed a meh performance thingy when you leave a moon for the crates and biomes.
 - Crates opened by terminal gal should be sync'd with everyone.
 - Fixed abuse of puppeteer's on hit animation.
+- Probably fixed laser turret desync, let me know if i have not.
 
 ## v0.12.3
 
