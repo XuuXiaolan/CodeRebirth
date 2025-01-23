@@ -4,7 +4,7 @@
 - Extra fix for dropping stuff infront of janitor while he's grabbing an item.
 - Added second member of cleanup crew, jimothy the transporter.
 - Added cleaning drone gal.
-- Improved pathfinding completely in all CodeRebirth entities, this makes them able to fluidly use all fire exits, entrances, anything they need to reach you no matter where you are, should preform better than usual too.
+- Improved pathfinding completely in all CodeRebirth entities, this makes them able to fluidly use all fire exits, entrances, anything they need to reach you no matter where you are, should preform better than usual too (added a dependency to help since it'd be too much to include it into coderebirth itself).
 - Hazards despawn if they spawn on top of doors.
 - New weight defaults for manor lord, redwood titan and janitor.
 - Did some fixing with tesla shock.
