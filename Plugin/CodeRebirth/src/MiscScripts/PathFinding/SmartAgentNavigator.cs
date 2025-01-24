@@ -289,6 +289,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             return;
         }
     }
+
     private void DoPathingThroughEntrance(EntranceTeleport viableEntrance)
     {
         Vector3 destination = viableEntrance.entrancePoint.position;

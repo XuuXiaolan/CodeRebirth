@@ -52,16 +52,18 @@ public class FindPathThroughTeleportsOperation : PathfindingOperation
         FindDestinationJobs = new PooledFindPathJob[entranceTeleports.Length];
         for (int i = 0; i < entranceTeleports.Length; i++)
         {
-            if (entranceTeleports[i] == null) continue;
+            var currentEntranceTeleport = entranceTeleports[i];
+            if (currentEntranceTeleport == null) continue;
+            if (currentEntranceTeleport.exitPoint == null || currentEntranceTeleport.entrancePoint == null) continue;
             PooledFindPathJob findEntrancePointJob = JobPools.GetFindPathJob();
             PooledFindPathJob findDestinationJob = JobPools.GetFindPathJob();
-            findEntrancePointJob.Job.Initialize(startPos, entranceTeleports[i].entrancePoint.position, agent);
-            findDestinationJob.Job.Initialize(entranceTeleports[i].exitPoint.position, endPos, agent);
+            findEntrancePointJob.Job.Initialize(startPos, currentEntranceTeleport.entrancePoint.position, agent);
+            findDestinationJob.Job.Initialize(currentEntranceTeleport.exitPoint.position, endPos, agent);
             previousJob = findEntrancePointJob.Job.ScheduleByRef(previousJob);
             previousJob = findDestinationJob.Job.ScheduleByRef(previousJob);
             FindEntrancePointJobs[i] = findEntrancePointJob;
             FindDestinationJobs[i] = findDestinationJob;
-            // Plugin.ExtendedLogging($"Started job {startPos} -> {entranceTeleports[i].entrancePoint.position}, {entranceTeleports[i].exitPoint.position} -> {endPos}");
+            // Plugin.ExtendedLogging($"Started job {startPos} -> {currentEntranceTeleport.entrancePoint.position}, {currentEntranceTeleport.exitPoint.position} -> {endPos}");
         }
     }
 
@@ -90,6 +92,7 @@ public class FindPathThroughTeleportsOperation : PathfindingOperation
         for (int i = 0; i < FindEntrancePointJobs.Length; i++)
         {
             if (entranceTeleports[i] == null) continue;
+            if (FindEntrancePointJobs[i] == null || FindDestinationJobs[i] == null) continue;
             var statusOfEntranceJob = FindEntrancePointJobs[i].Job.GetStatus().GetResult();
             var statusOfDestinationJob = FindDestinationJobs[i].Job.GetStatus().GetResult();
             // Plugin.ExtendedLogging($"Entrance job status: {statusOfEntranceJob} and destination job status: {statusOfDestinationJob}");
