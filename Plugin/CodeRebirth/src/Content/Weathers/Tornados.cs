@@ -124,10 +124,10 @@ public class Tornados : CodeRebirthEnemyAI
     {
         StartOfRound.Instance.allPlayerScripts[PlayerID].SetFlingingAway(true);
         StartOfRound.Instance.allPlayerScripts[PlayerID].SetFlung(true);
-        StartCoroutine(AutoReEnableKinematicsAfter10Seconds(StartOfRound.Instance.allPlayerScripts[PlayerID]));
+        StartCoroutine(StopFlingingPlayer(StartOfRound.Instance.allPlayerScripts[PlayerID]));
     }
 
-    public IEnumerator AutoReEnableKinematicsAfter10Seconds(PlayerControllerB player)
+    public IEnumerator StopFlingingPlayer(PlayerControllerB player)
     {
         yield return new WaitForSeconds(10f);
         player.SetFlingingAway(false);
@@ -137,7 +137,6 @@ public class Tornados : CodeRebirthEnemyAI
     {
         base.Update();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
-        HandleLocalPlayerInsideTornado(GameNetworkManager.Instance.localPlayerController);
     }
 
     private void HandleLocalPlayerInsideTornado(PlayerControllerB localPlayer)
@@ -146,11 +145,11 @@ public class Tornados : CodeRebirthEnemyAI
         float distanceOfLocalPlayerToTornado = Vector3.Distance(localPlayer.transform.position, eye.transform.position);
         if (TornadoConditionsAreMet(localPlayer) && distanceOfLocalPlayerToTornado <= 10f)
         {
-            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.deltaTime, 0, 49f);
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.fixedDeltaTime, 0, Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value+20f);
         }
-        else if (distanceOfLocalPlayerToTornado > 10f)
+        else
         {
-            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.deltaTime, 0, 49f);
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.fixedDeltaTime, 0, Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value+20f);
         }
 
         if (timeSinceBeingInsideTornado >= Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value)
@@ -167,6 +166,7 @@ public class Tornados : CodeRebirthEnemyAI
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
         if (localPlayer == null || localPlayer.isPlayerDead || !localPlayer.isPlayerControlled) return;
 
+        HandleLocalPlayerInsideTornado(localPlayer);
         HandleTornadoDamageAndPulling(localPlayer);
         HandleStatusEffects(localPlayer);
         if (!localPlayer.IsFlingingAway()) return;
@@ -315,9 +315,10 @@ public class Tornados : CodeRebirthEnemyAI
                 localPlayerController.DamagePlayer(tornadoRandom.Next(-5, 6));
                 break;
             case TornadoType.Windy:
+                localPlayerController.DamagePlayer(-2);
                 break;
             case TornadoType.Smoke:
-            localPlayerController.DamagePlayer(2);
+                localPlayerController.DamagePlayer(2);
                 // make the player screen a smokey mess.
                 break;
             case TornadoType.Water:

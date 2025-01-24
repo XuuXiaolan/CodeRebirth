@@ -2,37 +2,45 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
-
+/*
 namespace CodeRebirth.src.Content.Unlockables;
 public class CruiserGalAI : GalAI
 {
     public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
     public Renderer FaceRenderer = null!;
+    public InteractTrigger ChestCollisionToggleTrigger = null!;
+    public InteractTrigger RadioTrigger = null!;
+    public InteractTrigger UppiesTrigger = null!;
+    public InteractTrigger LeverDeliverPlayerTrigger = null!;
     public List<InteractTrigger> GiveItemTrigger = new();
-    public List<Transform> itemsHeldTransforms = new();
+    public List<Transform> ItemsHeldTransforms = new();
     public AudioSource FlySource = null!;
     public AudioClip[] TakeDropItemSounds = [];
+    public AudioClip ChestCollisionToggleSound = null!;
 
+    private bool carryingPlayer = false;
+    private PlayerControllerB? carriedPlayer = null;
     private List<GrabbableObject> itemsHeldList = new();
     private bool flying = false;
     private int maxItemsToHold = 99;
     private State galState = State.Inactive;
-    private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem");
-    private readonly static int danceAnimation = Animator.StringToHash("dancing");
-    private readonly static int activatedAnimation = Animator.StringToHash("activated");
-    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed");
+    private Coroutine? chestCollisionToggleCoroutine = null;
+    private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // Bool
+    private readonly static int danceAnimation = Animator.StringToHash("dancing"); // Bool
+    private readonly static int activatedAnimation = Animator.StringToHash("activated"); // Bool
+    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private readonly static int flyAnimation = Animator.StringToHash("flying"); // Bool
+    private readonly static int chestCollisionToggleAnimation = Animator.StringToHash("triggerBumperChest"); // Trigger
 
     public enum State
     {
         Inactive = 0,
         Active = 1,
         FollowingPlayer = 2,
-        DeliveringItems = 3,
+        DeliveringPlayer = 3,
         Dancing = 4,
     }
 
@@ -64,6 +72,7 @@ public class CruiserGalAI : GalAI
         CruiserCharger CruiserCharger = CruiserChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
         CruiserCharger.GalAI = this;
         GalCharger = CruiserCharger;
+        ChestCollisionToggleTrigger.onInteract.AddListener(OnChestCollisionToggleInteract);
         // Automatic activation if configured
         if (Plugin.ModConfig.ConfigCruiserBotAutomatic.Value)
         {
@@ -99,6 +108,32 @@ public class CruiserGalAI : GalAI
         ResetToChargerStation(State.Inactive);
     }
 
+    private void OnChestCollisionToggleInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (chestCollisionToggleCoroutine == null) StartCollisionAnimationServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartCollisionAnimationServerRpc() // todo: do timing stuff with animation here
+    {
+        NetworkAnimator.SetTrigger(chestCollisionToggleAnimation);
+        StartCollisionAnimationClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartCollisionAnimationClientRpc()
+    {
+        StartCoroutine(StartCollisionAnimation());
+    }
+
+    private IEnumerator StartCollisionAnimation()
+    {
+        GalVoice.PlayOneShot(ChestCollisionToggleSound);
+        EnablePhysics(!physicsEnabled);
+        yield break;
+    }
+
     [ServerRpc(RequireOwnership = false)]
     private void DropAllHeldItemsServerRpc()
     {
@@ -123,12 +158,12 @@ public class CruiserGalAI : GalAI
 
     private void InteractTriggersUpdate()
     {
-        bool interactable = !inActive && (ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer);
+        bool interactable = !inActive && ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
         bool idleInteractable = interactable;
 
         foreach (InteractTrigger trigger in GiveItemTrigger)
         {
-            trigger.interactable = idleInteractable && ownerPlayer.currentlyHeldObjectServer != null && galState != State.DeliveringItems;
+            trigger.interactable = idleInteractable && ownerPlayer != null && ownerPlayer.currentlyHeldObjectServer != null && galState != State.DeliveringPlayer;
         }
     }
 
@@ -177,7 +212,7 @@ public class CruiserGalAI : GalAI
 
     private float GetCurrentSpeedMultiplier()
     {
-        float speedMultiplier = (galState == State.FollowingPlayer) ? 2f : 1f;
+        float speedMultiplier = (galState == State.FollowingPlayer ? 2f : 1f);
 
         return speedMultiplier;
     }
@@ -201,14 +236,11 @@ public class CruiserGalAI : GalAI
             case State.FollowingPlayer:
                 DoFollowingPlayer();
                 break;
-            case State.DeliveringItems:
-                DoDeliveringItems();
+            case State.DeliveringPlayer:
+                DoDeliveringPlayer();
                 break;
             case State.Dancing:
                 DoDancing();
-                break;
-            case State.AttackMode:
-                DoAttackMode();
                 break;
         }
     }
@@ -216,7 +248,7 @@ public class CruiserGalAI : GalAI
     public override void OnEnableOrDisableAgent(bool agentEnabled)
     {
         base.OnEnableOrDisableAgent(agentEnabled);
-        Animator.SetBool(, !agentEnabled);
+        Animator.SetBool(flyAnimation, !agentEnabled);
     }
 
     private void DoActive()
@@ -247,35 +279,31 @@ public class CruiserGalAI : GalAI
 
         DoStaringAtOwner(ownerPlayer);
 
-        if (itemsHeldList.Count >= maxItemsToHold)
-        { // change this to a trigger
-            HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye);
-            return;
-        }
-
         if (boomboxPlaying)
         {
-            HandleStateAnimationSpeedChanges(State.Dancing, Emotion.Happy);
+            HandleStateAnimationSpeedChanges(State.Dancing);
             StartCoroutine(StopDancingDelay());
             return;
         }
     }
 
-    private void DoDeliveringItems()
+    private void DoDeliveringPlayer()
     {
-        if (itemsHeldList.Count == 0)
+        if (!carryingPlayer) // Trigger an animation to set all this stuff.
         {
-            if (ownerPlayer != null)
+            if (ownerPlayer == null)
             {
-                HandleStateAnimationSpeedChangesServerRpc((int)State.FollowingPlayer, (int)Emotion.OpenEye);
+                HandleStateAnimationSpeedChangesServerRpc((int)State.FollowingPlayer);
             }
-            else
+            else if (carriedPlayer == ownerPlayer)
             {
-                GalCharger.ActivateGirlServerRpc(-1);
+                carryingPlayer = true;
             }
+            return;
         }
 
-        smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position);
+        Vector3 destination = RoundManager.FindMainEntrancePosition(true, smartAgentNavigator.isOutside);
+        smartAgentNavigator.DoPathingToDestination(destination);
         if (Vector3.Distance(this.transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance)
         {
             if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
@@ -287,11 +315,6 @@ public class CruiserGalAI : GalAI
 
     private void DoDancing()
     {
-        if (itemsHeldList.Count >= maxItemsToHold)
-        {
-            HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringItems, (int)Emotion.OpenEye);
-            return;
-        }
     }
 
     private IEnumerator StopDancingDelay()
@@ -327,7 +350,6 @@ public class CruiserGalAI : GalAI
     private void SetFlying(bool flying)
     {
         this.flying = flying;
-        backFlipping = flying;
         if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
         else FlySource.volume = 0f;
     }
@@ -344,25 +366,24 @@ public class CruiserGalAI : GalAI
         switch (state)
         {
             case State.Inactive:
-                SetAnimatorBools(holding: false, attack: false, dance: false, activated: false);
+                SetAnimatorBools(holding: false, dance: false, activated: false);
                 break;
             case State.Active:
             case State.FollowingPlayer:
-                SetAnimatorBools(holding: false, attack: false, dance: false, activated: true);
+                SetAnimatorBools(holding: false, dance: false, activated: true);
                 break;
-            case State.DeliveringItems:
-                SetAnimatorBools(holding: true, attack: false, dance: false, activated: true);
+            case State.DeliveringPlayer:
+                SetAnimatorBools(holding: true, dance: false, activated: true);
                 break;
             case State.Dancing:
-                SetAnimatorBools(holding: false, attack: false, dance: true, activated: true);
+                SetAnimatorBools(holding: false, dance: true, activated: true);
                 break;
         }
     }
 
-    private void SetAnimatorBools(bool holding, bool attack, bool dance, bool activated)
+    private void SetAnimatorBools(bool holding, bool dance, bool activated)
     {
         Animator.SetBool(holdingItemAnimation, holding);
-        Animator.SetBool(attackModeAnimation, attack);
         Animator.SetBool(danceAnimation, dance);
         Animator.SetBool(activatedAnimation, activated);
     }
@@ -386,11 +407,21 @@ public class CruiserGalAI : GalAI
         {
             switch (stateToSwitchTo)
             {
-                State.Inactive => HandleStateInactiveChange(),
-                State.Active => HandleStateActiveChange(),
-                State.FollowingPlayer => HandleStateFollowingPlayerChange(),
-                State.DeliveringItems => HandleStateDeliveringItemsChange(),
-                State.Dancing => HandleStateDancingChange(),
+                case State.Inactive:
+                    HandleStateInactiveChange();
+                    break;
+                case State.Active: 
+                    HandleStateActiveChange();
+                    break;
+                case State.FollowingPlayer: 
+                    HandleStateFollowingPlayerChange();
+                    break;
+                case State.DeliveringPlayer: 
+                    HandleStateDeliveringPlayerChange();
+                    break;
+                case State.Dancing: 
+                    HandleStateDancingChange();
+                    break;
             };
             galState = stateToSwitchTo;
         }
@@ -415,7 +446,7 @@ public class CruiserGalAI : GalAI
         GalVoice.PlayOneShot(GreetOwnerSound);
     }
 
-    private void HandleStateDeliveringItemsChange()
+    private void HandleStateDeliveringPlayerChange()
     {
     }
 
@@ -441,7 +472,7 @@ public class CruiserGalAI : GalAI
     private void GrabItemOwnerHoldingClientRpc(int indexOfOwner)
     {
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[indexOfOwner];
-        StartCoroutine(HandleGrabbingItem(player.currentlyHeldObjectServer, itemsHeldTransforms[itemsHeldList.Count]));
+        StartCoroutine(HandleGrabbingItem(player.currentlyHeldObjectServer, ItemsHeldTransforms[itemsHeldList.Count]));
     }
 
     private IEnumerator HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
@@ -462,18 +493,18 @@ public class CruiserGalAI : GalAI
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void HandleDroppingItemServerRpc(int itemIndex, Vector3 dropPosition)
+    private void HandleDroppingItemServerRpc(int itemIndex)
     {
-        HandleDroppingItemClientRpc(itemIndex, dropPosition);
+        HandleDroppingItemClientRpc(itemIndex);
     }
 
     [ClientRpc]
-    private void HandleDroppingItemClientRpc(int itemIndex, Vector3 dropPosition)
+    private void HandleDroppingItemClientRpc(int itemIndex)
     {
-        HandleDroppingItem(itemsHeldList[itemIndex], dropPosition);
+        HandleDroppingItem(itemsHeldList[itemIndex]);
     }
 
-    private void HandleDroppingItem(GrabbableObject? item, Vector3 dropPosition)
+    private void HandleDroppingItem(GrabbableObject? item)
     {
         if (item == null)
         {
@@ -527,7 +558,7 @@ public class CruiserGalAI : GalAI
         for (int i = 0; i < itemsHeldList.Count; i++)
         {
             itemsHeldList[i].isInFactory = setOutside;
-            itemsHeldList[i].transform.position = itemsHeldTransforms[i].position;
+            itemsHeldList[i].transform.position = ItemsHeldTransforms[i].position;
             StartCoroutine(SetItemPhysics(itemsHeldList[i]));
         }
     }
@@ -537,4 +568,4 @@ public class CruiserGalAI : GalAI
         yield return new WaitForSeconds(0.1f);
         grabbableObject.EnablePhysics(false);
     }
-}
+}*/

@@ -181,10 +181,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             RegisterInsideMapObjectWithConfig(Janitor.TrashCanPrefab, "Vanilla - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00 | Custom - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00");
         }
 
-        if (true)
+        if (Plugin.ModConfig.ConfigTransporterEnabled.Value)
         {
             Transporter = new TransporterAssets("transporterassets");
-            RegisterEnemyWithConfig("", Transporter.TransporterEnemyType, null, null, 2, 1);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigTransporterSpawnWeights.Value, Transporter.TransporterEnemyType, null, null, Plugin.ModConfig.ConfigTransporterPowerLevel.Value, Plugin.ModConfig.ConfigTransporterMaxSpawnCount.Value);
         }
     }
 }

@@ -23,6 +23,7 @@ public static class SpikeTrapPatch
     {
         orig(self);
         var parent = self.gameObject.transform.parent;
+        self.NetworkObject.gameObject.layer = 21;
         parent.transform.Find("BaseSupport").gameObject.layer = 21;
         parent.transform.Find("SpikeRoof").gameObject.layer = 21;
         parent.transform.Find("SpikeRoof").Find("MovingBar").gameObject.layer = 21;

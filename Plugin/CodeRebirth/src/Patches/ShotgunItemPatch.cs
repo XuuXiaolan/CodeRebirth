@@ -13,6 +13,7 @@ public static class ShotgunItemPatch
     private static void ShotgunItem_ShootGun(On.ShotgunItem.orig_ShootGun orig, ShotgunItem self, Vector3 shotgunPosition, Vector3 shotgunForward)
     {
         orig(self, shotgunPosition, shotgunForward);
+        if (self.enemyColliders == null || self.enemyColliders.Length == 0) return;
         foreach (RaycastHit raycastHit in self.enemyColliders.ToArray())
         {
             if (raycastHit.transform == null) continue;

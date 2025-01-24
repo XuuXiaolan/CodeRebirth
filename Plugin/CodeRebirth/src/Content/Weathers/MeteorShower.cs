@@ -86,7 +86,10 @@ public class MeteorShower : CodeRebirthWeathers
 		foreach (var meteor in meteors.ToArray())
 		{
 			if (meteor == null) continue;
-			if (meteor.NetworkObject.IsSpawned) meteor.NetworkObject.Despawn();
+			if (meteor.NetworkObject.IsSpawned)
+			{
+				if (IsAuthority()) meteor.NetworkObject.Despawn();
+			}
 			else Destroy(meteor.gameObject);
 		}
 		meteors.Clear();
@@ -110,7 +113,7 @@ public class MeteorShower : CodeRebirthWeathers
 		}
 	}
 
-	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null)
+	private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null) // todo: make em rotate
 	{
         Vector3 averageLocation = CalculateAverageLandNodePosition(nodes);
         Vector3 centralLocation = averageLocation + new Vector3(0, random.NextFloat(150, 200), 0);

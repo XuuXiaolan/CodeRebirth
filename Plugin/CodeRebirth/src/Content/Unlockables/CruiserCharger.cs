@@ -1,5 +1,5 @@
 using Unity.Netcode;
-
+/*
 namespace CodeRebirth.src.Content.Unlockables;
 public class CruiserCharger : Charger
 {
@@ -13,4 +13,4 @@ public class CruiserCharger : Charger
         GalAI.GalCharger = this;
         netObj.Spawn();
     }
-}
+}*/

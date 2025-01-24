@@ -1,8 +1,8 @@
 # v0.13.0
 
+- Added second member of cleanup crew, jimothy the transporter.
 - Damage fix for janitor when you hit him.
 - Extra fix for dropping stuff infront of janitor while he's grabbing an item.
-- Added second member of cleanup crew, jimothy the transporter.
 - Added cleaning drone gal.
 - Improved pathfinding completely in all CodeRebirth entities, this makes them able to fluidly use all fire exits, entrances, anything they need to reach you no matter where you are, should preform better than usual too (added a dependency to help since it'd be too much to include it into coderebirth itself).
 - Hazards despawn if they spawn on top of doors.
@@ -15,6 +15,9 @@
 - Fixed abuse of puppeteer's on hit animation.
 - Probably fixed laser turret desync, let me know if i have not.
 - Fixed bug with SCP 999 gal reviving body-less dead bodies and reviving more people than it should be able to via group revives.
+- Fixed global duck song not playing.
+- Can now store all the furniture like the gals etc.
+- Changed layer of spike trap to be the maphazards layer (thanks zeekerss).
 
 ## v0.12.3
 

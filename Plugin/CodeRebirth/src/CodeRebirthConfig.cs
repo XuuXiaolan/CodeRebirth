@@ -10,6 +10,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigJanitorEnabled { get; private set; }
     public ConfigEntry<bool> ConfigManorLordEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigTransporterEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortAddonsEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapGalEnabled { get; private set; }
@@ -91,6 +92,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigZortRecorderSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigZortAccordionSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigManorLordSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigTransporterSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigJanitorSpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
@@ -114,7 +116,6 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorShowerTimeToLeave { get; private set; }
     public ConfigEntry<float> ConfigTornadoInsideBeforeThrow { get; private set; }
     public ConfigEntry<float> ConfigTornadoPullStrength { get; private set; }
-    public ConfigEntry<bool> ConfigTornadoYeetSFX { get; private set; }
     public ConfigEntry<string> ConfigTornadoCanFlyYouAwayWeatherTypes { get; private set; }
     public ConfigEntry<float> ConfigTornadoSpeed { get; private set; }
     public ConfigEntry<float> ConfigMeteorSpeed { get; private set; }
@@ -202,6 +203,8 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigACUnitGalCost { get; private set; }
     public ConfigEntry<int> ConfigManorLordPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigManorLordMaxSpawnCount { get; private set; }
+    public ConfigEntry<int> ConfigTransporterPowerLevel { get; private set; }
+    public ConfigEntry<int> ConfigTransporterMaxSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigJanitorPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigJanitorMaxSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigCleanerDroneGalCost { get; private set; }
@@ -241,6 +244,22 @@ public class CodeRebirthConfig
                                             "Whether zeekerss' horrible interior fog is removed.");
         #endregion
         #region Transporter
+        ConfigTransporterEnabled = configFile.Bind("Transporter Options",
+                                            "Transporter | Enabled",
+                                            true,
+                                            "Whether the Transporter is enabled.");
+        ConfigTransporterSpawnWeights = configFile.Bind("Transporter Options",
+                                            "Transporter | Spawn Weights",
+                                            "Vanilla:20,Custom:20 ",
+                                            "The spawn weights for the Transporter.");
+        ConfigTransporterPowerLevel = configFile.Bind("Transporter Options",
+                                            "Transporter | Power Level",
+                                            2,
+                                            "The power level of the Transporter.");
+        ConfigTransporterMaxSpawnCount = configFile.Bind("Transporter Options",
+                                            "Transporter | Max Spawn Count",
+                                            1,
+                                            "The max spawn count of the Transporter.");
         #endregion
         #region Cleaner Drone Gal
         ConfigCleanerDroneGalEnabled = configFile.Bind("Cleaner Drone Gal Options",
@@ -813,10 +832,6 @@ public class CodeRebirthConfig
                                                 "Volume of tornados in the ship.",
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
-        ConfigTornadoYeetSFX = configFile.Bind("Tornado Options",
-                                            "Tornados | Yeet SFX",
-                                            false,
-                                            "Tornado Yeet SFX");
         #endregion
         #region Weapons
         ConfigCanBreakTrees = configFile.Bind("Weapon Options",

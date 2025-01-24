@@ -59,7 +59,7 @@ If you're interested in helping with the development of the mod, feel free to re
 </details>
 
 <details>
-  <summary><string>Inside Enemies</string></summary>
+  <summary><strong>Inside Enemies</strong></summary>
 
 ### Duck Song
 

@@ -194,11 +194,10 @@ public class Transporter : CodeRebirthEnemyAI
             List<(GameObject obj, Vector3 position)> candidateObjects = new();
 
             // Loop 20 times, pick random nodes, add them to the list
-            IEnumerable<GameObject> allNodes = RoundManager.Instance.outsideAINodes
-                .Concat(RoundManager.Instance.insideAINodes);
+            List<GameObject> allNodes = [.. RoundManager.Instance.outsideAINodes, .. RoundManager.Instance.insideAINodes];
 
             candidateObjects = allNodes
-                .Select(kv => (kv, kv.transform.position))    
+                .Select(kv => (kv, kv.transform.position))
                 .ToList();
             smartAgentNavigator.CheckPaths(candidateObjects, CheckIfCanReposition);
         }
@@ -273,7 +272,7 @@ public class Transporter : CodeRebirthEnemyAI
         var _transportTarget = (GameObject)netObjRef;
         _transportTarget.transform.localPosition = Vector3.zero;
         _transportTarget.transform.localRotation = Quaternion.identity;
-        NavMesh.SamplePosition(currentEndPosition, out currentEndHit, 1f, NavMesh.AllAreas);
+        NavMesh.SamplePosition(currentEndPosition, out currentEndHit, 4f, NavMesh.AllAreas);
     }
 
     #endregion
@@ -335,9 +334,20 @@ public class Transporter : CodeRebirthEnemyAI
         onHitRoutine = null;
     }
 
+    public void OnLiftOrDropObjectImmediateAnimEvent(int liftNumber)
+    {
+        if (liftNumber == 0)
+        {
+            creatureVoice.PlayOneShot(pickUpHazardSound);
+        }
+        else
+        {
+            creatureVoice.PlayOneShot(dumpHazardSound);
+        }
+    }
+
     public void OnLiftHazardAnimEvent()
     {
-        creatureVoice.PlayOneShot(pickUpHazardSound);
         repositioning = false;
         agent.speed = 4 + speedIncrease;
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Repositioning);
@@ -352,7 +362,6 @@ public class Transporter : CodeRebirthEnemyAI
             Plugin.Logger.LogError($"Transporter: transportTarget is null");
             return;
         }
-        creatureVoice.PlayOneShot(dumpHazardSound);
 
         transportTarget.transform.SetParent(null, true);
         SceneManager.MoveGameObjectToScene(transportTarget, previousSceneOfTransportTarget);
