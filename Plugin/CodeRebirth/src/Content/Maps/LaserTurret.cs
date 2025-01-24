@@ -1,7 +1,5 @@
 using GameNetcodeStuff;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;

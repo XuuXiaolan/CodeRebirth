@@ -40,30 +40,30 @@ public class BearTrap : CodeRebirthHazard
 
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
 
-			if (hit.collider != null) // Check to make sure we hit something
-			{
-				GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
-				if (hit.collider.CompareTag("Grass"))
-				{
-					beartrap = MapObjectHandler.Instance.BearTrap.GrassMatPrefab;
-				}
-				else if (hit.collider.CompareTag("Gravel"))
-				{
-					beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
-				}
-				else if (hit.collider.CompareTag("Snow"))
-				{
-					beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
-				}
+			if (hit.collider == null) continue;
+            GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+            if (hit.collider.CompareTag("Grass"))
+            {
+                beartrap = MapObjectHandler.Instance.BearTrap.GrassMatPrefab;
+            }
+            else if (hit.collider.CompareTag("Gravel"))
+            {
+                beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+            }
+            else if (hit.collider.CompareTag("Snow"))
+            {
+                beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
+            }
 
-				GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-                spawnedTrap.GetComponent<BearTrap>().byProduct = true;
-				Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
-				spawnedTrap.transform.up = hit.normal;
-				spawnedTrap.GetComponent<NetworkObject>().Spawn();
-                position = spawnedTrap.transform.position;
-			}
+            GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            spawnedTrap.GetComponent<BearTrap>().byProduct = true;
+            Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
+            spawnedTrap.transform.up = hit.normal;
+            spawnedTrap.GetComponent<NetworkObject>().Spawn(true);
+            spawnedTrap.transform.SetParent(null, true);
+            position = spawnedTrap.transform.position;
 		}
+        this.transform.SetParent(null, true);
     }
 
     private void Update()

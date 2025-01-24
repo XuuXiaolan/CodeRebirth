@@ -1,4 +1,8 @@
-# v0.13.2
+# v0.13.3
+
+- Bear trap despawn fix, i think anyway.
+
+## v0.13.2
 
 - smol Pathfinding hotfix.
 

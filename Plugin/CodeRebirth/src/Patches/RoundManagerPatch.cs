@@ -186,7 +186,7 @@ static class RoundManagerPatch {
                 GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
                 Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
                 spawnedTrap.transform.up = hit.normal;
-                spawnedTrap.GetComponent<NetworkObject>().Spawn();
+                spawnedTrap.GetComponent<NetworkObject>().Spawn(true);
             }
         }
     }
