@@ -5,7 +5,7 @@ using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-/*
+
 namespace CodeRebirth.src.Content.Unlockables;
 public class CruiserGalAI : GalAI
 {
@@ -14,12 +14,15 @@ public class CruiserGalAI : GalAI
     public InteractTrigger ChestCollisionToggleTrigger = null!;
     public InteractTrigger RadioTrigger = null!;
     public InteractTrigger UppiesTrigger = null!;
+    public InteractTrigger WheelDumpScrapTrigger = null!;
     public InteractTrigger LeverDeliverPlayerTrigger = null!;
     public List<InteractTrigger> GiveItemTrigger = new();
     public List<Transform> ItemsHeldTransforms = new();
     public AudioSource FlySource = null!;
+    public AudioSource RadioAudioSource = null!
     public AudioClip[] TakeDropItemSounds = [];
     public AudioClip ChestCollisionToggleSound = null!;
+    public AudioClip[] RadioSounds = [];
 
     private bool carryingPlayer = false;
     private PlayerControllerB? carriedPlayer = null;
@@ -73,6 +76,8 @@ public class CruiserGalAI : GalAI
         CruiserCharger.GalAI = this;
         GalCharger = CruiserCharger;
         ChestCollisionToggleTrigger.onInteract.AddListener(OnChestCollisionToggleInteract);
+        RadioTrigger.onInteract.AddListener(OnRadioInteract);
+        WheelDumpScrapTrigger.onInteract.AddListener(OnWheelDumpScrapInteract);
         // Automatic activation if configured
         if (Plugin.ModConfig.ConfigCruiserBotAutomatic.Value)
         {
@@ -106,6 +111,44 @@ public class CruiserGalAI : GalAI
     {
         base.DeactivateGal();
         ResetToChargerStation(State.Inactive);
+    }
+
+    private void OnWheelDumpScrapInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (itemsHeldList.Count == 0) return;
+        DropAllHeldItemsServerRpc();
+    }
+
+    private void OnRadioInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        StartRadioServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartRadioServerRpc()
+    {
+        StartRadioClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartRadioClientRpc()
+    {
+        StartOrStopRadio();
+    }
+
+    private void StartOrStopRadio()
+    {
+        if (RadioAudioSource.isPlaying)
+        {
+            RadioAudioSource.Stop();
+        }
+        else
+        {
+            RadioAudioSource.clip = RadioSounds[galRandom.Next(0, RadioSounds.Length)];
+            RadioAudioSource.Play();
+        }
     }
 
     private void OnChestCollisionToggleInteract(PlayerControllerB playerInteracting)
@@ -492,18 +535,6 @@ public class CruiserGalAI : GalAI
         HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void HandleDroppingItemServerRpc(int itemIndex)
-    {
-        HandleDroppingItemClientRpc(itemIndex);
-    }
-
-    [ClientRpc]
-    private void HandleDroppingItemClientRpc(int itemIndex)
-    {
-        HandleDroppingItem(itemsHeldList[itemIndex]);
-    }
-
     private void HandleDroppingItem(GrabbableObject? item)
     {
         if (item == null)
@@ -568,4 +599,14 @@ public class CruiserGalAI : GalAI
         yield return new WaitForSeconds(0.1f);
         grabbableObject.EnablePhysics(false);
     }
-}*/
+
+    #region Anim Events
+    public void OnThrowPlayerAnimEvent()
+    {
+        if (carriedPlayer == null) return;
+        carriedPlayer.externalForceAutoFade += 500f;
+        carriedPlayer = null;
+        carryingPlayer = false;
+    }
+    #endregion
+}
