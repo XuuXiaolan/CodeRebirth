@@ -26,10 +26,12 @@ public class FindPathThroughTeleportsOperation : PathfindingOperation
         }
         foreach (var jobWrapper in FindEntrancePointJobs)
         {
+            if (jobWrapper == null) continue;
             JobPools.ReleaseFindPathJob(jobWrapper);
         }
         foreach (var jobWrapper in FindDestinationJobs)
         {
+            if (jobWrapper == null) continue;
             JobPools.ReleaseFindPathJob(jobWrapper);
         }
         entranceTeleports = [];

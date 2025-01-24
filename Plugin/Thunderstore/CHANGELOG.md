@@ -1,4 +1,12 @@
-# v0.13.0
+# v0.13.2
+
+- smol Pathfinding hotfix.
+
+## v0.13.1
+
+- I do what mel says.
+
+## v0.13.0
 
 - Added second member of cleanup crew, jimothy the transporter.
 - Damage fix for janitor when you hit him.
