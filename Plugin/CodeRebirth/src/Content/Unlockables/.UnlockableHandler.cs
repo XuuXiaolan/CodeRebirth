@@ -132,7 +132,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		if (Plugin.ModConfig.ConfigBearTrapGalEnabled.Value) RegisterBearTrapGal();
 		if (Plugin.ModConfig.ConfigACUnitGalEnabled.Value) RegisterACUnitGal();
 		if (Plugin.ModConfig.ConfigCleanerDroneGalEnabled.Value) RegisterCleanerDroneGal();
-		if (false) RegisterCruiserGal();
+		if (Plugin.ModConfig.ConfigCruiserGalEnabled.Value) RegisterCruiserGal();
 	}
 
 	private void RegisterCruiserGal()

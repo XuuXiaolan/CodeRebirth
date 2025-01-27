@@ -84,6 +84,10 @@ public class CruiserGalAI : GalAI
     {
         base.ActivateGal(owner);
         ResetToChargerStation(State.Active);
+        if (GalCharger is CruiserCharger cruiserCharger)
+        {
+            cruiserCharger.animator.SetBool(CruiserCharger.isActivatedAnimation, true);
+        }
     }
 
     private void ResetToChargerStation(State state)
@@ -99,6 +103,10 @@ public class CruiserGalAI : GalAI
     {
         base.DeactivateGal();
         ResetToChargerStation(State.Inactive);
+        if (GalCharger is CruiserCharger cruiserCharger)
+        {
+            cruiserCharger.animator.SetBool(CruiserCharger.isActivatedAnimation, false);
+        }
     }
 
     private void OnWheelDumpScrapInteract(PlayerControllerB playerInteracting)

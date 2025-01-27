@@ -1,8 +1,11 @@
 using Unity.Netcode;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class CruiserCharger : Charger
 {
+    public Animator animator = null!;
+    [HideInInspector] public static readonly int isActivatedAnimation = Animator.StringToHash("IsActivated"); // bool
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
