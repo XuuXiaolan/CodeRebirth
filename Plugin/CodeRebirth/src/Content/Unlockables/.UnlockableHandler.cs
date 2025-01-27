@@ -97,6 +97,15 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public UnlockableItemDef CleanerDroneGalUnlockable { get; private set; } = null!;
 	}
 
+	public class CruiserGalAssets(string bundleName) : AssetBundleLoader<CruiserGalAssets>(bundleName)
+	{
+		[LoadFromBundle("CruiserGalUnlockable.asset")]
+		public UnlockableItemDef CruiserBotUnlockable { get; private set; } = null!;
+
+		[LoadFromBundle("CruiserGal.prefab")]
+		public GameObject CruiserGalPrefab { get; private set; } = null!;
+	}
+
     public FriendAssets Friend { get; private set; } = null!;
 	public Fishdispenserassets ShrimpDispenser { get; private set; } = null!;
 	public SCP999Assets SCP999 { get; private set; } = null!;
@@ -108,6 +117,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	public ACUnitGalAssets ACUnitGal { get; private set; } = null!;
 	public BearTrapGalAssets BearTrapGal { get; private set; } = null!;
 	public CleanerDroneGalAssets CleanerDroneGal { get; private set; } = null!;
+	public CruiserGalAssets CruiserGal { get; private set; } = null!;
 
     public UnlockableHandler()
 	{
@@ -122,6 +132,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		if (Plugin.ModConfig.ConfigBearTrapGalEnabled.Value) RegisterBearTrapGal();
 		if (Plugin.ModConfig.ConfigACUnitGalEnabled.Value) RegisterACUnitGal();
 		if (Plugin.ModConfig.ConfigCleanerDroneGalEnabled.Value) RegisterCleanerDroneGal();
+		if (false) RegisterCruiserGal();
+	}
+
+	private void RegisterCruiserGal()
+	{
+		CruiserGal = new CruiserGalAssets("cruisergalassets");
+		LethalLib.Modules.Unlockables.RegisterUnlockable(CruiserGal.CruiserBotUnlockable, Plugin.ModConfig.ConfigCruiserGalCost.Value, StoreType.ShipUpgrade);
 	}
 
 	private void RegisterCleanerDroneGal()

@@ -60,10 +60,8 @@ public class BearTrap : CodeRebirthHazard
             Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
             spawnedTrap.transform.up = hit.normal;
             spawnedTrap.GetComponent<NetworkObject>().Spawn(true);
-            spawnedTrap.transform.SetParent(null, true);
             position = spawnedTrap.transform.position;
 		}
-        this.transform.SetParent(null, true);
     }
 
     private void Update()

@@ -63,15 +63,6 @@ public class SeamineGalAI : GalAI
         AttackMode = 4,
     }
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        if (!IsServer) return;
-
-        NetworkObject.TrySetParent(GalCharger.transform, false);
-        ResetToChargerStation(galState);
-    }
-
     private void StartUpDelay()
     {
         List<SeamineCharger> seamineChargers = new();

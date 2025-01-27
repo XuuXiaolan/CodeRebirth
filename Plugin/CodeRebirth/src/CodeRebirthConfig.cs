@@ -6,6 +6,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigCruiserGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigCleanerDroneGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigJanitorEnabled { get; private set; }
@@ -135,6 +136,7 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigSeamineTinkCharges { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerSeesScanEffectsTerminalGal { get; private set; }
     public ConfigEntry<float> ConfigTerminalBotFlyingVolume { get; private set; }
+    public ConfigEntry<bool> ConfigCruiserGalAutomatic { get; private set; }
     public ConfigEntry<bool> ConfigTerminalBotAutomatic { get; private set; }
     public ConfigEntry<int> ConfigTerminalBotCost { get; private set; }
     public ConfigEntry<float> ConfigWoodenSeedTreeSpawnChance { get; private set; }
@@ -208,6 +210,7 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigJanitorPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigJanitorMaxSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigCleanerDroneGalCost { get; private set; }
+    public ConfigEntry<int> ConfigCruiserGalCost { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigTomatoValue { get; private set; }
@@ -271,6 +274,7 @@ public class CodeRebirthConfig
                                             420,
                                             "The cost of the Cleaner Drone Gal.");
         #endregion
+
         #region Janitor
         ConfigJanitorEnabled = configFile.Bind("Janitor Options",
                                             "Janitor | Enabled",
@@ -535,6 +539,20 @@ public class CodeRebirthConfig
                                             "Hazards | Delete Bodies",
                                             true,
                                             "Whether hazards like IndustrialFan and LaserTurret should delete player bodies.");
+        #endregion
+        #region Cruiser Gal
+        ConfigCruiserGalEnabled = configFile.Bind("Cruiser Options",
+                                            "Cruiser Gal | Enabled",
+                                            true,
+                                            "Whether the Cruiser Gal is enabled.");
+        ConfigCruiserGalCost = configFile.Bind("Cruiser Options",
+                                            "Cruiser Gal | Cost",
+                                            999,
+                                            "Cost of the Cruiser Gal.");
+        ConfigCruiserGalAutomatic = configFile.Bind("Cruiser Options",
+                                            "Cruiser Gal | Automatic Behaviour",
+                                            false,
+                                            "Whether the Cruiser Gal will automatically wake up and choose the nearest player as the owner.");
         #endregion
         #region Shockwave Gal
         ConfigShockwaveBotEnabled = configFile.Bind("Shockwave Options",

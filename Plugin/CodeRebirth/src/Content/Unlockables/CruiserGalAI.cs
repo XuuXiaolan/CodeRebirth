@@ -9,8 +9,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Unlockables;
 public class CruiserGalAI : GalAI
 {
-    public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
-    public Renderer FaceRenderer = null!;
     public InteractTrigger ChestCollisionToggleTrigger = null!;
     public InteractTrigger RadioTrigger = null!;
     public InteractTrigger UppiesTrigger = null!;
@@ -18,8 +16,7 @@ public class CruiserGalAI : GalAI
     public InteractTrigger LeverDeliverPlayerTrigger = null!;
     public List<InteractTrigger> GiveItemTrigger = new();
     public List<Transform> ItemsHeldTransforms = new();
-    public AudioSource FlySource = null!;
-    public AudioSource RadioAudioSource = null!
+    public AudioSource RadioAudioSource = null!;
     public AudioClip[] TakeDropItemSounds = [];
     public AudioClip ChestCollisionToggleSound = null!;
     public AudioClip[] RadioSounds = [];
@@ -47,15 +44,6 @@ public class CruiserGalAI : GalAI
         Dancing = 4,
     }
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        if (!IsServer) return;
-
-        NetworkObject.TrySetParent(GalCharger.transform, false);
-        ResetToChargerStation(galState);
-    }
-
     private void StartUpDelay()
     {
         List<CruiserCharger> CruiserChargers = new();
@@ -79,7 +67,7 @@ public class CruiserGalAI : GalAI
         RadioTrigger.onInteract.AddListener(OnRadioInteract);
         WheelDumpScrapTrigger.onInteract.AddListener(OnWheelDumpScrapInteract);
         // Automatic activation if configured
-        if (Plugin.ModConfig.ConfigCruiserBotAutomatic.Value)
+        if (Plugin.ModConfig.ConfigCruiserGalAutomatic.Value)
         {
             StartCoroutine(GalCharger.ActivateGalAfterLand());
         }
@@ -221,10 +209,8 @@ public class CruiserGalAI : GalAI
         {
             doneOnce = true;
             Plugin.Logger.LogInfo("Syncing for client");
-            FlySource.Play();
             galRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
             Agent.enabled = false;
-            FlySource.volume = 0f;
             StartUpDelay();
         }
     }
@@ -246,7 +232,6 @@ public class CruiserGalAI : GalAI
             this.transform.rotation = GalCharger.transform.rotation;
             return;
         }
-        if (flying) FlySource.volume = Plugin.ModConfig.ConfigCruiserBotPropellerVolume.Value;
         StoppingDistanceUpdate();
 
         if (!IsHost) return;
@@ -393,8 +378,6 @@ public class CruiserGalAI : GalAI
     private void SetFlying(bool flying)
     {
         this.flying = flying;
-        if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;
-        else FlySource.volume = 0f;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -604,7 +587,7 @@ public class CruiserGalAI : GalAI
     public void OnThrowPlayerAnimEvent()
     {
         if (carriedPlayer == null) return;
-        carriedPlayer.externalForceAutoFade += 500f;
+        carriedPlayer.externalForceAutoFade += Vector3.up * 150f;
         carriedPlayer = null;
         carryingPlayer = false;
     }

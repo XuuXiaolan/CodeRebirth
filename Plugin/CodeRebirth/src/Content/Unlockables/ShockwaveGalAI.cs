@@ -61,15 +61,6 @@ public class ShockwaveGalAI : GalAI
         Happy = 3
     }
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        if (!IsServer) return;
-
-        NetworkObject.TrySetParent(GalCharger.transform, false);
-        ResetToChargerStation(galState, galEmotion);
-    }
-
     private void StartUpDelay()
     {
         List<ShockwaveCharger> shockwaveChargers = new();

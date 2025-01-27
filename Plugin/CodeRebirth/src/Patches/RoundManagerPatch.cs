@@ -87,7 +87,7 @@ static class RoundManagerPatch {
 				GameObject spawnedAirControlUnit = GameObject.Instantiate(aircontrolunit, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 				Plugin.ExtendedLogging($"Spawning air control unit at: {hit.point}");
 				spawnedAirControlUnit.transform.up = hit.normal;
-				spawnedAirControlUnit.GetComponent<NetworkObject>().Spawn();
+				spawnedAirControlUnit.GetComponent<NetworkObject>().Spawn(true);
 			}
 		}
 	}
@@ -452,7 +452,7 @@ static class RoundManagerPatch {
 				GameObject spawnedCrate = GameObject.Instantiate(crate, spawnPoint, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}");
 				spawnedCrate.transform.up = hit.normal;
-				spawnedCrate.GetComponent<NetworkObject>().Spawn();
+				spawnedCrate.GetComponent<NetworkObject>().Spawn(true);
 			}
 		}
 	}
@@ -526,7 +526,7 @@ static class RoundManagerPatch {
 				GameObject spawnedCrate = GameObject.Instantiate(crate, spawnPoint, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 				Plugin.ExtendedLogging($"Spawning {crate.name} at {spawnPoint}");
 				spawnedCrate.transform.up = hit.normal;
-				spawnedCrate.GetComponent<NetworkObject>().Spawn();
+				spawnedCrate.GetComponent<NetworkObject>().Spawn(true);
 			}
 		}
 	}
@@ -544,9 +544,9 @@ static class RoundManagerPatch {
 
 			GameObject biome = MapObjectHandler.Instance.Biome.BiomePrefab;
 			
-			GameObject spawnedBiome = GameObject.Instantiate(biome, vector, Quaternion.identity);
+			GameObject spawnedBiome = GameObject.Instantiate(biome, vector, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
 			Plugin.ExtendedLogging($"Spawning biome at {vector}");
-			spawnedBiome.GetComponent<NetworkObject>().Spawn();
+			spawnedBiome.GetComponent<NetworkObject>().Spawn(true);
 		}
 	}
 
@@ -583,20 +583,6 @@ static class RoundManagerPatch {
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	private static void PatchFix_DespawnOldCrates()
 	{
-		foreach (ItemCrate crate in ItemCrate.Instances.ToArray())
-		{
-			if (crate.NetworkObject.IsSpawned) crate.NetworkObject.Despawn();
-			else GameObject.Destroy(crate.gameObject);
-		}
-
-		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
-		{
-			foreach (BiomeManager biome in GameObject.FindObjectsOfType<BiomeManager>())
-			{
-				biome.NetworkObject.Despawn();
-			}
-		}
-
 		foreach (GalAI gal in GalAI.Instances)
 		{
 			gal.RefillChargesServerRpc();

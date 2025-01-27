@@ -57,13 +57,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 747556695841835239}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4791727645122105921}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!137 &6825724647279540839
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -194,7 +194,7 @@ Transform:
   m_GameObject: {fileID: 2611412988392046966}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7070574, w: 0.7071562}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -219,8 +219,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8862589, y: 1.1842214, z: 0.81983316}
-  m_Center: {x: 0.4607564, y: -0.24311805, z: -0.66950446}
+  m_Size: {x: 1.498817, y: 1.1842214, z: 0.81983316}
+  m_Center: {x: 0.15447733, y: -0.24311829, z: -0.66950446}
 --- !u!114 &355448436623907195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,6 +390,7 @@ GameObject:
   - component: {fileID: 3272383635430614626}
   - component: {fileID: 3471554038775788269}
   - component: {fileID: 3529443833716092348}
+  - component: {fileID: 6606660901712244188}
   m_Layer: 0
   m_Name: CruiserGalCharger
   m_TagString: Untagged
@@ -413,7 +414,6 @@ Transform:
   - {fileID: 470032981861139232}
   - {fileID: 3457968161029377775}
   - {fileID: 6417347556269755486}
-  - {fileID: 3065953834162481883}
   - {fileID: 8538040950924847636}
   - {fileID: 8243985282306516833}
   m_Father: {fileID: 0}
@@ -491,7 +491,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 3471554038775788269}
+--- !u!114 &6606660901712244188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3632346896036407525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1594426630, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActivateOrDeactivateTrigger: {fileID: 8961698831747888178}
+  ChargeTransform: {fileID: 3457968161029377775}
 --- !u!1 &4366553993643034951
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,80 +875,6 @@ Transform:
   - {fileID: 694036150690957725}
   m_Father: {fileID: 516356837615001608}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7598284696461355552
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3065953834162481883}
-  - component: {fileID: 7075948245764664252}
-  - component: {fileID: 5492849582623713401}
-  m_Layer: 21
-  m_Name: ScanNode
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3065953834162481883
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7598284696461355552}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4791727645122105921}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7075948245764664252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7598284696461355552}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxRange: 13
-  minRange: 0
-  requiresLineOfSight: 1
-  headerText: BearTrap Gal
-  subText: Snap!
-  scrapValue: 0
-  creatureScanID: -1
-  nodeType: 0
---- !u!65 &5492849582623713401
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7598284696461355552}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.55510426, y: 0.56638366, z: 0.53289306}
-  m_Center: {x: 0.045739174, y: -0.08307567, z: 0.11376709}
 --- !u!1 &7763757773944401767
 GameObject:
   m_ObjectHideFlags: 0

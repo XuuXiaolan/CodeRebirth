@@ -70,15 +70,6 @@ public class TerminalGalAI : GalAI
         Love = 7,
     }
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        if (!IsServer) return;
-
-        NetworkObject.TrySetParent(GalCharger.transform, false);
-        ResetToChargerStation(galState, galEmotion);
-    }
-
     private void StartUpDelay()
     {
         List<TerminalCharger> terminalChargers = new();
@@ -92,14 +83,14 @@ public class TerminalGalAI : GalAI
         if (terminalChargers.Count <= 0)
         {
             if (IsServer) NetworkObject.Despawn();
-            Plugin.Logger.LogError($"TerminalCharger not found in scene. SeamineGalAI will not be functional.");
+            Plugin.Logger.LogError($"TerminalCharger not found in scene. TerminalGalAI will not be functional.");
             return;
         }
         TerminalCharger terminalCharger = terminalChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
         terminalCharger.GalAI = this;
         GalCharger = terminalCharger;
         // Automatic activation if configured
-        if (Plugin.ModConfig.ConfigSeamineTinkAutomatic.Value)
+        if (Plugin.ModConfig.ConfigTerminalBotAutomatic.Value)
         {
             StartCoroutine(GalCharger.ActivateGalAfterLand());
         }

@@ -57,6 +57,11 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     {
         base.OnNetworkSpawn();
         Instances.Add(this);
+        if (!IsServer) return;
+
+        transform.SetParent(GalCharger.transform, false);
+        transform.position = GalCharger.transform.position;
+        transform.rotation = GalCharger.transform.rotation;
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -45,7 +45,7 @@ public class AirControlUnit : CodeRebirthHazard
         // Rotate the turret to look for targets
         FindAndAimAtTarget();
 
-        if (lastPlayerTargetted != null) return;
+        if (lastPlayerTargetted == null) return;
         // Handle firing logic
         fireTimer -= Time.deltaTime;
         if (fireTimer <= 0f)

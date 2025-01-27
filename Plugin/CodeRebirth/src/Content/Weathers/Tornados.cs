@@ -11,7 +11,6 @@ using System;
 using static CodeRebirth.src.Content.Weathers.Tornados;
 using static CodeRebirth.src.Util.PlayerControllerBExtensions;
 using CodeRebirth.src.Content.Enemies;
-using static UnityEngine.ParticleSystem;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Tornados : CodeRebirthEnemyAI

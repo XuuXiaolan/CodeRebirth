@@ -1,4 +1,17 @@
-# v0.13.3
+# v0.13.6
+
+- Made performance of jimothy a bit better, and gonna do similar stuff with other coderebirth things later.
+- Fixed AirControlUnit not being able to fire, at all, lol.
+
+## v0.13.5
+
+- Made it so my weathers dont spawn on Galetry.
+
+## v0.13.4
+
+- Fixed aircontrolunit despawn fix, and removed some code so that would make orbiting a tiny bit faster.
+
+## v0.13.3
 
 - Bear trap despawn fix, i think anyway.
 

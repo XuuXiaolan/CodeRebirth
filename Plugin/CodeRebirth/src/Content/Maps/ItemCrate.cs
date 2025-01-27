@@ -45,12 +45,10 @@ public class ItemCrate : CRHittable
 	public GrabAndLaunchPlayer? grabAndLaunchPlayerScript = null;
 
 	private bool openedOnce = false;
-	[HideInInspector] public static List<ItemCrate> Instances = new();
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-		Instances.Add(this);
 		Transporter.objectsToTransport.Add(gameObject);
     }
 
@@ -58,14 +56,13 @@ public class ItemCrate : CRHittable
     {
         base.OnNetworkDespawn();
 		Transporter.objectsToTransport.Remove(gameObject);
-		Instances.Remove(this);
     }
 
     private void Start()
 	{
 		if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = false;
 		if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = false;
-		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed + Instances.Count);
+		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
 		health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
 		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
 		originalPosition = transform.position;
