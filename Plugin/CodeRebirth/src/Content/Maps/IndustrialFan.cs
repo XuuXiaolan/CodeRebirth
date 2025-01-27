@@ -19,12 +19,11 @@ public class IndustrialFan : CodeRebirthHazard
         Plugin.ExtendedLogging("Industrial fan initialized");
     }
 
-    private void Update()
+    public void FixedUpdate()
     {
         UpdateAudio();
-        if (!IsServer) return;
         // Rotate the fan continuously
-        fanTransform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+        fanTransform.Rotate(Vector3.up, rotationSpeed * Time.fixedDeltaTime);
     }
 
     private void UpdateAudio()

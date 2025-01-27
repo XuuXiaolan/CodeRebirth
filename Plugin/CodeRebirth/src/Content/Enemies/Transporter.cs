@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -72,6 +74,7 @@ public class Transporter : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
         if (!IsServer) return;
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
@@ -80,6 +83,22 @@ public class Transporter : CodeRebirthEnemyAI
         SyncNetworkObjectParentServerRpc(new NetworkObjectReference(emptyNetworkObject));
         palletTransform = emptyNetworkObject.transform;
         TryFindAnyTransportableObjectViaAsyncPathfinding();
+    }
+
+    private void OnUseEntranceTeleport(bool setOutside)
+    {
+        foreach (GrabbableObject grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
+        {
+            if (grabbableObject == null) continue;
+            grabbableObject.EnableItemMeshes(true);
+            grabbableObject.EnablePhysics(true);
+        }
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        {
+            if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform) continue; 
+            smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
+            player.transform.position = palletTransform.position;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -100,13 +119,15 @@ public class Transporter : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (agent.velocity.magnitude > 0.5f)
+        if (agent.velocity.magnitude > 0.5f && creatureSFX.clip != engineAndIdleSounds[0])
         {
             creatureSFX.clip = engineAndIdleSounds[0];
+            creatureSFX.Play();
         }
-        else
+        else if (creatureSFX.clip != engineAndIdleSounds[1] && agent.velocity.magnitude <= 0.5f)
         {
             creatureSFX.clip = engineAndIdleSounds[1];
+            creatureSFX.Play();
         }
 
         idleTimer -= Time.deltaTime;

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
 using PathfindingLib.Utilities;
 using Unity.Netcode;
@@ -17,6 +18,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     [HideInInspector] public UnityEvent<bool> OnUseEntranceTeleport = new();
     [HideInInspector] public UnityEvent<bool> OnEnableOrDisableAgent = new();
     [HideInInspector] public UnityEvent<bool> OnEnterOrExitElevator = new();
+    [HideInInspector] public EntranceTeleport lastUsedEntranceTeleport;
 
     private float nonAgentMovementSpeed = 10f;
     [HideInInspector] public NavMeshAgent agent = null!;
@@ -52,8 +54,8 @@ public class SmartAgentNavigator : NetworkBehaviour
     {
         this.isOutside = isOutside;
 
-        exitPoints.Clear();
-        foreach (var exit in FindObjectsByType<EntranceTeleport>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID))
+        exitPoints.Clear(); // todo: Make this better
+        foreach (var exit in CodeRebirthUtils.entrancePoints)
         {
             exitPoints.Add(exit);
             if (!exit.FindExitPoint())
@@ -300,7 +302,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         if (distanceToDestination <= agent.stoppingDistance + 1f)
         {
             agent.Warp(destinationAfterTeleport);
-            SetThingOutsideServerRpc(!isOutside);
+            SetThingOutsideServerRpc(!isOutside, new NetworkBehaviourReference(viableEntrance));
             return;
         }
         else
@@ -383,15 +385,16 @@ public class SmartAgentNavigator : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetThingOutsideServerRpc(bool setOutside)
+    public void SetThingOutsideServerRpc(bool setOutside, NetworkBehaviourReference entranceTeleportReference)
     {
-        SetThingOutsideClientRpc(setOutside);
+        SetThingOutsideClientRpc(setOutside, entranceTeleportReference);
     }
 
     [ClientRpc]
-    public void SetThingOutsideClientRpc(bool setOutside)
+    public void SetThingOutsideClientRpc(bool setOutside, NetworkBehaviourReference entranceTeleportReference)
     {
         isOutside = setOutside;
+        lastUsedEntranceTeleport = (EntranceTeleport)entranceTeleportReference;
         OnUseEntranceTeleport.Invoke(setOutside);
     }
 

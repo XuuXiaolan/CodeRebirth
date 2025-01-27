@@ -1,4 +1,13 @@
-# v0.13.6
+# v0.13.7
+
+- You can now ride jimothy inside or outside safely without problems.
+- Fixed lag-spike when a coderebirth enemy spawns.
+- Fixed Janitor breaking randomly-atleast for clients and in cases where it wouldn't grab objects but did for host.
+- Fixed Jimothy sounds.
+- Fixed Jimothy holding items incompat with cullfactory.
+- Fixed problem with jimothy holding IndustrialFans, probably?
+
+## v0.13.6
 
 - Made performance of jimothy a bit better, and gonna do similar stuff with other coderebirth things later.
 - Fixed AirControlUnit not being able to fire, at all, lol.

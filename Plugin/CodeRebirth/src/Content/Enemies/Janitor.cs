@@ -415,6 +415,7 @@ public class Janitor : CodeRebirthEnemyAI
         scrapObj.grabbable = false;
         HoarderBugAI.grabbableObjectsInMap.Remove(scrapObj.gameObject);
 
+        targetScrap = scrapObj;
         if (IsServer) 
         {
             creatureNetworkAnimator.SetTrigger(GrabScrapAnimation);
@@ -929,13 +930,18 @@ public class Janitor : CodeRebirthEnemyAI
     private IEnumerator PlaceScrapInsideJanitor(GrabbableObject scrap)
     {
         scrap.parentObject = handTransform;
+        scrap.isHeldByEnemy = true;
+        scrap.hasHitGround = false;
+        scrap.EnablePhysics(false);
         yield return new WaitForSeconds(0.2f);
-        
+        scrap.isInElevator = false;
+        scrap.isInShipRoom = false;
+        scrap.playerHeldBy?.DiscardHeldObject();
+        yield return new WaitForSeconds(0.2f);
         storedScrapAndValueDict.Add(scrap, scrap.scrapValue);
         scrap.parentObject = placeToHideScrap;
         scrap.transform.position = placeToHideScrap.position;
         scrap.EnableItemMeshes(false);
-        scrap.EnablePhysics(false);
 
         ResetToIdle();
         currentlyGrabbingScrap = false;

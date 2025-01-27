@@ -2835,7 +2835,6 @@ GameObject:
   - component: {fileID: 1739986065628525033}
   - component: {fileID: 1178067371502072966}
   - component: {fileID: 7686463768527773463}
-  - component: {fileID: 8949203082928865293}
   - component: {fileID: 5197676068331167340}
   - component: {fileID: 1544097678725543291}
   - component: {fileID: 7540495099118453201}
@@ -2913,36 +2912,6 @@ MonoBehaviour:
   pushForce: 3
   suctionForce: 5
   redMistEffect: {fileID: 9155697015635142109}
---- !u!114 &8949203082928865293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5429102615241829864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!95 &5197676068331167340
 Animator:
   serializedVersion: 5
@@ -3004,8 +2973,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.3845854, y: 0.33665776, z: 1.1024504}
-  m_Center: {x: -0.07081461, y: 0.21297371, z: 0.051225185}
+  m_Size: {x: 3.3845854, y: 0.17581333, z: 1.1024504}
+  m_Center: {x: -0.07081461, y: 0.13255149, z: 0.051225185}
 --- !u!65 &2123439759598390477
 BoxCollider:
   m_ObjectHideFlags: 0

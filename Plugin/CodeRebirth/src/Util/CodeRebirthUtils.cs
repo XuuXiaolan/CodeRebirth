@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using Unity.Netcode;
@@ -6,7 +5,6 @@ using UnityEngine;
 using Random = System.Random;
 using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Unlockables;
-using CodeRebirth.src.Util.Extensions;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Maps;
@@ -19,13 +17,20 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public Material WireframeMaterial = null!;
     public Shader SeeThroughShader = null!;
 
-    [NonSerialized] public static List<EnemyType> EnemyTypes = new();
+    [HideInInspector] public static List<EnemyType> EnemyTypes = new();
+    [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
     private static Random random = null!;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
     private void Awake()
     {
+        StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
         Instance = this;
+    }
+
+    public void OnNewRoundStart()
+    {
+        entrancePoints = FindObjectsOfType<EntranceTeleport>();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -49,10 +54,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
         // Get the NetworkObject component and spawn it on the network
         NetworkObject networkObject = spawnedObject.GetComponent<NetworkObject>();
-        if (networkObject != null)
-        {
-            networkObject.Spawn();
-        }
+        networkObject?.Spawn();
         
         // Optionally, you can re-add the prefab back to the list if needed
         MapObjectHandler.hazardPrefabs.Add(prefabToSpawn);
@@ -196,5 +198,17 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         CodeRebirthSave.Current = null!;
         PlantPot.totalSpawnedPlantPots = 0;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ResetEntrancePointsServerRpc()
+    {
+        ResetEntrancePointsClientRpc();
+    }
+
+    [ClientRpc]
+    public void ResetEntrancePointsClientRpc()
+    {
+        entrancePoints = [];
     }
 }

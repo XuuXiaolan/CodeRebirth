@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using Random = System.Random;
 using CodeRebirth.src.Content.Unlockables;
+using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -592,6 +593,7 @@ static class RoundManagerPatch {
 		{
 			gal.MakeTriggerInteractableServerRpc(false);
 		}
+		CodeRebirthUtils.Instance.ResetEntrancePointsServerRpc();
 	}
 
 	[HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
@@ -605,18 +607,16 @@ static class RoundManagerPatch {
 		Collider[] hitColliders = Physics.OverlapSphere(noisePosition, noiseRange, LayerMask.GetMask("Props", "MapHazards"), QueryTriggerInteraction.Collide);
 		for (int i = 0; i < hitColliders.Length; i++)
 		{
-            if (hitColliders[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener))
-            {
-				GalAI? gal = hitColliders[i].gameObject.GetComponent<GalAI>();
-				SCP999GalAI? scp999Gal = hitColliders[i].gameObject.GetComponent<SCP999GalAI>();
-				BellCrabGalAI? bellCrabGal = hitColliders[i].gameObject.GetComponent<BellCrabGalAI>();
-				FlashTurret? flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
-                if (gal == null && flashTurret == null && scp999Gal == null && bellCrabGal == null)
-                {
-                    continue;
-                }
-                noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
-            }
+            if (!hitColliders[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener)) continue;
+			GalAI? gal = hitColliders[i].gameObject.GetComponent<GalAI>();
+			SCP999GalAI? scp999Gal = hitColliders[i].gameObject.GetComponent<SCP999GalAI>();
+			BellCrabGalAI? bellCrabGal = hitColliders[i].gameObject.GetComponent<BellCrabGalAI>();
+			FlashTurret? flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
+			if (gal == null && flashTurret == null && scp999Gal == null && bellCrabGal == null)
+			{
+				continue;
+			}
+			noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
         }
 	}
 
@@ -624,7 +624,6 @@ static class RoundManagerPatch {
 	[HarmonyPrefix]
 	public static void LoadNewLevelWaitPatch(RoundManager __instance)
 	{
-		if (!NetworkManager.Singleton.IsServer) return;
 		if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
 		{
 			if (Plugin.ModConfig.Config999GalCompanyMoonRecharge.Value)
