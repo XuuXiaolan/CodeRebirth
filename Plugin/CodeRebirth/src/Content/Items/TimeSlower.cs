@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -8,7 +9,7 @@ public class TimeSlower : GrabbableObject
     public override void Start()
     {
         base.Start();
-        if (audioSourcesToAffect.Length == 0) audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>();
+        if (audioSourcesToAffect.Length == 0) audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>(); // Patch AudioSouce.Awake or find Audio Listener
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
@@ -16,6 +17,9 @@ public class TimeSlower : GrabbableObject
         base.ItemActivate(used, buttonDown);
         float timeDelay = 30f;
         Time.timeScale = 0.2f;
+        List<(AudioSource audioSource, float pitch, float volume, float dopplerLevel)> audioSourcesWithOldValues = new();
+        List<OccludeAudio> occludeAudiosToReEnable = new();
+        List<(AudioLowPassFilter filter, float oldCutOffFrequency)> lowPassFiltersWithOldValues = new();
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
             player.movementSpeed *= 6f;
@@ -23,18 +27,18 @@ public class TimeSlower : GrabbableObject
         }
         foreach (var audiosource in audioSourcesToAffect)
         {
-            StartCoroutine(ResetAudioSourceVariables(audiosource, audiosource.pitch, audiosource.volume, audiosource.dopplerLevel, timeDelay * Time.timeScale));
+            audioSourcesWithOldValues.Add((audiosource, audiosource.pitch, audiosource.volume, audiosource.dopplerLevel));
             audiosource.pitch = 0.2f;
             audiosource.volume = 0.7f * audiosource.volume;
             audiosource.dopplerLevel = 0f;
             if (audiosource.gameObject.TryGetComponent(out OccludeAudio occludeAudio) && occludeAudio.enabled)
             {
+                occludeAudiosToReEnable.Add(occludeAudio);
                 occludeAudio.enabled = false;
-                StartCoroutine(ReEnableOccludeAudio(occludeAudio, timeDelay * Time.timeScale));
             }
             if (audiosource.gameObject.TryGetComponent(out AudioLowPassFilter filter))
             {
-                StartCoroutine(ResetLowPassFilterValue(filter, filter.cutoffFrequency, timeDelay * Time.timeScale));
+                lowPassFiltersWithOldValues.Add((filter, filter.cutoffFrequency));
                 filter.cutoffFrequency = 1000f;
                 continue;
             }
@@ -42,30 +46,27 @@ public class TimeSlower : GrabbableObject
             Destroy(filter, timeDelay * Time.timeScale);
             filter.cutoffFrequency = 1000f;
         }
-        StartCoroutine(ResetTimeScale(timeDelay * Time.timeScale));
+        StartCoroutine(ResetTimeScaleAndMisc(audioSourcesWithOldValues, occludeAudiosToReEnable, lowPassFiltersWithOldValues, timeDelay * Time.timeScale));
     }
 
-    public IEnumerator ReEnableOccludeAudio(OccludeAudio occludeAudio, float delay)
+    public void ReEnableOccludeAudio(OccludeAudio occludeAudio)
     {
-        yield return new WaitForSeconds(delay);
         occludeAudio.enabled = true;
     }
 
-    public IEnumerator ResetAudioSourceVariables(AudioSource audioSource, float pitch, float volume, float dopplerLevel, float delay)
+    public void ResetAudioSourceVariables(AudioSource audioSource, float pitch, float volume, float dopplerLevel)
     {
-        yield return new WaitForSeconds(delay);
         audioSource.pitch = pitch;
         audioSource.volume = volume;
         audioSource.dopplerLevel = dopplerLevel;
     }
 
-    public IEnumerator ResetLowPassFilterValue(AudioLowPassFilter filter, float cutoffFrequency, float delay)
+    public void ResetLowPassFilterValue(AudioLowPassFilter filter, float cutoffFrequency)
     {
-        yield return new WaitForSeconds(delay);
         filter.cutoffFrequency = cutoffFrequency;
     }
 
-    public IEnumerator ResetTimeScale(float delay)
+    public IEnumerator ResetTimeScaleAndMisc(List<(AudioSource audioSource, float pitch, float volume, float dopplerLevel)> audioSourcesWithOldValues, List<OccludeAudio> occludeAudiosToReEnable, List<(AudioLowPassFilter filter, float oldCutOffFrequency)> lowPassFiltersWithOldValues, float delay)
     {
         yield return new WaitForSeconds(delay);
         Time.timeScale = 1f;
@@ -73,6 +74,20 @@ public class TimeSlower : GrabbableObject
         {
             player.movementSpeed /= 6f;
             player.playerBodyAnimator.speed /= 5f;
+        }
+        foreach (var audiosourceThing in audioSourcesWithOldValues)
+        {
+            ResetAudioSourceVariables(audiosourceThing.audioSource, audiosourceThing.pitch, audiosourceThing.volume, audiosourceThing.dopplerLevel);
+        }
+
+        foreach (var occludeAudio in occludeAudiosToReEnable)
+        {
+            ReEnableOccludeAudio(occludeAudio);
+        }
+
+        foreach (var lowPassFilter in lowPassFiltersWithOldValues)
+        {
+            ResetLowPassFilterValue(lowPassFilter.filter, lowPassFilter.oldCutOffFrequency);
         }
     }
 }
