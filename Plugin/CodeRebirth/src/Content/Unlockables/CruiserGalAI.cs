@@ -11,9 +11,8 @@ public class CruiserGalAI : GalAI
 {
     public InteractTrigger ChestCollisionToggleTrigger = null!;
     public InteractTrigger RadioTrigger = null!;
-    public InteractTrigger UppiesTrigger = null!;
     public InteractTrigger WheelDumpScrapTrigger = null!;
-    public InteractTrigger LeverDeliverPlayerTrigger = null!;
+    public InteractTrigger LeverThrowPlayerTrigger = null!;
     public List<Transform> ItemsHeldTransforms = new();
     public AudioSource RadioAudioSource = null!;
     public AudioClip[] TakeDropItemSounds = [];
