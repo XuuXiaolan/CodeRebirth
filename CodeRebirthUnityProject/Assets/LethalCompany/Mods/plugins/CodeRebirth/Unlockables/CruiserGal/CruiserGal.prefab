@@ -677,7 +677,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 1
+    OriginatingState: -1459219776
+    DestinationState: 1946197648
+    TransitionDuration: 0.25
+    TriggerNameHash: -1632668642
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 1
+    OriginatingState: -1459219776
+    DestinationState: -33873781
+    TransitionDuration: 0.25
+    TriggerNameHash: -913020321
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 1
+    OriginatingState: -1459219776
+    DestinationState: -1065008334
+    TransitionDuration: 0.25
+    TriggerNameHash: -1505982378
+    TransitionIndex: 2
   m_Animator: {fileID: 5326531890941614610}
 --- !u!114 &4900210806852568220
 MonoBehaviour:

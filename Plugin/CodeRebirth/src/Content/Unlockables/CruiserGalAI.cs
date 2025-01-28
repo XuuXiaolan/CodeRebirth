@@ -14,7 +14,6 @@ public class CruiserGalAI : GalAI
     public InteractTrigger UppiesTrigger = null!;
     public InteractTrigger WheelDumpScrapTrigger = null!;
     public InteractTrigger LeverDeliverPlayerTrigger = null!;
-    public List<InteractTrigger> GiveItemTrigger = new();
     public List<Transform> ItemsHeldTransforms = new();
     public AudioSource RadioAudioSource = null!;
     public AudioClip[] TakeDropItemSounds = [];
@@ -23,17 +22,20 @@ public class CruiserGalAI : GalAI
 
     private bool carryingPlayer = false;
     private PlayerControllerB? carriedPlayer = null;
-    private List<GrabbableObject> itemsHeldList = new();
+    private List<GrabbableObject> itemsHeldList => GetHeldItemsList();
     private bool flying = false;
-    private int maxItemsToHold = 99;
     private State galState = State.Inactive;
     private Coroutine? chestCollisionToggleCoroutine = null;
-    private readonly static int holdingItemAnimation = Animator.StringToHash("holdingItem"); // Bool
+    private readonly static int chestCollisionToggleAnimation = Animator.StringToHash("hitBumper"); // Trigger
+    private readonly static int pullLevelAnimation = Animator.StringToHash("pullLever"); // Trigger
+    private readonly static int spinWheelAnimation = Animator.StringToHash("spinWheel"); // Trigger
+    private readonly static int randomAnimation = Animator.StringToHash("doRandomAnimation"); // Trigger
+    private readonly static int grabPlayerOntoSeatAnimation = Animator.StringToHash("putPlayerOnSeat"); // Trigger
+    private readonly static int throwPlayerAnimation = Animator.StringToHash("throwPlayer"); // Trigger
     private readonly static int danceAnimation = Animator.StringToHash("dancing"); // Bool
     private readonly static int activatedAnimation = Animator.StringToHash("activated"); // Bool
-    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private readonly static int flyAnimation = Animator.StringToHash("flying"); // Bool
-    private readonly static int chestCollisionToggleAnimation = Animator.StringToHash("triggerBumperChest"); // Trigger
+    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
     public enum State
     {
@@ -74,10 +76,6 @@ public class CruiserGalAI : GalAI
 
         // Adding listener for interaction trigger
         GalCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(GalCharger.OnActivateGal);
-        foreach (InteractTrigger trigger in GiveItemTrigger)
-        {
-            trigger.onInteract.AddListener(GrabItemInteract);
-        }
     }
 
     public override void ActivateGal(PlayerControllerB owner)
@@ -187,6 +185,7 @@ public class CruiserGalAI : GalAI
 
     private void DropAllHeldItems()
     {
+
         int heldItemCount = itemsHeldList.Count;
         Plugin.ExtendedLogging($"Items held: {heldItemCount}");
         for (int i = heldItemCount - 1; i >= 0; i--)
@@ -198,12 +197,6 @@ public class CruiserGalAI : GalAI
     private void InteractTriggersUpdate()
     {
         bool interactable = !inActive && ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
-        bool idleInteractable = interactable;
-
-        foreach (InteractTrigger trigger in GiveItemTrigger)
-        {
-            trigger.interactable = idleInteractable && ownerPlayer != null && ownerPlayer.currentlyHeldObjectServer != null && galState != State.DeliveringPlayer;
-        }
     }
 
     private void StoppingDistanceUpdate()
@@ -400,24 +393,23 @@ public class CruiserGalAI : GalAI
         switch (state)
         {
             case State.Inactive:
-                SetAnimatorBools(holding: false, dance: false, activated: false);
+                SetAnimatorBools(dance: false, activated: false);
                 break;
             case State.Active:
             case State.FollowingPlayer:
-                SetAnimatorBools(holding: false, dance: false, activated: true);
+                SetAnimatorBools(dance: false, activated: true);
                 break;
             case State.DeliveringPlayer:
-                SetAnimatorBools(holding: true, dance: false, activated: true);
+                SetAnimatorBools(dance: false, activated: true);
                 break;
             case State.Dancing:
-                SetAnimatorBools(holding: false, dance: true, activated: true);
+                SetAnimatorBools(dance: true, activated: true);
                 break;
         }
     }
 
-    private void SetAnimatorBools(bool holding, bool dance, bool activated)
+    private void SetAnimatorBools(bool dance, bool activated)
     {
-        Animator.SetBool(holdingItemAnimation, holding);
         Animator.SetBool(danceAnimation, dance);
         Animator.SetBool(activatedAnimation, activated);
     }
@@ -489,59 +481,17 @@ public class CruiserGalAI : GalAI
     }
     #endregion
 
-    private void GrabItemInteract(PlayerControllerB player)
+    private List<GrabbableObject> GetHeldItemsList()
     {
-        if (player != ownerPlayer || player.currentlyHeldObjectServer == null || itemsHeldList.Count >= maxItemsToHold) return;
-        GrabItemOwnerHoldingServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+        return transform.GetComponentsInChildren<GrabbableObject>().ToList();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void GrabItemOwnerHoldingServerRpc(int indexOfOwner)
+    private void HandleDroppingItem(GrabbableObject item)
     {
-        Animator.SetBool(holdingItemAnimation, true);
-        GrabItemOwnerHoldingClientRpc(indexOfOwner);
-    }
-
-    [ClientRpc]
-    private void GrabItemOwnerHoldingClientRpc(int indexOfOwner)
-    {
-        PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[indexOfOwner];
-        StartCoroutine(HandleGrabbingItem(player.currentlyHeldObjectServer, ItemsHeldTransforms[itemsHeldList.Count]));
-    }
-
-    private IEnumerator HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
-    {
-        yield return new WaitForSeconds(0.2f);
-        item.isInElevator = false;
-        item.isInShipRoom = false;
-        item.playerHeldBy?.DiscardHeldObject();
-        yield return new WaitForSeconds(0.2f);
-        item.grabbable = false;
-        item.isHeldByEnemy = true;
-        item.hasHitGround = false;
-        item.parentObject = heldTransform;
-        item.EnablePhysics(false);
-        itemsHeldList.Add(item);
-        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(0, TakeDropItemSounds.Length)]);
-        HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
-    }
-
-    private void HandleDroppingItem(GrabbableObject? item)
-    {
-        if (item == null)
-        {
-            Plugin.Logger.LogError("Item was null in HandleDroppingItem");
-            return;
-        }
-
         item.parentObject = null;
         bool droppedItemIntoShip = StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position);
         if (droppedItemIntoShip)
         {
-            if ((itemsHeldList.Count - 1) == 0)
-            {
-                HUDManager.Instance.DisplayTip("Scrap Delivered", "Cruiser Gal has delivered the items given to her to the ship!", false);
-            }
             Plugin.ExtendedLogging($"Dropping item in ship room: {item}");
             item.transform.SetParent(GameNetworkManager.Instance.localPlayerController.playersManager.elevatorTransform, true);
         }
@@ -553,25 +503,12 @@ public class CruiserGalAI : GalAI
         item.isInShipRoom = droppedItemIntoShip;
         item.isInElevator = droppedItemIntoShip;
         item.transform.localScale = item.originalScale;
-
-        item.isHeld = false;
-        item.isPocketed = false;
-        item.EnablePhysics(true);
-        item.EnableItemMeshes(true);
         item.fallTime = 0f;
         item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
         item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
         item.floorYRot = -1;
-        item.grabbable = true;
-        item.isHeldByEnemy = false;
         item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
-
-        itemsHeldList.Remove(item);
-        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(0, TakeDropItemSounds.Length)]);
-        if (itemsHeldList.Count == 0 && IsServer)
-        {
-            Animator.SetBool(holdingItemAnimation, false);
-        }
+        // Make the grabbableobject play a sound GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(0, TakeDropItemSounds.Length)]);
     }
 
     public override void OnUseEntranceTeleport(bool setOutside)
