@@ -212,14 +212,14 @@ public class Transporter : CodeRebirthEnemyAI
         {
             repositioning = true;
             // Change from IEnumerable to List
-            List<(GameObject obj, Vector3 position)> candidateObjects = new();
+            IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = [];
 
             // Loop 20 times, pick random nodes, add them to the list
-            List<GameObject> allNodes = [.. RoundManager.Instance.outsideAINodes, .. RoundManager.Instance.insideAINodes];
+            IEnumerable<GameObject> allNodes = [.. RoundManager.Instance.outsideAINodes, .. RoundManager.Instance.insideAINodes];
 
             candidateObjects = allNodes
-                .Select(kv => (kv, kv.transform.position))
-                .ToList();
+                .Select(kv => (kv, kv.transform.position));
+
             smartAgentNavigator.CheckPaths(candidateObjects, CheckIfCanReposition);
         }
     }

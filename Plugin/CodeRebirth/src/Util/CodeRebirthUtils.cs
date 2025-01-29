@@ -2,7 +2,6 @@ using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using Unity.Netcode;
 using UnityEngine;
-using Random = System.Random;
 using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Unlockables;
 using Newtonsoft.Json;
@@ -19,7 +18,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
-    private static Random random = null!;
+    private static System.Random CRRandom = new();
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
     private void Awake()
@@ -52,11 +51,10 @@ internal class CodeRebirthUtils : NetworkBehaviour
         // Align the object's up direction with the hit normal
         spawnedObject.transform.up = hit.normal;
 
-        // Get the NetworkObject component and spawn it on the network
         NetworkObject networkObject = spawnedObject.GetComponent<NetworkObject>();
-        networkObject?.Spawn();
+        networkObject?.Spawn(true);
         
-        // Optionally, you can re-add the prefab back to the list if needed
+        // Re-add the prefab back to the list if needed
         MapObjectHandler.hazardPrefabs.Add(prefabToSpawn);
     }
 
@@ -105,7 +103,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             return default;
         }
         
-        random ??= new Random(StartOfRound.Instance.randomMapSeed + 85);
+        CRRandom ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
 
         Transform? parent = null;
         if (parent == null)
@@ -114,7 +112,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
         GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
         go.GetComponent<NetworkObject>().Spawn();
-        int value = (int)(random.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
+        int value = (int)(CRRandom.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
         var scanNode = go.GetComponentInChildren<ScanNodeProperties>();
         scanNode.scrapValue = value;
         scanNode.subText = $"Value: ${value}";

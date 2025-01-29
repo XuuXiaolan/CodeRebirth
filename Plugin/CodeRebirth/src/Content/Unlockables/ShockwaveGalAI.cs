@@ -711,9 +711,9 @@ public class ShockwaveGalAI : GalAI
     }
 
     [ClientRpc]
-    private void HandleGrabbingItemClientRpc(NetworkObjectReference networkObjectReference, int heldTransform)
+    private void HandleGrabbingItemClientRpc(NetworkBehaviourReference networkBehaviourReference)
     {
-        StartCoroutine(HandleGrabbingItem(((GameObject)networkObjectReference).GetComponent<GrabbableObject>(), itemsHeldTransforms[heldTransform]));
+        StartCoroutine(HandleGrabbingItem((GrabbableObject)networkBehaviourReference, itemsHeldTransforms[itemsHeldList.Count]));
     }
 
     private IEnumerator HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
