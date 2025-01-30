@@ -49,15 +49,15 @@ public class CruiserGalAI : GalAI
 
     private void StartUpDelay()
     {
-        IEnumerable<CruiserCharger> CruiserChargers = [];
+        List<CruiserCharger> CruiserChargers = new();
         foreach (var charger in Charger.Instances)
         {
             if (charger is CruiserCharger CruiserCharger1)
             {
-                CruiserChargers.AddItem(CruiserCharger1);
+                CruiserChargers.Add(CruiserCharger1);
             }
         }
-        if (CruiserChargers.Count() <= 0)
+        if (CruiserChargers.Count <= 0)
         {
             if (IsServer) NetworkObject.Despawn();
             Plugin.Logger.LogError($"CruiserCharger not found in scene. CruiserGalAI will not be functional.");

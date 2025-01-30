@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2492.5002, g: 2539.5627, b: 3610.4614, a: 1}
+  m_IndirectSpecularColor: {r: 2491.3596, g: 2538.5706, b: 3609.4692, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -462,79 +462,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &823830128
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3272383635430614626, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 117559923
-      objectReference: {fileID: 0}
-    - target: {fileID: 3632346896036407525, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_Name
-      value: CruiserGalCharger
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 35.54532
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 7.991043
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4791727645122105921, guid: 187ae79187eb6c546af56a8525e608aa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 187ae79187eb6c546af56a8525e608aa, type: 3}
 --- !u!1 &1752473777
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,5 +624,4 @@ SceneRoots:
   - {fileID: 432432461}
   - {fileID: 2013410475}
   - {fileID: 1752473781}
-  - {fileID: 823830128}
   - {fileID: 304679118}

@@ -115,6 +115,7 @@ static class StartOfRoundPatch
 
 		foreach (var gal in GalAI.Instances)
 		{
+			if (gal.IdleSounds.Length <= 0) continue;
 			gal.GalVoice.PlayOneShot(gal.IdleSounds[gal.galRandom.Next(0, gal.IdleSounds.Length)]);
 		}
 	}

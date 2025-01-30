@@ -8,7 +8,6 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using UnityEngine.AI;
-using Random = System.Random;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
 
@@ -209,7 +208,7 @@ static class RoundManagerPatch {
 		}
 	}
 
-	private static void SpawnFlora(Random random, SpawnableFlora flora, ref int spawnCount)
+	private static void SpawnFlora(System.Random random, SpawnableFlora flora, ref int spawnCount)
 	{
 		var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
 		for (int i = 0; i < targetSpawns; i++)
@@ -253,7 +252,7 @@ static class RoundManagerPatch {
 		}
 	}
 
-	private static bool TryGetValidFloraSpawnPoint(Random random, out RaycastHit hit)
+	private static bool TryGetValidFloraSpawnPoint(System.Random random, out RaycastHit hit)
 	{
 		Vector3 basePosition = GetRandomPointNearPointsOfInterest(random, 20);
 		Vector3 randomPosition = basePosition;
@@ -426,7 +425,7 @@ static class RoundManagerPatch {
         if (spawnCount <= 0) return;
 
         // Check if the current moon configuration is valid
-        System.Random random = new();
+        System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed);
         Plugin.ExtendedLogging($"Spawning {spawnCount} Wooden crates");
 		for (int i = 0; i < spawnCount; i++)
 		{
@@ -500,7 +499,7 @@ static class RoundManagerPatch {
         if (spawnCount <= 0) return;
 
         // Check if the current moon configuration is valid
-        System.Random random = new();
+        System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed);
         Plugin.ExtendedLogging($"Spawning {spawnCount} metal crates");
 		for (int i = 0; i < spawnCount; i++)
 		{
