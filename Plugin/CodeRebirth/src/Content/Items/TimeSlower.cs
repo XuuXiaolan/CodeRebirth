@@ -9,7 +9,7 @@ public class TimeSlower : GrabbableObject
     public override void Start()
     {
         base.Start();
-        if (audioSourcesToAffect.Length == 0) audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>(); // Patch AudioSouce.Awake or find Audio Listener
+        if (audioSourcesToAffect.Length == 0) audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>(); // Patch AudioSource.Awake or find Audio Listener
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)

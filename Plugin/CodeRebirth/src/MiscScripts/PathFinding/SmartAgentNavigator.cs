@@ -92,6 +92,7 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     public bool DoPathingToDestination(Vector3 destination)
     {
+        if (cantMove) return false;
         if (!agent.enabled)
         {
             HandleDisabledAgentPathing();
@@ -139,7 +140,6 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     private void HandleDisabledAgentPathing()
     {
-        if (cantMove) return;
         Vector3 targetPosition = pointToGo;
         float arcHeight = 10f;  // Adjusted arc height for a more pronounced arc
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
@@ -164,7 +164,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     private bool DetermineIfNeedToDisableAgent(Vector3 destination)
     {
         float distanceToDest = Vector3.Distance(transform.position, destination);
-        if (distanceToDest <= agent.stoppingDistance)
+        if (distanceToDest <= agent.stoppingDistance + 5f)
         {
             return false;
         }

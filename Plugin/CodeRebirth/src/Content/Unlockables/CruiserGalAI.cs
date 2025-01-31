@@ -19,11 +19,12 @@ public class CruiserGalAI : GalAI
     public Transform playerHeldBone = null!;
     public Transform galContainer = null!;
     public AudioSource RadioAudioSource = null!;
-    public AudioClip[] TakeDropItemSounds = [];
+    public AudioSource FootstepSource = null!;
     public AudioClip[] RadioSounds = [];
     public AudioClip ChestCollisionToggleSound = null!;
 
-    private List<GrabbableObject> itemsHeldList => GetHeldItemsList();
+    private Coroutine? fixPlayerPositionRoutine = null;
+    private List<GrabbableObject> itemsHeldList = new();
     private EntranceTeleport entranceToGoTo = null!;
     private bool flying = false;
     private State galState = State.Inactive;
@@ -125,7 +126,12 @@ public class CruiserGalAI : GalAI
     [ClientRpc]
     private void HandleGrabbingItemClientRpc(NetworkBehaviourReference networkBehaviourReference)
     {
-        StartCoroutine(HandleGrabbingItem((GrabbableObject)networkBehaviourReference, ItemsHeldTransforms[itemsHeldList.Count]));
+        int index = itemsHeldList.Count;
+        if (itemsHeldList.Count >= 8)
+        {
+            index = galRandom.Next(8);
+        }
+        StartCoroutine(HandleGrabbingItem((GrabbableObject)networkBehaviourReference, ItemsHeldTransforms[index]));
     }
 
     private IEnumerator HandleGrabbingItem(GrabbableObject item, Transform heldTransform)
@@ -143,7 +149,7 @@ public class CruiserGalAI : GalAI
         itemsHeldList.Add(item);
         transform.rotation = item.parentObject.rotation;
         transform.Rotate(item.itemProperties.rotationOffset);
-        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(0, TakeDropItemSounds.Length)]);
+        GalVoice.PlayOneShot(item.itemProperties.dropSFX);
         HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
     }
 
@@ -163,6 +169,7 @@ public class CruiserGalAI : GalAI
     private void CheckIfCanPathToEntrances(List<EntranceTeleport> teleports)
     {
         smartAgentNavigator.cantMove = false;
+        Plugin.ExtendedLogging($"Pathable entrances: {teleports.Count}");
         if (teleports.Count <= 0)
         {
             // todo: Maybe play a sound that she can't route to any exit?
@@ -172,23 +179,20 @@ public class CruiserGalAI : GalAI
         HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringPlayer);
     }
 
-    private IEnumerator FixingPlayerToPoint()
+    public IEnumerator FixingPlayerToPoint()
     {
         while (true)
         {
             yield return new WaitForEndOfFrame();
-            if (ownerPlayer != null)
-            {
-                ownerPlayer.transform.position = playerHeldBone.position;
-                ownerPlayer.transform.rotation = playerHeldBone.rotation;
-            }
+            if (ownerPlayer == null) yield break;
+            ownerPlayer.transform.position = playerHeldBone.position;
+            ownerPlayer.transform.rotation = playerHeldBone.rotation;
         }
     }
 
     private void OnWheelDumpScrapInteract(PlayerControllerB playerInteracting)
     {
         if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
-        if (itemsHeldList.Count == 0) return;
         DropAllHeldItemsServerRpc();
     }
 
@@ -230,7 +234,7 @@ public class CruiserGalAI : GalAI
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void StartCollisionAnimationServerRpc() // todo: do timing stuff with animation here
+    private void StartCollisionAnimationServerRpc()
     {
         NetworkAnimator.SetTrigger(chestCollisionToggleAnimation);
         StartCollisionAnimationClientRpc();
@@ -265,18 +269,23 @@ public class CruiserGalAI : GalAI
 
     private void DropAllHeldItems()
     {
-
-        List<GrabbableObject> heldItems = itemsHeldList;
-        Plugin.ExtendedLogging($"Items held: {heldItems.Count}");
-        for (int i = heldItems.Count; i > 0; i--)
+        Plugin.ExtendedLogging($"Items held Count: {itemsHeldList.Count}");
+        for (int i = itemsHeldList.Count - 1; i > 0; i--)
         {
-            HandleDroppingItem(heldItems[i]);
+            HandleDroppingItem(itemsHeldList[i]);
         }
     }
 
     private void InteractTriggersUpdate()
     {
         bool interactable = !inActive && ownerPlayer != null && GameNetworkManager.Instance.localPlayerController == ownerPlayer;
+        bool isHoldingItem = interactable && ownerPlayer != null && ownerPlayer.currentlyHeldObjectServer != null;
+
+        ChestCollisionToggleTrigger.interactable = interactable;
+        RadioTrigger.interactable = interactable;
+        WheelDumpScrapTrigger.interactable = itemsHeldList.Count > 0;
+        LeverInteract.interactable = interactable;
+        ContainerTrigger.interactable = isHoldingItem;
     }
 
     private void StoppingDistanceUpdate()
@@ -307,14 +316,20 @@ public class CruiserGalAI : GalAI
         base.Update();
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
-        if (galState == State.Inactive && GalCharger != null)
+        if (inActive)
         {
-            this.transform.position = GalCharger.transform.position;
-            this.transform.rotation = GalCharger.transform.rotation;
+            FootstepSource.volume = 0f;
             return;
         }
         StoppingDistanceUpdate();
-
+        if (Animator.GetFloat(runSpeedFloat) > 0.01f)
+        {
+            FootstepSource.volume = 1f;
+        }
+        else
+        {
+            FootstepSource.volume = 0f;
+        }
         if (!IsHost) return;
         HostSideUpdate();
     }
@@ -402,8 +417,8 @@ public class CruiserGalAI : GalAI
             return;
         }
         
-        smartAgentNavigator.DoPathingToDestination(entranceToGoTo.transform.position);
-        if (Vector3.Distance(this.transform.position, entranceToGoTo.transform.position) > Agent.stoppingDistance) return;
+        smartAgentNavigator.DoPathingToDestination(entranceToGoTo.entrancePoint.position);
+        if (Vector3.Distance(this.transform.position, entranceToGoTo.entrancePoint.position) > Agent.stoppingDistance) return;
         if (Agent.hasPath && Agent.velocity.sqrMagnitude != 0f) return;
         // finished
         HandleStateAnimationSpeedChangesServerRpc((int)State.FollowingPlayer);
@@ -543,11 +558,6 @@ public class CruiserGalAI : GalAI
     }
     #endregion
 
-    private List<GrabbableObject> GetHeldItemsList()
-    {
-        return transform.GetComponentsInChildren<GrabbableObject>().ToList();
-    }
-
     private void HandleDroppingItem(GrabbableObject item)
     {
         item.parentObject = null;
@@ -562,34 +572,35 @@ public class CruiserGalAI : GalAI
             item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
         }
 
+        item.grabbable = true;
+        item.isHeldByEnemy = false;
+        item.EnablePhysics(true);
+        item.EnableItemMeshes(true);
         item.isInShipRoom = droppedItemIntoShip;
         item.isInElevator = droppedItemIntoShip;
         item.transform.localScale = item.originalScale;
         item.fallTime = 0f;
         item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
-        item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(default(Vector3)));
+        item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(item.transform.position - Vector3.up * 1.5f));
         item.floorYRot = -1;
         item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
-        // Make the grabbableobject play a sound GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(0, TakeDropItemSounds.Length)]);
+        itemsHeldList.Remove(item);
     }
 
     public override void OnUseEntranceTeleport(bool setOutside)
     {
         base.OnUseEntranceTeleport(setOutside);
-        List<GrabbableObject> grabbableObjects = itemsHeldList;
-        for (int i = 0; i < grabbableObjects.Count; i++)
+        for (int i = 0; i < itemsHeldList.Count; i++)
         {
-            grabbableObjects[i].isInFactory = setOutside;
+            itemsHeldList[i].isInFactory = setOutside;
             int indexOfRandomTransform = galRandom.Next(0, ItemsHeldTransforms.Count);
-            grabbableObjects[i].transform.position = ItemsHeldTransforms[indexOfRandomTransform].position;
-            StartCoroutine(SetItemPhysics(grabbableObjects[i]));
+            itemsHeldList[i].transform.position = ItemsHeldTransforms[indexOfRandomTransform].position;
+            StartCoroutine(SetItemPhysics(itemsHeldList[i]));
         }
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
-        {
-            if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform) continue; 
-            smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
-            player.transform.position = galContainer.position;
-        }
+
+        if (GameNetworkManager.Instance.localPlayerController.transform.parent != this.transform) return; 
+        smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
+        GameNetworkManager.Instance.localPlayerController.transform.position = galContainer.position;
     }
 
     private IEnumerator SetItemPhysics(GrabbableObject grabbableObject)
@@ -610,23 +621,29 @@ public class CruiserGalAI : GalAI
 
         if (grabbing == 1)
         {
-            StartCoroutine(FixingPlayerToPoint());
+            fixPlayerPositionRoutine = StartCoroutine(FixingPlayerToPoint());
             ownerPlayer.disableMoveInput = true;
         }
         else
         {
-            StopCoroutine(FixingPlayerToPoint());
+            StopCoroutine(fixPlayerPositionRoutine);
             ownerPlayer.disableMoveInput = false;
             ownerPlayer.transform.position = galContainer.position;
             smartAgentNavigator.cantMove = true;
-            IEnumerable<(EntranceTeleport obj, Vector3 position)> candidateObjects = [];
-            IEnumerable<EntranceTeleport> potentiallyPathableTeleports = CodeRebirthUtils.entrancePoints
-                .Where(x => x.isEntranceToBuilding && smartAgentNavigator.isOutside || !smartAgentNavigator.isOutside && !x.isEntranceToBuilding);
+            List<(EntranceTeleport obj, Vector3 position)> candidateObjects = new();
+            List<EntranceTeleport> potentiallyPathableTeleports = CodeRebirthUtils.entrancePoints
+                .Where(x => (x.isEntranceToBuilding && smartAgentNavigator.isOutside) || (!smartAgentNavigator.isOutside && !x.isEntranceToBuilding))
+                .ToList();
 
             candidateObjects = potentiallyPathableTeleports
-                .Select(kv => (kv, kv.transform.position));
+                .Select(kv => (kv, kv.entrancePoint.position))
+                .ToList();
 
-            smartAgentNavigator.CheckPaths(candidateObjects, CheckIfCanPathToEntrances); // todo: Set a cooldown to the trigger in unity
+            foreach ((EntranceTeleport obj, Vector3 position) in candidateObjects)
+            {
+                Plugin.ExtendedLogging($"Checking if can path to {obj.name} with position {position}");
+            }
+            smartAgentNavigator.CheckPaths(candidateObjects, CheckIfCanPathToEntrances);
         }
     }
 

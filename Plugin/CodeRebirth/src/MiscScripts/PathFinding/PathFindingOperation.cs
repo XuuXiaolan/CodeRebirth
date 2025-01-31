@@ -84,7 +84,7 @@ public class FindPathThroughTeleportsOperation : PathfindingOperation
         }
         if (statusOfDirectPathJob == PathQueryStatus.Success)
         {
-            // Plugin.ExtendedLogging("Direct path job success with length: " + FindDirectPathToDestinationJob.Job.PathLength[0]);
+            // Plugin.ExtendedLogging("Direct path job success with length: " + FindDirectPathToDestinationJob.Job.GetPathLength());
             bestDistance = FindDirectPathToDestinationJob.Job.GetPathLength();
             foundPath = true;
         }
