@@ -425,7 +425,7 @@ static class RoundManagerPatch {
         if (spawnCount <= 0) return;
 
         // Check if the current moon configuration is valid
-        System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed);
+        System.Random random = new System.Random();
         Plugin.ExtendedLogging($"Spawning {spawnCount} Wooden crates");
 		for (int i = 0; i < spawnCount; i++)
 		{
@@ -499,7 +499,7 @@ static class RoundManagerPatch {
         if (spawnCount <= 0) return;
 
         // Check if the current moon configuration is valid
-        System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed);
+        System.Random random = new System.Random();
         Plugin.ExtendedLogging($"Spawning {spawnCount} metal crates");
 		for (int i = 0; i < spawnCount; i++)
 		{

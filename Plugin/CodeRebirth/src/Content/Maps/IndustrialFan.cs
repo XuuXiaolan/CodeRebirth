@@ -7,7 +7,6 @@ public class IndustrialFan : CodeRebirthHazard
 {
     public Transform fanTransform = null!;
     public AudioSource cutAudioSource = null!;
-    public AudioSource windAudioSource = null!;
     public float rotationSpeed = 45f;
     public float pushForce = 15f;
     public float suctionForce = 15f;
@@ -21,14 +20,8 @@ public class IndustrialFan : CodeRebirthHazard
 
     public void FixedUpdate()
     {
-        UpdateAudio();
         // Rotate the fan continuously
         fanTransform.Rotate(Vector3.up, rotationSpeed * Time.fixedDeltaTime);
-    }
-
-    private void UpdateAudio()
-    {
-        windAudioSource.volume = Plugin.ModConfig.ConfigIndustrialFanVolume.Value;
     }
 
     private void OnTriggerEnter(Collider other)

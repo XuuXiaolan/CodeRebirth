@@ -29,6 +29,13 @@ public class SnowGlobe : GrabbableObject
     private AudioSource musicAS = null!;
     private PlayerControllerB? previouslyHeldBy;
     private bool activated;
+    private System.Random snow = new();
+
+    public override void Start()
+    {
+        base.Start();
+        snow = new System.Random(StartOfRound.Instance.randomMapSeed + 32);
+    }
 
     public override void Update()
     {
@@ -75,6 +82,10 @@ public class SnowGlobe : GrabbableObject
         base.ItemActivate(used, buttonDown);
         if (!activated)
         {
+            if (snow.Next(0, 100) < 10)
+            {
+                
+            }
             if (Plugin.ModConfig.ConfigSnowGlobeMusic.Value)
             {
                 musicAS.volume = 1;

@@ -117,7 +117,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         if (idleTimer <= idleNeededTimer) return;
 
         idleTimer = 0f;
-        idleNeededTimer = galRandom.NextFloat(5f, 10f);
+        idleNeededTimer = galRandom.NextFloat(10f, 15f);
         GalSFX.PlayOneShot(IdleSounds[galRandom.Next(0, IdleSounds.Length)]);
         GalVoice.pitch = galRandom.NextFloat(0.9f, 1.1f);
     }

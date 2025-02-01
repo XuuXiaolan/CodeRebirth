@@ -21,6 +21,7 @@ public class CruiserGalAI : GalAI
     public AudioSource RadioAudioSource = null!;
     public AudioSource FootstepSource = null!;
     public AudioClip[] RadioSounds = [];
+    public AudioClip[] StartOrStopFlyingSounds = [];
     public AudioClip ChestCollisionToggleSound = null!;
 
     private Coroutine? fixPlayerPositionRoutine = null;
@@ -50,11 +51,13 @@ public class CruiserGalAI : GalAI
 
     private void LateUpdate()
     {
-        if (ownerPlayer != null && galState == State.DeliveringPlayer && Vector3.Distance(ownerPlayer.transform.position, galContainer.position) > 1)
+        if (ownerPlayer != null && galState == State.DeliveringPlayer)
         {
             ownerPlayer.transform.position = galContainer.position;
+            ownerPlayer.ResetFallGravity();
         }
     }
+
     private void StartUpDelay()
     {
         List<CruiserCharger> CruiserChargers = new();
@@ -93,6 +96,7 @@ public class CruiserGalAI : GalAI
     {
         base.ActivateGal(owner);
         ResetToChargerStation(State.Active);
+        GalSFX.volume = 1f;
         if (GalCharger is CruiserCharger cruiserCharger)
         {
             cruiserCharger.animator.SetBool(CruiserCharger.isActivatedAnimation, true);
@@ -112,6 +116,7 @@ public class CruiserGalAI : GalAI
     {
         base.DeactivateGal();
         ResetToChargerStation(State.Inactive);
+        GalSFX.volume = 0f;
         if (GalCharger is CruiserCharger cruiserCharger)
         {
             cruiserCharger.animator.SetBool(CruiserCharger.isActivatedAnimation, false);
@@ -277,7 +282,7 @@ public class CruiserGalAI : GalAI
     private void DropAllHeldItems()
     {
         Plugin.ExtendedLogging($"Items held Count: {itemsHeldList.Count}");
-        for (int i = itemsHeldList.Count - 1; i > 0; i--)
+        for (int i = itemsHeldList.Count - 1; i >= 0; i--)
         {
             HandleDroppingItem(itemsHeldList[i]);
         }
@@ -464,6 +469,14 @@ public class CruiserGalAI : GalAI
     private void SetFlying(bool flying)
     {
         this.flying = flying;
+        if (flying)
+        {
+            GalSFX.PlayOneShot(StartOrStopFlyingSounds[0]);
+        }
+        else
+        {
+            GalSFX.PlayOneShot(StartOrStopFlyingSounds[1]);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -13,10 +13,6 @@ public class IndustrialFanFrontCollider : NetworkBehaviour
     {
         if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
-            if (!industrialFan.IsObstructed(other.transform.position) && player == GameNetworkManager.Instance.localPlayerController)
-            {
-                industrialFan.windAudioSource.volume = 0.8f;
-            }
             playersInRange.Add(player);
         }
     }
@@ -25,7 +21,6 @@ public class IndustrialFanFrontCollider : NetworkBehaviour
     {
         if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
         {
-            industrialFan.windAudioSource.volume = 0.2f;
             playersInRange.Remove(player);
         }
     }

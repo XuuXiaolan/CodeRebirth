@@ -1,4 +1,11 @@
-# v0.14.0
+# v0.14.1
+
+- Reverted a crate attempt fix cuz my friend has a luck skill issue.
+- Fixed cruiser gal sounds and client bugs.
+- Added a 10% easter egg on activation to snow globe on a future feature.
+- Fixed IndustrialFan error spam.
+
+## v0.14.0
 
 - Added the last gal, cruiser gal.
 

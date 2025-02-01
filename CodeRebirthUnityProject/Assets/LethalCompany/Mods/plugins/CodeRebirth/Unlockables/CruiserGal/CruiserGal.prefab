@@ -868,7 +868,6 @@ MonoBehaviour:
   ActivateSound: {fileID: 8300000, guid: acb12c28290173f47969a5027a95535d, type: 3}
   GreetOwnerSound: {fileID: 0}
   IdleSounds:
-  - {fileID: 8300000, guid: f6e7e70a440d61040855bdd4f924f52d, type: 3}
   - {fileID: 8300000, guid: 8b13d51a23fb2fd4f9e8a30d3026b1d3, type: 3}
   - {fileID: 8300000, guid: de1ced14a71443c42b3a29511ab08754, type: 3}
   - {fileID: 8300000, guid: f9f86e884034a194aa37e12394c31a71, type: 3}
@@ -918,6 +917,9 @@ MonoBehaviour:
   FootstepSource: {fileID: 1905762728487785427}
   RadioSounds:
   - {fileID: 8300000, guid: c7507cc997dc045479c230302a3bc697, type: 3}
+  StartOrStopFlyingSounds:
+  - {fileID: 8300000, guid: 2e1c57803f20660419cfda69429e1670, type: 3}
+  - {fileID: 8300000, guid: d213c6a4e1bb68445a010a2f473ce122, type: 3}
   ChestCollisionToggleSound: {fileID: 8300000, guid: 7660a816c9c9faf4a9247d6018c964c9,
     type: 3}
 --- !u!114 &8135599528666598451
@@ -2160,7 +2162,7 @@ MonoBehaviour:
   disabledHoverTip: 
   interactable: 1
   oneHandedItemAllowed: 1
-  twoHandedItemAllowed: 0
+  twoHandedItemAllowed: 1
   holdInteraction: 0
   timeToHold: 0.5
   timeToHoldSpeedMultiplier: 1
@@ -2294,7 +2296,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -2805,11 +2807,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 8e6aa433117b36642829b17e291b2fc0,
     type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
+  m_audioClip: {fileID: 8300000, guid: f6e7e70a440d61040855bdd4f924f52d, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
