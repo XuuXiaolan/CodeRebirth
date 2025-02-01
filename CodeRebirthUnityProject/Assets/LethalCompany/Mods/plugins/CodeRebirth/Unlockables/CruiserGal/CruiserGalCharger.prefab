@@ -413,6 +413,7 @@ Transform:
   m_Children:
   - {fileID: 470032981861139232}
   - {fileID: 3457968161029377775}
+  - {fileID: 6138722746098619757}
   - {fileID: 6417347556269755486}
   - {fileID: 8538040950924847636}
   - {fileID: 8243985282306516833}
@@ -505,7 +506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActivateOrDeactivateTrigger: {fileID: 8961698831747888178}
-  ChargeTransform: {fileID: 3457968161029377775}
+  ChargeTransform: {fileID: 6138722746098619757}
   animator: {fileID: 3471554038775788269}
 --- !u!1 &4366553993643034951
 GameObject:
@@ -911,3 +912,34 @@ Transform:
   - {fileID: 7665667965622941509}
   m_Father: {fileID: 470032981861139232}
   m_LocalEulerAnglesHint: {x: 89.98021, y: 0, z: 0}
+--- !u!1 &7973288590584356793
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6138722746098619757}
+  m_Layer: 8
+  m_Name: ChargerTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6138722746098619757
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7973288590584356793}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4791727645122105921}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

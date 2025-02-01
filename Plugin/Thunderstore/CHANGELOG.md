@@ -1,4 +1,8 @@
-# v0.13.7
+# v0.14.0
+
+- Added the last gal, cruiser gal.
+
+## v0.13.7
 
 - You can now ride jimothy inside or outside safely without problems.
 - Fixed lag-spike when a coderebirth enemy spawns.

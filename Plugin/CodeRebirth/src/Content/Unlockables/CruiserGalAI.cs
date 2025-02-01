@@ -48,6 +48,13 @@ public class CruiserGalAI : GalAI
         Dancing = 4,
     }
 
+    private void LateUpdate()
+    {
+        if (ownerPlayer != null && galState == State.DeliveringPlayer && Vector3.Distance(ownerPlayer.transform.position, galContainer.position) > 1)
+        {
+            ownerPlayer.transform.position = galContainer.position;
+        }
+    }
     private void StartUpDelay()
     {
         List<CruiserCharger> CruiserChargers = new();
@@ -147,8 +154,8 @@ public class CruiserGalAI : GalAI
         item.parentObject = heldTransform;
         item.EnablePhysics(false);
         itemsHeldList.Add(item);
-        transform.rotation = item.parentObject.rotation;
-        transform.Rotate(item.itemProperties.rotationOffset);
+        item.transform.rotation = item.parentObject.rotation;
+        item.transform.Rotate(item.itemProperties.rotationOffset);
         GalVoice.PlayOneShot(item.itemProperties.dropSFX);
         HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
     }
@@ -396,6 +403,7 @@ public class CruiserGalAI : GalAI
             return;
         }
 
+
         if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position))
         {
             return;
@@ -534,7 +542,9 @@ public class CruiserGalAI : GalAI
     private void HandleStateInactiveChange()
     {
         DropAllHeldItems();
+        SetFlying(false);
 
+        Animator.SetBool(flyAnimation, false);
         ownerPlayer = null;
         Agent.enabled = false;
     }
@@ -581,7 +591,7 @@ public class CruiserGalAI : GalAI
         item.transform.localScale = item.originalScale;
         item.fallTime = 0f;
         item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
-        item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(item.transform.position - Vector3.up * 1.5f));
+        item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.GetItemFloorPosition(item.transform.position - Vector3.up * 1.75f));
         item.floorYRot = -1;
         item.transform.rotation = Quaternion.Euler(item.itemProperties.restingRotation);
         itemsHeldList.Remove(item);
@@ -623,11 +633,13 @@ public class CruiserGalAI : GalAI
         {
             fixPlayerPositionRoutine = StartCoroutine(FixingPlayerToPoint());
             ownerPlayer.disableMoveInput = true;
+            ownerPlayer.inSpecialInteractAnimation = true;
         }
         else
         {
             StopCoroutine(fixPlayerPositionRoutine);
             ownerPlayer.disableMoveInput = false;
+            ownerPlayer.inSpecialInteractAnimation = false;
             ownerPlayer.transform.position = galContainer.position;
             smartAgentNavigator.cantMove = true;
             List<(EntranceTeleport obj, Vector3 position)> candidateObjects = new();
