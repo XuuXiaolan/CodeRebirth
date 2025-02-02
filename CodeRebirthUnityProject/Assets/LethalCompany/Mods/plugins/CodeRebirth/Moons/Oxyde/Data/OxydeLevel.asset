@@ -1,0 +1,192 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89cc72f2cd6e5da392d2eb839dbf2eba, type: 3}
+  m_Name: OxydeLevel
+  m_EditorClassIdentifier: 
+  planetPrefab: {fileID: 1152200012831475, guid: c102ec5cd3dda8b4b8050768d9b2fad0,
+    type: 3}
+  sceneName: OxydeScene
+  levelID: 745
+  lockedForDemo: 0
+  spawnEnemiesAndScrap: 1
+  PlanetName: 745 Oxyde
+  LevelDescription: 'POPULATION: Abandoned
+
+    CONDITIONS: DEATH
+
+    FAUNA: DEATH'
+  videoReel: {fileID: 0}
+  riskLevel: Death
+  timeToArrive: 1
+  OffsetFromGlobalTime: 0
+  DaySpeedMultiplier: 1
+  planetHasTime: 0
+  randomWeathers:
+  - weatherType: 3
+    weatherVariable: 4
+    weatherVariable2: 12
+  - weatherType: 5
+    weatherVariable: 3
+    weatherVariable2: 0
+  - weatherType: 0
+    weatherVariable: 3
+    weatherVariable2: 0
+  - weatherType: -1
+    weatherVariable: 3
+    weatherVariable2: 0
+  overrideWeather: 0
+  overrideWeatherType: -1
+  currentWeather: -1
+  factorySizeMultiplier: 1.6
+  dungeonFlowTypes: []
+  spawnableMapObjects: []
+  spawnableOutsideObjects: []
+  canSpawnMold: 1
+  moldSpreadIterations: 0
+  moldStartPosition: -1
+  spawnableScrap: []
+  minScrap: 28
+  maxScrap: 32
+  minTotalScrapValue: 300
+  maxTotalScrapValue: 700
+  levelAmbienceClips: {fileID: 11400000, guid: ba1bf23eed1efb941864af0d4bb79db3, type: 2}
+  maxEnemyPowerCount: 18
+  maxOutsideEnemyPowerCount: 7
+  maxDaytimeEnemyPowerCount: 20
+  Enemies: []
+  OutsideEnemies:
+  - enemyType: {fileID: 11400000, guid: 9a726758bfe9cd948a5e960ab7bdbea4, type: 2}
+    rarity: 20
+  - enemyType: {fileID: 11400000, guid: 7712b157f6470c3428da58382131565a, type: 2}
+    rarity: 10
+  - enemyType: {fileID: 11400000, guid: 8cb8b0df25a3f76439fefdb07040503c, type: 2}
+    rarity: 6
+  - enemyType: {fileID: 11400000, guid: 9a99c44c0a2f01f4da74b8e820c5a09c, type: 2}
+    rarity: 4
+  - enemyType: {fileID: 11400000, guid: 0d35d0655a7f83742a89ddc37223e58d, type: 2}
+    rarity: 4
+  - enemyType: {fileID: 11400000, guid: 3c41db0f374c24c488ab343397e90999, type: 2}
+    rarity: 1
+  - enemyType: {fileID: 11400000, guid: 6ee0c03ab1d4b8d46b2399ecc30174fe, type: 2}
+    rarity: 2
+  DaytimeEnemies:
+  - enemyType: {fileID: 11400000, guid: fb0ffe9405fd3a04b8166e871975cb10, type: 2}
+    rarity: 20
+  - enemyType: {fileID: 11400000, guid: 716137d860e5dad4ca99783d7f1c20a4, type: 2}
+    rarity: 13
+  - enemyType: {fileID: 11400000, guid: 314863f04053ed24286271427619c412, type: 2}
+    rarity: 15
+  - enemyType: {fileID: 11400000, guid: 429fb44cba9deaa4c8f3b8bd17f63b46, type: 2}
+    rarity: 17
+  enemySpawnChanceThroughoutDay:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -3
+      inSlope: 59.199333
+      outSlope: 59.199333
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0
+      outWeight: 0.18829483
+    - serializedVersion: 3
+      time: 0.16717777
+      value: 2.1031938
+      inSlope: 11.647723
+      outSlope: 11.647723
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.65918964
+      outWeight: 0.40484196
+    - serializedVersion: 3
+      time: 0.7631003
+      value: 11.275558
+      inSlope: 25.289257
+      outSlope: 25.289257
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.41667995
+      outWeight: 0.5360636
+    - serializedVersion: 3
+      time: 1
+      value: 15
+      inSlope: 35.604027
+      outSlope: 35.604027
+      tangentMode: 0
+      weightedMode: 1
+      inWeight: 0.04912584
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  outsideEnemySpawnChanceThroughDay:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.00000077369623
+      value: -2.8875
+      inSlope: Infinity
+      outSlope: -1.0600616
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0
+      outWeight: 0.14093608
+    - serializedVersion: 3
+      time: 0.5448442
+      value: -0.02099245
+      inSlope: 9.172262
+      outSlope: 9.172262
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.33333334
+      outWeight: 0.71965504
+    - serializedVersion: 3
+      time: 1.0052626
+      value: 5.3594007
+      inSlope: 16.256857
+      outSlope: 11.374388
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.25347674
+      outWeight: 0.48315445
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  daytimeEnemySpawnChanceThroughDay:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.27990866
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14916255
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spawnProbabilityRange: 2
+  daytimeEnemiesProbabilityRange: 10
+  levelIncludesSnowFootprints: 1
+  levelIconString: 
