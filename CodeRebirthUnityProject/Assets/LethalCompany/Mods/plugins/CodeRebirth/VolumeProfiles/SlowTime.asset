@@ -15,13 +15,13 @@ MonoBehaviour:
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {r: 0.36467603, g: 0.49443334, b: 0.5188679, a: 1}
+    m_Value: {r: 0.6886792, g: 0.67437667, b: 0.5879761, a: 1}
   highlights:
     m_OverrideState: 1
-    m_Value: {r: 0.56535846, g: 0.5438323, b: 0.9528302, a: 1}
+    m_Value: {r: 0.5191359, g: 0.5030705, b: 0.8018868, a: 1}
   balance:
     m_OverrideState: 1
-    m_Value: -24
+    m_Value: -29.5
 --- !u!114 &-2810317844936076923
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -129,10 +129,10 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: -0.06
+    m_Value: -0.12
   contrast:
     m_OverrideState: 1
-    m_Value: 43.8
+    m_Value: 47.2
   colorFilter:
     m_OverrideState: 0
     m_Value: {r: 1, g: 0.8254717, b: 0.8254717, a: 1}
@@ -169,7 +169,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   scale:
     m_OverrideState: 1
-    m_Value: 0.95
+    m_Value: 0.86
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,8 +226,8 @@ MonoBehaviour:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.19086461
-          value: 0.16554052
+          time: 0.22670807
+          value: 0.15894037
           inSlope: 1.0030174
           outSlope: 1.0030174
           tangentMode: 0
@@ -235,17 +235,17 @@ MonoBehaviour:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.39636365
-          value: 0.4015748
-          inSlope: 1
-          outSlope: 1
+          time: 0.42857143
+          value: 0.36423838
+          inSlope: 2.0752702
+          outSlope: 2.0752702
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.5823817
-          value: 0.570946
+          time: 0.5647668
+          value: 0.5806452
           inSlope: 0.7658401
           outSlope: 0.7658401
           tangentMode: 0
@@ -489,7 +489,7 @@ MonoBehaviour:
     m_Value: 0
   color:
     m_OverrideState: 1
-    m_Value: {r: 0.023985408, g: 0.103773594, b: 0.07913913, a: 1}
+    m_Value: {r: 0.036356356, g: 0.1792453, b: 0.13637862, a: 1}
   center:
     m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
@@ -532,7 +532,7 @@ MonoBehaviour:
     m_Value: {fileID: 2800000, guid: 4c01269b41c5cf44c83f7ac6b5a91014, type: 3}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.142
+    m_Value: 0.266
   m_MaxSamples:
     m_OverrideState: 1
     m_Value: 14
