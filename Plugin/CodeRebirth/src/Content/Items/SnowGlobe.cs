@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using GameNetcodeStuff;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Content.Items;
 public class SnowGlobe : GrabbableObject
@@ -82,9 +83,9 @@ public class SnowGlobe : GrabbableObject
         base.ItemActivate(used, buttonDown);
         if (!activated)
         {
-            if (snow.Next(0, 100) < 10)
+            if (snow.Next(0, 100) < 5)
             {
-                
+                SlowDownEffect.DoSlowdownEffect(10, 0.2f);
             }
             if (Plugin.ModConfig.ConfigSnowGlobeMusic.Value)
             {

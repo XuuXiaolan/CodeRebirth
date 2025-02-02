@@ -9,12 +9,14 @@ using System.Collections.Generic;
 using CodeRebirth.src.Content.Maps;
 using UnityEngine.AI;
 using CodeRebirth.src.MiscScripts;
+using UnityEngine.Rendering;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
     public Material WireframeMaterial = null!;
     public Shader SeeThroughShader = null!;
+    public Volume TimeSlowVolume = null!;
 
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];

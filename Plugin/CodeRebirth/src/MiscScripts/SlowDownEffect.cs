@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -8,12 +9,13 @@ public static class SlowDownEffect
     public static AudioSource[] audioSourcesToAffect = []; // Patch AudioSource.Awake or find Audio Listener.
     public static void DoSlowdownEffect(float timeLength, float timeScale)
     {
+        CodeRebirthUtils.Instance.TimeSlowVolume.weight = 1f;
         if (audioSourcesToAffect.Length == 0) audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>();
         float timeDelay = timeLength;
         Time.timeScale = timeScale;
-        List<(AudioSource audioSource, float pitch, float volume, float dopplerLevel)> audioSourcesWithOldValues = [];
-        List<OccludeAudio> occludeAudiosToReEnable = [];
-        List<(AudioLowPassFilter filter, float oldCutOffFrequency)> lowPassFiltersWithOldValues = [];
+        List<(AudioSource audioSource, float pitch, float volume, float dopplerLevel)> audioSourcesWithOldValues = new();
+        List<OccludeAudio> occludeAudiosToReEnable = new();
+        List<(AudioLowPassFilter filter, float oldCutOffFrequency)> lowPassFiltersWithOldValues = new();
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
             player.movementSpeed /= (Time.timeScale*0.8f);
@@ -21,6 +23,7 @@ public static class SlowDownEffect
         }
         foreach (var audiosource in audioSourcesToAffect)
         {
+            if (audiosource == null) continue;
             audioSourcesWithOldValues.Add((audiosource, audiosource.pitch, audiosource.volume, audiosource.dopplerLevel));
             audiosource.pitch = 0.2f;
             audiosource.volume = 0.7f * audiosource.volume;
@@ -45,11 +48,13 @@ public static class SlowDownEffect
 
     public static void ReEnableOccludeAudio(OccludeAudio occludeAudio)
     {
+        if (occludeAudio == null) return;
         occludeAudio.enabled = true;
     }
 
     public static void ResetAudioSourceVariables(AudioSource audioSource, float pitch, float volume, float dopplerLevel)
     {
+        if (audioSource == null) return;
         audioSource.pitch = pitch;
         audioSource.volume = volume;
         audioSource.dopplerLevel = dopplerLevel;
@@ -57,6 +62,7 @@ public static class SlowDownEffect
 
     public static void ResetLowPassFilterValue(AudioLowPassFilter filter, float cutoffFrequency)
     {
+        if (filter == null) return;
         filter.cutoffFrequency = cutoffFrequency;
     }
 
@@ -83,5 +89,13 @@ public static class SlowDownEffect
         {
             ResetLowPassFilterValue(filter, oldCutOffFrequency);
         }
+        float timeElapsed = 1f;
+        while (timeElapsed > 0)
+        {
+            timeElapsed -= Time.deltaTime;
+            yield return null;
+            CodeRebirthUtils.Instance.TimeSlowVolume.weight = timeElapsed;
+        }
+        CodeRebirthUtils.Instance.TimeSlowVolume.weight = 0f;
     }
 }
