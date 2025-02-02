@@ -4,6 +4,8 @@ Code Rebirth is a general content mod expanding on all parts of the game.
 
 If you're interested in helping with the development of the mod, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on Discord!
 
+![GoodJob](https://i.postimg.cc/9Mr5sSZj/image.png)
+
 ## Current Additions
 
 - 160+ Plant types!!!
@@ -74,7 +76,6 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ![Jim](https://i.postimg.cc/GmNZG9Gk/image.png)
 ![JimTrap](https://i.postimg.cc/NMtCkXMr/image.png)
-![GoodJob](https://i.postimg.cc/9Mr5sSZj/image.png)
 
 > He's literally programmed to think he's doing a good job.
 > I'd keep an eye out on where he's going...

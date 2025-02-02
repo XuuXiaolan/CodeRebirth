@@ -1,4 +1,11 @@
-# v0.14.2
+# v0.14.3
+
+- Added poster boy to the top of the readme.
+- He thinks he's doing a good job.
+- He shall open the gates when you are ready.
+- Prepare.
+
+## v0.14.2
 
 - Updated README, it SHOULD have everything currently in here plus a bit more...
 - Gave CruiserGal collisions.
