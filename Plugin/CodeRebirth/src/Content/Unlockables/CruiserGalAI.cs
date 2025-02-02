@@ -15,6 +15,7 @@ public class CruiserGalAI : GalAI
     public InteractTrigger WheelDumpScrapTrigger = null!;
     public InteractTrigger LeverInteract = null!;
     public InteractTrigger ContainerTrigger = null!;
+    public InteractTrigger HatTrigger = null!;
     public List<Transform> ItemsHeldTransforms = new();
     public Transform playerHeldBone = null!;
     public Transform galContainer = null!;
@@ -22,7 +23,9 @@ public class CruiserGalAI : GalAI
     public AudioSource FootstepSource = null!;
     public AudioClip[] RadioSounds = [];
     public AudioClip[] StartOrStopFlyingSounds = [];
+    public AudioClip LaunchSound = null!;
     public AudioClip ChestCollisionToggleSound = null!;
+    public GameObject ContainerGO = null!;
 
     private Coroutine? fixPlayerPositionRoutine = null;
     private List<GrabbableObject> itemsHeldList = new();
@@ -82,6 +85,7 @@ public class CruiserGalAI : GalAI
         WheelDumpScrapTrigger.onInteract.AddListener(OnWheelDumpScrapInteract);
         LeverInteract.onInteract.AddListener(OnLeverPullInteract);
         ContainerTrigger.onInteract.AddListener(OnContainerInteract);
+        HatTrigger.onInteract.AddListener(OnHatInteract);
         // Automatic activation if configured
         if (Plugin.ModConfig.ConfigCruiserGalAutomatic.Value)
         {
@@ -121,6 +125,41 @@ public class CruiserGalAI : GalAI
         {
             cruiserCharger.animator.SetBool(CruiserCharger.isActivatedAnimation, false);
         }
+    }
+
+    private void OnHatInteract(PlayerControllerB playerInteracting)
+    {
+        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        ThrowPlayerServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ThrowPlayerServerRpc()
+    {
+        HandleStateAnimationSpeedChanges(State.FollowingPlayer);
+        ThrowPlayerClientRpc();
+    }
+
+    [ClientRpc]
+    private void ThrowPlayerClientRpc()
+    {
+        if (ownerPlayer == null) return;
+        GalSFX.PlayOneShot(LaunchSound);
+        ownerPlayer.externalForceAutoFade += Vector3.up * 40f;
+        ownerPlayer.ResetFallGravity();
+        StartCoroutine(ResetGravityContinuously());
+    }
+
+    private IEnumerator ResetGravityContinuously()
+    {
+        int iterations = 0;
+        while (ownerPlayer != null && iterations < 5)
+        {
+            iterations++;
+            yield return new WaitForSeconds(0.5f);
+            ownerPlayer.ResetFallGravity();
+        }
+        ContainerGO.SetActive(false);
     }
 
     private void OnContainerInteract(PlayerControllerB playerInteracting) // todo: update interact to wait for player to be holding an item to actually be trigger-able
@@ -184,6 +223,7 @@ public class CruiserGalAI : GalAI
         Plugin.ExtendedLogging($"Pathable entrances: {teleports.Count}");
         if (teleports.Count <= 0)
         {
+            ContainerGO.SetActive(false);
             // todo: Maybe play a sound that she can't route to any exit?
             return;
         }
@@ -298,6 +338,7 @@ public class CruiserGalAI : GalAI
         WheelDumpScrapTrigger.interactable = itemsHeldList.Count > 0;
         LeverInteract.interactable = interactable;
         ContainerTrigger.interactable = isHoldingItem;
+        HatTrigger.interactable = interactable && galState == State.DeliveringPlayer;
     }
 
     private void StoppingDistanceUpdate()
@@ -434,6 +475,7 @@ public class CruiserGalAI : GalAI
         if (Vector3.Distance(this.transform.position, entranceToGoTo.entrancePoint.position) > Agent.stoppingDistance) return;
         if (Agent.hasPath && Agent.velocity.sqrMagnitude != 0f) return;
         // finished
+        ContainerGO.SetActive(false);
         HandleStateAnimationSpeedChangesServerRpc((int)State.FollowingPlayer);
     }
 
@@ -556,7 +598,7 @@ public class CruiserGalAI : GalAI
     {
         DropAllHeldItems();
         SetFlying(false);
-
+        ContainerGO.SetActive(false);
         Animator.SetBool(flyAnimation, false);
         ownerPlayer = null;
         Agent.enabled = false;
@@ -645,6 +687,7 @@ public class CruiserGalAI : GalAI
         if (grabbing == 1)
         {
             fixPlayerPositionRoutine = StartCoroutine(FixingPlayerToPoint());
+            ContainerGO.SetActive(true);
             ownerPlayer.disableMoveInput = true;
             ownerPlayer.inSpecialInteractAnimation = true;
         }

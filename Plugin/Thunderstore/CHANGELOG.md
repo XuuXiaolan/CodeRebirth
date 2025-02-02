@@ -1,8 +1,16 @@
-# v0.14.1
+# v0.14.2
+
+- Updated README, it SHOULD have everything currently in here plus a bit more...
+- Gave CruiserGal collisions.
+- She also wont run over players and send them under the map anymore, probably, lol.
+- Added a small eject while you're riding cruiser gal.
+- Manor Lord no longer damages the puppet via collisions.
+- Puppet can now only take damage once every 1 second rather than 0.5 seconds.
+
+## v0.14.1
 
 - Reverted a crate attempt fix cuz my friend has a luck skill issue.
 - Fixed cruiser gal sounds and client bugs.
-- Added a 10% easter egg on activation to snow globe on a future feature.
 - Fixed IndustrialFan error spam.
 
 ## v0.14.0

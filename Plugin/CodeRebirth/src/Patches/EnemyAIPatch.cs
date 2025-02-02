@@ -27,7 +27,8 @@ static class EnemyAIPatch
         {
             if (self.isEnemyDead) return;
             if (!self.IsServer) return;
-            if (puppet.lastTimeTakenDamageFromEnemy <= 0.5f) return;
+            if (puppet.lastTimeTakenDamageFromEnemy <= 1f) return;
+            if (self is Puppeteer) return;
             if (self.enemyType.enemyName.Contains("SCP-999"))
             {
                 puppet.Hit(-1, self.transform.position, null, false, -1);

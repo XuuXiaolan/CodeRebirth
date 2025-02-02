@@ -8,14 +8,16 @@ If you're interested in helping with the development of the mod, feel free to re
 
 - 160+ Plant types!!!
 - 3 Custom Model replacement (This needs you to have ModelReplacementAPI and MoreSuits installed!!).
-- 1 Inside Enemy.
+- 1 [̷͈̇̂ͅṘ̸̮̯E̶̺͊͛́D̸̨̉̌̃Ą̴̭͛C̵̨̪͑̈́̚Ṭ̵̝̙͋͂͊Ê̵̞̣͜͠D̷̝̟͛̈]̶̫͋̐͠
+- 4 Inside Enemy.
 - 2 Outside Enemy.
-- 4 (+3 Decor) Helpful Creatures.
+- 5 (+4 Decor) Helpful Creatures.
+- 1 Ship Upgrade.
 - 1 Shrimp Dispenser.
 - 2 Ambient Enemies.
 - 2 Weather with 7 different events total.
 - 2 Shop Items.
-- 11 Scrap.
+- 11 Scrap with unique effects.
 - 6 Custom Outside Objects.
 - 6 Custom Inside Objects.
 
@@ -40,21 +42,18 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Windy
 
-![WB](https://i.postimg.cc/WbG5f0JK/image.png)
-![WWi](https://i.postimg.cc/tCkhxk6X/image.png)
-![WF](https://i.postimg.cc/59qzhgnw/image.png)
-![WS](https://i.postimg.cc/ZKbN4NMX/image.png)
-![WWa](https://i.postimg.cc/wTwmvvKM/image.png)
-![WE](https://i.postimg.cc/Fz8gYsq2/image.png)
+![WS](https://i.postimg.cc/c4W1tk0s/image.png)
 
 > Disastrous weather where the player is pulled and ripped apart by different types of tornados.
+> Decreases outdoor and daytime power by 3 each and increases indoor power by 6. 
 
 ### Meteor Shower
 
 ![M](https://i.postimg.cc/RFJzM5yL/image-removebg-preview-1.png)
-![MS](https://i.postimg.cc/6pRzGnBz/image.png)
+![MS](https://i.postimg.cc/Nf2FR2r4/image.png)
 
 > World-ending weather where the world will slowly crumble as time goes on, but with the potential for rare crystals to spawn.
+> Decreases outdoor and daytime power by 3 each and increases indoor power by 6.
 
 </details>
 
@@ -70,6 +69,32 @@ If you're interested in helping with the development of the mod, feel free to re
 
 > The one and only duck from the hit DUCK song.
 > and he waddled away, waddle waddle waddle... till the very next day bam bam bam bum ba ra ra bam.
+
+### Jimothy
+
+![Jim](https://i.postimg.cc/GmNZG9Gk/image.png)
+![JimTrap](https://i.postimg.cc/NMtCkXMr/image.png)
+![GoodJob](https://i.postimg.cc/9Mr5sSZj/image.png)
+
+> He's literally programmed to think he's doing a good job.
+> I'd keep an eye out on where he's going...
+
+### Scrap-E
+
+![SE](https://i.postimg.cc/vmr3Tmz8/image.png)
+
+> A different take on the hoarding bug mechanic, will not be very happy if he sees you littering.
+> The green one is bald.
+
+### Lord Of The Manor
+
+![ML](https://i.postimg.cc/x81wLZjZ/image.png)
+![VP](https://i.postimg.cc/0NCXZC41/image.png)
+
+> Once betrayed, he haunts the mansion looking for the one who backstabbed him.
+> On player contact, extracts the player's blood and spawns a puppet following the player anywhere.
+> If the puppet is damaged by any source, turret, landmine, other enemies, players, etc, the player would also be damaged.
+> Keep your puppet safe.
 
 </details>
 
@@ -96,7 +121,24 @@ If you're interested in helping with the development of the mod, feel free to re
 </details>
 
 <details>
-  <summary><strong>Helpful Enemies</strong></summary>
+  <summary><strong>Helpful Ship Upgrades</strong></summary>
+
+### Shrimp Dispenser
+
+![SD](https://i.postimg.cc/SNnzQNLB/image.png)
+
+> Dispenses Shrimp that deals 3 damage to enemies and 60 damage to players.
+> One time use unless you dispense another.
+> Dropping the Shrimp despawns it.
+> Inspired by the shrimp from lockdown protocol, it's a lovely game.
+
+### Cruiser Gal
+
+![CrG](https://i.postimg.cc/764ZkKBt/image.png)
+
+> Friendly gal that holds unlimited scrap and follows you around!
+> Can lead you into entrances both inside and outside.
+> Has a special little tune included.
 
 ### Terminal Gal
 
@@ -115,13 +157,22 @@ If you're interested in helping with the development of the mod, feel free to re
 > Friendly gal that carries scrap and kills enemies!
 > Rechargable via time after orbit!
 
-#### Seamine Gal
+### Seamine Gal
 
 ![SeG](https://i.postimg.cc/nLK92rFv/image.webp)
 
 > Friendly gal that gives players the ability to detect surrounding hazards and enemies.
 > Reliable big sister for shockwave gal and can kill "unkillable" enemies.
 > Rechargable via time after orbit or with a key on her belt!
+
+### 999 Gal
+
+![LIZ](https://i.postimg.cc/nzS1XSXT/image.png)
+
+> Friendly gal that heals players that interact with her.
+> Can also revive players nearby.
+> Recharges on orbit or on quota depending on config.
+> Very configurable.
 
 </details>
 
@@ -219,6 +270,7 @@ If you're interested in helping with the development of the mod, feel free to re
 ![NM](https://i.postimg.cc/zvKF6H00/image.png)
 
 > Mace that uses the power of nature to strike your enemies.
+> Heals enemies and players alike (players to 80 hp max, enemies infinitely).
 > Can crit and deal 2x damage.
 
 ### Spiky Mace
@@ -226,6 +278,7 @@ If you're interested in helping with the development of the mod, feel free to re
 ![SM](https://i.postimg.cc/5tr5tSrs/image.png)
 
 > Looks like it would hurt a lot...
+> Deals 2 damage by default, very powerful!
 > Can crit and deal 2x damage.
 
 ### Icy Hammer
@@ -235,11 +288,26 @@ If you're interested in helping with the development of the mod, feel free to re
 > With the power of ice, enemies may be slowed down temporarily...
 > Can crit and deal 2x damage.
 
+### Pointy Needle
+
+![PN](https://i.postimg.cc/6QfKxn8B/image.png)
+
+> Obtained by defeating the Lord Of The Manor.
+> Might have more to it later on.
+
+### Puppet
+
+![PS](https://i.postimg.cc/YSC7kjYg/image.png)
+
+> Obtained by defeating the Manor Lord that puppetted the player.
+> It's you, but better!
+
 ### Coin
 
 ![C](https://i.postimg.cc/cC5bHZ5L/imagwadae-removebg-preview.png)
 
 > Scrap to get some extra cash for the quota, Coin doesn't affect normal-level scrap spawn rates and is not included in the pool normally.
+> Rumours say this ancient currency can be used to trade with [INFORMATION NOT AVAILABLE].
 
 </details>
 
@@ -274,7 +342,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 > Designation : Industrial Fan  
 > Objective : Aeration  
-> 
+>
 > These giant industrial fans were used for aeration during mining operations, keeping dust off equipment and keeping crewmates cooled down. The fan's automated system would control fan speed by detecting the amount of dust, gas and other various aerosols.  
 > [Final Recorded Equipment Transmission]  
 > [ERROR] Software critical failure - Objective updated : Fan Speed - Max, Maximum aeration mode - 360 degree coverage  

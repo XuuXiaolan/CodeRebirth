@@ -99,6 +99,7 @@ public class MeteorShower : CodeRebirthWeathers
 	{
 		foreach (var crater in craters.ToArray())
 		{
+			if (crater == null) continue;
 			Destroy(crater.gameObject);
 		}
 		craters.Clear();
