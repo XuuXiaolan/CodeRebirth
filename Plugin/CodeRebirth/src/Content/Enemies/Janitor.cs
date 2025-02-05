@@ -28,6 +28,7 @@ public class Janitor : CodeRebirthEnemyAI
     public AudioClip[] throwPlayerSounds = [];
     public Material[] variantMaterials = [];
 
+    private Collider[] hitColliders = new Collider[10];
     private float idleTimer = 60f;
     private System.Random janitorRandom = new();
     
@@ -973,7 +974,6 @@ public class Janitor : CodeRebirthEnemyAI
     /// </summary>
     private void TryFindScrapNearby()
     {
-        Collider[] hitColliders = new Collider[20];
         int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15f, hitColliders, LayerMask.GetMask("Props"), QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)

@@ -1,4 +1,20 @@
-# v0.14.3
+# v0.15.0
+
+- Added BoomTraps
+- Optimised the following additions a bit.
+  - Janitor
+  - ACUnit
+  - Biomes
+  - Hazards
+  - Seamine Gal
+  - Shockwave Gal
+  - Terminal Gal
+  - Explosions in CR
+  - Spawning of redwood titan and seed through CR weapons.
+  - Anything that plays a sound a dog or other enemies can hears.
+- Fixed cruiser gal carrying you causing you to be spun out of existence, that was fun.
+
+## v0.14.3
 
 - Added poster boy to the top of the readme.
 - He thinks he's doing a good job.

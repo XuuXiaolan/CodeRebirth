@@ -12,6 +12,7 @@ public class CRUtilities
 {
     private static Dictionary<int, int> _masksByLayer = new();
     private static AudioReverbPresets? audioReverbPreset = null;
+    private static Collider[] cachedColliders = new Collider[16];
     public static void Init()
     {
         GenerateLayerMap();
@@ -141,33 +142,33 @@ public class CRUtilities
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
         }
 
-        Collider[] colliders = Physics.OverlapSphere(explosionPosition, maxDamageRange, LayerMask.GetMask("Enemies", "Player", "MapHazard"), QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, LayerMask.GetMask("Enemies", "Player", "MapHazard"), QueryTriggerInteraction.Collide);
         Dictionary<PlayerControllerB, int> playerControllerBToDamage = new();
         Dictionary<EnemyAICollisionDetect, int> enemyAICollisionDetectToDamage = new();
-        IEnumerable<Landmine> landmineList = [];
-        foreach (Collider collider in colliders)
+        List<Landmine> landmineList = new();
+        for (int i = 0; i < numHits; i++)
         {
-            if (collider.GetComponent<IHittable>() == null) continue;
-            float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, collider.transform.position);
-            if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, collider.transform.position + Vector3.up * 0.3f, out _, 256, QueryTriggerInteraction.Ignore))
+            if (cachedColliders[i].GetComponent<IHittable>() == null) continue;
+            float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, cachedColliders[i].transform.position);
+            if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, cachedColliders[i].transform.position + Vector3.up * 0.3f, out _, 256, QueryTriggerInteraction.Ignore))
             {
                 continue;
             }
 
-            if (collider.gameObject.layer == 3 && collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !playerControllerBToDamage.ContainsKey(player))
+            if (cachedColliders[i].gameObject.layer == 3 && cachedColliders[i].TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !playerControllerBToDamage.ContainsKey(player))
             {
                 playerControllerBToDamage.Add(player, (int)(damage * (1f - Mathf.Clamp01((distanceOfObjectFromExplosion - minDamageRange) / (maxDamageRange - minDamageRange)))));
                 continue;
             }
 
-            if (collider.gameObject.layer == 19 && collider.TryGetComponent<EnemyAICollisionDetect>(out EnemyAICollisionDetect enemy) && !enemyAICollisionDetectToDamage.ContainsKey(enemy))
+            if (cachedColliders[i].gameObject.layer == 19 && cachedColliders[i].TryGetComponent<EnemyAICollisionDetect>(out EnemyAICollisionDetect enemy) && !enemyAICollisionDetectToDamage.ContainsKey(enemy))
             {
                 enemyAICollisionDetectToDamage.Add(enemy, enemyHitForce);
                 continue;
             }
 
-            if (collider.gameObject.layer != 21) continue;
-            Landmine componentInChildren = collider.gameObject.GetComponentInChildren<Landmine>();
+            if (cachedColliders[i].gameObject.layer != 21) continue;
+            Landmine componentInChildren = cachedColliders[i].gameObject.GetComponentInChildren<Landmine>();
             if (componentInChildren != null && distanceOfObjectFromExplosion < 6f && !landmineList.Contains(componentInChildren))
             {
                 landmineList.AddItem(componentInChildren);

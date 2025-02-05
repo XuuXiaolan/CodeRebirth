@@ -19,6 +19,7 @@ public class BiomeManager : CodeRebirthHazard
     private static int terrainLayer = 0;
     private static int combinedLayerMask = 0;
     private List<Collider> foliageOrTreeColliderList = new();
+    private Collider[] cachedColliders = new Collider[10];
 
 	public static List<BiomeManager> Instances = new();
 	public static bool Active => Instances.Count > 0;
@@ -84,23 +85,15 @@ public class BiomeManager : CodeRebirthHazard
         //Stopwatch timer = new Stopwatch();
         //timer.Start();
         // Perform sphere cast
-        Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, activeProjector.size.y / 3.5f, combinedLayerMask);
+        int numHit = Physics.OverlapSphereNonAlloc(activeProjector.transform.position, activeProjector.size.y / 3.5f, cachedColliders, combinedLayerMask);
         int foliageOrTreeCount = 0;
-        foreach (var hitCollider in hitColliders) {
-            // Check if the collider belongs to foliage or a tree
-            if (foliageOrTreeColliderList.Contains(hitCollider))
+        for (int i = numHit - 1; i >= 0; i--)
+        {
+            if (foliageOrTreeColliderList.Contains(cachedColliders[i]))
             {
                 foliageOrTreeCount++;
-            }
-        }
-
-        foreach (var hitCollider in hitColliders)
-        {
-            // Check if the collider belongs to foliage or a tree
-            if (foliageOrTreeColliderList.Contains(hitCollider))
-            {
-                foliageOrTreeColliderList.Remove(hitCollider);
-                DestroyColliderObject(hitCollider, foliageOrTreeCount);
+                foliageOrTreeColliderList.Remove(cachedColliders[i]);
+                DestroyColliderObject(cachedColliders[i], foliageOrTreeCount);
             }
         }
 

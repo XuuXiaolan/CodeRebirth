@@ -153,13 +153,14 @@ public class CruiserGalAI : GalAI
     private IEnumerator ResetGravityContinuously()
     {
         int iterations = 0;
+        yield return new WaitForSeconds(0.5f);
+        ContainerGO.SetActive(false);
         while (ownerPlayer != null && iterations < 5)
         {
             iterations++;
             yield return new WaitForSeconds(0.5f);
             ownerPlayer.ResetFallGravity();
         }
-        ContainerGO.SetActive(false);
     }
 
     private void OnContainerInteract(PlayerControllerB playerInteracting) // todo: update interact to wait for player to be holding an item to actually be trigger-able

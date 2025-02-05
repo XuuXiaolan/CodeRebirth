@@ -26,6 +26,7 @@ public class ShockwaveGalAI : GalAI
     public AudioClip PatSound = null!;
     public AudioClip[] TakeDropItemSounds = [];
 
+    private Collider[] cachedColliders = new Collider[5];
     private List<GrabbableObject> itemsHeldList = new();
     private bool flying = false;
     private int maxItemsToHold = 4;
@@ -456,13 +457,11 @@ public class ShockwaveGalAI : GalAI
 
             if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || !smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory || smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory) continue;
 
-            // Use OverlapSphereNonAlloc to reduce garbage collection
-            Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
-            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, hitColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < numHits; i++)
             {
-                Collider collider = hitColliders[i];
+                Collider collider = cachedColliders[i];
                 if (!collider.gameObject.activeSelf) continue;
                 if (!collider.TryGetComponent(out EnemyAI enemy) && collider.GetComponent<NetworkObject>() == null)
                 {

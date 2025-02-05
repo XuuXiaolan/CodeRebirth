@@ -603,14 +603,14 @@ static class RoundManagerPatch {
 		{
 			noiseRange /= 2f;
 		}
-		Collider[] hitColliders = Physics.OverlapSphere(noisePosition, noiseRange, LayerMask.GetMask("Props", "MapHazards"), QueryTriggerInteraction.Collide);
-		for (int i = 0; i < hitColliders.Length; i++)
+		int numHits = Physics.OverlapSphereNonAlloc(noisePosition, noiseRange, RoundManager.Instance.tempColliderResults, LayerMask.GetMask("Props", "MapHazards"), QueryTriggerInteraction.Collide);
+		for (int i = 0; i < numHits; i++)
 		{
-            if (!hitColliders[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener)) continue;
-			GalAI? gal = hitColliders[i].gameObject.GetComponent<GalAI>();
-			SCP999GalAI? scp999Gal = hitColliders[i].gameObject.GetComponent<SCP999GalAI>();
-			BellCrabGalAI? bellCrabGal = hitColliders[i].gameObject.GetComponent<BellCrabGalAI>();
-			FlashTurret? flashTurret = hitColliders[i].gameObject.GetComponent<FlashTurret>();
+            if (!RoundManager.Instance.tempColliderResults[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener)) continue;
+			GalAI? gal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<GalAI>();
+			SCP999GalAI? scp999Gal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<SCP999GalAI>();
+			BellCrabGalAI? bellCrabGal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<BellCrabGalAI>();
+			FlashTurret? flashTurret = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<FlashTurret>();
 			if (gal == null && flashTurret == null && scp999Gal == null && bellCrabGal == null)
 			{
 				continue;

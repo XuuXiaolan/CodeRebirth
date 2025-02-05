@@ -33,6 +33,7 @@ public class TerminalGalAI : GalAI
     public List<AudioClip> startOrEndFlyingAudioClips = new();
     public TerminalFaceController terminalFaceController = null!;
 
+    private Collider[] cachedColliders = new Collider[5];
     private List<Coroutine> customPassRoutines = new();
     private List<GameObject> pointsOfInterest = new();
     private float scrapRevealTimer = 10f;
@@ -231,17 +232,16 @@ public class TerminalGalAI : GalAI
     [ServerRpc(RequireOwnership = false)]
     private void KeyHandInteractServerRpc()
     {
-        Collider[] colliders = new Collider[10];
-        Physics.OverlapSphereNonAlloc(transform.position, 7.5f, colliders, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 7.5f, cachedColliders, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
 
         HashSet<GameObject> pointsOfInterestSet = new HashSet<GameObject>();
-        Plugin.ExtendedLogging($"Found {colliders.Length} interactable objects");
+        Plugin.ExtendedLogging($"Found {numHits} interactable objects");
 
-        foreach (var collider in colliders)
+        for (int i = 0; i < numHits; i++) // replace with pathfindinglib operations.
         {
-            if (collider == null) continue;
+            if (cachedColliders[i] == null) continue;
             
-            GameObject gameObject = collider.gameObject;
+            GameObject gameObject = cachedColliders[i].gameObject;
             
             if (!ObjectIsInteractable(gameObject)) continue;
             

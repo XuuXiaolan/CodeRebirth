@@ -34,6 +34,7 @@ public class SeamineGalAI : GalAI
     public Pickable pickable = null!;
     public Light light = null!;
 
+    private Collider[] cachedColliders = new Collider[5];
     private bool physicsTemporarilyDisabled = false;
     private List<Coroutine> customPassRoutines = new();
     private float hazardRevealTimer = 10f;
@@ -507,13 +508,11 @@ public class SeamineGalAI : GalAI
 
             if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory)) continue;
 
-            // Use OverlapSphereNonAlloc to reduce garbage collection
-            Collider[] hitColliders = new Collider[20];  // Size accordingly to expected max enemies
-            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, hitColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < numHits; i++)
             {
-                Collider collider = hitColliders[i];
+                Collider collider = cachedColliders[i];
                 if (!collider.gameObject.activeSelf) continue;
 
                 if (!collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect)) continue;
@@ -546,23 +545,24 @@ public class SeamineGalAI : GalAI
         GalSFX.PlayOneShot(explosionSound);
         CRUtilities.CreateExplosion(beltInteractTrigger.gameObject.transform.position, true, 10, 0, 6, 1, null, null, 5f);
         List<EnemyAI> enemiesToKill = new();
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 15, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15, cachedColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
 
-        foreach (Collider collider in colliders)
+        for (int i = 0; i < numHits; i++)
         {
-            if (collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect))
+            if (cachedColliders[i].TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect))
             {
                 EnemyAI enemyDetected = enemyCollisionDetect.mainScript;
                 if (enemyDetected != null && !enemyDetected.isEnemyDead)
                 {
                     // Ensure there's a line of sight from SeamineGalAI to the enemy
                     Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
-                    if (!enemiesToKill.Contains(enemyDetected)) enemiesToKill.Add(enemyDetected);
+                    if (enemiesToKill.Contains(enemyDetected)) continue;
+                    enemiesToKill.Add(enemyDetected);
                 }
             }
             else
             {
-                Plugin.ExtendedLogging("Thing hit: " + collider.name);
+                Plugin.ExtendedLogging("Thing hit: " + cachedColliders[i].name);
             }
         }
 
@@ -573,7 +573,7 @@ public class SeamineGalAI : GalAI
 
             if (enemy.enemyType.canDie && !enemy.enemyType.destroyOnDeath)
             {
-                enemy.KillEnemyOnOwnerClient();
+                enemy.KillEnemyOnOwnerClient(false);
             }
             else
             {

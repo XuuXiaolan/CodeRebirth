@@ -5,6 +5,7 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Maps;
 public class CodeRebirthHazard : NetworkBehaviour
 {
+    private Collider[] cachedColliders = new Collider[5];
     public virtual void Start()
     {
         if (!IsServer) return;
@@ -14,13 +15,10 @@ public class CodeRebirthHazard : NetworkBehaviour
     private IEnumerator DecideHazardSpawningStuff()
     {
         yield return new WaitForSeconds(UnityEngine.Random.Range(0, 2f));
-        Collider[] colliders = new Collider[5];
-        Physics.OverlapSphereNonAlloc(transform.position, 1f, colliders, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
-        foreach (Collider collider in colliders)
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 1f, cachedColliders, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < numHits; i++)
         {
-            if (collider == null) continue;
-            yield return null;
-            if (collider.gameObject.GetComponent<DoorLock>() == null) continue;
+            if (!cachedColliders[i].GetComponent<DoorLock>()) continue;
             NetworkObject.Despawn(true);
             yield break;
         }

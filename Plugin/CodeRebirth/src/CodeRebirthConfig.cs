@@ -139,7 +139,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigCruiserGalAutomatic { get; private set; }
     public ConfigEntry<bool> ConfigTerminalBotAutomatic { get; private set; }
     public ConfigEntry<int> ConfigTerminalBotCost { get; private set; }
-    public ConfigEntry<float> ConfigWoodenSeedTreeSpawnChance { get; private set; }
+    public ConfigEntry<int> ConfigWoodenSeedTreeSpawnChance { get; private set; }
     public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
     public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
     public ConfigEntry<bool> ConfigGalBypassQuota { get; private set; }
@@ -787,7 +787,7 @@ public class CodeRebirthConfig
                                             "Price of the Plant Pot.");
         ConfigWoodenSeedTreeSpawnChance = configFile.Bind("Farming Options",
                                             "Farming | Wooden Seed Tree Spawn Chance",
-                                            2f,
+                                            2,
                                             "Chance of the wooden seed to spawn from a broken tree");
         ConfigWoodenSeedSpawnWeights = configFile.Bind("Farming Options",
                                             "Farming | Wooden Seed Spawn Weights",

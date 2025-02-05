@@ -17,6 +17,7 @@ public class AirUnitProjectile : NetworkBehaviour
     public AudioSource windSource = null!;
     public MeshFilter bulletMesh = null!;
 
+    private Collider[] cachedColliders = new Collider[5];
     [NonSerialized] public bool explodedOnTarget = false;
     private float anglePointingTo = 0f;
     private PlayerControllerB playerToTarget = null!;
@@ -35,8 +36,8 @@ public class AirUnitProjectile : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        Collider[] wallInWay = Physics.OverlapSphere(this.transform.position, 2f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Ignore);
-        if (!explodedOnTarget && wallInWay.Length != 0 && playerToTarget.playerSteamId != Plugin.GLITCH_STEAM_ID)
+        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, cachedColliders, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Ignore);
+        if (!explodedOnTarget && collidersFound != 0 && playerToTarget.playerSteamId != Plugin.GLITCH_STEAM_ID)
         {
             CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, null, null, 5f);
             playerHitSoundSource.Play();
