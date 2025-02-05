@@ -143,7 +143,7 @@ public class BearTrap : CodeRebirthHazard
         TriggerTrap(StartOfRound.Instance.allPlayerScripts[index]);
     }
 
-    private void TriggerTrap(PlayerControllerB player)
+    public virtual void TriggerTrap(PlayerControllerB player)
     {
         trapAudioSource.Stop();
         trapAudioSource.clip = triggerSound;
@@ -158,7 +158,7 @@ public class BearTrap : CodeRebirthHazard
         trapCollider.enabled = false;
     }
 
-    private void TriggerTrap(EnemyAI enemy)
+    public virtual void TriggerTrap(EnemyAI enemy)
     {
         trapAudioSource.Stop();
         trapAudioSource.clip = triggerSound;

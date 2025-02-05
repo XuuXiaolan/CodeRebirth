@@ -2,17 +2,22 @@
 
 - Added BoomTraps
 - Optimised the following additions a bit.
-  - Janitor
-  - ACUnit
-  - Biomes
-  - Hazards
-  - Seamine Gal
-  - Shockwave Gal
-  - Terminal Gal
-  - Explosions in CR
+  - Janitor.
+  - ACUnit.
+  - Biomes.
+  - Hazards.
+  - Seamine Gal.
+  - Shockwave Gal.
+  - Terminal Gal.
+  - Explosions in CR.
   - Spawning of redwood titan and seed through CR weapons.
   - Anything that plays a sound a dog or other enemies can hears.
 - Fixed cruiser gal carrying you causing you to be spun out of existence, that was fun.
+- Separated Windy into 3 weathers.
+  - Tornado.
+  - Hurricane.
+  - Firestorm.
+- Added The Mistress.
 
 ## v0.14.3
 

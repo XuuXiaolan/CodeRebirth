@@ -46,12 +46,24 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
         
         [LoadFromBundle("TornadoWeather.prefab")]
         public GameObject TornadoPermanentEffectPrefab { get; private set; } = null!;
-        
-        [LoadFromBundle("TornadoTN.asset")]
-        public TerminalNode TornadoTerminalNode { get; private set; } = null!;
 
-        [LoadFromBundle("TornadoTK.asset")]
-        public TerminalKeyword TornadoTerminalKeyword { get; private set; } = null!;
+        [LoadFromBundle("HurricaneObj.asset")]
+        public EnemyType HurricaneObj { get; private set; } = null!;
+        
+        [LoadFromBundle("HurricaneContainer.prefab")]
+        public GameObject HurricaneEffectPrefab { get; private set; } = null!;
+        
+        [LoadFromBundle("HurricaneWeather.prefab")]
+        public GameObject HurricanePermanentEffectPrefab { get; private set; } = null!;
+
+        [LoadFromBundle("FireStormObj.asset")]
+        public EnemyType FireStormObj { get; private set; } = null!;
+        
+        [LoadFromBundle("FireStormContainer.prefab")]
+        public GameObject FireStormEffectPrefab { get; private set; } = null!;
+        
+        [LoadFromBundle("FireStormWeather.prefab")]
+        public GameObject FireStormPermanentEffectPrefab { get; private set; } = null!;
     }
 
     public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName)
@@ -64,7 +76,9 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     public TornadoAssets Tornado { get; private set; } = null!;
     public GodRaysAssets GodRays { get; private set; } = null!;
     public Weather MeteorShowerWeather { get; private set; } = null!;
-    public Weather TornadoesWeather { get; private set; } = null!;
+    public Weather TornadoWeather { get; private set; } = null!;
+    public Weather HurricaneWeather { get; private set; } = null!;
+    public Weather FireStormWeather { get; private set; } = null!;
     public Weather GodRaysWeather { get; private set; } = null!;
 
     public WeatherHandler()
@@ -100,6 +114,13 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     private void RegisterTornadoWeather()
     {
         Tornado = new TornadoAssets("tornadoassets");
+        RegisterRegularTornado();
+        RegisterHurricane();
+        RegisterFireStorm();
+    }
+
+    private void RegisterRegularTornado()
+    {
         GameObject effectObject = GameObject.Instantiate(Tornado.TornadoEffectPrefab);
         effectObject.hideFlags = HideFlags.HideAndDontSave;
         GameObject.DontDestroyOnLoad(effectObject);
@@ -113,15 +134,67 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
             SunAnimatorBool = "overcast",
         };
 
-        TornadoesWeather = new Weather("Windy", tornadoEffect)
+        TornadoWeather = new Weather("Windy", tornadoEffect)
         {
             DefaultWeight = 40,
             DefaultLevelFilters = new string[] { "Gordion", "Galetry" },
             LevelFilteringOption = FilteringOption.Exclude,
             Color = UnityEngine.Color.gray,
         };
-        RegisterEnemyWithConfig("All:0", Tornado.TornadoObj, Tornado.TornadoTerminalNode, Tornado.TornadoTerminalKeyword, 1, 10);
-        WeatherManager.RegisterWeather(TornadoesWeather);
+        RegisterEnemyWithConfig("All:0", Tornado.TornadoObj, null, null, 1, 10);
+        WeatherManager.RegisterWeather(TornadoWeather);
+    }
+
+    private void RegisterHurricane()
+    {
+        GameObject effectObject = GameObject.Instantiate(Tornado.HurricaneEffectPrefab);
+        effectObject.hideFlags = HideFlags.HideAndDontSave;
+        GameObject.DontDestroyOnLoad(effectObject);
+
+        GameObject effectPermanentObject = GameObject.Instantiate(Tornado.HurricanePermanentEffectPrefab);
+        effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
+        GameObject.DontDestroyOnLoad(effectPermanentObject);
+
+        ImprovedWeatherEffect HurricaneEffect = new(effectObject, effectPermanentObject)
+        {
+            SunAnimatorBool = "overcast",
+        };
+
+        HurricaneWeather = new Weather("Windy", HurricaneEffect)
+        {
+            DefaultWeight = 40,
+            DefaultLevelFilters = new string[] { "Gordion", "Galetry" },
+            LevelFilteringOption = FilteringOption.Exclude,
+            Color = UnityEngine.Color.gray,
+        };
+        RegisterEnemyWithConfig("All:0", Tornado.HurricaneObj, null, null, 1, 10);
+        WeatherManager.RegisterWeather(HurricaneWeather);
+    }
+
+    private void RegisterFireStorm()
+    {
+        GameObject effectObject = GameObject.Instantiate(Tornado.FireStormEffectPrefab);
+        effectObject.hideFlags = HideFlags.HideAndDontSave;
+        GameObject.DontDestroyOnLoad(effectObject);
+
+        GameObject effectPermanentObject = GameObject.Instantiate(Tornado.FireStormPermanentEffectPrefab);
+        effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
+        GameObject.DontDestroyOnLoad(effectPermanentObject);
+
+        ImprovedWeatherEffect FireStormEffect = new(effectObject, effectPermanentObject)
+        {
+            SunAnimatorBool = "overcast",
+        };
+
+        FireStormWeather = new Weather("Windy", FireStormEffect)
+        {
+            DefaultWeight = 40,
+            DefaultLevelFilters = new string[] { "Gordion", "Galetry" },
+            LevelFilteringOption = FilteringOption.Exclude,
+            Color = UnityEngine.Color.gray,
+        };
+        RegisterEnemyWithConfig("All:0", Tornado.FireStormObj, null, null, 1, 10);
+        WeatherManager.RegisterWeather(FireStormWeather);
     }
 
     private void RegisterMeteorShower()
