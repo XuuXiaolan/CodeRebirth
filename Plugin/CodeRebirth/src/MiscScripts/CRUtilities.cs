@@ -125,10 +125,11 @@ public class CRUtilities
         {
             if (overridePrefab == null)
             {
-                UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(value: true);
-
-            } else {
-                UnityEngine.Object.Instantiate(overridePrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(value: true);
+                UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(true);
+            }
+            else
+            {
+                UnityEngine.Object.Instantiate(overridePrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(true);
             }
         }
 
@@ -171,7 +172,7 @@ public class CRUtilities
             Landmine componentInChildren = cachedColliders[i].gameObject.GetComponentInChildren<Landmine>();
             if (componentInChildren != null && distanceOfObjectFromExplosion < 6f && !landmineList.Contains(componentInChildren))
             {
-                landmineList.AddItem(componentInChildren);
+                landmineList.Add(componentInChildren);
             }
         }
 

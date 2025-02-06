@@ -182,7 +182,10 @@ static class RoundManagerPatch {
                 {
                     beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
                 }
-
+				if (random.Next(0, 100) <= 5)
+				{
+					beartrap = MapObjectHandler.Instance.BearTrap.BoomTrapPrefab;
+				}
                 GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
                 Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
                 spawnedTrap.transform.up = hit.normal;

@@ -52,6 +52,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public GameObject GravelMatPrefab { get; private set; } = null!;
 		[LoadFromBundle("SnowBearTrap.prefab")]
 		public GameObject SnowMatPrefab { get; private set; } = null!;
+		[LoadFromBundle("BoomBearTrap.prefab")]
+		public GameObject BoomTrapPrefab { get; private set; } = null!;
 	}
 
 	public class GlowingGemAssets(string bundleName) : AssetBundleLoader<GlowingGemAssets>(bundleName)
