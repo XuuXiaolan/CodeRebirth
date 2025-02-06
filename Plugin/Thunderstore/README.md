@@ -313,7 +313,7 @@ If you're interested in helping with the development of the mod, feel free to re
 </details>
 
 <details>
-  <summary><strong>Miscellaneous</strong></summary>
+  <summary><strong>Hazards Inside+Outside</strong></summary>
 
 ### Bug Zapper
 
@@ -400,7 +400,6 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ![ICW](https://i.postimg.cc/3Jz8Lfy1/image.png)
 ![ICWM](https://i.postimg.cc/T2nKcWSF/image.png)
-![ICM](https://i.postimg.cc/g0xR1608/image.png)
 ![ICMM](https://i.postimg.cc/K8fLDgKx/image.png)
 
 > Wooden: Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
