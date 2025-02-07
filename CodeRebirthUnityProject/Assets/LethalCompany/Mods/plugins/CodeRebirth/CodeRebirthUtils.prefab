@@ -34,6 +34,7 @@ Transform:
   - {fileID: 3581466405576643439}
   - {fileID: 435024662321420950}
   - {fileID: 5996126976280628407}
+  - {fileID: 4052278683935056417}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3565935444937518052
@@ -73,6 +74,7 @@ MonoBehaviour:
   TimeSlowVolume: {fileID: 789975294119285480}
   FireyVolume: {fileID: 4257917388346144537}
   SmokyVolume: {fileID: 3191303810075138719}
+  CloseEyeVolume: {fileID: 2120676631970192616}
 --- !u!1 &3587829296263914092
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,3 +222,52 @@ MonoBehaviour:
   blendDistance: 0
   weight: 0
   sharedProfile: {fileID: 11400000, guid: df47bc2eff2d8f94bb591933a61e0d45, type: 2}
+--- !u!1 &7938076225253797394
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4052278683935056417}
+  - component: {fileID: 2120676631970192616}
+  m_Layer: 0
+  m_Name: CloseEyeVolumeProfile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4052278683935056417
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7938076225253797394}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 396152554580695494}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2120676631970192616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7938076225253797394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: 7389a22057bcda24eb1f87938b250b30, type: 2}

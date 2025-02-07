@@ -19,10 +19,11 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public Volume TimeSlowVolume = null!;
     public Volume FireyVolume = null!;
     public Volume SmokyVolume = null!;
+    public Volume CloseEyeVolume = null!;
 
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
-    private static System.Random CRRandom = new();
+    private System.Random CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
     private void Awake()

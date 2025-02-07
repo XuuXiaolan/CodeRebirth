@@ -102,6 +102,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public Item PinNeedleItem { get; private set; } = null!;
     }
 
+    public class MistressAssets(string bundleName) : AssetBundleLoader<MistressAssets>(bundleName)
+    {
+        [LoadFromBundle("MistressObj.asset")]
+        public EnemyType MistressEnemyType { get; private set; } = null!;
+    }
+
     public class JanitorAssets(string bundleName) : AssetBundleLoader<JanitorAssets>(bundleName)
     {
         [LoadFromBundle("JanitorObj.asset")]
@@ -117,6 +123,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public EnemyType TransporterEnemyType { get; private set; } = null!;
     }
 
+    public MistressAssets Mistress { get; private set; } = null!;
     public TransporterAssets Transporter { get; private set; } = null!;
     public JanitorAssets Janitor { get; private set; } = null!;
     public ManorLordAssets ManorLord { get; private set; } = null!;
@@ -128,6 +135,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
+
+        if (Plugin.ModConfig.ConfigMistressEnabled.Value)
+        {
+            Mistress = new MistressAssets("mistressassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigMistressSpawnWeights.Value, Mistress.MistressEnemyType, null, null, Plugin.ModConfig.ConfigMistressPowerLevel.Value, Plugin.ModConfig.ConfigMistressMaxSpawnCount.Value);
+        }
 
         if (Plugin.ModConfig.ConfigRedwoodEnabled.Value)
         {

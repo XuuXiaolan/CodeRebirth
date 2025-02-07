@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2491.1272, g: 2538.4026, b: 3609.3208, a: 1}
+  m_IndirectSpecularColor: {r: 2492.4885, g: 2539.551, b: 3610.4458, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -616,6 +616,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &977820031508454918
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.644897
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.15556192
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487416679267980202, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189159617199528416, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1336358290
+      objectReference: {fileID: 0}
+    - target: {fileID: 6386906853206818203, guid: c0a8af2109e51234f972f41cc6e47b7f,
+        type: 3}
+      propertyPath: m_Name
+      value: Mistress
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c0a8af2109e51234f972f41cc6e47b7f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -625,3 +698,4 @@ SceneRoots:
   - {fileID: 2013410475}
   - {fileID: 1752473781}
   - {fileID: 1299664633}
+  - {fileID: 977820031508454918}

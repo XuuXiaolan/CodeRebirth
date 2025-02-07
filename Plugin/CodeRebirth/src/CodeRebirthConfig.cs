@@ -11,6 +11,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigJanitorEnabled { get; private set; }
     public ConfigEntry<bool> ConfigManorLordEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigMistressEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTransporterEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortAddonsEnabled { get; private set; }
@@ -93,6 +94,7 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigZortRecorderSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigZortAccordionSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigManorLordSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigMistressSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigTransporterSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigJanitorSpawnWeights { get; private set; }
     #endregion
@@ -205,6 +207,8 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigACUnitGalCost { get; private set; }
     public ConfigEntry<int> ConfigManorLordPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigManorLordMaxSpawnCount { get; private set; }
+    public ConfigEntry<int> ConfigMistressPowerLevel { get; private set; }
+    public ConfigEntry<int> ConfigMistressMaxSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigTransporterPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigTransporterMaxSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigJanitorPowerLevel { get; private set; }
@@ -296,6 +300,24 @@ public class CodeRebirthConfig
                                             "Janitor | Disable Trash Cans",
                                             false,
                                             "Whether trash cans are disabled.");
+        #endregion
+        #region Mistress
+        ConfigMistressEnabled = configFile.Bind("Mistress Options",
+                                            "Mistress | Enabled",
+                                            true,
+                                            "Whether the Mistress is enabled.");
+        ConfigMistressSpawnWeights = configFile.Bind("Mistress Options",
+                                            "Mistress | Spawn Weights",
+                                            "Experimentation:2,Assurance:5,Vow:5,Offense:10,March:10,Adamance:10,Rend:50,Dine:80,Titan:50,Artifice:60,Embrion:10,Modded:10 ",
+                                            "The spawn weights for the Mistress.");
+        ConfigMistressPowerLevel = configFile.Bind("Mistress Options",
+                                            "Mistress | Power Level",
+                                            2,
+                                            "The power level of the Mistress.");
+        ConfigMistressMaxSpawnCount = configFile.Bind("Mistress Options",
+                                            "Mistress | Max Spawn Count",
+                                            1,
+                                            "The max spawn count of the Mistress.");
         #endregion
         #region Lord Of The Manor
         ConfigManorLordEnabled = configFile.Bind("Manor Lord Options",
