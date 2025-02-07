@@ -13,11 +13,8 @@ public enum CodeRebirthStatusEffects
 {
     None,
     Water,
-    Electric,
     Fire,
     Smoke,
-    Windy,
-    Blood
     // Add other status effects here
 }
 
@@ -83,6 +80,14 @@ internal static class PlayerControllerBExtensions
             player.ApplyStatusEffect(effect, false);
             return ApplyEffectResults.Removed;
         }
+        if (player.HasEffectActive(effect) && effect == CodeRebirthStatusEffects.Fire)
+        {
+            CodeRebirthUtils.Instance.FireyVolume.weight = Mathf.Clamp01(distance/range);
+        }
+        else if (player.HasEffectActive(effect) && effect == CodeRebirthStatusEffects.Smoke)
+        {
+            CodeRebirthUtils.Instance.SmokyVolume.weight = Mathf.Clamp01(distance/range);
+        }
         return ApplyEffectResults.None;
     }
 
@@ -96,20 +101,11 @@ internal static class PlayerControllerBExtensions
             case CodeRebirthStatusEffects.Water:
                 playerData.Water = isActive;
                 break;
-            case CodeRebirthStatusEffects.Electric:
-                playerData.Electric = isActive;
-                break;
             case CodeRebirthStatusEffects.Fire:
                 playerData.Fire = isActive;
                 break;
             case CodeRebirthStatusEffects.Smoke:
                 playerData.Smoke = isActive;
-                break;
-            case CodeRebirthStatusEffects.Windy:
-                playerData.Windy = isActive;
-                break;
-            case CodeRebirthStatusEffects.Blood:
-                playerData.Blood = isActive;
                 break;
         }
     }
@@ -122,11 +118,8 @@ internal static class PlayerControllerBExtensions
         return effect switch
         {
             CodeRebirthStatusEffects.Water => playerData.Water,
-            CodeRebirthStatusEffects.Electric => playerData.Electric,
             CodeRebirthStatusEffects.Fire => playerData.Fire,
             CodeRebirthStatusEffects.Smoke => playerData.Smoke,
-            CodeRebirthStatusEffects.Windy => playerData.Windy,
-            CodeRebirthStatusEffects.Blood => playerData.Blood,
             _ => false,
         };
     }

@@ -17,6 +17,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public Material WireframeMaterial = null!;
     public Shader SeeThroughShader = null!;
     public Volume TimeSlowVolume = null!;
+    public Volume FireyVolume = null!;
+    public Volume SmokyVolume = null!;
 
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];

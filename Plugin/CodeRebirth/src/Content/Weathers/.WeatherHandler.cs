@@ -47,7 +47,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
         [LoadFromBundle("TornadoWeather.prefab")]
         public GameObject TornadoPermanentEffectPrefab { get; private set; } = null!;
 
-        /*[LoadFromBundle("HurricaneObj.asset")]
+        [LoadFromBundle("HurricaneObj.asset")]
         public EnemyType HurricaneObj { get; private set; } = null!;
         
         [LoadFromBundle("HurricaneContainer.prefab")]
@@ -63,7 +63,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
         public GameObject FireStormEffectPrefab { get; private set; } = null!;
         
         [LoadFromBundle("FireStormWeather.prefab")]
-        public GameObject FireStormPermanentEffectPrefab { get; private set; } = null!;*/
+        public GameObject FireStormPermanentEffectPrefab { get; private set; } = null!;
     }
 
     public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName)
@@ -145,7 +145,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
         WeatherManager.RegisterWeather(TornadoWeather);
     }
 
-    /*private void RegisterHurricane()
+    private void RegisterHurricane()
     {
         GameObject effectObject = GameObject.Instantiate(Tornado.HurricaneEffectPrefab);
         effectObject.hideFlags = HideFlags.HideAndDontSave;
@@ -195,7 +195,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
         };
         RegisterEnemyWithConfig("All:0", Tornado.FireStormObj, null, null, 1, 10);
         WeatherManager.RegisterWeather(FireStormWeather);
-    }*/
+    }
 
     private void RegisterMeteorShower()
     {

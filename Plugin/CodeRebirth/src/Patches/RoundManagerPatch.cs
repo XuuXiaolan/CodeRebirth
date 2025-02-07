@@ -515,7 +515,7 @@ static class RoundManagerPatch {
 			{
 				GameObject crate;
 
-				if (random.Next(0, 100) < 100 && Plugin.ModConfig.ConfigSuspiciousActivityEnabled.Value)
+				if (random.Next(0, 100) < 20 && Plugin.ModConfig.ConfigSuspiciousActivityEnabled.Value)
 				{
 					crate = MapObjectHandler.Instance.Crate.MimicMetalCratePrefab;
 				}
