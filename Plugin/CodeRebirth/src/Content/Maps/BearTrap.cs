@@ -54,7 +54,14 @@ public class BearTrap : CodeRebirthHazard
             {
                 beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
             }
-
+            if (this is BoomTrap)
+            {
+                beartrap = MapObjectHandler.Instance.BearTrap.BoomTrapPrefab;
+            }
+            else if (random.Next(0, 100) < 5)
+            {
+                beartrap = MapObjectHandler.Instance.BearTrap.BoomTrapPrefab;
+            }
             GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedTrap.GetComponent<BearTrap>().byProduct = true;
             Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");
