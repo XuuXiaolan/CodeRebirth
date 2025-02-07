@@ -182,7 +182,7 @@ static class RoundManagerPatch {
                 {
                     beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
                 }
-				if (random.Next(0, 100) < 100)
+				if (random.Next(0, 100) < 5)
 				{
 					beartrap = MapObjectHandler.Instance.BearTrap.BoomTrapPrefab;
 				}
