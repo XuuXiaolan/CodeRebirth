@@ -6,8 +6,11 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Maps;
 public class BoomTrap : BearTrap
 {
+    public AudioSource boomSource = null!;
+    public AudioClip explosionSound = null!;
     public AudioClip hissSound = null!;
-    public bool triggeredOnce = false;
+
+    private bool triggeredOnce = false;
 
     public override void TriggerTrap(PlayerControllerB player)
     {
@@ -19,11 +22,12 @@ public class BoomTrap : BearTrap
 
     private IEnumerator StartExplosionCountdown(PlayerControllerB? playerSnapped)
     {
-        trapAudioSource.PlayOneShot(hissSound);
+        boomSource.PlayOneShot(hissSound);
         yield return new WaitForSeconds(hissSound.length);
         yield return new WaitForSeconds(2f);
         CRUtilities.CreateExplosion(transform.position, true, 200, 0, 1f, 10, playerSnapped, null, 50f);
-        yield return new WaitForSeconds(0.4f);
+        boomSource.PlayOneShot(explosionSound);
+        yield return new WaitForSeconds(explosionSound.length);
         this.NetworkObject.Despawn();
     }
 
