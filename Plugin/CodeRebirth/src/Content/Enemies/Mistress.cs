@@ -59,6 +59,7 @@ public class Mistress : CodeRebirthEnemyAI
         if (localPlayer == targetPlayer)
         {
             CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer/killCooldown);
+            ForceTurnTowardsTarget(localPlayer);
         }
         
         if (killTimer >= killCooldown)
@@ -81,7 +82,6 @@ public class Mistress : CodeRebirthEnemyAI
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
 
         if (currentBehaviourStateIndex != (int)State.Attack) return;
-        if (GameNetworkManager.Instance.localPlayerController == targetPlayer) HandleTargetPlayerRotations();
     }
 
     #region State Machine
@@ -130,7 +130,7 @@ public class Mistress : CodeRebirthEnemyAI
             return;
         }
 
-        bool LookedAt = !Physics.Raycast(transform.position, targetPlayer.gameplayCamera.transform.forward - transform.position, out RaycastHit hit, distance, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
+        bool LookedAt = PlayerLookingAtEnemy(distance);
         Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
         if (LookedAt)
         {
@@ -158,7 +158,7 @@ public class Mistress : CodeRebirthEnemyAI
             return;
         }
 
-        bool LookedAt = !Physics.Raycast(transform.position, targetPlayer.gameplayCamera.transform.forward - transform.position, out RaycastHit hit, distance, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
+        bool LookedAt = PlayerLookingAtEnemy(distance);
         Plugin.ExtendedLogging($"LookedAt in attack phase: {LookedAt}");
         if (LookedAt) return;
         TemporarilyCripplePlayerServerRpc(false);
@@ -170,9 +170,9 @@ public class Mistress : CodeRebirthEnemyAI
     private void DoExecution()
     {
         Plugin.ExtendedLogging($"Executing player {playerToKill}!");
-        playerToKill.inSpecialInteractAnimation = false;
+        /*playerToKill.inSpecialInteractAnimation = false;
         playerToKill.inShockingMinigame = false;
-        playerToKill.shockingTarget = null;
+        playerToKill.shockingTarget = null;*/
         CodeRebirthUtils.Instance.CloseEyeVolume.weight = 0f;
         // Begin the execution.
         // Once player dies, goes back to spawning phase.
@@ -181,80 +181,14 @@ public class Mistress : CodeRebirthEnemyAI
 
     #region Misc Functions
 
-    private void HandleTargetPlayerRotations()
+    private bool PlayerLookingAtEnemy(float distance)
     {
-        if (targetPlayer == null)
-            return;
-
-        targetPlayer.inSpecialInteractAnimation = true;
-        targetPlayer.inShockingMinigame = true;
-        targetPlayer.shockingTarget = HeadTransform;
-        /*Vector3 directionToTarget = transform.position - camTransform.position;
-
-        // --- Yaw (Horizontal Rotation) Calculation ---
-        // Remove the vertical component so we only have the horizontal direction.
-        Vector3 horizontalDirection = directionToTarget;
-        horizontalDirection.y = 0f;
-        if (horizontalDirection.sqrMagnitude < 0.001f)
-            return;  // Too close to compute a reliable direction.
-        horizontalDirection.Normalize();
-
-        // Determine the desired yaw angle (in degrees) based on the horizontal direction.
-        float desiredYaw = Mathf.Atan2(horizontalDirection.x, horizontalDirection.z) * Mathf.Rad2Deg;
-        // Use the gameplayCamera's current yaw.
-        float currentYaw = camTransform.eulerAngles.y;
-        // Compute the shortest angle difference.
-        float yawDelta = Mathf.DeltaAngle(currentYaw, desiredYaw);
-
-        // --- Pitch (Vertical Rotation) Calculation ---
-        // Find the horizontal distance (ignoring vertical differences).
-        float horizontalDistance = new Vector2(directionToTarget.x, directionToTarget.z).magnitude;
-        // Calculate the desired pitch angle.
-        float desiredPitch = -Mathf.Atan2(directionToTarget.y, horizontalDistance) * Mathf.Rad2Deg;
-
-        // Get the current pitch from the camera's local rotation.
-        float currentPitch = camTransform.localEulerAngles.x;
-        // Convert the angle from [0, 360] to [-180, 180] for proper delta calculation.
-        if (currentPitch > 180f)
-            currentPitch -= 360f;
-        float pitchDelta = Mathf.DeltaAngle(currentPitch, desiredPitch);
-
-        // --- Simulated Mouse Delta ---
-        // Here we combine the yaw and pitch differences into a Vector2,
-        // similar to a mouse delta input.
-        Vector2 simulatedMouseDelta = new Vector2(yawDelta, pitchDelta);
-
-        // --- Apply Rotations ---
-        float turnSpeed = 0.1f;
-        // Calculate the rotation amounts.
-        float turnAmountYaw = simulatedMouseDelta.x * turnSpeed;
-        // For pitch, an additional multiplier is applied (adjust as needed).
-        float turnAmountPitch = simulatedMouseDelta.y * turnSpeed * 0.8f;
-
-        // Apply vertical (pitch) rotation.
-        // This method is assumed to update the camera's local X rotation.
-        Vector2 inputVector = new Vector2(0, turnAmountPitch);
-        CalculateVerticalLookingInput(inputVector);
-
-        // Apply horizontal (yaw) rotation.
-        // Rotating around the world Y-axis ensures the camera rotates correctly regardless of its current tilt.
-        camTransform.Rotate(Vector3.up, turnAmountYaw, Space.World);*/
+        float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (HeadTransform.position - targetPlayer.gameplayCamera.transform.position).normalized);
+        Plugin.ExtendedLogging($"Vector Dot: {dot}");
+        if (dot <= 0) return false;
+        if (Physics.Raycast(targetPlayer.gameplayCamera.transform.position, (HeadTransform.forward - targetPlayer.gameplayCamera.transform.position).normalized, distance, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore)) return false;
+        return true;
     }
-
-    /*private void CalculateVerticalLookingInput(Vector2 inputVector)
-    {
-        if (!targetPlayer.smoothLookEnabledLastFrame)
-        {
-            targetPlayer.smoothLookEnabledLastFrame = true;
-            targetPlayer.smoothLookTurnCompass.rotation = targetPlayer.gameplayCamera.transform.rotation;
-            targetPlayer.smoothLookTurnCompass.SetParent(null);
-        }
-
-        targetPlayer.cameraUp -= inputVector.y;
-        targetPlayer.cameraUp = Mathf.Clamp(targetPlayer.cameraUp, -80f, 60f);
-        targetPlayer.smoothLookTurnCompass.localEulerAngles = new Vector3(targetPlayer.cameraUp, targetPlayer.smoothLookTurnCompass.localEulerAngles.y, targetPlayer.smoothLookTurnCompass.localEulerAngles.z);
-        targetPlayer.gameplayCamera.transform.localEulerAngles = new Vector3(Mathf.LerpAngle(targetPlayer.gameplayCamera.transform.localEulerAngles.x, targetPlayer.cameraUp, targetPlayer.smoothLookMultiplier * Time.deltaTime), targetPlayer.gameplayCamera.transform.localEulerAngles.y, targetPlayer.gameplayCamera.transform.localEulerAngles.z);
-    }*/
 
     private void PickATargetPlayer()
     {
@@ -301,6 +235,43 @@ public class Mistress : CodeRebirthEnemyAI
         }
         return Vector3.zero;
     }
+
+    public void ForceTurnTowardsTarget(PlayerControllerB player)
+    {
+        player.targetScreenPos = player.turnCompassCamera.WorldToViewportPoint(HeadTransform.position);
+        player.shockMinigamePullPosition = player.targetScreenPos.x - 0.5f;
+        float num = Mathf.Clamp(Time.deltaTime, 0f, 0.1f);
+        if (player.targetScreenPos.x > 0.54f)
+        {
+            player.turnCompass.Rotate(Vector3.up * 500f * num * Mathf.Abs(player.shockMinigamePullPosition));
+            player.playerBodyAnimator.SetBool("PullingCameraRight", false);
+            player.playerBodyAnimator.SetBool("PullingCameraLeft", true);
+        }
+        else if (player.targetScreenPos.x < 0.46f)
+        {
+            player.turnCompass.Rotate(Vector3.up * -500f * num * Mathf.Abs(player.shockMinigamePullPosition));
+            player.playerBodyAnimator.SetBool("PullingCameraLeft", false);
+            player.playerBodyAnimator.SetBool("PullingCameraRight", true);
+        }
+        else
+        {
+            player.playerBodyAnimator.SetBool("PullingCameraLeft", false);
+            player.playerBodyAnimator.SetBool("PullingCameraRight", false);
+        }
+        player.targetScreenPos = player.gameplayCamera.WorldToViewportPoint(HeadTransform.position + Vector3.up * 0.35f);
+        if (player.targetScreenPos.y > 0.6f)
+        {
+            player.cameraUp = Mathf.Clamp(Mathf.Lerp(player.cameraUp, player.cameraUp - 25f, 25f * num * Mathf.Abs(player.targetScreenPos.y - 0.5f)), -89f, 89f);
+        }
+        else if (player.targetScreenPos.y < 0.35f)
+        {
+            player.cameraUp = Mathf.Clamp(Mathf.Lerp(player.cameraUp, player.cameraUp + 25f, 25f * num * Mathf.Abs(player.targetScreenPos.y - 0.5f)), -89f, 89f);
+        }
+        player.gameplayCamera.transform.localEulerAngles = new Vector3(player.cameraUp, player.gameplayCamera.transform.localEulerAngles.y, player.gameplayCamera.transform.localEulerAngles.z);
+        Vector3 zero = Vector3.zero;
+        zero.y = player.turnCompass.eulerAngles.y;
+        player.thisPlayerBody.rotation = Quaternion.Lerp(player.thisPlayerBody.rotation, Quaternion.Euler(zero), Time.deltaTime * 20f * (1f - Mathf.Abs(player.shockMinigamePullPosition)));
+    }
     #endregion
 
     #region RPC's
@@ -315,14 +286,14 @@ public class Mistress : CodeRebirthEnemyAI
     private void TemporarilyCripplePlayerClientRpc(bool cripple)
     {
         if (targetPlayer == null) return;
-        /*if (cripple)
+        if (cripple)
         {
-            targetPlayer.lookSensitivity /= 2;
+            AIIntervalTime = 0.05f;
         }
         else
         {
-            targetPlayer.lookSensitivity *= 2;
-        }*/
+            AIIntervalTime = 0.5f;
+        }
         targetPlayer.disableMoveInput = cripple;
     }
     #endregion

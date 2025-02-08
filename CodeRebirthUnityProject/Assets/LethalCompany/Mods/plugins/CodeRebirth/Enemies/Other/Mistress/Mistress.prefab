@@ -956,7 +956,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5897796756092576796}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -7.1054274e-15, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0.35148907, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1362,6 +1362,7 @@ MonoBehaviour:
   smartAgentNavigator: {fileID: 6419109921350317054}
   teleportCooldown: 20
   killCooldown: 10
+  HeadTransform: {fileID: 1212291645882394840}
 --- !u!1 &6478745463343962421
 GameObject:
   m_ObjectHideFlags: 0

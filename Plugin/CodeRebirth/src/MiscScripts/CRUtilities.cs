@@ -136,11 +136,11 @@ public class CRUtilities
         float playerDistanceFromExplosion = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, explosionPosition);
         if (playerDistanceFromExplosion <= 14)
         {
-            HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         }
         else if (playerDistanceFromExplosion <= 25)
         {
-            HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
 
         int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, LayerMask.GetMask("Enemies", "Player", "MapHazard"), QueryTriggerInteraction.Collide);

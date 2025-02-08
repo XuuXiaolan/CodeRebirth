@@ -24,7 +24,6 @@ public class BoomTrap : BearTrap
     {
         boomSource.PlayOneShot(hissSound);
         yield return new WaitForSeconds(hissSound.length);
-        yield return new WaitForSeconds(2f);
         CRUtilities.CreateExplosion(transform.position, true, 200, 0, 1f, 10, playerSnapped, null, 50f);
         boomSource.PlayOneShot(explosionSound);
         yield return new WaitForSeconds(explosionSound.length);
