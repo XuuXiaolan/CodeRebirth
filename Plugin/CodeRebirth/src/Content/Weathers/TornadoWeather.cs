@@ -7,6 +7,7 @@ public class TornadoWeather : CodeRebirthWeathers
 {
 	private IEnumerable<GameObject> nodes = [];
     private List<GameObject> alreadyUsedNodes = new();
+	private List<Tornados> spawnedTornados = new();
 	private void OnEnable()
 	{
 		Plugin.ExtendedLogging("Initing Tornado Weather on " + RoundManager.Instance.currentLevel.name);
@@ -21,6 +22,12 @@ public class TornadoWeather : CodeRebirthWeathers
 	private void OnDisable()
 	{
 		Plugin.ExtendedLogging("Cleaning up Weather.");
+		foreach (Tornados tornado in spawnedTornados)
+		{
+			if (tornado == null) continue;
+			if (tornado.IsOwner) tornado.KillEnemyOnOwnerClient(true);
+		}
+		spawnedTornados.Clear();
 		ChangeCurrentLevelMaximumPower(outsidePower: 3, insidePower: -6, dayTimePower: 3);
 	}
 
@@ -34,6 +41,7 @@ public class TornadoWeather : CodeRebirthWeathers
 
 	private void SpawnTornado(Vector3 target)
 	{
-		RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, WeatherHandler.Instance.Tornado.TornadoObj);
+		var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, WeatherHandler.Instance.Tornado.TornadoObj);
+		spawnedTornados.Add(((GameObject)tornado).GetComponent<Tornados>());
 	}
 }

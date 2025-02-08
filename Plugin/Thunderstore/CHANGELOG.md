@@ -1,5 +1,6 @@
-# v0.15.0
+# v1.0.0
 
+- Improved readme yet again.
 - Added BoomTraps
 - Optimised the following additions a bit.
   - Janitor.
@@ -18,6 +19,10 @@
   - Hurricane.
   - Firestorm.
 - Added The Mistress.
+  - Added the severed head.
+- Added The Creature (Dalice).
+- Added Oxyde.
+- Added Haemoglobin.
 
 ## v0.14.3
 

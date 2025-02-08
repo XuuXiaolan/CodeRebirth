@@ -106,6 +106,12 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     {
         [LoadFromBundle("MistressObj.asset")]
         public EnemyType MistressEnemyType { get; private set; } = null!;
+
+        [LoadFromBundle("LeChoppedHeadObj.asset")]
+        public Item ChoppedTalkingHead { get; private set; } = null!;
+
+        [LoadFromBundle("GuillotinePrefab.prefab")]
+        public GameObject GuillotinePrefab { get; private set; } = null!;
     }
 
     public class JanitorAssets(string bundleName) : AssetBundleLoader<JanitorAssets>(bundleName)
@@ -140,6 +146,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         {
             Mistress = new MistressAssets("mistressassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigMistressSpawnWeights.Value, Mistress.MistressEnemyType, null, null, Plugin.ModConfig.ConfigMistressPowerLevel.Value, Plugin.ModConfig.ConfigMistressMaxSpawnCount.Value);
+            RegisterScrapWithConfig("", Mistress.ChoppedTalkingHead, -1, -1);
         }
 
         if (Plugin.ModConfig.ConfigRedwoodEnabled.Value)
