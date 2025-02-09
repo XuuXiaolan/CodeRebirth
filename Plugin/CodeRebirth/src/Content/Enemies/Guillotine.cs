@@ -28,7 +28,7 @@ public class Guillotine : MonoBehaviour
         sequenceFinished = true;
         if (playerToKill == null || playerToKill.isPlayerDead) return;
         Plugin.ExtendedLogging($"Killing player {playerToKill}!");
-        if (playerToKill == GameNetworkManager.Instance.localPlayerController && StartOfRound.Instance.allPlayerScripts.Where(x => !x.isPlayerDead && x.isPlayerControlled).Count() == 1)
+        if (StartOfRound.Instance.allPlayerScripts.Where(x => !x.isPlayerDead && x.isPlayerControlled).Count() == 1)
         {
             playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
             return;
@@ -41,13 +41,11 @@ public class Guillotine : MonoBehaviour
         playerToKill.disableInteract = true;
         playerToKill.thisPlayerModelLOD2.gameObject.SetActive(false);
         playerToKill.thisPlayerModelLOD1.gameObject.SetActive(false);
-        
-        playerToKill.CancelSpecialTriggerAnimations();
+        playerToKill.headCostumeContainer.gameObject.SetActive(false);
+        playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
         if (GameNetworkManager.Instance.localPlayerController == playerToKill)
         {
             HUDManager.Instance.HideHUD(true);
-            playerToKill.headCostumeContainer.gameObject.SetActive(false);
-            playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
             StartOfRound.Instance.allowLocalPlayerDeath = false;
         }
         if (!NetworkManager.Singleton.IsServer) return;

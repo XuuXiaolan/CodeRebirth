@@ -85,7 +85,11 @@ public class Mistress : CodeRebirthEnemyAI
     {
         base.DoAIInterval();
         if (StartOfRound.Instance.allPlayersDead || isEnemyDead) return;
-
+        if (targetPlayer != null && targetPlayer.isPlayerDead)
+        {
+            targetPlayer = null;
+            StartCoroutine(ResetMistressToStalking());
+        }
         switch (currentBehaviourStateIndex)
         {
             case (int)State.Spawning:
@@ -200,12 +204,7 @@ public class Mistress : CodeRebirthEnemyAI
     public IEnumerator TeleportRoutine()
     {
         yield return new WaitForSeconds(0.5f);
-        skinnedMeshRenderers[0].enabled = false;
-        if (GameNetworkManager.Instance.localPlayerController == targetPlayer)
-        {
-            StartCoroutine(UnHideMistress());
-        }
-        if (!IsServer) yield break;
+        SyncRendererMistressServerRpc();
         teleporterTimer = mistressRandom.NextFloat(teleportCooldown - 5, teleportCooldown + 5);
         Vector3 teleportPoint = ChooseNewTeleportPoint();
         if (teleportPoint == Vector3.zero)
@@ -357,6 +356,22 @@ public class Mistress : CodeRebirthEnemyAI
     #region RPC's
 
     [ServerRpc(RequireOwnership = false)]
+    private void SyncRendererMistressServerRpc()
+    {
+        SyncRendererMistressClientRpc();
+    }
+
+    [ClientRpc]
+    private void SyncRendererMistressClientRpc()
+    {
+        skinnedMeshRenderers[0].enabled = false;
+        if (GameNetworkManager.Instance.localPlayerController == targetPlayer)
+        {
+            StartCoroutine(UnHideMistress());
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
     private void TemporarilyCripplePlayerServerRpc(bool cripple)
     {
         TemporarilyCripplePlayerClientRpc(cripple);
@@ -370,7 +385,7 @@ public class Mistress : CodeRebirthEnemyAI
         {
             Plugin.ExtendedLogging($"Sensitivity: {IngamePlayerSettings.Instance.settings.lookSensitivity}");
             playerPreviousSensitivity = IngamePlayerSettings.Instance.settings.lookSensitivity;
-            IngamePlayerSettings.Instance.settings.lookSensitivity = 1;
+            if (GameNetworkManager.Instance.localPlayerController == targetPlayer) IngamePlayerSettings.Instance.settings.lookSensitivity = 1;
             AIIntervalTime = 0.05f;
             targetPlayer.inAnimationWithEnemy = this;
             inSpecialAnimationWithPlayer = targetPlayer;
@@ -379,7 +394,7 @@ public class Mistress : CodeRebirthEnemyAI
         {
             skinnedMeshRenderers[0].enabled = false;
             Plugin.ExtendedLogging($"Sensitivity: {IngamePlayerSettings.Instance.settings.lookSensitivity}");
-            IngamePlayerSettings.Instance.settings.lookSensitivity = playerPreviousSensitivity;
+            if (GameNetworkManager.Instance.localPlayerController == targetPlayer) IngamePlayerSettings.Instance.settings.lookSensitivity = playerPreviousSensitivity;
             AIIntervalTime = 0.5f;
             targetPlayer.inAnimationWithEnemy = null;
             StartCoroutine(ResetVolumeWeightTo0(targetPlayer));
