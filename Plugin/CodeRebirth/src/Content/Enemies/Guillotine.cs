@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -13,7 +14,7 @@ public class Guillotine : MonoBehaviour
     [HideInInspector] public PlayerControllerB playerToKill = null!;
     [HideInInspector] public bool sequenceFinished = false;
 
-    public void LateUpdate()
+    public void Update()
     {
         if (!sequenceFinished)
         {
@@ -26,10 +27,29 @@ public class Guillotine : MonoBehaviour
     {
         sequenceFinished = true;
         if (playerToKill == null || playerToKill.isPlayerDead) return;
+        Plugin.ExtendedLogging($"Killing player {playerToKill}!");
+        if (playerToKill == GameNetworkManager.Instance.localPlayerController && StartOfRound.Instance.allPlayerScripts.Where(x => !x.isPlayerDead && x.isPlayerControlled).Count() == 1)
+        {
+            playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
+            return;
+        }
+        // if this is the last person left alive, then just kill em.
+        playerToKill.DropAllHeldItems();
+        playerToKill.DisablePlayerModel(playerToKill.gameObject, false, true);
         playerToKill.isPlayerDead = true;
         playerToKill.disableMoveInput = true;
         playerToKill.disableInteract = true;
-        playerToKill.DisablePlayerModel(playerToKill.gameObject, false, true);
+        playerToKill.thisPlayerModelLOD2.gameObject.SetActive(false);
+        playerToKill.thisPlayerModelLOD1.gameObject.SetActive(false);
+        
+        playerToKill.CancelSpecialTriggerAnimations();
+        if (GameNetworkManager.Instance.localPlayerController == playerToKill)
+        {
+            HUDManager.Instance.HideHUD(true);
+            playerToKill.headCostumeContainer.gameObject.SetActive(false);
+            playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
+            StartOfRound.Instance.allowLocalPlayerDeath = false;
+        }
         if (!NetworkManager.Singleton.IsServer) return;
         GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.Mistress.ChoppedTalkingHead, scrapSpawnTransform.position, false, true, 0);
         TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();

@@ -52,6 +52,7 @@ public class Mistress : CodeRebirthEnemyAI
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
         if (localPlayer == targetPlayer)
         {
+            localPlayer.JumpToFearLevel(0.7f);
             CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer/killCooldown);
             ForceTurnTowardsTarget(localPlayer);
         }
@@ -74,7 +75,7 @@ public class Mistress : CodeRebirthEnemyAI
         direction.y = 0;
         
         Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime); // todo: make the mistress head rotate up and down
 
         if (currentBehaviourStateIndex != (int)State.Attack) return;
     }
@@ -174,12 +175,9 @@ public class Mistress : CodeRebirthEnemyAI
             IngamePlayerSettings.Instance.settings.lookSensitivity = playerPreviousSensitivity;
         }
         StartCoroutine(ResetMistressToStalking());
-        yield return new WaitForSeconds(30f);
+        yield return new WaitForSeconds(20f);
         Destroy(GuillotineGO);
         // Find Valid spot to spawn guillotine.
-        // parent player to the bone on a late update sequence, start teh guillotine animation, then kill em.
-        // If we killed them, then spawn the talking head with player.
-        // If not, then oh well.
     }
 
     private IEnumerator ResetMistressToStalking()
@@ -194,6 +192,7 @@ public class Mistress : CodeRebirthEnemyAI
         teleporterTimer = 0f;
         targetPlayer = null;
         yield return new WaitForSeconds(20f);
+        timeSpentInState = 0f;
         SwitchToBehaviourServerRpc((int)State.Stalking);
         PickATargetPlayer();
     }
@@ -303,65 +302,39 @@ public class Mistress : CodeRebirthEnemyAI
 
     public void ForceTurnTowardsTarget(PlayerControllerB player)
     {
-        // ----- Horizontal (Yaw) Adjustment -----
-        // Convert target world position to viewport coordinates using the turn compass camera.
         player.targetScreenPos = player.turnCompassCamera.WorldToViewportPoint(HeadTransform.position);
         player.shockMinigamePullPosition = player.targetScreenPos.x - 0.5f;
         float dt = Mathf.Clamp(Time.deltaTime, 0f, 0.1f);
-
-        // If the target is to the right of center (beyond 0.54), rotate left.
         if (player.targetScreenPos.x > 0.54f)
         {
-            player.turnCompass.Rotate(Vector3.up * 2000f * dt * Mathf.Abs(player.shockMinigamePullPosition));
+            player.turnCompass.Rotate(Vector3.up * 1500 * dt * Mathf.Abs(player.shockMinigamePullPosition));
             player.playerBodyAnimator.SetBool("PullingCameraRight", false);
             player.playerBodyAnimator.SetBool("PullingCameraLeft", true);
         }
-        // If the target is to the left of center (below 0.46), rotate right.
         else if (player.targetScreenPos.x < 0.46f)
         {
-            player.turnCompass.Rotate(Vector3.up * -2000f * dt * Mathf.Abs(player.shockMinigamePullPosition));
+            player.turnCompass.Rotate(Vector3.up * -1500 * dt * Mathf.Abs(player.shockMinigamePullPosition));
             player.playerBodyAnimator.SetBool("PullingCameraLeft", false);
             player.playerBodyAnimator.SetBool("PullingCameraRight", true);
         }
         else
         {
-            // In the dead zone, no horizontal pulling animation.
             player.playerBodyAnimator.SetBool("PullingCameraLeft", false);
             player.playerBodyAnimator.SetBool("PullingCameraRight", false);
         }
-
-        // ----- Vertical (Pitch) Adjustment -----
-        // Offset the target position slightly upward (if needed).
-        Vector3 targetOffsetPos = HeadTransform.position + Vector3.up * 0.35f;
-        player.targetScreenPos = player.gameplayCamera.WorldToViewportPoint(targetOffsetPos);
-
-        // Instead of applying a fixed offset, calculate the desired pitch.
-        // Determine the normalized direction from the camera to the target.
-        Vector3 directionToTarget = (targetOffsetPos - player.gameplayCamera.transform.position).normalized;
-        // Calculate the desired pitch (in degrees) using Atan2.
-        float desiredPitch = Mathf.Atan2(directionToTarget.y, new Vector2(directionToTarget.x, directionToTarget.z).magnitude) * Mathf.Rad2Deg;
-
-        // Smoothly interpolate between the current pitch and the desired pitch.
-        // Adjust verticalRotationSpeed as needed (here set to 100 for a strong, yet smooth adjustment).
-        float verticalRotationSpeed = 10;
-        player.cameraUp = Mathf.LerpAngle(player.cameraUp, desiredPitch, verticalRotationSpeed * dt);
-
-        // Clamp the pitch so that it never exceeds reasonable limits.
-        player.cameraUp = Mathf.Clamp(player.cameraUp, -89f, 89f);
-
-        // Apply the new pitch to the gameplay camera's local rotation while preserving its Y and Z angles.
-        Vector3 currentEuler = player.gameplayCamera.transform.localEulerAngles;
-        player.gameplayCamera.transform.localEulerAngles = new Vector3(player.cameraUp, currentEuler.y, currentEuler.z);
-
-        // ----- Player Body Rotation -----
-        // Use the turnCompass's Y rotation to smoothly rotate the player's body.
-        Vector3 targetEuler = Vector3.zero;
-        targetEuler.y = player.turnCompass.eulerAngles.y;
-        player.thisPlayerBody.rotation = Quaternion.Lerp(
-            player.thisPlayerBody.rotation,
-            Quaternion.Euler(targetEuler),
-            Time.deltaTime * 20f * (1f - Mathf.Abs(player.shockMinigamePullPosition))
-        );
+        player.targetScreenPos = player.gameplayCamera.WorldToViewportPoint(HeadTransform.position + Vector3.up * 0.35f);
+        if (player.targetScreenPos.y > 0.6f)
+        {
+            player.cameraUp = Mathf.Clamp(Mathf.Lerp(player.cameraUp, player.cameraUp - 25f, 40f * dt * Mathf.Abs(player.targetScreenPos.y - 0.5f)), -89f, 89f);
+        }
+        else if (player.targetScreenPos.y < 0.35f)
+        {
+            player.cameraUp = Mathf.Clamp(Mathf.Lerp(player.cameraUp, player.cameraUp + 25f, 40f * dt * Mathf.Abs(player.targetScreenPos.y - 0.5f)), -89f, 89f);
+        }
+        player.gameplayCamera.transform.localEulerAngles = new Vector3(player.cameraUp, player.gameplayCamera.transform.localEulerAngles.y, player.gameplayCamera.transform.localEulerAngles.z);
+        Vector3 zero = Vector3.zero;
+        zero.y = player.turnCompass.eulerAngles.y;
+        player.thisPlayerBody.rotation = Quaternion.Lerp(player.thisPlayerBody.rotation, Quaternion.Euler(zero), Time.deltaTime * 20f * (1f - Mathf.Abs(player.shockMinigamePullPosition)));
     }
 
     private IEnumerator ResetVolumeWeightTo0(PlayerControllerB targetPlayer)

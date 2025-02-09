@@ -569,7 +569,7 @@ public class CodeRebirthConfig
                                             "Whether the Cruiser Gal is enabled.");
         ConfigCruiserGalCost = configFile.Bind("Cruiser Options",
                                             "Cruiser Gal | Cost",
-                                            999,
+                                            2500,
                                             "Cost of the Cruiser Gal.");
         ConfigCruiserGalAutomatic = configFile.Bind("Cruiser Options",
                                             "Cruiser Gal | Automatic Behaviour",
@@ -583,7 +583,7 @@ public class CodeRebirthConfig
                                             "Whether the Shockwave Gal is enabled.");
         ConfigShockwaveBotCost = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Cost",
-                                            999,
+                                            2000,
                                             "Cost of the Shockwave Gal.");
         ConfigShockwaveCharges = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Charges",
@@ -624,7 +624,7 @@ public class CodeRebirthConfig
                                             "Whether the Seamine Gal is enabled.");
         ConfigSeamineTinkCost = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Cost",
-                                            999,
+                                            1500,
                                             "Cost of the Seamine Gal.");
         ConfigSeamineTinkCharges = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Charges",
@@ -661,7 +661,7 @@ public class CodeRebirthConfig
                                             "Whether the Terminal Gal is enabled.");
         ConfigTerminalBotCost = configFile.Bind("Terminal Options",
                                             "Terminal Gal | Cost",
-                                            1500,
+                                            2000,
                                             "Cost of the Terminal Gal.");
         ConfigTerminalBotAutomatic = configFile.Bind("Terminal Options",
                                             "Terminal Gal | Automatic Behaviour",
