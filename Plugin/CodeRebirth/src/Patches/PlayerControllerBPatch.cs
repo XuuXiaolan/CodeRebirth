@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
-using CodeRebirth.src.MiscScripts.PathFinding;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using HarmonyLib;
+using LethalLib.Modules;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Unity.Netcode;
@@ -54,11 +54,29 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.ConnectClientToPlayerObject += PlayerControllerB_ConnectClientToPlayerObject;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
+        On.GameNetcodeStuff.PlayerControllerB.Update += PlayerControllerB_Update;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
         On.GameNetcodeStuff.PlayerControllerB.KillPlayer += PlayerControllerB_KillPlayer;
         On.GameNetcodeStuff.PlayerControllerB.IHittable_Hit += PlayerControllerB_IHittable_Hit;
         On.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += PlayerControllerB_DiscardHeldObject;
+        // On.GameNetcodeStuff.PlayerControllerB.NearOtherPlayers += PlayerControllerB_NearOtherPlayers;
     }
+
+    private static void PlayerControllerB_Update(On.GameNetcodeStuff.PlayerControllerB.orig_Update orig, PlayerControllerB self)
+    {
+        if (self != GameNetworkManager.Instance.localPlayerController && self.IsPsuedoDead())
+        {
+            // Plugin.ExtendedLogging($"Setting player layer to 0.");
+            self.gameObject.layer = 0;
+        }
+        orig(self);
+    }
+
+    /*private static bool PlayerControllerB_NearOtherPlayers(On.GameNetcodeStuff.PlayerControllerB.orig_NearOtherPlayers orig, PlayerControllerB self, PlayerControllerB playerScript, float checkRadius)
+    {
+        if (self == GameNetworkManager.Instance.localPlayerController && TalkingHead.talkingHeads.Count > 0 && TalkingHead.talkingHeads.Any(x => x.player == self)) return false;
+        return orig(self, playerScript, checkRadius);
+    }*/
 
     private static void PlayerControllerB_DiscardHeldObject(On.GameNetcodeStuff.PlayerControllerB.orig_DiscardHeldObject orig, PlayerControllerB self, bool placeObject, NetworkObject parentObjectTo, Vector3 placePosition, bool matchRotationOfParent)
     {
@@ -115,6 +133,11 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)
     {
         orig(self);
+        if (self != GameNetworkManager.Instance.localPlayerController && self.IsPsuedoDead())
+        {
+            // Plugin.ExtendedLogging($"Setting player layer to 0.");
+            self.gameObject.layer = 0;
+        }
         if (self.ContainsCRPlayerData() && ((self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
         {
             Hoverboard? hoverboard = self.TryGetHoverboardRiding();

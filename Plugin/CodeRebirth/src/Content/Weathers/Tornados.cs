@@ -208,7 +208,7 @@ public class Tornados : CodeRebirthEnemyAI
     private float DetermineTornadoMaxStrength(bool hasLineOfSight, PlayerControllerB localPlayerController)
     {
         return (hasLineOfSight ? Plugin.ModConfig.ConfigTornadoPullStrength.Value : 0.125f * Plugin.ModConfig.ConfigTornadoPullStrength.Value)
-            * (tornadoType != TornadoType.Smoke ? 0.5f : 1f);
+            * (tornadoType != TornadoType.Smoke ? 0.2f : 1f);
     }
 
     private void HandleTornadoTypeDamage(PlayerControllerB localPlayerController) // todo: redo this mess.

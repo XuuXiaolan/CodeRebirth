@@ -253,7 +253,7 @@ public class BearTrap : CodeRebirthHazard
         DoReleaseTrap();
     }
 
-    private void DoReleaseTrap()
+    public void DoReleaseTrap()
     {
         trapAudioSource.Stop();
         trapAudioSource.clip = resetTrapEndSound;

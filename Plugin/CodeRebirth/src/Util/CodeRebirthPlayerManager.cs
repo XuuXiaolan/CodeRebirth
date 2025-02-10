@@ -44,15 +44,13 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
 public class CRPlayerData
 {
     public bool Water = false;
-    public bool Electric = false;
     public bool Fire = false;
     public bool Smoke = false;
-    public bool Windy = false;
-    public bool Blood = false;
     public bool ridingHoverboard = false;
     public bool holdingWallet = false;
     public bool flingingAway = false;
     public bool flung = false;
+    public bool psuedoDead = false;
     public Hoverboard? hoverboardRiding;
     public List<Collider> playerColliders = new();
 
@@ -82,11 +80,11 @@ internal static class PlayerControllerBExtensions
         }
         if (player.HasEffectActive(effect) && effect == CodeRebirthStatusEffects.Fire)
         {
-            CodeRebirthUtils.Instance.FireyVolume.weight = Mathf.Clamp01(distance/range);
+            CodeRebirthUtils.Instance.FireyVolume.weight = Mathf.Clamp01(range/distance);
         }
         else if (player.HasEffectActive(effect) && effect == CodeRebirthStatusEffects.Smoke)
         {
-            CodeRebirthUtils.Instance.SmokyVolume.weight = Mathf.Clamp01(distance/range);
+            CodeRebirthUtils.Instance.SmokyVolume.weight = Mathf.Clamp01(range/distance);
         }
         return ApplyEffectResults.None;
     }
@@ -102,9 +100,11 @@ internal static class PlayerControllerBExtensions
                 playerData.Water = isActive;
                 break;
             case CodeRebirthStatusEffects.Fire:
+                CodeRebirthUtils.Instance.FireyVolume.weight = 0;
                 playerData.Fire = isActive;
                 break;
             case CodeRebirthStatusEffects.Smoke:
+                CodeRebirthUtils.Instance.SmokyVolume.weight = 0;
                 playerData.Smoke = isActive;
                 break;
         }
@@ -134,6 +134,12 @@ internal static class PlayerControllerBExtensions
         CodeRebirthPlayerManager.dataForPlayer.Add(player, new CRPlayerData());
         player.GetCRPlayerData().playerColliders = new List<Collider>(player.GetComponentsInChildren<Collider>());
     }
+
+    internal static bool IsPsuedoDead(this PlayerControllerB player) =>
+        player.GetCRPlayerData().psuedoDead;
+
+    internal static bool SetPsuedoDead(this PlayerControllerB player, bool psuedoDead) =>
+        player.GetCRPlayerData().psuedoDead = psuedoDead;
 
     internal static bool IsHoldingWallet(this PlayerControllerB player) =>
         player.GetCRPlayerData().holdingWallet;

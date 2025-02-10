@@ -10,7 +10,7 @@ public static class SlowDownEffect
     public static void DoSlowdownEffect(float timeLength, float timeScale)
     {
         CodeRebirthUtils.Instance.TimeSlowVolume.weight = 1f;
-        if (audioSourcesToAffect.Length == 0) audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>();
+        audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>();
         float timeDelay = timeLength;
         Time.timeScale = timeScale;
         List<(AudioSource audioSource, float pitch, float volume, float dopplerLevel)> audioSourcesWithOldValues = new();
@@ -23,7 +23,6 @@ public static class SlowDownEffect
         }
         foreach (var audiosource in audioSourcesToAffect)
         {
-            if (audiosource == null) continue;
             audioSourcesWithOldValues.Add((audiosource, audiosource.pitch, audiosource.volume, audiosource.dopplerLevel));
             audiosource.pitch = 0.2f;
             audiosource.volume = 0.7f * audiosource.volume;

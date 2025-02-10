@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -12,31 +14,53 @@ public class TalkingHead : GrabbableObject
     [HideInInspector] public PlayerControllerB? player = null;
     private bool wasInFactoryLastFrame = false;
 
+    [HideInInspector] public static List<TalkingHead> talkingHeads = new();
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        talkingHeads.Add(this);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        talkingHeads.Remove(this);
+    }
+
     public override void Update()
     {
         base.Update();
         if (player == null) return;
-        if (isInFactory != wasInFactoryLastFrame && GameNetworkManager.Instance.localPlayerController == player)
+        /*if (isInFactory != wasInFactoryLastFrame && GameNetworkManager.Instance.localPlayerController == player && RoundManager.Instance.currentLevel.planetHasTime)
         {
             Plugin.ExtendedLogging("Teleporting player.");
-            var entranceTeleport = CodeRebirthUtils.entrancePoints.OrderBy(p => Vector3.Distance(p.entrancePoint.position, player.transform.position)).FirstOrDefault();
+            var entranceTeleport = CodeRebirthUtils.entrancePoints.Where(p => p.isEntranceToBuilding == !wasInFactoryLastFrame).FirstOrDefault();
             entranceTeleport.TeleportPlayer();
-        }
+        }*/
         wasInFactoryLastFrame = this.isInFactory;
         if (GameNetworkManager.Instance.localPlayerController == player) meshRenderer.enabled = false;
+        player.thisPlayerModelLOD1.gameObject.SetActive(false);
+        player.thisPlayerModelLOD2.gameObject.SetActive(false);
+        player.thisPlayerModel.gameObject.SetActive(false);
         player.disableMoveInput = true;
+        player.disableInteract = true;
         player.transform.position = playerBone.position;
         player.transform.rotation = transform.rotation;
-        if (StartOfRound.Instance.shipIsLeaving || StartOfRound.Instance.allPlayerScripts.Where(p => p.isPlayerControlled && !p.isPlayerDead).Count() <= 0)
+        if (StartOfRound.Instance.shipIsLeaving)
         {
+            MoreCompanySoftCompat.TryDisableOrEnableCosmetics(player, false);
             player.DisablePlayerModel(player.gameObject, true, false);
             player.disableMoveInput = false;
             player.disableInteract = false;
+            player.thisPlayerModel.gameObject.SetActive(true);
+            player.playerBadgeMesh.gameObject.SetActive(true);
             player.thisPlayerModelLOD2.gameObject.SetActive(true);
             player.thisPlayerModelLOD1.gameObject.SetActive(true);
             player.headCostumeContainer.gameObject.SetActive(true);
             player.headCostumeContainerLocal.gameObject.SetActive(true);
-            player.isPlayerDead = false;
+            player.SetPsuedoDead(false);
+            player.gameObject.layer = 3;
             if (GameNetworkManager.Instance.localPlayerController == player)
             {
                 HUDManager.Instance.HideHUD(false);
@@ -62,5 +86,6 @@ public class TalkingHead : GrabbableObject
         {
             meshRenderer.enabled = false;
         }
+        player.SetPsuedoDead(true);
     }
 }

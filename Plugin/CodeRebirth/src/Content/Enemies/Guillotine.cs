@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -28,17 +29,18 @@ public class Guillotine : MonoBehaviour
         sequenceFinished = true;
         if (playerToKill == null || playerToKill.isPlayerDead) return;
         Plugin.ExtendedLogging($"Killing player {playerToKill}!");
-        if (StartOfRound.Instance.allPlayerScripts.Where(x => !x.isPlayerDead && x.isPlayerControlled).Count() == 1)
+        /*if (StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPsuedoDead()).Count() == 1)
         {
             playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
             return;
-        }
+        }*/
         // if this is the last person left alive, then just kill em.
+        MoreCompanySoftCompat.TryDisableOrEnableCosmetics(playerToKill, true);
         playerToKill.DropAllHeldItems();
         playerToKill.DisablePlayerModel(playerToKill.gameObject, false, true);
-        playerToKill.isPlayerDead = true;
         playerToKill.disableMoveInput = true;
         playerToKill.disableInteract = true;
+        playerToKill.playerBadgeMesh.gameObject.SetActive(false);
         playerToKill.thisPlayerModelLOD2.gameObject.SetActive(false);
         playerToKill.thisPlayerModelLOD1.gameObject.SetActive(false);
         playerToKill.headCostumeContainer.gameObject.SetActive(false);

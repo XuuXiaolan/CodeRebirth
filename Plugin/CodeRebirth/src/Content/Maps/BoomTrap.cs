@@ -24,9 +24,11 @@ public class BoomTrap : BearTrap
     {
         boomSource.PlayOneShot(hissSound);
         yield return new WaitForSeconds(hissSound.length);
-        CRUtilities.CreateExplosion(transform.position, true, 200, 0, 1f, 10, playerSnapped, null, 50f);
+        CRUtilities.CreateExplosion(transform.position, true, 400, 0f, 4f, 10, playerSnapped, null, 50f);
         boomSource.PlayOneShot(explosionSound);
         yield return new WaitForSeconds(explosionSound.length);
+        DoReleaseTrap();
+        if (!IsServer) yield break;
         this.NetworkObject.Despawn();
     }
 

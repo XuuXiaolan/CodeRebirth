@@ -23,6 +23,7 @@
 - Added The Creature (Dalice).
 - Added Oxyde.
 - Added Haemoglobin.
+- Gave cruiser gal a new song.
 
 ## v0.14.3
 

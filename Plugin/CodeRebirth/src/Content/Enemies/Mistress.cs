@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
@@ -19,7 +20,6 @@ public class Mistress : CodeRebirthEnemyAI
     public Transform HeadTransform = null!;
 
     private List<PlayerControllerB> previousTargetPlayers = new();
-    private int playerPreviousSensitivity = 0;
     private System.Random mistressRandom = new();
     private float teleporterTimer = 20f;
     private float timeSpentInState = 0f;
@@ -38,6 +38,7 @@ public class Mistress : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        AIIntervalTime = 0.1f;
         skinnedMeshRenderers[0].enabled = false;
         mistressRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         StartCoroutine(ResetMistressToStalking());
@@ -54,17 +55,35 @@ public class Mistress : CodeRebirthEnemyAI
         {
             localPlayer.JumpToFearLevel(0.7f);
             CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer/killCooldown);
-            ForceTurnTowardsTarget(localPlayer);
         }
         
         if (killTimer >= killCooldown)
         {
+            killTimer = 0f;
             playerToKill = targetPlayer;
-            StartCoroutine(ResetVolumeWeightTo0(playerToKill));
-            StartCoroutine(InitiateKillingSequence(playerToKill));
-            SwitchToBehaviourStateOnLocalClient((int)State.Execution);
-            return;
+            playerToKill.inSpecialInteractAnimation = false;
+            playerToKill.shockingTarget = null;
+            playerToKill.inShockingMinigame = false;
+            if (playerToKill == localPlayer)
+            {
+                DoExecutionStuffServerRpc();
+            }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DoExecutionStuffServerRpc()
+    {
+        DoExecutionStuffClientRpc();
+    }
+
+    [ClientRpc]
+    private void DoExecutionStuffClientRpc()
+    {
+        Plugin.Logger.LogInfo($"Executing player so please work please please {playerToKill}");
+        StartCoroutine(ResetVolumeWeightTo0(playerToKill));
+        StartCoroutine(InitiateKillingSequence(playerToKill));
+        SwitchToBehaviourStateOnLocalClient((int)State.Execution);
     }
 
     public void LateUpdate()
@@ -84,11 +103,13 @@ public class Mistress : CodeRebirthEnemyAI
     public override void DoAIInterval()
     {
         base.DoAIInterval();
+        if (targetPlayer == null) return;
         if (StartOfRound.Instance.allPlayersDead || isEnemyDead) return;
         if (targetPlayer != null && targetPlayer.isPlayerDead)
         {
-            targetPlayer = null;
+            SetTargetServerRpc(-1);
             StartCoroutine(ResetMistressToStalking());
+            return;
         }
         switch (currentBehaviourStateIndex)
         {
@@ -119,11 +140,6 @@ public class Mistress : CodeRebirthEnemyAI
         }
 
         float distance = Vector3.Distance(transform.position, targetPlayer.transform.position);
-        if (distance > 20)
-        {
-            return;
-        }
-
         bool LookedAt = PlayerLookingAtEnemy(distance);
         Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
         if (LookedAt)
@@ -145,12 +161,6 @@ public class Mistress : CodeRebirthEnemyAI
     private void DoAttack()
     {
         float distance = Vector3.Distance(HeadTransform.position, targetPlayer.transform.position);
-        if (distance > 20)
-        {
-            StartCoroutine(ResetMistressToStalking());
-            return;
-        }
-
         bool LookedAt = PlayerLookingAtEnemy(distance);
         Plugin.ExtendedLogging($"LookedAt in attack phase: {LookedAt}");
         if (LookedAt) return;
@@ -172,12 +182,13 @@ public class Mistress : CodeRebirthEnemyAI
         Physics.Raycast(Vector3.zero, Vector3.down, out RaycastHit hit, 10, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
         GameObject GuillotineGO = GameObject.Instantiate(EnemyHandler.Instance.Mistress.GuillotinePrefab, hit.point, Quaternion.Euler(-90, 0, 0), RoundManager.Instance.mapPropsContainer.transform);
         var Guillotine = GuillotineGO.GetComponent<Guillotine>();
+        if (playerToExecute.isInsideFactory && playerToExecute == GameNetworkManager.Instance.localPlayerController)
+        {
+            CodeRebirthUtils.entrancePoints.Where(entrance => !entrance.isEntranceToBuilding).First().TeleportPlayer();
+        }
         Guillotine.playerToKill = playerToExecute;
         yield return new WaitUntil(() => Guillotine.sequenceFinished); // Have the player stick to guillotine script.
-        if (playerToExecute == GameNetworkManager.Instance.localPlayerController)
-        {
-            IngamePlayerSettings.Instance.settings.lookSensitivity = playerPreviousSensitivity;
-        }
+        targetPlayer = null;
         StartCoroutine(ResetMistressToStalking());
         yield return new WaitForSeconds(20f);
         Destroy(GuillotineGO);
@@ -186,15 +197,14 @@ public class Mistress : CodeRebirthEnemyAI
 
     private IEnumerator ResetMistressToStalking()
     {
+        killTimer = 0f;
         if (!IsServer) yield break;
         creatureNetworkAnimator.SetTrigger(DoVanishAnimation);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         TemporarilyCripplePlayerServerRpc(false);
         SwitchToBehaviourServerRpc((int)State.Spawning);
         previousTargetPlayers.Add(targetPlayer);
-        killTimer = 0f;
         teleporterTimer = 0f;
-        targetPlayer = null;
         yield return new WaitForSeconds(20f);
         timeSpentInState = 0f;
         SwitchToBehaviourServerRpc((int)State.Stalking);
@@ -220,7 +230,6 @@ public class Mistress : CodeRebirthEnemyAI
 
     private bool PlayerLookingAtEnemy(float distance)
     {
-        if (!skinnedMeshRenderers[0].enabled) return false;
         float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (HeadTransform.position - targetPlayer.gameplayCamera.transform.position).normalized);
         Plugin.ExtendedLogging($"Vector Dot: {dot}");
         if (dot <= 0.35f) return false;
@@ -233,13 +242,13 @@ public class Mistress : CodeRebirthEnemyAI
         Dictionary<PlayerControllerB, int> playersWithPriorityDict = new();
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player == null || player.isPlayerDead || !player.isPlayerControlled) continue;
+            if (player == null || player.isPlayerDead || !player.isPlayerControlled || TalkingHead.talkingHeads.Any(x => x.player == player)) continue;
             playersWithPriorityDict.Add(player, 0);
 
             if (previousTargetPlayers.Contains(player))
             {
-                playersWithPriorityDict[player] -= 2;
-            } // Decrease priority if was already a previous target.
+                playersWithPriorityDict[player] += 200;
+            } // Increase priority if was already a previous target.
 
             if (player.isInsideFactory)
             {
@@ -261,7 +270,7 @@ public class Mistress : CodeRebirthEnemyAI
 
         foreach (var gal in GalAI.Instances)
         {
-            if (gal == null || gal.ownerPlayer == null) continue;
+            if (gal == null || gal.ownerPlayer == null || gal.ownerPlayer.isPlayerDead || !gal.ownerPlayer.isPlayerControlled || gal.ownerPlayer.IsPsuedoDead()) continue;
             playersWithPriorityDict[gal.ownerPlayer] += 1;
         } // Increase priority for each gal a player owns.
         
@@ -297,43 +306,6 @@ public class Mistress : CodeRebirthEnemyAI
         }
         
         return Vector3.zero;
-    }
-
-    public void ForceTurnTowardsTarget(PlayerControllerB player)
-    {
-        player.targetScreenPos = player.turnCompassCamera.WorldToViewportPoint(HeadTransform.position);
-        player.shockMinigamePullPosition = player.targetScreenPos.x - 0.5f;
-        float dt = Mathf.Clamp(Time.deltaTime, 0f, 0.1f);
-        if (player.targetScreenPos.x > 0.54f)
-        {
-            player.turnCompass.Rotate(Vector3.up * 1500 * dt * Mathf.Abs(player.shockMinigamePullPosition));
-            player.playerBodyAnimator.SetBool("PullingCameraRight", false);
-            player.playerBodyAnimator.SetBool("PullingCameraLeft", true);
-        }
-        else if (player.targetScreenPos.x < 0.46f)
-        {
-            player.turnCompass.Rotate(Vector3.up * -1500 * dt * Mathf.Abs(player.shockMinigamePullPosition));
-            player.playerBodyAnimator.SetBool("PullingCameraLeft", false);
-            player.playerBodyAnimator.SetBool("PullingCameraRight", true);
-        }
-        else
-        {
-            player.playerBodyAnimator.SetBool("PullingCameraLeft", false);
-            player.playerBodyAnimator.SetBool("PullingCameraRight", false);
-        }
-        player.targetScreenPos = player.gameplayCamera.WorldToViewportPoint(HeadTransform.position + Vector3.up * 0.35f);
-        if (player.targetScreenPos.y > 0.6f)
-        {
-            player.cameraUp = Mathf.Clamp(Mathf.Lerp(player.cameraUp, player.cameraUp - 25f, 40f * dt * Mathf.Abs(player.targetScreenPos.y - 0.5f)), -89f, 89f);
-        }
-        else if (player.targetScreenPos.y < 0.35f)
-        {
-            player.cameraUp = Mathf.Clamp(Mathf.Lerp(player.cameraUp, player.cameraUp + 25f, 40f * dt * Mathf.Abs(player.targetScreenPos.y - 0.5f)), -89f, 89f);
-        }
-        player.gameplayCamera.transform.localEulerAngles = new Vector3(player.cameraUp, player.gameplayCamera.transform.localEulerAngles.y, player.gameplayCamera.transform.localEulerAngles.z);
-        Vector3 zero = Vector3.zero;
-        zero.y = player.turnCompass.eulerAngles.y;
-        player.thisPlayerBody.rotation = Quaternion.Lerp(player.thisPlayerBody.rotation, Quaternion.Euler(zero), Time.deltaTime * 20f * (1f - Mathf.Abs(player.shockMinigamePullPosition)));
     }
 
     private IEnumerator ResetVolumeWeightTo0(PlayerControllerB targetPlayer)
@@ -377,26 +349,37 @@ public class Mistress : CodeRebirthEnemyAI
         TemporarilyCripplePlayerClientRpc(cripple);
     }
 
+    /*private IEnumerator MessWithSpecialAnimationRoutine()
+    {
+        while (targetPlayer != null)
+        {
+            targetPlayer.inShockingMinigame = false;
+            yield return null;
+            if (targetPlayer == null) continue;
+            targetPlayer.inShockingMinigame = true;
+        }
+    }*/
+
     [ClientRpc]
     private void TemporarilyCripplePlayerClientRpc(bool cripple)
     {
         if (targetPlayer == null) return;
         if (cripple)
         {
-            Plugin.ExtendedLogging($"Sensitivity: {IngamePlayerSettings.Instance.settings.lookSensitivity}");
-            playerPreviousSensitivity = IngamePlayerSettings.Instance.settings.lookSensitivity;
-            if (GameNetworkManager.Instance.localPlayerController == targetPlayer) IngamePlayerSettings.Instance.settings.lookSensitivity = 1;
-            AIIntervalTime = 0.05f;
             targetPlayer.inAnimationWithEnemy = this;
             inSpecialAnimationWithPlayer = targetPlayer;
+            targetPlayer.inSpecialInteractAnimation = true;
+            // StartCoroutine(MessWithSpecialAnimationRoutine());
+            targetPlayer.shockingTarget = HeadTransform;
+            targetPlayer.inShockingMinigame = true;
         }
         else
         {
             skinnedMeshRenderers[0].enabled = false;
-            Plugin.ExtendedLogging($"Sensitivity: {IngamePlayerSettings.Instance.settings.lookSensitivity}");
-            if (GameNetworkManager.Instance.localPlayerController == targetPlayer) IngamePlayerSettings.Instance.settings.lookSensitivity = playerPreviousSensitivity;
-            AIIntervalTime = 0.5f;
             targetPlayer.inAnimationWithEnemy = null;
+            targetPlayer.inSpecialInteractAnimation = false;
+            targetPlayer.shockingTarget = null;
+            targetPlayer.inShockingMinigame = false;
             StartCoroutine(ResetVolumeWeightTo0(targetPlayer));
         }
         targetPlayer.disableMoveInput = cripple;
