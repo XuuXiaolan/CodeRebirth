@@ -1,5 +1,11 @@
 # v1.0.0
 
+- The final update.
+- Added the mistress.
+
+## v0.15.0
+
+- Added BoomTrap
 - Improved readme yet again.
 - Optimised the following additions a bit.
   - Janitor.
@@ -14,12 +20,13 @@
   - Anything that plays a sound a dog or other enemies can hears.
   - A lot more lol.
 - Fixed cruiser gal carrying you causing you to be spun out of existence, that was fun.
-- Separated Windy into 3 weathers.
+- Separated Windy into 3 weathers, the last two arent available currently.
   - Tornado.
   - Hurricane.
   - Firestorm.
 - Gave cruiser gal a new song.
 - Optimised a lot of collision detection in a lot of things.
+- This is gonna be the last update for a while before the 1.0.0 release which will contain more content than this mod currently has, look forward to it.
 
 ## v0.14.3
 

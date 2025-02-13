@@ -39,6 +39,7 @@ public class HurricaneWeather : CodeRebirthWeathers
 	{
 		// Look into making the weather warning from vanilla into this.
 		yield return new WaitForSeconds(20f);
+		
 		SpawnTornado(GetRandomTargetPosition(nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 	}
 

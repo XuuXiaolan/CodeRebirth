@@ -134,7 +134,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
             SunAnimatorBool = "overcast",
         };
 
-        TornadoWeather = new Weather("Windy", tornadoEffect)
+        TornadoWeather = new Weather("Tornado", tornadoEffect)
         {
             DefaultWeight = 10,
             DefaultLevelFilters = new string[] { "Gordion", "Galetry" },

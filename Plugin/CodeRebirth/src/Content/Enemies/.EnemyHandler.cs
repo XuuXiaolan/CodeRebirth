@@ -141,7 +141,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
-
         if (Plugin.ModConfig.ConfigMistressEnabled.Value)
         {
             Mistress = new MistressAssets("mistressassets");
