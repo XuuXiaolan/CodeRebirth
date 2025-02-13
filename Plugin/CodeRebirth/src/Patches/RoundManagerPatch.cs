@@ -267,7 +267,7 @@ static class RoundManagerPatch {
 
 		Vector3 navMeshPosition = navMeshHit.position;
 		Vector3 vector = navMeshPosition;
-		if (!Physics.Raycast(vector, Vector3.down, out hit, 150, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) 
+		if (!Physics.Raycast(vector, Vector3.down, out hit, 150, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore)) 
 			return false;
 		return true;
 	}
@@ -606,7 +606,7 @@ static class RoundManagerPatch {
 		{
 			noiseRange /= 2f;
 		}
-		int numHits = Physics.OverlapSphereNonAlloc(noisePosition, noiseRange, RoundManager.Instance.tempColliderResults, LayerMask.GetMask("Props", "MapHazards"), QueryTriggerInteraction.Collide);
+		int numHits = Physics.OverlapSphereNonAlloc(noisePosition, noiseRange, RoundManager.Instance.tempColliderResults, CodeRebirthUtils.Instance.propsAndHazardMask, QueryTriggerInteraction.Collide);
 		for (int i = 0; i < numHits; i++)
 		{
             if (!RoundManager.Instance.tempColliderResults[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener)) continue;

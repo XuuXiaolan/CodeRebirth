@@ -369,8 +369,9 @@ public class ItemCrate : CRHittable
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (opened && other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
+		if (opened && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
 		{
+			opened = false;
 			CloseCrateOnPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
 		}
 	}

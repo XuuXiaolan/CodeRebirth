@@ -40,7 +40,8 @@ public class Meteors : NetworkBehaviour
         origin = _origin;
         target = _target;
         float distance = Vector3.Distance(origin, target);
-        Physics.Raycast(origin, (target - origin).normalized, out RaycastHit hit, distance + 5f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
+        Ray ray = new Ray(origin, target - origin);
+        Physics.Raycast(ray, out RaycastHit hit, distance + 5f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
         Plugin.ExtendedLogging($"Raycast hit: {hit.point} with normal: {hit.normal}");
         target = hit.point;
         normal = hit.normal;

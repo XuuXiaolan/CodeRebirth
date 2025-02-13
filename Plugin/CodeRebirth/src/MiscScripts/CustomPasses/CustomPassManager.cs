@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Util;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -62,7 +63,7 @@ public class CustomPassManager
                 {
                     var seeThrough = new SeeThroughCustomPass();
                     seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
-                    seeThrough.seeThroughLayer = LayerMask.GetMask("Enemies");
+                    seeThrough.seeThroughLayer = CodeRebirthUtils.Instance.enemiesMask;
                     Color darkRed = Color.red;
                     Color lightRed = new(204/255f, 0/255f, 0/255f, 0.8f);
                     seeThrough.ConfigureMaterial(darkRed, lightRed, 0.04f);
@@ -73,7 +74,7 @@ public class CustomPassManager
                 {
                     var seeThrough = new SeeThroughCustomPass();
                     seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
-                    seeThrough.seeThroughLayer = LayerMask.GetMask("Props");
+                    seeThrough.seeThroughLayer = CodeRebirthUtils.Instance.propsMask;
                     Color darkGreen = new(46/255f, 111/255f, 64/255f, 0.9f);
                     Color lightGreen = new(168/255f, 220/255f, 171/255f, 0.5f);
                     seeThrough.ConfigureMaterial(darkGreen, lightGreen, 0.04f);
@@ -84,7 +85,7 @@ public class CustomPassManager
                 {
                     var seeThrough = new SeeThroughCustomPass();
                     seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
-                    seeThrough.seeThroughLayer = LayerMask.GetMask("Player", "PlayerRagdoll");
+                    seeThrough.seeThroughLayer = CodeRebirthUtils.Instance.playersAndRagdollMask;
                     Color darkBlue = new(0/255f, 51/255f, 102/255f, 0.9f);
                     Color lightBlue = new(0/255f, 76/255f, 153/255f, 0.6f);
                     seeThrough.ConfigureMaterial(darkBlue, lightBlue, 0.04f);
@@ -95,7 +96,7 @@ public class CustomPassManager
                 {
                     var seeThrough = new SeeThroughCustomPass();
                     seeThrough.clearFlags = UnityEngine.Rendering.ClearFlag.None;
-                    seeThrough.seeThroughLayer = LayerMask.GetMask("MapHazards");
+                    seeThrough.seeThroughLayer = CodeRebirthUtils.Instance.hazardMask;
                     Color darkRed = Color.red;
                     Color lightRed = new(204/255f, 0/255f, 0/255f, 0.8f);
                     seeThrough.ConfigureMaterial(darkRed, lightRed, 0.04f);

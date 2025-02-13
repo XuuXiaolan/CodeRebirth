@@ -50,7 +50,7 @@ public class CRPlayerData
     public bool holdingWallet = false;
     public bool flingingAway = false;
     public bool flung = false;
-    public bool psuedoDead = false;
+    public bool pseudoDead = false;
     public Hoverboard? hoverboardRiding;
     public List<Collider> playerColliders = new();
 
@@ -135,11 +135,11 @@ internal static class PlayerControllerBExtensions
         player.GetCRPlayerData().playerColliders = new List<Collider>(player.GetComponentsInChildren<Collider>());
     }
 
-    internal static bool IsPsuedoDead(this PlayerControllerB player) =>
-        player.GetCRPlayerData().psuedoDead;
+    internal static bool IsPseudoDead(this PlayerControllerB player) =>
+        player.GetCRPlayerData().pseudoDead;
 
-    internal static bool SetPsuedoDead(this PlayerControllerB player, bool psuedoDead) =>
-        player.GetCRPlayerData().psuedoDead = psuedoDead;
+    internal static bool SetPseudoDead(this PlayerControllerB player, bool pseudoDead) =>
+        player.GetCRPlayerData().pseudoDead = pseudoDead;
 
     internal static bool IsHoldingWallet(this PlayerControllerB player) =>
         player.GetCRPlayerData().holdingWallet;

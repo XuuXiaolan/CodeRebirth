@@ -211,20 +211,10 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     {
         if (Time.realtimeSinceStartup - hitTimer < 0.5f)
             return;
-        Plugin.ExtendedLogging($"OnTriggerEnter: {other.gameObject.name} with tag {other.gameObject.tag}");
+        // Plugin.ExtendedLogging($"OnTriggerEnter: {other.gameObject.name} with tag {other.gameObject.tag}");
         // If the object is tagged PlayerBody or Enemy
-        if (other.tag.StartsWith("PlayerBody") || other.CompareTag("Enemy"))
+        if (other.tag.StartsWith("PlayerBody") || other.tag == "Enemy")
         {
-            // Check line-of-sight
-            if (Physics.Linecast(
-                    other.gameObject.transform.position + Vector3.up,
-                    transform.position + Vector3.up * 0.5f,
-                    StartOfRound.Instance.collidersAndRoomMaskAndDefault,
-                    QueryTriggerInteraction.Ignore))
-            {
-                return;
-            }
-
             BeginKickDoll(other.transform.position + Vector3.up, triggerCall: true);
         }
     }

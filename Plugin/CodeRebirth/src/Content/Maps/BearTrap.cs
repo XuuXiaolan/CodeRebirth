@@ -38,7 +38,7 @@ public class BearTrap : CodeRebirthHazard
 		{
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
 
-			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+			Physics.Linecast(vector, Vector3.down, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
 
 			if (hit.collider == null) continue;
             GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;

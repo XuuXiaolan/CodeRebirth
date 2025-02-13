@@ -5,6 +5,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -232,7 +233,7 @@ public class TerminalGalAI : GalAI
     [ServerRpc(RequireOwnership = false)]
     private void KeyHandInteractServerRpc()
     {
-        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 7.5f, cachedColliders, LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 7.5f, cachedColliders, CodeRebirthUtils.Instance.interactableMask, QueryTriggerInteraction.Collide);
 
         HashSet<GameObject> pointsOfInterestSet = new HashSet<GameObject>();
         Plugin.ExtendedLogging($"Found {numHits} interactable objects");

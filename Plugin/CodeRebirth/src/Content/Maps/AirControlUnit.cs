@@ -65,7 +65,8 @@ public class AirControlUnit : CodeRebirthHazard
 
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
     {
-        if (Physics.Raycast(playerControllerB.gameplayCamera.transform.position, -Vector3.up, out RaycastHit hit, 6f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+        Ray ray = new Ray(playerControllerB.gameplayCamera.transform.position, -Vector3.up);
+        if (Physics.Raycast(ray, out _, 6f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
         {
             return true;
         }
@@ -106,7 +107,6 @@ public class AirControlUnit : CodeRebirthHazard
         Rigidbody targetRigidbody = playerControllerB.playerRigidbody;
         if (targetRigidbody == null) return;
 
-        Vector3 directionToPlayer = (playerControllerB.transform.position - turretCannonTransform.position).normalized;
         float distanceToPlayer = Vector3.Distance(turretCannonTransform.position, playerControllerB.transform.position);
 
         // Calculate the time needed for the projectile to reach the target
@@ -122,7 +122,7 @@ public class AirControlUnit : CodeRebirthHazard
         // Check if player is within detection range and if there's line of sight
         if (distanceToPlayer <= detectionRange && angle <= maxAngle)
         {
-            if (!Physics.Raycast(turretCannonTransform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
+            if (!Physics.Linecast(turretCannonTransform.position, playerControllerB.transform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
             {
                 lockedOntoAPlayer = true;
                 lastPlayerTargetted = playerControllerB;

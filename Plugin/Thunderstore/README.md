@@ -2,7 +2,7 @@
 
 Code Rebirth is a big general content mod expanding on all parts of the game. This mod is highly configurable and each feature can be disabled separately.
 
-If you're interested in helping with the development of the mod, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on the [Lethal Modding Discord](https://discord.gg/XeyYqRdRGC)!
+If you're interested in helping with the development of the mod, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on the Lethal Modding Discord!
 
 ![GoodJob](https://i.postimg.cc/9Mr5sSZj/image.png)
 
@@ -117,7 +117,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Air Control Unit
 
-![ACU](https://i.postimg.cc/HxLZnQKR/image.png)
+![ACU](https://i.postimg.cc/jS9Rj24y/image.png)
 
 > Designation : Air Control Unit  
 > Objective : Shoot down threats  
@@ -129,13 +129,14 @@ If you're interested in helping with the development of the mod, feel free to re
 ### Item Crate
 
 ![ICW](https://i.postimg.cc/3Jz8Lfy1/image.png)
+![SW](https://i.postimg.cc/k4NV8KT0/image.png)
 ![ICWM](https://i.postimg.cc/T2nKcWSF/image.png)
 ![ICMM](https://i.postimg.cc/K8fLDgKx/image.png)
 
-> Wooden: Spawns outside and is openable instantly with a key, or at a slow speed manually to get a random piece of scrap!
-> Wooden (Mimic): 20% Chance to replace a normal wooden crate with a mimic'd one...
-> Metal: Similar except you keep bashing it! gives you shop items.
+> Safe: Spawns outside and is unlockable with a key, manually open it with the dial to get a random pieces of scrap!
 > Metal (Mimic): Will trap you and digest you slowly...
+> Wooden: Similar except you keep bashing it! gives you shop items.
+> Wooden (Mimic): 20% Chance to replace a normal wooden crate with a mimic'd one...
 </details>
 
 <details>
@@ -186,7 +187,7 @@ If you're interested in helping with the development of the mod, feel free to re
 ![RT](https://i.postimg.cc/FHXjYh5p/image-removebg.png)
 
 > Stomps around outside, crushing anything in its way
-> Staying too close may prompt aggressive behaviour
+> Staying too close may prompt aggressive behavior.
 
 ### Carnivorous Plant
 
@@ -201,7 +202,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ![WS](https://i.postimg.cc/c4W1tk0s/image.png)
 
-> Disastrous weather where the player is pulled and ripped apart by different types of tornados.
+> Disastrous weather where the player is pulled and thrown by different types of tornados.
 > Decreases outdoor and daytime power by 3 each and increases indoor power by 6. 
 
 ### Meteor Shower
@@ -322,7 +323,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ![SG](https://i.postimg.cc/NfBS0qgy/snowglobe-icon.png)
 
-> Cracked, rare and unique. This Snow Globe is found deep inside of abandoned moons, made for children but loved by all. (Includes custom animations and sounds)
+> Cracked, rare and unique. This Snow Globe is found deep inside of abandoned moons.
 
 ### Meteorite (Sapphire)
 
@@ -453,7 +454,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Misc/Organisation:**
 
-- Smxrez
+- [Smxrez](https://www.youtube.com/shorts/6Mo9MJFu89M)
 
 **Testing:**
 

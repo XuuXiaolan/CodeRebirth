@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -46,7 +47,8 @@ public class ACUnitGalAI : NetworkBehaviour
     private IEnumerator ShootAnimationDelay(int playerIndex)
     {
         PlayerControllerB affectedPlayer = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        Physics.Raycast(gunTransform.position, gunTransform.forward.normalized, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
+        Ray ray = new Ray(gunTransform.position, gunTransform.forward);
+        Physics.Raycast(ray, out RaycastHit hit, 100f, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
         Vector3 endPosition = hit.point;
         CRUtilities.CreateExplosion(endPosition, true, 50, 0, 1, 5, affectedPlayer, null, 10f);
         networkAnimator.SetTrigger(ShootingAnimation);

@@ -23,13 +23,44 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
+    [HideInInspector] public int collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = 0;
+    [HideInInspector] public int collidersAndRoomAndRailingAndInteractableMask = 0;
+    [HideInInspector] public int collidersAndRoomAndPlayersAndInteractableMask = 0;
+    [HideInInspector] public int collidersAndRoomMaskAndDefaultAndEnemies = 0;
+    [HideInInspector] public int playersAndEnemiesAndHazardMask = 0;
+    [HideInInspector] public int playersAndRagdollMask = 0;
+    [HideInInspector] public int propsAndHazardMask = 0;
+    [HideInInspector] public int terrainAndFoliageMask = 0;
+    [HideInInspector] public int propsMask = 0;
+    [HideInInspector] public int hazardMask = 0;
+    [HideInInspector] public int enemiesMask = 0;
+    [HideInInspector] public int interactableMask = 0;
+    [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
     private System.Random CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
     private void Awake()
     {
         StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
+        DoLayerMaskStuff();
         Instance = this;
+    }
+
+    private void DoLayerMaskStuff()
+    {
+        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject", "Railing", "Enemies", "Terrain", "MapHazards", "Vehicle");
+        collidersAndRoomAndRailingAndInteractableMask = StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing", "InteractableObject");
+        collidersAndRoomAndPlayersAndInteractableMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | LayerMask.GetMask("InteractableObject");
+        collidersAndRoomMaskAndDefaultAndEnemies = StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("Enemies");
+        playersAndEnemiesAndHazardMask = LayerMask.GetMask("Player", "Enemies", "MapHazards");
+        playersAndRagdollMask = LayerMask.GetMask("Player", "PlayerRagdoll");
+        propsAndHazardMask = LayerMask.GetMask("Props", "MapHazards");
+        terrainAndFoliageMask = LayerMask.GetMask("Terrain", "Foliage");
+        propsMask = LayerMask.GetMask("Props");
+        hazardMask = LayerMask.GetMask("MapHazards");
+        enemiesMask = LayerMask.GetMask("Enemies");
+        interactableMask = LayerMask.GetMask("InteractableObject");
+        collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | LayerMask.GetMask("Enemies", "Terrain", "Vehicle");
     }
 
     public void OnNewRoundStart()

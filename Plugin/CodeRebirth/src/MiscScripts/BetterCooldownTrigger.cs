@@ -221,7 +221,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!enabledScript) return;
-        if (triggerForPlayers && other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
+        if (triggerForPlayers && other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
         {
             if (playerCoroutineStatus.ContainsKey(player))
             {
@@ -233,11 +233,13 @@ public class BetterCooldownTrigger : NetworkBehaviour
                 Plugin.ExtendedLogging("Player Coroutine Started");
                 StartCoroutine(DamagePlayerCoroutine(player));
             }
+            return;
         }
+
         if (triggerForEnemies)
         {
             Transform? parent = CRUtilities.TryFindRoot(other.transform);
-            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy) && !enemy.isEnemyDead && !(enemyMainScript != null && (enemy == enemyMainScript || enemyMainScript is RedwoodTitanAI redwoodTitanAI && enemy == redwoodTitanAI.targetEnemy)))
+            if (parent != null && parent.TryGetComponent(out EnemyAI enemy) && !enemy.isEnemyDead && !(enemyMainScript != null && (enemy == enemyMainScript || enemyMainScript is RedwoodTitanAI redwoodTitanAI && enemy == redwoodTitanAI.targetEnemy)))
             {
                 if (!enemyCoroutineStatus.ContainsKey(enemy))
                 {
@@ -256,16 +258,18 @@ public class BetterCooldownTrigger : NetworkBehaviour
     {
         if (!enabledScript || !canThingExit) return;
 
-        if (triggerForPlayers && other.CompareTag("Player") && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && GameNetworkManager.Instance.localPlayerController == player)
+        if (triggerForPlayers && other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && GameNetworkManager.Instance.localPlayerController == player)
         {
             Plugin.ExtendedLogging("Player Coroutine Stopped");
             RemovePlayerFromList(player);
             playerClosestAudioSources.Remove(player);
+            return;
         }
+
         if (triggerForEnemies)
         {
             Transform? parent = CRUtilities.TryFindRoot(other.transform);
-            if (parent != null && parent.TryGetComponent<EnemyAI>(out EnemyAI enemy))
+            if (parent != null && parent.TryGetComponent(out EnemyAI enemy))
             {
                 enemyCoroutineStatus[enemy] = false;
                 enemyClosestAudioSources.Remove(enemy);

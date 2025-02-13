@@ -270,7 +270,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2146959359
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -2600,7 +2600,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -2672,6 +2672,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -895497750
+    DestinationState: 1574157778
+    TransitionDuration: 0.11086956
+    TriggerNameHash: 1826567713
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -895497750
+    DestinationState: -485976934
+    TransitionDuration: 0.25
+    TriggerNameHash: -947045449
+    TransitionIndex: 2
   - IsCrossFadeExit: 0
     Layer: 0
     OriginatingState: -446757617
@@ -2916,6 +2930,7 @@ MonoBehaviour:
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []

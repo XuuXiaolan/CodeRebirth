@@ -1,3 +1,4 @@
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -27,7 +28,7 @@ public class IndustrialFan : CodeRebirthHazard
     private void OnTriggerEnter(Collider other)
     {
         // Kill players who touch the back blades
-        if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (other.TryGetComponent(out PlayerControllerB player))
         {
             cutAudioSource.Play();
             player.KillPlayer(player.velocityLastFrame, !Plugin.ModConfig.ConfigHazardsDeleteBodies.Value, CauseOfDeath.Fan, 0, default);
@@ -37,17 +38,7 @@ public class IndustrialFan : CodeRebirthHazard
 
     public bool IsObstructed(Vector3 targetPosition)
     {
-        Vector3 direction = (targetPosition - fanTransform.position).normalized;
-        float distance = Vector3.Distance(fanTransform.position, targetPosition);
-        if (Physics.Raycast(fanTransform.position, direction, out RaycastHit hit, distance, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject", "Railing"), QueryTriggerInteraction.Ignore))
-        {
-            if (hit.collider.gameObject.layer != 3)
-            {
-                // There is an obstruction between the fan and the player
-                return true;
-            }
-        }
-        return false;
+        return Physics.Linecast(fanTransform.position, targetPosition, out _, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
     }
 
     private void PlayRedMist()

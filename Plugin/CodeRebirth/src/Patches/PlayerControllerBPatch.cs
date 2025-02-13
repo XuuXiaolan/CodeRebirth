@@ -64,7 +64,7 @@ static class PlayerControllerBPatch
 
     private static void PlayerControllerB_Update(On.GameNetcodeStuff.PlayerControllerB.orig_Update orig, PlayerControllerB self)
     {
-        if (self != GameNetworkManager.Instance.localPlayerController && self.IsPsuedoDead())
+        if (self != GameNetworkManager.Instance.localPlayerController && self.IsPseudoDead())
         {
             // Plugin.ExtendedLogging($"Setting player layer to 0.");
             self.gameObject.layer = 0;
@@ -133,7 +133,7 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)
     {
         orig(self);
-        if (self != GameNetworkManager.Instance.localPlayerController && self.IsPsuedoDead())
+        if (self != GameNetworkManager.Instance.localPlayerController && self.IsPseudoDead())
         {
             // Plugin.ExtendedLogging($"Setting player layer to 0.");
             self.gameObject.layer = 0;

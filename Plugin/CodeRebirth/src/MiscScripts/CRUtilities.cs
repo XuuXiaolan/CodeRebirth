@@ -1,4 +1,6 @@
-﻿using GameNetcodeStuff;
+﻿using CodeRebirth.src.Util;
+using CodeRebirth.Util.Extensions;
+using GameNetcodeStuff;
 using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ public class CRUtilities
     private static Dictionary<int, int> _masksByLayer = new();
     private static AudioReverbPresets? audioReverbPreset = null;
     private static Collider[] cachedColliders = new Collider[16];
+
     public static void Init()
     {
         GenerateLayerMap();
@@ -110,6 +113,11 @@ public class CRUtilities
         enemy.SyncPositionToClients();
     }
 
+    private static Dictionary<PlayerControllerB, int> playerControllerBToDamage = new();
+    private static Dictionary<EnemyAICollisionDetect, int> enemyAICollisionDetectToDamage = new();
+    private static List<Landmine> landmineList = new();
+    private static List<IHittable> hittablesList = new();
+
     public static void CreateExplosion(Vector3 explosionPosition, bool spawnExplosionEffect, int damage, float minDamageRange, float maxDamageRange, int enemyHitForce, PlayerControllerB? attacker, GameObject? overridePrefab, float pushForce)
     {
         Plugin.ExtendedLogging($"Spawning explosion at pos: {explosionPosition}");
@@ -143,37 +151,50 @@ public class CRUtilities
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
 
-        int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, LayerMask.GetMask("Enemies", "Player", "MapHazard"), QueryTriggerInteraction.Collide);
-        Dictionary<PlayerControllerB, int> playerControllerBToDamage = new();
-        Dictionary<EnemyAICollisionDetect, int> enemyAICollisionDetectToDamage = new();
-        List<Landmine> landmineList = new();
+        int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (cachedColliders[i].GetComponent<IHittable>() == null) continue;
-            float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, cachedColliders[i].transform.position);
-            if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, cachedColliders[i].transform.position + Vector3.up * 0.3f, out _, 256, QueryTriggerInteraction.Ignore))
+            if (!cachedColliders[i].TryGetComponent(out IHittable ihittable)) continue;
+            float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, cachedColliders[i].ClosestPoint(explosionPosition));
+            if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, cachedColliders[i].transform.position + Vector3.up * 0.3f, out _, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
                 continue;
             }
 
-            if (cachedColliders[i].gameObject.layer == 3 && cachedColliders[i].TryGetComponent<PlayerControllerB>(out PlayerControllerB player) && !playerControllerBToDamage.ContainsKey(player))
+            if (cachedColliders[i].gameObject.layer == 3 && cachedColliders[i].TryGetComponent(out PlayerControllerB player))
             {
-                playerControllerBToDamage.Add(player, (int)(damage * (1f - Mathf.Clamp01((distanceOfObjectFromExplosion - minDamageRange) / (maxDamageRange - minDamageRange)))));
+                int damageToDeal = (int)(damage * (1f - Mathf.Clamp01((distanceOfObjectFromExplosion - minDamageRange) / (maxDamageRange - minDamageRange))));
+                if (playerControllerBToDamage.ContainsKey(player) && playerControllerBToDamage[player] < damageToDeal)
+                {
+                    playerControllerBToDamage[player] = damageToDeal;
+                }
+                else
+                {
+                    playerControllerBToDamage.Add(player, damageToDeal);
+                }
                 continue;
             }
 
-            if (cachedColliders[i].gameObject.layer == 19 && cachedColliders[i].TryGetComponent<EnemyAICollisionDetect>(out EnemyAICollisionDetect enemy) && !enemyAICollisionDetectToDamage.ContainsKey(enemy))
+            if (cachedColliders[i].gameObject.layer == 19 && cachedColliders[i].TryGetComponent(out EnemyAICollisionDetect enemy))
             {
-                enemyAICollisionDetectToDamage.Add(enemy, enemyHitForce);
+                if (enemyAICollisionDetectToDamage.ContainsKey(enemy) && enemyAICollisionDetectToDamage[enemy] < enemyHitForce)
+                {
+                    enemyAICollisionDetectToDamage[enemy] = enemyHitForce;
+                }
+                else
+                {
+                    enemyAICollisionDetectToDamage.Add(enemy, enemyHitForce);
+                }
                 continue;
             }
 
-            if (cachedColliders[i].gameObject.layer != 21) continue;
-            Landmine componentInChildren = cachedColliders[i].gameObject.GetComponentInChildren<Landmine>();
-            if (componentInChildren != null && distanceOfObjectFromExplosion < 6f && !landmineList.Contains(componentInChildren))
+            Landmine? componentInChildren = cachedColliders[i].gameObject.GetComponentInChildren<Landmine>();
+            if (cachedColliders[i].gameObject.layer == 21 && componentInChildren != null && distanceOfObjectFromExplosion < 6f && !landmineList.Contains(componentInChildren))
             {
                 landmineList.Add(componentInChildren);
+                continue;
             }
+            hittablesList.Add(ihittable);
         }
 
         foreach (PlayerControllerB player in playerControllerBToDamage.Keys)
@@ -192,5 +213,15 @@ public class CRUtilities
         {
             landmine.StartCoroutine(landmine.TriggerOtherMineDelayed(landmine));
         }
+
+        foreach (IHittable hittable in hittablesList)
+        {
+            hittable.Hit(5, explosionPosition, attacker, true, -1);
+        }
+
+        playerControllerBToDamage.Clear();
+        enemyAICollisionDetectToDamage.Clear();
+        landmineList.Clear();
+        hittablesList.Clear();
     }
 }

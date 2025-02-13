@@ -22,6 +22,7 @@ namespace CodeRebirth.src;
 [BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("Zaggy1024.PathfindingLib", BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(MoreCompany.PluginInformation.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger = null!;
@@ -94,7 +95,7 @@ public class Plugin : BaseUnityPlugin
         // Register Keybinds
         InputActionsInstance = new IngameKeybinds();
         
-        Logger.LogInfo("Registering content.");
+        Logger.LogInfo("Registering content that's controlled by gaycob.");
 
         RegisterContentHandlers(Assembly.GetExecutingAssembly());
 

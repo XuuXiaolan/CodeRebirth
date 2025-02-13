@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -974,7 +975,7 @@ public class Janitor : CodeRebirthEnemyAI
     /// </summary>
     private void TryFindScrapNearby()
     {
-        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15f, hitColliders, LayerMask.GetMask("Props"), QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15f, hitColliders, CodeRebirthUtils.Instance.propsMask, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)
         {

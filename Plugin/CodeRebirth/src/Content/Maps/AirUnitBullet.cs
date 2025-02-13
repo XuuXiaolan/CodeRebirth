@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class AirUnitProjectile : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, cachedColliders, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing"), QueryTriggerInteraction.Ignore);
+        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, cachedColliders, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
         if (!explodedOnTarget && collidersFound != 0 && playerToTarget.playerSteamId != Plugin.GLITCH_STEAM_ID)
         {
             CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, null, null, 5f);
@@ -73,7 +74,7 @@ public class AirUnitProjectile : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!explodedOnTarget && other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (!explodedOnTarget && other.TryGetComponent(out PlayerControllerB player))
         {
             Vector3 forceFlung = transform.up * Plugin.ModConfig.ConfigAirControlUnitKnockbackPower.Value;
             CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, null, null, 5f);

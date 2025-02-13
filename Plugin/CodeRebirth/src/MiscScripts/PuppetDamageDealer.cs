@@ -12,7 +12,7 @@ public class PuppetDamageDealer : MonoBehaviour
     public void OnTriggerStay(Collider other)
     {
         if (!isEnabled) return;
-        if (other.gameObject.layer == 19 && other.gameObject.name.Contains("PuppeteerPuppet") && !puppeteers.Contains(other.gameObject))
+        if (other.gameObject.name.StartsWith("PuppeteerPuppet") && !puppeteers.Contains(other.gameObject))
         {
             puppeteers.Add(other.gameObject);
             StartCoroutine(ClearPuppet(other.gameObject));

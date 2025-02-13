@@ -24,7 +24,8 @@ public class Mistress : CodeRebirthEnemyAI
     private float teleporterTimer = 20f;
     private float timeSpentInState = 0f;
     private float killTimer = 0f;
-    private PlayerControllerB playerToKill;
+    private bool cantLosePlayer = false;
+    private PlayerControllerB? playerToKill;
     private static readonly int DoVanishAnimation = Animator.StringToHash("doVanish"); // Trigger
     private static readonly int IdleIntAnimation = Animator.StringToHash("idleInt"); // Int
     public enum State
@@ -41,7 +42,7 @@ public class Mistress : CodeRebirthEnemyAI
         AIIntervalTime = 0.1f;
         skinnedMeshRenderers[0].enabled = false;
         mistressRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
-        StartCoroutine(ResetMistressToStalking());
+        StartCoroutine(ResetMistressToStalking(null));
     }
 
     public override void Update()
@@ -64,27 +65,14 @@ public class Mistress : CodeRebirthEnemyAI
             playerToKill.inSpecialInteractAnimation = false;
             playerToKill.shockingTarget = null;
             playerToKill.inShockingMinigame = false;
-            if (playerToKill == localPlayer)
-            {
-                DoExecutionStuffServerRpc();
-            }
+            playerToKill.disableLookInput = false;
+            Plugin.ExtendedLogging($"Executing player so please work please please {playerToKill}");
+            StartCoroutine(ResetVolumeWeightTo0(playerToKill));
+            StartCoroutine(InitiateKillingSequence(playerToKill));
+            SwitchToBehaviourStateOnLocalClient((int)State.Execution);
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void DoExecutionStuffServerRpc()
-    {
-        DoExecutionStuffClientRpc();
-    }
-
-    [ClientRpc]
-    private void DoExecutionStuffClientRpc()
-    {
-        Plugin.Logger.LogInfo($"Executing player so please work please please {playerToKill}");
-        StartCoroutine(ResetVolumeWeightTo0(playerToKill));
-        StartCoroutine(InitiateKillingSequence(playerToKill));
-        SwitchToBehaviourStateOnLocalClient((int)State.Execution);
-    }
 
     public void LateUpdate()
     {
@@ -107,8 +95,7 @@ public class Mistress : CodeRebirthEnemyAI
         if (StartOfRound.Instance.allPlayersDead || isEnemyDead) return;
         if (targetPlayer != null && targetPlayer.isPlayerDead)
         {
-            SetTargetServerRpc(-1);
-            StartCoroutine(ResetMistressToStalking());
+            StartCoroutine(ResetMistressToStalking(targetPlayer));
             return;
         }
         switch (currentBehaviourStateIndex)
@@ -139,15 +126,15 @@ public class Mistress : CodeRebirthEnemyAI
             return;
         }
 
-        float distance = Vector3.Distance(transform.position, targetPlayer.transform.position);
-        bool LookedAt = PlayerLookingAtEnemy(distance);
+        bool LookedAt = PlayerLookingAtEnemy();
         Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
         if (LookedAt)
         {
             if (timeSpentInState > 15f)
             {
                 timeSpentInState = 0f;
-                TemporarilyCripplePlayerServerRpc(true);
+                TemporarilyCripplePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), true);
+                StartCoroutine(UpdatePlayerLossVision());
                 SwitchToBehaviourServerRpc((int)State.Attack);
             }
             else
@@ -160,11 +147,10 @@ public class Mistress : CodeRebirthEnemyAI
 
     private void DoAttack()
     {
-        float distance = Vector3.Distance(HeadTransform.position, targetPlayer.transform.position);
-        bool LookedAt = PlayerLookingAtEnemy(distance);
+        bool LookedAt = PlayerLookingAtEnemy();
         Plugin.ExtendedLogging($"LookedAt in attack phase: {LookedAt}");
         if (LookedAt) return;
-        StartCoroutine(ResetMistressToStalking());
+        StartCoroutine(ResetMistressToStalking(targetPlayer));
     }
 
     private void DoExecution()
@@ -177,33 +163,55 @@ public class Mistress : CodeRebirthEnemyAI
 
     #region Misc Functions
 
+    private IEnumerator UpdatePlayerLossVision()
+    {
+        cantLosePlayer = true;
+        yield return new WaitForSeconds(1f);
+        cantLosePlayer = false;
+    }
+
     private IEnumerator InitiateKillingSequence(PlayerControllerB playerToExecute)
     {
         Physics.Raycast(Vector3.zero, Vector3.down, out RaycastHit hit, 10, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
-        GameObject GuillotineGO = GameObject.Instantiate(EnemyHandler.Instance.Mistress.GuillotinePrefab, hit.point, Quaternion.Euler(-90, 0, 0), RoundManager.Instance.mapPropsContainer.transform);
-        var Guillotine = GuillotineGO.GetComponent<Guillotine>();
         if (playerToExecute.isInsideFactory && playerToExecute == GameNetworkManager.Instance.localPlayerController)
         {
-            CodeRebirthUtils.entrancePoints.Where(entrance => !entrance.isEntranceToBuilding).First().TeleportPlayer();
+            var entrance = CodeRebirthUtils.entrancePoints.Where(entrance => !entrance.isEntranceToBuilding).FirstOrDefault();
+            entrance?.TeleportPlayer();
         }
-        Guillotine.playerToKill = playerToExecute;
+        if (!IsServer) yield break;
+        GameObject GuillotineGO = GameObject.Instantiate(EnemyHandler.Instance.Mistress.GuillotinePrefab, hit.point, Quaternion.Euler(-90, 0, 0), RoundManager.Instance.mapPropsContainer.transform);
+        var netObj = GuillotineGO.GetComponent<NetworkObject>();
+        netObj.Spawn(false);
+        var Guillotine = GuillotineGO.GetComponent<Guillotine>();
+        yield return new WaitUntil(() => netObj.IsSpawned);
+        Guillotine.SyncGuillotineServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
         yield return new WaitUntil(() => Guillotine.sequenceFinished); // Have the player stick to guillotine script.
-        targetPlayer = null;
-        StartCoroutine(ResetMistressToStalking());
+        StartCoroutine(ResetMistressToStalking(targetPlayer));
         yield return new WaitForSeconds(20f);
-        Destroy(GuillotineGO);
+        Guillotine.NetworkObject.Despawn();
         // Find Valid spot to spawn guillotine.
     }
 
-    private IEnumerator ResetMistressToStalking()
+    private IEnumerator ResetMistressToStalking(PlayerControllerB? lastTargetPlayer)
     {
         killTimer = 0f;
+        previousTargetPlayers.Add(targetPlayer);
+        StartCoroutine(ResetVolumeWeightTo0(targetPlayer));
+        targetPlayer = null;
         if (!IsServer) yield break;
+        playerToKill = null;
+        SetTargetServerRpc(-1);
         creatureNetworkAnimator.SetTrigger(DoVanishAnimation);
         yield return new WaitForSeconds(1f);
-        TemporarilyCripplePlayerServerRpc(false);
+        if (lastTargetPlayer != null)
+        {
+            TemporarilyCripplePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, lastTargetPlayer), false);
+        }
+        else if (currentBehaviourStateIndex != 0)
+        {
+            Plugin.Logger.LogError("Target player was not supposed to be null with this state: " + currentBehaviourStateIndex);
+        }
         SwitchToBehaviourServerRpc((int)State.Spawning);
-        previousTargetPlayers.Add(targetPlayer);
         teleporterTimer = 0f;
         yield return new WaitForSeconds(20f);
         timeSpentInState = 0f;
@@ -228,12 +236,13 @@ public class Mistress : CodeRebirthEnemyAI
         agent.Warp(teleportPoint);
     }
 
-    private bool PlayerLookingAtEnemy(float distance)
+    private bool PlayerLookingAtEnemy()
     {
+        if (cantLosePlayer) return true;
         float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (HeadTransform.position - targetPlayer.gameplayCamera.transform.position).normalized);
         Plugin.ExtendedLogging($"Vector Dot: {dot}");
-        if (dot <= 0.35f) return false;
-        if (Physics.Raycast(targetPlayer.gameplayCamera.transform.position, (HeadTransform.position - targetPlayer.gameplayCamera.transform.position).normalized, distance, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore)) return false;
+        if (dot <= 0.45f) return false;
+        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.forward, HeadTransform.position, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore)) return false;
         return true;
     }
 
@@ -242,7 +251,7 @@ public class Mistress : CodeRebirthEnemyAI
         Dictionary<PlayerControllerB, int> playersWithPriorityDict = new();
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player == null || player.isPlayerDead || !player.isPlayerControlled || TalkingHead.talkingHeads.Any(x => x.player == player)) continue;
+            if (player == null || player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead()) continue;
             playersWithPriorityDict.Add(player, 0);
 
             if (previousTargetPlayers.Contains(player))
@@ -270,7 +279,7 @@ public class Mistress : CodeRebirthEnemyAI
 
         foreach (var gal in GalAI.Instances)
         {
-            if (gal == null || gal.ownerPlayer == null || gal.ownerPlayer.isPlayerDead || !gal.ownerPlayer.isPlayerControlled || gal.ownerPlayer.IsPsuedoDead()) continue;
+            if (gal == null || gal.ownerPlayer == null || gal.ownerPlayer.isPlayerDead || !gal.ownerPlayer.isPlayerControlled || gal.ownerPlayer.IsPseudoDead()) continue;
             playersWithPriorityDict[gal.ownerPlayer] += 1;
         } // Increase priority for each gal a player owns.
         
@@ -344,45 +353,36 @@ public class Mistress : CodeRebirthEnemyAI
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void TemporarilyCripplePlayerServerRpc(bool cripple)
+    private void TemporarilyCripplePlayerServerRpc(int playerToCripple, bool cripple)
     {
-        TemporarilyCripplePlayerClientRpc(cripple);
+        TemporarilyCripplePlayerClientRpc(playerToCripple, cripple);
     }
 
-    /*private IEnumerator MessWithSpecialAnimationRoutine()
-    {
-        while (targetPlayer != null)
-        {
-            targetPlayer.inShockingMinigame = false;
-            yield return null;
-            if (targetPlayer == null) continue;
-            targetPlayer.inShockingMinigame = true;
-        }
-    }*/
-
     [ClientRpc]
-    private void TemporarilyCripplePlayerClientRpc(bool cripple)
+    private void TemporarilyCripplePlayerClientRpc(int playerToCrippleIndex, bool cripple)
     {
-        if (targetPlayer == null) return;
+        PlayerControllerB playerToCripple = StartOfRound.Instance.allPlayerScripts[playerToCrippleIndex];
         if (cripple)
         {
-            targetPlayer.inAnimationWithEnemy = this;
-            inSpecialAnimationWithPlayer = targetPlayer;
-            targetPlayer.inSpecialInteractAnimation = true;
-            // StartCoroutine(MessWithSpecialAnimationRoutine());
-            targetPlayer.shockingTarget = HeadTransform;
-            targetPlayer.inShockingMinigame = true;
+            playerToCripple.inAnimationWithEnemy = this;
+            inSpecialAnimationWithPlayer = playerToCripple;
+            playerToCripple.inSpecialInteractAnimation = true;
+            playerToCripple.shockingTarget = HeadTransform;
+            playerToCripple.inShockingMinigame = true;
+            playerToCripple.movementSpeed /= 3;
         }
         else
         {
             skinnedMeshRenderers[0].enabled = false;
-            targetPlayer.inAnimationWithEnemy = null;
-            targetPlayer.inSpecialInteractAnimation = false;
-            targetPlayer.shockingTarget = null;
-            targetPlayer.inShockingMinigame = false;
-            StartCoroutine(ResetVolumeWeightTo0(targetPlayer));
+            playerToCripple.inAnimationWithEnemy = null;
+            inSpecialAnimationWithPlayer = null;
+            playerToCripple.inSpecialInteractAnimation = false;
+            playerToCripple.shockingTarget = null;
+            playerToCripple.inShockingMinigame = false;
+            playerToCripple.movementSpeed *= 3;
+            StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
         }
-        targetPlayer.disableMoveInput = cripple;
+        playerToCripple.disableLookInput = cripple;
     }
     #endregion
 }

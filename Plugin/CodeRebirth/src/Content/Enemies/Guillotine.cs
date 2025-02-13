@@ -8,16 +8,16 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
-public class Guillotine : MonoBehaviour
+public class Guillotine : NetworkBehaviour
 {
     public Transform scrapSpawnTransform = null!;
     public Transform playerBone = null!;
-    [HideInInspector] public PlayerControllerB playerToKill = null!;
+    [HideInInspector] public PlayerControllerB? playerToKill = null;
     [HideInInspector] public bool sequenceFinished = false;
 
     public void Update()
     {
-        if (!sequenceFinished)
+        if (!sequenceFinished && playerToKill != null)
         {
             playerToKill.transform.position = playerBone.position;
             playerToKill.transform.rotation = playerBone.rotation;
@@ -27,13 +27,41 @@ public class Guillotine : MonoBehaviour
     public void FinishGuillotineSequenceAnimEvent()
     {
         sequenceFinished = true;
-        if (playerToKill == null || playerToKill.isPlayerDead) return;
-        Plugin.ExtendedLogging($"Killing player {playerToKill}!");
-        /*if (StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPsuedoDead()).Count() == 1)
+        if (playerToKill == GameNetworkManager.Instance.localPlayerController)
         {
-            playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
+            PseudoKillPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncGuillotineServerRpc(int playerIndex)
+    {
+        SyncGuillotineClientRpc(playerIndex);
+    }
+
+    [ClientRpc]
+    public void SyncGuillotineClientRpc(int playerIndex)
+    {
+        playerToKill = StartOfRound.Instance.allPlayerScripts[playerIndex];
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PseudoKillPlayerServerRpc(int playerIndex)
+    {
+        PseudoKillPlayerClientRpc(playerIndex);
+    }
+
+    [ClientRpc]
+    private void PseudoKillPlayerClientRpc(int playerIndex)
+    {
+        playerToKill = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        Plugin.ExtendedLogging($"Killing player {playerToKill}!");
+        int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
+        if (StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 1)
+        {
+            if (playerToKill.IsOwner) playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
             return;
-        }*/
+        }
         // if this is the last person left alive, then just kill em.
         MoreCompanySoftCompat.TryDisableOrEnableCosmetics(playerToKill, true);
         playerToKill.DropAllHeldItems();
@@ -45,15 +73,21 @@ public class Guillotine : MonoBehaviour
         playerToKill.thisPlayerModelLOD1.gameObject.SetActive(false);
         playerToKill.headCostumeContainer.gameObject.SetActive(false);
         playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
+        playerToKill.playerBetaBadgeMesh.gameObject.SetActive(false);
         if (GameNetworkManager.Instance.localPlayerController == playerToKill)
         {
             HUDManager.Instance.HideHUD(true);
             StartOfRound.Instance.allowLocalPlayerDeath = false;
         }
-        if (!NetworkManager.Singleton.IsServer) return;
+        if (!IsServer)
+        {
+            playerToKill = null;
+            return;
+        }
         GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.Mistress.ChoppedTalkingHead, scrapSpawnTransform.position, false, true, 0);
         TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();
         talkingHeadScript.player = playerToKill;
         talkingHeadScript.SyncTalkingHeadServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
+        playerToKill = null;
     }
 }

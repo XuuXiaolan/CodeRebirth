@@ -4,6 +4,7 @@ using System.Collections;
 using GameNetcodeStuff;
 using System;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class LaserShockBlast : NetworkBehaviour
@@ -11,7 +12,6 @@ public class LaserShockBlast : NetworkBehaviour
     [Header("Laser Settings")]
     public float LaserRange = 100f; // Maximum range of the laser beam
     public float LaserDuration = 0.2f; // Duration the laser stays active
-    private LayerMask hitLayers; // Layers to check for collisions
 
     [Header("Visual Effects")]
     public LineRenderer LineRenderer = null!; // LineRenderer component for the laser beam
@@ -27,7 +27,6 @@ public class LaserShockBlast : NetworkBehaviour
 
     public void Start()
     {
-        hitLayers = LayerMask.GetMask("Enemies", "Room", "Player", "Colliders", "Vehicle", "Terrain");
         impactEffect = ImpactEffectGameObject.GetComponent<ParticleSystem>();
         if (IsServer)
         {
@@ -41,7 +40,7 @@ public class LaserShockBlast : NetworkBehaviour
         Vector3 origin = laserOrigin.position;
         Vector3 direction = laserOrigin.forward;
 
-        var raycastHits = Physics.RaycastAll(origin, direction, LaserRange, hitLayers, QueryTriggerInteraction.Collide);
+        var raycastHits = Physics.RaycastAll(origin, direction, LaserRange, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
         Array.Sort(raycastHits, (a, b) => a.distance.CompareTo(b.distance));
 
         Vector3 finalHitPoint = origin + (direction * LaserRange);
@@ -125,7 +124,7 @@ public class LaserShockBlast : NetworkBehaviour
 
     private bool HandleTerrainOrGroundHit(RaycastHit raycastHit)
     {
-        if (raycastHit.collider.gameObject.layer == LayerMask.NameToLayer("Terrain") || raycastHit.collider.gameObject.layer == LayerMask.NameToLayer("Room"))
+        if (raycastHit.collider.gameObject.layer == 25 || raycastHit.collider.gameObject.layer == 8) // Terrain Or Room
         {
             return true;
         }

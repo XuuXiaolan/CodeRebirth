@@ -96,7 +96,8 @@ public class FlashTurret : CodeRebirthHazard, INoiseListener
         int playerNoiseID = 6;
         if (distance <= detectionRange && noiseID == playerNoiseID)
         {
-            if (Physics.Raycast(turretTransform.position, (noisePosition - turretTransform.position).normalized, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
+            Ray ray = new Ray(turretTransform.position, noisePosition - turretTransform.position);
+            if (Physics.Raycast(ray, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
             {
                 if (hit.collider != null && hit.collider.TryGetComponent(out PlayerControllerB player))
                 {

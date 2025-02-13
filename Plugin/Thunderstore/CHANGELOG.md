@@ -1,7 +1,6 @@
 # v1.0.0
 
 - Improved readme yet again.
-- Added BoomTraps
 - Optimised the following additions a bit.
   - Janitor.
   - ACUnit.
@@ -13,17 +12,14 @@
   - Explosions in CR.
   - Spawning of redwood titan and seed through CR weapons.
   - Anything that plays a sound a dog or other enemies can hears.
+  - A lot more lol.
 - Fixed cruiser gal carrying you causing you to be spun out of existence, that was fun.
 - Separated Windy into 3 weathers.
   - Tornado.
   - Hurricane.
   - Firestorm.
-- Added The Mistress.
-  - Added the severed head.
-- Added The Creature (Dalice).
-- Added Oxyde.
-- Added Haemoglobin.
 - Gave cruiser gal a new song.
+- Optimised a lot of collision detection in a lot of things.
 
 ## v0.14.3
 

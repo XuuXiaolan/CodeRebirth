@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -457,7 +458,7 @@ public class ShockwaveGalAI : GalAI
 
             if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || !smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory || smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory) continue;
 
-            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < numHits; i++)
             {
@@ -478,7 +479,7 @@ public class ShockwaveGalAI : GalAI
                 // First, do a simple direction check to see if the enemy is in front of the player
                 Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
                 // Then check if there's a clear line of sight
-                if (!Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, 15, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide))
+                if (!Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, ownerPlayer.gameObject.transform.position + directionToEnemy * 15, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomMaskAndDefaultAndEnemies, QueryTriggerInteraction.Collide))
                     continue;
 
                 // Make sure the hit belongs to the same GameObject as the enemy

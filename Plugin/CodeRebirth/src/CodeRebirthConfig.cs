@@ -119,12 +119,10 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorShowerTimeToLeave { get; private set; }
     public ConfigEntry<float> ConfigTornadoInsideBeforeThrow { get; private set; }
     public ConfigEntry<float> ConfigTornadoPullStrength { get; private set; }
-    public ConfigEntry<string> ConfigTornadoCanFlyYouAwayWeatherTypes { get; private set; }
     public ConfigEntry<float> ConfigTornadoSpeed { get; private set; }
     public ConfigEntry<float> ConfigMeteorSpeed { get; private set; }
     public ConfigEntry<int> ConfigMinMeteorSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigMaxMeteorSpawnCount { get; private set; }
-    public ConfigEntry<string> ConfigTornadoMoonWeatherTypes { get; private set; }
     public ConfigEntry<float> ConfigTornadoInShipVolume { get; private set; }
     public ConfigEntry<float> ConfigTornadoDefaultVolume { get; private set; }
     public ConfigEntry<float> ConfigMeteorShowerMeteoriteSpawnChance { get; private set; }
@@ -144,7 +142,6 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigWoodenSeedTreeSpawnChance { get; private set; }
     public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
     public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
-    public ConfigEntry<bool> ConfigGalBypassQuota { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotAutomatic { get; private set; }
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
@@ -182,7 +179,6 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigBearTrapVolume { get; private set; }
     public ConfigEntry<float> ConfigLaserTurretVolume { get; private set; }
     public ConfigEntry<float> ConfigFlashTurretVolume { get; private set; }
-    public ConfigEntry<float> ConfigIndustrialFanVolume { get; private set; }
     public ConfigEntry<float> ConfigTeslaShockVolume { get; private set; }
     public ConfigEntry<float> ConfigACUVolume { get; private set; }
     public ConfigEntry<int> ConfigBellCrabGalCost { get; private set; }
@@ -502,10 +498,6 @@ public class CodeRebirthConfig
                                             "Industrial Fan | SpawnWeight Curve",
                                             "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
                                             "The MoonName - CurveSpawnWeight for the IndustrialFan.");
-        ConfigIndustrialFanVolume = configFile.Bind("IndustrialFan Options",
-                                            "Industrial Fan | Volume",
-                                            1f,
-                                            "The volume of the Industrial Fan.");
         #endregion
         #region Tesla Shock
         ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
@@ -608,10 +600,6 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Shockwave Gal will automatically wake up and choose the nearest player as the owner.");
-        ConfigGalBypassQuota = configFile.Bind("Shockwave Options",
-                                            "Shockwave Gal | Bypass Quota",
-                                            false,
-                                            "Whether the Shockwave Gal will bypass quota when using her sell function at company.");
         ConfigShockwaveGalPlayerModelEnabled = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Player Model",
                                             true,
@@ -829,14 +817,6 @@ public class CodeRebirthConfig
                                             "Tornados | Enabled",
                                             true,
                                             "Enables/Disables the Tornados from popping up into moons.");
-        ConfigTornadoMoonWeatherTypes = configFile.Bind("Tornado Options",
-                                            "Tornados | Moon Types",
-                                            "Smoky: All, | Fire: All, | Water: All, | Electric: All, | Windy: All, | Blood: All, |",
-                                            "Moons that the fire type can pop into (All, or specify per moon type like so: Experimentation,Artifice,etc).");
-        ConfigTornadoCanFlyYouAwayWeatherTypes = configFile.Bind("Tornado Options",
-                                            "Tornado | Can Fly You Away Weather Types",
-                                            "All",
-                                            "Tornado weather types that can fly you away (All, or specify per weather type like so: Fire,Electric,etc except water!!).");
         ConfigTornadoSpeed = configFile.Bind("Tornado Options",
                                             "Tornados | Speed",
                                             7f,

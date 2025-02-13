@@ -524,7 +524,6 @@ MonoBehaviour:
   onUnlock:
     m_PersistentCalls:
       m_Calls: []
-  trigger: {fileID: 5216363493227153392}
 --- !u!65 &4147470104225953683
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -635,7 +634,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2147483639
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

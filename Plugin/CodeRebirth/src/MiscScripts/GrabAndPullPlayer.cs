@@ -15,7 +15,7 @@ public class GrabAndPullPlayer : MonoBehaviour
     public void OnTriggerStay(Collider other)
     {
         if (!enabled || pullRoutine != null) return;
-        if (other.gameObject.layer != 3 || !other.gameObject.TryGetComponent(out PlayerControllerB player)) return;
+        if (!other.gameObject.TryGetComponent(out PlayerControllerB player)) return;
         pullRoutine = StartCoroutine(PullAndTrapPlayer(player));
     }
 

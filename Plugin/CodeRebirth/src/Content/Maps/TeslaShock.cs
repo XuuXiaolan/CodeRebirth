@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -80,7 +81,7 @@ public class TeslaShock : CodeRebirthHazard
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (other.TryGetComponent(out PlayerControllerB player))
         {
             Vector3 direction = (player.transform.position - this.transform.position).normalized;
             Vector3 force = direction * pushMultiplier;
@@ -100,7 +101,7 @@ public class TeslaShock : CodeRebirthHazard
             if (!ShouldContinueCharging(affectedPlayer))
             {
                 float distanceFromItem = Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position);
-                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (chargedItemPlayerWasHolding.transform.position - transform.position).normalized, out _, distanceFromItem, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
+                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (chargedItemPlayerWasHolding.transform.position - transform.position).normalized, out _, distanceFromItem, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore))
                 {
                     validTargets.Add(startChainPoint);
                     validTargets.Add(chargedItemPlayerWasHolding.transform);
@@ -135,7 +136,7 @@ public class TeslaShock : CodeRebirthHazard
             && !affectedPlayer.isPlayerDead
             && affectedPlayer.isPlayerControlled
             && PlayerCarryingSomethingConductive(affectedPlayer)
-            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out _, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore);
+            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out _, distanceToPlayer, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
     }
 
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)

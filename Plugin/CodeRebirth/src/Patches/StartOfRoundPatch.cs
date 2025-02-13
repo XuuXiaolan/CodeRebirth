@@ -68,12 +68,12 @@ static class StartOfRoundPatch
 			timer.Start();
 			var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 			int FoundObject = 0;
-			LayerMask layerMask = LayerMask.NameToLayer("Foliage");
+			LayerMask foliageLayer = 10;
 			if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null) Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
 			foreach (var item in objs)
 			{
 				if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null && LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name == "Toy Store") HandleWesleyChangesCuzHeIsStupid(item);
-				if (item.layer == layerMask)
+				if (item.layer == foliageLayer)
 				{
 					// figure out a way to make this better against static meshes.
 					item.AddComponent<BoxCollider>().isTrigger = true;

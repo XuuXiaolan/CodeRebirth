@@ -155,7 +155,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
 
     public void OnColliderEnter(Collider other)
     {
-        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB playerControllerB))
+        if (other.TryGetComponent(out PlayerControllerB playerControllerB))
         {
             if (!playersAffected.Contains(playerControllerB))
             {
@@ -167,7 +167,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
 
     public void OnColliderStay(Collider other)
     {
-        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB playerControllerB))
+        if (other.TryGetComponent(out PlayerControllerB playerControllerB))
         {
             if (damageTimerDecrease <= 0f)
             {
@@ -179,7 +179,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
 
     public void OnColliderExit(Collider other)
     {
-        if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB playerControllerB))
+        if (other.TryGetComponent(out PlayerControllerB playerControllerB))
         {
             if (playersAffected.Contains(playerControllerB))
             {

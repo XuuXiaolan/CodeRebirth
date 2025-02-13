@@ -11,12 +11,11 @@ public class RedwoodFeetCollision : MonoBehaviour
     private List<PlayerControllerB> playersBeingKicked = new List<PlayerControllerB>();
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 3 && !playersBeingKicked.Contains(other.GetComponent<PlayerControllerB>()) && mainscript.kickingOut)
+        if (other.TryGetComponent(out PlayerControllerB playerControllerB) && !playersBeingKicked.Contains(playerControllerB) && mainscript.kickingOut)
         {
-            PlayerControllerB player = other.GetComponent<PlayerControllerB>();
-            playersBeingKicked.Add(player);
-            StartCoroutine(KickingPlayer(player));
-            player.DamagePlayer(20, true, true, CauseOfDeath.Bludgeoning, 0, false);
+            playersBeingKicked.Add(playerControllerB);
+            StartCoroutine(KickingPlayer(playerControllerB));
+            playerControllerB.DamagePlayer(20, true, true, CauseOfDeath.Bludgeoning, 0, false);
             Plugin.ExtendedLogging("Kicked player...");
         }
     }

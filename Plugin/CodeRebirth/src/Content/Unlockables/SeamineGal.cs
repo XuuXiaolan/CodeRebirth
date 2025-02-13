@@ -7,6 +7,7 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -508,7 +509,7 @@ public class SeamineGalAI : GalAI
 
             if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory)) continue;
 
-            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < numHits; i++)
             {
@@ -522,10 +523,7 @@ public class SeamineGalAI : GalAI
                     continue;
 
                 // First, do a simple direction check to see if the enemy is in front of the player
-                Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
-                // Then check if there's a clear line of sight
-                float distanceToEnemy = Vector3.Distance(ownerPlayer.gameplayCamera.transform.position, collider.transform.position);
-                if (Physics.Raycast(ownerPlayer.gameplayCamera.transform.position, directionToEnemy, out RaycastHit hit, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+                if (Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, collider.transform.position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
                 {
                     Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name);
                     continue;
@@ -545,7 +543,7 @@ public class SeamineGalAI : GalAI
         GalSFX.PlayOneShot(explosionSound);
         CRUtilities.CreateExplosion(beltInteractTrigger.gameObject.transform.position, true, 10, 0, 6, 1, null, null, 5f);
         List<EnemyAI> enemiesToKill = new();
-        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15, cachedColliders, LayerMask.GetMask("Enemies"), QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)
         {

@@ -1,3 +1,4 @@
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -40,7 +41,7 @@ public class LaserTurret : CodeRebirthHazard
         originalBeamCoreScaleY = visualEffect.GetVector3(BeamCoreScale).y;
     }
 
-    public void FixedUpdate()
+    public void Update()
     {
         UpdateAudio();
         // Rotate the turret
@@ -58,7 +59,7 @@ public class LaserTurret : CodeRebirthHazard
     private void FireLaser()
     {
         Vector3 laserDirection = laserStartPoint.forward;
-        if (Physics.SphereCast(laserStartPoint.position, laserThickness / 2, laserDirection, out RaycastHit hit, laserRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(laserStartPoint.position, laserThickness / 2, laserDirection, out RaycastHit hit, laserRange, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
             {
@@ -66,7 +67,7 @@ public class LaserTurret : CodeRebirthHazard
                 {
                     // Ignore player and continue laser
                     Vector3 newStart = hit.point + laserDirection * 0.01f; // Move start point slightly beyond player
-                    if (Physics.SphereCast(newStart, laserThickness / 2, laserDirection, out RaycastHit newHit, laserRange - hit.distance, StartOfRound.Instance.collidersAndRoomMaskAndPlayers | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
+                    if (Physics.SphereCast(newStart, laserThickness / 2, laserDirection, out RaycastHit newHit, laserRange - hit.distance, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore))
                     {
                         hit = newHit;
                     }

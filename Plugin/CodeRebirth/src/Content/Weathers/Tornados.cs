@@ -264,7 +264,7 @@ public class Tornados : CodeRebirthEnemyAI
             float distance = Vector3.Distance(eye.transform.position, player.transform.position);
             if (distance > range) continue;
             bestDistanceOverall = Mathf.Min(bestDistanceOverall, distance);
-            if (Physics.Raycast(eye.transform.position, (player.transform.position - eye.position).normalized, distance, StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Terrain", "InteractableObject", "MapHazards", "Vehicle", "Railing"), QueryTriggerInteraction.Ignore)) continue;
+            if (Physics.Linecast(eye.transform.position, eye.position, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore)) continue;
             bestDistanceLOS = Mathf.Min(bestDistanceLOS, distance);
         }
         // Plugin.ExtendedLogging($"Best distance with LOS: {bestDistanceLOS} and overall: {bestDistanceOverall}");

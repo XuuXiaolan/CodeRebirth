@@ -12,7 +12,8 @@ static class KeyItemPatch {
 		{
 			return;
 		}
-		if (Physics.Raycast(new Ray(__instance.playerHeldBy.gameplayCamera.transform.position, __instance.playerHeldBy.gameplayCamera.transform.forward), out RaycastHit raycastHit, 3f, 2816))
+		Ray ray = new Ray(__instance.playerHeldBy.gameplayCamera.transform.position, __instance.playerHeldBy.gameplayCamera.transform.forward);
+		if (Physics.Raycast(ray, out RaycastHit raycastHit, 3f, 2816))
 		{
 			if (raycastHit.transform.TryGetComponent(out Pickable pickable) && pickable.enabled && pickable.IsLocked)
 			{

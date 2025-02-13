@@ -9,7 +9,7 @@ public class AirUnitBulletTrail : NetworkBehaviour
     public AirUnitProjectile mainProjectile = null!;
     private void OnTriggerEnter(Collider other)
     {
-        if (!mainProjectile.explodedOnTarget && other.gameObject.layer == 3 && other.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+        if (!mainProjectile.explodedOnTarget && other.TryGetComponent(out PlayerControllerB player))
         {
             Vector3 forceFlung = (mainProjectile.transform.position - this.transform.position).normalized * mainProjectile.bulletTrailForce;
             if (player == GameNetworkManager.Instance.localPlayerController)

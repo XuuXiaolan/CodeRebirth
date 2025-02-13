@@ -19,6 +19,7 @@ public class TalkingHead : GrabbableObject
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        isInFactory = false;
         talkingHeads.Add(this);
     }
 
@@ -32,12 +33,12 @@ public class TalkingHead : GrabbableObject
     {
         base.Update();
         if (player == null) return;
-        /*if (isInFactory != wasInFactoryLastFrame && GameNetworkManager.Instance.localPlayerController == player && RoundManager.Instance.currentLevel.planetHasTime)
+        if (isInFactory != wasInFactoryLastFrame && GameNetworkManager.Instance.localPlayerController == player && RoundManager.Instance.currentLevel.planetHasTime)
         {
             Plugin.ExtendedLogging("Teleporting player.");
             var entranceTeleport = CodeRebirthUtils.entrancePoints.Where(p => p.isEntranceToBuilding == !wasInFactoryLastFrame).FirstOrDefault();
-            entranceTeleport.TeleportPlayer();
-        }*/
+            entranceTeleport?.TeleportPlayer();
+        }
         wasInFactoryLastFrame = this.isInFactory;
         if (GameNetworkManager.Instance.localPlayerController == player) meshRenderer.enabled = false;
         player.thisPlayerModelLOD1.gameObject.SetActive(false);
@@ -47,7 +48,9 @@ public class TalkingHead : GrabbableObject
         player.disableInteract = true;
         player.transform.position = playerBone.position;
         player.transform.rotation = transform.rotation;
-        if (StartOfRound.Instance.shipIsLeaving)
+        int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
+        Plugin.ExtendedLogging($"alive players: {alivePlayers}");
+        if (StartOfRound.Instance.shipIsLeaving || StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 0)
         {
             MoreCompanySoftCompat.TryDisableOrEnableCosmetics(player, false);
             player.DisablePlayerModel(player.gameObject, true, false);
@@ -59,7 +62,8 @@ public class TalkingHead : GrabbableObject
             player.thisPlayerModelLOD1.gameObject.SetActive(true);
             player.headCostumeContainer.gameObject.SetActive(true);
             player.headCostumeContainerLocal.gameObject.SetActive(true);
-            player.SetPsuedoDead(false);
+            player.playerBetaBadgeMesh.gameObject.SetActive(true);
+            player.SetPseudoDead(false);
             player.gameObject.layer = 3;
             if (GameNetworkManager.Instance.localPlayerController == player)
             {
@@ -86,6 +90,6 @@ public class TalkingHead : GrabbableObject
         {
             meshRenderer.enabled = false;
         }
-        player.SetPsuedoDead(true);
+        player.SetPseudoDead(true);
     }
 }
