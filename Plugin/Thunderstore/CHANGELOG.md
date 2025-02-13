@@ -3,6 +3,11 @@
 - The final update.
 - Added the mistress.
 
+## v0.15.1
+
+- Well this was bound to happen.
+- Fixed bear trap spawning to stop... spawning on walls???
+
 ## v0.15.0
 
 - Added BoomTrap
