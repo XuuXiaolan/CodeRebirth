@@ -6,18 +6,6 @@ namespace CodeRebirth.src.Content.Enemies;
 
 public class EnemyHandler : ContentHandler<EnemyHandler>
 {
-    public class ButterflyAssets(string bundleName) : AssetBundleLoader<ButterflyAssets>(bundleName)
-    {
-        [LoadFromBundle("ButterflyObj.asset")]
-        public EnemyType ButterflyEnemyType { get; private set; } = null!;
-
-        [LoadFromBundle("CutieFlyTN.asset")]
-        public TerminalNode ButterflyTerminalNode { get; private set; } = null!;
-
-        [LoadFromBundle("CutieFlyTK.asset")]
-        public TerminalKeyword ButterflyTerminalKeyword { get; private set; } = null!;
-    }
-
     public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName)
     {
         [LoadFromBundle("SnailCatObj.asset")]
@@ -129,18 +117,35 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public EnemyType TransporterEnemyType { get; private set; } = null!;
     }
 
+    public class MonarchAssets(string bundleName) : AssetBundleLoader<MonarchAssets>(bundleName)
+    {
+        [LoadFromBundle("MonarchObj.asset")]
+        public EnemyType MonarchEnemyType { get; private set; } = null!;
+
+        [LoadFromBundle("CutieflyObj.asset")]
+        public EnemyType CutieflyEnemyType { get; private set; } = null!;
+    }
+
+    public MonarchAssets Monarch { get; private set; } = null!;
     public MistressAssets Mistress { get; private set; } = null!;
     public TransporterAssets Transporter { get; private set; } = null!;
     public JanitorAssets Janitor { get; private set; } = null!;
     public ManorLordAssets ManorLord { get; private set; } = null!;
     public DuckSongAssets DuckSong { get; private set; } = null!;
-    public ButterflyAssets Butterfly { get; private set; } = null!;
     public SnailCatAssets SnailCat { get; private set; } = null!;
     public CarnivorousPlantAssets CarnivorousPlant { get; private set; } = null!;
     public RedwoodTitanAssets RedwoodTitan { get; private set; } = null!;
 
     public EnemyHandler()
     {
+
+        if (Plugin.ModConfig.ConfigMonarchEnabled.Value)
+        {
+            Monarch = new MonarchAssets("monarchassets");
+            RegisterEnemyWithConfig("", Monarch.MonarchEnemyType, null, null, 3, 0);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Monarch.CutieflyEnemyType, null, null, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
+        }
+
         if (Plugin.ModConfig.ConfigMistressEnabled.Value)
         {
             Mistress = new MistressAssets("mistressassets");
@@ -159,12 +164,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         {
             CarnivorousPlant = new CarnivorousPlantAssets("carnivorousplantassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCarnivorousSpawnWeights.Value, CarnivorousPlant.CarnivorousPlantEnemyType, CarnivorousPlant.CarnivorousPlantTerminalNode, CarnivorousPlant.CarnivorousPlantTerminalKeyword, Plugin.ModConfig.ConfigCarnivorousPowerLevel.Value, Plugin.ModConfig.ConfigCarnivorousMaxSpawnCount.Value);
-        }
-
-        if (Plugin.ModConfig.ConfigCutieFlyEnabled.Value)
-        {
-            Butterfly = new ButterflyAssets("cutieflyassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Butterfly.ButterflyEnemyType, Butterfly.ButterflyTerminalNode, Butterfly.ButterflyTerminalKeyword, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
         }
 
         if (Plugin.ModConfig.ConfigSnailCatEnabled.Value)

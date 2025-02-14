@@ -412,7 +412,9 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ![CF](https://i.postimg.cc/zvmYv21Z/image-207-removebg-preview.png)
 
-> Flies around occasionally resting on the ground. (harmless)
+> Flies around occasionally resting on the ground. (harmless?????)
+> DO NOT APPROACH DO NOT APPROACH [REDACTED].
+> ON DEATH IT LIVES YET AGAIN, REBORN A NEW.
 
 ### Snailcat
 

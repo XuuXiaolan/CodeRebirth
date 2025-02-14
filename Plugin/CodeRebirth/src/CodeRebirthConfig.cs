@@ -19,7 +19,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigACUnitGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSuspiciousActivityEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTerminalBotEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigTerminalBotPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFriendStuffEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShrimpDispenserEnabled { get; private set; }
     public ConfigEntry<bool> Config999GalEnabled { get; private set; }
@@ -54,7 +53,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
     public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
     public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigCutieFlyEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigMonarchEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnailCatEnabled { get; private set; }
     public ConfigEntry<bool> ConfigItemCrateEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeEnabled { get; private set; }
@@ -109,7 +108,6 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigRedwoodShipPadding { get; private set; }
     public ConfigEntry<float> ConfigRedwoodEyesight { get; private set; }
     public ConfigEntry<bool> ConfigRedwoodCanEatOldBirds { get; private set; }
-    public ConfigEntry<float> ConfigCutieFlyFlapWingVolume { get; private set; }
     public ConfigEntry<int> ConfigCutieFlyMaxSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigSnailCatMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
@@ -587,7 +585,7 @@ public class CodeRebirthConfig
                                             "Whether the Shockwave Gal holds four items regardless of singleplayer or multiplayer.");
         ConfigShockwaveBotEnemyBlacklist = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Enemy Blacklist",
-                                            "Pikmin, Centipede, Red Locust Bees, Docile Locust Bees, Manticoil, CutieFly, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
+                                            "Pikmin, Centipede, Red Locust Bees, Docile Locust Bees, Manticoil, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
                                             "Comma separated list of enemies that the Shockwave Gal will not target (immortal enemies should be counted by default, just not in config).");
         ConfigShockwaveBotPropellerVolume = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Propeller Volume",
@@ -620,7 +618,7 @@ public class CodeRebirthConfig
                                             "How many charges the Seamine Gal has.");
         ConfigSeamineTinkEnemyBlacklist = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Enemy Blacklist",
-                                            "Pikmin, Docile Locust Bees, Manticoil, Nemo, Horse, CutieFly, Shisha, Tornado, Scary",
+                                            "Pikmin, Docile Locust Bees, Manticoil, Nemo, Horse, Shisha, Tornado, Scary",
                                             "Comma separated list of enemies that the Seamine Gal will not target (keep in mind she targets ALL enemies).");
         ConfigSeamineTinkRidingBruceVolume = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Riding Bruce Volume",
@@ -655,10 +653,6 @@ public class CodeRebirthConfig
                                             "Terminal Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Terminal Gal will automatically wake up and choose the nearest player as the owner.");
-        ConfigTerminalBotPlayerModelEnabled = configFile.Bind("Terminal Options",
-                                            "Terminal Gal | Player Model",
-                                            true,
-                                            "Whether the Terminal Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
         ConfigOnlyOwnerSeesScanEffectsTerminalGal = configFile.Bind("Terminal Options",
                                             "Terminal Gal | Only Owner Sees Scan Effects",
                                             false,
@@ -1066,30 +1060,23 @@ public class CodeRebirthConfig
                                             false,
                                             "Allows the pjonk turkey to spawn in certain conditions");
         #endregion
-        #region CutieFly
-        ConfigCutieFlyEnabled = configFile.Bind("CutieFly Options",
-                                            "CutieFly Enemy | Enabled",
+        #region Monarch+Cutiefly
+        ConfigMonarchEnabled = configFile.Bind("Monarch Options",
+                                            "Monarch Enemy | Enabled",
                                             false,
-                                            "Enables/Disables the CutieFly enemy");
-        ConfigCutieFlySpawnWeights = configFile.Bind("CutieFly Options",
-                                            "CutieFly Enemy | Spawn Weights",
-                                            "Custom:50,Vanilla:50",
+                                            "Enables/Disables the Monarch");
+        ConfigCutieFlySpawnWeights = configFile.Bind("Cutiefly Options",
+                                            "Cutiefly Enemy | Spawn Weights",
+                                            "Custom:10,Vanilla:10",
                                             "SpawnWeight of the CutieFly in moons.");
-        ConfigCutieFlyMaxSpawnCount = configFile.Bind("CutieFly Options",
-                                            "CutieFly Enemy | Max Spawn Count",
-                                            5,
-                                            "How many CutieFlies can spawn at once.");
-        ConfigCutieFlyPowerLevel = configFile.Bind("CutieFly Options",
-                                            "CutieFly Enemy | Power Level",
-                                            1.0f,
+        ConfigCutieFlyPowerLevel = configFile.Bind("Cutiefly Options",
+                                            "Cutiefly Enemy | Power Level",
+                                            2.5f,
                                             "Power level of the CutieFly enemy.");
-        ConfigCutieFlyFlapWingVolume = configFile.Bind("CutieFly Options",
-                                            "Cutie Fly | Flap Wing Volume",
-                                            0.75f,
-                                            new ConfigDescription(
-                                                "Volume of flapping wings.",
-                                                new AcceptableValueRange<float>(0, 1f)
-                                            ));
+        ConfigCutieFlyMaxSpawnCount = configFile.Bind("Cutiefly Options",
+                                            "Cutiefly Enemy | Max Spawn Count",
+                                            5,
+                                            "How many CutieFly can spawn in a moon.");
         #endregion
         #region SnailCat
         ConfigSnailCatEnabled = configFile.Bind("SnailCat Options",

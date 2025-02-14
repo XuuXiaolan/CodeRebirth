@@ -16,8 +16,6 @@ public class HurricaneWeather : CodeRebirthWeathers
 		ChangeCurrentLevelMaximumPower(outsidePower: -3, insidePower: 6, dayTimePower: -3);
         nodes = RoundManager.Instance.outsideAINodes;
 		nodes = CullNodesByProximity(nodes, 5.0f, true, true, 50f);
-		// WeatherRegistry.WeatherController.SetWeatherEffects(LevelWeatherType.Rainy);
-		// WeatherRegistry.WeatherController.SetWeatherEffects(LevelWeatherType.Flooded);
 
 		if(!IsAuthority()) return;
 		StartCoroutine(TornadoSpawnerHandler());
@@ -38,8 +36,10 @@ public class HurricaneWeather : CodeRebirthWeathers
 	private IEnumerator TornadoSpawnerHandler()
 	{
 		// Look into making the weather warning from vanilla into this.
+		// 20 second buffer from ship start before spawning tornado stuff
 		yield return new WaitForSeconds(20f);
-		
+		WeatherController.AddWeatherEffect(LevelWeatherType.Flooded);
+		WeatherController.AddWeatherEffect(LevelWeatherType.Rainy);
 		SpawnTornado(GetRandomTargetPosition(nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 	}
 

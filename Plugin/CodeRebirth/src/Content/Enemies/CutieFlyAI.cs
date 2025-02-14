@@ -1,134 +1,58 @@
-using Unity.Netcode;
+using System.Collections.Generic;
+using System.Linq;
+using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class CutieFlyAI : CodeRebirthEnemyAI
 {
-    private SkinnedMeshRenderer skinnedMeshRenderer = null!;
-    float lastIdleCycle = 0f;
-    float blendShapeWeight = 0f;
-    
-    float blendShapeDirection = 1f;
-    const float blendShapeSpeed = 1000f;
-    bool climbing = true;
+    public Material[] variantMaterials = [];
 
-    const float WANDER_SPEED = 3f;
-    const float PERCH_SPEED = 1f;
-    const float IDLE_SPEED = 0f;
-
-    const float MAXIMUM_CLIMBING_OFFSET = 3.5f;
-    const float MINIMUM_CLIMBING_OFFSET = 2.5f;
-
-    const float LAND_OFFSET = 0.1f;
-
-    const float IDLE_MAXIMUM_TIME = 5f;
-    const float WANDERING_MAXIMUM_TIME = 20f;
-
-    public enum State
-    {
-        Wandering,
-        Perching,
-        Idle,
-    }
+    private System.Random cutieflyRandom = new();
+    private static readonly int IsDeadAnimation = Animator.StringToHash("doDeath");
+    private static List<CutieFlyAI> cutieflys = new();
 
     public override void Start()
     {
         base.Start();
-        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        lastIdleCycle = Time.time;
-        StartSearch(transform.position);
-        SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
+        cutieflys.Add(this);
+
+        // Random seed for variant material
+        cutieflyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + cutieflys.Count);
+
+        // Apply material variant
+        ApplyMaterialVariant();
+        smartAgentNavigator.StartSearchRoutine(transform.position, 50);
     }
 
-    public override void Update()
+    private void ApplyMaterialVariant()
     {
-        base.Update();
+        Material variantMaterial = variantMaterials[cutieflyRandom.Next(variantMaterials.Length)];
+        Material[] currentMaterials = skinnedMeshRenderers[0].sharedMaterials;
+        currentMaterials[0] = variantMaterial;
+        skinnedMeshRenderers[0].SetMaterials(currentMaterials.ToList());
+    }
+
+    public override void HitEnemy(int force = 1, PlayerControllerB?playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead) return;
-        creatureSFX.volume = Plugin.ModConfig.ConfigCutieFlyFlapWingVolume.Value;
-        UpdateBlendShapeWeight();
-    }
-
-    private void UpdateBlendShapeWeight()
-    {
-        if (currentBehaviourStateIndex == (int)State.Idle) return;
-        blendShapeWeight += blendShapeDirection * blendShapeSpeed * Time.deltaTime;
-        if (blendShapeWeight > 100f || blendShapeWeight < 0f)
+        enemyHP -= force;
+        if (IsOwner && enemyHP <= 0)
         {
-            blendShapeDirection *= -1f;
-            blendShapeWeight = Mathf.Clamp(blendShapeWeight, 0f, 100f);
-        }
-        skinnedMeshRenderer.SetBlendShapeWeight(0, blendShapeWeight);
-    }
-
-    private void WanderAround(float timeSinceLastStateChange)
-    {
-        agent.speed = WANDER_SPEED;
-        agent.baseOffset = Mathf.Lerp(agent.baseOffset, climbing ? 4f : 2f, Time.deltaTime * 5f);
-        climbing = agent.baseOffset <= MINIMUM_CLIMBING_OFFSET && agent.baseOffset < MAXIMUM_CLIMBING_OFFSET;
-        if (timeSinceLastStateChange > WANDERING_MAXIMUM_TIME)
-        {
-            SwitchToBehaviourStateOnLocalClient((int)State.Perching);
-            lastIdleCycle = Time.time;
+            KillEnemyOnOwnerClient();
         }
     }
 
-    private void Perch()
+    public override void KillEnemy(bool destroy = false)
     {
-        agent.speed = PERCH_SPEED;
-        agent.baseOffset = Mathf.Lerp(agent.baseOffset, 0f, Time.deltaTime * 6f);
-
-        if (agent.baseOffset <= LAND_OFFSET)
-        {
-            StopSearch(currentSearch);
-            ToggleEnemySounds(false);
-            SwitchToBehaviourStateOnLocalClient((int)State.Idle);
-            SyncBlendShapeWeightOnLocalClient(100f);
-            lastIdleCycle = Time.time;
-        }
+        base.KillEnemy(destroy);
+        if (IsServer) creatureNetworkAnimator.SetTrigger(IsDeadAnimation);
     }
 
-    private void Idling(float timeSinceLastStateChange)
+    public void SpawnMonarchAnimEvent()
     {
-        agent.speed = IDLE_SPEED;
-        if (timeSinceLastStateChange > IDLE_MAXIMUM_TIME)
-        {
-            StartSearch(transform.position);
-            ToggleEnemySounds(true);
-            SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
-            lastIdleCycle = Time.time;
-        }
-    }
-    public override void DoAIInterval()
-    {
-        base.DoAIInterval();
-        if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
-
-        float timeSinceLastStateChange = Time.time - lastIdleCycle;
-
-        switch(currentBehaviourStateIndex)
-        {
-            case (int)State.Wandering:
-                WanderAround(timeSinceLastStateChange);
-                break;
-
-            case (int)State.Perching:
-                Perch();
-                break;
-
-            case (int)State.Idle:
-                Idling(timeSinceLastStateChange);
-                break;
-        }
-    }
-
-    [ClientRpc]
-    public void SyncBlendShapeWeightClientRpc(float currentBlendShapeWeight)
-    {
-        SyncBlendShapeWeightOnLocalClient(currentBlendShapeWeight);
-    }
-
-    public void SyncBlendShapeWeightOnLocalClient(float currentBlendShapeWeight)
-    {
-        skinnedMeshRenderer.SetBlendShapeWeight(0, currentBlendShapeWeight);
+        if (!IsServer) return;
+        RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.MonarchEnemyType);
     }
 }

@@ -65,7 +65,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
     public void OnNewRoundStart()
     {
-        entrancePoints = FindObjectsOfType<EntranceTeleport>();
+        entrancePoints = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);
     }
 
     [ServerRpc(RequireOwnership = false)]
