@@ -41,6 +41,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     private PlayerControllerB? priorityPlayer = null;
     private System.Random enemyRandom = new();
     private float timeSinceLastTakenDamage = 0f;
+    private bool teleporting = false;
 
     private Dictionary<PlayerControllerB, GameObject> playerPuppetMap = new();
     private static readonly int DoStabAnimation = Animator.StringToHash("doStab"); // Trigger
@@ -244,12 +245,15 @@ public class Puppeteer : CodeRebirthEnemyAI
 
     private void TeleportAway()
     {
-        if (!IsServer) return;
-        Vector3 randomFarPoint = GetRandomFarPointInFacility(new List<Vector3> { transform.position });
+        if (IsServer)
+        {
+            Vector3 randomFarPoint = GetRandomFarPointInFacility(new List<Vector3> { transform.position });
 
-        // Teleport
-        agent.Warp(randomFarPoint);
-        SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
+            // Teleport
+            agent.Warp(randomFarPoint);
+            SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
+        }
+        teleporting = false;
     }
 
     public Vector3 GetRandomFarPointInFacility(List<Vector3> pointsToStayAwayFrom)
@@ -274,9 +278,8 @@ public class Puppeteer : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        if (isEnemyDead || playerWhoHit == null) return;
+        if (isEnemyDead || playerWhoHit == null || teleporting) return;
         if (timeSinceLastTakenDamage <= 1f) return;
-        force = 1;
         if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
         {
             // Reflect incoming damage
@@ -284,6 +287,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             playerWhoHit.DamagePlayer(force * 25, true, false, CauseOfDeath.Unknown, 0, false, default);
             return;
         }
+        force = 1;
         if (currentBehaviourStateIndex != (int)PuppeteerState.Attacking)
         {
             if (playerPuppetMap.ContainsKey(playerWhoHit))
@@ -330,6 +334,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     [ClientRpc]
     public void SetTargetNeedlePlayerClientRpc(int playerIndex)
     {
+        teleporting = true;
         targetPlayerToNeedle = StartOfRound.Instance.allPlayerScripts[playerIndex];
         if (targetPlayerToNeedle == GameNetworkManager.Instance.localPlayerController) creatureSFX.PlayOneShot(grabPlayerSound);
         targetPlayerToNeedle.disableMoveInput = true;
@@ -347,6 +352,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         targetPlayerToNeedle.disableMoveInput = false;
         targetPlayerToNeedle.disableLookInput = false;
         if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = null;
+        Plugin.ExtendedLogging($"{this} unsetting target player {player.playerUsername}");
         targetPlayerToNeedle = null;
     }
 
@@ -434,7 +440,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         PlayerControllerB? target = null;
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (!player.isPlayerControlled || player.isPlayerDead || playerPuppetMap.ContainsKey(player)) 
+            if (!player.isPlayerControlled || player.isPlayerDead || player.inAnimationWithEnemy != null || playerPuppetMap.ContainsKey(player)) 
                 continue;
 
             float distance = Vector3.Distance(transform.position, player.transform.position);
@@ -498,6 +504,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             priorityPlayer = null;
         }
+        Plugin.ExtendedLogging($"{this} unsetting target player {targetPlayerToNeedle.playerUsername}");
         targetPlayerToNeedle = null;
         agent.speed = sneakSpeed;
     }

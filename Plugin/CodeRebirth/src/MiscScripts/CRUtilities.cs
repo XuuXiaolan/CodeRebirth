@@ -168,7 +168,7 @@ public class CRUtilities
                 {
                     playerControllerBToDamage[player] = damageToDeal;
                 }
-                else
+                else if (!playerControllerBToDamage.ContainsKey(player))
                 {
                     playerControllerBToDamage.Add(player, damageToDeal);
                 }
@@ -181,7 +181,7 @@ public class CRUtilities
                 {
                     enemyAICollisionDetectToDamage[enemy] = enemyHitForce;
                 }
-                else
+                else if (!enemyAICollisionDetectToDamage.ContainsKey(enemy))
                 {
                     enemyAICollisionDetectToDamage.Add(enemy, enemyHitForce);
                 }

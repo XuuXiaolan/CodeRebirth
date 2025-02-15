@@ -3,6 +3,12 @@
 - The final update.
 - Added the mistress.
 
+## v0.15.2
+
+- Another one, fix for seamine gal and shockwave gal bloowing up and causing errors.
+- Manor Lord also reflects damage proportional to how much damage you deal to it (so you're dead if you shoot it while its in its reflect state).
+- Extra checks in manor lord to make sure he doesnt bug out.
+
 ## v0.15.1
 
 - Well this was bound to happen.

@@ -476,10 +476,7 @@ public class ShockwaveGalAI : GalAI
                 if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
                     continue;
 
-                // First, do a simple direction check to see if the enemy is in front of the player
-                Vector3 directionToEnemy = (collider.transform.position - ownerPlayer.gameplayCamera.transform.position).normalized;
-                // Then check if there's a clear line of sight
-                if (!Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, ownerPlayer.gameObject.transform.position + directionToEnemy * 15, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomMaskAndDefaultAndEnemies, QueryTriggerInteraction.Collide))
+                if (!Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, collider.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomMaskAndDefaultAndEnemies, QueryTriggerInteraction.Collide))
                     continue;
 
                 // Make sure the hit belongs to the same GameObject as the enemy

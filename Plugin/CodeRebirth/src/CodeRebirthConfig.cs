@@ -1065,15 +1065,15 @@ public class CodeRebirthConfig
                                             "Monarch Enemy | Enabled",
                                             false,
                                             "Enables/Disables the Monarch");
-        ConfigCutieFlySpawnWeights = configFile.Bind("Cutiefly Options",
+        ConfigCutieFlySpawnWeights = configFile.Bind("Monarch Options",
                                             "Cutiefly Enemy | Spawn Weights",
                                             "Custom:10,Vanilla:10",
                                             "SpawnWeight of the CutieFly in moons.");
-        ConfigCutieFlyPowerLevel = configFile.Bind("Cutiefly Options",
+        ConfigCutieFlyPowerLevel = configFile.Bind("Monarch Options",
                                             "Cutiefly Enemy | Power Level",
                                             2.5f,
                                             "Power level of the CutieFly enemy.");
-        ConfigCutieFlyMaxSpawnCount = configFile.Bind("Cutiefly Options",
+        ConfigCutieFlyMaxSpawnCount = configFile.Bind("Monarch Options",
                                             "Cutiefly Enemy | Max Spawn Count",
                                             5,
                                             "How many CutieFly can spawn in a moon.");

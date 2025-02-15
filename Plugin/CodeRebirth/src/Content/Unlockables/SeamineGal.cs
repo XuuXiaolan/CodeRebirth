@@ -35,7 +35,7 @@ public class SeamineGalAI : GalAI
     public Pickable pickable = null!;
     public Light light = null!;
 
-    private Collider[] cachedColliders = new Collider[5];
+    private Collider[] cachedColliders = new Collider[10];
     private bool physicsTemporarilyDisabled = false;
     private List<Coroutine> customPassRoutines = new();
     private float hazardRevealTimer = 10f;
@@ -510,7 +510,7 @@ public class SeamineGalAI : GalAI
             if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory)) continue;
 
             int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
-
+            Plugin.ExtendedLogging($"Found {numHits} enemies");
             for (int i = 0; i < numHits; i++)
             {
                 Collider collider = cachedColliders[i];
