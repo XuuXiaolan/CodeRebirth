@@ -3,6 +3,11 @@
 - The final update.
 - Added the mistress.
 
+## v0.15.3
+
+- Disabled the broken extra weathers, had them added by accident.
+- Also see that, this was a thing I did by accident that would crash your game, and fixing it took a couple hours because I have a lot to work with, and I'm also running on a fever right now, I'm not gonna say what mod, but I'm not just silently crashing your game randomly and not fixing it immediately.
+
 ## v0.15.2
 
 - Another one, fix for seamine gal and shockwave gal bloowing up and causing errors.

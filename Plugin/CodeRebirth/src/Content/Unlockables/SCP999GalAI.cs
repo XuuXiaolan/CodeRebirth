@@ -166,7 +166,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         float healingSpeed = Plugin.ModConfig.Config999GalHealSpeed.Value;
         bool reviveNearbyDeadPlayers = Plugin.ModConfig.Config999GalReviveNearbyDeadPlayers.Value;
         bool fail = false;
-        if (random.NextFloat(0, 100) <= Plugin.ModConfig.Config999GalFailureChance.Value)
+        if (UnityEngine.Random.Range(0f, 100f) <= Plugin.ModConfig.Config999GalFailureChance.Value)
         {
             fail = true;
         }
@@ -186,7 +186,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         }
         if (onlyInteractedPlayerHealed)
         {
-            if (healChargeCount.Value <= 0 || playerInteracting == null || playerInteracting.isPlayerDead || !playerInteracting.isPlayerControlled || playerInteracting.health >= playerMaxHealthDict[playerInteracting]) return;
+            if (healChargeCount.Value <= 0 || playerInteracting == null || playerInteracting.isPlayerDead || !playerInteracting.isPlayerControlled) return;
             galDidSomething = true;
             HealPlayersClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting), healAmount, healingSpeed, fail);
         }
@@ -195,7 +195,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
                 Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled}");
-                if (healChargeCount.Value <= 0 || player == null || player.isPlayerDead || !player.isPlayerControlled || player.health >= playerMaxHealthDict[player]) continue;
+                if (healChargeCount.Value <= 0 || player == null || player.isPlayerDead || !player.isPlayerControlled) continue;
                 if (Vector3.Distance(transform.position, player.transform.position) > 5) continue;
                 galDidSomething = true;
                 HealPlayersClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), healAmount, healingSpeed, fail);
@@ -220,8 +220,12 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     {
         if (failed)
         {
-            if (IsServer) networkAnimator.SetTrigger(doFailAnimation);
-            Plugin.ExtendedLogging("Failed to heal player.");
+            Plugin.ExtendedLogging($"Failed to heal player, taking up {50} health away.");
+            if (IsServer)
+            {
+                networkAnimator.SetTrigger(doFailAnimation);
+                healChargeCount.Value -= 50;
+            }
             yield break;
         }
         currentlyHealing = true;
@@ -250,11 +254,13 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             if (healthThisFrame > 0)
             {
                 healthHealed += healthThisFrame;
-                if (IsServer) healChargeCount.Value -= healthThisFrame;
+                if (GameNetworkManager.Instance.localPlayerController == player)
+                {
+                    TellHostAboutNewHealthServerRpc(healthThisFrame);
+                }
                 player.health += healthThisFrame;
                 SetVisualChangesToPlayer(player);
             }
-
             // Wait for the next frame.
             yield return null;
         }
@@ -272,6 +278,12 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         // Clean up the particles.
         particlesSpawned.Remove(newParticles);
         Destroy(newParticles);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void TellHostAboutNewHealthServerRpc(int healthToDecrease)
+    {
+        healChargeCount.Value -= healthToDecrease;
     }
 
     private void SetVisualChangesToPlayer(PlayerControllerB player)

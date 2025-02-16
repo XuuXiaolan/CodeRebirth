@@ -679,7 +679,7 @@ public class CodeRebirthConfig
                                             "Whether the SCP 999 Gal is enabled.");
         Config999GalCost = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Cost",
-                                            999,
+                                            1999,
                                             "Cost of the SCP 999 Gal.");
         Config999GalHealCooldown = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Heal Cooldown",
@@ -691,19 +691,19 @@ public class CodeRebirthConfig
                                             "Amount healed by interacting on the gal.");
         Config999GalHealSpeed = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Heal Speed",
-                                            5f,
+                                            10f,
                                             "Speed of healing by interacting on the gal (amount of time in seconds it for the gal to finish healing).");
         Config999GalHealTotalAmount = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Healing Capacity",
-                                            150,
+                                            200,
                                             "How much healing the SCP 999 Gal has per orbit.");
         Config999GalReviveCharges = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Revive Charges",
-                                            1,
+                                            2,
                                             "How many revive charges the SCP 999 Gal has per orbit.");
         Config999GalCompanyMoonRecharge = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Company Moon Recharge",
-                                            false,
+                                            true,
                                             "Whether the SCP 999 Gal recharges once per visiting company moon on last day.");
         Config999GalFailureChance = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Failure Chance",

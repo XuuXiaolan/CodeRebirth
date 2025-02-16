@@ -18,6 +18,8 @@ public class HurricaneWeather : CodeRebirthWeathers
 		nodes = CullNodesByProximity(nodes, 5.0f, true, true, 50f);
 
 		if(!IsAuthority()) return;
+		WeatherController.AddWeatherEffect(LevelWeatherType.Flooded);
+		WeatherController.AddWeatherEffect(LevelWeatherType.Rainy);
 		StartCoroutine(TornadoSpawnerHandler());
 	}
 
@@ -38,8 +40,6 @@ public class HurricaneWeather : CodeRebirthWeathers
 		// Look into making the weather warning from vanilla into this.
 		// 20 second buffer from ship start before spawning tornado stuff
 		yield return new WaitForSeconds(20f);
-		WeatherController.AddWeatherEffect(LevelWeatherType.Flooded);
-		WeatherController.AddWeatherEffect(LevelWeatherType.Rainy);
 		SpawnTornado(GetRandomTargetPosition(nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
 	}
 
