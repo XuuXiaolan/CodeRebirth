@@ -47,7 +47,6 @@ public class CRPlayerData
     public bool Fire = false;
     public bool Smoke = false;
     public bool ridingHoverboard = false;
-    public bool holdingWallet = false;
     public bool flingingAway = false;
     public bool flung = false;
     public bool pseudoDead = false;
@@ -140,12 +139,6 @@ internal static class PlayerControllerBExtensions
 
     internal static bool SetPseudoDead(this PlayerControllerB player, bool pseudoDead) =>
         player.GetCRPlayerData().pseudoDead = pseudoDead;
-
-    internal static bool IsHoldingWallet(this PlayerControllerB player) =>
-        player.GetCRPlayerData().holdingWallet;
-
-    internal static void SetHoldingWallet(this PlayerControllerB player, bool holdingWallet) =>
-        player.GetCRPlayerData().holdingWallet = holdingWallet;
 
     internal static Hoverboard? TryGetHoverboardRiding(this PlayerControllerB player) =>
         player.GetCRPlayerData().hoverboardRiding;

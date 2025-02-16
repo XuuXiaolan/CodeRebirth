@@ -432,7 +432,11 @@ If you're interested in helping with the development of the mod, feel free to re
 
 </details>
 
-## Credits - CodeRebirth Team
+## Credits
+
+**Moon Work:**
+
+- Xu Xiaolan, [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc), SolidStone, S1ckboy, MrSaltedBeef, Siphon, NutDaddy
 
 **Coding:**
 

@@ -6,6 +6,8 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigMerchantEnabled { get; private set; }
     public ConfigEntry<bool> ConfigCruiserGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigCleanerDroneGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
@@ -51,7 +53,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
     public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigWalletEnabled { get; private set; }
     public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigMonarchEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnailCatEnabled { get; private set; }
@@ -75,7 +76,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigRedwoodSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSnailCatSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
-    public ConfigEntry<int> ConfigMoneyAbundance { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigBearTrapSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigMetalCrateSpawnWeight { get; private set; }
@@ -129,6 +129,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<int> ConfigPiggyBankCost { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapsPopTires { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerSeesScanEffects { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCharges { get; private set; }
@@ -165,11 +166,8 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigFloraDesertSpawnPlaces { get; private set; }
     public ConfigEntry<string> ConfigFloraSnowSpawnPlaces { get; private set; }
     public ConfigEntry<float> ConfigCritChance { get; private set; }
-    public ConfigEntry<bool> ConfigWalletMode { get; private set; }
     public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
     public ConfigEntry<int> ConfigWalletCost { get; private set; }
-    public ConfigEntry<int> ConfigMinCoinValue { get; private set; }
-    public ConfigEntry<int> ConfigMaxCoinValue { get; private set; }
     public ConfigEntry<string> ConfigSeamineTinkEnemyBlacklist { get; private set; }
     public ConfigEntry<float> ConfigSeamineTinkRidingBruceVolume { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkAutomatic { get; private set; }
@@ -243,6 +241,14 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        #endregion
+        #region Oxyde
+        ConfigOxydeEnabled = configFile.Bind("??? Options",
+                                            "??? | Enabled",
+                                            true,
+                                            "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\n This includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
+        #endregion
+        #region Merchant
         #endregion
         #region Transporter
         ConfigTransporterEnabled = configFile.Bind("Transporter Options",
@@ -1106,37 +1112,19 @@ public class CodeRebirthConfig
                                             500,
                                             "Cost of Hoverboard.");
         #endregion
-        #region Wallet
-        ConfigWalletEnabled = configFile.Bind("Wallet Options",
-                                            "Wallet Item | Enabled",
-                                            true,
-                                            "Enables/Disables the Wallet from showing up in shop.");
-        ConfigWalletMode = configFile.Bind("Wallet Options",
-                                            "Wallet | Mode",
-                                            true,
-                                            "true for old system (item mode), false for newer system (non-held mode).");
-        ConfigWalletCost = configFile.Bind("Wallet Options",
-                                            "Wallet Item | Cost",
-                                            250,
-                                            "Cost of Wallet");
-        #endregion
         #region Money
         ConfigMoneyEnabled = configFile.Bind("Money Options",
-                                            "Money | Enabled",
+                                            "Money+Wallet+PiggyBanks | Enabled",
                                             true,
-                                            "Enables/Disables the Money from spawning.");
-        ConfigMoneyAbundance = configFile.Bind("Money Options",
-                                            "Money Scrap | Abundance",
-                                            10,
-                                            "Overall Abundance of Money in the level.");
-        ConfigMinCoinValue = configFile.Bind("Money Options",
-                                            "Money Scrap | Min Value",
-                                            5,
-                                            "Min value of Money in the level (can be negative).");
-        ConfigMaxCoinValue = configFile.Bind("Money Options",
-                                            "Money Scrap | Max Value",
-                                            25,
-                                            "Max value of Money in the level (has to be higher than min value (or same)).");
+                                            "Enables/Disables the Money, Wallet and Piggy Banks.");
+        ConfigWalletCost = configFile.Bind("Money Options",
+                                            "Wallet Item | Cost",
+                                            150,
+                                            "Cost of Wallet");
+        ConfigPiggyBankCost = configFile.Bind("Money Options",
+                                            "PiggyBank | Cost",
+                                            250,
+                                            "Cost of the Piggy Bank Unlockable");
         #endregion
         #region SnowGlobe
         ConfigSnowGlobeEnabled = configFile.Bind("SnowGlobe Options",

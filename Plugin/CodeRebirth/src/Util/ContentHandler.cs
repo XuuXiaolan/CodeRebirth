@@ -42,7 +42,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
     }
 
-    protected void RegisterShopItemWithConfig(bool enabledScrap, Item item, TerminalNode terminalNode, int itemCost, string configMoonRarity, int minWorth, int maxWorth)
+    protected void RegisterShopItemWithConfig(bool enabledScrap, Item item, TerminalNode? terminalNode, int itemCost, string configMoonRarity, int minWorth, int maxWorth)
     {
         Items.RegisterShopItem(item, null!, null!, terminalNode, itemCost);
         if (enabledScrap)

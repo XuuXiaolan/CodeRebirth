@@ -1,22 +1,9 @@
 ﻿﻿using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
-using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class ItemHandler : ContentHandler<ItemHandler>
 {
-    public class WalletAssets(string bundleName) : AssetBundleLoader<WalletAssets>(bundleName)
-    {
-        [LoadFromBundle("WalletNewObj.asset")]
-        public Item WalletItemNew { get; private set; } = null!;
-
-        [LoadFromBundle("WalletOldObj.asset")]
-        public Item WalletItemOld { get; private set; } = null!;
-
-        [LoadFromBundle("wTerminalNode.asset")]
-        public TerminalNode WalletTerminalNode { get; private set; } = null!;
-    }
-
     public class HoverboardAssets(string bundleName) : AssetBundleLoader<HoverboardAssets>(bundleName)
     {
         [LoadFromBundle("HoverboardObj.asset")]
@@ -79,7 +66,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public ZortAssets Zort { get; private set; } = null!;
     public PjonkTurkeyAssets PjonkTurkey { get; private set; } = null!;
-    public WalletAssets Wallet { get; private set; } = null!;
     public HoverboardAssets Hoverboard { get; private set; } = null!;
     public EpicAxeAssets EpicAxe { get; private set; } = null!;
     public SnowGlobeAssets SnowGlobe { get; private set; } = null!;
@@ -96,13 +82,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
             RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortViolinSpawnWeights.Value, Zort.ViolinItem, -1, -1);
             RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortRecorderSpawnWeights.Value, Zort.RecorderItem, -1, -1);
             RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortAccordionSpawnWeights.Value, Zort.AccordionItem, -1, -1);
-        }
-
-        if (Plugin.ModConfig.ConfigWalletEnabled.Value)
-        {
-            Wallet = new WalletAssets("walletassets");
-            if (Plugin.ModConfig.ConfigWalletMode.Value) RegisterShopItemWithConfig(false, Wallet.WalletItemOld, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "", -1, -1);
-            else RegisterShopItemWithConfig(true, Wallet.WalletItemNew, Wallet.WalletTerminalNode, Plugin.ModConfig.ConfigWalletCost.Value, "", -1, -1);
         }
 
         if (Plugin.ModConfig.ConfigHoverboardEnabled.Value)
