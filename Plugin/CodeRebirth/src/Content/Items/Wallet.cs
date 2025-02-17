@@ -33,21 +33,25 @@ public class Wallet : GrabbableObject
         base.ItemActivate(used, buttonDown);
         if (playerHeldBy == null) return;
         Ray interactRay = new Ray(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
-        if (!Physics.Raycast(interactRay, out RaycastHit hit, playerHeldBy.grabDistance, CodeRebirthUtils.Instance.propsAndHazardMask, QueryTriggerInteraction.Collide)) return;
-        Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
-        PiggyBank piggyBank = hit.collider.transform.gameObject.GetComponent<PiggyBank>();
-        if (coin == null && piggyBank == null) return;
-        if (coin != null)
+        RaycastHit[] hits = Physics.RaycastAll(interactRay, playerHeldBy.grabDistance, CodeRebirthUtils.Instance.propsAndHazardMask, QueryTriggerInteraction.Collide);
+        foreach (RaycastHit hit in hits)
         {
-            audioPlayer.Play();
-            coinsStored += coin.value;
-            scanNode.subText = $"Coins Stored: {coinsStored}";
-            if (IsServer) coin.NetworkObject.Despawn();
-        }
-        else
-        {
-            int coins = piggyBank.AddCoinsToPiggyBank(coinsStored);
-            coinsStored -= coins;
+            Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
+            PiggyBank piggyBank = hit.collider.transform.gameObject.GetComponent<PiggyBank>();
+            if (coin == null && piggyBank == null) continue;
+            if (coin != null)
+            {
+                audioPlayer.Play();
+                coinsStored += coin.value;
+                scanNode.subText = $"Coins Stored: {coinsStored}";
+                if (IsServer) coin.NetworkObject.Despawn();
+                return;
+            }
+            else
+            {
+                int coins = piggyBank.AddCoinsToPiggyBank(coinsStored);
+                coinsStored -= coins;
+            }
         }
     }
 
