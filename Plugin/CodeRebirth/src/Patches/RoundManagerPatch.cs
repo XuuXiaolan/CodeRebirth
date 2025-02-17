@@ -586,6 +586,7 @@ static class RoundManagerPatch {
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
 	private static void PatchFix_DespawnOldCrates()
 	{
+		PiggyBank.Instance?.RepairPiggyBankServerRpc();
 		foreach (GalAI gal in GalAI.Instances)
 		{
 			gal.RefillChargesServerRpc();

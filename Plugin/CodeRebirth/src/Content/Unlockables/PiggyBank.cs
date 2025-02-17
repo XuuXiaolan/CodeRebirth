@@ -18,6 +18,21 @@ public class PiggyBank : NetworkBehaviour, IHittable
     private static readonly int BreakAnimation = Animator.StringToHash("borked"); // Bool
     private static readonly int InsertCoinAnimation = Animator.StringToHash("insertCoin"); // Trigger
 
+    public static PiggyBank? Instance = null;
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        Instance = this;
+        int coinsStored = ES3.Load("coinsStoredCR", GameNetworkManager.Instance.currentSaveFileName, -1);
+        if (coinsStored != -1) this.coinsStored = coinsStored;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        Instance = null;
+    }
+
     public void Start()
     {
         ApplyVariantMaterial();
@@ -35,17 +50,40 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public int AddCoinsToPiggyBank(int amount)
     {
         if (broken) return 0;
-        if (IsServer) piggyBankNetworkAnimator.SetTrigger(InsertCoinAnimation);
         coinsStored += amount;
+        if (IsServer)
+        {
+            piggyBankNetworkAnimator.SetTrigger(InsertCoinAnimation);
+        }
+        if (StartOfRound.Instance.inShipPhase) SaveCurrentCoins();
         return amount;
+    }
+
+    public void SaveCurrentCoins()
+    {
+        if (!IsHost) return;
+        ES3.Save<int>("coinsStoredCR", coinsStored, GameNetworkManager.Instance.currentSaveFileName);
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         if (broken) return false;
-        if (IsServer) piggyBankAnimator.SetTrigger(BreakAnimation);
+        if (IsServer) piggyBankAnimator.SetBool(BreakAnimation, true);
         broken = true;
         return true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RepairPiggyBankServerRpc()
+    {
+        piggyBankAnimator.SetBool(BreakAnimation, false);
+        RepairPiggyBankClientRpc();
+    }
+
+    [ClientRpc]
+    private void RepairPiggyBankClientRpc()
+    {
+        broken = false;
     }
 
     public void SpawnAllCoinsAnimEvent()

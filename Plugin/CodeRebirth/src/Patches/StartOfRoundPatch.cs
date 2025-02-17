@@ -28,6 +28,7 @@ static class StartOfRoundPatch
 	[HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
 	static void SaveCodeRebirthData()
 	{
+		PiggyBank.Instance?.SaveCurrentCoins();
 		if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
 	}
 	
