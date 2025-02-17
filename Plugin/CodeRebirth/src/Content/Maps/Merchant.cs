@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -78,10 +79,14 @@ public class Merchant : NetworkBehaviour
 
         foreach (var barrel in merchantBarrels)
         {
-            barrel.validItemsWithRarity.Clear();
+            barrel.validItemsWithRarityAndColor.Clear();
 
-            foreach ((string name, int rarity) in barrel.itemNamesWithRarity)
+            foreach (var itemNamesWithRarityAndColor in barrel.itemNamesWithRarityAndColor)
             {
+                string name = itemNamesWithRarityAndColor.itemName;
+                float rarity = itemNamesWithRarityAndColor.rarity;
+                Color color = itemNamesWithRarityAndColor.color;
+
                 string normalizedName = name.ToLowerInvariant().Trim();
 
                 if (itemsByName.TryGetValue(normalizedName, out Item matchingItem))
@@ -90,7 +95,7 @@ public class Merchant : NetworkBehaviour
                     Plugin.ExtendedLogging($"Merchant item rarity: {rarity}");
                     Plugin.ExtendedLogging($"Comparable item: {matchingItem.itemName}\n");
 
-                    barrel.validItemsWithRarity.Add((matchingItem, rarity));
+                    barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, color));
                 }
             }
         }
@@ -102,33 +107,35 @@ public class Merchant : NetworkBehaviour
         {
             Vector3 spawnPosition = barrel.barrelSpawnPoint.position;
 
-            if (barrel.validItemsWithRarity == null || barrel.validItemsWithRarity.Count == 0)
+            if (barrel.validItemsWithRarityAndColor == null || barrel.validItemsWithRarityAndColor.Count == 0)
             {
                 Plugin.ExtendedLogging("No valid items for barrel at " + spawnPosition);
                 continue;
             }
 
-            var validItems = barrel.validItemsWithRarity.ToList();
+            var validItems = barrel.validItemsWithRarityAndColor.ToList();
             validItems.Shuffle();
 
             // Compute cumulative weights.
-            int cumulativeWeight = 0;
-            var cumulativeList = new List<(Item item, int cumulativeWeight)>(validItems.Count);
-            foreach (var (item, weight) in validItems)
+            float cumulativeWeight = 0;
+            var cumulativeList = new List<(Item item, float cumulativeWeight, Color color)>(validItems.Count);
+            foreach (var itemsWithRarityAndColor in validItems)
             {
-                cumulativeWeight += weight;
-                cumulativeList.Add((item, cumulativeWeight));
+                cumulativeWeight += itemsWithRarityAndColor.rarity;
+                cumulativeList.Add((itemsWithRarityAndColor.item, cumulativeWeight, itemsWithRarityAndColor.color));
             }
 
             // Get a random value in the range [0, cumulativeWeight).
-            int randomValue = Random.Range(0, cumulativeWeight);
+            float randomValue = Random.Range(0, cumulativeWeight);
 
             Item? selectedItem = null;
-            foreach (var (item, cumWeight) in cumulativeList)
+            Color selectedColor = Color.white;
+            foreach (var (item, cumWeight, color) in cumulativeList)
             {
                 if (randomValue < cumWeight)
                 {
                     selectedItem = item;
+                    selectedColor = color;
                     break;
                 }
             }
@@ -141,7 +148,11 @@ public class Merchant : NetworkBehaviour
 
             // Spawn the selected item.
             GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(selectedItem, spawnPosition, false, true, 0);
-            itemsSpawned.Add(itemGO.GetComponent<GrabbableObject>(), false);
+            GrabbableObject grabbableObject = itemGO.GetComponent<GrabbableObject>();
+            itemsSpawned.Add(grabbableObject, false);
+            ForceScanColorOnItem forceScanColorOnItem = itemGO.AddComponent<ForceScanColorOnItem>();
+            forceScanColorOnItem.grabbableObject = grabbableObject;
+            forceScanColorOnItem.color = selectedColor;
         }
     }
 }

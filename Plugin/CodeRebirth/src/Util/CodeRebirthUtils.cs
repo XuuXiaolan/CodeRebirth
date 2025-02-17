@@ -211,7 +211,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         Plugin.ExtendedLogging($"LocalClientId: {NetworkManager.Singleton.LocalClientId}");
         Plugin.ExtendedLogging($"StartOfRound.Instance.ClientPlayerList: {{{string.Join(", ",StartOfRound.Instance.ClientPlayerList)}}}");
 
-        if (!StartOfRound.Instance.ClientPlayerList.ContainsKey(NetworkManager.Singleton.LocalClientId)) {
+        if (!StartOfRound.Instance.ClientPlayerList.ContainsKey(NetworkManager.Singleton.LocalClientId))
+        {
             StartCoroutine(DelayLoadRequestRPC());
             return;
         }

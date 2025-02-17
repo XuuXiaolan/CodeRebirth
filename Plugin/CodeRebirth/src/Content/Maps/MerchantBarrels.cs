@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MerchantBarrel : MonoBehaviour
 {
-    public List<(string itemName, int rarity)> itemNamesWithRarity = new();
+    [SerializeField] public List<ItemWithRarityAndColor> itemNamesWithRarityAndColor = new();
     public Transform barrelSpawnPoint = null!;
 
-    [HideInInspector] public List<(Item item, int rarity)> validItemsWithRarity = new();
+    [HideInInspector] public List<(Item item, float rarity, Color color)> validItemsWithRarityAndColor = new();
 }

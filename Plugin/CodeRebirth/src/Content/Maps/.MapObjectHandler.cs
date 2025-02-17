@@ -112,6 +112,13 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public Item CharredBabyItem { get; private set; } = null!;
 	}
 
+	public class MerchantAssets(string bundleName) : AssetBundleLoader<MerchantAssets>(bundleName)
+	{
+		[LoadFromBundle("Guardsman.prefab")]
+		public GameObject MerchantPrefab { get; private set; } = null!;
+	}
+
+	public MerchantAssets Merchant { get; private set; } = null!;
 	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
@@ -128,6 +135,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public MapObjectHandler()
 	{
+		if (Plugin.ModConfig.ConfigMerchantEnabled.Value)
+			Merchant = new MerchantAssets("merchantassets");
+
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
 			Crate = new CrateAssets("crateassets");
 

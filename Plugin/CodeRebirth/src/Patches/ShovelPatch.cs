@@ -12,7 +12,7 @@ using CodeRebirth.src.Content.Unlockables;
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch
 {
-	static System.Random? random;
+	static System.Random? random = null;
 	
 	public static void Init()
     {
