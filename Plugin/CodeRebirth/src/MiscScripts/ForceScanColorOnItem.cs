@@ -36,7 +36,9 @@ public class ForceScanColorOnItem : MonoBehaviour
         if (rectTransformOfImportance == null) return;
         Image? image1 = rectTransformOfImportance.transform.GetChild(1).GetChild(0).GetComponent<Image>();
         Image? image2 = rectTransformOfImportance.transform.GetChild(1).GetChild(2).GetComponent<Image>();
+        Plugin.ExtendedLogging($"image1: {image1} image2: {image2}");
         if (image1 == null || image2 == null) return;
+        Plugin.ExtendedLogging($"Setting color to {color}");
         image1.color = color;
         image2.color = color;
     }

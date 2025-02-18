@@ -171,7 +171,7 @@ GameObject:
   - component: {fileID: 3782165185340137470}
   - component: {fileID: 6661070410640509997}
   - component: {fileID: 760708763693885464}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Guardsman.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -302,12 +302,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
-  - itemName: Gift Box
+  - itemName: Gift
     rarity: 99
-    color: {r: 0, g: 0, b: 0, a: 0}
+    color: {r: 0.9691129, g: 1, b: 0, a: 1}
   - itemName: Big Present
     rarity: 1
-    color: {r: 0, g: 0, b: 0, a: 0}
+    color: {r: 1, g: 0.83183765, b: 0, a: 1}
   barrelSpawnPoint: {fileID: 8693615149441997582}
 --- !u!1 &680574876329626848
 GameObject:
@@ -500,7 +500,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8693615149441997582}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +562,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 794146360343781012}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -690,7 +690,7 @@ GameObject:
   - component: {fileID: 112111387171587828}
   - component: {fileID: 5833179663088537320}
   - component: {fileID: 4218536834317112292}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Guardsman.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -820,7 +820,13 @@ MonoBehaviour:
   m_Script: {fileID: -928161405, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemNamesWithRarityAndColor: []
+  itemNamesWithRarityAndColor:
+  - itemName: Gift
+    rarity: 99
+    color: {r: 0.9691129, g: 1, b: 0, a: 1}
+  - itemName: Big Present
+    rarity: 1
+    color: {r: 1, g: 0.83183765, b: 0, a: 1}
   barrelSpawnPoint: {fileID: 8996456538382694786}
 --- !u!1 &2685888227207986660
 GameObject:
@@ -1311,7 +1317,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7979581275971554832}
   - component: {fileID: 1995663806380315695}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Guardsman
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1660,7 +1666,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5087414292805205031}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2005,7 +2011,7 @@ GameObject:
   - component: {fileID: 5339130929379196032}
   - component: {fileID: 3267723125848557930}
   - component: {fileID: 283535674282599745}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Guardsman.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2135,7 +2141,13 @@ MonoBehaviour:
   m_Script: {fileID: -928161405, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemNamesWithRarityAndColor: []
+  itemNamesWithRarityAndColor:
+  - itemName: Gift
+    rarity: 99
+    color: {r: 0.9691129, g: 1, b: 0, a: 1}
+  - itemName: Big Present
+    rarity: 1
+    color: {r: 1, g: 0.83183765, b: 0, a: 1}
   barrelSpawnPoint: {fileID: 5087414292805205031}
 --- !u!1 &8202763550955054907
 GameObject:
@@ -2180,7 +2192,7 @@ GameObject:
   - component: {fileID: 5567307562375676021}
   - component: {fileID: 9102632587938153768}
   - component: {fileID: 1195153308776570972}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Guardsman.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2310,7 +2322,13 @@ MonoBehaviour:
   m_Script: {fileID: -928161405, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemNamesWithRarityAndColor: []
+  itemNamesWithRarityAndColor:
+  - itemName: Gift
+    rarity: 99
+    color: {r: 0.9691129, g: 1, b: 0, a: 1}
+  - itemName: Big Present
+    rarity: 1
+    color: {r: 1, g: 0.83183765, b: 0, a: 1}
   barrelSpawnPoint: {fileID: 794146360343781012}
 --- !u!1 &8317945808578046085
 GameObject:
@@ -2451,7 +2469,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8996456538382694786}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

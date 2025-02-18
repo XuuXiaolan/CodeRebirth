@@ -249,6 +249,10 @@ public class CodeRebirthConfig
                                             "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\n This includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
         #endregion
         #region Merchant
+        ConfigMerchantEnabled = configFile.Bind("Merchant Options",
+                                            "Merchant | Enabled",
+                                            true,
+                                            "Whether the Merchant is enabled.");
         #endregion
         #region Transporter
         ConfigTransporterEnabled = configFile.Bind("Transporter Options",

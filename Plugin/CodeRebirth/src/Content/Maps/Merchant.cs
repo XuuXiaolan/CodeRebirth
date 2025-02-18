@@ -93,6 +93,7 @@ public class Merchant : NetworkBehaviour
                 {
                     Plugin.ExtendedLogging($"Merchant item: {name}");
                     Plugin.ExtendedLogging($"Merchant item rarity: {rarity}");
+                    Plugin.ExtendedLogging($"Merchant item color: {color}");
                     Plugin.ExtendedLogging($"Comparable item: {matchingItem.itemName}\n");
 
                     barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, color));
