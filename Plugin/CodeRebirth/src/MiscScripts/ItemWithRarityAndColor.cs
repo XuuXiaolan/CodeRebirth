@@ -7,6 +7,7 @@ public class ItemWithRarityAndColor
 {
     public string itemName = "Item Name";
     public float rarity = 0;
+    public int price = 0;
     public Color borderColor = new(46f/255f, 180f/255f, 0, 1f);
     public Color textColor = new(65f/255f, 1f, 0f, 1f);
 }

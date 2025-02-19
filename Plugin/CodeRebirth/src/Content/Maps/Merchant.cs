@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
@@ -13,9 +14,11 @@ public class Merchant : NetworkBehaviour
     public Transform[] turretBones = [];
     public MerchantBarrel[] merchantBarrels = [];
 
-    private Dictionary<GrabbableObject, bool> itemsSpawned = new();
+    private Dictionary<GrabbableObject, int> itemsSpawned = new();
     private List<PlayerControllerB> targetPlayers = new();
     private Dictionary<Transform, float> localDamageCooldownPerTurret = new();
+    private int currentCoinsStored = 0;
+
     public void Start()
     {
         localDamageCooldownPerTurret.Add(turretBones[0], 0.2f);
@@ -27,14 +30,14 @@ public class Merchant : NetworkBehaviour
 
     public void Update()
     {
-        foreach (var item in itemsSpawned.ToArray())
+        foreach (KeyValuePair<GrabbableObject, int> item in itemsSpawned.ToArray())
         {
-            if (item.Value) continue;
+            if (item.Value == -1) continue;
             if (item.Key.isHeld && item.Key.playerHeldBy != null && !targetPlayers.Contains(item.Key.playerHeldBy))
             {
-                if (EnoughMoneySlotted())
+                if (EnoughMoneySlotted(item.Value))
                 {
-                    itemsSpawned[item.Key] = true;
+                    itemsSpawned[item.Key] = -1;
                     continue;
                 }
                 targetPlayers.Add(item.Key.playerHeldBy);
@@ -45,7 +48,7 @@ public class Merchant : NetworkBehaviour
         EliminateTargetPlayers();
     }
 
-    private bool EnoughMoneySlotted()
+    private bool EnoughMoneySlotted(int itemCost)
     {
         return false;
     }
@@ -92,6 +95,7 @@ public class Merchant : NetworkBehaviour
             {
                 string name = itemNamesWithRarityAndColor.itemName;
                 float rarity = itemNamesWithRarityAndColor.rarity;
+                int price = itemNamesWithRarityAndColor.price;
                 Color borderColor = itemNamesWithRarityAndColor.borderColor;
                 Color textColor = itemNamesWithRarityAndColor.textColor;
 
@@ -101,11 +105,12 @@ public class Merchant : NetworkBehaviour
                 {
                     Plugin.ExtendedLogging($"Merchant item: {name}");
                     Plugin.ExtendedLogging($"Merchant item rarity: {rarity}");
+                    Plugin.ExtendedLogging($"Merchant item price: {price}");
                     Plugin.ExtendedLogging($"Merchant item border color: {borderColor}");
                     Plugin.ExtendedLogging($"Merchant item text color: {textColor}");
                     Plugin.ExtendedLogging($"Comparable item: {matchingItem.itemName}\n");
 
-                    barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, borderColor, textColor));
+                    barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, price, borderColor, textColor));
                 }
             }
         }
@@ -128,24 +133,26 @@ public class Merchant : NetworkBehaviour
 
             // Compute cumulative weights.
             float cumulativeWeight = 0;
-            var cumulativeList = new List<(Item item, float cumulativeWeight, Color borderColor, Color textColor)>(validItems.Count);
+            var cumulativeList = new List<(Item item, float cumulativeWeight, int price, Color borderColor, Color textColor)>(validItems.Count);
             foreach (var itemsWithRarityAndColor in validItems)
             {
                 cumulativeWeight += itemsWithRarityAndColor.rarity;
-                cumulativeList.Add((itemsWithRarityAndColor.item, cumulativeWeight, itemsWithRarityAndColor.borderColor, itemsWithRarityAndColor.textColor));
+                cumulativeList.Add((itemsWithRarityAndColor.item, cumulativeWeight, itemsWithRarityAndColor.price, itemsWithRarityAndColor.borderColor, itemsWithRarityAndColor.textColor));
             }
 
             // Get a random value in the range [0, cumulativeWeight).
             float randomValue = Random.Range(0, cumulativeWeight);
 
             Item? selectedItem = null;
+            int _price = 0;
             Color _borderColor = Color.white;
             Color _textColor = Color.white;
-            foreach (var (item, cumWeight, borderColor, textColor) in cumulativeList)
+            foreach (var (item, cumWeight, price, borderColor, textColor) in cumulativeList)
             {
                 if (randomValue < cumWeight)
                 {
                     selectedItem = item;
+                    _price = price;
                     _borderColor = borderColor;
                     _textColor = textColor;
                     break;
@@ -161,11 +168,31 @@ public class Merchant : NetworkBehaviour
             // Spawn the selected item.
             GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(selectedItem, spawnPosition, false, true, 0);
             GrabbableObject grabbableObject = itemGO.GetComponent<GrabbableObject>();
-            itemsSpawned.Add(grabbableObject, false);
+            itemsSpawned.Add(grabbableObject, _price);
             ForceScanColorOnItem forceScanColorOnItem = itemGO.AddComponent<ForceScanColorOnItem>();
             forceScanColorOnItem.grabbableObject = grabbableObject;
             forceScanColorOnItem.borderColor = _borderColor;
             forceScanColorOnItem.textColor = _textColor;
         }
+    }
+
+    public void TryDepositCoinsOntoBarrel(PlayerControllerB playerWhoInteracted)
+    {
+        if (playerWhoInteracted == null || playerWhoInteracted != GameNetworkManager.Instance.localPlayerController || playerWhoInteracted.currentlyHeldObjectServer == null || playerWhoInteracted.currentlyHeldObjectServer is not Wallet wallet) return;
+        if (wallet.coinsStored <= 0) return;
+
+        IncreaseCoinsServerRpc(wallet.coinsStored);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void IncreaseCoinsServerRpc(int coinIncrease)
+    {
+        IncreaseCoinsClientRpc(coinIncrease);
+    }
+
+    [ClientRpc]
+    public void IncreaseCoinsClientRpc(int coinIncrease)
+    {
+        currentCoinsStored += coinIncrease;
     }
 }

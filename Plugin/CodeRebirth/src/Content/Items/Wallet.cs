@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class Wallet : GrabbableObject
 {
-    private int coinsStored = 0;
+    [HideInInspector] public int coinsStored = 0;
     public AudioSource audioPlayer = null!;
     public ScanNodeProperties scanNode = null!;
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;

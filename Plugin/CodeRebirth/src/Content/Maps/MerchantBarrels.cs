@@ -8,5 +8,5 @@ public class MerchantBarrel : MonoBehaviour
     [SerializeField] public List<ItemWithRarityAndColor> itemNamesWithRarityAndColor = new();
     public Transform barrelSpawnPoint = null!;
 
-    [HideInInspector] public List<(Item item, float rarity, Color borderColor, Color textColor)> validItemsWithRarityAndColor = new();
+    [HideInInspector] public List<(Item item, float rarity, int price, Color borderColor, Color textColor)> validItemsWithRarityAndColor = new();
 }
