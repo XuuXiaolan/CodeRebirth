@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,8 @@ namespace CodeRebirth.src.MiscScripts;
 public class ForceScanColorOnItem : MonoBehaviour
 {
     public GrabbableObject grabbableObject = null!;
-    public Color color = Color.green;
+    public Color borderColor = Color.green;
+    public Color textColor = Color.green;
 
     private ScanNodeProperties? scanNodeProperties = null;
 
@@ -30,16 +32,18 @@ public class ForceScanColorOnItem : MonoBehaviour
             if (value == scanNodeProperties)
             {
                 rectTransformOfImportance = key;
-                Plugin.ExtendedLogging($"Found scan node's gameobject: {key}");
+                // Plugin.ExtendedLogging($"Found scan node's gameobject: {key}");
             }
         }
         if (rectTransformOfImportance == null) return;
-        Image? image1 = rectTransformOfImportance.transform.GetChild(1).GetChild(0).GetComponent<Image>();
-        Image? image2 = rectTransformOfImportance.transform.GetChild(1).GetChild(2).GetComponent<Image>();
-        Plugin.ExtendedLogging($"image1: {image1} image2: {image2}");
-        if (image1 == null || image2 == null) return;
-        Plugin.ExtendedLogging($"Setting color to {color}");
-        image1.color = color;
-        image2.color = color;
+        foreach (Image image in rectTransformOfImportance.GetComponentsInChildren<Image>())
+        {
+            image.color = new Color(borderColor.r, borderColor.g, borderColor.b, image.color.a);
+        }
+        Transform transformOfImportance = rectTransformOfImportance.GetChild(1);
+        foreach (TextMeshProUGUI text in transformOfImportance.GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            text.color = new Color(textColor.r, textColor.g, textColor.b, text.color.a);
+        }
     }
 }

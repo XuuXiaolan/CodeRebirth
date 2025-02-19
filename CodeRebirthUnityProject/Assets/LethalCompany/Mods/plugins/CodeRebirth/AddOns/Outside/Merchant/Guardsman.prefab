@@ -303,11 +303,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
   - itemName: Gift
-    rarity: 99
-    color: {r: 0.9691129, g: 1, b: 0, a: 1}
+    rarity: 95
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
   - itemName: Big Present
-    rarity: 1
-    color: {r: 1, g: 0.83183765, b: 0, a: 1}
+    rarity: 5
+    borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
+    textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
   barrelSpawnPoint: {fileID: 8693615149441997582}
 --- !u!1 &680574876329626848
 GameObject:
@@ -500,7 +502,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8693615149441997582}
-  m_Layer: 21
+  - component: {fileID: 7080530422077554847}
+  m_Layer: 11
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -522,6 +525,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3782165185340137470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &7080530422077554847
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287965535038995087}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.47367364
+  m_Height: 1.4973345
+  m_Direction: 2
+  m_Center: {x: -0.019860957, y: -0.000000057826743, z: -0.8762636}
 --- !u!1 &1552950304480920592
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,7 +588,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 794146360343781012}
-  m_Layer: 21
+  - component: {fileID: 1757089838917883390}
+  m_Layer: 11
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -584,6 +611,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5567307562375676021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1757089838917883390
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694889267920067028}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.47367364
+  m_Height: 1.4973345
+  m_Direction: 2
+  m_Center: {x: -0.019860957, y: -0.000000057826743, z: -0.8762636}
 --- !u!1 &1843270082980675234
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,11 +872,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
   - itemName: Gift
-    rarity: 99
-    color: {r: 0.9691129, g: 1, b: 0, a: 1}
+    rarity: 95
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
   - itemName: Big Present
-    rarity: 1
-    color: {r: 1, g: 0.83183765, b: 0, a: 1}
+    rarity: 5
+    borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
+    textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
   barrelSpawnPoint: {fileID: 8996456538382694786}
 --- !u!1 &2685888227207986660
 GameObject:
@@ -1618,14 +1670,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6291408528825352290}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000004470373, y: 0.000000049833933, z: 0.003311201, w: 0.9999945}
+  m_LocalRotation: {x: 0.1450462, y: -0.00047972248, z: 0.0032723828, w: 0.98941934}
   m_LocalPosition: {x: -0, y: 2.60253, z: -0.00000023841858}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5636783694433967930}
   m_Father: {fileID: 4172243349871267718}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 16.68, y: 0, z: 0.379}
 --- !u!1 &6482234450448164591
 GameObject:
   m_ObjectHideFlags: 0
@@ -1666,7 +1718,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5087414292805205031}
-  m_Layer: 21
+  - component: {fileID: 5812800697203139206}
+  m_Layer: 11
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1688,6 +1741,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5339130929379196032}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &5812800697203139206
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6761743963509326672}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.47367364
+  m_Height: 1.4973345
+  m_Direction: 2
+  m_Center: {x: -0.019860957, y: -0.000000057826743, z: -0.8762636}
 --- !u!1 &7239196189667474953
 GameObject:
   m_ObjectHideFlags: 0
@@ -1747,7 +1823,7 @@ Transform:
   m_GameObject: {fileID: 7301262495575449647}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.132, y: 0.498, z: -0.045}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1764,11 +1840,11 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0.9667889, b: 0, a: 1}
-  m_Intensity: 13517.884
-  m_Range: 60.5
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_Color: {r: 0.8113208, g: 0.6700196, b: 0, a: 1}
+  m_Intensity: 41452.105
+  m_Range: 20
+  m_SpotAngle: 45.2
+  m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -1808,12 +1884,12 @@ Light:
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
-  m_ColorTemperature: 7242
+  m_ColorTemperature: 1500
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 20.9
+  m_ShadowRadius: 20
   m_ShadowAngle: 0
 --- !u!114 &6129027091123571638
 MonoBehaviour:
@@ -1827,10 +1903,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Intensity: 2894.1038
+  m_Intensity: 20000
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
-  m_InnerSpotPercent: 0
+  m_InnerSpotPercent: 44.2
   m_SpotIESCutoffPercent: 100
   m_LightDimmer: 1
   m_VolumetricDimmer: 1
@@ -1843,10 +1919,10 @@ MonoBehaviour:
   m_ShapeWidth: 0.5
   m_ShapeHeight: 0.5
   m_AspectRatio: 1
-  m_ShapeRadius: 20.9
+  m_ShapeRadius: 20
   m_SoftnessScale: 1
   m_UseCustomSpotLightShadowCone: 0
-  m_CustomSpotLightShadowCone: 30
+  m_CustomSpotLightShadowCone: 2
   m_MaxSmoothness: 0.99
   m_ApplyRangeAttenuation: 1
   m_DisplayAreaLightEmissiveMesh: 0
@@ -2143,11 +2219,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
   - itemName: Gift
-    rarity: 99
-    color: {r: 0.9691129, g: 1, b: 0, a: 1}
+    rarity: 95
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
   - itemName: Big Present
-    rarity: 1
-    color: {r: 1, g: 0.83183765, b: 0, a: 1}
+    rarity: 5
+    borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
+    textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
   barrelSpawnPoint: {fileID: 5087414292805205031}
 --- !u!1 &8202763550955054907
 GameObject:
@@ -2324,11 +2402,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
   - itemName: Gift
-    rarity: 99
-    color: {r: 0.9691129, g: 1, b: 0, a: 1}
+    rarity: 95
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
   - itemName: Big Present
-    rarity: 1
-    color: {r: 1, g: 0.83183765, b: 0, a: 1}
+    rarity: 5
+    borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
+    textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
   barrelSpawnPoint: {fileID: 794146360343781012}
 --- !u!1 &8317945808578046085
 GameObject:
@@ -2469,7 +2549,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8996456538382694786}
-  m_Layer: 21
+  - component: {fileID: 4040043446637638393}
+  m_Layer: 11
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2491,6 +2572,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 112111387171587828}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4040043446637638393
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9137845936959335054}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.47367364
+  m_Height: 1.4973345
+  m_Direction: 2
+  m_Center: {x: -0.019860957, y: -0.000000057826743, z: -0.8762636}
 --- !u!1 &9218986554781795567
 GameObject:
   m_ObjectHideFlags: 0

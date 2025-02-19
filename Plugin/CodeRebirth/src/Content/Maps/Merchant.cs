@@ -15,8 +15,11 @@ public class Merchant : NetworkBehaviour
 
     private Dictionary<GrabbableObject, bool> itemsSpawned = new();
     private List<PlayerControllerB> targetPlayers = new();
+    private Dictionary<Transform, float> localDamageCooldownPerTurret = new();
     public void Start()
     {
+        localDamageCooldownPerTurret.Add(turretBones[0], 0.2f);
+        localDamageCooldownPerTurret.Add(turretBones[1], 0.2f);
         if (!IsServer) return;
         PopulateItemsWithRarityList();
         HandleSpawningMerchantItems();
@@ -24,7 +27,7 @@ public class Merchant : NetworkBehaviour
 
     public void Update()
     {
-        foreach (var item in itemsSpawned)
+        foreach (var item in itemsSpawned.ToArray())
         {
             if (item.Value) continue;
             if (item.Key.isHeld && item.Key.playerHeldBy != null && !targetPlayers.Contains(item.Key.playerHeldBy))
@@ -44,7 +47,7 @@ public class Merchant : NetworkBehaviour
 
     private bool EnoughMoneySlotted()
     {
-        return true;
+        return false;
     }
 
     private void EliminateTargetPlayers()
@@ -57,17 +60,21 @@ public class Merchant : NetworkBehaviour
         }
         foreach (var turret in turretBones)
         {
-            if (Vector3.Dot(currentTargetPlayer.gameplayCamera.transform.position, turret.position) > 0.9f)
+            localDamageCooldownPerTurret[turret] -= Time.deltaTime;
+            Vector3 normalizedDirection = (currentTargetPlayer.gameplayCamera.transform.position - turret.position).normalized;
+            float dotProduct = Vector3.Dot(turret.forward, normalizedDirection);
+            Plugin.ExtendedLogging($"Dot product: {dotProduct}");
+            if (dotProduct > 0.9f)
             {
                 // Fire at player and deal damage.
-                currentTargetPlayer.DamagePlayer(2, true, false, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
+                if (GameNetworkManager.Instance.localPlayerController == currentTargetPlayer && localDamageCooldownPerTurret[turret] <= 0)
+                {
+                    currentTargetPlayer.DamagePlayer(2, true, true, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
+                    localDamageCooldownPerTurret[turret] = 0.2f;
+                }
             }
-            else
-            {
-                Vector3 direction = currentTargetPlayer.gameplayCamera.transform.position - transform.position;
-                Quaternion toRotation = Quaternion.FromToRotation(transform.forward, direction);
-                transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, 5 * Time.deltaTime);
-            }
+            Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);
+            turret.rotation = Quaternion.Lerp(turret.rotation, targetRotation, 2f * Time.deltaTime);
         }
         // position turrets towards player, and blast the fuck out of the player.
     }
@@ -85,7 +92,8 @@ public class Merchant : NetworkBehaviour
             {
                 string name = itemNamesWithRarityAndColor.itemName;
                 float rarity = itemNamesWithRarityAndColor.rarity;
-                Color color = itemNamesWithRarityAndColor.color;
+                Color borderColor = itemNamesWithRarityAndColor.borderColor;
+                Color textColor = itemNamesWithRarityAndColor.textColor;
 
                 string normalizedName = name.ToLowerInvariant().Trim();
 
@@ -93,10 +101,11 @@ public class Merchant : NetworkBehaviour
                 {
                     Plugin.ExtendedLogging($"Merchant item: {name}");
                     Plugin.ExtendedLogging($"Merchant item rarity: {rarity}");
-                    Plugin.ExtendedLogging($"Merchant item color: {color}");
+                    Plugin.ExtendedLogging($"Merchant item border color: {borderColor}");
+                    Plugin.ExtendedLogging($"Merchant item text color: {textColor}");
                     Plugin.ExtendedLogging($"Comparable item: {matchingItem.itemName}\n");
 
-                    barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, color));
+                    barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, borderColor, textColor));
                 }
             }
         }
@@ -119,24 +128,26 @@ public class Merchant : NetworkBehaviour
 
             // Compute cumulative weights.
             float cumulativeWeight = 0;
-            var cumulativeList = new List<(Item item, float cumulativeWeight, Color color)>(validItems.Count);
+            var cumulativeList = new List<(Item item, float cumulativeWeight, Color borderColor, Color textColor)>(validItems.Count);
             foreach (var itemsWithRarityAndColor in validItems)
             {
                 cumulativeWeight += itemsWithRarityAndColor.rarity;
-                cumulativeList.Add((itemsWithRarityAndColor.item, cumulativeWeight, itemsWithRarityAndColor.color));
+                cumulativeList.Add((itemsWithRarityAndColor.item, cumulativeWeight, itemsWithRarityAndColor.borderColor, itemsWithRarityAndColor.textColor));
             }
 
             // Get a random value in the range [0, cumulativeWeight).
             float randomValue = Random.Range(0, cumulativeWeight);
 
             Item? selectedItem = null;
-            Color selectedColor = Color.white;
-            foreach (var (item, cumWeight, color) in cumulativeList)
+            Color _borderColor = Color.white;
+            Color _textColor = Color.white;
+            foreach (var (item, cumWeight, borderColor, textColor) in cumulativeList)
             {
                 if (randomValue < cumWeight)
                 {
                     selectedItem = item;
-                    selectedColor = color;
+                    _borderColor = borderColor;
+                    _textColor = textColor;
                     break;
                 }
             }
@@ -153,7 +164,8 @@ public class Merchant : NetworkBehaviour
             itemsSpawned.Add(grabbableObject, false);
             ForceScanColorOnItem forceScanColorOnItem = itemGO.AddComponent<ForceScanColorOnItem>();
             forceScanColorOnItem.grabbableObject = grabbableObject;
-            forceScanColorOnItem.color = selectedColor;
+            forceScanColorOnItem.borderColor = _borderColor;
+            forceScanColorOnItem.textColor = _textColor;
         }
     }
 }
