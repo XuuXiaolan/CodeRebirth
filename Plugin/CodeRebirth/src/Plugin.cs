@@ -88,6 +88,7 @@ public class Plugin : BaseUnityPlugin
         LandminePatch.Init();
         ShotgunItemPatch.Init();
         TurretPatch.Init();
+        GameNetworkManagerPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");

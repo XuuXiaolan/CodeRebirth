@@ -22,6 +22,7 @@ public class Wallet : GrabbableObject
 	{
 		base.LoadItemSaveData(saveData);
 		coinsStored = saveData;
+        ResetCoinsServerRpc(coinsStored);
 	}
 
     private void UpdateWalletSize()
@@ -57,15 +58,15 @@ public class Wallet : GrabbableObject
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ResetCoinsServerRpc()
+    public void ResetCoinsServerRpc(int value)
     {
-        ResetCoinsClientRpc();
+        ResetCoinsClientRpc(value);
     }
 
     [ClientRpc]
-    public void ResetCoinsClientRpc()
+    public void ResetCoinsClientRpc(int value)
     {
-        coinsStored = 0;
+        coinsStored = value;
     }
 
     public override void Update()

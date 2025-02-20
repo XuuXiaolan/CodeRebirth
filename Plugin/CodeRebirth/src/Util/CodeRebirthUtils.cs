@@ -1,15 +1,12 @@
-using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using Unity.Netcode;
 using UnityEngine;
-using CodeRebirth.src.Content;
-using CodeRebirth.src.Content.Unlockables;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Maps;
 using UnityEngine.AI;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Rendering;
+using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -182,57 +179,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestLoadSaveDataServerRPC(int playerID)
+    public static void SaveCodeRebirthData()
     {
-        ulong steamID = StartOfRound.Instance.allPlayerScripts[playerID].playerSteamId;
-        if (!CodeRebirthSave.Current.PlayerData.ContainsKey(steamID)) { CodeRebirthSave.Current.PlayerData[steamID] = new(); CodeRebirthSave.Current.Save();}
-        SetSaveDataClientRPC(playerID, JsonConvert.SerializeObject(CodeRebirthSave.Current));
-    }
-
-    [ClientRpc]
-    private void SetSaveDataClientRPC(int playerID, string saveData)
-    {
-        Plugin.ExtendedLogging("Received save data from host!");
-
-        if (!IsHost && !IsServer)
-        {
-            CodeRebirthSave.Current = JsonConvert.DeserializeObject<CodeRebirthSave>(saveData, new JsonSerializerSettings{ContractResolver = new IncludePrivateSetterContractResolver()})!;
-        }
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        if (IsHost || IsServer)
-        {
-            CodeRebirthSave.Current = PersistentDataHandler.Load<CodeRebirthSave>($"CRSave{GameNetworkManager.Instance.saveFileNum}");
-        }
-        Plugin.ExtendedLogging($"Attempting to get save data over RPC!");
-        Plugin.ExtendedLogging($"LocalClientId: {NetworkManager.Singleton.LocalClientId}");
-        Plugin.ExtendedLogging($"StartOfRound.Instance.ClientPlayerList: {{{string.Join(", ",StartOfRound.Instance.ClientPlayerList)}}}");
-
-        if (!StartOfRound.Instance.ClientPlayerList.ContainsKey(NetworkManager.Singleton.LocalClientId))
-        {
-            StartCoroutine(DelayLoadRequestRPC());
-            return;
-        }
-        
-        Plugin.ExtendedLogging("ClientPlayerList already contained the local client id, hooray :3");
-        RequestLoadSaveDataServerRPC(StartOfRound.Instance.ClientPlayerList[NetworkManager.Singleton.LocalClientId]);
-    }
-
-    IEnumerator DelayLoadRequestRPC()
-    {
-        Plugin.Logger.LogInfo("ClientPlayerList did not contain LocalClientId, delaying save data request!");
-        
-        yield return new WaitUntil(() => StartOfRound.Instance.ClientPlayerList.ContainsKey(NetworkManager.Singleton.LocalClientId)); // ensure some of it has been populated ig?
-        RequestLoadSaveDataServerRPC(StartOfRound.Instance.ClientPlayerList[NetworkManager.Singleton.LocalClientId]);
-    }
-
-    private void OnDisable()
-    {
-        CodeRebirthSave.Current = null!;
-        PlantPot.totalSpawnedPlantPots = 0;
+        if (!NetworkManager.Singleton.IsHost) return;
+        PiggyBank.Instance?.SaveCurrentCoins();
+		foreach (var plantpot in PlantPot.Instances)
+		{
+			plantpot.SavePlantData();
+		}
     }
 
     [ServerRpc(RequireOwnership = false)]

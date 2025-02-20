@@ -14,7 +14,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public NetworkAnimator piggyBankNetworkAnimator = null!;
 
     [HideInInspector] public bool broken = false;
-    private int coinsStored = 0; // Somehow save and load this, lol.
+    private int coinsStored = 0;
     private static readonly int BreakAnimation = Animator.StringToHash("borked"); // Bool
     private static readonly int InsertCoinAnimation = Animator.StringToHash("insertCoin"); // Trigger
 
@@ -23,8 +23,9 @@ public class PiggyBank : NetworkBehaviour, IHittable
     {
         base.OnNetworkSpawn();
         Instance = this;
-        int coinsStored = ES3.Load("coinsStoredCR", GameNetworkManager.Instance.currentSaveFileName, -1);
-        if (coinsStored != -1) this.coinsStored = coinsStored;
+        if (!IsServer) return;
+        int _coinsStored = ES3.Load("coinsStoredCR", GameNetworkManager.Instance.currentSaveFileName, 0);
+        AddCoinsToPiggyBank(_coinsStored);
     }
 
     public override void OnNetworkDespawn()

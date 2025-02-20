@@ -198,7 +198,7 @@ public class Merchant : NetworkBehaviour
     {
         if (playerWhoInteracted == null || playerWhoInteracted != GameNetworkManager.Instance.localPlayerController || playerWhoInteracted.currentlyHeldObjectServer == null || playerWhoInteracted.currentlyHeldObjectServer is not Wallet wallet) return;
         if (wallet.coinsStored <= 0) return;
-        wallet.ResetCoinsServerRpc();
+        wallet.ResetCoinsServerRpc(0);
         IncreaseCoinsServerRpc(wallet.coinsStored);
     }
 

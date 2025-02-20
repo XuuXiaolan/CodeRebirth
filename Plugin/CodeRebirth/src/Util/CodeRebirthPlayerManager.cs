@@ -52,8 +52,6 @@ public class CRPlayerData
     public bool pseudoDead = false;
     public Hoverboard? hoverboardRiding;
     public List<Collider> playerColliders = new();
-
-    internal CodeRebirthLocalSave persistentData => CodeRebirthSave.Current.PlayerData[CodeRebirthPlayerManager.dataForPlayer.FirstOrDefault(it => it.Value == this).Key.playerSteamId];
 }
 
 internal static class PlayerControllerBExtensions

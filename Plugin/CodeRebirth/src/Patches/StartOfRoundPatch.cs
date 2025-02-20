@@ -1,11 +1,8 @@
-﻿using CodeRebirth.src.Content;
-using CodeRebirth.src.Content.Weathers;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using CodeRebirth.src.Util;
-using WeatherRegistry;
 using CodeRebirth.src.Util.Extensions;
 using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
@@ -28,8 +25,7 @@ static class StartOfRoundPatch
 	[HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
 	static void SaveCodeRebirthData()
 	{
-		PiggyBank.Instance?.SaveCurrentCoins();
-		if (CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
+		CodeRebirthUtils.SaveCodeRebirthData();
 	}
 	
 	private static void CreateNetworkManager()
@@ -118,12 +114,5 @@ static class StartOfRoundPatch
 			Plugin.ExtendedLogging("Changing layer of " + gameObject.name + "To layer MapHazards (21)");
 			gameObject.layer = 21;
 		}
-	}
-
-	[HarmonyPatch(nameof(StartOfRound.ResetShip)), HarmonyPostfix]
-	static void ResetSave()
-	{
-		CodeRebirthSave.Current = new CodeRebirthSave(CodeRebirthSave.Current.FileName);
-		if(CodeRebirthUtils.Instance.IsHost || CodeRebirthUtils.Instance.IsServer) CodeRebirthSave.Current.Save();
 	}
 }
