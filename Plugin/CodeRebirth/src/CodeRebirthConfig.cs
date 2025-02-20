@@ -129,6 +129,10 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigMeteorsDefaultVolume { get; private set; }
     #endregion
     #region Misc
+    public ConfigEntry<float> ConfigTerminalScanFrequency { get; private set; }
+    public ConfigEntry<float> ConfigTerminalScanRange { get; private set; }
+    public ConfigEntry<float> ConfigSeamineScanFrequency { get; private set; }
+    public ConfigEntry<float> ConfigSeamineScanRange { get; private set; }
     public ConfigEntry<int> ConfigPiggyBankCost { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapsPopTires { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerSeesScanEffects { get; private set; }
@@ -246,7 +250,7 @@ public class CodeRebirthConfig
         ConfigOxydeEnabled = configFile.Bind("??? Options",
                                             "??? | Enabled",
                                             true,
-                                            "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\n This includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
+                                            "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
         #endregion
         #region Merchant
         ConfigMerchantEnabled = configFile.Bind("Merchant Options",
@@ -645,6 +649,14 @@ public class CodeRebirthConfig
                                             "Seamine Gal | Only Owner Sees Scan Effects",
                                             false,
                                             "Whether only the owner of the Seamine Gal can see the scan effects.");
+        ConfigSeamineScanRange = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Scan Range",
+                                            50f,
+                                            "Range of the Seamine Gal's scan.");
+        ConfigSeamineScanFrequency = configFile.Bind("Seamine Options",
+                                            "Seamine Gal | Scan Frequency",
+                                            17.5f,
+                                            "The average Frequency time of the Seamine Gal's scan in seconds.");
         ConfigSeamineTinkPlayerModelEnabled = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Player Model",
                                             true,
@@ -667,6 +679,14 @@ public class CodeRebirthConfig
                                             "Terminal Gal | Only Owner Sees Scan Effects",
                                             false,
                                             "Whether only the owner of the Terminal Gal can see the scan effects.");
+        ConfigTerminalScanRange = configFile.Bind("Terminal Options",
+                                            "Terminal Gal | Scan Range",
+                                            50f,
+                                            "Range of the Terminal Gal's scan.");
+        ConfigTerminalScanFrequency = configFile.Bind("Terminal Options",
+                                            "Terminal Gal | Scan Frequency",
+                                            17.5f,
+                                            "The average Frequency time of the Terminal Gal's scan in seconds.");
         ConfigTerminalBotFlyingVolume = configFile.Bind("Terminal Options",
                                             "Terminal Gal | Flying Volume",
                                             0.75f,

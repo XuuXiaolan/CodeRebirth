@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -31,12 +33,11 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 
     
     // point to new data structure because i do not feel like changing it
-    public FruitType fruitType = FruitType.None;
-    public Stage stage = Stage.Zero;
+    public NetworkVariable<int> fruitType = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> stage = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     
     
     [NonSerialized] public bool grewThisOrbit = true;
-    private System.Random random = new System.Random();
 
     [NonSerialized] public static List<PlantPot> Instances = new();
 
@@ -44,14 +45,19 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     {
         base.OnNetworkSpawn();
         Instances.Add(this);
+        if (!IsServer) return;
         LoadPlantData();
     }
 
     public void Start()
     {
-        random = new System.Random(StartOfRound.Instance.randomMapSeed);
-        if (stage != Stage.Zero) enableList[(int)stage].SetActive(true);
-        if (stage == Stage.Zero) 
+        if ((Stage)stage.Value != Stage.Zero)
+        {
+            StartCoroutine(GrowthRoutine());
+            enableList[stage.Value].SetActive(true);
+            return;
+        }
+        if ((Stage)stage.Value == Stage.Zero) 
         {
             trigger.onInteract.AddListener(OnInteract);
         }
@@ -59,32 +65,15 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 
     public void SavePlantData()
     {
-        if (!IsHost) return;
-        ES3.Save<int>(this.gameObject.name + "Stage", (int)stage, GameNetworkManager.Instance.currentSaveFileName);
-        ES3.Save<int>(this.gameObject.name + "FruitType", (int)fruitType, GameNetworkManager.Instance.currentSaveFileName);
+        ES3.Save<int>(this.gameObject.name + "Stage", stage.Value, GameNetworkManager.Instance.currentSaveFileName);
+        ES3.Save<int>(this.gameObject.name + "FruitType", fruitType.Value, GameNetworkManager.Instance.currentSaveFileName);
     }
 
     public void LoadPlantData()
     {
-        if (!IsHost) return;
-        stage = (Stage)ES3.Load<int>(this.gameObject.name + "Stage", GameNetworkManager.Instance.currentSaveFileName, 0);
-        fruitType = (FruitType)ES3.Load<int>(this.gameObject.name + "FruitType", GameNetworkManager.Instance.currentSaveFileName, 0);
-        SyncPlantDataServerRpc((int)stage, (int)fruitType);
+        stage.Value = ES3.Load<int>(this.gameObject.name + "Stage", GameNetworkManager.Instance.currentSaveFileName, 0);
+        fruitType.Value = ES3.Load<int>(this.gameObject.name + "FruitType", GameNetworkManager.Instance.currentSaveFileName, 0);
         Plugin.ExtendedLogging($"Loaded stage {stage} and fruit type {fruitType}");
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void SyncPlantDataServerRpc(int _stage, int _fruitType)
-    {
-        SyncPlantDataClientRpc(_stage, _fruitType);
-    }
-
-    [ClientRpc]
-    private void SyncPlantDataClientRpc(int _stage, int _fruitType)
-    {
-        stage = (Stage)_stage;
-        fruitType = (FruitType)_fruitType;
-        Plugin.ExtendedLogging($"Synced stage {stage} and fruit type {fruitType}");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -99,7 +88,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     private void SetupFruitTypeClientRpc(NetworkObjectReference netObjRef)
     {
         WoodenSeed woodenSeed = ((GameObject)netObjRef).GetComponent<WoodenSeed>();
-        fruitType = woodenSeed.fruitType;
+        fruitType.Value = (int)woodenSeed.fruitType;
         Plugin.ExtendedLogging($"Setting up fruit type {fruitType}");
         woodenSeed.playerHeldBy.DespawnHeldObject();
     }
@@ -115,16 +104,17 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 
     private IEnumerator GrowthRoutine() 
     {
+        trigger.enabled = false;
         while (true)
         {
-            yield return new WaitUntil(() => StartOfRound.Instance.inShipPhase && !grewThisOrbit && RoundManager.Instance.currentLevel.levelID != 3);
-            if (stage < Stage.Three)
+            yield return new WaitUntil(() => StartOfRound.Instance.inShipPhase && !grewThisOrbit && RoundManager.Instance.currentLevel.spawnEnemiesAndScrap);
+            if ((Stage)stage.Value < Stage.Three)
             {
                 IncreaseStageServerRpc();
             }
             else
             {
-                switch (fruitType) 
+                switch ((FruitType)fruitType.Value) 
                 {
                     case FruitType.Tomato:
                         ProduceFruitServerRpc((int)FruitType.Tomato);
@@ -142,21 +132,24 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     [ServerRpc(RequireOwnership = false)]
     private void ProduceFruitServerRpc(int fruitType)
     {
-        string itemToSpawn = "";
+        Item? itemToSpawn = null;
         switch (fruitType)
         {
             case (int)FruitType.Tomato:
-                itemToSpawn = "Tomato";
+                itemToSpawn = UnlockableHandler.Instance.PlantPot.Tomato;
                 break;
             case (int)FruitType.Golden_Tomato:
-                itemToSpawn = "Golden Tomato";
+                itemToSpawn = UnlockableHandler.Instance.PlantPot.GoldenTomato;
                 break;
         }
-        Plugin.samplePrefabs.TryGetValue(itemToSpawn, out Item item);
+        if (itemToSpawn == null)
+        {
+            Plugin.Logger.LogError($"Couldn't find fruit of type {fruitType}!");
+            return;
+        }
         foreach (var itemSpawnSpot in ItemSpawnSpots)
         {
-            NetworkObjectReference spawnedItem = CodeRebirthUtils.Instance.SpawnScrap(item, itemSpawnSpot.position, false, true, 0);
-            ((GameObject)spawnedItem).GetComponent<Fruit>().plantPot = this;
+            CodeRebirthUtils.Instance.SpawnScrap(itemToSpawn, itemSpawnSpot.position, false, true, 0);
         }
     }
 
@@ -169,11 +162,11 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     [ClientRpc]
     private void IncreaseStageClientRpc()
     {
-        Plugin.ExtendedLogging($"Increasing stage from {(int)stage} to {(int)stage + 1}");
-        if (stage == Stage.Zero) trigger.onInteract.RemoveListener(OnInteract);
-        enableList[(int)stage].SetActive(false);
-        stage++;
-        enableList[(int)stage].SetActive(true);
+        Plugin.ExtendedLogging($"Increasing stage from {stage.Value} to {stage.Value + 1}");
+        if ((Stage)stage.Value == Stage.Zero) trigger.onInteract.RemoveListener(OnInteract);
+        enableList[stage.Value].SetActive(false);
+        stage.Value++;
+        enableList[stage.Value].SetActive(true);
     }
 
     public override void OnNetworkDespawn() 

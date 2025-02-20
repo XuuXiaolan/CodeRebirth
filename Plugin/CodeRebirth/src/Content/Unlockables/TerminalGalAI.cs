@@ -491,7 +491,7 @@ public class TerminalGalAI : GalAI
         if (scrapRevealTimer <= 0)
         {
             NetworkAnimator.SetTrigger(revealScrapAnimation);
-            scrapRevealTimer = UnityEngine.Random.Range(12.5f, 17.5f);
+            scrapRevealTimer = UnityEngine.Random.Range(Plugin.ModConfig.ConfigTerminalScanFrequency.Value - 5, Plugin.ModConfig.ConfigTerminalScanFrequency.Value + 5);
         }
     }
 
@@ -698,14 +698,14 @@ public class TerminalGalAI : GalAI
         {
             float percentLifetime = particleSystem.time / particleSystem.main.startLifetime.constant;
             customPass.maxVisibilityDistance =  particleSystem.sizeOverLifetime.size.Evaluate(percentLifetime) * 300; // takes some odd seconds
-            return customPass.maxVisibilityDistance < 50;
+            return customPass.maxVisibilityDistance < Plugin.ModConfig.ConfigTerminalScanRange.Value;
         });
 
         yield return new WaitForSeconds(5);
 
         yield return new WaitWhile(() =>
         {
-            customPass.maxVisibilityDistance -= Time.deltaTime * 50 / 3f; // takes 3s
+            customPass.maxVisibilityDistance -= Time.deltaTime * Plugin.ModConfig.ConfigTerminalScanRange.Value / 3f; // takes 3s
             return customPass.maxVisibilityDistance > 0f;
         });
         CustomPassManager.Instance.RemoveCustomPass(customPassType);

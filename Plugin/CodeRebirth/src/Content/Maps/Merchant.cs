@@ -197,9 +197,9 @@ public class Merchant : NetworkBehaviour
     public void TryDepositCoinsOntoBarrel(PlayerControllerB playerWhoInteracted)
     {
         if (playerWhoInteracted == null || playerWhoInteracted != GameNetworkManager.Instance.localPlayerController || playerWhoInteracted.currentlyHeldObjectServer == null || playerWhoInteracted.currentlyHeldObjectServer is not Wallet wallet) return;
-        if (wallet.coinsStored <= 0) return;
+        if (wallet.coinsStored.Value <= 0) return;
         wallet.ResetCoinsServerRpc(0);
-        IncreaseCoinsServerRpc(wallet.coinsStored);
+        IncreaseCoinsServerRpc(wallet.coinsStored.Value);
     }
 
     [ServerRpc(RequireOwnership = false)]

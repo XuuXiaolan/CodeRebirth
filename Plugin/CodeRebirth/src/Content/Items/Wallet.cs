@@ -7,7 +7,7 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class Wallet : GrabbableObject
 {
-    [HideInInspector] public int coinsStored = 0;
+    [HideInInspector] public NetworkVariable<int> coinsStored = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public AudioSource audioPlayer = null!;
     public ScanNodeProperties scanNode = null!;
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
@@ -15,19 +15,18 @@ public class Wallet : GrabbableObject
 	public override int GetItemDataToSave()
 	{
 		base.GetItemDataToSave();
-		return coinsStored;
+		return coinsStored.Value;
 	}
 
 	public override void LoadItemSaveData(int saveData)
 	{
 		base.LoadItemSaveData(saveData);
-		coinsStored = saveData;
-        ResetCoinsServerRpc(coinsStored);
+		coinsStored.Value = saveData;
 	}
 
     private void UpdateWalletSize()
     {
-        skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(coinsStored * 20f, 0, 300));
+        skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(coinsStored.Value * 20f, 0, 300));
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
@@ -44,29 +43,23 @@ public class Wallet : GrabbableObject
             if (coin != null)
             {
                 audioPlayer.Play();
-                coinsStored += coin.value;
-                scanNode.subText = $"Coins Stored: {coinsStored}";
+                if (IsServer) coinsStored.Value += coin.value;
+                scanNode.subText = $"Coins Stored: {coinsStored.Value}";
                 if (IsServer) coin.NetworkObject.Despawn();
                 return;
             }
-            else
+            else if (IsServer)
             {
-                int coins = piggyBank.AddCoinsToPiggyBank(coinsStored);
-                coinsStored -= coins;
+                int coins = piggyBank.AddCoinsToPiggyBank(coinsStored.Value);
+                coinsStored.Value -= coins;
             }
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ResetCoinsServerRpc(int value)
+    public void ResetCoinsServerRpc(int amount)
     {
-        ResetCoinsClientRpc(value);
-    }
-
-    [ClientRpc]
-    public void ResetCoinsClientRpc(int value)
-    {
-        coinsStored = value;
+        coinsStored.Value = amount;
     }
 
     public override void Update()

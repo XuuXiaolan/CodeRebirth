@@ -14,7 +14,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public NetworkAnimator piggyBankNetworkAnimator = null!;
 
     [HideInInspector] public bool broken = false;
-    private int coinsStored = 0;
+    private NetworkVariable<int> coinsStored = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private static readonly int BreakAnimation = Animator.StringToHash("borked"); // Bool
     private static readonly int InsertCoinAnimation = Animator.StringToHash("insertCoin"); // Trigger
 
@@ -51,19 +51,19 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public int AddCoinsToPiggyBank(int amount)
     {
         if (broken) return 0;
-        coinsStored += amount;
         if (IsServer)
         {
+            coinsStored.Value += amount;
             piggyBankNetworkAnimator.SetTrigger(InsertCoinAnimation);
+            if (StartOfRound.Instance.inShipPhase) SaveCurrentCoins();
         }
-        if (StartOfRound.Instance.inShipPhase) SaveCurrentCoins();
         return amount;
     }
 
     public void SaveCurrentCoins()
     {
         if (!IsHost) return;
-        ES3.Save<int>("coinsStoredCR", coinsStored, GameNetworkManager.Instance.currentSaveFileName);
+        ES3.Save<int>("coinsStoredCR", coinsStored.Value, GameNetworkManager.Instance.currentSaveFileName);
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -91,12 +91,12 @@ public class PiggyBank : NetworkBehaviour, IHittable
     {
         if (IsServer)
         {
-            for (int i = 0; i < coinsStored; i++)
+            for (int i = 0; i < coinsStored.Value; i++)
             {
                 var coin = GameObject.Instantiate(MapObjectHandler.Instance.Money.MoneyPrefab, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
                 coin.GetComponent<NetworkObject>().Spawn(true);
             }
+            coinsStored.Value = 0;
         }
-        coinsStored = 0;
     }
 }
