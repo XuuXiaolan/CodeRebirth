@@ -7,13 +7,19 @@ using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
 public class Merchant : NetworkBehaviour
 {
+    public Animator merchantAnimator = null!;
+    public NetworkAnimator networkAnimator = null!;
     public Transform[] turretBones = [];
+    public Transform SpotLightLeftRight = null!;
+    public Transform SpotLightUpDown = null!;
     public MerchantBarrel[] merchantBarrels = [];
+    public InteractTrigger walletTrigger = null!;
 
     private Dictionary<GrabbableObject, int> itemsSpawned = new();
     private List<PlayerControllerB> targetPlayers = new();
@@ -21,11 +27,16 @@ public class Merchant : NetworkBehaviour
     private int currentCoinsStored = 0;
     public GameObject[] coinObjects = [];
     private bool canTarget = true;
+    private NetworkVariable<bool> isActive = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private static readonly int TakeCoinsAnimation = Animator.StringToHash("takeCoins"); // Trigger
+    private static readonly int Activated = Animator.StringToHash("activated"); // Bool
 
     public void Start()
     {
+        DisableOrEnableCoinObjects();
         localDamageCooldownPerTurret.Add(turretBones[0], 0.2f);
         localDamageCooldownPerTurret.Add(turretBones[1], 0.2f);
+        walletTrigger.onInteract.AddListener(TryDepositCoinsOntoBarrel);
         if (!IsServer) return;
         PopulateItemsWithRarityList();
         HandleSpawningMerchantItems();
@@ -33,6 +44,29 @@ public class Merchant : NetworkBehaviour
 
     public void Update()
     {
+        if (IsServer)
+        {
+            bool playerNearby = false;
+            foreach (var player in StartOfRound.Instance.allPlayerScripts)
+            {
+                if (!player.isPlayerControlled || player.isPlayerDead) continue;
+                float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+                if (distanceToPlayer > 20f) continue;
+                playerNearby = true;
+                break;
+            }
+            if (!playerNearby && isActive.Value && targetPlayers.Count <= 0)
+            {
+                isActive.Value = false;
+                merchantAnimator.SetBool(Activated, false);
+            }
+            else if (playerNearby && !isActive.Value)
+            {
+                merchantAnimator.SetBool(Activated, true);
+                isActive.Value = true;
+            }
+        }
+        walletTrigger.interactable = GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Wallet";
         foreach (KeyValuePair<GrabbableObject, int> item in itemsSpawned.ToArray())
         {
             if (item.Value == -1) continue;
@@ -53,19 +87,19 @@ public class Merchant : NetworkBehaviour
 
     private bool EnoughMoneySlotted(int itemCost)
     {
+        StartCoroutine(StealAllCoins());
         if (itemCost <= currentCoinsStored)
         {
-            StealAllCoins();
             return true;
         }
-        StealAllCoins();
         return false;
     }
 
     private IEnumerator StealAllCoins()
     {
         canTarget = false;
-        yield return new WaitForSeconds(1.5f); // wait for animation to end.
+        if (IsServer) networkAnimator.SetTrigger(TakeCoinsAnimation);
+        yield return new WaitForSeconds(9f); // wait for animation to end.
         canTarget = true;
         currentCoinsStored = 0;
         DisableOrEnableCoinObjects();
@@ -85,7 +119,7 @@ public class Merchant : NetworkBehaviour
             localDamageCooldownPerTurret[turret] -= Time.deltaTime;
             Vector3 normalizedDirection = (currentTargetPlayer.gameplayCamera.transform.position - turret.position).normalized;
             float dotProduct = Vector3.Dot(turret.forward, normalizedDirection);
-            Plugin.ExtendedLogging($"Dot product: {dotProduct}");
+            // Plugin.ExtendedLogging($"Dot product: {dotProduct}");
             if (dotProduct > 0.9f)
             {
                 // Fire at player and deal damage.
@@ -186,7 +220,9 @@ public class Merchant : NetworkBehaviour
             // Spawn the selected item.
             GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(selectedItem, spawnPosition, false, true, 0);
             GrabbableObject grabbableObject = itemGO.GetComponent<GrabbableObject>();
+            // Sync from here:
             itemsSpawned.Add(grabbableObject, _price);
+            barrel.textMeshPro.text = _price.ToString();
             ForceScanColorOnItem forceScanColorOnItem = itemGO.AddComponent<ForceScanColorOnItem>();
             forceScanColorOnItem.grabbableObject = grabbableObject;
             forceScanColorOnItem.borderColor = _borderColor;
@@ -194,12 +230,13 @@ public class Merchant : NetworkBehaviour
         }
     }
 
-    public void TryDepositCoinsOntoBarrel(PlayerControllerB playerWhoInteracted)
+    public void TryDepositCoinsOntoBarrel(PlayerControllerB? playerWhoInteracted)
     {
+        Plugin.ExtendedLogging("player interacted: " + playerWhoInteracted);
         if (playerWhoInteracted == null || playerWhoInteracted != GameNetworkManager.Instance.localPlayerController || playerWhoInteracted.currentlyHeldObjectServer == null || playerWhoInteracted.currentlyHeldObjectServer is not Wallet wallet) return;
         if (wallet.coinsStored.Value <= 0) return;
-        wallet.ResetCoinsServerRpc(0);
         IncreaseCoinsServerRpc(wallet.coinsStored.Value);
+        wallet.ResetCoinsServerRpc(0);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -225,7 +262,7 @@ public class Merchant : NetworkBehaviour
 
         int objectsToEnable = Mathf.Clamp(currentCoinsStored / 4, 0, coinObjects.Length - 1);
 
-        for (int i = 0; i < objectsToEnable; i++)
+        for (int i = 0; i <= objectsToEnable; i++)
         {
             coinObjects[i].SetActive(true);
         }

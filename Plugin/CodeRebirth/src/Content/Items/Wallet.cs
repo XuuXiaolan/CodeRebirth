@@ -65,7 +65,7 @@ public class Wallet : GrabbableObject
     public override void Update()
     {
         base.Update();
-        scanNode.subText = $"Coins Stored: {coinsStored}";
+        scanNode.subText = $"Coins Stored: {coinsStored.Value}";
         UpdateWalletSize();
     }
 }

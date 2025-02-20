@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12824701, g: 0.085635744, b: 0.078504935, a: 1}
+  m_IndirectSpecularColor: {r: 0.12768528, g: 0.08521553, b: 0.07816542, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3759,15 +3759,20 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 62988357
       objectReference: {fileID: 0}
-    - target: {fileID: 8251236643819212371, guid: 6eb5ab5d093a97c41a6eddf1b2db5b47,
+    - target: {fileID: 5965850333504775708, guid: 6eb5ab5d093a97c41a6eddf1b2db5b47,
         type: 3}
-      propertyPath: m_Radius
-      value: 0.32
+      propertyPath: parameters.textureOffset.x
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8251236643819212371, guid: 6eb5ab5d093a97c41a6eddf1b2db5b47,
+    - target: {fileID: 5965850333504775708, guid: 6eb5ab5d093a97c41a6eddf1b2db5b47,
         type: 3}
-      propertyPath: m_ExcludeLayers.m_Bits
-      value: 4294967295
+      propertyPath: parameters.textureOffset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5965850333504775708, guid: 6eb5ab5d093a97c41a6eddf1b2db5b47,
+        type: 3}
+      propertyPath: parameters.textureOffset.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4873,6 +4878,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f469f9dc199594a41b1caff572c8f462,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7091,10 +7101,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -82358763968010616, guid: d50c7b7d4dabd2c42a9f0b83320cacf7,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d50c7b7d4dabd2c42a9f0b83320cacf7,
         type: 3}
       propertyPath: m_Name
       value: JimothyCabinNWindows
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d50c7b7d4dabd2c42a9f0b83320cacf7,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5845375464428368027, guid: d50c7b7d4dabd2c42a9f0b83320cacf7,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8234,6 +8259,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Gravel
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8b93a899eeb3c1c47b3eb044968d41d3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
