@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
@@ -18,6 +19,8 @@ public class Merchant : NetworkBehaviour
     private List<PlayerControllerB> targetPlayers = new();
     private Dictionary<Transform, float> localDamageCooldownPerTurret = new();
     private int currentCoinsStored = 0;
+    public GameObject[] coinObjects = [];
+    private bool canTarget = true;
 
     public void Start()
     {
@@ -50,11 +53,27 @@ public class Merchant : NetworkBehaviour
 
     private bool EnoughMoneySlotted(int itemCost)
     {
+        if (itemCost <= currentCoinsStored)
+        {
+            StealAllCoins();
+            return true;
+        }
+        StealAllCoins();
         return false;
+    }
+
+    private IEnumerator StealAllCoins()
+    {
+        canTarget = false;
+        yield return new WaitForSeconds(1.5f); // wait for animation to end.
+        canTarget = true;
+        currentCoinsStored = 0;
+        DisableOrEnableCoinObjects();
     }
 
     private void EliminateTargetPlayers()
     {
+        if (!canTarget) return;
         var currentTargetPlayer = targetPlayers[0];
         if (currentTargetPlayer.isPlayerDead || !currentTargetPlayer.isPlayerControlled)
         {
@@ -79,7 +98,6 @@ public class Merchant : NetworkBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);
             turret.rotation = Quaternion.Lerp(turret.rotation, targetRotation, 2f * Time.deltaTime);
         }
-        // position turrets towards player, and blast the fuck out of the player.
     }
 
     public void PopulateItemsWithRarityList()
@@ -134,10 +152,10 @@ public class Merchant : NetworkBehaviour
             // Compute cumulative weights.
             float cumulativeWeight = 0;
             var cumulativeList = new List<(Item item, float cumulativeWeight, int price, Color borderColor, Color textColor)>(validItems.Count);
-            foreach (var itemsWithRarityAndColor in validItems)
+            foreach (var (item, rarity, price, borderColor, textColor) in validItems)
             {
-                cumulativeWeight += itemsWithRarityAndColor.rarity;
-                cumulativeList.Add((itemsWithRarityAndColor.item, cumulativeWeight, itemsWithRarityAndColor.price, itemsWithRarityAndColor.borderColor, itemsWithRarityAndColor.textColor));
+                cumulativeWeight += rarity;
+                cumulativeList.Add((item, cumulativeWeight, price, borderColor, textColor));
             }
 
             // Get a random value in the range [0, cumulativeWeight).
@@ -180,7 +198,7 @@ public class Merchant : NetworkBehaviour
     {
         if (playerWhoInteracted == null || playerWhoInteracted != GameNetworkManager.Instance.localPlayerController || playerWhoInteracted.currentlyHeldObjectServer == null || playerWhoInteracted.currentlyHeldObjectServer is not Wallet wallet) return;
         if (wallet.coinsStored <= 0) return;
-
+        wallet.ResetCoinsServerRpc();
         IncreaseCoinsServerRpc(wallet.coinsStored);
     }
 
@@ -194,5 +212,22 @@ public class Merchant : NetworkBehaviour
     public void IncreaseCoinsClientRpc(int coinIncrease)
     {
         currentCoinsStored += coinIncrease;
+        DisableOrEnableCoinObjects();
+    }
+    
+    public void DisableOrEnableCoinObjects()
+    {
+        foreach (GameObject coinObject in coinObjects)
+        {
+            coinObject.SetActive(false);
+        }
+        if (currentCoinsStored <= 0) return;
+
+        int objectsToEnable = Mathf.Clamp(currentCoinsStored / 4, 0, coinObjects.Length - 1);
+
+        for (int i = 0; i < objectsToEnable; i++)
+        {
+            coinObjects[i].SetActive(true);
+        }
     }
 }

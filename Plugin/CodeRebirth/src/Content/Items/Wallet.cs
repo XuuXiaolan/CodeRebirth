@@ -1,6 +1,7 @@
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -53,6 +54,18 @@ public class Wallet : GrabbableObject
                 coinsStored -= coins;
             }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ResetCoinsServerRpc()
+    {
+        ResetCoinsClientRpc();
+    }
+
+    [ClientRpc]
+    public void ResetCoinsClientRpc()
+    {
+        coinsStored = 0;
     }
 
     public override void Update()
