@@ -80,7 +80,10 @@ public class Merchant : NetworkBehaviour
                 targetPlayers.Add(item.Key.playerHeldBy);
             }
         }
+    }
 
+    public void LateUpdate()
+    {
         if (targetPlayers.Count <= 0) return;
         EliminateTargetPlayers();
     }
