@@ -1093,7 +1093,7 @@ public class CodeRebirthConfig
         #region Monarch+Cutiefly
         ConfigMonarchEnabled = configFile.Bind("Monarch Options",
                                             "Monarch Enemy | Enabled",
-                                            false,
+                                            true,
                                             "Enables/Disables the Monarch");
         ConfigCutieFlySpawnWeights = configFile.Bind("Monarch Options",
                                             "Cutiefly Enemy | Spawn Weights",

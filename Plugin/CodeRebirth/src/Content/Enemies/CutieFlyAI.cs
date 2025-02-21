@@ -11,10 +11,12 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     private System.Random cutieflyRandom = new();
     private static readonly int IsDeadAnimation = Animator.StringToHash("doDeath");
     private static List<CutieFlyAI> cutieflys = new();
+    private float oldSpeed = 0f;
 
     public override void Start()
     {
         base.Start();
+        oldSpeed = agent.speed;
         cutieflys.Add(this);
 
         // Random seed for variant material
@@ -48,6 +50,17 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     {
         base.KillEnemy(destroy);
         if (IsServer) creatureNetworkAnimator.SetTrigger(IsDeadAnimation);
+    }
+
+    public void LandCutieflyAnimEvent()
+    {
+        agent.velocity = Vector3.zero;
+        agent.speed = 0;
+    }
+
+    public void FlyCutieflyAnimEvent()
+    {
+        agent.speed = oldSpeed;
     }
 
     public void SpawnMonarchAnimEvent()
