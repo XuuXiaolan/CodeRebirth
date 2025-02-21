@@ -6,6 +6,7 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using LethalLib.Modules;
 using LethalLib.Extras;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
@@ -131,15 +132,25 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public AirControlUnitAssets AirControlUnit { get; private set; } = null!;
 	public FunctionalMicrowaveAssets FunctionalMicrowave { get; private set; } = null!;
 
+    private Dictionary<SpawnSyncedCRObject.CRObjectType, GameObject> prefabMapping = new();
 	public static List<GameObject> hazardPrefabs = new List<GameObject>();
 
     public MapObjectHandler()
 	{
 		if (Plugin.ModConfig.ConfigMerchantEnabled.Value)
+		{
 			Merchant = new MerchantAssets("merchantassets");
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.Merchant] = Merchant.MerchantPrefab;
+		}
 
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
+		{
 			Crate = new CrateAssets("crateassets");
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.MimicWoodenCrate] = Crate.MimicWoodenCratePrefab;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.WoodenCrate] = Crate.WoodenCratePrefab;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.MimicMetalCrate] = Crate.MimicMetalCratePrefab;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.MetalCrate] = Crate.MetalCratePrefab;
+		}
 
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value)
 			RegisterOutsideFlora();
@@ -156,6 +167,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
 		{
 			BearTrap = new BearTrapAssets("beartrapassets");
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.BearTrap] = BearTrap.GrassMatPrefab;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.BoomTrap] = BearTrap.BoomTrapPrefab;
 			hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);
 			if (Plugin.ModConfig.ConfigInsideBearTrapEnabled.Value) RegisterInsideBearTraps();
 		}
@@ -175,9 +188,16 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value)
 		{
 			AirControlUnit = new AirControlUnitAssets("aircontrolunitassets");
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.AirControlUnit] = AirControlUnit.AirControlUnitPrefab;
 			hazardPrefabs.Add(MapObjectHandler.Instance.AirControlUnit.AirControlUnitPrefab);
 		}
 	}
+
+    public GameObject GetPrefabFor(SpawnSyncedCRObject.CRObjectType objectType)
+    {
+        prefabMapping.TryGetValue(objectType, out var prefab);
+        return prefab;
+    }
 
 	public void RegisterInsideBearTraps()
 	{
@@ -187,6 +207,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public void RegisterFunctionalMicrowave()
 	{
 		FunctionalMicrowave = new FunctionalMicrowaveAssets("functionalmicrowaveassets");
+		prefabMapping[SpawnSyncedCRObject.CRObjectType.FunctionalMicrowave] = FunctionalMicrowave.FunctionalMicrowavePrefab;
 		RegisterScrapWithConfig("", FunctionalMicrowave.SporkItem, -1, -1);
 		RegisterScrapWithConfig("", FunctionalMicrowave.ForkItem, -1, -1);
 		RegisterScrapWithConfig("", FunctionalMicrowave.CharredBabyItem, -1, -1);
@@ -199,24 +220,28 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public void RegisterTeslaShock()
 	{
 		TeslaShock = new TeslaShockAssets("teslashockassets");
+		prefabMapping[SpawnSyncedCRObject.CRObjectType.BugZapper] = TeslaShock.TeslaShockPrefab;
 		RegisterInsideMapObjectWithConfig(TeslaShock.TeslaShockPrefab, Plugin.ModConfig.ConfigTeslaShockCurveSpawnWeight.Value);
 	}
 
 	public void RegisterFlashTurret()
 	{
 		FlashTurret = new FlashTurretAssets("flashturretassets");
+		prefabMapping[SpawnSyncedCRObject.CRObjectType.FlashTurret] = FlashTurret.FlashTurretPrefab;
 		RegisterInsideMapObjectWithConfig(FlashTurret.FlashTurretPrefab, Plugin.ModConfig.ConfigFlashTurretCurveSpawnWeight.Value);
 	}
 
 	public void RegisterIndustrialFan()
 	{
 		IndustrialFan = new IndustrialFanAssets("industrialfanassets");
+		prefabMapping[SpawnSyncedCRObject.CRObjectType.IndustrialFan] = IndustrialFan.IndustrialFanPrefab;
 		RegisterInsideMapObjectWithConfig(IndustrialFan.IndustrialFanPrefab, Plugin.ModConfig.ConfigIndustrialFanCurveSpawnWeight.Value);
 	}
 
 	public void RegisterLaserTurret()
 	{
 		GlowingGem = new GlowingGemAssets("glowinggemassets");
+		prefabMapping[SpawnSyncedCRObject.CRObjectType.LaserTurret] = GlowingGem.LaserTurretPrefab;
 		RegisterInsideMapObjectWithConfig(GlowingGem.LaserTurretPrefab, Plugin.ModConfig.ConfigLaserTurretCurveSpawnWeight.Value);
 	}
 

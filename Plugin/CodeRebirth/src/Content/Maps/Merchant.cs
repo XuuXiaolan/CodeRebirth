@@ -72,7 +72,7 @@ public class Merchant : NetworkBehaviour
             if (item.Value == -1) continue;
             if (item.Key.isHeld && item.Key.playerHeldBy != null && !targetPlayers.Contains(item.Key.playerHeldBy))
             {
-                if (EnoughMoneySlotted(item.Value))
+                if (EnoughMoneySlotted(item.Value, item.Key))
                 {
                     itemsSpawned[item.Key] = -1;
                     continue;
@@ -80,17 +80,14 @@ public class Merchant : NetworkBehaviour
                 targetPlayers.Add(item.Key.playerHeldBy);
             }
         }
-    }
-
-    public void LateUpdate()
-    {
+        
         if (targetPlayers.Count <= 0) return;
         EliminateTargetPlayers();
     }
 
-    private bool EnoughMoneySlotted(int itemCost)
+    private bool EnoughMoneySlotted(int itemCost, GrabbableObject itemTaken)
     {
-        StartCoroutine(StealAllCoins());
+        StartCoroutine(StealAllCoins(itemTaken));
         if (itemCost <= currentCoinsStored)
         {
             return true;
@@ -98,11 +95,21 @@ public class Merchant : NetworkBehaviour
         return false;
     }
 
-    private IEnumerator StealAllCoins()
+    private IEnumerator StealAllCoins(GrabbableObject itemTaken)
     {
         canTarget = false;
+        foreach (var items in itemsSpawned.ToArray())
+        {
+            if (items.Key == itemTaken) continue;
+            items.Key.grabbable = false;
+        }
         if (IsServer) networkAnimator.SetTrigger(TakeCoinsAnimation);
-        yield return new WaitForSeconds(9f); // wait for animation to end.
+        yield return new WaitForSeconds(10f); // wait for animation to end.
+        foreach (var items in itemsSpawned.ToArray())
+        {
+            if (items.Key == itemTaken) continue;
+            items.Key.grabbable = true;
+        }
         canTarget = true;
         currentCoinsStored = 0;
         DisableOrEnableCoinObjects();
@@ -133,7 +140,7 @@ public class Merchant : NetworkBehaviour
                 }
             }
             Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);
-            turret.rotation = Quaternion.Lerp(turret.rotation, targetRotation, 2f * Time.deltaTime);
+            turret.rotation = Quaternion.Lerp(turret.rotation, targetRotation, 0.5f * Time.deltaTime);
         }
     }
 
