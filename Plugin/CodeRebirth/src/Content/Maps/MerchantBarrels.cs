@@ -10,5 +10,5 @@ public class MerchantBarrel : MonoBehaviour
     public TextMeshPro textMeshPro = null!;
     public Transform barrelSpawnPoint = null!;
 
-    [HideInInspector] public List<(Item item, float rarity, int price, Color borderColor, Color textColor)> validItemsWithRarityAndColor = new();
+    [HideInInspector] public List<(Item? item, float rarity, int minPrice, int maxPrice, Color borderColor, Color textColor)> validItemsWithRarityAndColor = new();
 }

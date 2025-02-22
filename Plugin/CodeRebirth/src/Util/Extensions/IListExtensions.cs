@@ -6,7 +6,7 @@ public static class IListExtensions { // Taken from Smooth_P in https://discussi
 	/// <summary>
 	/// Shuffles the element order of the specified list.
 	/// </summary>
-	public static void Shuffle<T>(this IList<T> ts) {
+	public static IList<T> Shuffle<T>(this IList<T> ts) {
 		var count = ts.Count;
 		var last = count - 1;
 		for (var i = 0; i < last; ++i) {
@@ -15,5 +15,7 @@ public static class IListExtensions { // Taken from Smooth_P in https://discussi
 			ts[i] = ts[r];
 			ts[r] = tmp;
 		}
+
+		return ts;
 	}
 }

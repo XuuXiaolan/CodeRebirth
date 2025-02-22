@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,7 +81,7 @@ public class Merchant : NetworkBehaviour
                 targetPlayers.Add(item.Key.playerHeldBy);
             }
         }
-        
+
         if (targetPlayers.Count <= 0) return;
         EliminateTargetPlayers();
     }
@@ -157,22 +158,38 @@ public class Merchant : NetworkBehaviour
             {
                 string name = itemNamesWithRarityAndColor.itemName;
                 float rarity = itemNamesWithRarityAndColor.rarity;
-                int price = itemNamesWithRarityAndColor.price;
+                int minPrice = itemNamesWithRarityAndColor.minPrice;
+                int maxPrice = itemNamesWithRarityAndColor.maxPrice;
                 Color borderColor = itemNamesWithRarityAndColor.borderColor;
                 Color textColor = itemNamesWithRarityAndColor.textColor;
-
+                if (minPrice > maxPrice)
+                {
+                    Plugin.ExtendedLogging($"Rodrigo did a stinky with item: {name} min price: {minPrice} max price: {maxPrice}");
+                    minPrice = maxPrice;
+                }
                 string normalizedName = name.ToLowerInvariant().Trim();
-
+                if (normalizedName == "vanilla")
+                {
+                    Plugin.ExtendedLogging($"Merchant item: {name}");
+                    Plugin.ExtendedLogging($"Merchant item rarity: {rarity}");
+                    Plugin.ExtendedLogging($"Merchant item min price: {minPrice}");
+                    Plugin.ExtendedLogging($"Merchant item max price: {maxPrice}");
+                    Plugin.ExtendedLogging($"Merchant item border color: {borderColor}");
+                    Plugin.ExtendedLogging($"Merchant item text color: {textColor}");
+                    barrel.validItemsWithRarityAndColor.Add((null, rarity, minPrice, maxPrice, borderColor, textColor));
+                    return;
+                }
                 if (itemsByName.TryGetValue(normalizedName, out Item matchingItem))
                 {
                     Plugin.ExtendedLogging($"Merchant item: {name}");
                     Plugin.ExtendedLogging($"Merchant item rarity: {rarity}");
-                    Plugin.ExtendedLogging($"Merchant item price: {price}");
+                    Plugin.ExtendedLogging($"Merchant item price: {minPrice}");
+                    Plugin.ExtendedLogging($"Merchant item max price: {maxPrice}");
                     Plugin.ExtendedLogging($"Merchant item border color: {borderColor}");
                     Plugin.ExtendedLogging($"Merchant item text color: {textColor}");
                     Plugin.ExtendedLogging($"Comparable item: {matchingItem.itemName}\n");
 
-                    barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, price, borderColor, textColor));
+                    barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, minPrice, maxPrice, borderColor, textColor));
                 }
             }
         }
@@ -195,26 +212,26 @@ public class Merchant : NetworkBehaviour
 
             // Compute cumulative weights.
             float cumulativeWeight = 0;
-            var cumulativeList = new List<(Item item, float cumulativeWeight, int price, Color borderColor, Color textColor)>(validItems.Count);
-            foreach (var (item, rarity, price, borderColor, textColor) in validItems)
+            var cumulativeList = new List<(Item? item, float cumulativeWeight, int minPrice, int maxPrice, Color borderColor, Color textColor)>(validItems.Count);
+            foreach (var (item, rarity, minPrice, maxPrice, borderColor, textColor) in validItems)
             {
                 cumulativeWeight += rarity;
-                cumulativeList.Add((item, cumulativeWeight, price, borderColor, textColor));
+                cumulativeList.Add((item, cumulativeWeight, minPrice, maxPrice, borderColor, textColor));
             }
 
             // Get a random value in the range [0, cumulativeWeight).
-            float randomValue = Random.Range(0, cumulativeWeight);
+            float randomValue = UnityEngine.Random.Range(0, cumulativeWeight);
 
             Item? selectedItem = null;
             int _price = 0;
             Color _borderColor = Color.white;
             Color _textColor = Color.white;
-            foreach (var (item, cumWeight, price, borderColor, textColor) in cumulativeList)
+            foreach (var (item, cumWeight, minPrice, maxprice, borderColor, textColor) in cumulativeList)
             {
                 if (randomValue < cumWeight)
                 {
                     selectedItem = item;
-                    _price = price;
+                    _price = UnityEngine.Random.Range(minPrice, maxprice + 1);
                     _borderColor = borderColor;
                     _textColor = textColor;
                     break;
@@ -223,21 +240,35 @@ public class Merchant : NetworkBehaviour
 
             if (selectedItem == null)
             {
-                Plugin.ExtendedLogging("Item selection failed for barrel at " + spawnPosition);
-                continue;
+                Plugin.ExtendedLogging("Item selection failed for barrel at " + spawnPosition + "Assuming Random item");
+                selectedItem = StartOfRound.Instance.allItemsList.itemsList[UnityEngine.Random.Range(0, StartOfRound.Instance.allItemsList.itemsList.Count)];
             }
 
             // Spawn the selected item.
             GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(selectedItem, spawnPosition, false, true, 0);
             GrabbableObject grabbableObject = itemGO.GetComponent<GrabbableObject>();
-            // Sync from here:
-            itemsSpawned.Add(grabbableObject, _price);
-            barrel.textMeshPro.text = _price.ToString();
-            ForceScanColorOnItem forceScanColorOnItem = itemGO.AddComponent<ForceScanColorOnItem>();
-            forceScanColorOnItem.grabbableObject = grabbableObject;
-            forceScanColorOnItem.borderColor = _borderColor;
-            forceScanColorOnItem.textColor = _textColor;
+            SyncGrabbableObjectScanStuffServerRpc(new NetworkBehaviourReference(grabbableObject), Array.IndexOf(merchantBarrels, barrel), _price, _borderColor.r, _borderColor.g, _borderColor.b, _textColor.r, _textColor.g, _textColor.b);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncGrabbableObjectScanStuffServerRpc(NetworkBehaviourReference grabbableObject, int barrelRef, int price, float borderColorR, float borderColorG, float borderColorB, float textColorR, float textColorG, float textColorB)
+    {
+        SyncGrabbableObjectScanStuffClientRpc(grabbableObject, barrelRef, price, borderColorR, borderColorG, borderColorB, textColorR, textColorG, textColorB);
+    }
+
+    [ClientRpc]
+    public void SyncGrabbableObjectScanStuffClientRpc(NetworkBehaviourReference grabbableObjectRef, int barrelRef, int price, float borderColorR, float borderColorG, float borderColorB, float textColorR, float textColorG, float textColorB)
+    {
+        GrabbableObject grabbableObject = (GrabbableObject)grabbableObjectRef;
+        grabbableObject.grabbable = true;
+        itemsSpawned.Add(grabbableObject, price);
+        MerchantBarrel barrel = merchantBarrels[barrelRef];
+        barrel.textMeshPro.text = price.ToString();
+        ForceScanColorOnItem forceScanColorOnItem = grabbableObject.gameObject.AddComponent<ForceScanColorOnItem>();
+        forceScanColorOnItem.grabbableObject = grabbableObject;
+        forceScanColorOnItem.borderColor = new Color(borderColorR, borderColorG, borderColorB, 1);
+        forceScanColorOnItem.textColor = new Color(textColorR, textColorG, textColorB, 1);
     }
 
     public void TryDepositCoinsOntoBarrel(PlayerControllerB? playerWhoInteracted)
