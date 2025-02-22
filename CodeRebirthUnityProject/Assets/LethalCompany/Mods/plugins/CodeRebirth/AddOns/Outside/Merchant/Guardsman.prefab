@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 6661070410640509997}
   - component: {fileID: 760708763693885464}
   m_Layer: 21
-  m_Name: Guardsman.001
+  m_Name: Barrel1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -303,13 +303,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
   - itemName: Gift
-    rarity: 95
-    price: 3
+    rarity: 90
+    minPrice: 1
+    maxPrice: 5
     borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
     textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
   - itemName: Big Present
-    rarity: 5
-    price: 5
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
     borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
     textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
   textMeshPro: {fileID: 4196939461208763335}
@@ -1008,7 +1010,7 @@ GameObject:
   - component: {fileID: 5833179663088537320}
   - component: {fileID: 4218536834317112292}
   m_Layer: 21
-  m_Name: Guardsman.003
+  m_Name: Barrel3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1138,16 +1140,222 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
-  - itemName: Gift
-    rarity: 95
-    price: 0
+  - itemName: Vanilla
+    rarity: 30
+    minPrice: 1
+    maxPrice: 7
     borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
     textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Big Present
+  - itemName: Melanie Drawing
+    rarity: 30
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Puppeteer's Voodoo
+    rarity: 10
+    minPrice: 2
+    maxPrice: 4
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Puppeteer's Needle
+    rarity: 10
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Grape
+    rarity: 20
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Lemonade Pitcher
+    rarity: 10
+    minPrice: 2
+    maxPrice: 4
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Blue Shrimp
+    rarity: 20
+    minPrice: 1
+    maxPrice: 1
+    borderColor: {r: 0, g: 0.6244762, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.88888884, b: 1, a: 1}
+  - itemName: Charred Fork
+    rarity: 20
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Charred Spork
+    rarity: 20
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Charred Baby
+    rarity: 15
+    minPrice: 1
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Violin
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Guitar
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Recorder
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Accordion
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Nitroglycerin Crate
+    rarity: 7
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Remote Detonator
+    rarity: 7
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Credit Pad 100cc
+    rarity: 10
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Ship Upgrade Pad
+    rarity: 10
+    minPrice: 5
+    maxPrice: 6
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: InfiniKey
+    rarity: 10
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: WalkieYellie
+    rarity: 10
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Zorti
+    rarity: 10
+    minPrice: 4
+    maxPrice: 5
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Credit Pad 500cc
     rarity: 5
-    price: 0
-    borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
-    textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: FogHorn
+    rarity: 5
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Mole Digger
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Rocky
+    rarity: 5
+    minPrice: 100
+    maxPrice: 100
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Lifeform Analyser
+    rarity: 5
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: SpotLamp
+    rarity: 5
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Swrd-1 Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Sea-m1 Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Daisy Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Cruiser Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Stoptime Watch
+    rarity: 3
+    minPrice: 10
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Electro Slugger
+    rarity: 3
+    minPrice: 12
+    maxPrice: 15
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Aminaking
+    rarity: 3
+    minPrice: 10
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Credit Pad 1000cc
+    rarity: 3
+    minPrice: 11
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Oxidizer
+    rarity: 3
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   textMeshPro: {fileID: 9140578443034586371}
   barrelSpawnPoint: {fileID: 8996456538382694786}
 --- !u!1 &2685888227207986660
@@ -3121,7 +3329,7 @@ GameObject:
   - component: {fileID: 3267723125848557930}
   - component: {fileID: 283535674282599745}
   m_Layer: 21
-  m_Name: Guardsman.002
+  m_Name: Barrel2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3251,16 +3459,222 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
-  - itemName: Gift
-    rarity: 95
-    price: 0
+  - itemName: Vanilla
+    rarity: 30
+    minPrice: 1
+    maxPrice: 7
     borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
     textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Big Present
+  - itemName: Melanie Drawing
+    rarity: 30
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Puppeteer's Voodoo
+    rarity: 10
+    minPrice: 2
+    maxPrice: 4
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Puppeteer's Needle
+    rarity: 10
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Grape
+    rarity: 20
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Lemonade Pitcher
+    rarity: 10
+    minPrice: 2
+    maxPrice: 4
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Blue Shrimp
+    rarity: 20
+    minPrice: 1
+    maxPrice: 1
+    borderColor: {r: 0, g: 0.6244762, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.88888884, b: 1, a: 1}
+  - itemName: Charred Fork
+    rarity: 20
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Charred Spork
+    rarity: 20
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Charred Baby
+    rarity: 15
+    minPrice: 1
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Violin
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Guitar
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Recorder
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Accordion
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Nitroglycerin Crate
+    rarity: 7
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Remote Detonator
+    rarity: 7
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Credit Pad 100cc
+    rarity: 10
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Ship Upgrade Pad
+    rarity: 10
+    minPrice: 5
+    maxPrice: 6
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: InfiniKey
+    rarity: 10
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: WalkieYellie
+    rarity: 10
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Zorti
+    rarity: 10
+    minPrice: 4
+    maxPrice: 5
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Credit Pad 500cc
     rarity: 5
-    price: 0
-    borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
-    textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: FogHorn
+    rarity: 5
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Mole Digger
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Rocky
+    rarity: 5
+    minPrice: 100
+    maxPrice: 100
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Lifeform Analyser
+    rarity: 5
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: SpotLamp
+    rarity: 5
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Swrd-1 Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Sea-m1 Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Daisy Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Cruiser Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Stoptime Watch
+    rarity: 3
+    minPrice: 10
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Electro Slugger
+    rarity: 3
+    minPrice: 12
+    maxPrice: 15
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Aminaking
+    rarity: 3
+    minPrice: 10
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Credit Pad 1000cc
+    rarity: 3
+    minPrice: 11
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Oxidizer
+    rarity: 3
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   textMeshPro: {fileID: 1717170170684254663}
   barrelSpawnPoint: {fileID: 5087414292805205031}
 --- !u!1 &8202763550955054907
@@ -3307,7 +3721,7 @@ GameObject:
   - component: {fileID: 9102632587938153768}
   - component: {fileID: 1195153308776570972}
   m_Layer: 21
-  m_Name: Guardsman.004
+  m_Name: Barrel4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3437,16 +3851,222 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
-  - itemName: Gift
-    rarity: 95
-    price: 0
+  - itemName: Nitroglycerin Crate
+    rarity: 7
+    minPrice: 2
+    maxPrice: 3
     borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
     textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Big Present
-    rarity: 5
-    price: 0
-    borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
-    textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
+  - itemName: The sacrificer
+    rarity: 7
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: The Gambler
+    rarity: 7
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Remote Detonator
+    rarity: 7
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
+  - itemName: Credit Pad 100cc
+    rarity: 8
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Ship Upgrade Pad
+    rarity: 8
+    minPrice: 5
+    maxPrice: 6
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: InfiniKey
+    rarity: 8
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: WalkieYellie
+    rarity: 8
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Zorti
+    rarity: 8
+    minPrice: 4
+    maxPrice: 5
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Job application
+    rarity: 8
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Credit Pad 500cc
+    rarity: 6
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: FogHorn
+    rarity: 6
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Mole Digger
+    rarity: 6
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Rocky
+    rarity: 6
+    minPrice: 100
+    maxPrice: 100
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Lifeform Analyser
+    rarity: 6
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: SpotLamp
+    rarity: 6
+    minPrice: 7
+    maxPrice: 8
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Swrd-1 Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Sea-m1 Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Daisy Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Cruiser Scraps
+    rarity: 10
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Friendship Ender
+    rarity: 6
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Uno Reverse Card DX
+    rarity: 6
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Death Note
+    rarity: 6
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: The talking orb
+    rarity: 6
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Master Sword
+    rarity: 6
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Rusty
+    rarity: 6
+    minPrice: 4
+    maxPrice: 6
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Chronos
+    rarity: 6
+    minPrice: 4
+    maxPrice: 6
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Stoptime Watch
+    rarity: 7
+    minPrice: 10
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Electro Slugger
+    rarity: 7
+    minPrice: 12
+    maxPrice: 15
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Aminaking
+    rarity: 7
+    minPrice: 10
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Credit Pad 1000cc
+    rarity: 7
+    minPrice: 11
+    maxPrice: 12
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Oxidizer
+    rarity: 7
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Ocarina
+    rarity: 7
+    minPrice: 8
+    maxPrice: 10
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Controller
+    rarity: 7
+    minPrice: 10
+    maxPrice: 11
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Rodriguez
+    rarity: 2
+    minPrice: 69
+    maxPrice: 69
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: The Saint
+    rarity: 2
+    minPrice: 4
+    maxPrice: 5
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   textMeshPro: {fileID: 4412735403398847839}
   barrelSpawnPoint: {fileID: 794146360343781012}
 --- !u!1 &8291131645556859678
