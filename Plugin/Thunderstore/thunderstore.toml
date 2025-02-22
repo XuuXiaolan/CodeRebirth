@@ -10,7 +10,7 @@ name = "CodeRebirth"
 description = "Content Expansion mod with Custom Weathers, Items, Enemies and more!."
 websiteUrl = "https://github.com/XuuXiao/CodeRebirth"
 containsNsfwContent = false
-[package.dependencies]
+[packagedot.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
 Evaisa-LethalLib = "0.16.2"
 Rune580-LethalCompany_InputUtils = "0.7.7"
@@ -205,10 +205,6 @@ target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]
 source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/cruisergalassets"
-target = "plugins/CodeRebirth/Assets/"
-
-[[build.copy]]
-source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/oxyde.lethalbundle"
 target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]

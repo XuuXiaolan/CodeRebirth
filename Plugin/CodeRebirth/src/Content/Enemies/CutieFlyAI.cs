@@ -24,7 +24,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
 
         // Apply material variant
         ApplyMaterialVariant();
-        smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+        if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 50);
     }
 
     private void ApplyMaterialVariant()
@@ -35,10 +35,17 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         skinnedMeshRenderers[0].SetMaterials(currentMaterials.ToList());
     }
 
-    public override void HitEnemy(int force = 1, PlayerControllerB?playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    public override void OnCollideWithPlayer(Collider other)
+    {
+        base.OnCollideWithPlayer(other);
+        if (isEnemyDead) return;
+        HitEnemy(1, other.GetComponent<PlayerControllerB>(), true, -1);
+    }
+
+    public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        if (isEnemyDead) return;
+        if (isEnemyDead || playerWhoHit == null) return;
         enemyHP -= force;
         if (IsOwner && enemyHP <= 0)
         {
@@ -49,6 +56,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        smartAgentNavigator.StopSearchRoutine();
         if (IsServer) creatureNetworkAnimator.SetTrigger(IsDeadAnimation);
     }
 
@@ -66,6 +74,10 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     public void SpawnMonarchAnimEvent()
     {
         if (!IsServer) return;
+        if (Monarch.Monarchs.Count > 0)
+        {
+            if (UnityEngine.Random.Range(0, 100) < 50) return;
+        }
         RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.MonarchEnemyType);
     }
 }

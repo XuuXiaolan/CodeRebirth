@@ -6,7 +6,6 @@ using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
-using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
 
@@ -69,7 +68,6 @@ static class StartOfRoundPatch
 			if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null) Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
 			foreach (var item in objs)
 			{
-				if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null && LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name == "Toy Store") HandleWesleyChangesCuzHeIsStupid(item);
 				if (item.layer == foliageLayer)
 				{
 					// figure out a way to make this better against static meshes.
@@ -103,16 +101,6 @@ static class StartOfRoundPatch
 		{
 			if (gal.IdleSounds.Length <= 0) continue;
 			gal.GalVoice.PlayOneShot(gal.IdleSounds[gal.galRandom.Next(0, gal.IdleSounds.Length)]);
-		}
-	}
-
-	public static void HandleWesleyChangesCuzHeIsStupid(GameObject gameObject)
-	{
-		string[] stringsToCompare = ["GunBarrel", "GunBarrel (9)", "Cake", "Cake 0", "Cake (1)", "Cake (2)", "Cake (3)", "coilmesh", "MaskMesh", "MaskMesh (1)"];
-		if (stringsToCompare.Contains(gameObject.name) && gameObject.GetComponent<MeshRenderer>() != null && gameObject.layer != 21 && gameObject.layer != 19)
-		{
-			Plugin.ExtendedLogging("Changing layer of " + gameObject.name + "To layer MapHazards (21)");
-			gameObject.layer = 21;
 		}
 	}
 }
