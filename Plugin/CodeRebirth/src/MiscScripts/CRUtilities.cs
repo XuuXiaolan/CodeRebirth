@@ -163,6 +163,7 @@ public class CRUtilities
 
             if (cachedColliders[i].gameObject.layer == 3 && cachedColliders[i].TryGetComponent(out PlayerControllerB player))
             {
+                if (!player.isPlayerControlled || player.isPlayerDead) continue;
                 int damageToDeal = (int)(damage * (1f - Mathf.Clamp01((distanceOfObjectFromExplosion - minDamageRange) / (maxDamageRange - minDamageRange))));
                 if (playerControllerBToDamage.ContainsKey(player) && playerControllerBToDamage[player] < damageToDeal)
                 {

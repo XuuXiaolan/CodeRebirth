@@ -48,7 +48,7 @@ public class Mistress : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (currentBehaviourStateIndex != (int)State.Attack) return;
+        if (currentBehaviourStateIndex != (int)State.Attack || targetPlayer == null) return;
 
         killTimer += Time.deltaTime;
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
@@ -127,7 +127,7 @@ public class Mistress : CodeRebirthEnemyAI
         }
 
         bool LookedAt = PlayerLookingAtEnemy();
-        Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
+        // Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
         if (LookedAt)
         {
             if (timeSpentInState > 15f)
@@ -194,6 +194,7 @@ public class Mistress : CodeRebirthEnemyAI
 
     private IEnumerator ResetMistressToStalking(PlayerControllerB? lastTargetPlayer)
     {
+        Plugin.ExtendedLogging($"Resetting mistress to stalking phase!");
         killTimer = 0f;
         previousTargetPlayers.Add(targetPlayer);
         StartCoroutine(ResetVolumeWeightTo0(targetPlayer));
@@ -240,9 +241,14 @@ public class Mistress : CodeRebirthEnemyAI
     {
         if (cantLosePlayer) return true;
         float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (HeadTransform.position - targetPlayer.gameplayCamera.transform.position).normalized);
-        Plugin.ExtendedLogging($"Vector Dot: {dot}");
+        // Plugin.ExtendedLogging($"Vector Dot: {dot}");
         if (dot <= 0.45f) return false;
-        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.forward, HeadTransform.position, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore)) return false;
+        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.position, HeadTransform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore))
+        {
+            // Plugin.ExtendedLogging($"Linecast hit {hit.collider.name}");
+            return false;
+        }
+        // Plugin.ExtendedLogging($"Linecast did not hit anything");
         return true;
     }
 

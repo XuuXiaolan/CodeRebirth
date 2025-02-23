@@ -29,6 +29,8 @@ public class Merchant : NetworkBehaviour
     public GameObject[] coinObjects = [];
     private bool canTarget = true;
     private NetworkVariable<bool> isActive = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private bool playerWhoStoleKilled = true;
+    private Coroutine? destroyShipRoutine = null;
     private static readonly int TakeCoinsAnimation = Animator.StringToHash("takeCoins"); // Trigger
     private static readonly int Activated = Animator.StringToHash("activated"); // Bool
 
@@ -45,6 +47,11 @@ public class Merchant : NetworkBehaviour
 
     public void Update()
     {
+        if (StartOfRound.Instance.shipIsLeaving && destroyShipRoutine == null && !playerWhoStoleKilled)
+        {
+            destroyShipRoutine = StartCoroutine(DestroyShip());
+        }
+        if (StartOfRound.Instance.shipIsLeaving) return;
         if (IsServer)
         {
             bool playerNearby = false;
@@ -78,6 +85,7 @@ public class Merchant : NetworkBehaviour
                     itemsSpawned[item.Key] = -1;
                     continue;
                 }
+                playerWhoStoleKilled = false;
                 targetPlayers.Add(item.Key.playerHeldBy);
             }
         }
@@ -96,6 +104,26 @@ public class Merchant : NetworkBehaviour
         return false;
     }
 
+    private IEnumerator DestroyShip()
+    {
+        HUDManager.Instance.DisplayTip("Warning", "The Merchant never forgets thieves...\nPrepare for fire", true);
+        HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+        HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+        yield return new WaitForSeconds(2f);
+        float timeElapsed = 0f;
+        while (timeElapsed <= 10)
+        {
+            EliminateShip();
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        {
+            if (!player.isPlayerControlled || player.isPlayerDead) continue;
+            CRUtilities.CreateExplosion(player.transform.position, true, 999, 0, 5, 50, null, null, 100f);
+        }
+    }
+
     private IEnumerator StealAllCoins(GrabbableObject itemTaken)
     {
         canTarget = false;
@@ -105,7 +133,7 @@ public class Merchant : NetworkBehaviour
             items.Key.grabbable = false;
         }
         if (IsServer) networkAnimator.SetTrigger(TakeCoinsAnimation);
-        yield return new WaitForSeconds(10f); // wait for animation to end.
+        yield return new WaitForSeconds(10f);
         foreach (var items in itemsSpawned.ToArray())
         {
             if (items.Key == itemTaken) continue;
@@ -116,22 +144,40 @@ public class Merchant : NetworkBehaviour
         DisableOrEnableCoinObjects();
     }
 
+    private void EliminateShip()
+    {
+        Transform targetTransform = StartOfRound.Instance.shipInnerRoomBounds.transform;
+
+        foreach (var turret in turretBones)
+        {
+            localDamageCooldownPerTurret[turret] -= Time.deltaTime;
+            Vector3 normalizedDirection = (targetTransform.position - turret.position).normalized;
+            float dotProduct = Vector3.Dot(turret.forward, normalizedDirection);
+            // Plugin.ExtendedLogging($"Dot product: {dotProduct}");
+            // play the sound and visuals for shooting towards the ship at 0.9f dotproduct or higher.
+            Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);
+            turret.rotation = Quaternion.Lerp(turret.rotation, targetRotation, 0.5f * Time.deltaTime);
+        }
+    }
+
     private void EliminateTargetPlayers()
     {
         if (!canTarget) return;
         var currentTargetPlayer = targetPlayers[0];
         if (currentTargetPlayer.isPlayerDead || !currentTargetPlayer.isPlayerControlled)
         {
+            playerWhoStoleKilled = true;
             targetPlayers.RemoveAt(0);
             return;
         }
+
         foreach (var turret in turretBones)
         {
             localDamageCooldownPerTurret[turret] -= Time.deltaTime;
             Vector3 normalizedDirection = (currentTargetPlayer.gameplayCamera.transform.position - turret.position).normalized;
             float dotProduct = Vector3.Dot(turret.forward, normalizedDirection);
             // Plugin.ExtendedLogging($"Dot product: {dotProduct}");
-            if (dotProduct > 0.9f)
+            if (dotProduct > 0.9f && !Physics.Linecast(turret.position, currentTargetPlayer.transform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
                 // Fire at player and deal damage.
                 if (GameNetworkManager.Instance.localPlayerController == currentTargetPlayer && localDamageCooldownPerTurret[turret] <= 0)
@@ -177,9 +223,8 @@ public class Merchant : NetworkBehaviour
                     Plugin.ExtendedLogging($"Merchant item border color: {borderColor}");
                     Plugin.ExtendedLogging($"Merchant item text color: {textColor}");
                     barrel.validItemsWithRarityAndColor.Add((null, rarity, minPrice, maxPrice, borderColor, textColor));
-                    return;
                 }
-                if (itemsByName.TryGetValue(normalizedName, out Item matchingItem))
+                else if (itemsByName.TryGetValue(normalizedName, out Item matchingItem))
                 {
                     Plugin.ExtendedLogging($"Merchant item: {name}");
                     Plugin.ExtendedLogging($"Merchant item rarity: {rarity}");
@@ -203,7 +248,7 @@ public class Merchant : NetworkBehaviour
 
             if (barrel.validItemsWithRarityAndColor == null || barrel.validItemsWithRarityAndColor.Count == 0)
             {
-                Plugin.ExtendedLogging("No valid items for barrel at " + spawnPosition);
+                Plugin.ExtendedLogging($"No valid items for barrel {barrel.gameObject.name}");
                 continue;
             }
 
@@ -241,7 +286,8 @@ public class Merchant : NetworkBehaviour
             if (selectedItem == null)
             {
                 Plugin.ExtendedLogging("Item selection failed for barrel at " + spawnPosition + "Assuming Random item");
-                selectedItem = StartOfRound.Instance.allItemsList.itemsList[UnityEngine.Random.Range(0, StartOfRound.Instance.allItemsList.itemsList.Count)];
+                Item item = GetRandomVanillaItem();
+                selectedItem = item;
             }
 
             // Spawn the selected item.
@@ -249,6 +295,13 @@ public class Merchant : NetworkBehaviour
             GrabbableObject grabbableObject = itemGO.GetComponent<GrabbableObject>();
             SyncGrabbableObjectScanStuffServerRpc(new NetworkBehaviourReference(grabbableObject), Array.IndexOf(merchantBarrels, barrel), _price, _borderColor.r, _borderColor.g, _borderColor.b, _textColor.r, _textColor.g, _textColor.b);
         }
+    }
+
+    private Item GetRandomVanillaItem()
+    {
+        var vanillaItems = LethalLevelLoader.OriginalContent.Items;
+        int randomIndex = UnityEngine.Random.Range(0, vanillaItems.Count);
+        return vanillaItems[randomIndex];
     }
 
     [ServerRpc(RequireOwnership = false)]

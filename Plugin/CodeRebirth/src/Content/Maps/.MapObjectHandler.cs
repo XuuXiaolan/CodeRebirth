@@ -117,6 +117,57 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	{
 		[LoadFromBundle("Guardsman.prefab")]
 		public GameObject MerchantPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("CreditPad100ccObj.asset")]
+		public Item CreditPad100cc { get; private set; } = null!;
+
+		[LoadFromBundle("CreditPad500ccObj.asset")]
+		public Item CreditPad500cc { get; private set; } = null!;
+
+		[LoadFromBundle("CreditPad1000ccObj.asset")]
+		public Item CreditPad1000cc { get; private set; } = null!;
+
+		[LoadFromBundle("DetonatorObj.asset")]
+		public Item Detonator { get; private set; } = null!;
+
+		[LoadFromBundle("FogHornObj.asset")]
+		public Item FogHorn { get; private set; } = null!;
+
+		[LoadFromBundle("GuardsmanPhoneObj.asset")]
+		public Item GuardsmanPhone { get; private set; } = null!;
+
+		[LoadFromBundle("InfiniKeyObj.asset")]
+		public Item InfiniKey { get; private set; } = null!;
+
+		[LoadFromBundle("LifeformAnalyserObj.asset")]
+		public Item LifeformAnalyser { get; private set; } = null!;
+
+		[LoadFromBundle("MoleDiggerObj.asset")]
+		public Item MoleDigger { get; private set; } = null!;
+
+		[LoadFromBundle("NitroCrateObj.asset")]
+		public Item NitroCrate { get; private set; } = null!;
+
+		[LoadFromBundle("OxidizerObj.asset")]
+		public Item Oxidizer { get; private set; } = null!;
+
+		[LoadFromBundle("RailSluggerObj.asset")]
+		public Item RailSlugger { get; private set; } = null!;
+
+		[LoadFromBundle("RockyObj.asset")]
+		public Item Rocky { get; private set; } = null!;
+
+		[LoadFromBundle("ShipUpgradeUnlockerObj.asset")]
+		public Item ShipUpgradeUnlocker { get; private set; } = null!;
+
+		[LoadFromBundle("StoptimeWatchObj.asset")]
+		public Item StoptimeWatch { get; private set; } = null!;
+
+		[LoadFromBundle("WalkieYellieObj.asset")]
+		public Item WalkieYellie { get; private set; } = null!;
+
+		[LoadFromBundle("WorthlessObj.asset")]
+		public Item Worthless { get; private set; } = null!;
 	}
 
 	public MerchantAssets Merchant { get; private set; } = null!;
@@ -141,6 +192,23 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		{
 			Merchant = new MerchantAssets("merchantassets");
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.Merchant] = Merchant.MerchantPrefab;
+			RegisterScrapWithConfig("", Merchant.CreditPad100cc, -1, -1);
+			RegisterScrapWithConfig("", Merchant.CreditPad500cc, -1, -1);
+			RegisterScrapWithConfig("", Merchant.CreditPad1000cc, -1, -1);
+			RegisterScrapWithConfig("", Merchant.Detonator, -1, -1);
+			RegisterScrapWithConfig("", Merchant.FogHorn, -1, -1);
+			RegisterScrapWithConfig("", Merchant.GuardsmanPhone, -1, -1);
+			RegisterScrapWithConfig("", Merchant.InfiniKey, -1, -1);
+			RegisterScrapWithConfig("", Merchant.LifeformAnalyser, -1, -1);
+			RegisterScrapWithConfig("", Merchant.MoleDigger, -1, -1);
+			RegisterScrapWithConfig("", Merchant.NitroCrate, -1, -1);
+			RegisterScrapWithConfig("", Merchant.Oxidizer, -1, -1);
+			RegisterScrapWithConfig("", Merchant.RailSlugger, -1, -1);
+			RegisterScrapWithConfig("", Merchant.Rocky, -1, -1);
+			RegisterScrapWithConfig("", Merchant.ShipUpgradeUnlocker, -1, -1);
+			RegisterScrapWithConfig("", Merchant.StoptimeWatch, -1, -1);
+			RegisterScrapWithConfig("", Merchant.WalkieYellie, -1, -1);
+			RegisterScrapWithConfig("", Merchant.Worthless, -1, -1);
 		}
 
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
