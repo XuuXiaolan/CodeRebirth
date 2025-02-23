@@ -24,7 +24,7 @@ public class Detonator : GrabbableObject
 
         foreach (var crate in NitroCrate.nitroCrates)
         {
-            crate.RequestServerToDespawnServerRpc();
+            if (IsServer) crate.RequestServerToDespawnServerRpc();
         }
 
         yield return new WaitForSeconds(4f);
