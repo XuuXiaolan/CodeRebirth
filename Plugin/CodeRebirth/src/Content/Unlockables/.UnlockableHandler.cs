@@ -183,7 +183,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	private void RegisterBellCrab()
 	{
 		BellCrab = new BellCrabAssets("bellcrabgalassets");
-		LethalLib.Modules.Unlockables.RegisterUnlockable(BellCrab.BellCrabUnlockable, Plugin.ModConfig.ConfigBellCrabGalCost.Value, StoreType.Decor);
+		LethalLib.Modules.Unlockables.RegisterUnlockable(BellCrab.BellCrabUnlockable, Plugin.ModConfig.ConfigBellCrabGalCost.Value, StoreType.ShipUpgrade);
 	}
 
     private void RegisterShockWaveGal()

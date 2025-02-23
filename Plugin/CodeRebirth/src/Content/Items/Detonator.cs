@@ -15,21 +15,21 @@ public class Detonator : GrabbableObject
     private IEnumerator DoBlowAnimation()
     {
         float currentWeight = skinnedMeshRenderer.GetBlendShapeWeight(0);
-        while (currentWeight <= 100)
+        while (currentWeight < 100)
         {
             currentWeight = skinnedMeshRenderer.GetBlendShapeWeight(0);
             skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentWeight + Time.deltaTime * 100f, 0, 100f));
             yield return null;
         }
 
-        foreach (var crate in NitroCrate.nitroCrates)
+        foreach (var crate in NitroCrate.nitroCrates.ToArray())
         {
             if (IsServer) crate.RequestServerToDespawnServerRpc();
         }
 
         yield return new WaitForSeconds(4f);
 
-        while (currentWeight >= 0)
+        while (currentWeight > 0)
         {
             currentWeight = skinnedMeshRenderer.GetBlendShapeWeight(0);
             skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentWeight - Time.deltaTime * 100f, 0, 100f));
