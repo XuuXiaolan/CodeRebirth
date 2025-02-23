@@ -80,6 +80,10 @@ Please **report any issues [here](https://github.com/Zaggy1024/LC_OpenBodyCams/i
 - `FixDroppedItemRotation`: Defaulted to `true`, this fixes a desync of items' rotations when dropping them. See [Notes/Item rotations](#item-rotations).
 - `FixMaskedConversionForClients`: Defaulted to `true`, this fixes vanilla bug that causes clients to be unable to see through the perspective of players that have been converted by masked enemies. It will cause such conversions to spawn dead bodies which will be instantly deactivated, similar to how the mask item behaves.
 
+## Experimental
+- `DisplayWeatherBasedOnPerspective`: When enabled, weathers will be displayed for each camera target regardless of their distance from the local player. For example, if a moon is raining, and the target player walks far away from the ship where you are watching them, this option will create a copy of the rain emitter that follows that target player and is only visible to the body cam.
+    - **Note:** This may cause unexpected behavior for custom weathers.
+
 ## Debug
 See [Debugging](#debugging).
 
@@ -98,13 +102,8 @@ An optional fix is included for items' rotations being desynced between the play
 
 The logs can be found in the BepInEx folder within the mod manager's profile folder (`%appdata%\r2modmanPlus-local\LethalCompany\profiles\[profile name]` for r2modman), or inside the game's Steam install folder. Please ensure that the modification date indicates that the file is the most recent launch of the game.
 
-### Screen freezes/error spam
-If error spam or screen freezes are encountered, please reproduce the issue with `ReferencedObjectDestructionDetectionEnabled` enabled in the `[Debug]` section of the config, then provide the game logs in a [new issue on GitHub](https://github.com/Zaggy1024/LC_OpenBodyCams/issues/new)  (see [Debugging](#debugging) to find the `.log` file).  The option prints a message and stack trace whenever an object is destroyed while a body cam is referencing it. This should point directly to any problematic mods causing issues.
-
-After the issue occurs, `BruteForcePreventFreezes` can be used to resume normal gameplay. The option prevents the error spam by checking every frame whether any cosmetics on viewed players have been destroyed and updating the list if so. This can be used as a stopgap measure to prevent screen freezes if a mod conflict is unavoidable.
-
-### "Collected cosmetics" spam
-If messages are spammed excessively in the console/logs saying `Collected [x] cosmetics objects for [name]`, then the `PrintCosmeticsDebugInfo` can be enabled to provide information on what is causing the collection of the cosmetics. Enable this option while the issue is occurring and provide the logs in a GitHub issue (see [Debugging](#debugging) to find the `.log` file). It will print extra information about the cosmetics being collected for each player, as well as the code that is causing the cosmetics to be collected.
+### Warnings about null cosmetics
+If you see a warning like `[player]'s third-person cosmetic at index 5 is null` followed by a stack trace, this indicates that the list of cosmetics that OpenBodyCams tracks for targeted players has desynced. In order to make it easier to determine the cause and fix the issue, the `ReferencedObjectDestructionDetectionEnabled` option in the `[Debug]` section of the config will print a message and stack trace whenever an object is destroyed while a body cam is referencing it. This should point directly to any mods that are causing these cosmetics changes to occur unexpectedly.
 
 # Developers
 If you wish to create a body cam separate from the default one included with this mod, you can simply add OpenBodyCams as a dependency and use `OpenBodyCams.API.BodyCam.CreateBodyCam()`:

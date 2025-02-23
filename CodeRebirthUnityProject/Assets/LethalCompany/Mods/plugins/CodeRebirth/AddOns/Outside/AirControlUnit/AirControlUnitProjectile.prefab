@@ -55,7 +55,7 @@ MeshCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2147483639
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -76,7 +76,6 @@ MonoBehaviour:
   m_Script: {fileID: -111783595, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Force: 50
   mainProjectile: {fileID: 4674622863445439202}
 --- !u!1 &2701026502764469935
 GameObject:
@@ -471,7 +470,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2147483639
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -513,6 +512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 100
   lifetime: 8
+  bulletTrailForce: 50
   curveStrength: 3
   playerHitSoundSource: {fileID: 3839476044651145590}
   windSource: {fileID: 1293718865966083847}

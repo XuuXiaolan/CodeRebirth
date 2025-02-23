@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9130453451630374458}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Pedal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,7 +83,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1073217527
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -109,8 +109,8 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!95 &2317965333872203752
 Animator:
   serializedVersion: 5
@@ -152,6 +152,7 @@ MonoBehaviour:
   resetTrapEndSound: {fileID: 8300000, guid: 46f04229c69916149b6ee5bf646ddc0d, type: 3}
   triggerSound: {fileID: 8300000, guid: b0c03999d3135d941999599fdd9049b8, type: 3}
   resetTrapSound: {fileID: 8300000, guid: 4bc15bae28cfe2c449231554263be0dd, type: 3}
+  poppingTireSound: {fileID: 8300000, guid: e45763eaae7a70348868c67719f442b7, type: 3}
 --- !u!1 &2986401360771270740
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6669187903130983800}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Jaw2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +322,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9218267250219278221}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: BearTrapArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 21300000, guid: 5719a1b87b2b4f945bfe990e7165b620, type: 2}
+  hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: Disable Trap.
   disabledHoverIcon: {fileID: 0}
   disabledHoverTip: 
@@ -516,7 +517,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9179047477153770714}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -550,7 +551,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8038428184917020175}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Jaw1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -582,7 +583,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3494546352720046672}
   - component: {fileID: 1537178196941237508}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: BaboonTrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

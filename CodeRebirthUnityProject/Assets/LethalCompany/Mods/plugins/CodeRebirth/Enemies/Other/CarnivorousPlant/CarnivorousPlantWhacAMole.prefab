@@ -2031,7 +2031,8 @@ GameObject:
   - component: {fileID: 6018552592219118470}
   - component: {fileID: 6900835463141935646}
   - component: {fileID: 577517964605079600}
-  - component: {fileID: 3367853959885649467}
+  - component: {fileID: 1999054437790632983}
+  - component: {fileID: 243809026747451477}
   m_Layer: 19
   m_Name: CarnivorousPlantWhacAMole
   m_TagString: Enemy
@@ -2170,12 +2171,13 @@ MonoBehaviour:
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  smartAgentNavigator: {fileID: 3367853959885649467}
+  targetEnemy: {fileID: 0}
+  creatureNetworkAnimator: {fileID: 577517964605079600}
+  smartAgentNavigator: {fileID: 243809026747451477}
   eyes:
   - {fileID: 1292584987158040788}
   - {fileID: 2697936339120152967}
   attackAnimation: {fileID: 7400000, guid: 01fc1f4500b2d324db8fe9f5872e4770, type: 2}
-  networkAnimator: {fileID: 577517964605079600}
   mouth: {fileID: 3058117292641546787}
   BiteSound: {fileID: 8300000, guid: 10fe0bdfe8e3e6e41901eef2e7016104, type: 3}
   HitSounds:
@@ -2329,7 +2331,7 @@ MonoBehaviour:
     TriggerNameHash: -1533413595
     TransitionIndex: 1
   m_Animator: {fileID: 6018552592219118470}
---- !u!114 &3367853959885649467
+--- !u!114 &1999054437790632983
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2338,9 +2340,52 @@ MonoBehaviour:
   m_GameObject: {fileID: 8882997186667264661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
+--- !u!114 &243809026747451477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882997186667264661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
 --- !u!1 &8945839021943058437
 GameObject:
   m_ObjectHideFlags: 0

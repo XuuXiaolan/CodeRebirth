@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 160491242234400288}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4743249928222601306}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Jaw2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3847257182834199248}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Pedal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 7940777223988309850}
   - component: {fileID: 5826837753776003054}
   - component: {fileID: 6455568411290944019}
+  - component: {fileID: 5809401652167921232}
   m_Layer: 21
   m_Name: GrassBearTrap
   m_TagString: Untagged
@@ -174,8 +175,8 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!95 &5826837753776003054
 Animator:
   serializedVersion: 5
@@ -217,6 +218,28 @@ MonoBehaviour:
   resetTrapEndSound: {fileID: 8300000, guid: 46f04229c69916149b6ee5bf646ddc0d, type: 3}
   triggerSound: {fileID: 8300000, guid: b0c03999d3135d941999599fdd9049b8, type: 3}
   resetTrapSound: {fileID: 8300000, guid: 4bc15bae28cfe2c449231554263be0dd, type: 3}
+  poppingTireSound: {fileID: 8300000, guid: e45763eaae7a70348868c67719f442b7, type: 3}
+--- !u!135 &5809401652167921232
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2600753275211172565}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 1073217527
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3464227149221087293
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,7 +249,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4111880835406273689}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Jaw1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +409,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4752283454919626776}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: BearTrapArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -419,7 +442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6775501796237949210}
   - component: {fileID: 6262327743296023298}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: BaboonTrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -564,7 +587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 21300000, guid: 5719a1b87b2b4f945bfe990e7165b620, type: 2}
+  hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: Disable Trap.
   disabledHoverIcon: {fileID: 0}
   disabledHoverTip: 

@@ -1,4 +1,391 @@
-# v0.7.16
+# v1.0.0
+
+- The final update.
+- Lots of stuff lol.
+- Dozens of new items with special effects added.
+- Multiple enemies reworked and rewritten.
+- I forced a lot of your configs to reset to true for the first time to experience the new content.
+- Multiple new enemies added.
+
+## v0.15.3
+
+- Disabled the broken extra weathers, had them added by accident.
+- Also see that, this was a thing I did by accident that would crash your game, and fixing it took a couple hours because I have a lot to work with, and I'm also running on a fever right now, I'm not gonna say what mod, but I'm not just silently crashing your game randomly and not fixing it immediately.
+
+## v0.15.2
+
+- Another one, fix for seamine gal and shockwave gal bloowing up and causing errors.
+- Manor Lord also reflects damage proportional to how much damage you deal to it (so you're dead if you shoot it while its in its reflect state).
+- Extra checks in manor lord to make sure he doesnt bug out.
+
+## v0.15.1
+
+- Well this was bound to happen.
+- Fixed bear trap spawning to stop... spawning on walls???
+
+## v0.15.0
+
+- Added BoomTrap
+- Improved readme yet again.
+- Optimised the following additions a bit.
+  - Janitor.
+  - ACUnit.
+  - Biomes.
+  - Hazards.
+  - Seamine Gal.
+  - Shockwave Gal.
+  - Terminal Gal.
+  - Explosions in CR.
+  - Spawning of redwood titan and seed through CR weapons.
+  - Anything that plays a sound a dog or other enemies can hears.
+  - A lot more lol.
+- Fixed cruiser gal carrying you causing you to be spun out of existence, that was fun.
+- Separated Windy into 3 weathers, the last two arent available currently.
+  - Tornado.
+  - Hurricane.
+  - Firestorm.
+- Gave cruiser gal a new song.
+- Optimised a lot of collision detection in a lot of things.
+- This is gonna be the last update for a while before the 1.0.0 release which will contain more content than this mod currently has, look forward to it.
+
+## v0.14.3
+
+- Added poster boy to the top of the readme.
+- He thinks he's doing a good job.
+- He shall open the gates when you are ready.
+- Prepare.
+
+## v0.14.2
+
+- Updated README, it SHOULD have everything currently in here plus a bit more...
+- Gave CruiserGal collisions.
+- She also wont run over players and send them under the map anymore, probably, lol.
+- Added a small eject while you're riding cruiser gal.
+- Manor Lord no longer damages the puppet via collisions.
+- Puppet can now only take damage once every 1 second rather than 0.5 seconds.
+
+## v0.14.1
+
+- Reverted a crate attempt fix cuz my friend has a luck skill issue.
+- Fixed cruiser gal sounds and client bugs.
+- Fixed IndustrialFan error spam.
+
+## v0.14.0
+
+- Added the last gal, cruiser gal.
+
+## v0.13.7
+
+- You can now ride jimothy inside or outside safely without problems.
+- Fixed lag-spike when a coderebirth enemy spawns.
+- Fixed Janitor breaking randomly-atleast for clients and in cases where it wouldn't grab objects but did for host.
+- Fixed Jimothy sounds.
+- Fixed Jimothy holding items incompat with cullfactory.
+- Fixed problem with jimothy holding IndustrialFans, probably?
+
+## v0.13.6
+
+- Made performance of jimothy a bit better, and gonna do similar stuff with other coderebirth things later.
+- Fixed AirControlUnit not being able to fire, at all, lol.
+
+## v0.13.5
+
+- Made it so my weathers dont spawn on Galetry.
+
+## v0.13.4
+
+- Fixed aircontrolunit despawn fix, and removed some code so that would make orbiting a tiny bit faster.
+
+## v0.13.3
+
+- Bear trap despawn fix, i think anyway.
+
+## v0.13.2
+
+- smol Pathfinding hotfix.
+
+## v0.13.1
+
+- I do what mel says.
+
+## v0.13.0
+
+- Added second member of cleanup crew, jimothy the transporter.
+- Damage fix for janitor when you hit him.
+- Extra fix for dropping stuff infront of janitor while he's grabbing an item.
+- Added cleaning drone gal.
+- Improved pathfinding completely in all CodeRebirth entities, this makes them able to fluidly use all fire exits, entrances, anything they need to reach you no matter where you are, should preform better than usual too (added a dependency to help since it'd be too much to include it into coderebirth itself).
+- Hazards despawn if they spawn on top of doors.
+- New weight defaults for manor lord, redwood titan and janitor.
+- Did some fixing with tesla shock.
+- Redid the tornado visuals entirely.
+- Rewrote a lot of the code for tornados and meteor shower, let me know if anything breaks.
+- Removed a meh performance thingy when you leave a moon for the crates and biomes.
+- Crates opened by terminal gal should be sync'd with everyone.
+- Fixed abuse of puppeteer's on hit animation.
+- Probably fixed laser turret desync, let me know if i have not.
+- Fixed bug with SCP 999 gal reviving body-less dead bodies and reviving more people than it should be able to via group revives.
+- Fixed global duck song not playing.
+- Can now store all the furniture like the gals etc.
+- Changed layer of spike trap to be the maphazards layer (thanks zeekerss).
+
+## v0.12.3
+
+- Fixed shockwave gal spammin error.
+- Balanced cleanup crew faster.
+- Fixed misc bugs with him when hitting him mid animation.
+
+## v0.12.2
+
+- Made cleanup turn faster.
+- Made him only be able to grab things infront of him.
+- Fixed meteor shower sounds not working.
+
+## v0.12.1
+
+- Some stabilisation fixes to the cleanup crew.
+- picks random trash can.
+- Gave it higher priority.
+- Misc fixes to janitor.
+
+## v0.12.0
+
+- Added cleanup crew.
+- Cleaned up some assetbundles, if you notice loss of quality let me know and I'll restore some stuff.
+- Fixed a bug with manor lord spawning enemies that its not supposed to know.
+- Optimised navmesh code a bit.
+- Fixed laser turret going through walls (woo fuck interiors that fucked it up, if it fucks up still then I'm gonna be sending you straight to the interior creators).
+- Fixed tesla shock to actually trigger more often.
+
+## v0.11.0
+
+- Added Lord of the manor.
+
+## v0.10.4
+
+- Readme update! woo
+- Forgot to include zort assets into the release build.
+- Added a punishment from the duck abuse.
+- Fixed bug with hoverboard weight not disappearing when dismounting with held.
+
+## v0.10.3
+
+- Added the 4 instruments from zort as scrap, harmonize together with your friends.
+
+## v0.10.2
+
+- Improved detection from terminal gal for scrap and items.
+- Added warning sounds to suspicious thing.
+- Fixed collisions with terminal gal and gave her a new facial expression for it.
+- Added T!tan from rebalanced moons for weight of 0 for ACUnit.
+- Put the suspicious thing into the enemy layer.
+
+## v0.10.1
+
+- Decreased chance of rare idle song from terminal gal.
+- Accidently included unreleased assets into build.
+
+## v0.10.0
+
+- Added terminal gal.
+- Added bear trap gal.
+- Added ACUnit gal.
+- Fixed explosions happening outside for clients through microwave.
+- Added something suspicious...
+
+## v0.9.7
+
+- Fixed meteor shower craters not disappearing for clients.
+- Fixed blue shrimp bug with dropping and grabbing in midair.
+- Added pikmin to shockwave and seamine gal blacklist config.
+- Added voicelines to bald man.
+- Fixed some UI issues with duck.
+- Gave value to grape and lemonade pitcher.
+
+## v0.9.6
+
+- Fixed inside bear traps.
+- Change defaults of hazards to be more vanilla friendly and more like how zeekerss does turrets and landmines etc.
+- Gave duck song enemy more configs.
+- Lowered repeat quest chance to 15% from 99%.
+- Added a thing for someone.
+
+## v0.9.5
+
+- Apparently despawning of crates was broken, no idea how, but reverted to how they despawned in previous versions.
+- SCP 999 gal had a bug when somebody died and lost their corpse, this has been fixed.
+- SCP 999 gal was also not interactable for quite a while because of a false/true accident.
+
+## v0.9.4
+
+- Added configs to the new thing I added.
+- Added configs for acu for strength and knockback power.
+
+## v0.9.3
+
+- Fixed bug with seamine gal targetting inside enemies.
+- Made craters in meteor shower disappear after 20 seconds to help performance.
+- Bam bam bam ba rum da dum......
+- Helped performance a bit when loading into orbit and despawning crates etc.
+- Made crates not spawn the same items if more than one is broken in a moon.
+- Fixed 999 not working with company config.
+- Added sound to cruiser tires popping from bear trap.
+
+## v0.9.2
+
+- Fixed bug with gals not being activatable on company moon with navmeshcompany mod.
+- Added a new unlockable dispenser, costs only 150, something from lockdown protocol, one of my favourite games recently.
+- Messed with seamine gal range when outside for attacking.
+- Changed interact message for scp 999 gal.
+- Fixed scannode for hoverboard, bell crab and scp 999 gal.
+
+## v0.9.1
+
+- Rebuilt mod for latest game version.
+
+## v0.9.0
+
+- Added 15% chance event for wooden crate's to explode and damage the player.
+- Gave bellcrab gal a dancing animation.
+- Fixed 999 Gal not being interactable by players other than host.
+- Fixed microwave scrap being on the bottom.
+- Fixed microwave explosion not showing on client's end.
+- Fixed microwave scrap always being grabbable despite microwave closed.
+- Fixed "Vanilla" and "Modded" for hazard curves.
+- Fixed microwave scannode not having a box collider.
+- Gave 999 Gal and BellCrab Gal a ScanNode.
+- Added config for bear traps, they can now pop the cruiser's tires, fuck you cruiser drivers, burn and die.
+
+## v0.8.16
+
+- Fixed lethal hands damage with crate.
+- Forgot something.
+
+## v0.8.15
+
+- Fixed hazard stuff fully, assuming LethalLib updated before i put out this update, which i hope it did.
+- Added new gal, SCP 999 Gal, with keyword LIZ-ZIE, this one is a very configurable healer type gal, have fun.
+- Fixed dance animation for seamine gal.
+
+## v0.8.14
+
+- Forgot to check if company moon didnt have an interior.
+
+## v0.8.13
+
+- Forgot to include bellcrabgal assets.
+
+## v0.8.12
+
+- Fixed shockwave gal textures for crismas.
+- Made some of wesley's interiors in toy store scan for hazards properly like the cake and stuff.
+- Made spikerooftrap on hazard layer so seamine gal scans it.
+- Added bellcrab gal (she's purely decor with some luck value added).
+- Fixed bugs with seamine and shockwave hug and pat bug with doing it after directly getting out of charger.
+- Added config for seamine gal only owner sees scan results.
+
+## v0.8.11
+
+- Fixed ACUnit sound continuously playing.
+
+## v0.8.10
+
+- Actually added the seamine and shockwave gal christmas textures.
+- Fixed rare animation bug for seamine gal.
+- Increased range seamine gal needs to stop to explode at an enemy.
+- Added config for sounds of hazards.
+
+## v0.8.9
+
+- Added christmas texture for shockwave gal and seamine gal.
+
+## v0.8.8
+
+- Fixed icy hammer and made it have a 75% chance to slow.
+- Fixed microwave scrap not following microwave for clients (maybe).
+- Fan doesn't push you through railing now :<.
+- Added redwood spawning with breaking trees sometimes.
+- Fixed seamine gal dance anim.
+- Changed weights of all the weapons to be less and gave them a small sound when grabbing dropping etc.
+- Fixed hazard spawning for non host clients in debug mode.
+- Fixed item spawning value for microwave scrap.
+- Fixed wooden seed spawning (maybe).
+- Got rid of lineofsight check for seamine gal's explosion.
+- Fixed bug with gals where they'd disappear when lobby was reloaded.
+
+## v0.8.7
+
+- Fixed redwood explosion.
+
+## v0.8.6
+
+- Fixed position desync of laser turret.
+
+## v0.8.5
+
+- Buffed redwood giant's kick and jump actions.
+- Laser turret should perform a tiny bit better.
+- Crates should shoot up the same as for host and client now.
+- Completely fixed parenting and position issues with latejoin clients and other clients with the gals and their chargers.
+- Improved redwood giant search routine for clients.
+
+## v0.8.4
+
+- Made the seamine gal scanner a LOT better, you can put down the pitch forks now.
+- Tried to fix automatic issues with gal.
+
+## v0.8.3
+
+- Fixed very rare config issue with the hazard curve stuff with non english systems(?) and added more error logging.
+- Readded config (true by default) to remove interior fog.
+
+## v0.8.2
+
+- Fixed gal being outside in orbit for late joining clients.
+- Fixed pathing issues with seamine gal if enemy is in an unreachable position.
+- Check the readme for how the hazards config works!!!
+
+## v0.8.1
+
+- Fixed harmless error with MRAPI and CodeRebirth when MRAPI isn't found.
+- Fixed harmless error with gal's chargers when the owner dies.
+
+## v0.8.0
+
+- Added seamine gal.
+- Added seamine gal as a player suit.
+- Added configs for enabling/disabling seamine and shockwave gal player models.
+- Fixed meteor shower initial volume stuff.
+- Microwave has a chance to spawn scrap inside of it now, making it more deadly.
+- Nerfed meteor shower fire damage a bit and reduced the particles to save on some frames.
+- Lowered the default speed of the meteor shower meteor's from 50 to 30.
+- Made meteor shower automatically end at 80% through the day by default and start only after the ship has nearly landed.
+- Made meteor shower strike on ship by default false because I got scolded, and also improved the non-hitting of the ship to be a decent radius around the ship.
+- Made meteor shower scrap amount multiplier and scrap value multiplier 1.2x by default and lowered spawn weight from 50 to 30 (and tornado from 50 to 40).
+- Added a special death interaction for Pjonk, die often for the sake of us (this is a config disabled by default because most people aren't Pjonk).
+- Added a config in general category for the gal ai owner being the only person able to disable her.
+- Probably fixed tornado type desync.
+- Maybe fixed position desync for late-join clients (clients that joined AFTER the gal was bought).
+- Gave All inside hazards an animation curve in the config stuff, have fun.
+- Gave industrial fan and laser turret config to not destroy body.
+
+## v0.7.18
+
+- Removed readjustment of camera with the shockwave gal model cuz that seems like a bad idea in hindsight.
+- Also credited rodrigo with a funny video.
+
+## v0.7.17
+
+- Fixed bug with wooden crate where it would error/spawn normal items despite config not allowing it.
+- Allowed you to be teleported away/use entrance teleports while in a bear trap to escape.
+- Gave bear traps a more advanced config.
+- Fixes to do with functional microwave.
+- Fixes to do with laser turret.
+- Fixes to do with wooden seeds.
+- Added config for wooden seed spawn chance from tree.
+- Shockwave gal fix with being fired, again.
+
+## v0.7.16
 
 - Metal crates no longer abusable.
 - Fixed exploit with metal crates.

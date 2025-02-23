@@ -5,15 +5,18 @@ schemaVersion = "0.0.1"
 repository = "https://thunderstore.io"
 
 [package]
+namespace = "XuXiaolan"
+name = "CodeRebirth"
 description = "Content Expansion mod with Custom Weathers, Items, Enemies and more!."
 websiteUrl = "https://github.com/XuuXiao/CodeRebirth"
 containsNsfwContent = false
-[package.dependencies]
+[packagedot.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
-Evaisa-LethalLib = "0.16.1"
+Evaisa-LethalLib = "0.16.2"
 Rune580-LethalCompany_InputUtils = "0.7.7"
-mrov-WeatherRegistry = "0.1.20"
-IAmBatby-LethalLevelLoader = "1.3.8"
+mrov-WeatherRegistry = "0.3.16"
+IAmBatby-LethalLevelLoader = "1.4.6"
+Zaggy1024-PathfindingLib = "0.0.6"
 
 [build]
 icon = "./icon.png"
@@ -21,7 +24,11 @@ readme = "./README.md"
 outdir = "./Packages"
 
 [[build.copy]]
-source = "../bin/Release/netstandard2.1/CodeRebirth.dll"
+source = "../CodeRebirth/bin/Release/netstandard2.1/CodeRebirth.dll"
+target = "plugins/CodeRebirth/"
+
+[[build.copy]]
+source = "../CodeRebirthMRAPI/bin/Release/netstandard2.1/XuuXiaolan.CodeRebirthMRAPI.dll"
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]
@@ -49,10 +56,6 @@ source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRe
 target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]
-source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/walletassets"
-target = "plugins/CodeRebirth/Assets/"
-
-[[build.copy]]
 source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/epicaxeassets"
 target = "plugins/CodeRebirth/Assets/"
 
@@ -62,10 +65,6 @@ target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]
 source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/snailcatassets"
-target = "plugins/CodeRebirth/Assets/"
-
-[[build.copy]]
-source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/cutieflyassets"
 target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]
@@ -138,6 +137,90 @@ target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]
 source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/shockwavegalmodelreplacementassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/seaminegalmodelreplacementassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/bellcrabgalassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/scp999galassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/fishdispenserassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/ducksongassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/friendassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/terminalbotassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/zortmodelreplacementassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/acunitgalassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/beartrapgalassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/zortassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/manorlordassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/janitorassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/cleanerdronegalassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/transporterassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/cruisergalassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/mistressassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/oxydescene.lethalbundle"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/monarchassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/merchantassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/rebirthmoons.lethalbundle"
 target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]

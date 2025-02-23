@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2333725887377077111}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 2409271556467163142}
   - component: {fileID: 9067752377212529587}
   - component: {fileID: 2368011123059840060}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: CameraLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -461,7 +461,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8197029560752061708}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: FlashTurretArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -683,8 +683,8 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &7524428467916669808
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,7 +694,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3182019183138045378}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -727,7 +727,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3149554132072344731}
   - component: {fileID: 1173025202173437919}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: FlashTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}

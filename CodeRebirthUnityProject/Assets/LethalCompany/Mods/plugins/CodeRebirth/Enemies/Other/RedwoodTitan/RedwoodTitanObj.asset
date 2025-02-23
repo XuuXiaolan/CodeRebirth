@@ -18,25 +18,34 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      value: 0.3
+      inSlope: 2.0875714
+      outSlope: 2.0875714
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.3
-      value: 1
-      inSlope: -0.000583067
-      outSlope: -0.000583067
+      time: 0.23951276
+      value: 0.8
+      inSlope: 1.7628536
+      outSlope: 1.7628536
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0.054376937
+      outSlope: 0.054376937
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.9798319
     - serializedVersion: 3
       time: 1
-      value: 0
+      value: 0.8
       inSlope: -0.4211312
       outSlope: -0.4211312
       tangentMode: 0
@@ -65,12 +74,14 @@ MonoBehaviour:
   nestsSpawned: 0
   isOutsideEnemy: 1
   isDaytimeEnemy: 0
+  increasedChanceInterior: -1
   normalizedTimeInDayToLeave: 1
   stunTimeMultiplier: 2
   doorSpeedMultiplier: 1
   stunGameDifficultyMultiplier: 1
   canBeStunned: 0
   canDie: 1
+  canBeDestroyed: 1
   destroyOnDeath: 0
   canSeeThroughFog: 1
   pushPlayerForce: 0

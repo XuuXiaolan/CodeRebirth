@@ -546,7 +546,7 @@ GameObject:
   - component: {fileID: 628193322848618802}
   - component: {fileID: 8144318307373106634}
   - component: {fileID: 5627089283044738071}
-  - component: {fileID: 8023955127254829699}
+  - component: {fileID: 3297163771968334546}
   m_Layer: 6
   m_Name: ShockwaveDrone
   m_TagString: InteractTrigger
@@ -610,9 +610,9 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.21
   m_Speed: 3.5
-  m_Acceleration: 20
-  avoidancePriority: 0
-  m_AngularSpeed: 240
+  m_Acceleration: 50
+  avoidancePriority: 5
+  m_AngularSpeed: 720
   m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -675,23 +675,10 @@ MonoBehaviour:
   m_Script: {fileID: -1614751389, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RobotFaceController: {fileID: 1288711711486736261}
-  FaceSkinnedMeshRenderer: {fileID: 9145391281392864541}
-  FaceRenderer: {fileID: 5216258533289101653}
+  GalName: Delilah
   Animator: {fileID: 6904610231587874633}
   NetworkAnimator: {fileID: 4395047199544177820}
   Agent: {fileID: 7682458782736325733}
-  HeadPatTrigger: {fileID: 7316101535542453347}
-  ChestTrigger: {fileID: 740510766078076077}
-  GiveItemTrigger:
-  - {fileID: 8551896037526453644}
-  - {fileID: 1980633229420150388}
-  itemsHeldTransforms:
-  - {fileID: 3074165211092828060}
-  - {fileID: 3785008659575890605}
-  - {fileID: 5674199889616152704}
-  - {fileID: 3498476748268425813}
-  CatPoseAnim: {fileID: 7400000, guid: 8e9f930d1b6ff5548b6e7abb38c64f45, type: 2}
   colliders:
   - {fileID: 8399114803787972892}
   - {fileID: 1172609015266963544}
@@ -718,8 +705,6 @@ MonoBehaviour:
   - {fileID: 687856985607472630}
   - {fileID: 6483371858232139439}
   - {fileID: 6886110659957231696}
-  LaserOrigin: {fileID: 1054080880911732113}
-  FlySource: {fileID: 8144318307373106634}
   GalVoice: {fileID: 6043710715914045858}
   GalSFX: {fileID: 1029347397223471147}
   ActivateSound: {fileID: 8300000, guid: ef344bdac4bb8b74fa8513b5daf88ada, type: 3}
@@ -732,22 +717,53 @@ MonoBehaviour:
   DeactivateSound: {fileID: 8300000, guid: b6c55c761340701488dc7925c6c45834, type: 3}
   HitSounds:
   - {fileID: 8300000, guid: f6161a4fa3a5fe9448eaee6cf03d5e36, type: 3}
-  PatSound: {fileID: 8300000, guid: a1d9e332ae5f7394bbccf15853cdfad6, type: 3}
   FootstepSounds:
   - {fileID: 8300000, guid: 56b7ec9e07fcb3e439ba01a55e36f46f, type: 3}
   - {fileID: 8300000, guid: 7c33ad107b6fd6e42882de6ab1fb9010, type: 3}
   - {fileID: 8300000, guid: 326354a8cf32f4a4bbf5d0dbefc2de67, type: 3}
   - {fileID: 8300000, guid: e2d5e5a111ea9de4aaeb253d6402b859, type: 3}
+  DoorOpeningSpeed: 1
+  GalHead: {fileID: 4619480781770405425}
+  GalEye: {fileID: 0}
+  renderersToHideIn:
+  - {fileID: 9145391281392864541}
+  smartAgentNavigator: {fileID: 3297163771968334546}
+  boomboxPlaying: 0
+  staringTimer: 0
+  targetEnemy: {fileID: 0}
+  ownerPlayer: {fileID: 0}
+  enemyTargetBlacklist: []
+  chargeCount: 10
+  maxChargeCount: 0
+  currentlyAttacking: 0
+  boomboxTimer: 0
+  physicsEnabled: 1
+  idleNeededTimer: 10
+  idleTimer: 0
+  isInHangarShipRoom: 1
+  inActive: 1
+  doneOnce: 0
+  RobotFaceController: {fileID: 1288711711486736261}
+  FaceSkinnedMeshRenderer: {fileID: 9145391281392864541}
+  FaceRenderer: {fileID: 5216258533289101653}
+  HeadPatTrigger: {fileID: 7316101535542453347}
+  ChestTrigger: {fileID: 740510766078076077}
+  GiveItemTrigger:
+  - {fileID: 8551896037526453644}
+  - {fileID: 1980633229420150388}
+  itemsHeldTransforms:
+  - {fileID: 3074165211092828060}
+  - {fileID: 3785008659575890605}
+  - {fileID: 5674199889616152704}
+  - {fileID: 3498476748268425813}
+  CatPoseAnim: {fileID: 7400000, guid: 8e9f930d1b6ff5548b6e7abb38c64f45, type: 2}
+  LaserOrigin: {fileID: 1054080880911732113}
+  FlySource: {fileID: 8144318307373106634}
+  PatSound: {fileID: 8300000, guid: a1d9e332ae5f7394bbccf15853cdfad6, type: 3}
   TakeDropItemSounds:
   - {fileID: 8300000, guid: f34769a1a52ce1c468a53ff61d07e3ea, type: 3}
   - {fileID: 8300000, guid: b9de0fcdf19fbe9449c7f8c82709a7c6, type: 3}
   - {fileID: 8300000, guid: 35ad9e3e0654e174e8455f348f365559, type: 3}
-  DoorOpeningSpeed: 1
-  DroneHead: {fileID: 4619480781770405425}
-  DroneEye: {fileID: 590808199739691480}
-  renderersToHideIn:
-  - {fileID: 9145391281392864541}
-  smartAgentNavigator: {fileID: 8023955127254829699}
 --- !u!114 &1288711711486736261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -933,7 +949,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &8023955127254829699
+--- !u!114 &3297163771968334546
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -942,9 +958,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1574516792246697467}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1157765670, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
 --- !u!1 &2060832966963771189
 GameObject:
   m_ObjectHideFlags: 0
@@ -3782,7 +3811,7 @@ MonoBehaviour:
   subText: Reliable Companion
   scrapValue: 0
   creatureScanID: -1
-  nodeType: 2
+  nodeType: 0
 --- !u!65 &417445123474427045
 BoxCollider:
   m_ObjectHideFlags: 0

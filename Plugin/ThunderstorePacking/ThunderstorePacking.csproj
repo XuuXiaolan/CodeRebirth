@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <ProjectReference Include="..\CodeRebirth\CodeRebirth.csproj" />
+        <ProjectReference Include="..\CodeRebirthMRAPI\CodeRebirthMRAPI.csproj" />
+    </ItemGroup>
+    
+    <!-- stuff to make msbuild happy because this is almost certainly not how you are supposed to do this -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <Target Name="PackThunderstore" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
+        <Exec Command="dotnet tcli build --config-path &quot;$(SolutionDir)Thunderstore/thunderstore.toml&quot; --package-version $(Version)"  />
+    </Target>
+</Project>

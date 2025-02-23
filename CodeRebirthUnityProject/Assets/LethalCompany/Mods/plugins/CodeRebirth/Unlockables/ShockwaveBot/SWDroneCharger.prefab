@@ -139,6 +139,7 @@ MonoBehaviour:
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
   overrideOffset: 1
+  unlockableID: -1
 --- !u!114 &2977379315748365077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActivateOrDeactivateTrigger: {fileID: 2451136845314577703}
   ChargeTransform: {fileID: 167647281384866141}
+  canActivateOnCompanyMoon: 1
 --- !u!1 &5634704177966452990
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,8 +300,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.54354966, y: 0.50659686, z: 0.4026558}
-  m_Center: {x: 0.010793373, y: 0.24670157, z: 0.032046333}
+  m_Size: {x: 1.0852051, y: 1.0712143, z: 0.82702637}
+  m_Center: {x: -0.0050964355, y: 0.51769847, z: 0.04426384}
 --- !u!1 &6084349758333810073
 GameObject:
   m_ObjectHideFlags: 0

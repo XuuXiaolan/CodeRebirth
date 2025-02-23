@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+		<!-- This is the most likely to work in Unity games, for the most part; you can ignore it. -->
+    <TargetFramework>netstandard2.1</TargetFramework>
+		<!-- This is the name of your mod. This will be used by tcli when building our Thunderstore package. -->
+    <AssemblyName>CodeRebirth</AssemblyName>
+		<!-- This assembly description doesn't show up on Thunderstore. -->
+    <!-- Configure description for Thunderstore at ./Thunderstore/thunderstore.toml -->
+    <Description>Content mod that adds Custom Weathers, Items, Enemies and more.</Description>
+		<!-- This is required for BepInEx to load us properly. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<!-- This allows you to use C#11 features, for the most part. -->
+    <LangVersion>latest</LangVersion>
+
+    <Configurations>Debug;Release</Configurations>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<!-- Embedded Debug (without showing your file structure :3) -->
+	<PropertyGroup>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>embedded</DebugType>
+		<PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+	  <PackageReference Include="Evaisa.LethalLib" Version="0.*" />
+    <PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" Version="0.7.4" />
+    <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>    
+    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
+    <PackageReference Include="IAmBatby.LethalLevelLoader" Version="1.4.*" />
+    <PackageReference Include="mrov.WeatherRegistry" Publicize="true" Version="*" />
+    <!-- <PackageReference Include="Zaggy1024-OpenBodyCams" Version="3.0.0" />
+    <PackageReference Include="BunyaPineTree-ModelReplacementAPI" Version="2.4.11" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MoreCompany"><HintPath>../dlls/MoreCompany.dll</HintPath></Reference>
+    <Reference Include="PathfindingLib"><HintPath>../dlls/PathfindingLib.dll</HintPath></Reference>
+    <Reference Include="CullFactory"><HintPath>../dlls/CullFactory.dll</HintPath></Reference>
+    <Reference Include="OpenBodyCams"><HintPath>../dlls/OpenBodyCams.dll</HintPath></Reference>
+    <Reference Include="SubtitlesAPI"><HintPath>../dlls/SubtitlesAPI.dll</HintPath></Reference>
+    <Reference Include="MMHOOK_Assembly-CSharp"><HintPath>../dlls/MMHOOK_Assembly-CSharp.dll</HintPath></Reference>
+  </ItemGroup>  
+
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Allows us to use Rpc methods. See https://github.com/EvaisaDev/UnityNetcodePatcher -->
+  <!-- This MSBuild option does not work in Visual Studio, using cli option for now
+  <ItemGroup>
+    <PackageReference Include="Evaisa.NetcodePatcher.MSBuild" Version="3.*" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <NetcodePatch Include="$(TargetPath)" />
+  </ItemGroup>
+  -->
+  <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+  </Target>
+</Project>

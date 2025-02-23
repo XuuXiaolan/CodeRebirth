@@ -295,7 +295,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2661599232986745737}
   - component: {fileID: 2969623847393940429}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WoodenCrate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -360,7 +360,7 @@ SkinnedMeshRenderer:
   m_SortingOrder: 0
   serializedVersion: 2
   m_Quality: 0
-  m_UpdateWhenOffscreen: 0
+  m_UpdateWhenOffscreen: 1
   m_SkinnedMotionVectors: 1
   m_Mesh: {fileID: 6494220093297859469, guid: 5e29d25cb9967fb46a5c3763f7ca6fc2, type: 3}
   m_Bones:
@@ -1034,15 +1034,13 @@ MonoBehaviour:
   m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regularHoverTip: 
-  keyHoverTip: 
+  keyHoverTip: 'Open : [LMB]'
   slowlyOpeningSFX: {fileID: 6992814719332117094}
   openSFX: {fileID: 850424377539253765}
   trigger: {fileID: 0}
   pickable: {fileID: 0}
   animator: {fileID: 8557149345729840933}
-  health:
-    m_InternalValue: 4
+  health: 4
   originalPosition: {x: 0, y: 0, z: 0}
   crateType: 0
   mainCollider: {fileID: 4954358645330385402}
@@ -1115,7 +1113,7 @@ MonoBehaviour:
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
-  InLocalSpace: 0
+  InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
 --- !u!1 &7967646740812313434

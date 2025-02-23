@@ -293,8 +293,8 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &5629450085371556831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +313,6 @@ MonoBehaviour:
   rotationSpeed: 125
   fireRate: 3
   detectionRange: 400
-  damageAmount: 10
   ACUAudioSource: {fileID: 6783464174544928357}
   ACUFireSound: {fileID: 8300000, guid: 3ee3f9ad28f62ac40981a57364e51e43, type: 3}
   ACURechargeSound: {fileID: 8300000, guid: 1b8a68f403d28a44d827a08fadd8d47f, type: 3}
@@ -321,7 +320,8 @@ MonoBehaviour:
   DetectPlayerAudioSound: {fileID: 280126752041892052}
   ACUStartOrEndSound: {fileID: 8300000, guid: a012878ce8e68be4384ff9784bfad54e, type: 3}
   ACUTurnAudioSource: {fileID: 3749041448614679287}
-  playerHeadstart: 10
+  playerHeadstart: 5
+  maxAngle: 70
 --- !u!1 &1575862944460693779
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,7 +708,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3611783422789201844}
   - component: {fileID: 4802960847316012075}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: AirControl
   m_TagString: Untagged
   m_Icon: {fileID: 0}

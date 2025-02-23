@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6333936334786670863}
   - component: {fileID: 7112890505607982334}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: IronSafe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ SkinnedMeshRenderer:
   m_SortingOrder: 0
   serializedVersion: 2
   m_Quality: 0
-  m_UpdateWhenOffscreen: 0
+  m_UpdateWhenOffscreen: 1
   m_SkinnedMotionVectors: 1
   m_Mesh: {fileID: -4523559303502009203, guid: 99d67befb0c452d4782afd058e6a3e02, type: 3}
   m_Bones:
@@ -413,8 +413,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: 'Hold : [E]'
-  disabledHoverIcon: {fileID: 21300000, guid: b64c2f1d1dab3024eb82969f4be28b42, type: 2}
-  disabledHoverTip: Requires a key first!
+  disabledHoverIcon: {fileID: 21300000, guid: e627092ae40a31349bb823b30f28e905, type: 3}
+  disabledHoverTip: Dig it and get a key!
   interactable: 1
   oneHandedItemAllowed: 1
   twoHandedItemAllowed: 1
@@ -523,20 +523,7 @@ MonoBehaviour:
   unlockSFX: {fileID: 4391645601647652912}
   onUnlock:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2851295282374575768}
-        m_TargetAssemblyTypeName: CodeRebirth.src.Content.Maps.ItemCrate, CodeRebirth
-        m_MethodName: AllowCrateToBeOpened
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  trigger: {fileID: 5216363493227153392}
+      m_Calls: []
 --- !u!65 &4147470104225953683
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -606,7 +593,7 @@ MonoBehaviour:
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
-  InLocalSpace: 0
+  InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
 --- !u!114 &2851295282374575768
@@ -621,18 +608,19 @@ MonoBehaviour:
   m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regularHoverTip: 'Hold : [E]'
   keyHoverTip: 'Open : [LMB]'
   slowlyOpeningSFX: {fileID: 971887808943341902}
   openSFX: {fileID: 6931942329036839841}
   trigger: {fileID: 5216363493227153392}
   pickable: {fileID: 7892467125358745976}
   animator: {fileID: 3949561938320951568}
-  health:
-    m_InternalValue: 4
+  health: 4
   originalPosition: {x: 0, y: 0, z: 0}
+  creepyWarningSound: {fileID: 0}
   crateType: 1
   mainCollider: {fileID: 4147470104225953683}
+  grabAndPullPlayerScript: {fileID: 0}
+  grabAndLaunchPlayerScript: {fileID: 0}
 --- !u!135 &6841124065061655706
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -646,7 +634,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2147483639
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
