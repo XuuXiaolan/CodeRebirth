@@ -56,7 +56,6 @@ static class PlayerControllerBPatch
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.Update += PlayerControllerB_Update;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
-        On.GameNetcodeStuff.PlayerControllerB.KillPlayer += PlayerControllerB_KillPlayer;
         On.GameNetcodeStuff.PlayerControllerB.IHittable_Hit += PlayerControllerB_IHittable_Hit;
         On.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += PlayerControllerB_DiscardHeldObject;
         // On.GameNetcodeStuff.PlayerControllerB.NearOtherPlayers += PlayerControllerB_NearOtherPlayers;
@@ -108,15 +107,6 @@ static class PlayerControllerBPatch
             return false;
         }
         return orig(self, force, hitDirection, playerWhoHit, playHitSFX, hitID);
-    }
-
-    private static void PlayerControllerB_KillPlayer(On.GameNetcodeStuff.PlayerControllerB.orig_KillPlayer orig, PlayerControllerB self, Vector3 bodyVelocity, bool spawnBody, CauseOfDeath causeOfDeath, int deathAnimation, Vector3 positionOffset)
-    {
-        orig(self, bodyVelocity, spawnBody, causeOfDeath, deathAnimation, positionOffset);
-        if (self.playerSteamId == 76561198217661947 && Plugin.ModConfig.ConfigPjonkTurkeyEnabled.Value && GameNetworkManager.Instance.localPlayerController == self)
-        {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Pjonk Turkey", spawnBody ? self.deadBody.transform.position : self.transform.position, false, true, 0);
-        }
     }
 
     private static void PlayerControllerB_ConnectClientToPlayerObject(On.GameNetcodeStuff.PlayerControllerB.orig_ConnectClientToPlayerObject orig, PlayerControllerB self)

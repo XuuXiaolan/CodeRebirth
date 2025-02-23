@@ -1,7 +1,11 @@
 # v1.0.0
 
 - The final update.
-- Added the mistress.
+- Lots of stuff lol.
+- Dozens of new items with special effects added.
+- Multiple enemies reworked and rewritten.
+- I forced a lot of your configs to reset to true for the first time to experience the new content.
+- Multiple new enemies added.
 
 ## v0.15.3
 

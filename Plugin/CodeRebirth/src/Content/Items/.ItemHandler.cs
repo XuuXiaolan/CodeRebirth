@@ -43,12 +43,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
         public Item SnowGlobeItem { get; private set; } = null!;
     }
 
-    public class PjonkTurkeyAssets(string bundleName) : AssetBundleLoader<PjonkTurkeyAssets>(bundleName)
-    {
-        [LoadFromBundle("PjonkTurkeyObj.asset")]
-        public Item PjonkTurkeyItem { get; private set; } = null!;
-    }
-
     public class ZortAssets(string bundleName) : AssetBundleLoader<ZortAssets>(bundleName)
     {
         [LoadFromBundle("AccordionObj.asset")]
@@ -65,7 +59,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
     }
 
     public ZortAssets Zort { get; private set; } = null!;
-    public PjonkTurkeyAssets PjonkTurkey { get; private set; } = null!;
     public HoverboardAssets Hoverboard { get; private set; } = null!;
     public EpicAxeAssets EpicAxe { get; private set; } = null!;
     public SnowGlobeAssets SnowGlobe { get; private set; } = null!;
@@ -123,13 +116,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
             SpikyMace = new SpikyMaceAssets("spikymaceassets");
             int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigSpikyMaceWorth.Value);
             RegisterScrapWithConfig(Plugin.ModConfig.ConfigSpikyMaceScrapSpawnWeights.Value, SpikyMace.SpikyMaceItem, scrapValues[0], scrapValues[1]);
-        }
-
-        if (Plugin.ModConfig.ConfigPjonkTurkeyEnabled.Value)
-        {
-            PjonkTurkey = new PjonkTurkeyAssets("pjonkturkeyassets");
-            Plugin.samplePrefabs.Add("Pjonk Turkey", PjonkTurkey.PjonkTurkeyItem);
-            RegisterScrapWithConfig("All:0", PjonkTurkey.PjonkTurkeyItem, -1, -1);
         }
     }
 }
