@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.Util;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
 public static class SlowDownEffect
 {
+    public static bool isSlowDownEffectActive = false;
     public static AudioSource[] audioSourcesToAffect = []; // Patch AudioSource.Awake or find Audio Listener.
     public static void DoSlowdownEffect(float timeLength, float timeScale)
     {
-        CodeRebirthUtils.Instance.TimeSlowVolume.weight = 1f;
+        isSlowDownEffectActive = true;
+        // CodeRebirthUtils.Instance.TimeSlowVolume.weight = 1f;
         audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>();
         float timeDelay = timeLength;
         Time.timeScale = timeScale;
@@ -93,8 +94,9 @@ public static class SlowDownEffect
         {
             timeElapsed -= Time.deltaTime;
             yield return null;
-            CodeRebirthUtils.Instance.TimeSlowVolume.weight = timeElapsed;
+            // CodeRebirthUtils.Instance.TimeSlowVolume.weight = timeElapsed;
         }
-        CodeRebirthUtils.Instance.TimeSlowVolume.weight = 0f;
+        // CodeRebirthUtils.Instance.TimeSlowVolume.weight = 0f;
+        isSlowDownEffectActive = false;
     }
 }

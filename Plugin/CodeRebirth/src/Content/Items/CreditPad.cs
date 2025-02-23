@@ -7,9 +7,9 @@ public class CreditPad : GrabbableObject
 {
     public int creditValue = 0;
 
-    public override void InteractItem()
+    public override void ItemActivate(bool used, bool buttonDown = true)
     {
-        base.InteractItem();
+        base.ItemActivate(used, buttonDown);
         playerHeldBy.inSpecialInteractAnimation = true;
         IncreaseShipValueServerRpc();
         StartCoroutine(WaitForEndOfFrame());

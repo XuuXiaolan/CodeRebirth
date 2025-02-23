@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.PathFinding;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -21,6 +22,7 @@ public enum CodeRebirthStatusEffects
 public class CodeRebirthPlayerManager : NetworkBehaviour
 {
     private bool previousDoorClosed;
+    public static List<InteractTrigger> triggersTampered = new();
     internal static Dictionary<PlayerControllerB, CRPlayerData> dataForPlayer = new Dictionary<PlayerControllerB, CRPlayerData>();
     public static List<SmartAgentNavigator> smartAgentNavigators = new();
     public static event EventHandler<bool>? OnDoorStateChange;
@@ -38,6 +40,23 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
             OnDoorStateChange?.Invoke(null, StartOfRound.Instance.hangarDoorsClosed);
         }
         previousDoorClosed = StartOfRound.Instance.hangarDoorsClosed;
+
+        if (SlowDownEffect.isSlowDownEffectActive)
+        {
+            if (GameNetworkManager.Instance.localPlayerController.hoveringOverTrigger && GameNetworkManager.Instance.localPlayerController.currentTriggerInAnimationWith != null && !triggersTampered.Contains(GameNetworkManager.Instance.localPlayerController.currentTriggerInAnimationWith))
+            {
+                GameNetworkManager.Instance.localPlayerController.currentTriggerInAnimationWith.timeToHold /= 5f;
+                triggersTampered.Add(GameNetworkManager.Instance.localPlayerController.currentTriggerInAnimationWith);
+            }
+        }
+        else if (triggersTampered.Count > 0)
+        {
+            foreach (InteractTrigger trigger in triggersTampered)
+            {
+                trigger.timeToHold *= 5f;
+            }
+            triggersTampered.Clear();
+        }
     }
 }
 

@@ -6,9 +6,9 @@ public class Detonator : GrabbableObject
 {
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
 
-    public override void InteractItem()
+    public override void ItemActivate(bool used, bool buttonDown = true)
     {
-        base.InteractItem();
+        base.ItemActivate(used, buttonDown);
         StartCoroutine(DoBlowAnimation());
     }
 
