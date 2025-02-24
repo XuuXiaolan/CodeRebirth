@@ -33,6 +33,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public int enemiesMask = 0;
     [HideInInspector] public int interactableMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
+    [HideInInspector] public ES3Settings SaveSettings = new ES3Settings();
     private System.Random CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
@@ -41,6 +42,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
         DoLayerMaskStuff();
         Instance = this;
+        SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
     }
 
     private void DoLayerMaskStuff()

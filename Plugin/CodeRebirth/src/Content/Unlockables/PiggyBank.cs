@@ -1,5 +1,6 @@
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -24,7 +25,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
         base.OnNetworkSpawn();
         Instance = this;
         if (!IsServer) return;
-        int _coinsStored = ES3.Load("coinsStoredCR", GameNetworkManager.Instance.currentSaveFileName, 0);
+        int _coinsStored = ES3.Load("coinsStoredCR", 0, CodeRebirthUtils.Instance.SaveSettings);
         AddCoinsToPiggyBank(_coinsStored);
     }
 
@@ -63,7 +64,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public void SaveCurrentCoins()
     {
         if (!IsHost) return;
-        ES3.Save<int>("coinsStoredCR", coinsStored.Value, GameNetworkManager.Instance.currentSaveFileName);
+        ES3.Save<int>("coinsStoredCR", coinsStored.Value, CodeRebirthUtils.Instance.SaveSettings);
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
