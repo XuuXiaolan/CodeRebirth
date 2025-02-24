@@ -28,7 +28,6 @@ public class SmartAgentNavigator : NetworkBehaviour
     private bool InElevator => elevatorScript != null && Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) < 7f;
     private bool wasInElevatorLastFrame = false;
     private Coroutine? searchRoutine = null;
-    private Coroutine? searchCoroutine = null;
     private bool isSearching = false;
     private bool reachedDestination = false;
     private MineshaftElevatorController? elevatorScript = null;
@@ -499,7 +498,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     public void StopSearchRoutine()
     {
         isSearching = false;
-        if (searchCoroutine != null)
+        if (searchRoutine != null)
         {
             StopCoroutine(searchRoutine);
         }
@@ -516,6 +515,7 @@ public class SmartAgentNavigator : NetworkBehaviour
 
             while (!reachedDestination && isSearching)
             {
+                Plugin.ExtendedLogging($"Search: {positionToTravel}");
                 agent.SetDestination(positionToTravel);
                 yield return new WaitForSeconds(3f);
 

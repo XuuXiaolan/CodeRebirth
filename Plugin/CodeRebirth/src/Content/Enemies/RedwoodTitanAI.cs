@@ -3,7 +3,6 @@ using GameNetcodeStuff;
 using UnityEngine;
 using System.Linq;
 using CodeRebirth.src.Util;
-using Unity.Netcode.Components;
 using Unity.Netcode;
 using CodeRebirth.src.MiscScripts;
 
@@ -57,8 +56,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     [HideInInspector]
     public bool kickingOut = false;
-    [HideInInspector]
-    public bool kicking = false;
     [HideInInspector]
     public bool jumping = false;
 
@@ -180,11 +177,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         CodeRebirthPlayerManager.OnDoorStateChange -= OnShipDoorStateChange;
     }
 
-    public override void EnableEnemyMesh(bool enable, bool overrideDoNotSet = false)
-    {
-        base.EnableEnemyMesh(enable);
-    }
-
     public override void Update()
     {
         base.Update();
@@ -247,7 +239,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void DoFunnyThingWithNearestPlayer(PlayerControllerB closestPlayer, Vector3 closestFootPosition)
     {
-        if (kicking || jumping) return;
         float distanceToClosestPlayer = Vector3.Distance(closestFootPosition, closestPlayer.transform.position);
         float randomFloat = UnityEngine.Random.Range(0f, 100f);
         if (distanceToClosestPlayer <= 16f && randomFloat <= 5f)
@@ -255,7 +246,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             SetAnimatorMotionBools(chasing: false, walking: false);
             JumpInPlace();
         }
-        else if (distanceToClosestPlayer <= 16f && randomFloat <= 5f)
+        else if (distanceToClosestPlayer <= 16f && randomFloat <= 10f)
         {
             SetAnimatorMotionBools(chasing: false, walking: false);
             DoKickTargetPlayer(closestPlayer);
@@ -273,7 +264,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void DoKickTargetPlayer(PlayerControllerB closestPlayer)
     {
-        kicking = true;
         agent.speed = 0.5f;
         creatureNetworkAnimator.SetTrigger(startKick);
         playerToKick = closestPlayer;
@@ -309,7 +299,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost)
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost || playerToKick == null || jumping)
         {
             return;
         }
@@ -374,6 +364,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         agent.speed = 0f;
         creatureNetworkAnimator.SetTrigger(startEnrage);
         yield return new WaitForSeconds(6.9f);
+        if (currentBehaviourStateIndex != (int)State.RunningToTarget) yield break;
         SetAnimatorMotionBools(chasing: true, walking: false);
         agent.angularSpeed = 100f;
         agent.speed = walkingSpeed * 4;
@@ -640,7 +631,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void FinishKicking()
     { // AnimEvent
-        kicking = false;
         kickingOut = false;
         Plugin.ExtendedLogging("Kick ended");
         if (IsServer)
