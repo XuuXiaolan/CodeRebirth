@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65d3fcb39dd67306e9bb17a603308070, type: 3}
-  m_Name: SnailCatObj
+  m_Name: SnailCatEnemyObj
   m_EditorClassIdentifier: 
   enemyName: SnailCat
   probabilityCurve:
@@ -57,7 +57,7 @@ MonoBehaviour:
   useNumberSpawnedFalloff: 0
   spawnInGroupsOf: 0
   requireNestObjectsToSpawn: 0
-  enemyPrefab: {fileID: 2984345086716998709, guid: 1db672619e634324fbe9838381d21e18,
+  enemyPrefab: {fileID: 222362860697320849, guid: 40c6b80018aac694a86c6e18db5b201b,
     type: 3}
   PowerLevel: 0
   MaxCount: 4
@@ -65,13 +65,15 @@ MonoBehaviour:
   nestsSpawned: 0
   isOutsideEnemy: 1
   isDaytimeEnemy: 1
+  increasedChanceInterior: -1
   normalizedTimeInDayToLeave: 1
   stunTimeMultiplier: 0
   doorSpeedMultiplier: 1
   stunGameDifficultyMultiplier: 0
   canBeStunned: 0
   canDie: 0
-  destroyOnDeath: 1
+  canBeDestroyed: 0
+  destroyOnDeath: 0
   canSeeThroughFog: 1
   pushPlayerForce: 0.16
   pushPlayerDistance: 1.26

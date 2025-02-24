@@ -1,9 +1,22 @@
 using GameNetcodeStuff;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class SnailCatPhysicsProp : GrabbableObject
 {
+
+    public Animator animator = null!;
+    public NetworkAnimator networkAnimator = null!;
+	public SnailCatAI snailCatScript = null!;
+	public PlayerControllerB? previousPlayerHeldBy = null;
+
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private static readonly int HitAnimation = Animator.StringToHash("doHit"); // Trigger
+    private static readonly int GrabbedAnimation = Animator.StringToHash("grabbed"); // Bool
+    private static readonly int SittingAnimation = Animator.StringToHash("sitting"); // Bool
+    private static readonly int SleepingAnimation = Animator.StringToHash("sleeping"); // Bool
+
 	public override void EquipItem()
 	{
 		base.EquipItem();
@@ -156,7 +169,4 @@ public class SnailCatPhysicsProp : GrabbableObject
         playerHeldBy;
 		base.DiscardItem();
 	}
-
-	public SnailCatAI snailCatScript;
-	public PlayerControllerB previousPlayerHeldBy;
 }
