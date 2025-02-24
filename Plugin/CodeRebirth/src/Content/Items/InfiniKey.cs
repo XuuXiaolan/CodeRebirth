@@ -3,7 +3,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class InfiniKey : KnifeItem
 {
-
     public void OnHit(Collider collider)
     {
         if (collider == null) return;

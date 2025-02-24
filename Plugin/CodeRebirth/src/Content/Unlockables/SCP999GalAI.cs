@@ -181,7 +181,13 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
                 if (distanceFromGal > 5) continue;
                 reviveChargeCount.Value--;
                 galDidSomething = true;
-                DoALotOfShitToRevivePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), fail);
+                if (fail)
+                {
+                    Plugin.ExtendedLogging("Failed to revive player.");
+                    if (NetworkManager.Singleton.IsServer) networkAnimator.SetTrigger(doFailAnimation);
+                    return;
+                }
+                DoALotOfShitToRevivePlayerClientRpc(revivePositions[UnityEngine.Random.Range(0, revivePositions.Count)].position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
             }
         }
         if (onlyInteractedPlayerHealed)
@@ -301,17 +307,15 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     }
 
     [ClientRpc]
-    private void DoALotOfShitToRevivePlayerClientRpc(int PlayerScriptIndex, bool failed)
+    private void DoALotOfShitToRevivePlayerClientRpc(Vector3 revivePosition, int PlayerScriptIndex)
+    {
+        DoStuffToRevivePlayer(revivePosition, PlayerScriptIndex);
+    }
+
+    public static void DoStuffToRevivePlayer(Vector3 revivePosition, int PlayerScriptIndex)
     {
         PlayerControllerB PlayerScript = StartOfRound.Instance.allPlayerScripts[PlayerScriptIndex];
         DeadBodyInfo deadBodyInfo = PlayerScript.deadBody;
-
-        if (failed)
-        {
-            Plugin.ExtendedLogging("Failed to revive player.");
-            if (IsServer) networkAnimator.SetTrigger(doFailAnimation);
-            return;
-        }
         PlayerScript.isInsideFactory = false;
         PlayerScript.isInElevator = true;
         PlayerScript.isInHangarShipRoom = true;
@@ -336,7 +340,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             PlayerScript.hasBeenCriticallyInjured = false;
             PlayerScript.criticallyInjured = false;
             PlayerScript.playerBodyAnimator.SetBool("Limp", value: false);
-            PlayerScript.TeleportPlayer(revivePositions[random.Next(revivePositions.Count)].position, false, 0f, false, true);
+            PlayerScript.TeleportPlayer(revivePosition, false, 0f, false, true);
             PlayerScript.parentedToElevatorLastFrame = false;
             PlayerScript.overrideGameOverSpectatePivot = null;
             StartOfRound.Instance.SetPlayerObjectExtrapolate(enable: false);
