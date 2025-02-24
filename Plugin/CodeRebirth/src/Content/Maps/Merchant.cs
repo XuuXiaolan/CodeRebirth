@@ -177,7 +177,7 @@ public class Merchant : NetworkBehaviour
             Vector3 normalizedDirection = (currentTargetPlayer.gameplayCamera.transform.position - turret.position).normalized;
             float dotProduct = Vector3.Dot(turret.forward, normalizedDirection);
             // Plugin.ExtendedLogging($"Dot product: {dotProduct}");
-            if (dotProduct > 0.9f && !Physics.Linecast(turret.position, currentTargetPlayer.transform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            if (dotProduct > 0.9f && !Physics.Linecast(turret.position, currentTargetPlayer.transform.position, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
             {
                 // Fire at player and deal damage.
                 if (GameNetworkManager.Instance.localPlayerController == currentTargetPlayer && localDamageCooldownPerTurret[turret] <= 0)

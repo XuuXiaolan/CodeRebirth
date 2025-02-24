@@ -16,7 +16,7 @@ MonoBehaviour:
   itemName: Oxidizer
   spawnPositionTypes: []
   twoHanded: 0
-  twoHandedAnimation: 0
+  twoHandedAnimation: 1
   disableHandsOnWall: 1
   canBeGrabbedBeforeGameStart: 1
   weight: 1.1904762
@@ -35,8 +35,8 @@ MonoBehaviour:
   requiresBattery: 0
   batteryUsage: 0
   automaticallySetUsingPower: 0
-  itemIcon: {fileID: 21300000, guid: 549c3b8a8556a5b4c9e30ba4fed06e63, type: 3}
-  grabAnim: HoldLung
+  itemIcon: {fileID: 0}
+  grabAnim: HoldShotgun
   useAnim: 
   pocketAnim: 
   throwAnim: 
@@ -52,12 +52,12 @@ MonoBehaviour:
   saveItemVariable: 0
   isDefensiveWeapon: 0
   toolTips: []
-  verticalOffset: 0.015
+  verticalOffset: 0.25
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
-  restingRotation: {x: -89.98, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  restingRotation: {x: -30, y: 0, z: -90}
+  rotationOffset: {x: -5, y: 100, z: -180}
+  positionOffset: {x: 0, y: 0.6, z: 0.25}
   meshOffset: 0
   meshVariants: []
   materialVariants: []
