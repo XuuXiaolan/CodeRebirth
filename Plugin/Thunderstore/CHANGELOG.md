@@ -6,6 +6,7 @@
 - Multiple enemies reworked and rewritten.
 - I forced a lot of your configs to reset to true for the first time to experience the new content.
 - Multiple new enemies added.
+- Fixed redwood titan.
 
 ## v0.15.3
 

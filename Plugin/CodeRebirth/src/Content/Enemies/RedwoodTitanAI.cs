@@ -299,7 +299,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost || playerToKick == null || jumping)
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead || !IsHost || playerToKick != null || jumping)
         {
             return;
         }
@@ -394,7 +394,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
         }
-        SetDestinationToPosition(targetEnemy.transform.position, checkForPath: true);
+        smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position);
     }
 
     public void DealEnemyDamageFromShockwave(EnemyAI enemy, float distanceFromEnemy)
