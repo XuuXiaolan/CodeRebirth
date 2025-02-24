@@ -420,12 +420,12 @@ public class SeamineGalAI : GalAI
         // plays the visual effect from gabriel
         GalVoice.PlayOneShot(hazardPingSound);
         if (Plugin.ModConfig.ConfigOnlyOwnerSeesScanEffects.Value && GameNetworkManager.Instance.localPlayerController != ownerPlayer) return;
-        ParticleSystem particleSystem = DoTerrainScan();
+        ParticleSystem particleSystem = DoTerrainScan(terrainScanner, transform.position);
         particleSystem.gameObject.transform.parent.gameObject.SetActive(true);
         if (customPassRoutines.Count <= 0)
         {
-            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughEnemies)));
-            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughHazards)));
+            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughEnemies, Plugin.ModConfig.ConfigSeamineScanRange.Value)));
+            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughHazards, Plugin.ModConfig.ConfigSeamineScanRange.Value)));
         }
         else
         {
@@ -433,15 +433,15 @@ public class SeamineGalAI : GalAI
             {
                 StopCoroutine(coroutine);
             }
-            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughEnemies)));
-            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughHazards)));
+            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughEnemies, Plugin.ModConfig.ConfigSeamineScanRange.Value)));
+            customPassRoutines.Add(StartCoroutine(DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughHazards, Plugin.ModConfig.ConfigSeamineScanRange.Value)));
         }
     }
 
-    private ParticleSystem DoTerrainScan()
+    public static ParticleSystem DoTerrainScan(TerrainScanner _terrainScanner, Vector3 position)
     {
         //if (GameNetworkManager.Instance.localPlayerController != ownerPlayer || Vector3.Distance(transform.position, ownerPlayer.transform.position) > 10) return;
-        return terrainScanner.SpawnTerrainScanner(transform.position);
+        return _terrainScanner.SpawnTerrainScanner(position);
     }
 
     private bool DoDancingAction()
@@ -745,7 +745,7 @@ public class SeamineGalAI : GalAI
         Animator.SetBool(inElevatorAnimation, enteredElevator);
     }
 
-    public IEnumerator DoCustomPassThing(ParticleSystem particleSystem, CustomPassManager.CustomPassType customPassType)
+    public static IEnumerator DoCustomPassThing(ParticleSystem particleSystem, CustomPassManager.CustomPassType customPassType, float scanRange)
     {
         if (CustomPassManager.Instance.EnableCustomPass(customPassType, true) is not SeeThroughCustomPass customPass) yield break;
 
@@ -755,14 +755,14 @@ public class SeamineGalAI : GalAI
         {
             float percentLifetime = particleSystem.time / particleSystem.main.startLifetime.constant;
             customPass.maxVisibilityDistance =  particleSystem.sizeOverLifetime.size.Evaluate(percentLifetime) * 300; // takes some odd seconds
-            return customPass.maxVisibilityDistance < Plugin.ModConfig.ConfigSeamineScanRange.Value;
+            return customPass.maxVisibilityDistance < scanRange;
         });
 
         yield return new WaitForSeconds(5);
 
         yield return new WaitWhile(() =>
         {
-            customPass.maxVisibilityDistance -= Time.deltaTime * Plugin.ModConfig.ConfigSeamineScanRange.Value / 3f; // takes 3s
+            customPass.maxVisibilityDistance -= Time.deltaTime * scanRange / 3f; // takes 3s
             return customPass.maxVisibilityDistance > 0f;
         });
         CustomPassManager.Instance.RemoveCustomPass(customPassType);
