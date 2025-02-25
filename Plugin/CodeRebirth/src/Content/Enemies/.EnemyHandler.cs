@@ -8,14 +8,17 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 {
     public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName)
     {
-        [LoadFromBundle("SnailCatObj.asset")]
+        [LoadFromBundle("SnailCatEnemyObj.asset")]
         public EnemyType SnailCatEnemyType { get; private set; } = null!;
 
-        [LoadFromBundle("SnailCatTN.asset")]
+        [LoadFromBundle("SnailCatItemObj.asset")]
+        public Item SnailCatItem { get; private set; } = null!;
+
+        /*[LoadFromBundle("SnailCatTN.asset")]
         public TerminalNode SnailCatTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("SnailCatTK.asset")]
-        public TerminalKeyword SnailCatTerminalKeyword { get; private set; } = null!;
+        public TerminalKeyword SnailCatTerminalKeyword { get; private set; } = null!;*/
     }
 
     public class CarnivorousPlantAssets(string bundleName ) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName)
@@ -169,7 +172,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         if (Plugin.ModConfig.ConfigSnailCatEnabled.Value)
         {
             SnailCat = new SnailCatAssets("snailcatassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, SnailCat.SnailCatTerminalNode, SnailCat.SnailCatTerminalKeyword, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, null, null, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
         }
 
         if (Plugin.ModConfig.ConfigDuckSongEnabled.Value)

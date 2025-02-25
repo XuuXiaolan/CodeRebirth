@@ -1,5 +1,5 @@
+using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
-using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
@@ -7,19 +7,22 @@ public class SnailCatPhysicsProp : GrabbableObject
 {
 
     public Animator animator = null!;
-    public NetworkAnimator networkAnimator = null!;
+    public OwnerNetworkAnimator ownerNetworkAnimator = null!;
 	public SnailCatAI snailCatScript = null!;
 	public PlayerControllerB? previousPlayerHeldBy = null;
 
-    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
-    private static readonly int HitAnimation = Animator.StringToHash("doHit"); // Trigger
-    private static readonly int GrabbedAnimation = Animator.StringToHash("grabbed"); // Bool
-    private static readonly int SittingAnimation = Animator.StringToHash("sitting"); // Bool
-    private static readonly int SleepingAnimation = Animator.StringToHash("sleeping"); // Bool
+    [HideInInspector] public static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    [HideInInspector] public static readonly int HitAnimation = Animator.StringToHash("doHit"); // Trigger
+    [HideInInspector] public static readonly int GrabbedAnimation = Animator.StringToHash("grabbed"); // Bool
+    [HideInInspector] public static readonly int SittingAnimation = Animator.StringToHash("sitting"); // Bool
+    [HideInInspector] public static readonly int SleepingAnimation = Animator.StringToHash("sleeping"); // Bool
 
 	public override void EquipItem()
 	{
 		base.EquipItem();
+		animator.SetBool(GrabbedAnimation, true);
+		animator.SetBool(SittingAnimation, false);
+		animator.SetBool(SleepingAnimation, false);
         snailCatScript.PickUpBabyLocalClient();
         previousPlayerHeldBy = playerHeldBy;
 	}
@@ -86,6 +89,18 @@ public class SnailCatPhysicsProp : GrabbableObject
 
 	public override void Update()
 	{
+		if (IsOwner)
+		{
+			animator.SetFloat(RunSpeedFloat, snailCatScript.agent.velocity.magnitude / 3);
+			if (!wasOwnerLastFrame)
+			{
+				wasOwnerLastFrame = true;
+			}
+		}
+		else if (wasOwnerLastFrame)
+		{
+			wasOwnerLastFrame = false;
+		}
 		if (!isHeld && parentObject == null)
 		{
 			if (fallTime < 1f)
@@ -164,9 +179,8 @@ public class SnailCatPhysicsProp : GrabbableObject
 	public override void DiscardItem()
 	{		
         snailCatScript.DropBabyLocalClient();
-		
-        previousPlayerHeldBy = 
-        playerHeldBy;
+		animator.SetBool(GrabbedAnimation, false);
+        previousPlayerHeldBy = playerHeldBy;
 		base.DiscardItem();
 	}
 }

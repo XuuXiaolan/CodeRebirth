@@ -33,7 +33,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public int enemiesMask = 0;
     [HideInInspector] public int interactableMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
-    [HideInInspector] public ES3Settings SaveSettings = new ES3Settings();
+    [HideInInspector] public ES3Settings SaveSettings;
     private System.Random CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 

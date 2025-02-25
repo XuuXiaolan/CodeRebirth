@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,15 +19,19 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public enum State
     {
         Wandering,
+		Sleeping,
+		Sitting,
+		Grabbed
     }
 
     public override void Start()
     {
         base.Start();
-        StartSearch(transform.position);
+        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
 
+	#region State Machines
     public override void DoAIInterval()
     {
         base.DoAIInterval();
@@ -35,16 +40,47 @@ public class SnailCatAI : CodeRebirthEnemyAI
         switch(currentBehaviourStateIndex)
         {
             case (int)State.Wandering:
-                agent.speed = 4f;
+				DoWandering();
                 break;
+			case (int)State.Sleeping:
+				DoSleeping();
+				break;
+			case (int)State.Sitting:
+				DoSitting();
+				break;
+			case (int)State.Grabbed:
+				DoGrabbed();
+				break;
         }
     }
 
+	private void DoWandering()
+	{
+
+	}
+
+	private void DoSleeping()
+	{
+
+	}
+
+	private void DoSitting()
+	{
+
+	}
+	
+	private void DoGrabbed()
+	{
+
+	}
+
+	#endregion
     public void PickUpBabyLocalClient()
     {
+		Plugin.ExtendedLogging($"picked up by {propScript.playerHeldBy}");
+		EnableOrDisableAgentWithRoutineServerRpc(false, false);
 		currentOwnershipOnThisClient = (int)propScript.playerHeldBy.playerClientId;
 		inSpecialAnimation = true;
-		agent.enabled = false;
 		holdingBaby = true;
 		if (dropBabyCoroutine != null)
 		{
@@ -56,6 +92,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 
     public void DropBabyLocalClient()
     {
+		Plugin.ExtendedLogging($"dropped by {propScript.previousPlayerHeldBy}");
 		holdingBaby = false;
 		playerHolding = null;
 		if (IsOwner)
@@ -64,7 +101,16 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		}
 
 		bool gotValidDropPosition = true;
-		Vector3 itemFloorPosition = propScript.GetItemFloorPosition(propScript.previousPlayerHeldBy.transform.position + Vector3.up * 0.5f);
+		Vector3 startPosition = this.transform.position;
+		if (propScript.previousPlayerHeldBy == null)
+		{
+			gotValidDropPosition = false;
+		}
+		else
+		{
+			startPosition = propScript.previousPlayerHeldBy.transform.position;
+		}
+		Vector3 itemFloorPosition = propScript.GetItemFloorPosition(startPosition + Vector3.up * 0.5f);
 		Vector3 groundNavmeshPosition = RoundManager.Instance.GetNavMeshPosition(itemFloorPosition, default(NavMeshHit), 10f, -1);
 
 		if (!RoundManager.Instance.GotNavMeshPositionResult)
@@ -100,11 +146,13 @@ public class SnailCatAI : CodeRebirthEnemyAI
 
 		transform.position = groundNavmeshPosition;
 		inSpecialAnimation = false;
+		EnableOrDisableAgentWithRoutineServerRpc(true, true);
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+		if (IsOwner) propScript.ownerNetworkAnimator.SetTrigger(SnailCatPhysicsProp.HitAnimation);
         // trigger hit animation
     }
 
@@ -115,6 +163,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         transform.position = dropOnPosition;
         inSpecialAnimation = false;
 		dropBabyCoroutine = null;
+		EnableOrDisableAgentWithRoutineServerRpc(true, true);
 	}
 
 	public Transform ChooseClosestNodeToPositionNoPathCheck(Vector3 pos)
@@ -122,5 +171,20 @@ public class SnailCatAI : CodeRebirthEnemyAI
         IEnumerable<GameObject> allAINodes = RoundManager.Instance.insideAINodes.Concat(RoundManager.Instance.outsideAINodes);
 		var nodesTempArray = allAINodes.OrderBy(x => Vector3.Distance(pos, x.transform.position));
 		return nodesTempArray.First().transform;
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	private void EnableOrDisableAgentWithRoutineServerRpc(bool enable, bool startSearchRoutine)
+	{
+		agent.enabled = enable;
+		smartAgentNavigator.enabled = enable;
+		if (startSearchRoutine)
+		{
+			smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+		}
+		else
+		{
+			smartAgentNavigator.StopSearchRoutine();
+		}
 	}
 }

@@ -140,6 +140,14 @@ GameObject:
   - component: {fileID: 4376915116114350170}
   - component: {fileID: 1514618610394664556}
   - component: {fileID: 5861152159745177237}
+  - component: {fileID: 4180001964916081428}
+  - component: {fileID: 1205186133716411918}
+  - component: {fileID: 1442048396993938519}
+  - component: {fileID: 3362384424286290396}
+  - component: {fileID: 4184196377494464262}
+  - component: {fileID: 8802992103352183417}
+  - component: {fileID: 6361777462172498345}
+  - component: {fileID: 1712777916534107672}
   m_Layer: 6
   m_Name: SnailCatRe
   m_TagString: PhysicsProp
@@ -157,8 +165,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.3545635, y: 0, z: -2.7120996}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3651927742695513785}
   - {fileID: 5667959337506767994}
@@ -202,6 +210,432 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
   m_Animator: {fileID: 1514618610394664556}
+--- !u!114 &4180001964916081428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 257701648, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabbable: 1
+  isHeld: 0
+  isHeldByEnemy: 0
+  deactivated: 0
+  parentObject: {fileID: 0}
+  targetFloorPosition: {x: 0, y: 0, z: 0}
+  startFallingPosition: {x: 0, y: 0, z: 0}
+  floorYRot: 0
+  fallTime: 0
+  hasHitGround: 0
+  scrapValue: 0
+  itemUsedUp: 0
+  playerHeldBy: {fileID: 0}
+  isPocketed: 0
+  isBeingUsed: 0
+  isInElevator: 0
+  isInShipRoom: 0
+  isInFactory: 0
+  useCooldown: 0
+  currentUseCooldown: 0
+  itemProperties: {fileID: 11400000, guid: dc785b4da1f5c66448d3dc97fc584a81, type: 2}
+  insertedBattery:
+    empty: 0
+    charge: 0
+  customGrabTooltip: 
+  propBody: {fileID: 0}
+  propColliders: []
+  originalScale: {x: 0, y: 0, z: 0}
+  wasOwnerLastFrame: 0
+  mainObjectRenderer: {fileID: 0}
+  isSendingItemRPC: 0
+  scrapPersistedThroughRounds: 0
+  heldByPlayerOnServer: 0
+  radarIcon: {fileID: 0}
+  reachedFloorTarget: 0
+  grabbableToEnemies: 1
+  hasBeenHeld: 0
+  animator: {fileID: 1514618610394664556}
+  networkAnimator: {fileID: 5861152159745177237}
+  snailCatScript: {fileID: 8802992103352183417}
+  previousPlayerHeldBy: {fileID: 0}
+--- !u!114 &1205186133716411918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
+--- !u!65 &1442048396993938519
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.22689438, y: 0.7524376, z: 0.6633835}
+  m_Center: {x: 0.02056694, y: 0.3542118, z: -0.04466629}
+--- !u!195 &3362384424286290396
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.44
+  m_Speed: 4
+  m_Acceleration: 4
+  avoidancePriority: 50
+  m_AngularSpeed: 360
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.74
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &4184196377494464262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+--- !u!114 &8802992103352183417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1862996091, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyType: {fileID: 11400000, guid: 8550551a5aa69c748aba1f22aa43ecb2, type: 2}
+  skinnedMeshRenderers:
+  - {fileID: 6177123933367798727}
+  meshRenderers: []
+  creatureAnimator: {fileID: 1514618610394664556}
+  creatureVoice: {fileID: 8028621346348952520}
+  creatureSFX: {fileID: 8047301203869942705}
+  eye: {fileID: 0}
+  dieSFX: {fileID: 0}
+  enemyBehaviourStates:
+  - name: Wandering
+    VoiceClip: {fileID: 0}
+    playOneShotVoice: 0
+    SFXClip: {fileID: 0}
+    playOneShotSFX: 0
+    IsAnimTrigger: 0
+    parameterString: 
+    boolValue: 0
+  - name: Sleeping
+    VoiceClip: {fileID: 0}
+    playOneShotVoice: 0
+    SFXClip: {fileID: 0}
+    playOneShotSFX: 0
+    IsAnimTrigger: 0
+    parameterString: 
+    boolValue: 0
+  - name: Sitting
+    VoiceClip: {fileID: 0}
+    playOneShotVoice: 0
+    SFXClip: {fileID: 0}
+    playOneShotSFX: 0
+    IsAnimTrigger: 0
+    parameterString: 
+    boolValue: 0
+  - name: Grabbed
+    VoiceClip: {fileID: 0}
+    playOneShotVoice: 0
+    SFXClip: {fileID: 0}
+    playOneShotSFX: 0
+    IsAnimTrigger: 0
+    parameterString: 
+    boolValue: 0
+  currentBehaviourState:
+    name: 
+    VoiceClip: {fileID: 0}
+    playOneShotVoice: 0
+    SFXClip: {fileID: 0}
+    playOneShotSFX: 0
+    IsAnimTrigger: 0
+    parameterString: 
+    boolValue: 0
+  currentBehaviourStateIndex: 0
+  previousBehaviourStateIndex: 0
+  currentOwnershipOnThisClient: -1
+  isInsidePlayerShip: 0
+  AIIntervalTime: 0.2
+  inSpecialAnimation: 0
+  inSpecialAnimationWithPlayer: {fileID: 0}
+  serverPosition: {x: 0, y: 0, z: 0}
+  serverRotation: {x: 0, y: 0, z: 0}
+  agent: {fileID: 3362384424286290396}
+  allAINodes: []
+  targetNode: {fileID: 0}
+  favoriteSpot: {fileID: 0}
+  tempDist: 0
+  mostOptimalDistance: 0
+  pathDistance: 0
+  thisNetworkObject: {fileID: 0}
+  thisEnemyIndex: 0
+  isClientCalculatingAI: 0
+  updatePositionThreshold: 99999
+  targetPlayer: {fileID: 0}
+  movingTowardsTargetPlayer: 0
+  moveTowardsDestination: 0
+  destination: {x: 0, y: 0, z: 0}
+  addPlayerVelocityToDestination: 0
+  syncMovementSpeed: 0
+  timeSinceSpawn: 0
+  exitVentAnimationTime: 1
+  ventAnimationFinished: 0
+  isEnemyDead: 0
+  daytimeEnemyLeaving: 0
+  enemyHP: 999
+  nodesTempArray: []
+  openDoorSpeedMultiplier: 0
+  useSecondaryAudiosOnAnimatedObjects: 0
+  currentSearch:
+    unsearchedNodes: []
+    currentTargetNode: {fileID: 0}
+    nextTargetNode: {fileID: 0}
+    waitingForTargetNode: 0
+    choseTargetNode: 0
+    currentSearchStartPosition: {x: 0, y: 0, z: 0}
+    loopSearch: 1
+    timesFinishingSearch: 0
+    nodesEliminatedInCurrentSearch: 0
+    inProgress: 0
+    calculatingNodeInSearch: 0
+    startedSearchAtSelf: 0
+    searchWidth: 200
+    searchPrecision: 5
+    randomized: 0
+    onlySearchNodesInLOS: 0
+  DebugEnemy: 0
+  stunnedIndefinitely: 0
+  stunNormalizedTimer: 0
+  postStunInvincibilityTimer: 0
+  stunnedByPlayer: {fileID: 0}
+  debugEnemyAI: 0
+  isOutside: 0
+  hitsPhysicsObjects: 0
+  gotFarthestNodeAsync: 0
+  targetEnemy: {fileID: 0}
+  creatureNetworkAnimator: {fileID: 5861152159745177237}
+  smartAgentNavigator: {fileID: 4184196377494464262}
+  propScript: {fileID: 4180001964916081428}
+  randomizedNames:
+  - Florpus
+  - Gnarp
+  - Plink
+  - Greedy
+  - Gaycob
+  - Webley
+  - Baldi
+  - Swayer
+  - Rodigo
+  - Xuwu
+  - St1nky
+  - Snowy
+  - Funo
+  - Lizzie
+  - Pacho
+  - And now, time for the real deal, Solid Stone
+  - Fren
+  - 'Beanie :SnailCatGreed:'
+  - No
+  - Dalice
+  - Smxres
+  - Narpy (Immersion breaking name)
+  - Fluff Father
+  - Planet Annihilator
+  - Wiwiwii
+  - Mu
+  - Jimothy
+  - GOLB
+  - Salted Beef
+--- !u!82 &6361777462172498345
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 25
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1712777916534107672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &361247180470767358
 GameObject:
   m_ObjectHideFlags: 0

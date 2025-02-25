@@ -42,7 +42,7 @@ MonoBehaviour:
   throwAnim: 
   grabAnimationTime: 0
   grabSFX: {fileID: 0}
-  dropSFX: {fileID: 8300000, guid: 185bc5a24a6e5504188ac56dec1ccc44, type: 3}
+  dropSFX: {fileID: 0}
   pocketSFX: {fileID: 0}
   throwSFX: {fileID: 0}
   syncGrabFunction: 0
@@ -56,8 +56,8 @@ MonoBehaviour:
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
   restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 0, y: 105, z: 0}
+  positionOffset: {x: 0.35, y: -0.9, z: 0.35}
   meshOffset: 0
   meshVariants: []
   materialVariants: []

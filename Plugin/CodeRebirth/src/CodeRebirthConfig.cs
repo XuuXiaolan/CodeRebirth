@@ -1106,7 +1106,7 @@ public class CodeRebirthConfig
         #region SnailCat
         ConfigSnailCatEnabled = configFile.Bind("SnailCat Options",
                                             "SnailCat Enemy | Enabled",
-                                            false,
+                                            true,
                                             "Enables/Disables the SnailCat enemy");
         ConfigSnailCatSpawnWeights = configFile.Bind("SnailCat Options",
                                             "SnailCat Enemy | Spawn Weights",
