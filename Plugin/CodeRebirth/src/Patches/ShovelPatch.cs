@@ -103,6 +103,7 @@ static class ShovelPatch
 
     private static void TrySpawnRandomHazard(ref CodeRebirthWeapons CRWeapon)
     {
+        if (StartOfRound.Instance.inShipPhase) return;
         CodeRebirthUtils.Instance.SpawnHazardServerRpc(CRWeapon.weaponTip.position);
     }
 

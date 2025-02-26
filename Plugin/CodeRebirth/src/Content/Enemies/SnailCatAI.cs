@@ -1,7 +1,10 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,13 +15,26 @@ public class SnailCatAI : CodeRebirthEnemyAI
 {
     public SnailCatPhysicsProp propScript = null!;
     public string[] randomizedNames = [];
+	public ScanNodeProperties scanNodeProperties = null!;
+	public AudioClip[] randomNoises = [];
+	public AudioClip[] hitSounds = [];
+	public AudioClip enemyDetectSound = null!;
+	public AudioClip wiwiwiiiSound = null!;
+	public AudioClip[] footStepSounds = [];
 
+	private string currentName = "";
     private bool holdingBaby = false;
     private Coroutine? dropBabyCoroutine = null;
     private PlayerControllerB? playerHolding = null;
-    public enum State
+	private float specialActionTimer = 1f;
+	private System.Random random = new();
+	private float randomNoiseInterval = 0f;
+	private float detectEnemyInterval = 0f;
+
+	public enum State
     {
         Wandering,
+		Following,
 		Sleeping,
 		Sitting,
 		Grabbed
@@ -27,11 +43,35 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
-        SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
+        QualitySettings.skinWeights = SkinWeights.FourBones;
+		random = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count);
+		string randomName = randomizedNames[random.Next(0, randomizedNames.Length)];
+		scanNodeProperties.headerText = randomName;
+		currentName = randomName;
+        if (IsServer) smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
     }
 
-	#region State Machines
+    public override void Update()
+    {
+        base.Update();
+		if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+		randomNoiseInterval -= Time.deltaTime;
+		if (randomNoiseInterval <= 0)
+		{
+			randomNoiseInterval = random.NextFloat(7.5f, 15.5f);
+			creatureVoice.PlayOneShot(randomNoises[random.Next(0, randomNoises.Length)]);
+		}
+
+		if (currentBehaviourStateIndex != (int)State.Grabbed || currentBehaviourStateIndex != (int)State.Following) return;
+		detectEnemyInterval -= Time.deltaTime;
+		if (detectEnemyInterval <= 0)
+		{
+			detectEnemyInterval = random.NextFloat(7.5f, 15.5f);
+			creatureVoice.PlayOneShot(wiwiwiiiSound);
+		}
+    }
+
+    #region State Machines
     public override void DoAIInterval()
     {
         base.DoAIInterval();
@@ -42,42 +82,79 @@ public class SnailCatAI : CodeRebirthEnemyAI
             case (int)State.Wandering:
 				DoWandering();
                 break;
+			case (int)State.Following:
+				DoFollowing();
+				break;
 			case (int)State.Sleeping:
-				DoSleeping();
 				break;
 			case (int)State.Sitting:
-				DoSitting();
 				break;
 			case (int)State.Grabbed:
-				DoGrabbed();
 				break;
         }
     }
 
 	private void DoWandering()
 	{
+		foreach (var player in StartOfRound.Instance.allPlayerScripts)
+		{
+			if (player.isPlayerDead || !player.isPlayerControlled) continue;
+			float distance = Vector3.Distance(transform.position, player.transform.position);
+			if (distance > 5) continue;
+			SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+			SwitchToBehaviourServerRpc((int)State.Following);
+			return;
+		}
 
+		specialActionTimer -= AIIntervalTime;
+		if (specialActionTimer <= 0)
+		{
+			smartAgentNavigator.StopSearchRoutine();
+			agent.SetDestination(transform.position);
+			specialActionTimer = UnityEngine.Random.Range(7.5f, 15f);
+			if (UnityEngine.Random.Range(0, 100) < 50)
+			{
+				creatureAnimator.SetBool(SnailCatPhysicsProp.SleepingAnimation, true);
+				SwitchToBehaviourServerRpc((int)State.Sleeping);
+				StartCoroutine(ChangeStateWithDelayRoutine(20, State.Sleeping, SnailCatPhysicsProp.SleepingAnimation));
+			}
+			else
+			{
+				creatureAnimator.SetBool(SnailCatPhysicsProp.SittingAnimation, true);
+				SwitchToBehaviourServerRpc((int)State.Sitting);
+				StartCoroutine(ChangeStateWithDelayRoutine(10, State.Sitting, SnailCatPhysicsProp.SittingAnimation));
+			}
+		}
 	}
 
-	private void DoSleeping()
+	private void DoFollowing()
 	{
-
-	}
-
-	private void DoSitting()
-	{
-
-	}
-	
-	private void DoGrabbed()
-	{
-
+		smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
+		float distanceToPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
+		if (distanceToPlayer > 15)
+		{
+			// agent.speed = 4f;
+			SetTargetServerRpc(-1);
+			SwitchToBehaviourServerRpc((int)State.Wandering);
+			smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+			return;
+		}
 	}
 
 	#endregion
+	public IEnumerator ChangeStateWithDelayRoutine(float delay, State stateToSwitchOutOf, int animationToSwitchOutOf)
+	{
+		yield return new WaitForSeconds(delay);
+		if (currentBehaviourStateIndex != (int)stateToSwitchOutOf) yield break;
+		smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+		creatureAnimator.SetBool(animationToSwitchOutOf, false);
+		SwitchToBehaviourServerRpc((int)State.Wandering);
+	}
+
     public void PickUpBabyLocalClient()
     {
 		Plugin.ExtendedLogging($"picked up by {propScript.playerHeldBy}");
+		SwitchToBehaviourServerRpc((int)State.Grabbed);
 		EnableOrDisableAgentWithRoutineServerRpc(false, false);
 		currentOwnershipOnThisClient = (int)propScript.playerHeldBy.playerClientId;
 		inSpecialAnimation = true;
@@ -93,6 +170,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public void DropBabyLocalClient()
     {
 		Plugin.ExtendedLogging($"dropped by {propScript.previousPlayerHeldBy}");
+		SwitchToBehaviourServerRpc((int)State.Wandering);
 		holdingBaby = false;
 		playerHolding = null;
 		if (IsOwner)
@@ -152,8 +230,9 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-		if (IsOwner) propScript.ownerNetworkAnimator.SetTrigger(SnailCatPhysicsProp.HitAnimation);
+		if (propScript.IsOwner) propScript.ownerNetworkAnimator.SetTrigger(SnailCatPhysicsProp.HitAnimation);
         // trigger hit animation
+		creatureVoice.PlayOneShot(hitSounds[random.Next(0, hitSounds.Length)]);
     }
 
     private IEnumerator DropBabyAnimation(Vector3 dropOnPosition)
@@ -186,5 +265,16 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		{
 			smartAgentNavigator.StopSearchRoutine();
 		}
+	}
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+		CRUtilities.CreateExplosion(this.transform.position, true, 99999, 0, 15, 999, null, null, 1000f);
+    }
+
+	public void PlayFootStepSoundAnimEvent()
+	{
+		// creatureSFX.PlayOneShot(footStepSounds[UnityEngine.Random.Range(0, footStepSounds.Length)]);
 	}
 }

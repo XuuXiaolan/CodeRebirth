@@ -81,7 +81,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         Vector3 positionToSpawn = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(position, 2f, hit);
 
         // Instantiate a new instance of the prefab
-        GameObject spawnedObject = GameObject.Instantiate(prefabToSpawn, positionToSpawn, Quaternion.identity);
+        GameObject spawnedObject = GameObject.Instantiate(prefabToSpawn, positionToSpawn, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
         
         // Align the object's up direction with the hit normal
         spawnedObject.transform.up = hit.normal;

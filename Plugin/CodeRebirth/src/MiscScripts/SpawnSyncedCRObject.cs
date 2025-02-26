@@ -34,7 +34,8 @@ namespace CodeRebirth.src.MiscScripts
                 Plugin.Logger.LogWarning($"No prefab found for {objectType}");
                 return;
             }
-            
+
+            if (!IsServer) return;
             // Instantiate and spawn the object on the network.
             var spawnedObject = Instantiate(prefab, transform.position, transform.rotation, transform);
             spawnedObject.GetComponent<NetworkObject>().Spawn(true);

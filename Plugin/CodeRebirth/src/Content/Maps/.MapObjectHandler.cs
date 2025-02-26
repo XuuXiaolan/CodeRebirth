@@ -183,7 +183,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public AirControlUnitAssets AirControlUnit { get; private set; } = null!;
 	public FunctionalMicrowaveAssets FunctionalMicrowave { get; private set; } = null!;
 
-    private Dictionary<SpawnSyncedCRObject.CRObjectType, GameObject> prefabMapping = new();
+    public Dictionary<SpawnSyncedCRObject.CRObjectType, GameObject> prefabMapping = new();
 	public static List<GameObject> hazardPrefabs = new List<GameObject>();
 
     public MapObjectHandler()
