@@ -21,7 +21,7 @@ MonoBehaviour:
   canBeGrabbedBeforeGameStart: 1
   weight: 1.1904762
   itemIsTrigger: 0
-  holdButtonUse: 0
+  holdButtonUse: 1
   itemSpawnsOnGround: 1
   isConductiveMetal: 1
   isScrap: 1
@@ -32,9 +32,9 @@ MonoBehaviour:
   minValue: 150
   spawnPrefab: {fileID: 3898469256369999722, guid: f53d6586658f4124c8252dd207f4ed98,
     type: 3}
-  requiresBattery: 0
-  batteryUsage: 0
-  automaticallySetUsingPower: 0
+  requiresBattery: 1
+  batteryUsage: 300
+  automaticallySetUsingPower: 1
   itemIcon: {fileID: 21300000, guid: a69aade5980831246ad15d9081b106a5, type: 3}
   grabAnim: HoldShotgun
   useAnim: 
@@ -46,12 +46,14 @@ MonoBehaviour:
   pocketSFX: {fileID: 8300000, guid: 51fefdbb86193304faebd71049a3e05a, type: 3}
   throwSFX: {fileID: 0}
   syncGrabFunction: 0
-  syncUseFunction: 0
+  syncUseFunction: 1
   syncDiscardFunction: 0
   syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0
-  toolTips: []
+  toolTips:
+  - Press [R] to Activate Mole Digger
+  - Hold [LMB] to power Mole Digger
   verticalOffset: 0.5
   floorYOffset: -90
   allowDroppingAheadOfPlayer: 1

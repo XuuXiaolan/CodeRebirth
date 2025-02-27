@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6187964074036767532}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 14.885162, y: 17.104565, z: -129.85384}
 --- !u!1 &1472542202657809900
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,7 +156,7 @@ Transform:
   - {fileID: 3133520645839779561}
   - {fileID: 5600521680272207147}
   m_Father: {fileID: 6772338852672651274}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.98021, y: 0.000059650487, z: 0}
 --- !u!1 &3081681122143874873
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,7 +261,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6187964074036767532}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 14.88518, y: 17.104546, z: -129.85385}
 --- !u!1 &3729989859017622350
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,7 +293,7 @@ Transform:
   m_Children:
   - {fileID: 6772338852672651274}
   m_Father: {fileID: 3955639965929937542}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: 0, z: 0}
 --- !u!1 &3898469256369999722
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,6 +307,7 @@ GameObject:
   - component: {fileID: 3938776617406060123}
   - component: {fileID: -6034887335408358091}
   - component: {fileID: -2776931454579498628}
+  - component: {fileID: 7649735607237880221}
   m_Layer: 6
   m_Name: MoleDigger
   m_TagString: PhysicsProp
@@ -447,8 +448,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.74361086, y: 0.57838297, z: 1}
+  m_Center: {x: 0.10989976, y: 0.21080852, z: 0}
 --- !u!114 &-6034887335408358091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,12 +500,12 @@ MonoBehaviour:
   isInElevator: 0
   isInShipRoom: 0
   isInFactory: 0
-  useCooldown: 0
+  useCooldown: 0.5
   currentUseCooldown: 0
   itemProperties: {fileID: 11400000, guid: fd14a708251462641b3e8e45d74c2e60, type: 2}
   insertedBattery:
     empty: 0
-    charge: 0
+    charge: 1
   customGrabTooltip: 
   propBody: {fileID: 0}
   propColliders: []
@@ -518,6 +519,29 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  moleAnimator: {fileID: 7649735607237880221}
+  endTransform: {fileID: 5347509267497047824}
+--- !u!95 &7649735607237880221
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3898469256369999722}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2e24cc44ee4a2404a89a1d5f098a9182, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4791689045878965630
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,8 +570,40 @@ Transform:
   m_LocalPosition: {x: -0.000010637007, y: 3.5335553, z: -0.00002716352}
   m_LocalScale: {x: 0.9999999, y: 1, z: 0.9999999}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5347509267497047824}
   m_Father: {fileID: 6187964074036767532}
+  m_LocalEulerAnglesHint: {x: 0, y: -0.000013660376, z: 0}
+--- !u!1 &5232842178369435620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5347509267497047824}
+  m_Layer: 0
+  m_Name: EndDrillBit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5347509267497047824
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5232842178369435620}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 7, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7534018613468655221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7605467913853265609
 GameObject:
@@ -580,7 +636,7 @@ Transform:
   m_Children:
   - {fileID: 6187964074036767532}
   m_Father: {fileID: 3349276731957639570}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.98021, y: 0, z: 0}
 --- !u!1 &8975307859890377494
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,4 +667,4 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6187964074036767532}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.98021, y: 0.00003766001, z: 0}
