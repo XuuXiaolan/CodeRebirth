@@ -24,7 +24,7 @@ static class StartOfRoundPatch
 	[HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
 	static void SaveCodeRebirthData()
 	{
-		CodeRebirthUtils.SaveCodeRebirthData();
+		CodeRebirthUtils.Instance.SaveCodeRebirthData();
 	}
 	
 	private static void CreateNetworkManager()

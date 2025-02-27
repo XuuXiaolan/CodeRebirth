@@ -41,8 +41,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
         DoLayerMaskStuff();
-        Instance = this;
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
+        Instance = this;
     }
 
     private void DoLayerMaskStuff()
@@ -181,7 +181,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
     }
 
-    public static void SaveCodeRebirthData()
+    public void SaveCodeRebirthData()
     {
         if (!NetworkManager.Singleton.IsHost) return;
         PiggyBank.Instance?.SaveCurrentCoins();
@@ -189,6 +189,11 @@ internal class CodeRebirthUtils : NetworkBehaviour
 		{
 			plantpot.SavePlantData();
 		}
+    }
+
+    public static void ResetCodeRebirthData(ES3Settings saveSettings)
+    {
+        ES3.DeleteFile(saveSettings);
     }
 
     [ServerRpc(RequireOwnership = false)]

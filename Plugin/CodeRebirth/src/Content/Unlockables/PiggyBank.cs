@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util;
@@ -24,7 +25,12 @@ public class PiggyBank : NetworkBehaviour, IHittable
     {
         base.OnNetworkSpawn();
         Instance = this;
-        if (!IsServer) return;
+        StartCoroutine(LoadPiggyBankData());
+    }
+
+    public IEnumerator LoadPiggyBankData()
+    {
+        yield return new WaitUntil(() => CodeRebirthUtils.Instance != null);
         int _coinsStored = ES3.Load("coinsStoredCR", 0, CodeRebirthUtils.Instance.SaveSettings);
         AddCoinsToPiggyBank(_coinsStored);
     }

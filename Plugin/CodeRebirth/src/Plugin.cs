@@ -90,6 +90,7 @@ public class Plugin : BaseUnityPlugin
         ShotgunItemPatch.Init();
         TurretPatch.Init();
         GameNetworkManagerPatch.Init();
+        DeleteFileButtonPatch.Init();
         // This should be ran before Network Prefabs are registered.
         
         Assets = new MainAssets("coderebirthasset");

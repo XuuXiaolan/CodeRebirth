@@ -42,7 +42,7 @@ public class InfiniKey : GrabbableObject
             {
                 string tag = cachedHits[i].collider.gameObject.tag;
                 hitSurfaceIndex = Array.IndexOf(StartOfRound.Instance.footstepSurfaces, tag);
-                return;
+                continue;
             }
             OnHit(cachedHits[i].collider);
         }
@@ -62,6 +62,7 @@ public class InfiniKey : GrabbableObject
     public void OnHit(Collider collider)
     {
         if (collider == null) return;
+        Plugin.ExtendedLogging($"OnHit: {collider.gameObject.name} with tag {collider.gameObject.tag}");
         if (collider.gameObject.TryGetComponent(out DoorLock doorlock) && doorlock.isLocked)
         {
             doorlock.UnlockDoorServerRpc();

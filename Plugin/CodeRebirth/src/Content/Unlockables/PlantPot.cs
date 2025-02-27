@@ -46,21 +46,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         base.OnNetworkSpawn();
         Instances.Add(this);
         if (!IsServer) return;
-        LoadPlantData();
-    }
-
-    public void Start()
-    {
-        if ((Stage)stage.Value != Stage.Zero)
-        {
-            StartCoroutine(GrowthRoutine());
-            enableList[stage.Value].SetActive(true);
-            return;
-        }
-        if ((Stage)stage.Value == Stage.Zero) 
-        {
-            trigger.onInteract.AddListener(OnInteract);
-        }
+        StartCoroutine(LoadPlantData());
     }
 
     public void SavePlantData()
@@ -69,11 +55,24 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         ES3.Save<int>(this.gameObject.name + "FruitType", fruitType.Value, CodeRebirthUtils.Instance.SaveSettings);
     }
 
-    public void LoadPlantData()
+    public IEnumerator LoadPlantData()
     {
-        stage.Value = ES3.Load<int>(this.gameObject.name + "Stage", 0, CodeRebirthUtils.Instance.SaveSettings);
-        fruitType.Value = ES3.Load<int>(this.gameObject.name + "FruitType", 0, CodeRebirthUtils.Instance.SaveSettings);
-        Plugin.ExtendedLogging($"Loaded stage {stage} and fruit type {fruitType}");
+        yield return new WaitUntil(() => CodeRebirthUtils.Instance != null);
+        if (IsServer)
+        {
+            stage.Value = ES3.Load<int>(this.gameObject.name + "Stage", 0, CodeRebirthUtils.Instance.SaveSettings);
+            fruitType.Value = ES3.Load<int>(this.gameObject.name + "FruitType", 0, CodeRebirthUtils.Instance.SaveSettings);
+        }
+        Plugin.ExtendedLogging($"Loaded stage {stage.Value} and fruit type {fruitType.Value}");
+        if ((Stage)stage.Value != Stage.Zero)
+        {
+            StartCoroutine(GrowthRoutine());
+            enableList[stage.Value].SetActive(true);
+        }
+        else 
+        {
+            trigger.onInteract.AddListener(OnInteract);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -89,7 +88,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     {
         WoodenSeed woodenSeed = ((GameObject)netObjRef).GetComponent<WoodenSeed>();
         fruitType.Value = (int)woodenSeed.fruitType;
-        Plugin.ExtendedLogging($"Setting up fruit type {fruitType}");
+        Plugin.ExtendedLogging($"Setting up fruit type {fruitType.Value}");
         woodenSeed.playerHeldBy.DespawnHeldObject();
     }
 
