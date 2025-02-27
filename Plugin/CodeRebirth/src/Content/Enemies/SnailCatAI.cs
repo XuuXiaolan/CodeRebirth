@@ -19,7 +19,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 	public AudioClip[] randomNoises = [];
 	public AudioClip[] hitSounds = [];
 	public AudioClip enemyDetectSound = null!;
-	public AudioClip wiwiwiiiSound = null!;
+	public AudioClip[] wiwiwiiiSound = [];
 	public AudioClip[] footStepSounds = [];
 
 	private string currentName = "";
@@ -30,6 +30,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 	private System.Random random = new();
 	private float randomNoiseInterval = 0f;
 	private float detectEnemyInterval = 0f;
+	private bool isWiWiWiii = false;
 
 	public enum State
     {
@@ -48,6 +49,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		string randomName = randomizedNames[random.Next(0, randomizedNames.Length)];
 		scanNodeProperties.headerText = randomName;
 		currentName = randomName;
+		isWiWiWiii = currentName == "WiWiWiii";
         if (IsServer) smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
     }
 
@@ -59,15 +61,22 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		if (randomNoiseInterval <= 0)
 		{
 			randomNoiseInterval = random.NextFloat(7.5f, 15.5f);
-			creatureVoice.PlayOneShot(randomNoises[random.Next(0, randomNoises.Length)]);
+			if (isWiWiWiii)
+			{
+				creatureVoice.PlayOneShot(wiwiwiiiSound[random.Next(0, wiwiwiiiSound.Length)]);
+			}
+			else
+			{
+				creatureVoice.PlayOneShot(randomNoises[random.Next(0, randomNoises.Length)]);
+			}
 		}
 
-		if (currentBehaviourStateIndex != (int)State.Grabbed || currentBehaviourStateIndex != (int)State.Following) return;
+		if (currentBehaviourStateIndex != (int)State.Grabbed && currentBehaviourStateIndex != (int)State.Following) return;
 		detectEnemyInterval -= Time.deltaTime;
 		if (detectEnemyInterval <= 0)
 		{
 			detectEnemyInterval = random.NextFloat(7.5f, 15.5f);
-			creatureVoice.PlayOneShot(wiwiwiiiSound);
+			creatureVoice.PlayOneShot(enemyDetectSound);
 		}
     }
 

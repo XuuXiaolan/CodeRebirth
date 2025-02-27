@@ -15,8 +15,8 @@ MonoBehaviour:
   itemId: 0
   itemName: FogHorn
   spawnPositionTypes: []
-  twoHanded: 0
-  twoHandedAnimation: 0
+  twoHanded: 1
+  twoHandedAnimation: 1
   disableHandsOnWall: 1
   canBeGrabbedBeforeGameStart: 1
   weight: 1.4
@@ -36,7 +36,7 @@ MonoBehaviour:
   batteryUsage: 0
   automaticallySetUsingPower: 0
   itemIcon: {fileID: 21300000, guid: c48bedd774349614db7341511929ed83, type: 3}
-  grabAnim: 
+  grabAnim: HoldLung
   useAnim: 
   pocketAnim: 
   throwAnim: 
@@ -56,8 +56,8 @@ MonoBehaviour:
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
   restingRotation: {x: -90, y: 0, z: -90}
-  rotationOffset: {x: 15, y: 100, z: 180}
-  positionOffset: {x: -0.55, y: 0.4, z: 0}
+  rotationOffset: {x: 180, y: 0, z: -90}
+  positionOffset: {x: 0, y: 0, z: 0.55}
   meshOffset: 0
   meshVariants: []
   materialVariants: []

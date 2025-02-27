@@ -57,7 +57,7 @@ public class MoleDigger : GrabbableObject
 
     public void OnChainYanked(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (yankChainTimer > 0f || isBeingUsed || moleAnimator.GetBool(ActivatedAnimation)) return;
+        if (yankChainTimer > 0f || insertedBattery.empty || isBeingUsed || moleAnimator.GetBool(ActivatedAnimation)) return;
         if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
         var btn = (ButtonControl)context.control;
 
@@ -93,8 +93,8 @@ public class MoleDigger : GrabbableObject
         }
         if (hitSomething)
         {
-            hitTimer = 0.5f;
-            insertedBattery.charge -= 0.1f;
+            hitTimer = 0.4f;
+            insertedBattery.charge -= 0.05f;
             // take some battery charge.
         }
     }
@@ -102,7 +102,11 @@ public class MoleDigger : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        if (!moleAnimator.GetBool(ActivatedAnimation)) return;
+        if (!moleAnimator.GetBool(ActivatedAnimation))
+        {
+            isBeingUsed = false;
+            return;
+        }
         Plugin.ExtendedLogging($"Mole Digger used and button down: {used} {buttonDown}");
         if (!buttonDown)
         {

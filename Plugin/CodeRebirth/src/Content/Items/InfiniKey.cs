@@ -68,7 +68,7 @@ public class InfiniKey : GrabbableObject
             doorlock.UnlockDoorServerRpc();
             return;
         }
-        if (collider.gameObject.TryGetComponent(out Pickable pickable) && pickable.IsLocked)
+        if (collider.gameObject.TryGetComponent(out Pickable pickable))
         {
             pickable.Unlock();
             return;
