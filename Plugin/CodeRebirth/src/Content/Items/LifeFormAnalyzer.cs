@@ -34,9 +34,9 @@ public class LifeFormAnalyzer : GrabbableObject
     {
         // plays the visual effect from gabriel
         // GalVoice.PlayOneShot(hazardPingSound);
-        if (Vector3.Distance(this.transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) > 10) return;
         ParticleSystem particleSystem = SeamineGalAI.DoTerrainScan(terrainScanner, transform.position);
         particleSystem.gameObject.transform.parent.gameObject.SetActive(true);
+        if (Vector3.Distance(this.transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) > 10) return;
         if (customPassRoutines.Count <= 0)
         {
             customPassRoutines.Add(StartCoroutine(SeamineGalAI.DoCustomPassThing(particleSystem, CustomPassManager.CustomPassType.SeeThroughEnemies, 25)));
@@ -59,5 +59,7 @@ public class LifeFormAnalyzer : GrabbableObject
 
         turnedOn = !turnedOn;
         animator.SetBool(ActivatedAnimation, turnedOn);
+        scanTimer = scanInterval;
+        DoRevealScan();
     }
 }
