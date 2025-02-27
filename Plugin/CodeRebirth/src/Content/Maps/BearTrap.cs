@@ -87,7 +87,7 @@ public class BearTrap : CodeRebirthHazard
         }
         if (enemyCaught == null) return;
 
-        enemyCaught.agent.speed = 0f;
+        enemyCaught.agent.velocity = Vector3.zero;
     }
 
     public void SetWheelFriction(GameObject wheelHitGameObject)
@@ -181,7 +181,6 @@ public class BearTrap : CodeRebirthHazard
         {
             StopCoroutine(releaseCoroutine);
         }
-
         releaseCoroutine = StartCoroutine(DelayReleasingEnemy());
     }
 
