@@ -173,6 +173,7 @@ Transform:
   - {fileID: 7623536162471511207}
   - {fileID: 7135916331726870626}
   - {fileID: 190270667374876094}
+  - {fileID: 887107940309629081}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1514618610394664556
@@ -260,7 +261,7 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   animator: {fileID: 1514618610394664556}
-  ownerNetworkAnimator: {fileID: 0}
+  ownerNetworkAnimator: {fileID: 5861152159745177237}
   snailCatScript: {fileID: 8802992103352183417}
   previousPlayerHeldBy: {fileID: 0}
 --- !u!114 &1205186133716411918
@@ -456,7 +457,7 @@ MonoBehaviour:
   daytimeEnemyLeaving: 0
   enemyHP: 999
   nodesTempArray: []
-  openDoorSpeedMultiplier: 0
+  openDoorSpeedMultiplier: 1
   useSecondaryAudiosOnAnimatedObjects: 0
   currentSearch:
     unsearchedNodes: []
@@ -521,7 +522,6 @@ MonoBehaviour:
   - Soup
   - Evil SnailCat
   scanNodeProperties: {fileID: 2181669798328249144}
-  specialActionInterval: 10
   randomNoises:
   - {fileID: 8300000, guid: 0c683a03269ebc14fb5105852420f620, type: 3}
   - {fileID: 8300000, guid: 209538b93e4e65441899635fe7f69ca4, type: 3}
@@ -533,8 +533,16 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1738a016b4e2aeb41aa6fe43bb3f84a0, type: 3}
   - {fileID: 8300000, guid: 417b6623a695fc24fb61e099eaa24d66, type: 3}
   enemyDetectSound: {fileID: 8300000, guid: be67c13828194f144918ffc5744be20d, type: 3}
-  wiwiwiiiSound: {fileID: 0}
-  footStepSounds: []
+  wiwiwiiiSound:
+  - {fileID: 8300000, guid: 501dd0624b38d8148998aed253d5ab02, type: 3}
+  - {fileID: 8300000, guid: 99139c9555744b54f936e78661190010, type: 3}
+  - {fileID: 8300000, guid: 4896327b7d9d5c848b1d9e27607345de, type: 3}
+  - {fileID: 8300000, guid: afbfdfece397a6f41a64ff80268df836, type: 3}
+  footStepSounds:
+  - {fileID: 8300000, guid: 7aca801ef185f0c4b81cb3903edfe0c5, type: 3}
+  - {fileID: 8300000, guid: aeb53d16eabfa5f4a9e941cf9a1e144e, type: 3}
+  - {fileID: 8300000, guid: 30a22714dc933564895e96395a93923e, type: 3}
+  - {fileID: 8300000, guid: 6b68f04ab4fc57249861270136a37eb8, type: 3}
 --- !u!82 &6361777462172498345
 AudioSource:
   m_ObjectHideFlags: 0
@@ -833,6 +841,103 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5410109356240738974}
   m_LocalEulerAnglesHint: {x: -14.749317, y: 9.694851, z: -20.96591}
+--- !u!1 &1773988309673522236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 887107940309629081}
+  - component: {fileID: 5775856475654012976}
+  - component: {fileID: 1287589364534058150}
+  - component: {fileID: 7953650923665172579}
+  m_Layer: 19
+  m_Name: Collision
+  m_TagString: Enemy
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &887107940309629081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773988309673522236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.35, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4376915116114350170}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5775856475654012976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773988309673522236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainScript: {fileID: 8802992103352183417}
+  canCollideWithEnemies: 0
+  onlyCollideWhenGrounded: 0
+--- !u!135 &1287589364534058150
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773988309673522236}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.66
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &7953650923665172579
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773988309673522236}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1792213065853380662
 GameObject:
   m_ObjectHideFlags: 0

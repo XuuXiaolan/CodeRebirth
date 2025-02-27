@@ -16,7 +16,7 @@ public class NitroCrate : GrabbableObject
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        CRUtilities.CreateExplosion(this.transform.position, true, 999, 0, 6, 100, null, null, 250f);
+        CRUtilities.CreateExplosion(this.transform.position, true, 999, 0, 15, 100, null, null, 250f);
         nitroCrates.Remove(this);
     }
 

@@ -130,7 +130,7 @@ public class Mistress : CodeRebirthEnemyAI
         // Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
         if (LookedAt)
         {
-            if (timeSpentInState > 15f)
+            if (timeSpentInState > 70)
             {
                 timeSpentInState = 0f;
                 TemporarilyCripplePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), true);
