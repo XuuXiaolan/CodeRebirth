@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using GameNetcodeStuff;
-using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -83,7 +82,9 @@ public class Transporter : CodeRebirthEnemyAI
         emptyNetworkObject.GetComponent<NetworkObject>().Spawn();
         SyncNetworkObjectParentServerRpc(new NetworkObjectReference(emptyNetworkObject));
         palletTransform = emptyNetworkObject.transform;
-        TryFindAnyTransportableObjectViaAsyncPathfinding();
+        GameObject ship = FindObjectsOfType<GameObject>().Where(x => x.name == "HangarShip").FirstOrDefault();
+        CheckIfNeedToChangeState([ship]);
+        // TryFindAnyTransportableObjectViaAsyncPathfinding();
     }
 
     private void OnUseEntranceTeleport(bool setOutside)
@@ -171,18 +172,12 @@ public class Transporter : CodeRebirthEnemyAI
 
     private void TryFindAnyTransportableObjectViaAsyncPathfinding()
     {
-        /*        IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = objectsToTransport
-            .Where(kv => kv != null)
-            .Select(kv => (kv, kv.transform.position));
-*/
         // Gather all valid objects#
         Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects");
-        GameObject ship = GameObject.Find("Environment/HangarShip");
-        IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = [];
+        IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = objectsToTransport
+            .Where(kv => kv != null)
+            .Select(kv => (kv, kv.transform.position));
 
-        candidateObjects.AddItem((ship, ship.transform.position));
-        Plugin.ExtendedLogging($"Transporter: Found {candidateObjects.Count()} candidate objects");
-        Plugin.ExtendedLogging($"Transpoter's first candidate object is {candidateObjects.First().obj.name} with position {candidateObjects.First().position}");
         smartAgentNavigator.CheckPaths(candidateObjects, CheckIfNeedToChangeState);
     }
 
@@ -195,6 +190,10 @@ public class Transporter : CodeRebirthEnemyAI
             objectsToTransport.Remove(transportTarget);
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
+        }
+        else
+        {
+            Plugin.ExtendedLogging($"Transporter: No more objects to transport");
         }
     }
 
