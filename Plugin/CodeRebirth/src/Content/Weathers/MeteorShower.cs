@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class MeteorShower : CodeRebirthWeathers
