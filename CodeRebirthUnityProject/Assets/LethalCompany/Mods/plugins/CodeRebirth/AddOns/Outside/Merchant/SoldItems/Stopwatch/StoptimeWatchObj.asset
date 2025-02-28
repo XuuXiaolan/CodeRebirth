@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
+  m_Name: StoptimeWatchObj
+  m_EditorClassIdentifier: 
+  itemId: 0
+  itemName: Stoptime Watch
+  spawnPositionTypes: []
+  twoHanded: 0
+  twoHandedAnimation: 0
+  disableHandsOnWall: 1
+  canBeGrabbedBeforeGameStart: 1
+  weight: 1.152381
+  itemIsTrigger: 0
+  holdButtonUse: 0
+  itemSpawnsOnGround: 1
+  isConductiveMetal: 1
+  isScrap: 1
+  creditsWorth: 0
+  lockedInDemo: 0
+  highestSalePercentage: 80
+  maxValue: 320
+  minValue: 235
+  spawnPrefab: {fileID: 373315795805948273, guid: adcfc9cadd99c1a49a3af777a61a3a56,
+    type: 3}
+  requiresBattery: 0
+  batteryUsage: 0
+  automaticallySetUsingPower: 0
+  itemIcon: {fileID: 21300000, guid: fe30ca37572ef43468812f7a9ff2cc6a, type: 3}
+  grabAnim: 
+  useAnim: 
+  pocketAnim: 
+  throwAnim: 
+  grabAnimationTime: 0
+  grabSFX: {fileID: 8300000, guid: 51fefdbb86193304faebd71049a3e05a, type: 3}
+  dropSFX: {fileID: 8300000, guid: 51fefdbb86193304faebd71049a3e05a, type: 3}
+  pocketSFX: {fileID: 8300000, guid: 51fefdbb86193304faebd71049a3e05a, type: 3}
+  throwSFX: {fileID: 0}
+  syncGrabFunction: 0
+  syncUseFunction: 1
+  syncDiscardFunction: 0
+  syncInteractLRFunction: 0
+  saveItemVariable: 0
+  isDefensiveWeapon: 0
+  toolTips: []
+  verticalOffset: 0
+  floorYOffset: 0
+  allowDroppingAheadOfPlayer: 1
+  restingRotation: {x: -90, y: 0, z: 90}
+  rotationOffset: {x: 90, y: 90, z: 0}
+  positionOffset: {x: 0.025, y: 0.17, z: -0.1}
+  meshOffset: 0
+  meshVariants: []
+  materialVariants: []
+  usableInSpecialAnimations: 0
+  canBeInspected: 0

@@ -82,9 +82,11 @@ public class Transporter : CodeRebirthEnemyAI
         emptyNetworkObject.GetComponent<NetworkObject>().Spawn();
         SyncNetworkObjectParentServerRpc(new NetworkObjectReference(emptyNetworkObject));
         palletTransform = emptyNetworkObject.transform;
-        GameObject ship = FindObjectsOfType<GameObject>().Where(x => x.name == "HangarShip").FirstOrDefault();
-        CheckIfNeedToChangeState([ship]);
-        // TryFindAnyTransportableObjectViaAsyncPathfinding();
+        /*if (!objectsToTransport.Contains(StartOfRound.Instance.shipAnimatorObject.gameObject))
+        {
+            objectsToTransport.Add(StartOfRound.Instance.shipAnimatorObject.gameObject);
+        }*/
+        TryFindAnyTransportableObjectViaAsyncPathfinding();
     }
 
     private void OnUseEntranceTeleport(bool setOutside)
@@ -172,7 +174,7 @@ public class Transporter : CodeRebirthEnemyAI
 
     private void TryFindAnyTransportableObjectViaAsyncPathfinding()
     {
-        // Gather all valid objects#
+        // Gather all valid objects
         Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects");
         IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = objectsToTransport
             .Where(kv => kv != null)

@@ -57,7 +57,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigSnailCatEnabled { get; private set; }
     public ConfigEntry<bool> ConfigItemCrateEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigMoneyEnabled { get; private set; }
     public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
@@ -256,6 +255,14 @@ public class CodeRebirthConfig
                                             "Merchant | Enabled",
                                             true,
                                             "Whether the Merchant is enabled.");
+        ConfigWalletCost = configFile.Bind("Money Options",
+                                            "Wallet Item | Cost",
+                                            150,
+                                            "Cost of Wallet");
+        ConfigPiggyBankCost = configFile.Bind("Money Options",
+                                            "PiggyBank | Cost",
+                                            250,
+                                            "Cost of the Piggy Bank Unlockable");
         #endregion
         #region Transporter
         ConfigTransporterEnabled = configFile.Bind("Transporter Options",
@@ -1130,20 +1137,6 @@ public class CodeRebirthConfig
                                             "Hoverboard | Cost",
                                             500,
                                             "Cost of Hoverboard.");
-        #endregion
-        #region Money
-        ConfigMoneyEnabled = configFile.Bind("Money Options",
-                                            "Money+Wallet+PiggyBanks | Enabled",
-                                            true,
-                                            "Enables/Disables the Money, Wallet and Piggy Banks.");
-        ConfigWalletCost = configFile.Bind("Money Options",
-                                            "Wallet Item | Cost",
-                                            150,
-                                            "Cost of Wallet");
-        ConfigPiggyBankCost = configFile.Bind("Money Options",
-                                            "PiggyBank | Cost",
-                                            250,
-                                            "Cost of the Piggy Bank Unlockable");
         #endregion
         #region SnowGlobe
         ConfigSnowGlobeEnabled = configFile.Bind("SnowGlobe Options",

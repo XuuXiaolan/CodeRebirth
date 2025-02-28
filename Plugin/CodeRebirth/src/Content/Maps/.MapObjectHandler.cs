@@ -5,24 +5,12 @@ using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 using CodeRebirth.src.Util;
 using LethalLib.Modules;
-using LethalLib.Extras;
 using CodeRebirth.src.MiscScripts;
+using LethalLib.Extras;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
 {
-	public class MoneyAssets(string bundleName) : AssetBundleLoader<MoneyAssets>(bundleName)
-	{
-		[LoadFromBundle("MoneyPrefab.prefab")]
-		public GameObject MoneyPrefab { get; private set; } = null!;
-
-		[LoadFromBundle("WalletObj.asset")]
-		public Item WalletItem { get; private set; } = null!;
-
-		[LoadFromBundle("PiggyBankUnlockable.asset")]
-		public UnlockableItemDef PiggyBankUnlockable { get; private set; } = null!;
-	}
-
 	public class CrateAssets(string bundleName) : AssetBundleLoader<CrateAssets>(bundleName)
 	{
 		[LoadFromBundle("Wooden Crate")]
@@ -168,10 +156,18 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 		[LoadFromBundle("WorthlessObj.asset")]
 		public Item Worthless { get; private set; } = null!;
+
+			[LoadFromBundle("MoneyPrefab.prefab")]
+		public GameObject MoneyPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("WalletObj.asset")]
+		public Item WalletItem { get; private set; } = null!;
+
+		[LoadFromBundle("PiggyBankUnlockable.asset")]
+		public UnlockableItemDef PiggyBankUnlockable { get; private set; } = null!;
 	}
 
 	public MerchantAssets Merchant { get; private set; } = null!;
-	public MoneyAssets Money { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
 	public BiomeAssets Biome { get; private set; } = null!;
@@ -209,6 +205,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 			RegisterScrapWithConfig("", Merchant.StoptimeWatch, -1, -1);
 			RegisterScrapWithConfig("", Merchant.WalkieYellie, -1, -1);
 			RegisterScrapWithConfig("", Merchant.Worthless, -1, -1);
+
+			LethalLib.Modules.Unlockables.RegisterUnlockable(Merchant.PiggyBankUnlockable, Plugin.ModConfig.ConfigPiggyBankCost.Value, StoreType.ShipUpgrade);
+			RegisterInsideMapObjectWithConfig(Merchant.MoneyPrefab, "Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 ");
+			RegisterShopItemWithConfig(false, Merchant.WalletItem, null, Plugin.ModConfig.ConfigWalletCost.Value, "", -1, -1); 
 		}
 
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
@@ -222,9 +222,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value)
 			RegisterOutsideFlora();
-
-		if (Plugin.ModConfig.ConfigMoneyEnabled.Value)
-			RegisterInsideMoney();
 
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
 			Biome = new BiomeAssets("biomeassets");
@@ -311,14 +308,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		GlowingGem = new GlowingGemAssets("glowinggemassets");
 		prefabMapping[SpawnSyncedCRObject.CRObjectType.LaserTurret] = GlowingGem.LaserTurretPrefab;
 		RegisterInsideMapObjectWithConfig(GlowingGem.LaserTurretPrefab, Plugin.ModConfig.ConfigLaserTurretCurveSpawnWeight.Value);
-	}
-
-	public void RegisterInsideMoney()
-	{
-		Money = new MoneyAssets("moneyassets");
-		LethalLib.Modules.Unlockables.RegisterUnlockable(Money.PiggyBankUnlockable, Plugin.ModConfig.ConfigPiggyBankCost.Value, StoreType.ShipUpgrade);
-		RegisterInsideMapObjectWithConfig(Money.MoneyPrefab, "Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 ");
-		RegisterShopItemWithConfig(false, Money.WalletItem, null, Plugin.ModConfig.ConfigWalletCost.Value, "", -1, -1); 
 	}
 
 	public void RegisterOutsideFlora()

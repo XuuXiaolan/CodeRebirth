@@ -72,7 +72,6 @@ public class Plugin : BaseUnityPlugin
         _harmony.PatchAll(typeof(ShovelPatch));
         _harmony.PatchAll(typeof(DoorLockPatch));
         _harmony.PatchAll(typeof(MineshaftElevatorControllerPatch));
-        _harmony.PatchAll(typeof(DeleteFileButton));
         _harmony.PatchAll(typeof(KeyItemPatch));
         _harmony.PatchAll(typeof(RoundManagerPatch));
         _harmony.PatchAll(typeof(StartOfRoundPatch));
