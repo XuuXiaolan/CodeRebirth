@@ -4885,7 +4885,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4a05c470e2d90ee4a86d547ce3b47bab, type: 2}
+  - {fileID: 2100000, guid: 9544a1e63ce32fb40a41632e2ec9aceb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9831,7 +9831,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: aca4607c520a3fe469edeb73fcc3396d, type: 2}
+  - {fileID: 2100000, guid: 433dd114cb4fcfd4c9f646d8e2934bd8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10053,7 +10053,7 @@ ParticleSystem:
   prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
-  autoRandomSeed: 0
+  autoRandomSeed: 1
   startDelay:
     serializedVersion: 2
     minMaxState: 0
@@ -20460,7 +20460,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4a05c470e2d90ee4a86d547ce3b47bab, type: 2}
+  - {fileID: 2100000, guid: 89fb8766fef8c764a9f98c1d168b4d4e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -30876,7 +30876,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: aca4607c520a3fe469edeb73fcc3396d, type: 2}
+  - {fileID: 2100000, guid: 433dd114cb4fcfd4c9f646d8e2934bd8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -35950,7 +35950,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: aca4607c520a3fe469edeb73fcc3396d, type: 2}
+  - {fileID: 2100000, guid: 433dd114cb4fcfd4c9f646d8e2934bd8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -46598,7 +46598,6 @@ MonoBehaviour:
   eating: {fileID: 7400000, guid: bde4b014909da4d4ab48f5e78949ad7c, type: 2}
   kickAnimation: {fileID: 7400000, guid: 210fe676fc89119429b58c36a07c3603, type: 2}
   kickingOut: 0
-  kicking: 0
   jumping: 0
 --- !u!65 &8260936454864110043
 BoxCollider:
@@ -46677,11 +46676,11 @@ MonoBehaviour:
     TransitionIndex: 2
   - IsCrossFadeExit: 0
     Layer: 1
-    OriginatingState: -1489130674
+    OriginatingState: -542986255
     DestinationState: -1441185410
     TransitionDuration: 0.25
     TriggerNameHash: 439290163
-    TransitionIndex: 0
+    TransitionIndex: 3
   m_Animator: {fileID: 111922345862184124}
 --- !u!114 &6280165044034835773
 MonoBehaviour:
