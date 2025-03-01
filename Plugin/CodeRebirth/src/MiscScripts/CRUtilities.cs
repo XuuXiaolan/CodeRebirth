@@ -14,7 +14,7 @@ public class CRUtilities
 {
     private static Dictionary<int, int> _masksByLayer = new();
     private static AudioReverbPresets? audioReverbPreset = null;
-    private static Collider[] cachedColliders = new Collider[16];
+    private static Collider[] cachedColliders = new Collider[32];
 
     public static void Init()
     {
@@ -131,14 +131,22 @@ public class CRUtilities
 
         if (spawnExplosionEffect)
         {
+            float multiplier = Mathf.Clamp((maxDamageRange - minDamageRange)/3f, 0.2f, 20);
+            CodeRebirthUtils.Instance.ExplosionCreator.audio.maxDistance *= (multiplier/2);
+            foreach (var particleSystem in CodeRebirthUtils.Instance.ExplosionCreator.GetComponentsInChildren<ParticleSystem>())
+            {
+                particleSystem.gameObject.transform.localScale *= multiplier;
+            }
+            GameObject gameobject;
             if (overridePrefab == null)
             {
-                UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(true);
+                gameobject = UnityEngine.Object.Instantiate(CodeRebirthUtils.Instance.ExplosionCreator.Explosion, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder);
             }
             else
             {
-                UnityEngine.Object.Instantiate(overridePrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder).SetActive(true);
+                gameobject = UnityEngine.Object.Instantiate(overridePrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder);
             }
+            gameobject.SetActive(true);
         }
 
         float playerDistanceFromExplosion = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, explosionPosition);
@@ -151,10 +159,11 @@ public class CRUtilities
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
 
-        int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (!cachedColliders[i].TryGetComponent(out IHittable ihittable)) continue;
+            Plugin.ExtendedLogging($"Explosion hit {cachedColliders[i].name}");
             float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, cachedColliders[i].ClosestPoint(explosionPosition));
             if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, cachedColliders[i].transform.position + Vector3.up * 0.3f, out _, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
@@ -189,9 +198,10 @@ public class CRUtilities
                 continue;
             }
 
-            Landmine? componentInChildren = cachedColliders[i].gameObject.GetComponentInChildren<Landmine>();
-            if (cachedColliders[i].gameObject.layer == 21 && componentInChildren != null && distanceOfObjectFromExplosion < 6f && !landmineList.Contains(componentInChildren))
+            if (cachedColliders[i].gameObject.layer == 21 && distanceOfObjectFromExplosion < maxDamageRange)
             {
+                Landmine? componentInChildren = cachedColliders[i].gameObject.GetComponentInChildren<Landmine>();
+                if (componentInChildren == null || landmineList.Contains(componentInChildren)) continue;
                 landmineList.Add(componentInChildren);
                 continue;
             }

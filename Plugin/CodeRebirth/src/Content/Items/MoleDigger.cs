@@ -63,6 +63,7 @@ public class MoleDigger : GrabbableObject
             moleAnimator.SetBool(ActivatedAnimation, false);
             moleAnimator.SetBool(AttackingAnimation, false);
         }
+        lightObject.SetActive(false);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -102,7 +103,7 @@ public class MoleDigger : GrabbableObject
         yankChainTimer -= Time.deltaTime;
         hitTimer -= Time.deltaTime;
         if (!isBeingUsed || hitTimer > 0 || playerHeldBy == null) return;
-        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         bool hitSomething = false;
         for (int i = 0; i < numHits; i++)
         {

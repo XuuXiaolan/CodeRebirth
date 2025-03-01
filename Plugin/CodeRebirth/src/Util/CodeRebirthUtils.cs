@@ -11,6 +11,7 @@ using CodeRebirth.src.Content.Unlockables;
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
+    public ExplosionCreator ExplosionCreator = null!;
     public Material WireframeMaterial = null!;
     public Shader SeeThroughShader = null!;
     public Volume TimeSlowVolume = null!;
@@ -23,6 +24,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public int collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndRailingAndInteractableMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndInteractableMask = 0;
+    [HideInInspector] public int playersAndInteractableAndEnemiesAndPropsHazardMask = 0;
     [HideInInspector] public int collidersAndRoomMaskAndDefaultAndEnemies = 0;
     [HideInInspector] public int playersAndEnemiesAndHazardMask = 0;
     [HideInInspector] public int playersAndRagdollMask = 0;
@@ -47,19 +49,20 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
     private void DoLayerMaskStuff()
     {
-        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("InteractableObject", "Railing", "Enemies", "Terrain", "MapHazards", "Vehicle");
-        collidersAndRoomAndRailingAndInteractableMask = StartOfRound.Instance.collidersAndRoomMask | LayerMask.GetMask("Railing", "InteractableObject");
-        collidersAndRoomAndPlayersAndInteractableMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | LayerMask.GetMask("InteractableObject");
-        collidersAndRoomMaskAndDefaultAndEnemies = StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("Enemies");
-        playersAndEnemiesAndHazardMask = LayerMask.GetMask("Player", "Enemies", "MapHazards");
-        playersAndRagdollMask = LayerMask.GetMask("Player", "PlayerRagdoll");
-        propsAndHazardMask = LayerMask.GetMask("Props", "MapHazards");
-        terrainAndFoliageMask = LayerMask.GetMask("Terrain", "Foliage");
         propsMask = LayerMask.GetMask("Props");
         hazardMask = LayerMask.GetMask("MapHazards");
         enemiesMask = LayerMask.GetMask("Enemies");
         interactableMask = LayerMask.GetMask("InteractableObject");
-        collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | LayerMask.GetMask("Enemies", "Terrain", "Vehicle");
+        playersAndRagdollMask = StartOfRound.Instance.playersMask | LayerMask.GetMask("PlayerRagdoll");
+        propsAndHazardMask = propsMask | hazardMask;
+        terrainAndFoliageMask = LayerMask.GetMask("Terrain", "Foliage");
+        playersAndEnemiesAndHazardMask = StartOfRound.Instance.playersMask | enemiesMask | hazardMask;
+        collidersAndRoomMaskAndDefaultAndEnemies = StartOfRound.Instance.collidersAndRoomMaskAndDefault | enemiesMask;
+        collidersAndRoomAndRailingAndInteractableMask = StartOfRound.Instance.collidersAndRoomMask | interactableMask | LayerMask.GetMask("Railing");
+        collidersAndRoomAndPlayersAndInteractableMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | interactableMask;
+        playersAndInteractableAndEnemiesAndPropsHazardMask = playersAndEnemiesAndHazardMask | interactableMask | propsMask;
+        collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | enemiesMask | LayerMask.GetMask("Terrain", "Vehicle");
+        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | enemiesMask | hazardMask | LayerMask.GetMask("Terrain", "Vehicle");
     }
 
     public void OnNewRoundStart()
