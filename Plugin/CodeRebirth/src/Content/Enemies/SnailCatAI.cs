@@ -179,10 +179,10 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public void DropBabyLocalClient()
     {
 		Plugin.ExtendedLogging($"dropped by {propScript.previousPlayerHeldBy}");
-		SwitchToBehaviourServerRpc((int)State.Wandering);
+		SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
 		holdingBaby = false;
 		playerHolding = null;
-		if (IsOwner)
+		if (IsOwner && !IsOwnedByServer)
 		{
 			ChangeOwnershipOfEnemy(StartOfRound.Instance.allPlayerScripts[0].actualClientId);
 		}
@@ -233,7 +233,10 @@ public class SnailCatAI : CodeRebirthEnemyAI
 
 		transform.position = groundNavmeshPosition;
 		inSpecialAnimation = false;
-		EnableOrDisableAgentWithRoutineServerRpc(true, true);
+		if (!IsServer) return;
+		agent.enabled = true;
+		smartAgentNavigator.enabled = true;
+		smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -251,7 +254,10 @@ public class SnailCatAI : CodeRebirthEnemyAI
         transform.position = dropOnPosition;
         inSpecialAnimation = false;
 		dropBabyCoroutine = null;
-		EnableOrDisableAgentWithRoutineServerRpc(true, true);
+		if (!IsServer) yield break;
+		agent.enabled = true;
+		smartAgentNavigator.enabled = true;
+		smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
 	}
 
 	public Transform ChooseClosestNodeToPositionNoPathCheck(Vector3 pos)

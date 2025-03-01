@@ -667,7 +667,8 @@ public class Hoverboard : GrabbableObject, IHittable
 
     public void SwitchModeExtension(bool SwitchingOff)
     {
-        if (SwitchingOff) {
+        if (SwitchingOff)
+        {
             Plugin.InputActionsInstance.HoverForward.performed -= OnKeyHeld;
             Plugin.InputActionsInstance.HoverBackward.performed -= OnKeyHeld;
             Plugin.InputActionsInstance.HoverLeft.performed -= OnKeyHeld;
@@ -727,7 +728,8 @@ public class Hoverboard : GrabbableObject, IHittable
 
     private void CalculateVerticalLookingInput(Vector2 inputVector, PlayerControllerB playerCurrentlyControlling)
     {
-        if (!playerCurrentlyControlling.smoothLookEnabledLastFrame) {
+        if (!playerCurrentlyControlling.smoothLookEnabledLastFrame)
+        {
             playerCurrentlyControlling.smoothLookEnabledLastFrame = true;
             playerCurrentlyControlling.smoothLookTurnCompass.rotation = playerCurrentlyControlling.gameplayCamera.transform.rotation;
             playerCurrentlyControlling.smoothLookTurnCompass.SetParent(null);

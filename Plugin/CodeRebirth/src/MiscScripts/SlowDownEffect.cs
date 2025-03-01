@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using MoreCompany;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -17,11 +18,8 @@ public static class SlowDownEffect
         List<(AudioSource audioSource, float pitch, float volume, float dopplerLevel)> audioSourcesWithOldValues = new();
         List<OccludeAudio> occludeAudiosToReEnable = new();
         List<(AudioLowPassFilter filter, float oldCutOffFrequency)> lowPassFiltersWithOldValues = new();
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
-        {
-            player.movementSpeed /= (Time.timeScale*0.8f);
-            player.playerBodyAnimator.speed /= Time.timeScale;
-        }
+        GameNetworkManager.Instance.localPlayerController.movementSpeed /= Time.timeScale * 0.8f;
+        GameNetworkManager.Instance.localPlayerController.playerBodyAnimator.speed /= Time.timeScale;
         foreach (var audiosource in audioSourcesToAffect)
         {
             audioSourcesWithOldValues.Add((audiosource, audiosource.pitch, audiosource.volume, audiosource.dopplerLevel));
@@ -70,11 +68,8 @@ public static class SlowDownEffect
     {
         yield return new WaitForSeconds(delay);
         Time.timeScale = 1f;
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
-        {
-            player.movementSpeed /= 6f;
-            player.playerBodyAnimator.speed /= 5f;
-        }
+        GameNetworkManager.Instance.localPlayerController.movementSpeed /= 6f;
+        GameNetworkManager.Instance.localPlayerController.playerBodyAnimator.speed /= 5f;
         foreach (var (audioSource, pitch, volume, dopplerLevel) in audioSourcesWithOldValues)
         {
             ResetAudioSourceVariables(audioSource, pitch, volume, dopplerLevel);

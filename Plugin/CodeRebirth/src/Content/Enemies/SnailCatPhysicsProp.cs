@@ -1,5 +1,6 @@
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
@@ -177,10 +178,28 @@ public class SnailCatPhysicsProp : GrabbableObject
 	}
 
 	public override void DiscardItem()
-	{		
-        snailCatScript.DropBabyLocalClient();
+	{
 		animator.SetBool(GrabbedAnimation, false);
+        snailCatScript.DropBabyLocalClient();
+		DropBabyServerRpc((int)GameNetworkManager.Instance.localPlayerController.playerClientId);
         previousPlayerHeldBy = playerHeldBy;
 		base.DiscardItem();
+		Plugin.ExtendedLogging($"Snail Cat Discarded and isBeingUsed: {isBeingUsed}");
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	public void DropBabyServerRpc(int playerClientId)
+	{
+		DropBabyClientRpc(playerClientId);
+	}
+
+	[ClientRpc]
+	public void DropBabyClientRpc(int playerClientId)
+	{
+		if (playerClientId == (int)GameNetworkManager.Instance.localPlayerController.playerClientId)
+		{
+			return;
+		}
+		snailCatScript.DropBabyLocalClient();
 	}
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
@@ -12,7 +13,7 @@ public class ElectricSlugger : GrabbableObject
     public LineRenderer[] lineRenderers = null!;
     public Transform weaponTip = null!;
 
-    private RaycastHit[] cachedRaycastHits = new RaycastHit[20];
+    private RaycastHit[] cachedRaycastHits = new RaycastHit[100];
     private float pumpTimer = 0f;
     private int pumpCount = 0;
     private bool canFire = true;
@@ -40,7 +41,7 @@ public class ElectricSlugger : GrabbableObject
 
     public void OnPumpDone(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (pumpTimer > 0f || insertedBattery.empty || isBeingUsed) return;
+        if (pumpTimer > 0f || insertedBattery.empty || insertedBattery.charge <= 0 || isBeingUsed) return;
         if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
         var btn = (ButtonControl)context.control;
 
@@ -64,10 +65,10 @@ public class ElectricSlugger : GrabbableObject
 
     private IEnumerator DoPumpAction()
     {
-        pumpTimer = 2.5f;
+        pumpTimer = 1.5f;
         canFire = false;
         float elapsed = 0f;
-        while (elapsed < 0.5f)
+        while (elapsed < 0.25f)
         {
             elapsed += Time.deltaTime;
             skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(elapsed * 200, 0, 100));
@@ -90,34 +91,47 @@ public class ElectricSlugger : GrabbableObject
         pumpTimer -= Time.deltaTime;
     }
 
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
+
+        ShakeTransform();
+    }
+
+    public void ShakeTransform()
+    {
+        int intensity = pumpCount;
+
+        if (intensity > 0)
+        {
+            float offset = intensity * 0.1f * UnityEngine.Random.Range(-1, 2);
+            weaponTip.localPosition = new Vector3(weaponTip.localPosition.x + offset, weaponTip.localPosition.y + offset, weaponTip.localPosition.z + offset);
+        }
+    }
+
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        if (!canFire) return;
-        float finalDestinationDistance = 100;
-        bool hitSomething = Physics.Raycast(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameObject.transform.forward, out RaycastHit raycastHit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-        if (hitSomething)
-        {
-            finalDestinationDistance = Vector3.Distance(playerHeldBy.transform.position, raycastHit.point);
-        }
-        int numHits = Physics.RaycastNonAlloc(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, finalDestinationDistance, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
+        if (!canFire || insertedBattery.empty || insertedBattery.charge <= 0) return;
+        int numHits = Physics.SphereCastNonAlloc(playerHeldBy.gameplayCamera.transform.position, 1, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, 999, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (!cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable)) continue;
+            CRUtilities.CreateExplosion(cachedRaycastHits[i].transform.position, true, 0, 0, 0, 0, playerHeldBy, null, 0);
             if (GameNetworkManager.Instance.localPlayerController == playerHeldBy) iHittable.Hit(2 * (pumpCount + 1), playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
             // play sound and stuff prob
         }
         insertedBattery.charge -= 0.1f * (pumpCount + 1);
+        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * (pumpCount + 1) * 5f * (playerHeldBy.isCrouching ? 0.25f : 1f);
+        StartCoroutine(ForcePlayerLookup(playerHeldBy, pumpCount + 1));
         pumpCount = 0;
-        CRUtilities.CreateExplosion(playerHeldBy.gameplayCamera.transform.position + playerHeldBy.gameplayCamera.transform.forward * finalDestinationDistance, true, 0, 0, 0, 0, playerHeldBy, null, 0);
         foreach (var renderer in lineRenderers)
         {
             renderer.enabled = true;
             renderer.SetPosition(0, weaponTip.transform.position);
-            renderer.SetPosition(1, playerHeldBy.gameplayCamera.transform.position + playerHeldBy.gameplayCamera.transform.forward * finalDestinationDistance);
+            renderer.SetPosition(1, playerHeldBy.gameplayCamera.transform.position + playerHeldBy.gameplayCamera.transform.forward * 999);
         }
         StartCoroutine(DisableRenderersRoutine());
-        // Create a LineRenderer2D that goes from the player to the direction vector * finalDestinationDistance
     }
 
     private IEnumerator DisableRenderersRoutine()
@@ -127,5 +141,36 @@ public class ElectricSlugger : GrabbableObject
         {
             renderer.enabled = false;
         }
+    }
+
+    private IEnumerator ForcePlayerLookup(PlayerControllerB player, int pumpCount)
+    {
+        int intensity = pumpCount * 2;
+        float totalTime = 1f / intensity;
+        float timeElapsed = 0f;
+        
+        Vector2 upwardInput = new Vector2(0, 1f) * intensity;
+
+        while (timeElapsed <= totalTime)
+        {
+            CalculateVerticalLookingInput(upwardInput, player);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private void CalculateVerticalLookingInput(Vector2 inputVector, PlayerControllerB playerCurrentlyControlling)
+    {
+        if (!playerCurrentlyControlling.smoothLookEnabledLastFrame)
+        {
+            playerCurrentlyControlling.smoothLookEnabledLastFrame = true;
+            playerCurrentlyControlling.smoothLookTurnCompass.rotation = playerCurrentlyControlling.gameplayCamera.transform.rotation;
+            playerCurrentlyControlling.smoothLookTurnCompass.SetParent(null);
+        }
+
+        playerCurrentlyControlling.cameraUp -= inputVector.y;
+        playerCurrentlyControlling.cameraUp = Mathf.Clamp(playerCurrentlyControlling.cameraUp, -80f, 60f);
+        playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles = new Vector3(playerCurrentlyControlling.cameraUp, playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles.y, playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles.z);
+        playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles = new Vector3(Mathf.LerpAngle(playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.x, playerCurrentlyControlling.cameraUp, playerCurrentlyControlling.smoothLookMultiplier * Time.deltaTime), playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.y, playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.z);
     }
 }

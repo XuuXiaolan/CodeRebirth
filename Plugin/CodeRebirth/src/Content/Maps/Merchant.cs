@@ -29,7 +29,7 @@ public class Merchant : NetworkBehaviour
     public GameObject[] coinObjects = [];
     private bool canTarget = true;
     private NetworkVariable<bool> isActive = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    private bool playerWhoStoleKilled = true;
+    private bool playersWhoStoleKilled = true;
     private Coroutine? destroyShipRoutine = null;
     private static readonly int TakeCoinsAnimation = Animator.StringToHash("takeCoins"); // Trigger
     private static readonly int Activated = Animator.StringToHash("activated"); // Bool
@@ -47,12 +47,12 @@ public class Merchant : NetworkBehaviour
 
     public void Update()
     {
-        if (StartOfRound.Instance.shipIsLeaving && destroyShipRoutine == null && !playerWhoStoleKilled)
+        if (StartOfRound.Instance.shipIsLeaving && destroyShipRoutine == null && !playersWhoStoleKilled)
         {
             destroyShipRoutine = StartCoroutine(DestroyShip());
         }
         if (StartOfRound.Instance.shipIsLeaving) return;
-        if (IsServer)
+        if (IsServer && targetPlayers.Count <= 0)
         {
             bool playerNearby = false;
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
@@ -74,6 +74,11 @@ public class Merchant : NetworkBehaviour
                 isActive.Value = true;
             }
         }
+        else if (IsServer && !isActive.Value)
+        {
+            merchantAnimator.SetBool(Activated, true);
+            isActive.Value = true;
+        }
         walletTrigger.interactable = GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Wallet";
         foreach (KeyValuePair<GrabbableObject, int> item in itemsSpawned.ToArray())
         {
@@ -85,7 +90,7 @@ public class Merchant : NetworkBehaviour
                     itemsSpawned[item.Key] = -1;
                     continue;
                 }
-                playerWhoStoleKilled = false;
+                playersWhoStoleKilled = false;
                 targetPlayers.Add(item.Key.playerHeldBy);
             }
         }
@@ -166,7 +171,7 @@ public class Merchant : NetworkBehaviour
         var currentTargetPlayer = targetPlayers[0];
         if (currentTargetPlayer.isPlayerDead || !currentTargetPlayer.isPlayerControlled)
         {
-            playerWhoStoleKilled = true;
+            if (targetPlayers.Count == 1) playersWhoStoleKilled = true;
             targetPlayers.RemoveAt(0);
             return;
         }

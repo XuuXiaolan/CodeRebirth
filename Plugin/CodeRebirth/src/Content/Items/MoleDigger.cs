@@ -1,4 +1,6 @@
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
 
@@ -6,7 +8,9 @@ namespace CodeRebirth.src.Content.Items;
 public class MoleDigger : GrabbableObject
 {
     public Animator moleAnimator = null!;
+    public OwnerNetworkAnimator moleOwnerNetworkAnimator = null!;
     public Transform endTransform = null!;
+    public GameObject lightObject = null!;
 
     private Collider[] cachedColliders = new Collider[8];
     private System.Random moleRandom = new();
@@ -19,6 +23,7 @@ public class MoleDigger : GrabbableObject
     {
         base.Start();
         moleRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
+        lightObject.SetActive(false);
     }
 
     public override void GrabItem()
@@ -33,6 +38,7 @@ public class MoleDigger : GrabbableObject
         Plugin.ExtendedLogging($"Mole Digger Discarded and isBeingUsed: {isBeingUsed}");
         moleAnimator.SetBool(ActivatedAnimation, false);
         moleAnimator.SetBool(AttackingAnimation, false);
+        ActivateLightObjectServerRpc(false);
         isBeingUsed = false;
 
         Plugin.InputActionsInstance.PullChain.performed -= OnChainYanked;
@@ -45,14 +51,30 @@ public class MoleDigger : GrabbableObject
 
         moleAnimator.SetBool(ActivatedAnimation, false);
         moleAnimator.SetBool(AttackingAnimation, false);
+        ActivateLightObjectServerRpc(false);
         isBeingUsed = false;
     }
 
     public override void UseUpBatteries()
     {
         base.UseUpBatteries();
-        moleAnimator.SetBool(ActivatedAnimation, false);
-        moleAnimator.SetBool(AttackingAnimation, false);
+        if (IsOwner)
+        {
+            moleAnimator.SetBool(ActivatedAnimation, false);
+            moleAnimator.SetBool(AttackingAnimation, false);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ActivateLightObjectServerRpc(bool enable)
+    {
+        ActivateLightObjectClientRpc(enable);
+    }
+
+    [ClientRpc]
+    private void ActivateLightObjectClientRpc(bool enable)
+    {
+        lightObject.SetActive(enable);
     }
 
     public void OnChainYanked(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -67,9 +89,10 @@ public class MoleDigger : GrabbableObject
             if (moleRandom.Next(0, 100) < 25)
             {
                 moleAnimator.SetBool(ActivatedAnimation, true);
+                ActivateLightObjectServerRpc(true);
                 Plugin.ExtendedLogging($"Mole Digger Activated");
             }
-            moleAnimator.SetTrigger(PullChainAnimation);
+            moleOwnerNetworkAnimator.SetTrigger(PullChainAnimation);
         }
     }
 
@@ -110,11 +133,11 @@ public class MoleDigger : GrabbableObject
         Plugin.ExtendedLogging($"Mole Digger used and button down: {used} {buttonDown}");
         if (!buttonDown)
         {
-            moleAnimator.SetBool(AttackingAnimation, false);
+            if (IsOwner) moleAnimator.SetBool(AttackingAnimation, false);
         }
         else
         {
-            moleAnimator.SetBool(AttackingAnimation, true);
+            if (IsOwner) moleAnimator.SetBool(AttackingAnimation, true);
         }
     }
 }

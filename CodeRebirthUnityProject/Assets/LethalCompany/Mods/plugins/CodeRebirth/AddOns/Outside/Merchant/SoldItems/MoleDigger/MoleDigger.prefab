@@ -341,6 +341,7 @@ GameObject:
   - component: {fileID: -6034887335408358091}
   - component: {fileID: -2776931454579498628}
   - component: {fileID: 7649735607237880221}
+  - component: {fileID: 6727420671627930091}
   m_Layer: 6
   m_Name: MoleDigger
   m_TagString: PhysicsProp
@@ -553,7 +554,9 @@ MonoBehaviour:
   grabbableToEnemies: 0
   hasBeenHeld: 0
   moleAnimator: {fileID: 7649735607237880221}
+  moleOwnerNetworkAnimator: {fileID: 6727420671627930091}
   endTransform: {fileID: 5347509267497047824}
+  lightObject: {fileID: 7300298673132675433}
 --- !u!95 &7649735607237880221
 Animator:
   serializedVersion: 5
@@ -575,6 +578,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6727420671627930091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3898469256369999722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -270008894, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1735586914
+    DestinationState: 373389063
+    TransitionDuration: 0.09999995
+    TriggerNameHash: 2010866156
+    TransitionIndex: 0
+  m_Animator: {fileID: 7649735607237880221}
 --- !u!1 &4791689045878965630
 GameObject:
   m_ObjectHideFlags: 0
