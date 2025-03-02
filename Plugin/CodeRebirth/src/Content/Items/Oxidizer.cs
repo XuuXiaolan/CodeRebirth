@@ -1,6 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 namespace CodeRebirth.src.Content.Items;
 public class Oxidizer : GrabbableObject
@@ -11,12 +15,14 @@ public class Oxidizer : GrabbableObject
 
     private RaycastHit[] cachedRaycastHits = new RaycastHit[20];
     private bool charged = true;
+    private bool superCharged = false;
     private float updateHitInterval = 0.2f;
     public override void Update()
     {
         base.Update();
         updateHitInterval -= Time.deltaTime;
 
+        if (superCharged) return;
         if (!charged && skinnedMeshRenderer.GetBlendShapeWeight(0) < 80)
         {
             charged = true;
@@ -78,15 +84,90 @@ public class Oxidizer : GrabbableObject
         }
     }
 
+    public override void GrabItem()
+    {
+        base.GrabItem();
+        Plugin.InputActionsInstance.ExhaustFuel.performed += OnExhaustFuel;
+    }
+
     public override void DiscardItem()
     {
         base.DiscardItem();
         isBeingUsed = false;
+        Plugin.InputActionsInstance.ExhaustFuel.performed -= OnExhaustFuel;
     }
 
     public override void PocketItem()
     {
         base.PocketItem();
         isBeingUsed = false;
+    }
+
+    public void OnExhaustFuel(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (!charged || isPocketed) return;
+        if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
+        var btn = (ButtonControl)context.control;
+
+        if (btn.wasPressedThisFrame)
+        {
+            DoExhaustFuelServerRpc();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DoExhaustFuelServerRpc()
+    {
+        DoExhaustFuelClientRpc();
+    }
+
+    [ClientRpc]
+    private void DoExhaustFuelClientRpc()
+    {
+        superCharged = true;
+        float fuelLeft = 100 - skinnedMeshRenderer.GetBlendShapeWeight(0);
+        int damageToDeal = Mathf.FloorToInt(fuelLeft/5f);
+        Plugin.ExtendedLogging($"Oxidizer: {damageToDeal} damage dealt.");
+        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < numHits; i++)
+        {
+            if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
+            {
+                iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
+            }
+        }
+        foreach (var ps in flameStreamParticleSystems)
+        {
+            var emissionModule = ps.emission;
+            emissionModule.rateOverTimeMultiplier *= 3f;
+
+            var mainModule = ps.main;
+            mainModule.startSize = new ParticleSystem.MinMaxCurve(mainModule.startSize.constant * 3f);
+            ps.Play();
+        }
+        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 25f * (playerHeldBy.isCrouching ? 0.25f : 1f);
+        StartCoroutine(CRUtilities.ForcePlayerLookup(playerHeldBy, 5));
+        StartCoroutine(SetWeightTo100());
+    }
+
+    private IEnumerator SetWeightTo100()
+    {
+        while (skinnedMeshRenderer.GetBlendShapeWeight(0) < 100)
+        {
+            skinnedMeshRenderer.SetBlendShapeWeight(0, skinnedMeshRenderer.GetBlendShapeWeight(0) + 100 * Time.deltaTime);
+            yield return null;
+        }
+        foreach (var ps in flameStreamParticleSystems)
+        {
+            var emissionModule = ps.emission;
+            emissionModule.rateOverTimeMultiplier /= 3f;
+
+            var mainModule = ps.main;
+            mainModule.startSize = new ParticleSystem.MinMaxCurve(mainModule.startSize.constant / 3f);
+
+            ps.Stop();
+        }
+        charged = false;
+        superCharged = false;
     }
 }

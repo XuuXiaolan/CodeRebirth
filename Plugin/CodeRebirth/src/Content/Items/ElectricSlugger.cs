@@ -41,7 +41,7 @@ public class ElectricSlugger : GrabbableObject
 
     public void OnPumpDone(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (pumpTimer > 0f || insertedBattery.empty || insertedBattery.charge <= 0 || isBeingUsed) return;
+        if (pumpTimer > 0f || insertedBattery.empty || insertedBattery.charge <= 0 || isBeingUsed || isPocketed) return;
         if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
         var btn = (ButtonControl)context.control;
 
@@ -105,7 +105,7 @@ public class ElectricSlugger : GrabbableObject
         if (intensity > 0)
         {
             float offset = intensity * 0.1f * UnityEngine.Random.Range(-1, 2);
-            weaponTip.localPosition = new Vector3(weaponTip.localPosition.x + offset, weaponTip.localPosition.y + offset, weaponTip.localPosition.z + offset);
+            this.transform.localPosition = new Vector3(this.transform.localPosition.x + offset, this.transform.localPosition.y + offset, this.transform.localPosition.z + offset);
         }
     }
 
@@ -123,7 +123,8 @@ public class ElectricSlugger : GrabbableObject
         }
         insertedBattery.charge -= 0.1f * (pumpCount + 1);
         playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * (pumpCount + 1) * 5f * (playerHeldBy.isCrouching ? 0.25f : 1f);
-        StartCoroutine(ForcePlayerLookup(playerHeldBy, pumpCount + 1));
+        int intensity = (pumpCount + 1) * 2;
+        StartCoroutine(CRUtilities.ForcePlayerLookup(playerHeldBy, intensity));
         pumpCount = 0;
         foreach (var renderer in lineRenderers)
         {
@@ -141,36 +142,5 @@ public class ElectricSlugger : GrabbableObject
         {
             renderer.enabled = false;
         }
-    }
-
-    private IEnumerator ForcePlayerLookup(PlayerControllerB player, int pumpCount)
-    {
-        int intensity = pumpCount * 2;
-        float totalTime = 1f / intensity;
-        float timeElapsed = 0f;
-        
-        Vector2 upwardInput = new Vector2(0, 1f) * intensity;
-
-        while (timeElapsed <= totalTime)
-        {
-            CalculateVerticalLookingInput(upwardInput, player);
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
-    }
-
-    private void CalculateVerticalLookingInput(Vector2 inputVector, PlayerControllerB playerCurrentlyControlling)
-    {
-        if (!playerCurrentlyControlling.smoothLookEnabledLastFrame)
-        {
-            playerCurrentlyControlling.smoothLookEnabledLastFrame = true;
-            playerCurrentlyControlling.smoothLookTurnCompass.rotation = playerCurrentlyControlling.gameplayCamera.transform.rotation;
-            playerCurrentlyControlling.smoothLookTurnCompass.SetParent(null);
-        }
-
-        playerCurrentlyControlling.cameraUp -= inputVector.y;
-        playerCurrentlyControlling.cameraUp = Mathf.Clamp(playerCurrentlyControlling.cameraUp, -80f, 60f);
-        playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles = new Vector3(playerCurrentlyControlling.cameraUp, playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles.y, playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles.z);
-        playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles = new Vector3(Mathf.LerpAngle(playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.x, playerCurrentlyControlling.cameraUp, playerCurrentlyControlling.smoothLookMultiplier * Time.deltaTime), playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.y, playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.z);
     }
 }

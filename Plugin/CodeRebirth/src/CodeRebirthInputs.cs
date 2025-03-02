@@ -11,6 +11,9 @@ public class IngameKeybinds : LcInputActions
     [InputAction("<Keyboard>/r", Name = "PumpSlugger")]
     public InputAction PumpSlugger { get; set; } = null!;
 
+    [InputAction("<Keyboard>/r", Name = "ExhaustFuel")]
+    public InputAction ExhaustFuel { get; set; } = null!;
+
     [InputAction("<Keyboard>/w", Name = "HoverForward")]
     public InputAction HoverForward { get; set; } = null!;
 

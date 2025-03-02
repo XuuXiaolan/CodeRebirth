@@ -235,4 +235,34 @@ public class CRUtilities
         landmineList.Clear();
         hittablesList.Clear();
     }
+
+    public static IEnumerator ForcePlayerLookup(PlayerControllerB player, int intensity)
+    {
+        float totalTime = 1f / intensity;
+        float timeElapsed = 0f;
+        
+        Vector2 upwardInput = new Vector2(0, 1f) * intensity;
+
+        while (timeElapsed <= totalTime)
+        {
+            CalculateVerticalLookingInput(upwardInput, player);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public static void CalculateVerticalLookingInput(Vector2 inputVector, PlayerControllerB playerCurrentlyControlling)
+    {
+        if (!playerCurrentlyControlling.smoothLookEnabledLastFrame)
+        {
+            playerCurrentlyControlling.smoothLookEnabledLastFrame = true;
+            playerCurrentlyControlling.smoothLookTurnCompass.rotation = playerCurrentlyControlling.gameplayCamera.transform.rotation;
+            playerCurrentlyControlling.smoothLookTurnCompass.SetParent(null);
+        }
+
+        playerCurrentlyControlling.cameraUp -= inputVector.y;
+        playerCurrentlyControlling.cameraUp = Mathf.Clamp(playerCurrentlyControlling.cameraUp, -80f, 60f);
+        playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles = new Vector3(playerCurrentlyControlling.cameraUp, playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles.y, playerCurrentlyControlling.smoothLookTurnCompass.localEulerAngles.z);
+        playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles = new Vector3(Mathf.LerpAngle(playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.x, playerCurrentlyControlling.cameraUp, playerCurrentlyControlling.smoothLookMultiplier * Time.deltaTime), playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.y, playerCurrentlyControlling.gameplayCamera.transform.localEulerAngles.z);
+    }
 }

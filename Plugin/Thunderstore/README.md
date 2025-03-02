@@ -432,11 +432,15 @@ If you're interested in helping with the development of the mod, feel free to re
 
 </details>
 
+## Memorial/Graveyard
+
+- CoddingCat, Siphonife
+
 ## Credits
 
 **Moon Work:**
 
-- Xu Xiaolan, [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc), SolidStone, S1ckboy, MrSaltedBeef, Siphon, NutDaddy
+- Xu Xiaolan, [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc), SolidStone, S1ckboy, MrSaltedBeef, NutDaddy
 
 **Coding:**
 
@@ -444,7 +448,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 **Modeling/Designs:**
 
-- [QWERTYrodrigo](https://www.youtube.com/watch?v=AxE4TltnvjI), v0xx, S1ckboy, SolidStone, Codding Cat, IntegrityChaos, and Bobilka
+- [QWERTYrodrigo](https://www.youtube.com/watch?v=AxE4TltnvjI), v0xx, S1ckboy, SolidStone, IntegrityChaos, and Bobilka
 
 **Sounds:**
 
