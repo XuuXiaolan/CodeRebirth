@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 396152554580695494}
   - component: {fileID: 3565935444937518052}
   - component: {fileID: 6160766039648882065}
+  - component: {fileID: 3291055553321171071}
+  - component: {fileID: 756323026147055271}
   m_Layer: 0
   m_Name: CodeRebirthUtils
   m_TagString: Untagged
@@ -69,12 +71,55 @@ MonoBehaviour:
   m_Script: {fileID: -1422513921, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ExplosionCreator: {fileID: 756323026147055271}
   WireframeMaterial: {fileID: 2100000, guid: 890cd0d7011a0ce4e8fe0b8ce11f8d83, type: 2}
   SeeThroughShader: {fileID: 4800000, guid: 793acbe0596a2e14481dd68a72d2248c, type: 3}
   TimeSlowVolume: {fileID: 789975294119285480}
   FireyVolume: {fileID: 4257917388346144537}
   SmokyVolume: {fileID: 3191303810075138719}
   CloseEyeVolume: {fileID: 2120676631970192616}
+  collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask: 0
+  collidersAndRoomAndRailingAndInteractableMask: 0
+  collidersAndRoomAndPlayersAndInteractableMask: 0
+  playersAndInteractableAndEnemiesAndPropsHazardMask: 0
+  collidersAndRoomMaskAndDefaultAndEnemies: 0
+  playersAndEnemiesAndHazardMask: 0
+  playersAndRagdollMask: 0
+  propsAndHazardMask: 0
+  terrainAndFoliageMask: 0
+  propsMask: 0
+  hazardMask: 0
+  enemiesMask: 0
+  interactableMask: 0
+  collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask: 0
+  playersAndEnemiesMask: 0
+--- !u!114 &3291055553321171071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222572066768883343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -222393523, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &756323026147055271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222572066768883343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1032951893, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Explosion: {fileID: 0}
+  audio: {fileID: 0}
+  particleSystems: []
 --- !u!1 &3587829296263914092
 GameObject:
   m_ObjectHideFlags: 0

@@ -77,6 +77,7 @@ public class Plugin : BaseUnityPlugin
         _harmony.PatchAll(typeof(StartOfRoundPatch));
         _harmony.PatchAll(typeof(NetworkBehaviourPatch));
 
+        TerminalPatch.Init();
         KnifeItemPatch.Init();
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
@@ -129,7 +130,6 @@ public class Plugin : BaseUnityPlugin
 
     internal static void ExtendedLogging(object text)
     {
-
         if (ModConfig.ConfigExtendedLogging.Value)
         {
             Logger.LogInfo(text);

@@ -132,20 +132,20 @@ public class CRUtilities
         if (spawnExplosionEffect)
         {
             float multiplier = Mathf.Clamp((maxDamageRange - minDamageRange)/3f, 0.2f, 20);
-            CodeRebirthUtils.Instance.ExplosionCreator.audio.maxDistance *= (multiplier/2);
-            foreach (var particleSystem in CodeRebirthUtils.Instance.ExplosionCreator.GetComponentsInChildren<ParticleSystem>())
-            {
-                particleSystem.gameObject.transform.localScale *= multiplier;
-            }
             GameObject gameobject;
             if (overridePrefab == null)
             {
-                gameobject = UnityEngine.Object.Instantiate(CodeRebirthUtils.Instance.ExplosionCreator.Explosion, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder);
+                gameobject = UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder);
             }
             else
             {
                 gameobject = UnityEngine.Object.Instantiate(overridePrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder);
             }
+            foreach (var particleSystem in gameobject.GetComponentsInChildren<ParticleSystem>())
+            {
+                particleSystem.gameObject.transform.localScale *= multiplier;
+            }
+            gameobject.transform.Find("Audio").GetComponent<AudioSource>().maxDistance *= multiplier;
             gameobject.SetActive(true);
         }
 

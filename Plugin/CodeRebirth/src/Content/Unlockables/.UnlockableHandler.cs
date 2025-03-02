@@ -17,6 +17,9 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		
 		[LoadFromBundle("ShockWaveDrone.prefab")]
 		public GameObject ShockWaveDronePrefab { get; private set; } = null!;
+
+		[LoadFromBundle("DenyGalPurchase.asset")]
+		public TerminalNode denyPurchaseNode { get; private set; } = null!;
 	}
 
 	public class PlantPotAssets(string bundleName) : AssetBundleLoader<PlantPotAssets>(bundleName)

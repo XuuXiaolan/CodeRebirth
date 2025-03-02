@@ -9,8 +9,9 @@ public class ExplosionCreator : MonoBehaviour
 
     public void Start()
     {
-        Explosion = StartOfRound.Instance.explosionPrefab;
-        audio = Explosion.transform.Find("Audio").gameObject.GetComponent<AudioSource>();
+        Explosion = GameObject.Instantiate(StartOfRound.Instance.explosionPrefab, this.transform); // seems to be missing materials and audio?
+        audio = Explosion.GetComponentInChildren<AudioSource>();
         particleSystems = Explosion.GetComponentsInChildren<ParticleSystem>();
+        Explosion.SetActive(false);
     }
 }
