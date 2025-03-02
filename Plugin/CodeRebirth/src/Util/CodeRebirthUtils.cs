@@ -35,6 +35,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public int enemiesMask = 0;
     [HideInInspector] public int interactableMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
+    [HideInInspector] public int playersAndEnemiesMask = 0;
     [HideInInspector] public ES3Settings SaveSettings;
     private System.Random CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
@@ -56,7 +57,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         playersAndRagdollMask = StartOfRound.Instance.playersMask | LayerMask.GetMask("PlayerRagdoll");
         propsAndHazardMask = propsMask | hazardMask;
         terrainAndFoliageMask = LayerMask.GetMask("Terrain", "Foliage");
-        playersAndEnemiesAndHazardMask = StartOfRound.Instance.playersMask | enemiesMask | hazardMask;
+        playersAndEnemiesMask = StartOfRound.Instance.playersMask | enemiesMask;
+        playersAndEnemiesAndHazardMask = playersAndEnemiesMask | hazardMask;
         collidersAndRoomMaskAndDefaultAndEnemies = StartOfRound.Instance.collidersAndRoomMaskAndDefault | enemiesMask;
         collidersAndRoomAndRailingAndInteractableMask = StartOfRound.Instance.collidersAndRoomMask | interactableMask | LayerMask.GetMask("Railing");
         collidersAndRoomAndPlayersAndInteractableMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | interactableMask;
