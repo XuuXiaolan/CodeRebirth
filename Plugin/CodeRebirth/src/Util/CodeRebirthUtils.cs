@@ -7,9 +7,7 @@ using UnityEngine.AI;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Rendering;
 using CodeRebirth.src.Content.Unlockables;
-using System.Collections;
 using System.Linq;
-using UnityEngine.SocialPlatforms;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -76,7 +74,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         entrancePoints = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);
     }
 
-    private void UnlockProgressively(int unlockableIndex, int playerIndex, bool local, bool displayTip, string messageHeader, string messagBody)
+    public void UnlockProgressively(int unlockableIndex, int playerIndex, bool local, bool displayTip, string messageHeader, string messagBody)
     {
         UnlockableItem unlockable = ProgressiveUnlockables.unlockableIDs.Keys.ElementAt(unlockableIndex);
         ProgressiveUnlockables.unlockableIDs[unlockable] = true;

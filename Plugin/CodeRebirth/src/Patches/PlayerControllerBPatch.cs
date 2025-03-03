@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
@@ -115,13 +116,19 @@ static class PlayerControllerBPatch
         Plugin.ExtendedLogging("PlayerControllerB_ConnectClientToPlayerObject called");
         if (GameNetworkManager.Instance.localPlayerController == self)
         {
-            CodeRebirthUtils.Instance.RequestProgressiveUnlocksFromHostServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self), true, true, "Requesting Data", "Requesting unlockable information from host...");
+            self.StartCoroutine(WaitToLoadUnlockableData(self));
         }
         if (self.IsServer && Plugin.ModConfig.ConfigFirstLaunchPopup.Value && (!Plugin.ModelReplacementAPIIsOn || !Plugin.MoreSuitsIsOn))
         {
             HUDManager.Instance.DisplayTip("Mod not detected", "Downloading ModelReplacementAPI and MoreSuits adds a new suit as the ShockwaveGal's model");
             Plugin.ModConfig.ConfigFirstLaunchPopup.Value = false;
         }
+    }
+
+    private static IEnumerator WaitToLoadUnlockableData(PlayerControllerB self)
+    {
+        yield return new WaitUntil(() => CodeRebirthUtils.Instance != null);
+        CodeRebirthUtils.Instance.RequestProgressiveUnlocksFromHostServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self), true, true, "Requesting Data", "Requesting unlockable information from host...");
     }
 
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)

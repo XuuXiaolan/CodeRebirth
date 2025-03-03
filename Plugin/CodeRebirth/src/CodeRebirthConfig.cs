@@ -6,6 +6,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigMerchantEnabled { get; private set; }
     public ConfigEntry<bool> ConfigCruiserGalEnabled { get; private set; }
@@ -243,6 +244,10 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
+        ConfigUnlockAllGals = configFile.Bind("Debug Options",
+                                            "Debug Mode | Unlock All Gals",
+                                            false,
+                                            "Whether all Gal unlockables are unlocked by default.");
         #endregion
         #region Oxyde
         ConfigOxydeEnabled = configFile.Bind("??? Options",

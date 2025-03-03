@@ -9,6 +9,7 @@ public class ProgressiveUnlockables
 {
     public static Dictionary<UnlockableItem, bool> unlockableIDs = new();
     public static List<string> unlockableNames = new();
+    public static List<TerminalNode> rejectionNodes = new();
 
     public static IEnumerator LoadUnlockedIDs()
     {
@@ -17,6 +18,7 @@ public class ProgressiveUnlockables
         {
             UnlockableItem unlockable = unlockableIDs.Keys.ElementAt(i);
             bool actuallyUnlocked = ES3.Load(unlockable.ToString(), false, CodeRebirthUtils.Instance.SaveSettings);
+            if (Plugin.ModConfig.ConfigUnlockAllGals.Value) actuallyUnlocked = true;
             Plugin.ExtendedLogging($"Unlockable {unlockable.unlockableName} is unlocked: {actuallyUnlocked}");
             unlockableIDs[unlockable] = actuallyUnlocked;
             unlockable.unlockableName = actuallyUnlocked ? unlockableNames[i] : "???";

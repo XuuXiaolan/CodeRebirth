@@ -18,7 +18,8 @@ public static class TerminalPatch
         if (node.shipUnlockableID != -1 && ProgressiveUnlockables.unlockableIDs.ContainsKey(StartOfRound.Instance.unlockablesList.unlockables[node.shipUnlockableID]) && !ProgressiveUnlockables.unlockableIDs[StartOfRound.Instance.unlockablesList.unlockables[node.shipUnlockableID]])
         {
             Plugin.ExtendedLogging($"Twas equal, replacing node with deny purchase node.");
-            orig(self, UnlockableHandler.Instance.ShockwaveBot.denyPurchaseNode);
+            TerminalNode rejectionNode = ProgressiveUnlockables.rejectionNodes[ProgressiveUnlockables.unlockableIDs.Keys.ToList().IndexOf(StartOfRound.Instance.unlockablesList.unlockables[node.shipUnlockableID])];
+            orig(self, rejectionNode);
             return;
         }
         orig(self, node);

@@ -4,7 +4,6 @@ using LethalLib.Modules;
 using LethalLib.Extras;
 using UnityEngine;
 using CodeRebirth.src.MiscScripts;
-using System;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockableHandler : ContentHandler<UnlockableHandler>
@@ -21,7 +20,10 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public GameObject ShockWaveDronePrefab { get; private set; } = null!;
 
 		[LoadFromBundle("DenyGalPurchase.asset")]
-		public TerminalNode denyPurchaseNode { get; private set; } = null!;
+		public TerminalNode denyShockwaveGalPurchaseNode { get; private set; } = null!;
+
+		[LoadFromBundle("GalScrapHeapObj.asset")]
+		public Item ShockwaveScrapHeap { get; private set; } = null!;
 	}
 
 	public class PlantPotAssets(string bundleName) : AssetBundleLoader<PlantPotAssets>(bundleName)
@@ -46,6 +48,12 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
 		[LoadFromBundle("SeamineGal.prefab")]
 		public GameObject SeamineGalPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("DenyGalPurchase.asset")]
+		public TerminalNode denySeamineGalPurchaseNode { get; private set; } = null!;
+
+		[LoadFromBundle("GalScrapHeapObj.asset")]
+		public Item SeamineScrapHeap { get; private set; } = null!;
 	}
 
 	public class TerminalBotAssets(string bundleName) : AssetBundleLoader<TerminalBotAssets>(bundleName)
@@ -55,6 +63,12 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
 		[LoadFromBundle("TerminalGalDaisy.prefab")]
 		public GameObject TerminalGalPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("DenyGalPurchase.asset")]
+		public TerminalNode denyTerminalGalPurchaseNode { get; private set; } = null!;
+
+		[LoadFromBundle("GalScrapHeapObj.asset")]
+		public Item TerminalScrapHeap { get; private set; } = null!;
 	}
 
 	public class BellCrabAssets(string bundleName) : AssetBundleLoader<BellCrabAssets>(bundleName)
@@ -109,6 +123,12 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
 		[LoadFromBundle("CruiserGal.prefab")]
 		public GameObject CruiserGalPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("DenyGalPurchase.asset")]
+		public TerminalNode denyCruiserGalPurchaseNode { get; private set; } = null!;
+
+		[LoadFromBundle("GalScrapHeapObj.asset")]
+		public Item CruiserScrapHeap { get; private set; } = null!;
 	}
 
     public FriendAssets Friend { get; private set; } = null!;
@@ -144,8 +164,10 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		CruiserGal = new CruiserGalAssets("cruisergalassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(CruiserGal.CruiserBotUnlockable, Plugin.ModConfig.ConfigCruiserGalCost.Value, StoreType.ShipUpgrade);
+		RegisterScrapWithConfig("All:1", CruiserGal.CruiserScrapHeap, -1, -1);
 		ProgressiveUnlockables.unlockableIDs.Add(CruiserGal.CruiserBotUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(CruiserGal.CruiserBotUnlockable.unlockable.unlockableName);
+		ProgressiveUnlockables.rejectionNodes.Add(CruiserGal.denyCruiserGalPurchaseNode);
 	}
 
 	private void RegisterCleanerDroneGal()
@@ -197,24 +219,30 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
         ShockwaveBot = new ShockwaveBotAssets("shockwavebotassets");
         LethalLib.Modules.Unlockables.RegisterUnlockable(ShockwaveBot.ShockWaveBotUnlockable, Plugin.ModConfig.ConfigShockwaveBotCost.Value, StoreType.ShipUpgrade);
+		RegisterScrapWithConfig("All:1", ShockwaveBot.ShockwaveScrapHeap, -1, -1);
 		ProgressiveUnlockables.unlockableIDs.Add(ShockwaveBot.ShockWaveBotUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(ShockwaveBot.ShockWaveBotUnlockable.unlockable.unlockableName);
+		ProgressiveUnlockables.rejectionNodes.Add(ShockwaveBot.denyShockwaveGalPurchaseNode);
 	}
 
 	private void RegisterSeamineTink()
 	{
 		SeamineTink = new SeamineTinkAssets("seaminetinkassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(SeamineTink.SeamineTinkUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.ShipUpgrade);
+		RegisterScrapWithConfig("All:1", SeamineTink.SeamineScrapHeap, -1, -1);
 		ProgressiveUnlockables.unlockableIDs.Add(SeamineTink.SeamineTinkUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(SeamineTink.SeamineTinkUnlockable.unlockable.unlockableName);
+		ProgressiveUnlockables.rejectionNodes.Add(SeamineTink.denySeamineGalPurchaseNode);
 	}
 
 	private void RegisterTerminalBot()
 	{
 		TerminalBot = new TerminalBotAssets("terminalbotassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(TerminalBot.TerminalBotUnlockable, Plugin.ModConfig.ConfigTerminalBotCost.Value, StoreType.ShipUpgrade);
+		RegisterScrapWithConfig("All:1", TerminalBot.TerminalScrapHeap, -1, -1);
 		ProgressiveUnlockables.unlockableIDs.Add(TerminalBot.TerminalBotUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(TerminalBot.TerminalBotUnlockable.unlockable.unlockableName);
+		ProgressiveUnlockables.rejectionNodes.Add(TerminalBot.denyTerminalGalPurchaseNode);
 	}
 
 	private void RegisterPlantPot()
