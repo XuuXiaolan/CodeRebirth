@@ -46,6 +46,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         DoLayerMaskStuff();
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
         Instance = this;
+        StartCoroutine(ProgressiveUnlockables.LoadUnlockedIDs());
     }
 
     private void DoLayerMaskStuff()
@@ -194,6 +195,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 		{
 			plantpot.SavePlantData();
 		}
+        ProgressiveUnlockables.SaveUnlockedIDs();
     }
 
     public static void ResetCodeRebirthData(ES3Settings saveSettings)

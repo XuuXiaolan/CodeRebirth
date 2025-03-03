@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -16,6 +18,8 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        StartCoroutine(UnlockGal());
+
         oldSpeed = agent.speed;
         cutieflys.Add(this);
 
@@ -25,6 +29,17 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         // Apply material variant
         ApplyMaterialVariant();
         if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+    }
+
+    private IEnumerator UnlockGal()
+    {
+        for (int i = 0; i < ProgressiveUnlockables.unlockableIDs.Count; i++)
+        {
+            UnlockableItem unlockable = ProgressiveUnlockables.unlockableIDs.Keys.ElementAt(i);
+            ProgressiveUnlockables.unlockableIDs[unlockable] = true;
+            HUDManager.Instance.DisplayTip("Unlocked!", $"You unlocked {ProgressiveUnlockables.unlockableNames[i]}, hopefully");
+            yield return new WaitForSeconds(3f);
+        }
     }
 
     private void ApplyMaterialVariant()

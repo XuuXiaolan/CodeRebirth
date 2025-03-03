@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Patches;
 public static class TerminalPatch
@@ -12,19 +14,10 @@ public static class TerminalPatch
     private static void Terminal_LoadNewNodeIfAffordable(On.Terminal.orig_LoadNewNodeIfAffordable orig, Terminal self, TerminalNode node)
     {
         Plugin.ExtendedLogging($"Node's shipUnlockableID: {node.shipUnlockableID}");
-        Plugin.ExtendedLogging($"Shockwave Gal's shipUnlockableID: {UnlockableHandler.Instance.ShockwaveBot.ShockWaveBotUnlockable.unlockable}");
         
-        if (node.shipUnlockableID != -1 && StartOfRound.Instance.unlockablesList.unlockables[node.shipUnlockableID] == UnlockableHandler.Instance.ShockwaveBot.ShockWaveBotUnlockable.unlockable)
+        if (node.shipUnlockableID != -1 && ProgressiveUnlockables.unlockableIDs.ContainsKey(StartOfRound.Instance.unlockablesList.unlockables[node.shipUnlockableID]) && !ProgressiveUnlockables.unlockableIDs[StartOfRound.Instance.unlockablesList.unlockables[node.shipUnlockableID]])
         {
-            Plugin.ExtendedLogging($"Twas equal, replacing with deny purchase node with a name: {UnlockableHandler.Instance.ShockwaveBot.ShockWaveBotUnlockable.unlockable.unlockableName}");
-            if (UnlockableHandler.Instance.ShockwaveBot.ShockWaveBotUnlockable.unlockable.unlockableName == "???")
-            {
-                UnlockableHandler.Instance.ShockwaveBot.ShockWaveBotUnlockable.unlockable.unlockableName = "SWRD-1";
-            }
-            else
-            {
-                UnlockableHandler.Instance.ShockwaveBot.ShockWaveBotUnlockable.unlockable.unlockableName = "???";
-            }
+            Plugin.ExtendedLogging($"Twas equal, replacing node with deny purchase node.");
             orig(self, UnlockableHandler.Instance.ShockwaveBot.denyPurchaseNode);
             return;
         }
