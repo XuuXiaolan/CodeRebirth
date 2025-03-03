@@ -37,6 +37,7 @@ public class UnlockShipUnlockable : MonoBehaviour
             UnlockableItem unlockableItem = unlockableUpgradeScrap.unlockableItemDef.unlockable;
             int index = ProgressiveUnlockables.unlockableIDs.Keys.ToList().IndexOf(unlockableItem);
             CodeRebirthUtils.Instance.UnlockProgressively(index, playerIndex, false, true, "Assembled Parts", $"Congratulations on finding the parts, Unlocked {ProgressiveUnlockables.unlockableNames[index]}.");
+            if (unlockableUpgradeScrap.IsOwner) player.DespawnHeldObject();
         }
         else
         {
