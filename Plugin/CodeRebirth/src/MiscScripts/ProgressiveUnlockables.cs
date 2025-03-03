@@ -19,9 +19,7 @@ public class ProgressiveUnlockables
             bool actuallyUnlocked = ES3.Load(unlockable.ToString(), false, CodeRebirthUtils.Instance.SaveSettings);
             Plugin.ExtendedLogging($"Unlockable {unlockable.unlockableName} is unlocked: {actuallyUnlocked}");
             unlockableIDs[unlockable] = actuallyUnlocked;
-            unlockableNames[i] = unlockable.unlockableName;
-            unlockable.unlockableName = actuallyUnlocked ? unlockable.unlockableName : "???";
-            // Sync this somehow
+            unlockable.unlockableName = actuallyUnlocked ? unlockableNames[i] : "???";
         }
     }
 

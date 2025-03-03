@@ -7,6 +7,9 @@ using UnityEngine.AI;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Rendering;
 using CodeRebirth.src.Content.Unlockables;
+using System.Collections;
+using System.Linq;
+using UnityEngine.SocialPlatforms;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -71,6 +74,32 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public void OnNewRoundStart()
     {
         entrancePoints = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);
+    }
+
+    private void UnlockProgressively(int unlockableIndex, int playerIndex, bool local, bool displayTip, string messageHeader, string messagBody)
+    {
+        UnlockableItem unlockable = ProgressiveUnlockables.unlockableIDs.Keys.ElementAt(unlockableIndex);
+        ProgressiveUnlockables.unlockableIDs[unlockable] = true;
+        unlockable.unlockableName = ProgressiveUnlockables.unlockableNames[unlockableIndex];
+        if (!displayTip) return;
+        if (local && GameNetworkManager.Instance.localPlayerController != StartOfRound.Instance.allPlayerScripts[playerIndex]) return;
+        HUDManager.Instance.DisplayTip(messageHeader, messagBody);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestProgressiveUnlocksFromHostServerRpc(int playerIndex, bool displayTip, bool local, string messageHeader, string messagBody)
+    {
+        for (int i = 0; i < ProgressiveUnlockables.unlockableIDs.Count; i++)
+        {
+            if (!ProgressiveUnlockables.unlockableIDs.Values.ElementAt(i)) continue;
+            RequestProgressiveUnlocksFromHostClientRpc(i, playerIndex, local, displayTip, messageHeader, messagBody);
+        }
+    }
+
+    [ClientRpc]
+    public void RequestProgressiveUnlocksFromHostClientRpc(int unlockableID, int playerIndex, bool local, bool displayTip, string messageHeader, string messagBody)
+    {
+        UnlockProgressively(unlockableID, playerIndex, local, displayTip, messageHeader, messagBody);
     }
 
     [ServerRpc(RequireOwnership = false)]

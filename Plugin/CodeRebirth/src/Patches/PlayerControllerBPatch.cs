@@ -113,6 +113,10 @@ static class PlayerControllerBPatch
     {
         orig(self);
         Plugin.ExtendedLogging("PlayerControllerB_ConnectClientToPlayerObject called");
+        if (GameNetworkManager.Instance.localPlayerController == self)
+        {
+            CodeRebirthUtils.Instance.RequestProgressiveUnlocksFromHostServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self), true, true, "Requesting Data", "Requesting unlockable information from host...");
+        }
         if (self.IsServer && Plugin.ModConfig.ConfigFirstLaunchPopup.Value && (!Plugin.ModelReplacementAPIIsOn || !Plugin.MoreSuitsIsOn))
         {
             HUDManager.Instance.DisplayTip("Mod not detected", "Downloading ModelReplacementAPI and MoreSuits adds a new suit as the ShockwaveGal's model");
