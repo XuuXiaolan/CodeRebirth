@@ -489,7 +489,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1.5, y: 0.4, z: 1.25}
   m_Center: {x: 0.12, y: 0, z: 0}
@@ -933,12 +933,12 @@ PrefabInstance:
     - target: {fileID: -8182525422961435243, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0.001536587
+      value: 0.0015366281
       objectReference: {fileID: 0}
     - target: {fileID: -8182525422961435243, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -0.0015548352
+      value: -0.0015548493
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
@@ -958,12 +958,12 @@ PrefabInstance:
     - target: {fileID: 2772635555366777132, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0.000018700404
+      value: 0.00001866934
       objectReference: {fileID: 0}
     - target: {fileID: 4825287799719709642, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -71.80964
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4825287799719709642, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
@@ -978,17 +978,17 @@ PrefabInstance:
     - target: {fileID: 5746564759562468899, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 45.09136
+      value: 89.98021
       objectReference: {fileID: 0}
     - target: {fileID: 5746564759562468899, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -89.99999
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5746564759562468899, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -89.999985
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7236681855352827264, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
@@ -1013,7 +1013,7 @@ PrefabInstance:
     - target: {fileID: 8230615589976390052, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -17.813826
+      value: 0.00005464151
       objectReference: {fileID: 0}
     - target: {fileID: 8230615589976390052, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
@@ -1023,7 +1023,7 @@ PrefabInstance:
     - target: {fileID: 8358274600451086272, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0.000013645819
+      value: 0.000013660378
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
@@ -1146,6 +1146,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 724002561
+    DestinationState: -108051741
+    TransitionDuration: 0.37124777
+    TriggerNameHash: 1883569342
+    TransitionIndex: 1
   - IsCrossFadeExit: 0
     Layer: 0
     OriginatingState: 380199762

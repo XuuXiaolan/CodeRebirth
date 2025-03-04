@@ -19,6 +19,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public Volume FireyVolume = null!;
     public Volume SmokyVolume = null!;
     public Volume CloseEyeVolume = null!;
+    public AnimationClip ModifiedShipLandAnimation = null!;
+    public AnimationClip ModifiedDangerousShipLeaveAnimation = null!;
+    public AnimationClip ModifiedShipLeaveAnimation = null!;
 
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
@@ -38,6 +41,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
     [HideInInspector] public int playersAndEnemiesMask = 0;
     [HideInInspector] public ES3Settings SaveSettings;
+    [HideInInspector] public ShipAnimator shipAnimator = null!;
     private System.Random CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
@@ -47,6 +51,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
         DoLayerMaskStuff();
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
         Instance = this;
+        shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
+        shipAnimator.shipLandAnimation = ModifiedShipLandAnimation;
+        shipAnimator.shipNormalLeaveAnimation = ModifiedShipLeaveAnimation;
         StartCoroutine(ProgressiveUnlockables.LoadUnlockedIDs());
     }
 

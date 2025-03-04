@@ -78,6 +78,12 @@ MonoBehaviour:
   FireyVolume: {fileID: 4257917388346144537}
   SmokyVolume: {fileID: 3191303810075138719}
   CloseEyeVolume: {fileID: 2120676631970192616}
+  ModifiedShipLandAnimation: {fileID: 7400000, guid: b5bdff72a0d3f86499a0e8130e255110,
+    type: 2}
+  ModifiedDangerousShipLeaveAnimation: {fileID: 7400000, guid: 7fbbe35246ff8a842a7afa68e7f1dffc,
+    type: 2}
+  ModifiedShipLeaveAnimation: {fileID: 7400000, guid: 74a9061b128806542851ab7b24162171,
+    type: 2}
   collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask: 0
   collidersAndRoomAndRailingAndInteractableMask: 0
   collidersAndRoomAndPlayersAndInteractableMask: 0
@@ -93,6 +99,7 @@ MonoBehaviour:
   interactableMask: 0
   collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask: 0
   playersAndEnemiesMask: 0
+  shipAnimator: {fileID: 0}
 --- !u!114 &3291055553321171071
 MonoBehaviour:
   m_ObjectHideFlags: 0

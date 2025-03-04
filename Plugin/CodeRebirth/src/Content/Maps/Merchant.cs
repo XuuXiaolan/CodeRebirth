@@ -17,10 +17,9 @@ public class Merchant : NetworkBehaviour
     public Animator merchantAnimator = null!;
     public NetworkAnimator networkAnimator = null!;
     public Transform[] turretBones = [];
-    public Transform SpotLightLeftRight = null!;
-    public Transform SpotLightUpDown = null!;
     public MerchantBarrel[] merchantBarrels = [];
     public InteractTrigger walletTrigger = null!;
+    public AudioSource[] TurretAudioSources = [];
 
     private Dictionary<GrabbableObject, int> itemsSpawned = new();
     private List<PlayerControllerB> targetPlayers = new();
@@ -47,9 +46,17 @@ public class Merchant : NetworkBehaviour
 
     public void Update()
     {
-        if (StartOfRound.Instance.shipIsLeaving && destroyShipRoutine == null && !playersWhoStoleKilled)
+        if (StartOfRound.Instance.shipIsLeaving && !playersWhoStoleKilled)
         {
-            destroyShipRoutine = StartCoroutine(DestroyShip());
+            if (destroyShipRoutine == null)
+            {
+                foreach (var turretSource in TurretAudioSources)
+                {
+                    turretSource.Play();
+                }
+                CodeRebirthUtils.Instance.shipAnimator.overrideController[CodeRebirthUtils.Instance.shipAnimator.originalShipLeaveClip] = CodeRebirthUtils.Instance.ModifiedDangerousShipLeaveAnimation;
+                destroyShipRoutine = StartCoroutine(DestroyShip());
+            }
         }
         if (StartOfRound.Instance.shipIsLeaving) return;
         if (IsServer && targetPlayers.Count <= 0)
@@ -101,7 +108,7 @@ public class Merchant : NetworkBehaviour
 
     private bool EnoughMoneySlotted(int itemCost, GrabbableObject itemTaken)
     {
-        StartCoroutine(StealAllCoins(itemTaken));
+        StartCoroutine(StealAllCoins(itemTaken, itemCost));
         if (itemCost <= currentCoinsStored)
         {
             return true;
@@ -114,22 +121,20 @@ public class Merchant : NetworkBehaviour
         HUDManager.Instance.DisplayTip("Warning", "The Merchant never forgets thieves...\nPrepare for fire", true);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
-        yield return new WaitForSeconds(2f);
         float timeElapsed = 0f;
-        while (timeElapsed <= 10)
+        while (timeElapsed <= 11)
         {
             EliminateShip();
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        foreach (var turretSource in TurretAudioSources)
         {
-            if (!player.isPlayerControlled || player.isPlayerDead) continue;
-            CRUtilities.CreateExplosion(player.transform.position, true, 999, 0, 5, 50, null, null, 100f);
+            turretSource.Stop();
         }
     }
 
-    private IEnumerator StealAllCoins(GrabbableObject itemTaken)
+    private IEnumerator StealAllCoins(GrabbableObject itemTaken, int itemCost)
     {
         canTarget = false;
         foreach (var items in itemsSpawned.ToArray())
@@ -145,19 +150,22 @@ public class Merchant : NetworkBehaviour
             items.Key.grabbable = true;
         }
         canTarget = true;
-        currentCoinsStored = 0;
+        currentCoinsStored = Math.Clamp(currentCoinsStored - itemCost, 0, 999);
         DisableOrEnableCoinObjects();
     }
 
     private void EliminateShip()
     {
-        Transform targetTransform = StartOfRound.Instance.shipInnerRoomBounds.transform;
-
+        Transform targetTransform = StartOfRound.Instance.shipDoorNode;
+        foreach (var turretSource in TurretAudioSources)
+        {
+            turretSource.transform.position = targetTransform.position;
+        }
         foreach (var turret in turretBones)
         {
             localDamageCooldownPerTurret[turret] -= Time.deltaTime;
             Vector3 normalizedDirection = (targetTransform.position - turret.position).normalized;
-            float dotProduct = Vector3.Dot(turret.forward, normalizedDirection);
+            // float dotProduct = Vector3.Dot(turret.forward, normalizedDirection);
             // Plugin.ExtendedLogging($"Dot product: {dotProduct}");
             // play the sound and visuals for shooting towards the ship at 0.9f dotproduct or higher.
             Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);
@@ -187,8 +195,8 @@ public class Merchant : NetworkBehaviour
                 // Fire at player and deal damage.
                 if (GameNetworkManager.Instance.localPlayerController == currentTargetPlayer && localDamageCooldownPerTurret[turret] <= 0)
                 {
-                    currentTargetPlayer.DamagePlayer(2, true, true, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
-                    localDamageCooldownPerTurret[turret] = 0.2f;
+                    currentTargetPlayer.DamagePlayer(30, true, true, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
+                    localDamageCooldownPerTurret[turret] = 2f;
                 }
             }
             Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);

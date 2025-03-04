@@ -16,6 +16,7 @@ public class Oxidizer : GrabbableObject
     private RaycastHit[] cachedRaycastHits = new RaycastHit[20];
     private bool charged = true;
     private bool superCharged = false;
+    private bool nerfed = false;
     private float updateHitInterval = 0.2f;
     public override void Update()
     {
@@ -34,7 +35,7 @@ public class Oxidizer : GrabbableObject
 
         if (!isBeingUsed)
         {
-            skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) - Time.deltaTime, 0, 100));
+            skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) - Time.deltaTime * (nerfed ? 0.5f : 1f), 0, 100));
             return;
         }
         else
@@ -138,11 +139,9 @@ public class Oxidizer : GrabbableObject
         }
         foreach (var ps in flameStreamParticleSystems)
         {
-            var emissionModule = ps.emission;
-            emissionModule.rateOverTimeMultiplier *= 3f;
-
             var mainModule = ps.main;
             mainModule.startSize = new ParticleSystem.MinMaxCurve(mainModule.startSize.constant * 3f);
+
             ps.Play();
         }
         playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 25f * (playerHeldBy.isCrouching ? 0.25f : 1f);
@@ -159,9 +158,6 @@ public class Oxidizer : GrabbableObject
         }
         foreach (var ps in flameStreamParticleSystems)
         {
-            var emissionModule = ps.emission;
-            emissionModule.rateOverTimeMultiplier /= 3f;
-
             var mainModule = ps.main;
             mainModule.startSize = new ParticleSystem.MinMaxCurve(mainModule.startSize.constant / 3f);
 
@@ -169,5 +165,13 @@ public class Oxidizer : GrabbableObject
         }
         charged = false;
         superCharged = false;
+        StartCoroutine(SuperChargeNerf());
+    }
+
+    private IEnumerator SuperChargeNerf()
+    {
+        nerfed = true;
+        yield return new WaitForSeconds(15f);
+        nerfed = false;
     }
 }

@@ -4,10 +4,9 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class UnlockShipUnlockable : MonoBehaviour
+public class UnlockShipUnlockable : NetworkBehaviour
 {
     public InteractTrigger interactTrigger = null!;
 
