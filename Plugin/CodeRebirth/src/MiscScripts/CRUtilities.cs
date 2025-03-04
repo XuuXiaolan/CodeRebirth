@@ -145,7 +145,7 @@ public class CRUtilities
             {
                 particleSystem.gameObject.transform.localScale *= multiplier;
             }
-            gameobject.transform.Find("Audio").GetComponent<AudioSource>().maxDistance *= multiplier;
+            gameobject.GetComponentInChildren<AudioSource>().maxDistance *= multiplier;
             gameobject.SetActive(true);
         }
 

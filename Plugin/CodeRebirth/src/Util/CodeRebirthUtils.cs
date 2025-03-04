@@ -177,7 +177,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             return default;
         }
-        
+
         CRRandom ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
 
         Transform? parent = null;

@@ -199,11 +199,12 @@ public class Merchant : NetworkBehaviour
                 // Fire at player and deal damage.
                 if (localDamageCooldownPerTurret[turret] <= 0)
                 {
-                    Physics.Linecast(turret.position, currentTargetPlayer.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore);
-                    if (hit.transform == currentTargetPlayer.transform) currentTargetPlayer.DamagePlayer(30, true, false, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
-                    CRUtilities.CreateExplosion(hit.point, true, 10, 0, 3, 2, currentTargetPlayer, null, 50f);
+                    bool blocked = Physics.Linecast(turret.position, currentTargetPlayer.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Collide);
+                    // Plugin.ExtendedLogging($"Linecast hit {hit.transform.name}");
+                    if (!blocked) currentTargetPlayer.DamagePlayer(30, true, false, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
+                    CRUtilities.CreateExplosion(currentTargetPlayer.transform.position, true, 10, 0, 3, 2, currentTargetPlayer, null, 50f);
                     localDamageCooldownPerTurret[turret] = 2f;
-                    TurretAudioSources[1].transform.position = hit.point;
+                    TurretAudioSources[1].transform.position = currentTargetPlayer.transform.position;
                     TurretAudioSources[1].PlayOneShot(TurretAudioClips[UnityEngine.Random.Range(0, TurretAudioClips.Length)]);
                 }
             }

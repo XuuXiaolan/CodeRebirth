@@ -43,14 +43,14 @@ MonoBehaviour:
   - weatherType: -1
     weatherVariable: 3
     weatherVariable2: 0
-  overrideWeather: 0
+  overrideWeather: 1
   overrideWeatherType: -1
   currentWeather: -1
   factorySizeMultiplier: 1.6
   dungeonFlowTypes: []
   spawnableMapObjects: []
   spawnableOutsideObjects: []
-  canSpawnMold: 1
+  canSpawnMold: 0
   moldSpreadIterations: 0
   moldStartPosition: -1
   spawnableScrap: []
@@ -66,8 +66,6 @@ MonoBehaviour:
   OutsideEnemies:
   - enemyType: {fileID: 11400000, guid: 9a726758bfe9cd948a5e960ab7bdbea4, type: 2}
     rarity: 20
-  - enemyType: {fileID: 11400000, guid: 7712b157f6470c3428da58382131565a, type: 2}
-    rarity: 10
   - enemyType: {fileID: 11400000, guid: 8cb8b0df25a3f76439fefdb07040503c, type: 2}
     rarity: 6
   - enemyType: {fileID: 11400000, guid: d648d68b0b3a5e94ebab7fc9235024d8, type: 2}
@@ -188,5 +186,5 @@ MonoBehaviour:
     m_RotationOrder: 4
   spawnProbabilityRange: 2
   daytimeEnemiesProbabilityRange: 10
-  levelIncludesSnowFootprints: 1
+  levelIncludesSnowFootprints: 0
   levelIconString: 

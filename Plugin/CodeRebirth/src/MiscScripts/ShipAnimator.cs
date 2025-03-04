@@ -89,6 +89,13 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             yield return null;
             CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 0.3f, 0.5f * Time.deltaTime);
         }
+
+        yield return new WaitForSeconds(3f);
+        while (CodeRebirthUtils.Instance.CloseEyeVolume.weight < 1)
+        {
+            yield return null;
+            CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 1, 0.4f * Time.deltaTime);
+        }
     }
 
     private void UnReplaceAnimationClip()
