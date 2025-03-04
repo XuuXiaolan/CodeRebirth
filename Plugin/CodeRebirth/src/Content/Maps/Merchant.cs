@@ -20,6 +20,7 @@ public class Merchant : NetworkBehaviour
     public MerchantBarrel[] merchantBarrels = [];
     public InteractTrigger walletTrigger = null!;
     public AudioSource[] TurretAudioSources = [];
+    public AudioClip[] TurretAudioClips = [];
 
     private Dictionary<GrabbableObject, int> itemsSpawned = new();
     private List<PlayerControllerB> targetPlayers = new();
@@ -44,21 +45,30 @@ public class Merchant : NetworkBehaviour
         HandleSpawningMerchantItems();
     }
 
+    private bool ItemsStolen()
+    {
+        foreach (var (item, _) in itemsSpawned)
+        {
+            if (item == null) continue;
+            if (item.isInShipRoom) return true;
+            if (Vector3.Distance(item.transform.position, StartOfRound.Instance.shipLandingPosition.position) <= 15) return true;
+            return true;
+        }
+        return false;
+    }
+
     public void Update()
     {
-        if (StartOfRound.Instance.shipIsLeaving && !playersWhoStoleKilled)
+        if (StartOfRound.Instance.shipIsLeaving)
         {
-            if (destroyShipRoutine == null)
+            if (destroyShipRoutine == null && (!playersWhoStoleKilled || ItemsStolen()))
             {
-                foreach (var turretSource in TurretAudioSources)
-                {
-                    turretSource.Play();
-                }
+                TurretAudioSources[0].Play();
                 CodeRebirthUtils.Instance.shipAnimator.overrideController[CodeRebirthUtils.Instance.shipAnimator.originalShipLeaveClip] = CodeRebirthUtils.Instance.ModifiedDangerousShipLeaveAnimation;
                 destroyShipRoutine = StartCoroutine(DestroyShip());
             }
+            return;
         }
-        if (StartOfRound.Instance.shipIsLeaving) return;
         if (IsServer && targetPlayers.Count <= 0)
         {
             bool playerNearby = false;
@@ -128,10 +138,7 @@ public class Merchant : NetworkBehaviour
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        foreach (var turretSource in TurretAudioSources)
-        {
-            turretSource.Stop();
-        }
+        TurretAudioSources[0].Stop();
     }
 
     private IEnumerator StealAllCoins(GrabbableObject itemTaken, int itemCost)
@@ -157,10 +164,7 @@ public class Merchant : NetworkBehaviour
     private void EliminateShip()
     {
         Transform targetTransform = StartOfRound.Instance.shipDoorNode;
-        foreach (var turretSource in TurretAudioSources)
-        {
-            turretSource.transform.position = targetTransform.position;
-        }
+        TurretAudioSources[0].transform.position = targetTransform.position;
         foreach (var turret in turretBones)
         {
             localDamageCooldownPerTurret[turret] -= Time.deltaTime;
@@ -190,13 +194,17 @@ public class Merchant : NetworkBehaviour
             Vector3 normalizedDirection = (currentTargetPlayer.gameplayCamera.transform.position - turret.position).normalized;
             float dotProduct = Vector3.Dot(turret.forward, normalizedDirection);
             // Plugin.ExtendedLogging($"Dot product: {dotProduct}");
-            if (dotProduct > 0.9f && !Physics.Linecast(turret.position, currentTargetPlayer.transform.position, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
+            if (dotProduct > 0.9f)
             {
                 // Fire at player and deal damage.
-                if (GameNetworkManager.Instance.localPlayerController == currentTargetPlayer && localDamageCooldownPerTurret[turret] <= 0)
+                if (localDamageCooldownPerTurret[turret] <= 0)
                 {
-                    currentTargetPlayer.DamagePlayer(30, true, true, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
+                    Physics.Linecast(turret.position, currentTargetPlayer.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore);
+                    if (hit.transform == currentTargetPlayer.transform) currentTargetPlayer.DamagePlayer(30, true, false, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
+                    CRUtilities.CreateExplosion(hit.point, true, 10, 0, 3, 2, currentTargetPlayer, null, 50f);
                     localDamageCooldownPerTurret[turret] = 2f;
+                    TurretAudioSources[1].transform.position = hit.point;
+                    TurretAudioSources[1].PlayOneShot(TurretAudioClips[UnityEngine.Random.Range(0, TurretAudioClips.Length)]);
                 }
             }
             Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);

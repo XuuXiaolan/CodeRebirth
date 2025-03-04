@@ -12,6 +12,10 @@ public class ElectricSlugger : GrabbableObject
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
     public LineRenderer[] lineRenderers = null!;
     public Transform weaponTip = null!;
+    public AudioSource idleSource = null!;
+    public AudioSource firingSource = null!;
+    public AudioClip fireSound = null!;
+    public AudioClip chargeSound = null!;
 
     private RaycastHit[] cachedRaycastHits = new RaycastHit[100];
     private float pumpTimer = 0f;
@@ -68,6 +72,7 @@ public class ElectricSlugger : GrabbableObject
         pumpTimer = 1.5f;
         canFire = false;
         float elapsed = 0f;
+        firingSource.PlayOneShot(chargeSound);
         while (elapsed < 0.25f)
         {
             elapsed += Time.deltaTime;
@@ -94,14 +99,15 @@ public class ElectricSlugger : GrabbableObject
     public override void LateUpdate()
     {
         base.LateUpdate();
-
         ShakeTransform(this.transform, pumpCount);
     }
 
     public void ShakeTransform(Transform _transform, int intensity)
     {
+        idleSource.volume = 0f;
         if (intensity > 0)
         {
+            idleSource.volume = 1f;
             float offset = Mathf.Clamp(intensity * 0.00025f * UnityEngine.Random.Range(-1, 2), -0.002f, 0.002f);
             _transform.localPosition = new Vector3(_transform.localPosition.x + offset, _transform.localPosition.y + offset, _transform.localPosition.z + offset);
         }
@@ -114,11 +120,12 @@ public class ElectricSlugger : GrabbableObject
         int numHits = Physics.SphereCastNonAlloc(playerHeldBy.gameplayCamera.transform.position, 1, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, 999, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (!cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable) || Vector3.Distance(cachedRaycastHits[i].transform.position, playerHeldBy.transform.position) <= 3) continue;
             CRUtilities.CreateExplosion(cachedRaycastHits[i].transform.position, true, 0, 0, 0, 0, playerHeldBy, null, 0);
+            if (!cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable) || Vector3.Distance(cachedRaycastHits[i].transform.position, playerHeldBy.transform.position) <= 3) continue;
             if (GameNetworkManager.Instance.localPlayerController == playerHeldBy) iHittable.Hit(2 * (pumpCount + 1), playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
             // play sound and stuff prob
         }
+        firingSource.PlayOneShot(fireSound);
         insertedBattery.charge -= 0.1f * (pumpCount + 1);
         if (playerHeldBy == GameNetworkManager.Instance.localPlayerController) HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * (pumpCount + 1) * 5f * (playerHeldBy.isCrouching ? 0.25f : 1f);

@@ -100,7 +100,6 @@ public class MoleDigger : GrabbableObject
     public override void Update()
     {
         base.Update();
-        Plugin.ExtendedLogging($"Ship land position: {StartOfRound.Instance.shipLandingPosition}");
         yankChainTimer -= Time.deltaTime;
         hitTimer -= Time.deltaTime;
         if (!isBeingUsed || hitTimer > 0 || playerHeldBy == null) return;

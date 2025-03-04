@@ -1,18 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
-using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class WalkieYellie : GrabbableObject
 {
-    public override void DiscardItem()
-    {
-        base.DiscardItem();
-        
-    }
-
-    public override void ItemActivate(bool used, bool buttonDown = true)
+    public override void ItemActivate(bool used, bool buttonDown = true) // look into audio reverb zones
     {
         base.ItemActivate(used, buttonDown);
 

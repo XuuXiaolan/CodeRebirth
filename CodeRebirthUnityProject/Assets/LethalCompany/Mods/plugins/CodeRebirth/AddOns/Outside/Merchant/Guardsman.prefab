@@ -385,6 +385,14 @@ MonoBehaviour:
   walletTrigger: {fileID: 6463571638017796915}
   TurretAudioSources:
   - {fileID: 7513104917612167822}
+  - {fileID: 8809403582632782839}
+  TurretAudioClips:
+  - {fileID: 8300000, guid: d3efe35648591f4499f8db6fb7a6db09, type: 3}
+  - {fileID: 8300000, guid: 76b7d26435d71814abe24766c83c9e3a, type: 3}
+  - {fileID: 8300000, guid: bff274c6587c17f42b340fb2cff15552, type: 3}
+  - {fileID: 8300000, guid: d700dc2fa3fb73c46aa3bab425b0aa1d, type: 3}
+  - {fileID: 8300000, guid: f76b454c34ce6644fbd02005f7fb47d6, type: 3}
+  - {fileID: 8300000, guid: 2fe8b12aa947f1b4987b8275e37d66b7, type: 3}
   coinObjects:
   - {fileID: 5054003007516085619}
   - {fileID: 3538742201473828715}
@@ -970,7 +978,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.26666668
+      value: 0.4722222
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -985,7 +993,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 1.058
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -5172,7 +5180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7831090934787687416
 Transform:
   m_ObjectHideFlags: 0
@@ -5199,11 +5207,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300044, guid: a9b3c931039c20445a622a19edf4c62c,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: e7624581c2c10c946bf73ca6b1817687, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 1
   SpatializePostEffects: 1
