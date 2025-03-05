@@ -62,12 +62,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2191635184577347945}
-  - component: {fileID: 899418062553001802}
-  - component: {fileID: 2857600268502929816}
   - component: {fileID: 360253630763335662}
-  m_Layer: 9
+  - component: {fileID: 2294434864952179042}
+  m_Layer: 0
   m_Name: KillTrigger
-  m_TagString: InteractTrigger
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -87,115 +86,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8130653693202655507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &899418062553001802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051313534270986052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 0}
-  hoverTip: 
-  disabledHoverIcon: {fileID: 0}
-  disabledHoverTip: 
-  interactable: 1
-  oneHandedItemAllowed: 1
-  twoHandedItemAllowed: 0
-  holdInteraction: 0
-  timeToHold: 0.5
-  timeToHoldSpeedMultiplier: 1
-  holdTip: 
-  isBeingHeldByPlayer: 0
-  holdingInteractEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  touchTrigger: 1
-  triggerOnce: 1
-  interactCooldown: 1
-  cooldownTime: 1
-  currentCooldownValue: 0
-  disableTriggerMesh: 1
-  RandomChanceTrigger: 0
-  randomChancePercentage: 0
-  onInteractEarlyOtherClients:
-    m_PersistentCalls:
-      m_Calls: []
-  onInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2857600268502929816}
-        m_TargetAssemblyTypeName: KillLocalPlayer, Assembly-CSharp
-        m_MethodName: KillPlayer
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onInteractEarly:
-    m_PersistentCalls:
-      m_Calls: []
-  onStopInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  onCancelAnimation:
-    m_PersistentCalls:
-      m_Calls: []
-  specialCharacterAnimation: 0
-  stopAnimationManually: 0
-  stopAnimationString: SA_stopAnimation
-  hidePlayerItem: 0
-  isPlayingSpecialAnimation: 0
-  animationWaitTime: 2
-  animationString: 
-  lockPlayerPosition: 0
-  playerPositionNode: {fileID: 0}
-  clampLooking: 0
-  setVehicleAnimation: 0
-  minVerticalClamp: 0
-  maxVerticalClamp: 0
-  horizontalClamp: 0
-  allowUseWhileInAnimation: 0
-  overridePlayerParent: {fileID: 0}
-  isLadder: 0
-  topOfLadderPosition: {fileID: 0}
-  useRaycastToGetTopPosition: 0
-  bottomOfLadderPosition: {fileID: 0}
-  ladderHorizontalPosition: {fileID: 0}
-  ladderPlayerPositionNode: {fileID: 0}
-  usingLadder: 0
---- !u!114 &2857600268502929816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051313534270986052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64c6de9b64f5fa50ab3e1e87d281e1ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dontSpawnBody: 0
-  causeOfDeath: 8
-  justDamage: 0
-  playersManager: {fileID: 0}
-  deathAnimation: 0
-  roundManager: {fileID: 0}
-  spawnEnemyPosition: {fileID: 0}
-  enemySpawnNumber: 0
-  playAudioOnDeath: -1
-  spawnPrefab: {fileID: 0}
-  disallowKillingInShip: 0
-  destroyEnemies: 0
 --- !u!65 &360253630763335662
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -217,6 +107,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.6735086, y: 5.553327, z: 2.3711057}
   m_Center: {x: -0.15018412, y: 5.434165, z: 0.783729}
+--- !u!114 &2294434864952179042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2051313534270986052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 390557061, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2094943945085492360
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System.Collections;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -14,15 +15,11 @@ public class ShreddingSarah : NetworkBehaviour
 
     public float arcHeight = 30f;
     public float launchSpeed = 30f;
-    public float launchDistance = 75f;
 
     public float landingRadius = 8f;
 
     public float landingRaycastUp = 50f;
     public float landingRaycastDown = 100f;
-
-    public float targetAngleSnap = 17.5f;
-    public float targetAngleSnapMinDistance = 20f;
 
     public InteractTrigger cannonTrigger;
     public Transform shootPoint;
@@ -30,7 +27,6 @@ public class ShreddingSarah : NetworkBehaviour
     public AudioSource audioSource;
     public AudioClip loadSFX;
     public AudioClip shootSFX;
-    public LineRenderer[] debugLines;
 
     private System.Random cannonRandom = new();
     private bool interactWaiting;
@@ -38,111 +34,64 @@ public class ShreddingSarah : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
         Plugin.Logger.LogInfo("Scrap Cannon - Network spawned");
         cannonRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
     }
 
     public void Update()
     {
-#if DEBUG
-        DrawDebugLines();
-#endif
-
         cannonTrigger.hoverTip = $"Shred item : [{(StartOfRound.Instance.localPlayerUsingController ? "R-trigger" : "LMB")}]";
         cannonTrigger.disabledHoverTip = "Hold item to Shred";
         cannonTrigger.interactable = !interactWaiting && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null;
-    }
-
-    private void DrawDebugLines()
-    {
-        DrawDebugLine(debugLines[0], targetTransform);
-    }
-
-    private void DrawDebugLine(LineRenderer debugLine, Transform targetPos)
-    {
-        var cannonPos2D = new Vector3(shootPoint.position.x, 0f, shootPoint.position.z);
-        var targetPos2D = new Vector3(targetPos.position.x, 0f, targetPos.position.z);
-
-        var targetDistance = Vector3.Distance(cannonPos2D, targetPos2D);
-
-        if (targetDistance < targetAngleSnapMinDistance)
-        {
-            debugLine.enabled = false;
-            return;
-        }
-        else
-        {
-            debugLine.enabled = true;
-        }
-
-        var cannonFacing2D = new Vector3(shootPoint.forward.x, 0f, shootPoint.forward.z).normalized;
-
-        var targetAngleFull = Quaternion.FromToRotation(cannonFacing2D, targetPos2D - cannonPos2D);
-        var targetAngle = targetAngleFull.eulerAngles.y;
-
-        Plugin.ExtendedLogging($"TARGET ANGLE: {targetAngle}");
-
-        debugLine.SetPosition(0, new Vector3(Mathf.Sin((targetAngle - targetAngleSnap) * Mathf.Deg2Rad) * 3f, 0, Mathf.Cos((targetAngle - targetAngleSnap) * Mathf.Deg2Rad) * 3f));
-        debugLine.SetPosition(1, new Vector3(Mathf.Sin((targetAngle + targetAngleSnap) * Mathf.Deg2Rad) * 3f, 0, Mathf.Cos((targetAngle + targetAngleSnap) * Mathf.Deg2Rad) * 3f));
     }
 
     public void TryFeedItem(PlayerControllerB player)
     {
         if (player != GameNetworkManager.Instance.localPlayerController || player.currentlyHeldObjectServer == null) return;
         ShootItemForwards(player, targetTransform);
-
-        // Launch a scrap into a pit, just like slerp its position.
     }
 
-    private void ShootItemForwards(PlayerControllerB player, Transform? _targetTransform = null)
+    private void ShootItemForwards(PlayerControllerB player, Transform _targetTransform)
     {
         Plugin.ExtendedLogging($"Scrap Cannon - Shooting forwards (untargeted)");
 
-        var heldObject = player.currentlyHeldObjectServer;
+        GrabbableObject heldObject = player.currentlyHeldObjectServer;
+        Vector3 shootPointPos = shootPoint.position;
 
-        var cannonPos2D = new Vector3(shootPoint.position.x, 0f, shootPoint.position.z);
-        var cannonFacing2D = new Vector3(shootPoint.forward.x, 0f, shootPoint.forward.z).normalized;
+        // Instead of using shootPoint.forward, compute the 2D direction from shootPoint to target.
+        // Project the difference on the ground (Y = 0).
+        Vector3 targetDir2D = new Vector3(_targetTransform.position.x - shootPointPos.x, 0f, _targetTransform.position.z - shootPointPos.z).normalized;
 
-        var randOffset = (float)(cannonRandom.NextDouble() * landingRadius);
-        var randAngle = (float)(cannonRandom.NextDouble() * (360f * Mathf.Deg2Rad));
+        float randOffset = cannonRandom.NextFloat(0, 1) * landingRadius;
+        float randAngle = cannonRandom.NextFloat(0, 1) * (360f * Mathf.Deg2Rad);
 
-        var distance = launchDistance;
+        // Use the computed target direction to set the distance.
+        Vector3 targetPos2D = new Vector3(_targetTransform.position.x, 0f, _targetTransform.position.z);
+        // Use the exact distance from the shootPoint to the target.
+        float distance = Vector3.Distance(targetPos2D, new Vector3(shootPointPos.x, 0f, shootPointPos.z));
 
-        if (_targetTransform != null)
+        // Compute the landing position using the direction from shootPoint to target.
+        Vector3 landingPos2D = new Vector3(shootPointPos.x, 0f, shootPointPos.z) 
+                                + (targetDir2D * distance) 
+                                + new Vector3(Mathf.Sin(randAngle), 0f, Mathf.Cos(randAngle)) * randOffset;
+        Vector3 landingPositionRay = landingPos2D + (transform.position.y + landingRaycastUp) * Vector3.up;
+
+        if (Physics.Raycast(landingPositionRay, -Vector3.up, out RaycastHit raycastHit, landingRaycastUp + landingRaycastDown, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
-            var shipPos2D = new Vector3(_targetTransform.position.x, 0f, _targetTransform.position.y);
-
-            var targetAngleFull = Quaternion.FromToRotation(cannonFacing2D, shipPos2D - cannonPos2D);
-            var targetAngle = targetAngleFull.eulerAngles.y;
-
-            if (Mathf.DeltaAngle(0f, targetAngle) < 90f)
-            {
-                distance = Mathf.Max(distance, Vector3.Distance(shipPos2D, cannonPos2D));
-            }
-        }
-
-        var landingPos2D = cannonPos2D + (cannonFacing2D * distance) + new Vector3(Mathf.Sin(randAngle), 0f, Mathf.Cos(randAngle)) * randOffset;
-        var landingPositionRay = landingPos2D + (transform.position.y + landingRaycastUp) * Vector3.up;
-
-        if (Physics.Raycast(landingPositionRay, -Vector3.up, out var raycastHit, landingRaycastUp + landingRaycastDown, 0b10000000000000000100100000001, QueryTriggerInteraction.Ignore))
-        {
-            // Raycast again incase any mods hook GetItemFloorPosition
-            var landingPosition = heldObject.GetItemFloorPosition(raycastHit.point + Vector3.up);
-
+            // Raycast again in case any mods hook GetItemFloorPosition
+            Vector3 landingPosition = heldObject.GetItemFloorPosition(raycastHit.point + Vector3.up);
             ShootItem(player, landingPosition);
         }
         else
         {
-            var landingPosition = landingPos2D + (transform.position.y * Vector3.up);
-
+            Vector3 landingPosition = landingPos2D + (transform.position.y * Vector3.up);
             ShootItem(player, landingPosition);
         }
     }
 
     public void ShootItem(PlayerControllerB player, Vector3 landingPosition)
     {
-        var heldObject = player.currentlyHeldObjectServer;
+        GrabbableObject heldObject = player.currentlyHeldObjectServer;
 
         player.SetSpecialGrabAnimationBool(false, heldObject);
         player.playerBodyAnimator.SetBool("cancelHolding", true);
@@ -150,8 +99,7 @@ public class ShreddingSarah : NetworkBehaviour
         HUDManager.Instance.itemSlotIcons[player.currentItemSlot].enabled = false;
         HUDManager.Instance.holdingTwoHandedItem.enabled = false;
 
-        var localPos = StartOfRound.Instance.propsContainer.InverseTransformPoint(transform.position + 0.75f * Vector3.up);
-
+        Vector3 localPos = StartOfRound.Instance.propsContainer.InverseTransformPoint(transform.position + 0.75f * Vector3.up);
         player.PlaceGrabbableObject(StartOfRound.Instance.propsContainer, localPos, false, heldObject);
         heldObject.DiscardItemOnClient();
 
@@ -179,7 +127,6 @@ public class ShreddingSarah : NetworkBehaviour
             Plugin.Logger.LogError($"Scrap Cannon - ShootItemServerRPC - Held object could not be found: {heldObjectRef.NetworkObjectId}");
             return;
         }
-
         ShootItemClientRPC(playerId, heldObjectRef, landingPosition);
     }
 
@@ -193,21 +140,17 @@ public class ShreddingSarah : NetworkBehaviour
             Plugin.Logger.LogError($"Scrap Cannon - ShootItemClientRPC - Player could not be found: {playerId}");
             return;
         }
-
         if (!heldObjectRef.TryGet(out var heldObjectNetwork))
         {
             Plugin.Logger.LogError($"Scrap Cannon - ShootItemClientRPC - Held object could not be found: {heldObjectRef.NetworkObjectId}");
             return;
         }
-
         var heldObject = heldObjectNetwork.GetComponent<GrabbableObject>();
 
         if (!player.IsOwner)
         {
-            var localPos = StartOfRound.Instance.propsContainer.InverseTransformPoint(transform.position + 0.75f * Vector3.up);
-
+            Vector3 localPos = StartOfRound.Instance.propsContainer.InverseTransformPoint(transform.position + 0.75f * Vector3.up);
             player.PlaceGrabbableObject(StartOfRound.Instance.propsContainer, localPos, false, heldObject);
-
             heldObject.fallTime = 1.1f;
             heldObject.hasHitGround = true;
             heldObject.EnablePhysics(false);
@@ -217,7 +160,6 @@ public class ShreddingSarah : NetworkBehaviour
             {
                 audioSource.PlayOneShot(loadSFX);
             }
-
             // Don't shoot to same position on every client
             cannonRandom.NextDouble();
             cannonRandom.NextDouble();
@@ -244,42 +186,38 @@ public class ShreddingSarah : NetworkBehaviour
         }
 
         interactWaiting = false;
-
         StartCoroutine(ShootItemRoutine(heldObject, landingPosition));
     }
 
     private IEnumerator ShootItemRoutine(GrabbableObject heldObject, Vector3 landingPosition)
     {
         Plugin.Logger.LogInfo($"Scrap Cannon - Scrap landing at {landingPosition}");
-
         yield return new WaitForSeconds(0.5f);
 
         if (shootSFX != null)
         {
             audioSource.PlayOneShot(shootSFX);
         }
-
         heldObject.EnableItemMeshes(true);
 
-        var launchTotalDistance = Vector3.Distance(shootPoint.position, landingPosition);
-        var launchProgress = 0f;
+        float launchTotalDistance = Vector3.Distance(shootPoint.position, landingPosition);
+        float launchProgress = 0f;
 
         while (launchProgress < launchTotalDistance)
         {
-            var currentPosition = SampleParabola(shootPoint.position, landingPosition, arcHeight, launchProgress / launchTotalDistance);
-            var localPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(currentPosition);
+            // Sample along a circular arc (chute) from shootPoint to landing position.
+            Vector3 currentPosition = SampleChute(shootPoint.position, landingPosition, arcHeight, launchProgress / launchTotalDistance);
+            Vector3 localPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(currentPosition);
 
             heldObject.startFallingPosition = localPosition;
             heldObject.targetFloorPosition = localPosition;
             heldObject.transform.localPosition = localPosition;
 
             launchProgress += launchSpeed * Time.deltaTime;
-
             yield return null;
         }
 
-        var finalLocalPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(landingPosition);
-
+        Vector3 finalLocalPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(landingPosition);
         heldObject.EnablePhysics(true);
         heldObject.startFallingPosition = finalLocalPosition;
         heldObject.targetFloorPosition = finalLocalPosition;
@@ -288,29 +226,42 @@ public class ShreddingSarah : NetworkBehaviour
         heldObject.fallTime = 0f;
     }
 
-    // https://forum.unity.com/threads/generating-dynamic-parabola.211681/#post-1426169
-    private Vector3 SampleParabola(Vector3 start, Vector3 end, float height, float t)
+    /// <summary>
+    /// Samples a curved chute path from start to end using spherical interpolation.
+    /// The arcHeight value represents the maximum vertical deviation (sagitta) from the chord.
+    /// </summary>
+    private Vector3 SampleChute(Vector3 start, Vector3 end, float arcHeight, float t)
     {
-        float parabolicT = t * 2 - 1;
-        if (Mathf.Abs(start.y - end.y) < 0.1f)
-        {
-            //start and end are roughly level, pretend they are - simpler solution with less steps
-            Vector3 travelDirection = end - start;
-            Vector3 result = start + t * travelDirection;
-            result.y += (-parabolicT * parabolicT + 1) * height;
-            return result;
-        }
-        else
-        {
-            //start and end are not level, gets more complicated
-            Vector3 travelDirection = end - start;
-            Vector3 levelDirecteion = end - new Vector3(start.x, end.y, start.z);
-            Vector3 right = Vector3.Cross(travelDirection, levelDirecteion);
-            Vector3 up = Vector3.Cross(right, travelDirection);
-            if (end.y > start.y) up = -up;
-            Vector3 result = start + t * travelDirection;
-            result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
-            return result;
-        }
+        // If no arc is desired or if start/end are nearly identical, simply Lerp.
+        if (arcHeight <= 0f || Vector3.Distance(start, end) < 0.001f)
+            return Vector3.Lerp(start, end, t);
+
+        // Compute the chord.
+        Vector3 chord = end - start;
+        float d = chord.magnitude;
+        Vector3 mid = (start + end) / 2f;
+
+        // Determine the circle radius R given the sagitta (arcHeight)
+        // Formula: R = ((d/2)^2 + arcHeight^2) / (2 * arcHeight)
+        float R = (((d * d) / 4f) + (arcHeight * arcHeight)) / (2f * arcHeight);
+
+        // Compute the distance from the midpoint to the circle center along the perpendicular bisector.
+        float offsetDistance = R - arcHeight;
+
+        // Determine the vertical plane for the arc by computing a perpendicular direction to the chord in the plane defined by the chord and Vector3.up.
+        Vector3 planeNormal = Vector3.Cross(chord, Vector3.up).normalized;
+        Vector3 perp = Vector3.Cross(planeNormal, chord).normalized;
+        if (perp.y > 0f) perp = -perp;
+
+        // Compute the circle center.
+        Vector3 center = mid + perp * offsetDistance;
+
+        // Compute the vectors from the center to start and end.
+        Vector3 fromCenterToStart = start - center;
+        Vector3 fromCenterToEnd = end - center;
+
+        // Spherical interpolation between the two vectors.
+        Vector3 currentDirection = Vector3.Slerp(fromCenterToStart, fromCenterToEnd, t);
+        return center + currentDirection;
     }
 }

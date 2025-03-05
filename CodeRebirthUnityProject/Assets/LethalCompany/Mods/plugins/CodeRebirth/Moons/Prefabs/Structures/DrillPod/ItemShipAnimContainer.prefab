@@ -70,7 +70,7 @@ Transform:
   m_Children:
   - {fileID: 8780984237916370573}
   m_Father: {fileID: 4032920747946227457}
-  m_LocalEulerAnglesHint: {x: 89.98021, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.98022, y: 0, z: 0}
 --- !u!1 &85674976070182564
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -3.9182348e-13, y: -0.00008174941, z: 3.0360842e-19}
+  m_LocalEulerAnglesHint: {x: -0.00000053389687, y: -23.154709, z: -0.0000012030113}
 --- !u!1 &241805031214659933
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,9 +714,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 337133359755805795}
-  - component: {fileID: 5790532484315267306}
-  - component: {fileID: 203855096332873668}
   - component: {fileID: 3031426480178615355}
+  - component: {fileID: 80834061913524837}
   m_Layer: 0
   m_Name: SecondaryKillTrigger
   m_TagString: Untagged
@@ -739,115 +738,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5424310183818487711}
   m_LocalEulerAnglesHint: {x: -0.000000004188012, y: 0.47333714, z: -0.0000010138823}
---- !u!114 &5790532484315267306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1579757857059030947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 0}
-  hoverTip: 
-  disabledHoverIcon: {fileID: 0}
-  disabledHoverTip: 
-  interactable: 1
-  oneHandedItemAllowed: 1
-  twoHandedItemAllowed: 0
-  holdInteraction: 0
-  timeToHold: 0.5
-  timeToHoldSpeedMultiplier: 1
-  holdTip: 
-  isBeingHeldByPlayer: 0
-  holdingInteractEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  touchTrigger: 1
-  triggerOnce: 1
-  interactCooldown: 1
-  cooldownTime: 1
-  currentCooldownValue: 0
-  disableTriggerMesh: 1
-  RandomChanceTrigger: 0
-  randomChancePercentage: 0
-  onInteractEarlyOtherClients:
-    m_PersistentCalls:
-      m_Calls: []
-  onInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 203855096332873668}
-        m_TargetAssemblyTypeName: KillLocalPlayer, Assembly-CSharp
-        m_MethodName: KillPlayer
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onInteractEarly:
-    m_PersistentCalls:
-      m_Calls: []
-  onStopInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  onCancelAnimation:
-    m_PersistentCalls:
-      m_Calls: []
-  specialCharacterAnimation: 0
-  stopAnimationManually: 0
-  stopAnimationString: SA_stopAnimation
-  hidePlayerItem: 0
-  isPlayingSpecialAnimation: 0
-  animationWaitTime: 2
-  animationString: 
-  lockPlayerPosition: 0
-  playerPositionNode: {fileID: 0}
-  clampLooking: 0
-  setVehicleAnimation: 0
-  minVerticalClamp: 0
-  maxVerticalClamp: 0
-  horizontalClamp: 0
-  allowUseWhileInAnimation: 0
-  overridePlayerParent: {fileID: 0}
-  isLadder: 0
-  topOfLadderPosition: {fileID: 0}
-  useRaycastToGetTopPosition: 0
-  bottomOfLadderPosition: {fileID: 0}
-  ladderHorizontalPosition: {fileID: 0}
-  ladderPlayerPositionNode: {fileID: 0}
-  usingLadder: 0
---- !u!114 &203855096332873668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1579757857059030947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64c6de9b64f5fa50ab3e1e87d281e1ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dontSpawnBody: 0
-  causeOfDeath: 8
-  justDamage: 0
-  playersManager: {fileID: 0}
-  deathAnimation: 0
-  roundManager: {fileID: 0}
-  spawnEnemyPosition: {fileID: 0}
-  enemySpawnNumber: 0
-  playAudioOnDeath: -1
-  spawnPrefab: {fileID: 0}
-  disallowKillingInShip: 0
-  destroyEnemies: 0
 --- !u!65 &3031426480178615355
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -867,8 +757,20 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 25.118196, y: 30.40589, z: 18.234234}
-  m_Center: {x: -0.21920317, y: 5.202934, z: -0.76292104}
+  m_Size: {x: 20.411903, y: 28.84305, z: 17.976765}
+  m_Center: {x: 2.1339436, y: 5.984352, z: -0.63418394}
+--- !u!114 &80834061913524837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579757857059030947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 390557061, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1721127112527337157
 GameObject:
   m_ObjectHideFlags: 0
@@ -1015,7 +917,7 @@ Transform:
   m_Children:
   - {fileID: 6847377070032893279}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: 1.184173, y: 179.99982, z: 179.99997}
+  m_LocalEulerAnglesHint: {x: 1.1841735, y: 179.99982, z: 179.99998}
 --- !u!1 &3046098352530209006
 GameObject:
   m_ObjectHideFlags: 0
@@ -1594,7 +1496,7 @@ Transform:
   m_Children:
   - {fileID: 6250964242324012859}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -1.3057379, y: -0.000014111299, z: 3.3658284e-14}
+  m_LocalEulerAnglesHint: {x: 8.632187e-21, y: -0.000014121563, z: 7.241204e-14}
 --- !u!1 &4857367168838421580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2093,7 +1995,7 @@ Transform:
   m_Children:
   - {fileID: 980335814079662923}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -1.3057379, y: -0.000028222601, z: 2.6646025e-14}
+  m_LocalEulerAnglesHint: {x: 4.3160947e-21, y: -0.000028243127, z: 1.8103013e-14}
 --- !u!1 &6030487064349414643
 GameObject:
   m_ObjectHideFlags: 0
@@ -2125,7 +2027,7 @@ Transform:
   m_Children:
   - {fileID: 5936719320554896405}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -89.99991, y: -0.000075148884, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.99786, y: -0.00007068091, z: 0}
 --- !u!1 &6153629614187099389
 GameObject:
   m_ObjectHideFlags: 0
@@ -2156,7 +2058,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -52.808098, y: -40.639923, z: 90.000015}
+  m_LocalEulerAnglesHint: {x: -52.808098, y: -40.639923, z: 90.00001}
 --- !u!1 &6367249327435129888
 GameObject:
   m_ObjectHideFlags: 0
@@ -2188,7 +2090,7 @@ Transform:
   m_Children:
   - {fileID: 3286358984923104516}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -90, y: -0.00007304352, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: -0.000071827024, z: 0}
 --- !u!1 &7109975547126427977
 GameObject:
   m_ObjectHideFlags: 0
@@ -2198,10 +2100,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1880211051718589963}
-  - component: {fileID: 2219018960225252222}
-  - component: {fileID: 8614985187791815838}
   - component: {fileID: 3074198374835839671}
   - component: {fileID: 3316063557639775216}
+  - component: {fileID: 1875103132067136638}
   m_Layer: 0
   m_Name: KillTrigger
   m_TagString: Untagged
@@ -2224,115 +2125,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2246083739000080155}
   m_LocalEulerAnglesHint: {x: -0.000000004188012, y: 0.47333714, z: -0.0000010138823}
---- !u!114 &2219018960225252222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7109975547126427977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 0}
-  hoverTip: 
-  disabledHoverIcon: {fileID: 0}
-  disabledHoverTip: 
-  interactable: 1
-  oneHandedItemAllowed: 1
-  twoHandedItemAllowed: 0
-  holdInteraction: 0
-  timeToHold: 0.5
-  timeToHoldSpeedMultiplier: 1
-  holdTip: 
-  isBeingHeldByPlayer: 0
-  holdingInteractEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  touchTrigger: 1
-  triggerOnce: 1
-  interactCooldown: 1
-  cooldownTime: 1
-  currentCooldownValue: 0
-  disableTriggerMesh: 1
-  RandomChanceTrigger: 0
-  randomChancePercentage: 0
-  onInteractEarlyOtherClients:
-    m_PersistentCalls:
-      m_Calls: []
-  onInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8614985187791815838}
-        m_TargetAssemblyTypeName: KillLocalPlayer, Assembly-CSharp
-        m_MethodName: KillPlayer
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onInteractEarly:
-    m_PersistentCalls:
-      m_Calls: []
-  onStopInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  onCancelAnimation:
-    m_PersistentCalls:
-      m_Calls: []
-  specialCharacterAnimation: 0
-  stopAnimationManually: 0
-  stopAnimationString: SA_stopAnimation
-  hidePlayerItem: 0
-  isPlayingSpecialAnimation: 0
-  animationWaitTime: 2
-  animationString: 
-  lockPlayerPosition: 0
-  playerPositionNode: {fileID: 0}
-  clampLooking: 0
-  setVehicleAnimation: 0
-  minVerticalClamp: 0
-  maxVerticalClamp: 0
-  horizontalClamp: 0
-  allowUseWhileInAnimation: 0
-  overridePlayerParent: {fileID: 0}
-  isLadder: 0
-  topOfLadderPosition: {fileID: 0}
-  useRaycastToGetTopPosition: 0
-  bottomOfLadderPosition: {fileID: 0}
-  ladderHorizontalPosition: {fileID: 0}
-  ladderPlayerPositionNode: {fileID: 0}
-  usingLadder: 0
---- !u!114 &8614985187791815838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7109975547126427977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64c6de9b64f5fa50ab3e1e87d281e1ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dontSpawnBody: 0
-  causeOfDeath: 8
-  justDamage: 0
-  playersManager: {fileID: 0}
-  deathAnimation: 0
-  roundManager: {fileID: 0}
-  spawnEnemyPosition: {fileID: 0}
-  enemySpawnNumber: 0
-  playAudioOnDeath: -1
-  spawnPrefab: {fileID: 0}
-  disallowKillingInShip: 0
-  destroyEnemies: 0
 --- !u!136 &3074198374835839671
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2377,6 +2169,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.45166567
   m_Center: {x: 0.9807828, y: -0.000010324309, z: 1.671687}
+--- !u!114 &1875103132067136638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7109975547126427977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 390557061, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7176763770483339540
 GameObject:
   m_ObjectHideFlags: 0
@@ -2407,7 +2211,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -0.000020867177, y: -54.003704, z: 0.0000013916458}
+  m_LocalEulerAnglesHint: {x: -0.000046003526, y: -0.22102737, z: -0.000039043694}
 --- !u!1 &7339301815827033654
 GameObject:
   m_ObjectHideFlags: 0
@@ -2942,7 +2746,7 @@ Transform:
   - {fileID: 1498149763533004658}
   - {fileID: 8716940420017821710}
   m_Father: {fileID: 248359961754222167}
-  m_LocalEulerAnglesHint: {x: 85.12971, y: 76.54579, z: 76.54582}
+  m_LocalEulerAnglesHint: {x: 40.556084, y: 0.000082843486, z: 0.000024557874}
 --- !u!1 &8691676997024596700
 GameObject:
   m_ObjectHideFlags: 0
