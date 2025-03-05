@@ -77,6 +77,7 @@ public class Plugin : BaseUnityPlugin
         _harmony.PatchAll(typeof(StartOfRoundPatch));
         _harmony.PatchAll(typeof(NetworkBehaviourPatch));
 
+        ItemDropshipPatch.Init();
         TerminalPatch.Init();
         KnifeItemPatch.Init();
         PlayerControllerBPatch.Init();
