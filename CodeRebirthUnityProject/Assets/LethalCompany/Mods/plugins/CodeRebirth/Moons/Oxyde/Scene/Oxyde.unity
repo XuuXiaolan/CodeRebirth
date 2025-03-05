@@ -8531,11 +8531,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1991192134}
     m_Modifications:
-    - target: {fileID: 2765836381504517902, guid: f1ab898e1073b724f9641b286ab9c247,
+    - target: {fileID: 3757290323579919197, guid: f1ab898e1073b724f9641b286ab9c247,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: a7cf6168e99a5824caba63a0526d3b01, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 83.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 3757290323579919197, guid: f1ab898e1073b724f9641b286ab9c247,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 3757290323579919197, guid: f1ab898e1073b724f9641b286ab9c247,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 26.41
+      objectReference: {fileID: 0}
     - target: {fileID: 4914028431452642753, guid: f1ab898e1073b724f9641b286ab9c247,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8591,11 +8601,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: NewTerrainXuStillABitch
       objectReference: {fileID: 0}
-    - target: {fileID: 5730109235284878703, guid: f1ab898e1073b724f9641b286ab9c247,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 084a7f441b7bbdd42987936e8a5aef7b, type: 2}
     - target: {fileID: 7051509721684676303, guid: f1ab898e1073b724f9641b286ab9c247,
         type: 3}
       propertyPath: GlobalObjectIdHash
