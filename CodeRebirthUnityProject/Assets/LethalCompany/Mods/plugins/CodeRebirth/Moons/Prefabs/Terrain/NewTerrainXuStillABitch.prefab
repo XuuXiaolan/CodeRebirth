@@ -968,6 +968,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: 89.9802
       objectReference: {fileID: 0}
+    - target: {fileID: 7224563336992799584, guid: 073b8e1dc2607ef47a5f28caaaa00cc9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 7242051953201093240, guid: 073b8e1dc2607ef47a5f28caaaa00cc9,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1182,7 +1187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arcHeight: 30
-  launchSpeed: 3
+  launchSpeed: 30
   launchDistance: 100
   landingRadius: 8
   landingRaycastUp: 50
