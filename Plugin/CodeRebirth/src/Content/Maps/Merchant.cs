@@ -47,11 +47,9 @@ public class Merchant : NetworkBehaviour
 
     private bool ItemsStolen()
     {
-        foreach (var (item, _) in itemsSpawned)
+        foreach (var (item, price) in itemsSpawned)
         {
-            if (item == null) continue;
-            Plugin.ExtendedLogging($"InShipRoom: {item.isInShipRoom}");
-            Plugin.ExtendedLogging($"Distance to ship: {Vector3.Distance(item.transform.position, StartOfRound.Instance.shipLandingPosition.position)}");
+            if (item == null || price == -1) continue;
             if (item.isInShipRoom) return true;
             if (Vector3.Distance(item.transform.position, StartOfRound.Instance.shipLandingPosition.position) <= 15) return true;
         }
