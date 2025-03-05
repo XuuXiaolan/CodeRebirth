@@ -50,9 +50,10 @@ public class Merchant : NetworkBehaviour
         foreach (var (item, _) in itemsSpawned)
         {
             if (item == null) continue;
+            Plugin.ExtendedLogging($"InShipRoom: {item.isInShipRoom}");
+            Plugin.ExtendedLogging($"Distance to ship: {Vector3.Distance(item.transform.position, StartOfRound.Instance.shipLandingPosition.position)}");
             if (item.isInShipRoom) return true;
             if (Vector3.Distance(item.transform.position, StartOfRound.Instance.shipLandingPosition.position) <= 15) return true;
-            return true;
         }
         return false;
     }
