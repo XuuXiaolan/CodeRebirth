@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.46724516, g: 0.25089708, b: 0.39555627, a: 1}
+  m_IndirectSpecularColor: {r: 0.46723467, g: 0.2508867, b: 0.395521, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -317,7 +317,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 27353838}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
@@ -859,7 +859,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 167730184}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
@@ -5015,7 +5015,7 @@ Transform:
   m_GameObject: {fileID: 1278184485}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.1122494, z: 0, w: 0.99368006}
-  m_LocalPosition: {x: 211, y: -50, z: 67}
+  m_LocalPosition: {x: 211, y: -10.186901, z: 67.00001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5035,20 +5035,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parameters:
     albedo: {r: 0.46666667, g: 0.227451, b: 0.31234473, a: 1}
-    meanFreePath: 20
+    meanFreePath: 34
     blendingMode: 1
     priority: 0
     anisotropy: 0
     volumeMask: {fileID: 11700000, guid: 558aefef897d9784d935fa3ba081c1b1, type: 2}
     textureScrollingSpeed: {x: 0, y: 0, z: 0}
     textureTiling: {x: 0, y: 0, z: 0}
-    positiveFade: {x: 0, y: 0.99711484, z: 0}
-    negativeFade: {x: 0.0771996, y: 0, z: 0}
+    positiveFade: {x: 0, y: 0.69261, z: 0}
+    negativeFade: {x: 0.07719959, y: 0, z: 0}
     m_EditorUniformFade: 0.5
-    m_EditorPositiveFade: {x: 0, y: 0.99711484, z: 0}
-    m_EditorNegativeFade: {x: 0.0771996, y: 0, z: 0}
+    m_EditorPositiveFade: {x: 0, y: 0.69261, z: 0}
+    m_EditorNegativeFade: {x: 0.07719959, y: 0, z: 0}
     m_EditorAdvancedFade: 1
-    size: {x: 388.6031, y: 125.495026, z: 385.99884}
+    size: {x: 388.6031, y: 180.66866, z: 385.99884}
     invertFade: 0
     distanceFadeStart: 100
     distanceFadeEnd: 500

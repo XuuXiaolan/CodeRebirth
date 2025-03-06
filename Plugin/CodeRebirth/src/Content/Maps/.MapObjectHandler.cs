@@ -11,6 +11,18 @@ using LethalLib.Extras;
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
 {
+	public class ShredderSarahAssets(string bundleName) : AssetBundleLoader<ShredderSarahAssets>(bundleName)
+    {
+        [LoadFromBundle("ShreddingSarah.prefab")]
+		public GameObject ShreddingSarahPrefab { get; private set; } = null!;
+
+        [LoadFromBundle("DeadBodyScrapObj.asset")]
+        public Item DeadPlayerScrap { get; private set; } = null!;
+
+		[LoadFromBundle("ShreddedScrapObj.asset")]
+		public Item ShreddedScrap { get; private set; } = null!;
+    }
+
 	public class CrateAssets(string bundleName) : AssetBundleLoader<CrateAssets>(bundleName)
 	{
 		[LoadFromBundle("Wooden Crate")]
@@ -157,7 +169,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		[LoadFromBundle("WorthlessObj.asset")]
 		public Item Worthless { get; private set; } = null!;
 
-			[LoadFromBundle("MoneyPrefab.prefab")]
+		[LoadFromBundle("MoneyPrefab.prefab")]
 		public GameObject MoneyPrefab { get; private set; } = null!;
 
 		[LoadFromBundle("WalletObj.asset")]
@@ -167,6 +179,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public UnlockableItemDef PiggyBankUnlockable { get; private set; } = null!;
 	}
 
+	public ShredderSarahAssets ShredderSarah { get; private set; } = null!;
 	public MerchantAssets Merchant { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
 	public FloraAssets Flora { get; private set; } = null!;
@@ -184,6 +197,14 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public MapObjectHandler()
 	{
+		if (Plugin.ModConfig.ConfigOxydeEnabled.Value)
+		{
+			ShredderSarah = new ShredderSarahAssets("shreddersarahassets");
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.ShredderSarah] = ShredderSarah.ShreddingSarahPrefab;
+			RegisterScrapWithConfig("", ShredderSarah.ShreddedScrap, -1, -1);
+			RegisterScrapWithConfig("", ShredderSarah.DeadPlayerScrap, -1, -1);
+		}
+
 		if (Plugin.ModConfig.ConfigMerchantEnabled.Value)
 		{
 			Merchant = new MerchantAssets("merchantassets");

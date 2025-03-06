@@ -49,7 +49,8 @@ public class Merchant : NetworkBehaviour
     {
         foreach (var (item, price) in itemsSpawned)
         {
-            if (item == null || price == -1) continue;
+            if (price == -1) continue;
+            if (item == null) return true;
             if (item.isInShipRoom) return true;
             if (Vector3.Distance(item.transform.position, StartOfRound.Instance.shipLandingPosition.position) <= 15) return true;
         }
@@ -62,7 +63,6 @@ public class Merchant : NetworkBehaviour
         {
             if (destroyShipRoutine == null && (!playersWhoStoleKilled || ItemsStolen()))
             {
-                TurretAudioSources[0].Play();
                 CodeRebirthUtils.Instance.shipAnimator.overrideController[CodeRebirthUtils.Instance.shipAnimator.originalShipLeaveClip] = CodeRebirthUtils.Instance.ModifiedDangerousShipLeaveAnimation;
                 destroyShipRoutine = StartCoroutine(DestroyShip());
             }
@@ -137,7 +137,8 @@ public class Merchant : NetworkBehaviour
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        TurretAudioSources[0].Stop();
+        TurretAudioSources[0].transform.position = StartOfRound.Instance.shipDoorNode.position;
+        TurretAudioSources[0].PlayOneShot(TurretAudioClips[UnityEngine.Random.Range(0, TurretAudioClips.Length)]);
     }
 
     private IEnumerator StealAllCoins(GrabbableObject itemTaken, int itemCost)
@@ -163,7 +164,6 @@ public class Merchant : NetworkBehaviour
     private void EliminateShip()
     {
         Transform targetTransform = StartOfRound.Instance.shipDoorNode;
-        TurretAudioSources[0].transform.position = targetTransform.position;
         foreach (var turret in turretBones)
         {
             localDamageCooldownPerTurret[turret] -= Time.deltaTime;
@@ -198,7 +198,7 @@ public class Merchant : NetworkBehaviour
                 // Fire at player and deal damage.
                 if (localDamageCooldownPerTurret[turret] <= 0)
                 {
-                    bool blocked = Physics.Linecast(turret.position, currentTargetPlayer.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore);
+                    bool blocked = Physics.Linecast(turret.position, currentTargetPlayer.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Collide);
                     // Plugin.ExtendedLogging($"Linecast hit {hit.transform.name}");
                     Vector3 explosionPosition = blocked ? hit.point : currentTargetPlayer.transform.position;
                     if (!blocked)
@@ -207,8 +207,8 @@ public class Merchant : NetworkBehaviour
                     }
                     CRUtilities.CreateExplosion(explosionPosition, true, 10, 0, 3, 2, currentTargetPlayer, null, 50f);
                     localDamageCooldownPerTurret[turret] = 2f;
-                    TurretAudioSources[1].transform.position = explosionPosition;
-                    TurretAudioSources[1].PlayOneShot(TurretAudioClips[UnityEngine.Random.Range(0, TurretAudioClips.Length)]);
+                    TurretAudioSources[0].transform.position = explosionPosition;
+                    TurretAudioSources[0].PlayOneShot(TurretAudioClips[UnityEngine.Random.Range(0, TurretAudioClips.Length)]);
                 }
             }
             Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);

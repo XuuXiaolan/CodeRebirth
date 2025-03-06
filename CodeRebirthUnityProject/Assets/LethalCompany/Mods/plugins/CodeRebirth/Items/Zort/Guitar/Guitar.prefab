@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 554177628250294050}
   - component: {fileID: 8381217319833684512}
   - component: {fileID: 3428627182824605254}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pena
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 4312288592833612942}
   - component: {fileID: 8000209209068432507}
   - component: {fileID: 8820628498602589277}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ItemGraph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -569,9 +569,9 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

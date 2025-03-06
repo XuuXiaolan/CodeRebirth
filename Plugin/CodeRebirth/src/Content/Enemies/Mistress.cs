@@ -18,6 +18,8 @@ public class Mistress : CodeRebirthEnemyAI
     public float teleportCooldown = 20f;
     public float killCooldown = 10f;
     public Transform HeadTransform = null!;
+    public AudioClip LoseSightSound = null!;
+    public AudioClip[] AttackSounds = null!;
 
     private List<PlayerControllerB> previousTargetPlayers = new();
     private System.Random mistressRandom = new();
@@ -148,14 +150,14 @@ public class Mistress : CodeRebirthEnemyAI
     private void DoAttack()
     {
         bool LookedAt = PlayerLookingAtEnemy();
-        Plugin.ExtendedLogging($"LookedAt in attack phase: {LookedAt}");
+        // Plugin.ExtendedLogging($"LookedAt in attack phase: {LookedAt}");
         if (LookedAt) return;
         StartCoroutine(ResetMistressToStalking(targetPlayer));
     }
 
     private void DoExecution()
     {
-        Plugin.ExtendedLogging($"Executing player {playerToKill}!");
+        // Plugin.ExtendedLogging($"Executing player {playerToKill}!");
         // Begin the execution.
         // Once player dies, goes back to spawning phase.
     }
@@ -189,7 +191,7 @@ public class Mistress : CodeRebirthEnemyAI
         StartCoroutine(ResetMistressToStalking(targetPlayer));
         yield return new WaitForSeconds(20f);
         Guillotine.NetworkObject.Despawn();
-        // Find Valid spot to spawn guillotine.
+        // todo: Find Valid spot to spawn guillotine.
     }
 
     private IEnumerator ResetMistressToStalking(PlayerControllerB? lastTargetPlayer)
@@ -197,7 +199,6 @@ public class Mistress : CodeRebirthEnemyAI
         Plugin.ExtendedLogging($"Resetting mistress to stalking phase!");
         killTimer = 0f;
         previousTargetPlayers.Add(targetPlayer);
-        StartCoroutine(ResetVolumeWeightTo0(targetPlayer));
         targetPlayer = null;
         if (!IsServer) yield break;
         playerToKill = null;
@@ -370,6 +371,7 @@ public class Mistress : CodeRebirthEnemyAI
         PlayerControllerB playerToCripple = StartOfRound.Instance.allPlayerScripts[playerToCrippleIndex];
         if (cripple)
         {
+            creatureVoice.PlayOneShot(AttackSounds[mistressRandom.Next(AttackSounds.Length)]);
             playerToCripple.inAnimationWithEnemy = this;
             inSpecialAnimationWithPlayer = playerToCripple;
             playerToCripple.inSpecialInteractAnimation = true;
@@ -379,6 +381,10 @@ public class Mistress : CodeRebirthEnemyAI
         }
         else
         {
+            if (playerToCripple.IsOwner)
+            {
+                creatureVoice.PlayOneShot(LoseSightSound);
+            }
             skinnedMeshRenderers[0].enabled = false;
             playerToCripple.inAnimationWithEnemy = null;
             inSpecialAnimationWithPlayer = null;

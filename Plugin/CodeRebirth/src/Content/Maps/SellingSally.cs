@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class SellingSally : NetworkBehaviour
     public Animator animator = null!;
     public NetworkAnimator networkAnimator = null!;
     public Transform endOfBarrelTransform = null!;
+    public InteractTrigger ButtonTrigger = null!;
+    public InteractTrigger bellTrigger = null!;
 
     private List<SallyCubes> sallyCubes = new();
     private static readonly int OpenedAnimation = Animator.StringToHash("open"); // Bool
@@ -28,12 +31,24 @@ public class SellingSally : NetworkBehaviour
         Instance = null;
     }
 
+    public void OnButtonInteract(PlayerControllerB player)
+    {
+        if (!player.IsOwner) return;
+        PressButtonServerRpc();
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void PressButtonServerRpc()
     {
         Plugin.ExtendedLogging($"Can press button {CanCurrentlyShoot()}");
         if (!CanCurrentlyShoot()) return;
         networkAnimator.SetTrigger(ShootAnimation);
+    }
+
+    public void OnBellInteract(PlayerControllerB player)
+    {
+        if (!player.IsOwner) return;
+        RingBellServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
