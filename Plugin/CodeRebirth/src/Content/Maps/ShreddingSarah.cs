@@ -45,7 +45,7 @@ public class ShreddingSarah : NetworkBehaviour
         if (player.currentlyHeldObjectServer is RagdollGrabbableObject)
         {
             player.DespawnHeldObject();
-            TryFeedItemServerRpc(false, 10);
+            TryFeedItemServerRpc(true, 10);
             return;
         }
         int value = player.currentlyHeldObjectServer.scrapValue;
@@ -59,7 +59,14 @@ public class ShreddingSarah : NetworkBehaviour
         NetworkObjectReference netObjRef;
         if (playerDeath)
         {
-            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah.DeadPlayerScrap, shootPoint.position, false, true, valueOfItem);
+            if (UnityEngine.Random.Range(0, 100) < 50)
+            {
+                netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah.FlatBodyScrap, shootPoint.position, false, true, valueOfItem);
+            }
+            else
+            {
+                netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah.DeadPlayerScrap, shootPoint.position, false, true, valueOfItem);
+            }
         }
         else
         {
