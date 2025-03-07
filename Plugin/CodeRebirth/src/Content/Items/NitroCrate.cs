@@ -9,6 +9,7 @@ public class NitroCrate : GrabbableObject, IHittable
 {
     public static List<NitroCrate> nitroCrates = new();
 
+    private bool exploded = false;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -25,6 +26,7 @@ public class NitroCrate : GrabbableObject, IHittable
     [ServerRpc(RequireOwnership = false)]
     public void RequestServerToDespawnServerRpc()
     {
+        exploded = true;
         playerHeldBy?.DropAllHeldItems();
         playerHeldBy?.DropAllHeldItemsClientRpc();
         this.NetworkObject.Despawn();
@@ -32,6 +34,7 @@ public class NitroCrate : GrabbableObject, IHittable
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
+        if (exploded) return false;
         RequestServerToDespawnServerRpc();
         return true;
     }

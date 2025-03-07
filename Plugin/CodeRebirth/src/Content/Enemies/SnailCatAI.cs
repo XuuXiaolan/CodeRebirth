@@ -49,7 +49,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		string randomName = randomizedNames[random.Next(0, randomizedNames.Length)];
 		scanNodeProperties.headerText = randomName;
 		currentName = randomName;
-		isWiWiWiii = currentName == "WiWiWii";
+		isWiWiWiii = currentName == "Wiwiwii";
         if (IsServer) smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
     }
 
@@ -79,7 +79,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 			bool enemyNearby = false;
 			foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
 			{
-				if (enemy is SnailCatAI) return;
+				if (enemy is SnailCatAI) continue;
 				float distance = Vector3.Distance(transform.position, enemy.transform.position);
 				if (distance < 15)
 				{
