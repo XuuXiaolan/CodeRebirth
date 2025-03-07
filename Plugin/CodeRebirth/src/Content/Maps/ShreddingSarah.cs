@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -42,13 +40,18 @@ public class ShreddingSarah : NetworkBehaviour
     public void TryFeedItem(PlayerControllerB player)
     {
         if (!player.IsOwner || player.currentlyHeldObjectServer == null) return;
+        int value = 0;
         if (player.currentlyHeldObjectServer is RagdollGrabbableObject)
         {
             player.DespawnHeldObject();
             TryFeedItemServerRpc(true, 10);
             return;
         }
-        int value = player.currentlyHeldObjectServer.scrapValue;
+        else if (player.currentlyHeldObjectServer.itemProperties.itemName.Contains("Shredded Scraps"))
+        {
+            value = -24;
+        }
+        value += player.currentlyHeldObjectServer.scrapValue;
         player.DespawnHeldObject();
         TryFeedItemServerRpc(false, value + UnityEngine.Random.Range(10, 23));
     }
@@ -59,14 +62,7 @@ public class ShreddingSarah : NetworkBehaviour
         NetworkObjectReference netObjRef;
         if (playerDeath)
         {
-            if (UnityEngine.Random.Range(0, 100) < 50)
-            {
-                netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah.FlatBodyScrap, shootPoint.position, false, true, valueOfItem);
-            }
-            else
-            {
-                netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah.DeadPlayerScrap, shootPoint.position, false, true, valueOfItem);
-            }
+            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah.DeadPlayerScrap, shootPoint.position, false, true, valueOfItem);
         }
         else
         {

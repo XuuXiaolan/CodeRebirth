@@ -16,9 +16,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         [LoadFromBundle("ShreddingSarah.prefab")]
 		public GameObject ShreddingSarahPrefab { get; private set; } = null!;
 
-		[LoadFromBundle("FlatBodyScrapObj.asset")]
-		public Item FlatBodyScrap { get; private set; } = null!;
-
         [LoadFromBundle("DeadBodyScrapObj.asset")]
         public Item DeadPlayerScrap { get; private set; } = null!;
 
@@ -205,7 +202,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 			ShredderSarah = new ShredderSarahAssets("shreddersarahassets");
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.ShredderSarah] = ShredderSarah.ShreddingSarahPrefab;
 			RegisterScrapWithConfig("", ShredderSarah.ShreddedScrap, -1, -1);
-			RegisterScrapWithConfig("", ShredderSarah.FlatBodyScrap, -1, -1);
 			RegisterScrapWithConfig("", ShredderSarah.DeadPlayerScrap, -1, -1);
 		}
 

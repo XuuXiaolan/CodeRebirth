@@ -386,7 +386,7 @@ public class Mistress : CodeRebirthEnemyAI
         {
             if (playerToCripple.IsOwner)
             {
-                creatureVoice.PlayOneShot(LoseSightSound);
+                creatureVoice.PlayOneShot(LoseSightSound, 0.75f);
             }
             skinnedMeshRenderers[0].enabled = false;
             playerToCripple.inAnimationWithEnemy = null;
