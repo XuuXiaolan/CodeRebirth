@@ -19,7 +19,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		[LoadFromBundle("SallyCubesObj.asset")]
 		public Item SallyCubesScrap { get; private set; } = null!;
 
-		[LoadFromBundle("FlatDeadPlayerObj.asset")]
+		[LoadFromBundle("FlatBodyScrapObj.asset")]
 		public Item FlatDeadPlayerScrap { get; private set; } = null!;
 	}
 

@@ -61,7 +61,7 @@ public class LaserTurret : CodeRebirthHazard
         Vector3 laserDirection = laserStartPoint.forward;
         if (Physics.SphereCast(laserStartPoint.position, laserThickness / 2, laserDirection, out RaycastHit hit, laserRange, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore))
         {
-            if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB player))
+            if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent(out PlayerControllerB player))
             {
                 if (player.isCrouching && player.gameplayCamera.transform.position.y + laserThickness < laserStartPoint.position.y)
                 {
@@ -74,7 +74,7 @@ public class LaserTurret : CodeRebirthHazard
                     else
                     {
                         // No further hit, end laser
-                        UpdateLaserVisuals(hit.point - laserDirection * 1.912f);
+                        UpdateLaserVisuals(hit.point - laserDirection * 1.912f); // this needs to be called on fixed update instead
                         return;
                     }
                 }
@@ -82,7 +82,7 @@ public class LaserTurret : CodeRebirthHazard
 
             UpdateLaserVisuals(hit.point - laserDirection * 1.912f);
 
-            if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent<PlayerControllerB>(out PlayerControllerB targetPlayer))
+            if (hit.collider.gameObject.layer == 3 && hit.collider.TryGetComponent(out PlayerControllerB targetPlayer))
             {
                 damageTimer -= Time.deltaTime;
                 if (damageTimer <= 0f)
