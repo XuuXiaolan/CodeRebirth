@@ -23,7 +23,8 @@ namespace CodeRebirth.src.MiscScripts
             WoodenCrate,
             BearTrap,
             BoomTrap,
-            ShredderSarah
+            ShredderSarah,
+            CompactorToby
         }
 
         public void Start()

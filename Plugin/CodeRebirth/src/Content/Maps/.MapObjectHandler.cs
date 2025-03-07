@@ -11,6 +11,18 @@ using LethalLib.Extras;
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
 {
+	public class CompactorTobyAssets(string bundleName) : AssetBundleLoader<CompactorTobyAssets>(bundleName)
+	{
+		[LoadFromBundle("CompactorToby.prefab")]
+		public GameObject CompactorTobyPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("SallyCubesObj.asset")]
+		public Item SallyCubesScrap { get; private set; } = null!;
+
+		[LoadFromBundle("FlatDeadPlayerObj.asset")]
+		public Item FlatDeadPlayerScrap { get; private set; } = null!;
+	}
+
 	public class ShredderSarahAssets(string bundleName) : AssetBundleLoader<ShredderSarahAssets>(bundleName)
     {
         [LoadFromBundle("ShreddingSarah.prefab")]
@@ -179,6 +191,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public UnlockableItemDef PiggyBankUnlockable { get; private set; } = null!;
 	}
 
+	public CompactorTobyAssets CompactorToby { get; private set; } = null!;
 	public ShredderSarahAssets ShredderSarah { get; private set; } = null!;
 	public MerchantAssets Merchant { get; private set; } = null!;
 	public CrateAssets Crate { get; private set; } = null!;
@@ -197,6 +210,14 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public MapObjectHandler()
 	{
+		if (Plugin.ModConfig.ConfigOxydeEnabled.Value)
+		{
+			CompactorToby = new CompactorTobyAssets("compactortobyassets");
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.CompactorToby] = CompactorToby.CompactorTobyPrefab;
+			RegisterScrapWithConfig("", CompactorToby.FlatDeadPlayerScrap, -1, -1);
+			RegisterScrapWithConfig("", CompactorToby.SallyCubesScrap, -1, -1);
+		}
+
 		if (Plugin.ModConfig.ConfigOxydeEnabled.Value)
 		{
 			ShredderSarah = new ShredderSarahAssets("shreddersarahassets");
