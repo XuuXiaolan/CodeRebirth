@@ -11,8 +11,7 @@ public class SellingSally : NetworkBehaviour
     public Animator animator = null!;
     public NetworkAnimator networkAnimator = null!;
     public Transform endOfBarrelTransform = null!;
-    public InteractTrigger ButtonTrigger = null!;
-    public InteractTrigger bellTrigger = null!;
+    public Transform sallyLoaderTransform = null!;
 
     private List<SallyCubes> sallyCubes = new();
     private static readonly int OpenedAnimation = Animator.StringToHash("open"); // Bool
@@ -61,11 +60,13 @@ public class SellingSally : NetworkBehaviour
     {
         foreach (var grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
         {
+            if (grabbableObject.transform.parent != sallyLoaderTransform) continue;
             if (grabbableObject is SallyCubes sallyCube)
             {
                 sallyCubes.Add(sallyCube);
                 continue;
             }
+            sallyCubes.Clear();
             return false;
         }
         return true;
@@ -75,7 +76,7 @@ public class SellingSally : NetworkBehaviour
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (GameNetworkManager.Instance.localPlayerController != player || (player.transform.parent != this.transform && Vector3.Distance(transform.position, player.transform.position) > 20)) continue; 
+            if (!player.IsOwner || player.transform.parent != endOfBarrelTransform.parent) continue; 
             player.transform.position = endOfBarrelTransform.position;
             player.DamagePlayer(9999, true, true, CauseOfDeath.Blast, 0, false, endOfBarrelTransform.forward * 100f);
         }
