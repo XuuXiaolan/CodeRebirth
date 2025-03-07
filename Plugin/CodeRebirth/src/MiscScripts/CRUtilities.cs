@@ -131,21 +131,21 @@ public class CRUtilities
 
         if (spawnExplosionEffect)
         {
-            float multiplier = Mathf.Clamp((maxDamageRange - minDamageRange)/3f, 0.2f, 20);
+            float multiplier = Mathf.Clamp((maxDamageRange - minDamageRange)/4f, 0.25f, 20);
             GameObject gameobject;
             if (overridePrefab == null)
             {
                 gameobject = UnityEngine.Object.Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder);
+                gameobject.GetComponentInChildren<AudioSource>().maxDistance *= multiplier;
+                foreach (var particleSystem in gameobject.GetComponentsInChildren<ParticleSystem>())
+                {
+                    particleSystem.gameObject.transform.localScale *= multiplier;
+                }
             }
             else
             {
                 gameobject = UnityEngine.Object.Instantiate(overridePrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), holder);
             }
-            foreach (var particleSystem in gameobject.GetComponentsInChildren<ParticleSystem>())
-            {
-                particleSystem.gameObject.transform.localScale *= multiplier;
-            }
-            gameobject.GetComponentInChildren<AudioSource>().maxDistance *= multiplier;
             gameobject.SetActive(true);
         }
 
