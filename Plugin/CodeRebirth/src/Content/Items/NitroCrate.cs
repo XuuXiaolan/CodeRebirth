@@ -30,7 +30,7 @@ public class NitroCrate : GrabbableObject, IHittable
         this.NetworkObject.Despawn();
     }
 
-    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         RequestServerToDespawnServerRpc();
         return true;

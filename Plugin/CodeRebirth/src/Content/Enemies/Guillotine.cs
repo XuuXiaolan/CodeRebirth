@@ -60,7 +60,6 @@ public class Guillotine : NetworkBehaviour
         playerToKill = StartOfRound.Instance.allPlayerScripts[playerIndex];
         Plugin.ExtendedLogging($"Killing player {playerToKill}!");
         int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
-        audioSource.PlayOneShot(GuillotineSound);
         if (StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 1)
         {
             if (playerToKill.IsOwner) playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
@@ -93,5 +92,10 @@ public class Guillotine : NetworkBehaviour
         talkingHeadScript.player = playerToKill;
         talkingHeadScript.SyncTalkingHeadServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
         playerToKill = null;
+    }
+
+    public void PlayGuillotineSoundAnimEvent()
+    {
+        audioSource.PlayOneShot(GuillotineSound);
     }
 }

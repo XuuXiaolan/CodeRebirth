@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
@@ -12,8 +11,14 @@ public class Oxidizer : GrabbableObject
     public ParticleSystem[] flameStreamParticleSystems = [];
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
     public Transform capsuleTransform = null!;
+    public AudioSource flameSource = null!;
+    public AudioSource oxidizerSource = null!;
+    public AudioClip outOfOxygenClip = null!;
+    public AudioClip releaseHoldClip = null!;
+    public AudioClip holdStartClip = null!;
+    public AudioClip bigBlastClip = null!;
 
-    private RaycastHit[] cachedRaycastHits = new RaycastHit[20];
+    private RaycastHit[] cachedRaycastHits = new RaycastHit[24];
     private bool charged = true;
     private bool superCharged = false;
     private bool nerfed = false;
@@ -27,6 +32,7 @@ public class Oxidizer : GrabbableObject
         if (!charged && skinnedMeshRenderer.GetBlendShapeWeight(0) < 80)
         {
             charged = true;
+            oxidizerSource.PlayOneShot(holdStartClip);
         }
         else if (charged && !isBeingUsed && skinnedMeshRenderer.GetBlendShapeWeight(0) >= 80)
         {
@@ -43,7 +49,7 @@ public class Oxidizer : GrabbableObject
             if (updateHitInterval <= 0)
             {
                 updateHitInterval = 0.2f;
-                int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 1.3f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 4, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
+                int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 1.3f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 4, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
                 for (int i = 0; i < numHits; i++)
                 {
                     if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
@@ -62,6 +68,8 @@ public class Oxidizer : GrabbableObject
             {
                 particleSystem.Stop();
             }
+            oxidizerSource.PlayOneShot(outOfOxygenClip);
+            flameSource.Stop();
         }
     }
 
@@ -71,6 +79,16 @@ public class Oxidizer : GrabbableObject
 
         if (!charged) return;
         isBeingUsed = buttonDown;
+        if (buttonDown)
+        {
+            oxidizerSource.PlayOneShot(holdStartClip);
+            flameSource.Play();
+        }
+        else
+        {
+            oxidizerSource.PlayOneShot(releaseHoldClip);
+            flameSource.Stop();
+        }
         playerHeldBy.activatingItem = buttonDown;
         foreach (var particleSystem in flameStreamParticleSystems)
         {
@@ -126,12 +144,14 @@ public class Oxidizer : GrabbableObject
     private void DoExhaustFuelClientRpc()
     {
         superCharged = true;
+        oxidizerSource.PlayOneShot(bigBlastClip);
         float fuelLeft = 100 - skinnedMeshRenderer.GetBlendShapeWeight(0);
         int damageToDeal = Mathf.FloorToInt(fuelLeft/5f);
         Plugin.ExtendedLogging($"Oxidizer: {damageToDeal} damage dealt.");
         int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
+            if (cachedRaycastHits[i].transform == playerHeldBy.transform) continue;
             if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
             {
                 iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);

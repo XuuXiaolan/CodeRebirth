@@ -1,22 +1,27 @@
 using System;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class InfiniKey : GrabbableObject
 {
+    public AudioSource infiniSource = null!;
+    public AudioClip hitNothingSound = null!;
+    public AudioClip UnlockSomethingSound = null!;
+
     private RaycastHit[] cachedHits = new RaycastHit[10];
     private PlayerControllerB? previousPlayerHeldBy = null;
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        if (this.playerHeldBy != null)
+        if (playerHeldBy != null)
 		{
-			this.previousPlayerHeldBy = this.playerHeldBy;
-			if (this.playerHeldBy.IsOwner)
+			previousPlayerHeldBy = playerHeldBy;
+			if (playerHeldBy.IsOwner)
 			{
-				this.playerHeldBy.playerBodyAnimator.SetTrigger("UseHeldItem1");
+				playerHeldBy.playerBodyAnimator.SetTrigger("UseHeldItem1");
 			}
 		}
 		if (IsOwner)
@@ -48,30 +53,54 @@ public class InfiniKey : GrabbableObject
         }
 		if (hitSurfaceIndex != -1)
 		{
-			/*RoundManager.PlayRandomClip(this.knifeAudio, this.hitSFX, true, 1f, 0, 1000);
-			RoundManager.Instance.PlayAudibleNoise(base.transform.position, 17f, 0.8f, 0, false, 0);
-			if (hitSurfaceIndex != -1)
-			{
-				this.knifeAudio.PlayOneShot(StartOfRound.Instance.footstepSurfaces[hitSurfaceIndex].hitSurfaceSFX);
-				WalkieTalkie.TransmitOneShotAudio(this.knifeAudio, StartOfRound.Instance.footstepSurfaces[hitSurfaceIndex].hitSurfaceSFX, 1f);
-			}
-			this.HitShovelServerRpc(hitSurfaceIndex);*/
+			HitInfiniKeyServerRpc(hitSurfaceIndex);
 		}
+        else
+        {
+            HitInfiniKeyServerRpc(-2);
+        }
     }
 
     public void OnHit(Collider collider)
     {
         if (collider == null) return;
         Plugin.ExtendedLogging($"OnHit: {collider.gameObject.name} with tag {collider.gameObject.tag}");
+        bool unlockedSomething = false;
         if (collider.gameObject.TryGetComponent(out DoorLock doorlock) && doorlock.isLocked)
         {
             doorlock.UnlockDoorServerRpc();
-            return;
+            unlockedSomething = true;
         }
-        if (collider.gameObject.TryGetComponent(out Pickable pickable))
+        else if (collider.gameObject.TryGetComponent(out Pickable pickable))
         {
             pickable.Unlock();
+            unlockedSomething = true;
+        }
+        if (!unlockedSomething) return;
+        HitInfiniKeyServerRpc(-1);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void HitInfiniKeyServerRpc(int hitSurfaceIndex)
+    {
+        HitInfiniKeyClientRpc(hitSurfaceIndex);
+    }
+
+    [ClientRpc]
+    private void HitInfiniKeyClientRpc(int hitSurfaceIndex)
+    {
+        if (hitSurfaceIndex == -1)
+        {
+            infiniSource.PlayOneShot(UnlockSomethingSound);
             return;
         }
+        else if (hitSurfaceIndex == -2)
+        {
+            infiniSource.PlayOneShot(hitNothingSound);
+            return;
+        }
+        RoundManager.Instance.PlayAudibleNoise(transform.position, 17f, 0.8f, 0, false, 0);
+        infiniSource.PlayOneShot(StartOfRound.Instance.footstepSurfaces[hitSurfaceIndex].hitSurfaceSFX);
+        WalkieTalkie.TransmitOneShotAudio(infiniSource, StartOfRound.Instance.footstepSurfaces[hitSurfaceIndex].hitSurfaceSFX, 1f);
     }
 }

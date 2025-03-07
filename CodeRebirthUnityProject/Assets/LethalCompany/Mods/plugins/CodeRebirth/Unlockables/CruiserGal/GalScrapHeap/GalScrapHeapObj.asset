@@ -15,8 +15,8 @@ MonoBehaviour:
   itemId: 0
   itemName: CruiserGal Assembly Parts
   spawnPositionTypes: []
-  twoHanded: 0
-  twoHandedAnimation: 0
+  twoHanded: 1
+  twoHandedAnimation: 1
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 1
   weight: 1.6
@@ -36,7 +36,7 @@ MonoBehaviour:
   batteryUsage: 0
   automaticallySetUsingPower: 0
   itemIcon: {fileID: 21300000, guid: c84a2281995ee634782dbb4a7ee98de6, type: 3}
-  grabAnim: 
+  grabAnim: HoldForward
   useAnim: 
   pocketAnim: 
   throwAnim: 
@@ -56,8 +56,8 @@ MonoBehaviour:
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
   restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 10, y: 90, z: 0}
+  positionOffset: {x: 0.2, y: 0, z: 0.45}
   meshOffset: 0
   meshVariants: []
   materialVariants: []

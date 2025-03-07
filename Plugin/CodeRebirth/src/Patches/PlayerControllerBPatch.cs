@@ -101,7 +101,7 @@ static class PlayerControllerBPatch
 
     private static bool PlayerControllerB_IHittable_Hit(On.GameNetcodeStuff.PlayerControllerB.orig_IHittable_Hit orig, PlayerControllerB self, int force, Vector3 hitDirection, PlayerControllerB playerWhoHit, bool playHitSFX, int hitID)
     {
-        if (playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer is ScaryShrimp scaryShrimp)
+        if (playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer is ScaryShrimp scaryShrimp)
         {
             scaryShrimp.PastHitPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self));
             self.DamagePlayerFromOtherClientServerRpc(60, hitDirection, (int)playerWhoHit.playerClientId);

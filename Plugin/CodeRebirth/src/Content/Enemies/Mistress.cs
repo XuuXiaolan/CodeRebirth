@@ -371,7 +371,10 @@ public class Mistress : CodeRebirthEnemyAI
         PlayerControllerB playerToCripple = StartOfRound.Instance.allPlayerScripts[playerToCrippleIndex];
         if (cripple)
         {
-            creatureVoice.PlayOneShot(AttackSounds[mistressRandom.Next(AttackSounds.Length)]);
+            if (playerToCripple.IsOwner)
+            {
+                creatureVoice.PlayOneShot(AttackSounds[mistressRandom.Next(AttackSounds.Length)]);
+            }
             playerToCripple.inAnimationWithEnemy = this;
             inSpecialAnimationWithPlayer = playerToCripple;
             playerToCripple.inSpecialInteractAnimation = true;
