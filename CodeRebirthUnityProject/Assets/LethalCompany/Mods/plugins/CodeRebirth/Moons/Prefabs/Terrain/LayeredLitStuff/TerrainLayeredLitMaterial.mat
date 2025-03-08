@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DiffusionProfileReferences: []
   m_MaterialReferences:
   - {fileID: 2100000, guid: a7cf6168e99a5824caba63a0526d3b01, type: 2}
-  - {fileID: 2100000, guid: 6239bff0ff3af7243aef6677b1a71cdb, type: 2}
-  - {fileID: 2100000, guid: f24d375907476ec409d83feb9b675f9f, type: 2}
-  - {fileID: 2100000, guid: a7cf6168e99a5824caba63a0526d3b01, type: 2}
+  - {fileID: 2100000, guid: 447247895120eb848ba70a385a41b06a, type: 2}
+  - {fileID: 2100000, guid: c5b07d776224fc646bf4c3db2003e03a, type: 2}
+  - {fileID: 2100000, guid: 701d18350f1118a4c85e2b767a4e27b8, type: 2}
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -31,6 +31,12 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _LAYEREDLIT_4_LAYERS
+  - _MASKMAP1
+  - _MASKMAP2
+  - _MASKMAP3
+  - _NORMALMAP1
+  - _NORMALMAP2
+  - _NORMALMAP3
   - _NORMALMAP_TANGENT_SPACE0
   - _NORMALMAP_TANGENT_SPACE1
   - _NORMALMAP_TANGENT_SPACE2
@@ -65,16 +71,16 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap1:
-        m_Texture: {fileID: 2800000, guid: abc091bf75999024e9f91e94795303d9, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: d4bceb6c74370fa478cea4023ad30072, type: 3}
+        m_Scale: {x: 10, y: 10}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap2:
-        m_Texture: {fileID: 2800000, guid: 1019583c227f9b8459c7629878cea153, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 2db767f83f60f2b4fafcedd6bfc2736a, type: 3}
+        m_Scale: {x: 5, y: 5}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap3:
-        m_Texture: {fileID: 2800000, guid: 5b380a286f2c34b49947053e52dad655, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 1af6cbd1a9b576a458113a4d9814e01f, type: 3}
+        m_Scale: {x: 4, y: 4}
         m_Offset: {x: 0, y: 0}
     - _BentNormalMap:
         m_Texture: {fileID: 0}
@@ -193,15 +199,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap1:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dac60193ee9f0724b945a0769485beb0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap2:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 9e98941300136074c9047d64d61ae817, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap3:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 0fe8bef2e56d7e640be8a2a261e94c57, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -213,15 +219,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap1:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 7d04cef9838215c42a1a4e32c2e1608e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap2:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: e290323084f32884eaf22e01fadf79c0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap3:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 2bc3d2a4ebda6564286f9a115f34ce1a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMapOS:
@@ -468,9 +474,9 @@ Material:
     - _InheritBaseNormal3: 0
     - _InvTilingScale: 1
     - _InvTilingScale0: 1
-    - _InvTilingScale1: 1
-    - _InvTilingScale2: 1
-    - _InvTilingScale3: 1
+    - _InvTilingScale1: 0.1
+    - _InvTilingScale2: 0.2
+    - _InvTilingScale3: 0.25
     - _Ior: 1.5
     - _IridescenceMask: 1
     - _IridescenceThickness: 1
@@ -530,8 +536,8 @@ Material:
     - _Smoothness3: 0.5
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMax0: 1
-    - _SmoothnessRemapMax1: 1
-    - _SmoothnessRemapMax2: 1
+    - _SmoothnessRemapMax1: 0.21602196
+    - _SmoothnessRemapMax2: 0.6508045
     - _SmoothnessRemapMax3: 1
     - _SmoothnessRemapMin: 0
     - _SmoothnessRemapMin0: 0
