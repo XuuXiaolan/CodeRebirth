@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Content.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -81,6 +82,7 @@ public class SellingSally : NetworkBehaviour
             player.DamagePlayer(9999, true, true, CauseOfDeath.Blast, 0, false, endOfBarrelTransform.forward * 100f);
         }
         int scrapValueToMake = 0;
+        sallyCubes = sallyCubes.Where(x => x != null).Distinct().ToList();
         foreach (var sallyCube in sallyCubes)
         {
             scrapValueToMake += sallyCube.scrapValue; 

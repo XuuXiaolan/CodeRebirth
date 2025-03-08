@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: -79570451, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabbable: 0
+  grabbable: 1
   isHeld: 0
   isHeldByEnemy: 0
   deactivated: 0
@@ -203,7 +203,7 @@ MonoBehaviour:
   isBeingUsed: 0
   isInElevator: 0
   isInShipRoom: 0
-  isInFactory: 1
+  isInFactory: 0
   useCooldown: 0
   currentUseCooldown: 0
   itemProperties: {fileID: 11400000, guid: 7ef290f61e6df78438b01749d35e5ac4, type: 2}
@@ -271,7 +271,7 @@ MonoBehaviour:
   maxRange: 13
   minRange: 0
   requiresLineOfSight: 1
-  headerText: Bloody Shreds
+  headerText: Condensed Cube
   subText: 
   scrapValue: 0
   creatureScanID: -1

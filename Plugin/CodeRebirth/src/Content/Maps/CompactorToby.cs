@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -10,7 +11,6 @@ public class CompactorToby : NetworkBehaviour, IHittable
 {
     public Animator tobyAnimator = null!;
     public NetworkAnimator tobyNetworkAnimator = null!;
-    public Transform outputTransform = null!;
     public Transform[] spawnTransforms = null!;
 
     [HideInInspector] public bool compacting = false;
@@ -24,8 +24,14 @@ public class CompactorToby : NetworkBehaviour, IHittable
         if (compacting) return;
         if (!player.IsOwner) return;
         int valueOfItems = 0;
+        bool isFast = true;
+        List<GrabbableObject> grabbableObjects = new();
+        List<Vector3> vectorPositions = new();
         foreach (var grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
         {
+            if (grabbableObject.isHeld) continue;
+            grabbableObjects.Add(grabbableObject);
+            vectorPositions.Add(grabbableObject.transform.position);
             if (grabbableObject.itemProperties.itemName.Contains("Shredded Scraps"))
             {
                 valueOfItems += grabbableObject.scrapValue + 12;
@@ -36,28 +42,36 @@ public class CompactorToby : NetworkBehaviour, IHittable
                 valueOfItems += grabbableObject.scrapValue + 10;
                 continue;
             }
-
+            isFast = false;
             valueOfItems += grabbableObject.scrapValue - 5;
         }
-        TryCompactItemServerRpc(valueOfItems, false, false);
+        if (valueOfItems == 0) return;
+        foreach (GrabbableObject grabbableObject in grabbableObjects)
+        {
+            DespawnItemServerRpc(new NetworkBehaviourReference(grabbableObject));
+        }
+        Vector3 randomPosition = vectorPositions[UnityEngine.Random.Range(0, vectorPositions.Count)];
+        TryCompactItemServerRpc(randomPosition, valueOfItems, false, isFast);
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
+        Plugin.ExtendedLogging($"Hit");
         if (compacting) return false;
         TriggerAnimationServerRpc(HitAnimation);
         return true;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TryCompactItemServerRpc(int value, bool deadPlayer, bool fast)
+    public void TryCompactItemServerRpc(Vector3 randomPosition, int value, bool deadPlayer, bool fast)
     {
         StartOrStopCompactingClientRpc(true);
-        StartCoroutine(CompactProcess(value, deadPlayer, fast));
+        StartCoroutine(CompactProcess(randomPosition, value, deadPlayer, fast));
     }
 
-    private IEnumerator CompactProcess(int value, bool deadPlayer, bool fast)
+    private IEnumerator CompactProcess(Vector3 randomPosition, int value, bool deadPlayer, bool fast)
     {
+        Plugin.ExtendedLogging($"Value: {value} | Dead Player: {deadPlayer} | Fast: {fast}");
         tobyNetworkAnimator.SetTrigger(StartCompactAnimation);
         yield return new WaitForSeconds(20);
         float timeElapsed = 0f;
@@ -80,10 +94,11 @@ public class CompactorToby : NetworkBehaviour, IHittable
             if (Timethreshold <= 0f)
             {
                 Timethreshold = 2.4f;
+                Plugin.ExtendedLogging("Spawning Enemy");
                 int randomIndex = UnityEngine.Random.Range(0, spawnTransforms.Length);
                 EnemyType randomEnemy = RoundManager.Instance.currentLevel.OutsideEnemies[UnityEngine.Random.Range(0, RoundManager.Instance.currentLevel.OutsideEnemies.Count)].enemyType;
                 var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].position, -1, -1, randomEnemy);
-                if (((GameObject)NetObjRef).TryGetComponent(out EnemyAI enemyAI))
+                if (((GameObject)NetObjRef).TryGetComponent(out EnemyAI enemyAI) && enemyAI.agent != null)
                 {
                     enemyAI.agent.SetDestination(this.transform.position);
                 }
@@ -92,10 +107,10 @@ public class CompactorToby : NetworkBehaviour, IHittable
         StartOrStopCompactingClientRpc(false);
         if (deadPlayer)
         {
-            CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby.FlatDeadPlayerScrap, outputTransform.position, false, true, value);
+            CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby.FlatDeadPlayerScrap, randomPosition, false, true, value);
             yield break;
         }
-        CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby.SallyCubesScrap, outputTransform.position, false, true, value);
+        CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby.SallyCubesScrap, randomPosition, false, true, value);
     }
 
     [ServerRpc(RequireOwnership = false)]
