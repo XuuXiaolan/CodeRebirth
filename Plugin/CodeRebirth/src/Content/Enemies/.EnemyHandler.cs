@@ -129,6 +129,13 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public EnemyType CutieflyEnemyType { get; private set; } = null!;
     }
 
+    public class PandoraAssets(string bundleName) : AssetBundleLoader<PandoraAssets>(bundleName)
+    {
+        [LoadFromBundle("PandoraObj.asset")]
+        public EnemyType PandoraEnemyType { get; private set; } = null!;
+    }
+
+    public PandoraAssets Pandora { get; private set; } = null!;
     public MonarchAssets Monarch { get; private set; } = null!;
     public MistressAssets Mistress { get; private set; } = null!;
     public TransporterAssets Transporter { get; private set; } = null!;
@@ -142,6 +149,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     public EnemyHandler()
     {
 
+#if DEBUG
+        Pandora = new PandoraAssets("pandoraassets");
+        RegisterEnemyWithConfig("", Pandora.PandoraEnemyType, null, null, 3, 0);
+#endif
         if (Plugin.ModConfig.ConfigMonarchEnabled.Value)
         {
             Monarch = new MonarchAssets("monarchassets");
