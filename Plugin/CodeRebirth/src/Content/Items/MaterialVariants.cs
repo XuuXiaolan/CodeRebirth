@@ -54,7 +54,7 @@ public class MaterialVariants : NetworkBehaviour
     {
         foreach (var renderer in renderers)
         {
-            renderer.material = itemData.materialVariants[materialVariant];
+            renderer.SetMaterial(itemData.materialVariants[materialVariant]);
 
             if (!changeScanNodeText)
                 continue;

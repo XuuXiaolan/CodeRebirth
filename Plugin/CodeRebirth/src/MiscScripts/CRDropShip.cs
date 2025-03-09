@@ -5,6 +5,7 @@ using UnityEngine;
 namespace CodeRebirth.src.MiscScripts;
 public class CRDropShip : ItemDropship
 {
+    public Collider colliderEncompasingDropship = null!;
     // If it's items, then make it so it stays there for a set time forcibly, like 30 seconds, seems to work fine by itself.
     // If it's a vehicle, make it so the dropship stays for 30 seconds again.
     // Add a physics region onto the drop ship's floor.
@@ -34,6 +35,10 @@ public class CRDropShip : ItemDropship
     private IEnumerator DestroyUnmovedCruiser(VehicleController vehicle)
     {
         yield return new WaitUntil(() => shipTimer > 40f);
+        if (colliderEncompasingDropship.bounds.Contains(vehicle.transform.position))
+        {
+            vehicle.DestroyCar();
+        }
         Plugin.ExtendedLogging($"Doors closing, blowing up cruiser");
         // vehicle.
     }

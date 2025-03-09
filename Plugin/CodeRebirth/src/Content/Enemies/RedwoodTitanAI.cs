@@ -109,7 +109,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         redwoodRandom = new System.Random(StartOfRound.Instance.randomMapSeed + instanceNumbers);
         if (redwoodRandom.Next(0, 2) == 0)
         {
-            skinnedMeshRenderers[0].materials = AlbinoMaterials;
+            skinnedMeshRenderers[0].SetMaterials(AlbinoMaterials.ToList());
         }
 
         walkingSpeed = Plugin.ModConfig.ConfigRedwoodSpeed.Value;

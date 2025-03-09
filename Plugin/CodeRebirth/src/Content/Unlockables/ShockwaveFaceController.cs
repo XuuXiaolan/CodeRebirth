@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
 using static CodeRebirth.src.Content.Unlockables.ShockwaveGalAI;
@@ -41,7 +42,7 @@ public class ShockwaveFaceController : MonoBehaviour
         SetFaceState(ShockwaveGalAI.galEmotion, 100f);
         SetMode(currentMode);
 
-        originalMaterials = FaceRenderer.materials;
+        originalMaterials = FaceRenderer.sharedMaterials;
     }
 
     private void Update()
@@ -128,17 +129,17 @@ public class ShockwaveFaceController : MonoBehaviour
 
     private void ApplyEmissionColor(Color emissionColor)
     {
-        var materials = FaceRenderer.materials;
+        var materials = FaceRenderer.sharedMaterials;
         materials[0].SetColor("_EmissiveColor", emissionColor);
         materials[2].SetColor("_EmissiveColor", emissionColor);
-        FaceRenderer.materials = materials;
+        FaceRenderer.SetMaterials(materials.ToList());
     }
 
     private void ApplyFaceColor(Color faceColor)
     {
-        var materials = FaceSkinnedMeshRenderer.materials;
+        var materials = FaceSkinnedMeshRenderer.sharedMaterials;
         materials[0].SetColor("_EmissiveColor", faceColor);
-        FaceSkinnedMeshRenderer.materials = materials;
+        FaceSkinnedMeshRenderer.SetMaterials(materials.ToList());
     }
 
     public void ResetFace()
@@ -153,6 +154,6 @@ public class ShockwaveFaceController : MonoBehaviour
     {
         //reset
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)Emotion.Happy, 0f);
-        FaceRenderer.materials = originalMaterials;
+        FaceRenderer.SetMaterials(originalMaterials.ToList());
     }
 }

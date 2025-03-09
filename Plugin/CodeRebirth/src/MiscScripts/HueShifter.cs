@@ -9,13 +9,13 @@ public class HueShifter : MonoBehaviour
     public void Start()
     {
         rend = GetComponent<Renderer>();
-        rend.material.color = Color.HSVToRGB(.34f, .84f, .67f);
+        rend.GetMaterial().color = Color.HSVToRGB(.34f, .84f, .67f);
     }
 
     public void Update()
     {
         float h, s, v;
-        Color.RGBToHSV(rend.material.color, out h, out s, out v);
-        rend.material.color = Color.HSVToRGB(h + Time.deltaTime * .25f, s, v);
+        Color.RGBToHSV(rend.GetMaterial().color, out h, out s, out v);
+        rend.GetMaterial().color = Color.HSVToRGB(h + Time.deltaTime * .25f, s, v);
     }
 }
