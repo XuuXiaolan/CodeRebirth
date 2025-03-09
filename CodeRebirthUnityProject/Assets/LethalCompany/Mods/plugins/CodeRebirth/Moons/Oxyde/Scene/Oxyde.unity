@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.46723467, g: 0.2508867, b: 0.395521, a: 1}
+  m_IndirectSpecularColor: {r: 0.4664206, g: 0.25074178, b: 0.39491266, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4039,6 +4039,74 @@ Transform:
   - {fileID: 735861629}
   m_Father: {fileID: 995531750}
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!1001 &1054294377
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 31.41
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -21.39
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 107.9
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.28769675
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.2876968
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.645934
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.64593375
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 131.984
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e73a244d8e33195448df7390ea94caef,
+        type: 3}
+      propertyPath: m_Name
+      value: SallyStairs
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e73a244d8e33195448df7390ea94caef, type: 3}
 --- !u!1 &1062795962
 GameObject:
   m_ObjectHideFlags: 0
@@ -5069,7 +5137,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 100
     distanceFadeEnd: 500
-    textureOffset: {x: -0, y: -0, z: -0}
+    textureOffset: {x: 0, y: 0, z: 0}
     falloffMode: 0
     maskMode: 0
     materialMask: {fileID: 0}
@@ -8634,3 +8702,4 @@ SceneRoots:
   - {fileID: 656969839}
   - {fileID: 1991192134}
   - {fileID: 1026984391}
+  - {fileID: 1054294377}
