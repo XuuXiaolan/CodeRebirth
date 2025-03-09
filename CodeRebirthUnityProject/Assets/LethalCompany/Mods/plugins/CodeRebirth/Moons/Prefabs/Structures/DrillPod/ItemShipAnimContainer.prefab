@@ -1400,11 +1400,11 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 14.09, y: 2.05, z: 25.95}
+  m_Extents: {x: 14.09, y: 5.55, z: 25.95}
   m_MoveThreshold: 0.2
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: -0.54, y: 0, z: 5.14}
+  m_Center: {x: -0.54, y: 2.33, z: 5.14}
   m_TimeToStationary: 1
 --- !u!114 &1429441962258199311
 MonoBehaviour:
@@ -1457,6 +1457,7 @@ MonoBehaviour:
   deliverVehiclePoint: {fileID: 3070454002538386279}
   deliveringVehicle: 0
   untetheredVehicle: 0
+  colliderEncompasingDropship: {fileID: 0}
 --- !u!1 &4712706108259646944
 GameObject:
   m_ObjectHideFlags: 0
