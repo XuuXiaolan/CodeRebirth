@@ -40,8 +40,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8436331997230379202}
-  - component: {fileID: 1714856972875092491}
-  - component: {fileID: 3409361318504325766}
   m_Layer: 0
   m_Name: Ladder1.5x
   m_TagString: Untagged
@@ -57,65 +55,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3447727689309034702}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.000000021855701, y: 0.0000032484527, z: 5.4541336e-14, w: -1}
+  m_LocalRotation: {x: 0, y: 0.0000032769362, z: 0, w: 1}
   m_LocalPosition: {x: 139.3, y: -9.69, z: 93.57}
-  m_LocalScale: {x: 0.5804943, y: 0.5804943, z: 0.5804943}
+  m_LocalScale: {x: 0.58049434, y: 0.58049434, z: 0.58049434}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3671199350697066705}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -0.000002504479, y: 0.00037224527, z: -1.8857045e-12}
---- !u!33 &1714856972875092491
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3447727689309034702}
-  m_Mesh: {fileID: 4300000, guid: 1b022ca8f34f03d47b41fcbf4b2f558a, type: 2}
---- !u!23 &3409361318504325766
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3447727689309034702}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 257
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 567f64e4f50eb3941a3d9d36f0b2957a, type: 2}
-  - {fileID: 2100000, guid: 287180736057ac84fae6fe484625c6c4, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 67
-    subMeshCount: 2
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4736087451196831041
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +123,7 @@ Transform:
   m_GameObject: {fileID: 5222564347786434452}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000015454335, y: -0.70710576, z: 0.000000015454294, w: 0.7071079}
-  m_LocalPosition: {x: -0.101, y: 5.0643, z: -0.6995}
+  m_LocalPosition: {x: -0.01, y: 5.06, z: -0.75}
   m_LocalScale: {x: 1.5025468, y: 10.17645, z: 0.58394396}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -255,8 +202,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.99999976, y: 1.6019578, z: 0.594941}
-  m_Center: {x: -0.000000009383087, y: 0.300979, z: -0.20252964}
+  m_Size: {x: 0.9999998, y: 1.5233182, z: 0.5949411}
+  m_Center: {x: -0.000000024785361, y: 0.26165932, z: -0.20252961}
 --- !u!114 &4564907732772546575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,7 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 21300000, guid: 9bddd123b33a9534daa42bd143de6d9b, type: 2}
+  hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: 'Climb : [LMB]'
   disabledHoverIcon: {fileID: 0}
   disabledHoverTip: 
@@ -386,7 +333,7 @@ Transform:
   m_GameObject: {fileID: 8321143945298583512}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.02, y: 1.0007, z: -2.45}
+  m_LocalPosition: {x: -0.437, y: 1.6987, z: -1.85}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
