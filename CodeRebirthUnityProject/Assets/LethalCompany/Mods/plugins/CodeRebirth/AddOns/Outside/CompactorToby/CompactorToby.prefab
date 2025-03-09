@@ -546,7 +546,6 @@ GameObject:
   - component: {fileID: 3190174132836211068}
   - component: {fileID: 3292456448170981906}
   - component: {fileID: 385210160270769975}
-  - component: {fileID: 3055505343396927199}
   m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
@@ -619,27 +618,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3055505343396927199
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7232733107488307049}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7481299643175539443
 GameObject:
   m_ObjectHideFlags: 0
@@ -745,17 +723,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: b9143a8c790b0ba43a1c1bc9afcceae6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -158.49869
+      value: -57.51068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b9143a8c790b0ba43a1c1bc9afcceae6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -41.46854
+      value: -79.95244
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b9143a8c790b0ba43a1c1bc9afcceae6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 44.07967
+      value: 91.58807
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b9143a8c790b0ba43a1c1bc9afcceae6,
         type: 3}
@@ -1061,9 +1039,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tobyAnimator: {fileID: 6894166044123209358}
   tobyNetworkAnimator: {fileID: 2062970240473676086}
-  outputTransform: {fileID: 1969017205604055173}
   spawnTransforms:
   - {fileID: 1969017205604055173}
+  compacting: 0
 --- !u!114 &8648203605642157954
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,7 +21,6 @@ public class SnailCatAI : CodeRebirthEnemyAI
 	public AudioClip enemyDetectSound = null!;
 	public AudioClip[] wiwiwiiiSound = [];
 	public AudioClip[] footStepSounds = [];
-	public Material[] variantMaterials = [];
 
 	private string currentName = "";
     private bool holdingBaby = false;
@@ -44,6 +43,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 
     public override void Start()
     {
+		hasVariants = true;
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
 		random = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count);
@@ -52,16 +52,6 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		currentName = randomName;
 		isWiWiWiii = currentName == "Wiwiwii";
         if (IsServer) smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
-
-		ApplyMaterialVariant();
-    }
-
-    private void ApplyMaterialVariant()
-    {
-        Material variantMaterial = variantMaterials[random.Next(variantMaterials.Length)];
-        Material[] currentMaterials = skinnedMeshRenderers[0].sharedMaterials;
-        currentMaterials[0] = variantMaterial;
-        skinnedMeshRenderers[0].SetMaterials(currentMaterials.ToList());
     }
 
     public override void Update()

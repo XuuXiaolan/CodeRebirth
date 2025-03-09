@@ -1842,7 +1842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 21300000, guid: f371be0ed9ea23b42826d169c3e7d081, type: 2}
+  hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
   hoverTip: 'Set Item for Sale: [LMB]'
   disabledHoverIcon: {fileID: 0}
   disabledHoverTip: '[Nothing to store]'
@@ -1941,57 +1941,82 @@ PrefabInstance:
     - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 8408635923917504859, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -2056,7 +2081,12 @@ PrefabInstance:
     - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9221869549652106209, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -2433,57 +2463,82 @@ PrefabInstance:
     - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 8408635923917504859, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -2553,7 +2608,12 @@ PrefabInstance:
     - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9221869549652106209, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -3699,57 +3759,82 @@ PrefabInstance:
     - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 8408635923917504859, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -3819,7 +3904,12 @@ PrefabInstance:
     - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9221869549652106209, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -4811,57 +4901,82 @@ PrefabInstance:
     - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 966980624641946642, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 5576398566180399179, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 72
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e00
-      value: 1.3763819
+      value: 3.732051
       objectReference: {fileID: 0}
     - target: {fileID: 6281120943788032651, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_Shadows.m_CullingMatrixOverride.e11
-      value: 1.1469272
+      value: 3.109886
       objectReference: {fileID: 0}
     - target: {fileID: 8408635923917504859, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -4931,7 +5046,12 @@ PrefabInstance:
     - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
       propertyPath: m_VolumetricDimmer
-      value: 0.05
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_CustomSpotLightShadowCone
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9221869549652106209, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -5081,6 +5201,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: e9c8a995ff29cd34f9d4e98d646d9cb6,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2691c346fe48b6e4790c6f93d770976e, type: 2}
     - target: {fileID: 919132149155446097, guid: e9c8a995ff29cd34f9d4e98d646d9cb6,
         type: 3}
       propertyPath: m_Name

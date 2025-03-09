@@ -52,7 +52,7 @@ static class EnemyAIPatch
     private static void EnemyAI_Update(On.EnemyAI.orig_Update orig, EnemyAI self)
     {
         orig(self);
-        if (slowedEnemies.ContainsKey(self) && slowedEnemies[self] != null)
+        if (slowedEnemies.TryGetValue(self, out _))
         {
             self.agent.velocity = Vector3.zero;
         }

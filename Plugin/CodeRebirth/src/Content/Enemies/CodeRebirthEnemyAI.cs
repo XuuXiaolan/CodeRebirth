@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using System.Linq;
 using CodeRebirth.src.MiscScripts.PathFinding;
 using Unity.Netcode.Components;
+using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
@@ -16,8 +17,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 {
     [HideInInspector] public EnemyAI? targetEnemy;
 
+    public bool hasVariants = false;
     public NetworkAnimator creatureNetworkAnimator = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;
+
+    private static int ShiftHash = Shader.PropertyToID("_Shift");
 
     public override void Start()
     {
@@ -26,6 +30,17 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         smartAgentNavigator.SetAllValues(isOutside);
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
         GrabEnemyRarity(enemyType.enemyName);
+        if (hasVariants)
+        {
+            ApplyVariants();
+        }
+    }
+
+    private void ApplyVariants()
+    {
+        System.Random random = new System.Random(RoundManager.Instance.SpawnedEnemies.Count + StartOfRound.Instance.randomMapSeed);
+        float number = random.NextFloat(0f, 1f);
+        skinnedMeshRenderers[0].GetMaterial().SetFloat(ShiftHash, number);
     }
 
     public void GrabEnemyRarity(string enemyName)
