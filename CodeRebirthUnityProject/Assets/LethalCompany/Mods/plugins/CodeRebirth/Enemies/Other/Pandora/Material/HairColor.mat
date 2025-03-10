@@ -24,7 +24,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HairColor
-  m_Shader: {fileID: 4800000, guid: efa77a80ca0344749b4f19fdd5891cbe, type: 3}
+  m_Shader: {fileID: 4800000, guid: df12117ecd77c31469c224178886498e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -573,7 +573,7 @@ Material:
     - _Ior: 1.5
     - _IridescenceMask: 1
     - _IridescenceThickness: 1
-    - _LightMaxLimit: 1
+    - _LightMaxLimit: 0.68
     - _LightMinLimit: 0.05
     - _LinkDetailsWithBase: 1
     - _Main2ndDissolveNoiseStrength: 0.1
@@ -682,7 +682,7 @@ Material:
     - _OutlineVectorScale: 1
     - _OutlineVectorUVMode: 0
     - _OutlineVertexR2Width: 0
-    - _OutlineWidth: 1
+    - _OutlineWidth: 0.02
     - _OutlineZBias: 0
     - _OutlineZClip: 1
     - _OutlineZTest: 2
@@ -732,7 +732,7 @@ Material:
     - _Shadow3rdBorder: 0.25
     - _Shadow3rdNormalStrength: 1
     - _Shadow3rdReceive: 0
-    - _ShadowBlur: 0.02
+    - _ShadowBlur: 0.147
     - _ShadowBlurMaskLOD: 0
     - _ShadowBorder: 0.75
     - _ShadowBorderMaskLOD: 0
@@ -746,7 +746,7 @@ Material:
     - _ShadowNormalStrength: 1
     - _ShadowPostAO: 0
     - _ShadowReceive: 0
-    - _ShadowStrength: 0.5
+    - _ShadowStrength: 0.526
     - _ShadowStrengthMaskLOD: 0
     - _ShiftBackfaceUV: 0
     - _Smoothness: 1
@@ -842,7 +842,7 @@ Material:
     - _UseParallax: 0
     - _UseReflection: 0
     - _UseRim: 1
-    - _UseRimShade: 0
+    - _UseRimShade: 1
     - _UseShadow: 1
     - _UseShadowThreshold: 0
     - _VertexLightStrength: 0
