@@ -467,7 +467,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3286358984923104516}
   - component: {fileID: 1069879988309864569}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: DoorCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -835,7 +835,7 @@ GameObject:
   - component: {fileID: 8396380368049172447}
   - component: {fileID: 7356471793957969758}
   - component: {fileID: 1490198405607417424}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TankColliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -989,6 +989,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 896094707273176075}
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!1 &2126850921842246968
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1565623457649354884}
+  - component: {fileID: 6931433144635923395}
+  m_Layer: 0
+  m_Name: QuicksandProjector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1565623457649354884
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126850921842246968}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -2.9, y: -0.18971, z: -3.86}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 797443623739138821}
+  m_LocalEulerAnglesHint: {x: 90, y: -0, z: 0}
+--- !u!114 &6931433144635923395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126850921842246968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 65fb6de8e313b654d85b099890c89a24, type: 2}
+  m_DrawDistance: 44
+  m_FadeScale: 0.789
+  m_StartAngleFade: 0
+  m_EndAngleFade: 109.526276
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_AffectsTransparency: 0
+  m_DecalLayerMask: 4
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 28.9, y: 40.2, z: 14}
+  m_FadeFactor: 0.973
+  m_Version: 2
 --- !u!1 &2166290286140639813
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,6 +1402,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 797443623739138821}
   - {fileID: 337133359755805795}
   - {fileID: 4032920747946227457}
   - {fileID: 469118487490516872}
@@ -1400,7 +1459,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 14.09, y: 5.55, z: 25.95}
+  m_Extents: {x: 14.09, y: 5.55, z: 20.4}
   m_MoveThreshold: 0.2
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -1458,6 +1517,39 @@ MonoBehaviour:
   deliveringVehicle: 0
   untetheredVehicle: 0
   colliderEncompasingDropship: {fileID: 0}
+--- !u!1 &4710120134802729133
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 797443623739138821}
+  m_Layer: 0
+  m_Name: QuicksandContainer (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &797443623739138821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4710120134802729133}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.23, y: 0, z: 9.31}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1565623457649354884}
+  - {fileID: 6583066856817943110}
+  m_Father: {fileID: 5424310183818487711}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4712706108259646944
 GameObject:
   m_ObjectHideFlags: 0
@@ -1574,7 +1666,7 @@ MonoBehaviour:
   m_VolumetricDimmer: 1
   m_LightUnit: 0
   m_FadeDistance: 10000
-  m_VolumetricFadeDistance: 100
+  m_VolumetricFadeDistance: 40
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
@@ -1823,7 +1915,7 @@ MonoBehaviour:
   m_VolumetricDimmer: 1
   m_LightUnit: 0
   m_FadeDistance: 10000
-  m_VolumetricFadeDistance: 100
+  m_VolumetricFadeDistance: 40
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
@@ -1924,6 +2016,78 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
+--- !u!1 &5056238825419603813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6583066856817943110}
+  - component: {fileID: 6990443951677708206}
+  - component: {fileID: 3988765591091372116}
+  m_Layer: 13
+  m_Name: Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6583066856817943110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5056238825419603813}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.18971, z: 0}
+  m_LocalScale: {x: 1, y: 1.7421, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 797443623739138821}
+  m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!65 &6990443951677708206
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5056238825419603813}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 28.690163, y: 9.047397, z: 40.99254}
+  m_Center: {x: -2.6678734, y: -1.6041709, z: -3.9093819}
+--- !u!114 &3988765591091372116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5056238825419603813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8ec375840c30a0e501d18e3ba05fdb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isWater: 0
+  isInsideWater: 0
+  audioClipIndex: 0
+  sinkingLocalPlayer: 0
+  movementHinderance: 1.6
+  sinkingSpeedMultiplier: 0.21
 --- !u!1 &5207326714426207204
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,7 +2204,7 @@ MonoBehaviour:
   m_VolumetricDimmer: 1
   m_LightUnit: 0
   m_FadeDistance: 10000
-  m_VolumetricFadeDistance: 100
+  m_VolumetricFadeDistance: 40
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
@@ -3186,7 +3350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5936719320554896405}
   - component: {fileID: 309956236499559884}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: DoorCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3481,7 +3645,7 @@ MonoBehaviour:
   m_VolumetricDimmer: 1
   m_LightUnit: 0
   m_FadeDistance: 10000
-  m_VolumetricFadeDistance: 100
+  m_VolumetricFadeDistance: 40
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
@@ -3719,6 +3883,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DrillPodCollider
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 39c02b14695925a48b1be9b08684e5c4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -7511558181221131132, guid: 39c02b14695925a48b1be9b08684e5c4, type: 3}

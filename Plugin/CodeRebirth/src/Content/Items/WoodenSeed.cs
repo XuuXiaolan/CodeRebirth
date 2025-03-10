@@ -1,4 +1,3 @@
-using CodeRebirth.src.Util.Extensions;
 using static CodeRebirth.src.Content.Unlockables.PlantPot;
 
 namespace CodeRebirth.src.Content.Items;

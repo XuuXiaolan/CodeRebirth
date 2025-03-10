@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class ShipUnlocker : GrabbableObject
 {
-    public int creditValue = 0;
+    public AudioSource audioPlayer = null!;
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
@@ -21,13 +22,21 @@ public class ShipUnlocker : GrabbableObject
         if (unlockableItems.Count <= 0) return;
         UnlockableItem randomItem = unlockableItems[Random.Range(0, unlockableItems.Count)];
         StartOfRound.Instance.BuyShipUnlockableServerRpc(StartOfRound.Instance.unlockablesList.unlockables.IndexOf(randomItem), terminal.groupCredits);
+        PlaySoundClientRpc();
         StartCoroutine(WaitForEndOfFrame());
     }
 
     private IEnumerator WaitForEndOfFrame()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitUntil(() => !audioPlayer.isPlaying);
         playerHeldBy.inSpecialInteractAnimation = false;
         playerHeldBy.DespawnHeldObject();
+    }
+
+
+    [ClientRpc]
+    public void PlaySoundClientRpc()
+    {
+        audioPlayer.Play();
     }
 }
