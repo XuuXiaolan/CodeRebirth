@@ -4,11 +4,15 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class Detonator : GrabbableObject
 {
+    public AudioSource detonatorSource = null!;
+    public AudioClip useSound = null!;
+    public AudioClip leverPressed = null!;
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
+        detonatorSource.PlayOneShot(useSound);
         StartCoroutine(DoBlowAnimation());
     }
 
@@ -22,6 +26,7 @@ public class Detonator : GrabbableObject
             yield return null;
         }
 
+        detonatorSource.PlayOneShot(leverPressed);
         foreach (var crate in NitroCrate.nitroCrates.ToArray())
         {
             if (IsServer) crate.RequestServerToDespawnServerRpc();

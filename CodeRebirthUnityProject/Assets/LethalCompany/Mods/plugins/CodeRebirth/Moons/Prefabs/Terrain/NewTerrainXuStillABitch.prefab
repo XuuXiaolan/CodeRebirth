@@ -299,6 +299,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 176393256367939734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1342618186907339724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1268918464612417334}
+  - component: {fileID: 4725952091515068086}
+  - component: {fileID: 2989466333901548636}
+  m_Layer: 8
+  m_Name: Modifier
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1268918464612417334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342618186907339724}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.076, y: 0.113, z: 0.465}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7988150283405059669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4725952091515068086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342618186907339724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!208 &2989466333901548636
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342618186907339724}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.095, y: 1.1, z: 0.315}
+  m_MoveThreshold: 0.2
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 1
 --- !u!1 &1367942567921650234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1461,6 +1529,109 @@ OffMeshLink:
   m_BiDirectional: 1
   m_Activated: 1
   m_AutoUpdatePositions: 0
+--- !u!1 &4759968403580597455
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3662603411385867290}
+  - component: {fileID: 901603514743019917}
+  - component: {fileID: 4266296423511482254}
+  m_Layer: 8
+  m_Name: Modifier (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3662603411385867290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4759968403580597455}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0.033, y: 1.0863, z: 0.465}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7988150283405059669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!114 &901603514743019917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4759968403580597455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!208 &4266296423511482254
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4759968403580597455}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.095, y: 1.1, z: 0.315}
+  m_MoveThreshold: 0.2
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 1
+--- !u!1 &4807815625004490262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7988150283405059669}
+  m_Layer: 8
+  m_Name: NavmeshModifiers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7988150283405059669
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4807815625004490262}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1268918464612417334}
+  - {fileID: 7360594249702135788}
+  - {fileID: 8040049521069176547}
+  - {fileID: 3662603411385867290}
+  m_Father: {fileID: 2963118438586573017}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4833778117052655519
 GameObject:
   m_ObjectHideFlags: 0
@@ -1845,6 +2016,74 @@ Transform:
   - {fileID: 1718105589603970711}
   m_Father: {fileID: 7846028621891715652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6550521208161973520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7360594249702135788}
+  - component: {fileID: 5671773117670556650}
+  - component: {fileID: 8288400041871248983}
+  m_Layer: 8
+  m_Name: Modifier (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7360594249702135788
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6550521208161973520}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.028, y: -1.075, z: 0.465}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7988150283405059669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!114 &5671773117670556650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6550521208161973520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!208 &8288400041871248983
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6550521208161973520}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.095, y: 1.1, z: 0.315}
+  m_MoveThreshold: 0.2
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 1
 --- !u!1 &6595782932952077109
 GameObject:
   m_ObjectHideFlags: 0
@@ -2168,6 +2407,74 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectType: 15
+--- !u!1 &7180057957351800166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8040049521069176547}
+  - component: {fileID: 4109359136652962455}
+  - component: {fileID: 4225693456024552406}
+  m_Layer: 8
+  m_Name: Modifier (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8040049521069176547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7180057957351800166}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.074, y: 0.01, z: 0.465}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7988150283405059669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4109359136652962455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7180057957351800166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!208 &4225693456024552406
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7180057957351800166}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.095, y: 1.1, z: 0.315}
+  m_MoveThreshold: 0.2
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 1
 --- !u!1 &7413231395944038457
 GameObject:
   m_ObjectHideFlags: 0
@@ -2695,6 +3002,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
       propertyPath: m_CustomSpotLightShadowCone
       value: 3
       objectReference: {fileID: 0}
@@ -2737,6 +3049,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VolumetricDimmer
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -2847,6 +3164,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VolumetricDimmer
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -3972,6 +4294,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
       propertyPath: m_CustomSpotLightShadowCone
       value: 3
       objectReference: {fileID: 0}
@@ -4014,6 +4341,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VolumetricDimmer
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -4129,6 +4461,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VolumetricDimmer
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -6666,6 +7003,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2316896188719869755}
+    - targetCorrespondingSourceObject: {fileID: 6661494326866609635, guid: a80308eb2adefe149ad85a16a562dcb2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7776553513543120369}
+    - targetCorrespondingSourceObject: {fileID: 6661494326866609635, guid: a80308eb2adefe149ad85a16a562dcb2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5160299092655021278}
   m_SourcePrefab: {fileID: 100100000, guid: a80308eb2adefe149ad85a16a562dcb2, type: 3}
 --- !u!4 &770174991897601833 stripped
 Transform:
@@ -6691,6 +7036,47 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4503049440912606069}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7065138809040799382 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6661494326866609635, guid: a80308eb2adefe149ad85a16a562dcb2,
+    type: 3}
+  m_PrefabInstance: {fileID: 4503049440912606069}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &7776553513543120369
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7065138809040799382}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.735, y: 2.505, z: 4}
+  m_MoveThreshold: 0.2
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: -3.04, z: 0}
+  m_TimeToStationary: 1
+--- !u!114 &5160299092655021278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7065138809040799382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!4 &7445587591368938588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6424949935749469993, guid: a80308eb2adefe149ad85a16a562dcb2,
@@ -7423,6 +7809,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7846028621891715652}
+    - targetCorrespondingSourceObject: {fileID: -1538112130698044685, guid: a9cc2b7f77409ee498afcb7d17055422,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7988150283405059669}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5148817236446094103, guid: a9cc2b7f77409ee498afcb7d17055422,
         type: 3}
@@ -7664,6 +8054,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
       propertyPath: m_CustomSpotLightShadowCone
       value: 3
       objectReference: {fileID: 0}
@@ -7706,6 +8101,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VolumetricDimmer
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -7821,6 +8221,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VolumetricDimmer
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -8405,11 +8810,11 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 3.365, y: 17.75, z: 2.33}
+  m_Extents: {x: 3.365, y: 17.75, z: 3.035}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0.52, y: -1.7, z: 0}
+  m_Center: {x: 0.52, y: -1.7, z: -1.24}
   m_TimeToStationary: 0.5
 --- !u!4 &1269923613122228750 stripped
 Transform:
@@ -10355,6 +10760,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 709464654985221543, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
       propertyPath: m_CustomSpotLightShadowCone
       value: 3
       objectReference: {fileID: 0}
@@ -10397,6 +10807,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VolumetricDimmer
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 4522104252606820240, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
@@ -10512,6 +10927,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VolumetricDimmer
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
+        type: 3}
+      propertyPath: m_VolumetricFadeDistance
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 9065877594233989492, guid: 1d50a6b6706683d44bd7346326cfca89,
         type: 3}
