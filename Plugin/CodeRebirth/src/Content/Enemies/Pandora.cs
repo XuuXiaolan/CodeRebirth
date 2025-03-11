@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
@@ -10,10 +11,10 @@ public class Pandora : CodeRebirthEnemyAI
     // Fields for fixation escape counting
     private int fixationAttemptCount = 0;
     private const int maxFixationAttempts = 3; // After 3 escapes, Pandora loses interest
-
     private float currentTimerCooldown => GetTimerCooldown();
     private float currentTeleportTimer = 0f;
     private float showdownTimer = 0f;
+    private bool cantLosePlayer = false;
 
     public enum State
     {
@@ -43,24 +44,15 @@ public class Pandora : CodeRebirthEnemyAI
 
         if (currentBehaviourStateIndex == (int)State.ShowdownWithPlayer && targetPlayer != null)
         {
-            // Freeze movement on both sides while Pandora and the player establish eye contact.
-            targetPlayer.inSpecialInteractAnimation = true;
-            targetPlayer.shockingTarget = this.transform;
-            targetPlayer.inShockingMinigame = true;
-
-            // *** Animation placeholder ***
-            // Trigger "Raise Arms" animation and glowing radiance here.
-
             showdownTimer += Time.deltaTime;
             if (targetPlayer == GameNetworkManager.Instance.localPlayerController)
             {
                 CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(showdownTimer / 6f);
             }
-
-            float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (this.transform.position - targetPlayer.gameplayCamera.transform.position).normalized);
+            Plugin.ExtendedLogging($"Showdown timer: {showdownTimer}");
 
             // If the player breaks eye contact (escapes) after at least 1.5 seconds…
-            if (dot <= 0.45f && showdownTimer >= 1.5f)
+            if (showdownTimer >= 1.5f && !PlayerLookingAtEnemy(false))
             {
                 fixationAttemptCount++;
                 if (fixationAttemptCount >= maxFixationAttempts)
@@ -69,15 +61,17 @@ public class Pandora : CodeRebirthEnemyAI
                     fixationAttemptCount = 0;
                     targetPlayer = null;
                     showdownTimer = 0f;
-                    if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
+                    CodeRebirthUtils.Instance.CloseEyeVolume.weight = 0f;
+                    TemporarilyCripplePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false);
                     SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
+                    if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
                     return;
                 }
                 else
                 {
                     // Reset the timer and try to re-fixate by teleporting closer.
                     showdownTimer = 0f;
-                    if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
+                    if (IsServer) StartCoroutine(TeleportNearbyTargetPlayer(targetPlayer));
                     return;
                 }
             }
@@ -87,9 +81,9 @@ public class Pandora : CodeRebirthEnemyAI
             {
                 fixationAttemptCount = 0;
                 showdownTimer = 0f;
-                if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
                 SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
-                if (targetPlayer == GameNetworkManager.Instance.localPlayerController)
+                if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
+                if (targetPlayer.IsOwner)
                 {
                     CodeRebirthUtils.Instance.CloseEyeVolume.weight = 0f;
                     targetPlayer.KillPlayer(targetPlayer.velocityLastFrame, true, CauseOfDeath.Unknown, 0, default);
@@ -122,39 +116,38 @@ public class Pandora : CodeRebirthEnemyAI
     private void DoLookingForPlayer()
     {
         PlayerControllerB? closestPlayer = null;
-        float closestDistance = float.MaxValue;
+        float closestDistance = 30f;
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled || !player.isInsideFactory) 
-                continue;
+            if (player.isPlayerDead || !player.isPlayerControlled || !player.isInsideFactory) continue;
             float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
             if (distanceToPlayer < closestDistance)
-                closestPlayer = player;
-            
-            // If within fixation range (15 meters) try to check for direct gaze.
-            if (distanceToPlayer <= 15f)
             {
-                // Use a raycast to check line-of-sight.
-                if (Physics.Raycast(player.gameplayCamera.transform.position, (transform.position - player.gameplayCamera.transform.position).normalized, out RaycastHit hit, 20, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
-                {
-                    // If hit something, assume the player isn’t directly looking at Pandora.
-                    currentTeleportTimer = currentTimerCooldown;
-                    continue;
-                }
-
-                // Direct line-of-sight within 15m triggers fixation.
-                SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
-                agent.velocity = Vector3.zero;
-                fixationAttemptCount = 0; // Reset count for new target.
-                SwitchToBehaviourServerRpc((int)State.ShowdownWithPlayer);
-                return;
+                closestPlayer = player;
+                closestDistance = distanceToPlayer;
+                Plugin.ExtendedLogging($"Closest player is {player.playerUsername} at {distanceToPlayer} meters.");
             }
         }
 
         if (closestPlayer != null)
         {
+            // If within fixation range (15 meters) try to check for direct gaze.
+            if ((closestDistance <= 15f && PlayerLookingAtEnemy(false)) || closestDistance <= 2.5f)
+            {
+                // Direct line-of-sight within 15m triggers fixation.
+                int playerIndex = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer);
+                SetTargetServerRpc(playerIndex);
+                agent.velocity = Vector3.zero;
+                fixationAttemptCount = 0; // Reset count for new target.
+                // *** Animation placeholder ***
+                // Trigger "Raise Arms" animation and glowing radiance here.
+                TemporarilyCripplePlayerServerRpc(playerIndex, true);
+                SwitchToBehaviourServerRpc((int)State.ShowdownWithPlayer);
+                Plugin.ExtendedLogging($"Fixated on {closestPlayer.playerUsername}!");
+                return;
+            }
             smartAgentNavigator.StopSearchRoutine();
-            DoMovingToClosestPlayer(closestPlayer);
+            smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position); 
         }
 
         // Countdown for teleport if no player is within detection range.
@@ -208,9 +201,20 @@ public class Pandora : CodeRebirthEnemyAI
         }
     }
 
-    private void DoMovingToClosestPlayer(PlayerControllerB player)
+    private bool PlayerLookingAtEnemy(bool triggerWhilstLookingAtGeneralDirection)
     {
-        smartAgentNavigator.DoPathingToDestination(player.transform.position);
+        if (cantLosePlayer) return true;
+        float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (eye.position - targetPlayer.gameplayCamera.transform.position).normalized);
+        Plugin.ExtendedLogging($"Vector Dot: {dot}");
+        if (dot <= 0.45f) return false;
+        if (triggerWhilstLookingAtGeneralDirection) return true;
+        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.position, eye.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore))
+        {
+            Plugin.ExtendedLogging($"Linecast hit {hit.collider.name}");
+            return false;
+        }
+        Plugin.ExtendedLogging($"Linecast did not hit anything");
+        return true;
     }
 
     private IEnumerator TeleportAndResetSearchRoutine()
@@ -244,48 +248,77 @@ public class Pandora : CodeRebirthEnemyAI
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
     }
 
-    // AoE effect: During a chase, if any non-target player comes too close,
-    // teleport them away (and optionally play a "Have a nice journey" audio).
-    private void OnTriggerEnter(Collider other)
+    private IEnumerator TeleportNearbyTargetPlayer(PlayerControllerB? targettedPlayer)
     {
-        if (currentBehaviourStateIndex == (int)State.ShowdownWithPlayer)
+        if (targettedPlayer == null)
         {
-            if (other.TryGetComponent<PlayerControllerB>(out var player))
+            Plugin.Logger.LogError($"TeleportNearbyTargetPlayer: targetPlayer is null");
+            yield break;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void TemporarilyCripplePlayerServerRpc(int playerToCripple, bool cripple)
+    {
+        TemporarilyCripplePlayerClientRpc(playerToCripple, cripple);
+    }
+
+    [ClientRpc]
+    private void TemporarilyCripplePlayerClientRpc(int playerToCrippleIndex, bool cripple)
+    {
+        PlayerControllerB playerToCripple = StartOfRound.Instance.allPlayerScripts[playerToCrippleIndex];
+        if (cripple)
+        {
+            /*if (playerToCripple.IsOwner)
             {
-                // Only affect players that are not the current target.
-                if (targetPlayer == null || player != targetPlayer)
-                {
-                    TeleportPlayerAway(player);
-                }
-            }
+                creatureVoice.PlayOneShot(AttackSounds[mistressRandom.Next(AttackSounds.Length)]);
+            }*/
+            playerToCripple.inAnimationWithEnemy = this;
+            inSpecialAnimationWithPlayer = playerToCripple;
+            playerToCripple.inSpecialInteractAnimation = true;
+            playerToCripple.shockingTarget = eye;
+            playerToCripple.inShockingMinigame = true;
+            playerToCripple.movementSpeed /= 3;
+        }
+        else
+        {
+            /*if (playerToCripple.IsOwner)
+            {
+                creatureVoice.PlayOneShot(LoseSightSound, 0.75f);
+            }*/
+            skinnedMeshRenderers[0].enabled = false;
+            playerToCripple.inAnimationWithEnemy = null;
+            inSpecialAnimationWithPlayer = null;
+            playerToCripple.inSpecialInteractAnimation = false;
+            playerToCripple.shockingTarget = null;
+            playerToCripple.inShockingMinigame = false;
+            playerToCripple.movementSpeed *= 3;
+            StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
+        }
+        playerToCripple.disableLookInput = cripple;
+    }
+
+    private IEnumerator ResetVolumeWeightTo0(PlayerControllerB targetPlayer)
+    {
+        if (targetPlayer != GameNetworkManager.Instance.localPlayerController) yield break;
+        while (CodeRebirthUtils.Instance.CloseEyeVolume.weight > 0f)
+        {
+            yield return null;
+            CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 0f, Time.deltaTime);
         }
     }
 
     private void TeleportPlayerAway(PlayerControllerB player)
     {
+        if (!player.IsOwner) return;
         // Teleport the player to a designated location outside the main entrance.
-        /*Vector3 destination = RoundManager.Instance.GetMainEntrancePosition();
+        Vector3 destination = RoundManager.Instance.outsideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
         // With a small chance, teleport the player onto the ship instead.
         if (UnityEngine.Random.value < 0.05f)
         {
-            destination = RoundManager.Instance.GetRandomShipPosition();
+            destination = StartOfRound.Instance.shipDoorNode.position;
         }
-        player.Teleport(destination);*/
+        player.transform.position = destination;
         // *** Audio placeholder: Play "Have a nice journey" and optionally show subtitle with player's name.
-    }
-
-    // Optional: If Pandora collides directly with a player (e.g., within 1-2 meters),
-    // immediately trigger fixation.
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (currentBehaviourStateIndex == (int)State.ShowdownWithPlayer) return;
-        if (collision.gameObject.TryGetComponent(out PlayerControllerB player) && player.IsOwner)
-        {
-            if (Vector3.Distance(transform.position, player.transform.position) > 2f) return;
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
-            agent.velocity = Vector3.zero;
-            fixationAttemptCount = 0;
-            SwitchToBehaviourServerRpc((int)State.ShowdownWithPlayer);
-        }
     }
 }

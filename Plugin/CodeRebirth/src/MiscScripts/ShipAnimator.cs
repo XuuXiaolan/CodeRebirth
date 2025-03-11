@@ -1,5 +1,6 @@
 
 using System.Collections;
+using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util;
 using UnityEngine;
 
@@ -10,8 +11,8 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
     [HideInInspector] public AnimationClip shipNormalLeaveAnimation = null!;
     private Animator hangarShipAnimator = null!;
     [HideInInspector] public AnimationClip originalShipLandClip = null!;
-    [HideInInspector] public AnimationClip originalShipLeaveClip = null!; // todo: set a thing so that when merchant is firing it crashes the ship, turns on a darkening volume, shakes the camera, explodes the ship
-    private RuntimeAnimatorController animatorController = null!;
+    [HideInInspector] public AnimationClip originalShipLeaveClip = null!;
+    private RuntimeAnimatorController animatorController = null!; // turn off animator after finishing
     [HideInInspector] public AnimatorOverrideController overrideController = null!;
 
     private void Start()
@@ -29,7 +30,7 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
 
             if (animClip.name == "ShipLeave")
             {
-                originalShipLeaveClip = animClip;
+                originalShipLeaveClip = animClip; // the new ship leave needs to do it from when the ship is on the ground, crane drops it at 10pm by default
                 continue;
             }
         }
@@ -42,6 +43,12 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
         {
             yield return new WaitUntil(() => RoundManager.Instance.currentLevel.sceneName == "Oxyde" && !StartOfRound.Instance.inShipPhase);
             ReplaceAnimationClip();
+            yield return new WaitUntil(() => StartOfRound.Instance.shipHasLanded);
+            StartOfRound.Instance.shipAnimator.enabled = false;
+            // turn off animator
+            yield return new WaitUntil(() => StartOfRound.Instance.shipIsLeaving);
+            StartOfRound.Instance.shipAnimator.enabled = true;
+            // re-enable animator
             yield return new WaitUntil(() => RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase);
             UnReplaceAnimationClip();
         }

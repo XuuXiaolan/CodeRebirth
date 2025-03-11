@@ -174,7 +174,7 @@ public class Mistress : CodeRebirthEnemyAI
 
     private IEnumerator InitiateKillingSequence(PlayerControllerB playerToExecute)
     {
-        Physics.Raycast(Vector3.zero, Vector3.down, out RaycastHit hit, 10, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
+        Physics.Raycast(Vector3.zero + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
         if (playerToExecute.isInsideFactory && playerToExecute == GameNetworkManager.Instance.localPlayerController)
         {
             var entrance = CodeRebirthUtils.entrancePoints.Where(entrance => !entrance.isEntranceToBuilding).FirstOrDefault();

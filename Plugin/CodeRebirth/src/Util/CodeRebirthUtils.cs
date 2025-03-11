@@ -42,6 +42,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public int playersAndEnemiesMask = 0;
     [HideInInspector] public ES3Settings SaveSettings;
     [HideInInspector] public ShipAnimator shipAnimator = null!;
+    [HideInInspector] public StartMatchLever startMatchLever = null!;
     private System.Random CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
@@ -51,6 +52,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         DoLayerMaskStuff();
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
         Instance = this;
+        startMatchLever = FindFirstObjectByType<StartMatchLever>(FindObjectsInactive.Exclude);
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
         shipAnimator.shipLandAnimation = ModifiedShipLandAnimation;
         shipAnimator.shipNormalLeaveAnimation = ModifiedShipLeaveAnimation;
@@ -188,11 +190,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
         GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
         go.GetComponent<NetworkObject>().Spawn();
         int value = (int)(CRRandom.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
-        var scanNode = go.GetComponentInChildren<ScanNodeProperties>();
-        scanNode.scrapValue = value;
-        scanNode.subText = $"Value: ${value}";
-        go.GetComponent<GrabbableObject>().scrapValue = value;
-        UpdateScanNodeClientRpc(new NetworkObjectReference(go), value);
+        ScanNodeProperties? scanNodeProperties = go.GetComponentInChildren<ScanNodeProperties>();
+        if (scanNodeProperties != null)
+        {
+            scanNodeProperties.scrapValue = value;
+            scanNodeProperties.subText = $"Value: ${value}";
+            go.GetComponent<GrabbableObject>().scrapValue = value;
+            UpdateScanNodeClientRpc(new NetworkObjectReference(go), value);
+        }
         if (isQuest)
         {
             StartUIForItemClientRpc(go);
