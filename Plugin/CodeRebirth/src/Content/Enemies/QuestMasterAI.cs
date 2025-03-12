@@ -5,7 +5,6 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;

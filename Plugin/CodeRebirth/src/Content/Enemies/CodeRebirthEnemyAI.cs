@@ -21,11 +21,13 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public NetworkAnimator creatureNetworkAnimator = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;
 
+    [HideInInspector] public System.Random enemyRandom = new System.Random();
     private static int ShiftHash = Shader.PropertyToID("_Shift");
 
     public override void Start()
     {
         base.Start();
+        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + 69);
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside);
         smartAgentNavigator.SetAllValues(isOutside);
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");

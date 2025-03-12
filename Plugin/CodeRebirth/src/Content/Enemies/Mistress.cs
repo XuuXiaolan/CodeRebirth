@@ -22,7 +22,6 @@ public class Mistress : CodeRebirthEnemyAI
     public AudioClip[] AttackSounds = null!;
 
     private List<PlayerControllerB> previousTargetPlayers = new();
-    private System.Random mistressRandom = new();
     private float teleporterTimer = 20f;
     private float timeSpentInState = 0f;
     private float killTimer = 0f;
@@ -43,7 +42,6 @@ public class Mistress : CodeRebirthEnemyAI
         base.Start();
         AIIntervalTime = 0.1f;
         skinnedMeshRenderers[0].enabled = false;
-        mistressRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         StartCoroutine(ResetMistressToStalking(null));
     }
 
@@ -225,7 +223,7 @@ public class Mistress : CodeRebirthEnemyAI
     {
         yield return new WaitForSeconds(0.5f);
         SyncRendererMistressServerRpc();
-        teleporterTimer = mistressRandom.NextFloat(teleportCooldown - 5, teleportCooldown + 5);
+        teleporterTimer = enemyRandom.NextFloat(teleportCooldown - 5, teleportCooldown + 5);
         Vector3 teleportPoint = ChooseNewTeleportPoint();
         if (teleportPoint == Vector3.zero)
         {
@@ -234,7 +232,7 @@ public class Mistress : CodeRebirthEnemyAI
             yield break;
         }
         Plugin.ExtendedLogging($"Teleporting to: {teleportPoint}");
-        creatureAnimator.SetInteger(IdleIntAnimation, mistressRandom.Next(0, 3));
+        creatureAnimator.SetInteger(IdleIntAnimation, enemyRandom.Next(0, 3));
         agent.Warp(teleportPoint);
     }
 
@@ -303,17 +301,17 @@ public class Mistress : CodeRebirthEnemyAI
         // Try a few times to find a valid point
         for (int i = 0; i < 10; i++)
         {
-            Vector3 randomDirection = new Vector3(mistressRandom.NextFloat(-1f, 1f), 0f, mistressRandom.NextFloat(-1f, 1f));
+            Vector3 randomDirection = new Vector3(enemyRandom.NextFloat(-1f, 1f), 0f, enemyRandom.NextFloat(-1f, 1f));
             if (randomDirection.sqrMagnitude < 0.001f)
             {
                 continue;
             }
             randomDirection.Normalize();
 
-            float distance = mistressRandom.NextFloat(MIN_DISTANCE, MAX_DISTANCE);
+            float distance = enemyRandom.NextFloat(MIN_DISTANCE, MAX_DISTANCE);
             Vector3 candidatePos = targetPlayer.transform.position + randomDirection * distance;
             
-            candidatePos.y += mistressRandom.NextFloat(-3f, 3f);
+            candidatePos.y += enemyRandom.NextFloat(-3f, 3f);
 
             if (NavMesh.SamplePosition(candidatePos, out NavMeshHit hit, 10f, NavMesh.AllAreas))
             {
@@ -373,7 +371,7 @@ public class Mistress : CodeRebirthEnemyAI
         {
             if (playerToCripple.IsOwner)
             {
-                creatureVoice.PlayOneShot(AttackSounds[mistressRandom.Next(AttackSounds.Length)]);
+                creatureVoice.PlayOneShot(AttackSounds[enemyRandom.Next(AttackSounds.Length)]);
             }
             playerToCripple.inAnimationWithEnemy = this;
             inSpecialAnimationWithPlayer = playerToCripple;

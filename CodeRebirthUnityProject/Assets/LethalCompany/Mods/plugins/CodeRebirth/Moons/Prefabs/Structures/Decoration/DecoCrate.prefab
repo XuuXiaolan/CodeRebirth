@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 6836386865434682036}
   - component: {fileID: 4498927614547407337}
   - component: {fileID: 9056019198733553779}
+  - component: {fileID: 1650161149658779739}
+  - component: {fileID: 407002042722732748}
   m_Layer: 8
   m_Name: DecoCrate
   m_TagString: Untagged
@@ -105,3 +107,38 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.0060728, y: 2.0089579, z: 2.1249382}
   m_Center: {x: 0, y: 0.0008597969, z: 1.0492401}
+--- !u!114 &1650161149658779739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212494024604370248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!208 &407002042722732748
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212494024604370248}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 1.001, z: 1.059}
+  m_MoveThreshold: 0.2
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.001, z: 1.049}
+  m_TimeToStationary: 1

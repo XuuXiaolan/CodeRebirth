@@ -27,7 +27,6 @@ public class SnailCatAI : CodeRebirthEnemyAI
     private Coroutine? dropBabyCoroutine = null;
     private PlayerControllerB? playerHolding = null;
 	private float specialActionTimer = 1f;
-	private System.Random random = new();
 	private float randomNoiseInterval = 0f;
 	private float detectEnemyInterval = 0f;
 	private bool isWiWiWiii = false;
@@ -46,8 +45,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		hasVariants = true;
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
-		random = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count);
-		string randomName = randomizedNames[random.Next(0, randomizedNames.Length)];
+		string randomName = randomizedNames[enemyRandom.Next(0, randomizedNames.Length)];
 		scanNodeProperties.headerText = randomName;
 		currentName = randomName;
 		isWiWiWiii = currentName == "Wiwiwii";
@@ -61,14 +59,14 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		randomNoiseInterval -= Time.deltaTime;
 		if (randomNoiseInterval <= 0)
 		{
-			randomNoiseInterval = random.NextFloat(7.5f, 15.5f);
+			randomNoiseInterval = enemyRandom.NextFloat(7.5f, 15.5f);
 			if (isWiWiWiii)
 			{
-				creatureVoice.PlayOneShot(wiwiwiiiSound[random.Next(0, wiwiwiiiSound.Length)]);
+				creatureVoice.PlayOneShot(wiwiwiiiSound[enemyRandom.Next(0, wiwiwiiiSound.Length)]);
 			}
 			else
 			{
-				creatureVoice.PlayOneShot(randomNoises[random.Next(0, randomNoises.Length)]);
+				creatureVoice.PlayOneShot(randomNoises[enemyRandom.Next(0, randomNoises.Length)]);
 			}
 		}
 
@@ -76,7 +74,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 		detectEnemyInterval -= Time.deltaTime;
 		if (detectEnemyInterval <= 0)
 		{
-			detectEnemyInterval = random.NextFloat(7.5f, 15.5f);
+			detectEnemyInterval = enemyRandom.NextFloat(7.5f, 15.5f);
 			bool enemyNearby = false;
 			foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
 			{
@@ -257,7 +255,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
 		if (propScript.IsOwner) propScript.ownerNetworkAnimator.SetTrigger(SnailCatPhysicsProp.HitAnimation);
         // trigger hit animation
-		creatureVoice.PlayOneShot(hitSounds[random.Next(0, hitSounds.Length)]);
+		creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(0, hitSounds.Length)]);
     }
 
     private IEnumerator DropBabyAnimation(Vector3 dropOnPosition)

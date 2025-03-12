@@ -31,7 +31,6 @@ public class Janitor : CodeRebirthEnemyAI
 
     private Collider[] hitColliders = new Collider[10];
     private float idleTimer = 60f;
-    private System.Random janitorRandom = new();
     
     // Janitor states
     public enum JanitorStates
@@ -95,9 +94,6 @@ public class Janitor : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        // Random seed for variant material
-        janitorRandom = new System.Random(StartOfRound.Instance.randomMapSeed + janitors.Count);
-
         // Apply material variant
         ApplyMaterialVariant();
 
@@ -365,7 +361,7 @@ public class Janitor : CodeRebirthEnemyAI
     [ClientRpc]
     public void PlayDetectScrapSoundClientRpc()
     {
-        creatureVoice.PlayOneShot(detectItemDroppedSounds[janitorRandom.Next(detectItemDroppedSounds.Length)]);
+        creatureVoice.PlayOneShot(detectItemDroppedSounds[enemyRandom.Next(detectItemDroppedSounds.Length)]);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -574,7 +570,7 @@ public class Janitor : CodeRebirthEnemyAI
     public void GrabPlayerAnimEvent()
     {
         targetScrap = null;
-        creatureVoice.PlayOneShot(grabPlayerSounds[janitorRandom.Next(grabPlayerSounds.Length)]);
+        creatureVoice.PlayOneShot(grabPlayerSounds[enemyRandom.Next(grabPlayerSounds.Length)]);
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.ZoomingOff);
         currentlyGrabbingPlayer = false;
     }
@@ -584,7 +580,7 @@ public class Janitor : CodeRebirthEnemyAI
     /// </summary>
     public void ThrowPlayerAnimEvent()
     {
-        creatureVoice.PlayOneShot(throwPlayerSounds[janitorRandom.Next(throwPlayerSounds.Length)]);
+        creatureVoice.PlayOneShot(throwPlayerSounds[enemyRandom.Next(throwPlayerSounds.Length)]);
 
         PlayerControllerB previousTargetPlayer = targetPlayer;
         if (previousTargetPlayer == null)
@@ -669,7 +665,7 @@ public class Janitor : CodeRebirthEnemyAI
     {
         base.KillEnemy(destroy);
 
-        creatureVoice.PlayOneShot(deathSounds[janitorRandom.Next(deathSounds.Length)]);
+        creatureVoice.PlayOneShot(deathSounds[enemyRandom.Next(deathSounds.Length)]);
         currentlyThrowingPlayer = false;
         currentlyGrabbingPlayer = false;
         currentlyGrabbingScrap = false;
@@ -727,7 +723,7 @@ public class Janitor : CodeRebirthEnemyAI
 
     private void ApplyMaterialVariant()
     {
-        Material variantMaterial = variantMaterials[janitorRandom.Next(variantMaterials.Length)];
+        Material variantMaterial = variantMaterials[enemyRandom.Next(variantMaterials.Length)];
         Material[] currentMaterials = skinnedMeshRenderers[0].sharedMaterials;
         currentMaterials[1] = variantMaterial;
         skinnedMeshRenderers[0].SetMaterials(currentMaterials.ToList());
@@ -738,8 +734,8 @@ public class Janitor : CodeRebirthEnemyAI
         idleTimer -= Time.deltaTime;
         if (idleTimer < 0)
         {
-            idleTimer = janitorRandom.Next(30, 150);
-            creatureVoice.PlayOneShot(idleSounds[janitorRandom.Next(idleSounds.Length)]);
+            idleTimer = enemyRandom.Next(30, 150);
+            creatureVoice.PlayOneShot(idleSounds[enemyRandom.Next(idleSounds.Length)]);
         }
     }
 

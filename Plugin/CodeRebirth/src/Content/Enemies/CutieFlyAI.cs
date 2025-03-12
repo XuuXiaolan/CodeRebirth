@@ -10,7 +10,6 @@ public class CutieFlyAI : CodeRebirthEnemyAI
 {
     public Material[] variantMaterials = [];
 
-    private System.Random cutieflyRandom = new();
     private static readonly int IsDeadAnimation = Animator.StringToHash("doDeath");
     private static List<CutieFlyAI> cutieflys = new();
     private float oldSpeed = 0f;
@@ -21,9 +20,6 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         oldSpeed = agent.speed;
         cutieflys.Add(this);
 
-        // Random seed for variant material
-        cutieflyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + cutieflys.Count);
-
         // Apply material variant
         ApplyMaterialVariant();
         if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 50);
@@ -31,7 +27,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
 
     private void ApplyMaterialVariant()
     {
-        Material variantMaterial = variantMaterials[cutieflyRandom.Next(variantMaterials.Length)];
+        Material variantMaterial = variantMaterials[enemyRandom.Next(variantMaterials.Length)];
         Material[] currentMaterials = skinnedMeshRenderers[0].sharedMaterials;
         currentMaterials[0] = variantMaterial;
         skinnedMeshRenderers[0].SetMaterials(currentMaterials.ToList());

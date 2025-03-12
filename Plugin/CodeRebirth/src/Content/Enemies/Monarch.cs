@@ -11,7 +11,6 @@ public class Monarch : CodeRebirthEnemyAI
     public Transform[] AirAttackTransforms = [];
     public Transform MouthTransform = null!;
 
-    private System.Random monarchRandom = new();
     public static List<Monarch> Monarchs = new();
 
     public enum MonarchState
@@ -39,9 +38,8 @@ public class Monarch : CodeRebirthEnemyAI
         UltraCreatureVoice.Play();
 
         Monarchs.Add(this);
-        monarchRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69 + Monarchs.Count);
 
-        int randomNumberToSpawn = monarchRandom.Next(2, 5);
+        int randomNumberToSpawn = enemyRandom.Next(2, 5);
         if (!IsServer) return;
         for (int i = 0; i < randomNumberToSpawn; i++)
         {

@@ -44,7 +44,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     private static int instanceNumbers = 0;
     private Collider[] enemyColliders = null!;
     private PlayerControllerB? playerToKick = null;
-    private System.Random redwoodRandom = null!;
     private static readonly int chasingInt = Animator.StringToHash("chasing");
     private static readonly int walkingInt = Animator.StringToHash("walking");
     private static readonly int startKick = Animator.StringToHash("startKick");
@@ -106,8 +105,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         base.Start();
         instanceNumbers++;
 
-        redwoodRandom = new System.Random(StartOfRound.Instance.randomMapSeed + instanceNumbers);
-        if (redwoodRandom.Next(0, 2) == 0)
+        if (enemyRandom.Next(0, 2) == 0)
         {
             skinnedMeshRenderers[0].SetMaterials(AlbinoMaterials.ToList());
         }

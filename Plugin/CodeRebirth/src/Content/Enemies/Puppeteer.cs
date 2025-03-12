@@ -39,7 +39,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     private PlayerControllerB? targetPlayerToNeedle = null;
     private static int instanceCount = 0;
     private PlayerControllerB? priorityPlayer = null;
-    private System.Random enemyRandom = new();
     private float timeSinceLastTakenDamage = 0f;
     private bool teleporting = false;
 
@@ -67,7 +66,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         base.Start();
         instanceCount++;
-        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + instanceCount + 69);
         agent.speed = 0f;
         SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Spawn);
     }
