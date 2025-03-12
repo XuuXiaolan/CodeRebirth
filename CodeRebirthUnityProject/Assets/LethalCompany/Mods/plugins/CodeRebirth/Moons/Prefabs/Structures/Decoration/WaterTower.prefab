@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8661317341882786660}
   - component: {fileID: 7410790035856559922}
   - component: {fileID: 7611007472363562284}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WaterTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,8 @@ Transform:
   m_LocalPosition: {x: -90.580536, y: 71.61334, z: -78.0273}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4011717636695707015}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7410790035856559922
@@ -83,3 +84,119 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &3469674499498551916
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8661317341882786660}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_Name
+      value: WaterTowerCollider
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ff93510026b26594e8bd9d737599bde3,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7519993424567535327}
+  m_SourcePrefab: {fileID: 100100000, guid: ff93510026b26594e8bd9d737599bde3, type: 3}
+--- !u!4 &4011717636695707015 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ff93510026b26594e8bd9d737599bde3,
+    type: 3}
+  m_PrefabInstance: {fileID: 3469674499498551916}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4388664666563974973 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ff93510026b26594e8bd9d737599bde3,
+    type: 3}
+  m_PrefabInstance: {fileID: 3469674499498551916}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &7519993424567535327
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4388664666563974973}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6256801703943545171, guid: ff93510026b26594e8bd9d737599bde3, type: 3}

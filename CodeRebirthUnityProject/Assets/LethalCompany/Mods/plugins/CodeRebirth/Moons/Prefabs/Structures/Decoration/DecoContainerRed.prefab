@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 89981486207307499}
   - component: {fileID: 4554881592441420016}
   - component: {fileID: 1423456786067504674}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ContainerDoorBackL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 3522802243863180521}
   - component: {fileID: 5842913214860042555}
   - component: {fileID: 1003054419648836422}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ContainerDoorBackR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5444474708972824092}
-  m_Layer: 0
+  - component: {fileID: 8807171968442933092}
+  m_Layer: 8
   m_Name: DecoContainerRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,6 +203,27 @@ Transform:
   - {fileID: 2806496090999306722}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8807171968442933092
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4633633695591237459}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.231552, y: 4.158272, z: 7.0880165}
+  m_Center: {x: -0.03302002, y: 2.0935555, z: -0.21270943}
 --- !u!1 &5003402127225484502
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +235,7 @@ GameObject:
   - component: {fileID: 7785295688330851370}
   - component: {fileID: 2178912320434526691}
   - component: {fileID: 3702001051688874613}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ContainerDoorFrontL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -296,7 +318,7 @@ GameObject:
   - component: {fileID: 2806496090999306722}
   - component: {fileID: 5138994040793755147}
   - component: {fileID: 8356371274666060499}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ContainerDoorFrontR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,7 +401,7 @@ GameObject:
   - component: {fileID: 9025872017079210997}
   - component: {fileID: 1399216343945559452}
   - component: {fileID: 1715933221688195992}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ContainerBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
