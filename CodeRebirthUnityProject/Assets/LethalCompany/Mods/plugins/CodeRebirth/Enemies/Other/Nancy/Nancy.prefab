@@ -404,8 +404,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 3.075306, z: 1}
-  m_Center: {x: 0, y: 1.5141926, z: 0}
+  m_Size: {x: 1, y: 1.6012421, z: 1.0400696}
+  m_Center: {x: 0, y: 0.77716064, z: -0.13271332}
 --- !u!195 &6158736080623659982
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -686,6 +686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8459996602311492466}
+  - component: {fileID: 3099417924121438424}
   m_Layer: 0
   m_Name: BodyTop
   m_TagString: Untagged
@@ -712,6 +713,27 @@ Transform:
   - {fileID: 916190720231631016}
   m_Father: {fileID: 7223792966971323669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3099417924121438424
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2141171412172823072}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.6687446, y: 1.8414462, z: 5.296105}
+  m_Center: {x: 0.0054897848, y: 1.4067954, z: 1.7821444}
 --- !u!1 &2171926472224073687
 GameObject:
   m_ObjectHideFlags: 0
