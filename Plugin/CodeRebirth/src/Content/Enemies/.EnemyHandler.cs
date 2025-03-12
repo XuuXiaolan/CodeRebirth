@@ -26,11 +26,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         [LoadFromBundle("CarnivorousPlantObj.asset")]
         public EnemyType CarnivorousPlantEnemyType { get; private set; } = null!;
 
-        [LoadFromBundle("CarnivorousPlantTN")]
+        /*[LoadFromBundle("CarnivorousPlantTN")]
         public TerminalNode CarnivorousPlantTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("CarnivorousPlantTK")]
-        public TerminalKeyword CarnivorousPlantTerminalKeyword { get; private set; } = null!;
+        public TerminalKeyword CarnivorousPlantTerminalKeyword { get; private set; } = null!;*/
     }
 
     public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName)
@@ -38,11 +38,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         [LoadFromBundle("RedwoodTitanObj.asset")]
         public EnemyType RedwoodTitanEnemyType { get; private set; } = null!;
 
-        [LoadFromBundle("RedwoodTitanTN.asset")]
+        /*[LoadFromBundle("RedwoodTitanTN.asset")]
         public TerminalNode RedwoodTitanTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("RedwoodTitanTK.asset")]
-        public TerminalKeyword RedwoodTitanTerminalKeyword { get; private set; } = null!;
+        public TerminalKeyword RedwoodTitanTerminalKeyword { get; private set; } = null!;*/
         
         /*[LoadFromBundle("RedwoodHeart.asset")]
         public Item RedwoodHeart { get; private set; } = null!;
@@ -62,11 +62,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         [LoadFromBundle("LemonadePitcherObj.asset")]
         public Item LemonadePitcherItem { get; private set; } = null!;
 
-        [LoadFromBundle("DuckTN.asset")]
+        /*[LoadFromBundle("DuckTN.asset")]
         public TerminalNode DuckSongTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("DuckTK.asset")]
-        public TerminalKeyword DuckSongTerminalKeyword { get; private set; } = null!;
+        public TerminalKeyword DuckSongTerminalKeyword { get; private set; } = null!;*/
 
         [LoadFromBundle("DuckHolder.prefab")]
         public GameObject DuckUIPrefab { get; private set; } = null!;
@@ -77,11 +77,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         [LoadFromBundle("ManorLordObj.asset")]
         public EnemyType ManorLordEnemyType { get; private set; } = null!;
 
-        [LoadFromBundle("ManorLordTN.asset")]
+        /*[LoadFromBundle("ManorLordTN.asset")]
         public TerminalNode ManorLordTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("ManorLordTK.asset")]
-        public TerminalKeyword ManorLordTerminalKeyword { get; private set; } = null!;
+        public TerminalKeyword ManorLordTerminalKeyword { get; private set; } = null!;*/
 
         [LoadFromBundle("PuppeteerPuppet.prefab")]
         public GameObject PuppeteerPuppetPrefab { get; private set; } = null!;
@@ -135,6 +135,20 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public EnemyType PandoraEnemyType { get; private set; } = null!;
     }
 
+    public class NancyAssets(string bundleName) : AssetBundleLoader<NancyAssets>(bundleName)
+    {
+        [LoadFromBundle("NancyObj.asset")]
+        public EnemyType NancyEnemyType { get; private set; } = null!;
+    }
+
+    public class DriftwoodMenaceAssets(string bundleName) : AssetBundleLoader<DriftwoodMenaceAssets>(bundleName)
+    {
+        [LoadFromBundle("DriftwoodMenaceObj.asset")]
+        public EnemyType DriftwoodMenaceEnemyType { get; private set; } = null!;
+    }
+
+    public NancyAssets Nancy { get; private set; } = null!;
+    public DriftwoodMenaceAssets DriftwoodMenace { get; private set; } = null!;
     public PandoraAssets Pandora { get; private set; } = null!;
     public MonarchAssets Monarch { get; private set; } = null!;
     public MistressAssets Mistress { get; private set; } = null!;
@@ -153,6 +167,19 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         Pandora = new PandoraAssets("pandoraassets");
         RegisterEnemyWithConfig("", Pandora.PandoraEnemyType, null, null, 3, 0);
 #endif
+
+        /*if (Plugin.ModConfig.ConfigDriftwoodMenaceEnabled.Value)
+        {
+            DriftwoodMenace = new DriftwoodMenaceAssets("driftwoodmenaceassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDriftwoodMenaceSpawnWeights.Value, DriftwoodMenace.DriftwoodMenaceEnemyType, null, null, Plugin.ModConfig.ConfigDriftwoodMenacePowerLevel.Value, Plugin.ModConfig.ConfigDriftwoodMenaceMaxSpawnCount.Value);
+        }*/
+
+        if (Plugin.ModConfig.ConfigNancyEnabled.Value)
+        {
+            Nancy = new NancyAssets("nancyassets");
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigNancySpawnWeights.Value, Nancy.NancyEnemyType, null, null, Plugin.ModConfig.ConfigNancyPowerLevel.Value, Plugin.ModConfig.ConfigNancyMaxSpawnCount.Value);
+        }
+
         if (Plugin.ModConfig.ConfigMonarchEnabled.Value)
         {
             Monarch = new MonarchAssets("monarchassets");
@@ -170,14 +197,14 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         if (Plugin.ModConfig.ConfigRedwoodEnabled.Value)
         {
             RedwoodTitan = new RedwoodTitanAssets("redwoodtitanassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodTitan.RedwoodTitanEnemyType, RedwoodTitan.RedwoodTitanTerminalNode, RedwoodTitan.RedwoodTitanTerminalKeyword, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodTitan.RedwoodTitanEnemyType, null, null, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
             //Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodTitan.RedwoodHeart);
         }
 
         if (Plugin.ModConfig.ConfigDangerousFloraEnabled.Value)
         {
             CarnivorousPlant = new CarnivorousPlantAssets("carnivorousplantassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCarnivorousSpawnWeights.Value, CarnivorousPlant.CarnivorousPlantEnemyType, CarnivorousPlant.CarnivorousPlantTerminalNode, CarnivorousPlant.CarnivorousPlantTerminalKeyword, Plugin.ModConfig.ConfigCarnivorousPowerLevel.Value, Plugin.ModConfig.ConfigCarnivorousMaxSpawnCount.Value);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCarnivorousSpawnWeights.Value, CarnivorousPlant.CarnivorousPlantEnemyType, null, null, Plugin.ModConfig.ConfigCarnivorousPowerLevel.Value, Plugin.ModConfig.ConfigCarnivorousMaxSpawnCount.Value);
         }
 
         if (Plugin.ModConfig.ConfigSnailCatEnabled.Value)
@@ -191,7 +218,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             DuckSong = new DuckSongAssets("ducksongassets");
             RegisterScrapWithConfig("", DuckSong.GrapeItem, -1, -1);
             RegisterScrapWithConfig("", DuckSong.LemonadePitcherItem, -1, -1);
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDuckSongSpawnWeights.Value, DuckSong.DuckSongEnemyType, DuckSong.DuckSongTerminalNode, DuckSong.DuckSongTerminalKeyword, Plugin.ModConfig.ConfigDuckSongPowerLevel.Value, Plugin.ModConfig.ConfigDuckSongMaxSpawnCount.Value);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDuckSongSpawnWeights.Value, DuckSong.DuckSongEnemyType, null, null, Plugin.ModConfig.ConfigDuckSongPowerLevel.Value, Plugin.ModConfig.ConfigDuckSongMaxSpawnCount.Value);
             Plugin.samplePrefabs.Add(DuckSong.GrapeItem.itemName, DuckSong.GrapeItem);
             Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
         } // configurable quest time, max amount of ducks to spawn.
@@ -199,7 +226,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         if (Plugin.ModConfig.ConfigManorLordEnabled.Value)
         {
             ManorLord = new ManorLordAssets("manorlordassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigManorLordSpawnWeights.Value, ManorLord.ManorLordEnemyType, ManorLord.ManorLordTerminalNode, ManorLord.ManorLordTerminalKeyword, Plugin.ModConfig.ConfigManorLordPowerLevel.Value, Plugin.ModConfig.ConfigManorLordMaxSpawnCount.Value);
+            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigManorLordSpawnWeights.Value, ManorLord.ManorLordEnemyType, null, null, Plugin.ModConfig.ConfigManorLordPowerLevel.Value, Plugin.ModConfig.ConfigManorLordMaxSpawnCount.Value);
             RegisterScrapWithConfig("", ManorLord.PuppetItem, -1, -1);
             RegisterScrapWithConfig("", ManorLord.PinNeedleItem, -1, -1);
             Plugin.samplePrefabs.Add(ManorLord.PinNeedleItem.itemName, ManorLord.PinNeedleItem);

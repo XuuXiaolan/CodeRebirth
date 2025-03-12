@@ -6,6 +6,8 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigDriftwoodMenaceEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigNancyEnabled { get; private set; }
     public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigMerchantEnabled { get; private set; }
@@ -95,8 +97,14 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigMistressSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigTransporterSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigJanitorSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigDriftwoodMenaceSpawnWeights { get; private set; }
+    public ConfigEntry<string> ConfigNancySpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
+    public ConfigEntry<float> ConfigDriftwoodMenacePowerLevel { get; private set; }
+    public ConfigEntry<int> ConfigDriftwoodMenaceMaxSpawnCount { get; private set; }
+    public ConfigEntry<float> ConfigNancyPowerLevel { get; private set; }
+    public ConfigEntry<int> ConfigNancyMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigCarnivorousMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
@@ -254,6 +262,42 @@ public class CodeRebirthConfig
                                             "??? | Enabled",
                                             true,
                                             "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
+        #endregion
+        #region Driftwood Menace
+        ConfigDriftwoodMenaceEnabled = configFile.Bind("Driftwood Menace Options",
+                                            "Driftwood Menace | Enabled",
+                                            true,
+                                            "Whether the Driftwood Menace is enabled.");
+        ConfigDriftwoodMenaceSpawnWeights = configFile.Bind("Driftwood Menace Options",
+                                            "Driftwood Menace | Spawn Weights",
+                                            "Vanilla:20,Custom:20",
+                                            "The spawn weights for the Driftwood Menace.");
+        ConfigDriftwoodMenacePowerLevel = configFile.Bind("Driftwood Menace Options",
+                                            "Driftwood Menace | Power Level",
+                                            2f,
+                                            "The power level of the Driftwood Menace.");
+        ConfigDriftwoodMenaceMaxSpawnCount = configFile.Bind("Driftwood Menace Options",
+                                            "Driftwood Menace | Max Spawn Count",
+                                            3,
+                                            "The max spawn count of the Driftwood Menace.");
+        #endregion
+        #region Nancy
+        ConfigNancyEnabled = configFile.Bind("Nancy Options",
+                                            "Nancy | Enabled",
+                                            true,
+                                            "Whether the Nancy is enabled.");
+        ConfigNancySpawnWeights = configFile.Bind("Nancy Options",
+                                            "Nancy | Spawn Weights",
+                                            "Vanilla:20,Custom:20",
+                                            "The spawn weights for the Nancy.");
+        ConfigNancyPowerLevel = configFile.Bind("Nancy Options",
+                                            "Nancy | Power Level",
+                                            2f,
+                                            "The power level of the Nancy.");
+        ConfigNancyMaxSpawnCount = configFile.Bind("Nancy Options",
+                                            "Nancy | Max Spawn Count",
+                                            1,
+                                            "The max spawn count of the Nancy.");
         #endregion
         #region Merchant
         ConfigMerchantEnabled = configFile.Bind("Merchant Options",
