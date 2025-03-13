@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 9219471740202735180}
   - component: {fileID: 8837549197209476475}
   - component: {fileID: 4328988571842350466}
-  - component: {fileID: 3889077570673538164}
-  - component: {fileID: 2052890826871963156}
+  - component: {fileID: 3851498719039646571}
   m_Layer: 8
   m_Name: TallCrate
   m_TagString: Untagged
@@ -107,23 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.0115907, y: 2.0115905, z: 4.9602084}
   m_Center: {x: 0, y: 0, z: 2.460159}
---- !u!208 &3889077570673538164
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2818668852961581699}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 1.1, y: 1.1, z: 2.4740002}
-  m_MoveThreshold: 0.2
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 2.46}
-  m_TimeToStationary: 1
---- !u!114 &2052890826871963156
+--- !u!114 &3851498719039646571
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,13 +115,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2818668852961581699}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OverrideArea: 0
+  m_Size: {x: 2.2, y: 2.2, z: 4.948}
+  m_Center: {x: 0, y: 0, z: 2.46}
   m_Area: 0
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff

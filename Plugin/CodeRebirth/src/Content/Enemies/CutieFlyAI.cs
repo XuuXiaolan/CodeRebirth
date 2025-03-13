@@ -11,14 +11,12 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     public Material[] variantMaterials = [];
 
     private static readonly int IsDeadAnimation = Animator.StringToHash("doDeath");
-    private static List<CutieFlyAI> cutieflys = new();
     private float oldSpeed = 0f;
 
     public override void Start()
     {
         base.Start();
         oldSpeed = agent.speed;
-        cutieflys.Add(this);
 
         // Apply material variant
         ApplyMaterialVariant();

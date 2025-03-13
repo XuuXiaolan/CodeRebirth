@@ -42,7 +42,6 @@ public class SnailCatAI : CodeRebirthEnemyAI
 
     public override void Start()
     {
-		hasVariants = true;
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
 		string randomName = randomizedNames[enemyRandom.Next(0, randomizedNames.Length)];
@@ -296,7 +295,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-		CRUtilities.CreateExplosion(this.transform.position, true, 99999, 0, 15, 999, null, null, 1000f);
+		// CRUtilities.CreateExplosion(this.transform.position, true, 99999, 0, 15, 999, null, null, 1000f);
     }
 
 	public void PlayFootStepSoundAnimEvent()

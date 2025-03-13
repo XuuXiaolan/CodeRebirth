@@ -135,6 +135,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
             ownerPlayer = null;
         }
     }
+
     public virtual void Update()
     {
         if (!NetworkObject.IsSpawned) return;

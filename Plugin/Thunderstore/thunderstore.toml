@@ -236,6 +236,10 @@ source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRe
 target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/driftwoodmenaceassets"
+target = "plugins/CodeRebirth/Assets/"
+
+[[build.copy]]
 source = "./CHANGELOG.md"
 target = "/"
 

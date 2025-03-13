@@ -8,6 +8,7 @@ using CodeRebirth.src.MiscScripts;
 using UnityEngine.Rendering;
 using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -43,6 +44,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public ES3Settings SaveSettings;
     [HideInInspector] public ShipAnimator shipAnimator = null!;
     [HideInInspector] public StartMatchLever startMatchLever = null!;
+    [HideInInspector] public static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
     private System.Random CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 

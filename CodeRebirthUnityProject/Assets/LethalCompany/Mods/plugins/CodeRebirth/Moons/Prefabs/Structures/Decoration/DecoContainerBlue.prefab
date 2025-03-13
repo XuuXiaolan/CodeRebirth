@@ -93,8 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 630681992431089584}
   - component: {fileID: 8180600496336770386}
-  - component: {fileID: 7923325738191593054}
-  - component: {fileID: 4210152170191840564}
+  - component: {fileID: 2014324337721672914}
   m_Layer: 8
   m_Name: DecoContainerBlue
   m_TagString: Untagged
@@ -143,7 +142,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.231552, y: 4.158272, z: 7.0880165}
   m_Center: {x: -0.03302002, y: 2.0935555, z: -0.21270943}
---- !u!114 &7923325738191593054
+--- !u!114 &2014324337721672914
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,32 +151,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 731186136538616825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OverrideArea: 0
-  m_Area: 0
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
---- !u!208 &4210152170191840564
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731186136538616825}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 2.115776, y: 2.15, z: 3.5440075}
-  m_MoveThreshold: 0.2
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
+  m_Size: {x: 4.231552, y: 4.3, z: 7.088016}
   m_Center: {x: -0.03302002, y: 2.0935555, z: -0.21270943}
-  m_TimeToStationary: 1
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &1880951145170681720
 GameObject:
   m_ObjectHideFlags: 0

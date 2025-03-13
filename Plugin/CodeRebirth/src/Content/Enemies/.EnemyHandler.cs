@@ -168,11 +168,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         RegisterEnemyWithConfig("", Pandora.PandoraEnemyType, null, null, 3, 0);
 #endif
 
-        /*if (Plugin.ModConfig.ConfigDriftwoodMenaceEnabled.Value)
+        if (Plugin.ModConfig.ConfigDriftwoodMenaceEnabled.Value)
         {
             DriftwoodMenace = new DriftwoodMenaceAssets("driftwoodmenaceassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDriftwoodMenaceSpawnWeights.Value, DriftwoodMenace.DriftwoodMenaceEnemyType, null, null, Plugin.ModConfig.ConfigDriftwoodMenacePowerLevel.Value, Plugin.ModConfig.ConfigDriftwoodMenaceMaxSpawnCount.Value);
-        }*/
+        }
 
         if (Plugin.ModConfig.ConfigNancyEnabled.Value)
         {

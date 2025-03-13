@@ -6,6 +6,9 @@ using System.Linq;
 using CodeRebirth.src.MiscScripts.PathFinding;
 using Unity.Netcode.Components;
 using CodeRebirth.src.Util.Extensions;
+using System.Collections;
+using CodeRebirth.src.MiscScripts;
+using System;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
@@ -18,31 +21,66 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [HideInInspector] public EnemyAI? targetEnemy;
 
     public bool hasVariants = false;
+    public bool usesTemperature = false;
+    public Renderer? specialRenderer = null;
     public NetworkAnimator creatureNetworkAnimator = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;
 
+    private float previousLightValue = 0f;
+    private DetectLightInSurroundings? detectLightInSurroundings = null;
+    private LineRenderer line; // Debug line that shows destination of movement
     [HideInInspector] public System.Random enemyRandom = new System.Random();
     private static int ShiftHash = Shader.PropertyToID("_Shift");
+    private static int TemperatureHash = Shader.PropertyToID("_Temperature");
 
     public override void Start()
     {
         base.Start();
+#if DEBUG
+        line = gameObject.AddComponent<LineRenderer>();
+        line.widthMultiplier = 0.2f; // reduce width of the line
+        StartCoroutine(DrawPath(line, agent));
+#endif
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + 69);
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside);
         smartAgentNavigator.SetAllValues(isOutside);
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
         GrabEnemyRarity(enemyType.enemyName);
-        if (hasVariants)
+        if (hasVariants && specialRenderer != null)
         {
-            ApplyVariants();
+            ApplyVariants(specialRenderer);
         }
     }
 
-    private void ApplyVariants()
+    private void ApplyVariants(Renderer renderer)
     {
         System.Random random = new System.Random(RoundManager.Instance.SpawnedEnemies.Count + StartOfRound.Instance.randomMapSeed);
         float number = random.NextFloat(0f, 1f);
-        skinnedMeshRenderers[0].GetMaterial().SetFloat(ShiftHash, number);
+        renderer.GetMaterial().SetFloat(ShiftHash, number);
+        if (usesTemperature)
+        {
+            detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
+            detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
+        }
+    }
+
+    public virtual void OnLightValueChange(float lightValue)
+    {
+        Plugin.ExtendedLogging($"Light Value: {lightValue}");
+        float newLightValue = Mathf.Sqrt(lightValue);
+        StartCoroutine(LerpToHotOrCold(previousLightValue, newLightValue));
+    }
+
+    private IEnumerator LerpToHotOrCold(float oldValue, float newValue)
+    {
+        if (specialRenderer == null) yield break;
+        for (int i = 1; i <= 3; i++)
+        {
+            float step = Mathf.Lerp(oldValue, newValue, i/3f);
+            specialRenderer.GetMaterial().SetFloat(TemperatureHash, Mathf.Clamp(step/5f - 0.5f, -0.5f, 0.5f));
+            yield return null;
+        }
+        previousLightValue = newValue;
     }
 
     public void GrabEnemyRarity(string enemyName)
@@ -67,6 +105,23 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         else
         {
             Plugin.Logger.LogWarning("Enemy not found.");
+        }
+    }
+
+    public IEnumerator DrawPath(LineRenderer line, NavMeshAgent agent)
+    {
+        while (true)
+        {
+            yield return new WaitUntil(() => agent.enabled);
+            yield return new WaitForSeconds(1f);
+            yield return new WaitForEndOfFrame();
+            line.SetPosition(0, agent.transform.position); //set the line's origin
+
+            line.positionCount = agent.path.corners.Length; //set the array of positions to the amount of corners
+            for (var i = 1; i < agent.path.corners.Length; i++)
+            {
+                line.SetPosition(i, agent.path.corners[i]); //go through each corner and set that to the line renderer's position
+            }
         }
     }
 
@@ -156,7 +211,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public bool CheckIfPersonAlreadyTargetted(bool targetAlreadyTargettedPerson, PlayerControllerB playerToCheck)
     {
         if (!targetAlreadyTargettedPerson) return false;
-        foreach (var enemy in RoundManager.Instance.SpawnedEnemies.ToArray())
+        foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
             if (enemy is CodeRebirthEnemyAI codeRebirthEnemyAI)
             {
@@ -169,20 +224,22 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     public bool EnemyHasLineOfSightToPosition(Vector3 pos, float width = 60f, float range = 20f, float proximityAwareness = 5f)
     {
+        Transform eyeTransform;
         if (eye == null)
         {
-            _ = transform;
+            eyeTransform = transform;
         }
         else
         {
-            _ = eye;
+            eyeTransform = eye;
         }
 
-        if (Vector3.Distance(eye!.position, pos) >= range || Physics.Linecast(eye.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault)) return false;
+        if (Vector3.Distance(eyeTransform.position, pos) >= range || Physics.Linecast(eyeTransform.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore)) return false;
 
-        Vector3 to = pos - eye.position;
-        return Vector3.Angle(eye.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
+        Vector3 to = pos - eyeTransform.position;
+        return Vector3.Angle(eyeTransform.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
     }
+
     public bool IsPlayerReachable(PlayerControllerB PlayerToCheck)
     {
         Vector3 Position = RoundManager.Instance.GetNavMeshPosition(PlayerToCheck.transform.position, RoundManager.Instance.navHit, 2.7f);

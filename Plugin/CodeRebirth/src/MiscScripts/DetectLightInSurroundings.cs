@@ -1,136 +1,83 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace CodeRebirth.src.MiscScripts;
 public class DetectLightInSurroundings : MonoBehaviour
 {
-    private float lightValue = 0f;
-    private static List<GameObject> lights = new List<GameObject>();
-    private readonly float refreshRate = 10f;
+    [HideInInspector] public float lightValueOnThisObject = 0f;
+    [HideInInspector] public UnityEvent<float> OnLightValueChange = new();
 
-    private void Start() // keep in mind that the player also has a lightsource attached to them, this isnt exclusive to just interior lights, but you could try to exclude all lights that arent in the interior for some small performance gains (probably almost 0 gain lol).
+    public void OnEnable()
     {
-        // Populate the list of lights only once
-        if (lights.Count == 0)
+        LightUpdateManager.detectLightInSurroundings.Add(this);
+    }
+
+    public void OnDisable()
+    {
+        LightUpdateManager.detectLightInSurroundings.Remove(this);
+    }
+
+    public IEnumerator UpdateLightValue()
+    {
+        List<(Light light, HDAdditionalLightData hDAdditionalLightData)> roundLightData = new();
+        lightValueOnThisObject = 0f;
+        roundLightData.Clear();
+        roundLightData.AddRange(CodeRebirthUtils.currentRoundLightData);
+        foreach ((Light light, HDAdditionalLightData hdLightData) in roundLightData)
         {
-            HDAdditionalLightData[] potentialLights = FindObjectsOfType<HDAdditionalLightData>();
-            foreach (HDAdditionalLightData light in potentialLights)
+            if (light == null || hdLightData == null || !light.enabled) continue;
+            if (GameNetworkManager.Instance.localPlayerController.nightVision == light) continue;
+            Vector3 nodePosition = transform.position;
+
+            float attenuation = CalculateAttenuation(light, nodePosition);
+            if (attenuation == 0) continue;
+            float contribution = light.intensity * attenuation;
+            lightValueOnThisObject += contribution;
+            // Plugin.ExtendedLogging($"influencing light: {light.name} with contribution: {contribution}");
+            yield return null;
+        }
+
+        // Use the calculated lightValue as needed
+        OnLightValueChange.Invoke(lightValueOnThisObject);
+    }
+
+    private float CalculateAttenuation(Light light, Vector3 samplePosition)
+    {
+        float lightRange = light.range;
+        if (light.type == LightType.Directional)
+        {
+            if (light.shadows != LightShadows.None && Physics.Raycast(samplePosition, -light.transform.forward, out _, float.PositiveInfinity, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
-                if (!lights.Contains(light.gameObject))
-                {
-                    lights.Add(light.gameObject);
-                }
+                return 0f;
+            }
+            return 1f;
+        }
+        else if (light.type == LightType.Spot)
+        {
+            float angleToNode = Vector3.Angle(light.transform.forward, samplePosition - light.transform.position);
+            if (angleToNode > light.spotAngle / 2f)
+            {
+                // Node is outside the spot light's cone
+                return 0f;
             }
         }
 
-        StartCoroutine(UpdateLightValue());
-    }
-
-    private IEnumerator UpdateLightValue()
-    {
-        while (lights.Count > 0)
+        float distance = Vector3.Distance(samplePosition, light.transform.position);
+        if (distance > lightRange)
         {
-            //Stopwatch timer = new Stopwatch();
-            //timer.Start();
-            // Reset light value before calculation
-            lightValue = 0f;
-
-            foreach (GameObject lightObj in lights)
-            {
-                HDAdditionalLightData hdLightData = lightObj.GetComponent<HDAdditionalLightData>();
-                Light lightComponent = lightObj.GetComponent<Light>();
-
-                if (hdLightData != null && lightComponent != null && lightComponent.enabled)
-                {
-                    // Get positions
-                    Vector3 lightPosition = lightObj.transform.position;
-                    Vector3 nodePosition = transform.position;
-
-                    // Direction and distance from light to node
-                    Vector3 direction = nodePosition - lightPosition;
-                    float distance = direction.magnitude;
-
-                    // Check if the node is within the light's range
-                    float lightRange = lightComponent.range;
-                    if (distance <= lightRange)
-                    {
-                        // Perform a raycast to check for occlusion
-                        RaycastHit hit;
-                        if (!Physics.Raycast(lightPosition, direction.normalized, out hit, distance, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-                        {
-                            // No obstruction; proceed to calculate light contribution
-                            float attenuation = CalculateAttenuation(distance, lightRange);
-
-                            // Get light intensity (considering light type and HDRP settings)
-                            float intensity = GetLightIntensity(hdLightData, lightComponent, direction);
-
-                            // Accumulate light value
-                            float contribution = intensity * attenuation;
-                            lightValue += contribution;
-                        }
-                    }
-                }
-            }
-
-            // Use the calculated lightValue as needed
-            //Plugin.ExtendedLogging($"Light value at node {gameObject.name} and position {transform.position.x} {transform.position.y} {transform.position.z}: {lightValue}");
-            //timer.Stop();
-            //Plugin.ExtendedLogging($"{timer.ElapsedMilliseconds}ms + {timer.ElapsedTicks} ticks");
-            yield return new WaitForSeconds(refreshRate);
+            return 0f;
         }
-    }
 
-    /// <summary>
-    /// Calculates attenuation based on distance and light range.
-    /// </summary>
-    private float CalculateAttenuation(float distance, float range)
-    {
+        if (light.shadows != LightShadows.None && Physics.Linecast(light.transform.position, samplePosition, out _, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        {
+            return 0f;
+        }
         // Example using inverse square law with range consideration
         float attenuation = 1f / (distance * distance);
         return attenuation;
-    }
-
-    /// <summary>
-    /// Retrieves the light intensity, adjusting for light type and direction.
-    /// </summary>
-    private float GetLightIntensity(HDAdditionalLightData hdLightData, Light lightComponent, Vector3 directionToNode)
-    {
-        float intensity = hdLightData.intensity;
-
-        // Adjust intensity based on light type
-        switch (lightComponent.type)
-        {
-            case LightType.Point:
-                // Point light; no additional adjustments needed
-                break;
-
-            case LightType.Spot:
-                // Adjust for spot angle
-                float angleToNode = Vector3.Angle(lightComponent.transform.forward, directionToNode);
-                if (angleToNode > lightComponent.spotAngle / 2f)
-                {
-                    // Node is outside the spot light's cone
-                    return 0f;
-                }
-                break;
-
-            case LightType.Directional:
-                // For directional lights, intensity doesn't attenuate with distance
-                intensity = hdLightData.intensity;
-                break;
-
-            case LightType.Area:
-                // Area lights are more complex; simplifying as point light for this example
-                break;
-        }
-
-        return intensity;
-    }
-
-    public void OnDestroy()
-    {
-        lights.Clear();
     }
 }

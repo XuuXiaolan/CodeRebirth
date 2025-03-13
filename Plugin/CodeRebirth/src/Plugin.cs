@@ -76,6 +76,7 @@ public class Plugin : BaseUnityPlugin
         _harmony.PatchAll(typeof(RoundManagerPatch));
         _harmony.PatchAll(typeof(StartOfRoundPatch));
         _harmony.PatchAll(typeof(NetworkBehaviourPatch));
+        _harmony.PatchAll(typeof(HDAdditionalLightDataPatch));
 
         ItemDropshipPatch.Init();
         TerminalPatch.Init();

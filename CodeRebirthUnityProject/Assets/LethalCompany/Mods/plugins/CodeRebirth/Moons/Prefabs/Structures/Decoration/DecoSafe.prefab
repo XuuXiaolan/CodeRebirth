@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 7636435066569563802}
   - component: {fileID: 4877777002542522737}
   - component: {fileID: 3725999948105036260}
-  - component: {fileID: 3834254711718068985}
-  - component: {fileID: 8857444890383635667}
+  - component: {fileID: 7046268999816813054}
   m_Layer: 8
   m_Name: DecoSafe
   m_TagString: Untagged
@@ -107,23 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.0083344, y: 2.0755293, z: 3.3189437}
   m_Center: {x: 0.055625677, y: 0.70217764, z: 1.6675617}
---- !u!208 &3834254711718068985
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9171593415853247485}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 1, y: 1.1090001, z: 1.6550001}
-  m_MoveThreshold: 0.2
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0.056, y: 0.62700003, z: 1.6680001}
-  m_TimeToStationary: 1
---- !u!114 &8857444890383635667
+--- !u!114 &7046268999816813054
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,13 +115,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 9171593415853247485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OverrideArea: 0
-  m_Area: 0
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
+  m_Size: {x: 2, y: 2.218, z: 3.31}
+  m_Center: {x: 0.056, y: 0.627, z: 1.668}
+  m_Area: 1
   m_AffectedAgents: ffffffff

@@ -1378,10 +1378,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5424310183818487711}
   - component: {fileID: 5638731938855797589}
-  - component: {fileID: 2246482678992174476}
-  - component: {fileID: 3298818668542847165}
   - component: {fileID: 1429441962258199311}
   - component: {fileID: 7465995943950830732}
+  - component: {fileID: 3031542207564503112}
   m_Layer: 0
   m_Name: DrillPodBigJim
   m_TagString: Untagged
@@ -1430,41 +1429,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2246482678992174476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4615298961571888421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OverrideArea: 0
-  m_Area: 0
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 1
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
---- !u!208 &3298818668542847165
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4615298961571888421}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 14.09, y: 5.55, z: 20.4}
-  m_MoveThreshold: 0.2
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: -0.54, y: 2.33, z: 5.14}
-  m_TimeToStationary: 1
 --- !u!114 &1429441962258199311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1517,6 +1481,22 @@ MonoBehaviour:
   deliveringVehicle: 0
   untetheredVehicle: 0
   colliderEncompasingDropship: {fileID: 0}
+--- !u!114 &3031542207564503112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4615298961571888421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 28.18, y: 11.1, z: 40.8}
+  m_Center: {x: -0.54, y: 2.33, z: 5.14}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &4710120134802729133
 GameObject:
   m_ObjectHideFlags: 0

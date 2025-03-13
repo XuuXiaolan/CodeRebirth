@@ -486,6 +486,9 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
+  hasVariants: 1
+  usesTemperature: 1
+  specialRenderer: {fileID: 6177123933367798727}
   creatureNetworkAnimator: {fileID: 5861152159745177237}
   smartAgentNavigator: {fileID: 4184196377494464262}
   propScript: {fileID: 4180001964916081428}
@@ -544,14 +547,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: aeb53d16eabfa5f4a9e941cf9a1e144e, type: 3}
   - {fileID: 8300000, guid: 30a22714dc933564895e96395a93923e, type: 3}
   - {fileID: 8300000, guid: 6b68f04ab4fc57249861270136a37eb8, type: 3}
-  variantMaterials:
-  - {fileID: 2100000, guid: 6825c4cb7115ff54d9a686a4b85aaa50, type: 2}
-  - {fileID: 2100000, guid: 6acfb7d3d740ee945a527a39add292b3, type: 2}
-  - {fileID: 2100000, guid: 7acea94738c56d4499a7744dcc5da121, type: 2}
-  - {fileID: 2100000, guid: d4db49e29db5a6346bcb02cbd8a90261, type: 2}
-  - {fileID: 2100000, guid: ac30f3ddeec6434418500832464fde03, type: 2}
-  - {fileID: 2100000, guid: 6dd6237d7ee6b174bb9680378cd326b4, type: 2}
-  - {fileID: 2100000, guid: 6cf386d6eda3c744cb4df51cc73cecd5, type: 2}
 --- !u!82 &6361777462172498345
 AudioSource:
   m_ObjectHideFlags: 0

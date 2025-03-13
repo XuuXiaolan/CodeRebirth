@@ -8,6 +8,7 @@ using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -34,6 +35,7 @@ static class StartOfRoundPatch
 			if (CodeRebirthUtils.Instance == null)
 			{
 				GameObject utilsInstance = GameObject.Instantiate(Plugin.Assets.UtilsPrefab);
+				utilsInstance.AddComponent<LightUpdateManager>();
 				SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
 				utilsInstance.GetComponent<NetworkObject>().Spawn();
 				Plugin.ExtendedLogging($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");

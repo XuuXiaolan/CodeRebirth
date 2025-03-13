@@ -419,7 +419,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             .FirstOrDefault(x => RWHasLineOfSightToPosition(x.transform.position, 120, seeableDistance, 5));
     }
 
-    public void ParticlesFromEatingForestKeeper(EnemyAI targetEnemy) {
+    public void ParticlesFromEatingForestKeeper(EnemyAI targetEnemy)
+    {
         if (targetEnemy is ForestGiantAI)
         {
             ForestKeeperParticles.Play();
@@ -470,6 +471,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (IsServer)
         {
             creatureNetworkAnimator.SetTrigger(eatEnemyGiant);
+            if (targetEnemy is DriftwoodMenaceAI driftwoodMenaceAI)
+            {
+                driftwoodMenaceAI.SwitchToBehaviourServerRpc((int)DriftwoodMenaceAI.DriftwoodState.Grabbed);
+                driftwoodMenaceAI.creatureAnimator.SetBool(DriftwoodMenaceAI.GrabbedAnimation, true);
+            }
             SetAnimatorMotionBools(chasing: false, walking: false);
         }
         SwitchToBehaviourStateOnLocalClient((int)State.EatingTargetGiant);
@@ -592,6 +598,11 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         if (targetEnemy != null && targetEnemy.agent != null && !targetEnemy.agent.enabled)
         {
+            if (IsServer && targetEnemy is DriftwoodMenaceAI driftwoodMenaceAI)
+            {
+                driftwoodMenaceAI.SwitchToBehaviourServerRpc((int)DriftwoodMenaceAI.DriftwoodState.SearchingForPrey);
+                driftwoodMenaceAI.creatureAnimator.SetBool(DriftwoodMenaceAI.GrabbedAnimation, false);
+            }
             targetEnemy.agent.enabled = true;
         }
         //SpawnHeartOnDeath(transform.position);
