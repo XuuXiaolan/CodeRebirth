@@ -8,7 +8,6 @@ using Unity.Netcode.Components;
 using CodeRebirth.src.Util.Extensions;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
-using System;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
@@ -66,7 +65,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     public virtual void OnLightValueChange(float lightValue)
     {
-        Plugin.ExtendedLogging($"Light Value: {lightValue}");
+        // Plugin.ExtendedLogging($"Light Value: {lightValue}");
         float newLightValue = Mathf.Sqrt(lightValue);
         StartCoroutine(LerpToHotOrCold(previousLightValue, newLightValue));
     }

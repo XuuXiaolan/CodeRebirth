@@ -41,7 +41,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     private float seeableDistance = 0f;
     private float distanceFromShip = 0f;
     private Transform shipBoundaries = null!;
-    private static int instanceNumbers = 0;
+    [HideInInspector] public static int instanceNumbers = 0;
     private Collider[] enemyColliders = null!;
     private PlayerControllerB? playerToKick = null;
     private static readonly int chasingInt = Animator.StringToHash("chasing");
@@ -53,10 +53,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     private static readonly int eatEnemyGiant = Animator.StringToHash("eatEnemyGiant");
     private static readonly int startDeath = Animator.StringToHash("startDeath");
 
-    [HideInInspector]
-    public bool kickingOut = false;
-    [HideInInspector]
-    public bool jumping = false;
+    [HideInInspector] public bool kickingOut = false;
+    [HideInInspector] public bool jumping = false;
 
     #region ThreatType
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
@@ -173,6 +171,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.OnNetworkDespawn();
         CodeRebirthPlayerManager.OnDoorStateChange -= OnShipDoorStateChange;
+        instanceNumbers--;
     }
 
     public override void Update()
@@ -606,12 +605,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             targetEnemy.agent.enabled = true;
         }
         //SpawnHeartOnDeath(transform.position);
-    }
-
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-        instanceNumbers--;
     }
 
     public bool TargetClosestRadMech(float range)

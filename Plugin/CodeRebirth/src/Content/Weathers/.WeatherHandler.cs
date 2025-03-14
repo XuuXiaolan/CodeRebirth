@@ -115,8 +115,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     {
         Tornado = new TornadoAssets("tornadoassets");
         RegisterRegularTornado();
-        RegisterHurricane();
-        RegisterFireStorm();
+        // RegisterHurricane();
+        // RegisterFireStorm();
     }
 
     private void RegisterRegularTornado()

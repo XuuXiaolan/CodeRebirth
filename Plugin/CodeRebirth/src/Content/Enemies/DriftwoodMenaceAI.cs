@@ -20,17 +20,18 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public AudioClip[] hitSound = [];
     public AudioClip[] walkSounds = [];
     public AudioClip[] stompSounds = [];
-    public float rangeOfSight = 50f;
+    public float seeingRange = 60f;
     public float awarenessLevel = 0.0f; // Giant's awareness level of the player
     public float maxAwarenessLevel = 100.0f; // Maximum awareness level
     public float awarenessDecreaseRate = 2.5f; // Rate of awareness decrease per second when the player is not seen
     public float awarenessIncreaseRate = 5.0f; // Base rate of awareness increase when the player is seen
     public float awarenessIncreaseMultiplier = 2.0f; // Multiplier for awareness increase based on proximity
+    public Transform smashTransform = null!;
 
-    private float smashingRange = 6f;
+    private Collider[] CachedHits = new Collider[10];
     private Vector3 enemyPositionBeforeDeath = Vector3.zero;
     private bool currentlyGrabbed = false;
-    private bool canSmash = false;
+    private bool canSmash = true;
     private EnemyAI? ScaryThing = null;
 
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
@@ -116,16 +117,18 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         base.Update();
         if (isEnemyDead) return;
 
-        Plugin.ExtendedLogging($"Awareness: {awarenessLevel}");
+        // Plugin.ExtendedLogging($"Awareness: {awarenessLevel}");
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
         if (targetPlayer == localPlayer && currentlyGrabbed)
         {
             targetPlayer.transform.position = grabArea.transform.position;
+            targetPlayer.ResetFallGravity();
+            return;
         }
         
         if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.isInsideFactory || localPlayer.isInHangarShipRoom) return;
 
-        if (EnemyHasLineOfSightToPosition(localPlayer.transform.position, 60f, rangeOfSight, 5))
+        if (EnemyHasLineOfSightToPosition(localPlayer.transform.position, 60f, seeingRange, 5))
         {
             DriftwoodGiantSeePlayerEffect(localPlayer);
         }
@@ -190,7 +193,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
-        if (FindClosestTargetEnemyInRange(rangeOfSight) || (awarenessLevel >= 25f && FindClosestPlayerInRange(rangeOfSight)))
+        if (FindClosestTargetEnemyInRange(seeingRange) || (awarenessLevel >= 25f && FindClosestPlayerInRange(seeingRange)))
         {
             smartAgentNavigator.StopSearchRoutine();
             StartCoroutine(ChestBangPause((int)DriftwoodState.RunningToPrey, 20f));
@@ -220,7 +223,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         // Keep targetting target enemy, unless they are over 20 units away and we can't see them.
         if (targetEnemy != null)
         {
-            if (Vector3.Distance(transform.position, targetEnemy.transform.position) > rangeOfSight+10f && !EnemyHasLineOfSightToPosition(targetEnemy.transform.position))
+            if (Vector3.Distance(transform.position, targetEnemy.transform.position) > seeingRange+10f && !EnemyHasLineOfSightToPosition(targetEnemy.transform.position))
             {
                 Plugin.ExtendedLogging("Stop chasing target enemy");
                 SetEnemyTargetServerRpc(-1);
@@ -233,7 +236,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         else if (targetPlayer != null)
         {
-            if (Vector3.Distance(transform.position, targetPlayer.transform.position) > rangeOfSight+10f && !EnemyHasLineOfSightToPosition(targetPlayer.transform.position) || StartOfRound.Instance.shipBounds.bounds.Contains(targetPlayer.transform.position)) {
+            if (Vector3.Distance(transform.position, targetPlayer.transform.position) > seeingRange+10f && !EnemyHasLineOfSightToPosition(targetPlayer.transform.position) || StartOfRound.Instance.shipBounds.bounds.Contains(targetPlayer.transform.position)) {
                 Plugin.ExtendedLogging("Stop chasing target player");
                 SetTargetServerRpc(-1);
                 StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
@@ -258,7 +261,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         float distanceToEnemy = Vector3.Distance(transform.position, targetEnemy.transform.position);
 
-        if (distanceToEnemy > rangeOfSight + 10f && !EnemyHasLineOfSightToPosition(targetEnemy.transform.position))
+        if (distanceToEnemy > seeingRange + 10f && !EnemyHasLineOfSightToPosition(targetEnemy.transform.position))
         {
             SetEnemyTargetServerRpc(-1);
             StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
@@ -269,7 +272,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         if (!canSmash) return;
 
-        if (distanceToEnemy < smashingRange + 1.0f)
+        if (distanceToEnemy < agent.stoppingDistance + 1.0f)
         {
             // creatureSFX.PlayOneShot(smashSound);
             creatureNetworkAnimator.SetTrigger(DriftwoodSmashAnimation);
@@ -295,11 +298,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void DoRunningAway()
     {
-        if (ScaryThing == null)
-        {
-            SwitchToBehaviourServerRpc((int)DriftwoodState.SearchingForPrey);
-            return;
-        }
         if (ScaryThing is RadMechAI)
         {
             smartAgentNavigator.DoPathingToDestination(ChooseFarthestNodeFromPosition(transform.position, false).position);
@@ -328,19 +326,19 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         float distance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
         switch (distance)
         {
-            case < 4f:
+            case < 8f:
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
                 break;
-            case < 15 and >= 5:
+            case < 20 and >= 8:
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
                 break;
-            case < 25f and >= 15:
+            case < 40f and >= 20:
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
                 break;
@@ -352,10 +350,14 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
         if (!player.isPlayerControlled || player.isPlayerDead || player.isInHangarShipRoom) return;
         float distance = Vector3.Distance(transform.position, player.transform.position);
-        if (distance <= 12)
+
+        if (distance <= 40)
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-            player.DamagePlayer(5, true, true, CauseOfDeath.Suffocation, 0, false, default);
+            if (distance <= 20)
+            {
+                player.DamagePlayer(5, true, true, CauseOfDeath.Suffocation, 0, false, default);
+            }
         }
     }
 
@@ -387,13 +389,13 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         currentlyGrabbed = false;
 
         // Calculate the throwing direction with an upward angle
-        Vector3 backDirection = transform.TransformDirection(Vector3.back).normalized * 3f;
-        Vector3 upDirection = transform.TransformDirection(Vector3.up).normalized * 30f;
+        Vector3 backDirection = -transform.forward.normalized * 30f;
+        Vector3 upDirection = Vector3.up.normalized * 30f;
         // Creating a direction that is 45 degrees upwards from the back direction
         Vector3 throwingDirection = (backDirection + Quaternion.AngleAxis(55, transform.right) * upDirection).normalized;
 
         // Calculate the throwing force
-        float throwForceMagnitude = 125f;
+        float throwForceMagnitude = 1250f;
         // Throw the player
         Plugin.ExtendedLogging("Launching Player");
         targetPlayer.externalForceAutoFade += throwingDirection * throwForceMagnitude;
@@ -424,35 +426,41 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     }
 
     public void SmashEnemyAnimEvent()
-    {
-        if (targetEnemy == null)
+    {   
+        int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, CachedHits, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < numHits; i++)
         {
-            Plugin.Logger.LogError($"No target enemy to smash");
-            return;
+            if (CachedHits[i].gameObject.GetComponent<EnemyAICollisionDetect>()?.mainScript is DriftwoodMenaceAI) continue;
+            if (!CachedHits[i].gameObject.TryGetComponent(out IHittable iHittable)) continue;
+            iHittable.Hit(6, smashTransform.position, null, true, -1);
         }
 
-        // Slowly turn towards the target enemy
-        Vector3 targetDirection = (targetEnemy.transform.position - transform.position).normalized;
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection, transform.up);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 3f);
-        
-        targetEnemy.HitEnemy(1, null, false, -1);
-        if (targetEnemy.enemyHP <= 0)
+        if (targetEnemy != null)
         {
-            enemyPositionBeforeDeath = targetEnemy.transform.position;
-            agent.speed = 0f;
-            SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.EatingPrey);
-            // creatureVoice.PlayOneShot(eatingSound);
-            targetEnemy = null;
-            if (!IsServer) return;
-            smartAgentNavigator.DoPathingToDestination(enemyPositionBeforeDeath);
-            transform.LookAt(enemyPositionBeforeDeath);
-            creatureNetworkAnimator.SetTrigger(EatEnemyAnimation);
+            // Slowly turn towards the target enemy
+            Vector3 targetDirection = (targetEnemy.transform.position - transform.position).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection, transform.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 3f);
+            if (targetEnemy.enemyHP <= 0)
+            {
+                enemyPositionBeforeDeath = targetEnemy.transform.position;
+                agent.speed = 0f;
+                SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.EatingPrey);
+                // creatureVoice.PlayOneShot(eatingSound);
+                targetEnemy = null;
+                if (!IsServer) return;
+                smartAgentNavigator.DoPathingToDestination(enemyPositionBeforeDeath);
+
+                transform.LookAt(enemyPositionBeforeDeath);
+                creatureNetworkAnimator.SetTrigger(EatEnemyAnimation);
+            }
         }
     }
 
     public void FinishedFeedingOnEnemyAnimEvent()
     {
+        if (isEnemyDead) return;
+        enemyHP += 2;
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
         if (!IsServer) return;
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
@@ -543,14 +551,14 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void UpdateAwareness()
     {
-        bool playerSeen = false;
+        PlayerControllerB? playerSeen = null;
         float closestPlayerDistance = float.MaxValue;
 
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
             if (EnemyHasLineOfSightToPosition(player.transform.position))
             {
-                playerSeen = true;
+                playerSeen = player;
                 float distance = Vector3.Distance(transform.position, player.transform.position);
                 if (distance < closestPlayerDistance)
                 {
@@ -559,18 +567,21 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             }
         }
 
-        if (playerSeen)
+        float minimumAwareness = 0;
+        minimumAwareness += (RedwoodTitanAI.instanceNumbers > 0 ? 5 : 0);
+        awarenessLevel = Mathf.Max(awarenessLevel, minimumAwareness);
+        if (playerSeen != null)
         {
+            bool playerHoldingWeapon = playerSeen.currentlyHeldObjectServer != null && playerSeen.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon;
             // Increase awareness more quickly for closer players
-            float distanceFactor = Mathf.Clamp01((rangeOfSight - closestPlayerDistance) / rangeOfSight);
-            awarenessLevel += awarenessIncreaseRate * Time.deltaTime * (1 + distanceFactor * awarenessIncreaseMultiplier);
+            float distanceFactor = Mathf.Clamp01((seeingRange - closestPlayerDistance) / seeingRange);
+            awarenessLevel += awarenessIncreaseRate * Time.deltaTime * (1 + distanceFactor * awarenessIncreaseMultiplier) + (playerHoldingWeapon ? 0.1f : 0f);
             awarenessLevel = Mathf.Min(awarenessLevel, maxAwarenessLevel);
         }
         else
         {
             // Decrease awareness over time if no player is seen
             awarenessLevel -= awarenessDecreaseRate * Time.deltaTime;
-            awarenessLevel = Mathf.Max(awarenessLevel, 0.0f);
         }
     }
 
@@ -696,6 +707,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.KillEnemy(destroy);
         // creatureVoice.PlayOneShot(dieSFX);
+        smartAgentNavigator.StopSearchRoutine();
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Death);
 
         if (!IsServer) return;

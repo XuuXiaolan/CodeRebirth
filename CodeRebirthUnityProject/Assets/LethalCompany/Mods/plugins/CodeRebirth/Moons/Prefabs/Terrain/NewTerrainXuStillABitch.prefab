@@ -608,7 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Size: {x: 0.19, y: 2.2, z: 0.63}
   m_Center: {x: 0, y: 0, z: 0}
-  m_Area: 0
+  m_Area: 1
   m_AffectedAgents: ffffffff
 --- !u!1 &2430116665892392708
 GameObject:
@@ -656,7 +656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Size: {x: 0.19, y: 2.2, z: 0.63}
   m_Center: {x: 0, y: 0, z: 0}
-  m_Area: 0
+  m_Area: 1
   m_AffectedAgents: ffffffff
 --- !u!1 &3136011847888383202
 GameObject:
@@ -686,8 +686,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 814290114807757620}
+  m_Children: []
   m_Father: {fileID: 9180680824162532995}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3201866688780006463
@@ -772,54 +771,6 @@ OffMeshLink:
   m_BiDirectional: 1
   m_Activated: 1
   m_AutoUpdatePositions: 0
---- !u!1 &3418312741473700579
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 814290114807757620}
-  - component: {fileID: 2318651296213969829}
-  m_Layer: 0
-  m_Name: Modifier
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &814290114807757620
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3418312741473700579}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.43680182, y: 0, z: 0, w: 0.89955777}
-  m_LocalPosition: {x: -110.1, y: -75.8, z: -949.3}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1890352059218467500}
-  m_LocalEulerAnglesHint: {x: -51.8, y: 0, z: 0}
---- !u!114 &2318651296213969829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3418312741473700579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Size: {x: 197.8, y: 217.5, z: 581.8}
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Area: 0
-  m_AffectedAgents: ffffffff
 --- !u!1 &3470247933054037417
 GameObject:
   m_ObjectHideFlags: 0
