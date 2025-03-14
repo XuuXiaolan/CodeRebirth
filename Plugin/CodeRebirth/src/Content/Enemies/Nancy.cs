@@ -11,6 +11,8 @@ public class Nancy : CodeRebirthEnemyAI
     private float checkTimer = 0f;
     private Vector3 playersLastPosition = Vector3.zero;
     private float healTimer = 1f;
+    private float failTimer = 1f;
+    
 
     private static readonly int HealModeAnimation = Animator.StringToHash("HealMode"); // Bool
     private static readonly int HealingPlayerAnimation = Animator.StringToHash("HealingPlayer"); // Bool
@@ -56,7 +58,7 @@ public class Nancy : CodeRebirthEnemyAI
     {
         base.DoAIInterval();
         if (StartOfRound.Instance.allPlayersDead || isEnemyDead) return;
-
+        failTimer -= AIIntervalTime;
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude);
         if (targetPlayer != null && targetPlayer.isPlayerDead)
         {
@@ -111,7 +113,7 @@ public class Nancy : CodeRebirthEnemyAI
 
     public void DoHealingTarget()
     {
-        healTimer -= Time.deltaTime;
+        healTimer -= AIIntervalTime;
         float distanceToPlayer = Vector3.Distance(this.transform.position, targetPlayer.transform.position);
         int currentHealth = targetPlayer.health;
         if (currentHealth >= 100)
@@ -127,8 +129,9 @@ public class Nancy : CodeRebirthEnemyAI
         float distanceFromLastAIInterval = Vector3.Distance(targetPlayer.transform.position, playersLastPosition);
         playersLastPosition = targetPlayer.transform.position;
         Plugin.ExtendedLogging($"Distance from last AI interval: {distanceFromLastAIInterval}");
-        if (distanceFromLastAIInterval > 0.25f)
+        if (distanceFromLastAIInterval > 0.25f && failTimer <= 0)
         {
+            failTimer = 1f;
             creatureNetworkAnimator.SetTrigger(FailHealAnimation);
             targetPlayer.DamagePlayer(20, true, true, CauseOfDeath.Stabbing, 0, false, default);
         }

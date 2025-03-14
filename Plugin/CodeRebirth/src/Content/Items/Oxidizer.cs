@@ -17,6 +17,8 @@ public class Oxidizer : GrabbableObject
     public AudioClip releaseHoldClip = null!;
     public AudioClip holdStartClip = null!;
     public AudioClip bigBlastClip = null!;
+    public float depleteMultiplier = 10f;
+    public float rechargeMultiplier = 1f;
 
     private RaycastHit[] cachedRaycastHits = new RaycastHit[24];
     private bool charged = true;
@@ -41,7 +43,7 @@ public class Oxidizer : GrabbableObject
 
         if (!isBeingUsed)
         {
-            skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) - Time.deltaTime * (nerfed ? 0.5f : 1f), 0, 100));
+            skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) - Time.deltaTime * rechargeMultiplier * (nerfed ? 0.5f : 1f), 0, 100));
             return;
         }
         else
@@ -59,7 +61,7 @@ public class Oxidizer : GrabbableObject
                 }
             }
         }
-        skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) + Time.deltaTime*2.5f, 0, 100));
+        skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) + Time.deltaTime * depleteMultiplier, 0, 100));
         if (skinnedMeshRenderer.GetBlendShapeWeight(0) >= 100)
         {
             isBeingUsed = false;
@@ -124,7 +126,7 @@ public class Oxidizer : GrabbableObject
 
     public void OnExhaustFuel(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (!charged || isPocketed) return;
+        if (!charged || isPocketed || superCharged) return;
         if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
         var btn = (ButtonControl)context.control;
 

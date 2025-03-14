@@ -474,6 +474,8 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public IEnumerator ScareCooldown()
     {
         yield return new WaitForSeconds(7.5f);
+        agent.speed = 7f;
+        SwitchToBehaviourServerRpc((int)DriftwoodState.SearchingForPrey);
     }
 
     public IEnumerator ChestBangPause(int nextStateIndex, float agentSpeed)
@@ -491,14 +493,14 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public void RunFarAway()
     {
         StartCoroutine(ScareCooldown());
-        agent.speed = 7f;
+        agent.speed = 20f;
         SwitchToBehaviourServerRpc((int)DriftwoodState.RunningAway);
     }
 
     public bool DetectScaryThings()
     {
         EnemyAI? closestScaryThing = null;
-        float minDistance = 25f;
+        float minDistance = 35f;
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
