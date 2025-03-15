@@ -20,7 +20,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public GameObject ShockWaveDronePrefab { get; private set; } = null!;
 
 		[LoadFromBundle("DenyGalPurchase.asset")]
-		public TerminalNode denyShockwaveGalPurchaseNode { get; private set; } = null!;
+		public TerminalNode DenyShockwaveGalPurchaseNode { get; private set; } = null!;
 
 		[LoadFromBundle("GalScrapHeapObj.asset")]
 		public Item ShockwaveScrapHeap { get; private set; } = null!;
@@ -50,7 +50,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public GameObject SeamineGalPrefab { get; private set; } = null!;
 
 		[LoadFromBundle("DenyGalPurchase.asset")]
-		public TerminalNode denySeamineGalPurchaseNode { get; private set; } = null!;
+		public TerminalNode DenySeamineGalPurchaseNode { get; private set; } = null!;
 
 		[LoadFromBundle("GalScrapHeapObj.asset")]
 		public Item SeamineScrapHeap { get; private set; } = null!;
@@ -65,7 +65,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		public GameObject TerminalGalPrefab { get; private set; } = null!;
 
 		[LoadFromBundle("DenyGalPurchase.asset")]
-		public TerminalNode denyTerminalGalPurchaseNode { get; private set; } = null!;
+		public TerminalNode DenyTerminalGalPurchaseNode { get; private set; } = null!;
 
 		[LoadFromBundle("GalScrapHeapObj.asset")]
 		public Item TerminalScrapHeap { get; private set; } = null!;
@@ -93,6 +93,12 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		[LoadFromBundle("SCP999GalUnlockable.asset")]
 		public UnlockableItemDef SCP999Unlockable { get; private set; } = null!;
+
+		[LoadFromBundle("Deny999Purchase.asset")]
+		public TerminalNode Deny999PurchaseNode { get; private set; } = null!;
+
+		[LoadFromBundle("999ScrapHeapObj.asset")]
+		public Item SCP999ScrapHeap { get; private set; } = null!;
 	}
 
 	public class Fishdispenserassets(string bundleName) : AssetBundleLoader<Fishdispenserassets>(bundleName)
@@ -207,6 +213,10 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		SCP999 = new SCP999Assets("scp999galassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(SCP999.SCP999Unlockable, Plugin.ModConfig.Config999GalCost.Value, StoreType.ShipUpgrade);
+		RegisterScrapWithConfig("All:1", SCP999.SCP999ScrapHeap, -1, -1);
+		ProgressiveUnlockables.unlockableIDs.Add(SCP999.SCP999Unlockable.unlockable, false);
+		ProgressiveUnlockables.unlockableNames.Add(SCP999.SCP999Unlockable.unlockable.unlockableName);
+		ProgressiveUnlockables.rejectionNodes.Add(SCP999.Deny999PurchaseNode);
 	}
 
 	private void RegisterBellCrab()
@@ -222,7 +232,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		RegisterScrapWithConfig("All:1", ShockwaveBot.ShockwaveScrapHeap, -1, -1);
 		ProgressiveUnlockables.unlockableIDs.Add(ShockwaveBot.ShockWaveBotUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(ShockwaveBot.ShockWaveBotUnlockable.unlockable.unlockableName);
-		ProgressiveUnlockables.rejectionNodes.Add(ShockwaveBot.denyShockwaveGalPurchaseNode);
+		ProgressiveUnlockables.rejectionNodes.Add(ShockwaveBot.DenyShockwaveGalPurchaseNode);
 	}
 
 	private void RegisterSeamineTink()
@@ -232,7 +242,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		RegisterScrapWithConfig("All:1", SeamineTink.SeamineScrapHeap, -1, -1);
 		ProgressiveUnlockables.unlockableIDs.Add(SeamineTink.SeamineTinkUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(SeamineTink.SeamineTinkUnlockable.unlockable.unlockableName);
-		ProgressiveUnlockables.rejectionNodes.Add(SeamineTink.denySeamineGalPurchaseNode);
+		ProgressiveUnlockables.rejectionNodes.Add(SeamineTink.DenySeamineGalPurchaseNode);
 	}
 
 	private void RegisterTerminalBot()
@@ -242,7 +252,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		RegisterScrapWithConfig("All:1", TerminalBot.TerminalScrapHeap, -1, -1);
 		ProgressiveUnlockables.unlockableIDs.Add(TerminalBot.TerminalBotUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(TerminalBot.TerminalBotUnlockable.unlockable.unlockableName);
-		ProgressiveUnlockables.rejectionNodes.Add(TerminalBot.denyTerminalGalPurchaseNode);
+		ProgressiveUnlockables.rejectionNodes.Add(TerminalBot.DenyTerminalGalPurchaseNode);
 	}
 
 	private void RegisterPlantPot()

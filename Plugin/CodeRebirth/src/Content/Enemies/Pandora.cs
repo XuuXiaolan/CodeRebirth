@@ -8,6 +8,9 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class Pandora : CodeRebirthEnemyAI
 {
+    public AnimationClip deathAnimation = null!;
+    public AudioClip deathSound = null!;
+
     // Fields for fixation escape counting
     private int fixationAttemptCount = 0;
     private const int maxFixationAttempts = 3; // After 3 escapes, Pandora loses interest
@@ -15,6 +18,11 @@ public class Pandora : CodeRebirthEnemyAI
     private float currentTeleportTimer = 0f;
     private float showdownTimer = 0f;
     private bool cantLosePlayer = false;
+
+    private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private readonly static int RaiseArmsAnimation = Animator.StringToHash("raiseArms"); // Trigger
+    private readonly static int IsDeadAnimation = Animator.StringToHash("IsDead"); // Bool
+    private readonly static int RandomIdleAnimation = Animator.StringToHash("randomIdle"); // Trigger
 
     public enum State
     {
@@ -98,6 +106,7 @@ public class Pandora : CodeRebirthEnemyAI
         base.DoAIInterval();
         if (StartOfRound.Instance.allPlayersDead || isEnemyDead) return;
 
+        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
         switch (currentBehaviourStateIndex)
         {
             case (int)State.LookingForPlayer:
@@ -176,17 +185,29 @@ public class Pandora : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        StartCoroutine(DoDeathStuffAfterDeath());
         smartAgentNavigator.StopSearchRoutine();
+        agent.velocity = Vector3.zero;
+        agent.path = null;
+    }
+
+    private IEnumerator DoDeathStuffAfterDeath()
+    {
+        if (IsServer)
+        {
+            creatureAnimator.SetBool(IsDeadAnimation, true);
+        }
+        yield return new WaitForSeconds(deathAnimation.length);
         EnableEnemyMesh(false, true);
         SwitchToBehaviourStateOnLocalClient((int)State.Death);
+        creatureVoice.PlayOneShot(deathSound);
 
-        if (!IsServer)
-            return;
+        if (!IsServer) yield break;
         // When Pandora is killed, she respawns behind the nearest corner.
         // *** Audio placeholder: Play "Perhaps your eyes deceived you?" here.
-        RoundManager.Instance.SpawnEnemyGameObject(
-            RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 100, default),
-            -1, -1, this.enemyType);
+        RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 100, default), -1, -1, this.enemyType);
+        // yield return new WaitUntil(() => !creatureVoice.isPlaying);
+        this.NetworkObject.Despawn();
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)

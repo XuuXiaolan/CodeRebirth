@@ -30,7 +30,7 @@ public class Plugin : BaseUnityPlugin
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
     internal static bool SubtitlesAPIIsOn = false;
     internal static bool OpenBodyCamsIsOn = false;
-    internal static bool ModelReplacementAPIIsOn = false;
+    internal static bool ModelReplacementAPIIsOn;
     internal static bool MoreSuitsIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
