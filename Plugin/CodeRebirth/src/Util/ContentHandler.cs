@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirth.Util.Extensions;
 using LethalLib.Extras;
 using LethalLib.Modules;
 using UnityEngine;
@@ -254,8 +253,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else
                 {
-                    modifiedName = modifiedName.FirstCharToUpper();
-                    spawnRateByCustomLevelType[modifiedName] = spawnrate;
+                    spawnRateByCustomLevelType[name] = spawnrate;
                 }
             }
         }
