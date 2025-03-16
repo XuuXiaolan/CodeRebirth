@@ -30,6 +30,11 @@ public class OxydeCrane : NetworkBehaviour
         // stop ship lever from being unable to be pulled until ship's already been dropped.
     }
 
+    public void Update()
+    {
+        CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = !dropButton.interactable;
+    }
+
     public void DropInteract(PlayerControllerB player)
     {
         if (!player.IsOwner || alreadyDropped) return;

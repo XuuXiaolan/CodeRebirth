@@ -796,14 +796,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4963082450237829673}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.3178874, y: 1.8774738, z: -1.7607412}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4247180942410335277}
   m_Father: {fileID: 7202912522843969644}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5696174383166057378
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,15 +1009,15 @@ MonoBehaviour:
   gregBase: {fileID: 7202912522843969644}
   gregCannon: {fileID: 3011095680269132412}
   rotationSpeed: 45
-  fireRate: 1
-  detectionRange: 50
+  fireRate: 0.5
+  detectionRange: 200
   GregSource: {fileID: 0}
   GregFireSounds: []
   GregResupplySounds: []
   DetectPlayerAudioSound: {fileID: 0}
   GregTurningSound: {fileID: 0}
   playerHeadstart: 5
-  maxAngle: 90
+  maxAngle: 80
   rocketTransforms:
   - {fileID: 2415728666264293469}
   - {fileID: 918206431773941136}

@@ -92,6 +92,7 @@ public class GunslingerGreg : CodeRebirthHazard
     {
         rechargeRocketTimer -= Time.deltaTime;
         if (rechargeRocketTimer > 0) return;
+        rechargeRocketTimer = 30f;
         rocketsReady[rocketTransform] = SpawnImmobileRocket(rocketTransform);
     }
 
@@ -160,10 +161,11 @@ public class GunslingerGreg : CodeRebirthHazard
         Vector3 directionToTarget = futurePosition - gregBase.position;
         float angle = Vector3.Angle(gregBase.up, directionToTarget);
 
+        Plugin.ExtendedLogging($"Angle: {angle} Distance: {distanceToPlayer} Locked: {lockedOntoAPlayer}");
         // Check if player is within detection range and if there's line of sight
         if (distanceToPlayer <= detectionRange && angle <= maxAngle)
         {
-            if (!Physics.Linecast(gregCannon.position, playerControllerB.transform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
+            if (!Physics.Linecast(gregCannon.position, playerControllerB.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
                 lockedOntoAPlayer = true;
                 lastPlayerTargetted = playerControllerB;
@@ -178,7 +180,7 @@ public class GunslingerGreg : CodeRebirthHazard
 
                 // Set the pitch angle for the turret cannon
                 Vector3 currentLocalEulerAngles = gregCannon.localEulerAngles;
-                gregCannon.localEulerAngles = Vector3.MoveTowards(currentLocalEulerAngles, new Vector3(angle, currentLocalEulerAngles.y, currentLocalEulerAngles.z), Time.deltaTime * 5);
+                gregCannon.localEulerAngles = new Vector3(-(maxAngle - angle), currentLocalEulerAngles.y, currentLocalEulerAngles.z);
             }
         }
     }
