@@ -143,8 +143,6 @@ GameObject:
   - component: {fileID: 28374075056899420}
   - component: {fileID: 6134293639880378220}
   - component: {fileID: 3436347674006965903}
-  - component: {fileID: 2238017167107773739}
-  - component: {fileID: 3121638454210683633}
   m_Layer: 0
   m_Name: ScaffCollision
   m_TagString: Untagged
@@ -293,45 +291,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.28596163, y: 4.210586, z: 0.27631333}
   m_Center: {x: 4, y: 2.1463978, z: 2.83}
---- !u!65 &2238017167107773739
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7170010748757377165}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.25804186, y: 1.0494734, z: 1.8318138}
-  m_Center: {x: 4.022208, y: 3.7842276, z: 3.8189516}
---- !u!65 &3121638454210683633
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7170010748757377165}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.25804186, y: 1.0494734, z: 1.8318138}
-  m_Center: {x: -3.98, y: 3.7842276, z: 3.8189516}
