@@ -24,7 +24,8 @@ namespace CodeRebirth.src.MiscScripts
             BearTrap,
             BoomTrap,
             ShredderSarah,
-            CompactorToby
+            CompactorToby,
+            GunslingerGreg,
         }
 
         public void Start()

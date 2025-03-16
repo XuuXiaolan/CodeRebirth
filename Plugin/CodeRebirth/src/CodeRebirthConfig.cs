@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
+using CullFactory;
 
 namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigGunslingerGregEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDriftwoodMenaceEnabled { get; private set; }
     public ConfigEntry<bool> ConfigNancyEnabled { get; private set; }
     public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
@@ -231,10 +233,8 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigRubyWorth { get; private set; }
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
-    #region Debug
     public ConfigEntry<bool> ConfigDebugMode { get; private set; }
 
-    #endregion
     public CodeRebirthConfig(ConfigFile configFile)
     {
         configFile.SaveOnConfigSet = false;
@@ -262,6 +262,12 @@ public class CodeRebirthConfig
                                             "??? | Enabled",
                                             true,
                                             "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
+        #endregion
+        #region Gunslinger Greg
+        ConfigGunslingerGregEnabled = configFile.Bind("Gunslinger Greg Options",
+                                            "Gunslinger Greg | Enabled",
+                                            true,
+                                            "Whether Gunslinger Greg is enabled.");
         #endregion
         #region Driftwood Menace
         ConfigDriftwoodMenaceEnabled = configFile.Bind("Driftwood Menace Options",

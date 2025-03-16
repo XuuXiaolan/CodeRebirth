@@ -59,7 +59,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             prefabToSpawn = prefab
         };
-        MapObjectHandler.hazardPrefabs.Add(prefab);
 
         // Parse the configuration string
         (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);

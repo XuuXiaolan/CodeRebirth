@@ -191,6 +191,16 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public UnlockableItemDef PiggyBankUnlockable { get; private set; } = null!;
 	}
 
+	public class GunslingerGregAssets(string bundleName) : AssetBundleLoader<GunslingerGregAssets>(bundleName)
+	{
+		[LoadFromBundle("GregNotSAM.prefab")]
+		public GameObject GunslingerGregPrefab { get; private set; } = null!;
+
+		[LoadFromBundle("GregMissile.prefab")]
+		public GameObject MissilePrefab { get; private set; } = null!;
+	}
+
+	public GunslingerGregAssets GunslingerGreg { get; private set; } = null!;
 	public CompactorTobyAssets CompactorToby { get; private set; } = null!;
 	public ShredderSarahAssets ShredderSarah { get; private set; } = null!;
 	public MerchantAssets Merchant { get; private set; } = null!;
@@ -216,6 +226,12 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.CompactorToby] = CompactorToby.CompactorTobyPrefab;
 			RegisterScrapWithConfig("", CompactorToby.FlatDeadPlayerScrap, -1, -1);
 			RegisterScrapWithConfig("", CompactorToby.SallyCubesScrap, -1, -1);
+		}
+
+		if (Plugin.ModConfig.ConfigGunslingerGregEnabled.Value)
+		{
+			GunslingerGreg = new GunslingerGregAssets("gunslingergregassets");
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.GunslingerGreg] = GunslingerGreg.GunslingerGregPrefab;
 		}
 
 		if (Plugin.ModConfig.ConfigOxydeEnabled.Value)

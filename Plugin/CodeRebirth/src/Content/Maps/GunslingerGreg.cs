@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
-using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,7 +11,6 @@ public class GunslingerGreg : CodeRebirthHazard
 {
     public Transform gregBase = null!;
     public Transform gregCannon = null!;
-    public Transform[] projectileSpawnPoints = [];
     public float rotationSpeed = 45f;
     public float fireRate = 1f;
     public float detectionRange = 50f;
@@ -23,15 +21,15 @@ public class GunslingerGreg : CodeRebirthHazard
     public AudioSource GregTurningSound = null!;
     public float playerHeadstart = 5f;
     public float maxAngle = 90f;
-    public Dictionary<Transform, bool> rocketsReady = new();
+    public Dictionary<Transform, GunslingerMissile?> rocketsReady = new();
     public Transform[] rocketTransforms = [];
 
-    private List<Bounds> safeBounds = new();
+    private List<BoundsDefiner> safeBounds = new();
     private float rechargeRocketTimer = 30f;
     private System.Random gregRandom = new();
     private float currentAngle = 0f;
     private float fireTimer = 1f;
-    private GameObject projectilePrefab = null!;
+    private GameObject MissilePrefab = null!;
     private PlayerControllerB? lastPlayerTargetted = null;
 
     public override void Start()
@@ -42,29 +40,28 @@ public class GunslingerGreg : CodeRebirthHazard
             if (boundsDefiner.boundColor == new Color(1, 0, 1, 1))
             {
                 Plugin.ExtendedLogging($"Found valid bounds for greg");
-                safeBounds.AddItem(boundsDefiner.bounds);
+                safeBounds.Add(boundsDefiner);
             }
         }
+        MissilePrefab = MapObjectHandler.Instance.GunslingerGreg.MissilePrefab;
         foreach (var transform in rocketTransforms)
         {
-            rocketsReady.Add(transform, true);
-            if (IsServer) SpawnImmobileRocket(transform);
+            rocketsReady.Add(transform, SpawnImmobileRocket(transform));
         }
         gregRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
-        projectilePrefab = MapObjectHandler.Instance.AirControlUnit.ProjectilePrefab;
         lastPlayerTargetted = null;
-        DetectPlayerAudioSound.volume = 0f;
-        GregTurningSound.volume = 0f;
+        // DetectPlayerAudioSound.volume = 0f;
+        // GregTurningSound.volume = 0f;
     }
 
     private void Update()
     {
         playerHeadstart -= Time.deltaTime;
-        if (rocketsReady.ContainsValue(false))
+        if (rocketsReady.ContainsValue(null))
         {
             RechargeRocket(rocketsReady.First(x => x.Value == false).Key);
         }
-        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || !rocketsReady.ContainsValue(true)) return;
+        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rocketsReady.Values.Where(x => x != null).Count() <= 0) return;
         // Rotate the turret to look for targets
         FindAndAimAtTarget();
 
@@ -76,7 +73,7 @@ public class GunslingerGreg : CodeRebirthHazard
             FireProjectile();
             fireTimer = fireRate;
         }
-        UpdateAudio();
+        // UpdateAudio();
     }
 
     private void UpdateAudio()
@@ -85,19 +82,17 @@ public class GunslingerGreg : CodeRebirthHazard
         GregSource.volume = volume;
     }
 
-    private void SpawnImmobileRocket(Transform rocketTransform)
+    private GunslingerMissile SpawnImmobileRocket(Transform rocketTransform)
     {
-        var rocket = Instantiate(projectilePrefab, rocketTransform.position, Quaternion.identity, rocketTransform);
-        NetworkObject networkObject = rocket.GetComponent<NetworkObject>();
-        networkObject.Spawn(true);
+        GameObject rocket = Instantiate(MissilePrefab, rocketTransform.position, rocketTransform.rotation, rocketTransform);
+        return rocket.GetComponent<GunslingerMissile>();
     }
 
     private void RechargeRocket(Transform rocketTransform)
     {
         rechargeRocketTimer -= Time.deltaTime;
         if (rechargeRocketTimer > 0) return;
-        rocketsReady[rocketTransform] = true;
-        SpawnImmobileRocket(rocketTransform);
+        rocketsReady[rocketTransform] = SpawnImmobileRocket(rocketTransform);
     }
 
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
@@ -121,7 +116,7 @@ public class GunslingerGreg : CodeRebirthHazard
         {
             foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
             {
-                if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) || IsPlayerNearGround(playerControllerB))
+                if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || playerControllerB.isInHangarShipRoom || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) || IsPlayerNearGround(playerControllerB) || PlayerInSafeBounds(playerControllerB))
                 {            
                     continue;
                 }
@@ -132,11 +127,22 @@ public class GunslingerGreg : CodeRebirthHazard
         if (!lockedOntoAPlayer)
         {
             lastPlayerTargetted = null;
-            DetectPlayerAudioSound.volume = 0f;
-            GregTurningSound.volume = 0f;
+            // DetectPlayerAudioSound.volume = 0f;
+            // GregTurningSound.volume = 0f;
         }
     }
 
+    private bool PlayerInSafeBounds(PlayerControllerB playerControllerB)
+    {
+        foreach (var bounds in safeBounds)
+        {
+            if (bounds.BoundsContainTransform(playerControllerB.transform))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     private void HandleTargettingToPlayer(PlayerControllerB playerControllerB, ref bool lockedOntoAPlayer)
     {
         Rigidbody targetRigidbody = playerControllerB.playerRigidbody;
@@ -161,7 +167,7 @@ public class GunslingerGreg : CodeRebirthHazard
             {
                 lockedOntoAPlayer = true;
                 lastPlayerTargetted = playerControllerB;
-                DetectPlayerAudioSound.volume = Plugin.ModConfig.ConfigACUVolume.Value;
+                // DetectPlayerAudioSound.volume = Plugin.ModConfig.ConfigACUVolume.Value;
                 currentAngle = angle;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                 targetRotation.z = 0f;
@@ -172,10 +178,11 @@ public class GunslingerGreg : CodeRebirthHazard
 
                 // Set the pitch angle for the turret cannon
                 Vector3 currentLocalEulerAngles = gregCannon.localEulerAngles;
-                gregCannon.localEulerAngles = new Vector3(angle, currentLocalEulerAngles.y, currentLocalEulerAngles.z);
+                gregCannon.localEulerAngles = Vector3.MoveTowards(currentLocalEulerAngles, new Vector3(angle, currentLocalEulerAngles.y, currentLocalEulerAngles.z), Time.deltaTime * 5);
             }
         }
     }
+
     private void FireProjectile()
     {
         if (lastPlayerTargetted == null) return;
@@ -185,18 +192,17 @@ public class GunslingerGreg : CodeRebirthHazard
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         }
-        GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
-        if (IsServer)
-        {
-            Transform[] viableRockets = rocketsReady.Where(kvp => kvp.Value == true).Select(kvp => kvp.Key).ToArray();
-            Transform randomRocket = viableRockets[UnityEngine.Random.Range(0, viableRockets.Length)];
-            // Activate rockets via rpc similar to code below
-            // AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
-            // projectileComponent.Initialize(Plugin.ModConfig.ConfigAirControlUnitDamage.Value, currentAngle, lastPlayerTargetted);
+        // GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
+        Transform[] viableRockets = rocketsReady.Where(kvp => kvp.Value != null).Select(kvp => kvp.Key).ToArray();
+        Transform randomRocket = viableRockets[gregRandom.Next(viableRockets.Length)];
+        rocketsReady[randomRocket]?.Initialize(lastPlayerTargetted);
+        rocketsReady[randomRocket] = null;
+        // Activate rockets via rpc similar to code below
+        // AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
+        // projectileComponent.Initialize(Plugin.ModConfig.ConfigAirControlUnitDamage.Value, currentAngle, lastPlayerTargetted);
 
-            // Rattle the cannon's transform to emulate a shake effect
-            StartCoroutine(RattleCannon());
-        }
+        // Rattle the cannon's transform to emulate a shake effect
+        StartCoroutine(RattleCannon());
     }
 
     private IEnumerator RattleCannon()
@@ -213,6 +219,6 @@ public class GunslingerGreg : CodeRebirthHazard
         }
 
         gregCannon.localPosition = originalPosition;
-        GregSource.PlayOneShot(GregResupplySounds[UnityEngine.Random.Range(0, GregResupplySounds.Length)]);
+        // GregSource.PlayOneShot(GregResupplySounds[UnityEngine.Random.Range(0, GregResupplySounds.Length)]);
     }
 }
