@@ -45,6 +45,9 @@ public class SnailCatAI : CodeRebirthEnemyAI
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
 		string randomName = randomizedNames[enemyRandom.Next(0, randomizedNames.Length)];
+		float randomScale = enemyRandom.NextFloat(0.9f, 1.1f);
+		this.transform.localScale *= randomScale;
+		propScript.originalScale = this.transform.localScale;
 		scanNodeProperties.headerText = randomName;
 		currentName = randomName;
 		isWiWiWiii = currentName == "Wiwiwii";

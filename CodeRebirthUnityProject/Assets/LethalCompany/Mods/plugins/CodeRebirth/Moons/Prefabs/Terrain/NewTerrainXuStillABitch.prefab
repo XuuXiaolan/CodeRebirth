@@ -443,6 +443,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 53585165450310623}
+  - component: {fileID: 5355932034748060613}
   m_Layer: 0
   m_Name: GreySpawnSpot (3)
   m_TagString: Untagged
@@ -465,6 +466,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7526175770575607513}
   m_LocalEulerAnglesHint: {x: 25.608, y: -111.708, z: -0.729}
+--- !u!114 &5355932034748060613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001129307262758847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 761130553, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chanceOfSpawningAny: 100
+  objectTypesWithRarity:
+  - CRObjectType: 16
+    Rarity: 1
 --- !u!1 &1046177643076620408
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,6 +602,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1372997459568367708}
+  - component: {fileID: 283356251752227658}
   m_Layer: 0
   m_Name: GreySpawnSpot (2)
   m_TagString: Untagged
@@ -607,6 +625,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7526175770575607513}
   m_LocalEulerAnglesHint: {x: 3.327, y: -36.708, z: 9.568}
+--- !u!114 &283356251752227658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1185650204496779901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 761130553, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chanceOfSpawningAny: 100
+  objectTypesWithRarity:
+  - CRObjectType: 16
+    Rarity: 1
 --- !u!1 &1210131834776377162
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,6 +856,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1265147375635252547}
+  - component: {fileID: 1933544366517103756}
   m_Layer: 0
   m_Name: GreySpawnSpot (1)
   m_TagString: Untagged
@@ -844,6 +879,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7526175770575607513}
   m_LocalEulerAnglesHint: {x: 9.015, y: 92.109, z: 0}
+--- !u!114 &1933544366517103756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375360077644188190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 761130553, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chanceOfSpawningAny: 100
+  objectTypesWithRarity:
+  - CRObjectType: 16
+    Rarity: 1
 --- !u!1 &1407115297257643120
 GameObject:
   m_ObjectHideFlags: 0
@@ -2331,7 +2382,10 @@ MonoBehaviour:
   m_Script: {fileID: 761130553, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: 16
+  chanceOfSpawningAny: 100
+  objectTypesWithRarity:
+  - CRObjectType: 16
+    Rarity: 1
 --- !u!1 &4648469477059554915
 GameObject:
   m_ObjectHideFlags: 0
@@ -2625,7 +2679,10 @@ MonoBehaviour:
   m_Script: {fileID: 761130553, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: 1
+  chanceOfSpawningAny: 100
+  objectTypesWithRarity:
+  - CRObjectType: 1
+    Rarity: 1
 --- !u!1 &5263711021302302773
 GameObject:
   m_ObjectHideFlags: 0
@@ -4385,7 +4442,10 @@ MonoBehaviour:
   m_Script: {fileID: 761130553, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: 15
+  chanceOfSpawningAny: 100
+  objectTypesWithRarity:
+  - CRObjectType: 15
+    Rarity: 1
 --- !u!1 &7658332025828168310
 GameObject:
   m_ObjectHideFlags: 0
@@ -5147,7 +5207,10 @@ MonoBehaviour:
   m_Script: {fileID: 761130553, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: 14
+  chanceOfSpawningAny: 100
+  objectTypesWithRarity:
+  - CRObjectType: 14
+    Rarity: 1
 --- !u!1 &9205610619027942804
 GameObject:
   m_ObjectHideFlags: 0
