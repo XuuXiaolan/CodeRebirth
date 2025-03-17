@@ -25,8 +25,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     private Vector3 pointToGo = Vector3.zero;
     [HideInInspector] public bool isOutside = true;
     private bool usingElevator = false;
-    private bool InElevator => elevatorScript != null && Vector3.Distance(this.transform.position, elevatorScript.elevatorInsidePoint.position) < 7f;
-    private bool wasInElevatorLastFrame = false;
+    private bool inElevator = false;
     private Coroutine? searchRoutine = null;
     private bool isSearching = false;
     private bool reachedDestination = false;
@@ -70,23 +69,6 @@ public class SmartAgentNavigator : NetworkBehaviour
     {
         exitPoints.Clear();
         elevatorScript = null;
-    }
-
-    public void Update()
-    {
-        if (InElevator)
-        {
-            if (!wasInElevatorLastFrame)
-            {
-                OnEnterOrExitElevator.Invoke(true);
-            }
-            wasInElevatorLastFrame = true;
-        }
-        else if (wasInElevatorLastFrame)
-        {
-            OnEnterOrExitElevator.Invoke(false);
-            wasInElevatorLastFrame = false;
-        }
     }
 
     public bool DoPathingToDestination(Vector3 destination)
@@ -244,13 +226,21 @@ public class SmartAgentNavigator : NetworkBehaviour
         {
             if (entranceToUse == null && !foundPath) // still null after calculating
             {
-                HandleElevatorActions(actualEndPosition);
-
-                bool playerIsInElevator = elevatorScript != null && !elevatorScript.elevatorFinishedMoving && Vector3.Distance(actualEndPosition, elevatorScript.elevatorInsidePoint.position) < 7f;
-                if (!usingElevator && !playerIsInElevator)
+                if (elevatorScript != null)
                 {
-                    DetermineIfNeedToDisableAgent(actualEndPosition);
+                    if (NeedsElevator(actualEndPosition, elevatorScript, out bool goingUp))
+                    {
+                        usingElevator = true;
+                        HandleElevatorActions(elevatorScript, goingUp);
+                        return false;
+                    }
+                    else if (!elevatorScript.elevatorFinishedMoving && Vector3.Distance(actualEndPosition, elevatorScript.elevatorInsidePoint.position) < 7f)
+                    {
+                        return false;
+                    }
                 }
+                
+                DetermineIfNeedToDisableAgent(actualEndPosition);
 
                 // fallback?
                 return false;
@@ -272,23 +262,15 @@ public class SmartAgentNavigator : NetworkBehaviour
         return false;
     }
 
-    private void HandleElevatorActions(Vector3 actualEndPosition)
+    private void HandleElevatorActions(MineshaftElevatorController elevatorScript, bool goingUp)
     {
-        if (!isOutside && elevatorScript != null && !usingElevator)
-        {
-            bool scriptCloserToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
-            bool destinationCloserToTop = Vector3.Distance(actualEndPosition, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(actualEndPosition, elevatorScript.elevatorBottomPoint.position);
-            if (scriptCloserToTop != destinationCloserToTop)
-            {
-                UseTheElevator(elevatorScript);
-                return;
-            }
-        }
-        else if (usingElevator && elevatorScript != null)
+        if (inElevator)
         {
             agent.Warp(elevatorScript.elevatorInsidePoint.position);
             return;
         }
+        UseTheElevator(elevatorScript, goingUp);
+        return;
     }
 
     private void DoPathingThroughEntrance(EntranceTeleport viableEntrance)
@@ -311,56 +293,55 @@ public class SmartAgentNavigator : NetworkBehaviour
         }
     }
 
-    private bool NeedsElevator(Vector3 destination, EntranceTeleport entranceTeleportToUse, MineshaftElevatorController elevatorScript)
+    private bool NeedsElevator(Vector3 destination, MineshaftElevatorController elevatorScript, out bool goingUp)
     {
+        goingUp = false;
+        if (isOutside && destination.y > -50) return false;
+        if (usingElevator) return true;
         // Determine if the elevator is needed based on destination proximity and current position
-        bool nearMainEntrance = Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < Vector3.Distance(destination, entranceTeleportToUse.transform.position);
-        bool closerToTop = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position);
-        return !isOutside && ((nearMainEntrance && !closerToTop) || (!nearMainEntrance && closerToTop));
+        bool destinationNearMainEntrance = Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < 10f;
+        bool notCloseToTopPoint = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) > 15f;
+        goingUp = destinationNearMainEntrance;
+        return (destinationNearMainEntrance && notCloseToTopPoint) || (!notCloseToTopPoint && !destinationNearMainEntrance);
     }
 
-    private void UseTheElevator(MineshaftElevatorController elevatorScript)
+    private void UseTheElevator(MineshaftElevatorController elevatorScript, bool goingUp)
     {
-        // Determine if we need to go up or down based on current position and destination
-        bool goUp = Vector3.Distance(transform.position, elevatorScript.elevatorBottomPoint.position) < Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position);
         // Check if the elevator is finished moving
+        MoveToWaitingPoint(elevatorScript, goingUp);
         if (elevatorScript.elevatorFinishedMoving)
         {
-            if (elevatorScript.elevatorDoorOpen)
+            if (!elevatorScript.elevatorDoorOpen) return;
+            // If elevator is not called yet and is at the wrong level, call it
+            if (NeedToCallElevator(elevatorScript, goingUp))
             {
-                // If elevator is not called yet and is at the wrong level, call it
-                if (NeedToCallElevator(elevatorScript, goUp))
-                {
-                    elevatorScript.CallElevatorOnServer(goUp);
-                    MoveToWaitingPoint(elevatorScript, goUp);
-                    return;
-                }
-                // Move to the inside point of the elevator if not already there
-                if (Vector3.Distance(transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
-                {
-                    agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
-                }
-                else if (!usingElevator)
-                {
-                    // Press the button to start moving the elevator
-                    elevatorScript.PressElevatorButtonOnServer(true);
-                    StartCoroutine(StopUsingElevator(elevatorScript));
-                }
+                elevatorScript.CallElevatorOnServer(goingUp);
+                return;
             }
-        }
-        else
-        {
-            MoveToWaitingPoint(elevatorScript, goUp);
+            // Move to the inside point of the elevator if not already there
+            if (Vector3.Distance(transform.position, elevatorScript.elevatorInsidePoint.position) > 1f)
+            {
+                agent.SetDestination(elevatorScript.elevatorInsidePoint.position);
+            }
+            else if (!inElevator)
+            {
+                // Press the button to start moving the elevator
+                elevatorScript.PressElevatorButtonOnServer(true);
+                StartCoroutine(StopUsingElevator(elevatorScript));
+            }
         }
     }
 
     private IEnumerator StopUsingElevator(MineshaftElevatorController elevatorScript)
     {
-        usingElevator = true;
+        inElevator = true;
+        OnEnterOrExitElevator.Invoke(true);
         yield return new WaitForSeconds(2f);
         yield return new WaitUntil(() => elevatorScript.elevatorDoorOpen && elevatorScript.elevatorFinishedMoving);
-        // Plugin.ExtendedLogging("Stopped using elevator");
+        Plugin.ExtendedLogging("Stopped using elevator");
         usingElevator = false;
+        OnEnterOrExitElevator.Invoke(false);
+        inElevator = false;
     }
 
     private bool NeedToCallElevator(MineshaftElevatorController elevatorScript, bool needToGoUp)

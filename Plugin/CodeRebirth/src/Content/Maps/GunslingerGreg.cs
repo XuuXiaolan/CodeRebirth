@@ -161,7 +161,7 @@ public class GunslingerGreg : CodeRebirthHazard
         Vector3 directionToTarget = futurePosition - gregBase.position;
         float angle = Vector3.Angle(gregBase.up, directionToTarget);
 
-        Plugin.ExtendedLogging($"Angle: {angle} Distance: {distanceToPlayer} Locked: {lockedOntoAPlayer}");
+        // Plugin.ExtendedLogging($"Angle: {angle} Distance: {distanceToPlayer} Locked: {lockedOntoAPlayer}");
         // Check if player is within detection range and if there's line of sight
         if (distanceToPlayer <= detectionRange && angle <= maxAngle)
         {

@@ -85,16 +85,25 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public void GrabEnemyRarity(string enemyName)
     {
         // Search in OutsideEnemies
-        var enemy = RoundManager.Instance.currentLevel.OutsideEnemies
-            .OfType<SpawnableEnemyWithRarity>()
+        SpawnableEnemyWithRarity? enemy = RoundManager.Instance.currentLevel.OutsideEnemies
             .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName)) ?? RoundManager.Instance.currentLevel.DaytimeEnemies
-                .OfType<SpawnableEnemyWithRarity>()
-                .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
+                .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName)) ?? RoundManager.Instance.currentLevel.Enemies
+                    .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
 
-        // If not found in DaytimeEnemies, search in Enemies
-        enemy ??= RoundManager.Instance.currentLevel.Enemies
-                .OfType<SpawnableEnemyWithRarity>()
-                .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
+        foreach (var spawnableEnemyWithRarity in RoundManager.Instance.currentLevel.Enemies)
+        {
+            Plugin.ExtendedLogging($"{spawnableEnemyWithRarity.enemyType.enemyName} has Rarity: {spawnableEnemyWithRarity.rarity.ToString()}");
+        }
+
+        foreach (var spawnableEnemyWithRarity in RoundManager.Instance.currentLevel.DaytimeEnemies)
+        {
+            Plugin.ExtendedLogging($"{spawnableEnemyWithRarity.enemyType.enemyName} has Rarity: {spawnableEnemyWithRarity.rarity.ToString()}");
+        }
+
+        foreach(var spawnableEnemyWithRarity in RoundManager.Instance.currentLevel.OutsideEnemies)
+        {
+            Plugin.ExtendedLogging($"{spawnableEnemyWithRarity.enemyType.enemyName} has Rarity: {spawnableEnemyWithRarity.rarity.ToString()}");
+        }
 
         // Log the result
         if (enemy != null)
