@@ -83,7 +83,7 @@ static class PlayerControllerBPatch
         orig(self, placeObject, parentObjectTo, placePosition, matchRotationOfParent);
         foreach (var janitor in Janitor.janitors)
         {
-            if (janitor == null) continue;
+            if (janitor == null || janitor.isEnemyDead) continue;
             // If we’re still alive, chase that player if we’re not already
             if (self != null && NetworkManager.Singleton.IsServer && janitor.currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer && janitor.currentBehaviourStateIndex != (int)JanitorStates.ZoomingOff)
             {
