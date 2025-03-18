@@ -2172,6 +2172,9 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
+  hasVariants: 0
+  usesTemperature: 0
+  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 577517964605079600}
   smartAgentNavigator: {fileID: 243809026747451477}
   eyes:
@@ -2387,6 +2390,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
 --- !u!1 &8945839021943058437
 GameObject:
   m_ObjectHideFlags: 0

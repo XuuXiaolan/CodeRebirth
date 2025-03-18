@@ -46555,6 +46555,9 @@ MonoBehaviour:
   hitsPhysicsObjects: 1
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
+  hasVariants: 0
+  usesTemperature: 0
+  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 6190392053031910777}
   smartAgentNavigator: {fileID: 7132943189166769425}
   AlbinoMaterials:
@@ -46760,6 +46763,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
 --- !u!1 &6862261050158760410
 GameObject:
   m_ObjectHideFlags: 0

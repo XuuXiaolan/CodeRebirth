@@ -316,7 +316,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		}
 	}
 
-    public GameObject GetPrefabFor(SpawnSyncedCRObject.CRObjectType objectType)
+    public GameObject? GetPrefabFor(SpawnSyncedCRObject.CRObjectType objectType)
     {
         prefabMapping.TryGetValue(objectType, out var prefab);
         return prefab;

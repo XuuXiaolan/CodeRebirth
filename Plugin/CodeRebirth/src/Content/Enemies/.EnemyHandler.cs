@@ -1,4 +1,5 @@
-﻿﻿using CodeRebirth.src.MiscScripts;
+﻿﻿using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
@@ -10,63 +11,40 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName)
     {
         [LoadFromBundle("SnailCatEnemyObj.asset")]
-        public EnemyType SnailCatEnemyType { get; private set; } = null!;
+        public EnemyType? SnailCatEnemyType { get; private set; } = null;
 
         [LoadFromBundle("SnailCatItemObj.asset")]
-        public Item SnailCatItem { get; private set; } = null!;
-
-        /*[LoadFromBundle("SnailCatTN.asset")]
-        public TerminalNode SnailCatTerminalNode { get; private set; } = null!;
-
-        [LoadFromBundle("SnailCatTK.asset")]
-        public TerminalKeyword SnailCatTerminalKeyword { get; private set; } = null!;*/
+        public Item? SnailCatItem { get; private set; } = null;
     }
 
-    public class CarnivorousPlantAssets(string bundleName ) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName)
+    public class CarnivorousPlantAssets(string bundleName ) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName), IEnemyAssets
     {
-        [LoadFromBundle("CarnivorousPlantObj.asset")]
-        public EnemyType CarnivorousPlantEnemyType { get; private set; } = null!;
+        [LoadFromBundle("CarnivorousPlantEnemyDefinition.asset")]
+        public CREnemyDefinition FirstEnemyDefinition { get; private set; } = null!;
 
-        /*[LoadFromBundle("CarnivorousPlantTN")]
-        public TerminalNode CarnivorousPlantTerminalNode { get; private set; } = null!;
-
-        [LoadFromBundle("CarnivorousPlantTK")]
-        public TerminalKeyword CarnivorousPlantTerminalKeyword { get; private set; } = null!;*/
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { FirstEnemyDefinition };
     }
 
-    public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName), IEnemyAssets {
-        [LoadFromBundle("RedwoodTitanObj.asset")]
-        public EnemyType EnemyType { get; private set; } = null!;
+    public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName), IEnemyAssets
+    {
+        [LoadFromBundle("RedwoodEnemyDefinition.asset")]
+        public CREnemyDefinition FirstEnemyDefinition { get; private set; } = null!;
 
-        [LoadFromBundle("RedwoodTitanTN.asset")]
-        public TerminalNode EnemyTerminalNode { get; private set; } = null!;
-
-        [LoadFromBundle("RedwoodTitanTK.asset")]
-        public TerminalKeyword EnemyTerminalKeyword { get; private set; } = null!;
-        
-        /*[LoadFromBundle("RedwoodHeart.asset")]
-        public Item RedwoodHeart { get; private set; } = null!;
-
-        [LoadFromBundle("RedwoodWhistle.asset")]
-        public Item RedwoodWhistle { get; private set; } = null!;*/
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { FirstEnemyDefinition };
     }
 
     public class DuckSongAssets(string bundleName) : AssetBundleLoader<DuckSongAssets>(bundleName)
     {
         [LoadFromBundle("DuckObj.asset")]
-        public EnemyType DuckSongEnemyType { get; private set; } = null!;
+        public EnemyType? DuckSongEnemyType { get; private set; } = null;
 
         [LoadFromBundle("GrapeObj.asset")]
         public Item GrapeItem { get; private set; } = null!;
 
         [LoadFromBundle("LemonadePitcherObj.asset")]
         public Item LemonadePitcherItem { get; private set; } = null!;
-
-        /*[LoadFromBundle("DuckTN.asset")]
-        public TerminalNode DuckSongTerminalNode { get; private set; } = null!;
-
-        [LoadFromBundle("DuckTK.asset")]
-        public TerminalKeyword DuckSongTerminalKeyword { get; private set; } = null!;*/
 
         [LoadFromBundle("DuckHolder.prefab")]
         public GameObject DuckUIPrefab { get; private set; } = null!;
@@ -147,17 +125,17 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public EnemyType DriftwoodMenaceEnemyType { get; private set; } = null!;
     }
 
-    public NancyAssets Nancy { get; private set; } = null!;
-    public DriftwoodMenaceAssets DriftwoodMenace { get; private set; } = null!;
-    public PandoraAssets Pandora { get; private set; } = null!;
-    public MonarchAssets Monarch { get; private set; } = null!;
-    public MistressAssets Mistress { get; private set; } = null!;
-    public TransporterAssets Transporter { get; private set; } = null!;
-    public JanitorAssets Janitor { get; private set; } = null!;
-    public ManorLordAssets ManorLord { get; private set; } = null!;
-    public DuckSongAssets DuckSong { get; private set; } = null!;
-    public SnailCatAssets SnailCat { get; private set; } = null!;
-    public CarnivorousPlantAssets CarnivorousPlant { get; private set; } = null!;
+    public NancyAssets? Nancy { get; private set; }
+    public DriftwoodMenaceAssets? DriftwoodMenace { get; private set; }
+    public PandoraAssets? Pandora { get; private set; }
+    public MonarchAssets? Monarch { get; private set; }
+    public MistressAssets? Mistress { get; private set; }
+    public TransporterAssets? Transporter { get; private set; }
+    public JanitorAssets? Janitor { get; private set; }
+    public ManorLordAssets? ManorLord { get; private set; }
+    public DuckSongAssets? DuckSong { get; private set; }
+    public SnailCatAssets? SnailCat { get; private set; }
+    public CarnivorousPlantAssets? CarnivorousPlant { get; private set; }
     public RedwoodTitanAssets? RedwoodTitan { get; private set; }
 
     public EnemyHandler()
@@ -194,19 +172,9 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             RegisterScrapWithConfig("", Mistress.ChoppedTalkingHead, -1, -1);
         }
 
-        RedwoodTitan = LoadAndTryRegisterEnemy<RedwoodTitanAssets>(
-            "redwoodtitanassets",
-            "Rewood",
-            "Vanilla:20,Custom:20",
-            2f,
-            3
-        );
+        RedwoodTitan = LoadAndTryRegisterEnemy<RedwoodTitanAssets>("redwoodtitanassets", ["Redwood Titan"], ["Vanilla:20,Custom:20"], [2f], [3]);
 
-        if (Plugin.ModConfig.ConfigDangerousFloraEnabled.Value)
-        {
-            CarnivorousPlant = new CarnivorousPlantAssets("carnivorousplantassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCarnivorousSpawnWeights.Value, CarnivorousPlant.CarnivorousPlantEnemyType, null, null, Plugin.ModConfig.ConfigCarnivorousPowerLevel.Value, Plugin.ModConfig.ConfigCarnivorousMaxSpawnCount.Value);
-        }
+        CarnivorousPlant = LoadAndTryRegisterEnemy<CarnivorousPlantAssets>("carnivorousplantassets", ["Carnivorous Plant"], ["Vanilla:20,Custom:20"], [2f], [3]);
 
         if (Plugin.ModConfig.ConfigSnailCatEnabled.Value)
         {

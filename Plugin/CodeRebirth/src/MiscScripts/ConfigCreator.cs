@@ -1,4 +1,6 @@
 namespace CodeRebirth.src.MiscScripts;
+
+using System.Collections.Generic;
 using BepInEx.Configuration;
 
 public static class ConfigCreator
@@ -40,6 +42,16 @@ public static class ConfigCreator
             MaxSpawnCount = CreateEntry(configFile, enemyName, "Max Spawn Count", defaultMaxSpawnCount, $"Max spawn count for {enemyName}.")
         };
     }
+
+    public static ConfigEntry<T> CreateGeneralConfig<T>(
+        ConfigFile configFile,
+        string EnemyName,
+        string Settings,
+        T DynamicConfigType,
+        string Description)
+    {
+        return CreateEntry(configFile, EnemyName, Settings, DynamicConfigType, Description);
+    }
 }
 
 public class EnemyConfig
@@ -50,20 +62,47 @@ public class EnemyConfig
     public ConfigEntry<int> MaxSpawnCount;
 }
 
+public static class EnemyConfigManager
+{
+    private static readonly Dictionary<string, EnemyConfig> enemyConfigs = new();
+
+    // Call this during your initialization phase for each enemy
+    public static void LoadConfigForEnemy(
+        ConfigFile configFile, 
+        string enemyName, 
+        string defaultSpawnWeight, 
+        float defaultPowerLevel, 
+        int defaultSpawnCount)
+    {
+        var config = ConfigCreator.CreateEnemyConfig(
+            configFile,
+            enemyName,
+            true,
+            defaultSpawnWeight,
+            defaultPowerLevel,
+            defaultSpawnCount
+        );
+        enemyConfigs[enemyName] = config;
+    }
+
+    public static EnemyConfig GetEnemyConfig(string enemyName)
+    {
+        return enemyConfigs[enemyName];
+    }
+}
+
+
 public class ItemConfig
 {
     public ConfigEntry<bool> Enabled;
     public ConfigEntry<string> SpawnWeights;
-    public ConfigEntry<float> PowerLevel;
-    public ConfigEntry<int> MaxSpawnCount;
+    public ConfigEntry<bool> IsShopItem;
 }
 
-public class HazardConfig
+public class InsideHazardConfig
 {
     public ConfigEntry<bool> Enabled;
-    public ConfigEntry<string> SpawnWeights;
-    public ConfigEntry<float> PowerLevel;
-    public ConfigEntry<int> MaxSpawnCount;
+    public ConfigEntry<string> CurveSpawnWeights;
 }
 
 public class UnlockablesConfig

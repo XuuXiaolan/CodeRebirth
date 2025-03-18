@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.AssetLoading;
 using LethalLib.Extras;
@@ -28,29 +27,92 @@ public class ContentHandler<T> where T: ContentHandler<T>
         (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
         Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
     }
-    
-    protected TAsset? LoadAndTryRegisterEnemy<TAsset>(string assetBundleName, string enemyName, string defaultSpawnWeight, float defaultPowerLevel, int defaultSpawnCount) where TAsset : AssetBundleLoader<TAsset>, IEnemyAssets {
-        // In your plugin initialization code:
 
-        var enemyConfig = ConfigCreator.CreateEnemyConfig(
-            Plugin.configFile,               // ConfigFile instance
-            enemyName,                   // enemy name
-            true,                        // default: enabled
-            defaultSpawnWeight,       // default spawn weights
-            defaultPowerLevel,                          // default power level
-            defaultSpawnCount                            // default max spawn count
+    protected void LoadEnemyConfigs(string enemyName, string defaultSpawnWeight, float defaultPowerLevel, int defaultMaxSpawnCount)
+    {
+        EnemyConfigManager.LoadConfigForEnemy(
+            Plugin.configFile,
+            enemyName,
+            defaultSpawnWeight,
+            defaultPowerLevel,
+            defaultMaxSpawnCount
         );
+    }
 
-        if (!enemyConfig.Enabled.Value) return null;
+    protected TAsset? LoadAndTryRegisterEnemy<TAsset>(string assetBundleName, List<string> enemyNames, List<string> defaultSpawnWeights, List<float> defaultPowerLevels, List<int> defaultMaxSpawnCounts) where TAsset : AssetBundleLoader<TAsset>, IEnemyAssets
+    {
+        bool loadBundle = true;
+        for (int i = 0; i < enemyNames.Count; i++)
+        {
+            LoadEnemyConfigs(enemyNames[i], defaultSpawnWeights[i], defaultPowerLevels[i], defaultMaxSpawnCounts[i]);
+            var enemyConfig = EnemyConfigManager.GetEnemyConfig(enemyNames[i]);
+            if (!enemyConfig.Enabled.Value)
+            {
+                loadBundle = false;
+            }
+        }
+        
+        if (!loadBundle) return null;
 
         // hacky workaround because generic functions can't create instances using new with parameters???
         TAsset assetBundle = (TAsset)Activator.CreateInstance(typeof(TAsset), new object[] { assetBundleName });
-        
-        EnemyType enemy = assetBundle.EnemyType;
-        enemy.MaxCount = enemyConfig.MaxSpawnCount.Value;
-        enemy.PowerLevel = enemyConfig.PowerLevel.Value;
-        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(enemyConfig.SpawnWeights.Value);
-        Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, assetBundle.EnemyTerminalNode, assetBundle.EnemyTerminalKeyword);
+
+        int definitionIndex = 0;
+        foreach (var CREnemyDefinition in assetBundle.EnemyDefinitions)
+        {
+            var enemyConfig = EnemyConfigManager.GetEnemyConfig(enemyNames[definitionIndex]);
+            foreach (var configDefinition in CREnemyDefinition.ConfigEntries)
+            {
+                switch (configDefinition.DynamicConfigType)
+                {
+                    case CRDynamicConfigType.STRING:
+                        ConfigCreator.CreateGeneralConfig<string>(
+                            Plugin.configFile,
+                            enemyNames[definitionIndex],
+                            configDefinition.Key,
+                            configDefinition.defaultString,
+                            configDefinition.Description
+                        );
+                        break;
+                    case CRDynamicConfigType.INT:
+                        ConfigCreator.CreateGeneralConfig<int>(
+                            Plugin.configFile,
+                            enemyNames[definitionIndex],
+                            configDefinition.Key,
+                            configDefinition.defaultInt,
+                            configDefinition.Description
+                        );
+                        break;
+                    case CRDynamicConfigType.FLOAT:
+                        ConfigCreator.CreateGeneralConfig<float>(
+                            Plugin.configFile,
+                            enemyNames[definitionIndex],
+                            configDefinition.Key,
+                            configDefinition.defaultFloat,
+                            configDefinition.Description
+                        );
+                        break;
+                    case CRDynamicConfigType.BOOL:
+                        ConfigCreator.CreateGeneralConfig<bool>(
+                            Plugin.configFile,
+                            enemyNames[definitionIndex],
+                            configDefinition.Key,
+                            configDefinition.defaultBool,
+                            configDefinition.Description
+                        );
+                        break;
+                    default:
+                        throw new NotImplementedException("Dynamic config type not implemented.");
+                }
+            }
+            
+            EnemyType enemy = CREnemyDefinition.enemyType;
+            enemy.MaxCount = enemyConfig.MaxSpawnCount.Value;
+            enemy.PowerLevel = enemyConfig.PowerLevel.Value;
+            (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(enemyConfig.SpawnWeights.Value);
+            Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, CREnemyDefinition.terminalNode, CREnemyDefinition.terminalKeyword);
+            definitionIndex++;
+        }
 
         return assetBundle;
     }

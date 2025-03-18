@@ -45,7 +45,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigAirControlUnitEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigDangerousFloraEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFarmingEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBiomesEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFloraEnabled { get; private set; }
@@ -70,7 +69,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigDuckSongSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigWoodenSeedSpawnWeights { get; private set; }
     public ConfigEntry<float> ConfigBiomesSpawnChance { get; private set; }
-    public ConfigEntry<string> ConfigCarnivorousSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
@@ -104,8 +102,6 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigDriftwoodMenaceMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigNancyPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigNancyMaxSpawnCount { get; private set; }
-    public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigCarnivorousMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
     public ConfigEntry<float> ConfigRedwoodInShipVolume { get; private set; }
     public ConfigEntry<float> ConfigRedwoodSpeed { get; private set; }
@@ -817,22 +813,6 @@ public class CodeRebirthConfig
                                             "Biomes spawn chance.");
         #endregion
         #region DangerousFlora
-        ConfigDangerousFloraEnabled = configFile.Bind("Flora Options",
-                                            "Dangerous Flora | Enabled",
-                                            true,
-                                            "Whether dangerous Flora is enabled.");
-        ConfigCarnivorousSpawnWeights = configFile.Bind("Flora Options",
-                                            "Dangerous Flora | Carnivorous Spawn Weights",
-                                            "Custom:20,Vanilla:20",
-                                            "Carnivorous Plant spawn weights e.g. `Custom:20,Vanilla:20`.");
-        ConfigCarnivorousPowerLevel = configFile.Bind("Flora Options",
-                                            "Dangerous Flora | Carnivorous Power Levels",
-                                            0.5f,
-                                            "Carnivorous Plant power level.");
-        ConfigCarnivorousMaxSpawnCount = configFile.Bind("Flora Options",
-                                            "Dangerous Flora | Carnivorous Max Count",
-                                            6,
-                                            "Carnivorous Plant max count.");
         #endregion
         #region Flora
         ConfigFloraEnabled = configFile.Bind("Flora Options",

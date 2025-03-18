@@ -1,7 +1,8 @@
-﻿namespace CodeRebirth.src.Util.AssetLoading;
+﻿using System.Collections.Generic;
+using CodeRebirth.src.Content.Enemies;
 
-public interface IEnemyAssets {
-	EnemyType EnemyType { get; }
-	TerminalNode EnemyTerminalNode { get; }
-	TerminalKeyword EnemyTerminalKeyword { get; }
+namespace CodeRebirth.src.Util.AssetLoading;
+public interface IEnemyAssets
+{
+    IReadOnlyList<CREnemyDefinition> EnemyDefinitions { get; }
 }
