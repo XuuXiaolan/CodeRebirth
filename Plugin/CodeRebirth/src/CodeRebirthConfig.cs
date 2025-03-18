@@ -232,8 +232,6 @@ public class CodeRebirthConfig
 
     public CodeRebirthConfig(ConfigFile configFile)
     {
-        configFile.SaveOnConfigSet = false;
-
         #region Debug
         ConfigDebugMode = configFile.Bind("Debug Options",
                                             "Debug Mode | Hazard Spawning Enabled",
@@ -1234,16 +1232,5 @@ public class CodeRebirthConfig
                                             1.4f,
                                             "Value Multiplier for Metal Crates.");
         #endregion
-        configFile.SaveOnConfigSet = true;
-        ClearUnusedEntries(configFile);
-    }
-
-    private void ClearUnusedEntries(ConfigFile configFile)
-    {
-        // Normally, old unused config entries don't get removed, so we do it with this piece of code. Credit to Kittenji.
-        PropertyInfo orphanedEntriesProp = configFile.GetType().GetProperty("OrphanedEntries", BindingFlags.NonPublic | BindingFlags.Instance);
-        var orphanedEntries = (Dictionary<ConfigDefinition, string>)orphanedEntriesProp.GetValue(configFile, null);
-        orphanedEntries.Clear(); // Clear orphaned entries (Unbinded/Abandoned entries)
-        configFile.Save(); // Save the config file to save these changes
     }
 }

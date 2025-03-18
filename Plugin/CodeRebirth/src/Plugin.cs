@@ -13,6 +13,7 @@ using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
 using BepInEx.Configuration;
+using CodeRebirth.Util.Extensions;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -107,6 +108,10 @@ public class Plugin : BaseUnityPlugin
 
         RegisterContentHandlers(Assembly.GetExecutingAssembly());
 
+        Logger.LogInfo("Cleaning config");
+        Config.ClearUnusedEntries();
+        Config.Save();
+        
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 

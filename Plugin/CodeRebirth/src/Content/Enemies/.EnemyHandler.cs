@@ -200,7 +200,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             Plugin.configFile,               // your ConfigFile instance
             "Redwood",                   // enemy name
             true,                        // default: enabled
-            "Vanillaasd:20sfdg,Custom:20",       // default spawn weights
+            "Vanilla:20,Custom:20",       // default spawn weights
             2f,                          // default power level
             3                            // default max spawn count
         );
