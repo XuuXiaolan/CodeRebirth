@@ -83,6 +83,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public void OnNewRoundStart()
     {
         entrancePoints = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);
+        foreach (var entrance in entrancePoints)
+        {
+            if (!entrance.FindExitPoint())
+            {
+                Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
+            }
+        }
+
     }
 
     public void UnlockProgressively(int unlockableIndex, int playerIndex, bool local, bool displayTip, string messageHeader, string messagBody)

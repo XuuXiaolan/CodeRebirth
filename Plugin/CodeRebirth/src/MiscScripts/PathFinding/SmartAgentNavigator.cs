@@ -33,6 +33,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     [HideInInspector] public Coroutine? checkPathsRoutine = null;
     [HideInInspector] public PathfindingOperation? pathfindingOperation = null;
     [HideInInspector] public List<EntranceTeleport> exitPoints = new();
+    [HideInInspector] public EntranceTeleport? mainEntrance = null;
 
     public override void OnNetworkSpawn()
     {
@@ -56,9 +57,9 @@ public class SmartAgentNavigator : NetworkBehaviour
         foreach (var exit in CodeRebirthUtils.entrancePoints)
         {
             exitPoints.Add(exit);
-            if (!exit.FindExitPoint())
+            if (exit.entranceId == 0 && exit.isEntranceToBuilding)
             {
-                Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
+                mainEntrance = exit;
             }
             // Plugin.ExtendedLogging($"Exit point Entrance: {exit.entrancePoint.position} Exit: {exit.exitPoint.position} and are Entrances: {exit.isEntranceToBuilding}");
         }
@@ -69,6 +70,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     {
         exitPoints.Clear();
         elevatorScript = null;
+        mainEntrance = null;
     }
 
     public bool DoPathingToDestination(Vector3 destination)
@@ -240,8 +242,16 @@ public class SmartAgentNavigator : NetworkBehaviour
                     }
                 }
                 
-                DetermineIfNeedToDisableAgent(actualEndPosition);
-
+                if ((isOutside && actualEndPosition.y > -50) || (!isOutside && actualEndPosition.y < -50))
+                {
+                    DetermineIfNeedToDisableAgent(actualEndPosition);
+                    return false;
+                }
+                if (mainEntrance == null)
+                {
+                    return false;
+                }
+                DoPathingThroughEntrance(mainEntrance);
                 // fallback?
                 return false;
             }
@@ -296,13 +306,17 @@ public class SmartAgentNavigator : NetworkBehaviour
     private bool NeedsElevator(Vector3 destination, MineshaftElevatorController elevatorScript, out bool goingUp)
     {
         goingUp = false;
-        if (isOutside && destination.y > -50) return false;
+        if (isOutside && destination.y > -50)
+        {
+            usingElevator = false;
+            return false;
+        }
         if (usingElevator) return true;
         // Determine if the elevator is needed based on destination proximity and current position
-        bool destinationNearMainEntrance = Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < 10f;
+        bool destinationCloserToMainEntrance = Vector3.Distance(destination, RoundManager.FindMainEntrancePosition(true, false)) < Vector3.Distance(destination, elevatorScript.elevatorBottomPoint.position);
         bool notCloseToTopPoint = Vector3.Distance(transform.position, elevatorScript.elevatorTopPoint.position) > 15f;
-        goingUp = destinationNearMainEntrance;
-        return (destinationNearMainEntrance && notCloseToTopPoint) || (!notCloseToTopPoint && !destinationNearMainEntrance);
+        goingUp = destinationCloserToMainEntrance;
+        return (destinationCloserToMainEntrance && notCloseToTopPoint) || (!notCloseToTopPoint && !destinationCloserToMainEntrance);
     }
 
     private void UseTheElevator(MineshaftElevatorController elevatorScript, bool goingUp)

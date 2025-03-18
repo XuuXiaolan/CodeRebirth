@@ -238,7 +238,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 name = "modded";
             }
 
-            if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
+            if (Enum.TryParse(name, true, out Levels.LevelTypes levelType))
             {
                 spawnRateByLevelType[levelType] = spawnrate;
             }

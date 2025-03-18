@@ -90,7 +90,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
                 .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName)) ?? RoundManager.Instance.currentLevel.Enemies
                     .FirstOrDefault(x => x.enemyType.enemyName.Equals(enemyName));
 
-        foreach (var spawnableEnemyWithRarity in RoundManager.Instance.currentLevel.Enemies)
+        /*foreach (var spawnableEnemyWithRarity in RoundManager.Instance.currentLevel.Enemies)
         {
             Plugin.ExtendedLogging($"{spawnableEnemyWithRarity.enemyType.enemyName} has Rarity: {spawnableEnemyWithRarity.rarity.ToString()}");
         }
@@ -103,7 +103,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         foreach(var spawnableEnemyWithRarity in RoundManager.Instance.currentLevel.OutsideEnemies)
         {
             Plugin.ExtendedLogging($"{spawnableEnemyWithRarity.enemyType.enemyName} has Rarity: {spawnableEnemyWithRarity.rarity.ToString()}");
-        }
+        }*/
 
         // Log the result
         if (enemy != null)
