@@ -34,16 +34,15 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public TerminalKeyword CarnivorousPlantTerminalKeyword { get; private set; } = null!;*/
     }
 
-    public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName)
-    {
+    public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName), IEnemyAssets {
         [LoadFromBundle("RedwoodTitanObj.asset")]
-        public EnemyType RedwoodTitanEnemyType { get; private set; } = null!;
+        public EnemyType EnemyType { get; private set; } = null!;
 
-        /*[LoadFromBundle("RedwoodTitanTN.asset")]
-        public TerminalNode RedwoodTitanTerminalNode { get; private set; } = null!;
+        [LoadFromBundle("RedwoodTitanTN.asset")]
+        public TerminalNode EnemyTerminalNode { get; private set; } = null!;
 
         [LoadFromBundle("RedwoodTitanTK.asset")]
-        public TerminalKeyword RedwoodTitanTerminalKeyword { get; private set; } = null!;*/
+        public TerminalKeyword EnemyTerminalKeyword { get; private set; } = null!;
         
         /*[LoadFromBundle("RedwoodHeart.asset")]
         public Item RedwoodHeart { get; private set; } = null!;
@@ -159,7 +158,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     public DuckSongAssets DuckSong { get; private set; } = null!;
     public SnailCatAssets SnailCat { get; private set; } = null!;
     public CarnivorousPlantAssets CarnivorousPlant { get; private set; } = null!;
-    public RedwoodTitanAssets RedwoodTitan { get; private set; } = null!;
+    public RedwoodTitanAssets? RedwoodTitan { get; private set; }
 
     public EnemyHandler()
     {
@@ -195,28 +194,13 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             RegisterScrapWithConfig("", Mistress.ChoppedTalkingHead, -1, -1);
         }
 
-        // In your plugin initialization code:
-        var redwoodConfig = ConfigCreator.CreateEnemyConfig(
-            Plugin.configFile,               // your ConfigFile instance
-            "Redwood",                   // enemy name
-            true,                        // default: enabled
-            "Vanilla:20,Custom:20",       // default spawn weights
-            2f,                          // default power level
-            3                            // default max spawn count
+        RedwoodTitan = LoadAndTryRegisterEnemy<RedwoodTitanAssets>(
+            "redwoodtitanassets",
+            "Rewood",
+            "Vanilla:20,Custom:20",
+            2f,
+            3
         );
-
-        if (redwoodConfig.Enabled.Value)
-        {
-            RedwoodTitan = new RedwoodTitanAssets("redwoodtitanassets");
-            RegisterEnemyWithConfig(
-                redwoodConfig.SpawnWeights.Value,
-                RedwoodTitan.RedwoodTitanEnemyType,
-                null, 
-                null,
-                redwoodConfig.PowerLevel.Value,
-                redwoodConfig.MaxSpawnCount.Value);
-            // Optionally register additional assets if needed...
-        }
 
         if (Plugin.ModConfig.ConfigDangerousFloraEnabled.Value)
         {

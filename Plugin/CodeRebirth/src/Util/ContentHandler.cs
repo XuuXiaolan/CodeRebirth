@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util.AssetLoading;
 using LethalLib.Extras;
 using LethalLib.Modules;
 using UnityEngine;
@@ -18,12 +20,39 @@ public class ContentHandler<T> where T: ContentHandler<T>
 		Instance = (T)this;
 	}
 	
+    [Obsolete("Use LoadAndTryRegisterEnemy instead.")]
     protected void RegisterEnemyWithConfig(string configMoonRarity, EnemyType enemy, TerminalNode? terminalNode, TerminalKeyword? terminalKeyword, float powerLevel, int spawnCount)
     {
         enemy.MaxCount = spawnCount;
         enemy.PowerLevel = powerLevel;
         (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
         Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
+    }
+    
+    protected TAsset? LoadAndTryRegisterEnemy<TAsset>(string assetBundleName, string enemyName, string defaultSpawnWeight, float defaultPowerLevel, int defaultSpawnCount) where TAsset : AssetBundleLoader<TAsset>, IEnemyAssets {
+        // In your plugin initialization code:
+
+        var enemyConfig = ConfigCreator.CreateEnemyConfig(
+            Plugin.configFile,               // ConfigFile instance
+            enemyName,                   // enemy name
+            true,                        // default: enabled
+            defaultSpawnWeight,       // default spawn weights
+            defaultPowerLevel,                          // default power level
+            defaultSpawnCount                            // default max spawn count
+        );
+
+        if (!enemyConfig.Enabled.Value) return null;
+
+        // hacky workaround because generic functions can't create instances using new with parameters???
+        TAsset assetBundle = (TAsset)Activator.CreateInstance(typeof(TAsset), new object[] { assetBundleName });
+        
+        EnemyType enemy = assetBundle.EnemyType;
+        enemy.MaxCount = enemyConfig.MaxSpawnCount.Value;
+        enemy.PowerLevel = enemyConfig.PowerLevel.Value;
+        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(enemyConfig.SpawnWeights.Value);
+        Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, assetBundle.EnemyTerminalNode, assetBundle.EnemyTerminalKeyword);
+
+        return assetBundle;
     }
 
     protected void RegisterScrapWithConfig(string configMoonRarity, Item scrap, int itemWorthMin, int itemWorthMax)

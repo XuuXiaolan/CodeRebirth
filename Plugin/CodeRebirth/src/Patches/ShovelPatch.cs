@@ -89,10 +89,10 @@ static class ShovelPatch
 		int numHits = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
 		RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
         if (numHits <= 0) return;
-        if (EnemyHandler.Instance.RedwoodTitan.RedwoodTitanEnemyType != null && random.Next(0, 100) <= 5)
+        if (EnemyHandler.Instance.RedwoodTitan?.EnemyType != null && random.Next(0, 100) <= 5)
         {
             Plugin.ExtendedLogging("Spawning redwood titan");
-            CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.RedwoodTitanEnemyType.enemyName);
+            CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.EnemyType.enemyName);
         }
         if (UnlockableHandler.Instance.PlantPot.Seed != null && random.Next(0, 100) < Plugin.ModConfig.ConfigWoodenSeedTreeSpawnChance.Value)
         {
