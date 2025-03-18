@@ -1,4 +1,5 @@
-﻿﻿using CodeRebirth.src.Util;
+﻿﻿using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 
@@ -194,11 +195,27 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
             RegisterScrapWithConfig("", Mistress.ChoppedTalkingHead, -1, -1);
         }
 
-        if (Plugin.ModConfig.ConfigRedwoodEnabled.Value)
+        // In your plugin initialization code:
+        var redwoodConfig = ConfigCreator.CreateEnemyConfig(
+            Plugin.configFile,               // your ConfigFile instance
+            "Redwood",                   // enemy name
+            true,                        // default: enabled
+            "Vanillaasd:20sfdg,Custom:20",       // default spawn weights
+            2f,                          // default power level
+            3                            // default max spawn count
+        );
+
+        if (redwoodConfig.Enabled.Value)
         {
             RedwoodTitan = new RedwoodTitanAssets("redwoodtitanassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigRedwoodSpawnWeights.Value, RedwoodTitan.RedwoodTitanEnemyType, null, null, Plugin.ModConfig.ConfigRedwoodPowerLevel.Value, Plugin.ModConfig.ConfigRedwoodMaxSpawnCount.Value);
-            //Plugin.samplePrefabs.Add("RedwoodHeart", RedwoodTitan.RedwoodHeart);
+            RegisterEnemyWithConfig(
+                redwoodConfig.SpawnWeights.Value,
+                RedwoodTitan.RedwoodTitanEnemyType,
+                null, 
+                null,
+                redwoodConfig.PowerLevel.Value,
+                redwoodConfig.MaxSpawnCount.Value);
+            // Optionally register additional assets if needed...
         }
 
         if (Plugin.ModConfig.ConfigDangerousFloraEnabled.Value)

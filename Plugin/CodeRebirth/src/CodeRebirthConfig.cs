@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
-using CullFactory;
 
 namespace CodeRebirth.src;
 public class CodeRebirthConfig
@@ -51,7 +50,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigBiomesEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFloraEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigRedwoodEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
     public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
     public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
@@ -76,7 +74,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigRedwoodSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSnailCatSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
@@ -110,8 +107,6 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigCarnivorousPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigCarnivorousMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
-    public ConfigEntry<float> ConfigRedwoodPowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigRedwoodMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigRedwoodInShipVolume { get; private set; }
     public ConfigEntry<float> ConfigRedwoodSpeed { get; private set; }
     public ConfigEntry<float> ConfigRedwoodShipPadding { get; private set; }
@@ -1008,20 +1003,6 @@ public class CodeRebirthConfig
                                             "Redwood | Can Eat Old Birds",
                                             true,
                                             "Whether redwood can eat old birds.");
-        ConfigRedwoodMaxSpawnCount = configFile.Bind("Redwood Options",
-                                            "Redwood | Max Spawn Count",
-                                            1,
-                                            new ConfigDescription(
-                                                "Redwood max spawn count.",
-                                                new AcceptableValueRange<int>(0, 99)
-                                            ));
-        ConfigRedwoodPowerLevel = configFile.Bind("Redwood Options",
-                                            "Redwood | Power Level",
-                                            3f,
-                                            new ConfigDescription(
-                                                "Redwood power level.",
-                                                new AcceptableValueRange<float>(0, 999f)
-                                            ));
         ConfigRedwoodShipPadding = configFile.Bind("Redwood Options",
                                             "Redwood | Ship Padding",
                                             10f,
@@ -1029,10 +1010,6 @@ public class CodeRebirthConfig
                                                 "How far away the redwood usually stays from the ship.",
                                                 new AcceptableValueRange<float>(0, 999f)
                                             ));
-        ConfigRedwoodSpawnWeights = configFile.Bind("Redwood Options",
-                                            "Redwood | Spawn Weights",
-                                            "Experimentation:1,Assurance:10,Vow:90,Offense:20,March:90,Adamance:60,Rend:5,Dine:10,Titan:2,Artifice:30,Embrion:10,Modded:50",
-                                            "Redwood spawn weights.");
         ConfigRedwoodSpeed = configFile.Bind("Redwood Options",
                                             "Redwood | Speed",
                                             5f,
@@ -1040,10 +1017,6 @@ public class CodeRebirthConfig
                                                 "Redwood speed.",
                                                 new AcceptableValueRange<float>(0, 999f)
                                             ));
-        ConfigRedwoodEnabled = configFile.Bind("Redwood Options",
-                                            "Redwood | Enabled",
-                                            true,
-                                            "Whether redwood is enabled.");
         ConfigRedwoodEyesight = configFile.Bind("Redwood Options",
                                             "Redwood | Eyesight",
                                             40f,

@@ -12,6 +12,7 @@ using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
+using BepInEx.Configuration;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -34,6 +35,7 @@ public class Plugin : BaseUnityPlugin
     internal static bool MoreSuitsIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
+    public static ConfigFile configFile { get; private set; } = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
     internal const ulong GLITCH_STEAM_ID = 9;
     internal static MainAssets Assets { get; private set; } = null!;
@@ -49,7 +51,8 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
-        ModConfig = new CodeRebirthConfig(this.Config); // Create the config with the file from here.
+        configFile = this.Config;
+        ModConfig = new CodeRebirthConfig(configFile); // Create the config with the file from here.
 
         if (SubtitlesAPICompatibilityChecker.Enabled)
         {
