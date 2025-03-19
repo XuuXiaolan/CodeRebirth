@@ -39,14 +39,32 @@ public class ContentHandler<T> where T: ContentHandler<T>
         );
     }
 
-    protected TAsset? LoadAndTryRegisterEnemy<TAsset>(string assetBundleName, List<string> enemyNames, List<string> defaultSpawnWeights, List<float> defaultPowerLevels, List<int> defaultMaxSpawnCounts) where TAsset : AssetBundleLoader<TAsset>, IEnemyAssets
+    protected void LoadItemConfigs(string itemName, string defaultSpawnWeight, bool isScrapItem, bool isShopItem, int cost)
+    {
+        ItemConfigManager.LoadConfigForItem(
+            Plugin.configFile,
+            itemName,
+            defaultSpawnWeight,
+            isScrapItem,
+            isShopItem,
+            cost
+        );
+    }
+
+    protected void LoadEnabledConfigs(string keyName)
+    {
+        var config = CRConfigManager.CreateEnabledEntry(Plugin.configFile, keyName, "Enabled", true, $"Whether {keyName} is enabled.");
+        CRConfigManager.CRConfigs[keyName] = config;
+    }
+
+    protected TAsset? LoadAndRegisterAssets<TAsset>(string assetBundleName, List<string> keyNames) where TAsset : AssetBundleLoader<TAsset>
     {
         bool loadBundle = true;
-        for (int i = 0; i < enemyNames.Count; i++)
+        for (int i = 0; i < keyNames.Count; i++)
         {
-            LoadEnemyConfigs(enemyNames[i], defaultSpawnWeights[i], defaultPowerLevels[i], defaultMaxSpawnCounts[i]);
-            var enemyConfig = EnemyConfigManager.GetEnemyConfig(enemyNames[i]);
-            if (!enemyConfig.Enabled.Value)
+            LoadEnabledConfigs(keyNames[i]);
+            bool assetConfigEnabled = CRConfigManager.GetEnabledConfigResult(keyNames[i]);
+            if (!assetConfigEnabled)
             {
                 loadBundle = false;
             }
@@ -57,45 +75,52 @@ public class ContentHandler<T> where T: ContentHandler<T>
         // hacky workaround because generic functions can't create instances using new with parameters???
         TAsset assetBundle = (TAsset)Activator.CreateInstance(typeof(TAsset), new object[] { assetBundleName });
 
+        return assetBundle;
+    }
+
+    protected void RegisterEnemyAssets<TAsset>(TAsset? assetBundle, List<string> names, List<string> defaultSpawnWeights, List<float> defaultPowerLevels, List<int> defaultMaxSpawnCounts) where TAsset : AssetBundleLoader<TAsset>, IEnemyAssets
+    {
+        if (assetBundle == null) return;
         int definitionIndex = 0;
         foreach (var CREnemyDefinition in assetBundle.EnemyDefinitions)
         {
-            var enemyConfig = EnemyConfigManager.GetEnemyConfig(enemyNames[definitionIndex]);
+            LoadEnemyConfigs(names[definitionIndex], defaultSpawnWeights[definitionIndex], defaultPowerLevels[definitionIndex], defaultMaxSpawnCounts[definitionIndex]);
+            var enemyConfig = EnemyConfigManager.GetEnemyConfig(names[definitionIndex]);
             foreach (var configDefinition in CREnemyDefinition.ConfigEntries)
             {
                 switch (configDefinition.DynamicConfigType)
                 {
                     case CRDynamicConfigType.STRING:
-                        ConfigCreator.CreateGeneralConfig<string>(
+                        CRConfigManager.CreateGeneralConfig<string>(
                             Plugin.configFile,
-                            enemyNames[definitionIndex],
+                            names[definitionIndex],
                             configDefinition.Key,
                             configDefinition.defaultString,
                             configDefinition.Description
                         );
                         break;
                     case CRDynamicConfigType.INT:
-                        ConfigCreator.CreateGeneralConfig<int>(
+                        CRConfigManager.CreateGeneralConfig<int>(
                             Plugin.configFile,
-                            enemyNames[definitionIndex],
+                            names[definitionIndex],
                             configDefinition.Key,
                             configDefinition.defaultInt,
                             configDefinition.Description
                         );
                         break;
                     case CRDynamicConfigType.FLOAT:
-                        ConfigCreator.CreateGeneralConfig<float>(
+                        CRConfigManager.CreateGeneralConfig<float>(
                             Plugin.configFile,
-                            enemyNames[definitionIndex],
+                            names[definitionIndex],
                             configDefinition.Key,
                             configDefinition.defaultFloat,
                             configDefinition.Description
                         );
                         break;
                     case CRDynamicConfigType.BOOL:
-                        ConfigCreator.CreateGeneralConfig<bool>(
+                        CRConfigManager.CreateGeneralConfig<bool>(
                             Plugin.configFile,
-                            enemyNames[definitionIndex],
+                            names[definitionIndex],
                             configDefinition.Key,
                             configDefinition.defaultBool,
                             configDefinition.Description
@@ -113,32 +138,97 @@ public class ContentHandler<T> where T: ContentHandler<T>
             Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, CREnemyDefinition.terminalNode, CREnemyDefinition.terminalKeyword);
             definitionIndex++;
         }
-
-        return assetBundle;
     }
 
-    protected void RegisterScrapWithConfig(string configMoonRarity, Item scrap, int itemWorthMin, int itemWorthMax)
+    protected void RegisterItemAssets<TAsset>(TAsset? assetBundle, List<string> names, List<string> defaultSpawnWeights, List<bool> isScrapItems, List<bool> isShopItems, List<int> costs) where TAsset : AssetBundleLoader<TAsset>, IItemAssets
     {
+        if (assetBundle == null) return;
+        int definitionIndex = 0;
+        foreach (var CRItemDefinition in assetBundle.ItemDefinitions)
+        {
+            LoadItemConfigs(names[definitionIndex], defaultSpawnWeights[definitionIndex], isScrapItems[definitionIndex], isShopItems[definitionIndex], costs[definitionIndex]);
+            var itemConfig = ItemConfigManager.GetItemConfig(names[definitionIndex]);
+            foreach (var configDefinition in CRItemDefinition.ConfigEntries)
+            {
+                switch (configDefinition.DynamicConfigType)
+                {
+                    case CRDynamicConfigType.STRING:
+                        CRConfigManager.CreateGeneralConfig<string>(
+                            Plugin.configFile,
+                            names[definitionIndex],
+                            configDefinition.Key,
+                            configDefinition.defaultString,
+                            configDefinition.Description
+                        );
+                        break;
+                    case CRDynamicConfigType.INT:
+                        CRConfigManager.CreateGeneralConfig<int>(
+                            Plugin.configFile,
+                            names[definitionIndex],
+                            configDefinition.Key,
+                            configDefinition.defaultInt,
+                            configDefinition.Description
+                        );
+                        break;
+                    case CRDynamicConfigType.FLOAT:
+                        CRConfigManager.CreateGeneralConfig<float>(
+                            Plugin.configFile,
+                            names[definitionIndex],
+                            configDefinition.Key,
+                            configDefinition.defaultFloat,
+                            configDefinition.Description
+                        );
+                        break;
+                    case CRDynamicConfigType.BOOL:
+                        CRConfigManager.CreateGeneralConfig<bool>(
+                            Plugin.configFile,
+                            names[definitionIndex],
+                            configDefinition.Key,
+                            configDefinition.defaultBool,
+                            configDefinition.Description
+                        );
+                        break;
+                    default:
+                        throw new NotImplementedException("Dynamic config type not implemented.");
+                }
+            }
+            
+            Item item = CRItemDefinition.item;
+            (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(itemConfig.SpawnWeights.Value);
+            RegisterShopItemWithConfig(itemConfig.IsShopItem.Value, itemConfig.IsScrapItem.Value, item, null, itemConfig.Cost.Value, itemConfig.SpawnWeights.Value, itemConfig.Value.Value);
+            definitionIndex++;
+        }
+    }
+
+    protected void RegisterScrapWithConfig(string configMoonRarity, Item scrap)
+    {
+        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
+        Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
+    }
+
+    protected void RegisterShopItemWithConfig(bool enabledShopItem, bool enabledScrap, Item item, TerminalNode? terminalNode, int itemCost, string configMoonRarity, string minMaxWorth)
+    {
+        int[] scrapValues = ChangeItemValues(minMaxWorth);
+        int itemWorthMin = scrapValues[0];
+        int itemWorthMax = scrapValues[1];
+
         if (itemWorthMax != -1 && itemWorthMin != -1)
         {
             if (itemWorthMax < itemWorthMin)
             {
                 itemWorthMax = itemWorthMin;
             }
-            scrap.minValue = (int)(itemWorthMin/0.4f);
-            scrap.maxValue = (int)(itemWorthMax/0.4f);
+            item.minValue = (int)(itemWorthMin/0.4f);
+            item.maxValue = (int)(itemWorthMax/0.4f);
         }
 
-        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
-        Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
-    }
-
-    protected void RegisterShopItemWithConfig(bool enabledScrap, Item item, TerminalNode? terminalNode, int itemCost, string configMoonRarity, int minWorth, int maxWorth)
-    {
-        Items.RegisterShopItem(item, null!, null!, terminalNode, itemCost);
+        if (enabledShopItem) 
+        {
+            Items.RegisterShopItem(item, null, null, terminalNode, itemCost);
+        }
         if (enabledScrap)
         {
-            RegisterScrapWithConfig(configMoonRarity, item, minWorth, maxWorth);
+            RegisterScrapWithConfig(configMoonRarity, item);
         }
     }
 

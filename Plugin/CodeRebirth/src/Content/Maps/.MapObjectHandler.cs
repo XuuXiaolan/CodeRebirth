@@ -224,8 +224,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		{
 			CompactorToby = new CompactorTobyAssets("compactortobyassets");
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.CompactorToby] = CompactorToby.CompactorTobyPrefab;
-			RegisterScrapWithConfig("", CompactorToby.FlatDeadPlayerScrap, -1, -1);
-			RegisterScrapWithConfig("", CompactorToby.SallyCubesScrap, -1, -1);
+			RegisterScrapWithConfig("", CompactorToby.FlatDeadPlayerScrap);
+			RegisterScrapWithConfig("", CompactorToby.SallyCubesScrap);
 		}
 
 		if (Plugin.ModConfig.ConfigGunslingerGregEnabled.Value)
@@ -238,35 +238,35 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		{
 			ShredderSarah = new ShredderSarahAssets("shreddersarahassets");
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.ShredderSarah] = ShredderSarah.ShreddingSarahPrefab;
-			RegisterScrapWithConfig("", ShredderSarah.ShreddedScrap, -1, -1);
-			RegisterScrapWithConfig("", ShredderSarah.DeadPlayerScrap, -1, -1);
+			RegisterScrapWithConfig("", ShredderSarah.ShreddedScrap);
+			RegisterScrapWithConfig("", ShredderSarah.DeadPlayerScrap);
 		}
 
 		if (Plugin.ModConfig.ConfigMerchantEnabled.Value)
 		{
 			Merchant = new MerchantAssets("merchantassets");
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.Merchant] = Merchant.MerchantPrefab;
-			RegisterScrapWithConfig("", Merchant.CreditPad100cc, -1, -1);
-			RegisterScrapWithConfig("", Merchant.CreditPad500cc, -1, -1);
-			RegisterScrapWithConfig("", Merchant.CreditPad1000cc, -1, -1);
-			RegisterScrapWithConfig("", Merchant.Detonator, -1, -1);
-			RegisterScrapWithConfig("", Merchant.FogHorn, -1, -1);
-			RegisterScrapWithConfig("", Merchant.GuardsmanPhone, -1, -1);
-			RegisterScrapWithConfig("", Merchant.InfiniKey, -1, -1);
-			RegisterScrapWithConfig("", Merchant.LifeformAnalyser, -1, -1);
-			RegisterScrapWithConfig("", Merchant.MoleDigger, -1, -1);
-			RegisterScrapWithConfig("", Merchant.NitroCrate, -1, -1);
-			RegisterScrapWithConfig("", Merchant.Oxidizer, -1, -1);
-			RegisterScrapWithConfig("", Merchant.RailSlugger, -1, -1);
-			RegisterScrapWithConfig("", Merchant.Rocky, -1, -1);
-			RegisterScrapWithConfig("", Merchant.ShipUpgradeUnlocker, -1, -1);
-			RegisterScrapWithConfig("", Merchant.StoptimeWatch, -1, -1);
-			RegisterScrapWithConfig("", Merchant.WalkieYellie, -1, -1);
-			RegisterScrapWithConfig("", Merchant.Worthless, -1, -1);
+			RegisterScrapWithConfig("", Merchant.CreditPad100cc);
+			RegisterScrapWithConfig("", Merchant.CreditPad500cc);
+			RegisterScrapWithConfig("", Merchant.CreditPad1000cc);
+			RegisterScrapWithConfig("", Merchant.Detonator);
+			RegisterScrapWithConfig("", Merchant.FogHorn);
+			RegisterScrapWithConfig("", Merchant.GuardsmanPhone);
+			RegisterScrapWithConfig("", Merchant.InfiniKey);
+			RegisterScrapWithConfig("", Merchant.LifeformAnalyser);
+			RegisterScrapWithConfig("", Merchant.MoleDigger);
+			RegisterScrapWithConfig("", Merchant.NitroCrate);
+			RegisterScrapWithConfig("", Merchant.Oxidizer);
+			RegisterScrapWithConfig("", Merchant.RailSlugger);
+			RegisterScrapWithConfig("", Merchant.Rocky);
+			RegisterScrapWithConfig("", Merchant.ShipUpgradeUnlocker);
+			RegisterScrapWithConfig("", Merchant.StoptimeWatch);
+			RegisterScrapWithConfig("", Merchant.WalkieYellie);
+			RegisterScrapWithConfig("", Merchant.Worthless);
 
 			LethalLib.Modules.Unlockables.RegisterUnlockable(Merchant.PiggyBankUnlockable, Plugin.ModConfig.ConfigPiggyBankCost.Value, StoreType.ShipUpgrade);
 			RegisterInsideMapObjectWithConfig(Merchant.MoneyPrefab, "Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 ");
-			RegisterShopItemWithConfig(false, Merchant.WalletItem, null, Plugin.ModConfig.ConfigWalletCost.Value, "", -1, -1); 
+			RegisterShopItemWithConfig(true, false, Merchant.WalletItem, null, Plugin.ModConfig.ConfigWalletCost.Value, "", "-1,-1"); 
 		}
 
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
@@ -331,9 +331,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	{
 		FunctionalMicrowave = new FunctionalMicrowaveAssets("functionalmicrowaveassets");
 		prefabMapping[SpawnSyncedCRObject.CRObjectType.FunctionalMicrowave] = FunctionalMicrowave.FunctionalMicrowavePrefab;
-		RegisterScrapWithConfig("", FunctionalMicrowave.SporkItem, -1, -1);
-		RegisterScrapWithConfig("", FunctionalMicrowave.ForkItem, -1, -1);
-		RegisterScrapWithConfig("", FunctionalMicrowave.CharredBabyItem, -1, -1);
+		RegisterScrapWithConfig("", FunctionalMicrowave.SporkItem);
+		RegisterScrapWithConfig("", FunctionalMicrowave.ForkItem);
+		RegisterScrapWithConfig("", FunctionalMicrowave.CharredBabyItem);
 		Plugin.samplePrefabs.Add("MicrowaveSpork", FunctionalMicrowave.SporkItem);
 		Plugin.samplePrefabs.Add("MicrowaveFork", FunctionalMicrowave.ForkItem);
 		Plugin.samplePrefabs.Add("MicrowaveCharredBaby", FunctionalMicrowave.CharredBabyItem);

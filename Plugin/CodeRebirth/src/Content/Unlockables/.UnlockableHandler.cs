@@ -170,7 +170,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		CruiserGal = new CruiserGalAssets("cruisergalassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(CruiserGal.CruiserBotUnlockable, Plugin.ModConfig.ConfigCruiserGalCost.Value, StoreType.ShipUpgrade);
-		RegisterScrapWithConfig("All:1", CruiserGal.CruiserScrapHeap, -1, -1);
+		RegisterScrapWithConfig("All:1", CruiserGal.CruiserScrapHeap);
 		ProgressiveUnlockables.unlockableIDs.Add(CruiserGal.CruiserBotUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(CruiserGal.CruiserBotUnlockable.unlockable.unlockableName);
 		ProgressiveUnlockables.rejectionNodes.Add(CruiserGal.denyCruiserGalPurchaseNode);
@@ -205,7 +205,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		ShrimpDispenser = new Fishdispenserassets("fishdispenserassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(ShrimpDispenser.ShrimpDispenserUnlockable, Plugin.ModConfig.ConfigShrimpDispenserCost.Value, StoreType.ShipUpgrade);
 
-		RegisterScrapWithConfig("", ShrimpDispenser.ShrimpWeapon, 0, 0);
+		RegisterScrapWithConfig("", ShrimpDispenser.ShrimpWeapon);
 		Plugin.samplePrefabs.Add("Shrimp Weapon", ShrimpDispenser.ShrimpWeapon);
 	}
 
@@ -213,7 +213,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		SCP999 = new SCP999Assets("scp999galassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(SCP999.SCP999Unlockable, Plugin.ModConfig.Config999GalCost.Value, StoreType.ShipUpgrade);
-		RegisterScrapWithConfig("All:1", SCP999.SCP999ScrapHeap, -1, -1);
+		RegisterScrapWithConfig("All:1", SCP999.SCP999ScrapHeap);
 		ProgressiveUnlockables.unlockableIDs.Add(SCP999.SCP999Unlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(SCP999.SCP999Unlockable.unlockable.unlockableName);
 		ProgressiveUnlockables.rejectionNodes.Add(SCP999.Deny999PurchaseNode);
@@ -229,7 +229,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
         ShockwaveBot = new ShockwaveBotAssets("shockwavebotassets");
         LethalLib.Modules.Unlockables.RegisterUnlockable(ShockwaveBot.ShockWaveBotUnlockable, Plugin.ModConfig.ConfigShockwaveBotCost.Value, StoreType.ShipUpgrade);
-		RegisterScrapWithConfig("All:1", ShockwaveBot.ShockwaveScrapHeap, -1, -1);
+		RegisterScrapWithConfig("All:1", ShockwaveBot.ShockwaveScrapHeap);
 		ProgressiveUnlockables.unlockableIDs.Add(ShockwaveBot.ShockWaveBotUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(ShockwaveBot.ShockWaveBotUnlockable.unlockable.unlockableName);
 		ProgressiveUnlockables.rejectionNodes.Add(ShockwaveBot.DenyShockwaveGalPurchaseNode);
@@ -239,7 +239,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		SeamineTink = new SeamineTinkAssets("seaminetinkassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(SeamineTink.SeamineTinkUnlockable, Plugin.ModConfig.ConfigSeamineTinkCost.Value, StoreType.ShipUpgrade);
-		RegisterScrapWithConfig("All:1", SeamineTink.SeamineScrapHeap, -1, -1);
+		RegisterScrapWithConfig("All:1", SeamineTink.SeamineScrapHeap);
 		ProgressiveUnlockables.unlockableIDs.Add(SeamineTink.SeamineTinkUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(SeamineTink.SeamineTinkUnlockable.unlockable.unlockableName);
 		ProgressiveUnlockables.rejectionNodes.Add(SeamineTink.DenySeamineGalPurchaseNode);
@@ -249,7 +249,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	{
 		TerminalBot = new TerminalBotAssets("terminalbotassets");
 		LethalLib.Modules.Unlockables.RegisterUnlockable(TerminalBot.TerminalBotUnlockable, Plugin.ModConfig.ConfigTerminalBotCost.Value, StoreType.ShipUpgrade);
-		RegisterScrapWithConfig("All:1", TerminalBot.TerminalScrapHeap, -1, -1);
+		RegisterScrapWithConfig("All:1", TerminalBot.TerminalScrapHeap);
 		ProgressiveUnlockables.unlockableIDs.Add(TerminalBot.TerminalBotUnlockable.unlockable, false);
 		ProgressiveUnlockables.unlockableNames.Add(TerminalBot.TerminalBotUnlockable.unlockable.unlockableName);
 		ProgressiveUnlockables.rejectionNodes.Add(TerminalBot.DenyTerminalGalPurchaseNode);
@@ -258,15 +258,13 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 	private void RegisterPlantPot()
 	{
 		PlantPot = new PlantPotAssets("plantpotassets");
-		RegisterScrapWithConfig(Plugin.ModConfig.ConfigWoodenSeedSpawnWeights.Value, PlantPot.Seed, -1, -1);
+		RegisterScrapWithConfig(Plugin.ModConfig.ConfigWoodenSeedSpawnWeights.Value, PlantPot.Seed);
 		Plugin.samplePrefabs.Add("Wooden Seed", PlantPot.Seed);
 
-		int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigTomatoValue.Value);
-		RegisterScrapWithConfig("", PlantPot.Tomato, scrapValues[0], scrapValues[1]);
+		RegisterShopItemWithConfig(false, true, PlantPot.Tomato, null, 0, "", Plugin.ModConfig.ConfigTomatoValue.Value);
 		Plugin.samplePrefabs.Add("Tomato", PlantPot.Tomato);
 
-		int[] gScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigGoldenTomatoValue.Value);
-		RegisterScrapWithConfig("", PlantPot.GoldenTomato, gScrapValues[0], gScrapValues[1]);
+		RegisterShopItemWithConfig(false, true, PlantPot.GoldenTomato, null, 0, "", Plugin.ModConfig.ConfigGoldenTomatoValue.Value);
 		Plugin.samplePrefabs.Add("Golden Tomato", PlantPot.GoldenTomato);
 
 		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigPlantPotPrice.Value, StoreType.ShipUpgrade);

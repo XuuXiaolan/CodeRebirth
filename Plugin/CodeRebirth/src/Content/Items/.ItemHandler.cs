@@ -92,51 +92,46 @@ public class ItemHandler : ContentHandler<ItemHandler>
         if (Plugin.ModConfig.ConfigZortAddonsEnabled.Value)
         {
             Zort = new ZortAssets("zortassets");
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortGuitarSpawnWeights.Value, Zort.GuitarItem, -1, -1);
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortViolinSpawnWeights.Value, Zort.ViolinItem, -1, -1);
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortRecorderSpawnWeights.Value, Zort.RecorderItem, -1, -1);
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigZortAccordionSpawnWeights.Value, Zort.AccordionItem, -1, -1);
+            RegisterShopItemWithConfig(false, true, Zort.GuitarItem, null, 0, Plugin.ModConfig.ConfigZortGuitarSpawnWeights.Value, "-1,-1");
+            RegisterShopItemWithConfig(false, true, Zort.ViolinItem, null, 0, Plugin.ModConfig.ConfigZortViolinSpawnWeights.Value, "-1,-1");
+            RegisterShopItemWithConfig(false, true, Zort.RecorderItem, null, 0, Plugin.ModConfig.ConfigZortRecorderSpawnWeights.Value, "-1,-1");
+            RegisterShopItemWithConfig(false, true, Zort.AccordionItem, null, 0, Plugin.ModConfig.ConfigZortAccordionSpawnWeights.Value, "-1,-1");
         }
 
         if (Plugin.ModConfig.ConfigHoverboardEnabled.Value)
         {
             Hoverboard = new HoverboardAssets("hoverboardassets");
-            RegisterShopItemWithConfig(false, Hoverboard.HoverboardItem, Hoverboard.HoverboardTerminalNode, Plugin.ModConfig.ConfigHoverboardCost.Value, "", -1, -1);
+            RegisterShopItemWithConfig(true, false, Hoverboard.HoverboardItem, Hoverboard.HoverboardTerminalNode, Plugin.ModConfig.ConfigHoverboardCost.Value, "", "-1,-1");
         }
 
         if (Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value)
         {
             EpicAxe = new EpicAxeAssets("epicaxeassets");
-            int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigEpicAxeWorth.Value);
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, EpicAxe.EpicAxeItem, scrapValues[0], scrapValues[1]);
+            RegisterShopItemWithConfig(false, true, EpicAxe.EpicAxeItem, null, 0, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, Plugin.ModConfig.ConfigEpicAxeWorth.Value);
         }
 
         if (Plugin.ModConfig.ConfigSnowGlobeEnabled.Value)
         {
             SnowGlobe = new SnowGlobeAssets("snowglobeassets");
-            int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigSnowGlobeWorth.Value);
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigSnowGlobeSpawnWeights.Value, SnowGlobe.SnowGlobeItem, scrapValues[0], scrapValues[1]);
+            RegisterShopItemWithConfig(false, true, SnowGlobe.SnowGlobeItem, null, 0, Plugin.ModConfig.ConfigSnowGlobeSpawnWeights.Value, Plugin.ModConfig.ConfigSnowGlobeWorth.Value);
         }
 
         if (Plugin.ModConfig.ConfigNaturesMaceScrapEnabled.Value)
         {
             NaturesMace = new NaturesMaceAssets("naturesmaceassets");
-            int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigNaturesMaceWorth.Value);
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigNaturesMaceScrapSpawnWeights.Value, NaturesMace.NatureMaceItem, scrapValues[0], scrapValues[1]);
+            RegisterShopItemWithConfig(false, true, NaturesMace.NatureMaceItem, null, 0, Plugin.ModConfig.ConfigNaturesMaceScrapSpawnWeights.Value, Plugin.ModConfig.ConfigNaturesMaceWorth.Value);
         }
 
         if (Plugin.ModConfig.ConfigIcyHammerScrapEnabled.Value)
         {
             IcyHammer = new IcyHammerAssets("icyhammerassets");
-            int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigIcyHammerWorth.Value);
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigIcyHammerScrapSpawnWeights.Value, IcyHammer.IcyHammerItem, scrapValues[0], scrapValues[1]);
+            RegisterShopItemWithConfig(false, true, IcyHammer.IcyHammerItem, null, 0, Plugin.ModConfig.ConfigIcyHammerScrapSpawnWeights.Value, Plugin.ModConfig.ConfigIcyHammerWorth.Value);
         }
 
         if (Plugin.ModConfig.ConfigSpikyMaceScrapEnabled.Value)
         {
             SpikyMace = new SpikyMaceAssets("spikymaceassets");
-            int[] scrapValues = ChangeItemValues(Plugin.ModConfig.ConfigSpikyMaceWorth.Value);
-            RegisterScrapWithConfig(Plugin.ModConfig.ConfigSpikyMaceScrapSpawnWeights.Value, SpikyMace.SpikyMaceItem, scrapValues[0], scrapValues[1]);
+            RegisterShopItemWithConfig(false, true, SpikyMace.SpikyMaceItem, null, 0, Plugin.ModConfig.ConfigSpikyMaceScrapSpawnWeights.Value, Plugin.ModConfig.ConfigSpikyMaceWorth.Value);
         }
     }
 }

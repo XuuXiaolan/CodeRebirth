@@ -201,17 +201,14 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
         
-        int[] sScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigSapphireWorth.Value);
         Plugin.samplePrefabs.Add("Sapphire Meteorite", Meteorite.SapphireMeteoriteItem);
-        RegisterScrapWithConfig("All:0", Meteorite.SapphireMeteoriteItem, sScrapValues[0], sScrapValues[1]);
+        RegisterShopItemWithConfig(false, true, Meteorite.SapphireMeteoriteItem, null, 0, "", Plugin.ModConfig.ConfigSapphireWorth.Value);
 
-        int[] eScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigEmeraldWorth.Value);
         Plugin.samplePrefabs.Add("Emerald Meteorite", Meteorite.EmeraldMeteoriteItem);
-        RegisterScrapWithConfig("All:0", Meteorite.EmeraldMeteoriteItem, eScrapValues[0], eScrapValues[1]);
+        RegisterShopItemWithConfig(false, true, Meteorite.EmeraldMeteoriteItem, null, 0, "", Plugin.ModConfig.ConfigEmeraldWorth.Value);
         
-        int[] rScrapValues = ChangeItemValues(Plugin.ModConfig.ConfigRubyWorth.Value);
         Plugin.samplePrefabs.Add("Ruby Meteorite", Meteorite.RubyMeteoriteItem);
-        RegisterScrapWithConfig("All:0", Meteorite.RubyMeteoriteItem, rScrapValues[0], rScrapValues[1]);
+        RegisterShopItemWithConfig(false, true, Meteorite.RubyMeteoriteItem, null, 0, "", Plugin.ModConfig.ConfigRubyWorth.Value);
 
         GameObject effectObject = GameObject.Instantiate(Meteorite.MeteorEffectPrefab);
         effectObject.hideFlags = HideFlags.HideAndDontSave;

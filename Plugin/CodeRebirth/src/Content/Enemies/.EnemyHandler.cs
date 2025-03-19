@@ -1,4 +1,5 @@
 ﻿﻿using System.Collections.Generic;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
@@ -8,14 +9,20 @@ namespace CodeRebirth.src.Content.Enemies;
 
 public class EnemyHandler : ContentHandler<EnemyHandler>
 {
-    public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName)
+    /*public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName), IEnemyAssets, IItemAssets
     {
         [LoadFromBundle("SnailCatEnemyObj.asset")]
-        public EnemyType? SnailCatEnemyType { get; private set; } = null;
+        public CREnemyDefinition SnailCatEnemyDefinition { get; private set; } = null!;
 
         [LoadFromBundle("SnailCatItemObj.asset")]
-        public Item? SnailCatItem { get; private set; } = null;
-    }
+        public CRItemDefinition SnailCatItemDefinition { get; private set; } = null!;
+
+        public IReadOnlyList<CRItemDefinition> ItemDefinitions =>
+            new List<CRItemDefinition> { SnailCatItemDefinition };
+
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { SnailCatEnemyDefinition };
+    }*/
 
     public class CarnivorousPlantAssets(string bundleName ) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName), IEnemyAssets
     {
@@ -134,7 +141,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     public JanitorAssets? Janitor { get; private set; }
     public ManorLordAssets? ManorLord { get; private set; }
     public DuckSongAssets? DuckSong { get; private set; }
-    public SnailCatAssets? SnailCat { get; private set; }
+    // public SnailCatAssets? SnailCat { get; private set; }
     public CarnivorousPlantAssets? CarnivorousPlant { get; private set; }
     public RedwoodTitanAssets? RedwoodTitan { get; private set; }
 
@@ -169,24 +176,23 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         {
             Mistress = new MistressAssets("mistressassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigMistressSpawnWeights.Value, Mistress.MistressEnemyType, null, null, Plugin.ModConfig.ConfigMistressPowerLevel.Value, Plugin.ModConfig.ConfigMistressMaxSpawnCount.Value);
-            RegisterScrapWithConfig("", Mistress.ChoppedTalkingHead, -1, -1);
+            RegisterShopItemWithConfig(false, true, Mistress.ChoppedTalkingHead, null, 0, "", "-1,-1");
         }
 
-        RedwoodTitan = LoadAndTryRegisterEnemy<RedwoodTitanAssets>("redwoodtitanassets", ["Redwood Titan"], ["Vanilla:20,Custom:20"], [2f], [3]);
+        RedwoodTitan = LoadAndRegisterAssets<RedwoodTitanAssets>("redwoodtitanassets", ["Redwood Titan"]);
+        RegisterEnemyAssets(RedwoodTitan, ["Redwood Titan"], ["Vanilla:20,Custom:20"], [2f], [3]);
 
-        CarnivorousPlant = LoadAndTryRegisterEnemy<CarnivorousPlantAssets>("carnivorousplantassets", ["Carnivorous Plant"], ["Vanilla:20,Custom:20"], [2f], [3]);
+        CarnivorousPlant = LoadAndRegisterAssets<CarnivorousPlantAssets>("carnivorousplantassets", ["Carnivorous Plant"]);
 
-        if (Plugin.ModConfig.ConfigSnailCatEnabled.Value)
-        {
-            SnailCat = new SnailCatAssets("snailcatassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigSnailCatSpawnWeights.Value, SnailCat.SnailCatEnemyType, null, null, Plugin.ModConfig.ConfigSnailCatPowerLevel.Value, Plugin.ModConfig.ConfigSnailCatMaxSpawnCount.Value);
-        }
+        /*SnailCat = LoadAndRegisterAssets<SnailCatAssets>("snailcatassets", ["SnailCat"]);
+        RegisterEnemyAssets(SnailCat, ["SnailCat"], ["Vanilla:20,Custom:20"], [1f], [5]);
+        RegisterItemAssets(SnailCat, ["SnailCat"], ["Vanilla:20,Custom:20"], [true], [false], [0]);*/
 
         if (Plugin.ModConfig.ConfigDuckSongEnabled.Value)
         {
             DuckSong = new DuckSongAssets("ducksongassets");
-            RegisterScrapWithConfig("", DuckSong.GrapeItem, -1, -1);
-            RegisterScrapWithConfig("", DuckSong.LemonadePitcherItem, -1, -1);
+            RegisterShopItemWithConfig(false, true, DuckSong.GrapeItem, null, 0, "", "-1,-1");
+            RegisterShopItemWithConfig(false, true, DuckSong.LemonadePitcherItem, null, 0, "", "-1,-1");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDuckSongSpawnWeights.Value, DuckSong.DuckSongEnemyType, null, null, Plugin.ModConfig.ConfigDuckSongPowerLevel.Value, Plugin.ModConfig.ConfigDuckSongMaxSpawnCount.Value);
             Plugin.samplePrefabs.Add(DuckSong.GrapeItem.itemName, DuckSong.GrapeItem);
             Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
@@ -196,8 +202,8 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         {
             ManorLord = new ManorLordAssets("manorlordassets");
             RegisterEnemyWithConfig(Plugin.ModConfig.ConfigManorLordSpawnWeights.Value, ManorLord.ManorLordEnemyType, null, null, Plugin.ModConfig.ConfigManorLordPowerLevel.Value, Plugin.ModConfig.ConfigManorLordMaxSpawnCount.Value);
-            RegisterScrapWithConfig("", ManorLord.PuppetItem, -1, -1);
-            RegisterScrapWithConfig("", ManorLord.PinNeedleItem, -1, -1);
+            RegisterShopItemWithConfig(false, true, ManorLord.PuppetItem, null, 0, "", "-1,-1");
+            RegisterShopItemWithConfig(false, true, ManorLord.PinNeedleItem, null, 0, "", "-1,-1");
             Plugin.samplePrefabs.Add(ManorLord.PinNeedleItem.itemName, ManorLord.PinNeedleItem);
             Plugin.samplePrefabs.Add(ManorLord.PuppetItem.itemName, ManorLord.PuppetItem);
         }

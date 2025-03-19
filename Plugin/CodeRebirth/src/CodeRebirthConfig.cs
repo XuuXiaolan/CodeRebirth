@@ -1117,22 +1117,6 @@ public class CodeRebirthConfig
                                             "How many CutieFly can spawn in a moon.");
         #endregion
         #region SnailCat
-        ConfigSnailCatEnabled = configFile.Bind("SnailCat Options",
-                                            "SnailCat Enemy | Enabled",
-                                            true,
-                                            "Enables/Disables the SnailCat enemy");
-        ConfigSnailCatSpawnWeights = configFile.Bind("SnailCat Options",
-                                            "SnailCat Enemy | Spawn Weights",
-                                            "Custom:50,Vanilla:50",
-                                            "SpawnWeight of the SnailCat in moons.");
-        ConfigSnailCatMaxSpawnCount = configFile.Bind("SnailCat Options",
-                                            "SnailCat Enemy | Max Spawn Count",
-                                            5,
-                                            "How many SnailCats can spawn at once.");
-        ConfigSnailCatPowerLevel = configFile.Bind("SnailCat Options",
-                                            "SnailCat Enemy | Power Level",
-                                            1.0f,
-                                            "Power level of the SnailCat enemy.");
         #endregion
         #region Hoverboard
         ConfigHoverboardEnabled = configFile.Bind("Hoverboard Options",
