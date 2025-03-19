@@ -25,7 +25,7 @@ public class CRDynamicConfig
     public string Description;
 }
 
-[CreateAssetMenu(fileName = "DynamicConfigSettings", menuName = "CodeRebirth/Dynamic Config Settings")]
+[CreateAssetMenu(fileName = "DynamicConfigSettings", menuName = "CodeRebirth/Dynamic Config Settings", order = 2)]
 public class DynamicConfigSettings : ScriptableObject
 {
     public List<CRDynamicConfig> Configs;

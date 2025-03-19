@@ -9,7 +9,6 @@ public static class SubtitlesAPICompatibilityChecker
     public static void Init()
     {
         Plugin.ExtendedLogging("No way subtitlesapi is on?!");
-        Plugin.SubtitlesAPIIsOn = true;
         InitSounds();
     }
 

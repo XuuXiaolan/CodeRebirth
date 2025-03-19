@@ -43,12 +43,12 @@ public static class CRConfigManager
 
     public static ConfigEntry<T> CreateGeneralConfig<T>(
         ConfigFile configFile,
-        string EnemyName,
+        string keyName,
         string Settings,
         T DynamicConfigType,
         string Description)
     {
-        return CreateEntry(configFile, EnemyName, Settings, DynamicConfigType, Description);
+        return CreateEntry(configFile, keyName, Settings, DynamicConfigType, Description);
     }
 
     public static bool GetEnabledConfigResult(string keyName)
@@ -116,11 +116,11 @@ public static class EnemyConfigManager
 
 public class ItemConfig : CRConfig
 {
-    public ConfigEntry<string> SpawnWeights;
-    public ConfigEntry<bool> IsScrapItem;
-    public ConfigEntry<string> Value;
-    public ConfigEntry<bool> IsShopItem;
-    public ConfigEntry<int> Cost;
+    public ConfigEntry<string>? SpawnWeights = null;
+    public ConfigEntry<bool>? IsScrapItem = null;
+    public ConfigEntry<string>? Value = null;
+    public ConfigEntry<bool>? IsShopItem = null;
+    public ConfigEntry<int>? Cost = null;
 }
 
 public static class ItemConfigManager
@@ -133,27 +133,33 @@ public static class ItemConfigManager
         string itemName,
         bool defaultEnabled,
         string defaultSpawnWeights,
+        bool createSpawnWeightsConfig,
         bool isScrapItem,
+        bool createIsScrapItemConfig,
         bool isShopItem,
+        bool createIsShopItemConfig,
         int cost)
     {
         return new ItemConfig
         {
             Enabled = CRConfigManager.CreateEntry(configFile, itemName, "Enabled", defaultEnabled, $"Whether {itemName} is enabled."),
-            SpawnWeights = CRConfigManager.CreateEntry(configFile, itemName, "Spawn Weights", defaultSpawnWeights, $"MoonName:Rarity Spawn weights for {itemName}."),
-            IsScrapItem = CRConfigManager.CreateEntry(configFile, itemName, "Is Scrap Item", isScrapItem, $"Whether {itemName} is a scrap item."),
+            SpawnWeights = createSpawnWeightsConfig ? CRConfigManager.CreateEntry(configFile, itemName, "Spawn Weights", defaultSpawnWeights, $"MoonName:Rarity Spawn weights for {itemName}.") : null,
+            IsScrapItem = createIsScrapItemConfig ? CRConfigManager.CreateEntry(configFile, itemName, "Is Scrap Item", isScrapItem, $"Whether {itemName} is a scrap item.") : null,
             Value = CRConfigManager.CreateEntry(configFile, itemName, "Value", "-1,-1", $"how much {itemName} is worth when spawning, formatted as min,max where -1,-1 is the default."),
-            IsShopItem = CRConfigManager.CreateEntry(configFile, itemName, "Is Shop Item", isShopItem, $"Whether {itemName} is a shop item."),
-            Cost = CRConfigManager.CreateEntry(configFile, itemName, "Cost", cost, $"Cost for {itemName} in the shop.")
+            IsShopItem = createIsShopItemConfig ? CRConfigManager.CreateEntry(configFile, itemName, "Is Shop Item", isShopItem, $"Whether {itemName} is a shop item.") : null,
+            Cost = createIsScrapItemConfig ? CRConfigManager.CreateEntry(configFile, itemName, "Cost", cost, $"Cost for {itemName} in the shop.") : null
         };
     }
 
     public static void LoadConfigForItem(
         ConfigFile configFile,
         string itemName,
-        string defaultSpawnWeight, 
+        string defaultSpawnWeight,
+        bool createSpawnWeightsConfig,
         bool isScrapItem,
+        bool createIsScrapItemConfig,
         bool isShopItem,
+        bool createIsShopItemConfig,
         int cost)
     {
         var config = CreateItemConfig(
@@ -161,8 +167,11 @@ public static class ItemConfigManager
             itemName,
             true,
             defaultSpawnWeight,
+            createSpawnWeightsConfig,
             isScrapItem,
+            createIsScrapItemConfig,
             isShopItem,
+            createIsShopItemConfig,
             cost
         );
         itemConfigs[itemName] = config;

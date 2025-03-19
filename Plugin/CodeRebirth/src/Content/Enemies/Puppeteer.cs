@@ -429,7 +429,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         playerPuppetMap.Clear();
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.PinNeedleItem.itemName, transform.position);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord?.PinNeedleItemDefinition.item.itemName, transform.position);
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

@@ -30,9 +30,6 @@ public class Plugin : BaseUnityPlugin
     internal static new ManualLogSource Logger = null!;
     internal static readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
     internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
-    internal static bool SubtitlesAPIIsOn = false;
-    internal static bool OpenBodyCamsIsOn = false;
-    internal static bool ModelReplacementAPIIsOn;
     internal static bool MoreSuitsIsOn = false;
     internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
@@ -47,6 +44,9 @@ public class Plugin : BaseUnityPlugin
 
         [LoadFromBundle("EmptyNetworkObject.prefab")]
         public GameObject EmptyNetworkObject { get; private set; } = null!;
+
+        [LoadFromBundle("CodeRebirthContent.asset")]
+        public CodeRebirthContent CodeRebirthContent { get; private set; } = null!;
     }
     
     private void Awake()
@@ -98,13 +98,13 @@ public class Plugin : BaseUnityPlugin
         GameNetworkManagerPatch.Init();
         DeleteFileButtonPatch.Init();
         // This should be ran before Network Prefabs are registered.
-        
-        Assets = new MainAssets("coderebirthasset");
         InitializeNetworkBehaviours();
-        // Register Keybinds
         InputActionsInstance = new IngameKeybinds();
         
-        Logger.LogInfo("Registering content that's controlled by gaycob.");
+        Assets = new MainAssets("coderebirthasset");
+        // Register Keybinds
+        
+        Logger.LogInfo("Registering CodeRebirth content.");
 
         RegisterContentHandlers(Assembly.GetExecutingAssembly());
 

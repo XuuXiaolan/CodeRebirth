@@ -189,7 +189,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         PlayMiscSoundsServerRpc(0);
         animator.SetBool(IsDeadAnimation, true);
         yield return new WaitForSeconds(4f);
-        if (playerControlled != null && !playerControlled.isPlayerDead) CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.PuppetItem.itemName, transform.position);
+        if (playerControlled != null && !playerControlled.isPlayerDead) CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord?.PuppetItemDefinition.item.itemName, transform.position);
         NetworkObject.Despawn();
     }
 

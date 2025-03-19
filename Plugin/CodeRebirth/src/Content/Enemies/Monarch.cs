@@ -43,7 +43,7 @@ public class Monarch : CodeRebirthEnemyAI
         if (!IsServer) return;
         for (int i = 0; i < randomNumberToSpawn; i++)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch.CutieflyEnemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch?.CutieflyEnemyDefinition.enemyType);
         }
     }
 

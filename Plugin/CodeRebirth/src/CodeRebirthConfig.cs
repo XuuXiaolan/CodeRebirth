@@ -34,7 +34,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigOnlyOwnerDisablesGal { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkPlayerModelEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigFirstLaunchPopup { get; private set; }
     public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
     public ConfigEntry<bool> ConfigInsideBearTrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
@@ -1091,12 +1090,6 @@ public class CodeRebirthConfig
                                             "MeteorShower | Emerald Worth",
                                             "-1,-1",
                                             "Min and Max value of the Emerald, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        #endregion
-        #region ModCompat
-        ConfigFirstLaunchPopup = configFile.Bind("ModCompat Options",
-                                            "First Launch Popup",
-                                            true,
-                                            "Enables/Disables the first launch popup for the host about the ShockwaveGalModelReplacement mod.");
         #endregion
         #region Monarch+Cutiefly
         ConfigMonarchEnabled = configFile.Bind("Monarch Options",

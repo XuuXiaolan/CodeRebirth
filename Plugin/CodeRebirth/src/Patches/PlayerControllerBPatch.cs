@@ -118,11 +118,6 @@ static class PlayerControllerBPatch
         {
             self.StartCoroutine(WaitToLoadUnlockableData(self));
         }
-        if (self.IsServer && Plugin.ModConfig.ConfigFirstLaunchPopup.Value && (!Plugin.ModelReplacementAPIIsOn || !Plugin.MoreSuitsIsOn))
-        {
-            HUDManager.Instance.DisplayTip("Mod not detected", "Downloading ModelReplacementAPI and MoreSuits adds a new suit as the ShockwaveGal's model");
-            Plugin.ModConfig.ConfigFirstLaunchPopup.Value = false;
-        }
     }
 
     private static IEnumerator WaitToLoadUnlockableData(PlayerControllerB self)

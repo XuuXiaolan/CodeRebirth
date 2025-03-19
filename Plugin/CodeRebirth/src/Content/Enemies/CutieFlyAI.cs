@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -74,6 +71,6 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         {
             if (UnityEngine.Random.Range(0, 100) < 50) return;
         }
-        RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.MonarchEnemyType);
+        RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch?.MonarchEnemyDefinition.enemyType);
     }
 }

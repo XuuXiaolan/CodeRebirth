@@ -167,9 +167,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnScrapServerRpc(string itemName, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
+    public void SpawnScrapServerRpc(string? itemName, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
     {
-        if (itemName == string.Empty)
+        if (itemName == string.Empty || itemName == null)
         {
             return;
         }

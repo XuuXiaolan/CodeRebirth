@@ -1,4 +1,5 @@
 ﻿﻿using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
@@ -9,7 +10,7 @@ namespace CodeRebirth.src.Content.Enemies;
 
 public class EnemyHandler : ContentHandler<EnemyHandler>
 {
-    /*public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName), IEnemyAssets, IItemAssets
+    public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName), IEnemyAssets
     {
         [LoadFromBundle("SnailCatEnemyObj.asset")]
         public CREnemyDefinition SnailCatEnemyDefinition { get; private set; } = null!;
@@ -17,12 +18,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         [LoadFromBundle("SnailCatItemObj.asset")]
         public CRItemDefinition SnailCatItemDefinition { get; private set; } = null!;
 
-        public IReadOnlyList<CRItemDefinition> ItemDefinitions =>
-            new List<CRItemDefinition> { SnailCatItemDefinition };
-
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
             new List<CREnemyDefinition> { SnailCatEnemyDefinition };
-    }*/
+
+        public AssetBundleData? AssetBundleData { get; set; } = null;
+    }
 
     public class CarnivorousPlantAssets(string bundleName ) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName), IEnemyAssets
     {
@@ -31,6 +31,8 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
             new List<CREnemyDefinition> { FirstEnemyDefinition };
+
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
     public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName), IEnemyAssets
@@ -40,96 +42,144 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
             new List<CREnemyDefinition> { FirstEnemyDefinition };
+    
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
-    public class DuckSongAssets(string bundleName) : AssetBundleLoader<DuckSongAssets>(bundleName)
+    public class DuckSongAssets(string bundleName) : AssetBundleLoader<DuckSongAssets>(bundleName), IEnemyAssets, IItemAssets
     {
-        [LoadFromBundle("DuckObj.asset")]
-        public EnemyType? DuckSongEnemyType { get; private set; } = null;
+        [LoadFromBundle("DuckSongEnemyDefinition.asset")]
+        public CREnemyDefinition DuckSongEnemyDefinition { get; private set; } = null!;
 
-        [LoadFromBundle("GrapeObj.asset")]
-        public Item GrapeItem { get; private set; } = null!;
+        [LoadFromBundle("GrapeItemDefinition.asset")]
+        public CRItemDefinition GrapeItemDefinition { get; private set; } = null!;
 
-        [LoadFromBundle("LemonadePitcherObj.asset")]
-        public Item LemonadePitcherItem { get; private set; } = null!;
+        [LoadFromBundle("LemonadePitcherItemDefinition.asset")]
+        public CRItemDefinition LemonadePitcherItemDefinition { get; private set; } = null!;
 
         [LoadFromBundle("DuckHolder.prefab")]
         public GameObject DuckUIPrefab { get; private set; } = null!;
+
+        public IReadOnlyList<CRItemDefinition> ItemDefinitions =>
+            new List<CRItemDefinition> { GrapeItemDefinition, LemonadePitcherItemDefinition };
+
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { DuckSongEnemyDefinition };
+    
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
-    public class ManorLordAssets(string bundleName) : AssetBundleLoader<ManorLordAssets>(bundleName)
+    public class ManorLordAssets(string bundleName) : AssetBundleLoader<ManorLordAssets>(bundleName), IEnemyAssets, IItemAssets
     {
-        [LoadFromBundle("ManorLordObj.asset")]
-        public EnemyType ManorLordEnemyType { get; private set; } = null!;
+        [LoadFromBundle("ManorLordEnemyDefinition.asset")]
+        public CREnemyDefinition ManorLordEnemyDefinition { get; private set; } = null!;
 
-        /*[LoadFromBundle("ManorLordTN.asset")]
-        public TerminalNode ManorLordTerminalNode { get; private set; } = null!;
+        [LoadFromBundle("PuppetItemDefinition.asset")]
+        public CRItemDefinition PuppetItemDefinition { get; private set; } = null!;
 
-        [LoadFromBundle("ManorLordTK.asset")]
-        public TerminalKeyword ManorLordTerminalKeyword { get; private set; } = null!;*/
+        [LoadFromBundle("PinNeedleItemDefinition.asset")]
+        public CRItemDefinition PinNeedleItemDefinition { get; private set; } = null!;
 
         [LoadFromBundle("PuppeteerPuppet.prefab")]
         public GameObject PuppeteerPuppetPrefab { get; private set; } = null!;
 
-        [LoadFromBundle("PuppetScrapObj.asset")]
-        public Item PuppetItem { get; private set; } = null!;
+        public IReadOnlyList<CRItemDefinition> ItemDefinitions =>
+            new List<CRItemDefinition> { PinNeedleItemDefinition, PuppetItemDefinition };
 
-        [LoadFromBundle("PinNeedleObj.asset")]
-        public Item PinNeedleItem { get; private set; } = null!;
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { ManorLordEnemyDefinition };
+    
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
-    public class MistressAssets(string bundleName) : AssetBundleLoader<MistressAssets>(bundleName)
+    public class MistressAssets(string bundleName) : AssetBundleLoader<MistressAssets>(bundleName), IEnemyAssets, IItemAssets
     {
-        [LoadFromBundle("MistressObj.asset")]
-        public EnemyType MistressEnemyType { get; private set; } = null!;
+        [LoadFromBundle("MistressEnemyDefinition.asset")]
+        public CREnemyDefinition MistressEnemyDefinition { get; private set; } = null!;
 
-        [LoadFromBundle("LeChoppedHeadObj.asset")]
-        public Item ChoppedTalkingHead { get; private set; } = null!;
+        [LoadFromBundle("LeChoppedHeadItemDefinition.asset")]
+        public CRItemDefinition LeChoppedHeadItemDefinition { get; private set; } = null!;
 
         [LoadFromBundle("GuillotinePrefab.prefab")]
         public GameObject GuillotinePrefab { get; private set; } = null!;
+
+        public IReadOnlyList<CRItemDefinition> ItemDefinitions =>
+            new List<CRItemDefinition> { LeChoppedHeadItemDefinition };
+
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { MistressEnemyDefinition };
+    
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
-    public class JanitorAssets(string bundleName) : AssetBundleLoader<JanitorAssets>(bundleName)
+    public class JanitorAssets(string bundleName) : AssetBundleLoader<JanitorAssets>(bundleName), IEnemyAssets
     {
-        [LoadFromBundle("JanitorObj.asset")]
-        public EnemyType JanitorEnemyType { get; private set; } = null!;
+        [LoadFromBundle("JanitorEnemyDefinition.asset")]
+        public CREnemyDefinition JanitorEnemyDefinition { get; private set; } = null!;
 
         [LoadFromBundle("JanitorTrash.prefab")]
         public GameObject TrashCanPrefab { get; private set; } = null!;
+
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { JanitorEnemyDefinition };
+    
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
-    public class TransporterAssets(string bundleName) : AssetBundleLoader<TransporterAssets>(bundleName)
+    public class TransporterAssets(string bundleName) : AssetBundleLoader<TransporterAssets>(bundleName), IEnemyAssets
     {
-        [LoadFromBundle("TransporterObj.asset")]
-        public EnemyType TransporterEnemyType { get; private set; } = null!;
+        [LoadFromBundle("TransporterEnemyDefinition.asset")]
+        public CREnemyDefinition TransporterEnemyDefinition { get; private set; } = null!;
+
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { TransporterEnemyDefinition };
+    
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
-    public class MonarchAssets(string bundleName) : AssetBundleLoader<MonarchAssets>(bundleName)
+    public class MonarchAssets(string bundleName) : AssetBundleLoader<MonarchAssets>(bundleName), IEnemyAssets
     {
-        [LoadFromBundle("MonarchObj.asset")]
-        public EnemyType MonarchEnemyType { get; private set; } = null!;
+        [LoadFromBundle("MonarchEnemyDefinition.asset")]
+        public CREnemyDefinition MonarchEnemyDefinition { get; private set; } = null!;
 
-        [LoadFromBundle("CutieflyObj.asset")]
-        public EnemyType CutieflyEnemyType { get; private set; } = null!;
+        [LoadFromBundle("CutieflyEnemyDefinition.asset")]
+        public CREnemyDefinition CutieflyEnemyDefinition{ get; private set; } = null!;
+
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { MonarchEnemyDefinition, CutieflyEnemyDefinition };
+
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
     public class PandoraAssets(string bundleName) : AssetBundleLoader<PandoraAssets>(bundleName)
     {
         [LoadFromBundle("PandoraObj.asset")]
         public EnemyType PandoraEnemyType { get; private set; } = null!;
+
+        public AssetBundleData? AssetBundleData { get; private set; } = null;
     }
 
-    public class NancyAssets(string bundleName) : AssetBundleLoader<NancyAssets>(bundleName)
+    public class NancyAssets(string bundleName) : AssetBundleLoader<NancyAssets>(bundleName), IEnemyAssets
     {
-        [LoadFromBundle("NancyObj.asset")]
-        public EnemyType NancyEnemyType { get; private set; } = null!;
+        [LoadFromBundle("NancyEnemyDefinition.asset")]
+        public CREnemyDefinition NancyEnemyDefinition { get; private set; } = null!;
+
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { NancyEnemyDefinition };
+    
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
-    public class DriftwoodMenaceAssets(string bundleName) : AssetBundleLoader<DriftwoodMenaceAssets>(bundleName)
+    public class DriftwoodMenaceAssets(string bundleName) : AssetBundleLoader<DriftwoodMenaceAssets>(bundleName), IEnemyAssets
     {
-        [LoadFromBundle("DriftwoodMenaceObj.asset")]
-        public EnemyType DriftwoodMenaceEnemyType { get; private set; } = null!;
+        [LoadFromBundle("DriftwoodEnemyDefinition.asset")]
+        public CREnemyDefinition DriftwoodEnemyDefinition { get; private set; } = null!;
+
+        public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
+            new List<CREnemyDefinition> { DriftwoodEnemyDefinition };
+
+
+        public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
     public NancyAssets? Nancy { get; private set; }
@@ -141,84 +191,62 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     public JanitorAssets? Janitor { get; private set; }
     public ManorLordAssets? ManorLord { get; private set; }
     public DuckSongAssets? DuckSong { get; private set; }
-    // public SnailCatAssets? SnailCat { get; private set; }
+    public SnailCatAssets? SnailCat { get; private set; }
     public CarnivorousPlantAssets? CarnivorousPlant { get; private set; }
     public RedwoodTitanAssets? RedwoodTitan { get; private set; }
 
-    public EnemyHandler()
-    {
+    public EnemyHandler() // todo: balance all the defaults properly
+    { // todo: and then in coderebirth assets is one main SO that contains references to maybe secondary SO's for each enemy that has Assetbundle name, enemy name, and the basic config stuff for spawn weights, power level and max spawn count.
 
 #if DEBUG
         Pandora = new PandoraAssets("pandoraassets");
         RegisterEnemyWithConfig("", Pandora.PandoraEnemyType, null, null, 3, 0);
 #endif
 
-        if (Plugin.ModConfig.ConfigDriftwoodMenaceEnabled.Value)
+        DriftwoodMenace = LoadAndRegisterAssets<DriftwoodMenaceAssets>("driftwoodmenaceassets");
+        RegisterEnemyAssets(DriftwoodMenace);
+
+        Nancy = LoadAndRegisterAssets<NancyAssets>("nancyassets");
+        RegisterEnemyAssets(Nancy);
+
+        
+        Monarch = LoadAndRegisterAssets<MonarchAssets>("monarchassets");
+        RegisterEnemyAssets(Monarch);
+
+        Mistress = LoadAndRegisterAssets<MistressAssets>("mistressassets");
+        RegisterEnemyAssets(Mistress);
+        RegisterItemAssets(Mistress);
+
+        RedwoodTitan = LoadAndRegisterAssets<RedwoodTitanAssets>("redwoodtitanassets");
+        RegisterEnemyAssets(RedwoodTitan);
+
+        CarnivorousPlant = LoadAndRegisterAssets<CarnivorousPlantAssets>("carnivorousplantassets");
+        RegisterEnemyAssets(CarnivorousPlant);
+
+        SnailCat = LoadAndRegisterAssets<SnailCatAssets>("snailcatassets");
+        RegisterEnemyAssets(SnailCat);
+
+        DuckSong = LoadAndRegisterAssets<DuckSongAssets>("ducksongassets");
+        RegisterEnemyAssets(DuckSong);
+        RegisterItemAssets(DuckSong);
+        if (DuckSong != null)
         {
-            DriftwoodMenace = new DriftwoodMenaceAssets("driftwoodmenaceassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDriftwoodMenaceSpawnWeights.Value, DriftwoodMenace.DriftwoodMenaceEnemyType, null, null, Plugin.ModConfig.ConfigDriftwoodMenacePowerLevel.Value, Plugin.ModConfig.ConfigDriftwoodMenaceMaxSpawnCount.Value);
+            Plugin.samplePrefabs.Add(DuckSong.GrapeItemDefinition.item.itemName, DuckSong.GrapeItemDefinition.item);
+            Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItemDefinition.item.itemName, DuckSong.LemonadePitcherItemDefinition.item);
         }
 
-        if (Plugin.ModConfig.ConfigNancyEnabled.Value)
+        Transporter = LoadAndRegisterAssets<TransporterAssets>("transporterassets");
+        RegisterEnemyAssets(Transporter);
+
+        ManorLord = LoadAndRegisterAssets<ManorLordAssets>("manorlordassets");
+        RegisterEnemyAssets(ManorLord);
+        RegisterItemAssets(ManorLord);
+
+        Janitor = LoadAndRegisterAssets<JanitorAssets>("janitorassets");
+        RegisterEnemyAssets(Janitor);
+        if (Janitor != null)
         {
-            Nancy = new NancyAssets("nancyassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigNancySpawnWeights.Value, Nancy.NancyEnemyType, null, null, Plugin.ModConfig.ConfigNancyPowerLevel.Value, Plugin.ModConfig.ConfigNancyMaxSpawnCount.Value);
-        }
-
-        if (Plugin.ModConfig.ConfigMonarchEnabled.Value)
-        {
-            Monarch = new MonarchAssets("monarchassets");
-            RegisterEnemyWithConfig("", Monarch.MonarchEnemyType, null, null, 3, 0);
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigCutieFlySpawnWeights.Value, Monarch.CutieflyEnemyType, null, null, Plugin.ModConfig.ConfigCutieFlyPowerLevel.Value, Plugin.ModConfig.ConfigCutieFlyMaxSpawnCount.Value);
-        }
-
-        if (Plugin.ModConfig.ConfigMistressEnabled.Value)
-        {
-            Mistress = new MistressAssets("mistressassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigMistressSpawnWeights.Value, Mistress.MistressEnemyType, null, null, Plugin.ModConfig.ConfigMistressPowerLevel.Value, Plugin.ModConfig.ConfigMistressMaxSpawnCount.Value);
-            RegisterShopItemWithConfig(false, true, Mistress.ChoppedTalkingHead, null, 0, "", "-1,-1");
-        }
-
-        RedwoodTitan = LoadAndRegisterAssets<RedwoodTitanAssets>("redwoodtitanassets", ["Redwood Titan"]);
-        RegisterEnemyAssets(RedwoodTitan, ["Redwood Titan"], ["Vanilla:20,Custom:20"], [2f], [3]);
-
-        CarnivorousPlant = LoadAndRegisterAssets<CarnivorousPlantAssets>("carnivorousplantassets", ["Carnivorous Plant"]);
-
-        /*SnailCat = LoadAndRegisterAssets<SnailCatAssets>("snailcatassets", ["SnailCat"]);
-        RegisterEnemyAssets(SnailCat, ["SnailCat"], ["Vanilla:20,Custom:20"], [1f], [5]);
-        RegisterItemAssets(SnailCat, ["SnailCat"], ["Vanilla:20,Custom:20"], [true], [false], [0]);*/
-
-        if (Plugin.ModConfig.ConfigDuckSongEnabled.Value)
-        {
-            DuckSong = new DuckSongAssets("ducksongassets");
-            RegisterShopItemWithConfig(false, true, DuckSong.GrapeItem, null, 0, "", "-1,-1");
-            RegisterShopItemWithConfig(false, true, DuckSong.LemonadePitcherItem, null, 0, "", "-1,-1");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigDuckSongSpawnWeights.Value, DuckSong.DuckSongEnemyType, null, null, Plugin.ModConfig.ConfigDuckSongPowerLevel.Value, Plugin.ModConfig.ConfigDuckSongMaxSpawnCount.Value);
-            Plugin.samplePrefabs.Add(DuckSong.GrapeItem.itemName, DuckSong.GrapeItem);
-            Plugin.samplePrefabs.Add(DuckSong.LemonadePitcherItem.itemName, DuckSong.LemonadePitcherItem);
-        } // configurable quest time, max amount of ducks to spawn.
-
-        if (Plugin.ModConfig.ConfigManorLordEnabled.Value)
-        {
-            ManorLord = new ManorLordAssets("manorlordassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigManorLordSpawnWeights.Value, ManorLord.ManorLordEnemyType, null, null, Plugin.ModConfig.ConfigManorLordPowerLevel.Value, Plugin.ModConfig.ConfigManorLordMaxSpawnCount.Value);
-            RegisterShopItemWithConfig(false, true, ManorLord.PuppetItem, null, 0, "", "-1,-1");
-            RegisterShopItemWithConfig(false, true, ManorLord.PinNeedleItem, null, 0, "", "-1,-1");
-            Plugin.samplePrefabs.Add(ManorLord.PinNeedleItem.itemName, ManorLord.PinNeedleItem);
-            Plugin.samplePrefabs.Add(ManorLord.PuppetItem.itemName, ManorLord.PuppetItem);
-        }
-
-        if (Plugin.ModConfig.ConfigJanitorEnabled.Value)
-        {
-            Janitor = new JanitorAssets("janitorassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigJanitorSpawnWeights.Value, Janitor.JanitorEnemyType, null, null, Plugin.ModConfig.ConfigJanitorPowerLevel.Value, Plugin.ModConfig.ConfigJanitorMaxSpawnCount.Value);
             RegisterInsideMapObjectWithConfig(Janitor.TrashCanPrefab, "Vanilla - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00 | Custom - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00");
-        }
-
-        if (Plugin.ModConfig.ConfigTransporterEnabled.Value)
-        {
-            Transporter = new TransporterAssets("transporterassets");
-            RegisterEnemyWithConfig(Plugin.ModConfig.ConfigTransporterSpawnWeights.Value, Transporter.TransporterEnemyType, null, null, Plugin.ModConfig.ConfigTransporterPowerLevel.Value, Plugin.ModConfig.ConfigTransporterMaxSpawnCount.Value);
         }
     }
 }

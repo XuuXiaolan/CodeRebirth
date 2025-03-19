@@ -13,7 +13,6 @@ public static class OpenBodyCamCompatibilityChecker
     public static void Init()
     {
         Plugin.ExtendedLogging("No way openbodycams is on?!");
-        Plugin.OpenBodyCamsIsOn = true;
         InitializeImpl();
     }
 
