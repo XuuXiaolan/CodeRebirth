@@ -27,16 +27,16 @@ public class CRDynamicConfigDrawer : PropertyDrawer
         CRDynamicConfigType configType = (CRDynamicConfigType)dynamicTypeProp.enumValueIndex;
         switch (configType)
         {
-            case CRDynamicConfigType.STRING:
+            case CRDynamicConfigType.String:
                 EditorGUI.PropertyField(defaultRect, property.FindPropertyRelative("defaultString"), new GUIContent("Default Value"));
                 break;
-            case CRDynamicConfigType.INT:
+            case CRDynamicConfigType.Int:
                 EditorGUI.PropertyField(defaultRect, property.FindPropertyRelative("defaultInt"), new GUIContent("Default Value"));
                 break;
-            case CRDynamicConfigType.FLOAT:
+            case CRDynamicConfigType.Float:
                 EditorGUI.PropertyField(defaultRect, property.FindPropertyRelative("defaultFloat"), new GUIContent("Default Value"));
                 break;
-            case CRDynamicConfigType.BOOL:
+            case CRDynamicConfigType.Bool:
                 EditorGUI.PropertyField(defaultRect, property.FindPropertyRelative("defaultBool"), new GUIContent("Default Value"));
                 break;
         }

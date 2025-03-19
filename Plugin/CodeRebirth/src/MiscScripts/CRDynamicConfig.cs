@@ -5,10 +5,10 @@ using UnityEngine;
 namespace CodeRebirth.src.MiscScripts;
 public enum CRDynamicConfigType
 {
-    STRING, 
-    INT, 
-    FLOAT, 
-    BOOL 
+    String, 
+    Int, 
+    Float, 
+    Bool 
 }
 
 [Serializable]
@@ -25,7 +25,7 @@ public class CRDynamicConfig
     public string Description;
 }
 
-[CreateAssetMenu(fileName = "DynamicConfigSettings", menuName = "Settings/Dynamic Config Settings")]
+[CreateAssetMenu(fileName = "DynamicConfigSettings", menuName = "CodeRebirth/Dynamic Config Settings")]
 public class DynamicConfigSettings : ScriptableObject
 {
     public List<CRDynamicConfig> Configs;

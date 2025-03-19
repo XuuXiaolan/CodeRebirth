@@ -86,12 +86,13 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             LoadEnemyConfigs(names[definitionIndex], defaultSpawnWeights[definitionIndex], defaultPowerLevels[definitionIndex], defaultMaxSpawnCounts[definitionIndex]);
             var enemyConfig = EnemyConfigManager.GetEnemyConfig(names[definitionIndex]);
-            foreach (var configDefinition in CREnemyDefinition.ConfigEntries)
+            foreach (var configDefinition in CREnemyDefinition.ConfigEntries.Configs)
             {
+                Plugin.ExtendedLogging($"Registering config {configDefinition.Key} for {names[definitionIndex]}");
                 switch (configDefinition.DynamicConfigType)
                 {
-                    case CRDynamicConfigType.STRING:
-                        CRConfigManager.CreateGeneralConfig<string>(
+                    case CRDynamicConfigType.String:
+                        CRConfigManager.CreateGeneralConfig(
                             Plugin.configFile,
                             names[definitionIndex],
                             configDefinition.Key,
@@ -99,8 +100,8 @@ public class ContentHandler<T> where T: ContentHandler<T>
                             configDefinition.Description
                         );
                         break;
-                    case CRDynamicConfigType.INT:
-                        CRConfigManager.CreateGeneralConfig<int>(
+                    case CRDynamicConfigType.Int:
+                        CRConfigManager.CreateGeneralConfig(
                             Plugin.configFile,
                             names[definitionIndex],
                             configDefinition.Key,
@@ -108,8 +109,8 @@ public class ContentHandler<T> where T: ContentHandler<T>
                             configDefinition.Description
                         );
                         break;
-                    case CRDynamicConfigType.FLOAT:
-                        CRConfigManager.CreateGeneralConfig<float>(
+                    case CRDynamicConfigType.Float:
+                        CRConfigManager.CreateGeneralConfig(
                             Plugin.configFile,
                             names[definitionIndex],
                             configDefinition.Key,
@@ -117,8 +118,8 @@ public class ContentHandler<T> where T: ContentHandler<T>
                             configDefinition.Description
                         );
                         break;
-                    case CRDynamicConfigType.BOOL:
-                        CRConfigManager.CreateGeneralConfig<bool>(
+                    case CRDynamicConfigType.Bool:
+                        CRConfigManager.CreateGeneralConfig(
                             Plugin.configFile,
                             names[definitionIndex],
                             configDefinition.Key,
@@ -128,8 +129,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                         break;
                     default:
                         throw new NotImplementedException("Dynamic config type not implemented.");
-                }
-            }
+                }            }
             
             EnemyType enemy = CREnemyDefinition.enemyType;
             enemy.MaxCount = enemyConfig.MaxSpawnCount.Value;
@@ -148,12 +148,12 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             LoadItemConfigs(names[definitionIndex], defaultSpawnWeights[definitionIndex], isScrapItems[definitionIndex], isShopItems[definitionIndex], costs[definitionIndex]);
             var itemConfig = ItemConfigManager.GetItemConfig(names[definitionIndex]);
-            foreach (var configDefinition in CRItemDefinition.ConfigEntries)
+            foreach (var configDefinition in CRItemDefinition.ConfigEntries.Configs)
             {
                 switch (configDefinition.DynamicConfigType)
                 {
-                    case CRDynamicConfigType.STRING:
-                        CRConfigManager.CreateGeneralConfig<string>(
+                    case CRDynamicConfigType.String:
+                        CRConfigManager.CreateGeneralConfig(
                             Plugin.configFile,
                             names[definitionIndex],
                             configDefinition.Key,
@@ -161,8 +161,8 @@ public class ContentHandler<T> where T: ContentHandler<T>
                             configDefinition.Description
                         );
                         break;
-                    case CRDynamicConfigType.INT:
-                        CRConfigManager.CreateGeneralConfig<int>(
+                    case CRDynamicConfigType.Int:
+                        CRConfigManager.CreateGeneralConfig(
                             Plugin.configFile,
                             names[definitionIndex],
                             configDefinition.Key,
@@ -170,8 +170,8 @@ public class ContentHandler<T> where T: ContentHandler<T>
                             configDefinition.Description
                         );
                         break;
-                    case CRDynamicConfigType.FLOAT:
-                        CRConfigManager.CreateGeneralConfig<float>(
+                    case CRDynamicConfigType.Float:
+                        CRConfigManager.CreateGeneralConfig(
                             Plugin.configFile,
                             names[definitionIndex],
                             configDefinition.Key,
@@ -179,8 +179,8 @@ public class ContentHandler<T> where T: ContentHandler<T>
                             configDefinition.Description
                         );
                         break;
-                    case CRDynamicConfigType.BOOL:
-                        CRConfigManager.CreateGeneralConfig<bool>(
+                    case CRDynamicConfigType.Bool:
+                        CRConfigManager.CreateGeneralConfig(
                             Plugin.configFile,
                             names[definitionIndex],
                             configDefinition.Key,

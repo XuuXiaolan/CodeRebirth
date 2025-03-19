@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine;
 
@@ -8,5 +7,5 @@ namespace CodeRebirth.src.Content.Items;
 public class CRItemDefinition : ScriptableObject
 {
     public Item item;
-    public List<CRDynamicConfig> ConfigEntries;
+    public DynamicConfigSettings ConfigEntries;
 }
