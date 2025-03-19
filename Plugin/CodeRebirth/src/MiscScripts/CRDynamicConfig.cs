@@ -23,24 +23,6 @@ public class CRDynamicConfig
     public bool defaultBool;
 
     public string Description;
-
-    // Returns a boxed value based on the selected type.
-    public BoxedValueSetting GetBoxedValue()
-    {
-        switch (DynamicConfigType)
-        {
-            case CRDynamicConfigType.STRING:
-                return new BoxedValueSetting(defaultString, Key);
-            case CRDynamicConfigType.INT:
-                return new BoxedValueSetting(defaultInt, Key);
-            case CRDynamicConfigType.FLOAT:
-                return new BoxedValueSetting(defaultFloat, Key);
-            case CRDynamicConfigType.BOOL:
-                return new BoxedValueSetting(defaultBool, Key);
-            default:
-                throw new NotImplementedException();
-        }
-    }
 }
 
 [CreateAssetMenu(fileName = "DynamicConfigSettings", menuName = "Settings/Dynamic Config Settings")]
