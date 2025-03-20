@@ -13,13 +13,15 @@ public class CRDynamicConfigDrawer : PropertyDrawer
         float spacing = EditorGUIUtility.standardVerticalSpacing;
 
         // Calculate rects for each line.
-        Rect keyRect = new Rect(position.x, position.y, position.width, lineHeight);
-        Rect typeRect = new Rect(position.x, position.y + lineHeight + spacing, position.width, lineHeight);
-        Rect defaultRect = new Rect(position.x, position.y + (lineHeight + spacing) * 2, position.width, lineHeight);
-        Rect descRect = new Rect(position.x, position.y + (lineHeight + spacing) * 3, position.width, lineHeight);
+        Rect settingNameRect = new Rect(position.x, position.y, position.width, lineHeight);
+        Rect settingDescRect = new Rect(position.x, position.y + (lineHeight + spacing) * 1, position.width, lineHeight);
+        Rect typeRect = new Rect(position.x, position.y + (lineHeight + spacing) * 2, position.width, lineHeight);
+        Rect defaultRect = new Rect(position.x, position.y + (lineHeight + spacing) * 3, position.width, lineHeight);
+        Rect descRect = new Rect(position.x, position.y + (lineHeight + spacing) * 4, position.width, lineHeight);
 
         // Draw key and type fields.
-        EditorGUI.PropertyField(keyRect, property.FindPropertyRelative("Key"), new GUIContent("Key"));
+        EditorGUI.PropertyField(settingNameRect, property.FindPropertyRelative("settingName"), new GUIContent("settingName"));
+        EditorGUI.PropertyField(settingDescRect, property.FindPropertyRelative("settingDesc"), new GUIContent("settingDesc"));
         EditorGUI.PropertyField(typeRect, property.FindPropertyRelative("DynamicConfigType"), new GUIContent("Type"));
 
         // Depending on the type, show the correct default value field.
@@ -50,6 +52,6 @@ public class CRDynamicConfigDrawer : PropertyDrawer
         float lineHeight = EditorGUIUtility.singleLineHeight;
         float spacing = EditorGUIUtility.standardVerticalSpacing;
         // Four lines (Key, Type, Default Value, Description) plus spacing.
-        return (lineHeight * 4) + (spacing * 3);
+        return (lineHeight * 5) + (spacing * 3);
     }
 }

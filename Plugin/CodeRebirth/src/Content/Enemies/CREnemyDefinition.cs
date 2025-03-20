@@ -1,4 +1,4 @@
-using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.ConfigManager;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
@@ -9,5 +9,5 @@ public class CREnemyDefinition : ScriptableObject
     public EnemyType enemyType;
     public TerminalNode? terminalNode;
     public TerminalKeyword? terminalKeyword;
-    public DynamicConfigSettings ConfigEntries;
+    public DynamicConfigSettings? ConfigEntries;
 }

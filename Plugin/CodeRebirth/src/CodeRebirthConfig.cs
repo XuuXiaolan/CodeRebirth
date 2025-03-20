@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 
 namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
     public ConfigEntry<bool> ConfigGunslingerGregEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigDriftwoodMenaceEnabled { get; private set; }
     public ConfigEntry<bool> ConfigNancyEnabled { get; private set; }
     public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
@@ -62,10 +59,8 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBellCrabGalEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigDuckSongEnabled { get; private set; }
     #endregion
     #region Spawn Weights
-    public ConfigEntry<string> ConfigDuckSongSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigWoodenSeedSpawnWeights { get; private set; }
     public ConfigEntry<float> ConfigBiomesSpawnChance { get; private set; }
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
@@ -93,12 +88,9 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigMistressSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigTransporterSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigJanitorSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigDriftwoodMenaceSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigNancySpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
-    public ConfigEntry<float> ConfigDriftwoodMenacePowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigDriftwoodMenaceMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigNancyPowerLevel { get; private set; }
     public ConfigEntry<int> ConfigNancyMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
@@ -195,8 +187,6 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigShrimpDispenserCost { get; private set; }
     public ConfigEntry<float> ConfigAirControlUnitKnockbackPower { get; private set; }
     public ConfigEntry<int> ConfigAirControlUnitDamage { get; private set; }
-    public ConfigEntry<int> ConfigDuckSongPowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigDuckSongMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigDuckSongTimer { get; private set; }
     public ConfigEntry<int> ConfigBearTrapGalCost { get; private set; }
     public ConfigEntry<int> ConfigACUnitGalCost { get; private set; }
@@ -258,40 +248,8 @@ public class CodeRebirthConfig
                                             "Whether Gunslinger Greg is enabled.");
         #endregion
         #region Driftwood Menace
-        ConfigDriftwoodMenaceEnabled = configFile.Bind("Driftwood Menace Options",
-                                            "Driftwood Menace | Enabled",
-                                            true,
-                                            "Whether the Driftwood Menace is enabled.");
-        ConfigDriftwoodMenaceSpawnWeights = configFile.Bind("Driftwood Menace Options",
-                                            "Driftwood Menace | Spawn Weights",
-                                            "Vanilla:20,Custom:20",
-                                            "The spawn weights for the Driftwood Menace.");
-        ConfigDriftwoodMenacePowerLevel = configFile.Bind("Driftwood Menace Options",
-                                            "Driftwood Menace | Power Level",
-                                            2f,
-                                            "The power level of the Driftwood Menace.");
-        ConfigDriftwoodMenaceMaxSpawnCount = configFile.Bind("Driftwood Menace Options",
-                                            "Driftwood Menace | Max Spawn Count",
-                                            3,
-                                            "The max spawn count of the Driftwood Menace.");
         #endregion
         #region Nancy
-        ConfigNancyEnabled = configFile.Bind("Nancy Options",
-                                            "Nancy | Enabled",
-                                            true,
-                                            "Whether the Nancy is enabled.");
-        ConfigNancySpawnWeights = configFile.Bind("Nancy Options",
-                                            "Nancy | Spawn Weights",
-                                            "Vanilla:20,Custom:20",
-                                            "The spawn weights for the Nancy.");
-        ConfigNancyPowerLevel = configFile.Bind("Nancy Options",
-                                            "Nancy | Power Level",
-                                            2f,
-                                            "The power level of the Nancy.");
-        ConfigNancyMaxSpawnCount = configFile.Bind("Nancy Options",
-                                            "Nancy | Max Spawn Count",
-                                            1,
-                                            "The max spawn count of the Nancy.");
         #endregion
         #region Merchant
         ConfigMerchantEnabled = configFile.Bind("Merchant Options",
@@ -308,22 +266,6 @@ public class CodeRebirthConfig
                                             "Cost of the Piggy Bank Unlockable");
         #endregion
         #region Transporter
-        ConfigTransporterEnabled = configFile.Bind("Transporter Options",
-                                            "Transporter | Enabled",
-                                            true,
-                                            "Whether the Transporter is enabled.");
-        ConfigTransporterSpawnWeights = configFile.Bind("Transporter Options",
-                                            "Transporter | Spawn Weights",
-                                            "Vanilla:20,Custom:20 ",
-                                            "The spawn weights for the Transporter.");
-        ConfigTransporterPowerLevel = configFile.Bind("Transporter Options",
-                                            "Transporter | Power Level",
-                                            2,
-                                            "The power level of the Transporter.");
-        ConfigTransporterMaxSpawnCount = configFile.Bind("Transporter Options",
-                                            "Transporter | Max Spawn Count",
-                                            1,
-                                            "The max spawn count of the Transporter.");
         #endregion
         #region Cleaner Drone Gal
         ConfigCleanerDroneGalEnabled = configFile.Bind("Cleaner Drone Gal Options",
@@ -337,62 +279,14 @@ public class CodeRebirthConfig
         #endregion
 
         #region Janitor
-        ConfigJanitorEnabled = configFile.Bind("Janitor Options",
-                                            "Janitor | Enabled",
-                                            true,
-                                            "Whether the Janitor is enabled.");
-        ConfigJanitorSpawnWeights = configFile.Bind("Janitor Options",
-                                            "Janitor | Spawn Weights",
-                                            "Experimentation:20,Assurance:20,Vow:10,Offense:20,March:10,Adamance:5,Rend:10,Dine:10,Titan:60,Artifice:80,Embrion:90,Modded:20",
-                                            "The spawn weights for the Janitor.");
-        ConfigJanitorPowerLevel = configFile.Bind("Janitor Options",
-                                            "Janitor | Power Level",
-                                            2,
-                                            "The power level of the Janitor.");
-        ConfigJanitorMaxSpawnCount = configFile.Bind("Janitor Options",
-                                            "Janitor | Max Spawn Count",
-                                            3,
-                                            "The max spawn count of the Janitor.");
         ConfigDisableTrashCans = configFile.Bind("Janitor Options",
                                             "Janitor | Disable Trash Cans",
                                             false,
                                             "Whether trash cans are disabled.");
         #endregion
         #region Mistress
-        ConfigMistressEnabled = configFile.Bind("Mistress Options",
-                                            "Mistress | Enabled",
-                                            true,
-                                            "Whether the Mistress is enabled.");
-        ConfigMistressSpawnWeights = configFile.Bind("Mistress Options",
-                                            "Mistress | Spawn Weights",
-                                            "Experimentation:2,Assurance:5,Vow:5,Offense:10,March:10,Adamance:10,Rend:50,Dine:80,Titan:50,Artifice:60,Embrion:10,Modded:10 ",
-                                            "The spawn weights for the Mistress.");
-        ConfigMistressPowerLevel = configFile.Bind("Mistress Options",
-                                            "Mistress | Power Level",
-                                            2,
-                                            "The power level of the Mistress.");
-        ConfigMistressMaxSpawnCount = configFile.Bind("Mistress Options",
-                                            "Mistress | Max Spawn Count",
-                                            1,
-                                            "The max spawn count of the Mistress.");
         #endregion
         #region Lord Of The Manor
-        ConfigManorLordEnabled = configFile.Bind("Manor Lord Options",
-                                            "Manor Lord | Enabled",
-                                            true,
-                                            "Whether the Manor Lord is enabled.");
-        ConfigManorLordSpawnWeights = configFile.Bind("Manor Lord Options",
-                                            "Manor Lord | Spawn Weights",
-                                            "Experimentation:2,Assurance:5,Vow:5,Offense:10,March:10,Adamance:10,Rend:50,Dine:80,Titan:20,Artifice:60,Embrion:10,Modded:10 ",
-                                            "The spawn weights for the Manor Lord.");
-        ConfigManorLordPowerLevel = configFile.Bind("Manor Lord Options",
-                                            "Manor Lord | Power Level",
-                                            2,
-                                            "The power level of the Manor Lord.");
-        ConfigManorLordMaxSpawnCount = configFile.Bind("Manor Lord Options",
-                                            "Manor Lord | Max Spawn Count",
-                                            3,
-                                            "The max spawn count of the Manor Lord.");
         #endregion
         #region Zort Stuff
         ConfigZortAddonsEnabled = configFile.Bind("Zort Options",
@@ -451,26 +345,6 @@ public class CodeRebirthConfig
                                             "The MoonName - SpawnWeight for the Glitched Plushie.");
         #endregion
         #region Duck Song
-        ConfigDuckSongEnabled = configFile.Bind("DuckSong Options",
-                                            "Duck Song | Enabled",
-                                            true,
-                                            "Whether the Duck Song is enabled.");
-        ConfigDuckSongSpawnWeights = configFile.Bind("DuckSong Options",
-                                            "Duck Song | SpawnWeights",
-                                            "Vanilla:20,Custom:20",
-                                            "The MoonName - SpawnWeight for the Duck.");
-        ConfigDuckSongPowerLevel = configFile.Bind("DuckSong Options",
-                                            "Duck Song | Power Level",
-                                            3,
-                                            "The Power Level of the Duck Song enemy.");
-        ConfigDuckSongMaxSpawnCount = configFile.Bind("DuckSong Options",
-                                            "Duck Song | Max Spawn Count",
-                                            2,
-                                            "The Max Spawn Count of the Duck Song enemy.");
-        ConfigDuckSongTimer = configFile.Bind("DuckSong Options",
-                                            "Duck Song | Timer",
-                                            120f,
-                                            "The Quest Timer of the Duck Song enemy.");
         #endregion
         #region Shrimp Dispenser
         ConfigShrimpDispenserEnabled = configFile.Bind("ShrimpDispenser Options",

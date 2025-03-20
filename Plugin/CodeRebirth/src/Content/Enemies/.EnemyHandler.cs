@@ -1,7 +1,5 @@
-﻿﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
-using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
@@ -19,7 +17,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public CRItemDefinition SnailCatItemDefinition { get; private set; } = null!;
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { SnailCatEnemyDefinition };
+            [SnailCatEnemyDefinition];
 
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -30,7 +28,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public CREnemyDefinition FirstEnemyDefinition { get; private set; } = null!;
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { FirstEnemyDefinition };
+            [FirstEnemyDefinition];
 
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -41,7 +39,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public CREnemyDefinition FirstEnemyDefinition { get; private set; } = null!;
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { FirstEnemyDefinition };
+            [FirstEnemyDefinition];
     
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -61,11 +59,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public GameObject DuckUIPrefab { get; private set; } = null!;
 
         public IReadOnlyList<CRItemDefinition> ItemDefinitions =>
-            new List<CRItemDefinition> { GrapeItemDefinition, LemonadePitcherItemDefinition };
+            [GrapeItemDefinition, LemonadePitcherItemDefinition];
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { DuckSongEnemyDefinition };
-    
+            [DuckSongEnemyDefinition];
+
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
 
@@ -84,10 +82,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public GameObject PuppeteerPuppetPrefab { get; private set; } = null!;
 
         public IReadOnlyList<CRItemDefinition> ItemDefinitions =>
-            new List<CRItemDefinition> { PinNeedleItemDefinition, PuppetItemDefinition };
+            [PinNeedleItemDefinition, PuppetItemDefinition];
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { ManorLordEnemyDefinition };
+            [ManorLordEnemyDefinition];
     
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -104,10 +102,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public GameObject GuillotinePrefab { get; private set; } = null!;
 
         public IReadOnlyList<CRItemDefinition> ItemDefinitions =>
-            new List<CRItemDefinition> { LeChoppedHeadItemDefinition };
+            [LeChoppedHeadItemDefinition];
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { MistressEnemyDefinition };
+            [MistressEnemyDefinition];
     
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -121,7 +119,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public GameObject TrashCanPrefab { get; private set; } = null!;
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { JanitorEnemyDefinition };
+            [JanitorEnemyDefinition];
     
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -132,7 +130,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public CREnemyDefinition TransporterEnemyDefinition { get; private set; } = null!;
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { TransporterEnemyDefinition };
+            [TransporterEnemyDefinition];
     
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -146,7 +144,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public CREnemyDefinition CutieflyEnemyDefinition{ get; private set; } = null!;
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { MonarchEnemyDefinition, CutieflyEnemyDefinition };
+            [MonarchEnemyDefinition, CutieflyEnemyDefinition];
 
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -165,7 +163,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public CREnemyDefinition NancyEnemyDefinition { get; private set; } = null!;
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { NancyEnemyDefinition };
+            [NancyEnemyDefinition];
     
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -176,8 +174,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         public CREnemyDefinition DriftwoodEnemyDefinition { get; private set; } = null!;
 
         public IReadOnlyList<CREnemyDefinition> EnemyDefinitions =>
-            new List<CREnemyDefinition> { DriftwoodEnemyDefinition };
-
+            [DriftwoodEnemyDefinition];
 
         public AssetBundleData? AssetBundleData { get; set; } = null;
     }
@@ -195,8 +192,8 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     public CarnivorousPlantAssets? CarnivorousPlant { get; private set; }
     public RedwoodTitanAssets? RedwoodTitan { get; private set; }
 
-    public EnemyHandler() // todo: balance all the defaults properly
-    { // todo: and then in coderebirth assets is one main SO that contains references to maybe secondary SO's for each enemy that has Assetbundle name, enemy name, and the basic config stuff for spawn weights, power level and max spawn count.
+    public EnemyHandler()
+    {
 
 #if DEBUG
         Pandora = new PandoraAssets("pandoraassets");
@@ -209,7 +206,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         Nancy = LoadAndRegisterAssets<NancyAssets>("nancyassets");
         RegisterEnemyAssets(Nancy);
 
-        
         Monarch = LoadAndRegisterAssets<MonarchAssets>("monarchassets");
         RegisterEnemyAssets(Monarch);
 

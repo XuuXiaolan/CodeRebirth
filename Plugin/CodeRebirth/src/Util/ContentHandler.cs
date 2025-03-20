@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using BepInEx.Configuration;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util.AssetLoading;
 using LethalLib.Extras;
 using LethalLib.Modules;
@@ -28,22 +30,24 @@ public class ContentHandler<T> where T: ContentHandler<T>
         Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
     }
 
-    protected void LoadEnemyConfigs(string enemyName, string defaultSpawnWeight, float defaultPowerLevel, int defaultMaxSpawnCount)
+    protected void LoadEnemyConfigs(string enemyName, string keyName, string defaultSpawnWeight, float defaultPowerLevel, int defaultMaxSpawnCount)
     {
         EnemyConfigManager.LoadConfigForEnemy(
             Plugin.configFile,
             enemyName,
+            keyName,
             defaultSpawnWeight,
             defaultPowerLevel,
             defaultMaxSpawnCount
         );
     }
 
-    protected void LoadItemConfigs(string itemName, string defaultSpawnWeight, bool createSpawnWeightsConfig, bool isScrapItem, bool createIsScrapItemConfig, bool isShopItem, bool createIsShopItemConfig, int cost)
+    protected void LoadItemConfigs(string itemName, string keyName, string defaultSpawnWeight, bool createSpawnWeightsConfig, bool isScrapItem, bool createIsScrapItemConfig, bool isShopItem, bool createIsShopItemConfig, int cost)
     {
         ItemConfigManager.LoadConfigForItem(
             Plugin.configFile,
             itemName,
+            keyName,
             defaultSpawnWeight,
             createSpawnWeightsConfig,
             isScrapItem,
@@ -56,7 +60,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
     protected void LoadEnabledConfigs(string keyName)
     {
-        var config = CRConfigManager.CreateEnabledEntry(Plugin.configFile, keyName, "Enabled", true, $"Whether {keyName} is enabled.");
+        var config = CRConfigManager.CreateEnabledEntry(Plugin.configFile, keyName, keyName, "Enabled", true, $"Whether {keyName} is enabled.");
         CRConfigManager.CRConfigs[keyName] = config;
     }
 
@@ -65,6 +69,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         AssetBundleData assetBundleData = Plugin.Assets.CodeRebirthContent.assetBundles.Where(bundle => bundle.assetBundleName == assetBundleName).FirstOrDefault();
         if (assetBundleData == null) return null;
 
+        LoadEnabledConfigs(assetBundleData.configName);
         bool loadBundle = CRConfigManager.GetEnabledConfigResult(assetBundleData.configName);
         if (!loadBundle) return null;
 
@@ -82,53 +87,17 @@ public class ContentHandler<T> where T: ContentHandler<T>
         foreach (var CREnemyDefinition in assetBundle.EnemyDefinitions)
         {
             EnemyData enemyData = assetBundle.AssetBundleData.enemies[definitionIndex];
-            LoadEnemyConfigs(enemyData.entityName, enemyData.spawnWeights, enemyData.powerLevel, enemyData.maxSpawnCount);
-            var enemyConfig = EnemyConfigManager.GetEnemyConfig(enemyData.entityName);
-            foreach (var configDefinition in CREnemyDefinition.ConfigEntries.Configs)
+            LoadEnemyConfigs(CREnemyDefinition.enemyType.enemyName, assetBundle.AssetBundleData.configName, enemyData.spawnWeights, enemyData.powerLevel, enemyData.maxSpawnCount);
+            var enemyConfig = EnemyConfigManager.GetEnemyConfig(assetBundle.AssetBundleData.configName, CREnemyDefinition.enemyType.enemyName);
+            if (CREnemyDefinition.ConfigEntries != null)
             {
-                Plugin.ExtendedLogging($"Registering config {configDefinition.Key} for {enemyData.entityName}");
-                switch (configDefinition.DynamicConfigType)
+                foreach (var configDefinition in CREnemyDefinition.ConfigEntries.Configs)
                 {
-                    case CRDynamicConfigType.String:
-                        CRConfigManager.CreateGeneralConfig(
-                            Plugin.configFile,
-                            enemyData.entityName,
-                            configDefinition.Key,
-                            configDefinition.defaultString,
-                            configDefinition.Description
-                        );
-                        break;
-                    case CRDynamicConfigType.Int:
-                        CRConfigManager.CreateGeneralConfig(
-                            Plugin.configFile,
-                            enemyData.entityName,
-                            configDefinition.Key,
-                            configDefinition.defaultInt,
-                            configDefinition.Description
-                        );
-                        break;
-                    case CRDynamicConfigType.Float:
-                        CRConfigManager.CreateGeneralConfig(
-                            Plugin.configFile,
-                            enemyData.entityName,
-                            configDefinition.Key,
-                            configDefinition.defaultFloat,
-                            configDefinition.Description
-                        );
-                        break;
-                    case CRDynamicConfigType.Bool:
-                        CRConfigManager.CreateGeneralConfig(
-                            Plugin.configFile,
-                            enemyData.entityName,
-                            configDefinition.Key,
-                            configDefinition.defaultBool,
-                            configDefinition.Description
-                        );
-                        break;
-                    default:
-                        throw new NotImplementedException("Dynamic config type not implemented.");
-                }            }
-            
+                    Plugin.ExtendedLogging($"Registering config {configDefinition.settingName} | {configDefinition.settingDesc} for {CREnemyDefinition.enemyType.enemyName}");
+                    ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
+                }
+            }
+
             EnemyType enemy = CREnemyDefinition.enemyType;
             enemy.MaxCount = enemyConfig.MaxSpawnCount.Value;
             enemy.PowerLevel = enemyConfig.PowerLevel.Value;
@@ -145,53 +114,17 @@ public class ContentHandler<T> where T: ContentHandler<T>
         foreach (var CRItemDefinition in assetBundle.ItemDefinitions)
         {
             ItemData itemData = assetBundle.AssetBundleData.items[definitionIndex];
-            LoadItemConfigs(itemData.entityName, itemData.spawnWeights, itemData.generateSpawnWeightsConfig, itemData.isScrap, itemData.generateScrapConfig, itemData.isShopItem, itemData.generateShopItemConfig, itemData.cost);
-            var itemConfig = ItemConfigManager.GetItemConfig(itemData.entityName);
-            foreach (var configDefinition in CRItemDefinition.ConfigEntries.Configs)
+            LoadItemConfigs(CRItemDefinition.item.itemName, assetBundle.AssetBundleData.configName, itemData.spawnWeights, itemData.generateSpawnWeightsConfig, itemData.isScrap, itemData.generateScrapConfig, itemData.isShopItem, itemData.generateShopItemConfig, itemData.cost);
+            var itemConfig = ItemConfigManager.GetItemConfig(assetBundle.AssetBundleData.configName, CRItemDefinition.item.itemName);
+            if (CRItemDefinition.ConfigEntries != null)
             {
-                switch (configDefinition.DynamicConfigType)
+                foreach (var configDefinition in CRItemDefinition.ConfigEntries.Configs)
                 {
-                    case CRDynamicConfigType.String:
-                        CRConfigManager.CreateGeneralConfig(
-                            Plugin.configFile,
-                            itemData.entityName,
-                            configDefinition.Key,
-                            configDefinition.defaultString,
-                            configDefinition.Description
-                        );
-                        break;
-                    case CRDynamicConfigType.Int:
-                        CRConfigManager.CreateGeneralConfig(
-                            Plugin.configFile,
-                            itemData.entityName,
-                            configDefinition.Key,
-                            configDefinition.defaultInt,
-                            configDefinition.Description
-                        );
-                        break;
-                    case CRDynamicConfigType.Float:
-                        CRConfigManager.CreateGeneralConfig(
-                            Plugin.configFile,
-                            itemData.entityName,
-                            configDefinition.Key,
-                            configDefinition.defaultFloat,
-                            configDefinition.Description
-                        );
-                        break;
-                    case CRDynamicConfigType.Bool:
-                        CRConfigManager.CreateGeneralConfig(
-                            Plugin.configFile,
-                            itemData.entityName,
-                            configDefinition.Key,
-                            configDefinition.defaultBool,
-                            configDefinition.Description
-                        );
-                        break;
-                    default:
-                        throw new NotImplementedException("Dynamic config type not implemented.");
+                    Plugin.ExtendedLogging($"Registering config {configDefinition.settingName} | {configDefinition.settingDesc} for {CRItemDefinition.item.itemName}");
+                    ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
                 }
             }
-            
+
             Item item = CRItemDefinition.item;
             RegisterShopItemWithConfig(itemConfig.IsShopItem?.Value, itemConfig.IsScrapItem?.Value, item, null, itemConfig.Cost?.Value, itemConfig.SpawnWeights?.Value, itemConfig.Value?.Value);
             definitionIndex++;

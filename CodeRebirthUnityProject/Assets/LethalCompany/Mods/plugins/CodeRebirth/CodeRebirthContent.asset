@@ -13,8 +13,84 @@ MonoBehaviour:
   m_Name: CodeRebirthContent
   m_EditorClassIdentifier: 
   assetBundles:
+  - assetBundleName: driftwoodmenaceassets
+    configName: Driftwood Menace
+    enemies:
+    - entityName: Driftwood Menace
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 2
+      maxSpawnCount: 2
+    items: []
+  - assetBundleName: nancyassets
+    configName: Nancy
+    enemies:
+    - entityName: Nancy
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 1
+      maxSpawnCount: 1
+    items: []
+  - assetBundleName: monarchassets
+    configName: Monarch
+    enemies:
+    - entityName: Monarch
+      spawnWeights: 
+      powerLevel: 3
+      maxSpawnCount: 3
+    - entityName: Cutiefly
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 0.5
+      maxSpawnCount: 6
+    items: []
+  - assetBundleName: mistressassets
+    configName: Mistress
+    enemies:
+    - entityName: Mistress
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 2
+      maxSpawnCount: 1
+    items:
+    - entityName: Talking Head
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+  - assetBundleName: redwoodtitanassets
+    configName: Redwood Titan
+    enemies:
+    - entityName: Redwood Titan
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 1.5
+      maxSpawnCount: 1
+    items: []
+  - assetBundleName: carnivorousplantassets
+    configName: Carnivorous Plant
+    enemies:
+    - entityName: Carnivorous Plant
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 1
+      maxSpawnCount: 4
+    items: []
+  - assetBundleName: snailcatassets
+    configName: SnailCat
+    enemies:
+    - entityName: SnailCat
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 0.5
+      maxSpawnCount: 6
+    items:
+    - entityName: SnailCat
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
   - assetBundleName: ducksongassets
-    configName: Duck Song
+    configName: Duck
     enemies:
     - entityName: Duck
       spawnWeights: Vanilla:20,Custom:20
@@ -37,3 +113,43 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
+  - assetBundleName: transporterassets
+    configName: Transporter
+    enemies:
+    - entityName: Transporter
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 1
+      maxSpawnCount: 3
+    items: []
+  - assetBundleName: manorlordassets
+    configName: ManorLord
+    enemies:
+    - entityName: ManorLord
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 2
+      maxSpawnCount: 3
+    items:
+    - entityName: Puppet
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Pin Needle
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+  - assetBundleName: janitorassets
+    configName: Janitor
+    enemies:
+    - entityName: Janitor
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 1
+      maxSpawnCount: 3
+    items: []

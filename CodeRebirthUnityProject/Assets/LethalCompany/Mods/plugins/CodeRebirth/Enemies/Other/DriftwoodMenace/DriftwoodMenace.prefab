@@ -643,6 +643,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
 --- !u!114 &8632879953552201403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -926,14 +927,13 @@ MonoBehaviour:
   hitSound: []
   walkSounds: []
   stompSounds: []
-  rangeOfSight: 50
+  seeingRange: 60
   awarenessLevel: 0
   maxAwarenessLevel: 100
   awarenessDecreaseRate: 2.5
   awarenessIncreaseRate: 5
   awarenessIncreaseMultiplier: 2
   smashTransform: {fileID: 2970896645177088309}
-  enemyAICollisionDetect: {fileID: 2208748133427165879}
 --- !u!114 &4189782787398397864
 MonoBehaviour:
   m_ObjectHideFlags: 0
