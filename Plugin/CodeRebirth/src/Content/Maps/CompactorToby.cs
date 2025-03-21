@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -107,10 +108,10 @@ public class CompactorToby : NetworkBehaviour, IHittable
         StartOrStopCompactingClientRpc(false);
         if (deadPlayer)
         {
-            CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby.FlatDeadPlayerScrap, randomPosition, false, true, value);
+            CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby.ItemDefinitions.Where(x => x.GetItemOnName("Flat Shredded Scrap")).First().item, randomPosition, false, true, value);
             yield break;
         }
-        CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby.SallyCubesScrap, randomPosition, false, true, value);
+        CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby.ItemDefinitions.Where(x => x.GetItemOnName("Sally Cube")).First().item, randomPosition, false, true, value);
     }
 
     [ServerRpc(RequireOwnership = false)]

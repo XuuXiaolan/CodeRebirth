@@ -22,9 +22,9 @@ static class RoundManagerPatch {
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value) SpawnFlora();
         
 		if (!RoundManager.Instance.IsHost) return;
-		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) SpawnCrates();
+		// if (Plugin.ModConfig.ConfigItemCrateEnabled.Value) SpawnCrates();
 		if (Plugin.ModConfig.ConfigBiomesEnabled.Value) SpawnRandomBiomes();
-		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value) SpawnBearTrap();
+		// if (Plugin.ModConfig.ConfigBearTrapEnabled.Value) SpawnBearTrap();
 		if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value) SpawnAirControlUnit();
 	}
 
@@ -116,7 +116,7 @@ static class RoundManagerPatch {
         return moonSpawnCounts;
     }
 
-    private static void SpawnBearTrap()
+    /*private static void SpawnBearTrap()
     {
         Plugin.ExtendedLogging("Spawning bear trap!!!");
 
@@ -192,7 +192,7 @@ static class RoundManagerPatch {
                 spawnedTrap.GetComponent<NetworkObject>().Spawn(true);
             }
         }
-    }
+    }*/
 
 	private static void SpawnFlora()
 	{
@@ -382,11 +382,11 @@ static class RoundManagerPatch {
 
 	private static void SpawnCrates()
 	{
-		SpawnMetalCrates();
-		SpawnWoodenCrates();
+		// SpawnMetalCrates();
+		// SpawnWoodenCrates();
 	}
 
-	private static void SpawnWoodenCrates()
+	/*private static void SpawnWoodenCrates()
 	{
 		Plugin.ExtendedLogging("Spawning Wooden Crate!!!");
 
@@ -443,11 +443,11 @@ static class RoundManagerPatch {
 
 				if (random.Next(0, 100) < 20 && Plugin.ModConfig.ConfigSuspiciousActivityEnabled.Value)
 				{
-					crate = MapObjectHandler.Instance.Crate.MimicWoodenCratePrefab;
+					crate = MapObjectHandler.Instance.GetPrefabFor(MiscScripts.SpawnSyncedCRObject.CRObjectType.MimicWoodenCrate);
 				}
 				else
 				{
-					crate = MapObjectHandler.Instance.Crate.WoodenCratePrefab;
+					crate = MapObjectHandler.Instance.GetPrefabFor(MiscScripts.SpawnSyncedCRObject.CRObjectType.WoodenCrate);
 				}
 				// Adjust the hit point deeper into the ground along the hit.normal direction
 				Vector3 spawnPoint = hit.point + hit.normal * -0.6f; // Adjust -0.6f to control how deep you want it
@@ -517,11 +517,11 @@ static class RoundManagerPatch {
 
 				if (random.Next(0, 100) < 20 && Plugin.ModConfig.ConfigSuspiciousActivityEnabled.Value)
 				{
-					crate = MapObjectHandler.Instance.Crate.MimicMetalCratePrefab;
+					crate = MapObjectHandler.Instance.GetPrefabFor(MiscScripts.SpawnSyncedCRObject.CRObjectType.MimicMetalCrate);
 				}
 				else
 				{
-					crate = MapObjectHandler.Instance.Crate.MetalCratePrefab;
+					crate = MapObjectHandler.Instance.GetPrefabFor(MiscScripts.SpawnSyncedCRObject.CRObjectType.MetalCrate);
 				}
 				// Adjust the hit point deeper into the ground along the hit.normal direction
 				Vector3 spawnPoint = hit.point + hit.normal * -1.1f; // Adjust -1.2f to control how deep you want it
@@ -532,7 +532,7 @@ static class RoundManagerPatch {
 				spawnedCrate.GetComponent<NetworkObject>().Spawn(true);
 			}
 		}
-	}
+	}*/
 
 	private static void SpawnRandomBiomes()
 	{

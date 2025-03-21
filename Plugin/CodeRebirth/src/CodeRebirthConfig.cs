@@ -4,7 +4,6 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
-    public ConfigEntry<bool> ConfigGunslingerGregEnabled { get; private set; }
     public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigCruiserGalEnabled { get; private set; }
@@ -13,7 +12,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigACUnitGalEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigSuspiciousActivityEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTerminalBotEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFriendStuffEnabled { get; private set; }
     public ConfigEntry<bool> ConfigShrimpDispenserEnabled { get; private set; }
@@ -25,8 +23,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigInsideBearTrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigBearTrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigLaserTurretEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFlashTurretEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIndustrialFanEnabled { get; private set; }
@@ -40,33 +36,26 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
     public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
-    public ConfigEntry<bool> ConfigHoverboardEnabled { get; private set; }
     public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
     public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigItemCrateEnabled { get; private set; }
     public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBellCrabGalEnabled { get; private set; }
     #endregion
     #region Spawn Weights
-    public ConfigEntry<string> ConfigWoodenSeedSpawnWeights { get; private set; }
     public ConfigEntry<float> ConfigBiomesSpawnChance { get; private set; }
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigBearTrapSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigMetalCrateSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigWoodenCrateSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigLaserTurretCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigFlashTurretCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigIndustrialFanCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigTeslaShockCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigAirControlUnitSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigFunctionalMicrowaveCurveSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigBearTrapInsideSpawnWeight { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
@@ -111,7 +100,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigShockwaveBotAutomatic { get; private set; }
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
-    public ConfigEntry<int> ConfigPlantPotPrice { get; private set; }
     public ConfigEntry<int> ConfigShockwaveCharges { get; private set; }
     public ConfigEntry<string> ConfigShockwaveBotEnemyBlacklist { get; private set; }
     public ConfigEntry<int> ConfigWoodenCrateHealth { get; private set; }
@@ -163,8 +151,6 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigCruiserGalCost { get; private set; }
     #endregion 
     #region Worth
-    public ConfigEntry<string> ConfigTomatoValue { get; private set; }
-    public ConfigEntry<string> ConfigGoldenTomatoValue { get; private set; }
     public ConfigEntry<string> ConfigNaturesMaceWorth { get; private set; }
     public ConfigEntry<string> ConfigIcyHammerWorth { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceWorth { get; private set; }
@@ -202,10 +188,6 @@ public class CodeRebirthConfig
                                             "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
         #endregion
         #region Gunslinger Greg
-        ConfigGunslingerGregEnabled = configFile.Bind("Gunslinger Greg Options",
-                                            "Gunslinger Greg | Enabled",
-                                            true,
-                                            "Whether Gunslinger Greg is enabled.");
         #endregion
         #region Driftwood Menace
         #endregion
@@ -303,26 +285,10 @@ public class CodeRebirthConfig
                                             "The volume of the Functional Microwave.");
         #endregion
         #region Bear Trap
-        ConfigBearTrapEnabled = configFile.Bind("BearTrap Options",
-                                            "Bear Trap | Enabled",
-                                            true,
-                                            "Whether the bear trap is enabled.");
-        ConfigInsideBearTrapEnabled = configFile.Bind("BearTrap Options",
-                                            "Bear Trap | Interior Spawn",
-                                            false,
-                                            "Whether the bear traps can spawn in the interior.");
         ConfigBearTrapsPopTires = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Pop Tires",
                                             true,
                                             "Whether the bear trap can pop tires.");
-        ConfigBearTrapSpawnWeight = configFile.Bind("BearTrap Options",
-                                            "Bear Trap | OUTSIDE Spawn Abundance",
-                                            "Vanilla:10,Custom:10",
-                                            "The MoonName:Number Spawn Abundance (where it will spawn between 0 and 10) of bear trap clusters to spawn per round (clusters means that theres 1 primary bear trap that spawns more (0 to 5) around it).");
-        ConfigBearTrapInsideSpawnWeight = configFile.Bind("BearTrap Options",
-                                            "Bear Trap | INSIDE Spawn Weight",
-                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
-                                            "The MoonName - CurveSpawnWeight for the INSIDE BearTrap.");
         ConfigBearTrapVolume = configFile.Bind("BearTrap Options",
                                             "Bear Trap | Volume",
                                             1f,
@@ -654,26 +620,10 @@ public class CodeRebirthConfig
                                             "Farming | Enabled",
                                             true,
                                             "Whether Farming is enabled.");
-        ConfigPlantPotPrice = configFile.Bind("Farming Options",
-                                            "Farming | Plant Pot Price",
-                                            696,
-                                            "Price of the Plant Pot.");
         ConfigWoodenSeedTreeSpawnChance = configFile.Bind("Farming Options",
                                             "Farming | Wooden Seed Tree Spawn Chance",
                                             2,
                                             "Chance of the wooden seed to spawn from a broken tree");
-        ConfigWoodenSeedSpawnWeights = configFile.Bind("Farming Options",
-                                            "Farming | Wooden Seed Spawn Weights",
-                                            "",
-                                            "Weights of the Wooden Seed spawn moons e.g. `Custom:10,Vanilla:10,Experimentation:50,Assurance:30,Gloom:20` (recommended empty).");
-        ConfigTomatoValue = configFile.Bind("Farming Options",
-                                            "Farming | Tomato Value",
-                                            "-1,-1",
-                                            "Min,Max value of the Tomato, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigGoldenTomatoValue = configFile.Bind("Farming Options",
-                                            "Farming | Golden Tomato Value",
-                                            "-1,-1",
-                                            "Min,Max value of the Golden Tomato, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         #endregion
         #region Tornado
         ConfigTornadosEnabled = configFile.Bind("Tornado Options",
@@ -910,26 +860,10 @@ public class CodeRebirthConfig
                                             "Enables/Disables the music in the snow globe.");
         #endregion
         #region ItemCrate
-        ConfigItemCrateEnabled = configFile.Bind("Crate Options",
-                                            "Crate | Enabled",
-                                            true,
-                                            "Enables/Disables the Item Crate from spawning.");
-        ConfigSuspiciousActivityEnabled = configFile.Bind("Crate Options",
-                                            "Crate | Suspicious Activity Enabled",
-                                            true,
-                                            "Enables/Disables the Suspicious Activity from happening.");
-        ConfigMetalCrateSpawnWeight = configFile.Bind("Crate Options",
-                                            "Crate | Metal SpawnWeight",
-                                            "Vanilla:3,Custom:3",
-                                            "MoonName:SpawnWeight of Metal Crates that spawn outside (between 0 and your number).");
         ConfigCrateNumberToSpawn = configFile.Bind("Crate Options",
                                             "Crate | Scrap Number To Spawn",
                                             3,
                                             "Number of items that spawn inside a crate (between 0 and your number).");
-        ConfigWoodenCrateSpawnWeight = configFile.Bind("Crate Options",
-                                            "Crate | Wooden SpawnWeight",
-                                            "Vanilla:3,Custom:3",
-                                            "MoonName:SpawnWeight of Wooden Crates that spawn outside (between 0 and your number).");
         ConfigWoodenCrateHealth = configFile.Bind("Crate Options",
                                             "Crate | Wooden Crate Health",
                                             4,

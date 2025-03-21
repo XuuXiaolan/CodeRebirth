@@ -257,7 +257,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
 	private void RegisterPlantPot()
 	{
-		PlantPot = new PlantPotAssets("plantpotassets");
+		/*PlantPot = new PlantPotAssets("plantpotassets");
 		RegisterScrapWithConfig(Plugin.ModConfig.ConfigWoodenSeedSpawnWeights.Value, PlantPot.Seed);
 		Plugin.samplePrefabs.Add("Wooden Seed", PlantPot.Seed);
 
@@ -267,6 +267,6 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 		RegisterShopItemWithConfig(false, true, PlantPot.GoldenTomato, null, 0, "", Plugin.ModConfig.ConfigGoldenTomatoValue.Value);
 		Plugin.samplePrefabs.Add("Golden Tomato", PlantPot.GoldenTomato);
 
-		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigPlantPotPrice.Value, StoreType.ShipUpgrade);
+		LethalLib.Modules.Unlockables.RegisterUnlockable(PlantPot.PlantPotUnlockable, Plugin.ModConfig.ConfigPlantPotPrice.Value, StoreType.ShipUpgrade);*/
 	}
 }

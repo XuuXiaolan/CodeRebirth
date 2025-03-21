@@ -18,29 +18,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class ShredderSarahAssets(string bundleName) : AssetBundleLoader<ShredderSarahAssets>(bundleName)
     {
-        [LoadFromBundle("ShreddingSarah.prefab")]
-		public GameObject ShreddingSarahPrefab { get; private set; } = null!;
-
-        [LoadFromBundle("DeadBodyScrapObj.asset")]
-        public Item DeadPlayerScrap { get; private set; } = null!;
-
-		[LoadFromBundle("ShreddedScrapObj.asset")]
-		public Item ShreddedScrap { get; private set; } = null!;
     }
 
 	public class CrateAssets(string bundleName) : AssetBundleLoader<CrateAssets>(bundleName)
 	{
-		[LoadFromBundle("Wooden Crate")]
-		public GameObject WoodenCratePrefab { get; private set; } = null!;
-		
-		[LoadFromBundle("Metal Crate")]
-		public GameObject MetalCratePrefab { get; private set; } = null!;
-
-		[LoadFromBundle("Mimic Wooden Crate")]
-		public GameObject MimicWoodenCratePrefab { get; private set; } = null!;
-		
-		[LoadFromBundle("Mimic Metal Crate")]
-		public GameObject MimicMetalCratePrefab { get; private set; } = null!;
 	}
 
 	public class FloraAssets(string bundleName) : AssetBundleLoader<FloraAssets>(bundleName)
@@ -120,9 +101,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class MerchantAssets(string bundleName) : AssetBundleLoader<MerchantAssets>(bundleName)
 	{
-		[LoadFromBundle("MoneyPrefab.prefab")]
-		public GameObject MoneyPrefab { get; private set; } = null!;
-
 		[LoadFromBundle("PiggyBankUnlockable.asset")]
 		public UnlockableItemDef PiggyBankUnlockable { get; private set; } = null!;
 	}
@@ -162,18 +140,16 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.CompactorToby] = CompactorToby.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("compactor")).First().gameObject;;
 		}
 
-		if (Plugin.ModConfig.ConfigGunslingerGregEnabled.Value)
+		GunslingerGreg = LoadAndRegisterAssets<GunslingerGregAssets>("gunslingergregassets");
+		if (GunslingerGreg != null)
 		{
-			GunslingerGreg = new GunslingerGregAssets("gunslingergregassets");
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.GunslingerGreg] = GunslingerGreg.GunslingerGregPrefab;
 		}
 
-		if (Plugin.ModConfig.ConfigOxydeEnabled.Value)
+		ShredderSarah = LoadAndRegisterAssets<ShredderSarahAssets>("shreddersarahassets");
+		if (ShredderSarah != null)
 		{
-			ShredderSarah = new ShredderSarahAssets("shreddersarahassets");
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.ShredderSarah] = ShredderSarah.ShreddingSarahPrefab;
-			RegisterScrapWithConfig("", ShredderSarah.ShreddedScrap);
-			RegisterScrapWithConfig("", ShredderSarah.DeadPlayerScrap);
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.ShredderSarah] = ShredderSarah.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("shredder")).First().gameObject;
 		}
 
 		Merchant = LoadAndRegisterAssets<MerchantAssets>("merchantassets");
@@ -183,13 +159,13 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 			LethalLib.Modules.Unlockables.RegisterUnlockable(Merchant.PiggyBankUnlockable, Plugin.ModConfig.ConfigPiggyBankCost.Value, StoreType.ShipUpgrade);
 		}
 
-		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)
+		Crate = LoadAndRegisterAssets<CrateAssets>("crateassets");
+		if (Crate != null)
 		{
-			Crate = new CrateAssets("crateassets");
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.MimicWoodenCrate] = Crate.MimicWoodenCratePrefab;
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.WoodenCrate] = Crate.WoodenCratePrefab;
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.MimicMetalCrate] = Crate.MimicMetalCratePrefab;
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.MetalCrate] = Crate.MetalCratePrefab;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.MimicWoodenCrate] = Crate.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("mimic wooden")).First().gameObject;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.WoodenCrate] = Crate.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("normal wooden")).First().gameObject;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.MimicMetalCrate] = Crate.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("mimic metal")).First().gameObject;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.MetalCrate] = Crate.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("normal metal")).First().gameObject;
 		}
 
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value)
@@ -201,14 +177,14 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigTeslaShockEnabled.Value)
 			RegisterTeslaShock();
 
-		if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
+		/*if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
 		{
 			BearTrap = new BearTrapAssets("beartrapassets");
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.BearTrap] = BearTrap.GrassMatPrefab;
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.BoomTrap] = BearTrap.BoomTrapPrefab;
 			hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);
-			if (Plugin.ModConfig.ConfigInsideBearTrapEnabled.Value) RegisterInsideBearTraps();
-		}
+			// if (Plugin.ModConfig.ConfigInsideBearTrapEnabled.Value) RegisterInsideBearTraps();
+		}*/
 
 		if (Plugin.ModConfig.ConfigLaserTurretEnabled.Value)
 			RegisterLaserTurret();
@@ -236,10 +212,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         return prefab;
     }
 
-	public void RegisterInsideBearTraps()
+	/*public void RegisterInsideBearTraps()
 	{
 		RegisterInsideMapObjectWithConfig(BearTrap.GrassMatPrefab, Plugin.ModConfig.ConfigBearTrapInsideSpawnWeight.Value);
-	}
+	}*/
 
 	public void RegisterFunctionalMicrowave()
 	{

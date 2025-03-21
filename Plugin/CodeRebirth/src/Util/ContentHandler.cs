@@ -265,12 +265,10 @@ public class ContentHandler<T> where T: ContentHandler<T>
         SpawnableOutsideObjectDef mapObjDef = ScriptableObject.CreateInstance<SpawnableOutsideObjectDef>();
         mapObjDef.spawnableMapObject = new SpawnableOutsideObjectWithRarity
         {
-            spawnableObject = new SpawnableOutsideObject
-            {
-                prefabToSpawn = prefab
-            }
+            spawnableObject = ScriptableObject.CreateInstance<SpawnableOutsideObject>()
         };
 
+        mapObjDef.spawnableMapObject.spawnableObject.prefabToSpawn = prefab;
         // Parse the configuration string
         (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);
 
