@@ -12,7 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 1360606650, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: DuckSongEnemyDefinition
   m_EditorClassIdentifier: 
+  ConfigEntries:
+  - settingName: Duck
+    settingDesc: Quest Timer
+    DynamicConfigType: 2
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 120
+    defaultBool: 0
+    Description: How long it takes for the duck quest to end.
   enemyType: {fileID: 11400000, guid: 191e88b614dcb5144835fad35d9d53ca, type: 2}
   terminalNode: {fileID: 0}
   terminalKeyword: {fileID: 0}
-  ConfigEntries: {fileID: 11400000, guid: 3a02c2e60c956a840abf9a0a6b20cd7d, type: 2}

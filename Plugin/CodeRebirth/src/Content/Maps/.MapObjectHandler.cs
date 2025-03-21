@@ -14,14 +14,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 {
 	public class CompactorTobyAssets(string bundleName) : AssetBundleLoader<CompactorTobyAssets>(bundleName)
 	{
-		[LoadFromBundle("CompactorToby.prefab")]
-		public GameObject CompactorTobyPrefab { get; private set; } = null!;
-
-		[LoadFromBundle("SallyCubesObj.asset")]
-		public Item SallyCubesScrap { get; private set; } = null!;
-
-		[LoadFromBundle("FlatBodyScrapObj.asset")]
-		public Item FlatDeadPlayerScrap { get; private set; } = null!;
 	}
 
 	public class ShredderSarahAssets(string bundleName) : AssetBundleLoader<ShredderSarahAssets>(bundleName)
@@ -164,12 +156,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public MapObjectHandler()
 	{
-		if (Plugin.ModConfig.ConfigOxydeEnabled.Value)
+		CompactorToby = LoadAndRegisterAssets<CompactorTobyAssets>("compactortobyassets");
+		if (CompactorToby != null)
 		{
-			CompactorToby = new CompactorTobyAssets("compactortobyassets");
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.CompactorToby] = CompactorToby.CompactorTobyPrefab;
-			RegisterScrapWithConfig("", CompactorToby.FlatDeadPlayerScrap);
-			RegisterScrapWithConfig("", CompactorToby.SallyCubesScrap);
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.CompactorToby] = CompactorToby.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("compactor")).First().gameObject;;
 		}
 
 		if (Plugin.ModConfig.ConfigGunslingerGregEnabled.Value)
