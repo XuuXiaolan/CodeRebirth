@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.MiscScripts.PathFinding;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -189,7 +190,8 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         PlayMiscSoundsServerRpc(0);
         animator.SetBool(IsDeadAnimation, true);
         yield return new WaitForSeconds(4f);
-        if (playerControlled != null && !playerControlled.isPlayerDead) CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord?.PuppetItemDefinition.item.itemName, transform.position);
+        if (EnemyHandler.Instance.ManorLord == null) yield break;
+        if (playerControlled != null && !playerControlled.isPlayerDead) CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.Where(x => x.GetItemOnName("Voodoo")).First().item.itemName, transform.position);
         NetworkObject.Despawn();
     }
 

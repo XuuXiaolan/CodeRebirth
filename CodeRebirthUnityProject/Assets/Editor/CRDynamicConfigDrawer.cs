@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEditor;
-using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.ConfigManager;
 
 [CustomPropertyDrawer(typeof(CRDynamicConfig))]
 public class CRDynamicConfigDrawer : PropertyDrawer

@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using BepInEx;
 using BepInEx.Configuration;
+using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util.AssetLoading;
@@ -58,44 +62,88 @@ public class ContentHandler<T> where T: ContentHandler<T>
         );
     }
 
+    protected void LoadMapObjectConfigs(string mapObjectName, string keyName, bool isInsideHazard, bool createInsideHazardConfig, string defaultInsideCurveSpawnWeights, bool createInsideCurveSpawnWeightsConfig, bool isOutsideHazard, bool createOutsideHazardConfig, string defaultOutsideCurveSpawnWeights, bool createOutsideCurveSpawnWeightsConfig)
+    {
+        MapObjectConfigManager.LoadConfigForMapObject(
+            Plugin.configFile,
+            mapObjectName,
+            keyName,
+            isInsideHazard,
+            createInsideHazardConfig,
+            defaultInsideCurveSpawnWeights,
+            createInsideCurveSpawnWeightsConfig,
+            isOutsideHazard,
+            createOutsideHazardConfig,
+            defaultOutsideCurveSpawnWeights,
+            createOutsideCurveSpawnWeightsConfig
+        );
+    }
+
     protected void LoadEnabledConfigs(string keyName)
     {
         var config = CRConfigManager.CreateEnabledEntry(Plugin.configFile, keyName, keyName, "Enabled", true, $"Whether {keyName} is enabled.");
         CRConfigManager.CRConfigs[keyName] = config;
     }
 
-    protected TAsset? LoadAndRegisterAssets<TAsset>(string assetBundleName) where TAsset : AssetBundleLoader<TAsset>, IBundleAsset
+    protected TAsset? LoadAndRegisterAssets<TAsset>(string assetBundleName, bool overrideEnabledConfig = false) where TAsset : AssetBundleLoader<TAsset>
     {
         AssetBundleData assetBundleData = Plugin.Assets.CodeRebirthContent.assetBundles.Where(bundle => bundle.assetBundleName == assetBundleName).FirstOrDefault();
         if (assetBundleData == null) return null;
 
         LoadEnabledConfigs(assetBundleData.configName);
         bool loadBundle = CRConfigManager.GetEnabledConfigResult(assetBundleData.configName);
-        if (!loadBundle) return null;
+        if (!loadBundle && !overrideEnabledConfig) return null;
 
         // hacky workaround because generic functions can't create instances using new with parameters???
         TAsset assetBundle = (TAsset)Activator.CreateInstance(typeof(TAsset), new object[] { assetBundleName });
         assetBundle.AssetBundleData = assetBundleData;
 
+        // do the loadfrombundle for all CRContentDefinitions
+
+        CRContentDefinition[] definitions = assetBundle.bundle.LoadAllAssets<CRContentDefinition>();
+        foreach (CRContentDefinition definition in definitions)
+        {
+            if (definition is CREnemyDefinition enemyDef)
+            {
+                // Add to enemy definitions.
+                assetBundle.enemyDefinitions.Add(enemyDef);
+            }
+            else if (definition is CRItemDefinition itemDef)
+            {
+                // Add to item definitions.
+                assetBundle.itemDefinitions.Add(itemDef);
+            }
+            else if (definition is CRMapObjectDefinition mapObjectDef)
+            {
+                // Add to map object definitions.
+                assetBundle.mapObjectDefinitions.Add(mapObjectDef);
+            }
+        }
+
+        RegisterEnemyAssets(assetBundle);
+        RegisterItemAssets(assetBundle);
+        RegisterMapObjectAssets(assetBundle);
         return assetBundle;
     }
 
-    protected void RegisterEnemyAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>, IEnemyAssets
+    protected void RegisterEnemyAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
     {
         if (assetBundle == null || assetBundle.AssetBundleData == null) return;
+        Plugin.ExtendedLogging($"Registering enemies for {assetBundle.AssetBundleData.assetBundleName}");
         int definitionIndex = 0;
+        assetBundle.enemyDefinitions.Sort((a, b) => a.enemyType.enemyName.CompareTo(b.enemyType.enemyName));
+        assetBundle.AssetBundleData.enemies.Sort((a, b) => a.entityName.CompareTo(b.entityName));
         foreach (var CREnemyDefinition in assetBundle.EnemyDefinitions)
         {
             EnemyData enemyData = assetBundle.AssetBundleData.enemies[definitionIndex];
+            Plugin.ExtendedLogging($"EnemyData {enemyData.entityName}");
+            Plugin.ExtendedLogging($"EnemyDefinition {CREnemyDefinition.enemyType.enemyName}");
             LoadEnemyConfigs(CREnemyDefinition.enemyType.enemyName, assetBundle.AssetBundleData.configName, enemyData.spawnWeights, enemyData.powerLevel, enemyData.maxSpawnCount);
             var enemyConfig = EnemyConfigManager.GetEnemyConfig(assetBundle.AssetBundleData.configName, CREnemyDefinition.enemyType.enemyName);
-            if (CREnemyDefinition.ConfigEntries != null)
+            foreach (var configDefinition in CREnemyDefinition.ConfigEntries)
             {
-                foreach (var configDefinition in CREnemyDefinition.ConfigEntries.Configs)
-                {
-                    Plugin.ExtendedLogging($"Registering config {configDefinition.settingName} | {configDefinition.settingDesc} for {CREnemyDefinition.enemyType.enemyName}");
-                    ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
-                }
+                Plugin.ExtendedLogging($"Registering config {configDefinition.settingName} | {configDefinition.settingDesc} for {CREnemyDefinition.enemyType.enemyName}");
+                ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
             }
 
             EnemyType enemy = CREnemyDefinition.enemyType;
@@ -107,26 +155,62 @@ public class ContentHandler<T> where T: ContentHandler<T>
         }
     }
 
-    protected void RegisterItemAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>, IItemAssets
+    protected void RegisterItemAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
     {
         if (assetBundle == null || assetBundle.AssetBundleData == null) return;
+        Plugin.ExtendedLogging($"Registering items for {assetBundle.AssetBundleData.assetBundleName}");
+        assetBundle.itemDefinitions.Sort((a, b) => a.item.itemName.CompareTo(b.item.itemName));
+        assetBundle.AssetBundleData.items.Sort((a, b) => a.entityName.CompareTo(b.entityName));
         int definitionIndex = 0;
         foreach (var CRItemDefinition in assetBundle.ItemDefinitions)
-        {
+        { // todo: if the config option is null, read the default value instead.
             ItemData itemData = assetBundle.AssetBundleData.items[definitionIndex];
+            Plugin.ExtendedLogging($"ItemData: {assetBundle.AssetBundleData.items[definitionIndex].entityName}");
+            Plugin.ExtendedLogging($"CRItemDefinition: {CRItemDefinition.item.itemName}");
             LoadItemConfigs(CRItemDefinition.item.itemName, assetBundle.AssetBundleData.configName, itemData.spawnWeights, itemData.generateSpawnWeightsConfig, itemData.isScrap, itemData.generateScrapConfig, itemData.isShopItem, itemData.generateShopItemConfig, itemData.cost);
             var itemConfig = ItemConfigManager.GetItemConfig(assetBundle.AssetBundleData.configName, CRItemDefinition.item.itemName);
-            if (CRItemDefinition.ConfigEntries != null)
+            foreach (var configDefinition in CRItemDefinition.ConfigEntries)
             {
-                foreach (var configDefinition in CRItemDefinition.ConfigEntries.Configs)
-                {
-                    Plugin.ExtendedLogging($"Registering config {configDefinition.settingName} | {configDefinition.settingDesc} for {CRItemDefinition.item.itemName}");
-                    ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
-                }
+                ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
             }
 
             Item item = CRItemDefinition.item;
-            RegisterShopItemWithConfig(itemConfig.IsShopItem?.Value, itemConfig.IsScrapItem?.Value, item, null, itemConfig.Cost?.Value, itemConfig.SpawnWeights?.Value, itemConfig.Value?.Value);
+            bool isScrap = itemConfig.IsScrapItem?.Value ?? itemData.isScrap;
+            bool isShop = itemConfig.IsShopItem?.Value ?? itemData.isShopItem;
+            int cost = itemConfig.Cost?.Value ?? itemData.cost;
+            string spawnWeights = itemConfig.SpawnWeights?.Value ?? itemData.spawnWeights;
+            string value = itemConfig.Value?.Value ?? "-1,-1";
+            Plugin.ExtendedLogging($"Registering config for {item.itemName} | {spawnWeights} | {isScrap} | {isShop} | {cost} | {value}");
+            RegisterShopItemWithConfig(isShop, isScrap, item, CRItemDefinition.terminalNode, cost, spawnWeights, value);
+            definitionIndex++;
+        }
+    }
+
+    protected void RegisterMapObjectAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
+    {
+        if (assetBundle == null || assetBundle.AssetBundleData == null) return;
+        Plugin.ExtendedLogging($"Registering MapObjects for {assetBundle.AssetBundleData.assetBundleName}");
+        int definitionIndex = 0;
+        assetBundle.mapObjectDefinitions.Sort((a, b) => a.objectName.CompareTo(b.objectName));
+        assetBundle.AssetBundleData.mapObjects.Sort((a, b) => a.entityName.CompareTo(b.entityName));
+        foreach (var CRMapObjectDefinition in assetBundle.MapObjectDefinitions)
+        {
+            MapObjectData mapObjectData = assetBundle.AssetBundleData.mapObjects[definitionIndex];
+            Plugin.ExtendedLogging($"MapObjectData: {mapObjectData.entityName}");
+            Plugin.ExtendedLogging($"MapObjectDefinition: {CRMapObjectDefinition.objectName}");
+            LoadMapObjectConfigs(CRMapObjectDefinition.objectName, assetBundle.AssetBundleData.configName, mapObjectData.isInsideHazard, mapObjectData.createInsideHazardConfig, mapObjectData.defaultInsideCurveSpawnWeights, mapObjectData.createInsideCurveSpawnWeightsConfig, mapObjectData.isOutsideHazard, mapObjectData.createOutsideHazardConfig, mapObjectData.defaultOutsideCurveSpawnWeights, mapObjectData.createOutsideCurveSpawnWeightsConfig);
+            var mapObjectConfig = MapObjectConfigManager.GetMapObjectConfig(assetBundle.AssetBundleData.configName, CRMapObjectDefinition.objectName);
+            foreach (var configDefinition in CRMapObjectDefinition.ConfigEntries)
+            {
+                ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
+            }
+
+            GameObject gameObject = CRMapObjectDefinition.gameObject;
+            bool inside = mapObjectConfig.InsideHazard?.Value ?? mapObjectData.isInsideHazard;
+            string insideCurveSpawnWeights = mapObjectConfig.InsideCurveSpawnWeights?.Value ?? mapObjectData.defaultInsideCurveSpawnWeights;
+            bool outside = mapObjectConfig.OutsideHazard?.Value ?? mapObjectData.isOutsideHazard;
+            string outsideCurveSpawnWeightsConfig = mapObjectConfig.OutsideCurveSpawnWeights?.Value ?? mapObjectData.defaultOutsideCurveSpawnWeights;
+            RegisterMapObjectWithConfig(gameObject, inside, insideCurveSpawnWeights, outside, outsideCurveSpawnWeightsConfig);
             definitionIndex++;
         }
     }
@@ -137,9 +221,9 @@ public class ContentHandler<T> where T: ContentHandler<T>
         Items.RegisterScrap(scrap, spawnRateByLevelType, spawnRateByCustomLevelType);
     }
 
-    protected void RegisterShopItemWithConfig(bool? enabledShopItem, bool? enabledScrap, Item item, TerminalNode? terminalNode, int? itemCost, string? configMoonRarity, string? minMaxWorth)
+    protected void RegisterShopItemWithConfig(bool enabledShopItem, bool enabledScrap, Item item, TerminalNode? terminalNode, int itemCost, string configMoonRarity, string minMaxWorth)
     {
-        int[] scrapValues = ChangeItemValues(minMaxWorth ?? "-1,-1");
+        int[] scrapValues = ChangeItemValues(string.IsNullOrEmpty(minMaxWorth) ? "-1,-1" : minMaxWorth);
         int itemWorthMin = scrapValues[0];
         int itemWorthMax = scrapValues[1];
 
@@ -153,14 +237,116 @@ public class ContentHandler<T> where T: ContentHandler<T>
             item.maxValue = (int)(itemWorthMax/0.4f);
         }
 
-        if (enabledShopItem != null) 
+        if (enabledShopItem) 
         {
-            Items.RegisterShopItem(item, null, null, terminalNode, itemCost ?? 0);
+            Items.RegisterShopItem(item, null, null, terminalNode, itemCost);
         }
-        if (enabledScrap != null)
+        if (enabledScrap)
         {
             RegisterScrapWithConfig(configMoonRarity, item);
         }
+    }
+
+    protected void RegisterMapObjectWithConfig(GameObject prefab, bool inside, string insideConfigString, bool outside, string outsideConfigString)
+    {
+        if (inside)
+        {
+            RegisterInsideMapObjectWithConfig(prefab, outsideConfigString);
+        }
+        if (outside)
+        {
+            RegisterOutsideMapObjectWithConfig(prefab, insideConfigString);
+        }
+    }
+
+    protected void RegisterOutsideMapObjectWithConfig(GameObject prefab, string configString)
+    {
+        // Create the map object definition
+        SpawnableOutsideObjectDef mapObjDef = ScriptableObject.CreateInstance<SpawnableOutsideObjectDef>();
+        mapObjDef.spawnableMapObject = new SpawnableOutsideObjectWithRarity
+        {
+            spawnableObject = new SpawnableOutsideObject
+            {
+                prefabToSpawn = prefab
+            }
+        };
+
+        // Parse the configuration string
+        (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);
+
+        // Create dictionaries to hold animation curves for each level type
+        Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType = new Dictionary<Levels.LevelTypes, AnimationCurve>();
+        Dictionary<string, AnimationCurve> curvesByCustomLevelType = new Dictionary<string, AnimationCurve>();
+
+        bool allCurveExists = false;
+        AnimationCurve allAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+
+        bool vanillaCurveExists = false;
+        AnimationCurve vanillaAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+
+        bool moddedCurveExists = false;
+        AnimationCurve moddedAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+
+        // Populate the animation curves
+        foreach (var entry in spawnRateByLevelType)
+        {
+            Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
+            curvesByLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
+            if (entry.Key.ToString().ToLowerInvariant() == "vanilla")
+            {
+                vanillaCurveExists = true;
+                vanillaAnimationCurve = curvesByLevelType[entry.Key];
+            }
+            else if (entry.Key.ToString().ToLowerInvariant() == "modded" || entry.Key.ToString().ToLowerInvariant() == "custom")
+            {
+                moddedCurveExists = true;
+                moddedAnimationCurve = curvesByLevelType[Levels.LevelTypes.Modded];
+            }
+        }
+        foreach (var entry in spawnRateByCustomLevelType)
+        {
+            curvesByCustomLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
+        }
+
+        // Register the map object with a single lambda function
+        MapObjects.RegisterOutsideObject(
+            mapObjDef,
+            Levels.LevelTypes.All,
+            curvesByCustomLevelType.Keys.ToArray().Select(s => s.ToLowerInvariant()).ToArray(),
+            level =>
+            {
+                if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
+                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}");
+                string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
+                Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
+                bool isVanilla = false;
+                if (levelType != Levels.LevelTypes.None && levelType != Levels.LevelTypes.Modded)
+                {
+                    isVanilla = true;
+                }
+                if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
+                {
+                    return curve;
+                }
+                else if (isVanilla && vanillaCurveExists)
+                {
+                    return vanillaAnimationCurve;
+                }
+                else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
+                {
+                    return curve;
+                }
+                else if (moddedCurveExists)
+                {
+                    return moddedAnimationCurve;
+                }
+                else if (allCurveExists)
+                {
+                    return allAnimationCurve;
+                }
+                Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
+                return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]); // Default case if no curve matches
+            });
     }
 
     protected void RegisterInsideMapObjectWithConfig(GameObject prefab, string configString)
@@ -195,20 +381,17 @@ public class ContentHandler<T> where T: ContentHandler<T>
             curvesByLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
             if (entry.Key.ToString().ToLowerInvariant() == "vanilla")
             {
-                Plugin.ExtendedLogging($"Registering via Vanilla curve because this is vanilla");
                 vanillaCurveExists = true;
                 vanillaAnimationCurve = curvesByLevelType[entry.Key];
             }
             else if (entry.Key.ToString().ToLowerInvariant() == "modded" || entry.Key.ToString().ToLowerInvariant() == "custom")
             {
-                Plugin.ExtendedLogging($"Registering via Modded curve because this is modded");
                 moddedCurveExists = true;
                 moddedAnimationCurve = curvesByLevelType[Levels.LevelTypes.Modded];
             }
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
-            Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
             curvesByCustomLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
         }
 
@@ -223,17 +406,13 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}");
                 string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
                 Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
-                Plugin.ExtendedLogging($"Output Level type: {levelType}");
-                Plugin.ExtendedLogging($"is Level Vanilla AND Contained in Curves: {curvesByLevelType.Keys.Contains(levelType)}");
                 bool isVanilla = false;
                 if (levelType != Levels.LevelTypes.None && levelType != Levels.LevelTypes.Modded)
                 {
-                    Plugin.ExtendedLogging($"is Level Vanilla: true");
                     isVanilla = true;
                 }
                 if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
                 {
-                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
                     /*foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -242,7 +421,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else if (isVanilla && vanillaCurveExists)
                 {
-                    Plugin.ExtendedLogging("Managed to find curve for level: Vanilla | with given curve: ");
                     /*foreach (Keyframe keyframe in vanillaAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -251,7 +429,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
                 {
-                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} | with given curve: ");
                     /*foreach (Keyframe keyframe in curve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -260,7 +437,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else if (moddedCurveExists)
                 {
-                    Plugin.ExtendedLogging("Managed to find curve for level: Modded | with given curve: ");
                     /*foreach (Keyframe keyframe in moddedAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -269,7 +445,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else if (allCurveExists)
                 {
-                    Plugin.ExtendedLogging($"Managed to find curve for level: {actualLevelName} with type ALL | with given curve: ");
                     /*foreach (Keyframe keyframe in allAnimationCurve.keys)
                     {
                         Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
@@ -434,7 +609,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
     public AnimationCurve CreateCurveFromString(string keyValuePairs, string nameOfThing, string MoonName)
     {
         // Split the input string into individual key-value pairs
-        Plugin.ExtendedLogging($"Creating curve for {nameOfThing} on moon {MoonName} with key-value pairs: {keyValuePairs}");
         string[] pairs = keyValuePairs.Split(';').Select(s => s.Trim()).ToArray();
         if (pairs.Length == 0)
         {
@@ -458,7 +632,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 float.TryParse(splitPair[0], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float time) &&
                 float.TryParse(splitPair[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float value))
             {
-                Plugin.ExtendedLogging($"Adding keyframe for {nameOfThing} at time {time} with value {value}");
                 keyframes.Add(new Keyframe(time, value));
             }
             else

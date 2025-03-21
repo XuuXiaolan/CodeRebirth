@@ -7,6 +7,7 @@ using CodeRebirth.src.Util;
 using LethalLib.Modules;
 using CodeRebirth.src.MiscScripts;
 using LethalLib.Extras;
+using System.Linq;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
@@ -127,65 +128,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class MerchantAssets(string bundleName) : AssetBundleLoader<MerchantAssets>(bundleName)
 	{
-		[LoadFromBundle("Guardsman.prefab")]
-		public GameObject MerchantPrefab { get; private set; } = null!;
-
-		[LoadFromBundle("CreditPad100ccObj.asset")]
-		public Item CreditPad100cc { get; private set; } = null!;
-
-		[LoadFromBundle("CreditPad500ccObj.asset")]
-		public Item CreditPad500cc { get; private set; } = null!;
-
-		[LoadFromBundle("CreditPad1000ccObj.asset")]
-		public Item CreditPad1000cc { get; private set; } = null!;
-
-		[LoadFromBundle("DetonatorObj.asset")]
-		public Item Detonator { get; private set; } = null!;
-
-		[LoadFromBundle("FogHornObj.asset")]
-		public Item FogHorn { get; private set; } = null!;
-
-		[LoadFromBundle("GuardsmanPhoneObj.asset")]
-		public Item GuardsmanPhone { get; private set; } = null!;
-
-		[LoadFromBundle("InfiniKeyObj.asset")]
-		public Item InfiniKey { get; private set; } = null!;
-
-		[LoadFromBundle("LifeformAnalyserObj.asset")]
-		public Item LifeformAnalyser { get; private set; } = null!;
-
-		[LoadFromBundle("MoleDiggerObj.asset")]
-		public Item MoleDigger { get; private set; } = null!;
-
-		[LoadFromBundle("NitroCrateObj.asset")]
-		public Item NitroCrate { get; private set; } = null!;
-
-		[LoadFromBundle("OxidizerObj.asset")]
-		public Item Oxidizer { get; private set; } = null!;
-
-		[LoadFromBundle("RailSluggerObj.asset")]
-		public Item RailSlugger { get; private set; } = null!;
-
-		[LoadFromBundle("RockyObj.asset")]
-		public Item Rocky { get; private set; } = null!;
-
-		[LoadFromBundle("ShipUpgradeUnlockerObj.asset")]
-		public Item ShipUpgradeUnlocker { get; private set; } = null!;
-
-		[LoadFromBundle("StoptimeWatchObj.asset")]
-		public Item StoptimeWatch { get; private set; } = null!;
-
-		[LoadFromBundle("WalkieYellieObj.asset")]
-		public Item WalkieYellie { get; private set; } = null!;
-
-		[LoadFromBundle("WorthlessObj.asset")]
-		public Item Worthless { get; private set; } = null!;
-
 		[LoadFromBundle("MoneyPrefab.prefab")]
 		public GameObject MoneyPrefab { get; private set; } = null!;
-
-		[LoadFromBundle("WalletObj.asset")]
-		public Item WalletItem { get; private set; } = null!;
 
 		[LoadFromBundle("PiggyBankUnlockable.asset")]
 		public UnlockableItemDef PiggyBankUnlockable { get; private set; } = null!;
@@ -200,20 +144,20 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public GameObject MissilePrefab { get; private set; } = null!;
 	}
 
-	public GunslingerGregAssets GunslingerGreg { get; private set; } = null!;
-	public CompactorTobyAssets CompactorToby { get; private set; } = null!;
-	public ShredderSarahAssets ShredderSarah { get; private set; } = null!;
-	public MerchantAssets Merchant { get; private set; } = null!;
-	public CrateAssets Crate { get; private set; } = null!;
-	public FloraAssets Flora { get; private set; } = null!;
-	public BiomeAssets Biome { get; private set; } = null!;
-	public BearTrapAssets BearTrap { get; private set; } = null!;
-	public GlowingGemAssets GlowingGem { get; private set; } = null!;
-	public IndustrialFanAssets IndustrialFan { get; private set; } = null!;
-	public FlashTurretAssets FlashTurret { get; private set; } = null!;
-	public TeslaShockAssets TeslaShock { get; private set; } = null!;
-	public AirControlUnitAssets AirControlUnit { get; private set; } = null!;
-	public FunctionalMicrowaveAssets FunctionalMicrowave { get; private set; } = null!;
+	public GunslingerGregAssets? GunslingerGreg { get; private set; } = null;
+	public CompactorTobyAssets? CompactorToby { get; private set; } = null;
+	public ShredderSarahAssets? ShredderSarah { get; private set; } = null;
+	public MerchantAssets? Merchant { get; private set; } = null;
+	public CrateAssets? Crate { get; private set; } = null;
+	public FloraAssets? Flora { get; private set; } = null;
+	public BiomeAssets? Biome { get; private set; } = null;
+	public BearTrapAssets? BearTrap { get; private set; } = null;
+	public GlowingGemAssets? GlowingGem { get; private set; } = null;
+	public IndustrialFanAssets? IndustrialFan { get; private set; } = null;
+	public FlashTurretAssets? FlashTurret { get; private set; } = null;
+	public TeslaShockAssets? TeslaShock { get; private set; } = null;
+	public AirControlUnitAssets? AirControlUnit { get; private set; } = null;
+	public FunctionalMicrowaveAssets? FunctionalMicrowave { get; private set; } = null;
 
     public Dictionary<SpawnSyncedCRObject.CRObjectType, GameObject> prefabMapping = new();
 	public static List<GameObject> hazardPrefabs = new List<GameObject>();
@@ -242,31 +186,11 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 			RegisterScrapWithConfig("", ShredderSarah.DeadPlayerScrap);
 		}
 
-		if (Plugin.ModConfig.ConfigMerchantEnabled.Value)
+		Merchant = LoadAndRegisterAssets<MerchantAssets>("merchantassets");
+		if (Merchant != null)
 		{
-			Merchant = new MerchantAssets("merchantassets");
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.Merchant] = Merchant.MerchantPrefab;
-			RegisterScrapWithConfig("", Merchant.CreditPad100cc);
-			RegisterScrapWithConfig("", Merchant.CreditPad500cc);
-			RegisterScrapWithConfig("", Merchant.CreditPad1000cc);
-			RegisterScrapWithConfig("", Merchant.Detonator);
-			RegisterScrapWithConfig("", Merchant.FogHorn);
-			RegisterScrapWithConfig("", Merchant.GuardsmanPhone);
-			RegisterScrapWithConfig("", Merchant.InfiniKey);
-			RegisterScrapWithConfig("", Merchant.LifeformAnalyser);
-			RegisterScrapWithConfig("", Merchant.MoleDigger);
-			RegisterScrapWithConfig("", Merchant.NitroCrate);
-			RegisterScrapWithConfig("", Merchant.Oxidizer);
-			RegisterScrapWithConfig("", Merchant.RailSlugger);
-			RegisterScrapWithConfig("", Merchant.Rocky);
-			RegisterScrapWithConfig("", Merchant.ShipUpgradeUnlocker);
-			RegisterScrapWithConfig("", Merchant.StoptimeWatch);
-			RegisterScrapWithConfig("", Merchant.WalkieYellie);
-			RegisterScrapWithConfig("", Merchant.Worthless);
-
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.Merchant] = Merchant.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("merchant")).First().gameObject;
 			LethalLib.Modules.Unlockables.RegisterUnlockable(Merchant.PiggyBankUnlockable, Plugin.ModConfig.ConfigPiggyBankCost.Value, StoreType.ShipUpgrade);
-			RegisterInsideMapObjectWithConfig(Merchant.MoneyPrefab, "Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 ");
-			RegisterShopItemWithConfig(true, false, Merchant.WalletItem, null, Plugin.ModConfig.ConfigWalletCost.Value, "", "-1,-1"); 
 		}
 
 		if (Plugin.ModConfig.ConfigItemCrateEnabled.Value)

@@ -8,6 +8,7 @@ using UnityEngine;
 using Unity.Netcode;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Unlockables;
+using System.Linq;
 
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch
@@ -92,7 +93,7 @@ static class ShovelPatch
         if (EnemyHandler.Instance.RedwoodTitan != null && random.Next(0, 100) <= 5)
         {
             Plugin.ExtendedLogging("Spawning redwood titan");
-            CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.FirstEnemyDefinition.enemyType.enemyName);
+            CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.EnemyDefinitions.Where(x => x.GetEnemyTypeOnName("Redwood")).First().enemyType.enemyName);
         }
         if (UnlockableHandler.Instance.PlantPot.Seed != null && random.Next(0, 100) < Plugin.ModConfig.ConfigWoodenSeedTreeSpawnChance.Value)
         {

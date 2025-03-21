@@ -5,19 +5,12 @@ public class CodeRebirthConfig
 {
     #region Enables/Disables
     public ConfigEntry<bool> ConfigGunslingerGregEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigNancyEnabled { get; private set; }
     public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigMerchantEnabled { get; private set; }
     public ConfigEntry<bool> ConfigCruiserGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigCleanerDroneGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
-    public ConfigEntry<bool> ConfigJanitorEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigManorLordEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigMistressEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigTransporterEnabled { get; private set; }
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigZortAddonsEnabled { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigACUnitGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSuspiciousActivityEnabled { get; private set; }
@@ -51,10 +44,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
     public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
     public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigMonarchEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigSnailCatEnabled { get; private set; }
     public ConfigEntry<bool> ConfigItemCrateEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigSnowGlobeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
@@ -66,43 +56,25 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigSnailCatSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigCutieFlySpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigBearTrapSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigMetalCrateSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigWoodenCrateSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigLaserTurretCurveSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigSnowGlobeSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigFlashTurretCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigIndustrialFanCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigTeslaShockCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigAirControlUnitSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigFunctionalMicrowaveCurveSpawnWeight { get; private set; }
     public ConfigEntry<string> ConfigBearTrapInsideSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigZortGuitarSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigZortViolinSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigZortRecorderSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigZortAccordionSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigManorLordSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigMistressSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigTransporterSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigJanitorSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigNancySpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
-    public ConfigEntry<float> ConfigNancyPowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigNancyMaxSpawnCount { get; private set; }
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
     public ConfigEntry<float> ConfigRedwoodInShipVolume { get; private set; }
     public ConfigEntry<float> ConfigRedwoodSpeed { get; private set; }
     public ConfigEntry<float> ConfigRedwoodShipPadding { get; private set; }
     public ConfigEntry<float> ConfigRedwoodEyesight { get; private set; }
     public ConfigEntry<bool> ConfigRedwoodCanEatOldBirds { get; private set; }
-    public ConfigEntry<int> ConfigCutieFlyMaxSpawnCount { get; private set; }
-    public ConfigEntry<int> ConfigSnailCatMaxSpawnCount { get; private set; }
-    public ConfigEntry<float> ConfigCutieFlyPowerLevel { get; private set; }
-    public ConfigEntry<float> ConfigSnailCatPowerLevel { get; private set; }
     #endregion
     #region Weather Specific
     public ConfigEntry<float> ConfigMeteorShowerTimeToLeave { get; private set; }
@@ -161,8 +133,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigFloraDesertSpawnPlaces { get; private set; }
     public ConfigEntry<string> ConfigFloraSnowSpawnPlaces { get; private set; }
     public ConfigEntry<float> ConfigCritChance { get; private set; }
-    public ConfigEntry<int> ConfigHoverboardCost { get; private set; }
-    public ConfigEntry<int> ConfigWalletCost { get; private set; }
     public ConfigEntry<string> ConfigSeamineTinkEnemyBlacklist { get; private set; }
     public ConfigEntry<float> ConfigSeamineTinkRidingBruceVolume { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkAutomatic { get; private set; }
@@ -187,17 +157,8 @@ public class CodeRebirthConfig
     public ConfigEntry<int> ConfigShrimpDispenserCost { get; private set; }
     public ConfigEntry<float> ConfigAirControlUnitKnockbackPower { get; private set; }
     public ConfigEntry<int> ConfigAirControlUnitDamage { get; private set; }
-    public ConfigEntry<float> ConfigDuckSongTimer { get; private set; }
     public ConfigEntry<int> ConfigBearTrapGalCost { get; private set; }
     public ConfigEntry<int> ConfigACUnitGalCost { get; private set; }
-    public ConfigEntry<int> ConfigManorLordPowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigManorLordMaxSpawnCount { get; private set; }
-    public ConfigEntry<int> ConfigMistressPowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigMistressMaxSpawnCount { get; private set; }
-    public ConfigEntry<int> ConfigTransporterPowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigTransporterMaxSpawnCount { get; private set; }
-    public ConfigEntry<int> ConfigJanitorPowerLevel { get; private set; }
-    public ConfigEntry<int> ConfigJanitorMaxSpawnCount { get; private set; }
     public ConfigEntry<int> ConfigCleanerDroneGalCost { get; private set; }
     public ConfigEntry<int> ConfigCruiserGalCost { get; private set; }
     #endregion 
@@ -208,7 +169,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigIcyHammerWorth { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceWorth { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeWorth { get; private set; }
-    public ConfigEntry<string> ConfigSnowGlobeWorth { get; private set; }
     public ConfigEntry<string> ConfigSapphireWorth { get; private set; }
     public ConfigEntry<string> ConfigRubyWorth { get; private set; }
     public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
@@ -252,15 +212,7 @@ public class CodeRebirthConfig
         #region Nancy
         #endregion
         #region Merchant
-        ConfigMerchantEnabled = configFile.Bind("Merchant Options",
-                                            "Merchant | Enabled",
-                                            true,
-                                            "Whether the Merchant is enabled.");
-        ConfigWalletCost = configFile.Bind("Money Options",
-                                            "Wallet Item | Cost",
-                                            150,
-                                            "Cost of Wallet");
-        ConfigPiggyBankCost = configFile.Bind("Money Options",
+        ConfigPiggyBankCost = configFile.Bind("Merchant Options",
                                             "PiggyBank | Cost",
                                             250,
                                             "Cost of the Piggy Bank Unlockable");
@@ -289,26 +241,6 @@ public class CodeRebirthConfig
         #region Lord Of The Manor
         #endregion
         #region Zort Stuff
-        ConfigZortAddonsEnabled = configFile.Bind("Zort Options",
-                                            "Zort Addons | Enabled",
-                                            true,
-                                            "Whether Zort addons are enabled (from the game zort, try the game out it's amazing with 4 people).");
-        ConfigZortGuitarSpawnWeights = configFile.Bind("Zort Options",
-                                            "Zort Guitar | Spawn Weights",
-                                            "Vanilla:10,Custom:10",
-                                            "The spawn weights for the Zort guitar.");
-        ConfigZortViolinSpawnWeights = configFile.Bind("Zort Options",
-                                            "Zort Violin | Spawn Weights",
-                                            "Vanilla:10,Custom:10",
-                                            "The spawn weights for the Zort violin.");
-        ConfigZortRecorderSpawnWeights = configFile.Bind("Zort Options",
-                                            "Zort Recorder | Spawn Weights",
-                                            "Vanilla:10,Custom:10",
-                                            "The spawn weights for the Zort recorder.");
-        ConfigZortAccordionSpawnWeights = configFile.Bind("Zort Options",
-                                            "Zort Accordion | Spawn Weights",
-                                            "Vanilla:10,Custom:10",
-                                            "The spawn weights for the Zort accordion.");
         ConfigZortModelReplacementEnabled = configFile.Bind("Zort Options",
                                             "Zort Model Replacement | Enabled",
                                             true,
@@ -966,48 +898,12 @@ public class CodeRebirthConfig
                                             "Min and Max value of the Emerald, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         #endregion
         #region Monarch+Cutiefly
-        ConfigMonarchEnabled = configFile.Bind("Monarch Options",
-                                            "Monarch Enemy | Enabled",
-                                            true,
-                                            "Enables/Disables the Monarch");
-        ConfigCutieFlySpawnWeights = configFile.Bind("Monarch Options",
-                                            "Cutiefly Enemy | Spawn Weights",
-                                            "Custom:10,Vanilla:10",
-                                            "SpawnWeight of the CutieFly in moons.");
-        ConfigCutieFlyPowerLevel = configFile.Bind("Monarch Options",
-                                            "Cutiefly Enemy | Power Level",
-                                            2.5f,
-                                            "Power level of the CutieFly enemy.");
-        ConfigCutieFlyMaxSpawnCount = configFile.Bind("Monarch Options",
-                                            "Cutiefly Enemy | Max Spawn Count",
-                                            5,
-                                            "How many CutieFly can spawn in a moon.");
         #endregion
         #region SnailCat
         #endregion
         #region Hoverboard
-        ConfigHoverboardEnabled = configFile.Bind("Hoverboard Options",
-                                            "Hoverboard | Enabled",
-                                            true,
-                                            "Enables/Disables the Hoverboard from spawning.");
-        ConfigHoverboardCost = configFile.Bind("Hoverboard Options",
-                                            "Hoverboard | Cost",
-                                            500,
-                                            "Cost of Hoverboard.");
         #endregion
         #region SnowGlobe
-        ConfigSnowGlobeEnabled = configFile.Bind("SnowGlobe Options",
-                                            "Snow Globe | Enabled",
-                                            true,
-                                            "Enables/Disables the Snow Globe from spawning.");
-        ConfigSnowGlobeWorth = configFile.Bind("SnowGlobe Options",
-                                            "Snow Globe | Worth",
-                                            "-1,-1",
-                                            "Min and Max value of the SnowGlobe, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigSnowGlobeSpawnWeights = configFile.Bind("SnowGlobe Options",
-                                            "Snow Globe | Spawn Weights",
-                                            "Custom:50,Vanilla:50",
-                                            "Spawn Weight of the Snow Globe in moons.");
         ConfigSnowGlobeMusic = configFile.Bind("SnowGlobe Options",
                                             "Snow Globe | Music",
                                             true,

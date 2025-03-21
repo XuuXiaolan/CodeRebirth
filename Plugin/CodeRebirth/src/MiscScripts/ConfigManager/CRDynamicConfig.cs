@@ -24,10 +24,10 @@ public class CRDynamicConfig
     public bool defaultBool;
 
     public string Description;
-}
 
-[CreateAssetMenu(fileName = "DynamicConfigSettings", menuName = "CodeRebirth/Dynamic Config Settings", order = 2)]
-public class DynamicConfigSettings : ScriptableObject
-{
-    public List<CRDynamicConfig> Configs;
+    public CRDynamicConfig? GetCRDynamicConfigWithSetting(string _settingName, string _settingDesc)
+    {
+        if (_settingName.ToLowerInvariant().Contains(settingName.ToLowerInvariant()) && _settingDesc.ToLowerInvariant().Contains(settingDesc.ToLowerInvariant())) return this;
+        return null;
+    }
 }

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Content.Maps;
 using Unity.Netcode;
 using UnityEngine;
 using NetworkPrefabs = LethalLib.Modules.NetworkPrefabs;
@@ -9,7 +13,15 @@ using Utilities = LethalLib.Modules.Utilities;
 namespace CodeRebirth.src.Util.AssetLoading;
 public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
 {
-	protected AssetBundle bundle;
+	public AssetBundle bundle;
+    public AssetBundleData? AssetBundleData { get; set; } = null;
+    public List<CREnemyDefinition> enemyDefinitions = new();
+    public List<CRItemDefinition> itemDefinitions = new();
+	public List<CRMapObjectDefinition> mapObjectDefinitions = new();
+
+    public IReadOnlyList<CREnemyDefinition> EnemyDefinitions => enemyDefinitions;
+    public IReadOnlyList<CRItemDefinition> ItemDefinitions => itemDefinitions;
+	public IReadOnlyList<CRMapObjectDefinition> MapObjectDefinitions => mapObjectDefinitions;
 
 	protected AssetBundleLoader(string filePath, bool registerNetworkPrefabs = true, bool fixMixerGroups = true)
 	{
@@ -52,12 +64,6 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
 			if (!registerNetworkPrefabs || gameObject.GetComponent<NetworkObject>() == null) continue;
 			NetworkPrefabs.RegisterNetworkPrefab(gameObject);
 			Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {gameObject.name}");
-		}
-		foreach (Item item in bundle.LoadAllAssets<Item>())
-		{
-			if (!registerNetworkPrefabs || item.spawnPrefab == null || item.spawnPrefab.GetComponent<NetworkObject>() == null) continue;
-			NetworkPrefabs.RegisterNetworkPrefab(item.spawnPrefab);
-			Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {item.name}");
 		}
 	}
 

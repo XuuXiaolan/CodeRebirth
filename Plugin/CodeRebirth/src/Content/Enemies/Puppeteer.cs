@@ -210,6 +210,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             creatureSFX.PlayOneShot(makePuppetSound);
             if (!IsServer) return;
+            if (EnemyHandler.Instance.ManorLord == null) return;
             GameObject puppetObj = Instantiate(EnemyHandler.Instance.ManorLord.PuppeteerPuppetPrefab, needleAttachPoint.position, Quaternion.identity);
             puppetObj.GetComponent<NetworkObject>().Spawn(true);
             CreatePlayerPuppetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), new NetworkObjectReference(puppetObj));
@@ -429,7 +430,8 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         playerPuppetMap.Clear();
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord?.PinNeedleItemDefinition.item.itemName, transform.position);
+        if (EnemyHandler.Instance.ManorLord == null) return;
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.Where(x => x.GetItemOnName("Needle")).First().item.itemName, transform.position);
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

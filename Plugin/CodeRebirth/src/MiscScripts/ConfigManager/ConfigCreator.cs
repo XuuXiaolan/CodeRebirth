@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BepInEx.Configuration;
+using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirth.src.MiscScripts.ConfigManager;
 public class CRConfig 
@@ -40,8 +41,8 @@ public static class CRConfigManager
             throw new ArgumentException("Key name and/or setting name and/or Setting desc cannot be empty");
         }
 
-        string section = $"{keyName} Options";
-        string key = $"{settingName} | {settingDesc}";
+        string section = $"{keyName} Options".CleanStringForConfig();
+        string key = $"{settingName} | {settingDesc}".CleanStringForConfig();
         var definition = new ConfigDefinition(section, key);
         
         // Check if the key already exists
@@ -62,7 +63,7 @@ public static class CRConfigManager
         T DynamicConfigType,
         string Description)
     {
-        string key = $"{settingName} | {settingDesc}";
+        string key = $"{settingName} | {settingDesc}".CleanStringForConfig();
         var entry = CreateEntry(configFile, keyName, settingName, settingDesc, DynamicConfigType, Description);
         CRGeneralConfigs[key] = entry;
         return entry;
@@ -73,9 +74,9 @@ public static class CRConfigManager
         return CRConfigs[keyName].Enabled.Value;
     }
 
-    public static ConfigEntry<T> GetGeneralConfigEntry<T>(string keyName, string settingName)
+    public static ConfigEntry<T> GetGeneralConfigEntry<T>(string settingName, string settingDesc)
     {
-        string key = $"{keyName} | {settingName}";
+        string key = $"{settingName} | {settingDesc}".CleanStringForConfig();
         return (ConfigEntry<T>)CRGeneralConfigs[key];
     }
 }

@@ -13,7 +13,6 @@ using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
 using BepInEx.Configuration;
-using CodeRebirth.Util.Extensions;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -36,7 +35,6 @@ public class Plugin : BaseUnityPlugin
     public static ConfigFile configFile { get; private set; } = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
     internal const ulong GLITCH_STEAM_ID = 9;
-    internal static MainAssets Assets { get; private set; } = null!;
     internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName)
     {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
@@ -48,6 +46,7 @@ public class Plugin : BaseUnityPlugin
         [LoadFromBundle("CodeRebirthContent.asset")]
         public CodeRebirthContent CodeRebirthContent { get; private set; } = null!;
     }
+    internal static MainAssets Assets { get; private set; } = null!;
     
     private void Awake()
     {

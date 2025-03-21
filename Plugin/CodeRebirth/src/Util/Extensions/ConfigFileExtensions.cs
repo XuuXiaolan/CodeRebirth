@@ -2,9 +2,10 @@
 using System.Reflection;
 using BepInEx.Configuration;
 
-namespace CodeRebirth.Util.Extensions;
+namespace CodeRebirth.src.Util.Extensions;
 
-static class ConfigFileExtensions {
+static class ConfigFileExtensions
+{
 	internal static void ClearUnusedEntries(this ConfigFile configFile)
 	{
 		// Normally, old unused config entries don't get removed, so we do it with this piece of code. Credit to Kittenji.

@@ -37,7 +37,7 @@ namespace CodeRebirth.src.MiscScripts
             // Look up the prefab via the registry in MapObjectHandler.
             if (!IsServer) return;
             if (UnityEngine.Random.Range(0, 100) >= chanceOfSpawningAny) return;
-            List<(GameObject objectType, int cumulativeWeight)> cumulativeList = new();
+            List<(GameObject? objectType, int cumulativeWeight)> cumulativeList = new();
             int cumulativeWeight = 0;
             foreach (var objectTypeWithRarity in objectTypesWithRarity)
             {

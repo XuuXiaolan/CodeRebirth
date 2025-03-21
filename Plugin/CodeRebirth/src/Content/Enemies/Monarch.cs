@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -41,9 +42,10 @@ public class Monarch : CodeRebirthEnemyAI
 
         int randomNumberToSpawn = enemyRandom.Next(2, 5);
         if (!IsServer) return;
+        if (EnemyHandler.Instance.Monarch == null) return;
         for (int i = 0; i < randomNumberToSpawn; i++)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch?.CutieflyEnemyDefinition.enemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.Where(x => x.GetEnemyTypeOnName("Monarch")).First().enemyType);
         }
     }
 

@@ -21,6 +21,7 @@ MonoBehaviour:
       powerLevel: 2
       maxSpawnCount: 2
     items: []
+    mapObjects: []
   - assetBundleName: nancyassets
     configName: Nancy
     enemies:
@@ -29,6 +30,7 @@ MonoBehaviour:
       powerLevel: 1
       maxSpawnCount: 1
     items: []
+    mapObjects: []
   - assetBundleName: monarchassets
     configName: Monarch
     enemies:
@@ -41,6 +43,7 @@ MonoBehaviour:
       powerLevel: 0.5
       maxSpawnCount: 6
     items: []
+    mapObjects: []
   - assetBundleName: mistressassets
     configName: Mistress
     enemies:
@@ -57,6 +60,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
+    mapObjects: []
   - assetBundleName: redwoodtitanassets
     configName: Redwood Titan
     enemies:
@@ -65,6 +69,7 @@ MonoBehaviour:
       powerLevel: 1.5
       maxSpawnCount: 1
     items: []
+    mapObjects: []
   - assetBundleName: carnivorousplantassets
     configName: Carnivorous Plant
     enemies:
@@ -73,6 +78,7 @@ MonoBehaviour:
       powerLevel: 1
       maxSpawnCount: 4
     items: []
+    mapObjects: []
   - assetBundleName: snailcatassets
     configName: SnailCat
     enemies:
@@ -89,6 +95,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
+    mapObjects: []
   - assetBundleName: ducksongassets
     configName: Duck
     enemies:
@@ -113,6 +120,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
+    mapObjects: []
   - assetBundleName: transporterassets
     configName: Transporter
     enemies:
@@ -121,6 +129,7 @@ MonoBehaviour:
       powerLevel: 1
       maxSpawnCount: 3
     items: []
+    mapObjects: []
   - assetBundleName: manorlordassets
     configName: ManorLord
     enemies:
@@ -145,6 +154,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
+    mapObjects: []
   - assetBundleName: janitorassets
     configName: Janitor
     enemies:
@@ -153,3 +163,242 @@ MonoBehaviour:
       powerLevel: 1
       maxSpawnCount: 3
     items: []
+    mapObjects: []
+  - assetBundleName: zortassets
+    configName: Zort
+    enemies: []
+    items:
+    - entityName: Violin
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 150
+    - entityName: Guitar
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 150
+    - entityName: Accordion
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 150
+    - entityName: Recorder
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 150
+    mapObjects: []
+  - assetBundleName: hoverboardassets
+    configName: Hoverboard
+    enemies: []
+    items:
+    - entityName: Hoverboard
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 0
+      generateScrapConfig: 0
+      isShopItem: 1
+      generateShopItemConfig: 1
+      cost: 350
+    mapObjects: []
+  - assetBundleName: snowglobeassets
+    configName: SnowGlobe
+    enemies: []
+    items:
+    - entityName: Snow Globe
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+  - assetBundleName: merchantassets
+    configName: Merchant
+    enemies: []
+    items:
+    - entityName: CreditPad100cc
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: CreditPad500cc
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: CreditPad1000cc
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: FogHorn
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: GuardsmanPhone
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: InfiniKey
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: LifeformAnalyser
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: MoleDigger
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: NitroCrate
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Oxidizer
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: RailSlugger
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Remote Detonator
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Rocky
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: ShipUpgradeUnlocker
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: StoptimeWatch
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: WalkieYellie
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: WalletItem
+      spawnWeights: 
+      generateSpawnWeightsConfig: 1
+      isScrap: 0
+      generateScrapConfig: 1
+      isShopItem: 1
+      generateShopItemConfig: 1
+      cost: 0
+    - entityName: Melanie's Drawing
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects:
+    - entityName: Money
+      curveSpawnWeights: '"Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20
+        ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 |
+        Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38
+        ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 "'
+      isInsideHazard: 1
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: '"Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
+        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
+        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
+        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00 "'
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 0
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    - entityName: Merchant
+      curveSpawnWeights: 
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 0
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0

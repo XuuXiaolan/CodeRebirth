@@ -17,6 +17,7 @@ public class AssetBundleData
     public string configName;
     public List<EnemyData> enemies;
     public List<ItemData> items;
+    public List<MapObjectData> mapObjects;
 }
 
 [Serializable]
@@ -43,4 +44,17 @@ public class ItemData : EntityData
     public bool isShopItem;
     public bool generateShopItemConfig;
     public int cost;
+}
+
+[Serializable]
+public class MapObjectData : EntityData
+{
+    public bool isInsideHazard;
+    public bool createInsideHazardConfig;
+    public string defaultInsideCurveSpawnWeights;
+    public bool createInsideCurveSpawnWeightsConfig;
+    public bool isOutsideHazard;
+    public bool createOutsideHazardConfig;
+    public string defaultOutsideCurveSpawnWeights;
+    public bool createOutsideCurveSpawnWeightsConfig;
 }

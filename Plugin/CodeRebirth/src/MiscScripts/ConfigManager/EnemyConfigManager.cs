@@ -1,4 +1,5 @@
 using BepInEx.Configuration;
+using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirth.src.MiscScripts.ConfigManager;
 public class EnemyConfig : CRConfig
@@ -43,11 +44,11 @@ public static class EnemyConfigManager
             defaultPowerLevel,
             defaultSpawnCount
         );
-        CRConfigManager.CRConfigs[$"{keyName} | {enemyName}"] = config;
+        CRConfigManager.CRConfigs[$"{keyName} | {enemyName}".CleanStringForConfig()] = config;
     }
 
     public static EnemyConfig GetEnemyConfig(string keyName, string enemyName)
     {
-        return (EnemyConfig)CRConfigManager.CRConfigs[$"{keyName} | {enemyName}"]; // i.e. `DuckSong | Duck`
+        return (EnemyConfig)CRConfigManager.CRConfigs[$"{keyName} | {enemyName}".CleanStringForConfig()]; // i.e. `DuckSong | Duck`
     }
 }
