@@ -1,3 +1,4 @@
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class CRMapObjectDefinition : CRContentDefinition
 {
     public GameObject gameObject;
     public string objectName;
+    public SpawnSyncedCRObject.CRObjectType CRObjectType;
 
     public GameObject? GetGameObjectOnName(string name)
     {

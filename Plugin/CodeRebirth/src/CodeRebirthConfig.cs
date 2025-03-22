@@ -6,15 +6,8 @@ public class CodeRebirthConfig
     #region Enables/Disables
     public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigCruiserGalEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigCleanerDroneGalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigBearTrapGalEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigACUnitGalEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigTerminalBotEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigFriendStuffEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigShrimpDispenserEnabled { get; private set; }
     public ConfigEntry<bool> Config999GalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
     public ConfigEntry<bool> ConfigDontTargetFarEnemies { get; private set; }
@@ -22,16 +15,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigOnlyOwnerDisablesGal { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkPlayerModelEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigFunctionalMicrowaveEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigLaserTurretEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigFlashTurretEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigIndustrialFanEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigTeslaShockEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigAirControlUnitEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigSeamineTinkEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigShockwaveBotEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigFarmingEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigBiomesEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFloraEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
@@ -42,7 +25,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigBellCrabGalEnabled { get; private set; }
     #endregion
     #region Spawn Weights
     public ConfigEntry<float> ConfigBiomesSpawnChance { get; private set; }
@@ -50,12 +32,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigLaserTurretCurveSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigFlashTurretCurveSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigIndustrialFanCurveSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigTeslaShockCurveSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigAirControlUnitSpawnWeight { get; private set; }
-    public ConfigEntry<string> ConfigFunctionalMicrowaveCurveSpawnWeight { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
@@ -93,7 +69,6 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigTerminalBotFlyingVolume { get; private set; }
     public ConfigEntry<bool> ConfigCruiserGalAutomatic { get; private set; }
     public ConfigEntry<bool> ConfigTerminalBotAutomatic { get; private set; }
-    public ConfigEntry<int> ConfigTerminalBotCost { get; private set; }
     public ConfigEntry<int> ConfigWoodenSeedTreeSpawnChance { get; private set; }
     public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
     public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
@@ -108,9 +83,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigWoodenCratesBlacklist { get; private set; }
     public ConfigEntry<string> ConfigMetalCratesBlacklist { get; private set; }
     public ConfigEntry<bool> ConfigShovelCratesOnly { get; private set; }
-    public ConfigEntry<int> ConfigSeamineTinkCost { get; private set; }
-    public ConfigEntry<int> ConfigShockwaveBotCost { get; private set; }
-    public ConfigEntry<int> ConfigGlitchedPlushieCost { get; private set; }
     public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
     public ConfigEntry<bool> ConfigExtendedLogging { get; private set; }
@@ -130,8 +102,6 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigFlashTurretVolume { get; private set; }
     public ConfigEntry<float> ConfigTeslaShockVolume { get; private set; }
     public ConfigEntry<float> ConfigACUVolume { get; private set; }
-    public ConfigEntry<int> ConfigBellCrabGalCost { get; private set; }
-    public ConfigEntry<int> Config999GalCost { get; private set; }
     public ConfigEntry<float> Config999GalHealCooldown { get; private set; }
     public ConfigEntry<int> Config999GalHealAmount { get; private set; }
     public ConfigEntry<float> Config999GalHealSpeed { get; private set; }
@@ -142,13 +112,8 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> Config999GalCompanyMoonRecharge { get; private set; }
     public ConfigEntry<float> Config999GalFailureChance { get; private set; }
     public ConfigEntry<bool> Config999GalScaleHealAndReviveWithPlayerCount { get; private set; }
-    public ConfigEntry<int> ConfigShrimpDispenserCost { get; private set; }
     public ConfigEntry<float> ConfigAirControlUnitKnockbackPower { get; private set; }
     public ConfigEntry<int> ConfigAirControlUnitDamage { get; private set; }
-    public ConfigEntry<int> ConfigBearTrapGalCost { get; private set; }
-    public ConfigEntry<int> ConfigACUnitGalCost { get; private set; }
-    public ConfigEntry<int> ConfigCleanerDroneGalCost { get; private set; }
-    public ConfigEntry<int> ConfigCruiserGalCost { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigNaturesMaceWorth { get; private set; }
@@ -264,14 +229,6 @@ public class CodeRebirthConfig
 
         #endregion
         #region Air Control Unit
-        ConfigAirControlUnitEnabled = configFile.Bind("AirControlUnit Options",
-                                            "Air Control Unit | Enabled",
-                                            true,
-                                            "Whether the air control unit is enabled.");
-        ConfigAirControlUnitSpawnWeight = configFile.Bind("AirControlUnit Options",
-                                            "Air Control Unit | SpawnWeight",
-                                            "Vanilla:2,Custom:2,Tіtan:0,Titan:0,Olympus:2",
-                                            "The MoonName:CurveSpawnWeight for the AirControlUnit.");
         ConfigAirControlUnitDamage = configFile.Bind("AirControlUnit Options",
                                             "Air Control Unit | Damage",
                                             15,
@@ -480,10 +437,6 @@ public class CodeRebirthConfig
                                             "Flora EXLUDE spawn places e.g. `Experimentation,Assurance,Gloom` (only takes moon names).");
         #endregion
         #region Farming
-        ConfigFarmingEnabled = configFile.Bind("Farming Options",
-                                            "Farming | Enabled",
-                                            true,
-                                            "Whether Farming is enabled.");
         ConfigWoodenSeedTreeSpawnChance = configFile.Bind("Farming Options",
                                             "Farming | Wooden Seed Tree Spawn Chance",
                                             2,

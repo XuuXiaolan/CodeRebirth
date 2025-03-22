@@ -96,37 +96,14 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     public MapObjectHandler()
 	{
 		CompactorToby = LoadAndRegisterAssets<CompactorTobyAssets>("compactortobyassets");
-		if (CompactorToby != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.CompactorToby] = CompactorToby.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("compactor")).First().gameObject;;
-		}
 
 		GunslingerGreg = LoadAndRegisterAssets<GunslingerGregAssets>("gunslingergregassets");
-		if (GunslingerGreg != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.GunslingerGreg] = GunslingerGreg.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("greg")).First().gameObject;
-		}
 
 		ShredderSarah = LoadAndRegisterAssets<ShredderSarahAssets>("shreddersarahassets");
-		if (ShredderSarah != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.ShredderSarah] = ShredderSarah.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("shredder")).First().gameObject;
-		}
 
 		Merchant = LoadAndRegisterAssets<MerchantAssets>("merchantassets");
-		if (Merchant != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.Merchant] = Merchant.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("merchant")).First().gameObject;
-		}
 
 		Crate = LoadAndRegisterAssets<CrateAssets>("crateassets");
-		if (Crate != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.MimicWoodenCrate] = Crate.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("mimic wooden")).First().gameObject;
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.WoodenCrate] = Crate.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("normal wooden")).First().gameObject;
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.MimicMetalCrate] = Crate.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("mimic metal")).First().gameObject;
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.MetalCrate] = Crate.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("normal metal")).First().gameObject;
-		}
 
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value)
 			RegisterOutsideFlora();
@@ -134,48 +111,18 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		Biome = LoadAndRegisterAssets<BiomeAssets>("biomeassets");
 
 		TeslaShock = LoadAndRegisterAssets<TeslaShockAssets>("teslashockassets");
-		if (TeslaShock != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.BugZapper] = TeslaShock.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("zapper")).First().gameObject;
-		}
 
 		BearTrap = LoadAndRegisterAssets<BearTrapAssets>("beartrapassets");
-		if (BearTrap != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.BearTrap] = BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("bear")).First().gameObject;
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.BoomTrap] = BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("boom")).First().gameObject;
-			// if (Plugin.ModConfig.ConfigInsideBearTrapEnabled.Value) RegisterInsideBearTraps();
-		}
 
 		FunctionalMicrowave = LoadAndRegisterAssets<FunctionalMicrowaveAssets>("functionalmicrowaveassets");
-		if (FunctionalMicrowave != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.FunctionalMicrowave] = FunctionalMicrowave.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("microwave")).First().gameObject;
-		}
 
 		FlashTurret = LoadAndRegisterAssets<FlashTurretAssets>("flashturretassets");
-		if (FlashTurret != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.FlashTurret] = FlashTurret.FlashTurretPrefab;
-		}
 
 		IndustrialFan = LoadAndRegisterAssets<IndustrialFanAssets>("industrialfanassets");
-		if (FlashTurret != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.IndustrialFan] = IndustrialFan.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("fan")).First().gameObject;
-		}
 
 		GlowingGem = LoadAndRegisterAssets<GlowingGemAssets>("glowinggemassets");
-		if (GlowingGem != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.LaserTurret] = GlowingGem.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("laser")).First().gameObject;
-		}
 
 		AirControlUnit = LoadAndRegisterAssets<AirControlUnitAssets>("aircontrolunitassets");
-		if (AirControlUnit != null)
-		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.AirControlUnit] = AirControlUnit.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("air")).First().gameObject;
-		}
 	}
 
     public GameObject? GetPrefabFor(SpawnSyncedCRObject.CRObjectType objectType)

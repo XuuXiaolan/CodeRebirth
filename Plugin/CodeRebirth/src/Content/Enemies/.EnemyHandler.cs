@@ -98,13 +98,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         SnailCat = LoadAndRegisterAssets<SnailCatAssets>("snailcatassets");
 
         DuckSong = LoadAndRegisterAssets<DuckSongAssets>("ducksongassets");
-        if (DuckSong != null)
-        {
-            foreach (var itemDefinition in DuckSong.ItemDefinitions)
-            {
-                Plugin.samplePrefabs.Add(itemDefinition.item.itemName, itemDefinition.item);
-            }
-        }
 
         Transporter = LoadAndRegisterAssets<TransporterAssets>("transporterassets");
 

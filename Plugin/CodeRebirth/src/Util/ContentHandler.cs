@@ -151,9 +151,9 @@ public class ContentHandler<T> where T: ContentHandler<T>
             Plugin.ExtendedLogging($"No definitions found in {assetBundleName}");
         }
         RegisterEnemyAssets(assetBundle);
-        RegisterItemAssets(assetBundle);
         RegisterMapObjectAssets(assetBundle);
         RegisterUnlockableAssets(assetBundle);
+        RegisterItemAssets(assetBundle);
         return assetBundle;
     }
 
@@ -195,6 +195,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         int definitionIndex = 0;
         foreach (var CRItemDefinition in assetBundle.ItemDefinitions)
         {
+            Plugin.samplePrefabs.Add(CRItemDefinition.item.itemName, CRItemDefinition.item);
             ItemData itemData = assetBundle.AssetBundleData.items[definitionIndex];
             Plugin.ExtendedLogging($"ItemData: {assetBundle.AssetBundleData.items[definitionIndex].entityName}");
             Plugin.ExtendedLogging($"CRItemDefinition: {CRItemDefinition.item.itemName}");
@@ -237,11 +238,13 @@ public class ContentHandler<T> where T: ContentHandler<T>
             }
 
             GameObject gameObject = CRMapObjectDefinition.gameObject;
+            SpawnSyncedCRObject.CRObjectType CRObjectType = CRMapObjectDefinition.CRObjectType;
             bool inside = mapObjectConfig.InsideHazard?.Value ?? mapObjectData.isInsideHazard;
             string insideCurveSpawnWeights = mapObjectConfig.InsideCurveSpawnWeights?.Value ?? mapObjectData.defaultInsideCurveSpawnWeights;
             bool outside = mapObjectConfig.OutsideHazard?.Value ?? mapObjectData.isOutsideHazard;
             string outsideCurveSpawnWeightsConfig = mapObjectConfig.OutsideCurveSpawnWeights?.Value ?? mapObjectData.defaultOutsideCurveSpawnWeights;
-            RegisterMapObjectWithConfig(gameObject, inside, insideCurveSpawnWeights, outside, outsideCurveSpawnWeightsConfig);
+            
+            RegisterMapObjectWithConfig(gameObject, CRObjectType, inside, insideCurveSpawnWeights, outside, outsideCurveSpawnWeightsConfig);
             definitionIndex++;
         }
     }
@@ -330,7 +333,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         }
     }
 
-    protected void RegisterMapObjectWithConfig(GameObject prefab, bool inside, string insideConfigString, bool outside, string outsideConfigString)
+    protected void RegisterMapObjectWithConfig(GameObject prefab, SpawnSyncedCRObject.CRObjectType CRObjectType, bool inside, string insideConfigString, bool outside, string outsideConfigString)
     {
         if (inside)
         {
@@ -340,6 +343,8 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             RegisterOutsideMapObjectWithConfig(prefab, insideConfigString);
         }
+        Plugin.ExtendedLogging($"Registered map object: {prefab.name} to {CRObjectType}");
+        MapObjectHandler.Instance.prefabMapping[CRObjectType] = prefab;
     }
 
     protected void RegisterOutsideMapObjectWithConfig(GameObject prefab, string configString)

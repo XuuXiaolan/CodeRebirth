@@ -201,13 +201,8 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     {
         Meteorite = new MeteoriteAssets("meteorshowerassets");
         
-        Plugin.samplePrefabs.Add("Sapphire Meteorite", Meteorite.SapphireMeteoriteItem);
         RegisterShopItemWithConfig(false, true, Meteorite.SapphireMeteoriteItem, null, 0, "", Plugin.ModConfig.ConfigSapphireWorth.Value);
-
-        Plugin.samplePrefabs.Add("Emerald Meteorite", Meteorite.EmeraldMeteoriteItem);
         RegisterShopItemWithConfig(false, true, Meteorite.EmeraldMeteoriteItem, null, 0, "", Plugin.ModConfig.ConfigEmeraldWorth.Value);
-        
-        Plugin.samplePrefabs.Add("Ruby Meteorite", Meteorite.RubyMeteoriteItem);
         RegisterShopItemWithConfig(false, true, Meteorite.RubyMeteoriteItem, null, 0, "", Plugin.ModConfig.ConfigRubyWorth.Value);
 
         GameObject effectObject = GameObject.Instantiate(Meteorite.MeteorEffectPrefab);
