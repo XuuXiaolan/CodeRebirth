@@ -18,6 +18,7 @@ public class AssetBundleData
     public List<EnemyData> enemies;
     public List<ItemData> items;
     public List<MapObjectData> mapObjects;
+    public List<UnlockableData> unlockables;
 }
 
 [Serializable]
@@ -57,4 +58,14 @@ public class MapObjectData : EntityData
     public bool createOutsideHazardConfig;
     public string defaultOutsideCurveSpawnWeights;
     public bool createOutsideCurveSpawnWeightsConfig;
+}
+
+[Serializable]
+public class UnlockableData : EntityData
+{
+    public int cost;
+    public bool isShipUpgrade;
+    public bool isDecor;
+    public bool isProgressive;
+    public bool createProgressiveConfig;
 }

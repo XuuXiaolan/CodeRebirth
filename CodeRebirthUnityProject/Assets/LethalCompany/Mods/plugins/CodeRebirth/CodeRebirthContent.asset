@@ -13,63 +13,107 @@ MonoBehaviour:
   m_Name: CodeRebirthContent
   m_EditorClassIdentifier: 
   assetBundles:
-  - assetBundleName: driftwoodmenaceassets
-    configName: Driftwood Menace
-    enemies:
-    - entityName: Driftwood Menace
-      spawnWeights: Vanilla:20,Custom:20
-      powerLevel: 2
-      maxSpawnCount: 2
+  - assetBundleName: aircontrolunitassets
+    configName: Air Control Unit
+    enemies: []
     items: []
-    mapObjects: []
-  - assetBundleName: nancyassets
-    configName: Nancy
-    enemies:
-    - entityName: Nancy
-      spawnWeights: Vanilla:20,Custom:20
-      powerLevel: 1
-      maxSpawnCount: 1
+    mapObjects:
+    - entityName: Air Control Unit
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    unlockables: []
+  - assetBundleName: beartrapassets
+    configName: BearTrap
+    enemies: []
     items: []
-    mapObjects: []
-  - assetBundleName: monarchassets
-    configName: Monarch
-    enemies:
-    - entityName: Monarch
-      spawnWeights: 
-      powerLevel: 3
-      maxSpawnCount: 3
-    - entityName: Cutiefly
-      spawnWeights: Vanilla:20,Custom:20
-      powerLevel: 0.5
-      maxSpawnCount: 6
+    mapObjects:
+    - entityName: Gravel Bear Trap
+      isInsideHazard: 1
+      createInsideHazardConfig: 1
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 1
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    - entityName: Boom Trap
+      isInsideHazard: 1
+      createInsideHazardConfig: 1
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 1
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    - entityName: Snow Bear Trap
+      isInsideHazard: 1
+      createInsideHazardConfig: 1
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 1
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    - entityName: Grass Bear Trap
+      isInsideHazard: 1
+      createInsideHazardConfig: 1
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 1
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    unlockables: []
+  - assetBundleName: biomeassets
+    configName: Biomes
+    enemies: []
     items: []
-    mapObjects: []
-  - assetBundleName: mistressassets
-    configName: Mistress
-    enemies:
-    - entityName: Mistress
-      spawnWeights: Vanilla:20,Custom:20
-      powerLevel: 2
-      maxSpawnCount: 1
-    items:
-    - entityName: Talking Head
-      spawnWeights: 
-      generateSpawnWeightsConfig: 0
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects: []
-  - assetBundleName: redwoodtitanassets
-    configName: Redwood Titan
-    enemies:
-    - entityName: Redwood Titan
-      spawnWeights: Vanilla:20,Custom:20
-      powerLevel: 1.5
-      maxSpawnCount: 1
-    items: []
-    mapObjects: []
+    mapObjects:
+    - entityName: Biome
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 1.00,1.00 | Custom - 0.00,0.00 ; 0.11,0.14
+        ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 1.00,1.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    unlockables: []
   - assetBundleName: carnivorousplantassets
     configName: Carnivorous Plant
     enemies:
@@ -79,15 +123,12 @@ MonoBehaviour:
       maxSpawnCount: 4
     items: []
     mapObjects: []
-  - assetBundleName: snailcatassets
-    configName: SnailCat
-    enemies:
-    - entityName: SnailCat
-      spawnWeights: Vanilla:20,Custom:20
-      powerLevel: 0.5
-      maxSpawnCount: 6
+    unlockables: []
+  - assetBundleName: compactortobyassets
+    configName: Compactor Toby
+    enemies: []
     items:
-    - entityName: SnailCat
+    - entityName: Flat Body
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -95,7 +136,89 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
+    - entityName: Sally Cube
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects:
+    - entityName: Compactor Toby
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
+  - assetBundleName: crateassets
+    configName: Crate
+    enemies: []
+    items: []
+    mapObjects:
+    - entityName: Normal Metal Crate
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
+        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
+        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
+        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    - entityName: Mimic Metal Crate
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
+        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
+        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
+        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    - entityName: Normal Wooden Crate
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
+        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
+        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
+        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    - entityName: Mimic Wooden Crate
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
+        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
+        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
+        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
+  - assetBundleName: driftwoodmenaceassets
+    configName: Driftwood Menace
+    enemies:
+    - entityName: Driftwood Menace
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 2
+      maxSpawnCount: 2
+    items: []
     mapObjects: []
+    unlockables: []
   - assetBundleName: ducksongassets
     configName: Duck
     enemies:
@@ -121,15 +244,154 @@ MonoBehaviour:
       generateShopItemConfig: 0
       cost: 0
     mapObjects: []
-  - assetBundleName: transporterassets
-    configName: Transporter
+    unlockables: []
+  - assetBundleName: flashturretassets
+    configName: Flash Turret
+    enemies: []
+    items: []
+    mapObjects:
+    - entityName: Flash Turret
+      isInsideHazard: 1
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 0
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
+  - assetBundleName: functionalmicrowaveassets
+    configName: Microwave
+    enemies: []
+    items:
+    - entityName: Charred Baby
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Charred Fork
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Charred Spork
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects:
+    - entityName: Functional Microwave
+      isInsideHazard: 1
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 0
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
+  - assetBundleName: glowinggemassets
+    configName: Laser Turret
+    enemies: []
+    items: []
+    mapObjects:
+    - entityName: Laser Turret
+      isInsideHazard: 1
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 0
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
+  - assetBundleName: gunslingergregassets
+    configName: Gunslinger Greg
+    enemies: []
+    items: []
+    mapObjects:
+    - entityName: Gunslinger Greg
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
+  - assetBundleName: hoverboardassets
+    configName: Hoverboard
+    enemies: []
+    items:
+    - entityName: Hoverboard
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 0
+      generateScrapConfig: 0
+      isShopItem: 1
+      generateShopItemConfig: 1
+      cost: 350
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: industrialfanassets
+    configName: Industrial Fan
+    enemies: []
+    items: []
+    mapObjects:
+    - entityName: Industrial Fan
+      isInsideHazard: 1
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 0
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
+  - assetBundleName: janitorassets
+    configName: Janitor
     enemies:
-    - entityName: Transporter
+    - entityName: Janitor
       spawnWeights: Vanilla:20,Custom:20
       powerLevel: 1
       maxSpawnCount: 3
     items: []
-    mapObjects: []
+    mapObjects:
+    - entityName: Trash Can
+      isInsideHazard: 1
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58
+        ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88
+        ; 1.00,10.00 | Custom - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22
+        ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 0
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
   - assetBundleName: manorlordassets
     configName: ManorLord
     enemies:
@@ -155,78 +417,7 @@ MonoBehaviour:
       generateShopItemConfig: 0
       cost: 0
     mapObjects: []
-  - assetBundleName: janitorassets
-    configName: Janitor
-    enemies:
-    - entityName: Janitor
-      spawnWeights: Vanilla:20,Custom:20
-      powerLevel: 1
-      maxSpawnCount: 3
-    items: []
-    mapObjects: []
-  - assetBundleName: zortassets
-    configName: Zort
-    enemies: []
-    items:
-    - entityName: Violin
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 150
-    - entityName: Guitar
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 150
-    - entityName: Accordion
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 150
-    - entityName: Recorder
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 150
-    mapObjects: []
-  - assetBundleName: hoverboardassets
-    configName: Hoverboard
-    enemies: []
-    items:
-    - entityName: Hoverboard
-      spawnWeights: 
-      generateSpawnWeightsConfig: 0
-      isScrap: 0
-      generateScrapConfig: 0
-      isShopItem: 1
-      generateShopItemConfig: 1
-      cost: 350
-    mapObjects: []
-  - assetBundleName: snowglobeassets
-    configName: SnowGlobe
-    enemies: []
-    items:
-    - entityName: Snow Globe
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects: []
+    unlockables: []
   - assetBundleName: merchantassets
     configName: Merchant
     enemies: []
@@ -397,11 +588,22 @@ MonoBehaviour:
       createOutsideHazardConfig: 0
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
-  - assetBundleName: compactortobyassets
-    configName: Compactor Toby
-    enemies: []
+    unlockables:
+    - entityName: Piggy
+      cost: 200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: mistressassets
+    configName: Mistress
+    enemies:
+    - entityName: Mistress
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 2
+      maxSpawnCount: 1
     items:
-    - entityName: Flat Body
+    - entityName: Talking Head
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -409,38 +611,42 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: Sally Cube
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: monarchassets
+    configName: Monarch
+    enemies:
+    - entityName: Monarch
       spawnWeights: 
-      generateSpawnWeightsConfig: 0
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects:
-    - entityName: Compactor Toby
-      isInsideHazard: 0
-      createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: 
-      createInsideCurveSpawnWeightsConfig: 0
-      isOutsideHazard: 1
-      createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: 
-      createOutsideCurveSpawnWeightsConfig: 0
-  - assetBundleName: gunslingergregassets
-    configName: Gunslinger Greg
-    enemies: []
+      powerLevel: 3
+      maxSpawnCount: 3
+    - entityName: Cutiefly
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 0.5
+      maxSpawnCount: 6
     items: []
-    mapObjects:
-    - entityName: Gunslinger Greg
-      isInsideHazard: 0
-      createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: 
-      createInsideCurveSpawnWeightsConfig: 0
-      isOutsideHazard: 1
-      createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: 
-      createOutsideCurveSpawnWeightsConfig: 0
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: nancyassets
+    configName: Nancy
+    enemies:
+    - entityName: Nancy
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 1
+      maxSpawnCount: 1
+    items: []
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: redwoodtitanassets
+    configName: Redwood Titan
+    enemies:
+    - entityName: Redwood Titan
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 1.5
+      maxSpawnCount: 1
+    items: []
+    mapObjects: []
+    unlockables: []
   - assetBundleName: shreddersarahassets
     configName: Shredder Sarah
     enemies: []
@@ -471,56 +677,318 @@ MonoBehaviour:
       createOutsideHazardConfig: 0
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
-  - assetBundleName: crateassets
-    configName: Crate
+    unlockables: []
+  - assetBundleName: snailcatassets
+    configName: SnailCat
+    enemies:
+    - entityName: SnailCat
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 0.5
+      maxSpawnCount: 6
+    items:
+    - entityName: SnailCat
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: snowglobeassets
+    configName: SnowGlobe
+    enemies: []
+    items:
+    - entityName: Snow Globe
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: teslashockassets
+    configName: Bug Zapper
     enemies: []
     items: []
     mapObjects:
-    - entityName: Normal Metal Crate
-      isInsideHazard: 0
+    - entityName: Bug Zapper
+      isInsideHazard: 1
       createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: 
-      createInsideCurveSpawnWeightsConfig: 0
-      isOutsideHazard: 1
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
+        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
+        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      createInsideCurveSpawnWeightsConfig: 1
+      isOutsideHazard: 0
       createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
-      createOutsideCurveSpawnWeightsConfig: 1
-    - entityName: Mimic Metal Crate
-      isInsideHazard: 0
-      createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: 
-      createInsideCurveSpawnWeightsConfig: 0
-      isOutsideHazard: 1
-      createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
-      createOutsideCurveSpawnWeightsConfig: 1
-    - entityName: Normal Wooden Crate
-      isInsideHazard: 0
-      createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: 
-      createInsideCurveSpawnWeightsConfig: 0
-      isOutsideHazard: 1
-      createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
-      createOutsideCurveSpawnWeightsConfig: 1
-    - entityName: Mimic Wooden Crate
-      isInsideHazard: 0
-      createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: 
-      createInsideCurveSpawnWeightsConfig: 0
-      isOutsideHazard: 1
-      createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
+  - assetBundleName: transporterassets
+    configName: Transporter
+    enemies:
+    - entityName: Transporter
+      spawnWeights: Vanilla:20,Custom:20
+      powerLevel: 1
+      maxSpawnCount: 3
+    items: []
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: zortassets
+    configName: Zort
+    enemies: []
+    items:
+    - entityName: Violin
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 150
+    - entityName: Guitar
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 150
+    - entityName: Accordion
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 150
+    - entityName: Recorder
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 150
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: shockwavebotassets
+    configName: Shockwave Gal
+    enemies: []
+    items:
+    - entityName: Shockwave Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Shockwave Gal
+      cost: 2200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
+  - assetBundleName: plantpotassets
+    configName: Plant Pot
+    enemies: []
+    items:
+    - entityName: Golden Tomato
+      spawnWeights: 
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Normal Tomato
+      spawnWeights: 
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Wooden Seed
+      spawnWeights: 
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Plant Pot
+      cost: 250
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: terminalbotassets
+    configName: Terminal Bot
+    enemies: []
+    items:
+    - entityName: Terminal Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Terminal Gal
+      cost: 2200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
+  - assetBundleName: cruisergalassets
+    configName: Cruiser Gal
+    enemies: []
+    items:
+    - entityName: Cruiser Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Cruiser Gal
+      cost: 2500
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
+  - assetBundleName: fishdispenserassets
+    configName: Shrimp Dispenser
+    enemies: []
+    items:
+    - entityName: Blue Shrimp
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Shrimp Dispenser
+      cost: 500
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: seaminetinkassets
+    configName: Seamine Tink
+    enemies: []
+    items:
+    - entityName: Seamine Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Seamine Gal
+      cost: 1500
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
+  - assetBundleName: cleanerdronegalassets
+    configName: Cleaner Drone Gal
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: Cleaner Drone Gal
+      cost: 200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: acunitgalassets
+    configName: ACUnit Gal
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: ACUnit Gal
+      cost: 200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: beartrapgalassets
+    configName: BearTrap Gal
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: BearTrap Gal
+      cost: 150
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: friendassets
+    configName: Friend
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: Bald
+      cost: 69
+      isShipUpgrade: 0
+      isDecor: 1
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: bellcrabgalassets
+    configName: BellCrab Gal
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: BellCrab Gal
+      cost: 150
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: scp999galassets
+    configName: SCP 999 Gal
+    enemies: []
+    items:
+    - entityName: SCP999 Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: SCP999 Gal
+      cost: 1700
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1

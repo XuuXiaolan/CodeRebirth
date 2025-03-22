@@ -45,7 +45,7 @@ public class Monarch : CodeRebirthEnemyAI
         if (EnemyHandler.Instance.Monarch == null) return;
         for (int i = 0; i < randomNumberToSpawn; i++)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.Where(x => x.GetEnemyTypeOnName("Monarch")).First().enemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.Where(x => x.GetEnemyTypeOnName("Cutie")).First().enemyType);
         }
     }
 

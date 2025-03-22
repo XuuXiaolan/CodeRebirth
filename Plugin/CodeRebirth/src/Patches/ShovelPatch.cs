@@ -53,10 +53,6 @@ static class ShovelPatch
         if (self is not CodeRebirthWeapons CRWeapon) return;
         ResetWeaponDamage(ref CRWeapon);
         TryBreakTrees(ref CRWeapon);
-        if (Plugin.ModConfig.ConfigDebugMode.Value && (NetworkManager.Singleton.IsServer || self.playerHeldBy.playerSteamId == 76561198077184650 || self.playerHeldBy.playerSteamId == 76561198399127090 || self.playerHeldBy.playerSteamId == 76561198164429786))
-        {
-            TrySpawnRandomHazard(ref CRWeapon);
-        }
     }
 
     static bool DetermineIfShovelHitSomething(Shovel self)
@@ -95,17 +91,11 @@ static class ShovelPatch
             Plugin.ExtendedLogging("Spawning redwood titan");
             CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.EnemyDefinitions.Where(x => x.GetEnemyTypeOnName("Redwood")).First().enemyType.enemyName);
         }
-        if (UnlockableHandler.Instance.PlantPot.Seed != null && random.Next(0, 100) < Plugin.ModConfig.ConfigWoodenSeedTreeSpawnChance.Value)
+        if (UnlockableHandler.Instance.PlantPot != null && random.Next(0, 100) < Plugin.ModConfig.ConfigWoodenSeedTreeSpawnChance.Value)
         {
             Plugin.ExtendedLogging("Tree Destroyed with luck");
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("Wooden Seed", CRWeapon.weaponTip.position, false, true, 5);
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc(UnlockableHandler.Instance.PlantPot.ItemDefinitions.Where(x => x.GetItemOnName("Seed")).First().item.itemName, CRWeapon.weaponTip.position, false, true, 5);
         }
-    }
-
-    private static void TrySpawnRandomHazard(ref CodeRebirthWeapons CRWeapon)
-    {
-        if (StartOfRound.Instance.inShipPhase) return;
-        CodeRebirthUtils.Instance.SpawnHazardServerRpc(CRWeapon.weaponTip.position);
     }
 
     static void TryCritWeapon(ref CodeRebirthWeapons self)

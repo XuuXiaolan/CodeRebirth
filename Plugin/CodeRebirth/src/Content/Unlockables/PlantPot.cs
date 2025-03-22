@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util;
@@ -131,14 +132,15 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     [ServerRpc(RequireOwnership = false)]
     private void ProduceFruitServerRpc(int fruitType)
     {
+        if (UnlockableHandler.Instance.PlantPot == null) return;
         Item? itemToSpawn = null;
         switch (fruitType)
         {
             case (int)FruitType.Tomato:
-                itemToSpawn = UnlockableHandler.Instance.PlantPot.Tomato;
+                itemToSpawn = UnlockableHandler.Instance.PlantPot.ItemDefinitions.Where(x => x.GetItemOnName("Normal Tomato")).First().item;
                 break;
             case (int)FruitType.Golden_Tomato:
-                itemToSpawn = UnlockableHandler.Instance.PlantPot.GoldenTomato;
+                itemToSpawn = UnlockableHandler.Instance.PlantPot.ItemDefinitions.Where(x => x.GetItemOnName("Golden Tomato")).First().item;
                 break;
         }
         if (itemToSpawn == null)

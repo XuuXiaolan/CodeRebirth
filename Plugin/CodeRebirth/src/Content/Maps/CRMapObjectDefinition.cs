@@ -12,7 +12,7 @@ public class CRMapObjectDefinition : CRContentDefinition
     public GameObject? GetGameObjectOnName(string name)
     {
         if (string.IsNullOrEmpty(name)) return null;
-        if (name.ToLowerInvariant().Contains(name.ToLowerInvariant())) return gameObject;
+        if (objectName.ToLowerInvariant().Contains(name.ToLowerInvariant())) return gameObject;
         return null;
     }
 }

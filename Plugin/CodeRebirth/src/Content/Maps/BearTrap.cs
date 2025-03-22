@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using CodeRebirth.src.Util.Extensions;
+using System.Linq;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -34,6 +34,7 @@ public class BearTrap : CodeRebirthHazard
         if (!IsServer || byProduct) return;
         var random = new System.Random(StartOfRound.Instance.randomMapSeed);
 		Vector3 position = this.transform.position;
+        if (MapObjectHandler.Instance.BearTrap == null) return;
 		for (int i = 0; i < random.Next(3, 7); i++)
 		{
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
@@ -41,26 +42,26 @@ public class BearTrap : CodeRebirthHazard
 			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
 
 			if (hit.collider == null) continue;
-            GameObject beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+            GameObject beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("gravel")).First().gameObject;
             if (hit.collider.CompareTag("Grass"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.GrassMatPrefab;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("grass")).First().gameObject;;
             }
             else if (hit.collider.CompareTag("Gravel"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+                // beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
             }
             else if (hit.collider.CompareTag("Snow"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.SnowMatPrefab;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("snow")).First().gameObject;;
             }
             if (this is BoomTrap)
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.BoomTrapPrefab;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("boom")).First().gameObject;
             }
             else if (random.Next(0, 100) < 5)
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.BoomTrapPrefab;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("boom")).First().gameObject;
             }
             GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedTrap.GetComponent<BearTrap>().byProduct = true;
@@ -69,6 +70,7 @@ public class BearTrap : CodeRebirthHazard
             spawnedTrap.GetComponent<NetworkObject>().Spawn(true);
             position = spawnedTrap.transform.position;
 		}
+        this.NetworkObject.Despawn(true);
     }
 
     private void Update()

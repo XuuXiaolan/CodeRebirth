@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using CodeRebirth.src.Content.Items;
-using CodeRebirth.src.Util;
+﻿using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 
@@ -40,14 +38,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public class JanitorAssets(string bundleName) : AssetBundleLoader<JanitorAssets>(bundleName)
     {
-        [LoadFromBundle("JanitorTrash.prefab")]
-        public GameObject TrashCanPrefab { get; private set; } = null!;
     }
 
     public class TransporterAssets(string bundleName) : AssetBundleLoader<TransporterAssets>(bundleName)
     {
-        [LoadFromBundle("TransporterEnemyDefinition.asset")]
-        public CREnemyDefinition TransporterEnemyDefinition { get; private set; } = null!;
     }
 
     public class MonarchAssets(string bundleName) : AssetBundleLoader<MonarchAssets>(bundleName)
@@ -117,9 +111,5 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
         ManorLord = LoadAndRegisterAssets<ManorLordAssets>("manorlordassets");
 
         Janitor = LoadAndRegisterAssets<JanitorAssets>("janitorassets");
-        if (Janitor != null)
-        {
-            RegisterInsideMapObjectWithConfig(Janitor.TrashCanPrefab, "Vanilla - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00 | Custom - 0.00,5.00 ; 0.11,6.49 ; 0.22,6.58 ; 0.33,6.40 ; 0.44,8.22 ; 0.56,9.55 ; 0.67,10.02 ; 0.78,10.01 ; 0.89,9.88 ; 1.00,10.00");
-        }
     }
 }

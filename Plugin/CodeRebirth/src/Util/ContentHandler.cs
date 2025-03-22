@@ -7,6 +7,7 @@ using BepInEx.Configuration;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util.AssetLoading;
@@ -79,6 +80,20 @@ public class ContentHandler<T> where T: ContentHandler<T>
         );
     }
 
+    protected void LoadUnlockableConfigs(string unlockableName, string keyName, int cost, bool isShipUpgrade, bool isDecor, bool isProgressive, bool createProgressiveConfig)
+    {
+        UnlockableConfigManager.LoadConfigForUnlockable(
+            Plugin.configFile,
+            unlockableName,
+            keyName,
+            cost,
+            isShipUpgrade,
+            isDecor,
+            isProgressive,
+            createProgressiveConfig
+        );
+    }
+
     protected void LoadEnabledConfigs(string keyName)
     {
         var config = CRConfigManager.CreateEnabledEntry(Plugin.configFile, keyName, keyName, "Enabled", true, $"Whether {keyName} is enabled.");
@@ -88,8 +103,11 @@ public class ContentHandler<T> where T: ContentHandler<T>
     protected TAsset? LoadAndRegisterAssets<TAsset>(string assetBundleName, bool overrideEnabledConfig = false) where TAsset : AssetBundleLoader<TAsset>
     {
         AssetBundleData assetBundleData = Plugin.Assets.CodeRebirthContent.assetBundles.Where(bundle => bundle.assetBundleName == assetBundleName).FirstOrDefault();
-        if (assetBundleData == null) return null;
-
+        if (assetBundleData == null)
+        {
+            Plugin.ExtendedLogging($"Plugin with assetbundle name: {assetBundleName} is not implemented yet!");
+            return null;
+        }
         LoadEnabledConfigs(assetBundleData.configName);
         bool loadBundle = CRConfigManager.GetEnabledConfigResult(assetBundleData.configName);
         if (!loadBundle && !overrideEnabledConfig) return null;
@@ -106,23 +124,36 @@ public class ContentHandler<T> where T: ContentHandler<T>
             if (definition is CREnemyDefinition enemyDef)
             {
                 // Add to enemy definitions.
+                Plugin.ExtendedLogging($"EnemyDefinition: {enemyDef.enemyType.enemyName}");
                 assetBundle.enemyDefinitions.Add(enemyDef);
             }
             else if (definition is CRItemDefinition itemDef)
             {
                 // Add to item definitions.
+                Plugin.ExtendedLogging($"ItemDefinition: {itemDef.item.itemName}");
                 assetBundle.itemDefinitions.Add(itemDef);
             }
             else if (definition is CRMapObjectDefinition mapObjectDef)
             {
                 // Add to map object definitions.
+                Plugin.ExtendedLogging($"MapObjectDefinition: {mapObjectDef.objectName}");
                 assetBundle.mapObjectDefinitions.Add(mapObjectDef);
+            }
+            else if (definition is CRUnlockableDefinition unlockableDef)
+            {
+                Plugin.ExtendedLogging($"UnlockableDefinition: {unlockableDef.unlockableItemDef.unlockable.unlockableName}");
+                assetBundle.unlockableDefinitions.Add(unlockableDef);
             }
         }
 
+        if (assetBundle.unlockableDefinitions.Count <= 0 && assetBundle.itemDefinitions.Count <= 0 && assetBundle.mapObjectDefinitions.Count <= 0 && assetBundle.enemyDefinitions.Count <= 0)
+        {
+            Plugin.ExtendedLogging($"No definitions found in {assetBundleName}");
+        }
         RegisterEnemyAssets(assetBundle);
         RegisterItemAssets(assetBundle);
         RegisterMapObjectAssets(assetBundle);
+        RegisterUnlockableAssets(assetBundle);
         return assetBundle;
     }
 
@@ -163,7 +194,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         assetBundle.AssetBundleData.items.Sort((a, b) => a.entityName.CompareTo(b.entityName));
         int definitionIndex = 0;
         foreach (var CRItemDefinition in assetBundle.ItemDefinitions)
-        { // todo: if the config option is null, read the default value instead.
+        {
             ItemData itemData = assetBundle.AssetBundleData.items[definitionIndex];
             Plugin.ExtendedLogging($"ItemData: {assetBundle.AssetBundleData.items[definitionIndex].entityName}");
             Plugin.ExtendedLogging($"CRItemDefinition: {CRItemDefinition.item.itemName}");
@@ -212,6 +243,58 @@ public class ContentHandler<T> where T: ContentHandler<T>
             string outsideCurveSpawnWeightsConfig = mapObjectConfig.OutsideCurveSpawnWeights?.Value ?? mapObjectData.defaultOutsideCurveSpawnWeights;
             RegisterMapObjectWithConfig(gameObject, inside, insideCurveSpawnWeights, outside, outsideCurveSpawnWeightsConfig);
             definitionIndex++;
+        }
+    }
+
+    protected void RegisterUnlockableAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
+    {
+        if (assetBundle == null || assetBundle.AssetBundleData == null) return;
+        Plugin.ExtendedLogging($"Registering Unlockables for {assetBundle.AssetBundleData.assetBundleName}");
+        int definitionIndex = 0;
+        assetBundle.unlockableDefinitions.Sort((a, b) => a.unlockableItemDef.unlockable.unlockableName.CompareTo(b.unlockableItemDef.unlockable.unlockableName));
+        assetBundle.AssetBundleData.unlockables.Sort((a, b) => a.entityName.CompareTo(b.entityName));
+        foreach (var CRUnlockableDefinition in assetBundle.UnlockableDefinitions)
+        {
+            UnlockableData unlockableData = assetBundle.AssetBundleData.unlockables[definitionIndex];
+            Plugin.ExtendedLogging($"UnlockableData: {unlockableData.entityName}");
+            Plugin.ExtendedLogging($"UnlockableDefinition: {CRUnlockableDefinition.unlockableItemDef.unlockable.unlockableName}");
+            LoadUnlockableConfigs(CRUnlockableDefinition.unlockableItemDef.unlockable.unlockableName, assetBundle.AssetBundleData.configName, unlockableData.cost, unlockableData.isShipUpgrade, unlockableData.isDecor, unlockableData.isProgressive, unlockableData.createProgressiveConfig);
+            var unlockableConfig = UnlockableConfigManager.GetUnlockableConfig(assetBundle.AssetBundleData.configName, CRUnlockableDefinition.unlockableItemDef.unlockable.unlockableName);
+            foreach (var configDefinition in CRUnlockableDefinition.ConfigEntries)
+            {
+                ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
+            }
+
+            UnlockableItemDef unlockableItemDef = CRUnlockableDefinition.unlockableItemDef;
+            int cost = unlockableConfig.Cost.Value;
+            bool isShipUpgrade = unlockableConfig.IsShipUpgrade.Value;
+            bool isDecor = unlockableConfig.IsDecor.Value;
+            bool isProgressive = unlockableConfig.IsProgressive?.Value ?? unlockableData.isProgressive;
+            RegisterUnlockableWithConfig(CRUnlockableDefinition, cost, isShipUpgrade, isDecor, isProgressive);
+            definitionIndex++;
+        }
+    }
+
+    protected void RegisterUnlockableWithConfig(CRUnlockableDefinition unlockableDefinition, int cost, bool isShipUpgrade, bool isDecor, bool isProgressive)
+    {
+        if (isShipUpgrade)
+        {
+            Unlockables.RegisterUnlockable(unlockableDefinition.unlockableItemDef, cost, StoreType.ShipUpgrade);
+        }
+        if (isDecor)
+        {
+            Unlockables.RegisterUnlockable(unlockableDefinition.unlockableItemDef, cost, StoreType.Decor);
+        }
+        if (isProgressive)
+        {
+            ProgressiveUnlockables.unlockableIDs.Add(unlockableDefinition.unlockableItemDef.unlockable, false);
+            ProgressiveUnlockables.unlockableNames.Add(unlockableDefinition.unlockableItemDef.unlockable.unlockableName);
+            if (unlockableDefinition.DenyPurchaseNode == null)
+            {
+                unlockableDefinition.DenyPurchaseNode = ScriptableObject.CreateInstance<TerminalNode>();
+                unlockableDefinition.DenyPurchaseNode.displayText = "Ship Upgrade or Decor is not unlocked";
+            }
+            ProgressiveUnlockables.rejectionNodes.Add(unlockableDefinition.DenyPurchaseNode);
         }
     }
 

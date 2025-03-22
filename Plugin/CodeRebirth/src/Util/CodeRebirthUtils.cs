@@ -120,32 +120,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnHazardServerRpc(Vector3 position)
-    {
-        // Get a random prefab to spawn from the hazard prefabs list
-        GameObject prefabToSpawn = MapObjectHandler.hazardPrefabs[0];
-
-        // Remove the prefab from the list to prevent re-spawning it directly
-        MapObjectHandler.hazardPrefabs.RemoveAt(0);
-
-        // Get a random position on the NavMesh
-        NavMeshHit hit = default;
-        Vector3 positionToSpawn = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(position, 2f, hit);
-
-        // Instantiate a new instance of the prefab
-        GameObject spawnedObject = GameObject.Instantiate(prefabToSpawn, positionToSpawn, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-        
-        // Align the object's up direction with the hit normal
-        spawnedObject.transform.up = hit.normal;
-
-        NetworkObject networkObject = spawnedObject.GetComponent<NetworkObject>();
-        networkObject?.Spawn(true);
-        
-        // Re-add the prefab back to the list if needed
-        MapObjectHandler.hazardPrefabs.Add(prefabToSpawn);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
     public void SpawnEnemyServerRpc(Vector3 position, string enemyName)
     {
         if (position == Vector3.zero)

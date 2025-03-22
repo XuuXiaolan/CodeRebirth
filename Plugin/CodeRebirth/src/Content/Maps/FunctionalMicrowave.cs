@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -73,23 +74,24 @@ public class FunctionalMicrowave : CodeRebirthHazard
 
     private Item? ChooseRandomMicrowaveScrap()
     {
+        if (MapObjectHandler.Instance.FunctionalMicrowave == null) return null;
         int result = microwaveRandom.Next(0, 4);
         if (result == 0)
         {
-            return Plugin.samplePrefabs["MicrowaveSpork"];
+            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.Where(x => x.GetItemOnName("Spork")).First().item;
         }
         else if (result == 1)
         {
-            return Plugin.samplePrefabs["MicrowaveFork"];
+            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.Where(x => x.GetItemOnName("Fork")).First().item;
         }
         else if (result == 2)
         {
-            return Plugin.samplePrefabs["MicrowaveCharredBaby"];
+            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.Where(x => x.GetItemOnName("Baby")).First().item;
         }
         return null;
     }
 
-    private void Update()
+    public void Update()
     {
         UpdateAudio();
         damageTimerDecrease -= Time.deltaTime;

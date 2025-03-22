@@ -26,7 +26,7 @@ public class ShrimpDispenser : NetworkBehaviour
     public void Start()
     {
         shrimpRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
-        itemToSpawn = UnlockableHandler.Instance.ShrimpDispenser.ShrimpWeapon;
+        itemToSpawn = UnlockableHandler.Instance.ShrimpDispenser.ItemDefinitions.Where(x => x.GetItemOnName("Shrimp")).First().item;
         dispenserTrigger.onInteract.AddListener(OnDispenserInteract);
     }
 

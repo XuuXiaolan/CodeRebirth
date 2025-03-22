@@ -191,7 +191,10 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         animator.SetBool(IsDeadAnimation, true);
         yield return new WaitForSeconds(4f);
         if (EnemyHandler.Instance.ManorLord == null) yield break;
-        if (playerControlled != null && !playerControlled.isPlayerDead) CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.Where(x => x.GetItemOnName("Voodoo")).First().item.itemName, transform.position);
+        if (playerControlled != null && !playerControlled.isPlayerDead)
+        {
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.Where(x => x.GetItemOnName("Voodoo")).First().item.itemName, transform.position);
+        }
         NetworkObject.Despawn();
     }
 

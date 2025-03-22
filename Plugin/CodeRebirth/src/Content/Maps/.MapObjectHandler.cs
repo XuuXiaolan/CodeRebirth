@@ -4,9 +4,7 @@ using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 using CodeRebirth.src.Util;
-using LethalLib.Modules;
 using CodeRebirth.src.MiscScripts;
-using LethalLib.Extras;
 using System.Linq;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -32,32 +30,18 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class BiomeAssets(string bundleName) : AssetBundleLoader<BiomeAssets>(bundleName)
 	{
-		[LoadFromBundle("BiomeSpreader.prefab")]
-		public GameObject BiomePrefab { get; private set; } = null!;
 	}
 
 	public class BearTrapAssets(string bundleName) : AssetBundleLoader<BearTrapAssets>(bundleName)
 	{
-		[LoadFromBundle("GrassBearTrap.prefab")]
-		public GameObject GrassMatPrefab { get; private set; } = null!;
-		[LoadFromBundle("GravelBearTrap.prefab")]
-		public GameObject GravelMatPrefab { get; private set; } = null!;
-		[LoadFromBundle("SnowBearTrap.prefab")]
-		public GameObject SnowMatPrefab { get; private set; } = null!;
-		[LoadFromBundle("BoomBearTrap.prefab")]
-		public GameObject BoomTrapPrefab { get; private set; } = null!;
 	}
 
 	public class GlowingGemAssets(string bundleName) : AssetBundleLoader<GlowingGemAssets>(bundleName)
 	{
-		[LoadFromBundle("LaserTurret.prefab")]
-		public GameObject LaserTurretPrefab { get; private set; } = null!;
 	}
 
 	public class IndustrialFanAssets(string bundleName) : AssetBundleLoader<IndustrialFanAssets>(bundleName)
 	{
-		[LoadFromBundle("FanTrapAnimated.prefab")]
-		public GameObject IndustrialFanPrefab { get; private set; } = null!;
 	}
 
 	public class FlashTurretAssets(string bundleName) : AssetBundleLoader<FlashTurretAssets>(bundleName)
@@ -68,48 +52,26 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 	public class TeslaShockAssets(string bundleName) : AssetBundleLoader<TeslaShockAssets>(bundleName)
 	{
-		[LoadFromBundle("BugZapper.prefab")]
-		public GameObject TeslaShockPrefab { get; private set; } = null!;
-
 		[LoadFromBundle("ChainLightning.prefab")]
 		public GameObject ChainLightningPrefab { get; private set; } = null!;
 	}
 
 	public class AirControlUnitAssets(string bundleName) : AssetBundleLoader<AirControlUnitAssets>(bundleName)
 	{
-		[LoadFromBundle("AirControlUnit.prefab")]
-		public GameObject AirControlUnitPrefab { get; private set; } = null!;
-
 		[LoadFromBundle("AirControlUnitProjectile.prefab")]
 		public GameObject ProjectilePrefab { get; private set; } = null!;
 	}
 
 	public class FunctionalMicrowaveAssets(string bundleName) : AssetBundleLoader<FunctionalMicrowaveAssets>(bundleName)
 	{
-		[LoadFromBundle("FunctionalMicrowave.prefab")]
-		public GameObject FunctionalMicrowavePrefab { get; private set; } = null!;
-
-		[LoadFromBundle("MicrowaveForkItem.asset")]
-		public Item ForkItem { get; private set; } = null!;
-
-		[LoadFromBundle("MicrowaveSporkItem.asset")]
-		public Item SporkItem { get; private set; } = null!;
-
-		[LoadFromBundle("MicrowaveCharredBabyItem.asset")]
-		public Item CharredBabyItem { get; private set; } = null!;
 	}
 
 	public class MerchantAssets(string bundleName) : AssetBundleLoader<MerchantAssets>(bundleName)
 	{
-		[LoadFromBundle("PiggyBankUnlockable.asset")]
-		public UnlockableItemDef PiggyBankUnlockable { get; private set; } = null!;
 	}
 
 	public class GunslingerGregAssets(string bundleName) : AssetBundleLoader<GunslingerGregAssets>(bundleName)
 	{
-		[LoadFromBundle("GregNotSAM.prefab")]
-		public GameObject GunslingerGregPrefab { get; private set; } = null!;
-
 		[LoadFromBundle("GregMissile.prefab")]
 		public GameObject MissilePrefab { get; private set; } = null!;
 	}
@@ -130,7 +92,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	public FunctionalMicrowaveAssets? FunctionalMicrowave { get; private set; } = null;
 
     public Dictionary<SpawnSyncedCRObject.CRObjectType, GameObject> prefabMapping = new();
-	public static List<GameObject> hazardPrefabs = new List<GameObject>();
 
     public MapObjectHandler()
 	{
@@ -143,7 +104,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		GunslingerGreg = LoadAndRegisterAssets<GunslingerGregAssets>("gunslingergregassets");
 		if (GunslingerGreg != null)
 		{
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.GunslingerGreg] = GunslingerGreg.GunslingerGregPrefab;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.GunslingerGreg] = GunslingerGreg.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("greg")).First().gameObject;
 		}
 
 		ShredderSarah = LoadAndRegisterAssets<ShredderSarahAssets>("shreddersarahassets");
@@ -156,7 +117,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Merchant != null)
 		{
 			prefabMapping[SpawnSyncedCRObject.CRObjectType.Merchant] = Merchant.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("merchant")).First().gameObject;
-			LethalLib.Modules.Unlockables.RegisterUnlockable(Merchant.PiggyBankUnlockable, Plugin.ModConfig.ConfigPiggyBankCost.Value, StoreType.ShipUpgrade);
 		}
 
 		Crate = LoadAndRegisterAssets<CrateAssets>("crateassets");
@@ -171,38 +131,50 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value)
 			RegisterOutsideFlora();
 
-		if (Plugin.ModConfig.ConfigBiomesEnabled.Value)
-			Biome = new BiomeAssets("biomeassets");
+		Biome = LoadAndRegisterAssets<BiomeAssets>("biomeassets");
 
-		if (Plugin.ModConfig.ConfigTeslaShockEnabled.Value)
-			RegisterTeslaShock();
-
-		/*if (Plugin.ModConfig.ConfigBearTrapEnabled.Value)
+		TeslaShock = LoadAndRegisterAssets<TeslaShockAssets>("teslashockassets");
+		if (TeslaShock != null)
 		{
-			BearTrap = new BearTrapAssets("beartrapassets");
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.BearTrap] = BearTrap.GrassMatPrefab;
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.BoomTrap] = BearTrap.BoomTrapPrefab;
-			hazardPrefabs.Add(MapObjectHandler.Instance.BearTrap.GrassMatPrefab);
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.BugZapper] = TeslaShock.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("zapper")).First().gameObject;
+		}
+
+		BearTrap = LoadAndRegisterAssets<BearTrapAssets>("beartrapassets");
+		if (BearTrap != null)
+		{
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.BearTrap] = BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("bear")).First().gameObject;
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.BoomTrap] = BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("boom")).First().gameObject;
 			// if (Plugin.ModConfig.ConfigInsideBearTrapEnabled.Value) RegisterInsideBearTraps();
-		}*/
+		}
 
-		if (Plugin.ModConfig.ConfigLaserTurretEnabled.Value)
-			RegisterLaserTurret();
-		
-		if (Plugin.ModConfig.ConfigIndustrialFanEnabled.Value)
-			RegisterIndustrialFan();
-
-		if (Plugin.ModConfig.ConfigFlashTurretEnabled.Value)
-			RegisterFlashTurret();
-
-		if (Plugin.ModConfig.ConfigFunctionalMicrowaveEnabled.Value)
-			RegisterFunctionalMicrowave();
-
-		if (Plugin.ModConfig.ConfigAirControlUnitEnabled.Value)
+		FunctionalMicrowave = LoadAndRegisterAssets<FunctionalMicrowaveAssets>("functionalmicrowaveassets");
+		if (FunctionalMicrowave != null)
 		{
-			AirControlUnit = new AirControlUnitAssets("aircontrolunitassets");
-			prefabMapping[SpawnSyncedCRObject.CRObjectType.AirControlUnit] = AirControlUnit.AirControlUnitPrefab;
-			hazardPrefabs.Add(MapObjectHandler.Instance.AirControlUnit.AirControlUnitPrefab);
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.FunctionalMicrowave] = FunctionalMicrowave.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("microwave")).First().gameObject;
+		}
+
+		FlashTurret = LoadAndRegisterAssets<FlashTurretAssets>("flashturretassets");
+		if (FlashTurret != null)
+		{
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.FlashTurret] = FlashTurret.FlashTurretPrefab;
+		}
+
+		IndustrialFan = LoadAndRegisterAssets<IndustrialFanAssets>("industrialfanassets");
+		if (FlashTurret != null)
+		{
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.IndustrialFan] = IndustrialFan.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("fan")).First().gameObject;
+		}
+
+		GlowingGem = LoadAndRegisterAssets<GlowingGemAssets>("glowinggemassets");
+		if (GlowingGem != null)
+		{
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.LaserTurret] = GlowingGem.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("laser")).First().gameObject;
+		}
+
+		AirControlUnit = LoadAndRegisterAssets<AirControlUnitAssets>("aircontrolunitassets");
+		if (AirControlUnit != null)
+		{
+			prefabMapping[SpawnSyncedCRObject.CRObjectType.AirControlUnit] = AirControlUnit.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("air")).First().gameObject;
 		}
 	}
 
@@ -211,52 +183,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         prefabMapping.TryGetValue(objectType, out var prefab);
         return prefab;
     }
-
-	/*public void RegisterInsideBearTraps()
-	{
-		RegisterInsideMapObjectWithConfig(BearTrap.GrassMatPrefab, Plugin.ModConfig.ConfigBearTrapInsideSpawnWeight.Value);
-	}*/
-
-	public void RegisterFunctionalMicrowave()
-	{
-		FunctionalMicrowave = new FunctionalMicrowaveAssets("functionalmicrowaveassets");
-		prefabMapping[SpawnSyncedCRObject.CRObjectType.FunctionalMicrowave] = FunctionalMicrowave.FunctionalMicrowavePrefab;
-		RegisterScrapWithConfig("", FunctionalMicrowave.SporkItem);
-		RegisterScrapWithConfig("", FunctionalMicrowave.ForkItem);
-		RegisterScrapWithConfig("", FunctionalMicrowave.CharredBabyItem);
-		Plugin.samplePrefabs.Add("MicrowaveSpork", FunctionalMicrowave.SporkItem);
-		Plugin.samplePrefabs.Add("MicrowaveFork", FunctionalMicrowave.ForkItem);
-		Plugin.samplePrefabs.Add("MicrowaveCharredBaby", FunctionalMicrowave.CharredBabyItem);
-		RegisterInsideMapObjectWithConfig(FunctionalMicrowave.FunctionalMicrowavePrefab, Plugin.ModConfig.ConfigFunctionalMicrowaveCurveSpawnWeight.Value);
-	}
-
-	public void RegisterTeslaShock()
-	{
-		TeslaShock = new TeslaShockAssets("teslashockassets");
-		prefabMapping[SpawnSyncedCRObject.CRObjectType.BugZapper] = TeslaShock.TeslaShockPrefab;
-		RegisterInsideMapObjectWithConfig(TeslaShock.TeslaShockPrefab, Plugin.ModConfig.ConfigTeslaShockCurveSpawnWeight.Value);
-	}
-
-	public void RegisterFlashTurret()
-	{
-		FlashTurret = new FlashTurretAssets("flashturretassets");
-		prefabMapping[SpawnSyncedCRObject.CRObjectType.FlashTurret] = FlashTurret.FlashTurretPrefab;
-		RegisterInsideMapObjectWithConfig(FlashTurret.FlashTurretPrefab, Plugin.ModConfig.ConfigFlashTurretCurveSpawnWeight.Value);
-	}
-
-	public void RegisterIndustrialFan()
-	{
-		IndustrialFan = new IndustrialFanAssets("industrialfanassets");
-		prefabMapping[SpawnSyncedCRObject.CRObjectType.IndustrialFan] = IndustrialFan.IndustrialFanPrefab;
-		RegisterInsideMapObjectWithConfig(IndustrialFan.IndustrialFanPrefab, Plugin.ModConfig.ConfigIndustrialFanCurveSpawnWeight.Value);
-	}
-
-	public void RegisterLaserTurret()
-	{
-		GlowingGem = new GlowingGemAssets("glowinggemassets");
-		prefabMapping[SpawnSyncedCRObject.CRObjectType.LaserTurret] = GlowingGem.LaserTurretPrefab;
-		RegisterInsideMapObjectWithConfig(GlowingGem.LaserTurretPrefab, Plugin.ModConfig.ConfigLaserTurretCurveSpawnWeight.Value);
-	}
 
 	public void RegisterOutsideFlora()
 	{

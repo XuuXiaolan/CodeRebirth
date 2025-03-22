@@ -194,22 +194,10 @@ public class CodeRebirthConfig
         #region Nancy
         #endregion
         #region Merchant
-        ConfigPiggyBankCost = configFile.Bind("Merchant Options",
-                                            "PiggyBank | Cost",
-                                            250,
-                                            "Cost of the Piggy Bank Unlockable");
         #endregion
         #region Transporter
         #endregion
         #region Cleaner Drone Gal
-        ConfigCleanerDroneGalEnabled = configFile.Bind("Cleaner Drone Gal Options",
-                                            "Cleaner Drone Gal | Enabled",
-                                            true,
-                                            "Whether the Cleaner Drone Gal is enabled.");
-        ConfigCleanerDroneGalCost = configFile.Bind("Cleaner Drone Gal Options",
-                                            "Cleaner Drone Gal | Cost",
-                                            420,
-                                            "The cost of the Cleaner Drone Gal.");
         #endregion
 
         #region Janitor
@@ -229,56 +217,16 @@ public class CodeRebirthConfig
                                             "Whether the Zort model replacement is enabled.");
         #endregion
         #region BearTrap Gal
-        ConfigBearTrapGalEnabled = configFile.Bind("BearTrapGal Options",
-                                            "BearTrapGal | Enabled",
-                                            true,
-                                            "Whether the BearTrapGal is enabled.");
-        ConfigBearTrapGalCost = configFile.Bind("BearTrapGal Options",
-                                            "BearTrapGal | Cost",
-                                            200,
-                                            "The cost of the BearTrapGal.");
         #endregion
         #region ACUnit Gal
-        ConfigACUnitGalEnabled = configFile.Bind("ACUnitGal Options",
-                                            "ACUnitGal | Enabled",
-                                            true,
-                                            "Whether the ACUnitGal is enabled.");
-        ConfigACUnitGalCost = configFile.Bind("ACUnitGal Options",
-                                            "ACUnitGal | Cost",
-                                            200,
-                                            "The cost of the ACUnitGal.");
         #endregion
         #region Friend Stuff
-        ConfigFriendStuffEnabled = configFile.Bind("FriendStuff Options",
-                                            "Friend Stuff | Enabled",
-                                            true,
-                                            "Whether friend stuff is enabled, unrelated to this mod, just stuff for my friends.");
-        ConfigGlitchedPlushieCost = configFile.Bind("FriendStuff Options",
-                                            "Friend Stuff | Glitched Plushie SpawnWeights",
-                                            69,
-                                            "The MoonName - SpawnWeight for the Glitched Plushie.");
         #endregion
         #region Duck Song
         #endregion
         #region Shrimp Dispenser
-        ConfigShrimpDispenserEnabled = configFile.Bind("ShrimpDispenser Options",
-                                            "Shrimp Dispenser | Enabled",
-                                            true,
-                                            "Whether the Shrimp Dispenser is enabled.");
-        ConfigShrimpDispenserCost = configFile.Bind("ShrimpDispenser Options",
-                                            "Shrimp Dispenser | Cost",
-                                            150,
-                                            "The cost of the Shrimp Dispenser.");
         #endregion
         #region Functional Microwave
-        ConfigFunctionalMicrowaveEnabled = configFile.Bind("FunctionalMicrowave Options",
-                                            "Functional Microwave | Enabled",
-                                            true,
-                                            "Whether the Functional Microwave is enabled.");
-        ConfigFunctionalMicrowaveCurveSpawnWeight = configFile.Bind("FunctionalMicrowave Options",
-                                            "Functional Microwave | SpawnWeight Curve",
-                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
-                                            "The MoonName - CurveSpawnWeight for the hazard.");
         ConfigMicrowaveVolume = configFile.Bind("FunctionalMicrowave Options",
                                             "Functional Microwave | Volume",
                                             1f,
@@ -295,52 +243,20 @@ public class CodeRebirthConfig
                                             "The volume of the Bear Trap.");
         #endregion
         #region Laser Turret
-        ConfigLaserTurretEnabled = configFile.Bind("LaserTurret Options",
-                                            "Laser Turret | Enabled",
-                                            true,
-                                            "Whether the Laser Turret is enabled.");
-        ConfigLaserTurretCurveSpawnWeight = configFile.Bind("LaserTurret Options",
-                                            "Laser Turret | SpawnWeight Curve",
-                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
-                                            "The MoonName - CurveSpawnWeight for the LaserTurret.");
         ConfigLaserTurretVolume = configFile.Bind("LaserTurret Options",
                                             "Laser Turret | Volume",
                                             1f,
                                             "The volume of the Laser Turret.");
         #endregion
         #region Flash Turret
-        ConfigFlashTurretEnabled = configFile.Bind("FlashTurret Options",
-                                            "Flash Turret | Enabled",
-                                            true,
-                                            "Whether the flash turret is enabled.");
-        ConfigFlashTurretCurveSpawnWeight = configFile.Bind("FlashTurret Options",
-                                            "Flash Turret | SpawnWeight Curve",
-                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 ",
-                                            "The MoonName - CurveSpawnWeight for the FlashTurret.");
         ConfigFlashTurretVolume = configFile.Bind("FlashTurret Options",
                                             "Flash Turret | Volume",
                                             1f,
                                             "The volume of the Flash Turret.");
         #endregion
         #region Industrial Fan
-        ConfigIndustrialFanEnabled = configFile.Bind("IndustrialFan Options",
-                                            "Industrial Fan | Enabled",
-                                            true,
-                                            "Whether the industrial fan is enabled.");
-        ConfigIndustrialFanCurveSpawnWeight = configFile.Bind("IndustrialFan Options",
-                                            "Industrial Fan | SpawnWeight Curve",
-                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
-                                            "The MoonName - CurveSpawnWeight for the IndustrialFan.");
         #endregion
         #region Tesla Shock
-        ConfigTeslaShockEnabled = configFile.Bind("TeslaShock Options",
-                                            "Tesla Shock | Enabled",
-                                            true,
-                                            "Whether the tesla shock is enabled.");
-        ConfigTeslaShockCurveSpawnWeight = configFile.Bind("TeslaShock Options",
-                                            "Tesla Shock | SpawnWeight Curve",
-                                            "Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00",
-                                            "The MoonName - CurveSpawnWeight for the TeslaShock.");
         ConfigTeslaShockVolume = configFile.Bind("TeslaShock Options",
                                             "Tesla Shock | Volume",
                                             1f,
@@ -388,28 +304,12 @@ public class CodeRebirthConfig
                                             "Whether hazards like IndustrialFan and LaserTurret should delete player bodies.");
         #endregion
         #region Cruiser Gal
-        ConfigCruiserGalEnabled = configFile.Bind("Cruiser Options",
-                                            "Cruiser Gal | Enabled",
-                                            true,
-                                            "Whether the Cruiser Gal is enabled.");
-        ConfigCruiserGalCost = configFile.Bind("Cruiser Options",
-                                            "Cruiser Gal | Cost",
-                                            2500,
-                                            "Cost of the Cruiser Gal.");
         ConfigCruiserGalAutomatic = configFile.Bind("Cruiser Options",
                                             "Cruiser Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Cruiser Gal will automatically wake up and choose the nearest player as the owner.");
         #endregion
         #region Shockwave Gal
-        ConfigShockwaveBotEnabled = configFile.Bind("Shockwave Options",
-                                            "Shockwave Gal | Enabled",
-                                            true,
-                                            "Whether the Shockwave Gal is enabled.");
-        ConfigShockwaveBotCost = configFile.Bind("Shockwave Options",
-                                            "Shockwave Gal | Cost",
-                                            2000,
-                                            "Cost of the Shockwave Gal.");
         ConfigShockwaveCharges = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Charges",
                                             10,
@@ -439,14 +339,6 @@ public class CodeRebirthConfig
                                             "Whether the Shockwave Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
         #endregion
         #region Seamine Gal
-        ConfigSeamineTinkEnabled = configFile.Bind("Seamine Options",
-                                            "Seamine Gal | Enabled",
-                                            true,
-                                            "Whether the Seamine Gal is enabled.");
-        ConfigSeamineTinkCost = configFile.Bind("Seamine Options",
-                                            "Seamine Gal | Cost",
-                                            1500,
-                                            "Cost of the Seamine Gal.");
         ConfigSeamineTinkCharges = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Charges",
                                             3,
@@ -484,14 +376,6 @@ public class CodeRebirthConfig
                                             "Whether the Seamine Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
         #endregion
         #region Terminal Gal
-        ConfigTerminalBotEnabled = configFile.Bind("Terminal Options",
-                                            "Terminal Gal | Enabled",
-                                            true,
-                                            "Whether the Terminal Gal is enabled.");
-        ConfigTerminalBotCost = configFile.Bind("Terminal Options",
-                                            "Terminal Gal | Cost",
-                                            2000,
-                                            "Cost of the Terminal Gal.");
         ConfigTerminalBotAutomatic = configFile.Bind("Terminal Options",
                                             "Terminal Gal | Automatic Behaviour",
                                             false,
@@ -514,24 +398,8 @@ public class CodeRebirthConfig
                                             "Volume of the Terminal Gal's Flying animation.");
         #endregion
         #region Bell Crab Gal
-        ConfigBellCrabGalEnabled = configFile.Bind("Bell Crab Options",
-                                            "Bell Crab Gal | Enabled",
-                                            true,
-                                            "Whether the Bell Crab Gal is enabled.");
-        ConfigBellCrabGalCost = configFile.Bind("Bell Crab Options",
-                                            "Bell Crab Gal | Cost",
-                                            250,
-                                            "Cost of the Bell Crab Gal.");
         #endregion
         #region SCP 999 Gal
-        Config999GalEnabled = configFile.Bind("SCP 999 Gal Options",
-                                            "SCP 999 Gal | Enabled",
-                                            true,
-                                            "Whether the SCP 999 Gal is enabled.");
-        Config999GalCost = configFile.Bind("SCP 999 Gal Options",
-                                            "SCP 999 Gal | Cost",
-                                            1999,
-                                            "Cost of the SCP 999 Gal.");
         Config999GalHealCooldown = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Heal Cooldown",
                                             10f,
@@ -574,10 +442,6 @@ public class CodeRebirthConfig
                                             "Whether the gal scales the heals and revives with player count.");
         #endregion
         #region Biomes
-        ConfigBiomesEnabled = configFile.Bind("Biome Options",
-                                            "Biomes | Enabled",
-                                            false,
-                                            "Whether Biomes are enabled.");
         ConfigBiomesSpawnChance = configFile.Bind("Biome Options",
                                             "Biomes | Spawn Chance",
                                             0.5f,
