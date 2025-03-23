@@ -6,6 +6,7 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
+using CodeRebirth.src.Content.Weathers;
 using Unity.Netcode;
 using UnityEngine;
 using NetworkPrefabs = LethalLib.Modules.NetworkPrefabs;
@@ -20,11 +21,13 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
     public List<CRItemDefinition> itemDefinitions = new();
 	public List<CRMapObjectDefinition> mapObjectDefinitions = new();
 	public List<CRUnlockableDefinition> unlockableDefinitions = new();
+	public List<CRWeatherDefinition> weatherDefinitions = new();
 
     public IReadOnlyList<CREnemyDefinition> EnemyDefinitions => enemyDefinitions;
     public IReadOnlyList<CRItemDefinition> ItemDefinitions => itemDefinitions;
 	public IReadOnlyList<CRMapObjectDefinition> MapObjectDefinitions => mapObjectDefinitions;
 	public IReadOnlyList<CRUnlockableDefinition> UnlockableDefinitions => unlockableDefinitions;
+	public IReadOnlyList<CRWeatherDefinition> WeatherDefinitions => weatherDefinitions;
 
 	protected AssetBundleLoader(string filePath, bool registerNetworkPrefabs = true, bool fixMixerGroups = true)
 	{

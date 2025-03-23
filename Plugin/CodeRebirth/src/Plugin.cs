@@ -52,22 +52,12 @@ public class Plugin : BaseUnityPlugin
     {
         Logger = base.Logger;
         configFile = this.Config;
-        ModConfig = new CodeRebirthConfig(configFile); // Create the config with the file from here.
+        ModConfig = new CodeRebirthConfig(); // Create the config with the file from here.
 
-        if (SubtitlesAPICompatibilityChecker.Enabled)
-        {
-            SubtitlesAPICompatibilityChecker.Init();
-        }
-
-        if (OpenBodyCamCompatibilityChecker.Enabled)
-        {
-            OpenBodyCamCompatibilityChecker.Init();
-        }
-
-        if (MoreSuitsCompatibilityChecker.Enabled)
-        {
-            MoreSuitsCompatibilityChecker.Init();
-        }
+        ModConfig.ConfigExtendedLogging = configFile.Bind("Debug Options",
+                                            "Debug Mode | Extended Logging",
+                                            false,
+                                            "Whether ExtendedLogging is enabled.");
 
         _harmony.PatchAll(typeof(QuickMenuManagerPatch));
         _harmony.PatchAll(typeof(PlayerControllerBPatch));
@@ -106,6 +96,22 @@ public class Plugin : BaseUnityPlugin
         Logger.LogInfo("Registering CodeRebirth content.");
 
         RegisterContentHandlers(Assembly.GetExecutingAssembly());
+        ModConfig.InitCodeRebirthConfig(configFile);
+
+        if (SubtitlesAPICompatibilityChecker.Enabled)
+        {
+            SubtitlesAPICompatibilityChecker.Init();
+        }
+
+        if (OpenBodyCamCompatibilityChecker.Enabled)
+        {
+            OpenBodyCamCompatibilityChecker.Init();
+        }
+
+        if (MoreSuitsCompatibilityChecker.Enabled)
+        {
+            MoreSuitsCompatibilityChecker.Init();
+        }
 
         Logger.LogInfo("Cleaning config");
         Config.ClearUnusedEntries();

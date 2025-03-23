@@ -8,12 +8,14 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
+using CodeRebirth.src.Content.Weathers;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util.AssetLoading;
 using LethalLib.Extras;
 using LethalLib.Modules;
 using UnityEngine;
+using WeatherRegistry;
 
 namespace CodeRebirth.src.Util;
 
@@ -144,17 +146,53 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 Plugin.ExtendedLogging($"UnlockableDefinition: {unlockableDef.unlockableItemDef.unlockable.unlockableName}");
                 assetBundle.unlockableDefinitions.Add(unlockableDef);
             }
+            else if (definition is CRWeatherDefinition weatherDef)
+            {
+                Plugin.ExtendedLogging($"WeatherDefinition: {weatherDef.Weather.Name}");
+                assetBundle.weatherDefinitions.Add(weatherDef);
+            }
         }
 
-        if (assetBundle.unlockableDefinitions.Count <= 0 && assetBundle.itemDefinitions.Count <= 0 && assetBundle.mapObjectDefinitions.Count <= 0 && assetBundle.enemyDefinitions.Count <= 0)
+        if (assetBundle.unlockableDefinitions.Count <= 0 && assetBundle.itemDefinitions.Count <= 0 && assetBundle.mapObjectDefinitions.Count <= 0 && assetBundle.enemyDefinitions.Count <= 0 && assetBundle.weatherDefinitions.Count <= 0)
         {
             Plugin.ExtendedLogging($"No definitions found in {assetBundleName}");
         }
+
+        RegisterWeatherAssets(assetBundle);
         RegisterEnemyAssets(assetBundle);
         RegisterMapObjectAssets(assetBundle);
         RegisterUnlockableAssets(assetBundle);
         RegisterItemAssets(assetBundle);
         return assetBundle;
+    }
+
+    protected void RegisterWeatherAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
+    {
+        if (assetBundle == null || assetBundle.AssetBundleData == null) return;
+        Plugin.ExtendedLogging($"Registering weathers for {assetBundle.AssetBundleData.assetBundleName}");
+        int definitionIndex = 0;
+        assetBundle.weatherDefinitions.Sort((a, b) => a.Weather.Name.CompareTo(b.Weather.Name));
+        assetBundle.AssetBundleData.weathers.Sort((a, b) => a.entityName.CompareTo(b.entityName));
+        foreach (var CRWeatherDefinition in assetBundle.WeatherDefinitions)
+        {
+            WeatherData weatherData = assetBundle.AssetBundleData.weathers[definitionIndex];
+            Plugin.ExtendedLogging($"WeatherData {weatherData.entityName}");
+            Plugin.ExtendedLogging($"WeatherDefinition {CRWeatherDefinition.Weather.Name}");
+            foreach (var configDefinition in CRWeatherDefinition.ConfigEntries)
+            {
+                Plugin.ExtendedLogging($"Registering config {configDefinition.settingName} | {configDefinition.settingDesc} for {CRWeatherDefinition.Weather.Name}");
+                ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
+            }
+
+            Weather weather = CRWeatherDefinition.Weather;
+            weather.Config.DefaultWeight = new IntegerConfigHandler(weatherData.spawnWeight);
+            weather.Config.ScrapValueMultiplier = new FloatConfigHandler(weatherData.scrapValueMultiplier);
+            weather.Config.ScrapAmountMultiplier = new FloatConfigHandler(weatherData.scrapMultiplier);
+            weather.Config.FilteringOption = new BooleanConfigHandler(weatherData.isExclude);
+            weather.Config.LevelFilters = new LevelListConfigHandler(weatherData.excludeOrIncludeList);
+            WeatherManager.RegisterWeather(weather);
+            definitionIndex++;
+        }
     }
 
     protected void RegisterEnemyAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>

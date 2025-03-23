@@ -4,6 +4,7 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Events;
+using System.Linq;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Meteors : NetworkBehaviour
@@ -133,13 +134,14 @@ public class Meteors : NetworkBehaviour
         isMoving = false;
 
         ImpactAudio.Play();
-            
+        
+        if (WeatherHandler.Instance.Meteorite.ItemDefinitions.Where(x => x.GetItemOnName("Sapphire") != null).First().item)
         if (IsServer && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap)
         {
             int randomNumber = UnityEngine.Random.Range(0, 3);
-            if (randomNumber == 0 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Sapphire Meteorite", target);
-            else if (randomNumber == 1 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc("Emerald Meteorite", target);
-            else CodeRebirthUtils.Instance.SpawnScrapServerRpc("Ruby Meteorite", target);
+            if (randomNumber == 0 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite.ItemDefinitions.Where(x => x.GetItemOnName("Sapphire") != null).First().item.itemName, target);
+            else if (randomNumber == 1 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite.ItemDefinitions.Where(x => x.GetItemOnName("Emerald") != null).First().item.itemName, target);
+            else CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite.ItemDefinitions.Where(x => x.GetItemOnName("Ruby") != null).First().item.itemName, target);
         }
 
         GameObject craterInstance = Instantiate(WeatherHandler.Instance.Meteorite.CraterPrefab, target, Quaternion.identity);

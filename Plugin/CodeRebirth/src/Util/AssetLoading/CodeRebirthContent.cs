@@ -15,6 +15,7 @@ public class AssetBundleData
 {
     public string assetBundleName;
     public string configName;
+    public List<WeatherData> weathers;
     public List<EnemyData> enemies;
     public List<ItemData> items;
     public List<MapObjectData> mapObjects;
@@ -25,6 +26,16 @@ public class AssetBundleData
 public abstract class EntityData
 {
     public string entityName; // Common name property for both enemies and items
+}
+
+[Serializable]
+public class WeatherData : EntityData
+{
+    public int spawnWeight;
+    public float scrapMultiplier;
+    public float scrapValueMultiplier;
+    public bool isExclude;
+    public string excludeOrIncludeList;
 }
 
 [Serializable]

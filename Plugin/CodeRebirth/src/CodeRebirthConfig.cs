@@ -8,7 +8,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
-    public ConfigEntry<bool> Config999GalEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
     public ConfigEntry<bool> ConfigDontTargetFarEnemies { get; private set; }
     public ConfigEntry<bool> ConfigHazardsDeleteBodies { get; private set; }
@@ -19,15 +18,12 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
     public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
-    public ConfigEntry<bool> ConfigMeteorShowerEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigTornadosEnabled { get; private set; }
     public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
     #endregion
     #region Spawn Weights
-    public ConfigEntry<float> ConfigBiomesSpawnChance { get; private set; }
     public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
@@ -61,7 +57,6 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigTerminalScanRange { get; private set; }
     public ConfigEntry<float> ConfigSeamineScanFrequency { get; private set; }
     public ConfigEntry<float> ConfigSeamineScanRange { get; private set; }
-    public ConfigEntry<int> ConfigPiggyBankCost { get; private set; }
     public ConfigEntry<bool> ConfigBearTrapsPopTires { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerSeesScanEffects { get; private set; }
     public ConfigEntry<int> ConfigSeamineTinkCharges { get; private set; }
@@ -85,7 +80,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigShovelCratesOnly { get; private set; }
     public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
-    public ConfigEntry<bool> ConfigExtendedLogging { get; private set; }
+    public ConfigEntry<bool> ConfigExtendedLogging { get; set; }
     public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; private set; }
     public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
     public ConfigEntry<int> ConfigFloraMinAbundance { get; private set; }
@@ -100,7 +95,7 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigBearTrapVolume { get; private set; }
     public ConfigEntry<float> ConfigLaserTurretVolume { get; private set; }
     public ConfigEntry<float> ConfigFlashTurretVolume { get; private set; }
-    public ConfigEntry<float> ConfigTeslaShockVolume { get; private set; }
+    public ConfigEntry<float> ConfigBugZapperVolume { get; private set; }
     public ConfigEntry<float> ConfigACUVolume { get; private set; }
     public ConfigEntry<float> Config999GalHealCooldown { get; private set; }
     public ConfigEntry<int> Config999GalHealAmount { get; private set; }
@@ -120,13 +115,10 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigIcyHammerWorth { get; private set; }
     public ConfigEntry<string> ConfigSpikyMaceWorth { get; private set; }
     public ConfigEntry<string> ConfigEpicAxeWorth { get; private set; }
-    public ConfigEntry<string> ConfigSapphireWorth { get; private set; }
-    public ConfigEntry<string> ConfigRubyWorth { get; private set; }
-    public ConfigEntry<string> ConfigEmeraldWorth { get; private set; }
     #endregion
     public ConfigEntry<bool> ConfigDebugMode { get; private set; }
 
-    public CodeRebirthConfig(ConfigFile configFile)
+    public void InitCodeRebirthConfig(ConfigFile configFile)
     {
         #region Debug
         ConfigDebugMode = configFile.Bind("Debug Options",
@@ -221,11 +213,11 @@ public class CodeRebirthConfig
         #endregion
         #region Industrial Fan
         #endregion
-        #region Tesla Shock
-        ConfigTeslaShockVolume = configFile.Bind("TeslaShock Options",
-                                            "Tesla Shock | Volume",
+        #region Bug Zapper
+        ConfigBugZapperVolume = configFile.Bind("BugZapper Options",
+                                            "Bug Zapper | Volume",
                                             1f,
-                                            "The volume of the Tesla Shock.");
+                                            "The volume of the Bug Zapper.");
 
         #endregion
         #region Air Control Unit
@@ -399,10 +391,6 @@ public class CodeRebirthConfig
                                             "Whether the gal scales the heals and revives with player count.");
         #endregion
         #region Biomes
-        ConfigBiomesSpawnChance = configFile.Bind("Biome Options",
-                                            "Biomes | Spawn Chance",
-                                            0.5f,
-                                            "Biomes spawn chance.");
         #endregion
         #region DangerousFlora
         #endregion
@@ -443,10 +431,6 @@ public class CodeRebirthConfig
                                             "Chance of the wooden seed to spawn from a broken tree");
         #endregion
         #region Tornado
-        ConfigTornadosEnabled = configFile.Bind("Tornado Options",
-                                            "Tornados | Enabled",
-                                            true,
-                                            "Enables/Disables the Tornados from popping up into moons.");
         ConfigTornadoSpeed = configFile.Bind("Tornado Options",
                                             "Tornados | Speed",
                                             7f,
@@ -594,10 +578,6 @@ public class CodeRebirthConfig
                                             ));
         #endregion
         #region Meteors
-        ConfigMeteorShowerEnabled = configFile.Bind("MeteorShower Options",
-                                            "MeteorShower | Enabled",
-                                            true,
-                                            "Enables/Disables the MeteorShower from popping up into moons.");
         ConfigMaxMeteorSpawnCount = configFile.Bind("MeteorShower Options",
                                             "Meteors | Max Spawn Count",
                                             3,
@@ -651,18 +631,6 @@ public class CodeRebirthConfig
                                                 "Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.", 
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
-        ConfigSapphireWorth = configFile.Bind("MeteorShower Options",
-                                            "MeteorShower | Sapphire Worth",
-                                            "-1,-1",
-                                            "Min and Max value of the Sapphire, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigRubyWorth = configFile.Bind("MeteorShower Options",
-                                            "MeteorShower | Ruby Worth",
-                                            "-1,-1",
-                                            "Min and Max value of the Ruby, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigEmeraldWorth = configFile.Bind("MeteorShower Options",
-                                            "MeteorShower | Emerald Worth",
-                                            "-1,-1",
-                                            "Min and Max value of the Emerald, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
         #endregion
         #region Monarch+Cutiefly
         #endregion

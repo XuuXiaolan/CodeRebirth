@@ -13,8 +13,22 @@ MonoBehaviour:
   m_Name: CodeRebirthContent
   m_EditorClassIdentifier: 
   assetBundles:
+  - assetBundleName: acunitgalassets
+    configName: ACUnit Gal
+    weathers: []
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: ACUnit Gal
+      cost: 200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
   - assetBundleName: aircontrolunitassets
-    configName: Air Control Unit
+    configName: AirControlUnit
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -33,6 +47,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: beartrapassets
     configName: BearTrap
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -97,8 +112,35 @@ MonoBehaviour:
         ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
+  - assetBundleName: beartrapgalassets
+    configName: BearTrap Gal
+    weathers: []
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: BearTrap Gal
+      cost: 150
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
+  - assetBundleName: bellcrabgalassets
+    configName: BellCrab Gal
+    weathers: []
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: BellCrab Gal
+      cost: 150
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
   - assetBundleName: biomeassets
     configName: Biomes
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -116,6 +158,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: carnivorousplantassets
     configName: Carnivorous Plant
+    weathers: []
     enemies:
     - entityName: Carnivorous Plant
       spawnWeights: Vanilla:20,Custom:20
@@ -124,8 +167,22 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
+  - assetBundleName: cleanerdronegalassets
+    configName: Cleaner Drone Gal
+    weathers: []
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: Cleaner Drone Gal
+      cost: 200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
   - assetBundleName: compactortobyassets
     configName: Compactor Toby
+    weathers: []
     enemies: []
     items:
     - entityName: Flat Body
@@ -157,6 +214,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: crateassets
     configName: Crate
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -209,8 +267,30 @@ MonoBehaviour:
         ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
+  - assetBundleName: cruisergalassets
+    configName: Cruiser
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Cruiser Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Cruiser Gal
+      cost: 2500
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
   - assetBundleName: driftwoodmenaceassets
     configName: Driftwood Menace
+    weathers: []
     enemies:
     - entityName: Driftwood Menace
       spawnWeights: Vanilla:20,Custom:20
@@ -221,6 +301,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: ducksongassets
     configName: Duck
+    weathers: []
     enemies:
     - entityName: Duck
       spawnWeights: Vanilla:20,Custom:20
@@ -245,8 +326,30 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
+  - assetBundleName: fishdispenserassets
+    configName: Shrimp Dispenser
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Blue Shrimp
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Shrimp Dispenser
+      cost: 500
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
   - assetBundleName: flashturretassets
-    configName: Flash Turret
+    configName: FlashTurret
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -264,7 +367,8 @@ MonoBehaviour:
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
   - assetBundleName: functionalmicrowaveassets
-    configName: Microwave
+    configName: FunctionalMicrowave
+    weathers: []
     enemies: []
     items:
     - entityName: Charred Baby
@@ -305,8 +409,22 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
+  - assetBundleName: friendassets
+    configName: Friend
+    weathers: []
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables:
+    - entityName: Bald
+      cost: 69
+      isShipUpgrade: 0
+      isDecor: 1
+      isProgressive: 0
+      createProgressiveConfig: 0
   - assetBundleName: glowinggemassets
-    configName: Laser Turret
+    configName: LaserTurret
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -325,6 +443,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: gunslingergregassets
     configName: Gunslinger Greg
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -340,6 +459,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: hoverboardassets
     configName: Hoverboard
+    weathers: []
     enemies: []
     items:
     - entityName: Hoverboard
@@ -353,7 +473,8 @@ MonoBehaviour:
     mapObjects: []
     unlockables: []
   - assetBundleName: industrialfanassets
-    configName: Industrial Fan
+    configName: IndustrialFan
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -372,6 +493,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: janitorassets
     configName: Janitor
+    weathers: []
     enemies:
     - entityName: Janitor
       spawnWeights: Vanilla:20,Custom:20
@@ -394,6 +516,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: manorlordassets
     configName: ManorLord
+    weathers: []
     enemies:
     - entityName: ManorLord
       spawnWeights: Vanilla:20,Custom:20
@@ -420,6 +543,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: merchantassets
     configName: Merchant
+    weathers: []
     enemies: []
     items:
     - entityName: CreditPad100cc
@@ -595,8 +719,46 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
+  - assetBundleName: meteorshowerassets
+    configName: MeteorShower
+    weathers:
+    - entityName: Meteor Shower
+      spawnWeight: 10
+      scrapMultiplier: 1.2
+      scrapValueMultiplier: 0.9
+      isExclude: 1
+      excludeOrIncludeList: galetry;gordion
+    enemies: []
+    items:
+    - entityName: Ruby
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Sapphire
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Emerald
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables: []
   - assetBundleName: mistressassets
     configName: Mistress
+    weathers: []
     enemies:
     - entityName: Mistress
       spawnWeights: Vanilla:20,Custom:20
@@ -615,6 +777,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: monarchassets
     configName: Monarch
+    weathers: []
     enemies:
     - entityName: Monarch
       spawnWeights: 
@@ -629,6 +792,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: nancyassets
     configName: Nancy
+    weathers: []
     enemies:
     - entityName: Nancy
       spawnWeights: Vanilla:20,Custom:20
@@ -637,8 +801,46 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
+  - assetBundleName: plantpotassets
+    configName: Plant Pot
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Golden Tomato
+      spawnWeights: 
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Normal Tomato
+      spawnWeights: 
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    - entityName: Wooden Seed
+      spawnWeights: 
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Plant Pot
+      cost: 250
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 0
+      createProgressiveConfig: 0
   - assetBundleName: redwoodtitanassets
-    configName: Redwood Titan
+    configName: Redwood
+    weathers: []
     enemies:
     - entityName: Redwood Titan
       spawnWeights: Vanilla:20,Custom:20
@@ -647,8 +849,72 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
+  - assetBundleName: scp999galassets
+    configName: SCP 999 Gal
+    weathers: []
+    enemies: []
+    items:
+    - entityName: SCP999 Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: SCP999 Gal
+      cost: 1700
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
+  - assetBundleName: seaminetinkassets
+    configName: Seamine
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Seamine Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Seamine Gal
+      cost: 1500
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
+  - assetBundleName: shockwavebotassets
+    configName: Shockwave
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Shockwave Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Shockwave Gal
+      cost: 2200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
   - assetBundleName: shreddersarahassets
     configName: Shredder Sarah
+    weathers: []
     enemies: []
     items:
     - entityName: Bloody Shredded Scrap
@@ -680,6 +946,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: snailcatassets
     configName: SnailCat
+    weathers: []
     enemies:
     - entityName: SnailCat
       spawnWeights: Vanilla:20,Custom:20
@@ -698,6 +965,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: snowglobeassets
     configName: SnowGlobe
+    weathers: []
     enemies: []
     items:
     - entityName: Snow Globe
@@ -710,8 +978,30 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
+  - assetBundleName: terminalbotassets
+    configName: Terminal
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Terminal Scrap Heap
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 0
+    mapObjects: []
+    unlockables:
+    - entityName: Terminal Gal
+      cost: 2200
+      isShipUpgrade: 1
+      isDecor: 0
+      isProgressive: 1
+      createProgressiveConfig: 1
   - assetBundleName: teslashockassets
-    configName: Bug Zapper
+    configName: BugZapper
+    weathers: []
     enemies: []
     items: []
     mapObjects:
@@ -728,8 +1018,26 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
+  - assetBundleName: tornadoassets
+    configName: Tornado
+    weathers:
+    - entityName: Tornado
+      spawnWeight: 10
+      scrapMultiplier: 1.2
+      scrapValueMultiplier: 0.85
+      isExclude: 1
+      excludeOrIncludeList: galetry;gordion
+    enemies:
+    - entityName: Tornado
+      spawnWeights: All:0
+      powerLevel: 0
+      maxSpawnCount: 1
+    items: []
+    mapObjects: []
+    unlockables: []
   - assetBundleName: transporterassets
     configName: Transporter
+    weathers: []
     enemies:
     - entityName: Transporter
       spawnWeights: Vanilla:20,Custom:20
@@ -740,6 +1048,7 @@ MonoBehaviour:
     unlockables: []
   - assetBundleName: zortassets
     configName: Zort
+    weathers: []
     enemies: []
     items:
     - entityName: Violin
@@ -776,219 +1085,3 @@ MonoBehaviour:
       cost: 150
     mapObjects: []
     unlockables: []
-  - assetBundleName: shockwavebotassets
-    configName: Shockwave Gal
-    enemies: []
-    items:
-    - entityName: Shockwave Scrap Heap
-      spawnWeights: All:1
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 0
-    mapObjects: []
-    unlockables:
-    - entityName: Shockwave Gal
-      cost: 2200
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 1
-      createProgressiveConfig: 1
-  - assetBundleName: plantpotassets
-    configName: Plant Pot
-    enemies: []
-    items:
-    - entityName: Golden Tomato
-      spawnWeights: 
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    - entityName: Normal Tomato
-      spawnWeights: 
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    - entityName: Wooden Seed
-      spawnWeights: 
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects: []
-    unlockables:
-    - entityName: Plant Pot
-      cost: 250
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 0
-      createProgressiveConfig: 0
-  - assetBundleName: terminalbotassets
-    configName: Terminal Bot
-    enemies: []
-    items:
-    - entityName: Terminal Scrap Heap
-      spawnWeights: All:1
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 0
-    mapObjects: []
-    unlockables:
-    - entityName: Terminal Gal
-      cost: 2200
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 1
-      createProgressiveConfig: 1
-  - assetBundleName: cruisergalassets
-    configName: Cruiser Gal
-    enemies: []
-    items:
-    - entityName: Cruiser Scrap Heap
-      spawnWeights: All:1
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 0
-    mapObjects: []
-    unlockables:
-    - entityName: Cruiser Gal
-      cost: 2500
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 1
-      createProgressiveConfig: 1
-  - assetBundleName: fishdispenserassets
-    configName: Shrimp Dispenser
-    enemies: []
-    items:
-    - entityName: Blue Shrimp
-      spawnWeights: 
-      generateSpawnWeightsConfig: 0
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects: []
-    unlockables:
-    - entityName: Shrimp Dispenser
-      cost: 500
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 0
-      createProgressiveConfig: 0
-  - assetBundleName: seaminetinkassets
-    configName: Seamine Tink
-    enemies: []
-    items:
-    - entityName: Seamine Scrap Heap
-      spawnWeights: All:1
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 0
-    mapObjects: []
-    unlockables:
-    - entityName: Seamine Gal
-      cost: 1500
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 1
-      createProgressiveConfig: 1
-  - assetBundleName: cleanerdronegalassets
-    configName: Cleaner Drone Gal
-    enemies: []
-    items: []
-    mapObjects: []
-    unlockables:
-    - entityName: Cleaner Drone Gal
-      cost: 200
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 0
-      createProgressiveConfig: 0
-  - assetBundleName: acunitgalassets
-    configName: ACUnit Gal
-    enemies: []
-    items: []
-    mapObjects: []
-    unlockables:
-    - entityName: ACUnit Gal
-      cost: 200
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 0
-      createProgressiveConfig: 0
-  - assetBundleName: beartrapgalassets
-    configName: BearTrap Gal
-    enemies: []
-    items: []
-    mapObjects: []
-    unlockables:
-    - entityName: BearTrap Gal
-      cost: 150
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 0
-      createProgressiveConfig: 0
-  - assetBundleName: friendassets
-    configName: Friend
-    enemies: []
-    items: []
-    mapObjects: []
-    unlockables:
-    - entityName: Bald
-      cost: 69
-      isShipUpgrade: 0
-      isDecor: 1
-      isProgressive: 0
-      createProgressiveConfig: 0
-  - assetBundleName: bellcrabgalassets
-    configName: BellCrab Gal
-    enemies: []
-    items: []
-    mapObjects: []
-    unlockables:
-    - entityName: BellCrab Gal
-      cost: 150
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 0
-      createProgressiveConfig: 0
-  - assetBundleName: scp999galassets
-    configName: SCP 999 Gal
-    enemies: []
-    items:
-    - entityName: SCP999 Scrap Heap
-      spawnWeights: All:1
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 0
-    mapObjects: []
-    unlockables:
-    - entityName: SCP999 Gal
-      cost: 1700
-      isShipUpgrade: 1
-      isDecor: 0
-      isProgressive: 1
-      createProgressiveConfig: 1

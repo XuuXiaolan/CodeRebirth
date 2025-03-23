@@ -105,8 +105,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 		Crate = LoadAndRegisterAssets<CrateAssets>("crateassets");
 
-		if (Plugin.ModConfig.ConfigFloraEnabled.Value)
-			RegisterOutsideFlora();
+		// if (Plugin.ModConfig.ConfigFloraEnabled.Value)
+		//  	RegisterOutsideFlora();
 
 		Biome = LoadAndRegisterAssets<BiomeAssets>("biomeassets");
 

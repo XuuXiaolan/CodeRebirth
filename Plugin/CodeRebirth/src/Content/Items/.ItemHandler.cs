@@ -77,7 +77,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
         SnowGlobe = LoadAndRegisterAssets<SnowGlobeAssets>("snowglobeassets");
 
-        if (Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value)
+        /*if (Plugin.ModConfig.ConfigEpicAxeScrapEnabled.Value)
         {
             EpicAxe = new EpicAxeAssets("epicaxeassets");
             RegisterShopItemWithConfig(false, true, EpicAxe.EpicAxeItem, null, 0, Plugin.ModConfig.ConfigEpicAxeScrapSpawnWeights.Value, Plugin.ModConfig.ConfigEpicAxeWorth.Value);
@@ -99,6 +99,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
         {
             SpikyMace = new SpikyMaceAssets("spikymaceassets");
             RegisterShopItemWithConfig(false, true, SpikyMace.SpikyMaceItem, null, 0, Plugin.ModConfig.ConfigSpikyMaceScrapSpawnWeights.Value, Plugin.ModConfig.ConfigSpikyMaceWorth.Value);
-        }
+        }*/
     }
 }
