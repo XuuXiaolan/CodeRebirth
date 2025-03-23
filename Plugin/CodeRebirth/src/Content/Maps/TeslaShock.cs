@@ -74,8 +74,8 @@ public class TeslaShock : CodeRebirthHazard
 
     private void UpdateAudio()
     {
-        teslaIdleAudioSource.volume = Plugin.ModConfig.ConfigTeslaShockVolume.Value;
-        teslaAudioSource.volume = Plugin.ModConfig.ConfigTeslaShockVolume.Value;
+        teslaIdleAudioSource.volume = Plugin.ModConfig.ConfigBugZapperVolume.Value;
+        teslaAudioSource.volume = Plugin.ModConfig.ConfigBugZapperVolume.Value;
     }
 
     private void OnTriggerEnter(Collider other)
