@@ -42,6 +42,8 @@ GameObject:
   - component: {fileID: 589960968890740112}
   - component: {fileID: 4638084073588414561}
   - component: {fileID: 6613878427625144039}
+  - component: {fileID: 8352801785682869072}
+  - component: {fileID: 3833870985992077822}
   m_Layer: 21
   m_Name: OxydePipe
   m_TagString: Untagged
@@ -115,3 +117,45 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8352801785682869072
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6566448370868237077}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.006776, y: 6.2000017, z: 7.994463}
+  m_Center: {x: 0, y: -0.11597502, z: 4.0038233}
+--- !u!65 &3833870985992077822
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6566448370868237077}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.447323, y: 3.9757118, z: 7.154335}
+  m_Center: {x: -0.014711857, y: -4.6621447, z: 3.6169758}
