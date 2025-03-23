@@ -102,7 +102,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7202912522843969644}
-  m_Layer: 0
+  - component: {fileID: 3770163231308348332}
+  m_Layer: 8
   m_Name: GregBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,6 +126,27 @@ Transform:
   - {fileID: 3011095680269132412}
   m_Father: {fileID: 8683963610839333719}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3770163231308348332
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433562094487790688}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.9774704, y: 2.7117622, z: 4.5577726}
+  m_Center: {x: 0.34776995, y: -1.046448, z: 0.104508966}
 --- !u!1 &461074635152028228
 GameObject:
   m_ObjectHideFlags: 0
@@ -781,7 +803,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3011095680269132412}
-  m_Layer: 0
+  - component: {fileID: 7782160465457099983}
+  m_Layer: 8
   m_Name: GregHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -804,6 +827,27 @@ Transform:
   - {fileID: 4247180942410335277}
   m_Father: {fileID: 7202912522843969644}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7782160465457099983
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4963082450237829673}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.4109097, y: 5.4779263, z: 5.255464}
+  m_Center: {x: -1.1716683, y: 3.162649, z: 1.0038204}
 --- !u!1 &5696174383166057378
 GameObject:
   m_ObjectHideFlags: 0
@@ -970,6 +1014,7 @@ GameObject:
   - component: {fileID: 8665214328365687117}
   - component: {fileID: 8505805875123974748}
   - component: {fileID: 325731908114092459}
+  - component: {fileID: 5611125325463268474}
   m_Layer: 21
   m_Name: GregNotSAM
   m_TagString: Untagged
@@ -1069,6 +1114,27 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!65 &5611125325463268474
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6711806627134224891}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.6695023, y: 1.6217537, z: 4.4029016}
+  m_Center: {x: 0.092350006, y: 0.8524494, z: -0.013161182}
 --- !u!1 &7279648874118311017
 GameObject:
   m_ObjectHideFlags: 0

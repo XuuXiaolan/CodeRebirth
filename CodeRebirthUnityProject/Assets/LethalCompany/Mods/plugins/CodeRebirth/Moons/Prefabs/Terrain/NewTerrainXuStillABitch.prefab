@@ -279,7 +279,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6111400724528950262}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PAsystemPoles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -590,7 +590,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5445306368129752785}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CabinDeco
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26090,17 +26090,17 @@ PrefabInstance:
     - target: {fileID: 8175131182699620510, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -135.842
+      value: -133.699
       objectReference: {fileID: 0}
     - target: {fileID: 8175131182699620510, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -18.316
+      value: -19.644
       objectReference: {fileID: 0}
     - target: {fileID: 8175131182699620510, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 171.378
+      value: 171.747
       objectReference: {fileID: 0}
     - target: {fileID: 8832445080711238123, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
@@ -80047,6 +80047,76 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8835538510482883671}
     m_Modifications:
+    - target: {fileID: 587165608669392643, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 726272548234000099, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 967841831163779184, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275397762657136008, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1628010563854003816, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1649606193380747630, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2109719165662824353, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2498339065519492707, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522936857435396246, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223028471515992410, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615665789679140130, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6808191171492626304, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7196418373015246041, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093900758254517209, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8376600036052654355, guid: d0b0d663356a6bc4d8123e75472774ed,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -80101,6 +80171,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: JimothyCabinTiled
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184099640214094761, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
