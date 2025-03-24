@@ -476,6 +476,9 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
+  hasVariants: 0
+  usesTemperature: 0
+  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 1471202553139122210}
   smartAgentNavigator: {fileID: 4277607290375325627}
   engineAndIdleSounds:
@@ -533,6 +536,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
 --- !u!1 &528938990867653846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1619,8 +1623,8 @@ Transform:
   m_GameObject: {fileID: 4775001310044170863}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.71, z: 0.68}
-  m_LocalScale: {x: 1.2214999, y: 0.58322996, z: 4.892596}
+  m_LocalPosition: {x: 0, y: 0.71, z: -0.33}
+  m_LocalScale: {x: 1.2214999, y: 0.58322996, z: 1.2326895}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8517122089439447738}
