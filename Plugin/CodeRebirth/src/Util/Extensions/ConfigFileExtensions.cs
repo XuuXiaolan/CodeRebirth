@@ -4,7 +4,7 @@ using BepInEx.Configuration;
 
 namespace CodeRebirth.src.Util.Extensions;
 
-static class ConfigFileExtensions
+public static class ConfigFileExtensions
 {
 	internal static void ClearUnusedEntries(this ConfigFile configFile)
 	{
