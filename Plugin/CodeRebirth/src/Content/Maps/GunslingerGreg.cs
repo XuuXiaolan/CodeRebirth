@@ -27,7 +27,6 @@ public class GunslingerGreg : CodeRebirthHazard
     private List<BoundsDefiner> safeBounds = new();
     private float rechargeRocketTimer = 30f;
     private System.Random gregRandom = new();
-    private float currentAngle = 0f;
     private float fireTimer = 1f;
     private GameObject MissilePrefab = null!;
     private PlayerControllerB? lastPlayerTargetted = null;
@@ -165,12 +164,11 @@ public class GunslingerGreg : CodeRebirthHazard
         // Check if player is within detection range and if there's line of sight
         if (distanceToPlayer <= detectionRange && angle <= maxAngle)
         {
-            if (!Physics.Linecast(gregCannon.position, playerControllerB.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            if (!Physics.Linecast(gregCannon.position, playerControllerB.transform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
                 lockedOntoAPlayer = true;
                 lastPlayerTargetted = playerControllerB;
                 // DetectPlayerAudioSound.volume = Plugin.ModConfig.ConfigACUVolume.Value;
-                currentAngle = angle;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                 targetRotation.z = 0f;
                 targetRotation.x = 0f;

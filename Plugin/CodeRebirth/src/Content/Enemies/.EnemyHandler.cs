@@ -3,7 +3,6 @@ using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
-
 public class EnemyHandler : ContentHandler<EnemyHandler>
 {
     public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName)
@@ -48,11 +47,9 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     {
     }
 
-    /*public class PandoraAssets(string bundleName) : AssetBundleLoader<PandoraAssets>(bundleName)
+    public class PandoraAssets(string bundleName) : AssetBundleLoader<PandoraAssets>(bundleName)
     {
-        [LoadFromBundle("PandoraObj.asset")]
-        public EnemyType PandoraEnemyType { get; private set; } = null!;
-    }*/
+    }
 
     public class NancyAssets(string bundleName) : AssetBundleLoader<NancyAssets>(bundleName)
     {
@@ -64,7 +61,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public NancyAssets? Nancy { get; private set; }
     public DriftwoodMenaceAssets? DriftwoodMenace { get; private set; }
-    // public PandoraAssets? Pandora { get; private set; }
+    public PandoraAssets? Pandora { get; private set; }
     public MonarchAssets? Monarch { get; private set; }
     public MistressAssets? Mistress { get; private set; }
     public TransporterAssets? Transporter { get; private set; }
@@ -77,11 +74,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
-
-/*#if DEBUG
-        Pandora = new PandoraAssets("pandoraassets");
-        RegisterEnemyWithConfig("", Pandora.PandoraEnemyType, null, null, 3, 0);
-#endif*/
+        Pandora = LoadAndRegisterAssets<PandoraAssets>("pandoraassets");
 
         DriftwoodMenace = LoadAndRegisterAssets<DriftwoodMenaceAssets>("driftwoodmenaceassets");
 

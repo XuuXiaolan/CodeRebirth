@@ -596,18 +596,21 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
     protected List<SelectableLevel> GetLevelsWithTag(string tag)
     {
-        List<ExtendedContent> content = ContentTagManager.GetAllExtendedContentsByTag(tag);
-        List<SelectableLevel> levels = [];
+        return GetAllExtendedLevelsByTag(tag).Select(x => x.SelectableLevel).ToList();
+    }
 
-        foreach (ExtendedContent contentPiece in content)
+    protected List<ExtendedLevel> GetAllExtendedLevelsByTag(string tag)
+    {
+        List<ExtendedLevel> extendedLevels = [];
+        foreach (var extendedLevel in PatchedContent.ExtendedLevels)
         {
-            if (contentPiece is ExtendedLevel extendedLevel)
+            if (extendedLevel.TryGetTag(tag, out ContentTag contentTag))
             {
-                levels.Add(extendedLevel.SelectableLevel);
+                Plugin.ExtendedLogging($"Found level {extendedLevel.name} with tag: {contentTag.contentTagName}");
+                extendedLevels.Add(extendedLevel);
             }
         }
-
-        return levels;
+        return extendedLevels;
     }
 
     protected string[] MapObjectConfigParsing(string configString)

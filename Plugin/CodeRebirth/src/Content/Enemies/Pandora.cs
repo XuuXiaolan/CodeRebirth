@@ -19,7 +19,7 @@ public class Pandora : CodeRebirthEnemyAI
     private float showdownTimer = 0f;
     private bool cantLosePlayer = false;
 
-    private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
     private readonly static int RaiseArmsAnimation = Animator.StringToHash("raiseArms"); // Trigger
     private readonly static int IsDeadAnimation = Animator.StringToHash("IsDead"); // Bool
     private readonly static int RandomIdleAnimation = Animator.StringToHash("randomIdle"); // Trigger
@@ -42,16 +42,16 @@ public class Pandora : CodeRebirthEnemyAI
         base.Start();
         // Start Pandora's roaming/search routine.
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
-        // Note: Pandora is meant to spawn on snowy moons and only after 11am.
-        // This spawn check should be handled elsewhere in your spawning system.
+        SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
+        // todo: Pandora is meant to spawn on snowy moons and only after 11am.
     }
 
     public override void Update()
     {
         base.Update();
-
         if (currentBehaviourStateIndex == (int)State.ShowdownWithPlayer && targetPlayer != null)
         {
+
             showdownTimer += Time.deltaTime;
             if (targetPlayer == GameNetworkManager.Instance.localPlayerController)
             {
@@ -67,10 +67,10 @@ public class Pandora : CodeRebirthEnemyAI
                 {
                     // After too many escapes, Pandora loses interest and returns to roaming.
                     fixationAttemptCount = 0;
-                    targetPlayer = null;
                     showdownTimer = 0f;
                     CodeRebirthUtils.Instance.CloseEyeVolume.weight = 0f;
                     TemporarilyCripplePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false);
+                    targetPlayer = null;
                     SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
                     if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
                     return;
@@ -101,6 +101,16 @@ public class Pandora : CodeRebirthEnemyAI
         }
     }
 
+    public void LateUpdate()
+    {
+        if (targetPlayer == null || isEnemyDead || currentBehaviourStateIndex != (int)State.ShowdownWithPlayer) return;
+
+        Vector3 direction = targetPlayer.gameplayCamera.transform.position - transform.position;
+        direction.y = 0;
+        
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+    }
     public override void DoAIInterval()
     {
         base.DoAIInterval();
@@ -140,8 +150,9 @@ public class Pandora : CodeRebirthEnemyAI
 
         if (closestPlayer != null)
         {
+            Plugin.ExtendedLogging($"Closest player is {closestPlayer.playerUsername} at {closestDistance} meters.");
             // If within fixation range (15 meters) try to check for direct gaze.
-            if ((closestDistance <= 15f && PlayerLookingAtEnemy(false)) || closestDistance <= 2.5f)
+            if (closestDistance <= 2.5f || (closestDistance <= 15f && PlayerLookingAtEnemy(false)))
             {
                 // Direct line-of-sight within 15m triggers fixation.
                 int playerIndex = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer);
@@ -151,12 +162,14 @@ public class Pandora : CodeRebirthEnemyAI
                 // *** Animation placeholder ***
                 // Trigger "Raise Arms" animation and glowing radiance here.
                 TemporarilyCripplePlayerServerRpc(playerIndex, true);
+                smartAgentNavigator.StopSearchRoutine();
+                smartAgentNavigator.StopAgent();
                 SwitchToBehaviourServerRpc((int)State.ShowdownWithPlayer);
                 Plugin.ExtendedLogging($"Fixated on {closestPlayer.playerUsername}!");
                 return;
             }
             smartAgentNavigator.StopSearchRoutine();
-            smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position); 
+            smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position);
         }
 
         // Countdown for teleport if no player is within detection range.
@@ -229,7 +242,7 @@ public class Pandora : CodeRebirthEnemyAI
         Plugin.ExtendedLogging($"Vector Dot: {dot}");
         if (dot <= 0.45f) return false;
         if (triggerWhilstLookingAtGeneralDirection) return true;
-        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.position, eye.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.position, eye.position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             Plugin.ExtendedLogging($"Linecast hit {hit.collider.name}");
             return false;

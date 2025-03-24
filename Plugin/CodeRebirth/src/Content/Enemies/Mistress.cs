@@ -83,8 +83,6 @@ public class Mistress : CodeRebirthEnemyAI
         
         Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime); // todo: make the mistress head rotate up and down
-
-        if (currentBehaviourStateIndex != (int)State.Attack) return;
     }
 
     #region State Machine

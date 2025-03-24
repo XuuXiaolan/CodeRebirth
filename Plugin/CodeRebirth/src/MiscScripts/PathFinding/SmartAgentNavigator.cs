@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
 using PathfindingLib.Utilities;
 using Unity.Netcode;
@@ -71,6 +70,13 @@ public class SmartAgentNavigator : NetworkBehaviour
         exitPoints.Clear();
         elevatorScript = null;
         mainEntrance = null;
+    }
+
+    public void StopAgent()
+    {
+        agent.ResetPath();
+        agent.velocity = Vector3.zero;
+        agent.isStopped = true;
     }
 
     public bool DoPathingToDestination(Vector3 destination)
