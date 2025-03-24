@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using BepInEx;
-using BepInEx.Configuration;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Maps;
@@ -12,10 +10,13 @@ using CodeRebirth.src.Content.Weathers;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util.AssetLoading;
+using LethalLevelLoader;
 using LethalLib.Extras;
 using LethalLib.Modules;
 using UnityEngine;
 using WeatherRegistry;
+using EnemyData = CodeRebirth.src.Util.AssetLoading.EnemyData;
+using WeatherManager = WeatherRegistry.WeatherManager;
 
 namespace CodeRebirth.src.Util;
 
@@ -27,15 +28,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
     {
 		Instance = (T)this;
 	}
-	
-    [Obsolete("Use LoadAndTryRegisterEnemy instead.")]
-    protected void RegisterEnemyWithConfig(string configMoonRarity, EnemyType enemy, TerminalNode? terminalNode, TerminalKeyword? terminalKeyword, float powerLevel, int spawnCount)
-    {
-        enemy.MaxCount = spawnCount;
-        enemy.PowerLevel = powerLevel;
-        (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
-        Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, terminalNode, terminalKeyword);
-    }
 
     protected void LoadEnemyConfigs(string enemyName, string keyName, string defaultSpawnWeight, float defaultPowerLevel, int defaultMaxSpawnCount)
     {
@@ -602,10 +594,25 @@ public class ContentHandler<T> where T: ContentHandler<T>
         };
     }
 
+    protected List<SelectableLevel> GetLevelsWithTag(string tag)
+    {
+        List<ExtendedContent> content = ContentTagManager.GetAllExtendedContentsByTag(tag);
+        List<SelectableLevel> levels = [];
+
+        foreach (ExtendedContent contentPiece in content)
+        {
+            if (contentPiece is ExtendedLevel extendedLevel)
+            {
+                levels.Add(extendedLevel.SelectableLevel);
+            }
+        }
+
+        return levels;
+    }
+
     protected string[] MapObjectConfigParsing(string configString)
     {
         var levelTypesList = new List<string>();
-
         foreach (string entry in configString.Split(',').Select(s => s.Trim()))
         {
             string name = entry;
@@ -648,9 +655,17 @@ public class ContentHandler<T> where T: ContentHandler<T>
             string name = entryParts[0].ToLowerInvariant();
 
             if (!int.TryParse(entryParts[1], out int spawnrate)) continue;
+
             if (name == "custom")
             {
                 name = "modded";
+            }
+
+            foreach (SelectableLevel level in GetLevelsWithTag(name))
+            {
+                Plugin.ExtendedLogging($"Found level {level} with tag {name}");
+                string levelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
+                spawnRateByCustomLevelType[levelName] = spawnrate;
             }
 
             if (Enum.TryParse(name, true, out Levels.LevelTypes levelType))
@@ -689,6 +704,13 @@ public class ContentHandler<T> where T: ContentHandler<T>
             if (name == "custom")
             {
                 name = "modded";
+            }
+
+            foreach (SelectableLevel level in GetLevelsWithTag(name))
+            {
+                Plugin.ExtendedLogging($"Found level {level} with tag {name}");
+                string levelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
+                spawnRateByCustomLevelType[levelName] = entryParts[1];
             }
 
             if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))

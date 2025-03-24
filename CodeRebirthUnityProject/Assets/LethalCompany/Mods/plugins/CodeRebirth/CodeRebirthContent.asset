@@ -39,10 +39,10 @@ MonoBehaviour:
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.16 ; 0.22,0.34
+        ; 0.33,0.66 ; 0.44,1.32 ; 0.56,1.67 ; 0.67,1.73 ; 0.78,1.82 ; 0.89,2.12 ;
+        1.00,2.50 | Custom - 0.00,0.00 ; 0.11,0.16 ; 0.22,0.34 ; 0.33,0.66 ; 0.44,1.32
+        ; 0.56,1.67 ; 0.67,1.73 ; 0.78,1.82 ; 0.89,2.12 ; 1.00,2.50
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
   - assetBundleName: beartrapassets
@@ -54,62 +54,62 @@ MonoBehaviour:
     - entityName: Gravel Bear Trap
       isInsideHazard: 1
       createInsideHazardConfig: 1
-      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36
+        ; 0.33,1.60 ; 0.44,1.85 ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36 ; 0.33,1.60 ; 0.44,1.85
+        ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createInsideCurveSpawnWeightsConfig: 1
       isOutsideHazard: 1
       createOutsideHazardConfig: 1
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36
+        ; 0.33,1.60 ; 0.44,1.85 ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36 ; 0.33,1.60 ; 0.44,1.85
+        ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createOutsideCurveSpawnWeightsConfig: 1
     - entityName: Boom Trap
       isInsideHazard: 1
       createInsideHazardConfig: 1
-      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36
+        ; 0.33,1.60 ; 0.44,1.85 ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36 ; 0.33,1.60 ; 0.44,1.85
+        ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createInsideCurveSpawnWeightsConfig: 1
       isOutsideHazard: 1
       createOutsideHazardConfig: 1
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36
+        ; 0.33,1.60 ; 0.44,1.85 ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36 ; 0.33,1.60 ; 0.44,1.85
+        ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createOutsideCurveSpawnWeightsConfig: 1
     - entityName: Snow Bear Trap
       isInsideHazard: 1
       createInsideHazardConfig: 1
-      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36
+        ; 0.33,1.60 ; 0.44,1.85 ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36 ; 0.33,1.60 ; 0.44,1.85
+        ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createInsideCurveSpawnWeightsConfig: 1
       isOutsideHazard: 1
       createOutsideHazardConfig: 1
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36
+        ; 0.33,1.60 ; 0.44,1.85 ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36 ; 0.33,1.60 ; 0.44,1.85
+        ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createOutsideCurveSpawnWeightsConfig: 1
     - entityName: Grass Bear Trap
       isInsideHazard: 1
       createInsideHazardConfig: 1
-      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36
+        ; 0.33,1.60 ; 0.44,1.85 ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36 ; 0.33,1.60 ; 0.44,1.85
+        ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createInsideCurveSpawnWeightsConfig: 1
       isOutsideHazard: 1
       createOutsideHazardConfig: 1
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36
+        ; 0.33,1.60 ; 0.44,1.85 ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.89 ; 0.22,1.36 ; 0.33,1.60 ; 0.44,1.85
+        ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
   - assetBundleName: beartrapgalassets
@@ -225,10 +225,10 @@ MonoBehaviour:
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.54 ; 0.22,1.08
+        ; 0.33,1.55 ; 0.44,1.82 ; 0.56,1.92 ; 0.67,2.01 ; 0.78,2.05 ; 0.89,2.56 ;
+        1.00,3.80 | Custom - 0.00,0.00 ; 0.11,0.54 ; 0.22,1.08 ; 0.33,1.55 ; 0.44,1.82
+        ; 0.56,1.92 ; 0.67,2.01 ; 0.78,2.05 ; 0.89,2.56 ; 1.00,3.80
       createOutsideCurveSpawnWeightsConfig: 1
     - entityName: Mimic Metal Crate
       isInsideHazard: 0
@@ -237,10 +237,10 @@ MonoBehaviour:
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.32 ; 0.22,0.66
+        ; 0.33,0.94 ; 0.44,1.12 ; 0.56,1.15 ; 0.67,1.17 ; 0.78,1.34 ; 0.89,1.66 ;
+        1.00,2.00 | Custom - 0.00,0.00 ; 0.11,0.32 ; 0.22,0.66 ; 0.33,0.94 ; 0.44,1.12
+        ; 0.56,1.15 ; 0.67,1.17 ; 0.78,1.34 ; 0.89,1.66 ; 1.00,2.00
       createOutsideCurveSpawnWeightsConfig: 1
     - entityName: Normal Wooden Crate
       isInsideHazard: 0
@@ -249,10 +249,10 @@ MonoBehaviour:
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.54 ; 0.22,1.08
+        ; 0.33,1.55 ; 0.44,1.82 ; 0.56,1.92 ; 0.67,2.01 ; 0.78,2.05 ; 0.89,2.56 ;
+        1.00,3.80 | Custom - 0.00,0.00 ; 0.11,0.54 ; 0.22,1.08 ; 0.33,1.55 ; 0.44,1.82
+        ; 0.56,1.92 ; 0.67,2.01 ; 0.78,2.05 ; 0.89,2.56 ; 1.00,3.80
       createOutsideCurveSpawnWeightsConfig: 1
     - entityName: Mimic Wooden Crate
       isInsideHazard: 0
@@ -261,11 +261,11 @@ MonoBehaviour:
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
-      createOutsideCurveSpawnWeightsConfig: 0
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.32 ; 0.22,0.66
+        ; 0.33,0.94 ; 0.44,1.12 ; 0.56,1.15 ; 0.67,1.17 ; 0.78,1.34 ; 0.89,1.66 ;
+        1.00,2.00 | Custom - 0.00,0.00 ; 0.11,0.32 ; 0.22,0.66 ; 0.33,0.94 ; 0.44,1.12
+        ; 0.56,1.15 ; 0.67,1.17 ; 0.78,1.34 ; 0.89,1.66 ; 1.00,2.00
+      createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
   - assetBundleName: cruisergalassets
     configName: Cruiser
@@ -293,7 +293,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Driftwood Menace
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:5,Custom:10,Experimentation:3,Assurance:2,Vow:40,Offense:3,March:30,Adamance:35,Rend:5,Dine:5,Titan:1,Artifice:20,Embrion:5
       powerLevel: 2
       maxSpawnCount: 2
     items: []
@@ -304,7 +304,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Duck
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:5,Custom:10,Experimentation:15,Assurance:10,Vow:5,Offense:10,March:5,Adamance:9,Rend:25,Dine:35,Titan:5,Artifice:5,Embrion:50
       powerLevel: 2
       maxSpawnCount: 2
     items:
@@ -454,7 +454,10 @@ MonoBehaviour:
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: 
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.05 ; 0.22,0.08
+        ; 0.33,0.09 ; 0.44,0.12 ; 0.56,0.18 ; 0.67,0.28 ; 0.78,0.46 ; 0.89,0.77 ;
+        1.00,1.20 | Custom - 0.00,0.00 ; 0.11,0.05 ; 0.22,0.08 ; 0.33,0.09 ; 0.44,0.12
+        ; 0.56,0.18 ; 0.67,0.28 ; 0.78,0.46 ; 0.89,0.77 ; 1.00,1.20
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
   - assetBundleName: hoverboardassets
@@ -496,7 +499,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Janitor
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: ExperimentationLevel:20,AssuranceLevel:20,VowLevel:10,OffenseLevel:20,MarchLevel:10,AdamanceLevel:5,RendLevel:10,DineLevel:10,TitanLevel:60,ArtificeLevel:80,EmbrionLevel:90,Modded:20
       powerLevel: 1
       maxSpawnCount: 3
     items: []
@@ -519,7 +522,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: ManorLord
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: 'ExperimentationLevel:2,AssuranceLevel:5,VowLevel:5,OffenseLevel:10,MarchLevel:10,AdamanceLevel:10,RendLevel:50,DineLevel:80,TitanLevel:20,ArtificeLevel:60,EmbrionLevel:10,Modded:10 '
       powerLevel: 2
       maxSpawnCount: 3
     items:
@@ -761,7 +764,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Mistress
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:5,Custom:15,Experimentation:2,Assurance:2,Vow:20,Offense:5,March:15,Adamance:5,Rend:15,Dine:15,Titan:1,Artifice:20,Embrion:5
       powerLevel: 2
       maxSpawnCount: 1
     items:
@@ -784,7 +787,7 @@ MonoBehaviour:
       powerLevel: 3
       maxSpawnCount: 3
     - entityName: Cutiefly
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:10,Custom:10,Experimentation:3,Assurance:2,Vow:40,Offense:3,March:30,Adamance:35,Rend:5,Dine:5,Titan:1,Artifice:5,Embrion:5
       powerLevel: 0.5
       maxSpawnCount: 6
     items: []
@@ -795,7 +798,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Nancy
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:10,Custom:10,Experimentation:20,Assurance:20,Vow:10,Offense:40,March:5,Adamance:35,Rend:15,Dine:35,Titan:15,Artifice:20,Embrion:45
       powerLevel: 1
       maxSpawnCount: 1
     items: []
@@ -843,7 +846,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Redwood Titan
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: ExperimentationLevel:1,AssuranceLevel:10,VowLevel:90,OffenseLevel:20,MarchLevel:90,AdamanceLevel:60,RendLevel:5,DineLevel:10,TitanLevel:2,ArtificeLevel:30,EmbrionLevel:10,Modded:50
       powerLevel: 1.5
       maxSpawnCount: 1
     items: []
@@ -949,7 +952,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: SnailCat
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:15,Custom:15,Experimentation:5,Assurance:5,Vow:30,Offense:5,March:30,Adamance:20,Rend:5,Dine:5,Titan:1,Artifice:15,Embrion:2
       powerLevel: 0.5
       maxSpawnCount: 6
     items:
@@ -969,7 +972,7 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: Snow Globe
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:15,Custom:15,Experimentation:10,Assurance:20,Vow:15,Offense:30,March:20,Adamance:20,Rend:40,Dine:45,Titan:30,Artifice:20,Embrion:1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -1040,7 +1043,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Transporter
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:25,Custom:30,Experimentation:5,Assurance:10,Vow:20,Offense:5,March:20,Adamance:10,Rend:25,Dine:25,Titan:30,Artifice:50,Embrion:50
       powerLevel: 1
       maxSpawnCount: 3
     items: []
