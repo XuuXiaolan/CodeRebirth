@@ -1,7 +1,6 @@
 using System;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;

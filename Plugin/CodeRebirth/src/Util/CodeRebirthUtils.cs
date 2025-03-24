@@ -20,6 +20,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public Volume FireyVolume = null!;
     public Volume SmokyVolume = null!;
     public Volume CloseEyeVolume = null!;
+    public Volume StaticCloseEyeVolume = null!;
     public AnimationClip ModifiedShipLandAnimation = null!;
     public AnimationClip ModifiedDangerousShipLeaveAnimation = null!;
     public AnimationClip ModifiedShipLeaveAnimation = null!;
@@ -45,7 +46,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public ShipAnimator shipAnimator = null!;
     [HideInInspector] public StartMatchLever startMatchLever = null!;
     [HideInInspector] public static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
-    private System.Random CRRandom = null;
+    private System.Random? CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
     private void Awake()

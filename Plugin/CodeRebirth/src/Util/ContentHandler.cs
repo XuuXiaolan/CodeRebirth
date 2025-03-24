@@ -408,15 +408,20 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
             curvesByLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
-            if (entry.Key.ToString().ToLowerInvariant() == "vanilla")
+            if (entry.Key == Levels.LevelTypes.Vanilla)
             {
                 vanillaCurveExists = true;
                 vanillaAnimationCurve = curvesByLevelType[entry.Key];
             }
-            else if (entry.Key.ToString().ToLowerInvariant() == "modded" || entry.Key.ToString().ToLowerInvariant() == "custom")
+            else if (entry.Key == Levels.LevelTypes.Modded)
             {
                 moddedCurveExists = true;
-                moddedAnimationCurve = curvesByLevelType[Levels.LevelTypes.Modded];
+                moddedAnimationCurve = curvesByLevelType[entry.Key];
+            }
+            else if (entry.Key == Levels.LevelTypes.All)
+            {
+                allCurveExists = true;
+                allAnimationCurve = curvesByLevelType[entry.Key];
             }
         }
         foreach (var entry in spawnRateByCustomLevelType)
@@ -440,17 +445,23 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 {
                     isVanilla = true;
                 }
+
                 if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
                 {
+                    return curve;
+                }
+                else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
+                {
+                    return curve;
+                }
+                else if (CurveDictAndLevelHaveTag(curvesByCustomLevelType, level, out string tagName) && curvesByCustomLevelType.TryGetValue(tagName, out curve))
+                {
+                    Plugin.ExtendedLogging($"registering a mapobject through a tag, nice.");
                     return curve;
                 }
                 else if (isVanilla && vanillaCurveExists)
                 {
                     return vanillaAnimationCurve;
-                }
-                else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
-                {
-                    return curve;
                 }
                 else if (moddedCurveExists)
                 {
@@ -463,6 +474,25 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
                 return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]); // Default case if no curve matches
             });
+    }
+
+    protected bool CurveDictAndLevelHaveTag(Dictionary<string, AnimationCurve> curvesByCustomLevel, SelectableLevel level, out string tagName)
+    {
+        tagName = string.Empty;
+        ExtendedLevel? extendedLevel = LethalLevelLoader.PatchedContent.CustomExtendedLevels.Where(x => x.SelectableLevel == level).FirstOrDefault() ?? LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Where(x => x.SelectableLevel == level).FirstOrDefault();
+        if (extendedLevel == null) return false;
+        foreach (var curve in curvesByCustomLevel)
+        {
+            foreach (var tag in extendedLevel.ContentTags)
+            {
+                if (tag.contentTagName == curve.Key)
+                {
+                    tagName = curve.Key;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     protected void RegisterInsideMapObjectWithConfig(GameObject prefab, string configString)
@@ -594,25 +624,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
         };
     }
 
-    protected List<SelectableLevel> GetLevelsWithTag(string tag)
-    {
-        return GetAllExtendedLevelsByTag(tag).Select(x => x.SelectableLevel).ToList();
-    }
-
-    protected List<ExtendedLevel> GetAllExtendedLevelsByTag(string tag)
-    {
-        List<ExtendedLevel> extendedLevels = [];
-        foreach (var extendedLevel in PatchedContent.ExtendedLevels)
-        {
-            if (extendedLevel.TryGetTag(tag, out ContentTag contentTag))
-            {
-                Plugin.ExtendedLogging($"Found level {extendedLevel.name} with tag: {contentTag.contentTagName}");
-                extendedLevels.Add(extendedLevel);
-            }
-        }
-        return extendedLevels;
-    }
-
     protected string[] MapObjectConfigParsing(string configString)
     {
         var levelTypesList = new List<string>();
@@ -664,13 +675,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 name = "modded";
             }
 
-            foreach (SelectableLevel level in GetLevelsWithTag(name))
-            {
-                Plugin.ExtendedLogging($"Found level {level} with tag {name}");
-                string levelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
-                spawnRateByCustomLevelType[levelName] = spawnrate;
-            }
-
             if (Enum.TryParse(name, true, out Levels.LevelTypes levelType))
             {
                 spawnRateByLevelType[levelType] = spawnrate;
@@ -685,6 +689,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 else
                 {
+                    Plugin.ExtendedLogging($"Failed to parse level type: {name}");
                     spawnRateByCustomLevelType[name] = spawnrate;
                 }
             }
@@ -707,13 +712,6 @@ public class ContentHandler<T> where T: ContentHandler<T>
             if (name == "custom")
             {
                 name = "modded";
-            }
-
-            foreach (SelectableLevel level in GetLevelsWithTag(name))
-            {
-                Plugin.ExtendedLogging($"Found level {level} with tag {name}");
-                string levelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
-                spawnRateByCustomLevelType[levelName] = entryParts[1];
             }
 
             if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))

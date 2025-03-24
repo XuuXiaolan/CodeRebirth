@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
-  m_Name: CloseEyes
+  m_Name: StaticCloseEyes
   m_EditorClassIdentifier: 
   components:
   - {fileID: 2394316741395502362}
@@ -85,11 +85,11 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: {r: 0.4339623, g: 0.209323, b: 0, a: 1}
   dirtTexture:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {fileID: 2800000, guid: c442a7670b9229045a6d28b3ce1e1020, type: 3}
   dirtIntensity:
-    m_OverrideState: 0
-    m_Value: 44.83
+    m_OverrideState: 1
+    m_Value: 40.3
   anamorphic:
     m_OverrideState: 0
     m_Value: 1

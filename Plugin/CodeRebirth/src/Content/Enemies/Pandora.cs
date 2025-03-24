@@ -55,7 +55,7 @@ public class Pandora : CodeRebirthEnemyAI
             showdownTimer += Time.deltaTime;
             if (targetPlayer == GameNetworkManager.Instance.localPlayerController)
             {
-                CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(showdownTimer / 6f);
+                CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = Mathf.Clamp01(showdownTimer / 6f * 0.3f);
             }
             Plugin.ExtendedLogging($"Showdown timer: {showdownTimer}");
 
@@ -68,7 +68,7 @@ public class Pandora : CodeRebirthEnemyAI
                     // After too many escapes, Pandora loses interest and returns to roaming.
                     fixationAttemptCount = 0;
                     showdownTimer = 0f;
-                    CodeRebirthUtils.Instance.CloseEyeVolume.weight = 0f;
+                    CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = 0f;
                     TemporarilyCripplePlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false);
                     targetPlayer = null;
                     SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
@@ -93,7 +93,7 @@ public class Pandora : CodeRebirthEnemyAI
                 if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
                 if (targetPlayer.IsOwner)
                 {
-                    CodeRebirthUtils.Instance.CloseEyeVolume.weight = 0f;
+                    CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = 0f;
                     targetPlayer.KillPlayer(targetPlayer.velocityLastFrame, true, CauseOfDeath.Unknown, 0, default);
                 }
                 targetPlayer = null;
@@ -312,7 +312,7 @@ public class Pandora : CodeRebirthEnemyAI
             playerToCripple.inSpecialInteractAnimation = true;
             playerToCripple.shockingTarget = eye;
             playerToCripple.inShockingMinigame = true;
-            playerToCripple.movementSpeed /= 3;
+            // playerToCripple.movementSpeed /= 3;
         }
         else
         {
@@ -320,25 +320,28 @@ public class Pandora : CodeRebirthEnemyAI
             {
                 creatureVoice.PlayOneShot(LoseSightSound, 0.75f);
             }*/
-            skinnedMeshRenderers[0].enabled = false;
+            foreach (var renderer in skinnedMeshRenderers)
+            {
+                renderer.enabled = false;
+            }
             playerToCripple.inAnimationWithEnemy = null;
             inSpecialAnimationWithPlayer = null;
             playerToCripple.inSpecialInteractAnimation = false;
             playerToCripple.shockingTarget = null;
             playerToCripple.inShockingMinigame = false;
-            playerToCripple.movementSpeed *= 3;
+            // playerToCripple.movementSpeed *= 3;
             StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
         }
-        playerToCripple.disableLookInput = cripple;
+        playerToCripple.disableMoveInput = cripple;
     }
 
     private IEnumerator ResetVolumeWeightTo0(PlayerControllerB targetPlayer)
     {
         if (targetPlayer != GameNetworkManager.Instance.localPlayerController) yield break;
-        while (CodeRebirthUtils.Instance.CloseEyeVolume.weight > 0f)
+        while (CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight > 0f)
         {
             yield return null;
-            CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 0f, Time.deltaTime);
+            CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = Mathf.MoveTowards(CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight, 0f, Time.deltaTime);
         }
     }
 
