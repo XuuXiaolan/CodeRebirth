@@ -45,7 +45,7 @@ public class HurricaneWeather : CodeRebirthWeathers
 
 	private void SpawnTornado(Vector3 target)
 	{
-		var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, WeatherHandler.Instance.Tornado.HurricaneObj);
-		spawnedTornados.Add(((GameObject)tornado).GetComponent<Tornados>());
+		// var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, WeatherHandler.Instance.Tornado.HurricaneObj);
+		// spawnedTornados.Add(((GameObject)tornado).GetComponent<Tornados>());
 	}
 }

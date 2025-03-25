@@ -176,12 +176,16 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
             }
 
-            Weather weather = CRWeatherDefinition.Weather;
-            weather.Config.DefaultWeight = new IntegerConfigHandler(weatherData.spawnWeight);
-            weather.Config.ScrapValueMultiplier = new FloatConfigHandler(weatherData.scrapValueMultiplier);
-            weather.Config.ScrapAmountMultiplier = new FloatConfigHandler(weatherData.scrapMultiplier);
-            weather.Config.FilteringOption = new BooleanConfigHandler(weatherData.isExclude);
-            weather.Config.LevelFilters = new LevelListConfigHandler(weatherData.excludeOrIncludeList);
+            Weather weather = new ($"{CRWeatherDefinition.Weather.Name}", CRWeatherDefinition.Weather.Effect);
+            weather.Config = new()
+            {
+                DefaultWeight = new(weatherData.spawnWeight),
+                ScrapValueMultiplier = new(weatherData.scrapValueMultiplier),
+                ScrapAmountMultiplier = new(weatherData.scrapMultiplier),
+                FilteringOption = new(weatherData.isExclude),
+                LevelFilters = new(weatherData.excludeOrIncludeList),
+            };
+
             WeatherManager.RegisterWeather(weather);
             definitionIndex++;
         }
@@ -367,11 +371,11 @@ public class ContentHandler<T> where T: ContentHandler<T>
     {
         if (inside)
         {
-            RegisterInsideMapObjectWithConfig(prefab, outsideConfigString);
+            RegisterInsideMapObjectWithConfig(prefab, insideConfigString);
         }
         if (outside)
         {
-            RegisterOutsideMapObjectWithConfig(prefab, insideConfigString);
+            RegisterOutsideMapObjectWithConfig(prefab, outsideConfigString);
         }
         Plugin.ExtendedLogging($"Registered map object: {prefab.name} to {CRObjectType}");
         MapObjectHandler.Instance.prefabMapping[CRObjectType] = prefab;
@@ -437,7 +441,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
             level =>
             {
                 if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
-                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}");
+                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
                 string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
                 Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
                 bool isVanilla = false;
@@ -454,7 +458,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 {
                     return curve;
                 }
-                else if (CurveDictAndLevelHaveTag(curvesByCustomLevelType, level, out string tagName) && curvesByCustomLevelType.TryGetValue(tagName, out curve))
+                else if (TryGetCurveDictAndLevelTag(curvesByCustomLevelType, level, out string tagName) && curvesByCustomLevelType.TryGetValue(tagName, out curve))
                 {
                     Plugin.ExtendedLogging($"registering a mapobject through a tag, nice.");
                     return curve;
@@ -476,7 +480,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
             });
     }
 
-    protected bool CurveDictAndLevelHaveTag(Dictionary<string, AnimationCurve> curvesByCustomLevel, SelectableLevel level, out string tagName)
+    protected bool TryGetCurveDictAndLevelTag(Dictionary<string, AnimationCurve> curvesByCustomLevel, SelectableLevel level, out string tagName)
     {
         tagName = string.Empty;
         ExtendedLevel? extendedLevel = LethalLevelLoader.PatchedContent.CustomExtendedLevels.Where(x => x.SelectableLevel == level).FirstOrDefault() ?? LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Where(x => x.SelectableLevel == level).FirstOrDefault();
@@ -485,7 +489,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             foreach (var tag in extendedLevel.ContentTags)
             {
-                if (tag.contentTagName == curve.Key)
+                if (tag.contentTagName.ToLowerInvariant() == curve.Key)
                 {
                     tagName = curve.Key;
                     return true;
@@ -525,15 +529,20 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {entry.Key} with curve {entry.Value}");
             curvesByLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
-            if (entry.Key.ToString().ToLowerInvariant() == "vanilla")
+            if (entry.Key == Levels.LevelTypes.Vanilla)
             {
                 vanillaCurveExists = true;
                 vanillaAnimationCurve = curvesByLevelType[entry.Key];
             }
-            else if (entry.Key.ToString().ToLowerInvariant() == "modded" || entry.Key.ToString().ToLowerInvariant() == "custom")
+            else if (entry.Key == Levels.LevelTypes.Modded)
             {
                 moddedCurveExists = true;
-                moddedAnimationCurve = curvesByLevelType[Levels.LevelTypes.Modded];
+                moddedAnimationCurve = curvesByLevelType[entry.Key];
+            }
+            else if (entry.Key == Levels.LevelTypes.All)
+            {
+                allCurveExists = true;
+                allAnimationCurve = curvesByLevelType[entry.Key];
             }
         }
         foreach (var entry in spawnRateByCustomLevelType)
@@ -549,7 +558,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
             level =>
             {
                 if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
-                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}");
+                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
                 string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
                 Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
                 bool isVanilla = false;
@@ -559,42 +568,27 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
                 {
-                    /*foreach (Keyframe keyframe in curve.keys)
-                    {
-                        Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }*/
+                    return curve;
+                }
+                else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
+                {
+                    return curve;
+                }
+                else if (TryGetCurveDictAndLevelTag(curvesByCustomLevelType, level, out string tagName) && curvesByCustomLevelType.TryGetValue(tagName, out curve))
+                {
+                    Plugin.ExtendedLogging($"registering a mapobject through a tag, nice.");
                     return curve;
                 }
                 else if (isVanilla && vanillaCurveExists)
                 {
-                    /*foreach (Keyframe keyframe in vanillaAnimationCurve.keys)
-                    {
-                        Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }*/
                     return vanillaAnimationCurve;
-                }
-                else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
-                {
-                    /*foreach (Keyframe keyframe in curve.keys)
-                    {
-                        Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }*/
-                    return curve;
                 }
                 else if (moddedCurveExists)
                 {
-                    /*foreach (Keyframe keyframe in moddedAnimationCurve.keys)
-                    {
-                        Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }*/
                     return moddedAnimationCurve;
                 }
                 else if (allCurveExists)
                 {
-                    /*foreach (Keyframe keyframe in allAnimationCurve.keys)
-                    {
-                        Plugin.ExtendedLogging($"({keyframe.time}, {keyframe.value})");
-                    }*/
                     return allAnimationCurve;
                 }
                 Plugin.ExtendedLogging($"Failed to find curve for level: {level}");

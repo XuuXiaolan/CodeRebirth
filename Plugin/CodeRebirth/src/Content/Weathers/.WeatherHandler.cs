@@ -24,23 +24,6 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
 
     public class TornadoAssets(string bundleName) : AssetBundleLoader<TornadoAssets>(bundleName)
     {
-        [LoadFromBundle("HurricaneObj.asset")]
-        public EnemyType HurricaneObj { get; private set; } = null!;
-
-        [LoadFromBundle("HurricaneContainer.prefab")]
-        public GameObject HurricaneEffectPrefab { get; private set; } = null!;
-
-        [LoadFromBundle("HurricaneWeather.prefab")]
-        public GameObject HurricanePermanentEffectPrefab { get; private set; } = null!;
-
-        [LoadFromBundle("FireStormObj.asset")]
-        public EnemyType FireStormObj { get; private set; } = null!;
-
-        [LoadFromBundle("FireStormContainer.prefab")]
-        public GameObject FireStormEffectPrefab { get; private set; } = null!;
-
-        [LoadFromBundle("FireStormWeather.prefab")]
-        public GameObject FireStormPermanentEffectPrefab { get; private set; } = null!;
     }
 
     public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName)

@@ -44,8 +44,8 @@ public class FireStormWeather : CodeRebirthWeathers
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, WeatherHandler.Instance.Tornado.FireStormObj);
-			spawnedTornados.Add(((GameObject)tornado).GetComponent<Tornados>());
+			// var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, WeatherHandler.Instance.Tornado.FireStormObj);
+			// spawnedTornados.Add(((GameObject)tornado).GetComponent<Tornados>());
 		}
 	}
 }
