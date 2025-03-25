@@ -730,6 +730,7 @@ MonoBehaviour:
       scrapMultiplier: 1.2
       scrapValueMultiplier: 0.9
       isExclude: 1
+      createExcludeConfig: 1
       excludeOrIncludeList: galetry;gordion
     enemies: []
     items:
@@ -799,6 +800,31 @@ MonoBehaviour:
     enemies:
     - entityName: Nancy
       spawnWeights: Vanilla:10,Custom:10,Experimentation:20,Assurance:20,Vow:10,Offense:40,March:5,Adamance:35,Rend:15,Dine:35,Titan:15,Artifice:20,Embrion:45
+      powerLevel: 1
+      maxSpawnCount: 1
+    items: []
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: nightshiftassets
+    configName: Night Shift
+    weathers:
+    - entityName: Night Shift
+      spawnWeight: 30
+      scrapMultiplier: 0
+      scrapValueMultiplier: 0
+      isExclude: 0
+      createExcludeConfig: 1
+      excludeOrIncludeList: oxyde
+    enemies: []
+    items: []
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: pandoraassets
+    configName: Pandora
+    weathers: []
+    enemies:
+    - entityName: Pandora
+      spawnWeights: 
       powerLevel: 1
       maxSpawnCount: 1
     items: []
@@ -1029,6 +1055,7 @@ MonoBehaviour:
       scrapMultiplier: 1.2
       scrapValueMultiplier: 0.85
       isExclude: 1
+      createExcludeConfig: 1
       excludeOrIncludeList: galetry;gordion
     enemies:
     - entityName: Tornado
@@ -1086,16 +1113,5 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 1
       cost: 150
-    mapObjects: []
-    unlockables: []
-  - assetBundleName: pandoraassets
-    configName: Pandora
-    weathers: []
-    enemies:
-    - entityName: Pandora
-      spawnWeights: 
-      powerLevel: 1
-      maxSpawnCount: 1
-    items: []
     mapObjects: []
     unlockables: []

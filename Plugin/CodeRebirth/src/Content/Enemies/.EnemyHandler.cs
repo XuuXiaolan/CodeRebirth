@@ -74,8 +74,9 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
+#if DEBUG
         Pandora = LoadAndRegisterAssets<PandoraAssets>("pandoraassets");
-
+#endif
         DriftwoodMenace = LoadAndRegisterAssets<DriftwoodMenaceAssets>("driftwoodmenaceassets");
 
         Nancy = LoadAndRegisterAssets<NancyAssets>("nancyassets");

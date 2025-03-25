@@ -26,12 +26,17 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     {
     }
 
+    public class NightShiftAssets(string bundleName) : AssetBundleLoader<NightShiftAssets>(bundleName)
+    {
+    }
+
     public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName)
     { 
         [LoadFromBundle("GodRayWeather.prefab")]
         public GameObject GodRayPermanentEffectPrefab { get; private set; } = null!;
     }
 
+    public NightShiftAssets? NightShift { get; private set; } = null;
     public MeteoriteAssets? Meteorite { get; private set; } = null;
     public TornadoAssets? Tornado { get; private set; } = null;
     public GodRaysAssets? GodRays { get; private set; } = null;
@@ -40,5 +45,6 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     {
         Meteorite = LoadAndRegisterAssets<MeteoriteAssets>("meteorshowerassets");
         Tornado = LoadAndRegisterAssets<TornadoAssets>("tornadoassets");
+        NightShift = LoadAndRegisterAssets<NightShiftAssets>("nightshiftassets");
     }
 }

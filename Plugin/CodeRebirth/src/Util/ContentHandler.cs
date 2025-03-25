@@ -182,7 +182,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 DefaultWeight = new(weatherData.spawnWeight),
                 ScrapValueMultiplier = new(weatherData.scrapValueMultiplier),
                 ScrapAmountMultiplier = new(weatherData.scrapMultiplier),
-                FilteringOption = new(weatherData.isExclude),
+                FilteringOption = new(!weatherData.isExclude, weatherData.createExcludeConfig),
                 LevelFilters = new(weatherData.excludeOrIncludeList),
             };
 
