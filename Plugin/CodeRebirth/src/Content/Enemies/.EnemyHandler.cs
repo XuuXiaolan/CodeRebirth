@@ -59,6 +59,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     {
     }
 
+    public class CuteaAssets(string bundleName) : AssetBundleLoader<CuteaAssets>(bundleName)
+    {
+    }
+
+    public CuteaAssets? Cutea { get; private set; }
     public NancyAssets? Nancy { get; private set; }
     public DriftwoodMenaceAssets? DriftwoodMenace { get; private set; }
     public PandoraAssets? Pandora { get; private set; }
@@ -74,9 +79,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
-#if DEBUG
-        Pandora = LoadAndRegisterAssets<PandoraAssets>("pandoraassets");
-#endif
         DriftwoodMenace = LoadAndRegisterAssets<DriftwoodMenaceAssets>("driftwoodmenaceassets");
 
         Nancy = LoadAndRegisterAssets<NancyAssets>("nancyassets");

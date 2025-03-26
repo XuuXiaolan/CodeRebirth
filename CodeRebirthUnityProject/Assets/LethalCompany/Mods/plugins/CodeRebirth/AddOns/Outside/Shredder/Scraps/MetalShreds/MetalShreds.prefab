@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2256419265112428585}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.025, z: 0.544}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -66,9 +66,9 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 7102251917597761982}
   - component: {fileID: 395811113867021704}
   - component: {fileID: 639827116396003948}
-  - component: {fileID: 717025466037773542}
+  - component: {fileID: 7280021298509091698}
   m_Layer: 6
   m_Name: MetalShreds
   m_TagString: PhysicsProp
@@ -359,8 +359,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 0
---- !u!135 &717025466037773542
-SphereCollider:
+--- !u!65 &7280021298509091698
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -372,11 +372,11 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}

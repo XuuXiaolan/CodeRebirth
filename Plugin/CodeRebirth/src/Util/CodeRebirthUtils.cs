@@ -91,7 +91,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
                 Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
             }
         }
-
     }
 
     public void UnlockProgressively(int unlockableIndex, int playerIndex, bool local, bool displayTip, string messageHeader, string messagBody)

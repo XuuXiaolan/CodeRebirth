@@ -96,7 +96,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
 
     protected TAsset? LoadAndRegisterAssets<TAsset>(string assetBundleName, bool overrideEnabledConfig = false) where TAsset : AssetBundleLoader<TAsset>
     {
-        AssetBundleData assetBundleData = Plugin.Assets.CodeRebirthContent.assetBundles.Where(bundle => bundle.assetBundleName == assetBundleName).FirstOrDefault();
+        AssetBundleData? assetBundleData = Plugin.Assets.CodeRebirthContent.assetBundles.Where(bundle => bundle.assetBundleName == assetBundleName).FirstOrDefault();
         if (assetBundleData == null)
         {
             Plugin.ExtendedLogging($"Plugin with assetbundle name: {assetBundleName} is not implemented yet!");
@@ -177,6 +177,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
             }
 
             Weather weather = new ($"{CRWeatherDefinition.Weather.Name}", CRWeatherDefinition.Weather.Effect);
+            weather.Color = CRWeatherDefinition.Weather.Color;
             weather.Config = new()
             {
                 DefaultWeight = new(weatherData.spawnWeight),

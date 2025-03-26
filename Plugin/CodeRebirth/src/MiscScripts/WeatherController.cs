@@ -35,15 +35,16 @@ public class WeatherController : MonoBehaviour
             light.intensity = 0;
         }
         localVolumetricFog.transform.localPosition = fogPlacement;
-        foreach (Renderer renderer in renderersToDisableEmissiveness)
-        {
-            renderer.GetMaterial().SetFloat("_EmissionIntensity", 10f);
-        }
+
+        Material material = renderersToDisableEmissiveness[0].GetSharedMaterial();
+        material.SetColor("_EmissiveColor", Color.white);
 
         if (volumeProfile.TryGet(out HDRISky hdriSky))
         {
             hdriSky.hdriSky.overrideState = true;
             hdriSky.hdriSky.value = cubemapReplacement;
+            hdriSky.exposure.overrideState = true;
+            hdriSky.exposure.value = 2f;
         }
     }
 }

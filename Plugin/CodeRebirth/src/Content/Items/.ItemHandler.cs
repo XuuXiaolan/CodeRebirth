@@ -43,14 +43,8 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public class XuAndRigoAssets(string bundleName) : AssetBundleLoader<XuAndRigoAssets>(bundleName)
     {
-        [LoadFromBundle("GoldRigoObj.asset")]
-        public Item GoldRigoItem { get; private set; } = null!;
-
-        [LoadFromBundle("SmallRigoPrefab.prefab")]
-        public GameObject SmallRigoPrefab { get; private set; } = null!;
-
-        [LoadFromBundle("XuObj.asset")]
-        public Item XuItem { get; private set; } = null!;
+        /*[LoadFromBundle("SmallRigoPrefab.prefab")]
+        public GameObject SmallRigoPrefab { get; private set; } = null!;*/
     }
 
     public XuAndRigoAssets? XuAndRigo { get; private set; } = null;
@@ -64,12 +58,8 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public ItemHandler()
     {
-        /*if (Plugin.ModConfig.ConfigXuAndRigoEnabled.Value)
-        {
-            XuAndRigo = new XuAndRigoAssets("xuandrigoassets");
-            RegisterScrapWithConfig("", XuAndRigo.GoldRigoItem, -1, -1);
-            RegisterScrapWithConfig("", XuAndRigo.XuItem, -1, -1);
-        }*/
+
+        XuAndRigo = LoadAndRegisterAssets<XuAndRigoAssets>("xuandrigoassets");
 
         Zort = LoadAndRegisterAssets<ZortAssets>("zortassets");
 

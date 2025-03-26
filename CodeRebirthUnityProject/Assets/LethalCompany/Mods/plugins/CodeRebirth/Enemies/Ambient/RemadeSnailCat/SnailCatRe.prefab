@@ -297,9 +297,9 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -353,6 +353,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
 --- !u!114 &8802992103352183417
 MonoBehaviour:
   m_ObjectHideFlags: 0

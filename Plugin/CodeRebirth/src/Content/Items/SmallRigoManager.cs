@@ -14,7 +14,7 @@ public class SmallRigoManager : MonoBehaviour
 
     public void Start()
     {
-        smallRigoPrefab = ItemHandler.Instance.XuAndRigo.SmallRigoPrefab;
+        // smallRigoPrefab = ItemHandler.Instance.XuAndRigo.SmallRigoPrefab;
 
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
         {
