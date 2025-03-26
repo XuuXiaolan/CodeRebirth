@@ -43,8 +43,8 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public class XuAndRigoAssets(string bundleName) : AssetBundleLoader<XuAndRigoAssets>(bundleName)
     {
-        /*[LoadFromBundle("SmallRigoPrefab.prefab")]
-        public GameObject SmallRigoPrefab { get; private set; } = null!;*/
+        [LoadFromBundle("RodFollower.prefab")]
+        public GameObject SmallRigoPrefab { get; private set; } = null!;
     }
 
     public XuAndRigoAssets? XuAndRigo { get; private set; } = null;

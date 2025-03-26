@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
-public class SmallRigoManager : MonoBehaviour
+public class SmallRigoManager : NetworkBehaviour
 {
     public GoldRigo goldRigo = null!;
     public int numberOfSmallRigos = 20;
@@ -14,7 +15,13 @@ public class SmallRigoManager : MonoBehaviour
 
     public void Start()
     {
-        // smallRigoPrefab = ItemHandler.Instance.XuAndRigo.SmallRigoPrefab;
+        if (ItemHandler.Instance.XuAndRigo == null)
+        {
+            Plugin.Logger.LogError($"How the fuck");
+            return;
+        }
+
+        smallRigoPrefab = ItemHandler.Instance.XuAndRigo.SmallRigoPrefab;
 
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
         {
@@ -31,12 +38,13 @@ public class SmallRigoManager : MonoBehaviour
     {
         if (goldRigo == null)
         {
+            if (!IsServer) return;
             foreach (var smallRigo in smallRigosActive)
             {
                 if (smallRigo == null) continue;
-                Destroy(smallRigo.gameObject);
+                smallRigo.NetworkObject.Despawn();
             }
-            Destroy(this.gameObject);
+            this.NetworkObject.Despawn();
             return;
         }
 
@@ -61,18 +69,36 @@ public class SmallRigoManager : MonoBehaviour
         while (smallRigosActive.Count < numberOfSmallRigos)
         {
             yield return new WaitForSeconds(0.1f);
+            if (!IsServer) continue;
             GameObject smallRigo = Instantiate(smallRigoPrefab, goldRigo.transform.position, goldRigo.transform.rotation, null);
-            smallRigosActive.Add(smallRigo.GetComponent<SmallRigo>()); // let the prefab be deactivated by default.
+            smallRigo.GetComponent<NetworkObject>().Spawn();
+            var smallRigoScript = smallRigo.GetComponent<SmallRigo>();
+            SyncSmallRigoListClientRpc(new NetworkBehaviourReference(smallRigoScript));
         }
+
+        yield return new WaitForSeconds(2f); // just to make sure there's enough time.
         if (!hideSmallRigos)
         {
             Activate();
         }
     }
 
+    [ClientRpc]
+    public void SyncSmallRigoListClientRpc(NetworkBehaviourReference smallRigoScript)
+    {
+        if (smallRigoScript.TryGet(out SmallRigo smallRigo))
+        {
+            smallRigosActive.Add(smallRigo);
+        }
+    }
+
     public void Activate()
     {
         active = true;
+        foreach (var smallRigo in smallRigosActive)
+        {
+            smallRigo.gameObject.SetActive(true);
+        }
         StartCoroutine(ActiveRoutine());
     }
 
@@ -80,7 +106,6 @@ public class SmallRigoManager : MonoBehaviour
     {
         foreach (var smallRigo in smallRigosActive)
         {
-            smallRigo.gameObject.SetActive(true);
             smallRigo.smartAgentNavigator.agent.Warp(goldRigo.transform.position);
             yield return null;
         }
@@ -89,7 +114,16 @@ public class SmallRigoManager : MonoBehaviour
             foreach (SmallRigo smallRigo in smallRigosActive)
             {
                 yield return null;
-                if (Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position) <= 5f) continue;
+                if (Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position) <= 5f)
+                {
+                    if (smallRigo.jumping) continue;
+                    smallRigo.SetJumping(true);
+                    continue;
+                }
+                if (smallRigo.jumping)
+                {
+                    smallRigo.SetJumping(false);
+                }
                 if (goldRigo.playerHeldBy != null)
                 {
                     smallRigo.DoPathingToPosition(goldRigo.playerHeldBy.transform.position);
@@ -110,17 +144,18 @@ public class SmallRigoManager : MonoBehaviour
         }
     }
 
-    public void OnDestroy()
+    public override void OnNetworkDespawn()
     {
-        if (goldRigo != null && goldRigo.IsServer)
+        base.OnNetworkDespawn();
+        if (!IsServer) return;
+        if (goldRigo != null && goldRigo.IsSpawned)
         {
             goldRigo.NetworkObject.Despawn(true);
         }
         foreach (var smallRigo in smallRigosActive)
         {
-            if (smallRigo == null) continue;
-            Destroy(smallRigo.gameObject);
+            if (smallRigo == null || !smallRigo.IsSpawned) continue;
+            smallRigo.NetworkObject.Despawn(true);
         }
-        return;
     }
 }
