@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
-  m_Name: XuiObj
+  m_Name: GoldRigoObj
   m_EditorClassIdentifier: 
   itemId: 0
-  itemName: Xui
+  itemName: KingRigo
   spawnPositionTypes: []
   twoHanded: 0
   twoHandedAnimation: 1
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 0
-  weight: 1.15
+  weight: 1.3
   itemIsTrigger: 0
   holdButtonUse: 0
   itemSpawnsOnGround: 1
@@ -30,7 +30,7 @@ MonoBehaviour:
   highestSalePercentage: 80
   maxValue: 300
   minValue: 100
-  spawnPrefab: {fileID: 4171834634908631243, guid: 1471235aee42cb84db3558a069b30a1d,
+  spawnPrefab: {fileID: 4540595232750602218, guid: 82febd9262306ef448eb3fa34f136d1e,
     type: 3}
   requiresBattery: 0
   batteryUsage: 15
@@ -45,19 +45,19 @@ MonoBehaviour:
   dropSFX: {fileID: 0}
   pocketSFX: {fileID: 0}
   throwSFX: {fileID: 0}
-  syncGrabFunction: 0
-  syncUseFunction: 1
+  syncGrabFunction: 1
+  syncUseFunction: 0
   syncDiscardFunction: 0
   syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0
   toolTips: []
-  verticalOffset: 0.35
-  floorYOffset: 90
+  verticalOffset: 0
+  floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
   restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 90, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0.4}
+  rotationOffset: {x: 0, y: 0, z: 0}
+  positionOffset: {x: 0, y: 0, z: 0}
   meshOffset: 1
   meshVariants: []
   materialVariants: []

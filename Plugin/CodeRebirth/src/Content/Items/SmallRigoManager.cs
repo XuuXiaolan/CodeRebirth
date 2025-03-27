@@ -10,6 +10,7 @@ public class SmallRigoManager : NetworkBehaviour
     public int numberOfSmallRigos = 20;
 
     private bool active = false;
+    private bool initalizing = true;
     private GameObject smallRigoPrefab = null!;
     private List<SmallRigo> smallRigosActive = new();
 
@@ -22,15 +23,7 @@ public class SmallRigoManager : NetworkBehaviour
         }
 
         smallRigoPrefab = ItemHandler.Instance.XuAndRigo.SmallRigoPrefab;
-
-        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
-        {
-            StartCoroutine(SpawnSmallRigos(numberOfSmallRigos, true));
-        }
-        else
-        {
-            StartCoroutine(SpawnSmallRigos(numberOfSmallRigos, false));
-        }
+        StartCoroutine(SpawnSmallRigos(numberOfSmallRigos));
         // Spawn and hide the SmallRigo's on the following conditions: we're in orbit, leaving and/or landing whilst the goldrigo isnt in the ship
     }
 
@@ -38,16 +31,17 @@ public class SmallRigoManager : NetworkBehaviour
     {
         if (goldRigo == null)
         {
-            if (!IsServer) return;
             foreach (var smallRigo in smallRigosActive)
             {
                 if (smallRigo == null) continue;
-                smallRigo.NetworkObject.Despawn();
+                Destroy(smallRigo);
             }
+            if (!IsServer) return;
             this.NetworkObject.Despawn();
             return;
         }
 
+        if (initalizing) return;
         if (active)
         {
             if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
@@ -57,39 +51,22 @@ public class SmallRigoManager : NetworkBehaviour
         }
         else
         {
-            if (StartOfRound.Instance.inShipPhase && StartOfRound.Instance.shipHasLanded && !StartOfRound.Instance.shipIsLeaving)
+            if (!StartOfRound.Instance.inShipPhase && StartOfRound.Instance.shipHasLanded && !StartOfRound.Instance.shipIsLeaving)
             {
                 Activate();
             }
         }
     }
 
-    public IEnumerator SpawnSmallRigos(int numberOfSmallRigos, bool hideSmallRigos)
+    public IEnumerator SpawnSmallRigos(int numberOfSmallRigos)
     {
         while (smallRigosActive.Count < numberOfSmallRigos)
         {
             yield return new WaitForSeconds(0.1f);
-            if (!IsServer) continue;
             GameObject smallRigo = Instantiate(smallRigoPrefab, goldRigo.transform.position, goldRigo.transform.rotation, null);
-            smallRigo.GetComponent<NetworkObject>().Spawn();
-            var smallRigoScript = smallRigo.GetComponent<SmallRigo>();
-            SyncSmallRigoListClientRpc(new NetworkBehaviourReference(smallRigoScript));
+            smallRigosActive.Add(smallRigo.GetComponent<SmallRigo>());
         }
-
-        yield return new WaitForSeconds(2f); // just to make sure there's enough time.
-        if (!hideSmallRigos)
-        {
-            Activate();
-        }
-    }
-
-    [ClientRpc]
-    public void SyncSmallRigoListClientRpc(NetworkBehaviourReference smallRigoScript)
-    {
-        if (smallRigoScript.TryGet(out SmallRigo smallRigo))
-        {
-            smallRigosActive.Add(smallRigo);
-        }
+        initalizing = false;
     }
 
     public void Activate()
@@ -106,28 +83,29 @@ public class SmallRigoManager : NetworkBehaviour
     {
         foreach (var smallRigo in smallRigosActive)
         {
-            smallRigo.smartAgentNavigator.agent.Warp(goldRigo.transform.position);
             yield return null;
+            Plugin.ExtendedLogging($"SmallRigo: {smallRigo.transform.position}");
+            smallRigo.smartAgentNavigator.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 3, default));
         }
         while (active)
         {
             foreach (SmallRigo smallRigo in smallRigosActive)
             {
                 yield return null;
-                if (Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position) <= 5f)
+                if (goldRigo.playerHeldBy != null && Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position) <= 5f)
                 {
                     if (smallRigo.jumping) continue;
                     smallRigo.SetJumping(true);
                     continue;
                 }
-                if (smallRigo.jumping)
-                {
-                    smallRigo.SetJumping(false);
-                }
                 if (goldRigo.playerHeldBy != null)
                 {
                     smallRigo.DoPathingToPosition(goldRigo.playerHeldBy.transform.position);
                     continue;
+                }
+                if (smallRigo.jumping)
+                {
+                    smallRigo.SetJumping(false);
                 }
                 smallRigo.DoPathingToPosition(goldRigo.transform.position);
             }
@@ -147,15 +125,15 @@ public class SmallRigoManager : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        if (!IsServer) return;
-        if (goldRigo != null && goldRigo.IsSpawned)
+        if (IsServer && goldRigo != null && goldRigo.IsSpawned)
         {
             goldRigo.NetworkObject.Despawn(true);
         }
+
         foreach (var smallRigo in smallRigosActive)
         {
-            if (smallRigo == null || !smallRigo.IsSpawned) continue;
-            smallRigo.NetworkObject.Despawn(true);
+            if (smallRigo == null) continue;
+            Destroy(smallRigo.gameObject);
         }
     }
 }

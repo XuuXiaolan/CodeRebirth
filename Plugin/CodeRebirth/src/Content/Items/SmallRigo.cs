@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
-public class SmallRigo : NetworkBehaviour
+public class SmallRigo : MonoBehaviour
 {
     public Animator animator = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;

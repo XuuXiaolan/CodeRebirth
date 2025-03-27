@@ -34,11 +34,15 @@ public class SmartAgentNavigator : NetworkBehaviour
     [HideInInspector] public List<EntranceTeleport> exitPoints = new();
     [HideInInspector] public EntranceTeleport? mainEntrance = null;
 
+    public void Awake()
+    {
+        agent = gameObject.GetComponent<NavMeshAgent>();
+    }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         Plugin.ExtendedLogging("SmartAgentNavigator initialized");
-        agent = gameObject.GetComponent<NavMeshAgent>();
         CodeRebirthPlayerManager.smartAgentNavigators.Add(this);
     }
 

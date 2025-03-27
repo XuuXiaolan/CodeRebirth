@@ -813,7 +813,7 @@ MonoBehaviour:
       scrapMultiplier: 0
       scrapValueMultiplier: 0
       isExclude: 0
-      createExcludeConfig: 1
+      createExcludeConfig: 0
       excludeOrIncludeList: oxyde
     enemies: []
     items: []
@@ -1128,5 +1128,13 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 1
       cost: 300
+    - entityName: GoldRigo
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
     mapObjects: []
     unlockables: []
