@@ -92,24 +92,27 @@ public class SmallRigoManager : NetworkBehaviour
             foreach (SmallRigo smallRigo in smallRigosActive)
             {
                 yield return null;
-                if (goldRigo.playerHeldBy != null && Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position) <= 5f)
-                {
-                    if (smallRigo.jumping) continue;
-                    smallRigo.SetJumping(true);
-                    continue;
-                }
+                float distanceToKing = Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position);
                 if (goldRigo.playerHeldBy != null)
                 {
+                    if (distanceToKing <= 2f)
+                    {
+                        if (smallRigo.jumping) continue;
+                        smallRigo.SetJumping(true);
+                        continue;
+                    }
+
                     smallRigo.DoPathingToPosition(goldRigo.playerHeldBy.transform.position);
                     continue;
                 }
-                if (smallRigo.jumping)
+                else if (smallRigo.jumping)
                 {
                     smallRigo.SetJumping(false);
                 }
+                if (distanceToKing <= 1f) continue;
                 smallRigo.DoPathingToPosition(goldRigo.transform.position);
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.25f);
         }
     }
 
