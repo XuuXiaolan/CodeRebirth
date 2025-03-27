@@ -79,6 +79,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
+        Pandora = LoadAndRegisterAssets<PandoraAssets>("pandoraassets");
+
+        Cutea = LoadAndRegisterAssets<CuteaAssets>("cuteaassets");
+
         DriftwoodMenace = LoadAndRegisterAssets<DriftwoodMenaceAssets>("driftwoodmenaceassets");
 
         Nancy = LoadAndRegisterAssets<NancyAssets>("nancyassets");

@@ -14,48 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: 2394316741395502362}
-  - {fileID: 2536801344036241854}
-  - {fileID: 2253771492908853275}
---- !u!114 &2253771492908853275
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c1be1b6c95cd2e41b27903b9270817f, type: 3}
-  m_Name: Vignette
-  m_EditorClassIdentifier: 
-  active: 1
-  mode:
-    m_OverrideState: 0
-    m_Value: 0
-  color:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0, b: 0, a: 1}
-  center:
-    m_OverrideState: 0
-    m_Value: {x: 0.5, y: 0.5}
-  intensity:
-    m_OverrideState: 1
-    m_Value: 1
-  smoothness:
-    m_OverrideState: 1
-    m_Value: 0.58
-  roundness:
-    m_OverrideState: 1
-    m_Value: 1
-  rounded:
-    m_OverrideState: 1
-    m_Value: 1
-  mask:
-    m_OverrideState: 0
-    m_Value: {fileID: 0}
-  opacity:
-    m_OverrideState: 0
-    m_Value: 1
 --- !u!114 &2394316741395502362
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -77,19 +35,19 @@ MonoBehaviour:
     m_Value: 0.04
   intensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.393
   scatter:
     m_OverrideState: 1
-    m_Value: 0.356
+    m_Value: 0
   tint:
     m_OverrideState: 1
-    m_Value: {r: 0.4339623, g: 0.209323, b: 0, a: 1}
+    m_Value: {r: 1, g: 0.5414635, b: 0, a: 1}
   dirtTexture:
     m_OverrideState: 1
     m_Value: {fileID: 2800000, guid: c442a7670b9229045a6d28b3ce1e1020, type: 3}
   dirtIntensity:
     m_OverrideState: 1
-    m_Value: 40.3
+    m_Value: 40
   anamorphic:
     m_OverrideState: 0
     m_Value: 1
@@ -102,31 +60,3 @@ MonoBehaviour:
   m_HighQualityFiltering:
     m_OverrideState: 1
     m_Value: 1
---- !u!114 &2536801344036241854
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b8bcdf71d7fafa419fca1ed162f5fc9, type: 3}
-  m_Name: ColorAdjustments
-  m_EditorClassIdentifier: 
-  active: 1
-  postExposure:
-    m_OverrideState: 1
-    m_Value: 0.5
-  contrast:
-    m_OverrideState: 1
-    m_Value: 70
-  colorFilter:
-    m_OverrideState: 1
-    m_Value: {r: 0, g: 0, b: 0, a: 1}
-  hueShift:
-    m_OverrideState: 0
-    m_Value: 0
-  saturation:
-    m_OverrideState: 0
-    m_Value: -22
