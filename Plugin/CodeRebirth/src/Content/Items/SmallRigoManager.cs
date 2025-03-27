@@ -101,13 +101,15 @@ public class SmallRigoManager : NetworkBehaviour
                         smallRigo.SetJumping(true);
                         continue;
                     }
-
+                    else
+                    {
+                        if (smallRigo.jumping)
+                        {
+                            smallRigo.SetJumping(false);
+                        }
+                    }
                     smallRigo.DoPathingToPosition(goldRigo.playerHeldBy.transform.position);
                     continue;
-                }
-                else if (smallRigo.jumping)
-                {
-                    smallRigo.SetJumping(false);
                 }
                 if (distanceToKing <= 1f) continue;
                 smallRigo.DoPathingToPosition(goldRigo.transform.position);
