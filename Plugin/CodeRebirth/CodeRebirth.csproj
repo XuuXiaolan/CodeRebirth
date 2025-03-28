@@ -15,6 +15,8 @@
 
     <Configurations>Debug;Release</Configurations>
     <Nullable>enable</Nullable>
+
+    <AssetBundleDir>$(SolutionDir)../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/</AssetBundleDir>
   </PropertyGroup>
 
 	<!-- Embedded Debug (without showing your file structure :3) -->
@@ -63,5 +65,19 @@
   -->
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
     <Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+  </Target>
+  
+  <Target Name="CopyAssetBundles" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <AllBundles Include="$(AssetBundleDir)*" Exclude="$(AssetBundleDir)*.meta"/>
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <OutputDir>$(TargetDir)Assets</OutputDir>
+    </PropertyGroup>
+    
+    <Message Importance="high" Text="About to copy bundles, will take a second!"/>
+    <MakeDir Directories="$(OutputDir)" Condition="!Exists($(OutputDir))"/>
+    <Copy SourceFiles="@(AllBundles)" DestinationFolder="$(OutputDir)"/>
   </Target>
 </Project>
