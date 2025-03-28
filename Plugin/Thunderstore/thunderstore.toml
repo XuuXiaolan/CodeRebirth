@@ -32,6 +32,10 @@ source = "../CodeRebirthMRAPI/bin/Release/netstandard2.1/XuuXiaolan.CodeRebirthM
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]
+source = "../CodeRebirthESKR/bin/Release/netstandard2.1/XuuXiaolan.CodeRebirthESKR.dll"
+target = "plugins/CodeRebirth/"
+
+[[build.copy]]
 source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/coderebirthasset"
 target = "plugins/CodeRebirth/Assets/"
 
