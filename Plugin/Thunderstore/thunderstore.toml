@@ -36,7 +36,7 @@ source = "../CodeRebirthESKR/bin/Release/netstandard2.1/XuuXiaolan.CodeRebirthES
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]
-source = "../CodeRebirth/bin/Release/netstandard2.1/Assets/"
+source = "../CodeRebirth/bin/Release/netstandard2.1/Assets"
 target = "plugins/CodeRebirth/Assets/"
 
 [[build.copy]]

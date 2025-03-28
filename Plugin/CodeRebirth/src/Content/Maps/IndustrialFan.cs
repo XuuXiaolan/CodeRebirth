@@ -1,6 +1,5 @@
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
