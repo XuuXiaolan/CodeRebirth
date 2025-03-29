@@ -14,7 +14,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigOnlyOwnerDisablesGal { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkPlayerModelEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigFloraEnabled { get; private set; }
+    public ConfigEntry<bool> ConfigFloraEnabled { get; set; }
     public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
     public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
@@ -81,12 +81,12 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
     public ConfigEntry<bool> ConfigExtendedLogging { get; set; }
-    public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; private set; }
-    public ConfigEntry<int> ConfigFloraMaxAbundance { get; private set; }
-    public ConfigEntry<int> ConfigFloraMinAbundance { get; private set; }
-    public ConfigEntry<string> ConfigFloraGrassSpawnPlaces { get; private set; }
-    public ConfigEntry<string> ConfigFloraDesertSpawnPlaces { get; private set; }
-    public ConfigEntry<string> ConfigFloraSnowSpawnPlaces { get; private set; }
+    public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; set; }
+    public ConfigEntry<int> ConfigFloraMaxAbundance { get; set; }
+    public ConfigEntry<int> ConfigFloraMinAbundance { get; set; }
+    public ConfigEntry<string> ConfigFloraGrassSpawnPlaces { get; set; }
+    public ConfigEntry<string> ConfigFloraDesertSpawnPlaces { get; set; }
+    public ConfigEntry<string> ConfigFloraSnowSpawnPlaces { get; set; }
     public ConfigEntry<float> ConfigCritChance { get; private set; }
     public ConfigEntry<string> ConfigSeamineTinkEnemyBlacklist { get; private set; }
     public ConfigEntry<float> ConfigSeamineTinkRidingBruceVolume { get; private set; }
@@ -395,34 +395,6 @@ public class CodeRebirthConfig
         #region DangerousFlora
         #endregion
         #region Flora
-        ConfigFloraEnabled = configFile.Bind("Flora Options",
-                                            "Flora | Enabled",
-                                            true,
-                                            "Whether Flora is enabled.");
-        ConfigFloraMaxAbundance = configFile.Bind("Flora Options",
-                                            "Flora | Max Abundance",
-                                            60,
-                                            "How many plants can get added at most.");
-        ConfigFloraMinAbundance = configFile.Bind("Flora Options",
-                                            "Flora | Min Abundance",
-                                            30,
-                                            "How many plants can get added at least.");
-        ConfigFloraGrassSpawnPlaces = configFile.Bind("Flora Options",
-                                            "Flora | Grass Spawn Places",
-                                            "Vanilla,Custom,",
-                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
-        ConfigFloraDesertSpawnPlaces = configFile.Bind("Flora Options",
-                                            "Flora | Desert Spawn Places",
-                                            "Vanilla,Custom,",
-                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
-        ConfigFloraSnowSpawnPlaces = configFile.Bind("Flora Options",
-                                            "Flora | Snow Spawn Places",
-                                            "Vanilla,Custom,",
-                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
-        ConfigFloraExcludeSpawnPlaces = configFile.Bind("Flora Options",
-                                            "Flora | Exclude Spawn Places",
-                                            "Infernis",
-                                            "Flora EXLUDE spawn places e.g. `Experimentation,Assurance,Gloom` (only takes moon names).");
         #endregion
         #region Farming
         ConfigWoodenSeedTreeSpawnChance = configFile.Bind("Farming Options",

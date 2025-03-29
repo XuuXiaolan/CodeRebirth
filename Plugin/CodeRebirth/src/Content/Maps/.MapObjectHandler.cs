@@ -104,8 +104,13 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
 		Crate = LoadAndRegisterAssets<CrateAssets>("crateassets");
 
-		// if (Plugin.ModConfig.ConfigFloraEnabled.Value)
-		//  	RegisterOutsideFlora();
+        Plugin.ModConfig.ConfigFloraEnabled = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Enabled",
+                                            true,
+                                            "Whether Flora is enabled.");
+
+		 if (Plugin.ModConfig.ConfigFloraEnabled.Value)
+		  	RegisterOutsideFlora();
 
 		Biome = LoadAndRegisterAssets<BiomeAssets>("biomeassets");
 
@@ -134,7 +139,32 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 	{
 		Flora = new FloraAssets("floraassets");
 		Flora floraStuff = Flora.AllFloraPrefab.GetComponent<Flora>();
-		
+
+        Plugin.ModConfig.ConfigFloraMaxAbundance = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Max Abundance",
+                                            60,
+                                            "How many plants can get added at most.");
+        Plugin.ModConfig.ConfigFloraMinAbundance = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Min Abundance",
+                                            30,
+                                            "How many plants can get added at least.");
+        Plugin.ModConfig.ConfigFloraGrassSpawnPlaces = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Grass Spawn Places",
+                                            "Vanilla,Custom,",
+                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
+        Plugin.ModConfig.ConfigFloraDesertSpawnPlaces = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Desert Spawn Places",
+                                            "Vanilla,Custom,",
+                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
+        Plugin.ModConfig.ConfigFloraSnowSpawnPlaces = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Snow Spawn Places",
+                                            "Vanilla,Custom,",
+                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
+        Plugin.ModConfig.ConfigFloraExcludeSpawnPlaces = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Exclude Spawn Places",
+                                            "Infernis",
+                                            "Flora EXLUDE spawn places e.g. `Experimentation,Assurance,Gloom` (only takes moon names).");
+
 		string[] grassMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraGrassSpawnPlaces.Value);
 		string[] desertMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraDesertSpawnPlaces.Value);
 		string[] snowMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraSnowSpawnPlaces.Value);
