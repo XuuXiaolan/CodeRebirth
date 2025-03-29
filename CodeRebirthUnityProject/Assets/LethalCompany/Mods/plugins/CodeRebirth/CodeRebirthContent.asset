@@ -1076,6 +1076,29 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
+  - assetBundleName: xuandrigoassets
+    configName: XuRigo
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Xui
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 300
+    - entityName: GoldRigo
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables: []
   - assetBundleName: zortassets
     configName: Zort
     weathers: []
@@ -1115,21 +1138,13 @@ MonoBehaviour:
       cost: 150
     mapObjects: []
     unlockables: []
-  - assetBundleName: xuandrigoassets
-    configName: XuRigo
+  - assetBundleName: mountaineerassets
+    configName: Brrreaker
     weathers: []
     enemies: []
     items:
-    - entityName: Xui
-      spawnWeights: All:1
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 1
-      isShopItem: 0
-      generateShopItemConfig: 1
-      cost: 300
-    - entityName: GoldRigo
-      spawnWeights: All:1
+    - entityName: Brrreaker
+      spawnWeights: tundra:30
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
