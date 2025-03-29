@@ -5,7 +5,6 @@ using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
-using System.Linq;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>

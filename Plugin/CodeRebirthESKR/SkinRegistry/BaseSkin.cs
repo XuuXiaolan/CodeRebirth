@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CodeRebirthESKR.SkinRegistry;
 public abstract class BaseSkin : ScriptableObject, Skin
 {
-    [SerializeField] public SpawnLocation spawnLocation;
+    public SpawnLocation spawnLocation;
 
     [SerializeField] protected string label;
     public string Label => label;

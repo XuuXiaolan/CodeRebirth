@@ -13,6 +13,35 @@ MonoBehaviour:
   m_Name: JimothySkinDefinition
   m_EditorClassIdentifier: 
   spawnLocation: 0
-  label: 
-  id: 
-  icon: {fileID: 0}
+  label: Clean Transporter
+  id: Transporter.Clean
+  icon: {fileID: 2800000, guid: 93dcf9968073ed844ae136e3ba758694, type: 3}
+  smallPartsMaterialAction:
+    actionType: 1
+    replacementMaterial: {fileID: 2100000, guid: c937cbf18f27cc042b7423916582c248,
+      type: 2}
+    replacementTexture: {fileID: 0}
+  forkliftMaterialAction:
+    actionType: 1
+    replacementMaterial: {fileID: 2100000, guid: c2248e88b6915e74a86086fa3c3ae47d,
+      type: 2}
+    replacementTexture: {fileID: 0}
+  lightMaterialAction:
+    actionType: 1
+    replacementMaterial: {fileID: 2100000, guid: 6f8ec6364dd5d1a4d9967bed6cbbd18d,
+      type: 2}
+    replacementTexture: {fileID: 0}
+  dumpAudioAction:
+    actionType: 0
+    replacementClip: {fileID: 0}
+  hitJimothyAudioAction:
+    actionType: 0
+    replacementClip: {fileID: 0}
+  jimHonkVoiceAudioAction:
+    actionType: 0
+    replacementClip: {fileID: 0}
+  pickUpHazardAudioAction:
+    actionType: 0
+    replacementClip: {fileID: 0}
+  jimothyAttachments: []
+  machineAttachments: []

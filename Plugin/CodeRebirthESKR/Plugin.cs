@@ -3,6 +3,7 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using CodeRebirthESKR.Patches;
 
 namespace CodeRebirthESKR;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -28,6 +29,7 @@ public class Plugin : BaseUnityPlugin
 			return;
 		}
 
+		TransporterPatch.Init();
 		SkinsHandler.RegisterSkins();
 
         ModConfig.InitConfiguration(Config);

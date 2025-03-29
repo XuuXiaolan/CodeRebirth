@@ -13,7 +13,8 @@ using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
-static class RoundManagerPatch {
+static class RoundManagerPatch
+{
 	internal static List<SpawnableFlora> spawnableFlora = [];
     
 	[HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
@@ -209,7 +210,7 @@ static class RoundManagerPatch {
 	}
 
 	[HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
-	private static void PatchFix_DespawnOldCrates()
+	private static void ReturnToOrbitMiscPatch()
 	{
 		PiggyBank.Instance?.RepairPiggyBankServerRpc();
 		foreach (GalAI gal in GalAI.Instances)

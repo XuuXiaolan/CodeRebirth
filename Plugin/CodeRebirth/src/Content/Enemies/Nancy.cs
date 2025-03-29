@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -102,8 +103,9 @@ public class Nancy : CodeRebirthEnemyAI
         }
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
 
-        if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) <= 2)
+        if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) <= agent.stoppingDistance)
         {
+            CrippleTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
             SwitchToBehaviourServerRpc((int)NancyState.HealingTarget);
             playersLastPosition = targetPlayer.transform.position;
             agent.velocity = Vector3.zero;
@@ -163,5 +165,25 @@ public class Nancy : CodeRebirthEnemyAI
     private void DoBoolAnimationServerRpc(int animationHash, bool value)
     {
         creatureAnimator.SetBool(animationHash, value);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void CrippleTargetServerRpc(int playerIndex)
+    {
+        CrippleTargetClientRpc(playerIndex);
+    }
+
+    [ClientRpc]
+    private void CrippleTargetClientRpc(int playerIndex)
+    {
+        PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        player.disableMoveInput = true;
+        StartCoroutine(ReEnableMoveInput(player));
+    }
+
+    private IEnumerator ReEnableMoveInput(PlayerControllerB player)
+    {
+        yield return new WaitForSeconds(0.15f);
+        player.disableMoveInput = false;
     }
 }

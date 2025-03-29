@@ -17,13 +17,13 @@ public class SkinContentHandler
         CRConfigManager.CRConfigs[keyName] = config;
     }
 
-    public void LoadAndRegisterSkin(BaseSkin baseSkin, string authorName)
+    public void LoadAndRegisterSkin(BaseSkin baseSkin, string authorName, DefaultSkinConfigData defaultConfig)
     {
         LoadEnabledConfigs(baseSkin.Label);
         bool loadSkin = CRConfigManager.GetEnabledConfigResult(baseSkin.Label);
         if (!loadSkin) return;
 
-		EnemySkinRegistry.RegisterSkin(baseSkin);
-		EnemySkinRegistry.RegisterEnemy($"{authorName}.{baseSkin.EnemyId}", baseSkin.Label, baseSkin.spawnLocation);
+		EnemySkinRegistry.RegisterEnemy(baseSkin.EnemyId, baseSkin.Label, baseSkin.spawnLocation);
+		EnemySkinRegistry.RegisterSkin(baseSkin, defaultConfig);
     }
 }

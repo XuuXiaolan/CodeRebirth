@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using CodeRebirthESKR.SkinRegistry;
 using UnityEngine;
@@ -9,5 +8,6 @@ namespace CodeRebirthESKR.Misc;
 public class CRSkinDefinitions : ScriptableObject
 {
     public string authorName;
+    public DefaultSkinConfigurationView[] configs;
     public List<BaseSkin> BaseSkins = new();
 }
