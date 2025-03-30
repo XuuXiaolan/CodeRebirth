@@ -21,7 +21,7 @@ public class Mountaineer : CRWeapon
         base.OnNetworkSpawn();
         Instances.Add(this);
         iceMaterial = new Material(iceRenderer.sharedMaterial);
-        iceRenderer.sharedMaterial = iceMaterial;
+        iceRenderer.material = iceMaterial;
     }
 
     public override void OnNetworkDespawn()

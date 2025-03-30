@@ -177,11 +177,10 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
         if (cancel) return false;
         previousPlayerHeldBy.twoHanded = false;
-        int numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange / 2f, previousPlayerHeldBy.gameplayCamera.transform.forward, cachedRaycastHits, 0.5f, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange / 2f, weaponTip.forward, cachedRaycastHits, 5f, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore);
         List<RaycastHit> objectsHitByShovelList = cachedRaycastHits.Where(hit => hit.transform != null).OrderBy(x => x.distance).ToList();
 
         iHittableList.Clear();
-        Vector3 hitDir = previousPlayerHeldBy.gameplayCamera.transform.forward;
 
         foreach (RaycastHit hit in objectsHitByShovelList)
         {
@@ -192,6 +191,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
                 {
                     if (hit.collider.gameObject.tag != StartOfRound.Instance.footstepSurfaces[i].surfaceTag) continue;
                     surfaceSound = i;
+                    Plugin.ExtendedLogging($"Hit surface: {hit.collider.name} at position: {hit.point}");
                     hitSomething = true;
                     break;
                 }
@@ -200,8 +200,10 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             {
                 if (!hit.collider.TryGetComponent(out IHittable hittable) || hit.collider.gameObject == previousPlayerHeldBy.gameObject) continue;
                 hitSomething = true;
+                Plugin.ExtendedLogging($"Hit ihittable: {hit.collider.name}");
                 iHittableList.Add(hittable);
             }
+            if (hitSomething) break;
         }
 
         if (!hitSomething) return false;

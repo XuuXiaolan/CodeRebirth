@@ -29,6 +29,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
     [HideInInspector] public int collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = 0;
+    [HideInInspector] public int collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndRailingAndInteractableMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndInteractableMask = 0;
@@ -38,11 +39,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public int playersAndRagdollMask = 0;
     [HideInInspector] public int propsAndHazardMask = 0;
     [HideInInspector] public int terrainAndFoliageMask = 0;
+    [HideInInspector] public int playersAndEnemiesMask = 0;
     [HideInInspector] public int propsMask = 0;
     [HideInInspector] public int hazardMask = 0;
     [HideInInspector] public int enemiesMask = 0;
     [HideInInspector] public int interactableMask = 0;
-    [HideInInspector] public int playersAndEnemiesMask = 0;
+    [HideInInspector] public int railingMask = 0;
+    [HideInInspector] public int terrainMask = 0;
+    [HideInInspector] public int vehicleMask = 0;
     [HideInInspector] public ES3Settings SaveSettings;
     [HideInInspector] public ShipAnimator shipAnimator = null!;
     [HideInInspector] public StartMatchLever startMatchLever = null!;
@@ -69,18 +73,22 @@ internal class CodeRebirthUtils : NetworkBehaviour
         hazardMask = LayerMask.GetMask("MapHazards");
         enemiesMask = LayerMask.GetMask("Enemies");
         interactableMask = LayerMask.GetMask("InteractableObject");
+        railingMask = LayerMask.GetMask("Railing");
+        terrainMask = LayerMask.GetMask("Terrain");
+        vehicleMask = LayerMask.GetMask("Vehicle");
         playersAndRagdollMask = StartOfRound.Instance.playersMask | LayerMask.GetMask("PlayerRagdoll");
         propsAndHazardMask = propsMask | hazardMask;
-        terrainAndFoliageMask = LayerMask.GetMask("Terrain", "Foliage");
+        terrainAndFoliageMask = terrainMask | LayerMask.GetMask("Foliage");
         playersAndEnemiesMask = StartOfRound.Instance.playersMask | enemiesMask;
         playersAndEnemiesAndHazardMask = playersAndEnemiesMask | hazardMask;
         collidersAndRoomMaskAndDefaultAndEnemies = StartOfRound.Instance.collidersAndRoomMaskAndDefault | enemiesMask;
-        collidersAndRoomAndRailingAndInteractableMask = StartOfRound.Instance.collidersAndRoomMask | interactableMask | LayerMask.GetMask("Railing");
+        collidersAndRoomAndRailingAndInteractableMask = StartOfRound.Instance.collidersAndRoomMask | interactableMask | railingMask;
         collidersAndRoomAndPlayersAndInteractableMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | interactableMask;
         playersAndInteractableAndEnemiesAndPropsHazardMask = playersAndEnemiesAndHazardMask | interactableMask | propsMask;
-        collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | enemiesMask | LayerMask.GetMask("Terrain", "Vehicle");
+        collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleMask = StartOfRound.Instance.collidersAndRoomMask | hazardMask | railingMask | terrainMask | vehicleMask;
+        collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | enemiesMask | terrainMask | vehicleMask;
         collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask | LayerMask.GetMask("Default");
-        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | enemiesMask | hazardMask | LayerMask.GetMask("Terrain", "Vehicle");
+        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | enemiesMask | hazardMask | terrainMask | vehicleMask;;
     }
 
     public void PlayerPressedJump(PlayerControllerB player)
