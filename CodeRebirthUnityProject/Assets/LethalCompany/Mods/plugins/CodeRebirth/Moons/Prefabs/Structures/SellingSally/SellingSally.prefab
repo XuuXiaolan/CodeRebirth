@@ -662,6 +662,80 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8394078639747376309, guid: a0ff98a3d25a62748916a9b7fed7a5f5, type: 3}
+--- !u!1 &7215363651506666618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4423611329984134819}
+  - component: {fileID: 5239414957466366820}
+  - component: {fileID: 5295686129828764688}
+  m_Layer: 22
+  m_Name: ScanNode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4423611329984134819
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7215363651506666618}
+  serializedVersion: 2
+  m_LocalRotation: {x: -1.3738799e-10, y: -0.9554854, z: -4.4493262e-10, w: 0.29503843}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6585386513571039020}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5239414957466366820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7215363651506666618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRange: 100
+  minRange: 5
+  requiresLineOfSight: 0
+  headerText: Little Sally
+  subText: Selling cubes
+  scrapValue: 0
+  creatureScanID: -1
+  nodeType: 0
+--- !u!65 &5295686129828764688
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7215363651506666618}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 49.21744, y: 41.00447, z: 46.272007}
+  m_Center: {x: -0.45785704, y: 14.180626, z: 2.8887014}
 --- !u!1 &7306071436869103563
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,6 +1085,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 0
       addedObject: {fileID: 8175131182699620510}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 617da45b7f288364d838151c3e9edfbb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4423611329984134819}
     - targetCorrespondingSourceObject: {fileID: 5746564759562468899, guid: 617da45b7f288364d838151c3e9edfbb,
         type: 3}
       insertIndex: 0
@@ -1107,8 +1185,7 @@ MonoBehaviour:
   animator: {fileID: 7311730778536158977}
   networkAnimator: {fileID: 3656799665427672722}
   endOfBarrelTransform: {fileID: 0}
-  ButtonTrigger: {fileID: 0}
-  bellTrigger: {fileID: 0}
+  sallyLoaderTransform: {fileID: 0}
 --- !u!114 &3656799665427672722
 MonoBehaviour:
   m_ObjectHideFlags: 0

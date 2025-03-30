@@ -68,6 +68,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8780984237916370573}
+  - {fileID: 2658889125074367209}
   m_Father: {fileID: 4032920747946227457}
   m_LocalEulerAnglesHint: {x: 89.98022, y: 0, z: 0}
 --- !u!1 &85674976070182564
@@ -1367,6 +1368,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3861353375189447543}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4288306884127634857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2658889125074367209}
+  - component: {fileID: 5122420351789497373}
+  - component: {fileID: 322272416964933842}
+  m_Layer: 22
+  m_Name: ScanNode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2658889125074367209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288306884127634857}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.07440074, z: -0, w: 0.99722844}
+  m_LocalPosition: {x: -1.07, y: 7.26, z: 6.84}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 248359961754222167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5122420351789497373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288306884127634857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRange: 50
+  minRange: 5
+  requiresLineOfSight: 0
+  headerText: Big Jim
+  subText: Bad Boy Activated
+  scrapValue: 0
+  creatureScanID: -1
+  nodeType: 0
+--- !u!65 &322272416964933842
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4288306884127634857}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.682763, y: 7.5558777, z: 14.492445}
+  m_Center: {x: -0.54984665, y: 3.4471207, z: 0.27491203}
 --- !u!1 &4615298961571888421
 GameObject:
   m_ObjectHideFlags: 0
