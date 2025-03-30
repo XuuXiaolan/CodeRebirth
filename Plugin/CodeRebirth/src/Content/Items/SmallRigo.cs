@@ -1,10 +1,11 @@
 using CodeRebirth.src.MiscScripts.PathFinding;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class SmallRigo : MonoBehaviour
 {
+    public AudioSource audioSource = null!;
+    public AudioClip[] imarigoSounds = [];
     public Animator animator = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;
 

@@ -1,5 +1,5 @@
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.Content.Weapons;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using System.Collections;
@@ -9,7 +9,7 @@ using UnityEngine;
 namespace CodeRebirth.src.Patches;
 static class EnemyAIPatch
 {
-    private static Dictionary<EnemyAI, Coroutine> slowedEnemies = new Dictionary<EnemyAI, Coroutine>();
+    private static Dictionary<EnemyAI, Coroutine> slowedEnemies = new();
     private static System.Random enemyRandom = null;
 
     public static void Init()
@@ -60,9 +60,9 @@ static class EnemyAIPatch
 
     private static void EnemyAI_HitEnemy(On.EnemyAI.orig_HitEnemy orig, EnemyAI self, int force, PlayerControllerB playerWhoHit, bool playHitSFX, int hitID)
     {
-        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is IcyHammer)
+        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is Mountaineer mountaineer)
         {
-            if (enemyRandom.NextFloat(0, 100) <= 75f)
+            if (enemyRandom.NextFloat(0, 100) <= mountaineer.FreezePercentile)
             {
                 Plugin.ExtendedLogging("Slowed enemy");
                 if (slowedEnemies.ContainsKey(self) && slowedEnemies[self] != null)
@@ -71,13 +71,6 @@ static class EnemyAIPatch
                 }
                 slowedEnemies[self] = self.StartCoroutine(DelayResetSpeed(self));   
             }
-        }
-
-        if (self != null && playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is NaturesMace)
-        {
-            force = 0;
-            self.enemyHP++;
-            Plugin.ExtendedLogging($"Enemy HP: {self.enemyHP}");
         }
 
         orig(self, force, playerWhoHit, playHitSFX, hitID);

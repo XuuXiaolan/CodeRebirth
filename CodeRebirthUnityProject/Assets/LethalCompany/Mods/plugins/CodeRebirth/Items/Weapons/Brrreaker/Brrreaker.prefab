@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1655057235583538655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1401333191433680181}
+  m_Layer: 6
+  m_Name: WeaponTip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1401333191433680181
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655057235583538655}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.006, y: 1.95, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4715768846733771361}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4902229828778175189
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,6 +224,7 @@ Transform:
   - {fileID: 8973384020654764098}
   - {fileID: 6069637177703003453}
   - {fileID: 3814977929289802171}
+  - {fileID: 1401333191433680181}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1406158027474613143
@@ -361,6 +393,37 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  HitForce: 1
+  weaponTip: {fileID: 1401333191433680181}
+  weaponRange: 0.1
+  weaponCooldown: 0.1
+  bloodParticle: {fileID: 0}
+  OnHitSuccess:
+    m_PersistentCalls:
+      m_Calls: []
+  HitId: 1
+  isHeavyWeapon: 1
+  reelingTime: 0.2
+  swingTime: 0.13
+  hitSFX:
+  - {fileID: 8300000, guid: a363d8e62ebaff54c89ea4901ee77b8c, type: 3}
+  - {fileID: 8300000, guid: 4ac9ff7af0e57a947a11dd74da5f7e69, type: 3}
+  - {fileID: 8300000, guid: 800c3dc45abfe8c47bbbf3fa8503c20d, type: 3}
+  reelUpSFX:
+  - {fileID: 8300000, guid: 725d1c4040e47a449ba66c51175813ab, type: 3}
+  swingSFX:
+  - {fileID: 8300000, guid: 7e39dac39c455a64783fb3dd74758c46, type: 3}
+  finishReelUpSFX:
+  - {fileID: 8300000, guid: 1e361094de53ca747a59988a3b0c5748, type: 3}
+  hitEnemySFX:
+  - {fileID: 8300000, guid: bd02469a862eeb447ad0801ca2a287fd, type: 3}
+  weaponAudio: {fileID: 1406158027474613143}
+  heldOverHeadTimer: 0
+  iceRenderer: {fileID: 8675561301612511079}
+  iceFormSound: {fileID: 0}
+  unlatchSounds:
+  - {fileID: 8300000, guid: 5c78852394eba0d41b4a214d8bdea374, type: 3}
+  - {fileID: 8300000, guid: 37195a3120fb41c449f546055cf2bb84, type: 3}
 --- !u!114 &4552521399146081844
 MonoBehaviour:
   m_ObjectHideFlags: 0

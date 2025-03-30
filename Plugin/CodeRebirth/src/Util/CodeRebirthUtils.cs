@@ -2,13 +2,13 @@ using CodeRebirth.src.Content.Enemies;
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections.Generic;
-using CodeRebirth.src.Content.Maps;
-using UnityEngine.AI;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Rendering;
 using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
 using UnityEngine.Rendering.HighDefinition;
+using CodeRebirth.src.Content.Items;
+using GameNetcodeStuff;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -28,6 +28,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
     [HideInInspector] public int collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = 0;
+    [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = 0;
+    [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndRailingAndInteractableMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndInteractableMask = 0;
     [HideInInspector] public int playersAndInteractableAndEnemiesAndPropsHazardMask = 0;
@@ -40,7 +42,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public int hazardMask = 0;
     [HideInInspector] public int enemiesMask = 0;
     [HideInInspector] public int interactableMask = 0;
-    [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
     [HideInInspector] public int playersAndEnemiesMask = 0;
     [HideInInspector] public ES3Settings SaveSettings;
     [HideInInspector] public ShipAnimator shipAnimator = null!;
@@ -78,7 +79,16 @@ internal class CodeRebirthUtils : NetworkBehaviour
         collidersAndRoomAndPlayersAndInteractableMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | interactableMask;
         playersAndInteractableAndEnemiesAndPropsHazardMask = playersAndEnemiesAndHazardMask | interactableMask | propsMask;
         collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | enemiesMask | LayerMask.GetMask("Terrain", "Vehicle");
+        collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask | LayerMask.GetMask("Default");
         collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | enemiesMask | hazardMask | LayerMask.GetMask("Terrain", "Vehicle");
+    }
+
+    public void PlayerPressedJump(PlayerControllerB player)
+    {
+        foreach (var instance in Mountaineer.Instances)
+        {
+            instance.JumpActionTriggered(player);
+        }
     }
 
     public void OnNewRoundStart()

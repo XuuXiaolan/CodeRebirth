@@ -114,7 +114,15 @@ public class SmallRigoManager : NetworkBehaviour
                 if (distanceToKing <= 1f) continue;
                 smallRigo.DoPathingToPosition(goldRigo.transform.position);
             }
-            yield return new WaitForSeconds(0.25f);
+            int randomRigo = Random.Range(0, smallRigosActive.Count - 1);
+            smallRigosActive[randomRigo].audioSource.PlayOneShot(smallRigosActive[randomRigo].imarigoSounds[Random.Range(0, smallRigosActive[randomRigo].imarigoSounds.Length)]);
+            yield return new WaitForSeconds(0.1f);
+            randomRigo = Random.Range(0, smallRigosActive.Count - 1);
+            smallRigosActive[randomRigo].audioSource.PlayOneShot(smallRigosActive[randomRigo].imarigoSounds[Random.Range(0, smallRigosActive[randomRigo].imarigoSounds.Length)]);
+            yield return new WaitForSeconds(0.1f);
+            randomRigo = Random.Range(0, smallRigosActive.Count - 1);
+            smallRigosActive[randomRigo].audioSource.PlayOneShot(smallRigosActive[randomRigo].imarigoSounds[Random.Range(0, smallRigosActive[randomRigo].imarigoSounds.Length)]);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 

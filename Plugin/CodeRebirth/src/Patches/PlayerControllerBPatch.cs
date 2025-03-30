@@ -1,17 +1,16 @@
 using System;
 using System.Collections;
-using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using HarmonyLib;
-using LethalLib.Modules;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static CodeRebirth.src.Content.Enemies.Janitor;
 
 namespace CodeRebirth.src.Patches;
@@ -59,7 +58,16 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
         On.GameNetcodeStuff.PlayerControllerB.IHittable_Hit += PlayerControllerB_IHittable_Hit;
         On.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += PlayerControllerB_DiscardHeldObject;
+        On.GameNetcodeStuff.PlayerControllerB.Jump_performed += PlayerControllerB_Jump_performed;
         // On.GameNetcodeStuff.PlayerControllerB.NearOtherPlayers += PlayerControllerB_NearOtherPlayers;
+    }
+
+    private static void PlayerControllerB_Jump_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Jump_performed orig, PlayerControllerB self, InputAction.CallbackContext context)
+    {
+        orig(self, context);
+        if (self != GameNetworkManager.Instance.localPlayerController) return;
+        Plugin.ExtendedLogging($"{self.playerUsername} pressed jump.");
+        CodeRebirthUtils.Instance.PlayerPressedJump(self);
     }
 
     private static void PlayerControllerB_Update(On.GameNetcodeStuff.PlayerControllerB.orig_Update orig, PlayerControllerB self)
