@@ -24,13 +24,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655057235583538655}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.006, y: 1.95, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4715768846733771361}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &4902229828778175189
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,7 +420,6 @@ MonoBehaviour:
   weaponAudio: {fileID: 1406158027474613143}
   heldOverHeadTimer: 0
   iceRenderer: {fileID: 8675561301612511079}
-  iceFormSound: {fileID: 0}
   unlatchSounds:
   - {fileID: 8300000, guid: 5c78852394eba0d41b4a214d8bdea374, type: 3}
   - {fileID: 8300000, guid: 37195a3120fb41c449f546055cf2bb84, type: 3}

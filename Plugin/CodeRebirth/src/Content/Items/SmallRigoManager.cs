@@ -76,6 +76,7 @@ public class SmallRigoManager : NetworkBehaviour
         {
             smallRigo.gameObject.SetActive(true);
         }
+        StartCoroutine(VoiceRoutine());
         StartCoroutine(ActiveRoutine());
     }
 
@@ -114,15 +115,17 @@ public class SmallRigoManager : NetworkBehaviour
                 if (distanceToKing <= 1f) continue;
                 smallRigo.DoPathingToPosition(goldRigo.transform.position);
             }
+            yield return new WaitForSeconds(0.25f);
+        }
+    }
+
+    public IEnumerator VoiceRoutine()
+    {
+        while (active)
+        {
             int randomRigo = Random.Range(0, smallRigosActive.Count - 1);
-            smallRigosActive[randomRigo].audioSource.PlayOneShot(smallRigosActive[randomRigo].imarigoSounds[Random.Range(0, smallRigosActive[randomRigo].imarigoSounds.Length)]);
-            yield return new WaitForSeconds(0.1f);
-            randomRigo = Random.Range(0, smallRigosActive.Count - 1);
-            smallRigosActive[randomRigo].audioSource.PlayOneShot(smallRigosActive[randomRigo].imarigoSounds[Random.Range(0, smallRigosActive[randomRigo].imarigoSounds.Length)]);
-            yield return new WaitForSeconds(0.1f);
-            randomRigo = Random.Range(0, smallRigosActive.Count - 1);
-            smallRigosActive[randomRigo].audioSource.PlayOneShot(smallRigosActive[randomRigo].imarigoSounds[Random.Range(0, smallRigosActive[randomRigo].imarigoSounds.Length)]);
-            yield return new WaitForSeconds(0.1f);
+            smallRigosActive[randomRigo].audioSource.PlayOneShot(smallRigosActive[randomRigo].imarigoSounds[Random.Range(0, smallRigosActive[randomRigo].imarigoSounds.Length)], UnityEngine.Random.Range(0.75f, 1f));
+            yield return new WaitForSeconds(UnityEngine.Random.Range(0.75f, 2.5f));
         }
     }
 

@@ -48,6 +48,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     public AudioClip[] finishReelUpSFX;
     public AudioClip[] hitEnemySFX;
     public AudioSource weaponAudio;
+    public bool tryHitAllTimes = false;
 
     [HideInInspector] public float heldOverHeadTimer = 0f;
     private List<IHittable> iHittableList = new();
@@ -116,14 +117,23 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         yield return new WaitUntil(() => !isHoldingButton || !isHeld);
         if (playerHeldBy.IsOwner) playerHeldBy.playerBodyAnimator.speed = 1f;
         SwingHeavyWeapon(!isHeld);
-        float timeElapsed = 0f;
-        bool success = false;
-        while (timeElapsed <= swingTime && !success)
+        tryHitAllTimes = true;
+        if (tryHitAllTimes)
         {
-            timeElapsed += Time.deltaTime;
-            yield return null;
-            yield return new WaitForEndOfFrame();
-            success = HitWeapon(!isHeld);
+            float timeElapsed = 0f;
+            bool success = false;
+            while (timeElapsed <= swingTime && !success)
+            {
+                timeElapsed += Time.deltaTime;
+                yield return null;
+                yield return new WaitForEndOfFrame();
+                success = HitWeapon(!isHeld);
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(swingTime);
+            HitWeapon(!isHeld);
         }
         yield return new WaitForSeconds(weaponCooldown);
         heldOverHeadTimer = 0f;
@@ -177,37 +187,36 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
         if (cancel) return false;
         previousPlayerHeldBy.twoHanded = false;
-        int numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange / 2f, weaponTip.forward, cachedRaycastHits, 5f, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore);
-        List<RaycastHit> objectsHitByShovelList = cachedRaycastHits.Where(hit => hit.transform != null).OrderBy(x => x.distance).ToList();
+        int numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore);
+        var objectsHit = cachedRaycastHits.Take(numHits).OrderBy(hit => hit.distance);
 
-        iHittableList.Clear();
-
-        foreach (RaycastHit hit in objectsHitByShovelList)
+        foreach (RaycastHit hit in objectsHit)
         {
-            if (hit.collider.gameObject.layer == 8 || hit.collider.gameObject.layer == 11)
+            if (hit.collider.gameObject.tag.Contains("Player") || hit.collider.gameObject.tag.Contains("Enemy")) continue;
+            if (hit.collider.isTrigger) continue;
+            for (int i = 0; i < StartOfRound.Instance.footstepSurfaces.Length; i++)
             {
-                if (hit.collider.isTrigger) continue;
-                for (int i = 0; i < StartOfRound.Instance.footstepSurfaces.Length; i++)
-                {
-                    if (hit.collider.gameObject.tag != StartOfRound.Instance.footstepSurfaces[i].surfaceTag) continue;
-                    surfaceSound = i;
-                    Plugin.ExtendedLogging($"Hit surface: {hit.collider.name} at position: {hit.point}");
-                    hitSomething = true;
-                    break;
-                }
-            }
-            else
-            {
-                if (!hit.collider.TryGetComponent(out IHittable hittable) || hit.collider.gameObject == previousPlayerHeldBy.gameObject) continue;
+                if (hit.collider.gameObject.tag != StartOfRound.Instance.footstepSurfaces[i].surfaceTag) continue;
+                surfaceSound = i;
+                Plugin.ExtendedLogging($"Hit surface: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
                 hitSomething = true;
-                Plugin.ExtendedLogging($"Hit ihittable: {hit.collider.name}");
-                iHittableList.Add(hittable);
+                break;
             }
-            if (hitSomething) break;
         }
 
+        iHittableList.Clear();
+        numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
+        objectsHit = cachedRaycastHits.Take(numHits).OrderBy(hit => hit.distance);
+        foreach (RaycastHit hit in objectsHit)
+        {
+            if (!hit.collider.gameObject.TryGetComponent(out IHittable hittable) || hit.collider.gameObject == previousPlayerHeldBy.gameObject) continue;
+            Plugin.ExtendedLogging($"Hit hittable: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
+            iHittableList.Add(hittable);
+            hitSomething = true;
+        }
+        
         if (!hitSomething) return false;
-        foreach (IHittable hittable in iHittableList)
+        foreach (var hittable in iHittableList)
         {
             OnWeaponHit(hittable, this.transform.position);
         }
