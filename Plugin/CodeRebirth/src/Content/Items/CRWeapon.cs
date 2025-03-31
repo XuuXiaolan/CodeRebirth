@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
 using CodeRebirth.src.Util;
+using System;
 
 namespace CodeRebirth.src.Content.Items;
 public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's JMeleeWeapon
@@ -24,8 +25,27 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     private float timeAtLastDamageDealt;
 
-    [Tooltip("Player is the player who swung the weapon")]
-    public UnityEvent<PlayerControllerB> OnHitSuccess = new UnityEvent<PlayerControllerB>();
+    [Header("Damage Targets")]
+    public bool damagePlayers = true;
+    [Tooltip("Passes a Player that has been damaged by the weapon")]
+    public UnityEvent<PlayerControllerB> OnPlayerHit = new UnityEvent<PlayerControllerB>();
+
+    public bool damageEnemies = true;
+    [Tooltip("Passes an Enemy that has been damaged by the weapon")]
+    public UnityEvent<EnemyAI> OnEnemyHit = new UnityEvent<EnemyAI>();
+
+    public bool damageVehicles = false;
+    [Tooltip("Passes a Vehicle that has been damaged by the weapon")]
+    public UnityEvent<VehicleController> OnVehicleHit = new UnityEvent<VehicleController>();
+
+    public bool damageObjects = true;
+    [Tooltip("Passes an Object that has been damaged by the weapon")]
+    public UnityEvent<IHittable> OnObjectHit = new UnityEvent<IHittable>();
+
+    public bool damageSurfaces = true;
+    [Tooltip("Passes a Surface that has been damaged by the weapon")]
+    public UnityEvent<int> OnSurfaceHit = new UnityEvent<int>();
+
     [Tooltip("Default: 1\nPop Butlers: 5")]
     public int HitId = 1;
 
@@ -41,20 +61,24 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     private bool isHoldingButton;
 
     [Header("Audio")]
-    public AudioClip[] hitSFX;
+    public AudioClip[] hitSFX = [];
     [Tooltip("Only used for Heavy Weapons")]
-    public AudioClip[] reelUpSFX;
-    public AudioClip[] swingSFX;
-    public AudioClip[] finishReelUpSFX;
-    public AudioClip[] hitEnemySFX;
+    public AudioClip[] reelUpSFX = [];
+    public AudioClip[] swingSFX = [];
+    public AudioClip[] finishReelUpSFX = [];
+    public AudioClip[] hitEnemySFX = [];
     public AudioSource weaponAudio;
     public bool tryHitAllTimes = false;
 
     [HideInInspector] public float heldOverHeadTimer = 0f;
-    private List<IHittable> iHittableList = new();
     private Coroutine? reelingRoutine = null;
-    private RaycastHit[] cachedRaycastHits = new RaycastHit[8];
+    private RaycastHit[] cachedRaycastHits = new RaycastHit[16];
     private PlayerControllerB previousPlayerHeldBy;
+
+    private List<IHittable> iHittableList = new();
+    private List<VehicleController> hitVehicles = new();
+    private List<PlayerControllerB> hitPlayers = new();
+    private List<EnemyAICollisionDetect> hitEnemies = new();
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
@@ -98,15 +122,13 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         playerHeldBy.activatingItem = true;
         playerHeldBy.twoHanded = true;
         playerHeldBy.playerBodyAnimator.ResetTrigger("shovelHit");
-        playerHeldBy.playerBodyAnimator.SetBool("reelingUp", value: true);
-        if (playerHeldBy.IsOwner)
-        {
-            reelingAnimSpeed = 0.35f / reelingTime;
-            playerHeldBy.playerBodyAnimator.speed = reelingAnimSpeed;
-        }
+        playerHeldBy.playerBodyAnimator.SetBool("reelingUp", true);
+        reelingAnimSpeed = 0.35f / reelingTime;
+        playerHeldBy.playerBodyAnimator.speed = reelingAnimSpeed;
         PlayRandomSFX(reelUpSFX);
         ReelUpSFXServerRpc();
         yield return new WaitForSeconds(reelingTime);
+        playerHeldBy.playerBodyAnimator.speed = 1f;
         PlayRandomSFX(finishReelUpSFX);
         while (isHoldingButton && isHeld)
         {
@@ -115,9 +137,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         }
 
         yield return new WaitUntil(() => !isHoldingButton || !isHeld);
-        if (playerHeldBy.IsOwner) playerHeldBy.playerBodyAnimator.speed = 1f;
         SwingHeavyWeapon(!isHeld);
-        tryHitAllTimes = true;
         if (tryHitAllTimes)
         {
             float timeElapsed = 0f;
@@ -149,6 +169,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     [ClientRpc]
     public void ReelUpSFXClientRpc()
     {
+        if (IsOwner) return;
         PlayRandomSFX(reelUpSFX);
     }
 
@@ -183,39 +204,57 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
         previousPlayerHeldBy.activatingItem = false;
         int surfaceSound = -1;
-        bool hitSomething = false;
 
         if (cancel) return false;
         previousPlayerHeldBy.twoHanded = false;
         int numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore);
         var objectsHit = cachedRaycastHits.Take(numHits).OrderBy(hit => hit.distance);
 
+        hitVehicles.Clear();
         foreach (RaycastHit hit in objectsHit)
         {
             if (hit.collider.gameObject.tag.Contains("Player") || hit.collider.gameObject.tag.Contains("Enemy")) continue;
-            if (hit.collider.isTrigger) continue;
+            VehicleController? hitVehicle = GrabVehicleFromHit(hit);
+            if (hitVehicle != null)
+            {
+                hitVehicles.Add(hitVehicle);
+            }
             for (int i = 0; i < StartOfRound.Instance.footstepSurfaces.Length; i++)
             {
                 if (hit.collider.gameObject.tag != StartOfRound.Instance.footstepSurfaces[i].surfaceTag) continue;
                 surfaceSound = i;
                 Plugin.ExtendedLogging($"Hit surface: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
-                hitSomething = true;
                 break;
             }
         }
 
         iHittableList.Clear();
+        hitEnemies.Clear();
+        hitPlayers.Clear();
+
         numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
         objectsHit = cachedRaycastHits.Take(numHits).OrderBy(hit => hit.distance);
         foreach (RaycastHit hit in objectsHit)
         {
             if (!hit.collider.gameObject.TryGetComponent(out IHittable hittable) || hit.collider.gameObject == previousPlayerHeldBy.gameObject) continue;
             Plugin.ExtendedLogging($"Hit hittable: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
+            if (hittable is EnemyAICollisionDetect enemyAICollisionDetect)
+            {
+                if (hitEnemies.Contains(enemyAICollisionDetect)) continue;
+                Plugin.ExtendedLogging($"Hit enemy: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
+                hitEnemies.Add(enemyAICollisionDetect);
+                continue;
+            }
+            else if (hittable is PlayerControllerB playerControllerB)
+            {
+                if (hitPlayers.Contains(playerControllerB)) continue;
+                hitPlayers.Add(playerControllerB);
+                continue;
+            }
             iHittableList.Add(hittable);
-            hitSomething = true;
         }
-        
-        if (!hitSomething) return false;
+
+        if (surfaceSound == -1 && hitEnemies.Count <= 0 && hitPlayers.Count <= 0 && hitVehicles.Count <= 0) return false;
         foreach (var hittable in iHittableList)
         {
             OnWeaponHit(hittable, this.transform.position);
@@ -223,29 +262,83 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         timeAtLastDamageDealt = Time.realtimeSinceStartup;
 
         RoundManager.Instance.PlayAudibleNoise(transform.position, 17f, 0.8f);
-        if (surfaceSound != -1)
-        {
-            weaponAudio.PlayOneShot(StartOfRound.Instance.footstepSurfaces[surfaceSound].hitSurfaceSFX);
-            WalkieTalkie.TransmitOneShotAudio(weaponAudio, StartOfRound.Instance.footstepSurfaces[surfaceSound].hitSurfaceSFX);
-            PlayRandomSFX(hitSFX); // hit wall etc sound from weapon
-            HitWeaponServerRpc(surfaceSound); // hit wall etc sound from wall
-        }
-        else
-        {
-            PlayRandomSFX(hitEnemySFX);
-            bloodParticle?.Play(true);
-        }
+        HandleHittingPlayers(hitPlayers);
+        HandleHittingEnemies(hitEnemies);
+        HandleHittingVehicles(hitVehicles);
+        HandleHittingSurface(surfaceSound);
 
         if (isHeavyWeapon)
         {
             playerHeldBy.playerBodyAnimator.SetTrigger("shovelHit");
         }
 
-        return hitSomething;
+        return true;
     }
 
-    public virtual bool OnWeaponHit(IHittable target, Vector3 hitDir)
+    private void HandleHittingSurface(int surfaceID)
     {
+        if (!damageSurfaces) return;
+        if (surfaceID == -1) return;
+        OnSurfaceHit.Invoke(surfaceID);
+        weaponAudio.PlayOneShot(StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
+        WalkieTalkie.TransmitOneShotAudio(weaponAudio, StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
+        PlayRandomSFX(hitSFX); // hit wall etc sound from weapon
+        HitWeaponServerRpc(surfaceID); // hit wall etc sound from wall
+    }
+
+    private void HandleHittingPlayers(List<PlayerControllerB> hitPlayers)
+    {
+        if (!damagePlayers) return;
+        if (hitPlayers.Count <= 0) return;
+        foreach (var player in hitPlayers)
+        {
+            OnPlayerHit.Invoke(player);
+            player.DamagePlayer(HitForce, true, true, CauseOfDeath.Bludgeoning, 0, false, default);
+        }
+    }
+
+    private void HandleHittingEnemies(List<EnemyAICollisionDetect> hitEnemies)
+    {
+        if (!damageEnemies) return;
+        if (hitEnemies.Count <= 0) return;
+        foreach (var enemyAICollisionDetect in hitEnemies)
+        {
+            Plugin.ExtendedLogging($"Hitting enemy: {enemyAICollisionDetect.mainScript}");
+            OnEnemyHit.Invoke(enemyAICollisionDetect.mainScript);
+            enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(HitForce, weaponTip.transform.position, previousPlayerHeldBy, true, HitId);
+        }
+        PlayRandomSFX(hitEnemySFX);
+        bloodParticle?.Play(true);
+    }
+
+    private void HandleHittingVehicles(List<VehicleController> hitVehicles)
+    {
+        if (!damageVehicles) return;
+        if (hitVehicles.Count <= 0) return;
+        
+        foreach (var vehicle in hitVehicles)
+        {
+            vehicle.PushTruckServerRpc(previousPlayerHeldBy.transform.position, weaponTip.transform.position);
+            vehicle.DealPermanentDamage(HitForce, previousPlayerHeldBy.transform.position);
+
+            OnVehicleHit.Invoke(vehicle);
+        }
+
+    }
+
+    public VehicleController? GrabVehicleFromHit(RaycastHit hit)
+    {
+        if (!damageVehicles) return null;
+        if (hit.collider.gameObject.layer != 30) return null;
+        if (!hit.collider.TryGetComponent(out VehicleController vehicle)) return null;
+        if (hitVehicles.Contains(vehicle)) return null;
+        return vehicle;
+    }
+
+    public bool OnWeaponHit(IHittable target, Vector3 hitDir)
+    {
+        if (!damageObjects) return false;
+        OnObjectHit.Invoke(target);
         return target.Hit(HitForce, hitDir, previousPlayerHeldBy, true, HitId);
     }
 
@@ -258,21 +351,18 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     [ClientRpc]
     public void HitWeaponClientRpc(int hitSurfaceID)
     {
-        PlayRandomSFX(hitSFX);
-        OnHitSuccess.Invoke(previousPlayerHeldBy);
-
-        if (hitSurfaceID != -1)
-        {
-            HitSurface(hitSurfaceID);
-        }
+        if (IsOwner) return;
+        PlayRandomSFX(hitSFX); // hit wall etc sound from weapon
+        HitSurface(hitSurfaceID);
     }
 
     private void PlayRandomSFX(AudioClip[] clips)
     {
+        if (clips.Length == 0) return;
         RoundManager.PlayRandomClip(weaponAudio, clips);
     }
 
-    public virtual void HitSurface(int hitSurfaceID)
+    private void HitSurface(int hitSurfaceID)
     {
         weaponAudio.PlayOneShot(StartOfRound.Instance.footstepSurfaces[hitSurfaceID].hitSurfaceSFX);
         WalkieTalkie.TransmitOneShotAudio(weaponAudio, StartOfRound.Instance.footstepSurfaces[hitSurfaceID].hitSurfaceSFX);

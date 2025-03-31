@@ -39,19 +39,6 @@ public class SmartAgentNavigator : NetworkBehaviour
         agent = gameObject.GetComponent<NavMeshAgent>();
     }
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        Plugin.ExtendedLogging("SmartAgentNavigator initialized");
-        CodeRebirthPlayerManager.smartAgentNavigators.Add(this);
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-        CodeRebirthPlayerManager.smartAgentNavigators.Remove(this);
-    }
-
     public void SetAllValues(bool isOutside)
     {
         this.isOutside = isOutside;

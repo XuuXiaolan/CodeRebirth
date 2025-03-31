@@ -101,6 +101,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
     }
 
+    public void PlayerPressedInteract(PlayerControllerB player)
+    {
+        foreach (var instance in Mountaineer.Instances)
+        {
+            instance.InteractActionTriggered(player);
+        }
+    }
+
     public void OnNewRoundStart()
     {
         entrancePoints = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);

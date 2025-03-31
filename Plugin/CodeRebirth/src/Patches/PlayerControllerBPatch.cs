@@ -59,7 +59,16 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.IHittable_Hit += PlayerControllerB_IHittable_Hit;
         On.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.Jump_performed += PlayerControllerB_Jump_performed;
+        On.GameNetcodeStuff.PlayerControllerB.Interact_performed += PlayerControllerB_Interact_performed;
         // On.GameNetcodeStuff.PlayerControllerB.NearOtherPlayers += PlayerControllerB_NearOtherPlayers;
+    }
+
+    private static void PlayerControllerB_Interact_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Interact_performed orig, PlayerControllerB self, InputAction.CallbackContext context)
+    {
+        orig(self, context);
+        if (self != GameNetworkManager.Instance.localPlayerController) return;
+        Plugin.ExtendedLogging($"{self.playerUsername} pressed interact.");
+        CodeRebirthUtils.Instance.PlayerPressedInteract(self);
     }
 
     private static void PlayerControllerB_Jump_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Jump_performed orig, PlayerControllerB self, InputAction.CallbackContext context)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -20,6 +21,7 @@ public class Mountaineer : CRWeapon
     {
         base.OnNetworkSpawn();
         Instances.Add(this);
+        OnSurfaceHit.AddListener(OnSurfaceHitEvent);
         iceMaterial = new Material(iceRenderer.sharedMaterial);
         iceRenderer.material = iceMaterial;
     }
@@ -81,17 +83,43 @@ public class Mountaineer : CRWeapon
             }
             if (player.grabObjectCoroutine != null)
             {
-                base.StopCoroutine(player.grabObjectCoroutine);
+                StopCoroutine(player.grabObjectCoroutine);
             }
-            player.grabObjectCoroutine = base.StartCoroutine(player.GrabObject());
+            player.grabObjectCoroutine = StartCoroutine(player.GrabObject());
         }
     }
 
-    public override void HitSurface(int hitSurfaceID)
+    public void OnSurfaceHitEvent(int surfaceID)
     {
-        base.HitSurface(hitSurfaceID);
-        stuckPlayer = playerHeldBy;
+        if (!playerHeldBy.IsOwner) return;
+        OnSurfaceHitServerRpc(surfaceID);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void OnSurfaceHitServerRpc(int surfaceID)
+    {
+        OnSurfaceHitClientRpc(surfaceID);
+    }
+
+    [ClientRpc]
+    public void OnSurfaceHitClientRpc(int surfaceID)
+    {
+        // switch this to a listener for the objects hit and rpc it
         stuckToWall = true;
+        // Check if the weapon tip is angled downward.
+        /*float dot = Vector3.Dot(weaponTip.forward, -Vector3.up);
+        Plugin.ExtendedLogging($"Vector Dot: {dot}");
+        if (dot > 0.92f)        {
+            // The tip is aimed toward the ground, so skip the stuck logic.
+            return;
+        }*/ // doesn't work too well :/
+
+        if (playerHeldBy != GameNetworkManager.Instance.localPlayerController)
+        {
+            grabbable = false;
+            return;
+        }
+        stuckPlayer = playerHeldBy;
         stuckPlayer.externalForces = Vector3.zero;
         stuckPlayer.externalForceAutoFade = Vector3.zero;
         stuckPosition = stuckPlayer.transform.position;
@@ -104,9 +132,10 @@ public class Mountaineer : CRWeapon
         base.FallWithCurve();
     }
 
-    public override void EquipItem() // sync this
+    public override void EquipItem()
     {
         base.EquipItem();
+        grabbable = true;
         stuckToWall = false;
         stuckPlayer = null;
     }
@@ -115,10 +144,18 @@ public class Mountaineer : CRWeapon
     {
         if (!stuckToWall || stuckPlayer == null) return;
         weaponAudio.PlayOneShot(unlatchSounds[Random.Range(0, unlatchSounds.Length)]);
-        if (stuckPlayer != player) return;
         stuckPlayer.activatingItem = false;
         stuckPlayer.disableMoveInput = false;
         stuckPlayer.externalForceAutoFade = Vector3.up * 30f;
+        MakePlayerGrabObject(stuckPlayer);
+    }
+
+    public void InteractActionTriggered(PlayerControllerB player)
+    {
+        if (!stuckToWall || stuckPlayer == null) return;
+        weaponAudio.PlayOneShot(unlatchSounds[Random.Range(0, unlatchSounds.Length)]);
+        stuckPlayer.activatingItem = false;
+        stuckPlayer.disableMoveInput = false;
         MakePlayerGrabObject(stuckPlayer);
     }
 

@@ -123,6 +123,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             yield return new WaitUntil(() => agent.enabled);
             yield return new WaitForSeconds(1f);
             yield return new WaitForEndOfFrame();
+            if (!agent.enabled) yield break;
             line.SetPosition(0, agent.transform.position); //set the line's origin
 
             line.positionCount = agent.path.corners.Length; //set the array of positions to the amount of corners

@@ -13,6 +13,22 @@ public class ItemHandler : ContentHandler<ItemHandler>
     {
     }
 
+    public class TurbulenceAssets(string bundleName) : AssetBundleLoader<TurbulenceAssets>(bundleName)
+    {
+    }
+
+    public class MarrowSplitterAssets(string bundleName) : AssetBundleLoader<MarrowSplitterAssets>(bundleName)
+    {
+    }
+
+    public class SwatterAssets(string bundleName) : AssetBundleLoader<SwatterAssets>(bundleName)
+    {
+    }
+
+    public class TomaHopAssets(string bundleName) : AssetBundleLoader<TomaHopAssets>(bundleName)
+    {
+    }
+
     public class SnowGlobeAssets(string bundleName) : AssetBundleLoader<SnowGlobeAssets>(bundleName)
     {
     }
@@ -32,6 +48,10 @@ public class ItemHandler : ContentHandler<ItemHandler>
     public HoverboardAssets? Hoverboard { get; private set; } = null;
     public SnowGlobeAssets? SnowGlobe { get; private set; } = null;
     public BrrreakerAssets? Brrreaker { get; private set; } = null;
+    public TurbulenceAssets? Turbulence { get; private set; } = null;
+    public MarrowSplitterAssets? MarrowSplitter { get; private set; } = null;
+    public SwatterAssets? Swatter { get; private set; } = null;
+    public TomaHopAssets? TomaHop { get; private set; } = null;
 
     public ItemHandler()
     {
@@ -45,5 +65,13 @@ public class ItemHandler : ContentHandler<ItemHandler>
         SnowGlobe = LoadAndRegisterAssets<SnowGlobeAssets>("snowglobeassets");
 
         Brrreaker = LoadAndRegisterAssets<BrrreakerAssets>("mountaineerassets");
+
+        Turbulence = LoadAndRegisterAssets<TurbulenceAssets>("turbulenceassets");
+
+        MarrowSplitter = LoadAndRegisterAssets<MarrowSplitterAssets>("marrowsplitterassets");
+
+        Swatter = LoadAndRegisterAssets<SwatterAssets>("swatterassets");
+
+        TomaHop = LoadAndRegisterAssets<TomaHopAssets>("tomahopassets");
     }
 }

@@ -24,7 +24,6 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
     private bool previousDoorClosed;
     public static List<InteractTrigger> triggersTampered = new();
     internal static Dictionary<PlayerControllerB, CRPlayerData> dataForPlayer = new Dictionary<PlayerControllerB, CRPlayerData>();
-    public static List<SmartAgentNavigator> smartAgentNavigators = new();
     public static event EventHandler<bool>? OnDoorStateChange;
     public void Awake()
     {
@@ -70,6 +69,7 @@ public class CRPlayerData
     public bool flung = false;
     public bool pseudoDead = false;
     public Hoverboard? hoverboardRiding;
+    // public AnimatorOverrideController animatorOverrideController = null!;
     public List<Collider> playerColliders = new();
 }
 
@@ -149,6 +149,8 @@ internal static class PlayerControllerBExtensions
     {
         CodeRebirthPlayerManager.dataForPlayer.Add(player, new CRPlayerData());
         player.GetCRPlayerData().playerColliders = new List<Collider>(player.GetComponentsInChildren<Collider>());
+        // player.GetCRPlayerData().animatorOverrideController = new AnimatorOverrideController(player.playerBodyAnimator.runtimeAnimatorController);
+        // player.playerBodyAnimator.runtimeAnimatorController = player.GetCRPlayerData().animatorOverrideController;
     }
 
     internal static bool IsPseudoDead(this PlayerControllerB player) =>
