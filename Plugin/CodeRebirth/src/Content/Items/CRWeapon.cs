@@ -80,6 +80,10 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     private List<PlayerControllerB> hitPlayers = new();
     private List<EnemyAICollisionDetect> hitEnemies = new();
 
+    private static readonly int UseHeldItem1Animation = Animator.StringToHash("UseHeldItem1"); // Trigger
+    private static readonly int ShovelHitAnimation = Animator.StringToHash("shovelHit"); // Trigger
+    private static readonly int ReelingUpAnimation = Animator.StringToHash("reelingUp"); // Bool
+
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         if (playerHeldBy == null)
@@ -106,7 +110,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
             if (previousPlayerHeldBy.IsOwner)
             {
-                previousPlayerHeldBy.playerBodyAnimator.SetTrigger("UseHeldItem1");
+                previousPlayerHeldBy.playerBodyAnimator.SetTrigger(UseHeldItem1Animation);
             }
 
             if (IsOwner && Time.realtimeSinceStartup - timeAtLastDamageDealt > weaponCooldown)
@@ -121,8 +125,8 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         heldOverHeadTimer = 0f;
         playerHeldBy.activatingItem = true;
         playerHeldBy.twoHanded = true;
-        playerHeldBy.playerBodyAnimator.ResetTrigger("shovelHit");
-        playerHeldBy.playerBodyAnimator.SetBool("reelingUp", true);
+        playerHeldBy.playerBodyAnimator.ResetTrigger(ShovelHitAnimation);
+        playerHeldBy.playerBodyAnimator.SetBool(ReelingUpAnimation, true);
         reelingAnimSpeed = 0.35f / reelingTime;
         playerHeldBy.playerBodyAnimator.speed = reelingAnimSpeed;
         PlayRandomSFX(reelUpSFX);
@@ -186,7 +190,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     public virtual void SwingHeavyWeapon(bool cancel = false)
     {
-        previousPlayerHeldBy.playerBodyAnimator.SetBool("reelingUp", value: false);
+        previousPlayerHeldBy.playerBodyAnimator.SetBool(ReelingUpAnimation, false);
         if (!cancel)
         {
             PlayRandomSFX(swingSFX);
@@ -269,7 +273,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
         if (isHeavyWeapon)
         {
-            playerHeldBy.playerBodyAnimator.SetTrigger("shovelHit");
+            playerHeldBy.playerBodyAnimator.SetTrigger(ShovelHitAnimation);
         }
 
         return true;

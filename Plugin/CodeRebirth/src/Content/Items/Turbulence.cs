@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class Turbulence : CRWeapon
@@ -9,6 +10,30 @@ public class Turbulence : CRWeapon
     {
         base.OnNetworkSpawn();
         OnSurfaceHit.AddListener(OnSurfaceHitEvent);
+        OnEnemyHit.AddListener(OnEnemyHitEvent);
+    }
+
+    public void OnEnemyHitEvent(EnemyAI enemyAI)
+    {
+        OnEnemyHitServerRpc(new NetworkBehaviourReference(enemyAI));
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void OnEnemyHitServerRpc(NetworkBehaviourReference enemyAI)
+    {
+        OnEnemyHitClientRpc(enemyAI);
+    }
+
+    [ClientRpc]
+    public void OnEnemyHitClientRpc(NetworkBehaviourReference enemyAI)
+    {
+        if (enemyAI.TryGet(out EnemyAI enemyAIScript))
+        {
+            if (enemyAIScript.enemyHP <= 0 || enemyAIScript.isEnemyDead)
+            {
+                enemyAIScript.transform.localScale = new Vector3(enemyAIScript.transform.localScale.x, enemyAIScript.transform.localScale.y * 0.1f, enemyAIScript.transform.localScale.z);
+            }
+        }
     }
 
     public void OnSurfaceHitEvent(int surfaceID)
@@ -26,11 +51,19 @@ public class Turbulence : CRWeapon
     public void OnSurfaceHitClientRpc(int surfaceID)
     {
         stuckToGround = true;
+        float distance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
+
+        if (distance <= 15)
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+        }
         if (playerHeldBy != GameNetworkManager.Instance.localPlayerController)
         {
             return;
         }
         Plugin.ExtendedLogging($"Turbulence hit surface: {surfaceID} so dropping");
+        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 5f * (playerHeldBy.isCrouching ? 0.25f : 1f);
         StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
     }
 
