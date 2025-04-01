@@ -417,7 +417,24 @@ MonoBehaviour:
   weaponRange: 1.5
   weaponCooldown: 0.2
   bloodParticle: {fileID: 0}
-  OnHitSuccess:
+  damagePlayers: 1
+  OnPlayerHit:
+    m_PersistentCalls:
+      m_Calls: []
+  damageEnemies: 1
+  OnEnemyHit:
+    m_PersistentCalls:
+      m_Calls: []
+  damageVehicles: 1
+  OnVehicleHit:
+    m_PersistentCalls:
+      m_Calls: []
+  damageObjects: 1
+  OnObjectHit:
+    m_PersistentCalls:
+      m_Calls: []
+  damageSurfaces: 1
+  OnSurfaceHit:
     m_PersistentCalls:
       m_Calls: []
   HitId: 1
