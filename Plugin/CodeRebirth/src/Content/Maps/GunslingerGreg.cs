@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -60,6 +59,7 @@ public class GunslingerGreg : CodeRebirthHazard
         {
             RechargeRocket(rocketsReady.First(x => x.Value == false).Key);
         }
+        if (Plugin.ModConfig.ConfigDebugMode.Value) return;
         if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rocketsReady.Values.Where(x => x != null).Count() <= 0) return;
         // Rotate the turret to look for targets
         FindAndAimAtTarget();

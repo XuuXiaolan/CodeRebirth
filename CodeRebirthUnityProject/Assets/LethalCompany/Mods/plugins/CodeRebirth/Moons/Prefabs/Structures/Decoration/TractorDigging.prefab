@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 6318182912892142976}
   - component: {fileID: 5116928607923963994}
   - component: {fileID: 4479122497363013751}
+  - component: {fileID: 1739414180230833050}
   m_Layer: 0
   m_Name: TractorDigging
   m_TagString: Untagged
@@ -388,6 +389,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.7386493, y: 2.6497207, z: 3.2414577}
   m_Center: {x: -0.70938563, y: -0.6244401, z: 3.5034733}
+--- !u!114 &1739414180230833050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5458580021701886220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &8901898782322364623
 GameObject:
   m_ObjectHideFlags: 0

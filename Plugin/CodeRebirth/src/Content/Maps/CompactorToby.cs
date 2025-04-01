@@ -12,13 +12,18 @@ public class CompactorToby : NetworkBehaviour, IHittable
 {
     public Animator tobyAnimator = null!;
     public NetworkAnimator tobyNetworkAnimator = null!;
-    public Transform[] spawnTransforms = null!;
+    public GameObject[] spawnTransforms = [];
 
     [HideInInspector] public bool compacting = false;
     private static readonly int HitAnimation = Animator.StringToHash("hit"); // Trigger
     private static readonly int StartCompactAnimation = Animator.StringToHash("startCompact"); // Trigger
     private static readonly int FastEndCompactAnimation = Animator.StringToHash("fastEnd"); // Trigger
     private static readonly int SlowEndCompactAnimation = Animator.StringToHash("slowEnd"); // Trigger
+
+    public void Start()
+    {
+        spawnTransforms = GameObject.FindGameObjectsWithTag("EnemySpawn");
+    }
 
     public void CompactorInteract(PlayerControllerB player)
     {
@@ -97,11 +102,15 @@ public class CompactorToby : NetworkBehaviour, IHittable
                 Timethreshold = 2.4f;
                 Plugin.ExtendedLogging("Spawning Enemy");
                 int randomIndex = UnityEngine.Random.Range(0, spawnTransforms.Length);
-                EnemyType randomEnemy = RoundManager.Instance.currentLevel.OutsideEnemies[UnityEngine.Random.Range(0, RoundManager.Instance.currentLevel.OutsideEnemies.Count)].enemyType;
-                var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].position, -1, -1, randomEnemy);
+                var validEnemies = RoundManager.Instance.currentLevel.OutsideEnemies.Where(spawnableEnemy => spawnableEnemy.rarity > 0).ToList();
+                EnemyType randomEnemy = validEnemies[UnityEngine.Random.Range(0, validEnemies.Count)].enemyType;
+                var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].transform.position, -1, -1, randomEnemy);
                 if (((GameObject)NetObjRef).TryGetComponent(out EnemyAI enemyAI) && enemyAI.agent != null)
                 {
+                    enemyAI.destination = this.transform.position;
+                    enemyAI.moveTowardsDestination = true;
                     enemyAI.agent.SetDestination(this.transform.position);
+                    enemyAI.SetDestinationToPosition(this.transform.position);
                 }
             }
         }

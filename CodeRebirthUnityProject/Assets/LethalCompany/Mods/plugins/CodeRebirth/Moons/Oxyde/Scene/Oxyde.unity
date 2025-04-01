@@ -4666,7 +4666,7 @@ MonoBehaviour:
   m_VoxelSize: 0.2
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: cd17be29bf825534b999e1ebd75c47ba, type: 2}
-  m_BuildHeightMesh: 0
+  m_BuildHeightMesh: 1
 --- !u!114 &1991192133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5234,11 +5234,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2763930501
       objectReference: {fileID: 0}
-    - target: {fileID: 8201113634922178522, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: shipNavColliders
-      value: 
-      objectReference: {fileID: 1959721454}
     - target: {fileID: 8866132944236790290, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash

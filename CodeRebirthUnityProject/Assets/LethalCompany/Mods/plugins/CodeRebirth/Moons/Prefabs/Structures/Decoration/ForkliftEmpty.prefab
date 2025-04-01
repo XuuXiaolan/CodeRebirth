@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8366460526781099897}
   - component: {fileID: 470965622171232503}
   - component: {fileID: 3431897379073568629}
-  - component: {fileID: 6296573669361601775}
+  - component: {fileID: 7558542151413568054}
   m_Layer: 8
   m_Name: ForkliftEmpty
   m_TagString: Untagged
@@ -172,7 +172,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.22073364, y: 0.19990364, z: 1.4201037}
   m_Center: {x: -0.3285675, y: 0.5686181, z: 2.4579847}
---- !u!114 &6296573669361601775
+--- !u!114 &7558542151413568054
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -181,10 +181,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8915123578065303808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Size: {x: 1.636, y: 5.314, z: 3.426}
-  m_Center: {x: 0.011, y: -1.657, z: 1.675}
+  m_OverrideArea: 1
   m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff

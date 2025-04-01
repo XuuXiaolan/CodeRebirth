@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8661317341882786660}
   - component: {fileID: 7410790035856559922}
   - component: {fileID: 7611007472363562284}
-  - component: {fileID: 267605954464080653}
+  - component: {fileID: 339896024761695419}
   m_Layer: 8
   m_Name: WaterTower
   m_TagString: Untagged
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &267605954464080653
+--- !u!114 &339896024761695419
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,12 +94,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6432502833015194444}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Size: {x: 10.17, y: 10.8, z: 21.07}
-  m_Center: {x: 0, y: 0, z: 10.18}
+  m_OverrideArea: 1
   m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
 --- !u!1001 &3469674499498551916
 PrefabInstance:

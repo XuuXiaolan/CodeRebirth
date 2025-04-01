@@ -176,7 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5444474708972824092}
   - component: {fileID: 8807171968442933092}
-  - component: {fileID: 7035788860796968952}
+  - component: {fileID: 37993677131698476}
   m_Layer: 8
   m_Name: DecoContainerRed
   m_TagString: Untagged
@@ -225,7 +225,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.231552, y: 4.158272, z: 7.0880165}
   m_Center: {x: -0.03302002, y: 2.0935555, z: -0.21270943}
---- !u!114 &7035788860796968952
+--- !u!114 &37993677131698476
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,12 +234,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4633633695591237459}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Size: {x: 4.231552, y: 4.3, z: 7.088016}
-  m_Center: {x: -0.03302002, y: 2.0935555, z: -0.21270943}
+  m_OverrideArea: 1
   m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
 --- !u!1 &5003402127225484502
 GameObject:

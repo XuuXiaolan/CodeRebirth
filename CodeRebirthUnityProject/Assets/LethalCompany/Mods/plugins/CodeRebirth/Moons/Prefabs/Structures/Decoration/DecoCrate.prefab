@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6836386865434682036}
   - component: {fileID: 4498927614547407337}
   - component: {fileID: 9056019198733553779}
-  - component: {fileID: 3689452551572389542}
+  - component: {fileID: 4163788736859851205}
   m_Layer: 8
   m_Name: DecoCrate
   m_TagString: Untagged
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.0060728, y: 2.0089579, z: 2.1249382}
   m_Center: {x: 0, y: 0.0008597969, z: 1.0492401}
---- !u!114 &3689452551572389542
+--- !u!114 &4163788736859851205
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,10 +115,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 212494024604370248}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Size: {x: 2, y: 2.002, z: 2.118}
-  m_Center: {x: 0, y: 0.001, z: 1.049}
+  m_OverrideArea: 1
   m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff

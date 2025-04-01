@@ -63,7 +63,7 @@ public class Turbulence : CRWeapon
             return;
         }
         Plugin.ExtendedLogging($"Turbulence hit surface: {surfaceID} so dropping");
-        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 5f * (playerHeldBy.isCrouching ? 0.25f : 1f);
+        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.25f : 1f);
         StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
     }
 
