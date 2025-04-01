@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -431,7 +432,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         }
         playerPuppetMap.Clear();
         if (EnemyHandler.Instance.ManorLord == null) return;
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.Where(x => x.GetItemOnName("Needle")).First().item.itemName, transform.position);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.GetCRItemDefinitionWithItemName("Needle")?.item.itemName, transform.position);
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

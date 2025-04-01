@@ -185,9 +185,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
         SpawnScrap(item, position, isQuest, defaultRotation, valueIncrease);
     }
 
-    public NetworkObjectReference SpawnScrap(Item item, Vector3 position, bool isQuest, bool defaultRotation, int valueIncrease)
+    public NetworkObjectReference SpawnScrap(Item? item, Vector3 position, bool isQuest, bool defaultRotation, int valueIncrease)
     {
-        if (StartOfRound.Instance == null)
+        if (StartOfRound.Instance == null || item == null)
         {
             return default;
         }

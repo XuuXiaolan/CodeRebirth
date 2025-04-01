@@ -5,6 +5,7 @@ using UnityEngine;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch
@@ -84,12 +85,12 @@ static class ShovelPatch
         if (EnemyHandler.Instance.RedwoodTitan != null && random.Next(0, 100) <= 5)
         {
             Plugin.ExtendedLogging("Spawning redwood titan");
-            CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.EnemyDefinitions.Where(x => x.GetEnemyTypeOnName("Redwood")).First().enemyType.enemyName);
+            CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Redwood")!.enemyType.enemyName);
         }
         if (UnlockableHandler.Instance.PlantPot != null && random.Next(0, 100) < Plugin.ModConfig.ConfigWoodenSeedTreeSpawnChance.Value)
         {
             Plugin.ExtendedLogging("Tree Destroyed with luck");
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc(UnlockableHandler.Instance.PlantPot.ItemDefinitions.Where(x => x.GetItemOnName("Seed")).First().item.itemName, CRWeapon.weaponTip.position, false, true, 5);
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc(UnlockableHandler.Instance.PlantPot.ItemDefinitions.GetCRItemDefinitionWithItemName("Seed")?.item.itemName, CRWeapon.weaponTip.position, false, true, 5);
         }
     }
 

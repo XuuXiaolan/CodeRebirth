@@ -85,7 +85,7 @@ class TIPS : CustomPass
     // When empty this render pass will render to the active camera render target.
     // You should never call CommandBuffer.SetRenderTarget. Instead call <c>ConfigureTarget</c> and <c>ConfigureClear</c>.
     // The render pipeline will ensure target setup and clearing happens in an performance manner.
-    protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
+    public override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
         tipsMeshMaterial = Resources.Load<Material>("Shader Graphs_TIPS_Effect");
         tipsBuffer = RTHandles.Alloc(Vector2.one, TextureXR.slices, dimension: TextureXR.dimension, colorFormat: GraphicsFormat.R16G16B16A16_SFloat, useDynamicScale: true, name: "TIPS Buffer");
@@ -106,7 +106,7 @@ class TIPS : CustomPass
     private static readonly int _GlowColor = Shader.PropertyToID("_GlowColor");
     private static readonly int _EdgeRadius = Shader.PropertyToID("_EdgeRadius");
     private static readonly int _Intensity = Shader.PropertyToID("_Intensity");
-    protected override void Execute(CustomPassContext ctx)
+    public override void Execute(CustomPassContext ctx)
     {
         if (fullscreenMaterial == null)
             return ;
@@ -131,7 +131,7 @@ class TIPS : CustomPass
         CoreUtils.DrawFullScreen(ctx.cmd, fullscreenMaterial, shaderPassId: blurPass, properties: ctx.propertyBlock);
     }
 
-    protected override void Cleanup()
+    public override void Cleanup()
     {
         tipsBuffer.Release();
     }

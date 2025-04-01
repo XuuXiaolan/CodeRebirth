@@ -4,23 +4,53 @@ using System.Linq;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util.Extensions;
 using HarmonyLib;
-using Unity.Netcode;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
+using static LethalLib.Modules.MapObjects;
+using Unity.Netcode;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
 static class RoundManagerPatch
 {
+	internal static List<RegisteredMapObject> registeredMapObjects = [];
 	internal static List<SpawnableFlora> spawnableFlora = [];
     
 	[HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
 	private static void SpawnOutsideMapObjects()
 	{
 		if (Plugin.ModConfig.ConfigFloraEnabled.Value) SpawnFlora();
+		if (!NetworkManager.Singleton.IsServer) return;
+		System.Random random = new(StartOfRound.Instance.randomMapSeed + 69);
+		foreach (RegisteredMapObject registeredMapObject in registeredMapObjects)
+		{
+			HandleSpawningOutsideMapObjects(registeredMapObject, random);
+		}
+	}
+
+	private static void HandleSpawningOutsideMapObjects(RegisteredMapObject mapObjDef, System.Random random)
+	{
+		SelectableLevel level = RoundManager.Instance.currentLevel;
+		AnimationCurve animationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+		GameObject prefabToSpawn = mapObjDef.outsideObject.spawnableObject.prefabToSpawn;
+
+		animationCurve = mapObjDef.spawnRateFunction(level);
+		int randomNumberToSpawn = (int)animationCurve.Evaluate(random.NextFloat(0f, 1f));
+		Plugin.ExtendedLogging($"Spawning {randomNumberToSpawn} of {prefabToSpawn.name} for level {level}");
+		for (int i = 0; i < randomNumberToSpawn; i++)
+		{
+			Vector3 spawnPos = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+			spawnPos = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(spawnPos, 10f, default, random, -1) + (Vector3.up * 2);
+			Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+			if (hit.collider == null) continue;
+			GameObject spawnedPrefab = GameObject.Instantiate(prefabToSpawn, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+			Plugin.ExtendedLogging($"Spawning {spawnedPrefab.name} at {hit.point}");
+			spawnedPrefab.transform.up = hit.normal;
+			spawnedPrefab.GetComponent<NetworkObject>().Spawn(true);
+		}
 	}
 
 	private static void SpawnFlora()

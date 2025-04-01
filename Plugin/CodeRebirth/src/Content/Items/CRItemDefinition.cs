@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 
@@ -13,6 +14,18 @@ public class CRItemDefinition : CRContentDefinition
     {
         if (string.IsNullOrEmpty(itemName)) return null;
         if (item.itemName.ToLowerInvariant().Contains(itemName.ToLowerInvariant())) return item;
+        return null;
+    }
+}
+
+public static class CRItemDefinitionExtensions
+{
+    public static CRItemDefinition? GetCRItemDefinitionWithItemName(this IReadOnlyList<CRItemDefinition> ItemDefinitions, string itemName)
+    {
+        foreach (var entry in ItemDefinitions)
+        {
+            if (entry.GetItemOnName(itemName) != null) return entry;
+        }
         return null;
     }
 }

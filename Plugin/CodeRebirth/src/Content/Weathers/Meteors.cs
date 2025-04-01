@@ -5,6 +5,7 @@ using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Events;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Meteors : NetworkBehaviour
@@ -135,16 +136,15 @@ public class Meteors : NetworkBehaviour
 
         ImpactAudio.Play();
         
-        if (WeatherHandler.Instance.Meteorite.ItemDefinitions.Where(x => x.GetItemOnName("Sapphire") != null).First().item)
         if (IsServer && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap)
         {
             int randomNumber = UnityEngine.Random.Range(0, 3);
-            if (randomNumber == 0 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite.ItemDefinitions.Where(x => x.GetItemOnName("Sapphire") != null).First().item.itemName, target);
-            else if (randomNumber == 1 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite.ItemDefinitions.Where(x => x.GetItemOnName("Emerald") != null).First().item.itemName, target);
-            else CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite.ItemDefinitions.Where(x => x.GetItemOnName("Ruby") != null).First().item.itemName, target);
+            if (randomNumber == 0 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Sapphire")?.item.itemName, target);
+            else if (randomNumber == 1 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Emerald")?.item.itemName, target);
+            else CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ruby")?.item.itemName, target);
         }
 
-        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Meteorite.CraterPrefab, target, Quaternion.identity);
+        GameObject craterInstance = Instantiate(WeatherHandler.Instance.Meteorite!.CraterPrefab, target, Quaternion.identity);
         craterInstance.transform.up = normal;
         CraterController craterController = craterInstance.GetComponent<CraterController>();
         craterController.ShowCrater(target, normal);

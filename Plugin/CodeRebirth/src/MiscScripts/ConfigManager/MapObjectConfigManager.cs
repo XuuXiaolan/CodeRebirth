@@ -30,10 +30,10 @@ public static class MapObjectConfigManager
         return new MapObjectConfig
         {
             Enabled = CRConfigManager.CRConfigs[keyName].Enabled,
-            InsideHazard = createInsideHazardConfig ? CRConfigManager.CreateEntry(configFile, keyName, $"{mapObjectName}", "Is Inside Hazard", isInsideHazard, $"The Inside MoonName:CurveSpawnWeight for the {mapObjectName}.") : null,
-            InsideCurveSpawnWeights = createInsideCurveSpawnWeightsConfig ? CRConfigManager.CreateEntry(configFile, keyName, $"{mapObjectName}", "Inside Curve Spawn Weights", defaultInsideCurveSpawnWeights, $"Whether {mapObjectName} is a scrap item.") : null,
-            OutsideHazard = createOutsideHazardConfig ? CRConfigManager.CreateEntry(configFile, keyName, $"{mapObjectName}", "Is Outside Hazard", isOutsideHazard, $"The Outside MoonName:CurveSpawnWeight for the {mapObjectName}.") : null,
-            OutsideCurveSpawnWeights = createOutsideCurveSpawnWeightsConfig ? CRConfigManager.CreateEntry(configFile, keyName, $"{mapObjectName}", "Inside Curve Spawn Weights", defaultOutsideCurveSpawnWeights, $"Whether {mapObjectName} is a shop item.") : null,
+            InsideHazard = createInsideHazardConfig ? CRConfigManager.CreateEntry(configFile, keyName, $"{mapObjectName}", "Is Inside Hazard", isInsideHazard, $"Whether {mapObjectName} is able to spawn as an Inside Hazard.") : null,
+            InsideCurveSpawnWeights = createInsideCurveSpawnWeightsConfig ? CRConfigManager.CreateEntry(configFile, keyName, $"{mapObjectName}", "Inside Curve Spawn Weights", defaultInsideCurveSpawnWeights, $"The Inside MoonName:CurveSpawnWeight for the {mapObjectName}.") : null,
+            OutsideHazard = createOutsideHazardConfig ? CRConfigManager.CreateEntry(configFile, keyName, $"{mapObjectName}", "Is Outside Hazard", isOutsideHazard, $"Whether {mapObjectName} is able to spawn as an Outside Hazard.") : null,
+            OutsideCurveSpawnWeights = createOutsideCurveSpawnWeightsConfig ? CRConfigManager.CreateEntry(configFile, keyName, $"{mapObjectName}", "Outside Curve Spawn Weights", defaultOutsideCurveSpawnWeights, $"The Outside MoonName:CurveSpawnWeight for the {mapObjectName}.") : null,
         };
     }
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
@@ -78,15 +79,15 @@ public class FunctionalMicrowave : CodeRebirthHazard
         int result = microwaveRandom.Next(0, 4);
         if (result == 0)
         {
-            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.Where(x => x.GetItemOnName("Spork")).First().item;
+            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.GetCRItemDefinitionWithItemName("Spork")?.item;
         }
         else if (result == 1)
         {
-            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.Where(x => x.GetItemOnName("Fork")).First().item;
+            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.GetCRItemDefinitionWithItemName("Fork")?.item;
         }
         else if (result == 2)
         {
-            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.Where(x => x.GetItemOnName("Baby")).First().item;
+            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.GetCRItemDefinitionWithItemName("Baby")?.item;
         }
         return null;
     }

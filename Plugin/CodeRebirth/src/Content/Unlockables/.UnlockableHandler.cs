@@ -1,10 +1,7 @@
 using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util;
-using LethalLib.Modules;
 using LethalLib.Extras;
 using UnityEngine;
-using CodeRebirth.src.MiscScripts;
-using System.Linq;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockableHandler : ContentHandler<UnlockableHandler>

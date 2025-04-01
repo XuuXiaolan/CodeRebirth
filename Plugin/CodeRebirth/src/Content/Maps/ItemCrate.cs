@@ -65,6 +65,7 @@ public class ItemCrate : CRHittable
 		crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
 		health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
 		digProgress = crateRandom.NextFloat(0.01f, 0.1f);
+		transform.position = transform.position + transform.up * -0.6f;
 		originalPosition = transform.position;
 		UpdateDigPosition(0, digProgress);
 

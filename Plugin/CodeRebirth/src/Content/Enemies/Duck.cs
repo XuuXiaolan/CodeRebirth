@@ -10,14 +10,14 @@ public class Duck : QuestMasterAI
     {
         base.Start();
         questTimer = 120f;
-        if (EnemyHandler.Instance.DuckSong == null || EnemyHandler.Instance.DuckSong.AssetBundleData == null)
+        if (EnemyHandler.Instance.DuckSong == null)
         {
             Plugin.Logger.LogError($"How the fuck did you even get this error");
             return;
         }
         else
         {
-            List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.DuckSong.EnemyDefinitions.Where(x => x.enemyType == this.enemyType).First().ConfigEntries;
+            List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.DuckSong.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
             CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Duck", "Quest Timer");
             // string key = $"{configSetting.settingName} | {configSetting.settingDesc}".CleanStringForConfig();
             if (configSetting != null)

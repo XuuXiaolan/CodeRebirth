@@ -7,14 +7,14 @@ namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(HDAdditionalLightData))]
 static class HDAdditionalLightDataPatch
 {
-    [HarmonyPatch("OnEnable"), HarmonyPostfix]
+    [HarmonyPatch(nameof(HDAdditionalLightData.OnEnable)), HarmonyPostfix]
     static void OnEnablePatch(HDAdditionalLightData __instance)
     {
         if (!__instance.gameObject.TryGetComponent(out Light light)) return;
         CodeRebirthUtils.currentRoundLightData.Add((light, __instance));
     }
 
-    [HarmonyPatch("OnDisable"), HarmonyPostfix]
+    [HarmonyPatch(nameof(HDAdditionalLightData.OnDisable)), HarmonyPostfix]
     static void OnDisablePatch(HDAdditionalLightData __instance)
     {
         if (!__instance.gameObject.TryGetComponent(out Light light)) return;

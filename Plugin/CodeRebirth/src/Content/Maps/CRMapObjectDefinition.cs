@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
@@ -15,6 +16,18 @@ public class CRMapObjectDefinition : CRContentDefinition
     {
         if (string.IsNullOrEmpty(name)) return null;
         if (objectName.ToLowerInvariant().Contains(name.ToLowerInvariant())) return gameObject;
+        return null;
+    }
+}
+
+public static class CRMapObjectDefinitionExtensions
+{
+    public static CRMapObjectDefinition? GetCRMapObjectDefinitionWithObjectName(this IReadOnlyList<CRMapObjectDefinition> MapObjectDefinitions, string objectName)
+    {
+        foreach (var entry in MapObjectDefinitions)
+        {
+            if (entry.GetGameObjectOnName(objectName) != null) return entry;
+        }
         return null;
     }
 }

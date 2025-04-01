@@ -9,12 +9,14 @@ using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Weathers;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.ConfigManager;
+using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util.AssetLoading;
 using LethalLevelLoader;
 using LethalLib.Extras;
 using LethalLib.Modules;
 using UnityEngine;
 using WeatherRegistry;
+using static LethalLib.Modules.MapObjects;
 using EnemyData = CodeRebirth.src.Util.AssetLoading.EnemyData;
 using WeatherManager = WeatherRegistry.WeatherManager;
 
@@ -378,7 +380,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
         {
             RegisterOutsideMapObjectWithConfig(prefab, outsideConfigString);
         }
-        Plugin.ExtendedLogging($"Registered map object: {prefab.name} to {CRObjectType}");
+        Plugin.ExtendedLogging($"Registered map object: {prefab.name} to outside: {outside} and inside: {inside} to {CRObjectType} with inside config: {insideConfigString} and outside config: {outsideConfigString}");
         MapObjectHandler.Instance.prefabMapping[CRObjectType] = prefab;
     }
 
@@ -435,18 +437,22 @@ public class ContentHandler<T> where T: ContentHandler<T>
         }
 
         // Register the map object with a single lambda function
-        MapObjects.RegisterOutsideObject(
-            mapObjDef,
-            Levels.LevelTypes.All,
-            curvesByCustomLevelType.Keys.ToArray().Select(s => s.ToLowerInvariant()).ToArray(),
+        RegisteredMapObject registeredMapObject = new RegisteredMapObject
+        {
+            outsideObject = mapObjDef.spawnableMapObject,
+            levels = Levels.LevelTypes.All,
+            spawnLevelOverrides = curvesByCustomLevelType.Keys.ToArray().Select(s => s.ToLowerInvariant()).ToArray(),
+            spawnRateFunction =
             level =>
             {
                 if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
                 Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
-                string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
-                Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
+		        string actualLevelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
+                Plugin.ExtendedLogging($"actual level name: {actualLevelName}");
+
+                bool isValidLevelType = Enum.TryParse(actualLevelName, true, out Levels.LevelTypes levelType);
                 bool isVanilla = false;
-                if (levelType != Levels.LevelTypes.None && levelType != Levels.LevelTypes.Modded)
+                if (isValidLevelType && levelType != Levels.LevelTypes.Modded)
                 {
                     isVanilla = true;
                 }
@@ -478,7 +484,9 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 }
                 Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
                 return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]); // Default case if no curve matches
-            });
+            }
+        };
+        RoundManagerPatch.registeredMapObjects.Add(registeredMapObject);
     }
 
     protected bool TryGetCurveDictAndLevelTag(Dictionary<string, AnimationCurve> curvesByCustomLevel, SelectableLevel level, out string tagName)

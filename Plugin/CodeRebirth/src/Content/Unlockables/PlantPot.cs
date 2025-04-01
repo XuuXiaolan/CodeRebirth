@@ -132,15 +132,14 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
     [ServerRpc(RequireOwnership = false)]
     private void ProduceFruitServerRpc(int fruitType)
     {
-        if (UnlockableHandler.Instance.PlantPot == null) return;
         Item? itemToSpawn = null;
         switch (fruitType)
         {
             case (int)FruitType.Tomato:
-                itemToSpawn = UnlockableHandler.Instance.PlantPot.ItemDefinitions.Where(x => x.GetItemOnName("Normal Tomato")).First().item;
+                itemToSpawn = UnlockableHandler.Instance.PlantPot?.ItemDefinitions.GetCRItemDefinitionWithItemName("Normal Tomato")?.item;
                 break;
             case (int)FruitType.Golden_Tomato:
-                itemToSpawn = UnlockableHandler.Instance.PlantPot.ItemDefinitions.Where(x => x.GetItemOnName("Golden Tomato")).First().item;
+                itemToSpawn = UnlockableHandler.Instance.PlantPot?.ItemDefinitions.GetCRItemDefinitionWithItemName("Golden Tomato")?.item;
                 break;
         }
         if (itemToSpawn == null)

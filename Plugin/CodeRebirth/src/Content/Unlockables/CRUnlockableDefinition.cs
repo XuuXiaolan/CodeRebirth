@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CodeRebirth.src.Util.AssetLoading;
 using LethalLib.Extras;
 using UnityEngine;
@@ -14,6 +15,18 @@ public class CRUnlockableDefinition : CRContentDefinition
     {
         if (string.IsNullOrEmpty(name)) return null;
         if (unlockableItemDef.unlockable.unlockableName.ToLowerInvariant().Contains(name.ToLowerInvariant())) return unlockableItemDef;
+        return null;
+    }
+}
+
+public static class CRUnlockableDefinitionExtensions
+{
+    public static CRUnlockableDefinition? GetCRUnlockableDefinitionWithUnlockableName(this IReadOnlyList<CRUnlockableDefinition> UnlockableDefinitions, string unlockableName)
+    {
+        foreach (var entry in UnlockableDefinitions)
+        {
+            if (entry.GetUnlockableByName(unlockableName) != null) return entry;
+        }
         return null;
     }
 }

@@ -72,6 +72,6 @@ public class CutieFlyAI : CodeRebirthEnemyAI
             if (UnityEngine.Random.Range(0, 100) < 50) return;
         }
         if (EnemyHandler.Instance.Monarch == null) return;
-        RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.Where(x => x.GetEnemyTypeOnName("Monarch")).First().enemyType);
+        RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Monarch")?.enemyType);
     }
 }

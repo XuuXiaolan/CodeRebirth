@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -63,11 +64,11 @@ public class ShreddingSarah : NetworkBehaviour
         NetworkObjectReference netObjRef;
         if (playerDeath)
         {
-            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah.ItemDefinitions.Where(x => x.GetItemOnName("Bloody Shredded Scraps")).First().item, shootPoint.position, false, true, valueOfItem);
+            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah?.ItemDefinitions.GetCRItemDefinitionWithItemName("Bloody Shredded Scraps")?.item, shootPoint.position, false, true, valueOfItem);
         }
         else
         {
-            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah.ItemDefinitions.Where(x => x.GetItemOnName("Normal Shredded Scraps")).First().item, shootPoint.position, false, true, valueOfItem);
+            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.ShredderSarah?.ItemDefinitions.GetCRItemDefinitionWithItemName("Normal Shredded Scraps")?.item, shootPoint.position, false, true, valueOfItem);
         }
         ShootItemForwards(netObjRef);
     }

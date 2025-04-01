@@ -100,7 +100,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
         {
             for (int i = 0; i < coinsStored.Value; i++)
             {
-                var coin = GameObject.Instantiate(MapObjectHandler.Instance.Merchant.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("money")).First().gameObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
+                var coin = GameObject.Instantiate(MapObjectHandler.Instance.Merchant?.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("money")?.gameObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
                 coin.GetComponent<NetworkObject>().Spawn(true);
             }
             coinsStored.Value = 0;

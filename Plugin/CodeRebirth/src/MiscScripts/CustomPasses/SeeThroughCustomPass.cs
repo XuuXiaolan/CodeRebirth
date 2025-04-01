@@ -18,7 +18,7 @@ public class SeeThroughCustomPass : CustomPass
 
     ShaderTagId[] shaderTags = [];
 
-    protected override bool executeInSceneView => true;
+    public override bool executeInSceneView => true;
 
     public void ConfigureMaterial(Color edgeColor, Color fillColor, float thickness)
     {
@@ -27,7 +27,7 @@ public class SeeThroughCustomPass : CustomPass
         seeThroughMaterial.SetFloat("_WireframeVal", thickness);
     }
 
-    protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
+    public override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
         stencilMaterial = CoreUtils.CreateEngineMaterial(stencilShader);
 
@@ -40,7 +40,7 @@ public class SeeThroughCustomPass : CustomPass
         ];
     }
 
-    protected override void Execute(CustomPassContext ctx)
+    public override void Execute(CustomPassContext ctx)
     {
         // We first render objects into the user stencil bit 0, this will allow us to detect
         // if the object is behind another object.
@@ -89,7 +89,7 @@ public class SeeThroughCustomPass : CustomPass
         CoreUtils.DrawRendererList(renderContext, cmd, renderContext.CreateRendererList(result));
     }
 
-    protected override void Cleanup()
+    public override void Cleanup()
     {
         // Cleanup code
     }

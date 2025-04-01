@@ -39,29 +39,26 @@ public class BearTrap : CodeRebirthHazard
 		{
 			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
 
-			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
 
 			if (hit.collider == null) continue;
-            GameObject beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("gravel")).First().gameObject;
+            GameObject beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("gravel")!.gameObject;
             if (hit.collider.CompareTag("Grass"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("grass")).First().gameObject;;
-            }
-            else if (hit.collider.CompareTag("Gravel"))
-            {
-                // beartrap = MapObjectHandler.Instance.BearTrap.GravelMatPrefab;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("grass")!.gameObject;;
             }
             else if (hit.collider.CompareTag("Snow"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("snow")).First().gameObject;;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("snow")!.gameObject;;
             }
+
             if (this is BoomTrap)
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("boom")).First().gameObject;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("boom")!.gameObject;
             }
             else if (random.Next(0, 100) < 5)
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.Where(x => x.GetGameObjectOnName("boom")).First().gameObject;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("boom")!.gameObject;
             }
             GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedTrap.GetComponent<BearTrap>().byProduct = true;
