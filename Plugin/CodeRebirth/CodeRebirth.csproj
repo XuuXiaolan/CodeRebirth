@@ -63,9 +63,10 @@
     <NetcodePatch Include="$(TargetPath)" />
   </ItemGroup>
   -->
-  <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
-  </Target>
+  <Sdk Name="Evaisa.NetcodePatcher.MSBuild" Version="4.3.0" />
+  <ItemGroup>
+    <NetcodePatch Include="$(TargetPath)" />
+  </ItemGroup>
   
   <Target Name="CopyAssetBundles" AfterTargets="PostBuildEvent">
     <ItemGroup>
