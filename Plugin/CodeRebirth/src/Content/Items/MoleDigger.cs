@@ -11,9 +11,15 @@ public class MoleDigger : GrabbableObject
     public OwnerNetworkAnimator moleOwnerNetworkAnimator = null!;
     public Transform endTransform = null!;
     public GameObject lightObject = null!;
+    public AudioSource idleSource = null!;
+    public AudioClip attackIdleSound = null!;
+    public AudioClip normalIdleSound = null!;
+    public AudioSource audioSource = null!;
+    public AudioClip DeactivateSound = null!;
+    public AudioClip[] chainYankSound = [];
+    public AudioClip activateSound = null!;
 
     private Collider[] cachedColliders = new Collider[8];
-    private System.Random moleRandom = new();
     private float yankChainTimer = 0f;
     private float hitTimer = 0f;
     private static readonly int ActivatedAnimation = Animator.StringToHash("activated"); // Bool
@@ -22,7 +28,6 @@ public class MoleDigger : GrabbableObject
     public override void Start() // when battery runs out,
     {
         base.Start();
-        moleRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         lightObject.SetActive(false);
     }
 
@@ -75,6 +80,9 @@ public class MoleDigger : GrabbableObject
     [ClientRpc]
     private void ActivateLightObjectClientRpc(bool enable)
     {
+        idleSource.volume = enable ? 1f : 0f;
+        idleSource.clip = normalIdleSound;
+        audioSource.PlayOneShot(enable ? activateSound : DeactivateSound);
         lightObject.SetActive(enable);
     }
 
@@ -87,7 +95,8 @@ public class MoleDigger : GrabbableObject
         if (btn.wasPressedThisFrame)
         {
             yankChainTimer = 1f;
-            if (moleRandom.Next(0, 100) < 25)
+            audioSource.PlayOneShot(chainYankSound[UnityEngine.Random.Range(0, chainYankSound.Length)]);
+            if (UnityEngine.Random.Range(0, 100) < 25)
             {
                 moleAnimator.SetBool(ActivatedAnimation, true);
                 ActivateLightObjectServerRpc(true);
@@ -134,10 +143,16 @@ public class MoleDigger : GrabbableObject
         Plugin.ExtendedLogging($"Mole Digger used and button down: {used} {buttonDown}");
         if (!buttonDown)
         {
+            idleSource.clip = normalIdleSound;
+            idleSource.Stop();
+            idleSource.Play();
             if (IsOwner) moleAnimator.SetBool(AttackingAnimation, false);
         }
         else
         {
+            idleSource.clip = attackIdleSound;
+            idleSource.Stop();
+            idleSource.Play();
             if (IsOwner) moleAnimator.SetBool(AttackingAnimation, true);
         }
     }

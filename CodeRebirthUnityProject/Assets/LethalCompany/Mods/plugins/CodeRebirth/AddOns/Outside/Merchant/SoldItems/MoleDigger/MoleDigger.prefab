@@ -158,6 +158,134 @@ Transform:
   - {fileID: 7417575026318839074}
   m_Father: {fileID: 6772338852672651274}
   m_LocalEulerAnglesHint: {x: 89.98021, y: 0.000059650487, z: 0}
+--- !u!1 &1864694653969466319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7459133621560727809}
+  - component: {fileID: 2990119371895374498}
+  m_Layer: 6
+  m_Name: IdleSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7459133621560727809
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864694653969466319}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3955639965929937542}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &2990119371895374498
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864694653969466319}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: eec02cc99940537478bd0bd972b2c0e4, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 16
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &3081681122143874873
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,6 +678,7 @@ Transform:
   - {fileID: 3238099463395889974}
   - {fileID: 3349276731957639570}
   - {fileID: 6875366283942878470}
+  - {fileID: 7459133621560727809}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &5583701338116237926
@@ -573,7 +702,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 25
+  MaxDistance: 16
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -742,6 +871,16 @@ MonoBehaviour:
   moleOwnerNetworkAnimator: {fileID: 6727420671627930091}
   endTransform: {fileID: 5347509267497047824}
   lightObject: {fileID: 3650093881404420006}
+  idleSource: {fileID: 2990119371895374498}
+  attackIdleSound: {fileID: 8300000, guid: 6d9b3d46562c5be4d974a1dc1ed1a4c1, type: 3}
+  normalIdleSound: {fileID: 8300000, guid: eec02cc99940537478bd0bd972b2c0e4, type: 3}
+  audioSource: {fileID: 5583701338116237926}
+  DeactivateSound: {fileID: 8300000, guid: a35dedd2284478940bdf2048a1e55af3, type: 3}
+  chainYankSound:
+  - {fileID: 8300000, guid: e65e63200c491484fb2e759b801d14b8, type: 3}
+  - {fileID: 8300000, guid: 272b56a42fbb14a419463162dca55c88, type: 3}
+  - {fileID: 8300000, guid: 31f816c24fae15543888ebee3f295104, type: 3}
+  activateSound: {fileID: 8300000, guid: 51a4fd10f2e28644bb2aafcbed454b80, type: 3}
 --- !u!95 &7649735607237880221
 Animator:
   serializedVersion: 5
