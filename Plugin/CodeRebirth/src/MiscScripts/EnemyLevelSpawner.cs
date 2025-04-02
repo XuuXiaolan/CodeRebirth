@@ -26,7 +26,7 @@ public class EnemyLevelSpawner : MonoBehaviour
         if (spawnTimer <= 0f)
         {
             spawnTimer = Random.Range(spawnTimerMin, spawnTimerMax);
-            EnemyType? enemyType = CRUtilities.ChooseRandomWeightedEnemyType(RoundManager.Instance.currentLevel.OutsideEnemies);
+            EnemyType? enemyType = CRUtilities.ChooseRandomWeightedType(RoundManager.Instance.currentLevel.OutsideEnemies.Select(x => (x.enemyType, (float)x.rarity)));
             RoundManager.Instance.SpawnEnemyGameObject(spawnPosition.position, -1, -3, enemyType);
         }
     }

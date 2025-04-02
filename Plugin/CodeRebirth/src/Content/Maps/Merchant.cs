@@ -277,35 +277,18 @@ public class Merchant : NetworkBehaviour
                 continue;
             }
 
-            var validItems = barrel.validItemsWithRarityAndColor.ToList();
-            validItems.Shuffle();
-
-            // Compute cumulative weights.
-            float cumulativeWeight = 0;
-            var cumulativeList = new List<(Item? item, float cumulativeWeight, int minPrice, int maxPrice, Color borderColor, Color textColor)>(validItems.Count);
-            foreach (var (item, rarity, minPrice, maxPrice, borderColor, textColor) in validItems)
-            {
-                cumulativeWeight += rarity;
-                cumulativeList.Add((item, cumulativeWeight, minPrice, maxPrice, borderColor, textColor));
-            }
-
-            // Get a random value in the range [0, cumulativeWeight).
-            float randomValue = UnityEngine.Random.Range(0, cumulativeWeight);
-
-            Item? selectedItem = null;
+            Item? selectedItem = CRUtilities.ChooseRandomWeightedType(barrel.validItemsWithRarityAndColor.Select(x => (x.item, x.rarity)));
             int _price = 0;
             Color _borderColor = Color.white;
             Color _textColor = Color.white;
-            foreach (var (item, cumWeight, minPrice, maxprice, borderColor, textColor) in cumulativeList)
+            foreach (var (item, rarity, minPrice, maxprice, borderColor, textColor) in barrel.validItemsWithRarityAndColor)
             {
-                if (randomValue < cumWeight)
-                {
-                    selectedItem = item;
-                    _price = UnityEngine.Random.Range(minPrice, maxprice + 1);
-                    _borderColor = borderColor;
-                    _textColor = textColor;
-                    break;
-                }
+                if (selectedItem != item) continue;
+                selectedItem = item;
+                _price = UnityEngine.Random.Range(minPrice, maxprice + 1);
+                _borderColor = borderColor;
+                _textColor = textColor;
+                break;
             }
 
             if (selectedItem == null)

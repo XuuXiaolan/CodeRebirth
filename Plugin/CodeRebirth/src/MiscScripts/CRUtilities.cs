@@ -2,6 +2,7 @@
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -233,37 +234,37 @@ public class CRUtilities
         hittablesList.Clear();
     }
 
-    public static EnemyType? ChooseRandomWeightedEnemyType(List<SpawnableEnemyWithRarity> enemies)
+    public static T? ChooseRandomWeightedType<T>(IEnumerable<(T objectType, float rarity)> rarityList)
     {
-        var validEnemies = enemies;
+        var validObjects = rarityList.Where(x => x.rarity > 0).ToList();
 
         float cumulativeWeight = 0;
-        var cumulativeList = new List<(EnemyType, float)>(validEnemies.Count);
-        for (int i = 0; i < validEnemies.Count; i++)
+        var cumulativeList = new List<(T?, float)>(validObjects.Count);
+        for (int i = 0; i < validObjects.Count; i++)
         {
-            cumulativeWeight += validEnemies[i].rarity;
-            cumulativeList.Add((validEnemies[i].enemyType, cumulativeWeight));
+            cumulativeWeight += validObjects[i].rarity;
+            cumulativeList.Add((validObjects[i].objectType, cumulativeWeight));
         }
 
         // Get a random value in the range [0, cumulativeWeight).
         float randomValue = Random.Range(0, cumulativeWeight);
-        EnemyType? selectedEnemy = null;
+        T? selectedObject = default(T);
 
         foreach (var (enemy, cumWeight) in cumulativeList)
         {
             if (randomValue < cumWeight)
             {
-                selectedEnemy = enemy;
+                selectedObject = enemy;
                 break;
             }
         }
 
-        if (selectedEnemy == null)
+        if (selectedObject == null)
         {
             Plugin.ExtendedLogging($"Could not find a valid enemy to spawn!");
-            return null;
+            return default;
         }
-        return selectedEnemy;
+        return selectedObject;
     }
 
     public static IEnumerator ForcePlayerLookup(PlayerControllerB player, int intensity)
