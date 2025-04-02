@@ -4,6 +4,7 @@ using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
@@ -42,11 +43,17 @@ static class EnemyAIPatch
     private static void EnemyAI_Start(On.EnemyAI.orig_Start orig, EnemyAI self)
     {
         orig(self);
+        // self.skinnedMeshRenderers = self.skinnedMeshRenderers.Where(x => x != null).ToArray();
+        // self.meshRenderers = self.meshRenderers.Where(x => x != null).ToArray();
         enemyRandom ??= new System.Random(StartOfRound.Instance.randomMapSeed);
         if (self is CaveDwellerAI)
         {
             self.gameObject.transform.Find("BabyMeshContainer").Find("BabyManeaterMesh").gameObject.layer = 19;
         }
+
+        if (RoundManager.Instance.currentLevel.sceneName != "Oxyde") return;
+        self.SetEnemyOutside(true);
+        self.favoriteSpot = RoundManager.Instance.outsideAINodes.OrderBy(x => Vector3.Distance(x.transform.position, self.transform.position)).First().transform;
     }
 
     private static void EnemyAI_Update(On.EnemyAI.orig_Update orig, EnemyAI self)

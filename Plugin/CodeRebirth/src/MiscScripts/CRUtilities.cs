@@ -233,6 +233,39 @@ public class CRUtilities
         hittablesList.Clear();
     }
 
+    public static EnemyType? ChooseRandomWeightedEnemyType(List<SpawnableEnemyWithRarity> enemies)
+    {
+        var validEnemies = enemies;
+
+        float cumulativeWeight = 0;
+        var cumulativeList = new List<(EnemyType, float)>(validEnemies.Count);
+        for (int i = 0; i < validEnemies.Count; i++)
+        {
+            cumulativeWeight += validEnemies[i].rarity;
+            cumulativeList.Add((validEnemies[i].enemyType, cumulativeWeight));
+        }
+
+        // Get a random value in the range [0, cumulativeWeight).
+        float randomValue = Random.Range(0, cumulativeWeight);
+        EnemyType? selectedEnemy = null;
+
+        foreach (var (enemy, cumWeight) in cumulativeList)
+        {
+            if (randomValue < cumWeight)
+            {
+                selectedEnemy = enemy;
+                break;
+            }
+        }
+
+        if (selectedEnemy == null)
+        {
+            Plugin.ExtendedLogging($"Could not find a valid enemy to spawn!");
+            return null;
+        }
+        return selectedEnemy;
+    }
+
     public static IEnumerator ForcePlayerLookup(PlayerControllerB player, int intensity)
     {
         float totalTime = 1f / intensity;
