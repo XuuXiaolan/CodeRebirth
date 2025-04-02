@@ -96,8 +96,7 @@ public class GunslingerGreg : CodeRebirthHazard
         if (rechargeRocketTimer > 0) return;
         rechargeRocketTimer = 30f;
         rocket.ready = true;
-        rocket.transform.position = rocket.mainTransform.position;
-        rocket.transform.rotation = rocket.mainTransform.rotation;
+        rocket.transform.SetPositionAndRotation(rocket.mainTransform.position, rocket.mainTransform.rotation);
         rocket.gameObject.SetActive(true);
     }
 

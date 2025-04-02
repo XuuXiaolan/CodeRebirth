@@ -399,8 +399,7 @@ public class Hoverboard : GrabbableObject, IHittable
         }
         playerControlling.GetCRPlayerData().ridingHoverboard = true;
         playerControlling.GetCRPlayerData().hoverboardRiding = this;
-        playerControlling.transform.position = hoverboardSeat.transform.position;
-        playerControlling.transform.rotation = hoverboardSeat.transform.rotation * Quaternion.Euler(0, 90, 0);
+        playerControlling.transform.SetPositionAndRotation(hoverboardSeat.transform.position, hoverboardSeat.transform.rotation * Quaternion.Euler(0, 90, 0));
         Plugin.ExtendedLogging($"{this} setting target to: {playerControlling.playerUsername}");
     }
 

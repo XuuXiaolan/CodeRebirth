@@ -217,7 +217,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         hitVehicles.Clear();
         foreach (RaycastHit hit in objectsHit)
         {
-            if (hit.collider.gameObject.tag.Contains("Player") || hit.collider.gameObject.tag.Contains("Enemy")) continue;
+            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("Enemy")) continue;
             VehicleController? hitVehicle = GrabVehicleFromHit(hit);
             if (hitVehicle != null)
             {
@@ -225,7 +225,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             }
             for (int i = 0; i < StartOfRound.Instance.footstepSurfaces.Length; i++)
             {
-                if (hit.collider.gameObject.tag != StartOfRound.Instance.footstepSurfaces[i].surfaceTag) continue;
+                if (!hit.collider.gameObject.CompareTag(StartOfRound.Instance.footstepSurfaces[i].surfaceTag)) continue;
                 surfaceSound = i;
                 Plugin.ExtendedLogging($"Hit surface: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
                 break;

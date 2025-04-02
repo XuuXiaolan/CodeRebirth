@@ -254,8 +254,7 @@ public class ShockwaveGalAI : GalAI
         InteractTriggersUpdate();
         if (galState == State.Inactive && GalCharger != null)
         {
-            this.transform.position = GalCharger.transform.position;
-            this.transform.rotation = GalCharger.transform.rotation;
+            this.transform.SetPositionAndRotation(GalCharger.transform.position, GalCharger.transform.rotation);
             return;
         }
         if (flying) FlySource.volume = Plugin.ModConfig.ConfigShockwaveBotPropellerVolume.Value;

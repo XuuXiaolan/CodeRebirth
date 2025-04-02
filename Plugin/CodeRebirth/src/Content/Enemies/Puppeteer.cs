@@ -340,8 +340,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         targetPlayerToNeedle.disableMoveInput = true;
         targetPlayerToNeedle.disableLookInput = true;
         targetPlayerToNeedle.inAnimationWithEnemy = this;
-        targetPlayerToNeedle.transform.position = playerStabPosition.position;
-        targetPlayerToNeedle.transform.rotation = playerStabPosition.rotation;
+        targetPlayerToNeedle.transform.SetPositionAndRotation(playerStabPosition.position, playerStabPosition.rotation);
     }
 
     [ClientRpc]

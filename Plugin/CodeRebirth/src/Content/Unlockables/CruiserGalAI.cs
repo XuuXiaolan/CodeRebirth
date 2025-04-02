@@ -238,8 +238,7 @@ public class CruiserGalAI : GalAI
         {
             yield return new WaitForEndOfFrame();
             if (ownerPlayer == null) yield break;
-            ownerPlayer.transform.position = playerHeldBone.position;
-            ownerPlayer.transform.rotation = playerHeldBone.rotation;
+            ownerPlayer.transform.SetPositionAndRotation(playerHeldBone.position, playerHeldBone.rotation);
         }
     }
 

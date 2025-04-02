@@ -287,8 +287,7 @@ public class TerminalGalAI : GalAI
     {
         if (!IsServer) return;
         if (Agent.enabled) Agent.Warp(GalCharger.ChargeTransform.position);
-        else transform.position = GalCharger.ChargeTransform.position;
-        transform.rotation = GalCharger.ChargeTransform.rotation;
+        transform.SetPositionAndRotation(GalCharger.ChargeTransform.position, GalCharger.ChargeTransform.rotation);
         HandleStateAnimationSpeedChangesServerRpc((int)state, (int)emotion);
     }
 

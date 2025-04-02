@@ -46,8 +46,7 @@ public class TalkingHead : GrabbableObject
         player.thisPlayerModel.gameObject.SetActive(false);
         player.disableMoveInput = true;
         player.disableInteract = true;
-        player.transform.position = playerBone.position;
-        player.transform.rotation = transform.rotation;
+        player.transform.SetPositionAndRotation(playerBone.position, transform.rotation);
         int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
         Plugin.ExtendedLogging($"alive players: {alivePlayers}");
         if (StartOfRound.Instance.shipIsLeaving || StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 0)

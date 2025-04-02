@@ -22,8 +22,7 @@ public class Guillotine : NetworkBehaviour
     {
         if (!sequenceFinished && playerToKill != null)
         {
-            playerToKill.transform.position = playerBone.position;
-            playerToKill.transform.rotation = playerBone.rotation;
+            playerToKill.transform.SetPositionAndRotation(playerBone.position, playerBone.rotation);
         }
     }
 

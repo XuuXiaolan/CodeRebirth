@@ -137,8 +137,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * nonAgentMovementSpeed);
         newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
 
-        transform.position = newPosition;
-        transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
+        transform.SetPositionAndRotation(newPosition, Quaternion.LookRotation(targetPosition - transform.position));
     }
 
     private bool DetermineIfNeedToDisableAgent(Vector3 destination)

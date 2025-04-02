@@ -74,8 +74,9 @@ public class OxydeCrane : NetworkBehaviour
             timeElapsed += Time.deltaTime;
             foreach (GameObject obj in objectsToDrop)
             {
-                obj.transform.position = Vector3.Lerp(obj.transform.position, endPosition, timeElapsed * 2f);
-                obj.transform.rotation = Quaternion.Lerp(obj.transform.rotation, endRotation, timeElapsed * 2f);
+                Vector3 vector = Vector3.Lerp(obj.transform.position, endPosition, timeElapsed * 2f);
+                Quaternion quaternion = Quaternion.Lerp(obj.transform.rotation, endRotation, timeElapsed * 2f);
+                obj.transform.SetPositionAndRotation(vector, quaternion);
             }
         }
 

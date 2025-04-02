@@ -219,7 +219,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
             return;
         // Plugin.ExtendedLogging($"OnTriggerEnter: {other.gameObject.name} with tag {other.gameObject.tag}");
         // If the object is tagged PlayerBody or Enemy
-        if (other.tag.StartsWith("PlayerBody") || other.tag == "Enemy")
+        if (other.tag.StartsWith("PlayerBody") || other.CompareTag("Enemy"))
         {
             BeginKickDoll(other.transform.position + Vector3.up, triggerCall: true);
         }

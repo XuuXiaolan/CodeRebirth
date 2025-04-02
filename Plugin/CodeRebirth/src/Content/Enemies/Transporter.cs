@@ -99,7 +99,7 @@ public class Transporter : CodeRebirthEnemyAI
         {
             if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform) continue; 
             smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
-            player.transform.position = palletTransform.position;
+            player.transform.position = smartAgentNavigator.lastUsedEntranceTeleport.entrancePoint.position;
         }
     }
 
@@ -114,8 +114,7 @@ public class Transporter : CodeRebirthEnemyAI
     {
         var emptyNetworkObject = (GameObject)netObjRef;
         emptyNetworkObject.transform.SetParent(palletTransform, true);
-        emptyNetworkObject.transform.position = palletTransform.position;
-        emptyNetworkObject.transform.rotation = palletTransform.rotation;
+        emptyNetworkObject.transform.SetPositionAndRotation(palletTransform.position, palletTransform.rotation);
     }
 
     public override void Update()
