@@ -20,7 +20,7 @@ public class GunslingerGreg : CodeRebirthHazard
     public AudioSource GregTurningSound = null!;
     public float playerHeadstart = 5f;
     public float maxAngle = 90f;
-    public Dictionary<Transform, GunslingerMissile?> rocketsReady = new();
+    public Queue<GunslingerMissile> rockets = new();
     public Transform[] rocketTransforms = [];
 
     private List<BoundsDefiner> safeBounds = new();
@@ -41,10 +41,10 @@ public class GunslingerGreg : CodeRebirthHazard
                 safeBounds.Add(boundsDefiner);
             }
         }
-        MissilePrefab = MapObjectHandler.Instance.GunslingerGreg.MissilePrefab;
+        MissilePrefab = MapObjectHandler.Instance.GunslingerGreg!.MissilePrefab;
         foreach (var transform in rocketTransforms)
         {
-            rocketsReady.Add(transform, SpawnImmobileRocket(transform));
+            rockets.Enqueue(SpawnImmobileRocket(transform));
         }
         gregRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         lastPlayerTargetted = null;
@@ -55,12 +55,12 @@ public class GunslingerGreg : CodeRebirthHazard
     private void Update()
     {
         playerHeadstart -= Time.deltaTime;
-        if (rocketsReady.ContainsValue(null))
+        if (rockets.Any(x => x.ready == false))
         {
-            RechargeRocket(rocketsReady.First(x => x.Value == false).Key);
+            RechargeRocket(rockets.First(x => x.ready == false));
         }
         if (Plugin.ModConfig.ConfigDebugMode.Value) return;
-        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rocketsReady.Values.Where(x => x != null).Count() <= 0) return;
+        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rockets.Where(x => x.ready == true).Count() <= 0) return;
         // Rotate the turret to look for targets
         FindAndAimAtTarget();
 
@@ -84,15 +84,21 @@ public class GunslingerGreg : CodeRebirthHazard
     private GunslingerMissile SpawnImmobileRocket(Transform rocketTransform)
     {
         GameObject rocket = Instantiate(MissilePrefab, rocketTransform.position, rocketTransform.rotation, rocketTransform);
-        return rocket.GetComponent<GunslingerMissile>();
+        var rocketScript = rocket.GetComponent<GunslingerMissile>(); 
+        rocketScript.mainTransform = rocketTransform;
+        rocketScript.ready = true;
+        return rocketScript;
     }
 
-    private void RechargeRocket(Transform rocketTransform)
+    private void RechargeRocket(GunslingerMissile rocket)
     {
         rechargeRocketTimer -= Time.deltaTime;
         if (rechargeRocketTimer > 0) return;
         rechargeRocketTimer = 30f;
-        rocketsReady[rocketTransform] = SpawnImmobileRocket(rocketTransform);
+        rocket.ready = true;
+        rocket.transform.position = rocket.mainTransform.position;
+        rocket.transform.rotation = rocket.mainTransform.rotation;
+        rocket.gameObject.SetActive(true);
     }
 
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
@@ -192,11 +198,12 @@ public class GunslingerGreg : CodeRebirthHazard
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         }
+
         // GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
-        Transform[] viableRockets = rocketsReady.Where(kvp => kvp.Value != null).Select(kvp => kvp.Key).ToArray();
-        Transform randomRocket = viableRockets[gregRandom.Next(viableRockets.Length)];
-        rocketsReady[randomRocket]?.Initialize(lastPlayerTargetted);
-        rocketsReady[randomRocket] = null;
+        GunslingerMissile rocket = rockets.Dequeue();
+        rocket.ready = false;
+        rocket.Initialize(lastPlayerTargetted, this);
+
         // Activate rockets via rpc similar to code below
         // AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
         // projectileComponent.Initialize(Plugin.ModConfig.ConfigAirControlUnitDamage.Value, currentAngle, lastPlayerTargetted);

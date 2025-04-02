@@ -9,17 +9,22 @@ public class GunslingerMissile : MonoBehaviour
 {
     public float speed = 20f;
     public float curveStrength = 2f; // Strength of curve adjustment
-    public AudioSource playerHitSoundSource = null!;
-    public AudioSource windSource = null!;
     public MeshFilter bulletMesh = null!;
 
+    private Transform oldParent = null!;
+    [HideInInspector] public GunslingerGreg gregScript = null!;
+    [HideInInspector] public bool ready = false;
+    [HideInInspector] public Transform mainTransform = null!;
     private Collider[] cachedColliders = new Collider[8];
     private PlayerControllerB? playerToTarget = null;
 
-    public void Initialize(PlayerControllerB targetPlayer)
+    public void Initialize(PlayerControllerB targetPlayer, GunslingerGreg greg)
     {
         playerToTarget = targetPlayer; // Assign the player to target
-        this.transform.SetParent(null);
+        gregScript = greg;
+        oldParent = transform.parent;
+        transform.SetParent(null);
+        greg.rockets.Enqueue(this);
     }
 
     public void FixedUpdate()
@@ -29,12 +34,12 @@ public class GunslingerMissile : MonoBehaviour
         if (collidersFound > 0)
         {
             CRUtilities.CreateExplosion(this.transform.position, true, 15, 0, 4, 6, null, null, 20f);
-            StartCoroutine(DespawnAfterDelay(5f));
             // playerHitSoundSource.Play();
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             // windSource.volume = 0f;
-            bulletMesh.mesh = null;
+            this.gameObject.SetActive(false);
+            this.transform.SetParent(oldParent, false);
             playerToTarget = null;
             return;
         }
@@ -46,11 +51,5 @@ public class GunslingerMissile : MonoBehaviour
         Vector3 directionToTarget = (playerToTarget.transform.position - transform.position).normalized;
         Vector3 newDirection = Vector3.Lerp(transform.forward, directionToTarget, curveStrength * Time.fixedDeltaTime).normalized;
         transform.forward = newDirection;
-    }
-
-    private IEnumerator DespawnAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        Destroy(this);
     }
 }
