@@ -51,7 +51,13 @@ static class EnemyAIPatch
             self.gameObject.transform.Find("BabyMeshContainer").Find("BabyManeaterMesh").gameObject.layer = 19;
         }
 
-        if (RoundManager.Instance.currentLevel.sceneName != "Oxyde") return;
+        /*var enemyAICollisionDetects = self.GetComponentsInChildren<EnemyAICollisionDetect>();
+        foreach (var enemyAICollisionDetect in enemyAICollisionDetects)
+        {
+            if (!enemyAICollisionDetect.gameObject.TryGetComponent(out Collider collider) || !collider.isTrigger) continue;
+            collider.excludeLayers = ~LayerMask.GetMask("Player", "Enemies");
+        }*/ // this is a pretty decent performance improvement
+        if (RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase) return;
         self.SetEnemyOutside(true);
         self.favoriteSpot = RoundManager.Instance.outsideAINodes.OrderBy(x => Vector3.Distance(x.transform.position, self.transform.position)).First().transform;
     }

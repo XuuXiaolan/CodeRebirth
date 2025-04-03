@@ -6,7 +6,6 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
 using CodeRebirth.src.Util;
-using System;
 
 namespace CodeRebirth.src.Content.Items;
 public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's JMeleeWeapon
@@ -72,8 +71,8 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     [HideInInspector] public float heldOverHeadTimer = 0f;
     private Coroutine? reelingRoutine = null;
-    private RaycastHit[] cachedRaycastHits = new RaycastHit[16];
-    private PlayerControllerB previousPlayerHeldBy;
+    [HideInInspector] public RaycastHit[] cachedRaycastHits = new RaycastHit[16];
+    [HideInInspector] public PlayerControllerB previousPlayerHeldBy;
 
     private List<IHittable> iHittableList = new();
     private List<VehicleController> hitVehicles = new();
@@ -309,7 +308,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         {
             Plugin.ExtendedLogging($"Hitting enemy: {enemyAICollisionDetect.mainScript}");
             OnEnemyHit.Invoke(enemyAICollisionDetect.mainScript);
-            enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(HitForce, weaponTip.transform.position, previousPlayerHeldBy, true, HitId);
+            if (!enemyAICollisionDetect.mainScript.isEnemyDead) enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(HitForce, weaponTip.transform.position, previousPlayerHeldBy, true, HitId);
         }
         PlayRandomSFX(hitEnemySFX);
         bloodParticle?.Play(true);

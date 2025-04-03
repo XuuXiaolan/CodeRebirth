@@ -23,9 +23,9 @@ public class GunslingerGreg : CodeRebirthHazard
     public Queue<GunslingerMissile> rockets = new();
     public Transform[] rocketTransforms = [];
 
+    private GunslingerMissile? missileToRecharge = null;
     private List<BoundsDefiner> safeBounds = new();
     private float rechargeRocketTimer = 30f;
-    private System.Random gregRandom = new();
     private float fireTimer = 1f;
     private GameObject MissilePrefab = null!;
     private PlayerControllerB? lastPlayerTargetted = null;
@@ -46,7 +46,6 @@ public class GunslingerGreg : CodeRebirthHazard
         {
             rockets.Enqueue(SpawnImmobileRocket(transform));
         }
-        gregRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         lastPlayerTargetted = null;
         // DetectPlayerAudioSound.volume = 0f;
         // GregTurningSound.volume = 0f;
@@ -55,10 +54,20 @@ public class GunslingerGreg : CodeRebirthHazard
     private void Update()
     {
         playerHeadstart -= Time.deltaTime;
-        if (rockets.Any(x => x.ready == false))
+        if (missileToRecharge == null)
         {
-            RechargeRocket(rockets.First(x => x.ready == false));
+            foreach (var rocket in rockets)
+            {
+                if (rocket.ready) continue;
+                missileToRecharge = rocket;
+                break;
+            }            
         }
+        else
+        {
+            RechargeRocket(missileToRecharge);
+        }
+
         if (Plugin.ModConfig.ConfigDebugMode.Value) return;
         if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rockets.Where(x => x.ready == true).Count() <= 0) return;
         // Rotate the turret to look for targets
@@ -96,8 +105,8 @@ public class GunslingerGreg : CodeRebirthHazard
         if (rechargeRocketTimer > 0) return;
         rechargeRocketTimer = 30f;
         rocket.ready = true;
-        rocket.transform.SetPositionAndRotation(rocket.mainTransform.position, rocket.mainTransform.rotation);
         rocket.gameObject.SetActive(true);
+        missileToRecharge = null;
     }
 
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
@@ -200,7 +209,6 @@ public class GunslingerGreg : CodeRebirthHazard
 
         // GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
         GunslingerMissile rocket = rockets.Dequeue();
-        rocket.ready = false;
         rocket.Initialize(lastPlayerTargetted, this);
 
         // Activate rockets via rpc similar to code below

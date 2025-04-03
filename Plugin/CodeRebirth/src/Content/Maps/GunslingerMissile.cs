@@ -9,7 +9,6 @@ public class GunslingerMissile : MonoBehaviour
 {
     public float speed = 20f;
     public float curveStrength = 2f; // Strength of curve adjustment
-    public MeshFilter bulletMesh = null!;
 
     private Transform oldParent = null!;
     [HideInInspector] public GunslingerGreg gregScript = null!;
@@ -20,6 +19,7 @@ public class GunslingerMissile : MonoBehaviour
 
     public void Initialize(PlayerControllerB targetPlayer, GunslingerGreg greg)
     {
+        ready = false;
         playerToTarget = targetPlayer; // Assign the player to target
         gregScript = greg;
         oldParent = transform.parent;
@@ -39,7 +39,8 @@ public class GunslingerMissile : MonoBehaviour
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             // windSource.volume = 0f;
             this.gameObject.SetActive(false);
-            this.transform.SetParent(oldParent, false);
+            this.transform.SetParent(oldParent, true);
+            this.transform.SetPositionAndRotation(mainTransform.position, mainTransform.rotation);
             playerToTarget = null;
             return;
         }
