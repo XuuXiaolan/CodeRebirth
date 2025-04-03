@@ -175,6 +175,7 @@ public class Hoverboard : GrabbableObject, IHittable
             SetHoverboardReleasedServerRpc(forward, backward, right, left, sprint);
         }
     }
+
     public void MovementHandler(InputAction.CallbackContext context)
     {
         if (GameNetworkManager.Instance.localPlayerController != playerControlling) return;

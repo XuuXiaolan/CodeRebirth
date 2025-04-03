@@ -18,6 +18,7 @@ public class CreditPad : GrabbableObject
 
     private IEnumerator WaitForEndOfFrame()
     {
+        yield return new WaitForSeconds(0.1f);
         yield return new WaitUntil(() => !audioPlayer.isPlaying);
         playerHeldBy.inSpecialInteractAnimation = false;
         playerHeldBy.DespawnHeldObject();
