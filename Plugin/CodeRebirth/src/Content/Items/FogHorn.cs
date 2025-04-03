@@ -48,6 +48,7 @@ public class FogHorn : GrabbableObject
     {
         if (succeed)
         {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             audioSource.PlayOneShot(useSound);
         }
         else

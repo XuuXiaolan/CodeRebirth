@@ -20,7 +20,7 @@ public class EnemyLevelSpawner : MonoBehaviour
 
     public void Update()
     {
-        if (!NetworkManager.Singleton.IsServer || RoundManager.Instance.currentOutsideEnemyPower <= 0) return;
+        if (!NetworkManager.Singleton.IsServer || RoundManager.Instance.currentOutsideEnemyPower <= RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount) return;
 
         spawnTimer -= Time.deltaTime;
         if (spawnTimer <= 0f)
