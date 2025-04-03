@@ -694,6 +694,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             RunFarAway();
         }
+        else if (IsServer && force > 0 && currentBehaviourStateIndex == (int)DriftwoodState.EatingPrey)
+        {
+            
+        }
 
         enemyHP -= force;
         Plugin.ExtendedLogging("Enemy HP: " + enemyHP);

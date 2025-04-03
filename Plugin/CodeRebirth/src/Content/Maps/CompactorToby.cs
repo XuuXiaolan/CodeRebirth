@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -103,9 +104,8 @@ public class CompactorToby : NetworkBehaviour, IHittable
                 Timethreshold = 2.4f;
                 Plugin.ExtendedLogging("Spawning Enemy");
                 int randomIndex = UnityEngine.Random.Range(0, spawnTransforms.Length);
-                var validEnemies = RoundManager.Instance.currentLevel.OutsideEnemies.Where(spawnableEnemy => spawnableEnemy.rarity > 0).ToList();
-                EnemyType randomEnemy = validEnemies[UnityEngine.Random.Range(0, validEnemies.Count)].enemyType;
-                var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].transform.position, -1, -1, randomEnemy);
+                EnemyType? enemyType = CRUtilities.ChooseRandomWeightedType(RoundManager.Instance.currentLevel.OutsideEnemies.Select(x => (x.enemyType, (float)x.rarity)));
+                var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].transform.position, -1, -1, enemyType);
                 if (((GameObject)NetObjRef).TryGetComponent(out EnemyAI enemyAI) && enemyAI.agent != null)
                 {
                     enemyAI.destination = this.transform.position;
