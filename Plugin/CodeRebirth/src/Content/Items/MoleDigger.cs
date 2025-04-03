@@ -116,7 +116,7 @@ public class MoleDigger : GrabbableObject
         bool hitSomething = false;
         for (int i = 0; i < numHits; i++)
         {
-            if (!cachedColliders[i].TryGetComponent(out IHittable iHittable) || Vector3.Distance(cachedColliders[i].transform.position, playerHeldBy.transform.position) <= 1) continue;
+            if (!cachedColliders[i].TryGetComponent(out IHittable iHittable) || cachedColliders[i].transform.position == playerHeldBy.transform.position) continue;
             if (IsOwner)
             {
                 iHittable.Hit(1, playerHeldBy.gameplayCamera.transform.forward, playerHeldBy, true, -1);

@@ -377,6 +377,7 @@ public class Mistress : CodeRebirthEnemyAI
             playerToCripple.shockingTarget = HeadTransform;
             playerToCripple.inShockingMinigame = true;
             playerToCripple.movementSpeed /= 3;
+            playerToCripple.sprintMeter = 0f;
         }
         else
         {
