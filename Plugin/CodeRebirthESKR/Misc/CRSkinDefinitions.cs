@@ -1,13 +1,14 @@
 using System.Collections.Generic;
+using AntlerShed.SkinRegistry;
 using CodeRebirthESKR.SkinRegistry;
 using UnityEngine;
 
 namespace CodeRebirthESKR.Misc;
 
-[CreateAssetMenu(fileName = "CRSkinDefinition", menuName = "CodeRebirth/CRSkinDefinition", order = 1)]
+[CreateAssetMenu(fileName = "GenericSkinDefinition", menuName = "XSkins/GenericSkinDefinition", order = 0)]
 public class CRSkinDefinitions : ScriptableObject
 {
     public string authorName;
-    public DefaultSkinConfigurationView[] configs;
+    public DefaultSkinConfigData config;
     public List<BaseSkin> BaseSkins = new();
 }

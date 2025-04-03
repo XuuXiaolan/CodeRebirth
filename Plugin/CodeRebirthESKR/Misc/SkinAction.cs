@@ -344,7 +344,14 @@ public struct VanillaMaterial
 public struct MaterialAction
 {
     public MaterialActionType actionType;
+    [Header("Material Options")]
     public Material replacementMaterial;
+    [Tooltip("The index of the renderer to apply the material to.")]
+    public int rendererIndex;
+    [Tooltip("The index of the material in the renderer to apply the material to.")]
+    public int materialRendererIndex;
+
+    [Header("Texture Options [Material Recommended Instead]")]
     public Texture2D replacementTexture;
 
     public readonly VanillaMaterial Apply(Renderer vanillaRenderer, int materialIndex)

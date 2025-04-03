@@ -33,7 +33,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     public AudioClip maskDefensiveSound = null!;
     public AudioClip[] reflectSounds = null!;
     public AudioClip[] puppeteerHitSounds = [];
-    public AudioClip puppeteerDeathSound = null!;
 
     [HideInInspector] public bool isAttacking = false;
     private bool enteredDefensiveModeOnce = false;
@@ -413,7 +412,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         }
         base.KillEnemy(destroy);
         // play death animation.
-        creatureVoice.PlayOneShot(puppeteerDeathSound);
+        creatureVoice.PlayOneShot(dieSFX);
 
         // Make all puppets scrap
         agent.enabled = false;

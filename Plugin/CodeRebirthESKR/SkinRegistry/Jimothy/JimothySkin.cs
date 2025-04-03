@@ -36,8 +36,6 @@ public class JimothySkin : BaseSkin
     public ArmatureAttachment[] JimothyAttachments => jimothyAttachments;
     public ArmatureAttachment[] MachineAttachments => machineAttachments;
 
-    public override string EnemyId => "Transporter";
-
     public override Skinner CreateSkinner()
     {
         return new JimothySkinner(this);

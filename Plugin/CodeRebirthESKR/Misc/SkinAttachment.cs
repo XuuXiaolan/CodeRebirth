@@ -15,7 +15,7 @@ public struct ArmatureAttachment
 
     public static List<GameObject> ApplyAttachments(ArmatureAttachment[] attachments, SkinnedMeshRenderer renderer)
     {
-        if (renderer !=null && attachments != null)
+        if (renderer != null && attachments != null)
         {
             List<GameObject> activeAttachments = new();
             foreach (ArmatureAttachment attachment in attachments)

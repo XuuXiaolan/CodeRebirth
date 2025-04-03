@@ -2757,7 +2757,7 @@ MonoBehaviour:
   creatureVoice: {fileID: 1577936847749602867}
   creatureSFX: {fileID: 1238125472548049595}
   eye: {fileID: 5383794274422043948}
-  dieSFX: {fileID: 0}
+  dieSFX: {fileID: 8300000, guid: bbc4f6a7ae667be468e54d875710c709, type: 3}
   enemyBehaviourStates:
   - name: Spawn
     VoiceClip: {fileID: 0}
@@ -2878,6 +2878,9 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   targetEnemy: {fileID: 0}
+  hasVariants: 0
+  usesTemperature: 0
+  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 2919410584223474381}
   smartAgentNavigator: {fileID: 1299754130320147181}
   puppetDamageDealer: {fileID: 2167556560943370418}
@@ -2934,6 +2937,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
 --- !u!1 &6926373206089999037
 GameObject:
   m_ObjectHideFlags: 0
