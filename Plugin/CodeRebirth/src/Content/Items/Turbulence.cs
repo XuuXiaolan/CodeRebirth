@@ -9,7 +9,7 @@ public class Turbulence : CRWeapon
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        OnSurfaceHit.AddListener(OnSurfaceHitEvent);
+        OnHitSuccess.AddListener(OnHitSuccessEvent);
         OnEnemyHit.AddListener(OnEnemyHitEvent);
     }
 
@@ -36,19 +36,19 @@ public class Turbulence : CRWeapon
         }
     }
 
-    public void OnSurfaceHitEvent(int surfaceID)
+    public void OnHitSuccessEvent()
     {
-        OnSurfaceHitServerRpc(surfaceID);
+        OnHitSuccessServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void OnSurfaceHitServerRpc(int surfaceID)
+    public void OnHitSuccessServerRpc()
     {
-        OnSurfaceHitClientRpc(surfaceID);
+        OnHitSuccessClientRpc();
     }
 
     [ClientRpc]
-    public void OnSurfaceHitClientRpc(int surfaceID)
+    public void OnHitSuccessClientRpc()
     {
         stuckToGround = true;
         float distance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
@@ -62,8 +62,7 @@ public class Turbulence : CRWeapon
         {
             return;
         }
-        Plugin.ExtendedLogging($"Turbulence hit surface: {surfaceID} so dropping");
-        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.25f : 1f);
+        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 30f * (playerHeldBy.isCrouching ? 0.25f : 1f);
         StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
     }
 

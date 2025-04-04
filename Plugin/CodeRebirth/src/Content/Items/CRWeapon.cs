@@ -74,6 +74,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     [HideInInspector] public RaycastHit[] cachedRaycastHits = new RaycastHit[16];
     [HideInInspector] public PlayerControllerB previousPlayerHeldBy;
 
+    [HideInInspector] public UnityEvent OnHitSuccess = new UnityEvent();
     private List<IHittable> iHittableList = new();
     private List<VehicleController> hitVehicles = new();
     private List<PlayerControllerB> hitPlayers = new();
@@ -275,6 +276,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             playerHeldBy.playerBodyAnimator.SetTrigger(ShovelHitAnimation);
         }
 
+        OnHitSuccess.Invoke();
         return true;
     }
 
