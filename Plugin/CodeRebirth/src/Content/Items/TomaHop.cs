@@ -12,9 +12,13 @@ public class TomaHop : GrabbableObject
     // todo: not allow a jump to occur if the model is partly through the ground already to prevent clipping through the ground.
     // todo: improve detection of ceilings and things above so that it doesnt go through walls.
     // todo: improve ground detection because it clips through the ground at high speeds for some reason.
+
     public Transform holdTransform = null!;
     public Transform topTransform = null!;
     public Transform bottomTransform = null!;
+
+    [SerializeField] private SkinnedMeshRenderer _skinnedMeshRenderer = null!;
+    [SerializeField] private int _blendShapeIndex = 0;
 
     [SerializeField] private Rigidbody _rb = null!;
 
@@ -54,18 +58,34 @@ public class TomaHop : GrabbableObject
     public override void Update()
     {
         base.Update();
-        if (playerHeldBy == null || !isHeld || !playerHeldBy.IsOwner) return;
+        if (playerHeldBy == null || !isHeld || !playerHeldBy.IsOwner)
+            return;
+
+        // Attach player to the hold transform.
         playerHeldBy.transform.SetPositionAndRotation(holdTransform.position, holdTransform.rotation);
         playerHeldBy.ResetFallGravity();
         playerHeldBy.disableMoveInput = true;
 
         HandleRotating();
-        // detect player pressing space to hop up
+
+        // Apply idle bounce & blendshape animation when on ground
+        if (isOnGround)
+        {
+            if (_skinnedMeshRenderer != null)
+            {
+                // change the blendshape number based on the charge timer
+                _skinnedMeshRenderer.SetBlendShapeWeight(_blendShapeIndex, 0);
+            }
+        }
+
+        // If the item is airborne, check for collisions overhead or below.
         if (!isOnGround)
         {
             _triggerTimer -= Time.deltaTime;
-            if (_triggerTimer > 0) return;
-            bool hitCeiling = Physics.CheckSphere(topTransform.position, 0.2f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+            if (_triggerTimer > 0)
+                return;
+
+            bool hitCeiling = Physics.SphereCast(topTransform.position, 0.2f, transform.up, out _, 0.3f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
             if (hitCeiling)
             {
                 _rb.velocity = new Vector3(_rb.velocity.x/2, -2f, _rb.velocity.z/2);
@@ -75,10 +95,11 @@ public class TomaHop : GrabbableObject
             Collider[] playerOrEnemyColliders = Physics.OverlapSphere(bottomTransform.position, 0.1f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
             if (playerOrEnemyColliders.Length > 0)
             {
-                // damage enemy
+                // Damage enemy.
                 foreach (Collider collider in playerOrEnemyColliders)
                 {
-                    if (!collider.TryGetComponent(out IHittable hit)) continue;
+                    if (!collider.TryGetComponent(out IHittable hit))
+                        continue;
                     hit.Hit(1, Vector3.up, playerHeldBy, true, 1);
                 }
                 _pogoChargeTimer += 0.5f;
@@ -91,6 +112,7 @@ public class TomaHop : GrabbableObject
             Plugin.ExtendedLogging("Hit ground");
             return;
         }
+        // When on the ground and held, check for jump input.
         DetectPlayerPressingSpaceToHopUp();
     }
 
@@ -115,24 +137,13 @@ public class TomaHop : GrabbableObject
         // handle rotation (THIS SHOULD BE USING A VECTOR 2 COMPOSITE INPUT ACTION!!)
         float horizontal = 0, vertical = 0;
         if (Keyboard.current.aKey.isPressed)
-        {
             horizontal += _rotateSpeed * Time.deltaTime;
-        }
-
         if (Keyboard.current.dKey.isPressed)
-        {
             horizontal -= _rotateSpeed * Time.deltaTime;
-        }
-
         if (Keyboard.current.wKey.isPressed)
-        {
             vertical += _rotateSpeed * Time.deltaTime;
-        }
-
         if (Keyboard.current.sKey.isPressed)
-        {
             vertical -= _rotateSpeed * Time.deltaTime;
-        }
 
         _xAngle = Mathf.Clamp(_xAngle + vertical, -30, 30);
         _zAngle = Mathf.Clamp(_zAngle + horizontal, -30, 30);
@@ -145,18 +156,17 @@ public class TomaHop : GrabbableObject
     public void DetectPlayerPressingSpaceToHopUp()
     {
         if (Keyboard.current.spaceKey.isPressed)
-        { // temporary
+        {
             _pogoChargeTimer += Time.deltaTime;
             return;
         }
-        
+
         if (_pogoChargeTimer < _minChargeTimer)
         {
             _pogoChargeTimer = 0;
             return;
         }
 
-        // player has released space and now calculate launch velocity
         Plugin.ExtendedLogging($"pogo charge timer: {_pogoChargeTimer}");
         ApplyForceToRigidBody();
     }
@@ -171,16 +181,15 @@ public class TomaHop : GrabbableObject
         isOnGround = false;
         _rb.isKinematic = false;
         _rb.useGravity = true;
-        _rb.AddForce(launchVector, ForceMode.Impulse); // maybe _rb.AddForce would be better
-        // remember to have continuous detection for enemies and players and ground while in this state.
-        // reset state
+        _rb.AddForce(launchVector, ForceMode.Impulse);
         _pogoChargeTimer = 0;
     }
 
     public void SetRigidBodyToGround()
     {
         isOnGround = true;
-        if (!_rb.isKinematic) _rb.velocity = Vector3.zero;
+        if (!_rb.isKinematic)
+            _rb.velocity = Vector3.zero;
         _rb.isKinematic = true;
         _rb.useGravity = false;
     }
