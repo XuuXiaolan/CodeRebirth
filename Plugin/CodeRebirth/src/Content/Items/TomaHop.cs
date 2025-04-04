@@ -6,31 +6,35 @@ using UnityEngine.InputSystem;
 namespace CodeRebirth.src.Content.Items;
 public class TomaHop : GrabbableObject
 {
+    // todo: implement the blendshape and making the item go up and down with the blendshape.
+    // todo: implement an idle small bounce that basically does the same as the player holding space but tiny.
+    // todo: maybe a small debounce on the end of the player's land?
+    // todo: not allow a jump to occur if the model is partly through the ground already to prevent clipping through the ground.
+    // todo: improve detection of ceilings and things above so that it doesnt go through walls.
+    // todo: improve ground detection because it clips through the ground at high speeds for some reason.
     public Transform holdTransform = null!;
+    public Transform topTransform = null!;
+    public Transform bottomTransform = null!;
 
     [SerializeField] private Rigidbody _rb = null!;
-    [SerializeField] private Transform _pivot = null!;
-    
+
     [Header("Handling")]
     [SerializeField] private float _minChargeTimer = 0.05f; // this value is just so that if a player accidentally hits space for a frame they don't get launched
     [SerializeField] private float _rotateSpeed = 20f;
     [SerializeField] private AnimationCurve _chargeTimeToForce = AnimationCurve.Linear(0, 0, 3, 10);
 
     private PlayerControllerB previousPlayerHeldBy = null!;
-    private float _xAngle, _zAngle;
+    private float _xAngle, _yAngle, _zAngle;
     private bool isOnGround = true;
     private float _pogoChargeTimer;
-
-    public void FixedUpdate()
-    {
-        if (isOnGround) return;
-        _rb.AddForce(Vector3.up * -9.8f);
-    }
+    private float _triggerTimer;
 
     public override void EquipItem()
     {
         base.EquipItem();
         previousPlayerHeldBy = playerHeldBy;
+        transform.position = playerHeldBy.transform.position;
+        transform.rotation = playerHeldBy.transform.rotation;
     }
 
     public override void DiscardItem()
@@ -52,35 +56,39 @@ public class TomaHop : GrabbableObject
         base.Update();
         if (playerHeldBy == null || !isHeld || !playerHeldBy.IsOwner) return;
         playerHeldBy.transform.SetPositionAndRotation(holdTransform.position, holdTransform.rotation);
+        playerHeldBy.ResetFallGravity();
         playerHeldBy.disableMoveInput = true;
 
+        HandleRotating();
         // detect player pressing space to hop up
         if (!isOnGround)
         {
-            RaycastHit hit;
-            bool hitPlayerOrEnemy = Physics.Raycast(transform.position, Vector3.down, out hit, 1f, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
-            if (hitPlayerOrEnemy)
+            _triggerTimer -= Time.deltaTime;
+            if (_triggerTimer > 0) return;
+            bool hitCeiling = Physics.CheckSphere(topTransform.position, 0.2f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+            if (hitCeiling)
+            {
+                _rb.velocity = new Vector3(_rb.velocity.x/2, -2f, _rb.velocity.z/2);
+                return;
+            }
+
+            Collider[] playerOrEnemyColliders = Physics.OverlapSphere(bottomTransform.position, 0.1f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
+            if (playerOrEnemyColliders.Length > 0)
             {
                 // damage enemy
-                if (hit.transform.gameObject.layer == 3 && hit.transform.TryGetComponent(out PlayerControllerB player) && player != playerHeldBy)
+                foreach (Collider collider in playerOrEnemyColliders)
                 {
-                    player.DamagePlayer(1, true, true, CauseOfDeath.Gravity, 0, false, default);
-                }
-                else if (hit.transform.gameObject.layer == 19 && hit.transform.TryGetComponent(out EnemyAICollisionDetect enemyAICollisionDetect))
-                {
-                    enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(1, Vector3.up, playerHeldBy, true, 1);
+                    if (!collider.TryGetComponent(out IHittable hit)) continue;
+                    hit.Hit(1, Vector3.up, playerHeldBy, true, 1);
                 }
                 _pogoChargeTimer += 0.5f;
                 ApplyForceToRigidBody();
                 return;
             }
-            bool hitGround = Physics.Raycast(transform.position, Vector3.down, out hit, 1f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-            if (hitGround)
-            {
-                SetRigidBodyToGround();
-                Plugin.ExtendedLogging($"Raycast hit: {hit.collider.name}");
-                return;
-            }
+            bool hitGround = Physics.CheckSphere(bottomTransform.position, 0.2f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+            if (!hitGround) return;
+            SetRigidBodyToGround();
+            Plugin.ExtendedLogging("Hit ground");
             return;
         }
         DetectPlayerPressingSpaceToHopUp();
@@ -90,54 +98,55 @@ public class TomaHop : GrabbableObject
     {
         if (playerHeldBy != null && isHeld)
         {
-            RotateAroundPoint(_xAngle, _zAngle);
+            RotateAroundPoint(_xAngle, _yAngle, _zAngle);
             return;
         }
         base.LateUpdate();
     }
-    
-    private void RotateAroundPoint(float xAngle, float zAngle)
+
+    private void RotateAroundPoint(float xAngle, float yAngle, float zAngle)
     {
-        Quaternion targetRotation = Quaternion.Euler(xAngle, 0f, zAngle);
-
-        Vector3 pivotWorldPos = _pivot.position;
-
+        Quaternion targetRotation = Quaternion.Euler(xAngle, yAngle, zAngle);
         transform.rotation = targetRotation;
-
-        Vector3 positionOffset = pivotWorldPos - _pivot.position;
-        transform.position += positionOffset;
     }
-    
+
+    public void HandleRotating()
+    {
+        // handle rotation (THIS SHOULD BE USING A VECTOR 2 COMPOSITE INPUT ACTION!!)
+        float horizontal = 0, vertical = 0;
+        if (Keyboard.current.aKey.isPressed)
+        {
+            horizontal += _rotateSpeed * Time.deltaTime;
+        }
+
+        if (Keyboard.current.dKey.isPressed)
+        {
+            horizontal -= _rotateSpeed * Time.deltaTime;
+        }
+
+        if (Keyboard.current.wKey.isPressed)
+        {
+            vertical += _rotateSpeed * Time.deltaTime;
+        }
+
+        if (Keyboard.current.sKey.isPressed)
+        {
+            vertical -= _rotateSpeed * Time.deltaTime;
+        }
+
+        _xAngle = Mathf.Clamp(_xAngle + vertical, -30, 30);
+        _zAngle = Mathf.Clamp(_zAngle + horizontal, -30, 30);
+
+        Plugin.ExtendedLogging($"_xAngle: {_xAngle}, _yAngle: {_yAngle}, _zAngle: {_zAngle}");
+        Vector2 mouseDelta = Plugin.InputActionsInstance.MouseDelta.ReadValue<Vector2>();
+        _yAngle += mouseDelta.x * _rotateSpeed * 0.25f * Time.deltaTime;
+    }
+
     public void DetectPlayerPressingSpaceToHopUp()
     {
         if (Keyboard.current.spaceKey.isPressed)
         { // temporary
             _pogoChargeTimer += Time.deltaTime;
-            
-            // handle rotation (THIS SHOULD BE USING A VECTOR 2 COMPOSITE INPUT ACTION!!)
-            float horizontal = 0, vertical = 0;
-            if (Keyboard.current.aKey.isPressed)
-            {
-                horizontal += _rotateSpeed * Time.deltaTime;
-            }
-
-            if (Keyboard.current.dKey.isPressed)
-            {
-                horizontal -= _rotateSpeed * Time.deltaTime;
-            }
-
-            if (Keyboard.current.wKey.isPressed)
-            {
-                vertical += _rotateSpeed * Time.deltaTime;
-            }
-
-            if (Keyboard.current.sKey.isPressed)
-            {
-                vertical -= _rotateSpeed * Time.deltaTime;
-            }
-
-            _xAngle += vertical;
-            _zAngle += horizontal;
             return;
         }
         
@@ -146,7 +155,7 @@ public class TomaHop : GrabbableObject
             _pogoChargeTimer = 0;
             return;
         }
-        
+
         // player has released space and now calculate launch velocity
         Plugin.ExtendedLogging($"pogo charge timer: {_pogoChargeTimer}");
         ApplyForceToRigidBody();
@@ -155,14 +164,15 @@ public class TomaHop : GrabbableObject
     public void ApplyForceToRigidBody()
     {
         float force = _chargeTimeToForce.Evaluate(_pogoChargeTimer);
+        _triggerTimer = 0.25f;
         Vector3 launchVector = transform.up * force * 5f; // 5f is a temporay value and should be removed, i just don't want to keep rebuilding the bundle.
         Plugin.ExtendedLogging($"launching player with vector: {launchVector}");
 
         isOnGround = false;
         _rb.isKinematic = false;
-        _rb.velocity = launchVector; // maybe _rb.AddVelocity would be better
+        _rb.useGravity = true;
+        _rb.AddForce(launchVector, ForceMode.Impulse); // maybe _rb.AddForce would be better
         // remember to have continuous detection for enemies and players and ground while in this state.
-        
         // reset state
         _pogoChargeTimer = 0;
     }
@@ -172,5 +182,6 @@ public class TomaHop : GrabbableObject
         isOnGround = true;
         if (!_rb.isKinematic) _rb.velocity = Vector3.zero;
         _rb.isKinematic = true;
+        _rb.useGravity = false;
     }
 }
