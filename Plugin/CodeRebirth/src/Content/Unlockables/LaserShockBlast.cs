@@ -23,6 +23,7 @@ public class LaserShockBlast : NetworkBehaviour
     public AudioClip ImpactEffectSound = null!; // Sound effect of the impact effect
 
     [NonSerialized] public Transform laserOrigin = null!; // Origin point of the laser beam
+    [HideInInspector] public ShockwaveGalAI shockwaveGal = null!;
     private ParticleSystem impactEffect = null!; // Particle effect at the impact point
 
     public void Start()
@@ -140,6 +141,10 @@ public class LaserShockBlast : NetworkBehaviour
     private void KillEnemyFromOwnerClientRpc(NetworkObjectReference networkObjectReference)
     {
         EnemyAI enemyAI = ((GameObject)networkObjectReference).GetComponent<EnemyAI>();
+
+
+        if (!enemyAI.IsOwner) return;
+        enemyAI.HitEnemyOnLocalClient(999, shockwaveGal.transform.position, shockwaveGal.ownerPlayer, true, -1);
         enemyAI.KillEnemyOnOwnerClient();
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,6 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -569,6 +567,7 @@ public class SeamineGalAI : GalAI
             if (enemy == null || enemy.isEnemyDead || !enemy.IsOwner)
                 continue;
 
+            enemy.HitEnemyOnLocalClient(999, this.transform.position, ownerPlayer, true, -1);
             if (enemy.enemyType.canDie && !enemy.enemyType.destroyOnDeath)
             {
                 enemy.KillEnemyOnOwnerClient(false);

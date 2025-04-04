@@ -501,6 +501,7 @@ public class ShockwaveGalAI : GalAI
             LaserShockBlast laserShockBlack = laserInstance.GetComponent<LaserShockBlast>();
             
             // Set the origin of the laser
+            laserShockBlack.shockwaveGal = this;
             laserShockBlack.laserOrigin = LaserOrigin;
 
             // Spawn the laser over the network
