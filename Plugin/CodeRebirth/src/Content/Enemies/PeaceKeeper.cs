@@ -79,6 +79,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             }
         }
         backOffTimer = 0f;
+
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
     } // do a patch to attacking, if there's any callbacks to players
 
     public void DoAttackingPlayer()
