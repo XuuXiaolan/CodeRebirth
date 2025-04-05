@@ -63,6 +63,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     {
     }
 
+    public class PeaceKeeperAssets(string bundleName) : AssetBundleLoader<PeaceKeeperAssets>(bundleName)
+    {
+    }
+
+    public PeaceKeeperAssets? PeaceKeeper { get; private set; }
     public CuteaAssets? Cutea { get; private set; }
     public NancyAssets? Nancy { get; private set; }
     public DriftwoodMenaceAssets? DriftwoodMenace { get; private set; }
@@ -79,6 +84,8 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
+        PeaceKeeper = LoadAndRegisterAssets<PeaceKeeperAssets>("peacekeeperassets");
+
         Pandora = LoadAndRegisterAssets<PandoraAssets>("pandoraassets");
 
         Cutea = LoadAndRegisterAssets<CuteaAssets>("cuteaassets");

@@ -544,6 +544,21 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
+  - assetBundleName: marrowsplitterassets
+    configName: Marrow Splitter
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Marrow Splitter
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables: []
   - assetBundleName: merchantassets
     configName: Merchant
     weathers: []
@@ -794,6 +809,21 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
+  - assetBundleName: mountaineerassets
+    configName: Brrreaker
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Brrreaker
+      spawnWeights: tundra:30
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables: []
   - assetBundleName: nancyassets
     configName: Nancy
     weathers: []
@@ -827,6 +857,17 @@ MonoBehaviour:
       spawnWeights: 
       powerLevel: 1
       maxSpawnCount: 1
+    items: []
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: peacekeeperassets
+    configName: Peace Keeper
+    weathers: []
+    enemies:
+    - entityName: Peace Keeper
+      spawnWeights: Vanilla:30,ExperimentationLevel:5,AssuranceLevel:15,VowLevel:10,OffenseLevel:35,MarchLevel:15,AdamanceLevel:15,RendLevel:5,DineLevel:20,TitanLevel:50,ArtificeLevel:60,EmbrionLevel:60,Modded:20
+      powerLevel: 1.5
+      maxSpawnCount: 3
     items: []
     mapObjects: []
     unlockables: []
@@ -1007,6 +1048,21 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
+  - assetBundleName: swatterassets
+    configName: sWATTer
+    weathers: []
+    enemies: []
+    items:
+    - entityName: sWATTer
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables: []
   - assetBundleName: terminalbotassets
     configName: Terminal
     weathers: []
@@ -1047,6 +1103,21 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
+  - assetBundleName: tomahopassets
+    configName: TomaHop
+    weathers: []
+    enemies: []
+    items:
+    - entityName: TomaHop
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
+    mapObjects: []
+    unlockables: []
   - assetBundleName: tornadoassets
     configName: Tornado
     weathers:
@@ -1074,6 +1145,21 @@ MonoBehaviour:
       powerLevel: 1
       maxSpawnCount: 3
     items: []
+    mapObjects: []
+    unlockables: []
+  - assetBundleName: turbulenceassets
+    configName: Turbulence
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Turbulence
+      spawnWeights: Vanilla:20,Custom:20
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
     mapObjects: []
     unlockables: []
   - assetBundleName: xuandrigoassets
@@ -1136,80 +1222,5 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 1
       cost: 150
-    mapObjects: []
-    unlockables: []
-  - assetBundleName: mountaineerassets
-    configName: Brrreaker
-    weathers: []
-    enemies: []
-    items:
-    - entityName: Brrreaker
-      spawnWeights: tundra:30
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects: []
-    unlockables: []
-  - assetBundleName: turbulenceassets
-    configName: Turbulence
-    weathers: []
-    enemies: []
-    items:
-    - entityName: Turbulence
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects: []
-    unlockables: []
-  - assetBundleName: marrowsplitterassets
-    configName: Marrow Splitter
-    weathers: []
-    enemies: []
-    items:
-    - entityName: Marrow Splitter
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects: []
-    unlockables: []
-  - assetBundleName: tomahopassets
-    configName: TomaHop
-    weathers: []
-    enemies: []
-    items:
-    - entityName: TomaHop
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
-    mapObjects: []
-    unlockables: []
-  - assetBundleName: swatterassets
-    configName: sWATTer
-    weathers: []
-    enemies: []
-    items:
-    - entityName: sWATTer
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      cost: 0
     mapObjects: []
     unlockables: []

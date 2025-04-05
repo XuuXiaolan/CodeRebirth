@@ -28,10 +28,6 @@ source = "../CodeRebirth/bin/Release/netstandard2.1/CodeRebirth.dll"
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]
-source = "../CodeRebirthMRAPI/bin/Release/netstandard2.1/XuuXiaolan.CodeRebirthMRAPI.dll"
-target = "plugins/CodeRebirth/"
-
-[[build.copy]]
 source = "../CodeRebirthESKR/bin/Release/netstandard2.1/XuuXiaolan.CodeRebirthESKR.dll"
 target = "plugins/CodeRebirth/"
 

@@ -1,12 +1,16 @@
 # v1.0.0
 
-- The final update.
+- The semi-final update.
 - Lots of stuff lol.
 - Dozens of new items with special effects added.
 - Multiple enemies reworked and rewritten.
 - I forced a lot of your configs to reset to true for the first time to experience the new content.
 - Multiple new enemies added.
 - Fixed redwood titan.
+- Got rid of model replacement suits per demand.
+
+<details>
+  <summary>Older Versions</summary>
 
 ## v0.15.3
 
@@ -880,3 +884,5 @@
 ## v0.0.1
 
 - Initial release
+
+</details>

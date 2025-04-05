@@ -22,7 +22,6 @@ If you're interested in helping with the development of the mod, feel free to re
 - 4 Ship Decorations
 - 2 Shop Items
 - 11 Scrap with unique effects
-- 3 Custom Model replacement (This needs you to have ModelReplacementAPI and MoreSuits installed!!)
 
 ## Hazard Config
 
@@ -476,7 +475,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ## Credits - Zort
 
-The 4 Instrument models, music and zort playermodel are from the game "Zort" by Londer Software.
+The 4 Instrument models and music are from the game "Zort" by Londer Software.
 
 ## Credits - Misc Models
 

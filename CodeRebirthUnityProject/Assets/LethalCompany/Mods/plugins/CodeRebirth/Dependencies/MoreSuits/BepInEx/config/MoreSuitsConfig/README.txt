@@ -1,1 +1,0 @@
-You can put .json files from the advanced folder here in the config/MoreSuitsConfig folder and they'll be used instead of the ones in the advanced folder. Use this for setting custom prices for suits.

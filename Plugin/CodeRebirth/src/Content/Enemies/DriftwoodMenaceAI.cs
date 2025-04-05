@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using GameNetcodeStuff;
 using UnityEngine;
-using System.Linq;
-using Unity.Netcode;
 using CodeRebirth.src.Util;
+using System.Linq;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -443,6 +442,13 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 3f);
             if (targetEnemy.enemyHP <= 0)
             {
+                if (RoundManager.Instance.SpawnedEnemies.Any(x => Vector3.Distance(x.transform.position, this.transform.position) < 10))
+                {
+                    SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
+                    if (!IsServer) return;
+                    smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
+                    return;
+                }
                 enemyPositionBeforeDeath = targetEnemy.transform.position;
                 agent.speed = 0f;
                 SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.EatingPrey);
@@ -696,7 +702,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         else if (IsServer && force > 0 && currentBehaviourStateIndex == (int)DriftwoodState.EatingPrey)
         {
-            
+            SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
+            if (!IsServer) return;
+            smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
         }
 
         enemyHP -= force;

@@ -1,12 +1,37 @@
 using System;
+using System.Collections;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Util;
+using GameNetcodeStuff;
 using UnityEngine;
 
 public class PeaceKeeper : CodeRebirthEnemyAI
 {
 
-    private float backOffTimer = 0f;
+    [SerializeField]
+    private Transform _gunStartTransform = null!;
+
+    [SerializeField]
+    private Transform _gunEndTransform = null!;
+
+    [SerializeField]
+    private float _walkingSpeed = 2f;
+
+    [SerializeField]
+    private float _chasingSpeed = 5f;
+
+    [SerializeField]
+    private float _shootingSpeed = 0.1f;
+
+    private float _backOffTimer = 0f;
+    private bool _isShooting = false;
+    private Coroutine? _bitchSlappingRoutine = null;
+    private Collider[] _cachedColliders = new Collider[12];
+    private static readonly int ShootingAnimation = Animator.StringToHash("shooting"); // Bool
+    private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private static readonly int BitchSlapAnimation = Animator.StringToHash("bitchSlap"); // Trigger
     public enum PeaceKeeperState
     {
         Idle,
@@ -27,7 +52,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void DoAIInterval()
     {
         base.DoAIInterval();
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
 
+        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
         switch (currentBehaviourStateIndex)
         {
             case (int)PeaceKeeperState.Idle:
@@ -51,12 +78,12 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             if (Vector3.Distance(transform.position, player.transform.position) > 40) continue;
             Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
             if (Vector3.Dot(transform.forward, directionToPlayer) < 0.1f) continue;
-            if (!Physics.Linecast(transform.position, player.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore)) continue;
+            if (!Physics.Linecast(eye.position, player.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore)) continue;
             smartAgentNavigator.StopSearchRoutine();
             SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
             SwitchToBehaviourServerRpc((int)PeaceKeeperState.FollowPlayer);
             smartAgentNavigator.DoPathingToDestination(player.transform.position);
-            Plugin.ExtendedLogging($"Player spotting holding weapon: {player.name}");
+            Plugin.ExtendedLogging($"Player spotted holding weapon: {player.name}");
             return;
         }
     }
@@ -69,23 +96,51 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             return;
         }
 
-        if (targetPlayer.currentlyHeldObjectServer == null || targetPlayer.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon)
+        if (targetPlayer.currentlyHeldObjectServer == null || !targetPlayer.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon)
         {
-            backOffTimer += Time.deltaTime;
-            if (backOffTimer > 10f)
+            _backOffTimer += Time.deltaTime;
+            if (_backOffTimer > 10f)
             {
                 HandleSwitchingToIdle();
                 return;
             }
         }
-        backOffTimer = 0f;
+        _backOffTimer = 0f;
 
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
     } // do a patch to attacking, if there's any callbacks to players
 
     public void DoAttackingPlayer()
     {
+        if (targetPlayer == null || targetPlayer.isPlayerDead)
+        {
+            HandleSwitchingToIdle();
+            return;
+        }
 
+        float distanceToTargetPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
+        if (distanceToTargetPlayer > 3)
+        {
+            if (Physics.Linecast(eye.position, targetPlayer.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            {
+                smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
+                if (_isShooting)
+                {
+                    _isShooting = false;
+                    agent.speed = _chasingSpeed;
+                    creatureAnimator.SetBool(ShootingAnimation, false);
+                }
+                return;
+            }
+            if (_isShooting) return;
+            agent.speed = _shootingSpeed;
+            _isShooting = true;
+            creatureAnimator.SetBool(ShootingAnimation, true);
+            return;
+        }
+
+        if (_bitchSlappingRoutine != null) return;
+        _bitchSlappingRoutine = StartCoroutine(DoBitchSlapping());
     }
     #endregion
 
@@ -93,11 +148,93 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     public void HandleSwitchingToIdle()
     {
+        _backOffTimer = 0f;
+        agent.speed = _walkingSpeed;
         SetTargetServerRpc(-1);
         SwitchToBehaviourServerRpc((int)PeaceKeeperState.Idle);
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 40);
     }
 
+    public IEnumerator DoBitchSlapping()
+    {
+        creatureAnimator.SetTrigger(BitchSlapAnimation);
+        yield return new WaitForSeconds(2f);
+        _bitchSlappingRoutine = null;
+    }
+    #endregion
+
+    #region Callback
+
+    public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+        if (isEnemyDead) return;
+
+        if (playerWhoHit != null)
+        {
+            targetPlayer = playerWhoHit;
+            smartAgentNavigator.StopSearchRoutine();
+            agent.speed = _chasingSpeed;
+            SwitchToBehaviourStateOnLocalClient((int)PeaceKeeperState.AttackingPlayer);
+        }
+        enemyHP -= force;
+
+        if (IsOwner && enemyHP <= 0)
+        {
+            KillEnemyOnOwnerClient();
+        }
+    }
+
+    public override void KillEnemy(bool destroy = false)
+    {
+        base.KillEnemy(destroy);
+
+        creatureVoice.PlayOneShot(dieSFX);
+        if (!IsServer) return;
+        creatureAnimator.SetBool(IsDeadAnimation, true);
+    }
+    #endregion
+
+    #region Animation Events
+
+    public void BitchSlapAnimationEvent()
+    {
+        if (!IsServer) return;
+        int numHits = Physics.OverlapCapsuleNonAlloc(_gunStartTransform.position, _gunEndTransform.position, 2f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < numHits; i++)
+        {
+            Collider collider = _cachedColliders[i];
+            if (!collider.TryGetComponent(out IHittable iHittable))
+                continue;
+            if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect && enemyAICollisionDetect.mainScript.gameObject == gameObject)
+                continue;
+            if (iHittable is PlayerControllerB player)
+            {
+                Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 100f;
+                player.DamagePlayer(40, true, true, CauseOfDeath.Bludgeoning, 0, false, directionVector);
+                player.externalForceAutoFade += directionVector;
+            }
+            else if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect1)
+            {
+                enemyAICollisionDetect1.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, -1);
+            }
+            else
+            {
+                iHittable.Hit(2, this.transform.position, null, true, -1);
+            }
+        }
+
+        if (targetPlayer == null || targetPlayer.isPlayerDead)
+        {
+            Plugin.ExtendedLogging($"No player to slap");
+            return;
+        }
+        if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) > 10f)
+        {
+            creatureAnimator.SetBool(ShootingAnimation, true);
+            _isShooting = true;
+        }
+    }
     #endregion
     // wanders around normally.
     // but if it sees a player, it will follow them if they have a weapon.
