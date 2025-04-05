@@ -118,12 +118,12 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             return;
         }
 
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
         float distanceToTargetPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
         if (distanceToTargetPlayer > 3)
         {
             if (Physics.Linecast(eye.position, targetPlayer.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
-                smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
                 if (_isShooting)
                 {
                     _isShooting = false;
@@ -137,6 +137,13 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             _isShooting = true;
             creatureAnimator.SetBool(ShootingAnimation, true);
             return;
+        }
+
+        if (_isShooting)
+        {
+            _isShooting = false;
+            agent.speed = _chasingSpeed;
+            creatureAnimator.SetBool(ShootingAnimation, false);
         }
 
         if (_bitchSlappingRoutine != null) return;

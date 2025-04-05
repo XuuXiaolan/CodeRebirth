@@ -75,6 +75,11 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		public GameObject MissilePrefab { get; private set; } = null!;
 	}
 
+	public class OxydeCrashShipAssets(string bundleName) : AssetBundleLoader<OxydeCrashShipAssets>(bundleName)
+	{
+	}
+
+	public OxydeCrashShipAssets? OxydeCrashShip { get; private set; } = null;
 	public GunslingerGregAssets? GunslingerGreg { get; private set; } = null;
 	public CompactorTobyAssets? CompactorToby { get; private set; } = null;
 	public ShredderSarahAssets? ShredderSarah { get; private set; } = null;
@@ -94,6 +99,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public MapObjectHandler()
 	{
+		OxydeCrashShip = LoadAndRegisterAssets<OxydeCrashShipAssets>("oxydecrashshipassets");
+
 		CompactorToby = LoadAndRegisterAssets<CompactorTobyAssets>("compactortobyassets");
 
 		GunslingerGreg = LoadAndRegisterAssets<GunslingerGregAssets>("gunslingergregassets");
