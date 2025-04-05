@@ -234,6 +234,44 @@ public class CRUtilities
         hittablesList.Clear();
     }
 
+    public static void MakePlayerGrabObject(PlayerControllerB player, GrabbableObject grabbableObject)
+    {
+        player.currentlyGrabbingObject = grabbableObject;
+        player.currentlyGrabbingObject.InteractItem();
+        if (player.currentlyGrabbingObject.grabbable && player.FirstEmptyItemSlot() != -1)
+        {
+            player.playerBodyAnimator.SetBool("GrabInvalidated", false);
+            player.playerBodyAnimator.SetBool("GrabValidated", false);
+            player.playerBodyAnimator.SetBool("cancelHolding", false);
+            player.playerBodyAnimator.ResetTrigger("Throw");
+            player.SetSpecialGrabAnimationBool(true, null);
+            player.isGrabbingObjectAnimation = true;
+            player.cursorIcon.enabled = false;
+            player.cursorTip.text = "";
+            player.twoHanded = player.currentlyGrabbingObject.itemProperties.twoHanded;
+            player.carryWeight = Mathf.Clamp(player.carryWeight + (player.currentlyGrabbingObject.itemProperties.weight - 1f), 1f, 10f);
+            if (player.currentlyGrabbingObject.itemProperties.grabAnimationTime > 0f)
+            {
+                player.grabObjectAnimationTime = player.currentlyGrabbingObject.itemProperties.grabAnimationTime;
+            }
+            else
+            {
+                player.grabObjectAnimationTime = 0.4f;
+            }
+            if (!player.isTestingPlayer)
+            {
+                Plugin.ExtendedLogging($"heldByPlayerOnServer: {grabbableObject.heldByPlayerOnServer}");
+                grabbableObject.heldByPlayerOnServer = false;
+                player.GrabObjectServerRpc(grabbableObject.NetworkObject);
+            }
+            if (player.grabObjectCoroutine != null)
+            {
+                player.StopCoroutine(player.grabObjectCoroutine);
+            }
+            player.grabObjectCoroutine = player.StartCoroutine(player.GrabObject());
+        }
+    }
+
     public static T? ChooseRandomWeightedType<T>(IEnumerable<(T objectType, float rarity)> rarityList)
     {
         var validObjects = rarityList.Where(x => x.rarity > 0).ToList();

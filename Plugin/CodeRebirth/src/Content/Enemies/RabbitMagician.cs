@@ -10,7 +10,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [SerializeField]
     private readonly AnimationClip _spottedAnimation = null!;
 
-    private Coroutine? attachRoutine = null;
+    private Coroutine? _attachRoutine = null;
     public enum RabbitMagicianState
     {
         Spawn,
@@ -61,7 +61,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
 
     public void DoIdle()
     {
-        if (attachRoutine != null)
+        if (_attachRoutine != null)
             return;
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {

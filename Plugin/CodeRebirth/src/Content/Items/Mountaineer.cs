@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -50,42 +51,6 @@ public class Mountaineer : CRWeapon
             stuckPlayer.ResetFallGravity();
             stuckPlayer.disableMoveInput = true;
             stuckPlayer.activatingItem = true;
-        }
-    }
-
-    private void MakePlayerGrabObject(PlayerControllerB player)
-    {
-        player.currentlyGrabbingObject = this;
-        player.currentlyGrabbingObject.InteractItem();
-        if (player.currentlyGrabbingObject.grabbable && player.FirstEmptyItemSlot() != -1)
-        {
-            player.playerBodyAnimator.SetBool("GrabInvalidated", false);
-            player.playerBodyAnimator.SetBool("GrabValidated", false);
-            player.playerBodyAnimator.SetBool("cancelHolding", false);
-            player.playerBodyAnimator.ResetTrigger("Throw");
-            player.SetSpecialGrabAnimationBool(true, null);
-            player.isGrabbingObjectAnimation = true;
-            player.cursorIcon.enabled = false;
-            player.cursorTip.text = "";
-            player.twoHanded = player.currentlyGrabbingObject.itemProperties.twoHanded;
-            player.carryWeight = Mathf.Clamp(player.carryWeight + (player.currentlyGrabbingObject.itemProperties.weight - 1f), 1f, 10f);
-            if (player.currentlyGrabbingObject.itemProperties.grabAnimationTime > 0f)
-            {
-                player.grabObjectAnimationTime = player.currentlyGrabbingObject.itemProperties.grabAnimationTime;
-            }
-            else
-            {
-                player.grabObjectAnimationTime = 0.4f;
-            }
-            if (!player.isTestingPlayer)
-            {
-                player.GrabObjectServerRpc(this.NetworkObject);
-            }
-            if (player.grabObjectCoroutine != null)
-            {
-                StopCoroutine(player.grabObjectCoroutine);
-            }
-            player.grabObjectCoroutine = StartCoroutine(player.GrabObject());
         }
     }
 
@@ -147,7 +112,7 @@ public class Mountaineer : CRWeapon
         stuckPlayer.activatingItem = false;
         stuckPlayer.disableMoveInput = false;
         stuckPlayer.externalForceAutoFade = Vector3.up * 30f;
-        MakePlayerGrabObject(stuckPlayer);
+        CRUtilities.MakePlayerGrabObject(stuckPlayer, this);
     }
 
     public void InteractActionTriggered(PlayerControllerB player)
@@ -156,7 +121,7 @@ public class Mountaineer : CRWeapon
         weaponAudio.PlayOneShot(unlatchSounds[Random.Range(0, unlatchSounds.Length)]);
         stuckPlayer.activatingItem = false;
         stuckPlayer.disableMoveInput = false;
-        MakePlayerGrabObject(stuckPlayer);
+        CRUtilities.MakePlayerGrabObject(stuckPlayer, this);
     }
 
     public float GetFreezePercentage()

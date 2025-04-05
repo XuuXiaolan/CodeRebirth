@@ -32,9 +32,9 @@ public class EnemyLevelSpawner : MonoBehaviour
         spawnTimer = Random.Range(spawnTimerMin, spawnTimerMax);
         
         EnemyType? enemyType = CRUtilities.ChooseRandomWeightedType(outsideEnemies);
-        if (enemyType == null || (entitiesSpawned.ContainsKey(enemyType) && entitiesSpawned[enemyType] >= enemyType.MaxCount)) return;
+        if (enemyType == null || (entitiesSpawned.TryGetValue(enemyType, out int value) && value >= enemyType.MaxCount)) return;
 
-        entitiesSpawned[enemyType] += 1;
+        entitiesSpawned[enemyType] = value + 1;
         RoundManager.Instance.SpawnEnemyGameObject(spawnPosition.position, -1, -3, enemyType);
     }
 

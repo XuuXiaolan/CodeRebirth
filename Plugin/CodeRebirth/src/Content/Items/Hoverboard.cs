@@ -258,10 +258,7 @@ public class Hoverboard : GrabbableObject, IHittable
         }
         if (hoverboardMode == HoverboardMode.Mounted && turnedOn && playerControlling == GameNetworkManager.Instance.localPlayerController)
         {
-            if (Vector3.Distance(hoverboardSeat.transform.position, playerControlling.transform.position) >= 0.001f)
-            {
-                playerControlling.transform.position = Vector3.Lerp(playerControlling.transform.position, hoverboardSeat.transform.position, Time.deltaTime * 5f);
-            }
+            playerControlling.transform.position = hoverboardSeat.transform.position;
             if (_isHoverForwardHeld)
             {
                 hb.AddForce((Vector3.zero + hoverboardChild.right) * 25f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
@@ -723,7 +720,6 @@ public class Hoverboard : GrabbableObject, IHittable
 
     public override void FallWithCurve()
     {
-        return;
     }
 
     private void CalculateVerticalLookingInput(Vector2 inputVector, PlayerControllerB playerCurrentlyControlling)
