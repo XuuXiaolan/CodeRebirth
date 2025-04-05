@@ -1,3 +1,4 @@
+using System;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -20,19 +21,18 @@ public class TomaHop : GrabbableObject
     [SerializeField] private SkinnedMeshRenderer _skinnedMeshRenderer = null!;
     [SerializeField] private int _blendShapeIndex = 0;
 
-    [SerializeField] private Rigidbody _rb = null!;
-
     [Header("Handling")]
     [SerializeField] private float _minChargeTimer = 0.05f; // this value is just so that if a player accidentally hits space for a frame they don't get launched
     [SerializeField] private float _rotateSpeed = 20f;
     [SerializeField] private AnimationCurve _chargeTimeToForce = AnimationCurve.Linear(0, 0, 3, 10);
 
     private PlayerControllerB previousPlayerHeldBy = null!;
-    private float _xAngle, _yAngle, _zAngle;
-    private bool isOnGround = true;
+    private float _xAngle, _yAngle = 270, _zAngle;
+    private bool _isOnGround = true;
     private float _pogoChargeTimer;
-    private float _triggerTimer;
 
+    Vector3 _velocity;
+    
     public override void EquipItem()
     {
         base.EquipItem();
@@ -44,14 +44,14 @@ public class TomaHop : GrabbableObject
     public override void DiscardItem()
     {
         base.DiscardItem();
-        SetRigidBodyToGround();
+        OnHitGround();
         previousPlayerHeldBy.disableMoveInput = false;
     }
 
     public override void PocketItem()
     {
         base.PocketItem();
-        SetRigidBodyToGround();
+        OnHitGround();
         previousPlayerHeldBy.disableMoveInput = false;
     }
 
@@ -69,7 +69,7 @@ public class TomaHop : GrabbableObject
         HandleRotating();
 
         // Apply idle bounce & blendshape animation when on ground
-        if (isOnGround)
+        if (_isOnGround)
         {
             if (_skinnedMeshRenderer != null)
             {
@@ -77,43 +77,55 @@ public class TomaHop : GrabbableObject
                 _skinnedMeshRenderer.SetBlendShapeWeight(_blendShapeIndex, 0);
             }
         }
-
-        // If the item is airborne, check for collisions overhead or below.
-        if (!isOnGround)
-        {
-            _triggerTimer -= Time.deltaTime;
-            if (_triggerTimer > 0)
-                return;
-
-            bool hitCeiling = Physics.SphereCast(topTransform.position, 0.2f, transform.up, out _, 0.3f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-            if (hitCeiling)
-            {
-                _rb.velocity = new Vector3(_rb.velocity.x/2, -2f, _rb.velocity.z/2);
-                return;
-            }
-
-            Collider[] playerOrEnemyColliders = Physics.OverlapSphere(bottomTransform.position, 0.1f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
-            if (playerOrEnemyColliders.Length > 0)
-            {
-                // Damage enemy.
-                foreach (Collider collider in playerOrEnemyColliders)
-                {
-                    if (!collider.TryGetComponent(out IHittable hit))
-                        continue;
-                    hit.Hit(1, Vector3.up, playerHeldBy, true, 1);
-                }
-                _pogoChargeTimer += 0.5f;
-                ApplyForceToRigidBody();
-                return;
-            }
-            bool hitGround = Physics.CheckSphere(bottomTransform.position, 0.2f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-            if (!hitGround) return;
-            SetRigidBodyToGround();
-            Plugin.ExtendedLogging("Hit ground");
-            return;
-        }
+        
         // When on the ground and held, check for jump input.
         DetectPlayerPressingSpaceToHopUp();
+    }
+
+    bool DoRaycast(Vector3 distance, out RaycastHit hit) => Physics.Raycast(
+        bottomTransform.position,
+        distance.normalized,
+        out hit,
+        distance.magnitude,
+        StartOfRound.Instance.collidersAndRoomMaskAndDefault,
+        QueryTriggerInteraction.Ignore
+    );
+    
+    void FixedUpdate() {
+        if(_isOnGround) return;
+        
+        // this technically isn't good but oh well :3
+        _velocity -= new Vector3(0, 9.8f, 0) * Time.fixedDeltaTime;
+        Vector3 distanceThisFrame = _velocity * Time.fixedDeltaTime;
+        
+        if(DoRaycast(distanceThisFrame, out RaycastHit hitInfo)) {
+            Vector3 offset = hitInfo.point - bottomTransform.position;
+            transform.position += offset;
+
+            if(Mathf.Abs(hitInfo.normal.y) < 0.05f) { // value here is how vertical the surface needs in order to be considered a wall
+                Plugin.ExtendedLogging("Hit wall");
+                // hit wall!
+            } else if(distanceThisFrame.y > 0) {
+                Plugin.ExtendedLogging("Hit ceiling");
+                // hit ceiling!
+            } else {
+                OnHitGround();
+            }
+        } else {
+            transform.position += distanceThisFrame;
+        }
+        
+        Collider[] playerOrEnemyColliders = Physics.OverlapSphere(bottomTransform.position, 0.1f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
+        if(playerOrEnemyColliders.Length <= 0) return;
+        // Damage enemy.
+        foreach (Collider collider in playerOrEnemyColliders)
+        {
+            if (!collider.TryGetComponent(out IHittable hit))
+                continue;
+            hit.Hit(1, Vector3.up, playerHeldBy, true, 1);
+        }
+        _pogoChargeTimer += 0.5f;
+        //Launch();
     }
 
     public override void LateUpdate()
@@ -147,10 +159,6 @@ public class TomaHop : GrabbableObject
 
         _xAngle = Mathf.Clamp(_xAngle + vertical, -30, 30);
         _zAngle = Mathf.Clamp(_zAngle + horizontal, -30, 30);
-
-        Plugin.ExtendedLogging($"_xAngle: {_xAngle}, _yAngle: {_yAngle}, _zAngle: {_zAngle}");
-        Vector2 mouseDelta = Plugin.InputActionsInstance.MouseDelta.ReadValue<Vector2>();
-        _yAngle += mouseDelta.x * _rotateSpeed * 0.25f * Time.deltaTime;
     }
 
     public void DetectPlayerPressingSpaceToHopUp()
@@ -168,29 +176,31 @@ public class TomaHop : GrabbableObject
         }
 
         Plugin.ExtendedLogging($"pogo charge timer: {_pogoChargeTimer}");
-        ApplyForceToRigidBody();
+        Launch(_xAngle, _zAngle);
     }
 
-    public void ApplyForceToRigidBody()
+    public void Launch(float xAngle, float zAngle)
     {
+        Plugin.ExtendedLogging($"x: {xAngle}, z: {zAngle}");
         float force = _chargeTimeToForce.Evaluate(_pogoChargeTimer);
-        _triggerTimer = 0.25f;
-        Vector3 launchVector = transform.up * force * 5f; // 5f is a temporay value and should be removed, i just don't want to keep rebuilding the bundle.
+
+        Quaternion xRotation = Quaternion.AngleAxis(xAngle, Vector3.forward);
+        Quaternion zRotation = Quaternion.AngleAxis(-zAngle, Vector3.right);
+        Vector3 direction = zRotation * xRotation * Vector3.up;
+        
+        Vector3 launchVector = direction * force * 5f; // 5f is a temporay value and should be removed, i just don't want to keep rebuilding the bundle.
         Plugin.ExtendedLogging($"launching player with vector: {launchVector}");
 
-        isOnGround = false;
-        _rb.isKinematic = false;
-        _rb.useGravity = true;
-        _rb.AddForce(launchVector, ForceMode.Impulse);
+        _isOnGround = false;
+        _velocity = launchVector;
         _pogoChargeTimer = 0;
     }
 
-    public void SetRigidBodyToGround()
+    public void OnHitGround()
     {
-        isOnGround = true;
-        if (!_rb.isKinematic)
-            _rb.velocity = Vector3.zero;
-        _rb.isKinematic = true;
-        _rb.useGravity = false;
+        Plugin.ExtendedLogging("Hit ground");
+        
+        _isOnGround = true;
+        _velocity = Vector3.zero;
     }
 }

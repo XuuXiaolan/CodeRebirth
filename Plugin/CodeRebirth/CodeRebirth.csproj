@@ -68,7 +68,7 @@
     <NetcodePatch Include="$(TargetPath)" />
   </ItemGroup>
   
-  <Target Name="CopyAssetBundles" AfterTargets="PostBuildEvent">
+  <Target Name="CopyAssetBundles" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
     <ItemGroup>
       <AllBundles Include="$(AssetBundleDir)*" Exclude="$(AssetBundleDir)*.meta"/>
     </ItemGroup>
