@@ -14,6 +14,12 @@ namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
 static class StartOfRoundPatch
 {
+	[HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
+	static void SaveCodeRebirthData()
+	{
+		CodeRebirthUtils.Instance.SaveCodeRebirthData();
+	}
+
 	[HarmonyPatch(nameof(StartOfRound.Awake))]
 	[HarmonyPostfix]
 	public static void StartOfRound_Awake(ref StartOfRound __instance)
@@ -22,12 +28,6 @@ static class StartOfRoundPatch
 		__instance.NetworkObject.OnSpawn(CreateNetworkManager);
 	}
 
-	[HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
-	static void SaveCodeRebirthData()
-	{
-		CodeRebirthUtils.Instance.SaveCodeRebirthData();
-	}
-	
 	private static void CreateNetworkManager()
 	{
 		if (StartOfRound.Instance.IsServer || StartOfRound.Instance.IsHost)

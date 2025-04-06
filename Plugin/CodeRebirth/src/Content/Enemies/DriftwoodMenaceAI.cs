@@ -696,22 +696,40 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         // creatureVoice.PlayOneShot(hitSound[UnityEngine.Random.Range(0, hitSound.Length)]);
 
-        if (IsServer && force == 6 && currentBehaviourStateIndex != (int)DriftwoodState.RunningAway)
-        {
-            RunFarAway();
-        }
-        else if (IsServer && force > 0 && currentBehaviourStateIndex == (int)DriftwoodState.EatingPrey)
-        {
-            SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
-            if (!IsServer) return;
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
-        }
+
 
         enemyHP -= force;
         Plugin.ExtendedLogging("Enemy HP: " + enemyHP);
         if (IsOwner && enemyHP <= 0)
         {
             KillEnemyOnOwnerClient();
+            return;
+        }
+
+        if (enemyHP <= 0 || isEnemyDead) return;
+
+        if (IsServer && force == 6 && currentBehaviourStateIndex != (int)DriftwoodState.RunningAway)
+        {
+            RunFarAway();
+        }
+        else if (playerWhoHit != null)
+        {
+            targetPlayer = playerWhoHit;
+            smartAgentNavigator.StopSearchRoutine();
+            if (IsServer)
+            {
+                StartCoroutine(ChestBangPause((int)DriftwoodState.RunningToPrey, 20f));
+                agent.speed = 0f;
+                SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);                
+            }
+        }
+        else if (force > 0 && currentBehaviourStateIndex == (int)DriftwoodState.EatingPrey)
+        {
+            SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
+            if (IsServer)
+            {
+                smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
+            }
         }
     }
 

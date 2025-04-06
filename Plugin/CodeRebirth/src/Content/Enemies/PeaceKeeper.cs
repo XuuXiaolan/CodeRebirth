@@ -32,6 +32,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int BitchSlapAnimation = Animator.StringToHash("bitchSlap"); // Trigger
+
+    private static readonly int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Float
     public enum PeaceKeeperState
     {
         Idle,
@@ -55,6 +57,16 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
 
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
+        if (agent.velocity.magnitude > 0)
+        {
+            skinnedMeshRenderers[0].sharedMaterials[3].SetFloat(ScrollSpeedID, -1); // Left Tread
+            skinnedMeshRenderers[0].sharedMaterials[4].SetFloat(ScrollSpeedID, 1); // Right Tread
+        }
+        else
+        {
+            skinnedMeshRenderers[0].sharedMaterials[3].SetFloat(ScrollSpeedID, 0); // Left Tread
+            skinnedMeshRenderers[0].sharedMaterials[4].SetFloat(ScrollSpeedID, 0); // Right Tread
+        }
         switch (currentBehaviourStateIndex)
         {
             case (int)PeaceKeeperState.Idle:
@@ -75,10 +87,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         {
             if (player.isPlayerDead || !player.isPlayerControlled) continue;
             if (player.currentlyHeldObjectServer == null || !player.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon) continue;
-            if (Vector3.Distance(transform.position, player.transform.position) > 40) continue;
             Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-            if (Vector3.Dot(transform.forward, directionToPlayer) < 0.1f) continue;
-            if (!Physics.Linecast(eye.position, player.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore)) continue;
+            if (Vector3.Dot(transform.forward, directionToPlayer) < 0f) continue;
+            if (Physics.Raycast(eye.position, directionToPlayer, 40, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore)) continue;
             smartAgentNavigator.StopSearchRoutine();
             SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
             SwitchToBehaviourServerRpc((int)PeaceKeeperState.FollowPlayer);
@@ -96,9 +107,10 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             return;
         }
 
+        Plugin.ExtendedLogging($"following player with backofftimer: {_backOffTimer}");
         if (targetPlayer.currentlyHeldObjectServer == null || !targetPlayer.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon)
         {
-            _backOffTimer += Time.deltaTime;
+            _backOffTimer += AIIntervalTime;
             if (_backOffTimer > 10f)
             {
                 HandleSwitchingToIdle();
@@ -123,7 +135,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
         float distanceToTargetPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
-        if (distanceToTargetPlayer > 3)
+        if (distanceToTargetPlayer > 3) // todo: add more detection because player in a different height just wont get hit lol.
         {
             if (Physics.Linecast(eye.position, targetPlayer.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
@@ -210,7 +222,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public void BitchSlapAnimationEvent()
     {
         if (!IsServer) return;
-        int numHits = Physics.OverlapCapsuleNonAlloc(_gunStartTransform.position, _gunEndTransform.position, 2f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
+        int numHits = Physics.OverlapCapsuleNonAlloc(_gunStartTransform.position, _gunEndTransform.position, 2f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];
