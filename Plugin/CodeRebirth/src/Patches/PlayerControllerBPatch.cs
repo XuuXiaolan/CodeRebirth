@@ -124,6 +124,14 @@ static class PlayerControllerBPatch
             self.DamagePlayerFromOtherClientServerRpc(60, hitDirection, (int)playerWhoHit.playerClientId);
             return false;
         }
+
+        if (playerWhoHit != null)
+        {
+            foreach (var peaceKeeper in PeaceKeeper.Instances)
+            {
+                peaceKeeper.AlertPeaceKeeperToLocalPlayer(playerWhoHit);
+            }
+        }
         return orig(self, force, hitDirection, playerWhoHit, playHitSFX, hitID);
     }
 

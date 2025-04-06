@@ -37,11 +37,25 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     private static readonly int BitchSlapAnimation = Animator.StringToHash("bitchSlap"); // Trigger
 
     private static int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Vector3
+
+    public static List<PeaceKeeper> Instances = new();
     public enum PeaceKeeperState
     {
         Idle,
         FollowPlayer,
         AttackingPlayer
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        Instances.Add(this);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        Instances.Remove(this);
     }
 
     public override void Start()
@@ -88,17 +102,17 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     public void DoIdle()
     {
-        Plugin.ExtendedLogging($"Checking idle state.");
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled) continue;
-            Plugin.ExtendedLogging($"Checking player {player.name} for weapon.");
-            if (player.currentlyHeldObjectServer == null || !player.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon) continue;
-            Vector3 directionToPlayer = (player.transform.position - eye.position).normalized;
-            Plugin.ExtendedLogging($"Dot Product to player: {Vector3.Dot(transform.forward, directionToPlayer)}.");
-            if (Vector3.Dot(transform.forward, directionToPlayer) < 0f) continue;
-            float distanceToPlayer = Vector3.Distance(eye.position, player.transform.position);
-            if (Physics.Raycast(eye.position, directionToPlayer, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore)) continue;
+            if (player.isPlayerDead || !player.isPlayerControlled)
+                continue;
+
+            if (player.currentlyHeldObjectServer == null || !player.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon)
+                continue;
+
+            if (!PeaceKeeperSeesPlayer(player, 0f))
+                continue;
+
             smartAgentNavigator.StopSearchRoutine();
             SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
             SwitchToBehaviourServerRpc((int)PeaceKeeperState.FollowPlayer);
@@ -146,7 +160,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         float distanceToTargetPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
         if (distanceToTargetPlayer > 3) // todo: add more detection because player in a different height just wont get hit lol.
         {
-            if (Vector3.Dot(eye.forward, (targetPlayer.transform.position - eye.position).normalized) < 0.4f || Physics.Raycast(eye.position, eye.forward, distanceToTargetPlayer, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            if (!PeaceKeeperSeesPlayer(targetPlayer, 0.6f))
             {
                 if (_isShooting.Value)
                 {
@@ -193,6 +207,17 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         _bitchSlappingRoutine = null;
     }
 
+    public bool PeaceKeeperSeesPlayer(PlayerControllerB player, float dotThreshold)
+    {
+        Vector3 directionToPlayer = (player.transform.position - eye.position).normalized;
+        if (Vector3.Dot(transform.forward, directionToPlayer) < dotThreshold)
+            return false;
+        float distanceToPlayer = Vector3.Distance(eye.position, player.transform.position);
+        if (Physics.Raycast(eye.position, directionToPlayer, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            return false;
+        return true;
+    }
+
     public void DoGatlingGunDamage()
     {
         if (_damageInterval >= 0.21f)
@@ -204,6 +229,39 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         {
             _damageInterval += Time.deltaTime;
         }
+    }
+
+    public void AlertPeaceKeeperToLocalPlayer(PlayerControllerB playerWhoHit)
+    {
+        if (isEnemyDead)
+            return;
+
+        if (playerWhoHit.isPlayerDead)
+            return;
+
+        if (currentBehaviourStateIndex == (int)PeaceKeeperState.AttackingPlayer)
+            return;
+
+        if (currentBehaviourStateIndex == (int)PeaceKeeperState.FollowPlayer && targetPlayer == playerWhoHit)
+        {
+            AlertPeaceKeeperToPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
+            return;
+        }
+
+        if (PeaceKeeperSeesPlayer(playerWhoHit, 0f))
+        {
+            AlertPeaceKeeperToPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
+            return;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void AlertPeaceKeeperToPlayerServerRpc(int playerIndex)
+    {
+        targetPlayer = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        smartAgentNavigator.StopSearchRoutine();
+        agent.speed = _chasingSpeed;
+        SwitchToBehaviourClientRpc((int)PeaceKeeperState.AttackingPlayer);
     }
     #endregion
 

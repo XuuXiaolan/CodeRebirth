@@ -24,6 +24,14 @@ public static class EnemyAICollisionDetectPatch
             self.mainScript.HitEnemyOnLocalClient(3, hitDirection, playerWhoHit, playHitSFX, hitID);
             return false;
         }
+
+        if (playerWhoHit != null)
+        {
+            foreach (var peaceKeeper in PeaceKeeper.Instances)
+            {
+                peaceKeeper.AlertPeaceKeeperToLocalPlayer(playerWhoHit);
+            }
+        }
         return orig(self, force, hitDirection, playerWhoHit, playHitSFX, hitID);
     }
 }
