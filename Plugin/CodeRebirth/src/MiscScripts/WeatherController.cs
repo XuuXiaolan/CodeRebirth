@@ -10,7 +10,6 @@ public class WeatherController : MonoBehaviour
     public VolumeProfile volumeProfile = null!;
     public Light[] lightsToDeactivate = null!;
     public LocalVolumetricFog localVolumetricFog = null!;
-    public Vector3 fogPlacement = Vector3.zero;
     public GameObject[] gameObjectsToActivate = null!;
 
     public void Start()
@@ -34,7 +33,7 @@ public class WeatherController : MonoBehaviour
         {
             light.intensity = 0;
         }
-        localVolumetricFog.transform.localPosition = fogPlacement;
+        localVolumetricFog.parameters.meanFreePath = 25f;
 
         Material material = renderersToDisableEmissiveness[0].GetSharedMaterial();
         material.SetColor("_EmissiveColor", Color.white);
