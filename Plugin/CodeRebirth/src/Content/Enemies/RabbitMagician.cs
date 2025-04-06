@@ -167,6 +167,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private IEnumerator SwitchToIdle()
     {
         yield return new WaitForSeconds(_spawnAnimation.length);
+        this.transform.localScale = Vector3.one;
         smartAgentNavigator.enabled = true;
         agent.enabled = true;
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.Idle);
@@ -194,17 +195,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         while (lookedAt)
         {
             yield return new WaitForSeconds(0.5f);
-            Vector3 directionToRabbit = (transform.position - playerToAttachTo.gameObject.transform.position).normalized;
-            if (Vector3.Dot(playerToAttachTo.gameplayCamera.transform.forward, directionToRabbit) < 0.2f)
-            {
-                lookedAt = false;
-                continue;
-            }
-            if (Physics.Linecast(transform.position, playerToAttachTo.transform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
-            {
-                lookedAt = false;
-                continue;
-            }
+            lookedAt = PlayerLookingAtRabbit(playerToAttachTo);
         }
 
         creatureNetworkAnimator.SetTrigger(LatchOnAnimation);
