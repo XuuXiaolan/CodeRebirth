@@ -105,7 +105,10 @@ public class PeaceKeeper : CodeRebirthEnemyAI
                 return;
             }
         }
-        _backOffTimer = 0f;
+        else
+        {
+            _backOffTimer = 0f;
+        }
 
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
     } // do a patch to attacking, if there's any callbacks to players

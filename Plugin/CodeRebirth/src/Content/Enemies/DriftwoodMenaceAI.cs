@@ -27,7 +27,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public float awarenessIncreaseMultiplier = 2.0f; // Multiplier for awareness increase based on proximity
     public Transform smashTransform = null!;
 
-    private Collider[] CachedHits = new Collider[10];
+    private static Collider[] _cachedColliders = new Collider[12];
     private Vector3 enemyPositionBeforeDeath = Vector3.zero;
     private bool currentlyGrabbed = false;
     private bool canSmash = true;
@@ -388,13 +388,13 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         currentlyGrabbed = false;
 
         // Calculate the throwing direction with an upward angle
-        Vector3 backDirection = -transform.forward.normalized * 30f;
+        Vector3 backDirection = -transform.forward.normalized * 60f;
         Vector3 upDirection = Vector3.up.normalized * 30f;
         // Creating a direction that is 45 degrees upwards from the back direction
         Vector3 throwingDirection = (backDirection + Quaternion.AngleAxis(55, transform.right) * upDirection).normalized;
 
         // Calculate the throwing force
-        float throwForceMagnitude = 1250f;
+        float throwForceMagnitude = 150f;
         // Throw the player
         Plugin.ExtendedLogging("Launching Player");
         targetPlayer.externalForceAutoFade += throwingDirection * throwForceMagnitude;
@@ -426,11 +426,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void SmashEnemyAnimEvent()
     {   
-        int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, CachedHits, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (CachedHits[i].gameObject.GetComponent<EnemyAICollisionDetect>()?.mainScript is DriftwoodMenaceAI) continue;
-            if (!CachedHits[i].gameObject.TryGetComponent(out IHittable iHittable)) continue;
+            if (_cachedColliders[i].gameObject.GetComponent<EnemyAICollisionDetect>()?.mainScript is DriftwoodMenaceAI) continue;
+            if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable)) continue;
             iHittable.Hit(6, smashTransform.position, null, true, -1);
         }
 
@@ -442,7 +442,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 3f);
             if (targetEnemy.enemyHP <= 0)
             {
-                if (RoundManager.Instance.SpawnedEnemies.Any(x => Vector3.Distance(x.transform.position, this.transform.position) < 10))
+                if (RoundManager.Instance.SpawnedEnemies.Any(x => !x.isEnemyDead && x is not DriftwoodMenaceAI && Vector3.Distance(x.transform.position, this.transform.position) < 10))
                 {
                     SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
                     if (!IsServer) return;

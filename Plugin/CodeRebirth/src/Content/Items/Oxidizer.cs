@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
@@ -21,6 +22,7 @@ public class Oxidizer : GrabbableObject
     public float rechargeMultiplier = 1f;
 
     private RaycastHit[] cachedRaycastHits = new RaycastHit[24];
+    private List<IHittable> iHittableList = new();
     private bool charged = true;
     private bool superCharged = false;
     private bool nerfed = false;
@@ -51,13 +53,18 @@ public class Oxidizer : GrabbableObject
             if (updateHitInterval <= 0)
             {
                 updateHitInterval = 0.2f;
+                iHittableList.Clear();
                 int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 1.3f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 4, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
                 for (int i = 0; i < numHits; i++)
                 {
                     if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
                     {
-                        iHittable.Hit(1, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
+                        iHittableList.Add(iHittable);
                     }
+                }
+                foreach (var iHittable in iHittableList)
+                {
+                    iHittable.Hit(1, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
                 }
             }
         }
@@ -151,13 +158,18 @@ public class Oxidizer : GrabbableObject
         int damageToDeal = Mathf.FloorToInt(fuelLeft/5f);
         Plugin.ExtendedLogging($"Oxidizer: {damageToDeal} damage dealt.");
         int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
+        iHittableList.Clear();
         for (int i = 0; i < numHits; i++)
         {
             if (cachedRaycastHits[i].transform == playerHeldBy.transform) continue;
             if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
             {
-                iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
+                iHittableList.Add(iHittable);
             }
+        }
+        foreach (var iHittable in iHittableList)
+        {
+            iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
         }
         foreach (var ps in flameStreamParticleSystems)
         {
