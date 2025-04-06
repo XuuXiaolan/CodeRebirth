@@ -5,6 +5,7 @@ using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PeaceKeeper : CodeRebirthEnemyAI
@@ -26,7 +27,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     private List<Material> _materials = new();
     private float _backOffTimer = 0f;
-    private bool _isShooting = false;
+    private NetworkVariable<bool> _isShooting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private float _damageInterval = 0f;
     private Coroutine? _bitchSlappingRoutine = null;
     private Collider[] _cachedColliders = new Collider[24];
     private static readonly int ShootingAnimation = Animator.StringToHash("shooting"); // Bool
@@ -50,6 +52,14 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         _materials.Add(skinnedMeshRenderers[0].materials[3]);
         if (!IsServer) return;
         HandleSwitchingToIdle();
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (!_isShooting.Value) return;
+        DoGatlingGunDamage();
     }
 
     #region State Machines
@@ -138,24 +148,24 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         {
             if (Vector3.Dot(eye.forward, (targetPlayer.transform.position - eye.position).normalized) < 0.4f || Physics.Raycast(eye.position, eye.forward, distanceToTargetPlayer, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
-                if (_isShooting)
+                if (_isShooting.Value)
                 {
-                    _isShooting = false;
+                    _isShooting.Value = false;
                     agent.speed = _chasingSpeed;
                     creatureAnimator.SetBool(ShootingAnimation, false);
                 }
                 return;
             }
-            if (_isShooting) return;
+            if (_isShooting.Value) return;
             agent.speed = _shootingSpeed;
-            _isShooting = true;
+            _isShooting.Value = true;
             creatureAnimator.SetBool(ShootingAnimation, true);
             return;
         }
 
-        if (_isShooting)
+        if (_isShooting.Value)
         {
-            _isShooting = false;
+            _isShooting.Value = false;
             agent.speed = _chasingSpeed;
             creatureAnimator.SetBool(ShootingAnimation, false);
         }
@@ -181,6 +191,19 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         creatureAnimator.SetTrigger(BitchSlapAnimation);
         yield return new WaitForSeconds(2f);
         _bitchSlappingRoutine = null;
+    }
+
+    public void DoGatlingGunDamage()
+    {
+        if (_damageInterval >= 0.21f)
+        {
+            _damageInterval = 0f;
+            
+        }
+        else
+        {
+            _damageInterval += Time.deltaTime;
+        }
     }
     #endregion
 

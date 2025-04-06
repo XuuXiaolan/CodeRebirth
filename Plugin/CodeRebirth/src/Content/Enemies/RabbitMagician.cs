@@ -18,6 +18,8 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [SerializeField]
     private Vector3 _offsetPosition = new Vector3(0.031f, -0.109f, -0.471f);
 
+    private PlayerControllerB _previousTargetPlayer = null!;
+    private Coroutine? _killRoutine = null;
     private Coroutine? _attachRoutine = null;
     private Coroutine? _idleRoutine = null;
     private Transform? _targetPlayerSpine3 = null;
@@ -121,6 +123,8 @@ public class RabbitMagician : CodeRebirthEnemyAI
     {
         if (targetPlayer == null || targetPlayer.isPlayerDead)
         {
+            if (_killRoutine != null)
+                return;
             if (_idleRoutine != null)
                 return;
 
@@ -136,7 +140,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
             if (!PlayerLookingAtRabbit(player))
                 continue;
 
-            StartCoroutine(KillPlayerAndSwitchTarget(player));
+            _killRoutine = StartCoroutine(KillPlayerAndSwitchTarget(player));
         }
     }
 
@@ -151,7 +155,9 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private IEnumerator KillPlayerAndSwitchTarget(PlayerControllerB newTargetPlayer)
     {
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.SwitchingTarget);
-        yield return StartCoroutine(AttachToPlayer(newTargetPlayer));
+        _previousTargetPlayer.KillPlayer(_previousTargetPlayer.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
+        _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer));
+        yield return _attachRoutine;
     }
 
     private bool PlayerLookingAtRabbit(PlayerControllerB player)
@@ -179,6 +185,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     {
         smartAgentNavigator.StopSearchRoutine();
         SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
+        _previousTargetPlayer = targetPlayer;
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.Attached);
         smartAgentNavigator.enabled = false;
         agent.enabled = false;
