@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000059604634, y: -0.000000012621852, z: 1.13686824e-13,
     w: 1}
-  m_LocalPosition: {x: 0.00020289695, y: -0.00008332859, z: -0.00029524273}
+  m_LocalPosition: {x: 0, y: -0, z: -5.28}
   m_LocalScale: {x: 1.1064156, y: 1.1064156, z: 1.1064156}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2259,7 +2259,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 06f8f96e2c3725943bfecc1c096d9a8c, type: 2}
+  - {fileID: 2100000, guid: 517df4d1e8134b043adf6b2f9c92e2b2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2337,7 +2337,7 @@ Transform:
   m_GameObject: {fileID: 624072895730671688}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalPosition: {x: 1.04, y: 0.19, z: 0.29}
   m_LocalScale: {x: 0.5620443, y: 0.5620443, z: 0.5620443}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4568,8 +4568,8 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 06f8f96e2c3725943bfecc1c096d9a8c, type: 2}
-  - {fileID: 2100000, guid: 3990879918515744389db3e0fed2859d, type: 2}
+  - {fileID: 2100000, guid: 517df4d1e8134b043adf6b2f9c92e2b2, type: 2}
+  - {fileID: 2100000, guid: 7240953f11e3fa64280427757ef0fe00, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5374,7 +5374,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 2747
   m_UseColorTemperature: 1
-  m_BoundingSphereOverride: {x: NaN, y: NaN, z: 6966.9497, w: -8.048049e-34}
+  m_BoundingSphereOverride: {x: 0, y: NaN, z: 0, w: 75}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -5622,7 +5622,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 2747
   m_UseColorTemperature: 1
-  m_BoundingSphereOverride: {x: 0, y: NaN, z: 0, w: NaN}
+  m_BoundingSphereOverride: {x: 0, y: 1e-45, z: 0, w: 1e-45}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -6716,7 +6716,6 @@ MonoBehaviour:
   _walkingSpeed: 2
   _chasingSpeed: 5
   _shootingSpeed: 0.1
-  _treadMaterials: []
 --- !u!114 &6401745051562329849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7057,7 +7056,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000059604634, y: -0.000000012621852, z: 1.13686824e-13,
     w: 1}
-  m_LocalPosition: {x: 0.00020289695, y: -0.00008332859, z: -0.00029524273}
+  m_LocalPosition: {x: 0, y: -0, z: -5.5}
   m_LocalScale: {x: 1.1064156, y: 1.1064156, z: 1.1064156}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8803,7 +8802,7 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    maxLights: 20
+    maxLights: 10
   TrailModule:
     enabled: 0
     mode: 0
@@ -9288,7 +9287,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 06f8f96e2c3725943bfecc1c096d9a8c, type: 2}
+  - {fileID: 2100000, guid: 517df4d1e8134b043adf6b2f9c92e2b2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9499,7 +9498,7 @@ Transform:
   m_GameObject: {fileID: 8520123038933538607}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.12, z: -1.12}
   m_LocalScale: {x: 0.5620443, y: 0.5620443, z: 0.5620443}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11730,8 +11729,8 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 06f8f96e2c3725943bfecc1c096d9a8c, type: 2}
-  - {fileID: 2100000, guid: 3990879918515744389db3e0fed2859d, type: 2}
+  - {fileID: 2100000, guid: 517df4d1e8134b043adf6b2f9c92e2b2, type: 2}
+  - {fileID: 2100000, guid: 7240953f11e3fa64280427757ef0fe00, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

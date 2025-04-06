@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
@@ -8,7 +9,6 @@ using UnityEngine;
 
 public class PeaceKeeper : CodeRebirthEnemyAI
 {
-
     [SerializeField]
     private Transform _gunStartTransform = null!;
 
@@ -24,16 +24,17 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     [SerializeField]
     private float _shootingSpeed = 0.1f;
 
+    private List<Material> _materials = new();
     private float _backOffTimer = 0f;
     private bool _isShooting = false;
     private Coroutine? _bitchSlappingRoutine = null;
-    private Collider[] _cachedColliders = new Collider[12];
+    private Collider[] _cachedColliders = new Collider[24];
     private static readonly int ShootingAnimation = Animator.StringToHash("shooting"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int BitchSlapAnimation = Animator.StringToHash("bitchSlap"); // Trigger
 
-    private static readonly int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Float
+    private static int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Vector3
     public enum PeaceKeeperState
     {
         Idle,
@@ -45,8 +46,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     {
         base.Start();
 
+        _materials.Add(skinnedMeshRenderers[0].materials[2]);
+        _materials.Add(skinnedMeshRenderers[0].materials[3]);
         if (!IsServer) return;
-
         HandleSwitchingToIdle();
     }
 
@@ -56,17 +58,10 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
 
-        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
-        if (agent.velocity.magnitude > 0)
-        {
-            skinnedMeshRenderers[0].sharedMaterials[3].SetFloat(ScrollSpeedID, -1); // Left Tread
-            skinnedMeshRenderers[0].sharedMaterials[4].SetFloat(ScrollSpeedID, 1); // Right Tread
-        }
-        else
-        {
-            skinnedMeshRenderers[0].sharedMaterials[3].SetFloat(ScrollSpeedID, 0); // Left Tread
-            skinnedMeshRenderers[0].sharedMaterials[4].SetFloat(ScrollSpeedID, 0); // Right Tread
-        }
+        float velocity = agent.velocity.magnitude / 3;
+        creatureAnimator.SetFloat(RunSpeedFloat, velocity);
+        _materials[0].SetVector(ScrollSpeedID, new Vector3(0, -velocity, 0)); // Left Tread
+        _materials[1].SetVector(ScrollSpeedID, new Vector3(0, velocity, 0)); // Right Tread
         switch (currentBehaviourStateIndex)
         {
             case (int)PeaceKeeperState.Idle:
@@ -83,13 +78,17 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     public void DoIdle()
     {
+        Plugin.ExtendedLogging($"Checking idle state.");
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
             if (player.isPlayerDead || !player.isPlayerControlled) continue;
+            Plugin.ExtendedLogging($"Checking player {player.name} for weapon.");
             if (player.currentlyHeldObjectServer == null || !player.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon) continue;
-            Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+            Vector3 directionToPlayer = (player.transform.position - eye.position).normalized;
+            Plugin.ExtendedLogging($"Dot Product to player: {Vector3.Dot(transform.forward, directionToPlayer)}.");
             if (Vector3.Dot(transform.forward, directionToPlayer) < 0f) continue;
-            if (Physics.Raycast(eye.position, directionToPlayer, 40, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore)) continue;
+            float distanceToPlayer = Vector3.Distance(eye.position, player.transform.position);
+            if (Physics.Raycast(eye.position, directionToPlayer, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore)) continue;
             smartAgentNavigator.StopSearchRoutine();
             SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
             SwitchToBehaviourServerRpc((int)PeaceKeeperState.FollowPlayer);
@@ -226,6 +225,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];
+            Plugin.ExtendedLogging($"Bitch Slap hit {collider.name}");
             if (!collider.TryGetComponent(out IHittable iHittable))
                 continue;
             if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect && enemyAICollisionDetect.mainScript.gameObject == gameObject)
@@ -244,17 +244,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             {
                 iHittable.Hit(2, this.transform.position, null, true, -1);
             }
-        }
-
-        if (targetPlayer == null || targetPlayer.isPlayerDead)
-        {
-            Plugin.ExtendedLogging($"No player to slap");
-            return;
-        }
-        if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) > 10f)
-        {
-            creatureAnimator.SetBool(ShootingAnimation, true);
-            _isShooting = true;
         }
     }
     #endregion

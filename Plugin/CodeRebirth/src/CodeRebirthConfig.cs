@@ -253,10 +253,9 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether hazards like IndustrialFan and LaserTurret should delete player bodies.");
         ConfigCleanUnusedConfigs = configFile.Bind("General",
-													    "Clean Unusued Configs",
-													    true,
-													    "Whether CodeRebirth should delete old confing information that are unused."
-													);
+                                            "Clean Unusued Configs",
+                                            true,
+                                            "Whether CodeRebirth should delete old confing information that are unused.");
         #endregion
         #region Cruiser Gal
         ConfigCruiserGalAutomatic = configFile.Bind("Cruiser Options",
