@@ -136,7 +136,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         float distanceToTargetPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
         if (distanceToTargetPlayer > 3) // todo: add more detection because player in a different height just wont get hit lol.
         {
-            if (Physics.Linecast(eye.position, targetPlayer.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            if (Vector3.Dot(eye.forward, (targetPlayer.transform.position - eye.position).normalized) < 0.4f || Physics.Raycast(eye.position, eye.forward, distanceToTargetPlayer, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
                 if (_isShooting)
                 {
