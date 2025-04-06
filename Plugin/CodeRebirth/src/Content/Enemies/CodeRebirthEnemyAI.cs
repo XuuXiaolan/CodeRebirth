@@ -134,64 +134,6 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         }
     }
 
-    [ClientRpc]
-    public void SetFloatAnimationClientRpc(string name, float value)
-    {
-        SetFloatAnimationOnLocalClient(name, value);
-    }
-
-    public void SetFloatAnimationOnLocalClient(string name, float value)
-    {
-        Plugin.ExtendedLogging(name + " " + value);
-        creatureAnimator.SetFloat(name, value);
-    }
-
-    [ClientRpc]
-    public void SetBoolAnimationClientRpc(int nameInt, bool active)
-    {
-        SetBoolAnimationOnLocalClient(nameInt, active);
-    }
-
-    public void SetBoolAnimationOnLocalClient(int intName, bool active)
-    {
-        creatureAnimator.SetBool(intName, active);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void TriggerAnimationServerRpc(string triggerName)
-    {
-        TriggerAnimationClientRpc(triggerName);
-    }
-
-    [ClientRpc]
-    public void TriggerAnimationClientRpc(string triggerName)
-    {
-        TriggerAnimationOnLocalClient(triggerName);
-    }
-
-    public void TriggerAnimationOnLocalClient(string triggerName)
-    {
-        Plugin.ExtendedLogging(triggerName);
-        creatureAnimator.SetTrigger(triggerName);
-    }
-
-    public void ToggleEnemySounds(bool toggle)
-    {
-        creatureSFX.enabled = toggle;
-        creatureVoice.enabled = toggle;
-    }
-
-    [ClientRpc]
-    public void ChangeSpeedClientRpc(float speed)
-    {
-        ChangeSpeedOnLocalClient(speed);
-    }
-
-    public void ChangeSpeedOnLocalClient(float speed)
-    {
-        agent.speed = speed;
-    }
-
     public bool FindClosestPlayerInRange(float range, bool targetAlreadyTargettedPerson = true)
     {
         PlayerControllerB? closestPlayer = null;
@@ -249,38 +191,35 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         return Vector3.Angle(eyeTransform.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
     }
 
-    public bool IsPlayerReachable(PlayerControllerB PlayerToCheck)
+    public bool PlayerLookingAtEnemy(PlayerControllerB player, float dotProductThreshold)
     {
-        Vector3 Position = RoundManager.Instance.GetNavMeshPosition(PlayerToCheck.transform.position, RoundManager.Instance.navHit, 2.7f);
-        if (!RoundManager.Instance.GotNavMeshPositionResult)
-        {
-            Plugin.ExtendedLogging("Player Reach Test: No Navmesh position");
-            return false; 
-        }
-        agent.CalculatePath(Position, agent.path);
-        bool HasPath = (agent.path.status == NavMeshPathStatus.PathComplete);
-        Plugin.ExtendedLogging($"Player Reach Test: {HasPath}");
-        return HasPath;
+        Vector3 directionToEnemy = (transform.position - player.gameObject.transform.position).normalized;
+        if (Vector3.Dot(player.gameplayCamera.transform.forward, directionToEnemy) < dotProductThreshold)
+            return false;
+        if (Physics.Linecast(transform.position, player.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            return false;
+        return true;
     }
 
-    public float PlayerDistanceFromShip(PlayerControllerB PlayerToCheck)
+    public bool EnemySeesPlayer(PlayerControllerB player, float dotThreshold)
     {
-        if(PlayerToCheck == null) return -1;
-        float DistanceFromShip = Vector3.Distance(PlayerToCheck.transform.position, StartOfRound.Instance.shipBounds.transform.position);
-        Plugin.ExtendedLogging($"PlayerNearShip check: {DistanceFromShip}");
-        return DistanceFromShip;
-    }
-
-    private float DistanceFromPlayer(PlayerControllerB player, bool IncludeYAxis)
-    {
-        if (player == null) return -1f;
-        if (IncludeYAxis)
+        Transform mainTransform;
+        if (eye == null)
         {
-            return Vector3.Distance(player.transform.position, this.transform.position);
+            mainTransform = this.transform;
         }
-        Vector2 PlayerFlatLocation = new Vector2(player.transform.position.x, player.transform.position.z);
-        Vector2 EnemyFlatLocation = new Vector2(transform.position.x, transform.position.z);
-        return Vector2.Distance(PlayerFlatLocation, EnemyFlatLocation);
+        else
+        {
+            mainTransform = eye.transform;
+        }
+
+        Vector3 directionToPlayer = (player.transform.position - mainTransform.position).normalized;
+        if (Vector3.Dot(transform.forward, directionToPlayer) < dotThreshold)
+            return false;
+        float distanceToPlayer = Vector3.Distance(mainTransform.position, player.transform.position);
+        if (Physics.Raycast(mainTransform.position, directionToPlayer, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            return false;
+        return true;
     }
 
     public bool AnimationIsFinished(string AnimName)

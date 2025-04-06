@@ -110,7 +110,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         {
             if (player.isPlayerDead || !player.isPlayerControlled)
                 continue;
-            if (!PlayerLookingAtRabbit(player))
+            if (!PlayerLookingAtEnemy(player, 0.2f))
                 continue;
             _attachRoutine = StartCoroutine(AttachToPlayer(player));
             // do animation
@@ -137,7 +137,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
                 continue;
             if (player == targetPlayer)
                 continue;
-            if (!PlayerLookingAtRabbit(player))
+            if (!PlayerLookingAtEnemy(player, 0.2f))
                 continue;
 
             _killRoutine = StartCoroutine(KillPlayerAndSwitchTarget(player));
@@ -158,16 +158,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
         _previousTargetPlayer.KillPlayer(_previousTargetPlayer.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
         _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer));
         yield return _attachRoutine;
-    }
-
-    private bool PlayerLookingAtRabbit(PlayerControllerB player)
-    {
-        Vector3 directionToRabbit = (transform.position - player.gameObject.transform.position).normalized;
-        if (Vector3.Dot(player.gameplayCamera.transform.forward, directionToRabbit) < 0.2f)
-            return false;
-        if (Physics.Linecast(transform.position, player.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-            return false;
-        return true;
     }
 
     private IEnumerator SwitchToIdle()
@@ -202,7 +192,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         while (lookedAt)
         {
             yield return new WaitForSeconds(0.5f);
-            lookedAt = PlayerLookingAtRabbit(playerToAttachTo);
+            lookedAt = PlayerLookingAtEnemy(playerToAttachTo, 0.2f);
         }
 
         creatureNetworkAnimator.SetTrigger(LatchOnAnimation);

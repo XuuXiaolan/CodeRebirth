@@ -110,7 +110,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             if (player.currentlyHeldObjectServer == null || !player.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon)
                 continue;
 
-            if (!PeaceKeeperSeesPlayer(player, 0f))
+            if (!EnemySeesPlayer(player, 0f))
                 continue;
 
             smartAgentNavigator.StopSearchRoutine();
@@ -160,7 +160,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         float distanceToTargetPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
         if (distanceToTargetPlayer > 3) // todo: add more detection because player in a different height just wont get hit lol.
         {
-            if (!PeaceKeeperSeesPlayer(targetPlayer, 0.6f))
+            if (!EnemySeesPlayer(targetPlayer, 0.6f))
             {
                 if (_isShooting.Value)
                 {
@@ -207,17 +207,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         _bitchSlappingRoutine = null;
     }
 
-    public bool PeaceKeeperSeesPlayer(PlayerControllerB player, float dotThreshold)
-    {
-        Vector3 directionToPlayer = (player.transform.position - eye.position).normalized;
-        if (Vector3.Dot(transform.forward, directionToPlayer) < dotThreshold)
-            return false;
-        float distanceToPlayer = Vector3.Distance(eye.position, player.transform.position);
-        if (Physics.Raycast(eye.position, directionToPlayer, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
-            return false;
-        return true;
-    }
-
     public void DoGatlingGunDamage()
     {
         if (_damageInterval >= 0.21f)
@@ -248,7 +237,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             return;
         }
 
-        if (PeaceKeeperSeesPlayer(playerWhoHit, 0f))
+        if (EnemySeesPlayer(playerWhoHit, 0f))
         {
             AlertPeaceKeeperToPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
             return;

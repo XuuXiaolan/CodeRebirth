@@ -681,8 +681,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void SetAnimatorMotionBools(bool chasing = false, bool walking = false)
     {
-        SetBoolAnimationOnLocalClient(chasingInt, chasing);
-        SetBoolAnimationOnLocalClient(walkingInt, walking);
+        creatureAnimator.SetBool(chasingInt, chasing);
+        creatureAnimator.SetBool(walkingInt, walking);
     }
 
     public void EnableDeathColliders()

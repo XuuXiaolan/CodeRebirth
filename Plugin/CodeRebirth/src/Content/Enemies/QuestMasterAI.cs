@@ -130,7 +130,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
         smartAgentNavigator.SetAllValues(this.isOutside);
         if (!IsHost) return;
-        ChangeSpeedClientRpc(spawnSpeed);
+        agent.speed = spawnSpeed;
 
         StartCoroutine(DoSpawning(true));
         SwitchToBehaviourClientRpc((int)State.Spawning);
@@ -141,7 +141,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         if (playBigSound) creatureUltraVoice.Play();
         yield return new WaitForSeconds(spawnAnimation.length);
         smartAgentNavigator.StartSearchRoutine(transform.position, 40);
-        ChangeSpeedClientRpc(walkSpeed);
+        agent.speed = walkSpeed;
         creatureNetworkAnimator.SetTrigger(startWalkAnimation);
         SwitchToBehaviourClientRpc((int)State.Wandering);
     }
@@ -149,7 +149,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     protected virtual void DoWandering()
     {
         if (changingState || !FindClosestPlayerInRange(range)) return;
-        SetTargetClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
+        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
         StartCoroutine(ChangingToApproaching(questCompleted.Value));
     }
 
@@ -161,7 +161,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             yield return new WaitForSeconds(1f);
             changingState = false;
         }
-        ChangeSpeedClientRpc(approachSpeed);
+        agent.speed = approachSpeed;
         smartAgentNavigator.StopSearchRoutine();
         SwitchToBehaviourClientRpc((int)State.Approaching);
     }
@@ -222,7 +222,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         creatureAnimator.SetBool(isTalkingAnimation, false);
         creatureNetworkAnimator.SetTrigger(startQuestAnimation);
         questStarted.Value = true;
-        ChangeSpeedClientRpc(questSpeed);
+        agent.speed = questSpeed;
         Vector3 randomSpawnPosition = this.transform.position;
         if (RoundManager.Instance.insideAINodes.Length != 0)
         {
@@ -334,7 +334,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             PlayMiscSoundsClientRpc(3);
         }
         questCompleted.Value = true;
-        ChangeSpeedClientRpc(docileSpeed);
+        agent.speed = docileSpeed;
         SwitchToBehaviourClientRpc((int)State.Docile);
         float redoTimer = UnityEngine.Random.Range(45, 61);
         if (reason == QuestCompletion.Completed)
@@ -360,7 +360,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         questStarted.Value = false;
         questOrder.Value = 0;
         internalQuestTimer = 0f;
-        ChangeSpeedClientRpc(spawnSpeed);
+        agent.speed = spawnSpeed;
         StartCoroutine(DoSpawning(false));
         SwitchToBehaviourClientRpc((int)State.Spawning);
     }
