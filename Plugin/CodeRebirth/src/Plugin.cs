@@ -113,8 +113,11 @@ public class Plugin : BaseUnityPlugin
             MoreSuitsCompatibilityChecker.Init();
         }
 
-        Logger.LogInfo("Cleaning config");
-        Config.ClearUnusedEntries();
+        if(ModConfig.ConfigCleanUnusedConfigs.Value) {
+            Logger.LogInfo("Cleaning config");
+            Config.ClearUnusedEntries();
+        }
+
         Config.Save();
         
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");

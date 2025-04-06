@@ -109,6 +109,7 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> Config999GalScaleHealAndReviveWithPlayerCount { get; private set; }
     public ConfigEntry<float> ConfigAirControlUnitKnockbackPower { get; private set; }
     public ConfigEntry<int> ConfigAirControlUnitDamage { get; private set; }
+    public ConfigEntry<bool> ConfigCleanUnusedConfigs { get; private set; }
     #endregion 
     #region Worth
     public ConfigEntry<string> ConfigNaturesMaceWorth { get; private set; }
@@ -251,6 +252,11 @@ public class CodeRebirthConfig
                                             "Hazards | Delete Bodies",
                                             true,
                                             "Whether hazards like IndustrialFan and LaserTurret should delete player bodies.");
+        ConfigCleanUnusedConfigs = configFile.Bind("General",
+													    "Clean Unusued Configs",
+													    true,
+													    "Whether CodeRebirth should delete old confing information that are unused."
+													);
         #endregion
         #region Cruiser Gal
         ConfigCruiserGalAutomatic = configFile.Bind("Cruiser Options",
