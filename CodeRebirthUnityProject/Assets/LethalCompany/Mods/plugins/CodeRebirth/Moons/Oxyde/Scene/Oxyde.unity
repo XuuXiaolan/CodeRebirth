@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44811875, g: 0.24078181, b: 0.07642055, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9971,7 +9971,6 @@ MonoBehaviour:
   - {fileID: 167730187}
   - {fileID: 27353841}
   localVolumetricFog: {fileID: 1278184487}
-  fogPlacement: {x: 211, y: -10.186901, z: 67.00001}
   gameObjectsToActivate:
   - {fileID: 152164376}
   - {fileID: 1226662218}
@@ -18868,11 +18867,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: NewTerrainXuStillABitch
-      objectReference: {fileID: 0}
-    - target: {fileID: 5673505212844281391, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: m_Volume
-      value: 0.672
       objectReference: {fileID: 0}
     - target: {fileID: 7071544595146402373, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
