@@ -4840,6 +4840,7 @@ Transform:
   m_Children:
   - {fileID: 8851420747581952609}
   - {fileID: 5229137701962195962}
+  - {fileID: 5509598972112596070}
   m_Father: {fileID: 2352643702087328030}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1679516752452726417
@@ -5312,11 +5313,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 714c761220ff2b5488169cf0d71052b7, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -6080,6 +6081,134 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
+--- !u!1 &4749783355086138619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5509598972112596070}
+  - component: {fileID: 4926151374897401287}
+  m_Layer: 21
+  m_Name: BulletSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5509598972112596070
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4749783355086138619}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4235632938341393667}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &4926151374897401287
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4749783355086138619}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 20
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4992308964932370989
 GameObject:
   m_ObjectHideFlags: 0
@@ -6832,6 +6961,20 @@ MonoBehaviour:
   _chasingSpeed: 5
   _shootingSpeed: 0.5
   _gunParticleSystemGO: {fileID: 1367203227059449936}
+  _bulletSFX: {fileID: 4926151374897401287}
+  _spawnSound: {fileID: 8300000, guid: a00f33af26d31814ba6dbc7ebda35732, type: 3}
+  _revUpSound: {fileID: 8300000, guid: d9f25185427ac5e4ebb2af25a2aa053d, type: 3}
+  _revDownSound: {fileID: 8300000, guid: f3b6cd4336c77924eb11260a593bd754, type: 3}
+  _bitchSlapSound: {fileID: 8300000, guid: 696c4285dd9898042bed4b5b3238c3ba, type: 3}
+  _bitchSlapStartSound: {fileID: 8300000, guid: ed259afb46741cc4f8268c668442ef78,
+    type: 3}
+  _idleSounds:
+  - {fileID: 8300000, guid: 02712a9abb14dd941ad729c3c63bed0b, type: 3}
+  - {fileID: 8300000, guid: 93353aa6ca43f0e4fa3392831ad5973b, type: 3}
+  - {fileID: 8300000, guid: 9f930518baa908c4d8eb29f52b105955, type: 3}
+  - {fileID: 8300000, guid: 8a7197689e776df40b5bfa9255ec1fff, type: 3}
+  - {fileID: 8300000, guid: 27f24591a361be145896e3a0fc605aae, type: 3}
+  _idleSoundsTimer: 12.5
   _gatlingDamageInterval: 0.1
   _minigunRange: 90
   _minigunWidth: 2
