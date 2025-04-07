@@ -218,7 +218,24 @@ public class Merchant : NetworkBehaviour
 
     public void PopulateItemsWithRarityList()
     {
-        Dictionary<string, Item> itemsByName = StartOfRound.Instance.allItemsList.itemsList
+        List<(Item item, string itemName)> items = new();
+        foreach (var item in StartOfRound.Instance.allItemsList.itemsList)
+        {
+            Plugin.ExtendedLogging($"Item: {item.itemName}");
+            bool duplicate = false;
+            foreach (var itemAndName in items)
+            {
+                if (itemAndName.itemName.ToLowerInvariant().Trim() == item.itemName.ToLowerInvariant().Trim())
+                {
+                    Plugin.Logger.LogError($"Some mod added a duplicate item.... {item.itemName}");
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (duplicate) continue;
+            items.Add((item, item.itemName));
+        }
+        Dictionary<string, Item> itemsByName = items.Select(item => item.item)
             .ToDictionary(item => item.itemName.ToLowerInvariant().Trim());
 
         foreach (var barrel in merchantBarrels)
