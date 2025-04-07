@@ -1,13 +1,13 @@
+using System;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace CodeRebirth.src.Content.Items;
 public class TomaHop : GrabbableObject
 {
-    // todo: implement the blendshape and making the item go up and down with the blendshape.
-    // todo: implement an idle small bounce that basically does the same as the player holding space but tiny.
     // todo: maybe a small debounce on the end of the player's land?
     // todo: ground and ceiling detection probably break due to player rotating on their own so do something about that, maybe a sphere instead of a raycast??
 
@@ -62,10 +62,10 @@ public class TomaHop : GrabbableObject
     private void OnInteract(PlayerControllerB player)
     {
         if (!player.IsOwner) return;
-        player.carryWeight += Mathf.Clamp(this.itemProperties.weight - 1f, 0f, 10f);
+        // player.carryWeight += Mathf.Clamp(this.itemProperties.weight - 1f, 0f, 10f);
         player.GrabObjectServerRpc(this.NetworkObject);
-        this.parentObject = player.localItemHolder;
-        this.GrabItemOnClient();
+        parentObject = player.localItemHolder;
+        GrabItemOnClient();
     }
 
     public override void EquipItem()
@@ -97,7 +97,20 @@ public class TomaHop : GrabbableObject
     {
         parentObject = null;
         base.Update();
-        if (playerHeldBy == null || !isHeld || !playerHeldBy.IsOwner)
+        trigger.interactable = !isHeld;
+        if (playerHeldBy == null || isPocketed)
+            return;
+
+        if (_pogoChargeTimer > 0)
+        {
+            _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(100 - _pogoChargeTimer * 33.3f, 0, 100));
+        }
+        else
+        {
+            _skinnedMeshRenderer.SetBlendShapeWeight(0, 100);
+        }
+
+        if (!playerHeldBy.IsOwner)
             return;
 
         // Attach player to the hold transform.
@@ -121,7 +134,7 @@ public class TomaHop : GrabbableObject
             if (_pogoChargeTimer > 0) return;
             _jumpTimer -= Time.deltaTime;
             if (_jumpTimer > 0) return;
-            _jumpTimer = _jumpTimerMax;
+            _jumpTimer = _jumpTimerMax / 2;
             _pogoChargeTimer = _minChargeTimer;
             Launch();
         }
@@ -144,7 +157,7 @@ public class TomaHop : GrabbableObject
         if (_isOnGround) return;
 
         // this technically isn't good but oh well :3
-        _velocity -= new Vector3(0, 9.8f, 0) * Time.fixedDeltaTime;
+        _velocity -= new Vector3(0, 9.8f, 0) * Time.fixedDeltaTime * 2.5f;
         Vector3 distanceThisFrame = _velocity * Time.fixedDeltaTime;
 
         Transform raycastTransform;
@@ -189,11 +202,10 @@ public class TomaHop : GrabbableObject
         // Damage enemy.
         for (int i = 0; i < playerOrEnemyCollidersHits; i++)
         {
-            if (!_cachedColliders[i].TryGetComponent(out IHittable hit) || _cachedColliders[i].gameObject == previousPlayerHeldBy)
+            if (!_cachedColliders[i].TryGetComponent(out IHittable hit) || _cachedColliders[i].gameObject == previousPlayerHeldBy.gameObject)
                 continue;
             hit.Hit(1, Vector3.up, previousPlayerHeldBy, true, 1);
         }
-        _pogoChargeTimer += 0.5f;
         //Launch();
     }
 
@@ -204,7 +216,7 @@ public class TomaHop : GrabbableObject
     public override void LateUpdate()
     {
         base.LateUpdate();
-        if (playerHeldBy == null || !isHeld || !playerHeldBy.IsOwner) return;
+        if (playerHeldBy == null || isPocketed || !playerHeldBy.IsOwner) return;
         RotateAroundPoint(_xAngle, _yAngle, _zAngle);
     }
 

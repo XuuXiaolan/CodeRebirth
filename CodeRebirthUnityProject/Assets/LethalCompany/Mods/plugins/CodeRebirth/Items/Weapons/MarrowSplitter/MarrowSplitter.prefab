@@ -507,13 +507,14 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
-  marrowAnimator: {fileID: 6000667197330552496}
-  marrowOwnerNetworkAnimator: {fileID: 7863982260537457589}
+  _marrowSplitterAnimator: {fileID: 0}
+  _marrowSplitterOwnerNetworkAnimator: {fileID: 0}
   endTransform: {fileID: 461932613215040267}
-  idleSource: {fileID: 8764846700003574400}
-  audioSource: {fileID: 4005521916222698482}
-  DeactivateSound: {fileID: 0}
-  activateSound: {fileID: 0}
+  _idleSource: {fileID: 8764846700003574400}
+  _audioSource: {fileID: 4005521916222698482}
+  _DeactivateSound: {fileID: 0}
+  _activateSound: {fileID: 0}
+  _tryHealPlayerSounds: []
 --- !u!95 &6000667197330552496
 Animator:
   serializedVersion: 5

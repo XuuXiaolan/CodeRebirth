@@ -25,31 +25,17 @@ public class WalkieYellie : GrabbableObject
                 playerHeldBy.currentVoiceChatAudioSource.maxDistance = 999f;
             }
         }
+        else if (IsOwner)
+        {
+            SoundManager.Instance.SetEchoFilter(false);
+        }
 
         if (!IsOwner) Plugin.ExtendedLogging($"Setting voice distance of playerHeldBy to: {playerHeldBy.currentVoiceChatAudioSource.maxDistance}");
-    }
-
-    private IEnumerator DestroyDistortionFilter(AudioDistortionFilter distortionFilter)
-    {
-        yield return new WaitUntil(() => playerHeldBy == null || !playerHeldBy.activatingItem || isPocketed);
-        Destroy(distortionFilter);
     }
 
     private IEnumerator ResetVoiceChatAudioSource(AudioSource audioSource, float maxDistance)
     {
         yield return new WaitUntil(() => playerHeldBy == null || !playerHeldBy.activatingItem || isPocketed);
         audioSource.maxDistance = maxDistance;
-    }
-
-    private IEnumerator ResetLowPassFilterValue(AudioLowPassFilter audioLowPAudioLowPassFilter, float cutoffFrequency)
-    {
-        yield return new WaitUntil(() => playerHeldBy == null || !playerHeldBy.activatingItem || isPocketed);
-        audioLowPAudioLowPassFilter.cutoffFrequency = cutoffFrequency;
-    }
-
-    private IEnumerator ResetHighPassFilterValue(AudioHighPassFilter audioHighPassFilter, float cutoffFrequency)
-    {
-        yield return new WaitUntil(() => playerHeldBy == null || !playerHeldBy.activatingItem || isPocketed);
-        audioHighPassFilter.cutoffFrequency = cutoffFrequency;
     }
 }

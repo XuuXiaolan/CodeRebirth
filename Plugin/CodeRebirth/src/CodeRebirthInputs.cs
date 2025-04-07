@@ -40,4 +40,7 @@ public class IngameKeybinds : LcInputActions
 
     [InputAction(MouseControl.Delta, Name = "MouseDelta")]
     public InputAction MouseDelta { get; set; } = null!;
+
+    [InputAction(KeyboardControl.R, Name = "MarrowHealPlayer")]
+    public InputAction MarrowHealPlayer { get; set; } = null!;
 }

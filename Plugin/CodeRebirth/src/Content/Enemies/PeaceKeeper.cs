@@ -25,12 +25,15 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     [SerializeField]
     private float _shootingSpeed = 0.1f;
 
+    [SerializeField]
+    private GameObject _gunParticleSystemGO = null!;
+
     private List<Material> _materials = new();
     private float _backOffTimer = 0f;
-    private NetworkVariable<bool> _isShooting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private bool _isShooting = false;
     private float _damageInterval = 0f;
     private Coroutine? _bitchSlappingRoutine = null;
-    private Collider[] _cachedColliders = new Collider[24];
+    private Collider[] _cachedColliders = new Collider[30];
     private static readonly int ShootingAnimation = Animator.StringToHash("shooting"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
@@ -72,7 +75,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     {
         base.Update();
 
-        if (!_isShooting.Value) return;
+        if (!IsServer) return;
+        if (!_isShooting) return;
+        if (!_gunParticleSystemGO.activeSelf) return;
         DoGatlingGunDamage();
     }
 
@@ -145,7 +150,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         }
 
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
-    } // do a patch to attacking, if there's any callbacks to players
+    }
 
     public void DoAttackingPlayer()
     {
@@ -161,24 +166,24 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         {
             if (!EnemySeesPlayer(targetPlayer, 0.6f))
             {
-                if (_isShooting.Value)
+                if (_isShooting)
                 {
-                    _isShooting.Value = false;
+                    _isShooting = false;
                     agent.speed = _chasingSpeed;
                     creatureAnimator.SetBool(ShootingAnimation, false);
                 }
                 return;
             }
-            if (_isShooting.Value) return;
+            if (_isShooting) return;
             agent.speed = _shootingSpeed;
-            _isShooting.Value = true;
+            _isShooting = true;
             creatureAnimator.SetBool(ShootingAnimation, true);
             return;
         }
 
-        if (_isShooting.Value)
+        if (_isShooting)
         {
-            _isShooting.Value = false;
+            _isShooting = false;
             agent.speed = _chasingSpeed;
             creatureAnimator.SetBool(ShootingAnimation, false);
         }
@@ -206,16 +211,75 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         _bitchSlappingRoutine = null;
     }
 
+    [SerializeField]
+    private float _gatlingDamageInterval = 0.21f;
+    [SerializeField]
+    private float _minigunRange = 30f;
+    [SerializeField]
+    private float _minigunWidth = 1f;
+    [SerializeField]
+    private int _minigunDamage = 5;
+    [SerializeField]
+    private Transform _leftGunStartTransform = null!;
+    [SerializeField]
+    private Transform _rightGunStartTransform = null!;
+
     public void DoGatlingGunDamage()
     {
-        if (_damageInterval >= 0.21f)
-        {
-            _damageInterval = 0f;
-            
-        }
-        else
+        // Increment the timer; only process damage when the interval elapses.
+        if (_damageInterval < _gatlingDamageInterval)
         {
             _damageInterval += Time.deltaTime;
+            return;
+        }
+        _damageInterval = 0f;
+
+        // Use a HashSet to avoid applying damage twice to the same target
+        HashSet<IHittable> damagedTargets = new HashSet<IHittable>();
+
+        // Process both minigun heads
+        Transform[] gunTransforms = new Transform[] { _leftGunStartTransform, _rightGunStartTransform };
+
+        foreach (var gunTransform in gunTransforms)
+        {
+            // Define the capsule area starting at the gun head and extending forward by _minigunRange.
+            Vector3 capsuleStart = gunTransform.position;
+            Vector3 capsuleEnd = gunTransform.position + gunTransform.forward * _minigunRange;
+
+            int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+
+            for (int i = 0; i < numHits; i++)
+            {
+                Collider collider = _cachedColliders[i];
+                if (!collider.TryGetComponent(out IHittable hittable)) continue;
+
+                // Skip if already processed this target this tick.
+                if (damagedTargets.Contains(hittable))
+                    continue;
+                damagedTargets.Add(hittable);
+
+                if (hittable is EnemyAICollisionDetect enemyAICollision && enemyAICollision.mainScript.gameObject == gameObject)
+                {
+                    continue;
+                }
+
+                // Apply damage based on the target type.
+                if (hittable is PlayerControllerB player)
+                {
+                    // Calculate a direction vector (for potential knockback effects).
+                    Vector3 damageDirection = (player.transform.position - gunTransform.position).normalized;
+                    player.DamagePlayer(_minigunDamage, true, true, CauseOfDeath.Gunshots, 0, false, damageDirection * 10f);
+                    player.externalForceAutoFade += damageDirection * 10f;
+                }
+                else if (hittable is EnemyAICollisionDetect enemy)
+                {
+                    enemy.mainScript.HitEnemyOnLocalClient(_minigunDamage, gunTransform.position, null, true, -1);
+                }
+                else
+                {
+                    hittable.Hit(_minigunDamage, gunTransform.position, null, true, -1);
+                }
+            }
         }
     }
 

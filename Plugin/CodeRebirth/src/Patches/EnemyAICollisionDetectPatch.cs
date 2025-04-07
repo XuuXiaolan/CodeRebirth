@@ -1,4 +1,3 @@
-using System;
 using CodeRebirth.src.Content.Weapons;
 using GameNetcodeStuff;
 using UnityEngine;
