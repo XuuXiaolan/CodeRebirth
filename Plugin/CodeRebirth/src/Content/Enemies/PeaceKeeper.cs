@@ -130,7 +130,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             return;
         }
 
-        Plugin.ExtendedLogging($"following player with backofftimer: {_backOffTimer}");
         if (targetPlayer.currentlyHeldObjectServer == null || !targetPlayer.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon)
         {
             _backOffTimer += AIIntervalTime;

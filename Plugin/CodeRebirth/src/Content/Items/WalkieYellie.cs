@@ -12,30 +12,17 @@ public class WalkieYellie : GrabbableObject
         Plugin.ExtendedLogging($"Letting go of thing: {!buttonDown}");
         Plugin.ExtendedLogging($"Is owner: {IsOwner}");
         playerHeldBy.activatingItem = buttonDown;
-        if (buttonDown && !IsOwner)
+        if (buttonDown)
         {
-            StartCoroutine(ResetVoiceChatAudioSource(playerHeldBy.currentVoiceChatAudioSource, playerHeldBy.currentVoiceChatAudioSource.maxDistance));
-            playerHeldBy.currentVoiceChatAudioSource.maxDistance = 999f;
-
-            AudioDistortionFilter distortionFilter = playerHeldBy.currentVoiceChatAudioSource.gameObject.AddComponent<AudioDistortionFilter>();
-            distortionFilter.distortionLevel = 0.4f;
-            StartCoroutine(DestroyDistortionFilter(distortionFilter));
-
-            if (playerHeldBy.currentVoiceChatAudioSource.gameObject.TryGetComponent(out AudioDistortionFilter audioDistortionFilter))
+            if (IsOwner)
             {
-                Plugin.ExtendedLogging($"Found Audio Distortion Filter");
+                SoundManager.Instance.echoEnabled = true;
+                SoundManager.Instance.diageticMixer.SetFloat("EchoWetness", 0.4f);
             }
-
-            if (playerHeldBy.currentVoiceChatAudioSource.gameObject.TryGetComponent(out AudioLowPassFilter audioLowPassFilter))
+            else
             {
-                StartCoroutine(ResetLowPassFilterValue(audioLowPassFilter, audioLowPassFilter.cutoffFrequency));
-                audioLowPassFilter.cutoffFrequency = 2899f;
-            }
-
-            if (playerHeldBy.currentVoiceChatAudioSource.gameObject.TryGetComponent(out AudioHighPassFilter audioHighPassFilter))
-            {
-                StartCoroutine(ResetHighPassFilterValue(audioHighPassFilter, audioHighPassFilter.cutoffFrequency));
-                audioHighPassFilter.cutoffFrequency = 1613f;
+                StartCoroutine(ResetVoiceChatAudioSource(playerHeldBy.currentVoiceChatAudioSource, playerHeldBy.currentVoiceChatAudioSource.maxDistance));
+                playerHeldBy.currentVoiceChatAudioSource.maxDistance = 999f;
             }
         }
 
