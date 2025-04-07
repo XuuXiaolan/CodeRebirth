@@ -18,15 +18,24 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     [SerializeField]
     private float _walkingSpeed = 2f;
-
     [SerializeField]
     private float _chasingSpeed = 5f;
-
     [SerializeField]
     private float _shootingSpeed = 0.1f;
 
     [SerializeField]
     private GameObject _gunParticleSystemGO = null!;
+
+    [SerializeField]
+    private AudioSource _bulletSFX = null!;
+    [SerializeField]
+    private AudioClip _spawnSound = null!;
+    [SerializeField]
+    private AudioClip _revUpSound = null!;
+    [SerializeField]
+    private AudioClip _revDownSound = null!;
+    [SerializeField]
+    private AudioClip _bitchSlapSound = null!;
 
     private List<Material> _materials = new();
     private float _backOffTimer = 0f;
@@ -64,7 +73,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-
+        creatureVoice.PlayOneShot(_spawnSound);
         _materials.Add(skinnedMeshRenderers[0].materials[2]);
         _materials.Add(skinnedMeshRenderers[0].materials[3]);
         if (!IsServer) return;
@@ -75,9 +84,20 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     {
         base.Update();
 
-        if (!IsServer) return;
         if (!_isShooting) return;
-        if (!_gunParticleSystemGO.activeSelf) return;
+        if (!_gunParticleSystemGO.activeSelf)
+        {
+            if (creatureSFX.isPlaying)
+            {
+                creatureSFX.Stop();
+            }
+            return;
+        }
+        if (!creatureSFX.isPlaying)
+        {
+            creatureSFX.Play();
+        }
+        if (!IsServer) return;
         DoGatlingGunDamage();
     }
 
@@ -168,6 +188,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             {
                 if (_isShooting)
                 {
+                    PlayMiscSoundsServerRpc(1);
                     _isShooting = false;
                     agent.speed = _chasingSpeed;
                     creatureAnimator.SetBool(ShootingAnimation, false);
@@ -175,6 +196,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
                 return;
             }
             if (_isShooting) return;
+            PlayMiscSoundsServerRpc(0);
             agent.speed = _shootingSpeed;
             _isShooting = true;
             creatureAnimator.SetBool(ShootingAnimation, true);
@@ -183,6 +205,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
         if (_isShooting)
         {
+            PlayMiscSoundsServerRpc(1);
             _isShooting = false;
             agent.speed = _chasingSpeed;
             creatureAnimator.SetBool(ShootingAnimation, false);
@@ -194,6 +217,29 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     #endregion
 
     #region Misc Functions
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayMiscSoundsServerRpc(int soundID)
+    {
+        PlayMiscSoundsClientRpc(soundID);
+    }
+
+    [ClientRpc]
+    public void PlayMiscSoundsClientRpc(int soundID)
+    {
+        switch (soundID)
+        {
+            case 0:
+                creatureSFX.PlayOneShot(_revUpSound);
+                break;
+            case 1:
+                creatureSFX.PlayOneShot(_revDownSound);
+                break;
+            case 2:
+                creatureSFX.PlayOneShot(_bitchSlapSound);
+                break;
+        }
+    }
 
     public void HandleSwitchingToIdle()
     {
@@ -226,7 +272,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     public void DoGatlingGunDamage()
     {
-        // Increment the timer; only process damage when the interval elapses.
         if (_damageInterval < _gatlingDamageInterval)
         {
             _damageInterval += Time.deltaTime;
@@ -234,6 +279,16 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         }
         _damageInterval = 0f;
 
+        bool hitSomething = Physics.Raycast(_leftGunStartTransform.position, _leftGunStartTransform.forward, out RaycastHit hit, _minigunRange, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
+        if (hitSomething)
+        {
+            _bulletSFX.transform.position = hit.point;
+        }
+        else
+        {
+            _bulletSFX.transform.position = _leftGunStartTransform.position + _leftGunStartTransform.forward * _minigunRange;
+        }
+        if (!IsServer) return;
         // Use a HashSet to avoid applying damage twice to the same target
         HashSet<IHittable> damagedTargets = new HashSet<IHittable>();
 
@@ -378,6 +433,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI
                 iHittable.Hit(2, this.transform.position, null, true, -1);
             }
         }
+        if (numHits <= 0) return;
+        PlayMiscSoundsServerRpc(2);
     }
     #endregion
     // wanders around normally.
