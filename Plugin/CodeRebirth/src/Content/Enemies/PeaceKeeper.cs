@@ -36,7 +36,14 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     private AudioClip _revDownSound = null!;
     [SerializeField]
     private AudioClip _bitchSlapSound = null!;
+    [SerializeField]
+    private AudioClip _bitchSlapStartSound = null!;
+    [SerializeField]
+    private AudioClip[] _idleSounds = [];
+    [SerializeField]
+    private float _idleSoundsTimer = 12.5f;
 
+    private float _idleSoundTimer = 12.5f;
     private List<Material> _materials = new();
     private float _backOffTimer = 0f;
     private bool _isShooting = false;
@@ -83,7 +90,14 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
+        if (isEnemyDead) return;
 
+        _idleSoundTimer -= Time.deltaTime;
+        if (_idleSoundTimer <= 0f)
+        {
+            creatureVoice.PlayOneShot(_idleSounds[UnityEngine.Random.Range(0, _idleSounds.Length)]);
+            _idleSoundTimer = _idleSoundsTimer;
+        }
         if (!_isShooting) return;
         if (!_gunParticleSystemGO.activeSelf)
         {
@@ -238,6 +252,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             case 2:
                 creatureSFX.PlayOneShot(_bitchSlapSound);
                 break;
+            case 3:
+                creatureSFX.PlayOneShot(_bitchSlapStartSound);
+                break;
         }
     }
 
@@ -252,6 +269,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     public IEnumerator DoBitchSlapping()
     {
+        PlayMiscSoundsServerRpc(3);
         creatureAnimator.SetTrigger(BitchSlapAnimation);
         yield return new WaitForSeconds(2f);
         _bitchSlappingRoutine = null;
