@@ -29,9 +29,9 @@ public class GrabAndLaunchPlayer : MonoBehaviour
         this.player = null;
         player.disableMoveInput = false;
         player.externalForceAutoFade += crate.transform.up * 1000f;
-        yield return new WaitForSeconds(0.916f/2);
+        yield return new WaitForSeconds(0.916f / 2);
         crate.ResetWoodenCrate();
-        yield return new WaitForSeconds(0.916f/2);
+        yield return new WaitForSeconds(0.916f / 2);
         pullRoutine = null;
         this.enabled = false;
     }

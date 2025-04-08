@@ -44,7 +44,7 @@ public class SeeThroughCustomPass : CustomPass
     {
         // We first render objects into the user stencil bit 0, this will allow us to detect
         // if the object is behind another object.
-        if(stencilMaterial == null)
+        if (stencilMaterial == null)
             stencilMaterial = CoreUtils.CreateEngineMaterial(stencilShader);
 
         stencilMaterial.SetInt("_StencilWriteMask", (int)UserStencilUsage.UserBit0);

@@ -91,7 +91,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     [HideInInspector]
     public float internalQuestTimer = 0f;
     [HideInInspector]
-    public int questsFailed = 0; 
+    public int questsFailed = 0;
     [HideInInspector]
     public List<GameObject> questItemsList = new();
     [HideInInspector]
@@ -236,12 +236,12 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     protected virtual IEnumerator QuestTimer(Vector3 randomSpawnPosition, float delay = 5f)
     {
         SetDuckUIItemUIPlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
-        yield return new WaitForSeconds(delay/5);
+        yield return new WaitForSeconds(delay / 5);
         NetworkObjectReference item = CodeRebirthUtils.Instance.SpawnScrap(Plugin.samplePrefabs[questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]], randomSpawnPosition, true, true, 0);
         questItemsList.Add(item);
         currentQuestOrder.Value = Math.Clamp(questOrder.Value, 0, questItems.Length - 1);
         questOrder.Value++;
-        yield return new WaitForSeconds(delay/5*4);
+        yield return new WaitForSeconds(delay / 5 * 4);
         SwitchToBehaviourClientRpc((int)State.OngoingQuest);
         while (internalQuestTimer <= questTimer)
         {
@@ -329,7 +329,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             SwitchToBehaviourClientRpc((int)State.Wandering);
             return;
         }
-        else if (reason  == QuestCompletion.Completed && !doOtherQuest)
+        else if (reason == QuestCompletion.Completed && !doOtherQuest)
         {
             PlayMiscSoundsClientRpc(3);
         }

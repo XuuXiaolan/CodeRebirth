@@ -17,13 +17,13 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
     private static readonly int startAttack = Animator.StringToHash("startAttack");
     private static readonly int takeDamage = Animator.StringToHash("takeDamage");
     private static readonly int isDead = Animator.StringToHash("isDead");
-    public enum State 
+    public enum State
     {
         Idle,
         AttackTargetPlayer,
     }
 
-    public override void Start() 
+    public override void Start()
     {
         base.Start();
         agent.speed = 0;
@@ -38,10 +38,10 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
         {
             // Calculate direction to target player
             Vector3 direction = (targetPlayer.transform.position - transform.position).normalized;
-            
+
             // Calculate the rotation required to look at the target
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            
+
             // Smoothly rotate towards the target player
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
         }
@@ -50,7 +50,7 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
             // Default slow rotation to the right (positive y-axis)
             float rotationSpeed = 2f; // Adjust speed here if needed
             transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-            
+
             // To rotate to the left (negative y-axis), use:
             // transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
         }
@@ -76,7 +76,8 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
             if (player.isInHangarShipRoom || player.isPlayerDead || !player.isPlayerControlled) continue;
-            if (Vector3.Distance(transform.position, player.transform.position) <= 20) {
+            if (Vector3.Distance(transform.position, player.transform.position) <= 20)
+            {
                 SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
                 SwitchToBehaviourServerRpc((int)State.AttackTargetPlayer);
             }
@@ -85,7 +86,7 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
 
     private void DoAttackTargetPlayer()
     {
-        if (!attacking) 
+        if (!attacking)
         {
             PlayBiteSoundClientRpc();
             attacking = true;
@@ -128,22 +129,22 @@ public class CarnivorousPlant : CodeRebirthEnemyAI
     }
 
     [ClientRpc]
-    public void DropPlayerBodyClientRpc() 
+    public void DropPlayerBodyClientRpc()
     {
         DropPlayerBody();
     }
 
     private void DropPlayerBody()
-	{
-		if (!this.carryingPlayerBody || this.bodyBeingCarried == null)
-		{
-			return;
-		}
-		this.carryingPlayerBody = false;
-		this.bodyBeingCarried.matchPositionExactly = false;
-		this.bodyBeingCarried.attachedTo = null;
-		this.bodyBeingCarried = null;
-	}
+    {
+        if (!this.carryingPlayerBody || this.bodyBeingCarried == null)
+        {
+            return;
+        }
+        this.carryingPlayerBody = false;
+        this.bodyBeingCarried.matchPositionExactly = false;
+        this.bodyBeingCarried.attachedTo = null;
+        this.bodyBeingCarried = null;
+    }
 
     [ServerRpc(RequireOwnership = false)]
     private void CarryingDeadPlayerServerRpc(int playerIndex)

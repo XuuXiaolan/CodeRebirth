@@ -9,7 +9,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     {
     }
 
-    public class CarnivorousPlantAssets(string bundleName ) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName)
+    public class CarnivorousPlantAssets(string bundleName) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName)
     {
     }
 

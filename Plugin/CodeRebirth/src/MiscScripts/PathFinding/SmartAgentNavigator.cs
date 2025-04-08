@@ -237,7 +237,7 @@ public class SmartAgentNavigator : NetworkBehaviour
                         return false;
                     }
                 }
-                
+
                 if ((isOutside && actualEndPosition.y > -50) || (!isOutside && actualEndPosition.y < -50))
                 {
                     DetermineIfNeedToDisableAgent(actualEndPosition);

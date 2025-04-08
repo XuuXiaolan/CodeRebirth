@@ -12,7 +12,7 @@ public class BiomeManager : CodeRebirthHazard
     public DecalProjector corruptionProjector = null!;
     public DecalProjector crimsonProjector = null!;
     public DecalProjector hallowProjector = null!;
-    
+
     private ParticleSystem deathParticles = null!;
     private DecalProjector activeProjector = null!;
     private System.Random biomeRandom = new System.Random(69);
@@ -21,8 +21,8 @@ public class BiomeManager : CodeRebirthHazard
     private List<Collider> foliageOrTreeColliderList = new();
     private Collider[] cachedColliders = new Collider[10];
 
-	public static List<BiomeManager> Instances = new();
-	public static bool Active => Instances.Count > 0;
+    public static List<BiomeManager> Instances = new();
+    public static bool Active => Instances.Count > 0;
 
     public override void Start()
     {
@@ -65,9 +65,9 @@ public class BiomeManager : CodeRebirthHazard
     {
         yield return new WaitForSeconds(40f);
         Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, 250 / 3.5f, CodeRebirthUtils.Instance.terrainAndFoliageMask);
-        foreach (var hitCollider in hitColliders) 
+        foreach (var hitCollider in hitColliders)
         {
-            if (IsTree(hitCollider) || IsFoliage(hitCollider)) 
+            if (IsTree(hitCollider) || IsFoliage(hitCollider))
             {
                 foliageOrTreeColliderList.Add(hitCollider);
             }
@@ -135,10 +135,11 @@ public class BiomeManager : CodeRebirthHazard
         }
 
         // Instantiate dead particles at the position of the destroyed object
-        if ((colliderCount != 0 && biomeRandom.Next(1, colliderCount+1) <= 5) || biomeRandom.Next(1, 101) <= 20) {
+        if ((colliderCount != 0 && biomeRandom.Next(1, colliderCount + 1) <= 5) || biomeRandom.Next(1, 101) <= 20)
+        {
             ParticleSystem particles = Instantiate(deathParticles, hitPosition, hitRotation);
             particles.Play();
             Destroy(particles.gameObject, particles.main.duration + particles.main.startLifetime.constantMax);
         }
-   }
+    }
 }

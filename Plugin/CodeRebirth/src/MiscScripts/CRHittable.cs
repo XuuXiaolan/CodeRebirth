@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CodeRebirth.src.MiscScripts;
 public abstract class CRHittable : NetworkBehaviour
 {
-	public abstract bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null!,
-							 bool playHitSFX = false,
-							 int hitID = -1);
+    public abstract bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null!,
+                             bool playHitSFX = false,
+                             int hitID = -1);
 }

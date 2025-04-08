@@ -160,7 +160,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             return;
         }
     }
-    
+
     public void DoFollowPlayer()
     {
         if (targetPlayer == null || targetPlayer.isPlayerDead)

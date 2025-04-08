@@ -33,13 +33,13 @@ struct GodRaySpotlightData
 
         rotation = Quaternion.FromToRotation(Vector3.forward, bottomPoint - topPoint);
 
-        Vector2 towardsLight = new Vector2(location.x - topPoint.x, location.z-topPoint.z);
+        Vector2 towardsLight = new Vector2(location.x - topPoint.x, location.z - topPoint.z);
         Func<Vector2, Vector2, Vector2, (float a, float b, float c)> distances = (a, b, c) => ((c - b).magnitude, (c - a).magnitude, (b - a).magnitude);
         // a^2 = b^2 + c^2 - 2bc cos(A)
         // b^2 + c^2 - a^2 = 2bc cos(A)
         // A = acos( (b^2 + c^2 - a^2) / 2bc )
-        Func<float, float, float, float> triangleAngle = (a, b, c) => Mathf.Acos((b*b + c*c - a*a) / (2*b*c));
-        (float a, float b, float c) d = distances(new Vector2(towardsLight.magnitude, location.y-topPoint.y), Vector3.zero, Vector2.right * topRadius);
+        Func<float, float, float, float> triangleAngle = (a, b, c) => Mathf.Acos((b * b + c * c - a * a) / (2 * b * c));
+        (float a, float b, float c) d = distances(new Vector2(towardsLight.magnitude, location.y - topPoint.y), Vector3.zero, Vector2.right * topRadius);
         float halfTheta = triangleAngle(d.a, d.b, d.c);
         angle = halfTheta * 2;
 
@@ -91,8 +91,8 @@ public class GodRayManager : MonoBehaviour
     private float scale;
     private Vector3 previousPosition;
 
-	public static GodRayManager? Instance { get; private set; }
-	public static bool Active => Instance != null;
+    public static GodRayManager? Instance { get; private set; }
+    public static bool Active => Instance != null;
 
     public void OnEnable()
     {
@@ -146,7 +146,7 @@ public class GodRayManager : MonoBehaviour
     {
         if (GameNetworkManager.Instance == null || GameNetworkManager.Instance.localPlayerController == null) return;
         transform.position = camera.transform.position;
-        if (scale != camera.farClipPlane*2) 
+        if (scale != camera.farClipPlane * 2)
         {
             SetScale(camera.farClipPlane);
         }
@@ -208,14 +208,14 @@ public class GodRayManager : MonoBehaviour
         lightGameObject.transform.position = spotlightData.location;
         lightGameObject.transform.rotation = spotlightData.rotation;
 
-        GenerateSpotlightMesh(lightGameObject, (ray.BottomPosition-spotlightData.location).magnitude, ray.BottomRadius, spotlightData.colour, pointCount: 40);
+        GenerateSpotlightMesh(lightGameObject, (ray.BottomPosition - spotlightData.location).magnitude, ray.BottomRadius, spotlightData.colour, pointCount: 40);
         godRaySpotlights.Add(light);
         RegenerateRayComputeBuffer();
         // todo: figure out why light aint workin
         return ray;
     }
 
-    private void GenerateSpotlightMesh(GameObject lightGameObject, float distance, float bottomRadius, Color colour, bool generateNewMesh=true, int pointCount=100)
+    private void GenerateSpotlightMesh(GameObject lightGameObject, float distance, float bottomRadius, Color colour, bool generateNewMesh = true, int pointCount = 100)
     {
         if (pointCount < 3 || pointCount >= 254) throw new ArgumentOutOfRangeException(nameof(pointCount));
         Vector3[] points = new Vector3[pointCount + 1];
@@ -316,16 +316,19 @@ public class GodRayManager : MonoBehaviour
         material.SetInt("_rayCount", godRayEffects.Count);
     }
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         rayBuffer?.Release();
         RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
         rayBuffer = null;
         Instance = null;
-        foreach (HDAdditionalLightData light in godRaySpotlights) {
+        foreach (HDAdditionalLightData light in godRaySpotlights)
+        {
             if (light == null) continue;
             Destroy(light.gameObject);
         }
-        foreach (var collider in godRayColliders) {
+        foreach (var collider in godRayColliders)
+        {
             if (collider == null) continue;
             Destroy(collider.gameObject);
         }

@@ -33,23 +33,23 @@ public class BearTrap : CodeRebirthHazard
         base.Start();
         if (!IsServer || byProduct) return;
         var random = new System.Random(StartOfRound.Instance.randomMapSeed);
-		Vector3 position = this.transform.position;
+        Vector3 position = this.transform.position;
         if (MapObjectHandler.Instance.BearTrap == null) return;
-		for (int i = 0; i < random.Next(4, 8); i++)
-		{
-			Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
+        for (int i = 0; i < random.Next(4, 8); i++)
+        {
+            Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
 
-			Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+            Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
 
-			if (hit.collider == null) continue;
+            if (hit.collider == null) continue;
             GameObject beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("gravel")!.gameObject;
             if (hit.collider.CompareTag("Grass"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("grass")!.gameObject;;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("grass")!.gameObject; ;
             }
             else if (hit.collider.CompareTag("Snow"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("snow")!.gameObject;;
+                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("snow")!.gameObject; ;
             }
 
             if (this is BoomTrap)
@@ -66,7 +66,7 @@ public class BearTrap : CodeRebirthHazard
             spawnedTrap.transform.up = hit.normal;
             spawnedTrap.GetComponent<NetworkObject>().Spawn(true);
             position = spawnedTrap.transform.position;
-		}
+        }
         this.NetworkObject.Despawn(true);
     }
 

@@ -16,7 +16,7 @@ using BepInEx.Configuration;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)] 
+[BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
@@ -47,7 +47,7 @@ public class Plugin : BaseUnityPlugin
         public CodeRebirthContent CodeRebirthContent { get; private set; } = null!;
     }
     internal static MainAssets Assets { get; private set; } = null!;
-    
+
     private void Awake()
     {
         Logger = base.Logger;
@@ -89,10 +89,10 @@ public class Plugin : BaseUnityPlugin
         // This should be ran before Network Prefabs are registered.
         InitializeNetworkBehaviours();
         InputActionsInstance = new IngameKeybinds();
-        
+
         Assets = new MainAssets("coderebirthasset");
         // Register Keybinds
-        
+
         Logger.LogInfo("Registering CodeRebirth content.");
 
         RegisterContentHandlers(Assembly.GetExecutingAssembly());
@@ -120,23 +120,24 @@ public class Plugin : BaseUnityPlugin
         }
 
         Config.Save();
-        
+
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 
-    public static void RegisterContentHandlers(Assembly assembly) {
+    public static void RegisterContentHandlers(Assembly assembly)
+    {
         IEnumerable<Type> contentHandlers = assembly.GetLoadableTypes().Where(x =>
             x.BaseType != null
             && x.BaseType.IsGenericType
             && x.BaseType.GetGenericTypeDefinition() == typeof(ContentHandler<>)
         );
-        
+
         foreach (Type type in contentHandlers)
         {
             type.GetConstructor([]).Invoke([]);
         }
     }
-    
+
     private void OnDisable()
     {
         foreach (AssetBundle bundle in LoadedBundles.Values)

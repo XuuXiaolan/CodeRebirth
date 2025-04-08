@@ -151,7 +151,7 @@ public class TomaHop : GrabbableObject
             QueryTriggerInteraction.Ignore
         );
     }
-    
+
     private void FixedUpdate()
     {
         if (_isOnGround) return;
@@ -196,7 +196,7 @@ public class TomaHop : GrabbableObject
         {
             realPogo.position += distanceThisFrame;
         }
-        
+
         int playerOrEnemyCollidersHits = Physics.OverlapSphereNonAlloc(bottomTransform.position, 0.1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
         if (playerOrEnemyCollidersHits <= 0) return;
         // Damage enemy.

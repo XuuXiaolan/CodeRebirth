@@ -31,7 +31,7 @@ public class Janitor : CodeRebirthEnemyAI
 
     private Collider[] hitColliders = new Collider[10];
     private float idleTimer = 60f;
-    
+
     // Janitor states
     public enum JanitorStates
     {
@@ -45,7 +45,7 @@ public class Janitor : CodeRebirthEnemyAI
     // For storing references to all Janitors and TrashCans
     public static List<Janitor> janitors = new();
     [HideInInspector] public static List<TrashCan> trashCans = new();
-    
+
     // Navigation and pathing
     private Vector3[] _pathCorners = [];
     private int _currentCornerIndex = 0;
@@ -63,7 +63,7 @@ public class Janitor : CodeRebirthEnemyAI
 
     // Animator Hashes
     private static readonly int RightTreadFloat = Animator.StringToHash("RightTreadFloat");
-    private static readonly int LeftTreadFloat  = Animator.StringToHash("LeftTreadFloat");
+    private static readonly int LeftTreadFloat = Animator.StringToHash("LeftTreadFloat");
     private static readonly int IsAngryAnimation = Animator.StringToHash("isAngry");
     private static readonly int HoldingPlayerAnimation = Animator.StringToHash("holdingPlayer");
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead");
@@ -111,7 +111,7 @@ public class Janitor : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        
+
         if (currentBehaviourStateIndex == (int)JanitorStates.Idle)
         {
             HandleIdleSoundTimer();
@@ -375,7 +375,7 @@ public class Janitor : CodeRebirthEnemyAI
     {
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
         player.inAnimationWithEnemy = this;
-        targetPlayer = player; 
+        targetPlayer = player;
         player.disableMoveInput = true;
 
         if (IsServer)
@@ -414,7 +414,7 @@ public class Janitor : CodeRebirthEnemyAI
         HoarderBugAI.grabbableObjectsInMap.Remove(scrapObj.gameObject);
 
         targetScrap = scrapObj;
-        if (IsServer) 
+        if (IsServer)
         {
             creatureNetworkAnimator.SetTrigger(GrabScrapAnimation);
         }
@@ -459,7 +459,7 @@ public class Janitor : CodeRebirthEnemyAI
         transform.Rotate(Vector3.up, rotateSpeed);
 
         // Animate treads
-        creatureAnimator.SetFloat(LeftTreadFloat,  turningRight ? 1f : -1f);
+        creatureAnimator.SetFloat(LeftTreadFloat, turningRight ? 1f : -1f);
         creatureAnimator.SetFloat(RightTreadFloat, turningRight ? -1f : 1f);
         creatureSFX.volume = 1f;
 
@@ -494,7 +494,7 @@ public class Janitor : CodeRebirthEnemyAI
     {
         float forwardSpeed = agent.velocity.magnitude;
 
-        creatureAnimator.SetFloat(LeftTreadFloat,  forwardSpeed);
+        creatureAnimator.SetFloat(LeftTreadFloat, forwardSpeed);
         creatureAnimator.SetFloat(RightTreadFloat, forwardSpeed);
         creatureSFX.volume = (forwardSpeed > 0f) ? 1f : 0f;
 
@@ -526,7 +526,7 @@ public class Janitor : CodeRebirthEnemyAI
 
         // Reset tread animations
         creatureSFX.volume = 0f;
-        creatureAnimator.SetFloat(LeftTreadFloat,  0f);
+        creatureAnimator.SetFloat(LeftTreadFloat, 0f);
         creatureAnimator.SetFloat(RightTreadFloat, 0f);
     }
 

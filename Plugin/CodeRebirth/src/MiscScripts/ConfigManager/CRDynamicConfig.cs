@@ -5,10 +5,10 @@ using UnityEngine;
 namespace CodeRebirth.src.MiscScripts.ConfigManager;
 public enum CRDynamicConfigType
 {
-    String, 
-    Int, 
-    Float, 
-    Bool 
+    String,
+    Int,
+    Float,
+    Bool
 }
 
 [Serializable]

@@ -61,11 +61,11 @@ public class BellCrabGalAI : NetworkBehaviour, INoiseListener
 
     public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)
     {
-		if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
-		{
+        if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
+        {
             boomboxTimer = 0f;
-			boomboxPlaying = true;
+            boomboxPlaying = true;
             animator.SetBool(isDancing, true);
-		}
+        }
     }
 }

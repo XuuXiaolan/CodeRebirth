@@ -79,7 +79,7 @@ public class ShockwaveGalAI : GalAI
             Plugin.Logger.LogError($"ShockwaveCharger not found in scene. ShockwaveGalAI will not be functional.");
             return;
         }
-        ShockwaveCharger shockwaveCharger = shockwaveChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
+        ShockwaveCharger shockwaveCharger = shockwaveChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First(); ;
         shockwaveCharger.GalAI = this;
         GalCharger = shockwaveCharger;
         HeadPatTrigger.onInteract.AddListener(OnHeadInteract);
@@ -442,7 +442,7 @@ public class ShockwaveGalAI : GalAI
     private IEnumerator StopDancingDelay()
     {
         yield return new WaitUntil(() => !boomboxPlaying || galState != State.Dancing);
-        if (galState != State.Dancing) yield break;  
+        if (galState != State.Dancing) yield break;
         HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
     }
 
@@ -468,7 +468,7 @@ public class ShockwaveGalAI : GalAI
                     NetworkObject networkObject = collider.GetComponentInParent<NetworkObject>();
                     if (networkObject == null || !networkObject.TryGetComponent(out EnemyAI enemy2))
                         continue;
-                        
+
                     enemy = enemy2;
                 }
 
@@ -499,7 +499,7 @@ public class ShockwaveGalAI : GalAI
             GameObject laserPrefab = UnlockableHandler.Instance.ShockwaveBot.LasetShockBlast;
             GameObject laserInstance = Instantiate(laserPrefab, LaserOrigin.position, LaserOrigin.rotation);
             LaserShockBlast laserShockBlack = laserInstance.GetComponent<LaserShockBlast>();
-            
+
             // Set the origin of the laser
             laserShockBlack.shockwaveGal = this;
             laserShockBlack.laserOrigin = LaserOrigin;

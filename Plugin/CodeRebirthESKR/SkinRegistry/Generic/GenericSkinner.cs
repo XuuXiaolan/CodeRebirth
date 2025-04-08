@@ -31,7 +31,7 @@ public class GenericSkinner(GenericSkin skinData) : Skinner, GenericEventHandler
 
         foreach (var materialAction in SkinData.AllMaterialsAction)
         {
-            allMaterials.Add(materialAction.Apply(enemyScript.skinnedMeshRenderers[materialAction.rendererIndex], materialAction.materialRendererIndex)); 
+            allMaterials.Add(materialAction.Apply(enemyScript.skinnedMeshRenderers[materialAction.rendererIndex], materialAction.materialRendererIndex));
         }
 
         MeshRenderer? mapDotMeshRenderer = enemyScript.gameObject.transform.GetComponentsInChildren<MeshRenderer>().Where(x => x.CompareTag("DoNotSet") && x.gameObject.layer == 14).FirstOrDefault();

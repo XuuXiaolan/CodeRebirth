@@ -28,10 +28,10 @@ public class ItemUI : MonoBehaviour
 
     public void Update()
     {
-        if (parentItem == null) 
+        if (parentItem == null)
         {
             canvasGroup.alpha = 0f;
-            return; 
+            return;
         }
 
         itemImage.transform.localScale = Vector3.one * Mathf.LerpUnclamped(0.45f, 0.5f, Mathf.Sin(Time.time * 4.0f) * 0.5f + 0.5f);

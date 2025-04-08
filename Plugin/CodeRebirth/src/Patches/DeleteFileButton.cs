@@ -18,7 +18,7 @@ public static class DeleteFileButtonPatch
         }
         else
         {
-            settings = new ES3Settings($"CRLCSaveFile{self.fileToDelete+1}", ES3.EncryptionType.None);
+            settings = new ES3Settings($"CRLCSaveFile{self.fileToDelete + 1}", ES3.EncryptionType.None);
         }
         CodeRebirthUtils.ResetCodeRebirthData(settings);
     }

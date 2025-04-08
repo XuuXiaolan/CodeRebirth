@@ -104,7 +104,7 @@ public class TeslaShock : CodeRebirthHazard
                 {
                     validTargets.Add(startChainPoint);
                     validTargets.Add(chargedItemPlayerWasHolding.transform);
-                    
+
                     DrawChainLines(validTargets);
                     DamageTargets(validTargets, affectedPlayer);
 
@@ -118,7 +118,7 @@ public class TeslaShock : CodeRebirthHazard
                 List<Transform> sortedTargets = GetTargetsSortedByDistanceIncludingAffectedPlayer(affectedPlayer, sortedPlayers, sortedEnemies);
 
                 validTargets = GetValidChainTargets(sortedTargets);
-            
+
                 DrawChainLines(validTargets);
                 DamageTargets(validTargets, affectedPlayer);
 
@@ -147,15 +147,15 @@ public class TeslaShock : CodeRebirthHazard
         }
         teslaAudioSource.PlayOneShot(teslaFirstBigChargeSound);
         vfx.SetFloat("SpawnRate", 10);
-        yield return new WaitForSeconds(timeToCharge/5);
+        yield return new WaitForSeconds(timeToCharge / 5);
         vfx.SetFloat("SpawnRate", 20);
-        yield return new WaitForSeconds(timeToCharge/5);
+        yield return new WaitForSeconds(timeToCharge / 5);
         vfx.SetFloat("SpawnRate", 40);
-        yield return new WaitForSeconds(timeToCharge/5);
+        yield return new WaitForSeconds(timeToCharge / 5);
         vfx.SetFloat("SpawnRate", 60);
-        yield return new WaitForSeconds(timeToCharge/5);
+        yield return new WaitForSeconds(timeToCharge / 5);
         vfx.SetFloat("SpawnRate", 80);
-        yield return new WaitForSeconds(timeToCharge/5);
+        yield return new WaitForSeconds(timeToCharge / 5);
         vfx.SetFloat("SpawnRate", 100); // todo: change this to a hash or whatever its called
     }
 
@@ -179,7 +179,8 @@ public class TeslaShock : CodeRebirthHazard
     {
         List<Transform> targets =
         [
-            startChainPoint, affectedPlayer.transform,
+            startChainPoint,
+            affectedPlayer.transform,
             .. sortedPlayers.Select(player => player.transform),
             .. sortedEnemies.Select(enemy => enemy.transform),
         ];

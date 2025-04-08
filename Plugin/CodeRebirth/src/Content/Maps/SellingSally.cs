@@ -77,7 +77,7 @@ public class SellingSally : NetworkBehaviour
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (!player.IsOwner || player.transform.parent != endOfBarrelTransform.parent) continue; 
+            if (!player.IsOwner || player.transform.parent != endOfBarrelTransform.parent) continue;
             player.transform.position = endOfBarrelTransform.position;
             player.DamagePlayer(9999, true, true, CauseOfDeath.Blast, 0, false, endOfBarrelTransform.forward * 100f);
         }
@@ -85,7 +85,7 @@ public class SellingSally : NetworkBehaviour
         sallyCubes = sallyCubes.Where(x => x != null).Distinct().ToList();
         foreach (var sallyCube in sallyCubes)
         {
-            scrapValueToMake += sallyCube.scrapValue; 
+            scrapValueToMake += sallyCube.scrapValue;
         }
 
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
@@ -93,10 +93,10 @@ public class SellingSally : NetworkBehaviour
     }
 
     private void SellAndDisplayItemProfits(int profit, Terminal terminal)
-	{
-		terminal.groupCredits += profit;
-		StartOfRound.Instance.gameStats.scrapValueCollected += profit;
-		TimeOfDay.Instance.quotaFulfilled += profit;
+    {
+        terminal.groupCredits += profit;
+        StartOfRound.Instance.gameStats.scrapValueCollected += profit;
+        TimeOfDay.Instance.quotaFulfilled += profit;
         HUDManager.Instance.DisplayCreditsEarning(profit, sallyCubes.ToArray(), terminal.groupCredits);
 
         foreach (var sallyCube in sallyCubes)

@@ -75,8 +75,8 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         if (specialRenderer == null) yield break;
         for (int i = 1; i <= 3; i++)
         {
-            float step = Mathf.Lerp(oldValue, newValue, i/3f);
-            specialRenderer.GetMaterial().SetFloat(TemperatureHash, Mathf.Clamp(step/5f - 0.5f, -0.5f, 0.5f));
+            float step = Mathf.Lerp(oldValue, newValue, i / 3f);
+            specialRenderer.GetMaterial().SetFloat(TemperatureHash, Mathf.Clamp(step / 5f - 0.5f, -0.5f, 0.5f));
             yield return null;
         }
         previousLightValue = newValue;
@@ -145,7 +145,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             if (!onSight) continue;
 
             if (CheckIfPersonAlreadyTargetted(targetAlreadyTargettedPerson, player)) continue;
-            
+
             float distance = Vector3.Distance(transform.position, player.transform.position);
             bool closer = distance < minDistance;
             if (!closer) continue;
@@ -167,7 +167,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             if (enemy is CodeRebirthEnemyAI codeRebirthEnemyAI)
             {
                 if (codeRebirthEnemyAI.targetPlayer == playerToCheck)
-                return true;
+                    return true;
             }
         }
         return false;

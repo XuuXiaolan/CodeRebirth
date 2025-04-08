@@ -22,14 +22,14 @@ using WeatherManager = WeatherRegistry.WeatherManager;
 
 namespace CodeRebirth.src.Util;
 
-public class ContentHandler<T> where T: ContentHandler<T>
+public class ContentHandler<T> where T : ContentHandler<T>
 {
-	internal static T Instance { get; private set; } = null!;
+    internal static T Instance { get; private set; } = null!;
 
-	internal ContentHandler()
+    internal ContentHandler()
     {
-		Instance = (T)this;
-	}
+        Instance = (T)this;
+    }
 
     protected void LoadEnemyConfigs(string enemyName, string keyName, string defaultSpawnWeight, float defaultPowerLevel, int defaultMaxSpawnCount)
     {
@@ -178,7 +178,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                 ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
             }
 
-            Weather weather = new ($"{CRWeatherDefinition.Weather.Name}", CRWeatherDefinition.Weather.Effect);
+            Weather weather = new($"{CRWeatherDefinition.Weather.Name}", CRWeatherDefinition.Weather.Effect);
             weather.Color = CRWeatherDefinition.Weather.Color;
             weather.Config = new()
             {
@@ -280,7 +280,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
             string insideCurveSpawnWeights = mapObjectConfig.InsideCurveSpawnWeights?.Value ?? mapObjectData.defaultInsideCurveSpawnWeights;
             bool outside = mapObjectConfig.OutsideHazard?.Value ?? mapObjectData.isOutsideHazard;
             string outsideCurveSpawnWeightsConfig = mapObjectConfig.OutsideCurveSpawnWeights?.Value ?? mapObjectData.defaultOutsideCurveSpawnWeights;
-            
+
             RegisterMapObjectWithConfig(gameObject, CRObjectType, inside, insideCurveSpawnWeights, outside, outsideCurveSpawnWeightsConfig);
             definitionIndex++;
         }
@@ -356,11 +356,11 @@ public class ContentHandler<T> where T: ContentHandler<T>
             {
                 itemWorthMax = itemWorthMin;
             }
-            item.minValue = (int)(itemWorthMin/0.4f);
-            item.maxValue = (int)(itemWorthMax/0.4f);
+            item.minValue = (int)(itemWorthMin / 0.4f);
+            item.maxValue = (int)(itemWorthMax / 0.4f);
         }
 
-        if (enabledShopItem) 
+        if (enabledShopItem)
         {
             Items.RegisterShopItem(item, null, null, terminalNode, itemCost);
         }
@@ -445,9 +445,9 @@ public class ContentHandler<T> where T: ContentHandler<T>
             spawnRateFunction =
             level =>
             {
-                if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
+                if (level == null) return new AnimationCurve([new Keyframe(0, 0), new Keyframe(1, 0)]);
                 Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
-		        string actualLevelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
+                string actualLevelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
                 Plugin.ExtendedLogging($"actual level name: {actualLevelName}");
 
                 bool isValidLevelType = Enum.TryParse(actualLevelName, true, out Levels.LevelTypes levelType);
@@ -483,7 +483,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                     return allAnimationCurve;
                 }
                 Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
-                return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]); // Default case if no curve matches
+                return new AnimationCurve([new Keyframe(0, 0), new Keyframe(1, 0)]); // Default case if no curve matches
             }
         };
         RoundManagerPatch.registeredMapObjects.Add(registeredMapObject);
@@ -566,7 +566,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
             curvesByCustomLevelType.Keys.ToArray().Select(s => s.ToLowerInvariant()).ToArray(),
             level =>
             {
-                if (level == null) return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]);
+                if (level == null) return new AnimationCurve([new Keyframe(0, 0), new Keyframe(1, 0)]);
                 Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
                 string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
                 Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
@@ -601,7 +601,7 @@ public class ContentHandler<T> where T: ContentHandler<T>
                     return allAnimationCurve;
                 }
                 Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
-                return new AnimationCurve([new Keyframe(0,0), new Keyframe(1,0)]); // Default case if no curve matches
+                return new AnimationCurve([new Keyframe(0, 0), new Keyframe(1, 0)]); // Default case if no curve matches
             });
     }
 

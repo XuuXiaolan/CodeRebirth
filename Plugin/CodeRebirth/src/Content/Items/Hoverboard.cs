@@ -62,13 +62,17 @@ public class Hoverboard : GrabbableObject, IHittable
         }
         SwitchModeExtension(true);
         resetChildRotation = hoverboardChild.rotation;
-        if (IsServer) {
+        if (IsServer)
+        {
             PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-            if (StartOfRound.Instance.shipBounds.bounds.Contains(this.hoverboardChild.position) && !isInShipRoom) {
+            if (StartOfRound.Instance.shipBounds.bounds.Contains(this.hoverboardChild.position) && !isInShipRoom)
+            {
                 this.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
                 isInShipRoom = true;
                 isInElevator = true;
-            } else if (!StartOfRound.Instance.shipBounds.bounds.Contains(this.hoverboardChild.position) && isInShipRoom) {
+            }
+            else if (!StartOfRound.Instance.shipBounds.bounds.Contains(this.hoverboardChild.position) && isInShipRoom)
+            {
                 this.transform.SetParent(realPlayer.playersManager.propsContainer, true);
                 isInShipRoom = false;
                 isInElevator = false;
@@ -108,7 +112,8 @@ public class Hoverboard : GrabbableObject, IHittable
             if (hoverboardMode == HoverboardMode.Mounted)
             {
                 SetHoverboardStateServerRpc(1);
-            } else if (hoverboardMode == HoverboardMode.Held)
+            }
+            else if (hoverboardMode == HoverboardMode.Held)
             {
                 SetHoverboardStateServerRpc(2);
             }
@@ -387,11 +392,13 @@ public class Hoverboard : GrabbableObject, IHittable
         hoverboardChild.rotation = resetChildRotation;
         playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
         if (IsServer) this.NetworkObject.ChangeOwnership(playerControlling.actualClientId);
-        if (playerControlling == GameNetworkManager.Instance.localPlayerController && !playerControlling.GetCRPlayerData().ridingHoverboard) {
-            DialogueSegment dialogue = new DialogueSegment {
-                    speakerText = "Hoverboard Tooltips",
-                    bodyText = "C to Drop, E to Mount, F to Switch between Held and Mounted mode, Space to Jump, Shift to activate Boost.",
-                    waitTime = 7f
+        if (playerControlling == GameNetworkManager.Instance.localPlayerController && !playerControlling.GetCRPlayerData().ridingHoverboard)
+        {
+            DialogueSegment dialogue = new DialogueSegment
+            {
+                speakerText = "Hoverboard Tooltips",
+                bodyText = "C to Drop, E to Mount, F to Switch between Held and Mounted mode, Space to Jump, Shift to activate Boost.",
+                waitTime = 7f
             };
             HUDManager.Instance.ReadDialogue([dialogue]);
         }
@@ -444,7 +451,8 @@ public class Hoverboard : GrabbableObject, IHittable
         SetHoverboardState(state);
     }
 
-    private void SetHoverboardState(int state) {
+    private void SetHoverboardState(int state)
+    {
         if (playerControlling == null && hoverboardMode != HoverboardMode.None)
         {
             Plugin.Logger.LogWarning($"Player controlling is null for me...");
@@ -537,7 +545,8 @@ public class Hoverboard : GrabbableObject, IHittable
     public void SwitchToHeld(PlayerControllerB playerCurrentlyControlling)
     {
         PlayerControllerB realPlayer = StartOfRound.Instance.allPlayerScripts.FirstOrDefault();
-        if (playerCurrentlyControlling.isInHangarShipRoom) {
+        if (playerCurrentlyControlling.isInHangarShipRoom)
+        {
             playerCurrentlyControlling.transform.SetParent(realPlayer.playersManager.elevatorTransform, true);
         }
         else
@@ -622,7 +631,8 @@ public class Hoverboard : GrabbableObject, IHittable
     {
         this.propColliders = base.gameObject.GetComponentsInChildren<Collider>();
         this.originalScale = base.transform.localScale;
-        if (this.itemProperties.itemSpawnsOnGround) {
+        if (this.itemProperties.itemSpawnsOnGround)
+        {
             this.startFallingPosition = base.transform.position;
             if (base.transform.parent != null)
             {
@@ -658,7 +668,7 @@ public class Hoverboard : GrabbableObject, IHittable
         {
             componentsInChildren2[j].renderingLayerMask = 1U;
         }
-        
+
         trigger.onInteract.AddListener(OnInteract);
     }
 
@@ -773,9 +783,9 @@ public class Hoverboard : GrabbableObject, IHittable
     {
         // Move the hoverboard when hit.
         hb.AddForce(hitDirection * force, ForceMode.Impulse);
-		return true; // this bool literally doesn't get used. i have no idea.
-	}
-    
+        return true; // this bool literally doesn't get used. i have no idea.
+    }
+
     public void SetupCollidersIgnoringOrIncluding(bool ignore)
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts)

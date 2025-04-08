@@ -37,13 +37,15 @@ static class PlayerControllerBPatch
         }
     }
 
-	[HarmonyPatch(nameof(PlayerControllerB.PlayFootstepSound)), HarmonyPrefix]
-	public static bool PlayFootstepSound(PlayerControllerB __instance) {
+    [HarmonyPatch(nameof(PlayerControllerB.PlayFootstepSound)), HarmonyPrefix]
+    public static bool PlayFootstepSound(PlayerControllerB __instance)
+    {
         return !__instance.ContainsCRPlayerData() || !__instance.IsRidingHoverboard();
     }
 
     [HarmonyPatch(nameof(PlayerControllerB.Awake)), HarmonyPostfix]
-    public static void Awake(PlayerControllerB __instance) {
+    public static void Awake(PlayerControllerB __instance)
+    {
         if (__instance.ContainsCRPlayerData()) return;
 
         __instance.AddCRPlayerData();

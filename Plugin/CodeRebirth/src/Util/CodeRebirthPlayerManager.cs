@@ -96,11 +96,11 @@ internal static class PlayerControllerBExtensions
         }
         if (player.HasEffectActive(effect) && effect == CodeRebirthStatusEffects.Fire)
         {
-            CodeRebirthUtils.Instance.FireyVolume.weight = Mathf.Clamp01(range/distance);
+            CodeRebirthUtils.Instance.FireyVolume.weight = Mathf.Clamp01(range / distance);
         }
         else if (player.HasEffectActive(effect) && effect == CodeRebirthStatusEffects.Smoke)
         {
-            CodeRebirthUtils.Instance.SmokyVolume.weight = Mathf.Clamp01(range/distance);
+            CodeRebirthUtils.Instance.SmokyVolume.weight = Mathf.Clamp01(range / distance);
         }
         return ApplyEffectResults.None;
     }

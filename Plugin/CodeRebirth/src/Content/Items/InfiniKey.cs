@@ -17,28 +17,28 @@ public class InfiniKey : GrabbableObject
     {
         base.ItemActivate(used, buttonDown);
         if (playerHeldBy != null)
-		{
-			previousPlayerHeldBy = playerHeldBy;
-			if (playerHeldBy.IsOwner)
-			{
-				playerHeldBy.playerBodyAnimator.SetTrigger("UseHeldItem1");
-			}
-		}
-		if (IsOwner)
-		{
-			UseInfiniKey();
-		}
+        {
+            previousPlayerHeldBy = playerHeldBy;
+            if (playerHeldBy.IsOwner)
+            {
+                playerHeldBy.playerBodyAnimator.SetTrigger("UseHeldItem1");
+            }
+        }
+        if (IsOwner)
+        {
+            UseInfiniKey();
+        }
     }
 
     public void UseInfiniKey()
     {
         if (this.previousPlayerHeldBy == null)
-		{
-			Plugin.Logger.LogError("Previousplayerheldby is null on this client when HitShovel is called.");
-			return;
-		}
-		previousPlayerHeldBy.activatingItem = false;
-		int hitSurfaceIndex = -1;
+        {
+            Plugin.Logger.LogError("Previousplayerheldby is null on this client when HitShovel is called.");
+            return;
+        }
+        previousPlayerHeldBy.activatingItem = false;
+        int hitSurfaceIndex = -1;
         this.previousPlayerHeldBy.twoHanded = false;
         int numHits = Physics.SphereCastNonAlloc(previousPlayerHeldBy.gameplayCamera.transform.position + previousPlayerHeldBy.gameplayCamera.transform.right * 0.1f, 0.3f, previousPlayerHeldBy.gameplayCamera.transform.forward, cachedHits, 0.75f, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
@@ -51,10 +51,10 @@ public class InfiniKey : GrabbableObject
             }
             OnHit(cachedHits[i].collider);
         }
-		if (hitSurfaceIndex != -1)
-		{
-			HitInfiniKeyServerRpc(hitSurfaceIndex);
-		}
+        if (hitSurfaceIndex != -1)
+        {
+            HitInfiniKeyServerRpc(hitSurfaceIndex);
+        }
         else
         {
             HitInfiniKeyServerRpc(-2);

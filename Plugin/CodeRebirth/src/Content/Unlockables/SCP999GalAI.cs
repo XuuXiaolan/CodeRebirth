@@ -57,7 +57,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             bool moreThan0ReviveCapacity = reviveChargeCount.Value > 0;
             if (moreThan0HealCapacity && moreThan0ReviveCapacity)
             {
-                HealTrigger.hoverTip =  "Heals Left: " + healChargeCount.Value + "\nRevives Left: " + reviveChargeCount.Value;
+                HealTrigger.hoverTip = "Heals Left: " + healChargeCount.Value + "\nRevives Left: " + reviveChargeCount.Value;
             }
             else if (moreThan0HealCapacity)
             {
@@ -212,7 +212,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         {
             networkAnimator.SetTrigger(doSucceedAnimation);
         }
-    
+
         cooldownTimer.Value = Plugin.ModConfig.Config999GalHealCooldown.Value;
     }
 
@@ -235,15 +235,15 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             yield break;
         }
         currentlyHealing = true;
-        
+
         // Instantiate the particle system at the player's position.
         var newParticles = GameObject.Instantiate(particleSystemGameObject, player.transform.position, Quaternion.identity);
         newParticles.SetActive(true);
         particlesSpawned.Add(newParticles);
-        
+
         int totalHealthToHeal = healAmount;
         int healthHealed = 0;
-        
+
         // This variable will track the time passed and calculate health to heal over time.
         float timeElapsed = 0f;
 
@@ -270,7 +270,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             // Wait for the next frame.
             yield return null;
         }
-        
+
         // Ensure we do not heal more than the target amount.
         if (healthHealed < totalHealthToHeal && player.health < playerMaxHealthDict[player])
         {
@@ -319,7 +319,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         PlayerScript.isInsideFactory = false;
         PlayerScript.isInElevator = true;
         PlayerScript.isInHangarShipRoom = true;
-        
+
         PlayerScript.ResetPlayerBloodObjects(PlayerScript.isPlayerDead);
         PlayerScript.health = 5;
         PlayerScript.isClimbingLadder = false;
@@ -420,7 +420,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
         StartOfRound.Instance.allPlayersDead = false;
         StartOfRound.Instance.livingPlayers++;
-        StartOfRound.Instance.UpdatePlayerVoiceEffects();  
+        StartOfRound.Instance.UpdatePlayerVoiceEffects();
 
         deadBodyInfo.DeactivateBody(false);
     }
@@ -440,11 +440,11 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         Plugin.ExtendedLogging($"ActivePlayerAmount: {ActivePlayerAmount} | heal: {heal} | revive: {revive}");
         if (heal)
         {
-            healChargeCount.Value = Plugin.ModConfig.Config999GalHealTotalAmount.Value * (Plugin.ModConfig.Config999GalScaleHealAndReviveWithPlayerCount.Value ? ActivePlayerAmount : 1 );
+            healChargeCount.Value = Plugin.ModConfig.Config999GalHealTotalAmount.Value * (Plugin.ModConfig.Config999GalScaleHealAndReviveWithPlayerCount.Value ? ActivePlayerAmount : 1);
         }
         if (revive)
         {
-            reviveChargeCount.Value = Plugin.ModConfig.Config999GalReviveCharges.Value * (Plugin.ModConfig.Config999GalScaleHealAndReviveWithPlayerCount.Value ? ActivePlayerAmount : 1 );
+            reviveChargeCount.Value = Plugin.ModConfig.Config999GalReviveCharges.Value * (Plugin.ModConfig.Config999GalScaleHealAndReviveWithPlayerCount.Value ? ActivePlayerAmount : 1);
         }
     }
 
@@ -468,12 +468,12 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)
     {
         if (!IsServer) return;
-		if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
-		{
+        if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
+        {
             boomboxTimer = 0f;
-			boomboxPlaying.Value = true;
+            boomboxPlaying.Value = true;
             animator.SetBool(isDancing, true);
-		}
+        }
     }
 
     public override void OnNetworkDespawn()

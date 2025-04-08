@@ -93,11 +93,11 @@ public class Tornados : CodeRebirthEnemyAI
         float distanceOfLocalPlayerToTornado = Vector3.Distance(localPlayer.transform.position, eye.transform.position);
         if (TornadoConditionsAreMet(localPlayer) && distanceOfLocalPlayerToTornado <= 10f)
         {
-            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.fixedDeltaTime, 0, Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value+20f);
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado + Time.fixedDeltaTime, 0, Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value + 20f);
         }
         else
         {
-            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.fixedDeltaTime, 0, Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value+20f);
+            timeSinceBeingInsideTornado = Mathf.Clamp(timeSinceBeingInsideTornado - Time.fixedDeltaTime, 0, Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value + 20f);
         }
 
         if (timeSinceBeingInsideTornado >= Plugin.ModConfig.ConfigTornadoInsideBeforeThrow.Value)
@@ -154,7 +154,7 @@ public class Tornados : CodeRebirthEnemyAI
 
     public bool TornadoConditionsAreMet(PlayerControllerB player)
     {
-        return  !player.inVehicleAnimation &&
+        return !player.inVehicleAnimation &&
                 !player.IsRidingHoverboard() &&
                 !StartOfRound.Instance.shipBounds.bounds.Contains(player.transform.position) &&
                 !player.isInsideFactory &&
@@ -196,7 +196,7 @@ public class Tornados : CodeRebirthEnemyAI
 
         // Calculate the normalized distance and apply an exponential falloff
         float normalizedDistance = Mathf.Clamp01(1 - distance / maxDistance);
-        float strengthFalloff = normalizedDistance*normalizedDistance; // Use an exponential falloff for smoother results
+        float strengthFalloff = normalizedDistance * normalizedDistance; // Use an exponential falloff for smoother results
 
         // Calculate the pull strength based on the falloff
         // Plugin.ExtendedLogging($"Pull strength falloff: {strengthFalloff}");
@@ -253,7 +253,7 @@ public class Tornados : CodeRebirthEnemyAI
             closeTravelAudio.volume = Plugin.ModConfig.ConfigTornadoDefaultVolume.Value;
         }
     }
-    
+
     public void CalculateTornadoLineOfSights(int range, PlayerControllerB player, out float bestDistanceLOS, out float bestDistanceOverall)
     {
         bestDistanceLOS = float.PositiveInfinity;
@@ -271,12 +271,12 @@ public class Tornados : CodeRebirthEnemyAI
 
     public Vector3 GetRandomTargetPosition(System.Random random, IEnumerable<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius)
     {
-		int randomNodeIndex = random.Next(0, nodes.Count());
+        int randomNodeIndex = random.Next(0, nodes.Count());
         GameObject nextNode = nodes.ElementAt(randomNodeIndex);
         Vector3 position = nextNode.transform.position;
 
         position += new Vector3(random.NextFloat(minX, maxX), random.NextFloat(minY, maxY), random.NextFloat(minZ, maxZ));
         position = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(pos: position, radius: radius, randomSeed: random);
         return position;
-	}
+    }
 }

@@ -10,11 +10,11 @@ using CodeRebirth.src.Content.Items;
 namespace CodeRebirth.src.Patches;
 static class ShovelPatch
 {
-	static System.Random? random = null;
-	
-	public static void Init()
+    static System.Random? random = null;
+
+    public static void Init()
     {
-		On.Shovel.HitShovel += Shovel_HitShovel;
+        On.Shovel.HitShovel += Shovel_HitShovel;
     }
 
     private static void Shovel_HitShovel(On.Shovel.orig_HitShovel orig, Shovel self, bool cancel)
@@ -39,7 +39,7 @@ static class ShovelPatch
         {
             scaryShrimp.playerHeldBy.twoHanded = true;
             bool hitSomething = DetermineIfShovelHitSomething(self);
-            
+
             if (hitSomething)
             {
                 scaryShrimp.playerHeldBy.externalForceAutoFade = -scaryShrimp.playerHeldBy.gameplayCamera.transform.forward * 10;
@@ -79,8 +79,8 @@ static class ShovelPatch
     {
         if (!CRWeapon.canBreakTrees) return;
 
-		int numHits = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
-		RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
+        int numHits = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
+        RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
         if (numHits <= 0) return;
         if (EnemyHandler.Instance.RedwoodTitan != null && random.Next(0, 100) <= 5)
         {
@@ -95,9 +95,9 @@ static class ShovelPatch
     }
 
     static void TryCritWeapon(ref CodeRebirthWeapons self)
-	{
+    {
         self.defaultForce = self.shovelHitForce;
-		if (!Plugin.ModConfig.ConfigAllowCrits.Value || !self.critPossible) return;
+        if (!Plugin.ModConfig.ConfigAllowCrits.Value || !self.critPossible) return;
 
         self.shovelHitForce = ShovelExtensions.CriticalHit(self.shovelHitForce, random, self.critChance);
     }

@@ -73,7 +73,7 @@ class TIPS : CustomPass
     public float edgeDetectThreshold = 1;
     public int edgeRadius = 2;
     public Color glowColor = Color.white;
-    public const float  kMaxDistance = 1000;
+    public const float kMaxDistance = 1000;
     public Material tipsMeshMaterial;
     public Material fullscreenMaterial;
 
@@ -90,7 +90,7 @@ class TIPS : CustomPass
         tipsMeshMaterial = Resources.Load<Material>("Shader Graphs_TIPS_Effect");
         tipsBuffer = RTHandles.Alloc(Vector2.one, TextureXR.slices, dimension: TextureXR.dimension, colorFormat: GraphicsFormat.R16G16B16A16_SFloat, useDynamicScale: true, name: "TIPS Buffer");
 
-        if (fullscreenMaterial != null) 
+        if (fullscreenMaterial != null)
         {
             compositingPass = fullscreenMaterial.FindPass("Compositing");
             blurPass = fullscreenMaterial.FindPass("Blur");
@@ -109,7 +109,7 @@ class TIPS : CustomPass
     public override void Execute(CustomPassContext ctx)
     {
         if (fullscreenMaterial == null)
-            return ;
+            return;
 
         if (mesh != null && tipsMeshMaterial != null)
         {

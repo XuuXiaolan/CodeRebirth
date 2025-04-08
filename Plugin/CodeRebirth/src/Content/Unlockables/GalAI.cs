@@ -186,7 +186,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     public bool GoToChargerAndDeactivate()
     {
         smartAgentNavigator.DoPathingToDestination(GalCharger.ChargeTransform.position);
-        if (Vector3.Distance(transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance ||!Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
+        if (Vector3.Distance(transform.position, GalCharger.ChargeTransform.position) <= Agent.stoppingDistance || !Agent.hasPath || Agent.velocity.sqrMagnitude <= 0.01f)
         {
             GalCharger.ActivateGirlServerRpc(-1);
             return true;
@@ -263,15 +263,15 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
 
-	public virtual void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)
-	{
+    public virtual void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)
+    {
         if (inActive) return;
-		if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
-		{
+        if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
+        {
             boomboxTimer = 0f;
-			boomboxPlaying = true;
-		}
-	}
+            boomboxPlaying = true;
+        }
+    }
 
     public virtual bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {

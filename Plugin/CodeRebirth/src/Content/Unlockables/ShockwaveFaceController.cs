@@ -12,7 +12,7 @@ public class ShockwaveFaceController : MonoBehaviour
     private Renderer FaceRenderer = null!;
     public float GlitchDuration = 0.1f;
     public float GlitchFrequency = 2f;
-    
+
     private float glitchTimer;
     private Coroutine? glitchCoroutine = null;
     private Coroutine? modeCoroutine = null;
@@ -89,7 +89,7 @@ public class ShockwaveFaceController : MonoBehaviour
         }
 
         ResetFace();
-        
+
         //set the current face state
         ShockwaveGalAI.galEmotion = faceState;
         FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)faceState, Mathf.Clamp(weight, 0f, 100f));
@@ -149,7 +149,7 @@ public class ShockwaveFaceController : MonoBehaviour
             FaceSkinnedMeshRenderer.SetBlendShapeWeight((int)faceState, 0f);
         }
     }
-    
+
     private void OnDisable()
     {
         //reset

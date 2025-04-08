@@ -52,7 +52,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("Different ragdoll body types that spawn after death.")]
     public DeathAnimation deathAnimation = DeathAnimation.Default;
     [Space(2)]
-    
+
     [Header("Force Settings")]
     [Tooltip("The force direction of the damage.")]
     public ForceDirection forceDirection = ForceDirection.Forward;
@@ -63,12 +63,12 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("If true, the force direction will be calculated from the object's transform. If false, the force direction will be calculated from the player's transform.")]
     public bool forceDirectionFromThisObject = true;
     [Space(2)]
-    
+
     [Header("Cause of Death")]
     [Tooltip("Cause of death displayed in ScanNode after death.")]
     public CauseOfDeath causeOfDeath = CauseOfDeath.Unknown;
     [Space(2)]
-    
+
     [Header("Trigger Settings")]
     [Tooltip("Whether to trigger for players.")]
     public bool triggerForPlayers = false;
@@ -83,7 +83,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("Whether to play sound when damage is dealt to player that enemies can hear.")]
     public bool soundAttractsDogs = false;
     [Space(2)]
-    
+
     [Header("Damage Settings")]
     [Tooltip("Enemy Main Script if put on an enemy")]
     public EnemyAI? enemyMainScript = null;
@@ -98,21 +98,21 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("Cooldown to deal damage for enemies.")]
     public float damageIntervalForEnemies = 0.25f;
     [Space(2)]
-    
+
     [Header("Audio Settings")]
     [Tooltip("Damage clip to play when damage is dealt to player/enemy.")]
     public List<AudioClip> damageClips = new();
     [Tooltip("Damage audio sources to play when damage is dealt to player (picks the closest AudioSource to the player).")]
     public List<AudioSource> damageAudioSources = new();
     [Space(2)]
-    
+
     [Header("Death Prefab Settings")]
     [Tooltip("Prefab to spawn when the player dies.")]
     public GameObject? deathPrefabForPlayer = null;
     [Tooltip("Prefab to spawn when the enemy dies.")]
     public GameObject? deathPrefabForEnemy = null;
     [Space(2)]
-    
+
     [Header("Particle System Settings")]
     [Tooltip("Use particle systems when damage is dealt to player/enemy.")]
     public bool useParticleSystems = false;
@@ -127,7 +127,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
     [Tooltip("Particle system to play when the enemy is damaged.")]
     public List<ParticleSystem> damageParticlesForEnemy = new();
     [Space(2f)]
-    
+
     [Header("Display Message Settings")]
     [Tooltip("Whether to display message to player once damage is dealt to player.")]
     public bool displayMessage = false;
@@ -194,7 +194,8 @@ public class BetterCooldownTrigger : NetworkBehaviour
 
     public void OnEnable()
     {
-        foreach (var player in StartOfRound.Instance.allPlayerScripts) {
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        {
             playerCoroutineStatus[player] = false;
         }
         StartOfRound.Instance.playerTeleportedEvent.AddListener(new UnityAction<PlayerControllerB>(this.RemovePlayerFromList));
@@ -205,9 +206,9 @@ public class BetterCooldownTrigger : NetworkBehaviour
     private void RemovePlayerFromList(PlayerControllerB player)
     {
         if (playerCoroutineStatus.ContainsKey(player) && playerCoroutineStatus[player])
-		{
-			playerCoroutineStatus[player] = false;
-		}
+        {
+            playerCoroutineStatus[player] = false;
+        }
     }
 
     private IEnumerator ManageDamageTimer()
@@ -376,12 +377,14 @@ public class BetterCooldownTrigger : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void HandleParticleSystemStuffServerRpc(Vector3 position, bool forPlayer, bool isDead) {
+    private void HandleParticleSystemStuffServerRpc(Vector3 position, bool forPlayer, bool isDead)
+    {
         HandleParticleSystemStuffClientRpc(position, forPlayer, isDead);
     }
 
     [ClientRpc]
-    private void HandleParticleSystemStuffClientRpc(Vector3 position, bool forPlayer, bool isDead) {
+    private void HandleParticleSystemStuffClientRpc(Vector3 position, bool forPlayer, bool isDead)
+    {
         if (teleportParticles)
         {
             if (forPlayer)
@@ -393,7 +396,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
                 foreach (ParticleSystem? particle in deathParticlesForPlayer)
                 {
                     if (particle != null) particle.transform.position = position;
-                }  
+                }
             }
             else
             {

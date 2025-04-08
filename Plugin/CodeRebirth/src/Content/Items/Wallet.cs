@@ -12,17 +12,17 @@ public class Wallet : GrabbableObject
     public ScanNodeProperties scanNode = null!;
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
 
-	public override int GetItemDataToSave()
-	{
-		base.GetItemDataToSave();
-		return coinsStored.Value;
-	}
+    public override int GetItemDataToSave()
+    {
+        base.GetItemDataToSave();
+        return coinsStored.Value;
+    }
 
-	public override void LoadItemSaveData(int saveData)
-	{
-		base.LoadItemSaveData(saveData);
-		coinsStored.Value = saveData;
-	}
+    public override void LoadItemSaveData(int saveData)
+    {
+        base.LoadItemSaveData(saveData);
+        coinsStored.Value = saveData;
+    }
 
     private void UpdateWalletSize()
     {

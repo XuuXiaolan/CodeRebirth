@@ -369,7 +369,7 @@ public class Merchant : NetworkBehaviour
         currentCoinsStored += coinIncrease;
         DisableOrEnableCoinObjects();
     }
-    
+
     public void DisableOrEnableCoinObjects()
     {
         foreach (GameObject coinObject in coinObjects)

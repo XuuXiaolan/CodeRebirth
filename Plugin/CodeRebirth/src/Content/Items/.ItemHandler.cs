@@ -1,4 +1,4 @@
-﻿﻿using CodeRebirth.src.Util;
+﻿using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 

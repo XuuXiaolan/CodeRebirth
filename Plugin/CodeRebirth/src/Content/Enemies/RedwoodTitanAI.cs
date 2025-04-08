@@ -9,10 +9,10 @@ using CodeRebirth.src.MiscScripts;
 namespace CodeRebirth.src.Content.Enemies;
 public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 {
-    public Material[] AlbinoMaterials = null!;    
+    public Material[] AlbinoMaterials = null!;
     public Collider[] DeathColliders = null!;
     public Collider CollisionFootR = null!;
-    public Collider CollisionFootL = null!;    
+    public Collider CollisionFootL = null!;
     public ParticleSystem DustParticlesLeft = null!;
     public ParticleSystem DustParticlesRight = null!;
     public ParticleSystem ForestKeeperParticles = null!;
@@ -58,32 +58,42 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     #region ThreatType
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
-    int IVisibleThreat.SendSpecialBehaviour(int id) {
-        return 0; 
-    }
-    int IVisibleThreat.GetThreatLevel(Vector3 seenByPosition) {
-        return 18;
-    }
-    int IVisibleThreat.GetInterestLevel() {
+    int IVisibleThreat.SendSpecialBehaviour(int id)
+    {
         return 0;
     }
-    Transform IVisibleThreat.GetThreatLookTransform() {
+    int IVisibleThreat.GetThreatLevel(Vector3 seenByPosition)
+    {
+        return 18;
+    }
+    int IVisibleThreat.GetInterestLevel()
+    {
+        return 0;
+    }
+    Transform IVisibleThreat.GetThreatLookTransform()
+    {
         return eye;
     }
-    Transform IVisibleThreat.GetThreatTransform() {
+    Transform IVisibleThreat.GetThreatTransform()
+    {
         return base.transform;
     }
-    Vector3 IVisibleThreat.GetThreatVelocity() {
-        if (base.IsOwner) {
+    Vector3 IVisibleThreat.GetThreatVelocity()
+    {
+        if (base.IsOwner)
+        {
             return agent.velocity;
         }
         return Vector3.zero;
     }
-    float IVisibleThreat.GetVisibility() {
-        if (isEnemyDead) {
+    float IVisibleThreat.GetVisibility()
+    {
+        if (isEnemyDead)
+        {
             return 0f;
         }
-        if (agent.velocity.sqrMagnitude > 0f) {
+        if (agent.velocity.sqrMagnitude > 0f)
+        {
             return 1f;
         }
         return 0.75f;
@@ -256,7 +266,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         PlayMiscSoundsClientRpc(0);
         jumping = true;
         agent.speed = 0.5f;
-        Plugin.ExtendedLogging("Start Jump"); 
+        Plugin.ExtendedLogging("Start Jump");
     }
 
     public void DoKickTargetPlayer(PlayerControllerB closestPlayer)
@@ -300,7 +310,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             return;
         }
-        switch(currentBehaviourStateIndex)
+        switch (currentBehaviourStateIndex)
         {
             case (int)State.Spawn:
                 break;
@@ -381,7 +391,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
         }
-        if (Vector3.Distance(transform.position, targetEnemy.transform.position) >= seeableDistance+10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5))
+        if (Vector3.Distance(transform.position, targetEnemy.transform.position) >= seeableDistance + 10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5))
         {
             Plugin.ExtendedLogging("Stop Target Giant");
             agent.angularSpeed = 40f;
@@ -586,7 +596,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     }
 
     public override void KillEnemy(bool destroy = false)
-    { 
+    {
         base.KillEnemy(destroy);
         CollisionFootL.enabled = false;
         CollisionFootR.enabled = false;
@@ -648,7 +658,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         kickingOut = true;
     }
 
-    public void WanderAroundAfterSpawnAnimation() 
+    public void WanderAroundAfterSpawnAnimation()
     { // AnimEvent
         if (IsServer)
         {
@@ -715,28 +725,28 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void ShakePlayerCamera()
     { // AnimEvent
-            float distance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
-            switch (distance)
-            {
-                case < 15f:
-                
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+        float distance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
+        switch (distance)
+        {
+            case < 15f:
 
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                    break;
-                case < 30 and >= 15:
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                    break;
-                case < 50f and >= 30:
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                    break;
-            }
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+                break;
+            case < 30 and >= 15:
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+                break;
+            case < 50f and >= 30:
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+                break;
+        }
     }
 
     public void FootStepSounds()

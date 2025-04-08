@@ -108,7 +108,7 @@ public struct ColorAction
 {
     public ColorActionType actionType;
     public Color replacementColor;
-    
+
     public readonly Color Apply(Material vanillaMat, string property)
     {
         Color vanillaColor = Color.black;
@@ -221,7 +221,7 @@ public struct TextureAction
         if (vanillaMat != null)
         {
             try
-            { 
+            {
                 vanillaTexture = vanillaMat.GetTexture(property);
                 switch (actionType)
                 {
@@ -248,8 +248,8 @@ public struct TextureAction
     {
         if (vanillaMat != null)
         {
-            try 
-            { 
+            try
+            {
                 switch (actionType)
                 {
                     case TextureActionType.REPLACE:
@@ -383,7 +383,7 @@ public struct MaterialAction
 
     public readonly VanillaMaterial ApplyRef(ref Material vanillaRef)
     {
-        
+
         VanillaMaterial vanillaMaterial = new VanillaMaterial();
         switch (actionType)
         {
@@ -472,9 +472,9 @@ public struct ParticleSystemAction
                     instance.transform.localScale = Vector3.one;
                     instance.transform.localRotation = Quaternion.identity;
                     instance.transform.localPosition = Vector3.zero;
-                    if(vanillaParticle.isPlaying != instance.isPlaying)
+                    if (vanillaParticle.isPlaying != instance.isPlaying)
                     {
-                        if(vanillaParticle.isPlaying)
+                        if (vanillaParticle.isPlaying)
                         {
                             instance.Play();
                         }
@@ -559,7 +559,7 @@ public struct ParticleSystemAction
                     vanillaParticleRef.gameObject.GetComponent<ParticleSystemRenderer>().enabled = false;
                     break;
                 case ParticleSystemActionType.REPLACE:
-                    if(replacementParticle!=null)
+                    if (replacementParticle != null)
                     {
                         ParticleSystem instance = GameObject.Instantiate(replacementParticle.gameObject, vanillaParticle.transform).GetComponent<ParticleSystem>();
                         instance.transform.localPosition = Vector3.zero;
@@ -611,7 +611,7 @@ public struct ParticleSystemAction
                     {
                         if (replacementSubEmitter.isPlaying != vanillaSubEmitter.isPlaying)
                         {
-                            if(replacementSubEmitter.isPlaying)
+                            if (replacementSubEmitter.isPlaying)
                             {
                                 vanillaSubEmitter.Play();
                             }
@@ -645,9 +645,9 @@ public struct ParticleSystemAction
                     vanillaParticle.gameObject.GetComponent<ParticleSystemRenderer>().enabled = true;
                     break;
                 case ParticleSystemActionType.REPLACE:
-                    if(replacementSystem!=null)
+                    if (replacementSystem != null)
                     {
-                        if(replacementSystem.isPlaying != vanillaParticle.isPlaying)
+                        if (replacementSystem.isPlaying != vanillaParticle.isPlaying)
                         {
                             if (replacementSystem.isPlaying)
                             {
@@ -727,7 +727,7 @@ public struct AudioAction
 
     public readonly AudioClip Apply(ref AudioClip vanillaRef)
     {
-        
+
         AudioClip vanillaClip = vanillaRef;
         if (vanillaRef != null)
         {
@@ -782,8 +782,8 @@ public struct AudioAction
             switch (actionType)
             {
                 case AudioActionType.MUTE:
-                        vanillaSource.Stop();
-                        vanillaSource.clip = Silence;
+                    vanillaSource.Stop();
+                    vanillaSource.clip = Silence;
                     break;
                 case AudioActionType.REPLACE:
                     vanillaSource.clip = replacementClip;
@@ -859,7 +859,7 @@ public enum AudioListActionType
     RETAIN,
     MUTE,
     REPLACE,
-    
+
 }
 
 [Serializable]
@@ -886,7 +886,7 @@ public struct AudioListAction
                     }
                     break;
                 case AudioListActionType.REPLACE:
-                    if(replacementClips == null)
+                    if (replacementClips == null)
                     {
                         Plugin.Logger.LogWarning("Audio list was null on a replace action. This probably means either you're running dev build or you've uninstalled fixplugintypesserialization for some reason.");
                     }

@@ -61,7 +61,7 @@ public class GunslingerGreg : CodeRebirthHazard
                 if (rocket.ready) continue;
                 missileToRecharge = rocket;
                 break;
-            }            
+            }
         }
         else
         {
@@ -93,7 +93,7 @@ public class GunslingerGreg : CodeRebirthHazard
     private GunslingerMissile SpawnImmobileRocket(Transform rocketTransform)
     {
         GameObject rocket = Instantiate(MissilePrefab, rocketTransform.position, rocketTransform.rotation, rocketTransform);
-        var rocketScript = rocket.GetComponent<GunslingerMissile>(); 
+        var rocketScript = rocket.GetComponent<GunslingerMissile>();
         rocketScript.mainTransform = rocketTransform;
         rocketScript.ready = true;
         return rocketScript;
@@ -131,7 +131,7 @@ public class GunslingerGreg : CodeRebirthHazard
             foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
             {
                 if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || playerControllerB.isInHangarShipRoom || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) || IsPlayerNearGround(playerControllerB) || PlayerInSafeBounds(playerControllerB))
-                {            
+                {
                     continue;
                 }
 

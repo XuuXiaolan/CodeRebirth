@@ -88,7 +88,7 @@ public class TerminalGalAI : GalAI
             Plugin.Logger.LogError($"TerminalCharger not found in scene. TerminalGalAI will not be functional.");
             return;
         }
-        TerminalCharger terminalCharger = terminalChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
+        TerminalCharger terminalCharger = terminalChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First(); ;
         terminalCharger.GalAI = this;
         GalCharger = terminalCharger;
         // Automatic activation if configured
@@ -146,9 +146,9 @@ public class TerminalGalAI : GalAI
     private IEnumerator DelayTeleport(int playerIndex)
     {
         GalVoice.PlayOneShot(teleporterSound);
-        yield return new WaitForSeconds(teleporterSound.length/5);
+        yield return new WaitForSeconds(teleporterSound.length / 5);
         Animator.SetInteger(specialAnimationInt, -1);
-        yield return new WaitForSeconds(teleporterSound.length/5*4);
+        yield return new WaitForSeconds(teleporterSound.length / 5 * 4);
         ResetToChargerStation(galState, galEmotion);
         CRUtilities.TeleportPlayerToShip(playerIndex, GalCharger.transform.position);
 
@@ -241,13 +241,13 @@ public class TerminalGalAI : GalAI
         for (int i = 0; i < numHits; i++) // replace with pathfindinglib operations.
         {
             if (cachedColliders[i] == null) continue;
-            
+
             GameObject gameObject = cachedColliders[i].gameObject;
-            
+
             if (!ObjectIsInteractable(gameObject)) continue;
-            
+
             NavMesh.CalculatePath(transform.position, gameObject.transform.position, NavMesh.AllAreas, smartAgentNavigator.agent.path);
-            
+
             if (DoCalculatePathDistance(smartAgentNavigator.agent.path) <= 20)
             {
                 pointsOfInterestSet.Add(gameObject);
@@ -261,12 +261,12 @@ public class TerminalGalAI : GalAI
     public float DoCalculatePathDistance(NavMeshPath path)
     {
         float length = 0.0f;
-      
+
         if (path.status != NavMeshPathStatus.PathInvalid && path.corners.Length >= 1)
         {
             for (int i = 1; i < path.corners.Length; i++)
             {
-                length += Vector3.Distance(path.corners[i-1], path.corners[i]);
+                length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
             }
         }
         Plugin.ExtendedLogging($"Path distance: {length}");
@@ -450,7 +450,7 @@ public class TerminalGalAI : GalAI
             HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Basis);
             return;
         }
-    
+
         if (unlockingSomething != null) return;
         smartAgentNavigator.DoPathingToDestination(pointsOfInterest.First().transform.position);
         if (Agent.enabled && Agent.remainingDistance <= Agent.stoppingDistance)
@@ -535,7 +535,7 @@ public class TerminalGalAI : GalAI
     private IEnumerator StopDancingDelay()
     {
         yield return new WaitUntil(() => !boomboxPlaying || galState != State.Dancing);
-        if (galState != State.Dancing) yield break;  
+        if (galState != State.Dancing) yield break;
         HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.Basis);
     }
 
@@ -696,7 +696,7 @@ public class TerminalGalAI : GalAI
         yield return new WaitWhile(() =>
         {
             float percentLifetime = particleSystem.time / particleSystem.main.startLifetime.constant;
-            customPass.maxVisibilityDistance =  particleSystem.sizeOverLifetime.size.Evaluate(percentLifetime) * 300; // takes some odd seconds
+            customPass.maxVisibilityDistance = particleSystem.sizeOverLifetime.size.Evaluate(percentLifetime) * 300; // takes some odd seconds
             return customPass.maxVisibilityDistance < Plugin.ModConfig.ConfigTerminalScanRange.Value;
         });
 

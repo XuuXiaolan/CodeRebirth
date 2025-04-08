@@ -16,15 +16,15 @@ public static class TurretPatch
     {
         if (self.turretMode == TurretMode.Firing || self.turretMode == TurretMode.Berserk)
         {
-			var shootRay = new Ray(self.centerPoint.position - Vector3.up * 0.3f, self.aimPoint.forward - Vector3.up * 0.3f);
+            var shootRay = new Ray(self.centerPoint.position - Vector3.up * 0.3f, self.aimPoint.forward - Vector3.up * 0.3f);
             Plugin.ExtendedLogging($"Raycast from {self.centerPoint.position} to {self.aimPoint.forward}");
-			if (!Physics.Raycast(shootRay, out var hit, 30f, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide))
-			{
+            if (!Physics.Raycast(shootRay, out var hit, 30f, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide))
+            {
                 goto ret;
-			}
+            }
             Plugin.ExtendedLogging($"Raycast hit {hit.transform.name}");
-			if (hit.transform.CompareTag("Player") && hit.transform.TryGetComponent(out PuppeteersVoodoo puppet) && puppet.playerControlled != null)
-			{
+            if (hit.transform.CompareTag("Player") && hit.transform.TryGetComponent(out PuppeteersVoodoo puppet) && puppet.playerControlled != null)
+            {
                 Plugin.ExtendedLogging($"Hit player {puppet.playerControlled.name}");
                 if (angleRangeCheck && Vector3.Angle(puppet.transform.position + Vector3.up * 1.75f - self.centerPoint.position, self.forwardFacingPos.forward) > self.rotationRange)
                 {
@@ -32,7 +32,7 @@ public static class TurretPatch
                     goto ret;
                 }
                 return puppet.playerControlled;
-			}
+            }
         }
     ret:
         return orig(self, radius, angleRangeCheck);

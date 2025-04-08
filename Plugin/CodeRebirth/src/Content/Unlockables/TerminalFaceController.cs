@@ -8,7 +8,7 @@ public class TerminalFaceController : MonoBehaviour
 {
     public TerminalGalAI TerminalGalAI = null!;
     private SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;
-    
+
     [HideInInspector] public float glitchTimer;
     [HideInInspector] public Coroutine? TemporarySwitchCoroutine = null;
     [HideInInspector] public System.Random controllerRandom = new();

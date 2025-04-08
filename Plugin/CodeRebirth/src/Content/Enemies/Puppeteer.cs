@@ -129,7 +129,7 @@ public class Puppeteer : CodeRebirthEnemyAI
 
     private void DoSneakingUpdate()
     {
-        PlayerControllerB? nearestPlayer = GetNearestPlayerWithinRange(detectionRange+10);
+        PlayerControllerB? nearestPlayer = GetNearestPlayerWithinRange(detectionRange + 10);
         if (priorityPlayer != null)
         {
             nearestPlayer = priorityPlayer;
@@ -176,14 +176,14 @@ public class Puppeteer : CodeRebirthEnemyAI
         float distance = Vector3.Distance(targetPlayerPuppet.transform.position, transform.position);
         if (distance <= 2f)
         {
-            agent.speed = chaseSpeed/4;
+            agent.speed = chaseSpeed / 4;
             PlayMiscSoundClientRpc(1);
             creatureNetworkAnimator.SetTrigger(DoSwipeAnimation);
             isAttacking = true;
         }
         else if (distance <= 5f)
         {
-            agent.speed = chaseSpeed/4;
+            agent.speed = chaseSpeed / 4;
             PlayMiscSoundClientRpc(0);
             creatureNetworkAnimator.SetTrigger(DoStabAnimation);
             isAttacking = true;
@@ -439,7 +439,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         PlayerControllerB? target = null;
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (!player.isPlayerControlled || player.isPlayerDead || player.inAnimationWithEnemy != null || playerPuppetMap.ContainsKey(player)) 
+            if (!player.isPlayerControlled || player.isPlayerDead || player.inAnimationWithEnemy != null || playerPuppetMap.ContainsKey(player))
                 continue;
 
             float distance = Vector3.Distance(transform.position, player.transform.position);

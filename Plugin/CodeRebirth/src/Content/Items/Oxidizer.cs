@@ -155,7 +155,7 @@ public class Oxidizer : GrabbableObject
         superCharged = true;
         oxidizerSource.PlayOneShot(bigBlastClip);
         float fuelLeft = 100 - skinnedMeshRenderer.GetBlendShapeWeight(0);
-        int damageToDeal = Mathf.FloorToInt(fuelLeft/5f);
+        int damageToDeal = Mathf.FloorToInt(fuelLeft / 5f);
         Plugin.ExtendedLogging($"Oxidizer: {damageToDeal} damage dealt.");
         int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
         iHittableList.Clear();

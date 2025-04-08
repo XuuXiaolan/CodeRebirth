@@ -36,7 +36,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
     int IVisibleThreat.SendSpecialBehaviour(int id)
     {
-        return 0; 
+        return 0;
     }
 
     int IVisibleThreat.GetThreatLevel(Vector3 seenByPosition)
@@ -124,7 +124,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             targetPlayer.ResetFallGravity();
             return;
         }
-        
+
         if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.isInsideFactory || localPlayer.isInHangarShipRoom) return;
 
         if (EnemyHasLineOfSightToPosition(localPlayer.transform.position, 60f, seeingRange, 5))
@@ -232,7 +232,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         // Keep targetting target enemy, unless they are over 20 units away and we can't see them.
         if (targetEnemy != null)
         {
-            if (Vector3.Distance(transform.position, targetEnemy.transform.position) > seeingRange+10f && !EnemyHasLineOfSightToPosition(targetEnemy.transform.position))
+            if (Vector3.Distance(transform.position, targetEnemy.transform.position) > seeingRange + 10f && !EnemyHasLineOfSightToPosition(targetEnemy.transform.position))
             {
                 Plugin.ExtendedLogging("Stop chasing target enemy");
                 SetEnemyTargetServerRpc(-1);
@@ -245,7 +245,8 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         else if (targetPlayer != null)
         {
-            if (Vector3.Distance(transform.position, targetPlayer.transform.position) > seeingRange+10f && !EnemyHasLineOfSightToPosition(targetPlayer.transform.position) || StartOfRound.Instance.shipBounds.bounds.Contains(targetPlayer.transform.position)) {
+            if (Vector3.Distance(transform.position, targetPlayer.transform.position) > seeingRange + 10f && !EnemyHasLineOfSightToPosition(targetPlayer.transform.position) || StartOfRound.Instance.shipBounds.bounds.Contains(targetPlayer.transform.position))
+            {
                 Plugin.ExtendedLogging("Stop chasing target player");
                 SetTargetServerRpc(-1);
                 StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
@@ -435,7 +436,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     }
 
     public void SmashEnemyAnimEvent()
-    {   
+    {
         int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, _cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
@@ -506,9 +507,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         creatureNetworkAnimator.SetTrigger(DoAggroAnimation);
         yield return new WaitForSeconds(chestBangingAnimation.length);
-        if (nextStateIndex == (int)DriftwoodState.SearchingForPrey) 
+        if (nextStateIndex == (int)DriftwoodState.SearchingForPrey)
         {
-            smartAgentNavigator.StartSearchRoutine(transform.position, 50f);    
+            smartAgentNavigator.StartSearchRoutine(transform.position, 50f);
         }
         agent.speed = agentSpeed;
         SwitchToBehaviourServerRpc(nextStateIndex);
@@ -730,7 +731,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 StartCoroutine(ChestBangPause((int)DriftwoodState.RunningToPrey, 20f));
                 agent.speed = 0f;
-                SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);                
+                SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
             }
         }
         else if (force > 0 && currentBehaviourStateIndex == (int)DriftwoodState.EatingPrey)

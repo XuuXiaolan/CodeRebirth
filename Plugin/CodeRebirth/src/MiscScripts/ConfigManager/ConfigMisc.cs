@@ -51,5 +51,5 @@ public static class ConfigMisc
             default:
                 throw new NotImplementedException("Dynamic config type not implemented.");
         }
-    }    
+    }
 }

@@ -21,11 +21,11 @@ public class Meteors : NetworkBehaviour
 
     [Header("Graphics")]
     public GameObject? FireTrail = null;
-    public AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
+    public AnimationCurve animationCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
     [Header("Events")]
     public UnityEvent _onMeteorLand;
-    
+
     private Vector3 origin = Vector3.zero;
     private Vector3 target = Vector3.zero;
     private Vector3 normal = Vector3.zero;
@@ -122,7 +122,7 @@ public class Meteors : NetworkBehaviour
                 CloseTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value) * Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
                 ImpactAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value) * Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
             }
-            if (((1-Progress)*travelTime) <= 4.106f && !CloseTravelAudio.isPlaying)
+            if (((1 - Progress) * travelTime) <= 4.106f && !CloseTravelAudio.isPlaying)
             {
                 NormalTravelAudio.volume = Mathf.Clamp01(0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
                 CloseTravelAudio.Play();
@@ -135,12 +135,12 @@ public class Meteors : NetworkBehaviour
         isMoving = false;
 
         ImpactAudio.Play();
-        
+
         if (IsServer && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap)
         {
             int randomNumber = UnityEngine.Random.Range(0, 3);
-            if (randomNumber == 0 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Sapphire")?.item.itemName, target);
-            else if (randomNumber == 1 ) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Emerald")?.item.itemName, target);
+            if (randomNumber == 0) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Sapphire")?.item.itemName, target);
+            else if (randomNumber == 1) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Emerald")?.item.itemName, target);
             else CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ruby")?.item.itemName, target);
         }
 
@@ -150,7 +150,7 @@ public class Meteors : NetworkBehaviour
         craterController.ShowCrater(target, normal);
 
         FireTrail?.SetActive(false);
-        
+
         CRUtilities.CreateExplosion(transform.position, true, 100, 0, 15, 4, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab, 25f);
         _onMeteorLand.Invoke();
 

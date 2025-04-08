@@ -289,7 +289,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         Vector3 finalWorldDest = SnapToFloor(destinationPos);
 
         startFallingPosition = transform.localPosition + Vector3.up * 0.07f;
-        targetFloorPosition   = transform.parent.InverseTransformPoint(finalWorldDest);
+        targetFloorPosition = transform.parent.InverseTransformPoint(finalWorldDest);
 
         // Plugin.ExtendedLogging($"KickDollLocalClient (LOCAL): {startFallingPosition} -> {targetFloorPosition}");
     }
@@ -301,7 +301,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
         if (Physics.Raycast(downRay, out RaycastHit downHit, 65f, dollBallMask, QueryTriggerInteraction.Ignore))
         {
-            return downHit.point; 
+            return downHit.point;
         }
 
         // If no floor found, just return the original

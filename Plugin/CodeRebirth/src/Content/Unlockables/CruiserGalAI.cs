@@ -77,7 +77,7 @@ public class CruiserGalAI : GalAI
             Plugin.Logger.LogError($"CruiserCharger not found in scene. CruiserGalAI will not be functional.");
             return;
         }
-        CruiserCharger CruiserCharger = CruiserChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
+        CruiserCharger CruiserCharger = CruiserChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First(); ;
         CruiserCharger.GalAI = this;
         GalCharger = CruiserCharger;
         ChestCollisionToggleTrigger.onInteract.AddListener(OnChestCollisionToggleInteract);
@@ -470,7 +470,7 @@ public class CruiserGalAI : GalAI
             HandleStateAnimationSpeedChangesServerRpc((int)State.FollowingPlayer);
             return;
         }
-        
+
         smartAgentNavigator.DoPathingToDestination(entranceToGoTo.entrancePoint.position);
         if (Vector3.Distance(this.transform.position, entranceToGoTo.entrancePoint.position) > Agent.stoppingDistance) return;
         if (Agent.hasPath && Agent.velocity.sqrMagnitude != 0f) return;
@@ -486,7 +486,7 @@ public class CruiserGalAI : GalAI
     private IEnumerator StopDancingDelay()
     {
         yield return new WaitUntil(() => !boomboxPlaying || galState != State.Dancing);
-        if (galState != State.Dancing) yield break;  
+        if (galState != State.Dancing) yield break;
         HandleStateAnimationSpeedChanges(State.FollowingPlayer);
     }
 
@@ -576,16 +576,16 @@ public class CruiserGalAI : GalAI
                 case State.Inactive:
                     HandleStateInactiveChange();
                     break;
-                case State.Active: 
+                case State.Active:
                     HandleStateActiveChange();
                     break;
-                case State.FollowingPlayer: 
+                case State.FollowingPlayer:
                     HandleStateFollowingPlayerChange();
                     break;
-                case State.DeliveringPlayer: 
+                case State.DeliveringPlayer:
                     HandleStateDeliveringPlayerChange();
                     break;
-                case State.Dancing: 
+                case State.Dancing:
                     HandleStateDancingChange();
                     break;
             };
@@ -663,7 +663,7 @@ public class CruiserGalAI : GalAI
             StartCoroutine(SetItemPhysics(itemsHeldList[i]));
         }
 
-        if (GameNetworkManager.Instance.localPlayerController.transform.parent != this.transform) return; 
+        if (GameNetworkManager.Instance.localPlayerController.transform.parent != this.transform) return;
         smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
         GameNetworkManager.Instance.localPlayerController.transform.position = galContainer.position;
     }

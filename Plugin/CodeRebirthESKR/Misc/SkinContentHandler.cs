@@ -5,11 +5,11 @@ using CodeRebirthESKR.SkinRegistry;
 namespace CodeRebirthESKR.Misc;
 public class SkinContentHandler
 {
-	internal static SkinContentHandler Instance { get; private set; } = null!;
-	internal SkinContentHandler()
+    internal static SkinContentHandler Instance { get; private set; } = null!;
+    internal SkinContentHandler()
     {
-		Instance = this;
-	}
+        Instance = this;
+    }
 
     protected void LoadEnabledConfigs(string keyName)
     {
@@ -23,7 +23,7 @@ public class SkinContentHandler
         bool loadSkin = CRConfigManager.GetEnabledConfigResult(baseSkin.Label);
         if (!loadSkin) return;
 
-		EnemySkinRegistry.RegisterEnemy(baseSkin.EnemyId, baseSkin.Label, baseSkin.spawnLocation);
-		EnemySkinRegistry.RegisterSkin(baseSkin, defaultConfig);
+        EnemySkinRegistry.RegisterEnemy(baseSkin.EnemyId, baseSkin.Label, baseSkin.spawnLocation);
+        EnemySkinRegistry.RegisterSkin(baseSkin, defaultConfig);
     }
 }

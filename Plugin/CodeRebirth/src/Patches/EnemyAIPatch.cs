@@ -82,7 +82,7 @@ static class EnemyAIPatch
                 {
                     self.StopCoroutine(slowedEnemies[self]);
                 }
-                slowedEnemies[self] = self.StartCoroutine(DelayResetSpeed(self));   
+                slowedEnemies[self] = self.StartCoroutine(DelayResetSpeed(self));
             }
         }
 

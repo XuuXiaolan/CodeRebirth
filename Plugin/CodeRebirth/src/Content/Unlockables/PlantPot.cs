@@ -32,12 +32,12 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         Golden_Tomato = 2,
     }
 
-    
+
     // point to new data structure because i do not feel like changing it
     public NetworkVariable<int> fruitType = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> stage = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    
-    
+
+
     [NonSerialized] public bool grewThisOrbit = true;
 
     [NonSerialized] public static List<PlantPot> Instances = new();
@@ -70,7 +70,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
             StartCoroutine(GrowthRoutine());
             enableList[stage.Value].SetActive(true);
         }
-        else 
+        else
         {
             trigger.onInteract.AddListener(OnInteract);
         }
@@ -102,7 +102,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         }
     }
 
-    private IEnumerator GrowthRoutine() 
+    private IEnumerator GrowthRoutine()
     {
         trigger.enabled = false;
         while (true)
@@ -114,7 +114,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
             }
             else
             {
-                switch ((FruitType)fruitType.Value) 
+                switch ((FruitType)fruitType.Value)
                 {
                     case FruitType.Tomato:
                         ProduceFruitServerRpc((int)FruitType.Tomato);
@@ -169,7 +169,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         enableList[stage.Value].SetActive(true);
     }
 
-    public override void OnNetworkDespawn() 
+    public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
         Instances.Remove(this);

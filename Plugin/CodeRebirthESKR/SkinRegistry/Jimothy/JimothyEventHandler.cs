@@ -11,5 +11,5 @@ public interface JimothyEventHandler : EnemyEventHandler
 
     void OnDropMapObject(GameObject obj)
     {
-    } 
+    }
 }

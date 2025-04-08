@@ -42,7 +42,7 @@ public class FindPathThroughTeleportsOperation : PathfindingOperation
     public FindPathThroughTeleportsOperation(IEnumerable<EntranceTeleport> entrancePoints, Vector3 startPos, Vector3 endPos, NavMeshAgent agent)
     {
         // Plugin.ExtendedLogging("Starting FindPathThroughTeleportsOperation");
-        
+
         FindDirectPathToDestinationJob = JobPools.GetFindPathJob();
         FindDirectPathToDestinationJob.Job.Initialize(startPos, endPos, agent);
         JobHandle previousJob = FindDirectPathToDestinationJob.Job.ScheduleByRef();

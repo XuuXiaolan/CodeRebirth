@@ -13,7 +13,7 @@ public class Nancy : CodeRebirthEnemyAI
     private Vector3 playersLastPosition = Vector3.zero;
     private float healTimer = 1f;
     private float failTimer = 1f;
-    
+
 
     private static readonly int HealModeAnimation = Animator.StringToHash("HealMode"); // Bool
     private static readonly int HealingPlayerAnimation = Animator.StringToHash("HealingPlayer"); // Bool
@@ -161,7 +161,7 @@ public class Nancy : CodeRebirthEnemyAI
     }
 
     #endregion
-    [ServerRpc(RequireOwnership=false)]
+    [ServerRpc(RequireOwnership = false)]
     private void DoBoolAnimationServerRpc(int animationHash, bool value)
     {
         creatureAnimator.SetBool(animationHash, value);

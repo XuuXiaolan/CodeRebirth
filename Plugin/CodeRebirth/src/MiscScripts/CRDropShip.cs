@@ -13,7 +13,7 @@ public class CRDropShip : ItemDropship
     public void SpawnVehicleAnimEvent()
     {
         shipAnimator.SetBool("landing", true);
-		shipTimer = 0f;
+        shipTimer = 0f;
         if (IsServer)
         {
             var vehicleGO = GameObject.Instantiate<GameObject>(terminalScript.buyableVehicles[terminalScript.orderedVehicleFromTerminal].vehiclePrefab, deliverVehiclePoint.position, deliverVehiclePoint.rotation, RoundManager.Instance.VehiclesContainer);
@@ -24,12 +24,12 @@ public class CRDropShip : ItemDropship
             }
             StartCoroutine(DestroyUnmovedCruiser(vehicleGO.GetComponent<VehicleController>()));
         }
-		untetheredVehicle = false;
-		deliveringOrder = true;
-		terminalScript.orderedVehicleFromTerminal = -1;
-		terminalScript.vehicleInDropship = false;
-		deliveringVehicle = false;
-		triggerScript.interactable = false;
+        untetheredVehicle = false;
+        deliveringOrder = true;
+        terminalScript.orderedVehicleFromTerminal = -1;
+        terminalScript.vehicleInDropship = false;
+        deliveringVehicle = false;
+        triggerScript.interactable = false;
     }
 
     private IEnumerator DestroyUnmovedCruiser(VehicleController vehicle)

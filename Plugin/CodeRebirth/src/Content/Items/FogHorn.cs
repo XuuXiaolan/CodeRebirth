@@ -10,17 +10,17 @@ public class FogHorn : GrabbableObject
 
     private NetworkVariable<int> timesUsed = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-	public override int GetItemDataToSave()
-	{
-		base.GetItemDataToSave();
-		return timesUsed.Value;
-	}
+    public override int GetItemDataToSave()
+    {
+        base.GetItemDataToSave();
+        return timesUsed.Value;
+    }
 
-	public override void LoadItemSaveData(int saveData)
-	{
-		base.LoadItemSaveData(saveData);
-		timesUsed.Value = saveData;
-	}
+    public override void LoadItemSaveData(int saveData)
+    {
+        base.LoadItemSaveData(saveData);
+        timesUsed.Value = saveData;
+    }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {

@@ -30,7 +30,7 @@ public class CreditPad : GrabbableObject
         Terminal? terminal = GameObject.FindFirstObjectByType<Terminal>();
         if (terminal == null) return;
         int moneyToBe = terminal.groupCredits + creditValue;
-        if (moneyToBe < 0) moneyToBe = 0; 
+        if (moneyToBe < 0) moneyToBe = 0;
         terminal.SyncGroupCreditsClientRpc(moneyToBe, terminal.numberOfItemsInDropship);
         PlaySoundClientRpc();
     }

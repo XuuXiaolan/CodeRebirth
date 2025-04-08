@@ -605,7 +605,7 @@ public class CodeRebirthConfig
                                             "MeteorShower | Meteor Volume",
                                             0.3f,
                                             new ConfigDescription(
-                                                "Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.", 
+                                                "Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.",
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
         #endregion

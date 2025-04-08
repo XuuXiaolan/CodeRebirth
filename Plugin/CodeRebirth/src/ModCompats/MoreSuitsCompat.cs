@@ -4,7 +4,7 @@ namespace CodeRebirth.src.ModCompats;
 public static class MoreSuitsCompatibilityChecker
 {
     public static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("x753.More_Suits"); } }
-    
+
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static void Init()

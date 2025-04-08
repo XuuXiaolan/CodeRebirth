@@ -333,7 +333,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     {
         if (!damageVehicles) return;
         if (hitVehicles.Count <= 0) return;
-        
+
         foreach (var vehicle in hitVehicles)
         {
             vehicle.PushTruckServerRpc(previousPlayerHeldBy.transform.position, weaponTip.transform.position);

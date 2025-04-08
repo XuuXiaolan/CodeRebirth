@@ -54,9 +54,9 @@ public class Mistress : CodeRebirthEnemyAI
         if (localPlayer == targetPlayer)
         {
             localPlayer.JumpToFearLevel(0.7f);
-            CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer/killCooldown);
+            CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer / killCooldown);
         }
-        
+
         if (killTimer >= killCooldown)
         {
             killTimer = 0f;
@@ -79,7 +79,7 @@ public class Mistress : CodeRebirthEnemyAI
 
         Vector3 direction = targetPlayer.gameplayCamera.transform.position - transform.position;
         direction.y = 0;
-        
+
         Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime); // todo: make the mistress head rotate up and down
     }
@@ -284,7 +284,7 @@ public class Mistress : CodeRebirthEnemyAI
             if (gal == null || gal.ownerPlayer == null || gal.ownerPlayer.isPlayerDead || !gal.ownerPlayer.isPlayerControlled || gal.ownerPlayer.IsPseudoDead()) continue;
             playersWithPriorityDict[gal.ownerPlayer] += 1;
         } // Increase priority for each gal a player owns.
-        
+
         IEnumerable<PlayerControllerB> orderedPlayerList = playersWithPriorityDict.OrderByDescending(kvp => kvp.Value).Select(kvp => kvp.Key);
 
         SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, orderedPlayerList.First()));
@@ -294,7 +294,7 @@ public class Mistress : CodeRebirthEnemyAI
     {
         const float MIN_DISTANCE = 10f;
         const float MAX_DISTANCE = 30f;
-        
+
         // Try a few times to find a valid point
         for (int i = 0; i < 10; i++)
         {
@@ -307,7 +307,7 @@ public class Mistress : CodeRebirthEnemyAI
 
             float distance = enemyRandom.NextFloat(MIN_DISTANCE, MAX_DISTANCE);
             Vector3 candidatePos = targetPlayer.transform.position + randomDirection * distance;
-            
+
             candidatePos.y += enemyRandom.NextFloat(-3f, 3f);
 
             if (NavMesh.SamplePosition(candidatePos, out NavMeshHit hit, 10f, NavMesh.AllAreas))
@@ -315,7 +315,7 @@ public class Mistress : CodeRebirthEnemyAI
                 return hit.position;
             }
         }
-        
+
         return Vector3.zero;
     }
 

@@ -81,7 +81,7 @@ public class ScaryShrimp : Shovel
     public void PastHitPlayerClientRpc(int playerIndex, int playerHp, bool isDead)
     {
         Plugin.ExtendedLogging($"Hit player {playerIndex} with {playerHp} hp and dead: {isDead}");
-        
+
         PlayerControllerB playerHit = StartOfRound.Instance.allPlayerScripts[playerIndex];
         if (playerHp - 60 <= 0 || isDead) lastPlayerHeld.itemAudio.PlayOneShot(killClip);
         else

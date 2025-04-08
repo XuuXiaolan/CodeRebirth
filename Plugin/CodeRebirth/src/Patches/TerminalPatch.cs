@@ -14,7 +14,7 @@ public static class TerminalPatch
     private static void Terminal_LoadNewNodeIfAffordable(On.Terminal.orig_LoadNewNodeIfAffordable orig, Terminal self, TerminalNode node)
     {
         Plugin.ExtendedLogging($"Node's shipUnlockableID: {node.shipUnlockableID}");
-        
+
         if (node.shipUnlockableID != -1 && ProgressiveUnlockables.unlockableIDs.ContainsKey(StartOfRound.Instance.unlockablesList.unlockables[node.shipUnlockableID]) && !ProgressiveUnlockables.unlockableIDs[StartOfRound.Instance.unlockablesList.unlockables[node.shipUnlockableID]])
         {
             Plugin.ExtendedLogging($"Twas equal, replacing node with deny purchase node.");

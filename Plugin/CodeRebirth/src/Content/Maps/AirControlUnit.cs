@@ -85,7 +85,7 @@ public class AirControlUnit : CodeRebirthHazard
             foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
             {
                 if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) || IsPlayerNearGround(playerControllerB))
-                {            
+                {
                     continue;
                 }
 

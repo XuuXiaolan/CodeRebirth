@@ -12,14 +12,14 @@ public static class DoorLockPatch
 
     private static void DoorLock_OnTriggerStay(On.DoorLock.orig_OnTriggerStay orig, DoorLock self, Collider other)
     {
-		if (NetworkManager.Singleton == null || !self.IsServer)
-		{
-			goto ret;
-		}
-		if (self.isLocked || self.isDoorOpened)
-		{
-			goto ret;
-		}
+        if (NetworkManager.Singleton == null || !self.IsServer)
+        {
+            goto ret;
+        }
+        if (self.isLocked || self.isDoorOpened)
+        {
+            goto ret;
+        }
 
         if (other.gameObject.layer == 19 && other.gameObject.name == "DoorCollider")
         {
@@ -40,12 +40,12 @@ public static class DoorLockPatch
                 openDoorSpeedMultiplier = gal.DoorOpeningSpeed;
             }
             self.enemyDoorMeter += Time.deltaTime * openDoorSpeedMultiplier;
-    		if (self.enemyDoorMeter > 1f)
-			{
-				self.enemyDoorMeter = 0f;
-				self.gameObject.GetComponent<AnimatedObjectTrigger>().TriggerAnimationNonPlayer(false, true, false);
-				self.OpenDoorAsEnemyServerRpc();
-			}
+            if (self.enemyDoorMeter > 1f)
+            {
+                self.enemyDoorMeter = 0f;
+                self.gameObject.GetComponent<AnimatedObjectTrigger>().TriggerAnimationNonPlayer(false, true, false);
+                self.OpenDoorAsEnemyServerRpc();
+            }
         }
         if (other.gameObject.layer == 19 && other.gameObject.name == "MicrowaveCollider")
         {

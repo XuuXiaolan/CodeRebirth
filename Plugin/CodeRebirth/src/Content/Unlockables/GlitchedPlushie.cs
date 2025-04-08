@@ -42,7 +42,7 @@ public class GlitchedPlushie : NetworkBehaviour
     {
         float totalDuration = 1f;
         float halfDuration = totalDuration / 2f;
-        
+
         // First half: 0 -> 100
         for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
         {
@@ -51,7 +51,7 @@ public class GlitchedPlushie : NetworkBehaviour
             yield return null;
         }
         skinnedMeshRenderer.SetBlendShapeWeight(0, 100f); // Ensure it hits exactly 100 at the midpoint
-        
+
         // Second half: 100 -> 0
         for (float elapsed = 0f; elapsed < halfDuration; elapsed += Time.deltaTime)
         {

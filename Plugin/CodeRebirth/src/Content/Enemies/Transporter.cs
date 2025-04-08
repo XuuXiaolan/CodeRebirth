@@ -97,7 +97,7 @@ public class Transporter : CodeRebirthEnemyAI
         }
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform) continue; 
+            if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform) continue;
             smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
             player.transform.position = smartAgentNavigator.lastUsedEntranceTeleport.entrancePoint.position;
         }

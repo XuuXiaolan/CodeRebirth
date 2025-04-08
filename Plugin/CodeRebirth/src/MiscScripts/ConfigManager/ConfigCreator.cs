@@ -4,7 +4,7 @@ using BepInEx.Configuration;
 using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirth.src.MiscScripts.ConfigManager;
-public class CRConfig 
+public class CRConfig
 {
     public ConfigEntry<bool> Enabled;
 }
@@ -44,7 +44,7 @@ public static class CRConfigManager
         string section = $"{keyName} Options".CleanStringForConfig();
         string key = $"{settingName} | {settingDesc}".CleanStringForConfig();
         var definition = new ConfigDefinition(section, key);
-        
+
         // Check if the key already exists
         if (configFile.TryGetEntry<T>(definition, out var existingEntry))
         {

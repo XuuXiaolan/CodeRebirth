@@ -92,8 +92,8 @@ public class ShreddingSarah : NetworkBehaviour
         float distance = Vector3.Distance(targetPos2D, new Vector3(shootPointPos.x, 0f, shootPointPos.z));
 
         // Compute the landing position using the direction from shootPoint to target.
-        Vector3 landingPos2D = new Vector3(shootPointPos.x, 0f, shootPointPos.z) 
-                                + (targetDir2D * distance) 
+        Vector3 landingPos2D = new Vector3(shootPointPos.x, 0f, shootPointPos.z)
+                                + (targetDir2D * distance)
                                 + new Vector3(Mathf.Sin(randAngle), 0f, Mathf.Cos(randAngle)) * randOffset;
         Vector3 landingPositionRay = landingPos2D + (transform.position.y + landingRaycastUp) * Vector3.up;
 

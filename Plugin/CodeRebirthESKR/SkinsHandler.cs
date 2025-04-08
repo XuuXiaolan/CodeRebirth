@@ -6,9 +6,9 @@ using UnityEngine;
 namespace CodeRebirthESKR;
 public static class SkinsHandler
 {
-	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-	public static void RegisterSkins()
-	{
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    public static void RegisterSkins()
+    {
         SkinContentHandler skinContentHandler = new SkinContentHandler();
         string path = BepInEx.Paths.PluginPath;
         foreach (string file in Directory.GetFiles(path, "*.xskinbundle", SearchOption.AllDirectories))
@@ -25,5 +25,5 @@ public static class SkinsHandler
                 }
             }
         }
-	}
+    }
 }

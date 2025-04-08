@@ -1,4 +1,4 @@
-﻿﻿using CodeRebirth.src.Util;
+﻿using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
 using CullFactory;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
 
         [LoadFromBundle("NewMeteor.prefab")]
         public GameObject MeteorPrefab { get; private set; } = null!;
-        
+
         [LoadFromBundle("Meteor.prefab")]
         public GameObject FloatingMeteorPrefab { get; private set; } = null!;
     }
@@ -31,7 +31,7 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     }
 
     public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName)
-    { 
+    {
         [LoadFromBundle("GodRayWeather.prefab")]
         public GameObject GodRayPermanentEffectPrefab { get; private set; } = null!;
     }

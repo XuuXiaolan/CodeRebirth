@@ -90,7 +90,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask = StartOfRound.Instance.collidersAndRoomMask | hazardMask | railingMask | terrainMask | vehicleMask | defaultMask;
         collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | enemiesMask | terrainMask | vehicleMask;
         collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask | defaultMask;
-        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | enemiesMask | hazardMask | terrainMask | vehicleMask;;
+        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | enemiesMask | hazardMask | terrainMask | vehicleMask; ;
     }
 
     public void PlayerPressedJump(PlayerControllerB player)
@@ -228,7 +228,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public void UpdateScanNodeClientRpc(NetworkObjectReference go, int value)
     {
         go.TryGet(out NetworkObject netObj);
-        if(netObj != null)
+        if (netObj != null)
         {
             if (netObj.gameObject.TryGetComponent(out GrabbableObject grabbableObject))
             {
@@ -242,10 +242,10 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         if (!NetworkManager.Singleton.IsHost) return;
         PiggyBank.Instance?.SaveCurrentCoins();
-		foreach (var plantpot in PlantPot.Instances)
-		{
-			plantpot.SavePlantData();
-		}
+        foreach (var plantpot in PlantPot.Instances)
+        {
+            plantpot.SavePlantData();
+        }
         ProgressiveUnlockables.SaveUnlockedIDs();
     }
 

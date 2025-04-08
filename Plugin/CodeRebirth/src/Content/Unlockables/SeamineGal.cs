@@ -79,7 +79,7 @@ public class SeamineGalAI : GalAI
             Plugin.Logger.LogError($"SeamineCharger not found in scene. SeamineGalAI will not be functional.");
             return;
         }
-        SeamineCharger seamineCharger = seamineChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First();;
+        SeamineCharger seamineCharger = seamineChargers.OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).First(); ;
         seamineCharger.GalAI = this;
         GalCharger = seamineCharger;
         // Automatic activation if configured
@@ -492,7 +492,7 @@ public class SeamineGalAI : GalAI
     private IEnumerator StopDancingDelay()
     {
         yield return new WaitUntil(() => !boomboxPlaying || galState != State.Dancing);
-        if (galState != State.Dancing) yield break;  
+        if (galState != State.Dancing) yield break;
         HandleStateAnimationSpeedChanges(State.FollowingPlayer);
     }
 
@@ -753,7 +753,7 @@ public class SeamineGalAI : GalAI
         yield return new WaitWhile(() =>
         {
             float percentLifetime = particleSystem.time / particleSystem.main.startLifetime.constant;
-            customPass.maxVisibilityDistance =  particleSystem.sizeOverLifetime.size.Evaluate(percentLifetime) * 300; // takes some odd seconds
+            customPass.maxVisibilityDistance = particleSystem.sizeOverLifetime.size.Evaluate(percentLifetime) * 300; // takes some odd seconds
             return customPass.maxVisibilityDistance < scanRange;
         });
 

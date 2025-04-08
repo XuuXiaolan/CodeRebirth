@@ -107,7 +107,7 @@ public class Pandora : CodeRebirthEnemyAI
 
         Vector3 direction = targetPlayer.gameplayCamera.transform.position - transform.position;
         direction.y = 0;
-        
+
         Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
     }

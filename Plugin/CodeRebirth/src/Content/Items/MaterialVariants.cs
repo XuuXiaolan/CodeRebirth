@@ -21,7 +21,7 @@ public class MaterialVariants : NetworkBehaviour
     [FormerlySerializedAs("ChangeScanNodeText")]
     [Space(5f)]
     private bool changeScanNodeText = false;
-    
+
     [SerializeField]
     [Tooltip("The text to change to when the material is changed.")]
     private string[] scanNodeText = null!;
