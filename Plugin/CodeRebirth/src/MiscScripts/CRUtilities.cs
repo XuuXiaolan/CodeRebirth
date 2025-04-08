@@ -129,7 +129,7 @@ public class CRUtilities
 
         if (spawnExplosionEffect)
         {
-            float multiplier = Mathf.Clamp((maxDamageRange - minDamageRange) / 4f, 0.25f, 20);
+            float multiplier = Mathf.Clamp((maxDamageRange - minDamageRange)/4f, 0.25f, 20);
             GameObject gameobject;
             if (overridePrefab == null)
             {
@@ -309,7 +309,7 @@ public class CRUtilities
     {
         float totalTime = 1f / intensity;
         float timeElapsed = 0f;
-
+        
         Vector2 upwardInput = new Vector2(0, 1f) * intensity;
 
         while (timeElapsed <= totalTime)

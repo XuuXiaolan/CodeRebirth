@@ -33,7 +33,7 @@ public class GunslingerGreg : CodeRebirthHazard
     public override void Start()
     {
         base.Start();
-        foreach (var boundsDefiner in FindObjectsOfType<BoundsDefiner>())
+        foreach (var boundsDefiner in FindObjectsOfType<BoundsDefiner>()) // todo: client aint getting this for some reason
         {
             if (boundsDefiner.boundColor == new Color(1, 0, 1, 1))
             {
@@ -150,7 +150,7 @@ public class GunslingerGreg : CodeRebirthHazard
     {
         foreach (var bounds in safeBounds)
         {
-            if (bounds.BoundsContainPlayer(playerControllerB))
+            if (bounds.BoundsContainTransform(playerControllerB.transform))
             {
                 return true;
             }

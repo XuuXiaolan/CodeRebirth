@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
@@ -7,9 +8,12 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class NitroCrate : GrabbableObject, IHittable
 {
+    public Renderer renderer = null!;
     public static List<NitroCrate> nitroCrates = new();
 
-    private bool exploded = false;
+    [HideInInspector]
+    public bool exploded = false;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -19,24 +23,35 @@ public class NitroCrate : GrabbableObject, IHittable
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        CRUtilities.CreateExplosion(this.transform.position, true, 999, 0, 15, 100, null, null, 250f);
         nitroCrates.Remove(this);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void RequestServerToDespawnServerRpc()
     {
+        if (exploded) return;
         exploded = true;
         playerHeldBy?.DropAllHeldItems();
         playerHeldBy?.DropAllHeldItemsClientRpc();
-        if (!IsSpawned) return;
+        StartCoroutine(DespawnAfterDelay(1f));
+    }
+
+    private IEnumerator DespawnAfterDelay(float delay)
+    {
+        DisableRendererAndExplodeClientRpc();
+        yield return new WaitForSeconds(delay);
         this.NetworkObject.Despawn();
+    }
+
+    [ClientRpc]
+    private void DisableRendererAndExplodeClientRpc()
+    {
+        CRUtilities.CreateExplosion(this.transform.position, true, 999, 0, 15, 100, null, null, 250f);
+        renderer.enabled = false;
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
-        if (exploded) return false;
-        if (!IsSpawned) return false;
         RequestServerToDespawnServerRpc();
         return true;
     }

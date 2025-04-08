@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
 using CodeRebirth.src.Util;
+using System;
 
 namespace CodeRebirth.src.Content.Items;
 public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's JMeleeWeapon
@@ -311,7 +312,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             OnPlayerHit.Invoke(player);
             if (_relevantCentipedeAI.Any(x => x.clingingToPlayer == player))
                 continue;
-            player.DamagePlayer(HitForce * 10, true, true, CauseOfDeath.Bludgeoning, 0, false, default);
+            player.DamagePlayerFromOtherClientServerRpc(HitForce * 10, weaponTip.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }
     }
 
