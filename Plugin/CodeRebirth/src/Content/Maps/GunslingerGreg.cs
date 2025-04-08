@@ -150,7 +150,7 @@ public class GunslingerGreg : CodeRebirthHazard
     {
         foreach (var bounds in safeBounds)
         {
-            if (bounds.BoundsContainTransform(playerControllerB.transform))
+            if (bounds.BoundsContainPlayer(playerControllerB))
             {
                 return true;
             }

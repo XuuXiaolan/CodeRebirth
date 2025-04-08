@@ -1,3 +1,4 @@
+using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -19,5 +20,10 @@ public class BoundsDefiner : MonoBehaviour
     {
         Vector3 localPos = transform.InverseTransformPoint(target.position);
         return bounds.Contains(localPos);
+    }
+
+    public bool BoundsContainPlayer(PlayerControllerB player)
+    {
+        return bounds.Contains(player.serverPlayerPosition);
     }
 }
