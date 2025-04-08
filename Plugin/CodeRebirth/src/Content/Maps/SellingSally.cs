@@ -40,7 +40,6 @@ public class SellingSally : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PressButtonServerRpc()
     {
-        Plugin.ExtendedLogging($"Can press button {CanCurrentlyShoot()}");
         if (!CanCurrentlyShoot()) return;
         networkAnimator.SetTrigger(ShootAnimation);
     }
@@ -59,6 +58,7 @@ public class SellingSally : NetworkBehaviour
 
     private bool CanCurrentlyShoot()
     {
+        sallyCubes.Clear();
         foreach (var grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
         {
             if (grabbableObject.transform.parent != sallyLoaderTransform) continue;
@@ -69,6 +69,10 @@ public class SellingSally : NetworkBehaviour
             }
             sallyCubes.Clear();
             return false;
+        }
+        foreach (var sallyCube in sallyCubes)
+        {
+            sallyCube.grabbable = false;
         }
         return true;
     }
@@ -82,7 +86,7 @@ public class SellingSally : NetworkBehaviour
             player.DamagePlayer(9999, true, true, CauseOfDeath.Blast, 0, false, endOfBarrelTransform.forward * 100f);
         }
         int scrapValueToMake = 0;
-        sallyCubes = sallyCubes.Where(x => x != null).Distinct().ToList();
+        CanCurrentlyShoot();
         foreach (var sallyCube in sallyCubes)
         {
             scrapValueToMake += sallyCube.scrapValue;
