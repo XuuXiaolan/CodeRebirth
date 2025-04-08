@@ -1,4 +1,3 @@
-using System;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;

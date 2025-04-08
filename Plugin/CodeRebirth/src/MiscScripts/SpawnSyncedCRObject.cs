@@ -3,6 +3,7 @@ using UnityEngine;
 using CodeRebirth.src.Content.Maps;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace CodeRebirth.src.MiscScripts
 {
@@ -32,11 +33,11 @@ namespace CodeRebirth.src.MiscScripts
             GunslingerGreg,
         }
 
-        public void Start()
+        public IEnumerator Start()
         {
             // Look up the prefab via the registry in MapObjectHandler.
-            if (!IsServer) return;
-            if (UnityEngine.Random.Range(0, 100) >= chanceOfSpawningAny) return;
+            if (!IsServer) yield break;
+            if (UnityEngine.Random.Range(0, 100) >= chanceOfSpawningAny) yield break;
             List<(GameObject? objectType, int cumulativeWeight)> cumulativeList = new();
             int cumulativeWeight = 0;
             foreach (var objectTypeWithRarity in objectTypesWithRarity)
@@ -47,7 +48,7 @@ namespace CodeRebirth.src.MiscScripts
             if (cumulativeList.Count <= 0)
             {
                 Plugin.Logger.LogWarning($"No prefabs found for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
-                return;
+                yield break;
             }
 
             // Instantiate and spawn the object on the network.
@@ -56,7 +57,7 @@ namespace CodeRebirth.src.MiscScripts
             if (prefab == null)
             {
                 Plugin.Logger.LogError($"Did you really set something to spawn at a weight of 0? Couldn't find prefab for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
-                return;
+                yield break;
             }
             var spawnedObject = Instantiate(prefab, transform.position, transform.rotation, transform);
             spawnedObject.GetComponent<NetworkObject>().Spawn(true);

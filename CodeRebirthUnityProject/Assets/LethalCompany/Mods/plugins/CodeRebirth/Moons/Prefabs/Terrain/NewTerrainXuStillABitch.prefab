@@ -3088,7 +3088,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5772320625784281377}
-  - component: {fileID: 8448125537643340186}
+  - component: {fileID: 3354374510480619347}
   m_Layer: 0
   m_Name: GregSafeZone
   m_TagString: Untagged
@@ -3111,7 +3111,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8821095814542225472}
   m_LocalEulerAnglesHint: {x: 0, y: 55.14, z: 0}
---- !u!114 &8448125537643340186
+--- !u!114 &3354374510480619347
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3120,7 +3120,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3516489005005824079}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -297495333, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1381420669, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boundColor: {r: 1, g: 0, b: 1, a: 1}
@@ -4458,7 +4458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8867752786248069001}
-  - component: {fileID: 843978196335525095}
+  - component: {fileID: 5282581829476092763}
   m_Layer: 8
   m_Name: GregSafeZone
   m_TagString: Untagged
@@ -4481,7 +4481,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7154108309674494503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &843978196335525095
+--- !u!114 &5282581829476092763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4490,7 +4490,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5717068631463720948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -297495333, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1381420669, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boundColor: {r: 1, g: 0, b: 1, a: 1}
@@ -5511,7 +5511,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3569028530368217073}
-  - component: {fileID: 8148680071318349314}
+  - component: {fileID: 3676592921365437824}
   m_Layer: 8
   m_Name: GregSafeZone
   m_TagString: Untagged
@@ -5534,7 +5534,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3140958048368742541}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8148680071318349314
+--- !u!114 &3676592921365437824
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5543,7 +5543,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6443302374154123931}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -297495333, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1381420669, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boundColor: {r: 1, g: 0, b: 1, a: 1}
@@ -6029,7 +6029,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7714561355441604600}
-  - component: {fileID: 1964907188208784125}
+  - component: {fileID: 1366760089391210733}
   m_Layer: 0
   m_Name: GregSafeZone
   m_TagString: Untagged
@@ -6052,7 +6052,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 966093975536166081}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1964907188208784125
+--- !u!114 &1366760089391210733
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6061,7 +6061,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7157254004696607860}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -297495333, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1381420669, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boundColor: {r: 1, g: 0, b: 1, a: 1}
@@ -90415,7 +90415,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4589091819195285519, guid: d0b0d663356a6bc4d8123e75472774ed, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8376600036052654355, guid: d0b0d663356a6bc4d8123e75472774ed,
@@ -90631,6 +90632,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7343823616834075226}
+    - targetCorrespondingSourceObject: {fileID: 8093900758254517209, guid: d0b0d663356a6bc4d8123e75472774ed,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3290875420003568594}
   m_SourcePrefab: {fileID: 100100000, guid: d0b0d663356a6bc4d8123e75472774ed, type: 3}
 --- !u!4 &138795974693298021 stripped
 Transform:
@@ -90638,6 +90643,28 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8490045533005039222}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &396876097287765423 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8093900758254517209, guid: d0b0d663356a6bc4d8123e75472774ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 8490045533005039222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3290875420003568594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396876097287765423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1381420669, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundColor: {r: 1, g: 0, b: 1, a: 1}
+  bounds:
+    m_Center: {x: 0, y: 1.2, z: 0}
+    m_Extent: {x: 10.57, y: 7.55, z: 11.32}
 --- !u!1 &1588753688170812079 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7196418373015246041, guid: d0b0d663356a6bc4d8123e75472774ed,

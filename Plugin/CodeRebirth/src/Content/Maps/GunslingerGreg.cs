@@ -24,7 +24,7 @@ public class GunslingerGreg : CodeRebirthHazard
     public Transform[] rocketTransforms = [];
 
     private GunslingerMissile? missileToRecharge = null;
-    private List<BoundsDefiner> safeBounds = new();
+    public static List<GregBounds> safeBounds = new();
     private float rechargeRocketTimer = 30f;
     private float fireTimer = 1f;
     private GameObject MissilePrefab = null!;
@@ -33,14 +33,6 @@ public class GunslingerGreg : CodeRebirthHazard
     public override void Start()
     {
         base.Start();
-        foreach (var boundsDefiner in FindObjectsOfType<BoundsDefiner>()) // todo: client aint getting this for some reason
-        {
-            if (boundsDefiner.boundColor == new Color(1, 0, 1, 1))
-            {
-                Plugin.ExtendedLogging($"Found valid bounds for greg");
-                safeBounds.Add(boundsDefiner);
-            }
-        }
         MissilePrefab = MapObjectHandler.Instance.GunslingerGreg!.MissilePrefab;
         foreach (var transform in rocketTransforms)
         {
