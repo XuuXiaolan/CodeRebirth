@@ -88,7 +88,7 @@ public class Guillotine : NetworkBehaviour
         }
         playerToKill = null;
         if (EnemyHandler.Instance.Mistress == null) return;
-        GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.Mistress.ItemDefinitions.Where(item => item.name == "TalkingHead").First().item, scrapSpawnTransform.position, false, true, 0);
+        GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.Mistress.ItemDefinitions.GetCRItemDefinitionWithItemName("Talking Head")?.item, scrapSpawnTransform.position, false, true, 0);
         TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();
         talkingHeadScript.player = playerToKill;
         talkingHeadScript.SyncTalkingHeadServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));

@@ -29,12 +29,14 @@ public class NitroCrate : GrabbableObject, IHittable
         exploded = true;
         playerHeldBy?.DropAllHeldItems();
         playerHeldBy?.DropAllHeldItemsClientRpc();
+        if (!IsSpawned) return;
         this.NetworkObject.Despawn();
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         if (exploded) return false;
+        if (!IsSpawned) return false;
         RequestServerToDespawnServerRpc();
         return true;
     }

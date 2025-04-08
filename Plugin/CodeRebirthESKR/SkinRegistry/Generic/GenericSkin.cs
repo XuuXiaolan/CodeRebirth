@@ -3,7 +3,7 @@ using CodeRebirthESKR.Misc;
 using UnityEngine;
 
 namespace CodeRebirthESKR.SkinRegistry.Generic;
-[CreateAssetMenu(fileName = "GenericSkin", menuName = "XSkins/GenericSkin", order = 1)]
+[CreateAssetMenu(fileName = "GenericSkin", menuName = "CodeRebirthESKR/GenericSkin", order = 1)]
 public class GenericSkin : BaseSkin
 {
     [Header("Materials")]

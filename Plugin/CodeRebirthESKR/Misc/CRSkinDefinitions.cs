@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CodeRebirthESKR.Misc;
 
-[CreateAssetMenu(fileName = "GenericSkinDefinition", menuName = "XSkins/GenericSkinDefinition", order = 0)]
+[CreateAssetMenu(fileName = "CodeRebirthSkinDefinition", menuName = "CodeRebirthESKR/CodeRebirthSkinDefinition", order = 0)]
 public class CRSkinDefinitions : ScriptableObject
 {
     public string authorName;

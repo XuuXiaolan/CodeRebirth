@@ -29,7 +29,7 @@ public class Detonator : GrabbableObject
         detonatorSource.PlayOneShot(leverPressed);
         foreach (var crate in NitroCrate.nitroCrates.ToArray())
         {
-            if (IsServer) crate.RequestServerToDespawnServerRpc();
+            if (IsServer && crate.IsSpawned) crate.RequestServerToDespawnServerRpc();
         }
 
         yield return new WaitForSeconds(4f);

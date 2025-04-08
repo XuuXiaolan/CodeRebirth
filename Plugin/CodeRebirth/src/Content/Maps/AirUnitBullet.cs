@@ -37,6 +37,10 @@ public class AirUnitProjectile : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (playerToTarget == null)
+        {
+            return;
+        }
         int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, cachedColliders, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
         if (!explodedOnTarget && collidersFound != 0 && playerToTarget.playerSteamId != Plugin.GLITCH_STEAM_ID)
         {

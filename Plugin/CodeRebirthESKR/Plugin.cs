@@ -29,7 +29,7 @@ public class Plugin : BaseUnityPlugin
 			return;
 		}
 
-		TransporterPatch.Init();
+		EnemyAIPatches.Init();
 		SkinsHandler.RegisterSkins();
 
         ModConfig.InitConfiguration(Config);

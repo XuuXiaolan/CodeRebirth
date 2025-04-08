@@ -169,7 +169,7 @@ public class Oxidizer : GrabbableObject
         }
         foreach (var iHittable in iHittableList)
         {
-            iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
+            if (IsOwner) iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
         }
         foreach (var ps in flameStreamParticleSystems)
         {

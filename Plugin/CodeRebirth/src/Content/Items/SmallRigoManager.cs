@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using PathfindingLib.Utilities;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -94,7 +93,14 @@ public class SmallRigoManager : NetworkBehaviour
             foreach (SmallRigo smallRigo in smallRigosActive)
             {
                 yield return null;
-                if (!smallRigo.smartAgentNavigator.agent.isOnNavMesh) smallRigo.smartAgentNavigator.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 5, default));
+                if (!smallRigo.smartAgentNavigator.agent.isOnNavMesh)
+                {
+                    if (!smallRigo.smartAgentNavigator.agent.enabled)
+                    {
+                        smallRigo.smartAgentNavigator.agent.enabled = true;
+                    }
+                    smallRigo.smartAgentNavigator.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 5, default));
+                }
                 float distanceToKing = Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position);
                 if (goldRigo.playerHeldBy != null)
                 {

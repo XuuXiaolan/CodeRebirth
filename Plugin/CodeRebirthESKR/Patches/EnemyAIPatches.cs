@@ -2,7 +2,7 @@ using AntlerShed.SkinRegistry;
 using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirthESKR.Patches;
-public static class TransporterPatch
+public static class EnemyAIPatches
 {
     public static void Init()
     {

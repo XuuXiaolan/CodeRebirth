@@ -11,6 +11,8 @@ public class Mountaineer : CRWeapon
     public AudioClip[] unlatchSounds = [];
     [HideInInspector] public float FreezePercentile => GetFreezePercentage();
 
+    private Quaternion brrreakerStuckRotation = Quaternion.identity;
+    private Vector3 brrreakerStuckPosition = Vector3.zero;
     private bool stuckToWall = false;
     private PlayerControllerB? stuckPlayer = null;
     private Vector3 stuckPosition = Vector3.zero;
@@ -45,7 +47,7 @@ public class Mountaineer : CRWeapon
             iceMaterial.color = new Color(iceMaterial.color.r, iceMaterial.color.g, iceMaterial.color.b, 0f);
         }
         iceMaterial.color = new Color(iceMaterial.color.r, iceMaterial.color.g, iceMaterial.color.b, heldOverHeadTimer);
-        if (stuckPlayer != null && stuckToWall) // this wont be sync'd, which is okay!
+        if (stuckPlayer != null && stuckToWall && !stuckPlayer.isGrabbingObjectAnimation) // this wont be sync'd, which is okay!
         {
             stuckPlayer.transform.position = stuckPosition;
             stuckPlayer.ResetFallGravity();
@@ -57,20 +59,22 @@ public class Mountaineer : CRWeapon
     public void OnSurfaceHitEvent(int surfaceID)
     {
         if (!playerHeldBy.IsOwner) return;
-        OnSurfaceHitServerRpc(surfaceID);
+        OnSurfaceHitServerRpc(surfaceID, this.transform.position, this.transform.rotation);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void OnSurfaceHitServerRpc(int surfaceID)
+    public void OnSurfaceHitServerRpc(int surfaceID, Vector3 _brrreakerStuckPosition, Quaternion _brrreakerStuckRotation)
     {
-        OnSurfaceHitClientRpc(surfaceID);
+        OnSurfaceHitClientRpc(surfaceID, _brrreakerStuckPosition, _brrreakerStuckRotation);
     }
 
     [ClientRpc]
-    public void OnSurfaceHitClientRpc(int surfaceID)
+    public void OnSurfaceHitClientRpc(int surfaceID, Vector3 _brrreakerStuckPosition, Quaternion _brrreakerStuckRotation)
     {
         // switch this to a listener for the objects hit and rpc it
         stuckToWall = true;
+        brrreakerStuckPosition = _brrreakerStuckPosition;
+        brrreakerStuckRotation = _brrreakerStuckRotation;
         // Check if the weapon tip is angled downward.
         /*float dot = Vector3.Dot(weaponTip.forward, -Vector3.up);
         Plugin.ExtendedLogging($"Vector Dot: {dot}");
@@ -93,7 +97,12 @@ public class Mountaineer : CRWeapon
 
     public override void FallWithCurve()
     {
-        if (stuckToWall) return;
+        if (stuckToWall)
+        {
+            this.transform.position = brrreakerStuckPosition;
+            this.transform.rotation = brrreakerStuckRotation;
+            return;
+        }
         base.FallWithCurve();
     }
 
@@ -111,7 +120,7 @@ public class Mountaineer : CRWeapon
         weaponAudio.PlayOneShot(unlatchSounds[Random.Range(0, unlatchSounds.Length)]);
         stuckPlayer.activatingItem = false;
         stuckPlayer.disableMoveInput = false;
-        stuckPlayer.externalForceAutoFade = Vector3.up * 30f;
+        stuckPlayer.externalForceAutoFade = Vector3.up * 35f;
         CRUtilities.MakePlayerGrabObject(stuckPlayer, this);
     }
 

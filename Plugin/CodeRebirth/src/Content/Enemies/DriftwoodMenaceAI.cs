@@ -118,7 +118,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         // Plugin.ExtendedLogging($"Awareness: {awarenessLevel}");
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (targetPlayer == localPlayer && currentlyGrabbed)
+        if (currentlyGrabbed)
         {
             targetPlayer.transform.position = grabArea.transform.position;
             targetPlayer.ResetFallGravity();
@@ -137,6 +137,16 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             UpdateAwareness();
         }
     }
+
+    /*public void LateUpdate()
+    {
+        if (isEnemyDead) return;
+        if (currentlyGrabbed)
+        {
+            targetPlayer.transform.position = grabArea.transform.position;
+            targetPlayer.ResetFallGravity();
+        }
+    }*/
 
     #region StateMachine
     public override void DoAIInterval()
@@ -426,11 +436,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void SmashEnemyAnimEvent()
     {   
-        int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, _cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (_cachedColliders[i].gameObject.GetComponent<EnemyAICollisionDetect>()?.mainScript is DriftwoodMenaceAI) continue;
             if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable)) continue;
+            if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect && enemyAICollisionDetect.mainScript is DriftwoodMenaceAI) continue;
             iHittable.Hit(6, smashTransform.position, null, true, -1);
         }
 
@@ -479,9 +489,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public IEnumerator SpawnAnimationCooldown()
     {
         yield return new WaitForSeconds(spawnAnimation.length);
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
         if (!IsServer) yield break;
+        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
         agent.speed = 7f;
     }
 

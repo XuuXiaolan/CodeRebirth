@@ -112,7 +112,7 @@ public class GunslingerGreg : CodeRebirthHazard
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
     {
         Ray ray = new Ray(playerControllerB.transform.position, -Vector3.up);
-        if (Physics.Raycast(ray, out _, 6f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, 8f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             return true;
         }

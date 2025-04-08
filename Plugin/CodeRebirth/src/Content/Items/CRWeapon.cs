@@ -252,6 +252,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             else if (hittable is PlayerControllerB playerControllerB)
             {
                 if (hitPlayers.Contains(playerControllerB)) continue;
+                Plugin.ExtendedLogging($"Hit player: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
                 hitPlayers.Add(playerControllerB);
                 continue;
             }
@@ -291,14 +292,26 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         HitWeaponServerRpc(surfaceID); // hit wall etc sound from wall
     }
 
-    private void HandleHittingPlayers(List<PlayerControllerB> hitPlayers)
+    private void HandleHittingPlayers(List<PlayerControllerB> _hitPlayers)
     {
         if (!damagePlayers) return;
-        if (hitPlayers.Count <= 0) return;
-        foreach (var player in hitPlayers)
+        if (_hitPlayers.Count <= 0) return;
+        List<CentipedeAI> _relevantCentipedeAI = new();
+        foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
+            if (enemy == null || enemy.isEnemyDead) continue;
+            if (enemy is CentipedeAI centipedeAI && centipedeAI.clingingToPlayer != null)
+            {
+                _relevantCentipedeAI.Add(centipedeAI);
+            }
+        }
+        foreach (var player in _hitPlayers)
+        {
+            Plugin.ExtendedLogging($"Hitting player: {player}");
             OnPlayerHit.Invoke(player);
-            player.DamagePlayer(HitForce, true, true, CauseOfDeath.Bludgeoning, 0, false, default);
+            if (_relevantCentipedeAI.Any(x => x.clingingToPlayer == player))
+                continue;
+            player.DamagePlayer(HitForce * 10, true, true, CauseOfDeath.Bludgeoning, 0, false, default);
         }
     }
 

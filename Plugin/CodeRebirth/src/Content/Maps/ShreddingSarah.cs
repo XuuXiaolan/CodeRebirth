@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;

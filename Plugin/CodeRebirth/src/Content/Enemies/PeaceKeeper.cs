@@ -342,7 +342,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
                     // Calculate a direction vector (for potential knockback effects).
                     Vector3 damageDirection = (player.transform.position - gunTransform.position).normalized;
                     player.DamagePlayer(_minigunDamage, true, true, CauseOfDeath.Gunshots, 0, false, damageDirection * 10f);
-                    player.externalForceAutoFade += damageDirection * 10f;
+                    player.externalForceAutoFade += damageDirection * 2f;
                 }
                 else if (hittable is EnemyAICollisionDetect enemy)
                 {
