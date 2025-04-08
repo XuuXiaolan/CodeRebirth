@@ -13,9 +13,9 @@ public static class EnemyAIPatches
     {
         orig(self);
 
-        System.Random random = new(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + StartOfRound.Instance.allPlayerScripts.Length);
-        Skin? randomSkin = EnemySkinRegistry.PickSkinAtValue(self.enemyType.enemyName, self.isOutside ? SpawnLocation.OUTDOOR : SpawnLocation.INDOOR, random.NextFloat(0f, 1f));
-        if (randomSkin == null) return;
-        EnemySkinRegistry.ApplySkin(randomSkin, self.enemyType.enemyName, self.gameObject);
+        // System.Random random = new(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + StartOfRound.Instance.allPlayerScripts.Length);
+        // Skin? randomSkin = EnemySkinRegistry.PickSkinAtValue(self.enemyType.enemyName, self.isOutside ? SpawnLocation.OUTDOOR : SpawnLocation.INDOOR, random.NextFloat(0f, 1f));
+        // if (randomSkin == null) return;
+        // EnemySkinRegistry.ApplySkin(randomSkin, self.enemyType.enemyName, self.gameObject);
     }
 }

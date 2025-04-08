@@ -274,6 +274,7 @@ public class CRUtilities
 
     public static T? ChooseRandomWeightedType<T>(IEnumerable<(T objectType, float rarity)> rarityList)
     {
+        // Plugin.ExtendedLogging($"rarityList.Count: {rarityList.Count()}");
         var validObjects = rarityList.Where(x => x.rarity > 0).ToList();
 
         float cumulativeWeight = 0;
@@ -299,7 +300,7 @@ public class CRUtilities
 
         if (selectedObject == null)
         {
-            Plugin.ExtendedLogging($"Could not find a valid enemy to spawn!");
+            Plugin.ExtendedLogging($"Could not find a valid object to spawn of type {typeof(T).Name}!");
             return default;
         }
         return selectedObject;

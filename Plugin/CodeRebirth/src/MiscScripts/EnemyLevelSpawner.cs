@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src;
 using CodeRebirth.src.MiscScripts;
 using Unity.Netcode;
 using UnityEngine;
@@ -29,19 +30,40 @@ public class EnemyLevelSpawner : MonoBehaviour
 
     public void Update()
     {
-        if (!NetworkManager.Singleton.IsServer || RoundManager.Instance.currentOutsideEnemyPower > RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount) return;
-        if (maxEnemiesToSpawn >= enemiesSpawnedByPipe) return;
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
+        if ((!daytimeSpawner && RoundManager.Instance.currentOutsideEnemyPower > RoundManager.Instance.currentLevel.maxOutsideEnemyPowerCount) || (daytimeSpawner && RoundManager.Instance.currentDaytimeEnemyPower > RoundManager.Instance.currentLevel.maxDaytimeEnemyPowerCount))
+            return;
+
+        if (enemiesSpawnedByPipe >= maxEnemiesToSpawn)
+            return;
+
         spawnTimer -= Time.deltaTime;
-        if (spawnTimer > 0) return;
+        if (spawnTimer > 0)
+            return;
+
         spawnTimer = Random.Range(spawnTimerMin, spawnTimerMax);
 
         EnemyType? enemyType;
-        if (!daytimeSpawner) enemyType = CRUtilities.ChooseRandomWeightedType(outsideEnemies);
-        else enemyType = CRUtilities.ChooseRandomWeightedType(daytimeEnemies);
-        if (enemyType == null || (entitiesSpawned.TryGetValue(enemyType, out int value) && value >= enemyType.MaxCount)) return;
+        if (!daytimeSpawner)
+        {
+            enemyType = CRUtilities.ChooseRandomWeightedType(outsideEnemies);
+        }
+        else
+        {
+            enemyType = CRUtilities.ChooseRandomWeightedType(daytimeEnemies);
+        }
+
+        if (enemyType == null)
+            return;
+
+        if (entitiesSpawned.TryGetValue(enemyType, out int value) && value >= enemyType.MaxCount)
+            return;
 
         entitiesSpawned[enemyType] = value + 1;
         enemiesSpawnedByPipe++;
+        Plugin.ExtendedLogging($"Spawning {enemyType.enemyName}");
         RoundManager.Instance.SpawnEnemyGameObject(spawnPosition.position, -1, -3, enemyType);
     }
 
