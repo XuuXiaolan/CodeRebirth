@@ -17,7 +17,7 @@ public class WalkieYellie : GrabbableObject
             if (IsOwner)
             {
                 SoundManager.Instance.echoEnabled = true;
-                SoundManager.Instance.diageticMixer.SetFloat("EchoWetness", 0.4f);
+                SoundManager.Instance.diageticMixer.SetFloat("EchoWetness", 1f);
             }
             else
             {

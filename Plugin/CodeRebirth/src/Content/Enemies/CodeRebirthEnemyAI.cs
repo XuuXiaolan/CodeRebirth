@@ -8,6 +8,7 @@ using Unity.Netcode.Components;
 using CodeRebirth.src.Util.Extensions;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
@@ -196,8 +197,10 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         Vector3 directionToEnemy = (transform.position - player.gameObject.transform.position).normalized;
         if (Vector3.Dot(player.gameplayCamera.transform.forward, directionToEnemy) < dotProductThreshold)
             return false;
-        if (Physics.Linecast(transform.position, player.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+
+        if (Physics.Linecast(player.gameplayCamera.transform.position, transform.position, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
             return false;
+
         return true;
     }
 
@@ -217,7 +220,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         if (Vector3.Dot(transform.forward, directionToPlayer) < dotThreshold)
             return false;
         float distanceToPlayer = Vector3.Distance(mainTransform.position, player.transform.position);
-        if (Physics.Raycast(mainTransform.position, directionToPlayer, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(mainTransform.position, directionToPlayer, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             return false;
         return true;
     }

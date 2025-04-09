@@ -28,6 +28,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
     [HideInInspector] public int collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = 0;
+    [HideInInspector] public int collidersAndRoomAndInteractableAndRailingAndTerrainAndHazardAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = 0;
     [HideInInspector] public int collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = 0;
@@ -90,7 +91,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask = StartOfRound.Instance.collidersAndRoomMask | hazardMask | railingMask | terrainMask | vehicleMask | defaultMask;
         collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask = StartOfRound.Instance.collidersAndRoomMaskAndPlayers | enemiesMask | terrainMask | vehicleMask;
         collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask | defaultMask;
-        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | enemiesMask | hazardMask | terrainMask | vehicleMask; ;
+        collidersAndRoomAndInteractableAndRailingAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | hazardMask | terrainMask | vehicleMask;
+        collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndInteractableAndRailingAndTerrainAndHazardAndVehicleMask | enemiesMask;
     }
 
     public void PlayerPressedJump(PlayerControllerB player)

@@ -18,7 +18,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [SerializeField]
     private Vector3 _offsetPosition = new Vector3(0.031f, -0.109f, -0.471f);
 
-    private PlayerControllerB _previousTargetPlayer = null!;
     private Coroutine? _killRoutine = null;
     private Coroutine? _attachRoutine = null;
     private Coroutine? _idleRoutine = null;
@@ -56,10 +55,8 @@ public class RabbitMagician : CodeRebirthEnemyAI
         _idleRoutine = StartCoroutine(SwitchToIdle());
     }
 
-    public override void Update()
+    public void LateUpdate()
     {
-        base.Update();
-
         if (currentBehaviourStateIndex != (int)RabbitMagicianState.Attached)
             return;
 
@@ -133,11 +130,13 @@ public class RabbitMagician : CodeRebirthEnemyAI
         }
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || player.isPlayerControlled)
+            if (player.isPlayerDead || !player.isPlayerControlled)
                 continue;
             if (player == targetPlayer)
                 continue;
             if (!PlayerLookingAtEnemy(player, 0.2f))
+                continue;
+            if (Vector3.Dot(player.gameplayCamera.transform.forward, targetPlayer.gameplayCamera.transform.forward) <= 0.6f)
                 continue;
 
             _killRoutine = StartCoroutine(KillPlayerAndSwitchTarget(player));
@@ -155,9 +154,16 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private IEnumerator KillPlayerAndSwitchTarget(PlayerControllerB newTargetPlayer)
     {
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.SwitchingTarget);
-        _previousTargetPlayer.KillPlayer(_previousTargetPlayer.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
+        UnhideRendererClientRpc();
+        targetPlayer.DamagePlayerFromOtherClientServerRpc(9999, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, newTargetPlayer));
         _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer));
         yield return _attachRoutine;
+    }
+
+    [ClientRpc]
+    public void UnhideRendererClientRpc()
+    {
+        skinnedMeshRenderers[0].enabled = true;
     }
 
     private IEnumerator SwitchToIdle()
@@ -175,9 +181,15 @@ public class RabbitMagician : CodeRebirthEnemyAI
     {
         smartAgentNavigator.StopSearchRoutine();
         SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
-        _previousTargetPlayer = targetPlayer;
-        SwitchToBehaviourServerRpc((int)RabbitMagicianState.Attached);
         smartAgentNavigator.enabled = false;
+        if (!agent.enabled)
+        {
+            if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hit, 20, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            {
+                this.transform.position = hit.point;
+            }
+            yield return null;
+        }
         agent.enabled = false;
         creatureNetworkAnimator.SetTrigger(SpottedAnimation);
         yield return new WaitForSeconds(_spottedAnimation.length);
@@ -205,7 +217,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public IEnumerator HideForTargetPlayer()
     {
         yield return new WaitForSeconds(_latchOnAnimation.length);
-        if (targetPlayer == null || targetPlayer.isPlayerDead || currentBehaviourStateIndex != (int)RabbitMagicianState.Attached)
+        if (targetPlayer == null || targetPlayer.isPlayerDead || currentBehaviourStateIndex != (int)4)
             yield break;
 
         HideModelForTargetPlayerServerRpc();
