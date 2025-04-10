@@ -40,7 +40,7 @@ public class SpawnSyncedCRObject : NetworkBehaviour
         // Look up the prefab via the registry in MapObjectHandler.
         if (!IsServer) yield break;
         if (UnityEngine.Random.Range(0, 100) >= chanceOfSpawningAny) yield break;
-        IEnumerable<(GameObject objectType, float weight)> spawnableObjectsList = [];
+        List<(GameObject objectType, float weight)> spawnableObjectsList = new();
         foreach (var objectTypeWithRarity in objectTypesWithRarity)
         {
             GameObject? selectedPrefab = MapObjectHandler.Instance.GetPrefabFor(objectTypeWithRarity.CRObjectType);
@@ -49,12 +49,12 @@ public class SpawnSyncedCRObject : NetworkBehaviour
                 Plugin.Logger.LogWarning($"No prefab found for spawning: {objectTypeWithRarity.CRObjectType}");
                 continue;
             }
-            spawnableObjectsList.AddItem((selectedPrefab, objectTypeWithRarity.Rarity));
+            spawnableObjectsList.Add((selectedPrefab, objectTypeWithRarity.Rarity));
         }
 
-        if (spawnableObjectsList.Count() <= 0)
+        if (spawnableObjectsList.Count <= 0)
         {
-            Plugin.Logger.LogWarning($"No prefabs found for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
+            Plugin.Logger.LogWarning($"No prefabs found for spawning in game object: {this.gameObject.name}");
             yield break;
         }
 

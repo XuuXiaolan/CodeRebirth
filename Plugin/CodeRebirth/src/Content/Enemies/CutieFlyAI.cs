@@ -75,3 +75,4 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Monarch")?.enemyType);
     }
 }
+//todo add a few second delay between cutiefly death and monarch spawn, make monarch warning play on cutiefly death

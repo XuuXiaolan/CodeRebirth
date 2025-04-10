@@ -33,7 +33,7 @@ public class Monarch : CodeRebirthEnemyAI
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        HUDManager.Instance.DisplayTip("Warning", "This is going to be a terrible night...", true);
+        HUDManager.Instance.DisplayTip("WARNING", "UNUSUAL SEISMIC ACTIVITY DETECTED", true);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         UltraCreatureVoice.Play();
