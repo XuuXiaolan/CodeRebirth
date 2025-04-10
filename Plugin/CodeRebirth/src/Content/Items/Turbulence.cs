@@ -13,6 +13,13 @@ public class Turbulence : CRWeapon
         OnEnemyHit.AddListener(OnEnemyHitEvent);
     }
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        OnHitSuccess.RemoveListener(OnHitSuccessEvent);
+        OnEnemyHit.RemoveListener(OnEnemyHitEvent);
+    }
+
     public void OnEnemyHitEvent(EnemyAI enemyAI)
     {
         OnEnemyHitServerRpc(new NetworkBehaviourReference(enemyAI));
@@ -38,18 +45,20 @@ public class Turbulence : CRWeapon
 
     public void OnHitSuccessEvent()
     {
-        OnHitSuccessServerRpc();
+        OnHitSuccessServerRpc(this.transform.position, this.transform.rotation);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void OnHitSuccessServerRpc()
+    public void OnHitSuccessServerRpc(Vector3 position, Quaternion rotation)
     {
-        OnHitSuccessClientRpc();
+        OnHitSuccessClientRpc(position, rotation);
     }
 
     [ClientRpc]
-    public void OnHitSuccessClientRpc()
+    public void OnHitSuccessClientRpc(Vector3 position, Quaternion rotation)
     {
+        this.transform.position = position;
+        this.transform.rotation = rotation;
         stuckToGround = true;
         float distance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
 

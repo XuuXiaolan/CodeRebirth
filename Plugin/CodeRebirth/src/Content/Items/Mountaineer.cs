@@ -32,6 +32,7 @@ public class Mountaineer : CRWeapon
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+        OnSurfaceHit.RemoveListener(OnSurfaceHitEvent);
         Instances.Remove(this);
     }
 

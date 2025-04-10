@@ -80,11 +80,11 @@ public class ShreddingSarah : NetworkBehaviour
 
         // Instead of using shootPoint.forward, compute the 2D direction from shootPoint to target.
         // Project the difference on the ground (Y = 0).
-        Vector3 randomizedTargetTransformPos = targetTransform.position + new Vector3(cannonRandom.NextFloat(-2f, 2f), cannonRandom.NextFloat(-2f, 2f), cannonRandom.NextFloat(-2f, 2f));
+        Vector3 randomizedTargetTransformPos = targetTransform.position + new Vector3(UnityEngine.Random.Range(-2f, 2f), UnityEngine.Random.Range(-2f, 2f), UnityEngine.Random.Range(-2f, 2f));
         Vector3 targetDir2D = new Vector3(randomizedTargetTransformPos.x - shootPointPos.x, 0f, randomizedTargetTransformPos.z - shootPointPos.z).normalized;
 
-        float randOffset = cannonRandom.NextFloat(0, 1) * landingRadius;
-        float randAngle = cannonRandom.NextFloat(0, 1) * (360f * Mathf.Deg2Rad);
+        float randOffset = UnityEngine.Random.Range(0, 1) * landingRadius;
+        float randAngle = UnityEngine.Random.Range(0, 1) * (360f * Mathf.Deg2Rad);
 
         // Use the computed target direction to set the distance.
         Vector3 targetPos2D = new Vector3(randomizedTargetTransformPos.x, 0f, randomizedTargetTransformPos.z);

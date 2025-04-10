@@ -5,63 +5,77 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
-namespace CodeRebirth.src.MiscScripts
+namespace CodeRebirth.src.MiscScripts;
+public class SpawnSyncedCRObject : NetworkBehaviour
 {
-    public class SpawnSyncedCRObject : NetworkBehaviour
+    [Range(0f, 100f)]
+    public float chanceOfSpawningAny = 100f;
+    public bool automaticallyAlignWithTerrain = false;
+    public List<CRObjectTypeWithRarity> objectTypesWithRarity = new();
+    public enum CRObjectType
     {
-        [Range(0f, 100f)]
-        public float chanceOfSpawningAny = 100f;
-        public List<CRObjectTypeWithRarity> objectTypesWithRarity = new();
-        public enum CRObjectType
+        None,
+        Merchant,
+        LaserTurret,
+        FunctionalMicrowave,
+        FlashTurret,
+        IndustrialFan,
+        BugZapper,
+        AirControlUnit,
+        MimicMetalCrate,
+        MimicWoodenCrate,
+        MetalCrate,
+        WoodenCrate,
+        BearTrap,
+        BoomTrap,
+        ShredderSarah,
+        CompactorToby,
+        GunslingerGreg,
+        AutonomousCrane,
+    }
+
+    public IEnumerator Start()
+    {
+        // Look up the prefab via the registry in MapObjectHandler.
+        if (!IsServer) yield break;
+        if (UnityEngine.Random.Range(0, 100) >= chanceOfSpawningAny) yield break;
+        List<(GameObject? objectType, int cumulativeWeight)> cumulativeList = new();
+        int cumulativeWeight = 0;
+        foreach (var objectTypeWithRarity in objectTypesWithRarity)
         {
-            None,
-            Merchant,
-            LaserTurret,
-            FunctionalMicrowave,
-            FlashTurret,
-            IndustrialFan,
-            BugZapper,
-            AirControlUnit,
-            MimicMetalCrate,
-            MimicWoodenCrate,
-            MetalCrate,
-            WoodenCrate,
-            BearTrap,
-            BoomTrap,
-            ShredderSarah,
-            CompactorToby,
-            GunslingerGreg,
-            AutonomousCrane,
+            cumulativeWeight += objectTypeWithRarity.Rarity;
+            cumulativeList.Add((MapObjectHandler.Instance.GetPrefabFor(objectTypeWithRarity.CRObjectType), cumulativeWeight));
+        }
+        if (cumulativeList.Count <= 0)
+        {
+            Plugin.Logger.LogWarning($"No prefabs found for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
+            yield break;
         }
 
-        public IEnumerator Start()
+        // Instantiate and spawn the object on the network.
+        int randomWeight = UnityEngine.Random.Range(0, cumulativeWeight) + 1;
+        var prefab = cumulativeList.FirstOrDefault(x => x.cumulativeWeight <= randomWeight).objectType;
+        if (prefab == null)
         {
-            // Look up the prefab via the registry in MapObjectHandler.
-            if (!IsServer) yield break;
-            if (UnityEngine.Random.Range(0, 100) >= chanceOfSpawningAny) yield break;
-            List<(GameObject? objectType, int cumulativeWeight)> cumulativeList = new();
-            int cumulativeWeight = 0;
-            foreach (var objectTypeWithRarity in objectTypesWithRarity)
-            {
-                cumulativeWeight += objectTypeWithRarity.Rarity;
-                cumulativeList.Add((MapObjectHandler.Instance.GetPrefabFor(objectTypeWithRarity.CRObjectType), cumulativeWeight));
-            }
-            if (cumulativeList.Count <= 0)
-            {
-                Plugin.Logger.LogWarning($"No prefabs found for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
-                yield break;
-            }
-
-            // Instantiate and spawn the object on the network.
-            int randomWeight = UnityEngine.Random.Range(0, cumulativeWeight) + 1;
-            var prefab = cumulativeList.FirstOrDefault(x => x.cumulativeWeight <= randomWeight).objectType;
-            if (prefab == null)
-            {
-                Plugin.Logger.LogError($"Did you really set something to spawn at a weight of 0? Couldn't find prefab for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
-                yield break;
-            }
-            var spawnedObject = Instantiate(prefab, transform.position, transform.rotation, transform);
-            spawnedObject.GetComponent<NetworkObject>().Spawn(true);
+            Plugin.Logger.LogError($"Did you really set something to spawn at a weight of 0? Couldn't find prefab for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
+            yield break;
         }
+        var spawnedObject = Instantiate(prefab, transform.position, transform.rotation, transform);
+        spawnedObject.GetComponent<NetworkObject>().Spawn(true);
+
+        if (automaticallyAlignWithTerrain)
+        {
+            if (Physics.Raycast(transform.position + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            {
+                SyncPositionAndRotationClientRpc(hit.point, hit.normal);
+            }
+        }
+    }
+    
+    [ClientRpc]
+    public void SyncPositionAndRotationClientRpc(Vector3 position, Vector3 normal)
+    {
+        transform.position = position;
+        transform.up = normal;
     }
 }
