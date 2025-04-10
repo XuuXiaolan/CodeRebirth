@@ -45,6 +45,22 @@ MonoBehaviour:
         ; 0.56,1.67 ; 0.67,1.73 ; 0.78,1.82 ; 0.89,2.12 ; 1.00,2.50
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
+  - assetBundleName: autonomouscraneassets
+    configName: Autonomous Crane
+    weathers: []
+    enemies: []
+    items: []
+    mapObjects:
+    - entityName: Autonomous Crane
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: All - 0.00,0.00 ; 1.00, 2.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    unlockables: []
   - assetBundleName: beartrapassets
     configName: BearTrap
     weathers: []

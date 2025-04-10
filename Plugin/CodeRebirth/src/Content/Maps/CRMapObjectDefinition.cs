@@ -10,6 +10,7 @@ public class CRMapObjectDefinition : CRContentDefinition
 {
     public GameObject gameObject;
     public string objectName;
+    public bool alignWithTerrain;
     public SpawnSyncedCRObject.CRObjectType CRObjectType;
 
     public GameObject? GetGameObjectOnName(string name)

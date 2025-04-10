@@ -31,6 +31,7 @@ namespace CodeRebirth.src.MiscScripts
             ShredderSarah,
             CompactorToby,
             GunslingerGreg,
+            AutonomousCrane,
         }
 
         public IEnumerator Start()

@@ -16,7 +16,7 @@ namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
 static class RoundManagerPatch
 {
-    internal static List<RegisteredMapObject> registeredMapObjects = [];
+    internal static List<RegisteredCRMapObject> registeredMapObjects = [];
     internal static List<SpawnableFlora> spawnableFlora = [];
 
     [HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
@@ -25,13 +25,13 @@ static class RoundManagerPatch
         if (Plugin.ModConfig.ConfigFloraEnabled.Value) SpawnFlora();
         if (!NetworkManager.Singleton.IsServer) return;
         System.Random random = new(StartOfRound.Instance.randomMapSeed + 69);
-        foreach (RegisteredMapObject registeredMapObject in registeredMapObjects)
+        foreach (RegisteredCRMapObject registeredMapObject in registeredMapObjects)
         {
             HandleSpawningOutsideMapObjects(registeredMapObject, random);
         }
     }
 
-    private static void HandleSpawningOutsideMapObjects(RegisteredMapObject mapObjDef, System.Random random)
+    private static void HandleSpawningOutsideMapObjects(RegisteredCRMapObject mapObjDef, System.Random random)
     {
         SelectableLevel level = RoundManager.Instance.currentLevel;
         AnimationCurve animationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
@@ -48,7 +48,10 @@ static class RoundManagerPatch
             if (hit.collider == null) continue;
             GameObject spawnedPrefab = GameObject.Instantiate(prefabToSpawn, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             Plugin.ExtendedLogging($"Spawning {spawnedPrefab.name} at {hit.point}");
-            spawnedPrefab.transform.up = hit.normal;
+            if (mapObjDef.alignWithTerrain)
+            {
+                spawnedPrefab.transform.up = hit.normal;
+            }
             spawnedPrefab.GetComponent<NetworkObject>().Spawn(true);
         }
     }

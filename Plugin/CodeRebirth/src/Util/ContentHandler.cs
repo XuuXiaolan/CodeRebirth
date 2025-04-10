@@ -17,8 +17,6 @@ using LethalLib.Modules;
 using UnityEngine;
 using WeatherRegistry;
 using static LethalLib.Modules.MapObjects;
-using EnemyData = CodeRebirth.src.Util.AssetLoading.EnemyData;
-using WeatherManager = WeatherRegistry.WeatherManager;
 
 namespace CodeRebirth.src.Util;
 
@@ -189,7 +187,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 LevelFilters = new(weatherData.excludeOrIncludeList),
             };
 
-            WeatherManager.RegisterWeather(weather);
+            WeatherRegistry.WeatherManager.RegisterWeather(weather);
             definitionIndex++;
         }
     }
@@ -203,7 +201,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
         assetBundle.AssetBundleData.enemies.Sort((a, b) => a.entityName.CompareTo(b.entityName));
         foreach (var CREnemyDefinition in assetBundle.EnemyDefinitions)
         {
-            EnemyData enemyData = assetBundle.AssetBundleData.enemies[definitionIndex];
+            AssetLoading.EnemyData enemyData = assetBundle.AssetBundleData.enemies[definitionIndex];
             Plugin.ExtendedLogging($"EnemyData {enemyData.entityName}");
             Plugin.ExtendedLogging($"EnemyDefinition {CREnemyDefinition.enemyType.enemyName}");
             LoadEnemyConfigs(CREnemyDefinition.enemyType.enemyName, assetBundle.AssetBundleData.configName, enemyData.spawnWeights, enemyData.powerLevel, enemyData.maxSpawnCount);
@@ -276,12 +274,13 @@ public class ContentHandler<T> where T : ContentHandler<T>
 
             GameObject gameObject = CRMapObjectDefinition.gameObject;
             SpawnSyncedCRObject.CRObjectType CRObjectType = CRMapObjectDefinition.CRObjectType;
+            bool alignWithTerrain = CRMapObjectDefinition.alignWithTerrain;
             bool inside = mapObjectConfig.InsideHazard?.Value ?? mapObjectData.isInsideHazard;
             string insideCurveSpawnWeights = mapObjectConfig.InsideCurveSpawnWeights?.Value ?? mapObjectData.defaultInsideCurveSpawnWeights;
             bool outside = mapObjectConfig.OutsideHazard?.Value ?? mapObjectData.isOutsideHazard;
             string outsideCurveSpawnWeightsConfig = mapObjectConfig.OutsideCurveSpawnWeights?.Value ?? mapObjectData.defaultOutsideCurveSpawnWeights;
 
-            RegisterMapObjectWithConfig(gameObject, CRObjectType, inside, insideCurveSpawnWeights, outside, outsideCurveSpawnWeightsConfig);
+            RegisterMapObjectWithConfig(gameObject, CRObjectType, inside, insideCurveSpawnWeights, outside, alignWithTerrain, outsideCurveSpawnWeightsConfig);
             definitionIndex++;
         }
     }
@@ -370,7 +369,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
         }
     }
 
-    protected void RegisterMapObjectWithConfig(GameObject prefab, SpawnSyncedCRObject.CRObjectType CRObjectType, bool inside, string insideConfigString, bool outside, string outsideConfigString)
+    protected void RegisterMapObjectWithConfig(GameObject prefab, SpawnSyncedCRObject.CRObjectType CRObjectType, bool inside, string insideConfigString, bool outside, bool alignWithTerrain, string outsideConfigString)
     {
         if (inside)
         {
@@ -378,13 +377,13 @@ public class ContentHandler<T> where T : ContentHandler<T>
         }
         if (outside)
         {
-            RegisterOutsideMapObjectWithConfig(prefab, outsideConfigString);
+            RegisterOutsideMapObjectWithConfig(prefab, alignWithTerrain, outsideConfigString);
         }
         Plugin.ExtendedLogging($"Registered map object: {prefab.name} to outside: {outside} and inside: {inside} to {CRObjectType} with inside config: {insideConfigString} and outside config: {outsideConfigString}");
         MapObjectHandler.Instance.prefabMapping[CRObjectType] = prefab;
     }
 
-    protected void RegisterOutsideMapObjectWithConfig(GameObject prefab, string configString)
+    protected void RegisterOutsideMapObjectWithConfig(GameObject prefab, bool _alignWithTerrain, string configString)
     {
         // Create the map object definition
         SpawnableOutsideObjectDef mapObjDef = ScriptableObject.CreateInstance<SpawnableOutsideObjectDef>();
@@ -437,8 +436,9 @@ public class ContentHandler<T> where T : ContentHandler<T>
         }
 
         // Register the map object with a single lambda function
-        RegisteredMapObject registeredMapObject = new RegisteredMapObject
+        RegisteredCRMapObject registeredMapObject = new RegisteredCRMapObject
         {
+            alignWithTerrain = _alignWithTerrain,
             outsideObject = mapObjDef.spawnableMapObject,
             levels = Levels.LevelTypes.All,
             spawnLevelOverrides = curvesByCustomLevelType.Keys.ToArray().Select(s => s.ToLowerInvariant()).ToArray(),
