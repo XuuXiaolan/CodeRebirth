@@ -4,6 +4,7 @@ using CodeRebirth.src.Content.Maps;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using HarmonyLib;
 
 namespace CodeRebirth.src.MiscScripts;
 public class SpawnSyncedCRObject : NetworkBehaviour
@@ -39,28 +40,33 @@ public class SpawnSyncedCRObject : NetworkBehaviour
         // Look up the prefab via the registry in MapObjectHandler.
         if (!IsServer) yield break;
         if (UnityEngine.Random.Range(0, 100) >= chanceOfSpawningAny) yield break;
-        List<(GameObject? objectType, int cumulativeWeight)> cumulativeList = new();
-        int cumulativeWeight = 0;
+        IEnumerable<(GameObject objectType, float weight)> spawnableObjectsList = [];
         foreach (var objectTypeWithRarity in objectTypesWithRarity)
         {
-            cumulativeWeight += objectTypeWithRarity.Rarity;
-            cumulativeList.Add((MapObjectHandler.Instance.GetPrefabFor(objectTypeWithRarity.CRObjectType), cumulativeWeight));
+            GameObject? selectedPrefab = MapObjectHandler.Instance.GetPrefabFor(objectTypeWithRarity.CRObjectType);
+            if (selectedPrefab == null)
+            {
+                Plugin.Logger.LogWarning($"No prefab found for spawning: {objectTypeWithRarity.CRObjectType}");
+                continue;
+            }
+            spawnableObjectsList.AddItem((selectedPrefab, objectTypeWithRarity.Rarity));
         }
-        if (cumulativeList.Count <= 0)
+
+        if (spawnableObjectsList.Count() <= 0)
         {
             Plugin.Logger.LogWarning($"No prefabs found for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
             yield break;
         }
 
+        GameObject? prefabToSpawn = CRUtilities.ChooseRandomWeightedType(spawnableObjectsList);
+
         // Instantiate and spawn the object on the network.
-        int randomWeight = UnityEngine.Random.Range(0, cumulativeWeight) + 1;
-        var prefab = cumulativeList.FirstOrDefault(x => x.cumulativeWeight <= randomWeight).objectType;
-        if (prefab == null)
+        if (prefabToSpawn == null)
         {
             Plugin.Logger.LogError($"Did you really set something to spawn at a weight of 0? Couldn't find prefab for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
             yield break;
         }
-        var spawnedObject = Instantiate(prefab, transform.position, transform.rotation, transform);
+        var spawnedObject = Instantiate(prefabToSpawn, transform.position, transform.rotation, transform);
         spawnedObject.GetComponent<NetworkObject>().Spawn(true);
 
         if (automaticallyAlignWithTerrain)
