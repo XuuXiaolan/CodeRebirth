@@ -176,7 +176,34 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
             }
 
-            Weather weather = new($"{CRWeatherDefinition.Weather.Name}", CRWeatherDefinition.Weather.Effect);
+            GameObject? effectObject = null;
+            if (CRWeatherDefinition.Weather.Effect.EffectObject != null)
+            {
+                effectObject = GameObject.Instantiate(CRWeatherDefinition.Weather.Effect.EffectObject);
+                if (effectObject != null)
+                {
+                    effectObject.hideFlags = HideFlags.HideAndDontSave;
+                    GameObject.DontDestroyOnLoad(effectObject);                
+                }
+            }
+
+            GameObject? effectPermanentObject = null;
+            if (CRWeatherDefinition.Weather.Effect.WorldObject != null)
+            {
+                effectPermanentObject = GameObject.Instantiate(CRWeatherDefinition.Weather.Effect.WorldObject);
+                if (effectPermanentObject != null)
+                {
+                    effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
+                    GameObject.DontDestroyOnLoad(effectPermanentObject);                
+                }                
+            }
+
+            ImprovedWeatherEffect newImprovedWeatherEffect = new(effectObject, effectPermanentObject)
+            {
+                SunAnimatorBool = CRWeatherDefinition.Weather.Effect.SunAnimatorBool,
+            };
+
+            Weather weather = new Weather($"{CRWeatherDefinition.Weather.Name}", newImprovedWeatherEffect);
             weather.Color = CRWeatherDefinition.Weather.Color;
             weather.Config = new()
             {
