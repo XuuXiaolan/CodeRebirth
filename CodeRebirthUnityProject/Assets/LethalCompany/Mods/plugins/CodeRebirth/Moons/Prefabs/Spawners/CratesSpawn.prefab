@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6122073919466985004}
   - component: {fileID: 3439270000703778724}
+  - component: {fileID: 2576193278008148040}
   m_Layer: 0
   m_Name: CratesSpawn
   m_TagString: Untagged
@@ -45,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chanceOfSpawningAny: 10
+  automaticallyAlignWithTerrain: 1
   objectTypesWithRarity:
   - CRObjectType: 11
     Rarity: 10
@@ -54,3 +56,23 @@ MonoBehaviour:
     Rarity: 5
   - CRObjectType: 8
     Rarity: 1
+--- !u!114 &2576193278008148040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9074500884930967531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

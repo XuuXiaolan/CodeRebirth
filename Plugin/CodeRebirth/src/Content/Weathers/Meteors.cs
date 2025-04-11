@@ -4,7 +4,6 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Events;
-using System.Linq;
 using CodeRebirth.src.Content.Items;
 
 namespace CodeRebirth.src.Content.Weathers;

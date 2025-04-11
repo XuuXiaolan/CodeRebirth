@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -66,13 +67,23 @@ public class CutieFlyAI : CodeRebirthEnemyAI
 
     public void SpawnMonarchAnimEvent()
     {
-        if (!IsServer) return;
-        if (Monarch.Monarchs.Count > 0)
+        StartCoroutine(HandleSpawningMonarch());
+    }
+
+    public IEnumerator HandleSpawningMonarch()
+    {
+        if (EnemyHandler.Instance.Monarch == null) yield break;
+        yield return new WaitForSeconds(3f);
+        if (IsServer)
         {
-            if (UnityEngine.Random.Range(0, 100) < 50) return;
+            if (Monarch.Monarchs.Count > 0)
+            {
+                if (UnityEngine.Random.Range(0, 100) < 50) yield break;
+            }
+            RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Monarch")?.enemyType);
         }
-        if (EnemyHandler.Instance.Monarch == null) return;
-        RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Monarch")?.enemyType);
+        HUDManager.Instance.DisplayTip("WARNING", "SEISMIC ACTIVITY DETECTED", true);
+        HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+        HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
     }
 }
-//todo add a few second delay between cutiefly death and monarch spawn, make monarch warning play on cutiefly death

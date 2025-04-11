@@ -467,7 +467,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 targetEnemy = null;
                 if (!IsServer) return;
                 smartAgentNavigator.DoPathingToDestination(enemyPositionBeforeDeath);
-
                 transform.LookAt(enemyPositionBeforeDeath);
                 creatureNetworkAnimator.SetTrigger(EatEnemyAnimation);
             }
@@ -480,6 +479,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         enemyHP += 2;
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
         if (!IsServer) return;
+        agent.speed = 7f;
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
     }
 

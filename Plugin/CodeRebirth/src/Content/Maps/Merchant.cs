@@ -321,7 +321,7 @@ public class Merchant : NetworkBehaviour
         }
     }
 
-    private Item GetRandomVanillaItem()
+    public static Item GetRandomVanillaItem()
     {
         var vanillaItems = LethalLevelLoader.OriginalContent.Items;
         int randomIndex = UnityEngine.Random.Range(0, vanillaItems.Count);

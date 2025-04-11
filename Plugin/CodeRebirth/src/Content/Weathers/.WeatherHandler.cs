@@ -1,8 +1,6 @@
 ﻿using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
-using CullFactory;
 using UnityEngine;
-using WeatherRegistry;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class WeatherHandler : ContentHandler<WeatherHandler>
