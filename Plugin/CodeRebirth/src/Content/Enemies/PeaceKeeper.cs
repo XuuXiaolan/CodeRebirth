@@ -27,8 +27,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     private GameObject _gunParticleSystemGO = null!;
 
     [SerializeField]
-    private AudioSource _bulletSFX = null!;
-    [SerializeField]
     private AudioClip _spawnSound = null!;
     [SerializeField]
     private AudioClip _revUpSound = null!;
@@ -90,7 +88,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (isEnemyDead) return;
+        if (isEnemyDead)
+            return;
 
         _idleSoundTimer -= Time.deltaTime;
         if (_idleSoundTimer <= 0f)
@@ -98,20 +97,21 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             creatureVoice.PlayOneShot(_idleSounds[UnityEngine.Random.Range(0, _idleSounds.Length)]);
             _idleSoundTimer = _idleSoundsTimer;
         }
-        if (!_isShooting) return;
-        if (!_gunParticleSystemGO.activeSelf)
+        if (!IsServer)
+            return;
+
+        if (_bitchSlappingRoutine != null)
         {
-            if (creatureSFX.isPlaying)
-            {
-                creatureSFX.Stop();
-            }
+            RotateTowardsNearestPlayer();
             return;
         }
-        if (!creatureSFX.isPlaying)
-        {
-            creatureSFX.Play();
-        }
-        if (!IsServer) return;
+
+        if (!_isShooting)
+            return;
+
+        if (!_gunParticleSystemGO.activeSelf)
+            return;
+
         DoGatlingGunDamage();
     }
 
@@ -119,7 +119,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead)
+            return;
 
         float velocity = agent.velocity.magnitude / 3;
         creatureAnimator.SetFloat(RunSpeedFloat, velocity);
@@ -202,15 +203,14 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             {
                 if (_isShooting)
                 {
-                    PlayMiscSoundsServerRpc(1);
                     _isShooting = false;
                     agent.speed = _chasingSpeed;
                     creatureAnimator.SetBool(ShootingAnimation, false);
                 }
                 return;
             }
-            if (_isShooting) return;
-            PlayMiscSoundsServerRpc(0);
+            if (_isShooting)
+                return;
             agent.speed = _shootingSpeed;
             _isShooting = true;
             creatureAnimator.SetBool(ShootingAnimation, true);
@@ -219,43 +219,44 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
         if (_isShooting)
         {
-            PlayMiscSoundsServerRpc(1);
             _isShooting = false;
             agent.speed = _chasingSpeed;
             creatureAnimator.SetBool(ShootingAnimation, false);
         }
 
-        if (_bitchSlappingRoutine != null) return;
+        if (_bitchSlappingRoutine != null)
+            return;
+
         _bitchSlappingRoutine = StartCoroutine(DoBitchSlapping());
     }
     #endregion
 
     #region Misc Functions
 
-    [ServerRpc(RequireOwnership = false)]
-    public void PlayMiscSoundsServerRpc(int soundID)
+    public void RotateTowardsNearestPlayer()
     {
-        PlayMiscSoundsClientRpc(soundID);
-    }
-
-    [ClientRpc]
-    public void PlayMiscSoundsClientRpc(int soundID)
-    {
-        switch (soundID)
+        PlayerControllerB? nearestPlayer = null;
+        float closestDistance = float.MaxValue;
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            case 0:
-                creatureSFX.PlayOneShot(_revUpSound);
-                break;
-            case 1:
-                creatureSFX.PlayOneShot(_revDownSound);
-                break;
-            case 2:
-                creatureSFX.PlayOneShot(_bitchSlapSound);
-                break;
-            case 3:
-                creatureSFX.PlayOneShot(_bitchSlapStartSound);
-                break;
+            if (player.isPlayerDead || !player.isPlayerControlled)
+                continue;
+
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance > closestDistance)
+                continue;
+
+            nearestPlayer = player;
         }
+
+        if (nearestPlayer == null)
+            return;
+
+        Vector3 direction = nearestPlayer.transform.position - transform.position;
+        direction.y = 0;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
     }
 
     public void HandleSwitchingToIdle()
@@ -269,7 +270,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     public IEnumerator DoBitchSlapping()
     {
-        PlayMiscSoundsServerRpc(3);
         creatureAnimator.SetTrigger(BitchSlapAnimation);
         yield return new WaitForSeconds(2f);
         _bitchSlappingRoutine = null;
@@ -297,15 +297,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         }
         _damageInterval = 0f;
 
-        bool hitSomething = Physics.Raycast(_leftGunStartTransform.position, _leftGunStartTransform.forward, out RaycastHit hit, _minigunRange, StartOfRound.Instance.collidersAndRoomMaskAndDefault);
-        if (hitSomething)
-        {
-            _bulletSFX.transform.position = hit.point;
-        }
-        else
-        {
-            _bulletSFX.transform.position = _leftGunStartTransform.position + _leftGunStartTransform.forward * _minigunRange;
-        }
         if (!IsServer) return;
         // Use a HashSet to avoid applying damage twice to the same target
         HashSet<IHittable> damagedTargets = new HashSet<IHittable>();
@@ -451,8 +442,25 @@ public class PeaceKeeper : CodeRebirthEnemyAI
                 iHittable.Hit(2, this.transform.position, null, true, -1);
             }
         }
-        if (numHits <= 0) return;
-        PlayMiscSoundsServerRpc(2);
+    }
+
+    public void PlayMiscSoundsAnimationEvent(int soundID)
+    {
+        switch (soundID)
+        {
+            case 0:
+                creatureSFX.PlayOneShot(_revUpSound);
+                break;
+            case 1:
+                creatureSFX.PlayOneShot(_revDownSound);
+                break;
+            case 2:
+                creatureSFX.PlayOneShot(_bitchSlapSound);
+                break;
+            case 3:
+                creatureSFX.PlayOneShot(_bitchSlapStartSound);
+                break;
+        }
     }
     #endregion
     // wanders around normally.
