@@ -23,7 +23,6 @@ static class RoundManagerPatch
     private static void SpawnOutsideMapObjects()
     {
         if (Plugin.ModConfig.ConfigFloraEnabled.Value) SpawnFlora();
-        if (!NetworkManager.Singleton.IsServer) return;
         System.Random random = new(StartOfRound.Instance.randomMapSeed + 69);
         foreach (RegisteredCRMapObject registeredMapObject in registeredMapObjects)
         {
@@ -36,6 +35,10 @@ static class RoundManagerPatch
         SelectableLevel level = RoundManager.Instance.currentLevel;
         AnimationCurve animationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
         GameObject prefabToSpawn = mapObjDef.outsideObject.spawnableObject.prefabToSpawn;
+
+        NetworkObject networkObject = prefabToSpawn.GetComponent<NetworkObject>();
+        if (networkObject != null && !NetworkManager.Singleton.IsServer)
+            return;
 
         animationCurve = mapObjDef.spawnRateFunction(level);
         int randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0f, 1f)) + 0.5f);
@@ -52,6 +55,9 @@ static class RoundManagerPatch
             {
                 spawnedPrefab.transform.up = hit.normal;
             }
+            if (networkObject == null)
+                return;
+
             spawnedPrefab.GetComponent<NetworkObject>().Spawn(true);
         }
     }

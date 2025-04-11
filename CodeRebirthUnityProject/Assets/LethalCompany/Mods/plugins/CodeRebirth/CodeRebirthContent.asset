@@ -825,6 +825,29 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
+  - assetBundleName: moonunlockerassets
+    configName: Moon Unlockers
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Oxyde Tablet
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 999
+    - entityName: Haemoglobin Tablet
+      spawnWeights: All:1
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 999
+    mapObjects: []
+    unlockables: []
   - assetBundleName: mountaineerassets
     configName: Brrreaker
     weathers: []

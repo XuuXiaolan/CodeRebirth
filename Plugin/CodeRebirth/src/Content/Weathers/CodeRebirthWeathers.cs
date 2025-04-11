@@ -69,7 +69,8 @@ public class CodeRebirthWeathers : MonoBehaviour
     public Vector3 GetRandomTargetPosition(IEnumerable<GameObject> nodes, List<GameObject> alreadyUsedNodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius)
     {
         if (nodes.Count() == 0) return Vector3.zero;
-        GameObject nextNode = nodes.ElementAt(UnityEngine.Random.Range(0, nodes.Count()));
+        GameObject? nextNode = nodes.ElementAt(UnityEngine.Random.Range(0, nodes.Count()));
+        if (nextNode == null) return Vector3.zero;
         Vector3 position = nextNode.transform.position;
         if (!alreadyUsedNodes.Contains(nextNode))
         {

@@ -195,7 +195,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 {
                     effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
                     GameObject.DontDestroyOnLoad(effectPermanentObject);                
-                }                
+                }
             }
 
             ImprovedWeatherEffect newImprovedWeatherEffect = new(effectObject, effectPermanentObject)
