@@ -27,6 +27,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     private GameObject _gunParticleSystemGO = null!;
 
     [SerializeField]
+    private AudioSource _aggroSFX = null!;
+    [SerializeField]
     private AudioClip _spawnSound = null!;
     [SerializeField]
     private AudioClip _revUpSound = null!;
@@ -97,6 +99,12 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             creatureVoice.PlayOneShot(_idleSounds[UnityEngine.Random.Range(0, _idleSounds.Length)]);
             _idleSoundTimer = _idleSoundsTimer;
         }
+
+        if (!_aggroSFX.isPlaying && currentBehaviourStateIndex == (int)PeaceKeeperState.AttackingPlayer)
+        {
+            _aggroSFX.Play();
+        }
+
         if (!IsServer)
             return;
 
@@ -406,7 +414,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
-
+        _aggroSFX.Stop();
         creatureVoice.PlayOneShot(dieSFX);
         if (!IsServer) return;
         creatureAnimator.SetBool(IsDeadAnimation, true);
