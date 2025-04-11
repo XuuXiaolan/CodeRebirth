@@ -4128,7 +4128,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -30368,6 +30368,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0.000013660378
       objectReference: {fileID: 0}
+    - target: {fileID: 4786059030473727032, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5295686129828764688, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5775917684570758550, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       propertyPath: m_Name
@@ -30444,6 +30454,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4618876613342225089, guid: f1ab898e1073b724f9641b286ab9c247,
         type: 3}
+    - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
+      propertyPath: bellRenderer
+      value: 
+      objectReference: {fileID: 4604772229570269446}
     - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       propertyPath: ButtonTrigger

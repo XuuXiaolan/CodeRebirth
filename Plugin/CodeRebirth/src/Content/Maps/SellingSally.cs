@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
@@ -10,6 +11,7 @@ namespace CodeRebirth.src.Content.Maps;
 public class SellingSally : NetworkBehaviour
 {
     public Animator animator = null!;
+    public SkinnedMeshRenderer bellRenderer = null!;
     public NetworkAnimator networkAnimator = null!;
     public Transform endOfBarrelTransform = null!;
     public Transform sallyLoaderTransform = null!;
@@ -54,6 +56,31 @@ public class SellingSally : NetworkBehaviour
     public void RingBellServerRpc()
     {
         animator.SetBool(OpenedAnimation, !animator.GetBool(OpenedAnimation));
+        AnimateBellClientRpc();
+    }
+
+    [ClientRpc]
+    public void AnimateBellClientRpc()
+    {
+        StartCoroutine(AnimateBell());
+    }
+
+    public IEnumerator AnimateBell()
+    {
+        float timeElapsed = 0f;
+        while (timeElapsed <= 0.25f)
+        {
+            timeElapsed += Time.deltaTime;
+            bellRenderer.SetBlendShapeWeight(0, timeElapsed * 4 * 100);
+            yield return null;
+        }
+
+        while (timeElapsed > 0)
+        {
+            timeElapsed -= Time.deltaTime;
+            bellRenderer.SetBlendShapeWeight(0, timeElapsed * 4 * 100);
+            yield return null;
+        }
     }
 
     private bool CanCurrentlyShoot()

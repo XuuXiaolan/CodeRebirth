@@ -21088,9 +21088,9 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -22032,6 +22032,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 995531750}
     m_Modifications:
+    - target: {fileID: 322272416964933842, guid: 360d370ce77a2374898653dd89fad135,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1429441962258199311, guid: 360d370ce77a2374898653dd89fad135,
         type: 3}
       propertyPath: GlobalObjectIdHash
