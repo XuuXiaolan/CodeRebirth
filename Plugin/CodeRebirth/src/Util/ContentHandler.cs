@@ -16,7 +16,6 @@ using LethalLib.Extras;
 using LethalLib.Modules;
 using UnityEngine;
 using WeatherRegistry;
-using static LethalLib.Modules.MapObjects;
 
 namespace CodeRebirth.src.Util;
 

@@ -707,8 +707,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         // creatureVoice.PlayOneShot(hitSound[UnityEngine.Random.Range(0, hitSound.Length)]);
 
-
-
         enemyHP -= force;
         Plugin.ExtendedLogging("Enemy HP: " + enemyHP);
         if (IsOwner && enemyHP <= 0)
@@ -723,7 +721,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             RunFarAway();
         }
-        else if (playerWhoHit != null)
+        else if (playerWhoHit != null && targetPlayer == null)
         {
             targetPlayer = playerWhoHit;
             smartAgentNavigator.StopSearchRoutine();

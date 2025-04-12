@@ -23,6 +23,7 @@ public class Oxidizer : GrabbableObject
 
     private RaycastHit[] cachedRaycastHits = new RaycastHit[24];
     private List<IHittable> iHittableList = new();
+    private List<EnemyAI> enemyAIList = new();
     private bool charged = true;
     private bool superCharged = false;
     private bool nerfed = false;
@@ -53,18 +54,29 @@ public class Oxidizer : GrabbableObject
             if (updateHitInterval <= 0)
             {
                 updateHitInterval = 0.2f;
-                iHittableList.Clear();
                 int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 1.3f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 4, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+                iHittableList.Clear();
+                enemyAIList.Clear();
                 for (int i = 0; i < numHits; i++)
                 {
+                    if (cachedRaycastHits[i].transform == playerHeldBy.transform) continue;
                     if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
                     {
+                        if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
+                        {
+                            if (enemyAIList.Contains(enemyAICollisionDetect.mainScript))
+                            {
+                                continue;
+                            }
+                            enemyAIList.Add(enemyAICollisionDetect.mainScript);
+                        }
                         iHittableList.Add(iHittable);
                     }
                 }
                 foreach (var iHittable in iHittableList)
                 {
-                    iHittable.Hit(1, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
+                    if (IsOwner)
+                        iHittable.Hit(1, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
                 }
             }
         }
@@ -159,17 +171,27 @@ public class Oxidizer : GrabbableObject
         Plugin.ExtendedLogging($"Oxidizer: {damageToDeal} damage dealt.");
         int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
         iHittableList.Clear();
+        enemyAIList.Clear();
         for (int i = 0; i < numHits; i++)
         {
             if (cachedRaycastHits[i].transform == playerHeldBy.transform) continue;
             if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
             {
+                if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
+                {
+                    if (enemyAIList.Contains(enemyAICollisionDetect.mainScript))
+                    {
+                        continue;
+                    }
+                    enemyAIList.Add(enemyAICollisionDetect.mainScript);
+                }
                 iHittableList.Add(iHittable);
             }
         }
         foreach (var iHittable in iHittableList)
         {
-            if (IsOwner) iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
+            if (IsOwner)
+                iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
         }
         foreach (var ps in flameStreamParticleSystems)
         {

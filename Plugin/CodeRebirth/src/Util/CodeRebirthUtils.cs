@@ -57,6 +57,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     private System.Random? CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
+
     private void Awake()
     {
         StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
@@ -269,15 +270,20 @@ internal class CodeRebirthUtils : NetworkBehaviour
         entrancePoints = [];
     }
 
-    public T CreateFallingObject<T>(GameObject prefab, Vector3 origin, Vector3 target) where T : FallingObjectBehaviour
+    public T? CreateFallingObject<T>(GameObject prefab, Vector3 origin, Vector3 target, float speed) where T : FallingObjectBehaviour
     {
         Plugin.ExtendedLogging($"creating falling object: {prefab.name} going from {origin} to {target}");
         GameObject gameObject = Instantiate(prefab, origin, Quaternion.identity);
         T fallingObjectBehaviour = gameObject.GetComponent<T>();
-        
+
+        if (fallingObjectBehaviour == null)
+        {
+            Plugin.Logger.LogError($"FallingObjectBehaviour Component on GameObject: {prefab} does not exist.");
+            return null;
+        }
         fallingObjectBehaviour.NetworkObject.OnSpawn(() =>
         {
-            fallingObjectBehaviour.SetupFallingObjectClientRPC(origin, target);
+            fallingObjectBehaviour.SetupFallingObjectClientRPC(origin, target, speed);
         });
         fallingObjectBehaviour.NetworkObject.Spawn();
 

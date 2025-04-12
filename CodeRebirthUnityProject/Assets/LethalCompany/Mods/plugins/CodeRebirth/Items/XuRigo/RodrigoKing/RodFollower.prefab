@@ -486,9 +486,7 @@ GameObject:
   - component: {fileID: 7857247363407923244}
   - component: {fileID: 1263974109779689754}
   - component: {fileID: 1630493129968531005}
-  - component: {fileID: 2989386238595139478}
   - component: {fileID: 6033393776399093114}
-  - component: {fileID: -5246967796040644116}
   - component: {fileID: -6006075721730341715}
   m_Layer: 8
   m_Name: RodFollower
@@ -555,35 +553,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 81297a8cdea6f5a4cb9ba3d534783bb1, type: 3}
   - {fileID: 8300000, guid: c652b3f14748768419ec62335e8b3cb6, type: 3}
   animator: {fileID: 6033393776399093114}
-  smartAgentNavigator: {fileID: 2989386238595139478}
-  jumping: 0
---- !u!114 &2989386238595139478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5981160136508195334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  jumping: 0
 --- !u!95 &6033393776399093114
 Animator:
   serializedVersion: 5
@@ -605,26 +576,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-5246967796040644116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5981160136508195334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!82 &-6006075721730341715
 AudioSource:
   m_ObjectHideFlags: 0

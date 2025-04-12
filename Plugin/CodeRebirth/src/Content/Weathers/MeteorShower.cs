@@ -213,6 +213,6 @@ public class MeteorShower : CodeRebirthWeathers
         }
 
         GameObject prefab = overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab;
-        CodeRebirthUtils.Instance.CreateFallingObject<Meteors>(prefab, origin, target);
+        CodeRebirthUtils.Instance.CreateFallingObject<Meteors>(prefab, origin, target, Plugin.ModConfig.ConfigMeteorSpeed.Value);
     }
 }

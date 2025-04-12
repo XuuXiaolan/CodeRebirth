@@ -105,6 +105,11 @@ public class CompactorToby : NetworkBehaviour, IHittable
                 Plugin.ExtendedLogging("Spawning Enemy");
                 int randomIndex = UnityEngine.Random.Range(0, spawnTransforms.Length);
                 EnemyType? enemyType = CRUtilities.ChooseRandomWeightedType(RoundManager.Instance.currentLevel.OutsideEnemies.Select(x => (x.enemyType, (float)x.rarity)));
+                if (enemyType != null && enemyType.MaxCount == 1 && RoundManager.Instance.SpawnedEnemies.Any(x => x.enemyType == enemyType))
+                {
+                    enemyType = null;
+                }
+
                 var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].transform.position, -1, -1, enemyType);
                 if (((GameObject)NetObjRef).TryGetComponent(out EnemyAI enemyAI) && enemyAI.agent != null)
                 {

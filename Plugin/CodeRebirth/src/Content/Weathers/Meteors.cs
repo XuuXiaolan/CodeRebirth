@@ -37,11 +37,6 @@ public class Meteors : FallingObjectBehaviour
         StartCoroutine(UpdateAudio()); // Make sure audio works correctly on the first frame.
         FireTrail?.SetActive(true);
     }
-    protected override float CalculateTravelTime(float distance)
-    {
-        initialSpeed = Plugin.ModConfig.ConfigMeteorSpeed.Value;
-        return Mathf.Sqrt(2 * distance / initialSpeed);  // Time to reach the target, adjusted for acceleration
-    }
 
     public void SetupAsLooping(bool isBig)
     {

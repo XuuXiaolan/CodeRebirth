@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
-public class SmallRigoManager : NetworkBehaviour
+public class SmallRigoManager : MonoBehaviour
 {
     public GoldRigo goldRigo = null!;
     public int numberOfSmallRigos = 20;
@@ -16,12 +16,7 @@ public class SmallRigoManager : NetworkBehaviour
 
     public void Start()
     {
-        if (ItemHandler.Instance.XuAndRigo == null)
-        {
-            Plugin.Logger.LogError($"How the fuck");
-            return;
-        }
-
+        goldRigo = this.gameObject.GetComponent<GoldRigo>();
         smallRigoPrefab = ItemHandler.Instance.XuAndRigo.SmallRigoPrefab;
         StartCoroutine(SpawnSmallRigos(numberOfSmallRigos));
         // Spawn and hide the SmallRigo's on the following conditions: we're in orbit, leaving and/or landing whilst the goldrigo isnt in the ship
@@ -36,8 +31,8 @@ public class SmallRigoManager : NetworkBehaviour
                 if (smallRigo == null) continue;
                 Destroy(smallRigo);
             }
-            if (!IsServer) return;
-            this.NetworkObject.Despawn();
+            if (!NetworkManager.Singleton.IsServer) return;
+            Destroy(this);
             return;
         }
 
@@ -63,7 +58,11 @@ public class SmallRigoManager : NetworkBehaviour
         while (smallRigosActive.Count < numberOfSmallRigos)
         {
             yield return new WaitForSeconds(0.1f);
-            GameObject smallRigo = Instantiate(smallRigoPrefab, goldRigo.transform.position, goldRigo.transform.rotation, null);
+            if (goldRigo == null)
+            {
+                Plugin.Logger.LogError($"GoldRigo is null");
+            }
+            GameObject smallRigo = Instantiate(smallRigoPrefab, goldRigo.transform.position, goldRigo.transform.rotation);
             smallRigosActive.Add(smallRigo.GetComponent<SmallRigo>());
         }
         initalizing = false;
@@ -86,20 +85,20 @@ public class SmallRigoManager : NetworkBehaviour
         {
             yield return null;
             Plugin.ExtendedLogging($"SmallRigo: {smallRigo.transform.position}");
-            smallRigo.smartAgentNavigator.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 3, default));
+            smallRigo.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 3, default));
         }
         while (active)
         {
             foreach (SmallRigo smallRigo in smallRigosActive)
             {
                 yield return null;
-                if (!smallRigo.smartAgentNavigator.agent.isOnNavMesh)
+                if (smallRigo.agent.path.status == UnityEngine.AI.NavMeshPathStatus.PathPartial || smallRigo.agent.path.status == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
                 {
-                    if (!smallRigo.smartAgentNavigator.agent.enabled)
+                    if (!smallRigo.agent.enabled)
                     {
-                        smallRigo.smartAgentNavigator.agent.enabled = true;
+                        smallRigo.agent.enabled = true;
                     }
-                    smallRigo.smartAgentNavigator.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 5, default));
+                    smallRigo.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 5, default));
                 }
                 float distanceToKing = Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position);
                 if (goldRigo.playerHeldBy != null)
@@ -146,10 +145,9 @@ public class SmallRigoManager : NetworkBehaviour
         }
     }
 
-    public override void OnNetworkDespawn()
+    public void OnDestroy()
     {
-        base.OnNetworkDespawn();
-        if (IsServer && goldRigo != null && goldRigo.IsSpawned)
+        if (NetworkManager.Singleton.IsServer && goldRigo != null && goldRigo.IsSpawned)
         {
             goldRigo.NetworkObject.Despawn(true);
         }
