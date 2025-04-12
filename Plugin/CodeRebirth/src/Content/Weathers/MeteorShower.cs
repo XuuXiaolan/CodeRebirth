@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
 
@@ -191,6 +192,7 @@ public class MeteorShower : CodeRebirthWeathers
 
     public void SpawnMeteor(Vector3 target, GameObject? overridePrefab = null)
     {
+        Plugin.ExtendedLogging("spawning meteor");
         if (target == Vector3.zero)
         {
             Plugin.Logger.LogWarning("Target is zero, not spawning meteor");
@@ -210,11 +212,7 @@ public class MeteorShower : CodeRebirthWeathers
             origin = CalculateVector(target);
         }
 
-        Meteors meteor = Instantiate(overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab, origin, Quaternion.identity).GetComponent<Meteors>();
-        meteor.NetworkObject.OnSpawn(() =>
-        {
-            meteor.SetupMeteorClientRpc(origin, target);
-        });
-        meteor.NetworkObject.Spawn();
+        GameObject prefab = overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab;
+        CodeRebirthUtils.Instance.CreateFallingObject<Meteors>(prefab, origin, target);
     }
 }

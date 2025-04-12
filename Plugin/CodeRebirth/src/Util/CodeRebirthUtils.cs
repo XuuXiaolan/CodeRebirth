@@ -8,6 +8,7 @@ using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
 using UnityEngine.Rendering.HighDefinition;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 
 namespace CodeRebirth.src.Util;
@@ -266,5 +267,20 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public void ResetEntrancePointsClientRpc()
     {
         entrancePoints = [];
+    }
+
+    public T CreateFallingObject<T>(GameObject prefab, Vector3 origin, Vector3 target) where T : FallingObjectBehaviour
+    {
+        Plugin.ExtendedLogging($"creating falling object: {prefab.name} going from {origin} to {target}");
+        GameObject gameObject = Instantiate(prefab, origin, Quaternion.identity);
+        T fallingObjectBehaviour = gameObject.GetComponent<T>();
+        
+        fallingObjectBehaviour.NetworkObject.OnSpawn(() =>
+        {
+            fallingObjectBehaviour.SetupFallingObjectClientRPC(origin, target);
+        });
+        fallingObjectBehaviour.NetworkObject.Spawn();
+
+        return fallingObjectBehaviour;
     }
 }
