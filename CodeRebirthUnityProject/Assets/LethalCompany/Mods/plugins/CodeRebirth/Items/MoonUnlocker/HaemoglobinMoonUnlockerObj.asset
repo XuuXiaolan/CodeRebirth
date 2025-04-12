@@ -19,7 +19,7 @@ MonoBehaviour:
   twoHandedAnimation: 1
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 1
-  weight: 1.1
+  weight: 1.047619
   itemIsTrigger: 1
   holdButtonUse: 0
   itemSpawnsOnGround: 1
@@ -28,8 +28,8 @@ MonoBehaviour:
   creditsWorth: 0
   lockedInDemo: 0
   highestSalePercentage: 0
-  maxValue: 200
-  minValue: 100
+  maxValue: 0
+  minValue: 0
   spawnPrefab: {fileID: 536916751341801750, guid: dc395dbd7cbc28e4a8b7f750ce01b101,
     type: 3}
   requiresBattery: 0
@@ -52,12 +52,12 @@ MonoBehaviour:
   saveItemVariable: 0
   isDefensiveWeapon: 0
   toolTips: []
-  verticalOffset: 0
+  verticalOffset: 0.1
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
-  restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  restingRotation: {x: -90, y: 0, z: 90}
+  rotationOffset: {x: 0, y: 100, z: 4}
+  positionOffset: {x: 0.2, y: -0.2, z: 0.4}
   meshOffset: 0
   meshVariants: []
   materialVariants: []
