@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -18,7 +19,16 @@ public class Nancy : CodeRebirthEnemyAI
     private AudioClipsWithTime _idleAudioClipsWithTime = null!;
 
     [SerializeField]
+    private AudioClip[] _spawnVoicelines = [];
+
+    [SerializeField]
     private AudioClip[] _detectInjuredPlayerVoicelines = [];
+
+    [SerializeField]
+    private AudioClip[] _specialDetectInjuredPlayerVoicelines = [];
+
+    [SerializeField]
+    private ulong[] _baldPlayerSteamIds = [];
 
     [SerializeField]
     private AudioClip[] _healFailVoicelines = [];
@@ -52,6 +62,7 @@ public class Nancy : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        PlayVoiceline(_spawnVoicelines);
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 30f);
     }
 
@@ -87,8 +98,8 @@ public class Nancy : CodeRebirthEnemyAI
         float distance = Vector3.Distance(transform.position, localPlayer.transform.position);
         if (distance < 30 && smartAgentNavigator.CanPathToPoint(this.transform.position, localPlayer.transform.position) <= 20f)
         {
-            DoBoolAnimationServerRpc(HealModeAnimation, true);
             SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
+            DoBoolAnimationServerRpc(HealModeAnimation, true);
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)NancyState.ChasingHealTarget);
         }
@@ -272,6 +283,11 @@ public class Nancy : CodeRebirthEnemyAI
 
     public void DetectPlayerAnimationEvent()
     {
+        if (targetPlayer != null && _baldPlayerSteamIds.Contains(targetPlayer.playerSteamId))
+        {
+            PlayVoiceline(_specialDetectInjuredPlayerVoicelines);
+            return;
+        }
         PlayVoiceline(_detectInjuredPlayerVoicelines);
     }
 
