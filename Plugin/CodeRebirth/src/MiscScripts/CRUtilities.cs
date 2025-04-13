@@ -306,6 +306,20 @@ public class CRUtilities
         return selectedObject;
     }
 
+    public static Vector3 CalculateAverageLandNodePosition(IEnumerable<GameObject> nodes)
+    {
+        Vector3 sumPosition = Vector3.zero;
+        int count = 0;
+
+        foreach (GameObject node in nodes)
+        {
+            sumPosition += node.transform.position;
+            count++;
+        }
+
+        return count > 0 ? sumPosition / count : Vector3.zero;
+    }
+
     public static IEnumerator ForcePlayerLookup(PlayerControllerB player, int intensity)
     {
         float totalTime = 1f / intensity;

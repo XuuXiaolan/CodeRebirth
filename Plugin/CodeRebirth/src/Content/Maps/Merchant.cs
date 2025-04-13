@@ -310,7 +310,7 @@ public class Merchant : NetworkBehaviour
             if (selectedItem == null)
             {
                 Plugin.ExtendedLogging("Item selection failed for barrel at " + spawnPosition + "Assuming Random item");
-                Item item = GetRandomVanillaItem();
+                Item item = GetRandomVanillaItem(false);
                 selectedItem = item;
             }
 
@@ -321,9 +321,13 @@ public class Merchant : NetworkBehaviour
         }
     }
 
-    public static Item GetRandomVanillaItem()
+    public static Item GetRandomVanillaItem(bool excludeShopItems)
     {
         var vanillaItems = LethalLevelLoader.OriginalContent.Items;
+        if (excludeShopItems)
+        {
+            vanillaItems = vanillaItems.Where(x => x.isScrap).ToList();
+        }
         int randomIndex = UnityEngine.Random.Range(0, vanillaItems.Count);
         return vanillaItems[randomIndex];
     }

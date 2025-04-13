@@ -571,7 +571,7 @@ public class CodeRebirthConfig
                                             ));
         ConfigMeteorSpeed = configFile.Bind("MeteorShower Options",
                                             "Meteors | Speed",
-                                            30f,
+                                            50f,
                                             new ConfigDescription(
                                                 "Speed of meteors.",
                                                 new AcceptableValueRange<float>(0, 1000f)

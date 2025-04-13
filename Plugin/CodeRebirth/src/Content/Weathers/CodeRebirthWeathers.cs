@@ -6,21 +6,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Weathers;
 public class CodeRebirthWeathers : MonoBehaviour
 {
-
-    public Vector3 CalculateAverageLandNodePosition(IEnumerable<GameObject> nodes)
-    {
-        Vector3 sumPosition = Vector3.zero;
-        int count = 0;
-
-        foreach (GameObject node in nodes)
-        {
-            sumPosition += node.transform.position;
-            count++;
-        }
-
-        return count > 0 ? sumPosition / count : Vector3.zero;
-    }
-
     public IEnumerable<GameObject> CullNodesByProximity(IEnumerable<GameObject> nodes, float minDistance = 5f, bool cullDoors = true, bool cullShip = false, float shipCullDistance = 20f)
     {
         var nodeList = new List<GameObject>(nodes);

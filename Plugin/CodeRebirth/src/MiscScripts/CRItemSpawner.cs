@@ -10,8 +10,7 @@ namespace CodeRebirth.src.MiscScripts;
 
 public enum CRItemSpawnerType
 {
-    Common,
-    Rare,
+    Vanilla,
     Special,
 }
 
@@ -25,6 +24,7 @@ public class ItemNameWithRarity
 public class CRItemSpawner : MonoBehaviour
 {
     public CRItemSpawnerType spawnerType;
+    public float spawnChance;
 
     [Header("Special Items")]
     public List<ItemNameWithRarity> specialItemNamesWithRarity = new();
@@ -34,11 +34,8 @@ public class CRItemSpawner : MonoBehaviour
         if (!NetworkManager.Singleton.IsServer) return;
         switch (spawnerType)
         {
-            case CRItemSpawnerType.Common:
-                DoCommonItemSpawn();
-                break;
-            case CRItemSpawnerType.Rare:
-                DoRareItemSpawn();
+            case CRItemSpawnerType.Vanilla:
+                DoVanillaItemSpawn();
                 break;
             case CRItemSpawnerType.Special:
                 DoSpecialItemSpawn();
@@ -46,27 +43,18 @@ public class CRItemSpawner : MonoBehaviour
         }
     }
 
-    public void DoCommonItemSpawn()
+    public void DoVanillaItemSpawn()
     {
-        if (UnityEngine.Random.Range(0, 100) < 75)
+        if (UnityEngine.Random.Range(0, 100) < spawnChance)
             return;
 
-        Item? item = Merchant.GetRandomVanillaItem();
-        CodeRebirthUtils.Instance.SpawnScrap(item, transform.position, false, true, 0);
-    }
-
-    public void DoRareItemSpawn()
-    {
-        if (UnityEngine.Random.Range(0, 100) < 10)
-            return;
-
-        Item? item = Merchant.GetRandomVanillaItem();
+        Item? item = Merchant.GetRandomVanillaItem(false);
         CodeRebirthUtils.Instance.SpawnScrap(item, transform.position, false, true, 0);
     }
 
     public void DoSpecialItemSpawn()
     {
-        if (UnityEngine.Random.Range(0, 100) < 5)
+        if (UnityEngine.Random.Range(0, 100) < spawnChance)
             return;
 
         List<(Item item, float rarity)> specialItems = new();

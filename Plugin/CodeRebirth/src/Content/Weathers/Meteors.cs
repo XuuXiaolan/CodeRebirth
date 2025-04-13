@@ -10,7 +10,6 @@ namespace CodeRebirth.src.Content.Weathers;
 public class Meteors : FallingObjectBehaviour
 {
     [Header("Properties")]
-    public float initialSpeed = 50f;
     public float chanceToSpawnScrap;
 
     [Header("Audio")]
@@ -20,7 +19,7 @@ public class Meteors : FallingObjectBehaviour
 
     [Header("Graphics")]
     public GameObject? FireTrail = null;
-    
+
     [Header("Events")]
     public UnityEvent _onMeteorLand;
 
@@ -71,19 +70,19 @@ public class Meteors : FallingObjectBehaviour
             }
             else
             {
-                NormalTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
-                CloseTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
-                ImpactAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+                NormalTravelAudio.volume = Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
+                CloseTravelAudio.volume = Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
+                ImpactAudio.volume = Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
             }
             if (GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed)
             {
-                NormalTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value) * Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
-                CloseTravelAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value) * Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
-                ImpactAudio.volume = Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value) * Mathf.Clamp01(Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+                NormalTravelAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
+                CloseTravelAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
+                ImpactAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
             }
             if (((1 - Progress) * _travelTime) <= 4.106f && !CloseTravelAudio.isPlaying)
             {
-                NormalTravelAudio.volume = Mathf.Clamp01(0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value);
+                NormalTravelAudio.volume = 0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
                 CloseTravelAudio.Play();
             }
         }

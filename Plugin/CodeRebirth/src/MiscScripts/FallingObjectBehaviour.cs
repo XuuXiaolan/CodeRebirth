@@ -1,8 +1,16 @@
-﻿using Unity.Netcode;
+﻿using CodeRebirth.src.Util.Extensions;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.MiscScripts;
+public enum Direction
+{
+    East,
+    West,
+    North,
+    South,
+}
 
 public class FallingObjectBehaviour : NetworkBehaviour
 {
@@ -20,6 +28,33 @@ public class FallingObjectBehaviour : NetworkBehaviour
     
     [SerializeField]
     private UnityEvent _onImpact;
+
+    public Vector3 CalculateRandomSkyOrigin(Direction direction, Vector3 target, System.Random random)
+    {
+        float x = 0, z = 0;
+        float distanceX = random.NextFloat(250, 500);
+        float distanceZ = random.NextFloat(250, 500);
+
+        switch (direction)
+        {
+            case Direction.East:
+                x = distanceX;  // Move east
+                break;
+            case Direction.West:
+                x = -distanceX; // Move west
+                break;
+            case Direction.North:
+                z = distanceZ;  // Move north
+                break;
+            case Direction.South:
+                z = -distanceZ; // Move south
+                break;
+        }
+
+        float y = random.NextFloat(600, 900); // Fixed vertical range
+
+        return target + new Vector3(x, y, z);
+    }
     
     protected virtual void Update()
     {
@@ -39,7 +74,6 @@ public class FallingObjectBehaviour : NetworkBehaviour
             transform.position = _target;
             _isMoving = false;
             OnImpact();
-            
             return;
         }
 
@@ -64,8 +98,19 @@ public class FallingObjectBehaviour : NetworkBehaviour
         _isMoving = false;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void SetupFallingObjectServerRpc(Vector3 origin, Vector3 target, float speed)
+    {
+        SetupFallingObjectClientRpc(origin, target, speed);
+    }
+
     [ClientRpc]
-    public void SetupFallingObjectClientRPC(Vector3 origin, Vector3 target, float speed)
+    public void SetupFallingObjectClientRpc(Vector3 origin, Vector3 target, float speed)
+    {
+        SetupFallingObject(origin, target, speed);
+    }
+
+    public void SetupFallingObject(Vector3 origin, Vector3 target, float speed)
     {
         _origin = origin;
         _target = target;
@@ -73,12 +118,13 @@ public class FallingObjectBehaviour : NetworkBehaviour
         float distance = Vector3.Distance(_origin, _target);
         Ray ray = new Ray(_origin, _target - _origin);
         Physics.Raycast(ray, out RaycastHit hit, distance + 5f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
-        Plugin.ExtendedLogging($"Raycast hit: {hit.point} with normal: {hit.normal}");
+        Plugin.ExtendedLogging($"Raycast started at: {_origin} and wanted to end at: {_target}, hit: {hit.point} with normal: {hit.normal}");
         _target = hit.point;
         _normal = hit.normal;
         distance = Vector3.Distance(_origin, _target);
         _travelTime = CalculateTravelTime(distance);
-        
+        Plugin.ExtendedLogging($"Travel Time: {_travelTime}");
+
         _isMoving = true;
         transform.LookAt(_target);
         OnSetup();

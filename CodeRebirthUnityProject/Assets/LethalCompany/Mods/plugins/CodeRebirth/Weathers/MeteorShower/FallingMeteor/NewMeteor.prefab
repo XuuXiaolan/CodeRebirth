@@ -45,7 +45,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 540004.6
+  m_Intensity: 1080000
   m_Range: 200
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_VolumetricDimmer: 1
   m_LightUnit: 2
   m_FadeDistance: 10000
-  m_VolumetricFadeDistance: 10000
+  m_VolumetricFadeDistance: 40
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
@@ -689,12 +689,6 @@ MonoBehaviour:
   m_Script: {fileID: -1657131812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialSpeed: 50
-  chanceToSpawnScrap: 1
-  ImpactAudio: {fileID: 1489504212111590425}
-  NormalTravelAudio: {fileID: 6611196162246665466}
-  CloseTravelAudio: {fileID: 6930150719937817887}
-  FireTrail: {fileID: 3755270434050451099}
   animationCurve:
     serializedVersion: 2
     m_Curve:
@@ -719,6 +713,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _onImpact:
+    m_PersistentCalls:
+      m_Calls: []
+  chanceToSpawnScrap: 1
+  ImpactAudio: {fileID: 1489504212111590425}
+  NormalTravelAudio: {fileID: 6611196162246665466}
+  CloseTravelAudio: {fileID: 6930150719937817887}
+  FireTrail: {fileID: 3755270434050451099}
   _onMeteorLand:
     m_PersistentCalls:
       m_Calls:
@@ -1388,6 +1390,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FallenMeteor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c479935643400aa46bdab8f6755ed9fe,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c479935643400aa46bdab8f6755ed9fe,
         type: 3}

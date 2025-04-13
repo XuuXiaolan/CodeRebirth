@@ -34,11 +34,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         Attached,
         SwitchingTarget
     }
-    // todo: spawn animation, wanders around slowly.
-    // todo: when spotted, stops moving, does spot animation, attaches to player back once player looks away.
-    // todo: sits on the players back until someone spots the rabbit.
-    // todo: if seen, kills current player and transfers to next player.
-    // todo: if player dies, goes back to spawning phase.
+
     public override void Start()
     {
         base.Start();
@@ -154,17 +150,17 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private IEnumerator KillPlayerAndSwitchTarget(PlayerControllerB newTargetPlayer)
     {
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.SwitchingTarget);
-        UnhideRendererClientRpc();
+        // UnhideRendererClientRpc();
         targetPlayer.DamagePlayerFromOtherClientServerRpc(9999, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, newTargetPlayer));
         _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer));
         yield return _attachRoutine;
     }
 
-    [ClientRpc]
+    /*[ClientRpc]
     public void UnhideRendererClientRpc()
     {
         skinnedMeshRenderers[0].enabled = true;
-    }
+    }*/
 
     private IEnumerator SwitchToIdle()
     {
@@ -217,19 +213,19 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public IEnumerator HideForTargetPlayer()
     {
         yield return new WaitForSeconds(_latchOnAnimation.length);
-        if (targetPlayer == null || targetPlayer.isPlayerDead || currentBehaviourStateIndex != (int)4)
+        if (targetPlayer == null || targetPlayer.isPlayerDead || currentBehaviourStateIndex != (int)RabbitMagicianState.Attached)
             yield break;
 
-        HideModelForTargetPlayerServerRpc();
+        // HideModelForTargetPlayerServerRpc();
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    /*[ServerRpc(RequireOwnership = false)]
     private void HideModelForTargetPlayerServerRpc()
     {
         HideModelForTargetPlayerClientRpc();
-    }
+    }*/
 
-    [ClientRpc]
+    /*[ClientRpc]
     private void HideModelForTargetPlayerClientRpc()
     {
         skinnedMeshRenderers[0].enabled = true;
@@ -237,6 +233,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
             return;
 
         skinnedMeshRenderers[0].enabled = false;
-    }
+    }*/
     #endregion
 }

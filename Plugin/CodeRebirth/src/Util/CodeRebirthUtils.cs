@@ -14,7 +14,6 @@ using GameNetcodeStuff;
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
 {
-    public ExplosionCreator ExplosionCreator = null!;
     public Material WireframeMaterial = null!;
     public Shader SeeThroughShader = null!;
     public Volume TimeSlowVolume = null!;
@@ -283,7 +282,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
         fallingObjectBehaviour.NetworkObject.OnSpawn(() =>
         {
-            fallingObjectBehaviour.SetupFallingObjectClientRPC(origin, target, speed);
+            fallingObjectBehaviour.SetupFallingObjectServerRpc(origin, target, speed);
         });
         fallingObjectBehaviour.NetworkObject.Spawn();
 

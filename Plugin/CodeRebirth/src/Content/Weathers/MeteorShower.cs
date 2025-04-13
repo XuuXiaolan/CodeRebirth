@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
@@ -116,7 +117,7 @@ public class MeteorShower : CodeRebirthWeathers
 
     private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null) // todo: make em rotate
     {
-        Vector3 averageLocation = CalculateAverageLandNodePosition(nodes);
+        Vector3 averageLocation = CRUtilities.CalculateAverageLandNodePosition(nodes);
         Vector3 centralLocation = averageLocation + new Vector3(0, random.NextFloat(150, 200), 0);
         for (int i = 0; i < amount; i++)
         {
@@ -152,7 +153,6 @@ public class MeteorShower : CodeRebirthWeathers
         yield return new WaitForSeconds(25f); // inital delay to get everything started
         while (true)
         {
-
             for (int i = 0; i < random.Next(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++)
             {
                 SpawnMeteor(GetRandomTargetPosition(nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
@@ -163,7 +163,7 @@ public class MeteorShower : CodeRebirthWeathers
         }
     }
 
-    public Vector3 CalculateVector(Vector3 target)
+    public Vector3 CalculateSkyOrigin(Vector3 target)
     {
         float x = 0, z = 0;
         float distanceX = random.NextFloat(250, 500);
@@ -209,7 +209,7 @@ public class MeteorShower : CodeRebirthWeathers
         }
         else
         {
-            origin = CalculateVector(target);
+            origin = CalculateSkyOrigin(target);
         }
 
         GameObject prefab = overridePrefab ?? WeatherHandler.Instance.Meteorite.MeteorPrefab;
