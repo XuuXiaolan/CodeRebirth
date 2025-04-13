@@ -110,8 +110,8 @@ public class CompactorToby : NetworkBehaviour, IHittable
                     enemyType = null;
                 }
 
-                var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].transform.position, -1, -1, enemyType);
-                if (((GameObject)NetObjRef).TryGetComponent(out EnemyAI enemyAI) && enemyAI.agent != null)
+                var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].transform.position, -1, -3, enemyType);
+                if (((GameObject)NetObjRef).TryGetComponent(out EnemyAI enemyAI) && enemyAI.agent != null && enemyAI.agent.enabled)
                 {
                     var component = enemyAI.gameObject.AddComponent<ForceEnemyToDestination>();
                     component.enemy = enemyAI;

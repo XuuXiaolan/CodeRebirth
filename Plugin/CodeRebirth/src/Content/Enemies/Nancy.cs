@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -7,18 +9,39 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class Nancy : CodeRebirthEnemyAI
 {
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource _rollingSource = null!;
+
+    [Header("Voicelines")]
+    [SerializeField]
+    private AudioClipsWithTime _idleAudioClipsWithTime = null!;
+
+    [SerializeField]
+    private AudioClip[] _detectInjuredPlayerVoicelines = [];
+
+    [SerializeField]
+    private AudioClip[] _healFailVoicelines = [];
+
+    [SerializeField]
+    private AudioClip[] _healSuccessVoiceline = [];
+
+    [Header("Sound")]
+    [SerializeField]
+    private AudioSource _healDuringSource = null!;
 
     private float checkLengthTimer = 2f;
     private float checkTimer = 0f;
     private Vector3 playersLastPosition = Vector3.zero;
     private float healTimer = 1f;
     private float failTimer = 1f;
-
+    private float idleTimer = 1f;
 
     private static readonly int HealModeAnimation = Animator.StringToHash("HealMode"); // Bool
     private static readonly int HealingPlayerAnimation = Animator.StringToHash("HealingPlayer"); // Bool
     private static readonly int FailHealAnimation = Animator.StringToHash("FailHeal"); // Trigger
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+
     public enum NancyState
     {
         Wandering,
@@ -37,14 +60,30 @@ public class Nancy : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
+        if (isEnemyDead)
+            return;
+
+        idleTimer -= Time.deltaTime;
+        if (idleTimer <= 0f)
+        {
+            PlayVoiceline(_idleAudioClipsWithTime.audioClips);
+            idleTimer = enemyRandom.NextFloat(_idleAudioClipsWithTime.minTime, _idleAudioClipsWithTime.maxTime);
+        }
+
+        _rollingSource.volume = creatureAnimator.GetFloat(RunSpeedFloat) > 0.01 ? 1 : 0;
 
         checkTimer -= Time.deltaTime;
-        if (targetPlayer != null || currentBehaviourStateIndex != (int)NancyState.Wandering || checkTimer > 0) return;
+        if (targetPlayer != null || currentBehaviourStateIndex != (int)NancyState.Wandering || checkTimer > 0)
+            return;
 
         checkTimer = checkLengthTimer;
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (localPlayer.isInsideFactory && isOutside || !isOutside && !localPlayer.isInsideFactory) return;
-        if (localPlayer.health >= 100) return;
+        if (localPlayer.isInsideFactory && isOutside || !isOutside && !localPlayer.isInsideFactory)
+            return;
+
+        if (localPlayer.health >= 100)
+            return;
+
         float distance = Vector3.Distance(transform.position, localPlayer.transform.position);
         if (distance < 30 && smartAgentNavigator.CanPathToPoint(this.transform.position, localPlayer.transform.position) <= 20f)
         {
@@ -59,6 +98,7 @@ public class Nancy : CodeRebirthEnemyAI
     {
         base.DoAIInterval();
         if (StartOfRound.Instance.allPlayersDead || isEnemyDead) return;
+
         failTimer -= AIIntervalTime;
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude);
         if (targetPlayer != null && targetPlayer.isPlayerDead)
@@ -122,6 +162,7 @@ public class Nancy : CodeRebirthEnemyAI
         {
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
+            HealPlayerSuccessServerRpc();
             SetTargetServerRpc(-1);
             smartAgentNavigator.StartSearchRoutine(this.transform.position, 30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
@@ -161,6 +202,32 @@ public class Nancy : CodeRebirthEnemyAI
     }
 
     #endregion
+
+    #region Misc Functions
+    [ServerRpc(RequireOwnership = false)]
+    private void StartHealingPlayerServerRpc()
+    {
+        StartHealingPlayerClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartHealingPlayerClientRpc()
+    {
+        _healDuringSource.Play();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void HealPlayerSuccessServerRpc()
+    {
+        HealPlayerSuccessClientRpc();
+    }
+
+    [ClientRpc]
+    private void HealPlayerSuccessClientRpc()
+    {
+        PlayVoiceline(_healSuccessVoiceline);
+    }
+
     [ServerRpc(RequireOwnership = false)]
     private void DoBoolAnimationServerRpc(int animationHash, bool value)
     {
@@ -186,4 +253,31 @@ public class Nancy : CodeRebirthEnemyAI
         yield return new WaitForSeconds(0.15f);
         player.disableMoveInput = false;
     }
+
+    private void PlayVoiceline(AudioClip[] voicelines)
+    {
+        creatureVoice.Stop();
+        AudioClip voiceLine = voicelines[enemyRandom.Next(voicelines.Length)];
+        creatureVoice.clip = voiceLine;
+        creatureVoice.Play();
+    }
+    #endregion
+
+    #region Animation Events
+
+    public void FailHealAnimationEvent()
+    {
+        PlayVoiceline(_healFailVoicelines);
+    }
+
+    public void DetectPlayerAnimationEvent()
+    {
+        PlayVoiceline(_detectInjuredPlayerVoicelines);
+    }
+
+    public void EndHealingAnimationEvent()
+    {
+        _healDuringSource.Stop();
+    }
+    #endregion
 }

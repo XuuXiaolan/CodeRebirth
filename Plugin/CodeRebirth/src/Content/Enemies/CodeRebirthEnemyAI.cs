@@ -219,9 +219,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         Vector3 directionToPlayer = (player.transform.position - mainTransform.position).normalized;
         if (Vector3.Dot(transform.forward, directionToPlayer) < dotThreshold)
             return false;
+
         float distanceToPlayer = Vector3.Distance(mainTransform.position, player.transform.position);
         if (Physics.Raycast(mainTransform.position, directionToPlayer, distanceToPlayer, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             return false;
+
         return true;
     }
 
