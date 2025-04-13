@@ -18,27 +18,27 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.7
-      inSlope: 0.7148185
-      outSlope: 0.7148185
+      value: 1
+      inSlope: 0.40959033
+      outSlope: 0.40959033
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.41968697
-      value: 1
-      inSlope: 0.22753006
-      outSlope: 0.22753006
+      time: 0.04798287
+      value: 1.0196533
+      inSlope: -0.3307274
+      outSlope: -0.3307274
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.84925884
-      inSlope: -0.25975835
-      outSlope: -0.25975835
+      value: 0
+      inSlope: -1.0710452
+      outSlope: -1.0710452
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -59,11 +59,11 @@ MonoBehaviour:
   requireNestObjectsToSpawn: 0
   enemyPrefab: {fileID: 4779950444079482818, guid: 4b61dc92b9949e040b26d6e6b476530b,
     type: 3}
-  PowerLevel: 3
+  PowerLevel: 2
   MaxCount: 1
   numberSpawned: 0
   nestsSpawned: 0
-  isOutsideEnemy: 0
+  isOutsideEnemy: 1
   isDaytimeEnemy: 0
   increasedChanceInterior: -1
   normalizedTimeInDayToLeave: 0
@@ -71,9 +71,9 @@ MonoBehaviour:
   doorSpeedMultiplier: 1
   stunGameDifficultyMultiplier: 0
   canBeStunned: 0
-  canDie: 0
+  canDie: 1
   canBeDestroyed: 1
-  destroyOnDeath: 1
+  destroyOnDeath: 0
   canSeeThroughFog: 1
   pushPlayerForce: 0.16
   pushPlayerDistance: 1.26
