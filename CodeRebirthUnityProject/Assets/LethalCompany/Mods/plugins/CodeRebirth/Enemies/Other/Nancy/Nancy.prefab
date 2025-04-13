@@ -632,11 +632,24 @@ MonoBehaviour:
   smartAgentNavigator: {fileID: 3442137185753197099}
   _rollingSource: {fileID: 4590783949368486007}
   _idleAudioClipsWithTime:
-    audioClips: []
-    minTime: 7.5
-    maxTime: 12.5
-  _detectInjuredPlayerVoicelines: []
-  _healFailVoicelines: []
+    audioClips:
+    - {fileID: 8300000, guid: d4f97e6187e7b714d8996899e4607cf0, type: 3}
+    - {fileID: 8300000, guid: 60c92edb39c071c4db3e05adf73669fb, type: 3}
+    - {fileID: 8300000, guid: 9fefcf17bb1f1964bb37d915e76562cc, type: 3}
+    minTime: 25
+    maxTime: 60
+  _spawnVoicelines:
+  - {fileID: 8300000, guid: 67c5c3c67cde9514685c5cdfce4c8c21, type: 3}
+  _detectInjuredPlayerVoicelines:
+  - {fileID: 8300000, guid: e14f6022252f30444aeb417573233d70, type: 3}
+  - {fileID: 8300000, guid: f6dc609c58b829b4f9b03d8b3d9cac75, type: 3}
+  - {fileID: 8300000, guid: 4011d537956134240a7bdbf293b514d8, type: 3}
+  - {fileID: 8300000, guid: 04e17c9f7a419bd4fb4aa3f4cebc49f6, type: 3}
+  _specialDetectInjuredPlayerVoicelines:
+  - {fileID: 8300000, guid: 55539843e7988454d834f3dab8c2e455, type: 3}
+  _baldPlayerSteamIds: a5ab0b0e0100100137838307010010010d150c3d01001001
+  _healFailVoicelines:
+  - {fileID: 8300000, guid: e0d5de6efaf42ff49888c26b21fef610, type: 3}
   _healSuccessVoiceline: []
   _healDuringSource: {fileID: 6411237851739995076}
 --- !u!114 &890549359934255411
@@ -1452,7 +1465,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: a2f2d46ae9169ac41896147ad4d1f0c1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
