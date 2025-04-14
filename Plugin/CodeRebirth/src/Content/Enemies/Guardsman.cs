@@ -10,7 +10,7 @@ public class Guardsman : CodeRebirthEnemyAI
     [SerializeField]
     private float _enemySizeThreshold = 69;
 
-    private bool killingEnemy = false;
+    private bool _killingLargeEnemy = false;
     private float _bufferTimer = 0f;
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
@@ -32,7 +32,7 @@ public class Guardsman : CodeRebirthEnemyAI
     {
         base.Update();
 
-        if (killingEnemy && targetEnemy != null)
+        if (_killingLargeEnemy && targetEnemy != null)
         {
             targetEnemy.transform.position = _enemyHoldingPoint.position;
         }
@@ -61,7 +61,7 @@ public class Guardsman : CodeRebirthEnemyAI
         }
         else
         {
-            HandleKillingEnemy(targetEnemy);
+            _killingLargeEnemy(targetEnemy);
         }
     }
 
@@ -83,7 +83,7 @@ public class Guardsman : CodeRebirthEnemyAI
         }
     }
 
-    private void HandleKillingEnemy(EnemyAI _targetEnemy)
+    private void _killingLargeEnemy(EnemyAI _targetEnemy)
     {
         smartAgentNavigator.DoPathingToDestination(_targetEnemy.transform.position);
 
@@ -127,7 +127,7 @@ public class Guardsman : CodeRebirthEnemyAI
     #region Animation Events
     public void StartKillLargeEnemyAnimEvent()
     {
-        killingEnemy = true;
+        _killingLargeEnemy = true;
     }
 
     public void SmashEnemyAnimEvent()
@@ -146,7 +146,7 @@ public class Guardsman : CodeRebirthEnemyAI
 
     public void RipApartEnemyAnimEvent()
     {
-        killingEnemy = false;
+        _killingLargeEnemy = false;
         if (targetEnemy == null)
             return;
 

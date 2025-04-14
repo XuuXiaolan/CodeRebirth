@@ -578,7 +578,11 @@ MonoBehaviour:
   - assetBundleName: merchantassets
     configName: Merchant
     weathers: []
-    enemies: []
+    enemies:
+    - entityName: Guardsman
+      spawnWeights: 
+      powerLevel: 0
+      maxSpawnCount: 1
     items:
     - entityName: CreditPad100cc
       spawnWeights: 
