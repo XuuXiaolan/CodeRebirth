@@ -24,6 +24,8 @@ public class Guardsman : CodeRebirthEnemyAI
 
         foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
         {
+            if (enemyType.enemyPrefab == null || enemyType.enemyPrefab.GetComponent<EnemyAI>() == null)
+                continue;
             Plugin.ExtendedLogging($"{enemyType.enemyName} has Size: {CalculateEnemySize(enemyType.enemyPrefab.GetComponent<EnemyAI>())}");
         }
     }
@@ -119,6 +121,8 @@ public class Guardsman : CodeRebirthEnemyAI
 
     private float CalculateEnemySize(EnemyAI enemyAi)
     {
+        if (enemyAi.agent == null)
+            return 10f;
         float agentSize = 3.14159f * enemyAi.agent.radius * enemyAi.agent.radius * enemyAi.agent.height * (enemyAi.transform.localScale.x * enemyAi.transform.localScale.y * enemyAi.transform.localScale.z);
         return agentSize;
     }
