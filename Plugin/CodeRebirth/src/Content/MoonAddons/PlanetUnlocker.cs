@@ -13,7 +13,7 @@ public class PlanetUnlocker : GrabbableObject
     public override void Start()
     {
         base.Start();
-        LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == moonSceneName).FirstOrDefault(), out ExtendedLevel? extendedLevel);
+        /*LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == moonSceneName).FirstOrDefault(), out ExtendedLevel? extendedLevel);
         if (extendedLevel != null)
         {
             HUDManager.Instance.DisplayTip("Success", $"Disabling routing to {moonSceneName}", false);
@@ -23,7 +23,7 @@ public class PlanetUnlocker : GrabbableObject
         else
         {
             HUDManager.Instance.DisplayTip("Error", $"Could not find moon {moonSceneName}.", true);
-        }
+        }*/
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)

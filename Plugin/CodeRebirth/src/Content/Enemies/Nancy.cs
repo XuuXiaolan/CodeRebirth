@@ -62,6 +62,7 @@ public class Nancy : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        idleTimer = enemyRandom.NextFloat(_idleAudioClipsWithTime.minTime, _idleAudioClipsWithTime.maxTime);
         PlayVoiceline(_spawnVoicelines);
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 30f);
     }
@@ -157,6 +158,7 @@ public class Nancy : CodeRebirthEnemyAI
         if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) <= agent.stoppingDistance)
         {
             CrippleTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
+            StartHealingPlayerServerRpc();
             SwitchToBehaviourServerRpc((int)NancyState.HealingTarget);
             playersLastPosition = targetPlayer.transform.position;
             agent.velocity = Vector3.zero;

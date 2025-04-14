@@ -623,16 +623,13 @@ public class Janitor : CodeRebirthEnemyAI
         if (isEnemyDead) return;
 
         // If a new player hits us, reduce HP further
-        if (playerWhoHit != null)
+        if (targetPlayer != null && targetPlayer == playerWhoHit && targetPlayer.disableMoveInput)
         {
-            if (targetPlayer != null && targetPlayer == playerWhoHit && targetPlayer.disableMoveInput)
-            {
 
-            }
-            else
-            {
-                enemyHP -= force;
-            }
+        }
+        else
+        {
+            enemyHP -= force;
         }
 
         // If we’re still alive, chase that player if we’re not already

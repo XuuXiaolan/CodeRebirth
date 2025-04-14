@@ -403,6 +403,10 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             agent.speed = _chasingSpeed;
             SwitchToBehaviourStateOnLocalClient((int)PeaceKeeperState.AttackingPlayer);
         }
+        else if (IsServer)
+        {
+            creatureNetworkAnimator.SetTrigger(BitchSlapAnimation);
+        }
         enemyHP -= force;
 
         if (IsOwner && enemyHP <= 0)
@@ -433,17 +437,18 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             Plugin.ExtendedLogging($"Bitch Slap hit {collider.name}");
             if (!collider.TryGetComponent(out IHittable iHittable))
                 continue;
-            if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect && enemyAICollisionDetect.mainScript.gameObject == gameObject)
-                continue;
             if (iHittable is PlayerControllerB player)
             {
                 Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 100f;
                 player.DamagePlayer(40, true, true, CauseOfDeath.Bludgeoning, 0, false, directionVector);
                 player.externalForceAutoFade += directionVector;
             }
-            else if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect1)
+            else if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
             {
-                enemyAICollisionDetect1.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, -1);
+                if (enemyAICollisionDetect.mainScript.gameObject == gameObject)
+                    continue;
+
+                enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, -1);
             }
             else
             {
@@ -471,11 +476,4 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         }
     }
     #endregion
-    // wanders around normally.
-    // but if it sees a player, it will follow them if they have a weapon.
-    // will leave a player alone if they pocket/dont have a weapon.
-    // if you attack something, it will kill you.
-    // it keeps the peace.
-    // it has a ranged minigun attack and a melee attack.
-    // melee attack has big knockback to go back to shooting minigun.
 }

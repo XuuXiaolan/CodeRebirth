@@ -186,10 +186,15 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             eyeTransform = eye;
         }
 
-        if (Vector3.Distance(eyeTransform.position, pos) >= range || Physics.Linecast(eyeTransform.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore)) return false;
+        float distance = Vector3.Distance(eyeTransform.position, pos);
+        if (distance < proximityAwareness)
+            return true;
+
+        if (distance >= range || Physics.Linecast(eyeTransform.position, pos, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            return false;
 
         Vector3 to = pos - eyeTransform.position;
-        return Vector3.Angle(eyeTransform.forward, to) < width || Vector3.Distance(transform.position, pos) < proximityAwareness;
+        return Vector3.Angle(eyeTransform.forward, to) < width;
     }
 
     public bool PlayerLookingAtEnemy(PlayerControllerB player, float dotProductThreshold)
