@@ -61,7 +61,7 @@ public class Guardsman : CodeRebirthEnemyAI
         }
         else
         {
-            _killingLargeEnemy(targetEnemy);
+            KillEnemy(targetEnemy);
         }
     }
 
@@ -83,7 +83,7 @@ public class Guardsman : CodeRebirthEnemyAI
         }
     }
 
-    private void _killingLargeEnemy(EnemyAI _targetEnemy)
+    private void KillEnemy(EnemyAI _targetEnemy)
     {
         smartAgentNavigator.DoPathingToDestination(_targetEnemy.transform.position);
 
