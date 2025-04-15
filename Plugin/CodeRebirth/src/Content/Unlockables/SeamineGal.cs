@@ -704,6 +704,19 @@ public class SeamineGalAI : GalAI
     #region State Changes
     private void HandleStateInactiveChange()
     {
+        if (inHugAnimation)
+        {
+            inHugAnimation = false;
+            huggingOwner = false;
+            EnablePhysics(!physicsTemporarilyDisabled);
+            physicsTemporarilyDisabled = false;
+            if (ownerPlayer != null)
+            {
+                ownerPlayer.enteringSpecialAnimation = false;
+                ownerPlayer.disableMoveInput = false;                
+            }
+        }
+
         ownerPlayer = null;
         Agent.enabled = false;
         GalSFX.PlayOneShot(squeezeFishSound);

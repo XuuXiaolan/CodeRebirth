@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
-using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -33,15 +32,14 @@ public class CruiserGalAI : GalAI
     private bool flying = false;
     private State galState = State.Inactive;
     private Coroutine? chestCollisionToggleCoroutine = null;
-    private readonly static int chestCollisionToggleAnimation = Animator.StringToHash("hitBumper"); // Trigger
-    private readonly static int pullLeverAnimation = Animator.StringToHash("pullLever"); // Trigger
-    private readonly static int spinWheelAnimation = Animator.StringToHash("spinWheel"); // Trigger
-    private readonly static int randomAnimation = Animator.StringToHash("doRandomAnimation"); // Trigger
-    private readonly static int grabPlayerOntoSeatAnimation = Animator.StringToHash("putPlayerOnSeat"); // Trigger
-    private readonly static int danceAnimation = Animator.StringToHash("dancing"); // Bool
-    private readonly static int activatedAnimation = Animator.StringToHash("activated"); // Bool
-    private readonly static int flyAnimation = Animator.StringToHash("flying"); // Bool
-    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private static readonly int chestCollisionToggleAnimation = Animator.StringToHash("hitBumper"); // Trigger
+    private static readonly int pullLeverAnimation = Animator.StringToHash("pullLever"); // Trigger
+    private static readonly int spinWheelAnimation = Animator.StringToHash("spinWheel"); // Trigger
+    private static readonly int grabPlayerOntoSeatAnimation = Animator.StringToHash("putPlayerOnSeat"); // Trigger
+    private static readonly int danceAnimation = Animator.StringToHash("dancing"); // Bool
+    private static readonly int activatedAnimation = Animator.StringToHash("activated"); // Bool
+    private static readonly int flyAnimation = Animator.StringToHash("flying"); // Bool
+    private static readonly int runSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
     public enum State
     {
@@ -600,6 +598,12 @@ public class CruiserGalAI : GalAI
         SetFlying(false);
         ContainerGO.SetActive(false);
         Animator.SetBool(flyAnimation, false);
+        if (fixPlayerPositionRoutine != null && ownerPlayer != null)
+        {
+            StopCoroutine(fixPlayerPositionRoutine);
+            ownerPlayer.disableMoveInput = false;
+            ownerPlayer.inSpecialInteractAnimation = false;
+        }
         ownerPlayer = null;
         Agent.enabled = false;
     }

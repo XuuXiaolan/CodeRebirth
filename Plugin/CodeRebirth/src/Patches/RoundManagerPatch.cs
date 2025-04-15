@@ -275,7 +275,7 @@ static class RoundManagerPatch
         int numHits = Physics.OverlapSphereNonAlloc(noisePosition, noiseRange, RoundManager.Instance.tempColliderResults, CodeRebirthUtils.Instance.propsAndHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (!RoundManager.Instance.tempColliderResults[i].TryGetComponent<INoiseListener>(out INoiseListener noiseListener)) continue;
+            if (!RoundManager.Instance.tempColliderResults[i].TryGetComponent(out INoiseListener noiseListener)) continue;
             GalAI? gal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<GalAI>();
             SCP999GalAI? scp999Gal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<SCP999GalAI>();
             BellCrabGalAI? bellCrabGal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<BellCrabGalAI>();
