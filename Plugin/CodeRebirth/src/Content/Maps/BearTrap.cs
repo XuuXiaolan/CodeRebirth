@@ -56,7 +56,7 @@ public class BearTrap : CodeRebirthHazard
             {
                 beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("boom")!.gameObject;
             }
-            else if (random.Next(0, 100) < 5)
+            else if (random.Next(100) < 5)
             {
                 beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("boom")!.gameObject;
             }

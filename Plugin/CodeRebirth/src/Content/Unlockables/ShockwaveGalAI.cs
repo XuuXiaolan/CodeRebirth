@@ -517,7 +517,7 @@ public class ShockwaveGalAI : GalAI
 
     private void PlayFootstepSoundAnimEvent()
     {
-        GalSFX.PlayOneShot(FootstepSounds[galRandom.Next(0, FootstepSounds.Length)]);
+        GalSFX.PlayOneShot(FootstepSounds[galRandom.Next(FootstepSounds.Length)]);
     }
 
     private void StartFlyingAnimEvent()
@@ -734,7 +734,7 @@ public class ShockwaveGalAI : GalAI
         {
             item.transform.localRotation = Quaternion.Euler(0, 100, 0);
         }
-        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(0, TakeDropItemSounds.Length)]);
+        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(TakeDropItemSounds.Length)]);
         HoarderBugAI.grabbableObjectsInMap.Remove(item.gameObject);
     }
 
@@ -794,7 +794,7 @@ public class ShockwaveGalAI : GalAI
         }
 
         itemsHeldList.Remove(item);
-        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(0, TakeDropItemSounds.Length)]);
+        GalVoice.PlayOneShot(TakeDropItemSounds[galRandom.Next(TakeDropItemSounds.Length)]);
         if (itemsHeldList.Count == 0 && IsServer)
         {
             Animator.SetBool(holdingItemAnimation, false);

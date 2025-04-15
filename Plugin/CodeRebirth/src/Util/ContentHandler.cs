@@ -14,6 +14,7 @@ using CodeRebirth.src.Util.AssetLoading;
 using LethalLevelLoader;
 using LethalLib.Extras;
 using LethalLib.Modules;
+using Unity.Netcode;
 using UnityEngine;
 using WeatherRegistry;
 
@@ -182,7 +183,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 if (effectObject != null)
                 {
                     effectObject.hideFlags = HideFlags.HideAndDontSave;
-                    GameObject.DontDestroyOnLoad(effectObject);                
+                    GameObject.DontDestroyOnLoad(effectObject);
                 }
             }
 
@@ -193,7 +194,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 if (effectPermanentObject != null)
                 {
                     effectPermanentObject.hideFlags = HideFlags.HideAndDontSave;
-                    GameObject.DontDestroyOnLoad(effectPermanentObject);                
+                    GameObject.DontDestroyOnLoad(effectPermanentObject);
                 }
             }
 
@@ -423,17 +424,17 @@ public class ContentHandler<T> where T : ContentHandler<T>
         (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);
 
         // Create dictionaries to hold animation curves for each level type
-        Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType = new Dictionary<Levels.LevelTypes, AnimationCurve>();
-        Dictionary<string, AnimationCurve> curvesByCustomLevelType = new Dictionary<string, AnimationCurve>();
+        Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType = new();
+        Dictionary<string, AnimationCurve> curvesByCustomLevelType = new();
 
         bool allCurveExists = false;
-        AnimationCurve allAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+        AnimationCurve allAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
 
         bool vanillaCurveExists = false;
-        AnimationCurve vanillaAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+        AnimationCurve vanillaAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
 
         bool moddedCurveExists = false;
-        AnimationCurve moddedAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+        AnimationCurve moddedAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
 
         // Populate the animation curves
         foreach (var entry in spawnRateByLevelType)
@@ -465,51 +466,14 @@ public class ContentHandler<T> where T : ContentHandler<T>
         RegisteredCRMapObject registeredMapObject = new RegisteredCRMapObject
         {
             alignWithTerrain = _alignWithTerrain,
+            hasNetworkObject = mapObjDef.spawnableMapObject.spawnableObject.prefabToSpawn.GetComponent<NetworkObject>() != null,
             outsideObject = mapObjDef.spawnableMapObject,
             levels = Levels.LevelTypes.All,
             spawnLevelOverrides = curvesByCustomLevelType.Keys.ToArray().Select(s => s.ToLowerInvariant()).ToArray(),
             spawnRateFunction =
             level =>
             {
-                if (level == null) return new AnimationCurve([new Keyframe(0, 0), new Keyframe(1, 0)]);
-                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
-                string actualLevelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
-                Plugin.ExtendedLogging($"actual level name: {actualLevelName}");
-
-                bool isValidLevelType = Enum.TryParse(actualLevelName, true, out Levels.LevelTypes levelType);
-                bool isVanilla = false;
-                if (isValidLevelType && levelType != Levels.LevelTypes.Modded)
-                {
-                    isVanilla = true;
-                }
-
-                if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
-                {
-                    return curve;
-                }
-                else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
-                {
-                    return curve;
-                }
-                else if (TryGetCurveDictAndLevelTag(curvesByCustomLevelType, level, out string tagName) && curvesByCustomLevelType.TryGetValue(tagName, out curve))
-                {
-                    Plugin.ExtendedLogging($"registering a mapobject through a tag, nice.");
-                    return curve;
-                }
-                else if (isVanilla && vanillaCurveExists)
-                {
-                    return vanillaAnimationCurve;
-                }
-                else if (moddedCurveExists)
-                {
-                    return moddedAnimationCurve;
-                }
-                else if (allCurveExists)
-                {
-                    return allAnimationCurve;
-                }
-                Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
-                return new AnimationCurve([new Keyframe(0, 0), new Keyframe(1, 0)]); // Default case if no curve matches
+                return CurveFunction(level, prefab, curvesByLevelType, curvesByCustomLevelType, vanillaCurveExists, vanillaAnimationCurve, moddedCurveExists, moddedAnimationCurve, allCurveExists, allAnimationCurve);
             }
         };
         RoundManagerPatch.registeredMapObjects.Add(registeredMapObject);
@@ -547,17 +511,17 @@ public class ContentHandler<T> where T : ContentHandler<T>
         (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);
 
         // Create dictionaries to hold animation curves for each level type
-        Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType = new Dictionary<Levels.LevelTypes, AnimationCurve>();
-        Dictionary<string, AnimationCurve> curvesByCustomLevelType = new Dictionary<string, AnimationCurve>();
+        Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType = new();
+        Dictionary<string, AnimationCurve> curvesByCustomLevelType = new();
 
         bool allCurveExists = false;
-        AnimationCurve allAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+        AnimationCurve allAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
 
         bool vanillaCurveExists = false;
-        AnimationCurve vanillaAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+        AnimationCurve vanillaAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
 
         bool moddedCurveExists = false;
-        AnimationCurve moddedAnimationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+        AnimationCurve moddedAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
 
         // Populate the animation curves
         foreach (var entry in spawnRateByLevelType)
@@ -592,93 +556,54 @@ public class ContentHandler<T> where T : ContentHandler<T>
             curvesByCustomLevelType.Keys.ToArray().Select(s => s.ToLowerInvariant()).ToArray(),
             level =>
             {
-                if (level == null) return new AnimationCurve([new Keyframe(0, 0), new Keyframe(1, 0)]);
-                Plugin.ExtendedLogging($"Registering map object {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
-                string actualLevelName = level.ToString().Trim().Substring(0, Math.Max(0, level.ToString().Trim().Length - 23)).Trim().ToLowerInvariant();
-                Levels.LevelTypes levelType = LevelToLevelType(actualLevelName);
-                bool isVanilla = false;
-                if (levelType != Levels.LevelTypes.None && levelType != Levels.LevelTypes.Modded)
-                {
-                    isVanilla = true;
-                }
-                if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
-                {
-                    return curve;
-                }
-                else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
-                {
-                    return curve;
-                }
-                else if (TryGetCurveDictAndLevelTag(curvesByCustomLevelType, level, out string tagName) && curvesByCustomLevelType.TryGetValue(tagName, out curve))
-                {
-                    Plugin.ExtendedLogging($"registering a mapobject through a tag, nice.");
-                    return curve;
-                }
-                else if (isVanilla && vanillaCurveExists)
-                {
-                    return vanillaAnimationCurve;
-                }
-                else if (moddedCurveExists)
-                {
-                    return moddedAnimationCurve;
-                }
-                else if (allCurveExists)
-                {
-                    return allAnimationCurve;
-                }
-                Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
-                return new AnimationCurve([new Keyframe(0, 0), new Keyframe(1, 0)]); // Default case if no curve matches
-            });
+                return CurveFunction(level, prefab, curvesByLevelType, curvesByCustomLevelType, vanillaCurveExists, vanillaAnimationCurve, moddedCurveExists, moddedAnimationCurve, allCurveExists, allAnimationCurve);
+            }
+        );
     }
 
-    protected Levels.LevelTypes LevelToLevelType(string levelName)
+    public AnimationCurve CurveFunction(SelectableLevel level, GameObject prefab, Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType, Dictionary<string, AnimationCurve> curvesByCustomLevelType, bool vanillaCurveExists, AnimationCurve vanillaAnimationCurve, bool moddedCurveExists, AnimationCurve moddedAnimationCurve, bool allCurveExists, AnimationCurve allAnimationCurve)
     {
-        Plugin.ExtendedLogging($"Cutup Level type: {levelName}");
-        return levelName switch
-        {
-            "experimentation" => Levels.LevelTypes.ExperimentationLevel,
-            "assurance" => Levels.LevelTypes.AssuranceLevel,
-            "offense" => Levels.LevelTypes.OffenseLevel,
-            "march" => Levels.LevelTypes.MarchLevel,
-            "vow" => Levels.LevelTypes.VowLevel,
-            "dine" => Levels.LevelTypes.DineLevel,
-            "rend" => Levels.LevelTypes.RendLevel,
-            "titan" => Levels.LevelTypes.TitanLevel,
-            "artifice" => Levels.LevelTypes.ArtificeLevel,
-            "adamance" => Levels.LevelTypes.AdamanceLevel,
-            "embrion" => Levels.LevelTypes.EmbrionLevel,
-            "vanilla" => Levels.LevelTypes.Vanilla,
-            "modded" => Levels.LevelTypes.Modded,
-            _ => Levels.LevelTypes.None,
-        };
-    }
+        if (level == null)
+            return AnimationCurve.Linear(0, 0, 1, 0);
 
-    protected string[] MapObjectConfigParsing(string configString)
-    {
-        var levelTypesList = new List<string>();
-        foreach (string entry in configString.Split(',').Select(s => s.Trim()))
+        Plugin.ExtendedLogging($"Registering prefab {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
+        string actualLevelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
+        Plugin.ExtendedLogging($"actual level name: {actualLevelName}");
+
+        bool isValidLevelType = Enum.TryParse(actualLevelName, true, out Levels.LevelTypes levelType);
+        bool isVanilla = false;
+        if (isValidLevelType && levelType != Levels.LevelTypes.Modded)
         {
-            string name = entry;
-            if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
-            {
-                levelTypesList.Add(name);
-            }
-            else
-            {
-                // Try appending "Level" to the name and re-attempt parsing
-                string modifiedName = name + "Level";
-                if (System.Enum.TryParse(modifiedName, true, out levelType))
-                {
-                    levelTypesList.Add(modifiedName);
-                }
-                else
-                {
-                    levelTypesList.Add(name);
-                }
-            }
+            isVanilla = true;
         }
 
-        return levelTypesList.ToArray();
+        if (curvesByLevelType.TryGetValue(levelType, out AnimationCurve curve))
+        {
+            return curve;
+        }
+        else if (curvesByCustomLevelType.TryGetValue(actualLevelName, out curve))
+        {
+            return curve;
+        }
+        else if (TryGetCurveDictAndLevelTag(curvesByCustomLevelType, level, out string tagName) && curvesByCustomLevelType.TryGetValue(tagName, out curve))
+        {
+            Plugin.ExtendedLogging($"registering a mapobject through a tag, nice.");
+            return curve;
+        }
+        else if (isVanilla && vanillaCurveExists)
+        {
+            return vanillaAnimationCurve;
+        }
+        else if (moddedCurveExists)
+        {
+            return moddedAnimationCurve;
+        }
+        else if (allCurveExists)
+        {
+            return allAnimationCurve;
+        }
+        Plugin.ExtendedLogging($"Failed to find curve for level: {level}");
+        return AnimationCurve.Linear(0, 0, 1, 0); // Default case if no curve matches
     }
 
     protected (Dictionary<Levels.LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) ConfigParsing(string? configMoonRarity)
@@ -795,7 +720,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             else
             {
                 Plugin.Logger.LogError($"Invalid key-value pairs format: {keyValuePairs}");
-                return new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
+                return AnimationCurve.Linear(0, 0, 1, 0);
             }
         }
         List<Keyframe> keyframes = new();

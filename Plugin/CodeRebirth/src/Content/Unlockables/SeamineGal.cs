@@ -594,7 +594,7 @@ public class SeamineGalAI : GalAI
 
     private void PlayFootstepSoundAnimEvent()
     {
-        GalSFX.PlayOneShot(FootstepSounds[galRandom.Next(0, FootstepSounds.Length)]);
+        GalSFX.PlayOneShot(FootstepSounds[galRandom.Next(FootstepSounds.Length)]);
     }
 
     private void StartRidingBruceAnimEvent()
@@ -620,7 +620,7 @@ public class SeamineGalAI : GalAI
         this.ridingBruce = RidingBruce;
         if (RidingBruce)
         {
-            GalSFX.PlayOneShot(startOrEndRidingBruceAudioClips[galRandom.Next(0, startOrEndRidingBruceAudioClips.Count)]);
+            GalSFX.PlayOneShot(startOrEndRidingBruceAudioClips[galRandom.Next(startOrEndRidingBruceAudioClips.Count)]);
             RidingBruceSource.volume = Plugin.ModConfig.ConfigSeamineTinkRidingBruceVolume.Value;
         }
         else RidingBruceSource.volume = 0f;
@@ -713,7 +713,7 @@ public class SeamineGalAI : GalAI
             if (ownerPlayer != null)
             {
                 ownerPlayer.enteringSpecialAnimation = false;
-                ownerPlayer.disableMoveInput = false;                
+                ownerPlayer.disableMoveInput = false;
             }
         }
 

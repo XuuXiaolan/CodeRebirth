@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
 public enum FloraTag
@@ -13,9 +14,6 @@ public enum FloraTag
 public class SpawnableFlora
 {
     public GameObject prefab = null!;
-    public string[] moonsWhiteList = null!;
-    public AnimationCurve spawnCurve = null!;
-    public string[] blacklistedTags = null!;
     public FloraTag floraTag;
-    public string[] moonsBlackList = null!;
+    public Func<SelectableLevel, AnimationCurve> spawnCurveFunction;
 }

@@ -70,7 +70,7 @@ public class ShrimpDispenser : NetworkBehaviour
         //newParticles.SetActive(true);
         //Destroy(newParticles, newParticles.GetComponent<ParticleSystem>().main.duration);
 
-        if (shrimpRandom.Next(0, 10) <= 0 || Plugin.ModConfig.ConfigDebugMode.Value) audioSource.PlayOneShot(dispenseSound);
+        if (shrimpRandom.Next(10) <= 0 || Plugin.ModConfig.ConfigDebugMode.Value) audioSource.PlayOneShot(dispenseSound);
         yield return new WaitForSeconds(0.6f);
         if (lastShrimpDispensed != null && !ItemPickedUp)
         {

@@ -34,7 +34,7 @@ public class BiomeManager : CodeRebirthHazard
             biomeRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 85);
         }
 
-        switch (biomeRandom.Next(0, 3))
+        switch (biomeRandom.Next(3))
         {
             case 0:
                 corruptionProjector.gameObject.SetActive(true);

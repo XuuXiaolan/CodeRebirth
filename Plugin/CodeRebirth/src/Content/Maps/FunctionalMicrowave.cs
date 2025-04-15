@@ -76,7 +76,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
     private Item? ChooseRandomMicrowaveScrap()
     {
         if (MapObjectHandler.Instance.FunctionalMicrowave == null) return null;
-        int result = microwaveRandom.Next(0, 4);
+        int result = microwaveRandom.Next(4);
         if (result == 0)
         {
             return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.GetCRItemDefinitionWithItemName("Spork")?.item;

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util.Extensions;
 using HarmonyLib;
 using UnityEngine;
-using System.Text.RegularExpressions;
 using UnityEngine.AI;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
-using static LethalLib.Modules.MapObjects;
 using Unity.Netcode;
 
 namespace CodeRebirth.src.Patches;
@@ -22,7 +18,9 @@ static class RoundManagerPatch
     [HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
     private static void SpawnOutsideMapObjects()
     {
-        if (Plugin.ModConfig.ConfigFloraEnabled.Value) SpawnFlora();
+        if (Plugin.ModConfig.ConfigFloraEnabled.Value)
+            SpawnFlora();
+
         System.Random random = new(StartOfRound.Instance.randomMapSeed + 69);
         foreach (RegisteredCRMapObject registeredMapObject in registeredMapObjects)
         {
@@ -36,8 +34,7 @@ static class RoundManagerPatch
         AnimationCurve animationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
         GameObject prefabToSpawn = mapObjDef.outsideObject.spawnableObject.prefabToSpawn;
 
-        NetworkObject networkObject = prefabToSpawn.GetComponent<NetworkObject>();
-        if (networkObject != null && !NetworkManager.Singleton.IsServer)
+        if (mapObjDef.hasNetworkObject && !NetworkManager.Singleton.IsServer)
             return;
 
         animationCurve = mapObjDef.spawnRateFunction(level);
@@ -45,18 +42,19 @@ static class RoundManagerPatch
         Plugin.ExtendedLogging($"Spawning {randomNumberToSpawn} of {prefabToSpawn.name} for level {level}");
         for (int i = 0; i < randomNumberToSpawn; i++)
         {
-            Vector3 spawnPos = RoundManager.Instance.outsideAINodes[random.Next(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+            Vector3 spawnPos = RoundManager.Instance.outsideAINodes[random.Next(RoundManager.Instance.outsideAINodes.Length)].transform.position;
             spawnPos = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(spawnPos, 10f, default, random, -1) + (Vector3.up * 2);
             Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-            if (hit.collider == null) continue;
+            if (hit.collider == null)
+                continue;
             GameObject spawnedPrefab = GameObject.Instantiate(prefabToSpawn, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             Plugin.ExtendedLogging($"Spawning {spawnedPrefab.name} at {hit.point}");
             if (mapObjDef.alignWithTerrain)
             {
                 spawnedPrefab.transform.up = hit.normal;
             }
-            if (networkObject == null)
-                return;
+            if (!mapObjDef.hasNetworkObject)
+                continue;
 
             spawnedPrefab.GetComponent<NetworkObject>().Spawn(true);
         }
@@ -68,36 +66,36 @@ static class RoundManagerPatch
         System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
         int spawnCount = 0;
 
-        var validFlora = GetValidFlora();
-
-        foreach (var tagGroup in validFlora)
+        foreach (SpawnableFlora flora in spawnableFlora)
         {
-            foreach (SpawnableFlora flora in tagGroup)
-            {
-                SpawnFlora(random, flora, ref spawnCount);
-            }
+            SpawnFlora(random, flora, ref spawnCount);
         }
+    }
+
+    private static bool TryGetValidFloraSpawnPoint(System.Random random, out RaycastHit hit)
+    {
+        Vector3 randomPosition = GetRandomPointNearPointsOfInterest(random, 20);
+
+        hit = default;
+
+        if (!NavMesh.SamplePosition(randomPosition, out NavMeshHit navMeshHit, 20f, NavMesh.AllAreas))
+            return false;
+
+        if (!Physics.Raycast(navMeshHit.position, Vector3.down, out hit, 5, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            return false;
+
+        return true;
     }
 
     private static void SpawnFlora(System.Random random, SpawnableFlora flora, ref int spawnCount)
     {
-        var targetSpawns = flora.spawnCurve.Evaluate(random.NextFloat(0, 1));
+        AnimationCurve animationCurve = flora.spawnCurveFunction(RoundManager.Instance.currentLevel);
+        int targetSpawns = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0, 1)) + 0.5f);
         for (int i = 0; i < targetSpawns; i++)
         {
             if (!TryGetValidFloraSpawnPoint(random, out RaycastHit hit))
-                continue; // spawn failed
+                continue;
 
-            bool isValid = true;
-
-            foreach (string floorTag in flora.blacklistedTags)
-            {
-                if (hit.transform.gameObject.CompareTag(floorTag))
-                {
-                    isValid = false;
-                    break;
-                }
-            }
-            if (!isValid) continue;
             switch (flora.floraTag)
             {
                 case FloraTag.Grass:
@@ -115,65 +113,17 @@ static class RoundManagerPatch
             }
 
             Vector3 spawnPosition = hit.point;
-            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 
-            GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, rotation, RoundManager.Instance.mapPropsContainer.transform);
+            GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedFlora.transform.up = hit.normal;
             spawnCount++;
         }
     }
 
-    private static bool TryGetValidFloraSpawnPoint(System.Random random, out RaycastHit hit)
-    {
-        Vector3 basePosition = GetRandomPointNearPointsOfInterest(random, 20);
-        Vector3 randomPosition = basePosition;
-
-        hit = default;
-
-        if (!NavMesh.SamplePosition(randomPosition, out NavMeshHit navMeshHit, 20f, NavMesh.AllAreas))
-            return false;
-
-        Vector3 navMeshPosition = navMeshHit.position;
-        Vector3 vector = navMeshPosition;
-        if (!Physics.Raycast(vector, Vector3.down, out hit, 150, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
-            return false;
-        return true;
-    }
-
-    private static IEnumerable<IGrouping<FloraTag, SpawnableFlora>> GetValidFlora()
-    {
-        // Create a dictionary mapping FloraTag to the corresponding moonsWhiteList
-        var tagToMoonLists = spawnableFlora
-                             .GroupBy(flora => flora.floraTag)
-                             .ToDictionary(
-                                 g => g.Key,
-                                 g => new
-                                 {
-                                     MoonsWhiteList = g.First().moonsWhiteList,
-                                     MoonsBlackList = g.First().moonsBlackList
-                                 }
-                             );
-
-        // Cache the valid tags based on the current moon configuration
-        Dictionary<FloraTag, bool> validTags = new();
-        foreach (var tag in tagToMoonLists.Keys)
-        {
-            if (tagToMoonLists.TryGetValue(tag, out var moonLists))
-            {
-                bool isLevelValid = IsCurrentMoonInConfig(moonLists.MoonsWhiteList, moonLists.MoonsBlackList);
-                validTags[tag] = isLevelValid;
-            }
-        }
-
-        return spawnableFlora.GroupBy(flora => flora.floraTag).Where(it => validTags.TryGetValue(it.Key, out bool isLevelValid) && isLevelValid);
-    }
-
     public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random, float offsetRange = 20f)
     {
         // Get all points of interest
-        Vector3[] pointsOfInterest = RoundManager.Instance.outsideAINodes
-                                    .Select(node => node.transform.position)
-                                    .ToArray();
+        GameObject[] pointsOfInterest = RoundManager.Instance.outsideAINodes;
 
         // Check if there are any points of interest
         if (pointsOfInterest.Length == 0)
@@ -183,7 +133,7 @@ static class RoundManagerPatch
         }
 
         // Choose a random point of interest
-        Vector3 chosenPoint = pointsOfInterest[random.Next(0, pointsOfInterest.Length)];
+        Vector3 chosenPoint = pointsOfInterest[random.Next(pointsOfInterest.Length)].transform.position;
 
         // Generate a random offset within the specified range
         Vector3 offset = new(
@@ -193,59 +143,6 @@ static class RoundManagerPatch
         );
 
         return chosenPoint + offset;
-    }
-
-    public static Vector3 GetRandomNavMeshPosition(Vector3 center, float range, System.Random random)
-    {
-        for (int i = 0; i < 30; i++)
-        { // Try up to 30 times to find a valid position
-            Vector3 randomPos = center + new Vector3(random.NextFloat(-range, range), 0, random.NextFloat(-range, range));
-            if (NavMesh.SamplePosition(randomPos, out NavMeshHit hit, range, NavMesh.AllAreas))
-            {
-                return hit.position;
-            }
-        }
-        return center; // Fallback to the center if no valid position found
-    }
-
-    public static bool IsCurrentMoonInConfig(string[] moonsWhiteList, string[] moonsBlackList)
-    {
-        // Prepare the current level name
-        string currentLevelName = Regex.Replace(StartOfRound.Instance.currentLevel.PlanetName, "^(?:\\d+ )*(.*)", "$1Level").ToLowerInvariant();
-        string currentLLLLevelName = LethalLevelLoader.LevelManager.CurrentExtendedLevel.NumberlessPlanetName.ToLower();
-        // Convert whitelist and blacklist to lowercase and sort them
-        var whiteList = moonsWhiteList.Select(levelType => levelType.ToLowerInvariant()).ToArray();
-        var blackList = moonsBlackList.Select(levelType => levelType.ToLowerInvariant()).ToArray();
-        Array.Sort(whiteList);
-        Array.Sort(blackList);
-
-        // Function to check if an item exists in the sorted list using binary search
-        static bool IsInList(string item, string[] list)
-        {
-            return Array.BinarySearch(list, item) >= 0;
-        }
-
-        // Check if "all" is in the whitelist
-        if (IsInList("all", whiteList)) return true;
-
-        bool isVanillaMoon = LethalLevelLoader.PatchedContent.VanillaExtendedLevels.Any(level => level.Equals(LethalLevelLoader.LevelManager.CurrentExtendedLevel));
-
-        // Check blacklist first
-        if (IsInList(currentLevelName, blackList) || IsInList(currentLLLLevelName, blackList)) return false;
-
-        // Check for vanilla moon conditions
-        if (isVanillaMoon)
-        {
-            if (IsInList("vanilla", whiteList)) return true;
-            if (IsInList(currentLevelName, whiteList)) return true;
-            return false;
-        }
-
-        // Check for custom moon conditions
-        if (IsInList("custom", whiteList)) return true;
-
-        // Check for custom level name
-        return IsInList(currentLLLLevelName, whiteList);
     }
 
     [HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
@@ -267,11 +164,14 @@ static class RoundManagerPatch
     [HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
     public static void PlayAudibleNoiseForShockwaveGalPostfix(RoundManager __instance, ref Vector3 noisePosition, ref float noiseRange, ref float noiseLoudness, ref int timesPlayedInSameSpot, ref bool noiseIsInsideClosedShip, ref int noiseID)
     {
-        if (noiseID != 5 && noiseID != 6) return;
+        if (noiseID != 5 && noiseID != 6)
+            return;
+
         if (noiseIsInsideClosedShip)
         {
             noiseRange /= 2f;
         }
+
         int numHits = Physics.OverlapSphereNonAlloc(noisePosition, noiseRange, RoundManager.Instance.tempColliderResults, CodeRebirthUtils.Instance.propsAndHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
@@ -292,7 +192,7 @@ static class RoundManagerPatch
     [HarmonyPrefix]
     public static void LoadNewLevelWaitPatch(RoundManager __instance)
     {
-        if (__instance.currentLevel.levelID == 3 && TimeOfDay.Instance.daysUntilDeadline == 0)
+        if (!__instance.currentLevel.planetHasTime && TimeOfDay.Instance.daysUntilDeadline == 0)
         {
             if (Plugin.ModConfig.Config999GalCompanyMoonRecharge.Value)
             {

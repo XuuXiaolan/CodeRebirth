@@ -81,12 +81,9 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
     public ConfigEntry<bool> ConfigExtendedLogging { get; set; }
-    public ConfigEntry<string> ConfigFloraExcludeSpawnPlaces { get; set; }
-    public ConfigEntry<int> ConfigFloraMaxAbundance { get; set; }
-    public ConfigEntry<int> ConfigFloraMinAbundance { get; set; }
-    public ConfigEntry<string> ConfigFloraGrassSpawnPlaces { get; set; }
-    public ConfigEntry<string> ConfigFloraDesertSpawnPlaces { get; set; }
-    public ConfigEntry<string> ConfigFloraSnowSpawnPlaces { get; set; }
+    public ConfigEntry<string> ConfigFloraGrassCurveSpawnWeight { get; set; }
+    public ConfigEntry<string> ConfigFloraDesertCurveSpawnWeight { get; set; }
+    public ConfigEntry<string> ConfigFloraSnowCurveSpawnWeight { get; set; }
     public ConfigEntry<float> ConfigCritChance { get; private set; }
     public ConfigEntry<string> ConfigSeamineTinkEnemyBlacklist { get; private set; }
     public ConfigEntry<float> ConfigSeamineTinkRidingBruceVolume { get; private set; }

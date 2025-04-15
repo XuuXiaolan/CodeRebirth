@@ -31,7 +31,7 @@ public class GodRaySpawner : MonoBehaviour
         while (GodRayManager.Active && godRayManager.GodRays.Count() < numberOfGodrays)
         {
             yield return new WaitForSeconds(10f);
-            Color colour = rayColours[godRayRandom.Next(0, rayColours.Count)];
+            Color colour = rayColours[godRayRandom.Next(rayColours.Count)];
 
             Vector3 topPosition = godRayRandom.NextItem(RoundManager.Instance.outsideAINodes).transform.position;
             Vector3 bottomPosition = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(godRayRandom.NextItem(RoundManager.Instance.outsideAINodes).transform.position, 100, default, godRayRandom);

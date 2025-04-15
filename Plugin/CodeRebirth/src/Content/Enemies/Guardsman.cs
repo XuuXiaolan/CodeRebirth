@@ -73,7 +73,7 @@ public class Guardsman : CodeRebirthEnemyAI
         {
             if (enemy == null || enemy.isEnemyDead || enemy is Guardsman)
                 continue;
-            
+
             if (Vector3.Distance(transform.position, enemy.transform.position) > 45f)
                 continue;
 
@@ -112,7 +112,7 @@ public class Guardsman : CodeRebirthEnemyAI
 
         if (!IsServer)
             return;
-        
+
         creatureAnimator.SetBool(IsDeadAnimation, true);
     }
 

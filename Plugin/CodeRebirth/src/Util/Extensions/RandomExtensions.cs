@@ -38,7 +38,7 @@ public static class RandomExtensions
 
     public static bool NextBool(this Random random)
     {
-        return random.Next(0, 2) == 0;
+        return random.Next(2) == 0;
     }
 
     public static int NextSign(this Random random)

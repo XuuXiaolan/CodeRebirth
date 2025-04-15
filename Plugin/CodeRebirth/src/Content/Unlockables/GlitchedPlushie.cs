@@ -34,7 +34,7 @@ public class GlitchedPlushie : NetworkBehaviour
     [ClientRpc]
     private void PlayStuffClientRpc()
     {
-        plushieSource.PlayOneShot(audioClips[plushieRandom.Next(0, audioClips.Count)]);
+        plushieSource.PlayOneShot(audioClips[plushieRandom.Next(audioClips.Count)]);
         StartCoroutine(ActivatePlushieCoroutine());
     }
 

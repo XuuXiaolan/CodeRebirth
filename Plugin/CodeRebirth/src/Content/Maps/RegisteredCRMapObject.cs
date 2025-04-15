@@ -4,4 +4,5 @@ namespace CodeRebirth.src.Content.Maps;
 public class RegisteredCRMapObject : RegisteredMapObject
 {
     public bool alignWithTerrain;
+    public bool hasNetworkObject;
 }

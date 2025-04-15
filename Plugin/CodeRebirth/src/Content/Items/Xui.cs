@@ -51,7 +51,7 @@ public class Xui : GrabbableObject
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        int randomNumber = rand.Next(0, 100);
+        int randomNumber = rand.Next(100);
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");
         if (randomNumber <= 35)
         {
@@ -70,7 +70,7 @@ public class Xui : GrabbableObject
 
         if (deadPlayers.Count > 0)
         {
-            SCP999GalAI.DoStuffToRevivePlayer(this.transform.position, System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, deadPlayers[rand.Next(0, deadPlayers.Count)]));
+            SCP999GalAI.DoStuffToRevivePlayer(this.transform.position, System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, deadPlayers[rand.Next(deadPlayers.Count)]));
         }
         else if (randomNumber <= 70)
         {

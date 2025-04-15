@@ -282,7 +282,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
         {
             // Reflect incoming damage
-            creatureSFX.PlayOneShot(reflectSounds[enemyRandom.Next(0, reflectSounds.Length)]);
+            creatureSFX.PlayOneShot(reflectSounds[enemyRandom.Next(reflectSounds.Length)]);
             playerWhoHit.DamagePlayer(force * 25, true, false, CauseOfDeath.Unknown, 0, false, default);
             return;
         }
@@ -317,7 +317,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         enemyHP -= force;
-        creatureVoice.PlayOneShot(puppeteerHitSounds[enemyRandom.Next(0, puppeteerHitSounds.Length)]);
+        creatureVoice.PlayOneShot(puppeteerHitSounds[enemyRandom.Next(puppeteerHitSounds.Length)]);
         if (IsServer && currentBehaviourStateIndex != (int)PuppeteerState.Attacking) creatureNetworkAnimator.SetTrigger(DoHitAnimation);
         if (enemyHP <= 0 && !isEnemyDead)
         {
@@ -356,7 +356,7 @@ public class Puppeteer : CodeRebirthEnemyAI
 
     private IEnumerator SwitchToStateAfterDelay(PuppeteerState state, float delay)
     {
-        int randomNumber = enemyRandom.Next(0, 100);
+        int randomNumber = enemyRandom.Next(100);
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");
         if (IsServer)
         {
@@ -463,11 +463,11 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         if (currentBehaviourStateIndex == (int)PuppeteerState.Attacking)
         {
-            creatureVoice.PlayOneShot(combatFootstepSounds[enemyRandom.Next(0, combatFootstepSounds.Length)]);
+            creatureVoice.PlayOneShot(combatFootstepSounds[enemyRandom.Next(combatFootstepSounds.Length)]);
         }
         else
         {
-            creatureVoice.PlayOneShot(normalFootstepSounds[enemyRandom.Next(0, normalFootstepSounds.Length)]);
+            creatureVoice.PlayOneShot(normalFootstepSounds[enemyRandom.Next(normalFootstepSounds.Length)]);
         }
     }
 

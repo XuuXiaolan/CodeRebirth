@@ -5,6 +5,7 @@ using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
+using LethalLib.Modules;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
@@ -111,14 +112,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
         Crate = LoadAndRegisterAssets<CrateAssets>("crateassets");
 
-        Plugin.ModConfig.ConfigFloraEnabled = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Enabled",
-                                            true,
-                                            "Whether Flora is enabled.");
-
-        if (Plugin.ModConfig.ConfigFloraEnabled.Value)
-            RegisterOutsideFlora();
-
         Biome = LoadAndRegisterAssets<BiomeAssets>("biomeassets");
 
         TeslaShock = LoadAndRegisterAssets<TeslaShockAssets>("teslashockassets");
@@ -134,6 +127,14 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         GlowingGem = LoadAndRegisterAssets<GlowingGemAssets>("glowinggemassets");
 
         AirControlUnit = LoadAndRegisterAssets<AirControlUnitAssets>("aircontrolunitassets");
+
+        Plugin.ModConfig.ConfigFloraEnabled = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Enabled",
+                                            true,
+                                            "Whether Flora is enabled.");
+
+        if (Plugin.ModConfig.ConfigFloraEnabled.Value)
+            RegisterOutsideFlora();
     }
 
     public GameObject? GetPrefabFor(SpawnSyncedCRObject.CRObjectType objectType)
@@ -147,49 +148,32 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         Flora = new FloraAssets("floraassets");
         Flora floraStuff = Flora.AllFloraPrefab.GetComponent<Flora>();
 
-        Plugin.ModConfig.ConfigFloraMaxAbundance = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Max Abundance",
-                                            60,
-                                            "How many plants can get added at most.");
-        Plugin.ModConfig.ConfigFloraMinAbundance = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Min Abundance",
-                                            30,
-                                            "How many plants can get added at least.");
-        Plugin.ModConfig.ConfigFloraGrassSpawnPlaces = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Grass Spawn Places",
-                                            "Vanilla,Custom,",
-                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
-        Plugin.ModConfig.ConfigFloraDesertSpawnPlaces = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Desert Spawn Places",
-                                            "Vanilla,Custom,",
-                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
-        Plugin.ModConfig.ConfigFloraSnowSpawnPlaces = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Snow Spawn Places",
-                                            "Vanilla,Custom,",
-                                            "Flora spawn places e.g. `Custom,Vanilla,Experimentation,Assurance,Gloom`.");
-        Plugin.ModConfig.ConfigFloraExcludeSpawnPlaces = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Exclude Spawn Places",
-                                            "Infernis",
-                                            "Flora EXLUDE spawn places e.g. `Experimentation,Assurance,Gloom` (only takes moon names).");
-
-        string[] grassMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraGrassSpawnPlaces.Value);
-        string[] desertMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraDesertSpawnPlaces.Value);
-        string[] snowMoonList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraSnowSpawnPlaces.Value);
-        string[] moonBlackList = MapObjectConfigParsing(Plugin.ModConfig.ConfigFloraExcludeSpawnPlaces.Value);
+        Plugin.ModConfig.ConfigFloraGrassCurveSpawnWeight = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Grass CurveSpawnWeight",
+                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00",
+                                            "MoonName - CurveSpawnWeight for Grass flora (moon tags also work).");
+        Plugin.ModConfig.ConfigFloraDesertCurveSpawnWeight = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Desert CurveSpawnWeight",
+                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00",
+                                            "MoonName - CurveSpawnWeight for Desert flora (moon tags also work).");
+        Plugin.ModConfig.ConfigFloraSnowCurveSpawnWeight = Plugin.configFile.Bind("Flora Options",
+                                            "Flora | Snow CurveSpawnWeight",
+                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00",
+                                            "MoonName - CurveSpawnWeight for Snowy flora (moon tags also work).");
 
         foreach (var flora in floraStuff.Desert)
         {
-            RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), desertMoonList, FloraTag.Desert, moonBlackList);
+            RegisterFlora(flora, FloraTag.Desert, Plugin.ModConfig.ConfigFloraDesertCurveSpawnWeight.Value);
         }
 
         foreach (var flora in floraStuff.Snowy)
         {
-            RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), snowMoonList, FloraTag.Snow, moonBlackList);
+            RegisterFlora(flora, FloraTag.Snow, Plugin.ModConfig.ConfigFloraSnowCurveSpawnWeight.Value);
         }
 
         foreach (var flora in floraStuff.Grass)
         {
-            RegisterFlora(flora, new AnimationCurve(new Keyframe(0, Math.Clamp(Plugin.ModConfig.ConfigFloraMinAbundance.Value, 0, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), new Keyframe(1, Plugin.ModConfig.ConfigFloraMaxAbundance.Value)), grassMoonList, FloraTag.Grass, moonBlackList);
+            RegisterFlora(flora, FloraTag.Grass, Plugin.ModConfig.ConfigFloraGrassCurveSpawnWeight.Value);
         }
 
         /*foreach (var flora in floraStuff.DangerousSpecies) {
@@ -197,16 +181,55 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 		}*/
     }
 
-    public void RegisterFlora(GameObject prefab, AnimationCurve curve, string[] moonWhiteList, FloraTag tag, string[] moonBlackList)
+    public void RegisterFlora(GameObject prefab, FloraTag tag, string configString)
     {
+        (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);
+
+        // Create dictionaries to hold animation curves for each level type
+        Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType = new();
+        Dictionary<string, AnimationCurve> curvesByCustomLevelType = new();
+
+        bool allCurveExists = false;
+        AnimationCurve allAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
+
+        bool vanillaCurveExists = false;
+        AnimationCurve vanillaAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
+
+        bool moddedCurveExists = false;
+        AnimationCurve moddedAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
+
+        // Populate the animation curves
+        foreach (var entry in spawnRateByLevelType)
+        {
+            Plugin.ExtendedLogging($"Registering flora {prefab.name} for level {entry.Key} with curve {entry.Value}");
+            curvesByLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
+            if (entry.Key == Levels.LevelTypes.Vanilla)
+            {
+                vanillaCurveExists = true;
+                vanillaAnimationCurve = curvesByLevelType[entry.Key];
+            }
+            else if (entry.Key == Levels.LevelTypes.Modded)
+            {
+                moddedCurveExists = true;
+                moddedAnimationCurve = curvesByLevelType[entry.Key];
+            }
+            else if (entry.Key == Levels.LevelTypes.All)
+            {
+                allCurveExists = true;
+                allAnimationCurve = curvesByLevelType[entry.Key];
+            }
+        }
+        foreach (var entry in spawnRateByCustomLevelType)
+        {
+            curvesByCustomLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
+        }
+
         RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora()
         {
             prefab = prefab,
-            moonsWhiteList = moonWhiteList,
-            spawnCurve = curve,
-            blacklistedTags = ["Metal", "Wood", "Concrete", "Puddle", "Aluminum", "Catwalk", "Bush", "Rock", "MoldSpore", "Untagged"],
             floraTag = tag,
-            moonsBlackList = moonBlackList
+            spawnCurveFunction =
+            level => CurveFunction(level, prefab, curvesByLevelType, curvesByCustomLevelType, vanillaCurveExists, vanillaAnimationCurve, moddedCurveExists, moddedAnimationCurve, allCurveExists, allAnimationCurve)
         });
     }
 }

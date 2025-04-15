@@ -117,7 +117,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
 
         idleTimer = 0f;
         idleNeededTimer = galRandom.NextFloat(10f, 15f);
-        GalSFX.PlayOneShot(IdleSounds[galRandom.Next(0, IdleSounds.Length)]);
+        GalSFX.PlayOneShot(IdleSounds[galRandom.Next(IdleSounds.Length)]);
         GalVoice.pitch = galRandom.NextFloat(0.9f, 1.1f);
     }
 
@@ -289,7 +289,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     [ClientRpc]
     public virtual void PlayHurtSoundClientRpc()
     {
-        GalVoice.PlayOneShot(HitSounds[galRandom.Next(0, HitSounds.Length)]);
+        GalVoice.PlayOneShot(HitSounds[galRandom.Next(HitSounds.Length)]);
     }
 
     public override void OnNetworkDespawn()

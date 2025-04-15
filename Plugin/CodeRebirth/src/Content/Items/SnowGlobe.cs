@@ -83,7 +83,7 @@ public class SnowGlobe : GrabbableObject
         base.ItemActivate(used, buttonDown);
         if (!activated)
         {
-            /*if (snow.Next(0, 100) < 5)
+            /*if (snow.Next(100) < 5)
             {
                 SlowDownEffect.DoSlowdownEffect(10, 0.2f);
             }*/

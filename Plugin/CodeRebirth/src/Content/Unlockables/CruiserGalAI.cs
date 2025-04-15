@@ -272,7 +272,7 @@ public class CruiserGalAI : GalAI
         }
         else
         {
-            RadioAudioSource.clip = RadioSounds[galRandom.Next(0, RadioSounds.Length)];
+            RadioAudioSource.clip = RadioSounds[galRandom.Next(RadioSounds.Length)];
             RadioAudioSource.Play();
         }
     }
@@ -662,7 +662,7 @@ public class CruiserGalAI : GalAI
         for (int i = 0; i < itemsHeldList.Count; i++)
         {
             itemsHeldList[i].isInFactory = setOutside;
-            int indexOfRandomTransform = galRandom.Next(0, ItemsHeldTransforms.Count);
+            int indexOfRandomTransform = galRandom.Next(ItemsHeldTransforms.Count);
             itemsHeldList[i].transform.position = ItemsHeldTransforms[indexOfRandomTransform].position;
             StartCoroutine(SetItemPhysics(itemsHeldList[i]));
         }

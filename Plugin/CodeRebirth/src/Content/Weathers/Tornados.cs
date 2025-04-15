@@ -271,7 +271,7 @@ public class Tornados : CodeRebirthEnemyAI
 
     public Vector3 GetRandomTargetPosition(System.Random random, IEnumerable<GameObject> nodes, float minX, float maxX, float minY, float maxY, float minZ, float maxZ, float radius)
     {
-        int randomNodeIndex = random.Next(0, nodes.Count());
+        int randomNodeIndex = random.Next(nodes.Count());
         GameObject nextNode = nodes.ElementAt(randomNodeIndex);
         Vector3 position = nextNode.transform.position;
 

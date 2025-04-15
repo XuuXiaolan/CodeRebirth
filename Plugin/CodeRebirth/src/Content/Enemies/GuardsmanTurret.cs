@@ -29,7 +29,7 @@ public class GuardsmanTurret : MonoBehaviour
         hitTimer -= Time.deltaTime;
         if (hitTimer > 0)
             return;
-        
+
         hitTimer = 5f;
 
         Vector3 direction = targetEnemy.transform.position - transform.position;

@@ -83,9 +83,9 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         smartAgentNavigator.SetAllValues(puppeteerCreatedBy.isOutside);
         puppetRandom = new System.Random(StartOfRound.Instance.randomMapSeed + puppeteerList.Count);
 
-        if (puppetRandom.Next(0, 10) == 0)
+        if (puppetRandom.Next(10) == 0)
         {
-            renderer.SetMaterial(materialVariants[puppetRandom.Next(0, materialVariants.Length)]);
+            renderer.SetMaterial(materialVariants[puppetRandom.Next(materialVariants.Length)]);
         }
     }
 
@@ -181,7 +181,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
                 {
                     Plugin.Logger.LogError("PlayerControlled is null");
                 }
-                dollAudio.PlayOneShot(hitSounds[puppetRandom.Next(0, hitSounds.Length)]);
+                dollAudio.PlayOneShot(hitSounds[puppetRandom.Next(hitSounds.Length)]);
                 break;
         }
     }
@@ -278,7 +278,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         smartAgentNavigator.enabled = false;
         agent.enabled = false;
 
-        dollAudio.PlayOneShot(hitBallSFX[puppetRandom.Next(0, hitBallSFX.Length)]);
+        dollAudio.PlayOneShot(hitBallSFX[puppetRandom.Next(hitBallSFX.Length)]);
 
         transform.SetParent(StartOfRound.Instance.propsContainer, true);
 
@@ -390,7 +390,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private void PlayDropSFX()
     {
         // Play the "doll lands" SFX if any
-        dollAudio.PlayOneShot(ballHitFloorSFX[puppetRandom.Next(0, ballHitFloorSFX.Length)]);
+        dollAudio.PlayOneShot(ballHitFloorSFX[puppetRandom.Next(ballHitFloorSFX.Length)]);
 
         // Only the server should toggle the animation state
         if (IsServer)
@@ -443,6 +443,6 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
     public void PlayFootstepSoundAnimEvent()
     {
-        dollAudio.PlayOneShot(puppetFootstepSounds[puppetRandom.Next(0, puppetFootstepSounds.Length)]);
+        dollAudio.PlayOneShot(puppetFootstepSounds[puppetRandom.Next(puppetFootstepSounds.Length)]);
     }
 }

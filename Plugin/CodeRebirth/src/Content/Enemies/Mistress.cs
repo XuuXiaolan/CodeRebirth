@@ -229,7 +229,7 @@ public class Mistress : CodeRebirthEnemyAI
             yield break;
         }
         Plugin.ExtendedLogging($"Teleporting to: {teleportPoint}");
-        creatureAnimator.SetInteger(IdleIntAnimation, enemyRandom.Next(0, 3));
+        creatureAnimator.SetInteger(IdleIntAnimation, enemyRandom.Next(3));
         agent.Warp(teleportPoint);
     }
 

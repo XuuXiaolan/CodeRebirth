@@ -356,7 +356,7 @@ public class TerminalGalAI : GalAI
         {
             FootstepSource.volume = 0f;
         }
-        if (galRandom.Next(0, 500000) <= 3)
+        if (galRandom.Next(500000) <= 3)
         {
             specialSource.Stop();
             specialSource.Play();

@@ -43,7 +43,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
     {
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
-        string randomName = randomizedNames[enemyRandom.Next(0, randomizedNames.Length)];
+        string randomName = randomizedNames[enemyRandom.Next(randomizedNames.Length)];
         float randomScale = enemyRandom.NextFloat(0.9f, 1.1f);
         this.transform.localScale *= randomScale;
         propScript.originalScale = this.transform.localScale;
@@ -63,11 +63,11 @@ public class SnailCatAI : CodeRebirthEnemyAI
             randomNoiseInterval = enemyRandom.NextFloat(7.5f, 15.5f);
             if (isWiWiWiii)
             {
-                creatureVoice.PlayOneShot(wiwiwiiiSound[enemyRandom.Next(0, wiwiwiiiSound.Length)]);
+                creatureVoice.PlayOneShot(wiwiwiiiSound[enemyRandom.Next(wiwiwiiiSound.Length)]);
             }
             else
             {
-                creatureVoice.PlayOneShot(randomNoises[enemyRandom.Next(0, randomNoises.Length)]);
+                creatureVoice.PlayOneShot(randomNoises[enemyRandom.Next(randomNoises.Length)]);
             }
         }
 
@@ -256,7 +256,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (propScript.IsOwner) propScript.ownerNetworkAnimator.SetTrigger(SnailCatPhysicsProp.HitAnimation);
         // trigger hit animation
-        creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(0, hitSounds.Length)]);
+        creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(hitSounds.Length)]);
     }
 
     private IEnumerator DropBabyAnimation(Vector3 dropOnPosition)

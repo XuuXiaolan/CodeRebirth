@@ -63,7 +63,7 @@ public class MeteorShower : CodeRebirthWeathers
 
         if (!IsAuthority()) return;
         Direction[] directions = [Direction.Random, Direction.East, Direction.West, Direction.North, Direction.South];
-        int index = random.Next(0, directions.Length);
+        int index = random.Next(directions.Length);
         direction = directions[index];
 
         spawnHandler = StartCoroutine(MeteorSpawnerHandler());

@@ -113,7 +113,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         base.Start();
         instanceNumbers++;
 
-        if (enemyRandom.Next(0, 2) == 0)
+        if (enemyRandom.Next(2) == 0)
         {
             skinnedMeshRenderers[0].SetMaterials(AlbinoMaterials.ToList());
         }

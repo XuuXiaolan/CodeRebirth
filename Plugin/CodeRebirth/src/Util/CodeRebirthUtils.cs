@@ -56,7 +56,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     private System.Random? CRRandom = null;
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
-
     private void Awake()
     {
         StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);

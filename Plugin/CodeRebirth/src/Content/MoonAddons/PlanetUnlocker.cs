@@ -36,7 +36,7 @@ public class PlanetUnlocker : GrabbableObject
         {
             HUDManager.Instance.DisplayTip("Success", $"Coordinates to {moonSceneName} found", false);
             extendedLevel.IsRouteHidden = false;
-            extendedLevel.IsRouteLocked = false;            
+            extendedLevel.IsRouteLocked = false;
         }
         else
         {

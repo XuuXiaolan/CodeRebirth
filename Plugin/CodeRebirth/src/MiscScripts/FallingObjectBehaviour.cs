@@ -25,7 +25,7 @@ public class FallingObjectBehaviour : NetworkBehaviour
     private bool _isMoving = false;
 
     public AnimationCurve animationCurve = AnimationCurve.Linear(0, 0, 1, 1);
-    
+
     [SerializeField]
     private UnityEvent _onImpact;
 
@@ -55,7 +55,7 @@ public class FallingObjectBehaviour : NetworkBehaviour
 
         return target + new Vector3(x, y, z);
     }
-    
+
     protected virtual void Update()
     {
         if (!_isMoving)
@@ -67,7 +67,7 @@ public class FallingObjectBehaviour : NetworkBehaviour
     protected void MoveObject()
     {
         _timeInAir += Time.deltaTime;
-        
+
         float progress = Progress;
         if (progress >= 1.0f)
         {
@@ -85,8 +85,8 @@ public class FallingObjectBehaviour : NetworkBehaviour
     {
         _onImpact.Invoke();
     }
-    
-    protected virtual void OnSetup() {}
+
+    protected virtual void OnSetup() { }
 
     protected virtual float CalculateTravelTime(float distance)
     {
