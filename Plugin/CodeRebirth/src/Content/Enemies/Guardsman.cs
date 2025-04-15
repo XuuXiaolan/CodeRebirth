@@ -1,3 +1,4 @@
+using System.Collections;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 public class Guardsman : CodeRebirthEnemyAI
 {
     [SerializeField]
-    private Transform _enemyHoldingPoint = null!;
+    private Transform[] _enemyHoldingPoints = [];
 
     [SerializeField]
     private float _enemySizeThreshold = 69;
@@ -22,12 +23,13 @@ public class Guardsman : CodeRebirthEnemyAI
     {
         base.Start();
 
-        foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
+        StartCoroutine(StartDelay());
+        /*foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
         {
             if (enemyType.enemyPrefab == null || enemyType.enemyPrefab.GetComponent<EnemyAI>() == null)
                 continue;
             Plugin.ExtendedLogging($"{enemyType.enemyName} has Size: {CalculateEnemySize(enemyType.enemyPrefab.GetComponent<EnemyAI>())}");
-        }
+        }*/
     }
 
     public override void Update()
@@ -36,7 +38,8 @@ public class Guardsman : CodeRebirthEnemyAI
 
         if (_killingLargeEnemy && targetEnemy != null)
         {
-            targetEnemy.transform.position = _enemyHoldingPoint.position;
+            Vector3 holdingPoint = (_enemyHoldingPoints[0].position + _enemyHoldingPoints[1].position) / 2;
+            targetEnemy.transform.position = holdingPoint;
         }
     }
 
@@ -81,6 +84,7 @@ public class Guardsman : CodeRebirthEnemyAI
                 continue;
 
             SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
+            smartAgentNavigator.StopSearchRoutine();
             return;
         }
     }
@@ -95,10 +99,12 @@ public class Guardsman : CodeRebirthEnemyAI
         if (CalculateEnemySize(_targetEnemy) > _enemySizeThreshold)
         {
             creatureNetworkAnimator.SetTrigger(KillLargeAnimation);
+            _bufferTimer += 10f;
         }
         else
         {
             creatureNetworkAnimator.SetTrigger(KillSmallAnimation);
+            _bufferTimer += 10f;
         }
     }
 
@@ -119,6 +125,12 @@ public class Guardsman : CodeRebirthEnemyAI
     #endregion
     #region Misc Functions
 
+    private IEnumerator StartDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        smartAgentNavigator.StartSearchRoutine(this.transform.position, 100f);
+    }
+
     private float CalculateEnemySize(EnemyAI enemyAi)
     {
         if (enemyAi.agent == null)
@@ -126,6 +138,13 @@ public class Guardsman : CodeRebirthEnemyAI
         float agentSize = 3.14159f * enemyAi.agent.radius * enemyAi.agent.radius * enemyAi.agent.height * (enemyAi.transform.localScale.x * enemyAi.transform.localScale.y * enemyAi.transform.localScale.z);
         return agentSize;
     }
+
+    private IEnumerator StartSearchRoutineWithDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        smartAgentNavigator.StartSearchRoutine(this.transform.position, 100f);
+    }
+
     #endregion
 
     #region Animation Events
@@ -136,6 +155,7 @@ public class Guardsman : CodeRebirthEnemyAI
 
     public void SmashEnemyAnimEvent()
     {
+        StartCoroutine(StartSearchRoutineWithDelay());
         if (targetEnemy == null)
             return;
 
@@ -150,13 +170,13 @@ public class Guardsman : CodeRebirthEnemyAI
 
     public void RipApartEnemyAnimEvent()
     {
+        StartCoroutine(StartSearchRoutineWithDelay());
         _killingLargeEnemy = false;
         if (targetEnemy == null)
             return;
 
-        bool overrideDestroy = !targetEnemy.enemyType.canDie;
         if (targetEnemy.IsOwner)
-            targetEnemy.KillEnemyOnOwnerClient(overrideDestroy);
+            targetEnemy.KillEnemyOnOwnerClient(true);
 
         // idk other stuff like particle effects ig        
     }

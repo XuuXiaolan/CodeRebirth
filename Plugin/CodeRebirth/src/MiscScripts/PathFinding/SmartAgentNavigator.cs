@@ -478,6 +478,9 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     public void StartSearchRoutine(Vector3 position, float radius)
     {
+        if (!agent.enabled)
+            return;
+
         if (searchRoutine != null)
         {
             StopCoroutine(searchRoutine);
@@ -510,7 +513,7 @@ public class SmartAgentNavigator : NetworkBehaviour
                 agent.SetDestination(positionToTravel);
                 yield return new WaitForSeconds(3f);
 
-                if (Vector3.Distance(this.transform.position, positionToTravel) <= 10f || agent.velocity.magnitude <= 1f)
+                if (!agent.enabled || Vector3.Distance(this.transform.position, positionToTravel) <= 10f || agent.velocity.magnitude <= 1f)
                 {
                     reachedDestination = true;
                 }

@@ -928,7 +928,15 @@ MonoBehaviour:
       spawnWeights: Vanilla:30,ExperimentationLevel:5,AssuranceLevel:15,VowLevel:10,OffenseLevel:35,MarchLevel:15,AdamanceLevel:15,RendLevel:5,DineLevel:20,TitanLevel:50,ArtificeLevel:60,EmbrionLevel:60,Modded:20
       powerLevel: 1.5
       maxSpawnCount: 3
-    items: []
+    items:
+    - entityName: Ceasefire
+      spawnWeights: 
+      generateSpawnWeightsConfig: 1
+      isScrap: 1
+      generateScrapConfig: 1
+      isShopItem: 0
+      generateShopItemConfig: 1
+      cost: 2000
     mapObjects: []
     unlockables: []
   - assetBundleName: plantpotassets
