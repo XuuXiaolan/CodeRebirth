@@ -1,6 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Util;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,6 +21,9 @@ public class Guardsman : CodeRebirthEnemyAI
     private Coroutine? _messWithSizeOverTimeRoutine = null;
     private bool _killingLargeEnemy = false;
     private float _bufferTimer = 0f;
+    private List<IHittable> _iHittableList = new();
+    private List<EnemyAI> _enemyAIList = new();
+    private Collider[] _cachedHits = new Collider[24];
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
@@ -57,6 +63,7 @@ public class Guardsman : CodeRebirthEnemyAI
             return;
 
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
+
         _bufferTimer -= AIIntervalTime;
         if (_bufferTimer > 0)
             return;
@@ -105,12 +112,14 @@ public class Guardsman : CodeRebirthEnemyAI
         if (CalculateEnemySize(_targetEnemy) > _enemySizeThreshold)
         {
             // force enemies to stop moving
+            Plugin.ExtendedLogging($"Killing Large Enemy: {_targetEnemy.enemyType.enemyName} with Size: {CalculateEnemySize(_targetEnemy)}");
             smartAgentNavigator.cantMove = true;
             creatureNetworkAnimator.SetTrigger(KillLargeAnimation);
             _bufferTimer += 10f;
         }
         else
         {
+            Plugin.ExtendedLogging($"Killing Small Enemy: {_targetEnemy.enemyType.enemyName} with Size: {CalculateEnemySize(_targetEnemy)}");
             smartAgentNavigator.cantMove = true;
             creatureNetworkAnimator.SetTrigger(KillSmallAnimation);
             _bufferTimer += 10f;
@@ -169,6 +178,9 @@ public class Guardsman : CodeRebirthEnemyAI
     {
         yield return new WaitForSeconds(3f);
         smartAgentNavigator.cantMove = false;
+        if (targetEnemy == null)
+            yield break;
+
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 100f);
     }
 
@@ -191,14 +203,46 @@ public class Guardsman : CodeRebirthEnemyAI
     public void SmashEnemyAnimEvent()
     {
         StartCoroutine(StartSearchRoutineWithDelay());
-        if (targetEnemy == null)
-            return;
 
-        targetEnemy.transform.localScale = new Vector3(targetEnemy.transform.localScale.x, targetEnemy.transform.localScale.y * 0.1f, targetEnemy.transform.localScale.z);
+        Vector3 hitPosition = (_enemyHoldingPoints[0].position + _enemyHoldingPoints[1].position) / 2;
+        int numHits = Physics.OverlapSphereNonAlloc(hitPosition, 3f, _cachedHits, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
 
-        bool overrideDestroy = !targetEnemy.enemyType.canDie;
-        if (targetEnemy.IsOwner)
-            targetEnemy.KillEnemyOnOwnerClient(overrideDestroy);
+        _iHittableList.Clear();
+        _enemyAIList.Clear();
+
+        for (int i = 0; i < numHits; i++)
+        {
+            if (!_cachedHits[i].TryGetComponent(out IHittable iHittable))
+                continue;
+
+            if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
+            {
+                if (enemyAICollisionDetect.mainScript is Guardsman)
+                    continue;
+
+                if (_enemyAIList.Contains(enemyAICollisionDetect.mainScript))
+                    continue;
+
+                _enemyAIList.Add(enemyAICollisionDetect.mainScript);
+            }
+            _iHittableList.Add(iHittable);
+        }
+
+        foreach (var iHittable in _iHittableList)
+        {
+            iHittable.Hit(99, hitPosition, null, true, -1);
+        }
+
+        foreach (var enemy in _enemyAIList)
+        {
+            enemy.gameObject.transform.localScale = new Vector3(enemy.transform.localScale.x, enemy.transform.localScale.y * 0.1f, enemy.transform.localScale.z);
+
+            bool overrideDestroy = !enemy.enemyType.canDie;
+            if (enemy.IsOwner)
+                enemy.KillEnemyOnOwnerClient(overrideDestroy);
+        }
+
+
 
         // idk other stuff
     }

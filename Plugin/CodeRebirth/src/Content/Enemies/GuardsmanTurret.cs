@@ -44,14 +44,11 @@ public class GuardsmanTurret : MonoBehaviour
         if (Vector3.Dot(transform.forward, direction.normalized) > 0.7f)
             return;
 
-        CRUtilities.CreateExplosion(targetEnemy.transform.position, true, 25, 0, 6, 1, null, null, 25f);
+        // CRUtilities.CreateExplosion(targetEnemy.transform.position, true, 25, 0, 6, 1, null, null, 25f);
     }
 
     private void HandleFindingTargetEnemy()
     {
-        if (targetEnemy != null)
-            return;
-
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
             if (enemy is Guardsman)
@@ -60,8 +57,7 @@ public class GuardsmanTurret : MonoBehaviour
             if (GuardsmanOwner.targetEnemy != null && GuardsmanOwner.targetEnemy == enemy)
                 continue;
 
-            float distanceToEnemy = Vector3.Distance(this.transform.position, enemy.transform.position);
-            if (distanceToEnemy >= 30f && distanceToEnemy <= 70f)
+            if (GuardsmanOwner.EnemyHasLineOfSightToPosition(this.transform.position, 360, 70, 0))
             {
                 targetEnemy = enemy;
                 break;
