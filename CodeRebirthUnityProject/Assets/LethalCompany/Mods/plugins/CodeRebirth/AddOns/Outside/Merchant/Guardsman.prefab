@@ -1855,7 +1855,7 @@ MonoBehaviour:
     borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
     textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
   - itemName: Blue Shrimp
-    rarity: 20
+    rarity: 7
     minPrice: 1
     maxPrice: 1
     borderColor: {r: 0, g: 0.6244762, b: 0.7058824, a: 1}
@@ -1938,12 +1938,6 @@ MonoBehaviour:
     maxPrice: 4
     borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
     textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
-  - itemName: Zorti
-    rarity: 10
-    minPrice: 4
-    maxPrice: 5
-    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
   - itemName: Credit Pad 500cc
     rarity: 5
     minPrice: 7
@@ -1974,25 +1968,25 @@ MonoBehaviour:
     maxPrice: 8
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Swrd-1 Scraps
+  - itemName: ShockwaveGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Sea-m1 Scraps
+  - itemName: SeamineGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Daisy Scraps
+  - itemName: TerminalGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Cruiser Scraps
+  - itemName: CruiserGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
@@ -2010,10 +2004,16 @@ MonoBehaviour:
     maxPrice: 15
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Aminaking
+  - itemName: KingRigo
     rarity: 3
-    minPrice: 10
-    maxPrice: 12
+    minPrice: 7
+    maxPrice: 9
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Xui.
+    rarity: 5
+    minPrice: 7
+    maxPrice: 9
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   - itemName: Credit Pad 1000cc
@@ -2028,12 +2028,48 @@ MonoBehaviour:
     maxPrice: 17
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Ceasefire
+    rarity: 5
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   - itemName: Guardsman Phone
     rarity: 3
     minPrice: 12
     maxPrice: 15
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Turbulence
+    rarity: 5
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Brrreaker
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Marrow Splitter
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: sWATTer
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Toma Hop
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
   textMeshPro: {fileID: 9140578443034586371}
   barrelSpawnPoint: {fileID: 8996456538382694786}
 --- !u!1 &2685888227207986660
@@ -4086,7 +4122,7 @@ MonoBehaviour:
     borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
     textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
   - itemName: Blue Shrimp
-    rarity: 20
+    rarity: 7
     minPrice: 1
     maxPrice: 1
     borderColor: {r: 0, g: 0.6244762, b: 0.7058824, a: 1}
@@ -4169,12 +4205,6 @@ MonoBehaviour:
     maxPrice: 4
     borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
     textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
-  - itemName: Zorti
-    rarity: 10
-    minPrice: 4
-    maxPrice: 5
-    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
   - itemName: Credit Pad 500cc
     rarity: 5
     minPrice: 7
@@ -4205,25 +4235,25 @@ MonoBehaviour:
     maxPrice: 8
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Swrd-1 Scraps
+  - itemName: ShockwaveGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Sea-m1 Scraps
+  - itemName: SeamineGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Daisy Scraps
+  - itemName: TerminalGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Cruiser Scraps
+  - itemName: CruiserGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
@@ -4241,10 +4271,16 @@ MonoBehaviour:
     maxPrice: 15
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Aminaking
+  - itemName: KingRigo
     rarity: 3
-    minPrice: 10
-    maxPrice: 12
+    minPrice: 7
+    maxPrice: 9
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Xui.
+    rarity: 5
+    minPrice: 7
+    maxPrice: 9
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   - itemName: Credit Pad 1000cc
@@ -4259,12 +4295,48 @@ MonoBehaviour:
     maxPrice: 17
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Ceasefire
+    rarity: 5
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   - itemName: Guardsman Phone
     rarity: 3
     minPrice: 12
     maxPrice: 15
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Turbulence
+    rarity: 5
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Brrreaker
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Marrow Splitter
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: sWATTer
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Toma Hop
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
   textMeshPro: {fileID: 1717170170684254663}
   barrelSpawnPoint: {fileID: 5087414292805205031}
 --- !u!1 &8202763550955054907
@@ -4511,12 +4583,12 @@ MonoBehaviour:
     maxPrice: 4
     borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
     textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
-  - itemName: Zorti
-    rarity: 8
-    minPrice: 4
-    maxPrice: 5
-    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+  - itemName: Xui.
+    rarity: 5
+    minPrice: 7
+    maxPrice: 9
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   - itemName: Job application
     rarity: 8
     minPrice: 3
@@ -4553,25 +4625,25 @@ MonoBehaviour:
     maxPrice: 8
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Swrd-1 Scraps
+  - itemName: ShockwaveGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Sea-m1 Scraps
+  - itemName: SeamineGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Daisy Scraps
+  - itemName: TerminalGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Cruiser Scraps
+  - itemName: CruiserGal Assembly Parts
     rarity: 10
     minPrice: 3
     maxPrice: 5
@@ -4631,10 +4703,10 @@ MonoBehaviour:
     maxPrice: 15
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Aminaking
-    rarity: 7
-    minPrice: 10
-    maxPrice: 12
+  - itemName: KingRigo
+    rarity: 3
+    minPrice: 7
+    maxPrice: 9
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   - itemName: Credit Pad 1000cc
@@ -4662,7 +4734,7 @@ MonoBehaviour:
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
   - itemName: Rodriguez
-    rarity: 2
+    rarity: 1
     minPrice: 69
     maxPrice: 69
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
@@ -4679,6 +4751,42 @@ MonoBehaviour:
     maxPrice: 15
     borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
     textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Ceasefire
+    rarity: 7
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Turbulence
+    rarity: 7
+    minPrice: 15
+    maxPrice: 17
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: Brrreaker
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Marrow Splitter
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: sWATTer
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Toma Hop
+    rarity: 5
+    minPrice: 6
+    maxPrice: 7
+    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
   textMeshPro: {fileID: 4412735403398847839}
   barrelSpawnPoint: {fileID: 794146360343781012}
 --- !u!1 &8291131645556859678
