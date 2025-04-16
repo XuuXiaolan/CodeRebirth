@@ -2,6 +2,7 @@ using System.Collections;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Guardsman : CodeRebirthEnemyAI
 {
@@ -11,6 +12,7 @@ public class Guardsman : CodeRebirthEnemyAI
     [SerializeField]
     private float _enemySizeThreshold = 69;
 
+    private Coroutine? _messWithSizeOverTimeRoutine = null;
     private bool _killingLargeEnemy = false;
     private float _bufferTimer = 0f;
 
@@ -22,14 +24,13 @@ public class Guardsman : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-
         StartCoroutine(StartDelay());
-        /*foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
+        foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
         {
             if (enemyType.enemyPrefab == null || enemyType.enemyPrefab.GetComponent<EnemyAI>() == null)
                 continue;
             Plugin.ExtendedLogging($"{enemyType.enemyName} has Size: {CalculateEnemySize(enemyType.enemyPrefab.GetComponent<EnemyAI>())}");
-        }*/
+        }
     }
 
     public override void Update()
@@ -98,11 +99,13 @@ public class Guardsman : CodeRebirthEnemyAI
 
         if (CalculateEnemySize(_targetEnemy) > _enemySizeThreshold)
         {
+            smartAgentNavigator.cantMove = true;
             creatureNetworkAnimator.SetTrigger(KillLargeAnimation);
             _bufferTimer += 10f;
         }
         else
         {
+            smartAgentNavigator.cantMove = true;
             creatureNetworkAnimator.SetTrigger(KillSmallAnimation);
             _bufferTimer += 10f;
         }
@@ -125,29 +128,55 @@ public class Guardsman : CodeRebirthEnemyAI
     #endregion
     #region Misc Functions
 
+    private IEnumerator MessWithSizeOverTime(int sizeMultiplier)
+    {
+        while (true)
+        {
+            if (targetEnemy == null)
+            {
+                StopCoroutine(_messWithSizeOverTimeRoutine);
+                yield break;
+            }
+            targetEnemy.transform.localScale = new Vector3(targetEnemy.transform.localScale.x, targetEnemy.transform.localScale.y, targetEnemy.transform.localScale.z) + new Vector3(sizeMultiplier * Time.deltaTime, 0, 0);
+            yield return null;
+        }
+    }
+
     private IEnumerator StartDelay()
     {
-        yield return new WaitForSeconds(3f);
+        smartAgentNavigator.cantMove = true;
+        yield return new WaitForSeconds(10f);
+        smartAgentNavigator.cantMove = false;
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 100f);
     }
 
     private float CalculateEnemySize(EnemyAI enemyAi)
     {
-        if (enemyAi.agent == null)
+        NavMeshAgent agent = enemyAi.gameObject.GetComponent<NavMeshAgent>();
+        if (agent == null)
             return 10f;
-        float agentSize = 3.14159f * enemyAi.agent.radius * enemyAi.agent.radius * enemyAi.agent.height * (enemyAi.transform.localScale.x * enemyAi.transform.localScale.y * enemyAi.transform.localScale.z);
+        float agentSize = 3.14159f * agent.radius * agent.radius * agent.height * (enemyAi.transform.localScale.x * enemyAi.transform.localScale.y * enemyAi.transform.localScale.z);
         return agentSize;
     }
 
     private IEnumerator StartSearchRoutineWithDelay()
     {
         yield return new WaitForSeconds(3f);
+        smartAgentNavigator.cantMove = false;
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 100f);
     }
 
     #endregion
 
     #region Animation Events
+    public void MessWithSizeAnimEvent(int sizeMultiplier)
+    {
+        if (_messWithSizeOverTimeRoutine != null)
+            StopCoroutine(_messWithSizeOverTimeRoutine);
+
+        _messWithSizeOverTimeRoutine = StartCoroutine(MessWithSizeOverTime(sizeMultiplier));
+    }
+
     public void StartKillLargeEnemyAnimEvent()
     {
         _killingLargeEnemy = true;

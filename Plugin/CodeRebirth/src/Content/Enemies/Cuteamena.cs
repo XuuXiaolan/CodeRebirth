@@ -49,8 +49,6 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     [SerializeField]
     private AudioClip _griefSound;
 
-    public static List<YandereCuteamena> Instances = new List<YandereCuteamena>();
-
     private enum CuteamenaState
     {
         Searching,
@@ -65,18 +63,6 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     private float _attackEnemyTimer = 0f;
 
     private bool _isCleaverDrawn = false;
-
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        Instances.Add(this);
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-        Instances.Remove(this);
-    }
 
     public override void Start()
     {
@@ -237,13 +223,14 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         if (!_isCleaverDrawn)
         {
             DrawMeatCleaver();
-        }
+        } // this should just be in the whatever --> yandere transition
 
         // Chase and attack all players.
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
             if (player.isPlayerDead)
                 continue;
+            // there should be some checks here to not just target all players no matter hte distance simultaneously.
 
             ChaseAndAttackPlayer(player);
         }
@@ -278,10 +265,11 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
     private void AttackThreatsNearSenpai()
     {
-        // Find nearby enemy colliders within a radius (e.g., 10 units)
-        Collider[] nearbyEntities = Physics.OverlapSphere(targetPlayer.transform.position, 10f, CodeRebirthUtils.Instance.enemiesMask);
+        // Find nearby enemy colliders within a radius (e.g., 2 units)
+        Collider[] nearbyEntities = Physics.OverlapSphere(targetPlayer.transform.position, 10, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
         foreach (var collider in nearbyEntities)
         {
+            // use ihittable to also attack all threats,
             EnemyAICollisionDetect monster = collider.GetComponent<EnemyAICollisionDetect>();
             if (monster == null)
                 continue;
@@ -375,6 +363,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     {
         SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(monster.mainScript));
         // monster.mainScript.HitEnemyOnLocalClient(1, transform.position, null, true, -1);
+        // there should be a whole attack chase thing with animation events for dealing damage.
         Plugin.ExtendedLogging("Cuteamena attacked a monster to protect her Senpai!");
     }
 
@@ -425,9 +414,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
     private bool HasSenpaiBodyBeenMoved()
     {
-        // In a full implementation, this would detect if the Senpai’s body object has moved.
-        // For now, simulate with a small random chance.
-        return UnityEngine.Random.Range(0, 1000) < 3; // ~0.3% chance per frame.
+        return false;
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
