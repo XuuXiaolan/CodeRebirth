@@ -2171,20 +2171,17 @@ MonoBehaviour:
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
-  hasVariants: 0
-  usesTemperature: 0
-  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 577517964605079600}
   smartAgentNavigator: {fileID: 243809026747451477}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
   eyes:
   - {fileID: 1292584987158040788}
   - {fileID: 2697936339120152967}
   attackAnimation: {fileID: 7400000, guid: 01fc1f4500b2d324db8fe9f5872e4770, type: 2}
   mouth: {fileID: 3058117292641546787}
   BiteSound: {fileID: 8300000, guid: 10fe0bdfe8e3e6e41901eef2e7016104, type: 3}
-  HitSounds:
-  - {fileID: 8300000, guid: 8e171fe11cd731445b017f7fec55d951, type: 3}
   CarnivorousPlantColourGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}

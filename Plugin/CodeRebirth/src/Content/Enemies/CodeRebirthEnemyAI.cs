@@ -18,18 +18,28 @@ namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(Collider))]
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
-    [HideInInspector] public EnemyAI? targetEnemy;
+    internal EnemyAI? targetEnemy;
 
-    public bool hasVariants = false;
-    public bool usesTemperature = false;
-    public Renderer? specialRenderer = null;
-    public NetworkAnimator creatureNetworkAnimator = null!;
-    public SmartAgentNavigator smartAgentNavigator = null!;
+    [Header("Required Components")]
+    [SerializeField]
+    internal NetworkAnimator creatureNetworkAnimator = null!;
+    [SerializeField]
+    internal SmartAgentNavigator smartAgentNavigator = null!;
 
-    private float previousLightValue = 0f;
-    private DetectLightInSurroundings? detectLightInSurroundings = null;
-    private LineRenderer line; // Debug line that shows destination of movement
-    [HideInInspector] public System.Random enemyRandom = new System.Random();
+    [Header("Optional Settings: Palettes")]
+    [SerializeField]
+    private bool _hasVariants = false;
+    [SerializeField]
+    private bool _usesTemperature = false;
+    [SerializeField]
+    private Renderer? _specialRenderer = null;
+
+    [Header("Inherited Fields")]
+
+    [HideInInspector]
+    public System.Random enemyRandom = new System.Random();
+
+    private float _previousLightValue = 0f;
     private static int ShiftHash = Shader.PropertyToID("_Shift");
     private static int TemperatureHash = Shader.PropertyToID("_Temperature");
 
@@ -37,7 +47,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     {
         base.Start();
 #if DEBUG
-        line = gameObject.AddComponent<LineRenderer>();
+        LineRenderer line = gameObject.AddComponent<LineRenderer>();
         line.widthMultiplier = 0.2f; // reduce width of the line
         StartCoroutine(DrawPath(line, agent));
 #endif
@@ -46,9 +56,9 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         smartAgentNavigator.SetAllValues(isOutside);
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
         GrabEnemyRarity(enemyType.enemyName);
-        if (hasVariants && specialRenderer != null)
+        if (_hasVariants && _specialRenderer != null)
         {
-            ApplyVariants(specialRenderer);
+            ApplyVariants(_specialRenderer);
         }
     }
 
@@ -57,10 +67,9 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         System.Random random = new System.Random(RoundManager.Instance.SpawnedEnemies.Count + StartOfRound.Instance.randomMapSeed);
         float number = random.NextFloat(0f, 1f);
         renderer.GetMaterial().SetFloat(ShiftHash, number);
-        if (usesTemperature)
+        if (_usesTemperature)
         {
-            detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
-            detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
+            this.gameObject.AddComponent<DetectLightInSurroundings>().OnLightValueChange.AddListener(OnLightValueChange);
         }
     }
 
@@ -68,19 +77,19 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     {
         // Plugin.ExtendedLogging($"Light Value: {lightValue}");
         float newLightValue = Mathf.Sqrt(lightValue);
-        StartCoroutine(LerpToHotOrCold(previousLightValue, newLightValue));
+        StartCoroutine(LerpToHotOrCold(_previousLightValue, newLightValue));
     }
 
     private IEnumerator LerpToHotOrCold(float oldValue, float newValue)
     {
-        if (specialRenderer == null) yield break;
+        if (_specialRenderer == null) yield break;
         for (int i = 1; i <= 3; i++)
         {
             float step = Mathf.Lerp(oldValue, newValue, i / 3f);
-            specialRenderer.GetMaterial().SetFloat(TemperatureHash, Mathf.Clamp(step / 5f - 0.5f, -0.5f, 0.5f));
+            _specialRenderer.GetMaterial().SetFloat(TemperatureHash, Mathf.Clamp(step / 5f - 0.5f, -0.5f, 0.5f));
             yield return null;
         }
-        previousLightValue = newValue;
+        _previousLightValue = newValue;
     }
 
     public void GrabEnemyRarity(string enemyName)

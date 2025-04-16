@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using CodeRebirth.src.MiscScripts.PathFinding;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -9,11 +7,22 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class YandereCuteamena : CodeRebirthEnemyAI
 {
+    [Header("Misc")]
+    [SerializeField]
+    private InteractTrigger _headPatTrigger = null!;
+
+    [SerializeField]
+    private GameObject _cleaverGameObject = null!;
+
+    [Header("Stats")]
     [SerializeField]
     private float _wanderSpeed = 2f;
 
     [SerializeField]
     private float _followSpeed = 4f;
+
+    [SerializeField]
+    private float _chasingSpeed = 6f;
 
     [SerializeField]
     private int _healAmount = 10;
@@ -31,13 +40,17 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     private float _detectionRange = 20f;
 
     [SerializeField]
-    private float _doorLockpickInterval = 200f; // once per Moon
+    private float _doorLockpickInterval = 200f;
 
     [SerializeField]
-    private float _attackEnemyInterval = 5f;
+    private float _attackInterval = 5f;
 
     [SerializeField]
-    private AudioSource _cuteSFX = null!;
+    private float _threatFindInterval = 2f;
+
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource _griefingSource = null!;
 
     [SerializeField]
     private AudioClip _spawnSound = null!;
@@ -48,9 +61,6 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     [SerializeField]
     private AudioClip _yandereLaughSound = null!;
 
-    [SerializeField]
-    private AudioClip _griefSound = null!;
-
     private enum CuteamenaState
     {
         Searching,
@@ -60,11 +70,12 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         Grief
     }
 
+    private PlayerControllerB? _chasingPlayer = null;
+    private bool _isCleaverDrawn = false;
     private float _healTimer = 0f;
     private float _doorLockpickTimer = 0f;
-    private float _attackEnemyTimer = 0f;
-
-    private bool _isCleaverDrawn = false;
+    private float _attackTimer = 0f;
+    private float _threatFindTimer = 0f;
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
@@ -74,16 +85,14 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     private static readonly int PetAnimation = Animator.StringToHash("pat"); // Trigger
     private static readonly int PullOutKnifeAnimation = Animator.StringToHash("pullOutKnife"); // Trigger
     private static readonly int SlashAnimation = Animator.StringToHash("slashAttack"); // Trigger
-
-    private PlayerControllerB _chasingPlayer;
     
     public override void Start()
-    {
-        smartAgentNavigator = GetComponent<SmartAgentNavigator>(); // is this supposed to show in unity?
-            
+    {            
         base.Start();
+        _headPatTrigger.onInteract.AddListener(OnHeadPatInteract);
+        smartAgentNavigator.StartSearchRoutine(this.transform.position, 40f);
         agent.speed = _wanderSpeed;
-        //_cuteSFX.PlayOneShot(_spawnSound);
+        // creatureSFX.PlayOneShot(_spawnSound);
         _healTimer = _healCooldown;
         _doorLockpickTimer = _doorLockpickInterval;
     }
@@ -98,9 +107,10 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
         _healTimer -= Time.deltaTime;
         _doorLockpickTimer -= Time.deltaTime;
-        _attackEnemyTimer -= Time.deltaTime;
+        _attackTimer -= Time.deltaTime;
     }
 
+    #region StateMachine
     public override void DoAIInterval()
     {
         base.DoAIInterval();
@@ -148,9 +158,10 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
     private void DoPassiveBehavior()
     {
-        // If Senpai is lost or dead, transition to Grief
         if (targetPlayer == null || targetPlayer.isPlayerDead)
         {
+            agent.speed = 0f;
+            creatureAnimator.SetBool(CryingAnimation, true);
             SwitchToBehaviourServerRpc((int)CuteamenaState.Grief);
             return;
         }
@@ -164,16 +175,20 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             }
             smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position);
 
+            if (_attackTimer > 0)
+                return;
+
             if (Vector3.Distance(transform.position, targetEnemy.transform.position) < 2f)
             {
-                // do attack animation
+                _attackTimer = _attackInterval;
+                creatureNetworkAnimator.SetTrigger(HeadbuttAnimation);
+                // do headbutt animation
             }
             return;
         }
-        // Follow Senpai closely
-        FollowSenpai();
 
-        // Heal Senpai if injured and if cooldown has elapsed.
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
+
         if (_healTimer <= 0f && targetPlayer.health < 100)
         {
             HealSenpai();
@@ -181,10 +196,10 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             return;
         }
 
-        if (_attackEnemyTimer <= 0f)
+        if (_threatFindTimer <= 0f)
         {
-            AttackThreatsNearSenpai();
-            _attackEnemyTimer = _attackEnemyInterval;
+            FindThreatsNearbySenpai();
+            _threatFindTimer = _threatFindInterval;
             return;
         }
 
@@ -204,87 +219,121 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
     private void DoJealousBehavior()
     {
-        // If Senpai dies, shift to Grief state.
         if (targetPlayer == null || targetPlayer.isPlayerDead)
         {
+            agent.speed = 0f;
+            creatureAnimator.SetBool(CryingAnimation, true);
             SwitchToBehaviourServerRpc((int)CuteamenaState.Grief);
             return;
         }
 
-        // Continue following Senpai
-        FollowSenpai();
+        FollowSenpaiForwardly();
 
-        // Look for any other player nearby who might be a rival and, if Senpai isn’t looking, attack them.
-        PlayerControllerB? rival = LookForOtherPlayers();
+        PlayerControllerB? rival = LookForOtherPlayers(out float distanceToRival);
         if (rival != null)
         {
-            AttackPlayer(rival);
+            AttackPlayer(rival, distanceToRival);
+            return;
         }
 
-        // Check if Senpai shows affection (e.g. petting Cuteamena's head);
-        // if so, consider reverting back to Passive state.
-        if (IsSenpaiCheeringUp())
+        if (HasBeenFurtherIgnored())
         {
-            SwitchToBehaviourServerRpc((int)CuteamenaState.Passive);
-        }
-
-        // If she is further neglected or harmed, escalate to Yandere
-        if (HasBeenHarmedOrFurtherIgnored())
-        {
-            Plugin.ExtendedLogging("ignored");
+            Plugin.ExtendedLogging("transition to yandere by pure luck");
+            creatureNetworkAnimator.SetTrigger(PullOutKnifeAnimation);
+            agent.speed = _chasingSpeed;
             SwitchToBehaviourServerRpc((int)CuteamenaState.Yandere);
         }
     }
 
     private void DoYandereBehavior()
     {
-        // In Yandere mode, ensure the meat cleaver is drawn.
         if (!_isCleaverDrawn)
         {
-            DrawMeatCleaver();
-        } // this should just be in the whatever --> yandere transition
+            return;
+        }
 
-        if (!_chasingPlayer)
+        if (_chasingPlayer == null)
         {
+            float closestDistance = float.MaxValue;
+            PlayerControllerB? closestPlayer = null;
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
-                if (player.isPlayerDead)
+                if (!player.isPlayerControlled || player.isPlayerDead)
                     continue;
-                // there should be some checks here to not just target all players no matter hte distance simultaneously.
 
-                ChaseAndAttackPlayer(player);
+                closestPlayer = player;
+                closestDistance = Mathf.Min(closestDistance, Vector3.Distance(transform.position, player.transform.position));
+            }
+
+            if (closestDistance <= _detectionRange)
+            {
+                _chasingPlayer = closestPlayer;
             }
         }
+        else if (_chasingPlayer.isPlayerDead)
+        {
+            _chasingPlayer = null;
+        }
+
+        ChaseAndAttackPlayer(_chasingPlayer);
 
         // Check for nearby breaker box; with some chance, shut off the power.
         // AttemptShutOffPower();
     }
-    
-    private void ChaseAndAttackPlayer(PlayerControllerB player) {
+
+    private void DoGriefBehavior()
+    {
+        if (HasSenpaiBodyBeenMoved())
+        {
+            Plugin.ExtendedLogging("body moved");
+            creatureNetworkAnimator.SetTrigger(PullOutKnifeAnimation);
+            agent.speed = _chasingSpeed;
+            StartOrStopGriefingSoundServerRpc(false);
+            SwitchToBehaviourServerRpc((int)CuteamenaState.Yandere);
+        }
+    }
+    #endregion
+
+    #region Misc Functions
+    private void OnHeadPatInteract(PlayerControllerB player)
+    {
+        if (player == null || player != targetPlayer)
+            return;
+
+        HeadPatServerRpc(player);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void HeadPatServerRpc(PlayerControllerReference playerControllerReference)
+    {
+        PlayerControllerB player = playerControllerReference;
+        creatureNetworkAnimator.SetTrigger(PetAnimation);
+        // creatureVoice.PlayOneShot(patSounds[enemyRandom.Next(patSounds.Length)]);    
+
+        if (currentBehaviourStateIndex != (int)CuteamenaState.Jealous)
+            return;
+
+        if (player != targetPlayer)
+            return;
+
+        SwitchToBehaviourClientRpc((int)CuteamenaState.Passive);
+    }
+
+    private void ChaseAndAttackPlayer(PlayerControllerB? player)
+    {
+        if (player == null)
+            return;
+
         smartAgentNavigator.DoPathingToDestination(player.transform.position);
 
-        // If close enough, do animation event that deals damage.
         if (Vector3.Distance(transform.position, player.transform.position) < 2f)
         {
-            AttackPlayerWithCleaverClientRPC(player);
+            AttackPlayerWithCleaverClientRPC(player); // todo: it should be triggering the attack animation and then damaging through animation event
             Plugin.ExtendedLogging("Yandere Cuteamena attacked a player with her cleaver!");
         }
     }
 
-    private void DoGriefBehavior()
-    {
-        // Stay near Senpai's body and play grief animations/sounds.
-        SitAndCry();
-
-        // If Senpai's body is disturbed (e.g. picked up or teleported), immediately switch to Yandere.
-        if (HasSenpaiBodyBeenMoved())
-        {
-            Plugin.ExtendedLogging("body moved");
-            SwitchToBehaviourServerRpc((int)CuteamenaState.Yandere);
-        }
-    }
-
-    private void FollowSenpai()
+    private void FollowSenpaiForwardly()
     {
         // move slightly infront of the player to be kind of more annoying
         Vector3 target = targetPlayer.transform.position + targetPlayer.transform.forward * 2f;
@@ -295,30 +344,29 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     {
         targetPlayer.DamagePlayerFromOtherClientServerRpc(-_healAmount, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
         Plugin.ExtendedLogging("Cuteamena healed her Senpai!");
-        //_cuteSFX.PlayOneShot(_cheerUpSound);
+        // creatureSFX.PlayOneShot(_cheerUpSound);
     }
 
-    private void AttackThreatsNearSenpai()
+    private void FindThreatsNearbySenpai()
     {
-        // Find nearby enemy colliders within a radius (e.g., 2 units)
         Collider[] nearbyEntities = Physics.OverlapSphere(targetPlayer.transform.position, 10, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
         foreach (var collider in nearbyEntities)
         {
-            // use ihittable to also attack all threats,
-            EnemyAICollisionDetect monster = collider.GetComponent<EnemyAICollisionDetect>();
-            if (monster == null)
-                continue;
-            // Skip excluded types
-            if (!monster.mainScript.enemyType.canDie)
+            EnemyAICollisionDetect enemyAICollisionDetect = collider.GetComponent<EnemyAICollisionDetect>();
+            if (enemyAICollisionDetect == null)
                 continue;
 
-            AttackMonster(monster);
+            if (!enemyAICollisionDetect.mainScript.enemyType.canDie)
+                continue;
+
+            SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemyAICollisionDetect.mainScript));
+            Plugin.ExtendedLogging("Cuteamena started targetting a nearby monster to protect her Senpai!");
+            break;
         }
     }
 
     private void AttemptLockpickDoor()
     {
-        // Look for doors within a small radius (e.g., 5 units)
         Collider[] doors = Physics.OverlapSphere(transform.position, 5f, CodeRebirthUtils.Instance.interactableMask, QueryTriggerInteraction.Collide);
         foreach (var doorCollider in doors)
         {
@@ -326,6 +374,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             if (door != null && door.isLocked)
             {
                 door.UnlockDoorClientRpc();
+                // todo: probably headbutt the door, maybe set a target door for it to go towards first lol
                 Plugin.ExtendedLogging("Cuteamena attempted to lockpick a door.");
                 break;
             }
@@ -334,46 +383,48 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
     private bool IsSenpaiIgnoringMe()
     {
-        return Vector3.Distance(transform.position, targetPlayer.transform.position) > _attentionDistanceThreshold;
+        return Vector3.Distance(transform.position, targetPlayer.transform.position) > _attentionDistanceThreshold && !PlayerLookingAtEnemy(targetPlayer, 0.2f);
     }
 
     private bool IsSenpaiWithOtherPlayers()
     {
-        // If another player is very near the Senpai, return true.
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
             if (player == targetPlayer || player.isPlayerDead)
                 continue;
-            if (Vector3.Distance(targetPlayer.transform.position, player.transform.position) < 5f)
-            {
-                return true;
-            }
+            if (Vector3.Distance(targetPlayer.transform.position, player.transform.position) > 5f)
+                continue;
+
+            return true;
         }
         return false;
     }
 
-    private PlayerControllerB? LookForOtherPlayers()
+    private PlayerControllerB? LookForOtherPlayers(out float distanceToRival)
     {
-        // Look for a rival player (other than Senpai) within the jealous attack range.
+        distanceToRival = 0f;
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player == targetPlayer || player.isPlayerDead)
+            if (player == targetPlayer || player.isPlayerDead || !player.isPlayerControlled)
                 continue;
-            if (Vector3.Distance(transform.position, player.transform.position) < _jealousAttackRange)
-            {
-                if (!IsSenpaiLookingAt(player))
-                {
-                    return player;
-                }
-            }
+
+            distanceToRival = Vector3.Distance(transform.position, player.transform.position);
+
+            if (distanceToRival > _jealousAttackRange + 5)
+                continue;
+
+            if (IsSenpaiLookingAt(player))
+                continue;
+
+            return player;
         }
         return null;
     }
 
     private bool IsSenpaiLookingAt(PlayerControllerB player)
     {
-        Vector3 toPlayer = (player.transform.position - targetPlayer.transform.position).normalized;
-        float dot = Vector3.Dot(targetPlayer.transform.forward, toPlayer);
+        Vector3 toPlayer = (player.transform.position - targetPlayer.gameplayCamera.transform.position).normalized;
+        float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, toPlayer);
         return dot > 0.7f;
     }
 
@@ -382,45 +433,83 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         return UnityEngine.Random.Range(0, 1000) < 5;
     }
 
-    private bool HasBeenHarmedOrFurtherIgnored()
+    private bool HasBeenFurtherIgnored()
     {
         return UnityEngine.Random.Range(0, 1000) < 2;
     }
 
-    private void AttackPlayer(PlayerControllerB player)
+    private void AttackPlayer(PlayerControllerB player, float distanceToRival)
     {
         Vector3 knockback = (player.transform.position - transform.position).normalized * 5f;
+        smartAgentNavigator.DoPathingToDestination(player.transform.position);
+
+        if (distanceToRival < agent.stoppingDistance + _jealousAttackRange)
+            return;
+
+        // todo: do a headbutt animation and through animation event damage whatever's in the path
         player.DamagePlayer(10, true, false, CauseOfDeath.Bludgeoning, 0, false, knockback);
         Plugin.ExtendedLogging("Cuteamena attacked a rival player out of jealousy!");
     }
 
-    private void AttackMonster(EnemyAICollisionDetect monster)
-    {
-        SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(monster.mainScript));
-        // monster.mainScript.HitEnemyOnLocalClient(1, transform.position, null, true, -1);
-        // there should be a whole attack chase thing with animation events for dealing damage.
-        Plugin.ExtendedLogging("Cuteamena attacked a monster to protect her Senpai!");
-    }
-
-    private void DrawMeatCleaver()
-    {
-        _isCleaverDrawn = true;
-        Plugin.ExtendedLogging("Cuteamena has drawn her meat cleaver! Yandere mode engaged!");
-        //_cuteSFX.PlayOneShot(_yandereLaughSound);
-        // trigger an animation
-    }
-
     [ClientRpc]
-    void AttackPlayerWithCleaverClientRPC(PlayerControllerReference reference)
+    private void AttackPlayerWithCleaverClientRPC(PlayerControllerReference reference)
     {
         PlayerControllerB player = reference;
         if (player == GameNetworkManager.Instance.localPlayerController)
         {
             player.DamagePlayer(20, true, false, CauseOfDeath.Bludgeoning, 0, false, transform.forward * 10f);
         }
-        // idk maybe like animation stuff
+        // todo: this should really be an animation event that attacks everything in an overlap sphere
     }
-    
+
+    private bool HasSenpaiBodyBeenMoved()
+    {
+        if (targetPlayer.deadBody == null)
+            return false;
+        
+        DeadBodyInfo body = targetPlayer.deadBody;
+        if (body.grabBodyObject.isHeld)
+            return true;
+
+        return body.bodyMovedThisFrame;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartOrStopGriefingSoundServerRpc(bool start)
+    {
+        StartOrStopGriefingSoundClientRpc(start);
+    }
+
+    [ClientRpc]
+    public void StartOrStopGriefingSoundClientRpc(bool start)
+    {
+        if (start)
+        {
+            _griefingSource.Play();
+        }
+        else
+        {
+            _griefingSource.Stop();
+        }
+    }
+    #endregion
+
+    #region Animation Events
+    public void DrawMeatCleaverAnimEvent()
+    {
+        _isCleaverDrawn = true;
+        _cleaverGameObject.SetActive(true);
+        Plugin.ExtendedLogging("Cuteamena has drawn her meat cleaver! Yandere mode engaged!");
+        // creatureSFX.PlayOneShot(_yandereLaughSound);
+    }
+
+    public void DropCleaverAnimEvent()
+    {
+        // todo: Instantiate or spawn the meat cleaver as scrap
+        Plugin.ExtendedLogging("Meat cleaver dropped as scrap.");
+    }
+    #endregion
+
     /*private void AttemptShutOffPower()
     {
         // Look for a breaker box within an 8-unit radius.
@@ -439,22 +528,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         }
     }*/
 
-    private void SitAndCry()
-    {
-        Plugin.ExtendedLogging("Cuteamena is grieving over her lost Senpai...");
-        //_cuteSFX.PlayOneShot(_griefSound);
-        
-        // trigger a grief animation and halt movement.
-    }
-
-    private bool HasSenpaiBodyBeenMoved()
-    {
-        if(!targetPlayer.deadBody) return false;
-        
-        DeadBodyInfo body = targetPlayer.deadBody;
-        return body.bodyMovedThisFrame;
-    }
-
+    #region Call Backs
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
@@ -462,33 +536,38 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         enemyHP -= force;
         if (enemyHP < 0)
         {
-            if (!IsOwner) return;
-            KillEnemyOnOwnerClient();
+            if (IsOwner)
+            {
+                KillEnemyOnOwnerClient();
+            }
             return;
         }
+
         if (IsServer)
             creatureNetworkAnimator.SetTrigger(HitAnimation);
 
-        // If Cuteamena is hit while in Passive or Jealous modes, she becomes Yandere.
-        if (currentBehaviourStateIndex == (int)CuteamenaState.Passive || currentBehaviourStateIndex == (int)CuteamenaState.Jealous)
+        if (playerWhoHit == null || currentBehaviourStateIndex == (int)CuteamenaState.Yandere)
+            return;
+
+        _griefingSource.Stop();
+        if (currentBehaviourStateIndex == (int)CuteamenaState.Jealous)
         {
+            creatureNetworkAnimator.SetTrigger(PullOutKnifeAnimation);
+            agent.speed = _chasingSpeed;
             SwitchToBehaviourStateOnLocalClient((int)CuteamenaState.Yandere);
+            return;
         }
+        SwitchToBehaviourStateOnLocalClient((int)CuteamenaState.Jealous);
     }
 
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
-
+        _griefingSource.Stop();
+        _cleaverGameObject.SetActive(false);
         if (!IsServer) return;
         creatureAnimator.SetBool(IsDeadAnimation, true);
-        DropCleaver();
         Plugin.ExtendedLogging("Cuteamena has been defeated.");
     }
-
-    private void DropCleaver()
-    {
-        // Instantiate or spawn the meat cleaver as scrap
-        Plugin.ExtendedLogging("Meat cleaver dropped as scrap.");
-    }
+    #endregion
 }

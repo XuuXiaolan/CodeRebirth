@@ -72,6 +72,10 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     public bool DoPathingToDestination(Vector3 destination)
     {
+        if (isSearching)
+        {
+            StopSearchRoutine();
+        }
         if (cantMove) return false;
         if (!agent.enabled)
         {

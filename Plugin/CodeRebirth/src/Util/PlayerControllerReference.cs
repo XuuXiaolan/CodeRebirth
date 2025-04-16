@@ -1,4 +1,5 @@
-﻿using GameNetcodeStuff;
+﻿using System;
+using GameNetcodeStuff;
 using Unity.Netcode;
 
 namespace CodeRebirth.src.Util;
@@ -14,7 +15,7 @@ public class PlayerControllerReference : INetworkSerializable
     public static implicit operator PlayerControllerB(PlayerControllerReference reference) => StartOfRound.Instance.allPlayerScripts[reference._playerID];
     public static implicit operator PlayerControllerReference(PlayerControllerB player) => new()
     {
-        _playerID = (int)player.playerClientId,
+        _playerID = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), // (int)player.playerClientId,
     };
 
     public override bool Equals(object? obj)
