@@ -35,19 +35,19 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     private float _attackEnemyInterval = 5f;
 
     [SerializeField]
-    private AudioSource _cuteSFX;
+    private AudioSource _cuteSFX = null!;
 
     [SerializeField]
-    private AudioClip _spawnSound;
+    private AudioClip _spawnSound = null!;
 
     [SerializeField]
-    private AudioClip _cheerUpSound;
+    private AudioClip _cheerUpSound = null!;
 
     [SerializeField]
-    private AudioClip _yandereLaughSound;
+    private AudioClip _yandereLaughSound = null!;
 
     [SerializeField]
-    private AudioClip _griefSound;
+    private AudioClip _griefSound = null!;
 
     private enum CuteamenaState
     {
@@ -63,6 +63,15 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     private float _attackEnemyTimer = 0f;
 
     private bool _isCleaverDrawn = false;
+
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
+    private static readonly int CryingAnimation = Animator.StringToHash("crying"); // Bool
+    private static readonly int HitAnimation = Animator.StringToHash("hit"); // Trigger
+    private static readonly int HeadbuttAnimation = Animator.StringToHash("headbutt"); // Trigger
+    private static readonly int PetAnimation = Animator.StringToHash("pat"); // Trigger
+    private static readonly int PullOutKnifeAnimation = Animator.StringToHash("pullOutKnife"); // Trigger
+    private static readonly int SlashAnimation = Animator.StringToHash("slashAttack"); // Trigger
 
     public override void Start()
     {
@@ -89,7 +98,10 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     public override void DoAIInterval()
     {
         base.DoAIInterval();
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead)
+            return;
 
+        creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
         switch (currentBehaviourStateIndex)
         {
             case (int)CuteamenaState.Searching:
@@ -428,6 +440,9 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             KillEnemyOnOwnerClient();
             return;
         }
+        if (IsServer)
+            creatureNetworkAnimator.SetTrigger(HitAnimation);
+
         // If Cuteamena is hit while in Passive or Jealous modes, she becomes Yandere.
         if (currentBehaviourStateIndex == (int)CuteamenaState.Passive || currentBehaviourStateIndex == (int)CuteamenaState.Jealous)
         {
@@ -440,6 +455,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         base.KillEnemy(destroy);
 
         if (!IsServer) return;
+        creatureAnimator.SetBool(IsDeadAnimation, true);
         DropCleaver();
         Plugin.ExtendedLogging("Cuteamena has been defeated.");
     }

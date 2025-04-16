@@ -10,6 +10,9 @@ public class Guardsman : CodeRebirthEnemyAI
     private Transform[] _enemyHoldingPoints = [];
 
     [SerializeField]
+    private Transform _spotlightHead = null!;
+
+    [SerializeField]
     private float _enemySizeThreshold = 69;
 
     private Coroutine? _messWithSizeOverTimeRoutine = null;
@@ -29,6 +32,7 @@ public class Guardsman : CodeRebirthEnemyAI
         {
             if (enemyType.enemyPrefab == null || enemyType.enemyPrefab.GetComponent<EnemyAI>() == null)
                 continue;
+
             Plugin.ExtendedLogging($"{enemyType.enemyName} has Size: {CalculateEnemySize(enemyType.enemyPrefab.GetComponent<EnemyAI>())}");
         }
     }
@@ -41,6 +45,7 @@ public class Guardsman : CodeRebirthEnemyAI
         {
             Vector3 holdingPoint = (_enemyHoldingPoints[0].position + _enemyHoldingPoints[1].position) / 2;
             targetEnemy.transform.position = holdingPoint;
+            targetEnemy.transform.LookAt(_spotlightHead);
         }
     }
 
@@ -99,6 +104,7 @@ public class Guardsman : CodeRebirthEnemyAI
 
         if (CalculateEnemySize(_targetEnemy) > _enemySizeThreshold)
         {
+            // force enemies to stop moving
             smartAgentNavigator.cantMove = true;
             creatureNetworkAnimator.SetTrigger(KillLargeAnimation);
             _bufferTimer += 10f;
