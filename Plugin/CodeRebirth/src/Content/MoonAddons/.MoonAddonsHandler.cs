@@ -8,10 +8,17 @@ public class MoonAddonsHandler : ContentHandler<MoonAddonsHandler>
     {
     }
 
+    public class OxydeLoreAssets(string bundleName) : AssetBundleLoader<OxydeLoreAssets>(bundleName)
+    {
+    }
+
     public MoonUnlockerAssets? MoonUnlocker { get; private set; } = null;
+    public OxydeLoreAssets? OxydeLore { get; private set; } = null;
 
     public MoonAddonsHandler()
     {
+        OxydeLore = LoadAndRegisterAssets<OxydeLoreAssets>("oxydeloreassets");
+
         MoonUnlocker = LoadAndRegisterAssets<MoonUnlockerAssets>("moonunlockerassets");
     }
 }
