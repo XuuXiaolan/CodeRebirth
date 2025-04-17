@@ -118,29 +118,44 @@ public class ContentHandler<T> where T : ContentHandler<T>
             if (definition is CREnemyDefinition enemyDef)
             {
                 // Add to enemy definitions.
+                if (enemyDef.enemyType == null)
+                    continue;
+
                 Plugin.ExtendedLogging($"EnemyDefinition: {enemyDef.enemyType.enemyName}");
                 assetBundle.enemyDefinitions.Add(enemyDef);
             }
             else if (definition is CRItemDefinition itemDef)
             {
                 // Add to item definitions.
+                if (itemDef.item == null)
+                    continue;
+
                 Plugin.ExtendedLogging($"ItemDefinition: {itemDef.item.itemName}");
                 assetBundle.itemDefinitions.Add(itemDef);
             }
             else if (definition is CRMapObjectDefinition mapObjectDef)
             {
                 // Add to map object definitions.
+                if (mapObjectDef.gameObject == null)
+                    continue;
+
                 Plugin.ExtendedLogging($"MapObjectDefinition: {mapObjectDef.objectName}");
                 assetBundle.mapObjectDefinitions.Add(mapObjectDef);
             }
             else if (definition is CRUnlockableDefinition unlockableDef)
             {
                 Plugin.ExtendedLogging($"UnlockableDefinition: {unlockableDef.unlockableItemDef.unlockable.unlockableName}");
+                if (unlockableDef.unlockableItemDef == null)
+                    continue;
+
                 assetBundle.unlockableDefinitions.Add(unlockableDef);
             }
             else if (definition is CRWeatherDefinition weatherDef)
             {
                 Plugin.ExtendedLogging($"WeatherDefinition: {weatherDef.Weather.Name}");
+                if (weatherDef.Weather == null)
+                    continue;
+
                 assetBundle.weatherDefinitions.Add(weatherDef);
             }
         }
