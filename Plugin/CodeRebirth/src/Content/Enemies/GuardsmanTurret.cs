@@ -1,4 +1,3 @@
-using CodeRebirth.src.MiscScripts;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
@@ -36,7 +35,6 @@ public class GuardsmanTurret : MonoBehaviour
         hitTimer = 5f;
 
         Vector3 direction = targetEnemy.transform.position - transform.position;
-        direction.y = 0;
 
         Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);

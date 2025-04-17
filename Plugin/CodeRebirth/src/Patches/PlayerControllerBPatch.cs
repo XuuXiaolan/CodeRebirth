@@ -11,7 +11,6 @@ using MonoMod.Cil;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static CodeRebirth.src.Content.Enemies.Janitor;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
@@ -104,7 +103,7 @@ static class PlayerControllerBPatch
         {
             if (janitor == null || janitor.isEnemyDead) continue;
             // If we’re still alive, chase that player if we’re not already
-            if (self != null && NetworkManager.Singleton.IsServer && janitor.currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer && janitor.currentBehaviourStateIndex != (int)JanitorStates.ZoomingOff)
+            if (self != null && NetworkManager.Singleton.IsServer && janitor.currentBehaviourStateIndex != (int)Janitor.JanitorStates.FollowingPlayer && janitor.currentBehaviourStateIndex != (int)Janitor.JanitorStates.ZoomingOff)
             {
                 if (!janitor.currentlyGrabbingPlayer && !janitor.currentlyGrabbingScrap && !janitor.currentlyThrowingPlayer)
                 {

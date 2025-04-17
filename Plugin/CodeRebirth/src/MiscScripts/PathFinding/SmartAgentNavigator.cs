@@ -65,9 +65,8 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     public void StopAgent()
     {
-        agent.ResetPath();
+        if (agent.enabled && agent.isOnNavMesh) agent.ResetPath();
         agent.velocity = Vector3.zero;
-        agent.isStopped = true;
     }
 
     public bool DoPathingToDestination(Vector3 destination)
@@ -500,6 +499,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         {
             StopCoroutine(searchRoutine);
         }
+        StopAgent();
         searchRoutine = null;
     }
 
