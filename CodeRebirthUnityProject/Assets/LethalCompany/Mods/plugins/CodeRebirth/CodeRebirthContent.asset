@@ -172,6 +172,50 @@ MonoBehaviour:
         ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 1.00,1.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
+  - assetBundleName: cactusbudlingassets
+    configName: Cactus Budling
+    weathers: []
+    enemies:
+    - entityName: Cactus Budling
+      spawnWeights: All:1
+      powerLevel: 2
+      maxSpawnCount: 1
+    items: []
+    mapObjects:
+    - entityName: Emerging Cactus 1
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Canyon - 0.00,10.00 ; 0.11,10.64 ; 0.22,11.21
+        ; 0.33,11.77 ; 0.44,12.35 ; 0.56,13.00 ; 0.67,13.76 ; 0.78,14.68 ; 0.89,18.50
+        ; 1.00,30.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    - entityName: Emerging Cactus 2
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Canyon - 0.00,10.00 ; 0.11,10.64 ; 0.22,11.21
+        ; 0.33,11.77 ; 0.44,12.35 ; 0.56,13.00 ; 0.67,13.76 ; 0.78,14.68 ; 0.89,18.50
+        ; 1.00,30.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    - entityName: Emerging Cactus 3
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: Canyon - 0.00,10.00 ; 0.11,10.64 ; 0.22,11.21
+        ; 0.33,11.77 ; 0.44,12.35 ; 0.56,13.00 ; 0.67,13.76 ; 0.78,14.68 ; 0.89,18.50
+        ; 1.00,30.00
+      createOutsideCurveSpawnWeightsConfig: 1
+    unlockables: []
   - assetBundleName: carnivorousplantassets
     configName: Carnivorous Plant
     weathers: []
@@ -304,6 +348,17 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
+  - assetBundleName: cuteaassets
+    configName: Cutea
+    weathers: []
+    enemies:
+    - entityName: Cutea
+      spawnWeights: 
+      powerLevel: 0
+      maxSpawnCount: 0
+    items: []
+    mapObjects: []
+    unlockables: []
   - assetBundleName: driftwoodmenaceassets
     configName: Driftwood Menace
     weathers: []
@@ -1301,16 +1356,5 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 1
       cost: 150
-    mapObjects: []
-    unlockables: []
-  - assetBundleName: cuteaassets
-    configName: Cutea
-    weathers: []
-    enemies:
-    - entityName: Cutea
-      spawnWeights: 
-      powerLevel: 0
-      maxSpawnCount: 0
-    items: []
     mapObjects: []
     unlockables: []

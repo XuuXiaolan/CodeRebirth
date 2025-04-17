@@ -71,6 +71,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     {
     }
 
+    public class CactusBudlingAssets(string bundleName) : AssetBundleLoader<CactusBudlingAssets>(bundleName)
+    {
+    }
+
+    public CactusBudlingAssets? CactusBudling { get; private set; }
     public RabbitMagicianAssets? RabbitMagician { get; private set; }
     public PeaceKeeperAssets? PeaceKeeper { get; private set; }
     public CuteaAssets? Cutea { get; private set; }
@@ -89,6 +94,8 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
+        CactusBudling = LoadAndRegisterAssets<CactusBudlingAssets>("cactusbudlingassets");
+
         RabbitMagician = LoadAndRegisterAssets<RabbitMagicianAssets>("rabbitmagicianassets");
 
         PeaceKeeper = LoadAndRegisterAssets<PeaceKeeperAssets>("peacekeeperassets");
