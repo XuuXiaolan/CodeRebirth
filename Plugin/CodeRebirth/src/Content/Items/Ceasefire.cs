@@ -7,7 +7,8 @@ public class Ceasefire : GrabbableObject
     [Header("Visuals")]
     [SerializeField]
     private GameObject _ceasefireBarrel = null!;
-
+    [SerializeField]
+    private float _rotationSpeed = 10f;
     [Header("Audio")]
     [SerializeField]
     private AudioSource _idleSource = null!;
@@ -28,15 +29,15 @@ public class Ceasefire : GrabbableObject
         base.Update();
         if (_firingStartRoutine != null)
         {
-            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * 5f * _startingTime, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
+            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * _rotationSpeed * _startingTime, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
         }
         else if (isBeingUsed)
         {
-            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * 10f, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
+            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * _rotationSpeed, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
         }
         else if (_firingEndRoutine != null)
         {
-            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * 5f * _endingTime, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
+            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * _rotationSpeed * _endingTime, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
         }
     }
 
@@ -76,7 +77,7 @@ public class Ceasefire : GrabbableObject
         while (timeElapsed <= _fireStartSound.length)
         {
             yield return null;
-            _startingTime = (timeElapsed / _fireStartSound.length) * 2;
+            _startingTime = timeElapsed / _fireStartSound.length;
             timeElapsed += Time.deltaTime;
         }
         _idleSource.clip = _fireLoopSound;
@@ -95,7 +96,7 @@ public class Ceasefire : GrabbableObject
         while (timeElapsed > 0)
         {
             yield return null;
-            _endingTime = (timeElapsed / _fireEndSound.length) * 2;
+            _endingTime = timeElapsed / _fireEndSound.length;
             timeElapsed -= Time.deltaTime;
         }
         _firingEndRoutine = null;
