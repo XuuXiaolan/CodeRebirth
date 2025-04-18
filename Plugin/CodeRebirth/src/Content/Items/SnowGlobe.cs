@@ -44,23 +44,13 @@ public class SnowGlobe : GrabbableObject
         if (previouslyHeldBy == null) return;
     }
 
-    public override void GrabItem()
-    {
-        base.GrabItem();
-        previouslyHeldBy = playerHeldBy;
-        if (previouslyHeldBy == null)
-        {
-            Plugin.Logger.LogDebug("previouslyHeldBy is null");
-        }
-    }
-
     public override void EquipItem()
     {
         base.EquipItem();
         previouslyHeldBy = playerHeldBy;
         if (previouslyHeldBy == null)
         {
-            Plugin.Logger.LogDebug("previouslyHeldBy is null");
+            Plugin.ExtendedLogging("previouslyHeldBy is null");
         }
         // Coming from pocketing since this is also called when using inventory
         ToggleParticleRenderer(true);
@@ -71,11 +61,6 @@ public class SnowGlobe : GrabbableObject
         base.PocketItem();
         // Disable Particles renderer#
         ToggleParticleRenderer(false);
-    }
-
-    public override void DiscardItem()
-    {
-        base.DiscardItem();
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)

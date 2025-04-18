@@ -616,7 +616,7 @@ Transform:
   m_GameObject: {fileID: 1080467340835136185}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.129, y: 3.426, z: 0.021}
+  m_LocalPosition: {x: -1.125, y: 3.422, z: 0.021}
   m_LocalScale: {x: 1.0088, y: 1.0088, z: 1.0088}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1206,7 +1206,7 @@ MonoBehaviour:
   m_VolumetricDimmer: 0.3
   m_LightUnit: 0
   m_FadeDistance: 10000
-  m_VolumetricFadeDistance: 200
+  m_VolumetricFadeDistance: 50
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
@@ -5284,7 +5284,7 @@ GameObject:
   - component: {fileID: 3608575174855181158}
   - component: {fileID: 1750305131027025370}
   m_Layer: 21
-  m_Name: HeadLight
+  m_Name: TorsoLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
