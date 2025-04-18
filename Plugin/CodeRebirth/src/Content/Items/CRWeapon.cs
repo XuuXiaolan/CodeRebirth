@@ -73,7 +73,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     [HideInInspector] public float heldOverHeadTimer = 0f;
     private Coroutine? reelingRoutine = null;
     [HideInInspector] public RaycastHit[] cachedRaycastHits = new RaycastHit[16];
-    [HideInInspector] public PlayerControllerB previousPlayerHeldBy;
+    [HideInInspector] public PlayerControllerB? previousPlayerHeldBy = null;
 
     [HideInInspector] public UnityEvent OnHitSuccess = new UnityEvent();
     private List<IHittable> iHittableList = new();

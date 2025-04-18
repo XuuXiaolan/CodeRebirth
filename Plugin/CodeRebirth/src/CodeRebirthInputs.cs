@@ -8,6 +8,9 @@ public class IngameKeybinds : LcInputActions
     [InputAction("<Keyboard>/r", Name = "PullChain")]
     public InputAction PullChain { get; set; } = null!;
 
+    [InputAction("<Keyboard>/r", Name = "JumpBoost")]
+    public InputAction JumpBoost { get; set; } = null!;
+
     [InputAction("<Keyboard>/r", Name = "PumpSlugger")]
     public InputAction PumpSlugger { get; set; } = null!;
 
