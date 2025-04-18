@@ -1,10 +1,10 @@
 using GameNetcodeStuff;
 
 namespace CodeRebirth.src.Content.Enemies;
-public class CactusBudling : CodeRebirthEnemyAI
+public class TemplateAI : CodeRebirthEnemyAI
 {
 
-    public enum CactusBudlingState
+    public enum TemplateState
     {
         
     }

@@ -71,7 +71,7 @@ public class Turbulence : CRWeapon
         {
             return;
         }
-        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 30f * (playerHeldBy.isCrouching ? 0.25f : 1f);
+        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 120f * (playerHeldBy.isCrouching ? 0.25f : 1f);
         StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
     }
 
