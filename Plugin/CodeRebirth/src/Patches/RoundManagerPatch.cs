@@ -65,11 +65,15 @@ static class RoundManagerPatch
         Plugin.ExtendedLogging("Spawning flora!!!");
         System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
         int spawnCount = 0;
+        GameObject staticBatchedParent = new("Flora Parent");
+        staticBatchedParent.transform.SetParent(RoundManager.Instance.mapPropsContainer.transform);
 
         foreach (SpawnableFlora flora in spawnableFlora)
         {
-            SpawnFlora(random, flora, ref spawnCount);
+            SpawnFlora(staticBatchedParent, random, flora, ref spawnCount);
         }
+
+        // StaticBatchingUtility.Combine(staticBatchedParent);
     }
 
     private static bool TryGetValidFloraSpawnPoint(System.Random random, out RaycastHit hit)
@@ -87,7 +91,7 @@ static class RoundManagerPatch
         return true;
     }
 
-    private static void SpawnFlora(System.Random random, SpawnableFlora flora, ref int spawnCount)
+    private static void SpawnFlora(GameObject staticBatchedParent, System.Random random, SpawnableFlora flora, ref int spawnCount)
     {
         AnimationCurve animationCurve = flora.spawnCurveFunction(RoundManager.Instance.currentLevel);
         int targetSpawns = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0, 1)) + 0.5f);
@@ -114,7 +118,7 @@ static class RoundManagerPatch
 
             Vector3 spawnPosition = hit.point;
 
-            GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            GameObject spawnedFlora = GameObject.Instantiate(flora.prefab, spawnPosition, Quaternion.identity, staticBatchedParent.transform);
             spawnedFlora.transform.up = hit.normal;
             spawnCount++;
         }
