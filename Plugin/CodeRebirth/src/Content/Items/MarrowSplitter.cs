@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
@@ -24,7 +27,6 @@ public class MarrowSplitter : GrabbableObject
     [SerializeField]
     private AudioClip[] _tryHealPlayerSounds = [];
 
-    private Collider[] _cachedColliders = new Collider[8];
     private float _tryHealPlayerTimer = 0f;
     private float _hitTimer = 0f;
 
@@ -66,18 +68,27 @@ public class MarrowSplitter : GrabbableObject
 
     public void OnTryHealPlayer(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (_tryHealPlayerTimer > 0f || insertedBattery.empty || isBeingUsed) return;
+        if (_tryHealPlayerTimer > 0f || insertedBattery.empty || isBeingUsed || !isHeld || isPocketed) return;
         if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
         var btn = (ButtonControl)context.control;
 
-        if (btn.wasPressedThisFrame)
+        if (!btn.wasPressedThisFrame)
+            return;
+
+        _tryHealPlayerTimer = 1f;
+        _audioSource.PlayOneShot(_tryHealPlayerSounds[UnityEngine.Random.Range(0, _tryHealPlayerSounds.Length)]);
+
+        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < numHits; i++)
         {
-            _tryHealPlayerTimer = 1f;
-            _audioSource.PlayOneShot(_tryHealPlayerSounds[UnityEngine.Random.Range(0, _tryHealPlayerSounds.Length)]);
-            if (UnityEngine.Random.Range(0, 100) < 25)
-            {
-                Plugin.ExtendedLogging($"Marrow Splitter Activated");
-            }
+            if (_cachedColliders[i].transform == playerHeldBy.transform) continue;
+            if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
+                continue;
+
+            if (iHittable is not PlayerControllerB playerControllerB)
+                continue;
+
+            playerControllerB.DamagePlayerFromOtherClientServerRpc(-25, playerHeldBy.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
         }
     }
 
@@ -87,23 +98,47 @@ public class MarrowSplitter : GrabbableObject
         _tryHealPlayerTimer -= Time.deltaTime;
         _hitTimer -= Time.deltaTime;
         if (!isBeingUsed || _hitTimer > 0 || playerHeldBy == null) return;
-        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        DoHitStuff(1);
+    }
+
+    private Collider[] _cachedColliders = new Collider[8];
+    private List<IHittable> _iHittableList = new();
+    private List<EnemyAI> _enemyAIList = new();
+
+    private void DoHitStuff(int damageToDeal)
+    {
+        _iHittableList.Clear();
+        _enemyAIList.Clear();
         bool hitSomething = false;
+
+        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (!_cachedColliders[i].TryGetComponent(out IHittable iHittable) || _cachedColliders[i].transform.position == playerHeldBy.transform.position) continue;
-            if (IsOwner)
+            if (_cachedColliders[i].transform == playerHeldBy.transform) continue;
+            if (_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
             {
-                iHittable.Hit(1, playerHeldBy.gameplayCamera.transform.forward, playerHeldBy, true, -1);
+                if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
+                {
+                    if (_enemyAIList.Contains(enemyAICollisionDetect.mainScript))
+                    {
+                        continue;
+                    }
+                    _enemyAIList.Add(enemyAICollisionDetect.mainScript);
+                }
+                hitSomething = true;
+                _iHittableList.Add(iHittable);
             }
-            hitSomething = true;
-            Plugin.ExtendedLogging($"Marrow Splitter hit {_cachedColliders[i].name}");
         }
+        foreach (var iHittable in _iHittableList)
+        {
+            if (IsOwner)
+                iHittable.Hit(damageToDeal, playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
+        }
+
         if (hitSomething)
         {
             _hitTimer = 0.4f;
             insertedBattery.charge -= 0.05f;
-            // take some battery charge.
         }
     }
 

@@ -21,6 +21,7 @@ public class Mistress : CodeRebirthEnemyAI
     public AudioClip[] AttackSounds = null!;
 
     private List<PlayerControllerB> previousTargetPlayers = new();
+    private int _seeingCount = 0;
     private float teleporterTimer = 20f;
     private float timeSpentInState = 0f;
     private float killTimer = 0f;
@@ -124,21 +125,29 @@ public class Mistress : CodeRebirthEnemyAI
         }
 
         bool LookedAt = PlayerLookingAtEnemy();
-        // Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
         if (LookedAt)
         {
-            if (timeSpentInState > 70)
-            {
-                timeSpentInState = 0f;
-                TemporarilyCripplePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), true);
-                StartCoroutine(UpdatePlayerLossVision());
-                SwitchToBehaviourServerRpc((int)State.Attack);
-            }
-            else
-            {
-                teleporterTimer = 0f;
-            }
+            _seeingCount++;
+        }
+        else
+        {
+            _seeingCount = 0;
+        }
+        // Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
+        if (!LookedAt || _seeingCount < 3)
             return;
+
+        _seeingCount = 0;
+        if (timeSpentInState > 0)
+        {
+            timeSpentInState = 0f;
+            TemporarilyCripplePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), true);
+            StartCoroutine(UpdatePlayerLossVision());
+            SwitchToBehaviourServerRpc((int)State.Attack);
+        }
+        else
+        {
+            teleporterTimer = 0f;
         }
     }
 
@@ -146,7 +155,19 @@ public class Mistress : CodeRebirthEnemyAI
     {
         bool LookedAt = PlayerLookingAtEnemy();
         // Plugin.ExtendedLogging($"LookedAt in attack phase: {LookedAt}");
-        if (LookedAt) return;
+        if (LookedAt)
+        {
+            _seeingCount = 0;
+        }
+        else
+        {
+            _seeingCount++;
+        }
+
+        if (_seeingCount < 3) // variable name is really not great here since i'm doing hte direct opposite of it really
+            return;
+
+        _seeingCount = 0;
         StartCoroutine(ResetMistressToStalking(targetPlayer));
     }
 
@@ -239,7 +260,7 @@ public class Mistress : CodeRebirthEnemyAI
         float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (HeadTransform.position - targetPlayer.gameplayCamera.transform.position).normalized);
         // Plugin.ExtendedLogging($"Vector Dot: {dot}");
         if (dot <= 0.45f) return false;
-        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.position, HeadTransform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndInteractableMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.position, HeadTransform.position, out _, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
         {
             // Plugin.ExtendedLogging($"Linecast hit {hit.collider.name}");
             return false;
@@ -375,7 +396,8 @@ public class Mistress : CodeRebirthEnemyAI
             playerToCripple.inSpecialInteractAnimation = true;
             playerToCripple.shockingTarget = HeadTransform;
             playerToCripple.inShockingMinigame = true;
-            playerToCripple.movementSpeed /= 3;
+            playerToCripple.isMovementHindered++;
+            playerToCripple.hinderedMultiplier *= 2f;
             playerToCripple.sprintMeter = 0f;
         }
         else
@@ -390,7 +412,8 @@ public class Mistress : CodeRebirthEnemyAI
             playerToCripple.inSpecialInteractAnimation = false;
             playerToCripple.shockingTarget = null;
             playerToCripple.inShockingMinigame = false;
-            playerToCripple.movementSpeed *= 3;
+            playerToCripple.isMovementHindered--;
+            playerToCripple.hinderedMultiplier /= 2;
             StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
         }
         playerToCripple.disableLookInput = cripple;

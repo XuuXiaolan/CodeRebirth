@@ -21,13 +21,45 @@ public class Oxidizer : GrabbableObject
     public float depleteMultiplier = 10f;
     public float rechargeMultiplier = 1f;
 
-    private RaycastHit[] cachedRaycastHits = new RaycastHit[24];
-    private List<IHittable> iHittableList = new();
-    private List<EnemyAI> enemyAIList = new();
+
     private bool charged = true;
     private bool superCharged = false;
     private bool nerfed = false;
     private float updateHitInterval = 0.2f;
+
+    private RaycastHit[] _cachedRaycastHits = new RaycastHit[24];
+    private List<IHittable> _iHittableList = new();
+    private List<EnemyAI> _enemyAIList = new();
+
+    private void DoHitStuff(int damageToDeal)
+    {
+        _iHittableList.Clear();
+        _enemyAIList.Clear();
+
+        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, _cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < numHits; i++)
+        {
+            if (_cachedRaycastHits[i].transform == playerHeldBy.transform) continue;
+            if (_cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
+            {
+                if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
+                {
+                    if (_enemyAIList.Contains(enemyAICollisionDetect.mainScript))
+                    {
+                        continue;
+                    }
+                    _enemyAIList.Add(enemyAICollisionDetect.mainScript);
+                }
+                _iHittableList.Add(iHittable);
+            }
+        }
+        foreach (var iHittable in _iHittableList)
+        {
+            if (IsOwner)
+                iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
+        }
+    }
+
     public override void Update()
     {
         base.Update();
@@ -54,30 +86,7 @@ public class Oxidizer : GrabbableObject
             if (updateHitInterval <= 0)
             {
                 updateHitInterval = 0.2f;
-                int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 1.3f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 4, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
-                iHittableList.Clear();
-                enemyAIList.Clear();
-                for (int i = 0; i < numHits; i++)
-                {
-                    if (cachedRaycastHits[i].transform == playerHeldBy.transform) continue;
-                    if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
-                    {
-                        if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
-                        {
-                            if (enemyAIList.Contains(enemyAICollisionDetect.mainScript))
-                            {
-                                continue;
-                            }
-                            enemyAIList.Add(enemyAICollisionDetect.mainScript);
-                        }
-                        iHittableList.Add(iHittable);
-                    }
-                }
-                foreach (var iHittable in iHittableList)
-                {
-                    if (IsOwner)
-                        iHittable.Hit(1, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
-                }
+                DoHitStuff(1);
             }
         }
         skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(skinnedMeshRenderer.GetBlendShapeWeight(0) + Time.deltaTime * depleteMultiplier, 0, 100));
@@ -169,30 +178,7 @@ public class Oxidizer : GrabbableObject
         float fuelLeft = 100 - skinnedMeshRenderer.GetBlendShapeWeight(0);
         int damageToDeal = Mathf.FloorToInt(fuelLeft / 5f);
         Plugin.ExtendedLogging($"Oxidizer: {damageToDeal} damage dealt.");
-        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
-        iHittableList.Clear();
-        enemyAIList.Clear();
-        for (int i = 0; i < numHits; i++)
-        {
-            if (cachedRaycastHits[i].transform == playerHeldBy.transform) continue;
-            if (cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
-            {
-                if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
-                {
-                    if (enemyAIList.Contains(enemyAICollisionDetect.mainScript))
-                    {
-                        continue;
-                    }
-                    enemyAIList.Add(enemyAICollisionDetect.mainScript);
-                }
-                iHittableList.Add(iHittable);
-            }
-        }
-        foreach (var iHittable in iHittableList)
-        {
-            if (IsOwner)
-                iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
-        }
+        DoHitStuff(damageToDeal);
         foreach (var ps in flameStreamParticleSystems)
         {
             var mainModule = ps.main;

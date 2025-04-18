@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
@@ -19,9 +20,8 @@ public class MoleDigger : GrabbableObject
     public AudioClip[] chainYankSound = [];
     public AudioClip activateSound = null!;
 
-    private Collider[] cachedColliders = new Collider[8];
-    private float yankChainTimer = 0f;
-    private float hitTimer = 0f;
+    private float _yankChainTimer = 0f;
+    private float _hitTimer = 0f;
     private static readonly int ActivatedAnimation = Animator.StringToHash("activated"); // Bool
     private static readonly int PullChainAnimation = Animator.StringToHash("pullChain"); // Trigger
     private static readonly int AttackingAnimation = Animator.StringToHash("isAttacking"); // Bool
@@ -88,13 +88,13 @@ public class MoleDigger : GrabbableObject
 
     public void OnChainYanked(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (yankChainTimer > 0f || insertedBattery.empty || isBeingUsed || moleAnimator.GetBool(ActivatedAnimation)) return;
+        if (_yankChainTimer > 0f || insertedBattery.empty || isBeingUsed || moleAnimator.GetBool(ActivatedAnimation)) return;
         if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
         var btn = (ButtonControl)context.control;
 
         if (btn.wasPressedThisFrame)
         {
-            yankChainTimer = 1f;
+            _yankChainTimer = 1f;
             audioSource.PlayOneShot(chainYankSound[UnityEngine.Random.Range(0, chainYankSound.Length)]);
             if (UnityEngine.Random.Range(0, 100) < 25)
             {
@@ -109,26 +109,50 @@ public class MoleDigger : GrabbableObject
     public override void Update()
     {
         base.Update();
-        yankChainTimer -= Time.deltaTime;
-        hitTimer -= Time.deltaTime;
-        if (!isBeingUsed || hitTimer > 0 || playerHeldBy == null) return;
-        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        _yankChainTimer -= Time.deltaTime;
+        _hitTimer -= Time.deltaTime;
+        if (!isBeingUsed || _hitTimer > 0 || playerHeldBy == null) return;
+        DoHitStuff(1);
+    }
+
+    private Collider[] _cachedColliders = new Collider[8];
+    private List<IHittable> _iHittableList = new();
+    private List<EnemyAI> _enemyAIList = new();
+
+    private void DoHitStuff(int damageToDeal)
+    {
+        _iHittableList.Clear();
+        _enemyAIList.Clear();
         bool hitSomething = false;
+
+        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (!cachedColliders[i].TryGetComponent(out IHittable iHittable) || cachedColliders[i].transform.position == playerHeldBy.transform.position) continue;
-            if (IsOwner)
+            if (_cachedColliders[i].transform == playerHeldBy.transform) continue;
+            if (_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
             {
-                iHittable.Hit(1, playerHeldBy.gameplayCamera.transform.forward, playerHeldBy, true, -1);
+                if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
+                {
+                    if (_enemyAIList.Contains(enemyAICollisionDetect.mainScript))
+                    {
+                        continue;
+                    }
+                    _enemyAIList.Add(enemyAICollisionDetect.mainScript);
+                }
+                hitSomething = true;
+                _iHittableList.Add(iHittable);
             }
-            hitSomething = true;
-            Plugin.ExtendedLogging($"Mole Digger hit {cachedColliders[i].name}");
         }
+        foreach (var iHittable in _iHittableList)
+        {
+            if (IsOwner)
+                iHittable.Hit(damageToDeal, playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
+        }
+
         if (hitSomething)
         {
-            hitTimer = 0.4f;
+            _hitTimer = 0.4f;
             insertedBattery.charge -= 0.05f;
-            // take some battery charge.
         }
     }
 
