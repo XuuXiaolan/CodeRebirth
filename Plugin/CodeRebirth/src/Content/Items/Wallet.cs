@@ -32,21 +32,24 @@ public class Wallet : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        if (playerHeldBy == null) return;
-        Ray interactRay = new Ray(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
+        if (playerHeldBy == null)
+            return;
+
+        Ray interactRay = new(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
         RaycastHit[] hits = Physics.RaycastAll(interactRay, playerHeldBy.grabDistance, CodeRebirthUtils.Instance.propsAndHazardMask, QueryTriggerInteraction.Collide);
         foreach (RaycastHit hit in hits)
         {
-            Money coin = hit.collider.transform.gameObject.GetComponent<Money>();
-            PiggyBank piggyBank = hit.collider.transform.gameObject.GetComponent<PiggyBank>();
-            if (coin == null && piggyBank == null) continue;
+            Money? coin = hit.collider.transform.gameObject.GetComponent<Money>();
+            PiggyBank? piggyBank = hit.collider.transform.gameObject.GetComponent<PiggyBank>();
+            if (coin == null && piggyBank == null)
+                continue;
+
             if (coin != null)
             {
                 audioPlayer.Play();
                 if (IsServer) coinsStored.Value += coin.value;
                 scanNode.subText = $"Coins Stored: {coinsStored.Value}";
                 if (IsServer) coin.NetworkObject.Despawn();
-                return;
             }
             else if (IsServer)
             {
