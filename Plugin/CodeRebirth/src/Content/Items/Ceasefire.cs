@@ -23,21 +23,30 @@ public class Ceasefire : GrabbableObject
     private float _endingTime = 0f;
     private Coroutine? _firingStartRoutine = null;
     private Coroutine? _firingEndRoutine = null;
+    private float _currentBarrelRotationX = 0f;
 
     public override void Update()
     {
         base.Update();
+        float rotationDelta = 0f;
+
         if (_firingStartRoutine != null)
         {
-            _ceasefireBarrel.transform.eulerAngles = new Vector3(_ceasefireBarrel.transform.eulerAngles.x + Time.deltaTime * _rotationSpeed * _startingTime, _ceasefireBarrel.transform.eulerAngles.y, _ceasefireBarrel.transform.eulerAngles.z);
+            rotationDelta = Time.deltaTime * _rotationSpeed * _startingTime;
         }
         else if (isBeingUsed)
         {
-            _ceasefireBarrel.transform.eulerAngles = new Vector3(_ceasefireBarrel.transform.eulerAngles.x + Time.deltaTime * _rotationSpeed, _ceasefireBarrel.transform.eulerAngles.y, _ceasefireBarrel.transform.eulerAngles.z);
+            rotationDelta = Time.deltaTime * _rotationSpeed;
         }
         else if (_firingEndRoutine != null)
         {
-            _ceasefireBarrel.transform.eulerAngles = new Vector3(_ceasefireBarrel.transform.eulerAngles.x + Time.deltaTime * _rotationSpeed * _endingTime, _ceasefireBarrel.transform.eulerAngles.y, _ceasefireBarrel.transform.eulerAngles.z);
+            rotationDelta = Time.deltaTime * _rotationSpeed * _endingTime;
+        }
+
+        if (rotationDelta != 0f)
+        {
+            _currentBarrelRotationX += rotationDelta;
+            _ceasefireBarrel.transform.localEulerAngles = new Vector3(_currentBarrelRotationX, 0f, 0f);
         }
     }
 
