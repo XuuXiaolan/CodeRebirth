@@ -28,6 +28,7 @@ public class WrittenDocument : GrabbableObject
             {
                 page.SetActive(true);
             }
+            activePage = 0;
             return;
         }
 
