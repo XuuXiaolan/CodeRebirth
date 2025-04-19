@@ -29,15 +29,15 @@ public class Ceasefire : GrabbableObject
         base.Update();
         if (_firingStartRoutine != null)
         {
-            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * _rotationSpeed * _startingTime, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
+            _ceasefireBarrel.transform.eulerAngles = new Vector3(_ceasefireBarrel.transform.eulerAngles.x + Time.deltaTime * _rotationSpeed * _startingTime, _ceasefireBarrel.transform.eulerAngles.y, _ceasefireBarrel.transform.eulerAngles.z);
         }
         else if (isBeingUsed)
         {
-            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * _rotationSpeed, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
+            _ceasefireBarrel.transform.eulerAngles = new Vector3(_ceasefireBarrel.transform.eulerAngles.x + Time.deltaTime * _rotationSpeed, _ceasefireBarrel.transform.eulerAngles.y, _ceasefireBarrel.transform.eulerAngles.z);
         }
         else if (_firingEndRoutine != null)
         {
-            _ceasefireBarrel.transform.rotation = Quaternion.Euler(_ceasefireBarrel.transform.rotation.x + Time.deltaTime * _rotationSpeed * _endingTime, _ceasefireBarrel.transform.rotation.y, _ceasefireBarrel.transform.rotation.z);
+            _ceasefireBarrel.transform.eulerAngles = new Vector3(_ceasefireBarrel.transform.eulerAngles.x + Time.deltaTime * _rotationSpeed * _endingTime, _ceasefireBarrel.transform.eulerAngles.y, _ceasefireBarrel.transform.eulerAngles.z);
         }
     }
 
@@ -99,6 +99,7 @@ public class Ceasefire : GrabbableObject
             _endingTime = timeElapsed / _fireEndSound.length;
             timeElapsed -= Time.deltaTime;
         }
+        _idleSource.Stop();
         _firingEndRoutine = null;
     }
 }
