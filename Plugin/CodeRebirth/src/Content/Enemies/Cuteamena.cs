@@ -1,4 +1,5 @@
 using System;
+using CodeRebirth.src.MiscScripts.PathFinding;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -70,7 +71,14 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         Grief
     }
 
+    private enum AttackType
+    {
+        Cleaver,
+        Headbutt
+    }
+
     private PlayerControllerB? _chasingPlayer = null;
+    private DoorLock? _targetDoor;
     private bool _isCleaverDrawn = false;
     private float _healTimer = 0f;
     private float _doorLockpickTimer = 0f;
@@ -87,7 +95,8 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     private static readonly int SlashAnimation = Animator.StringToHash("slashAttack"); // Trigger
     
     public override void Start()
-    {            
+    {
+        smartAgentNavigator = GetComponent<SmartAgentNavigator>(); // todo: remove this
         base.Start();
         _headPatTrigger.onInteract.AddListener(OnHeadPatInteract);
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 40f);
@@ -182,11 +191,22 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             {
                 _attackTimer = _attackInterval;
                 creatureNetworkAnimator.SetTrigger(HeadbuttAnimation);
-                // do headbutt animation
             }
             return;
         }
 
+        if (_targetDoor)
+        {
+            smartAgentNavigator.DoPathingToDestination(_targetDoor!.transform.position);
+
+            if (Vector3.Distance(transform.position, _targetDoor.transform.position) < 2f)
+            {
+                creatureNetworkAnimator.SetTrigger(HeadbuttAnimation);
+            }
+            
+            return;
+        }
+        
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
 
         if (_healTimer <= 0f && targetPlayer.health < 100)
@@ -202,10 +222,10 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             _threatFindTimer = _threatFindInterval;
             return;
         }
-
+        
         if (_doorLockpickTimer <= 0f)
         {
-            AttemptLockpickDoor();
+            ChooseDoorToLockpick();
             _doorLockpickTimer = _doorLockpickInterval;
             return;
         }
@@ -289,6 +309,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             creatureNetworkAnimator.SetTrigger(PullOutKnifeAnimation);
             agent.speed = _chasingSpeed;
             StartOrStopGriefingSoundServerRpc(false);
+            creatureAnimator.SetBool(CryingAnimation, false);
             SwitchToBehaviourServerRpc((int)CuteamenaState.Yandere);
         }
     }
@@ -328,7 +349,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
         if (Vector3.Distance(transform.position, player.transform.position) < 2f)
         {
-            AttackPlayerWithCleaverClientRPC(player); // todo: it should be triggering the attack animation and then damaging through animation event
+            creatureNetworkAnimator.SetTrigger(SlashAnimation);
             Plugin.ExtendedLogging("Yandere Cuteamena attacked a player with her cleaver!");
         }
     }
@@ -365,7 +386,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         }
     }
 
-    private void AttemptLockpickDoor()
+    private void ChooseDoorToLockpick()
     {
         Collider[] doors = Physics.OverlapSphere(transform.position, 5f, CodeRebirthUtils.Instance.interactableMask, QueryTriggerInteraction.Collide);
         foreach (var doorCollider in doors)
@@ -373,9 +394,9 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             DoorLock door = doorCollider.GetComponent<DoorLock>();
             if (door != null && door.isLocked)
             {
-                door.UnlockDoorClientRpc();
+                _targetDoor = door;
                 // todo: probably headbutt the door, maybe set a target door for it to go towards first lol
-                Plugin.ExtendedLogging("Cuteamena attempted to lockpick a door.");
+                Plugin.ExtendedLogging("Cuteamena chose a door to lockpick.");
                 break;
             }
         }
@@ -446,20 +467,26 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         if (distanceToRival < agent.stoppingDistance + _jealousAttackRange)
             return;
 
-        // todo: do a headbutt animation and through animation event damage whatever's in the path
-        player.DamagePlayer(10, true, false, CauseOfDeath.Bludgeoning, 0, false, knockback);
+        creatureNetworkAnimator.SetTrigger(HeadbuttAnimation);
+        
         Plugin.ExtendedLogging("Cuteamena attacked a rival player out of jealousy!");
     }
 
     [ClientRpc]
-    private void AttackPlayerWithCleaverClientRPC(PlayerControllerReference reference)
+    private void AttackPlayerClientRPC(PlayerControllerReference reference, AttackType attackType)
     {
         PlayerControllerB player = reference;
-        if (player == GameNetworkManager.Instance.localPlayerController)
+        if (player != GameNetworkManager.Instance.localPlayerController) return;
+
+        switch (attackType)
         {
-            player.DamagePlayer(20, true, false, CauseOfDeath.Bludgeoning, 0, false, transform.forward * 10f);
+            case AttackType.Cleaver:
+                player.DamagePlayer(20, true, false, CauseOfDeath.Bludgeoning, 0, false, transform.forward * 10f);
+                break;
+            case AttackType.Headbutt:
+                player.DamagePlayer(10, true, false, CauseOfDeath.Bludgeoning, 0, false, transform.forward * 10f);
+                break;
         }
-        // todo: this should really be an animation event that attacks everything in an overlap sphere
     }
 
     private bool HasSenpaiBodyBeenMoved()
@@ -508,6 +535,31 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         // todo: Instantiate or spawn the meat cleaver as scrap
         Plugin.ExtendedLogging("Meat cleaver dropped as scrap.");
     }
+    
+    public void OnSwingCleaverAnimEvent() {
+        if(!IsServer && !IsHost) return;
+        if(!_chasingPlayer) return;
+        
+        AttackPlayerClientRPC(_chasingPlayer!, AttackType.Cleaver);
+    }
+
+    public void HeadbuttAnimEvent()
+    {
+        if(!IsServer && !IsHost) return;
+        if (_targetDoor)
+        {
+            _targetDoor.UnlockDoorClientRpc();
+            _targetDoor = null;
+        } else if (_chasingPlayer)
+        {
+            AttackPlayerClientRPC(_chasingPlayer!, AttackType.Headbutt);
+        }
+        else
+        {
+            Plugin.ExtendedLogging("reason to headbutt is unknown?");
+        }
+    }
+    
     #endregion
 
     /*private void AttemptShutOffPower()
