@@ -7,14 +7,13 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class Ceasefire : GrabbableObject
 {
-    // todo: slow down particle system with _chargedTime
-    // todo: make material redder on the emissive with _chargedTime
-    // todo: slow down damage dealing with _chargedTime
     [Header("Visuals")]
     [SerializeField]
     private GameObject _ceasefireBarrel = null!;
     [SerializeField]
     private GameObject _particleSystemsGO = null!;
+    [SerializeField]
+    private ParticleSystem[] _particleSystems = [];
     [SerializeField]
     private float _rotationSpeed = 10f;
     [SerializeField]
@@ -30,23 +29,61 @@ public class Ceasefire : GrabbableObject
     [SerializeField]
     private AudioClip _fireEndSound = null!;
 
+    [Header("Charge Effects")]
+    [SerializeField]
+    private float _maxChargedTime = 10f;
+    [SerializeField]
+    private float _minParticleRateOverTime = 10f;
+    [SerializeField]
+    private float _maxParticleRateOverTime = 45f;
+    [SerializeField]
+    private float _minEmissionIntensity = 1f;
+    [SerializeField]
+    private float _maxEmissionIntensity = 10f;
+    [SerializeField]
+    private float _maxDamageIntervalAtMaxCharge = 2f;
+
     private float _startingTime = 0f;
     private float _endingTime = 0f;
     private Coroutine? _firingStartRoutine = null;
     private Coroutine? _firingEndRoutine = null;
     private float _currentBarrelRotationX = 0f;
     private Material _ceasefireMaterial = null!;
+    private Color _baseEmissionColor;
     private float _chargedTime = 0f;
 
+    [Header("Gatling Gun")]
+    [SerializeField]
+    private float _minigunDamageInterval = 0.21f;
+    [SerializeField]
+    private float _minigunRange = 30f;
+    [SerializeField]
+    private float _minigunWidth = 1f;
+    [SerializeField]
+    private int _minigunDamage = 5;
+    [SerializeField]
+    private AnimationCurve _minigunDamageCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
+    private float _damageInterval = 0f;
+
+    private Collider[] _cachedColliders = new Collider[20];
+    private List<EnemyAI> enemyAIs = new();
+
+    private float CurrentDamageInterval => Mathf.Lerp(_minigunDamageInterval, _maxDamageIntervalAtMaxCharge, _minigunDamageCurve.Evaluate(Mathf.Clamp01(_chargedTime / _maxChargedTime)));
+
+    private static readonly int _EmissiveColorHash = Shader.PropertyToID("_EmissiveColor");
     public override void Start()
     {
         base.Start();
         _ceasefireMaterial = _ceasefireRenderer.material;
+        _baseEmissionColor = _ceasefireMaterial.GetColor(_EmissiveColorHash);
     }
 
     public override void Update()
     {
         base.Update();
+        if (!isHeld || isPocketed)
+            return;
+
         float rotationDelta = 0f;
 
         if (_firingStartRoutine != null)
@@ -63,11 +100,39 @@ public class Ceasefire : GrabbableObject
             rotationDelta = Time.deltaTime * _rotationSpeed * _endingTime;
         }
 
+        if (isBeingUsed && _chargedTime < _maxChargedTime)
+        {
+            _chargedTime += Time.deltaTime;
+        }
+        else if (!isBeingUsed && _chargedTime > 0f)
+        {
+            _chargedTime -= Time.deltaTime;
+        }
+
+        float tNorm = Mathf.Clamp01(_chargedTime / _maxChargedTime);
+        float evaluatedValue = _minigunDamageCurve.Evaluate(tNorm);
         if (rotationDelta != 0f)
         {
+            rotationDelta *= 1 - evaluatedValue;
             _currentBarrelRotationX += rotationDelta;
             _ceasefireBarrel.transform.localEulerAngles = new Vector3(-280 + _currentBarrelRotationX, 270f, 90f);
+            if (playerHeldBy != null && playerHeldBy.IsOwner)
+            {
+                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.25f : 1f) * Time.deltaTime * (rotationDelta / 35f);
+            }
         }
+
+        // Slow down particle systems as charge increases
+        foreach (ParticleSystem ps in _particleSystems)
+        {
+            var emission = ps.emission;
+            emission.rateOverTime = Mathf.Lerp(_maxParticleRateOverTime, _minParticleRateOverTime, evaluatedValue);
+        }
+
+        // Increase emissive intensity with charge
+        float intensity = Mathf.Lerp(_minEmissionIntensity, _maxEmissionIntensity, evaluatedValue);
+        Color emitColor = _baseEmissionColor * intensity;
+        _ceasefireMaterial.SetColor(_EmissiveColorHash, emitColor);
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
@@ -76,9 +141,7 @@ public class Ceasefire : GrabbableObject
         if (!buttonDown)
         {
             if (_firingStartRoutine != null)
-            {
                 StopCoroutine(_firingStartRoutine);
-            }
             _firingStartRoutine = null;
             _firingEndRoutine = StartCoroutine(DoEndFiringSequence());
             isBeingUsed = false;
@@ -86,9 +149,7 @@ public class Ceasefire : GrabbableObject
         else
         {
             if (_firingEndRoutine != null)
-            {
                 StopCoroutine(_firingEndRoutine);
-            }
             _firingEndRoutine = null;
             _firingStartRoutine = StartCoroutine(DoStartFiringSequence());
             isBeingUsed = true;
@@ -133,24 +194,10 @@ public class Ceasefire : GrabbableObject
         _firingEndRoutine = null;
     }
 
-    [Header("Gatling Gun")]
-    [SerializeField]
-    private float _minigunDamageInterval = 0.21f;
-    [SerializeField]
-    private float _minigunRange = 30f;
-    [SerializeField]
-    private float _minigunWidth = 1f;
-    [SerializeField]
-    private int _minigunDamage = 5;
-    [SerializeField]
-    private float _damageInterval = 0f;
-
-    private Collider[] _cachedColliders = new Collider[20];
-    private List<EnemyAI> enemyAIs = new();
-
     public void DoGatlingGunDamage()
     {
-        if (_damageInterval < _minigunDamageInterval)
+        float damageThreshold = CurrentDamageInterval;
+        if (_damageInterval < damageThreshold)
         {
             _damageInterval += Time.deltaTime;
             return;
@@ -162,8 +209,11 @@ public class Ceasefire : GrabbableObject
         enemyAIs.Clear();
 
         Vector3 capsuleStart = _ceasefireBarrel.transform.position;
-        Vector3 capsuleEnd = _ceasefireBarrel.transform.position + playerHeldBy.transform.forward * _minigunRange;
-        int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        Vector3 capsuleEnd = capsuleStart + playerHeldBy.transform.forward * _minigunRange;
+        int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth,
+            _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask,
+            QueryTriggerInteraction.Collide);
+
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];
@@ -175,7 +225,7 @@ public class Ceasefire : GrabbableObject
                 if (player == playerHeldBy)
                     continue;
 
-                Vector3 damageDirection = (player.transform.position - _ceasefireBarrel.transform.position).normalized;
+                Vector3 damageDirection = (player.transform.position - capsuleStart).normalized;
                 player.DamagePlayer(_minigunDamage, true, true, CauseOfDeath.Gunshots, 0, false, damageDirection * 10f);
                 player.externalForceAutoFade += damageDirection * 2f;
             }
@@ -185,11 +235,11 @@ public class Ceasefire : GrabbableObject
                     continue;
 
                 enemyAIs.Add(enemy.mainScript);
-                enemy.mainScript.HitEnemyOnLocalClient(1, _ceasefireBarrel.transform.position, null, true, -1);
+                enemy.mainScript.HitEnemyOnLocalClient(1, capsuleStart, playerHeldBy, true, -1);
             }
             else
             {
-                hittable.Hit(1, _ceasefireBarrel.transform.position, null, true, -1);
+                hittable.Hit(1, capsuleStart, playerHeldBy, true, -1);
             }
         }
     }

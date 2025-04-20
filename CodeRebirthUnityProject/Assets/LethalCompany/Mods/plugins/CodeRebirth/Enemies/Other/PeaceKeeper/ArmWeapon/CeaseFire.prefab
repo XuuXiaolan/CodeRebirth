@@ -164,7 +164,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 2747
   m_UseColorTemperature: 1
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 8.4e-43, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -317,7 +317,7 @@ Transform:
   m_GameObject: {fileID: 2542972363362958274}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.7980461, y: -0.14807129, z: -1.7815552}
+  m_LocalPosition: {x: 0.54, y: 0, z: -0.497}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -335,7 +335,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -500,7 +500,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 3
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -700,7 +700,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 155
+    maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -822,7 +822,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 45
+      scalar: 360
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -2105,7 +2105,7 @@ ParticleSystem:
     m_EnergyLossOnCollision:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.86
+      scalar: 0.66
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -2124,7 +2124,7 @@ ParticleSystem:
     radiusScale: 0.1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 14680063
+      m_Bits: 1109393664
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -3257,11 +3257,49 @@ MonoBehaviour:
   hasBeenHeld: 0
   _ceasefireBarrel: {fileID: 4793269125566295088}
   _particleSystemsGO: {fileID: 7208520598602796459}
-  _rotationSpeed: 10
+  _particleSystems:
+  - {fileID: 4706003235753964475}
+  - {fileID: 7602963628914261098}
+  _rotationSpeed: 3000
+  _ceasefireRenderer: {fileID: 5573095911387202118}
   _idleSource: {fileID: 6866611088339977767}
   _fireStartSound: {fileID: 8300000, guid: d9f25185427ac5e4ebb2af25a2aa053d, type: 3}
   _fireLoopSound: {fileID: 8300000, guid: 714c761220ff2b5488169cf0d71052b7, type: 3}
   _fireEndSound: {fileID: 8300000, guid: f3b6cd4336c77924eb11260a593bd754, type: 3}
+  _maxChargedTime: 10
+  _minParticleRateOverTime: 0
+  _maxParticleRateOverTime: 300
+  _minEmissionIntensity: 0
+  _maxEmissionIntensity: 10
+  _maxDamageIntervalAtMaxCharge: 1
+  _minigunDamageInterval: 0.1
+  _minigunRange: 60
+  _minigunWidth: 1.5
+  _minigunDamage: 5
+  _minigunDamageCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.25308093
+      outSlope: 0.25308093
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.19151944
+    - serializedVersion: 3
+      time: 1
+      value: 0.8
+      inSlope: 2.1171105
+      outSlope: 2.1171105
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.040993735
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7208520598602796459
 GameObject:
   m_ObjectHideFlags: 0
@@ -3277,7 +3315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &519285465274024350
 Transform:
   m_ObjectHideFlags: 0
@@ -5020,7 +5058,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     type: 1
     collisionMode: 0
@@ -5085,7 +5123,7 @@ ParticleSystem:
     radiusScale: 0.1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 14680063
+      m_Bits: 1109393665
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
