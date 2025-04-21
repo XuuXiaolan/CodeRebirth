@@ -94,10 +94,17 @@ public class Meteors : FallingObjectBehaviour
 
         if (IsServer && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap)
         {
-            int randomNumber = UnityEngine.Random.Range(0, 3);
-            if (randomNumber == 0) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Sapphire")?.item.itemName, _target);
-            else if (randomNumber == 1) CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Emerald")?.item.itemName, _target);
-            else CodeRebirthUtils.Instance.SpawnScrapServerRpc(WeatherHandler.Instance.Meteorite!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ruby")?.item.itemName, _target);
+            Item[] meteorites =
+            [
+                WeatherHandler.Instance.Meteorite.ItemDefinitions.GetCRItemDefinitionWithItemName("Amethyst")?.item,
+                WeatherHandler.Instance.Meteorite.ItemDefinitions.GetCRItemDefinitionWithItemName("Sapphire")?.item,
+                WeatherHandler.Instance.Meteorite.ItemDefinitions.GetCRItemDefinitionWithItemName("Emerald")?.item,
+                WeatherHandler.Instance.Meteorite.ItemDefinitions.GetCRItemDefinitionWithItemName("Quartz")?.item,
+                WeatherHandler.Instance.Meteorite.ItemDefinitions.GetCRItemDefinitionWithItemName("Ruby")?.item,
+                WeatherHandler.Instance.Meteorite.ItemDefinitions.GetCRItemDefinitionWithItemName("Topaz")?.item,
+            ];
+            int randomNumber = UnityEngine.Random.Range(0, meteorites.Length);
+            CodeRebirthUtils.Instance.SpawnScrap(meteorites[randomNumber], _target, false, true, 0);
         }
 
         GameObject craterInstance = Instantiate(WeatherHandler.Instance.Meteorite!.CraterPrefab, _target, Quaternion.identity);

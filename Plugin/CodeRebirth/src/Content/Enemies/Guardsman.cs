@@ -26,6 +26,7 @@ public class Guardsman : CodeRebirthEnemyAI
     private List<IHittable> _iHittableList = new();
     private List<EnemyAI> _enemyAIList = new();
     private Collider[] _cachedHits = new Collider[24];
+    private List<string> _internalEnemyBlacklist = [];
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
@@ -35,6 +36,11 @@ public class Guardsman : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        foreach (string enemy in Plugin.ModConfig.ConfigSeamineTinkEnemyBlacklist.Value.Split(','))
+        {
+            _internalEnemyBlacklist.Add(enemy.Trim());
+        }
+
         StartCoroutine(StartDelay());
         foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
         {
@@ -79,7 +85,6 @@ public class Guardsman : CodeRebirthEnemyAI
         }
 
         _bufferTimer -= AIIntervalTime;
-        Plugin.ExtendedLogging($"Buffer Timer: {_bufferTimer}");
         if (_bufferTimer > 0)
             return;
 
@@ -98,6 +103,9 @@ public class Guardsman : CodeRebirthEnemyAI
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
             if (enemy == null || enemy.isEnemyDead || enemy is Guardsman)
+                continue;
+
+            if (_internalEnemyBlacklist.Contains(enemy.enemyType.enemyName))
                 continue;
 
             if (Vector3.Distance(transform.position, enemy.transform.position) > 45f)
@@ -123,7 +131,7 @@ public class Guardsman : CodeRebirthEnemyAI
         {
             // force enemies to stop moving
             Plugin.ExtendedLogging($"Killing Large Enemy: {_targetEnemy.enemyType.enemyName} with Size: {CalculateEnemySize(_targetEnemy)}");
-            _bufferTimer = 10f;
+            _bufferTimer = 7.5f;
             smartAgentNavigator.cantMove = true;
             smartAgentNavigator.StopAgent();
             creatureNetworkAnimator.SetTrigger(KillLargeAnimation);
@@ -131,7 +139,7 @@ public class Guardsman : CodeRebirthEnemyAI
         else
         {
             Plugin.ExtendedLogging($"Killing Small Enemy: {_targetEnemy.enemyType.enemyName} with Size: {CalculateEnemySize(_targetEnemy)}");
-            _bufferTimer = 10f;
+            _bufferTimer = 7.5f;
             smartAgentNavigator.cantMove = true;
             smartAgentNavigator.StopAgent();
             creatureNetworkAnimator.SetTrigger(KillSmallAnimation);
