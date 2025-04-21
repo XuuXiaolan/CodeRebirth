@@ -3268,7 +3268,7 @@ MonoBehaviour:
   _fireEndSound: {fileID: 8300000, guid: f3b6cd4336c77924eb11260a593bd754, type: 3}
   _maxChargedTime: 10
   _minParticleRateOverTime: 0
-  _maxParticleRateOverTime: 300
+  _maxParticleRateOverTime: 150
   _minEmissionIntensity: 0
   _maxEmissionIntensity: 10
   _maxDamageIntervalAtMaxCharge: 1
@@ -3282,12 +3282,21 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0.25308093
-      outSlope: 0.25308093
+      inSlope: 0.019915551
+      outSlope: 0.019915551
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.19151944
+      outWeight: 0.1024735
+    - serializedVersion: 3
+      time: 0.40125832
+      value: 0.026071116
+      inSlope: 0.22865278
+      outSlope: 0.22865278
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 0.8
@@ -3315,7 +3324,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &519285465274024350
 Transform:
   m_ObjectHideFlags: 0

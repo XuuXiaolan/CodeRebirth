@@ -202,6 +202,11 @@ public class Ceasefire : GrabbableObject
             _damageInterval += Time.deltaTime;
             return;
         }
+        if (playerHeldBy.IsOwner) HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+        if (damageThreshold >= _maxDamageIntervalAtMaxCharge - 0.25f)
+        {
+            playerHeldBy.DamagePlayer(5, true, false, CauseOfDeath.Gunshots, 0, false, -playerHeldBy.gameplayCamera.transform.forward * 20f);
+        }
         _damageInterval = 0f;
 
         if (!IsServer) return;
