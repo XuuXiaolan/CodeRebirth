@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -418,9 +419,11 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        smartAgentNavigator.StopSearchRoutine();
         _aggroSFX.Stop();
         creatureVoice.PlayOneShot(dieSFX);
         if (!IsServer) return;
+        CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PeaceKeeper.ItemDefinitions.GetCRItemDefinitionWithItemName("Ceasefire")?.item, transform.position, false, true, 0);
         creatureAnimator.SetBool(IsDeadAnimation, true);
     }
     #endregion

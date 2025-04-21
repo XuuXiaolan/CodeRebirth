@@ -76,6 +76,10 @@ public class Ceasefire : GrabbableObject
         base.Start();
         _ceasefireMaterial = _ceasefireRenderer.material;
         _baseEmissionColor = _ceasefireMaterial.GetColor(_EmissiveColorHash);
+
+        float intensity = Mathf.Lerp(_minEmissionIntensity, _maxEmissionIntensity, 0);
+        Color emitColor = _baseEmissionColor * intensity;
+        _ceasefireMaterial.SetColor(_EmissiveColorHash, emitColor);
     }
 
     public override void Update()
@@ -116,7 +120,7 @@ public class Ceasefire : GrabbableObject
             rotationDelta *= 1 - evaluatedValue;
             _currentBarrelRotationX += rotationDelta;
             _ceasefireBarrel.transform.localEulerAngles = new Vector3(-280 + _currentBarrelRotationX, 270f, 90f);
-            if (playerHeldBy != null && playerHeldBy.IsOwner)
+            if (playerHeldBy != null && playerHeldBy.IsOwner && _particleSystemsGO.activeSelf)
             {
                 playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.25f : 1f) * Time.deltaTime * (rotationDelta / 35f);
             }
