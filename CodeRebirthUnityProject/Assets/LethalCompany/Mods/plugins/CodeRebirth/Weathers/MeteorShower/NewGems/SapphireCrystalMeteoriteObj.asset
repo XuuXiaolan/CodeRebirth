@@ -15,8 +15,8 @@ MonoBehaviour:
   itemId: 0
   itemName: Sapphire Crystal
   spawnPositionTypes: []
-  twoHanded: 0
-  twoHandedAnimation: 0
+  twoHanded: 1
+  twoHandedAnimation: 1
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 1
   weight: 1.4
@@ -28,15 +28,15 @@ MonoBehaviour:
   creditsWorth: 0
   lockedInDemo: 0
   highestSalePercentage: 0
-  maxValue: 200
-  minValue: 100
+  maxValue: 400
+  minValue: 200
   spawnPrefab: {fileID: 203316428044227477, guid: 987bc572ef12f4f4f835396af209863b,
     type: 3}
   requiresBattery: 0
   batteryUsage: 0
   automaticallySetUsingPower: 0
   itemIcon: {fileID: 21300000, guid: c84a2281995ee634782dbb4a7ee98de6, type: 3}
-  grabAnim: 
+  grabAnim: HoldLung
   useAnim: 
   pocketAnim: 
   throwAnim: 
@@ -55,9 +55,9 @@ MonoBehaviour:
   verticalOffset: 0.1
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
-  restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 8.8, y: 62.1, z: 0}
-  positionOffset: {x: 0.08, y: 0.24, z: -0.24}
+  restingRotation: {x: -90, y: 0, z: 180}
+  rotationOffset: {x: -90, y: 90, z: 0}
+  positionOffset: {x: 0, y: 0, z: 0}
   meshOffset: 0
   meshVariants: []
   materialVariants: []
