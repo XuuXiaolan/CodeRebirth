@@ -12,6 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 1183736322, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: ShockwaveBotUnlockableDefinition
   m_EditorClassIdentifier: 
-  ConfigEntries: []
+  ConfigEntries:
+  - settingName: Shockwave Bot
+    settingDesc: Enemy Blacklist
+    DynamicConfigType: 0
+    defaultString: Pikmin, SnailCat, CutieFly, Nancy, Transporter, Docile Locust
+      Bees, Red Locust Bees, Manticoil, Tulip Snake, Nemo, Horse, Mistress, Girl,
+      Rabbit Magician, Scary
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 0
+    Description: Enemy name blacklist for what the shockwave bot won't attack.
   unlockableItemDef: {fileID: 11400000, guid: ac526f56cd55d0948a5ad569988cea1c, type: 2}
   DenyPurchaseNode: {fileID: 11400000, guid: af44c760fb93299418fb0069c610ecd1, type: 2}

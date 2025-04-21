@@ -1,12 +1,17 @@
 using GameNetcodeStuff;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class CactusBudling : CodeRebirthEnemyAI
 {
 
+    private static readonly int rollingAnimation = Animator.StringToHash("Rolling");
     public enum CactusBudlingState
     {
-        
+        Spawning,
+        SearchingForRoot,
+        Rooted,
+        Rolling
     }
 
     #region Unity Lifecycles
