@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts.ConfigManager;
 public enum CRDynamicConfigType
@@ -27,7 +25,9 @@ public class CRDynamicConfig
 
     public CRDynamicConfig? GetCRDynamicConfigWithSetting(string _settingName, string _settingDesc)
     {
-        if (_settingName.ToLowerInvariant().Contains(settingName.ToLowerInvariant()) && _settingDesc.ToLowerInvariant().Contains(settingDesc.ToLowerInvariant())) return this;
+        if (_settingName.Contains(settingName, StringComparison.OrdinalIgnoreCase)
+         && _settingDesc.Contains(settingDesc, StringComparison.OrdinalIgnoreCase))
+            return this;
         return null;
     }
 }

@@ -66,7 +66,7 @@ public class Ceasefire : GrabbableObject
     private float _damageInterval = 0f;
 
     private Collider[] _cachedColliders = new Collider[20];
-    private List<EnemyAI> enemyAIs = new();
+    private HashSet<EnemyAI> enemyAIs = new();
 
     private float CurrentDamageInterval => Mathf.Lerp(_minigunDamageInterval, _maxDamageIntervalAtMaxCharge, _minigunDamageCurve.Evaluate(Mathf.Clamp01(_chargedTime / _maxChargedTime)));
 

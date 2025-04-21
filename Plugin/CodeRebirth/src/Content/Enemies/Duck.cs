@@ -10,22 +10,11 @@ public class Duck : QuestMasterAI
     {
         base.Start();
         questTimer = 120f;
-        if (EnemyHandler.Instance.DuckSong == null)
+        List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.DuckSong!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
+        CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Duck", "Quest Timer");
+        if (configSetting != null)
         {
-            Plugin.Logger.LogError($"How the fuck did you even get this error");
-            return;
+            questTimer = CRConfigManager.GetGeneralConfigEntry<float>(configSetting.settingName, configSetting.settingDesc).Value;
         }
-        else
-        {
-            List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.DuckSong.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
-            CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Duck", "Quest Timer");
-            // string key = $"{configSetting.settingName} | {configSetting.settingDesc}".CleanStringForConfig();
-            if (configSetting != null)
-            {
-                questTimer = CRConfigManager.GetGeneralConfigEntry<float>(configSetting.settingName, configSetting.settingDesc).Value;
-                Plugin.ExtendedLogging($"found da config option.");
-            }
-        }
-        Plugin.ExtendedLogging($"{enemyType.enemyName} has a quest timer of {questTimer} seconds.");
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
 namespace CodeRebirth.src.Util.Extensions;
-
 public static class IListExtensions
 {   // Taken from Smooth_P in https://discussions.unity.com/t/clever-way-to-shuffle-a-list-t-in-one-line-of-c-code/535113
     /// <summary>

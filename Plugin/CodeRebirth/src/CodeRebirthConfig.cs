@@ -7,27 +7,16 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
-    public ConfigEntry<bool> ConfigZortModelReplacementEnabled { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
     public ConfigEntry<bool> ConfigDontTargetFarEnemies { get; private set; }
     public ConfigEntry<bool> ConfigHazardsDeleteBodies { get; private set; }
     public ConfigEntry<bool> ConfigOnlyOwnerDisablesGal { get; private set; }
-    public ConfigEntry<bool> ConfigShockwaveGalPlayerModelEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigSeamineTinkPlayerModelEnabled { get; private set; }
     public ConfigEntry<bool> ConfigFloraEnabled { get; set; }
     public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
     public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
-    public ConfigEntry<bool> ConfigEpicAxeScrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigNaturesMaceScrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigIcyHammerScrapEnabled { get; private set; }
-    public ConfigEntry<bool> ConfigSpikyMaceScrapEnabled { get; private set; }
     #endregion
     #region Spawn Weights
-    public ConfigEntry<string> ConfigNaturesMaceScrapSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigIcyHammerScrapSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigSpikyMaceScrapSpawnWeights { get; private set; }
-    public ConfigEntry<string> ConfigEpicAxeScrapSpawnWeights { get; private set; }
     #endregion
     #region Enemy Specific
     public ConfigEntry<float> ConfigRedwoodNormalVolume { get; private set; }
@@ -109,10 +98,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigCleanUnusedConfigs { get; private set; }
     #endregion 
     #region Worth
-    public ConfigEntry<string> ConfigNaturesMaceWorth { get; private set; }
-    public ConfigEntry<string> ConfigIcyHammerWorth { get; private set; }
-    public ConfigEntry<string> ConfigSpikyMaceWorth { get; private set; }
-    public ConfigEntry<string> ConfigEpicAxeWorth { get; private set; }
     #endregion
     public ConfigEntry<bool> ConfigDebugMode { get; private set; }
 
@@ -159,17 +144,13 @@ public class CodeRebirthConfig
         ConfigDisableTrashCans = configFile.Bind("Janitor Options",
                                             "Janitor | Disable Trash Cans",
                                             false,
-                                            "Whether trash cans are disabled.");
+                                            "Whether trash cans are disabled (this is only visually, trash cans still exist).");
         #endregion
         #region Mistress
         #endregion
         #region Lord Of The Manor
         #endregion
         #region Zort Stuff
-        ConfigZortModelReplacementEnabled = configFile.Bind("Zort Options",
-                                            "Zort Model Replacement | Enabled",
-                                            true,
-                                            "Whether the Zort model replacement is enabled.");
         #endregion
         #region BearTrap Gal
         #endregion
@@ -284,10 +265,6 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Shockwave Gal will automatically wake up and choose the nearest player as the owner.");
-        ConfigShockwaveGalPlayerModelEnabled = configFile.Bind("Shockwave Options",
-                                            "Shockwave Gal | Player Model",
-                                            true,
-                                            "Whether the Shockwave Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
         #endregion
         #region Seamine Gal
         ConfigSeamineTinkCharges = configFile.Bind("Seamine Options",
@@ -321,10 +298,6 @@ public class CodeRebirthConfig
                                             "Seamine Gal | Scan Frequency",
                                             17.5f,
                                             "The average Frequency time of the Seamine Gal's scan in seconds.");
-        ConfigSeamineTinkPlayerModelEnabled = configFile.Bind("Seamine Options",
-                                            "Seamine Gal | Player Model",
-                                            true,
-                                            "Whether the Seamine Gal player model version is available for use (Requires MoreSuits and ModelReplacementAPI to be installed).");
         #endregion
         #region Terminal Gal
         ConfigTerminalBotAutomatic = configFile.Bind("Terminal Options",
@@ -457,54 +430,6 @@ public class CodeRebirthConfig
                                                 "Chance of crits in the game for code rebirth weapons.",
                                                 new AcceptableValueRange<float>(0, 100f)
                                             ));
-        ConfigNaturesMaceScrapEnabled = configFile.Bind("NatureMace Options",
-                                            "Natures Mace | Scrap Enabled",
-                                            true,
-                                            "Whether Natures Mace scrap is enabled.");
-        ConfigNaturesMaceWorth = configFile.Bind("NatureMace Options",
-                                            "Natures Mace | Worth",
-                                            "-1,-1",
-                                            "Min and Max value of the NaturesMace, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigNaturesMaceScrapSpawnWeights = configFile.Bind("NatureMace Options",
-                                            "Natures Mace | Scrap Spawn Weights",
-                                            "Custom:15,Vanilla:15",
-                                            "Natures Mace scrap spawn weights.");
-        ConfigIcyHammerScrapEnabled = configFile.Bind("Icy Hammer Options",
-                                            "Icy Hammer | Scrap Enabled",
-                                            true,
-                                            "Whether Icy Hammer scrap is enabled.");
-        ConfigIcyHammerWorth = configFile.Bind("Icy Hammer Options",
-                                            "Icy Hammer | Worth",
-                                            "-1,-1",
-                                            "Min and Max value of the IcyHammer, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigIcyHammerScrapSpawnWeights = configFile.Bind("Icy Hammer Options",
-                                            "Icy Hammer | Scrap Spawn Weights",
-                                            "Custom:15,Vanilla:15",
-                                            "Icy Hammer scrap spawn weights.");
-        ConfigSpikyMaceScrapEnabled = configFile.Bind("Spiky Mace Options",
-                                            "Spiky Mace | Scrap Enabled",
-                                            true,
-                                            "Whether Spiky Mace scrap is enabled.");
-        ConfigSpikyMaceWorth = configFile.Bind("Spiky Mace Options",
-                                            "Spiky Mace | Worth",
-                                            "-1,-1",
-                                            "Min and Max value of the SpikyMace, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigSpikyMaceScrapSpawnWeights = configFile.Bind("Spiky Mace Options",
-                                            "Spiky Mace | Scrap Spawn Weights",
-                                            "Custom:15,Vanilla:15",
-                                            "Spiky Mace scrap spawn weights.");
-        ConfigEpicAxeScrapEnabled = configFile.Bind("EpicAxe Options",
-                                            "Epic Axe Scrap | Enabled",
-                                            true,
-                                            "Enables/Disables the Epic Axe from showing up in the Factory.");
-        ConfigEpicAxeWorth = configFile.Bind("EpicAxe Options",
-                                            "Epic Axe Scrap | Worth",
-                                            "-1,-1",
-                                            "Min and Max value of the EpicAxe, leave at -1 for both defaults to not mess with base values, values are NOT multiplied by 0.4.");
-        ConfigEpicAxeScrapSpawnWeights = configFile.Bind("EpicAxe Options",
-                                            "Epic Axe Scrap | Spawn Weights",
-                                            "Custom:15,Vanilla:15",
-                                            "Spawn Weight of the epic axe in moons.");
         #endregion
         #region Redwood
         ConfigRedwoodCanEatOldBirds = configFile.Bind("Redwood Options",

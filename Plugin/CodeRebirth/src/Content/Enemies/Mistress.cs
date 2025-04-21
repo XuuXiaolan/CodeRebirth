@@ -20,7 +20,7 @@ public class Mistress : CodeRebirthEnemyAI
     public AudioClip LoseSightSound = null!;
     public AudioClip[] AttackSounds = null!;
 
-    private List<PlayerControllerB> previousTargetPlayers = new();
+    private HashSet<PlayerControllerB> previousTargetPlayers = new();
     private int _seeingCount = 0;
     private float teleporterTimer = 20f;
     private float timeSpentInState = 0f;

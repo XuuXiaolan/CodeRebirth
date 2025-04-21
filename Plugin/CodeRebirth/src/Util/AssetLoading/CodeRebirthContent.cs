@@ -25,7 +25,7 @@ public class AssetBundleData
 [Serializable]
 public abstract class EntityData
 {
-    public string entityName; // Common name property for both enemies and items
+    public string entityName;
 }
 
 [Serializable]

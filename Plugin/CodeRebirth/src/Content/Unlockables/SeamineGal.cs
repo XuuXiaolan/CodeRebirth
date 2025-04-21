@@ -4,9 +4,11 @@ using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.AssetLoading;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -231,9 +233,16 @@ public class SeamineGalAI : GalAI
             Animator.SetInteger(chargeCountInt, chargeCount);
             maxChargeCount = chargeCount;
             Agent.enabled = false;
-            foreach (string enemy in Plugin.ModConfig.ConfigSeamineTinkEnemyBlacklist.Value.Split(','))
+
+            List<CRDynamicConfig> configDefinitions = UnlockableHandler.Instance.SeamineTink!.UnlockableDefinitions.GetCRUnlockableDefinitionWithUnlockableName("Seamine")!.ConfigEntries;
+            CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Seamine Gal", "Enemy Blacklist");
+            if (configSetting != null)
             {
-                enemyTargetBlacklist.Add(enemy.Trim());
+                var enemyBlacklist = CRConfigManager.GetGeneralConfigEntry<string>(configSetting.settingName, configSetting.settingDesc).Value.Split(',').Select(s => s.Trim());
+                foreach (var nameEntry in enemyBlacklist)
+                {
+                    enemyTargetBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+                }
             }
             StartUpDelay();
         }
@@ -505,19 +514,23 @@ public class SeamineGalAI : GalAI
         {
             yield return delay;
 
-            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory)) continue;
+            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory))
+                continue;
 
             int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
             Plugin.ExtendedLogging($"Found {numHits} enemies");
             for (int i = 0; i < numHits; i++)
             {
                 Collider collider = cachedColliders[i];
-                if (!collider.gameObject.activeSelf) continue;
+                if (!collider.gameObject.activeSelf)
+                    continue;
 
-                if (!collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect)) continue;
+                if (!collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect))
+                    continue;
+
                 EnemyAI enemy = enemyCollisionDetect.mainScript;
 
-                if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName) || enemy is Transporter)
+                if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType) || enemy is Transporter)
                     continue;
 
                 // First, do a simple direction check to see if the enemy is in front of the player

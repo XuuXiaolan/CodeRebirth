@@ -40,7 +40,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     [HideInInspector] public const float STARE_ROTATION_SPEED = 2f;
     [HideInInspector] public EnemyAI? targetEnemy;
     [HideInInspector] public PlayerControllerB? ownerPlayer;
-    [HideInInspector] public List<string> enemyTargetBlacklist = new();
+    [HideInInspector] public HashSet<EnemyType> enemyTargetBlacklist = new();
     [HideInInspector] public int chargeCount = 10;
     [HideInInspector] public int maxChargeCount;
     [HideInInspector] public bool currentlyAttacking = false;

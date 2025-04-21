@@ -324,11 +324,13 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             for (int i = 0; i < numHits; i++)
             {
                 Collider collider = _cachedColliders[i];
-                if (!collider.TryGetComponent(out IHittable hittable)) continue;
+                if (!collider.TryGetComponent(out IHittable hittable))
+                    continue;
 
                 // Skip if already processed this target this tick.
                 if (damagedTargets.Contains(hittable))
                     continue;
+
                 damagedTargets.Add(hittable);
 
                 if (hittable is EnemyAICollisionDetect enemyAICollision && enemyAICollision.mainScript.gameObject == gameObject)

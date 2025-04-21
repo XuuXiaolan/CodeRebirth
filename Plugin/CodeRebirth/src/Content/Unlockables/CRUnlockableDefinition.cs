@@ -14,7 +14,7 @@ public class CRUnlockableDefinition : CRContentDefinition
     public UnlockableItemDef? GetUnlockableByName(string name)
     {
         if (string.IsNullOrEmpty(name)) return null;
-        if (unlockableItemDef.unlockable.unlockableName.ToLowerInvariant().Contains(name.ToLowerInvariant())) return unlockableItemDef;
+        if (unlockableItemDef.unlockable.unlockableName.Contains(name, System.StringComparison.OrdinalIgnoreCase)) return unlockableItemDef;
         return null;
     }
 }

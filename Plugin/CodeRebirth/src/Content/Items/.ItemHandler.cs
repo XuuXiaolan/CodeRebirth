@@ -55,7 +55,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public ItemHandler()
     {
-
         XuAndRigo = LoadAndRegisterAssets<XuAndRigoAssets>("xuandrigoassets");
 
         Zort = LoadAndRegisterAssets<ZortAssets>("zortassets");

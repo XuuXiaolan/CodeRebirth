@@ -1,8 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,7 +32,7 @@ public class Guardsman : CodeRebirthEnemyAI
     private List<IHittable> _iHittableList = new();
     private List<EnemyAI> _enemyAIList = new();
     private Collider[] _cachedHits = new Collider[24];
-    private List<string> _internalEnemyBlacklist = [];
+    private HashSet<EnemyType> _internalEnemyBlacklist = new();
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
@@ -36,19 +42,29 @@ public class Guardsman : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        foreach (string enemy in Plugin.ModConfig.ConfigSeamineTinkEnemyBlacklist.Value.Split(','))
+        List<CRDynamicConfig> configDefinitions = MapObjectHandler.Instance.Merchant!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
+        CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Guardsman", "Enemy Blacklist");
+        if (configSetting != null)
         {
-            _internalEnemyBlacklist.Add(enemy.Trim());
+            var enemyBlacklistArray = CRConfigManager.GetGeneralConfigEntry<string>(configSetting.settingName, configSetting.settingDesc).Value.Split(',').Select(s => s.Trim());
+            foreach (var nameEntry in enemyBlacklistArray)
+            {
+                _internalEnemyBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)));
+            }
         }
 
+        foreach (var nameEntry in _internalEnemyBlacklist)
+        {
+            Plugin.ExtendedLogging($"Adding {nameEntry} to Guardsman's internal blacklist.");
+        }
         StartCoroutine(StartDelay());
-        foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
+        /*foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
         {
             if (enemyType.enemyPrefab == null || enemyType.enemyPrefab.GetComponent<EnemyAI>() == null)
                 continue;
 
             Plugin.ExtendedLogging($"{enemyType.enemyName} has Size: {CalculateEnemySize(enemyType.enemyPrefab.GetComponent<EnemyAI>())}");
-        }
+        }*/
     }
 
     public override void Update()
@@ -105,7 +121,7 @@ public class Guardsman : CodeRebirthEnemyAI
             if (enemy == null || enemy.isEnemyDead || enemy is Guardsman)
                 continue;
 
-            if (_internalEnemyBlacklist.Contains(enemy.enemyType.enemyName))
+            if (_internalEnemyBlacklist.Contains(enemy.enemyType))
                 continue;
 
             if (Vector3.Distance(transform.position, enemy.transform.position) > 45f)
@@ -182,6 +198,7 @@ public class Guardsman : CodeRebirthEnemyAI
         smartAgentNavigator.cantMove = true;
         smartAgentNavigator.StopAgent();
         yield return new WaitForSeconds(10f);
+        skinnedMeshRenderers[0].updateWhenOffscreen = false;
         smartAgentNavigator.cantMove = false;
         smartAgentNavigator.StartSearchRoutine(this.transform.position, 100f);
     }
@@ -210,6 +227,12 @@ public class Guardsman : CodeRebirthEnemyAI
     #endregion
 
     #region Animation Events
+    public void ScreenShakeAnimEvent()
+    {
+        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) <= 50f)
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+    }
+
     public void MessWithSizeAnimEvent(int sizeMultiplier)
     {
         if (_messWithSizeOverTimeRoutine != null)

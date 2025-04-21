@@ -67,16 +67,20 @@ public class AssetBundleLoader<T> where T : AssetBundleLoader<T>
                 Utilities.FixMixerGroups(gameObject);
                 Plugin.ExtendedLogging($"[AssetBundle Loading] Fixed Mixer Groups: {gameObject.name}");
             }
-            if (!registerNetworkPrefabs || gameObject.GetComponent<NetworkObject>() == null) continue;
+
+            if (!registerNetworkPrefabs || gameObject.GetComponent<NetworkObject>() == null)
+                continue;
+
             NetworkPrefabs.RegisterNetworkPrefab(gameObject);
             Plugin.ExtendedLogging($"[AssetBundle Loading] Registered Network Prefab: {gameObject.name}");
         }
     }
 
-    UnityEngine.Object LoadAsset(AssetBundle bundle, string path)
+    private UnityEngine.Object LoadAsset(AssetBundle bundle, string path)
     {
         UnityEngine.Object result = bundle.LoadAsset<UnityEngine.Object>(path);
-        if (result == null) throw new ArgumentException(path + " is not valid in the assetbundle!");
+        if (result == null)
+            throw new ArgumentException(path + " is not valid in the assetbundle!");
 
         return result;
     }

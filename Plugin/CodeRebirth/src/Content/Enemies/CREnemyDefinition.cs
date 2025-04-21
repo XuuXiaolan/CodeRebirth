@@ -12,8 +12,12 @@ public class CREnemyDefinition : CRContentDefinition
 
     public EnemyType? GetEnemyTypeOnName(string enemyName)
     {
-        if (string.IsNullOrEmpty(enemyName)) return null;
-        if (enemyType.enemyName.ToLowerInvariant().Contains(enemyName.ToLowerInvariant())) return enemyType;
+        if (string.IsNullOrEmpty(enemyName))
+            return null;
+
+        if (enemyType.enemyName.Contains(enemyName, System.StringComparison.OrdinalIgnoreCase))
+            return enemyType;
+
         return null;
     }
 }

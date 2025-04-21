@@ -12,7 +12,7 @@ public class Monarch : CodeRebirthEnemyAI
     public Transform[] AirAttackTransforms = [];
     public Transform MouthTransform = null!;
 
-    public static List<Monarch> Monarchs = new();
+    public static HashSet<Monarch> Monarchs = new();
 
     public enum MonarchState
     {
@@ -24,7 +24,7 @@ public class Monarch : CodeRebirthEnemyAI
 
     private bool canAttack = true;
     private bool isAttacking = false;
-    private Collider[] cachedHits = new Collider[5];
+    private Collider[] cachedHits = new Collider[8];
     private static readonly int DoAttackAnimation = Animator.StringToHash("doAttack"); // trigger
     private static readonly int IsFlyingAnimation = Animator.StringToHash("isFlying"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
@@ -41,10 +41,9 @@ public class Monarch : CodeRebirthEnemyAI
 
         int randomNumberToSpawn = enemyRandom.Next(2, 5);
         if (!IsServer) return;
-        if (EnemyHandler.Instance.Monarch == null) return;
         for (int i = 0; i < randomNumberToSpawn; i++)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Cutie")?.enemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("CutieFly")!.enemyType);
         }
     }
 

@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirth.src.Util.AssetLoading;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -233,9 +234,15 @@ public class ShockwaveGalAI : GalAI
             maxChargeCount = chargeCount;
             Agent.enabled = false;
             FlySource.volume = 0f;
-            foreach (string enemy in Plugin.ModConfig.ConfigShockwaveBotEnemyBlacklist.Value.Split(','))
+            List<CRDynamicConfig> configDefinitions = UnlockableHandler.Instance.ShockwaveBot!.UnlockableDefinitions.GetCRUnlockableDefinitionWithUnlockableName("Shockwave")!.ConfigEntries;
+            CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Shockwave Gal", "Enemy Blacklist");
+            if (configSetting != null)
             {
-                enemyTargetBlacklist.Add(enemy.Trim());
+                var enemyBlacklist = CRConfigManager.GetGeneralConfigEntry<string>(configSetting.settingName, configSetting.settingDesc).Value.Split(',').Select(s => s.Trim());
+                foreach (var nameEntry in enemyBlacklist)
+                {
+                    enemyTargetBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+                }
             }
             StartUpDelay();
         }
@@ -472,7 +479,7 @@ public class ShockwaveGalAI : GalAI
                     enemy = enemy2;
                 }
 
-                if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
+                if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType))
                     continue;
 
                 if (!Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, collider.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomMaskAndDefaultAndEnemies, QueryTriggerInteraction.Collide))

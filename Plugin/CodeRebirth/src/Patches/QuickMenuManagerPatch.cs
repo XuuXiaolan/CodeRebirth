@@ -21,7 +21,8 @@ static class QuickMenuManagerPatch
             if (String.IsNullOrEmpty(enemy.enemyName)) continue;
             Plugin.ExtendedLogging($"{enemy.enemyName} has been found!");
 
-            if (!CodeRebirthUtils.EnemyTypes.Contains(enemy)) CodeRebirthUtils.EnemyTypes.Add(enemy);
+            if (!CodeRebirthUtils.EnemyTypes.Contains(enemy))
+                CodeRebirthUtils.EnemyTypes.Add(enemy);
         }
 
         alreadyPatched = true; // exiting to the menu launches this too, so we prevent the search just in case
