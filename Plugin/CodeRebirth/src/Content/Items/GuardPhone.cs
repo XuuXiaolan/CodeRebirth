@@ -6,7 +6,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class GuardPhone : GrabbableObject
 {
-
     [SerializeField]
     private AudioSource _callSource = null!;
 
