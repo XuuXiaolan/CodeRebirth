@@ -81,7 +81,6 @@ public class SmartAgentNavigator : NetworkBehaviour
             HandleDisabledAgentPathing();
             return false;
         }
-
         return GoToDestination(destination);
     }
 
@@ -484,10 +483,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         if (!agent.enabled)
             return;
 
-        if (searchRoutine != null)
-        {
-            StopCoroutine(searchRoutine);
-        }
+        StopSearchRoutine();
         isSearching = true;
         searchRoutine = StartCoroutine(SearchAlgorithm(position, radius));
     }

@@ -71,15 +71,15 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     public bool tryHitAllTimes = false;
 
     [HideInInspector] public float heldOverHeadTimer = 0f;
-    private Coroutine? reelingRoutine = null;
+    private Coroutine? _reelingRoutine = null;
     [HideInInspector] public RaycastHit[] cachedRaycastHits = new RaycastHit[16];
     [HideInInspector] public PlayerControllerB? previousPlayerHeldBy = null;
 
     [HideInInspector] public UnityEvent OnHitSuccess = new UnityEvent();
-    private List<IHittable> iHittableList = new();
-    private List<VehicleController> hitVehicles = new();
-    private List<PlayerControllerB> hitPlayers = new();
-    private List<EnemyAICollisionDetect> hitEnemies = new();
+    private List<IHittable> _iHittableList = new();
+    private List<VehicleController> _hitVehicles = new();
+    private List<PlayerControllerB> _hitPlayers = new();
+    private List<EnemyAICollisionDetect> _hitEnemies = new();
 
     private static readonly int UseHeldItem1Animation = Animator.StringToHash("UseHeldItem1"); // Trigger
     private static readonly int ShovelHitAnimation = Animator.StringToHash("shovelHit"); // Trigger
@@ -102,8 +102,8 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         if (isHeavyWeapon)
         {
             isHoldingButton = buttonDown;
-            if (!buttonDown || reelingRoutine != null) return;
-            reelingRoutine = StartCoroutine(ReelBackWeapon());
+            if (!buttonDown || _reelingRoutine != null) return;
+            _reelingRoutine = StartCoroutine(ReelBackWeapon());
         }
         else
         {
@@ -162,7 +162,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         }
         yield return new WaitForSeconds(weaponCooldown);
         heldOverHeadTimer = 0f;
-        reelingRoutine = null;
+        _reelingRoutine = null;
     }
 
     [ServerRpc]
@@ -215,14 +215,14 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         int numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore);
         var objectsHit = cachedRaycastHits.Take(numHits).OrderBy(hit => hit.distance);
 
-        hitVehicles.Clear();
+        _hitVehicles.Clear();
         foreach (RaycastHit hit in objectsHit)
         {
             if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("Enemy")) continue;
             VehicleController? hitVehicle = GrabVehicleFromHit(hit);
             if (hitVehicle != null)
             {
-                hitVehicles.Add(hitVehicle);
+                _hitVehicles.Add(hitVehicle);
             }
             for (int i = 0; i < StartOfRound.Instance.footstepSurfaces.Length; i++)
             {
@@ -233,9 +233,9 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             }
         }
 
-        iHittableList.Clear();
-        hitEnemies.Clear();
-        hitPlayers.Clear();
+        _iHittableList.Clear();
+        _hitEnemies.Clear();
+        _hitPlayers.Clear();
 
         numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
         objectsHit = cachedRaycastHits.Take(numHits).OrderBy(hit => hit.distance);
@@ -245,32 +245,32 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             Plugin.ExtendedLogging($"Hit hittable: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
             if (hittable is EnemyAICollisionDetect enemyAICollisionDetect)
             {
-                if (hitEnemies.Contains(enemyAICollisionDetect)) continue;
+                if (_hitEnemies.Contains(enemyAICollisionDetect)) continue;
                 Plugin.ExtendedLogging($"Hit enemy: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
-                hitEnemies.Add(enemyAICollisionDetect);
+                _hitEnemies.Add(enemyAICollisionDetect);
                 continue;
             }
             else if (hittable is PlayerControllerB playerControllerB)
             {
-                if (hitPlayers.Contains(playerControllerB)) continue;
+                if (_hitPlayers.Contains(playerControllerB)) continue;
                 Plugin.ExtendedLogging($"Hit player: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
-                hitPlayers.Add(playerControllerB);
+                _hitPlayers.Add(playerControllerB);
                 continue;
             }
-            iHittableList.Add(hittable);
+            _iHittableList.Add(hittable);
         }
 
-        if (surfaceSound == -1 && hitEnemies.Count <= 0 && hitPlayers.Count <= 0 && hitVehicles.Count <= 0) return false;
-        foreach (var hittable in iHittableList)
+        if (surfaceSound == -1 && _hitEnemies.Count <= 0 && _hitPlayers.Count <= 0 && _hitVehicles.Count <= 0) return false;
+        foreach (var hittable in _iHittableList)
         {
             OnWeaponHit(hittable, this.transform.position);
         }
         timeAtLastDamageDealt = Time.realtimeSinceStartup;
 
         RoundManager.Instance.PlayAudibleNoise(transform.position, 17f, 0.8f);
-        HandleHittingPlayers(hitPlayers);
-        HandleHittingEnemies(hitEnemies);
-        HandleHittingVehicles(hitVehicles);
+        HandleHittingPlayers(_hitPlayers);
+        HandleHittingEnemies(_hitEnemies);
+        HandleHittingVehicles(_hitVehicles);
         HandleHittingSurface(surfaceSound);
 
         if (isHeavyWeapon)
@@ -293,10 +293,10 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         HitWeaponServerRpc(surfaceID); // hit wall etc sound from wall
     }
 
-    private void HandleHittingPlayers(List<PlayerControllerB> _hitPlayers)
+    private void HandleHittingPlayers(List<PlayerControllerB> __hitPlayers)
     {
         if (!damagePlayers) return;
-        if (_hitPlayers.Count <= 0) return;
+        if (__hitPlayers.Count <= 0) return;
         List<CentipedeAI> _relevantCentipedeAI = new();
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
@@ -306,7 +306,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
                 _relevantCentipedeAI.Add(centipedeAI);
             }
         }
-        foreach (var player in _hitPlayers)
+        foreach (var player in __hitPlayers)
         {
             Plugin.ExtendedLogging($"Hitting player: {player}");
             OnPlayerHit.Invoke(player);
@@ -316,11 +316,11 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         }
     }
 
-    private void HandleHittingEnemies(List<EnemyAICollisionDetect> hitEnemies)
+    private void HandleHittingEnemies(List<EnemyAICollisionDetect> _hitEnemies)
     {
         if (!damageEnemies) return;
-        if (hitEnemies.Count <= 0) return;
-        foreach (var enemyAICollisionDetect in hitEnemies)
+        if (_hitEnemies.Count <= 0) return;
+        foreach (var enemyAICollisionDetect in _hitEnemies)
         {
             Plugin.ExtendedLogging($"Hitting enemy: {enemyAICollisionDetect.mainScript}");
             OnEnemyHit.Invoke(enemyAICollisionDetect.mainScript);
@@ -330,12 +330,12 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         bloodParticle?.Play(true);
     }
 
-    private void HandleHittingVehicles(List<VehicleController> hitVehicles)
+    private void HandleHittingVehicles(List<VehicleController> _hitVehicles)
     {
         if (!damageVehicles) return;
-        if (hitVehicles.Count <= 0) return;
+        if (_hitVehicles.Count <= 0) return;
 
-        foreach (var vehicle in hitVehicles)
+        foreach (var vehicle in _hitVehicles)
         {
             vehicle.PushTruckServerRpc(previousPlayerHeldBy.transform.position, weaponTip.transform.position);
             vehicle.DealPermanentDamage(HitForce, previousPlayerHeldBy.transform.position);
@@ -350,7 +350,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         if (!damageVehicles) return null;
         if (hit.collider.gameObject.layer != 30) return null;
         if (!hit.collider.TryGetComponent(out VehicleController vehicle)) return null;
-        if (hitVehicles.Contains(vehicle)) return null;
+        if (_hitVehicles.Contains(vehicle)) return null;
         return vehicle;
     }
 
