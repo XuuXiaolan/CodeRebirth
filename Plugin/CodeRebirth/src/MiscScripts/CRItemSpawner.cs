@@ -45,7 +45,7 @@ public class CRItemSpawner : MonoBehaviour
 
     public void DoVanillaItemSpawn()
     {
-        if (UnityEngine.Random.Range(0, 100) < spawnChance)
+        if (UnityEngine.Random.Range(0, 100) >= spawnChance)
             return;
 
         Item? item = Merchant.GetRandomVanillaItem(false);
@@ -54,7 +54,7 @@ public class CRItemSpawner : MonoBehaviour
 
     public void DoSpecialItemSpawn()
     {
-        if (UnityEngine.Random.Range(0, 100) < spawnChance)
+        if (UnityEngine.Random.Range(0, 100) >= spawnChance)
             return;
 
         List<(Item item, float rarity)> specialItems = new();
