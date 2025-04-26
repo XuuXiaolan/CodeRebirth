@@ -75,7 +75,9 @@ public class SmartAgentNavigator : NetworkBehaviour
         {
             StopSearchRoutine();
         }
-        if (cantMove) return false;
+        if (cantMove)
+            return false;
+
         if (!agent.enabled)
         {
             HandleDisabledAgentPathing();
@@ -170,17 +172,14 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     public float CanPathToPoint(Vector3 startPos, Vector3 endPos)
     {
-        // Calculate the path
         NavMeshPath path = new NavMeshPath();
         bool pathFound = NavMesh.CalculatePath(startPos, endPos, NavMesh.AllAreas, path);
 
-        // If we failed to calculate a path or it’s incomplete/invalid, return false
         if (!pathFound || path.status != NavMeshPathStatus.PathComplete)
         {
             return -1;
         }
 
-        // If you also want to check the path distance, you can do something like:
         float pathDistance = 0f;
         if (path.corners.Length > 1)
         {

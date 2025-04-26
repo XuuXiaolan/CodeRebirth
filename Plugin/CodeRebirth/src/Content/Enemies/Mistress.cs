@@ -23,7 +23,7 @@ public class Mistress : CodeRebirthEnemyAI
     private HashSet<PlayerControllerB> previousTargetPlayers = new();
     private int _seeingCount = 0;
     private float teleporterTimer = 20f;
-    private float timeSpentInState = 0f;
+    private float timeSpentInState = 69f;
     private float killTimer = 0f;
     private bool cantLosePlayer = false;
     private PlayerControllerB? playerToKill;
@@ -116,7 +116,7 @@ public class Mistress : CodeRebirthEnemyAI
     {
         if (teleporterTimer > 500) return;
         teleporterTimer -= AIIntervalTime;
-        timeSpentInState += AIIntervalTime;
+        timeSpentInState -= AIIntervalTime;
         if (teleporterTimer <= 0)
         {
             StartCoroutine(TeleportRoutine());
@@ -138,9 +138,9 @@ public class Mistress : CodeRebirthEnemyAI
             return;
 
         _seeingCount = 0;
-        if (timeSpentInState > 0)
+        if (timeSpentInState <= 0)
         {
-            timeSpentInState = 0f;
+            timeSpentInState = UnityEngine.Random.Range(50f, 80f);
             TemporarilyCripplePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), true);
             StartCoroutine(UpdatePlayerLossVision());
             SwitchToBehaviourServerRpc((int)State.Attack);
@@ -232,7 +232,7 @@ public class Mistress : CodeRebirthEnemyAI
         SwitchToBehaviourServerRpc((int)State.Spawning);
         teleporterTimer = 0f;
         yield return new WaitForSeconds(20f);
-        timeSpentInState = 0f;
+        timeSpentInState = UnityEngine.Random.Range(50f, 80f);
         SwitchToBehaviourServerRpc((int)State.Stalking);
         PickATargetPlayer();
     }

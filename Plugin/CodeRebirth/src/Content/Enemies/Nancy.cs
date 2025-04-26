@@ -97,7 +97,8 @@ public class Nancy : CodeRebirthEnemyAI
             return;
 
         float distance = Vector3.Distance(transform.position, localPlayer.transform.position);
-        if (distance < 30 && smartAgentNavigator.CanPathToPoint(this.transform.position, localPlayer.transform.position) <= 20f)
+        float pathDistance = smartAgentNavigator.CanPathToPoint(this.transform.position, localPlayer.transform.position);
+        if (distance < 30 && pathDistance != 0 && pathDistance <= 20f)
         {
             SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
             DoBoolAnimationServerRpc(HealModeAnimation, true);

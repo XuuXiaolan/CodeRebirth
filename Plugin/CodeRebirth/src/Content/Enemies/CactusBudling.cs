@@ -9,6 +9,8 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     [SerializeField]
     private AnimationClip _spawnAnimation = null!;
     [SerializeField]
+    private AnimationClip _rootingEndAnimation = null!;
+    [SerializeField]
     private AnimationClip _rollingStartAnimation = null!;
     [SerializeField]
     private AnimationClip _rollingEndAnimation = null!;
@@ -249,7 +251,12 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
             _rollingTimer = _rollingDuration;
             _targetRollingPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
-            _nextStateRoutine = StartCoroutine(DelayToNextState(_rollingStartAnimation.length, 10f, CactusBudlingState.Rolling));
+            float delayTimer = _rollingStartAnimation.length;
+            if (currentBehaviourStateIndex == (int)CactusBudlingState.Rooted)
+            {
+                delayTimer += _rootingEndAnimation.length;
+            }
+            _nextStateRoutine = StartCoroutine(DelayToNextState(delayTimer, 10f, CactusBudlingState.Rolling));
         }
     }
 

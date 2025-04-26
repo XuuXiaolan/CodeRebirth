@@ -12,7 +12,6 @@ namespace CodeRebirth.src.Content.Enemies;
 public class Janitor : CodeRebirthEnemyAI
 {
     #region Fields & Properties
-
     [Header("References & Transforms")]
     public GameObject sirenLights = null!;
     public Transform handTransform = null!;
@@ -29,10 +28,9 @@ public class Janitor : CodeRebirthEnemyAI
     public AudioClip[] throwPlayerSounds = [];
     public Material[] variantMaterials = [];
 
-    private Collider[] hitColliders = new Collider[10];
-    private float idleTimer = 60f;
+    private Collider[] _hitColliders = new Collider[12];
+    private float _idleTimer = 60f;
 
-    // Janitor states
     public enum JanitorStates
     {
         Idle,
@@ -42,26 +40,24 @@ public class Janitor : CodeRebirthEnemyAI
         Dead
     }
 
-    // For storing references to all Janitors and TrashCans
     public static List<Janitor> janitors = new();
-    [HideInInspector] public static List<TrashCan> trashCans = new();
 
-    // Navigation and pathing
     private Vector3[] _pathCorners = [];
     private int _currentCornerIndex = 0;
     private bool _isRotating = false;
-    private bool _isPathValid;
-    private readonly float _cornerThreshold = 0.5f;
+    private TrashCan? _targetTrashCan = null;
+    private GrabbableObject? _targetScrap = null;
+    private List<GrabbableObject?> _storedScrap = new();
 
-    // Scrap & Player
-    private TrashCan? targetTrashCan = null;
-    private GrabbableObject? targetScrap = null;
-    [HideInInspector] public bool currentlyGrabbingScrap = false;
-    [HideInInspector] public bool currentlyGrabbingPlayer = false;
-    [HideInInspector] public bool currentlyThrowingPlayer = false;
-    private readonly Dictionary<GrabbableObject, int> storedScrapAndValueDict = new();
+    [HideInInspector]
+    public static List<TrashCan> trashCans = new();
+    [HideInInspector]
+    public bool currentlyGrabbingScrap = false;
+    [HideInInspector]
+    public bool currentlyGrabbingPlayer = false;
+    [HideInInspector]
+    public bool currentlyThrowingPlayer = false;
 
-    // Animator Hashes
     private static readonly int RightTreadFloat = Animator.StringToHash("RightTreadFloat");
     private static readonly int LeftTreadFloat = Animator.StringToHash("LeftTreadFloat");
     private static readonly int IsAngryAnimation = Animator.StringToHash("isAngry");
@@ -70,11 +66,9 @@ public class Janitor : CodeRebirthEnemyAI
     private static readonly int GrabScrapAnimation = Animator.StringToHash("grabScrap");
     private static readonly int BreakMovementAnimation = Animator.StringToHash("break");
     private static readonly int ThrowPlayerAnimation = Animator.StringToHash("throwPlayer");
-
     #endregion
 
-    #region Network Spawn & Despawn
-
+    #region Unity Lifecycle
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -87,25 +81,18 @@ public class Janitor : CodeRebirthEnemyAI
         janitors.Remove(this);
     }
 
-    #endregion
-
-    #region Unity Lifecycle
-
     public override void Start()
     {
         base.Start();
-        // Apply material variant
         ApplyMaterialVariant();
 
-        // Audio & initial setup
         creatureVoice.PlayOneShot(spawnSound);
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
 
-        // If we're the server, start coroutines
-        if (IsServer)
-        {
-            StartCoroutine(CheckForScrapNearby());
-        }
+        if (!IsServer)
+            return;
+
+        StartCoroutine(CheckForScrapNearby());
     }
 
     public override void Update()
@@ -117,17 +104,15 @@ public class Janitor : CodeRebirthEnemyAI
             HandleIdleSoundTimer();
         }
 
-        // Only the server does path rotation
-        if (!IsServer) return;
-        if (_isRotating)
-        {
-            HandleRotation();
-        }
+        if (!IsServer)
+            return;
+
+        if (!_isRotating)
+            return;
+
+        HandleRotation();
     }
 
-    /// <summary>
-    /// Handle position adjustments each frame, especially for ZoomingOff state.
-    /// </summary>
     public void LateUpdate()
     {
         if (currentBehaviourStateIndex == (int)JanitorStates.ZoomingOff)
@@ -135,24 +120,15 @@ public class Janitor : CodeRebirthEnemyAI
             KeepPlayerAttachedDuringZoom();
         }
     }
-
     #endregion
 
     #region Coroutines
-
-    /// <summary>
-    /// Periodically checks for scrap in range, and if found, tries to collect it.
-    /// </summary>
-    public IEnumerator CheckForScrapNearby()
+    private IEnumerator CheckForScrapNearby()
     {
         while (true)
         {
-            yield return new WaitForSeconds(2f);
-
-            // Only check if we're idle and have no scrap targeted
-            yield return new WaitUntil(() => currentBehaviourStateIndex == (int)JanitorStates.Idle && targetScrap == null);
-
-            // Scan for scrap
+            yield return new WaitUntil(() => currentBehaviourStateIndex == (int)JanitorStates.Idle && _targetScrap == null);
+            yield return null;
             TryFindScrapNearby();
         }
     }
@@ -160,16 +136,17 @@ public class Janitor : CodeRebirthEnemyAI
     public IEnumerator WaitUntilNotDoingAnythingCurrently(PlayerControllerB playerWhoHit)
     {
         yield return new WaitUntil(() => !currentlyGrabbingScrap && !currentlyGrabbingPlayer && !currentlyThrowingPlayer);
+        yield return null;
         DetectDroppedScrapServerRpc(playerWhoHit.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
     }
-
     #endregion
 
     #region State Behaviors
-
     public override void DoAIInterval()
     {
         base.DoAIInterval();
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead)
+            return;
 
         switch (currentBehaviourStateIndex)
         {
@@ -186,64 +163,54 @@ public class Janitor : CodeRebirthEnemyAI
                 DoZoomingOff();
                 break;
             case (int)JanitorStates.Dead:
-                // Currently no default code for Dead
                 break;
         }
     }
 
-    /// <summary>
-    /// Wanders around when idle.
-    /// </summary>
     private void DoIdle()
     {
-        if (!_isPathValid || IsPathInvalid())
+        if (_isRotating)
+            return;
+
+        if (!IsPathValid())
         {
-            CalculateAndSetNewPath(
-                RoundManager.Instance.GetRandomNavMeshPositionInRadius(transform.position, 50, default)
-            );
+            CalculateAndSetNewPath(RoundManager.Instance.GetRandomNavMeshPositionInRadius(transform.position, 50, default));
             return;
         }
 
-        if (_isRotating) return;
-        HandleMovement();
-
-        // If we've reached a corner, rotate or get a new path
         if (ReachedCurrentCorner())
         {
             if (IsAtFinalCorner())
             {
-                // Reached the final corner, pick a new path
-                CalculateAndSetNewPath(
-                    RoundManager.Instance.GetRandomNavMeshPositionInRadius(transform.position, 50, default)
-                );
+                CalculateAndSetNewPath(RoundManager.Instance.GetRandomNavMeshPositionInRadius(transform.position, 50, default));
             }
             else
             {
                 BeginRotation();
             }
+            return;
         }
+
+        HandleMovement();
     }
 
-    /// <summary>
-    /// Moves to scrap location. If invalid or scrap is missing, go idle again.
-    /// </summary>
     private void DoStoringScrap()
     {
         if (!IsScrapStillValid())
         {
-            // Something invalid happened; revert to Idle
             ResetToIdle();
             return;
         }
 
-        if (_isRotating) return;
+        if (_isRotating)
+            return;
+
         HandleMovement();
 
         if (ReachedCurrentCorner())
         {
             if (IsAtFinalCorner())
             {
-                // Attempt to pick up the scrap if in reach
                 TryGrabScrap();
             }
             else
@@ -253,24 +220,24 @@ public class Janitor : CodeRebirthEnemyAI
         }
     }
 
-    /// <summary>
-    /// Chases a target player. If close enough, tries to grab them.
-    /// </summary>
     private void DoFollowingPlayer()
     {
-        if (!IsPlayerStillValid())
+        if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.isPlayerControlled)
         {
             ResetChaseAndRevertToIdle();
             return;
         }
 
-        if (!_isPathValid || IsPathInvalid())
+        if (_isRotating)
+            return;
+
+        if (!IsPathValid())
         {
             UpdatePathToTargetPlayer();
             return;
         }
 
-        if (_isRotating) return;
+
         HandleMovement();
 
         if (IsPlayerInRange() && !currentlyGrabbingPlayer)
@@ -279,10 +246,9 @@ public class Janitor : CodeRebirthEnemyAI
         }
         else if (ReachedCurrentCorner())
         {
-            // If the player is too far from our corner, recalc path
-            if (!currentlyGrabbingPlayer && IsPlayerTooFarFromCorner())
+            if ((IsAtFinalCorner()) || (!currentlyGrabbingPlayer && IsPlayerTooFarFromFinalCorner()))
             {
-                _isPathValid = false;
+                UpdatePathToTargetPlayer();
             }
             else
             {
@@ -291,15 +257,13 @@ public class Janitor : CodeRebirthEnemyAI
         }
     }
 
-    /// <summary>
-    /// Moves the Janitor (with player in tow) to a trash can to throw them in.
-    /// </summary>
     private void DoZoomingOff()
     {
-        if (!_isPathValid || IsPathInvalid() || targetTrashCan == null)
+        if (!IsPathValid() || _targetTrashCan == null)
         {
-            // If we can't find a new trash can or path is invalid, throw the player now
-            if (currentlyThrowingPlayer) return;
+            if (currentlyThrowingPlayer)
+                return;
+
             if (!TryFindAnyValidTrashCan())
             {
                 TriggerPlayerThrowAnimation();
@@ -307,7 +271,9 @@ public class Janitor : CodeRebirthEnemyAI
             return;
         }
 
-        if (_isRotating) return;
+        if (_isRotating)
+            return;
+
         HandleMovement();
 
         if (ReachedCurrentCorner())
@@ -322,11 +288,9 @@ public class Janitor : CodeRebirthEnemyAI
             }
         }
     }
-
     #endregion
 
-    #region Server/Client RPC Calls
-
+    #region Rpc Calls
     [ServerRpc(RequireOwnership = false)]
     public void SetBlendShapeWeightServerRpc(int weight)
     {
@@ -343,15 +307,12 @@ public class Janitor : CodeRebirthEnemyAI
     [ServerRpc(RequireOwnership = false)]
     public void DetectDroppedScrapServerRpc(Vector3 noisePosition, int playerWhoDroppedIndex)
     {
-        NavMesh.SamplePosition(noisePosition, out NavMeshHit hit, 5f, NavMesh.AllAreas);
-        NavMeshPath path = new NavMeshPath();
-        if (agent.CalculatePath(hit.position, path) &&
-            path.status == NavMeshPathStatus.PathComplete &&
-            DoCalculatePathDistance(path) <= 20f)
+        if (!NavMesh.SamplePosition(noisePosition, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            return;
+
+        if (ObjectIsPathable(hit.position, 20f, out NavMeshPath path))
         {
-            // Switch to chasing state
             SetTargetClientRpc(playerWhoDroppedIndex);
-            targetPlayer = StartOfRound.Instance.allPlayerScripts[playerWhoDroppedIndex];
             UpdateBlendShapeAndSpeedForChase();
             SwitchToBehaviourClientRpc((int)JanitorStates.FollowingPlayer);
         }
@@ -378,10 +339,10 @@ public class Janitor : CodeRebirthEnemyAI
         targetPlayer = player;
         player.disableMoveInput = true;
 
-        if (IsServer)
-        {
-            creatureAnimator.SetBool(HoldingPlayerAnimation, true);
-        }
+        if (!IsServer)
+            return;
+
+        creatureAnimator.SetBool(HoldingPlayerAnimation, true);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -393,19 +354,16 @@ public class Janitor : CodeRebirthEnemyAI
     [ClientRpc]
     public void SetTargetScrapUngrabbableClientRpc(NetworkObjectReference netObjRef)
     {
-        var scrapObj = (netObjRef.TryGet(out NetworkObject netObj) ? netObj : null)?.GetComponent<GrabbableObject>();
+        GrabbableObject? scrapObj = (netObjRef.TryGet(out NetworkObject netObj) ? netObj : null)?.GetComponent<GrabbableObject>();
         if (scrapObj == null)
         {
-            // Fallback
-            targetScrap = null;
+            _targetScrap = null;
             SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
             return;
         }
 
-        // If someone else grabbed it in the meantime, chase that player
         if (scrapObj.isHeld && scrapObj.playerHeldBy != null)
         {
-            // Freak out => chase player
             SwitchToChaseState(scrapObj.playerHeldBy);
             return;
         }
@@ -413,20 +371,15 @@ public class Janitor : CodeRebirthEnemyAI
         scrapObj.grabbable = false;
         HoarderBugAI.grabbableObjectsInMap.Remove(scrapObj.gameObject);
 
-        targetScrap = scrapObj;
-        if (IsServer)
-        {
-            creatureNetworkAnimator.SetTrigger(GrabScrapAnimation);
-        }
-    }
+        _targetScrap = scrapObj;
+        if (!IsServer)
+            return;
 
+        creatureNetworkAnimator.SetTrigger(GrabScrapAnimation);
+    }
     #endregion
 
     #region Movement & Rotation
-
-    /// <summary>
-    /// Initiates rotation to next corner (stops agent movement while rotating).
-    /// </summary>
     private void BeginRotation()
     {
         _isRotating = true;
@@ -435,36 +388,31 @@ public class Janitor : CodeRebirthEnemyAI
             creatureNetworkAnimator.SetTrigger(BreakMovementAnimation);
         }
 
+        smartAgentNavigator.cantMove = true;
         agent.velocity = Vector3.zero;
         agent.isStopped = true;
 
-        // Reset tread animations
         creatureAnimator.SetFloat(LeftTreadFloat, 0f);
         creatureAnimator.SetFloat(RightTreadFloat, 0f);
     }
 
-    /// <summary>
-    /// Rotates the Janitor to face the next path corner.
-    /// </summary>
     private void HandleRotation()
     {
-        if (_pathCorners.Length == 0) return;
+        if (_pathCorners.Length == 0)
+            return;
 
         Vector3 direction = GetRotationDirection();
         float signedAngle = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
         bool turningRight = signedAngle > 0f;
 
-        // Apply rotation
         float rotateSpeed = 60f * Time.deltaTime * (turningRight ? 1 : -1) * (sirenLights.activeSelf ? 6 : 1);
         transform.Rotate(Vector3.up, rotateSpeed);
 
-        // Animate treads
         creatureAnimator.SetFloat(LeftTreadFloat, turningRight ? 1f : -1f);
         creatureAnimator.SetFloat(RightTreadFloat, turningRight ? -1f : 1f);
         creatureSFX.volume = 1f;
 
-        // If mostly aligned, stop rotating
-        if (Mathf.Abs(signedAngle) < 5f)
+        if (Mathf.Abs(signedAngle) < 2.5f)
         {
             StopRotating();
         }
@@ -475,21 +423,16 @@ public class Janitor : CodeRebirthEnemyAI
         Vector3 direction;
         if (_currentCornerIndex < _pathCorners.Length - 1)
         {
-            // Next corner direction
             direction = (_pathCorners[_currentCornerIndex + 1] - transform.position).normalized;
         }
         else
         {
-            // If there's no next corner, rotate to final corner (or do something else)
             direction = (_pathCorners[_currentCornerIndex] - transform.position).normalized;
         }
         direction.y = 0f;
         return direction;
     }
 
-    /// <summary>
-    /// Moves the Janitor along the path, updates the animator.
-    /// </summary>
     private void HandleMovement()
     {
         float forwardSpeed = agent.velocity.magnitude;
@@ -498,86 +441,65 @@ public class Janitor : CodeRebirthEnemyAI
         creatureAnimator.SetFloat(RightTreadFloat, forwardSpeed);
         creatureSFX.volume = (forwardSpeed > 0f) ? 1f : 0f;
 
-        // Ensure the agent is heading to the correct corner
-        if (_pathCorners.Length > 0 && _currentCornerIndex < _pathCorners.Length)
-        {
-            if (!agent.pathPending)
-            {
-                smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex]);
-            }
-        }
+        if (agent.pathPending)
+            return;
+
+        smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex]);
     }
 
-    /// <summary>
-    /// Stops rotating and advances the corner index if not at the final corner.
-    /// </summary>
     private void StopRotating()
     {
         _isRotating = false;
         agent.isStopped = false;
+        smartAgentNavigator.cantMove = false;
 
-        // Move on to the next corner
         if (_currentCornerIndex < _pathCorners.Length - 1)
         {
             _currentCornerIndex++;
-            smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex]
-            );
         }
 
-        // Reset tread animations
         creatureSFX.volume = 0f;
         creatureAnimator.SetFloat(LeftTreadFloat, 0f);
         creatureAnimator.SetFloat(RightTreadFloat, 0f);
-    }
 
+        HandleMovement();
+    }
     #endregion
 
     #region Animation Events
-
-    /// <summary>
-    /// Animation event for fully grabbing scrap.
-    /// </summary>
     public void GrabScrapAnimEvent()
     {
-        if (targetScrap == null || Vector3.Distance(targetScrap.transform.position, transform.position) > 1.25f)
+        if (_targetScrap == null)
         {
-            targetScrap = null;
+            _targetScrap = null;
             ResetToIdle();
             return;
         }
 
         if (currentBehaviourStateIndex != (int)JanitorStates.StoringScrap)
         {
-            targetScrap = null;
+            _targetScrap = null;
             return;
         }
 
-        // If a player snatched it in the meantime => chase
-        if (targetScrap.playerHeldBy != null)
+        if (_targetScrap.playerHeldBy != null)
         {
-            SwitchToChaseState(targetScrap.playerHeldBy);
+            SwitchToChaseState(_targetScrap.playerHeldBy);
             return;
         }
 
-        // Otherwise, proceed to store it
-        StartCoroutine(PlaceScrapInsideJanitor(targetScrap));
-        targetScrap = null;
+        StartCoroutine(PlaceScrapInsideJanitor(_targetScrap));
+        _targetScrap = null;
     }
 
-    /// <summary>
-    /// Animation event for fully grabbing a player.
-    /// </summary>
     public void GrabPlayerAnimEvent()
     {
-        targetScrap = null;
+        _targetScrap = null;
         creatureVoice.PlayOneShot(grabPlayerSounds[enemyRandom.Next(grabPlayerSounds.Length)]);
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.ZoomingOff);
         currentlyGrabbingPlayer = false;
     }
 
-    /// <summary>
-    /// Animation event for throwing the player into a trash can or away.
-    /// </summary>
     public void ThrowPlayerAnimEvent()
     {
         creatureVoice.PlayOneShot(throwPlayerSounds[enemyRandom.Next(throwPlayerSounds.Length)]);
@@ -589,40 +511,32 @@ public class Janitor : CodeRebirthEnemyAI
             return;
         }
 
-        // Apply force to tossed player
-        Vector3 forceDirection = (targetTrashCan != null)
-            ? (targetTrashCan.transform.position - previousTargetPlayer.transform.position).normalized
-            : transform.forward;
+        Vector3 forceDirection = (_targetTrashCan != null) ? (_targetTrashCan.transform.position - previousTargetPlayer.transform.position).normalized : transform.forward;
 
         previousTargetPlayer.externalForceAutoFade = Vector3.up * 5f + forceDirection * 25f;
 
         // Reset states
-        targetTrashCan = null;
+        _targetTrashCan = null;
         targetPlayer = null;
         previousTargetPlayer.disableMoveInput = false;
         currentlyThrowingPlayer = false;
         previousTargetPlayer.inAnimationWithEnemy = null;
         previousTargetPlayer.DamagePlayer(15, true, false, CauseOfDeath.Gravity, 0, false, default);
 
-        if (IsServer)
-        {
-            creatureAnimator.SetBool(HoldingPlayerAnimation, false);
-        }
-    }
+        if (!IsServer)
+            return;
 
+        creatureAnimator.SetBool(HoldingPlayerAnimation, false);
+    }
     #endregion
 
-    #region Overrides (Take Damage, Kill, etc.)
-
-    /// <summary>
-    /// Applies damage to the Janitor and handles transitions to chase or death states.
-    /// </summary>
+    #region Overrides
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        if (isEnemyDead) return;
+        if (isEnemyDead)
+            return;
 
-        // If a new player hits us, reduce HP further
         if (targetPlayer != null && targetPlayer == playerWhoHit && targetPlayer.disableMoveInput)
         {
 
@@ -632,56 +546,50 @@ public class Janitor : CodeRebirthEnemyAI
             enemyHP -= force;
         }
 
-        // If we’re still alive, chase that player if we’re not already
-        if (playerWhoHit != null && IsServer && currentBehaviourStateIndex != (int)JanitorStates.FollowingPlayer && currentBehaviourStateIndex != (int)JanitorStates.ZoomingOff)
-        {
-            if (!currentlyGrabbingPlayer && !currentlyGrabbingScrap && !currentlyThrowingPlayer)
-            {
-                DetectDroppedScrapServerRpc(playerWhoHit.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
-            }
-            else
-            {
-                StartCoroutine(WaitUntilNotDoingAnythingCurrently(playerWhoHit));
-            }
-        }
-
-        // If HP is depleted, kill
         if (enemyHP <= 0 && !isEnemyDead)
         {
             if (IsOwner)
             {
                 KillEnemyOnOwnerClient();
             }
+            return;
+        }
+
+        if (playerWhoHit == null || !IsServer || currentBehaviourStateIndex == (int)JanitorStates.FollowingPlayer || currentBehaviourStateIndex == (int)JanitorStates.ZoomingOff)
+            return;
+
+        if (!currentlyGrabbingPlayer && !currentlyGrabbingScrap && !currentlyThrowingPlayer)
+        {
+            DetectDroppedScrapServerRpc(playerWhoHit.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
+        }
+        else
+        {
+            StartCoroutine(WaitUntilNotDoingAnythingCurrently(playerWhoHit));
         }
     }
 
-    /// <summary>
-    /// Kills the Janitor, dropping scrap and resetting states.
-    /// </summary>
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
-
         creatureVoice.PlayOneShot(deathSounds[enemyRandom.Next(deathSounds.Length)]);
         currentlyThrowingPlayer = false;
         currentlyGrabbingPlayer = false;
         currentlyGrabbingScrap = false;
-        targetScrap = null;
-        targetTrashCan = null;
+        _targetScrap = null;
+        _targetTrashCan = null;
 
-        // Free any player
         if (targetPlayer != null)
         {
             targetPlayer.inAnimationWithEnemy = null;
             targetPlayer.disableMoveInput = false;
         }
 
-        // Switch to Dead state
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Dead);
 
-        // Drop stored scrap
-        foreach (var item in storedScrapAndValueDict.Keys)
+        foreach (var item in _storedScrap)
         {
+            if (item == null)
+                continue;
             item.EnableItemMeshes(true);
             item.EnablePhysics(true);
             item.grabbable = true;
@@ -692,18 +600,8 @@ public class Janitor : CodeRebirthEnemyAI
             }
         }
 
-        storedScrapAndValueDict.Clear();
+        _storedScrap.Clear();
         creatureSFX.volume = 0f;
-
-        // Reset animator states
-        if (IsServer)
-        {
-            creatureAnimator.SetBool(HoldingPlayerAnimation, false);
-            creatureAnimator.SetFloat(LeftTreadFloat, 0);
-            creatureAnimator.SetFloat(RightTreadFloat, 0);
-            creatureAnimator.SetBool(IsAngryAnimation, false);
-            creatureAnimator.SetBool(IsDeadAnimation, true);
-        }
 
         // Turn off lights and blend shape
         sirenLights.SetActive(false);
@@ -712,12 +610,20 @@ public class Janitor : CodeRebirthEnemyAI
         {
             lights.SetActive(false);
         }
-    }
 
+        creatureVoice.pitch = 0.75f;
+        if (!IsServer)
+            return;
+
+        creatureAnimator.SetBool(HoldingPlayerAnimation, false);
+        creatureAnimator.SetFloat(LeftTreadFloat, 0);
+        creatureAnimator.SetFloat(RightTreadFloat, 0);
+        creatureAnimator.SetBool(IsAngryAnimation, false);
+        creatureAnimator.SetBool(IsDeadAnimation, true);
+    }
     #endregion
 
-    #region Helper & Utility Methods
-
+    #region Misc Methods
     private void ApplyMaterialVariant()
     {
         Material variantMaterial = variantMaterials[enemyRandom.Next(variantMaterials.Length)];
@@ -728,29 +634,29 @@ public class Janitor : CodeRebirthEnemyAI
 
     private void HandleIdleSoundTimer()
     {
-        idleTimer -= Time.deltaTime;
-        if (idleTimer < 0)
-        {
-            idleTimer = enemyRandom.Next(30, 150);
-            creatureVoice.PlayOneShot(idleSounds[enemyRandom.Next(idleSounds.Length)]);
-        }
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer > 0)
+            return;
+
+        _idleTimer = enemyRandom.Next(30, 150);
+        creatureVoice.PlayOneShot(idleSounds[enemyRandom.Next(idleSounds.Length)]);
+
     }
 
     private void KeepPlayerAttachedDuringZoom()
     {
-        if (targetPlayer == null || targetPlayer.isPlayerDead)
+        if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.isPlayerControlled)
         {
-            // Reset and revert to idle
             targetPlayer = null;
             sirenLights.SetActive(false);
-            targetScrap = null;
+            _targetScrap = null;
             SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
-            if (IsServer)
-            {
-                agent.speed = 7.5f;
-                creatureAnimator.SetBool(IsAngryAnimation, false);
-            }
             skinnedMeshRenderers[0].SetBlendShapeWeight(0, 0);
+            if (!IsServer)
+                return;
+
+            agent.speed = 7.5f;
+            creatureAnimator.SetBool(IsAngryAnimation, false);
         }
         else
         {
@@ -759,36 +665,32 @@ public class Janitor : CodeRebirthEnemyAI
         }
     }
 
-    /// <summary>
-    /// Calculates and sets a path to the given position, returns true if valid.
-    /// </summary>
-    private bool CalculateAndSetNewPath(Vector3 targetPosition)
+    private void CalculateAndSetNewPath(Vector3 targetPosition)
     {
-        NavMeshPath path = new NavMeshPath();
-        bool pathFound = agent.CalculatePath(targetPosition, path);
+        NavMeshPath path = new();
+        agent.CalculatePath(targetPosition, path);
+        if (path.corners.Length <= 0)
+            return;
 
-        if (pathFound && path.status == NavMeshPathStatus.PathComplete)
-        {
-            SetPathAsDestination(path);
-            return true;
-        }
-        _isPathValid = false;
-        agent.ResetPath();
-        return false;
+        if (path.status != NavMeshPathStatus.PathComplete)
+            return;
+
+        SetPathAsDestination(path);
     }
 
     private void SetPathAsDestination(NavMeshPath navMeshPath)
     {
-        _isPathValid = true;
+        agent.ResetPath();
         agent.SetPath(navMeshPath);
         _pathCorners = navMeshPath.corners;
         _currentCornerIndex = 0;
 
-        if (_pathCorners.Length > 0)
+        if (ReachedCurrentCorner())
         {
-            smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex]
-            );
+            BeginRotation();
+            return;
         }
+        smartAgentNavigator.DoPathingToDestination(_pathCorners[_currentCornerIndex]);
     }
 
     private float DoCalculatePathDistance(NavMeshPath path)
@@ -798,26 +700,24 @@ public class Janitor : CodeRebirthEnemyAI
         {
             for (int i = 1; i < path.corners.Length; i++)
             {
-                length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
-                Plugin.ExtendedLogging($"Distance: {Vector3.Distance(path.corners[i - 1], path.corners[i])}");
+                float dist = Vector3.Distance(path.corners[i - 1], path.corners[i]);
+                length += dist;
+                Plugin.ExtendedLogging($"Distance: {dist}");
             }
         }
         Plugin.ExtendedLogging($"Path distance: {length}");
         return length;
     }
 
-    private bool IsPathInvalid()
+    private bool IsPathValid()
     {
-        return agent.path.status == NavMeshPathStatus.PathInvalid || agent.path.status == NavMeshPathStatus.PathPartial;
+        return _currentCornerIndex < _pathCorners.Length && agent.path != null && agent.path.corners.Length > 0 && agent.path.status == NavMeshPathStatus.PathComplete;
     }
 
     private bool ReachedCurrentCorner()
     {
-        if (_pathCorners.Length == 0 || _currentCornerIndex >= _pathCorners.Length)
-            return false;
-
         float distToCorner = Vector3.Distance(transform.position, _pathCorners[_currentCornerIndex]);
-        return distToCorner <= _cornerThreshold;
+        return distToCorner <= 0.35f;
     }
 
     private bool IsAtFinalCorner()
@@ -827,34 +727,30 @@ public class Janitor : CodeRebirthEnemyAI
 
     private bool IsScrapStillValid()
     {
-        return _isPathValid &&
-                !IsPathInvalid() &&
-                targetScrap != null &&
-                !targetScrap.isHeld &&
-                targetScrap.playerHeldBy == null &&
-                !targetScrap.isHeldByEnemy;
+        return IsPathValid() &&
+                _targetScrap != null &&
+                !_targetScrap.isHeld &&
+                !_targetScrap.isHeldByEnemy &&
+                _targetScrap.playerHeldBy == null;
     }
 
     private void TryGrabScrap()
     {
-        // If within reach and not currently grabbing
-        if (Vector3.Distance(targetScrap.transform.position, transform.position) <= agent.stoppingDistance + 1.2f && !currentlyGrabbingScrap)
-        {
-            currentlyGrabbingScrap = true;
-            SetTargetScrapUngrabbableServerRpc(new NetworkObjectReference(targetScrap.gameObject));
-        }
-    }
+        if (_targetScrap == null)
+            return;
 
-    private bool IsPlayerStillValid()
-    {
-        return targetPlayer != null && !targetPlayer.isPlayerDead;
+        if (currentlyGrabbingScrap)
+            return;
+
+        currentlyGrabbingScrap = true;
+        SetTargetScrapUngrabbableServerRpc(new NetworkObjectReference(_targetScrap.gameObject));
     }
 
     private void ResetChaseAndRevertToIdle()
     {
-        _isPathValid = false;
+        agent.ResetPath();
         targetPlayer = null;
-        targetScrap = null;
+        _targetScrap = null;
         SwitchToBehaviourServerRpc((int)JanitorStates.Idle);
         agent.speed = 7.5f;
         creatureAnimator.SetBool(IsAngryAnimation, false);
@@ -863,20 +759,18 @@ public class Janitor : CodeRebirthEnemyAI
 
     private void UpdatePathToTargetPlayer()
     {
-        NavMesh.SamplePosition(targetPlayer.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
-        CalculateAndSetNewPath(hit.position);
+        if (NavMesh.SamplePosition(targetPlayer.transform.position, out NavMeshHit hit, 1.5f, NavMesh.AllAreas))
+        {
+            CalculateAndSetNewPath(hit.position);
+        }
     }
 
     private bool IsPlayerInRange()
     {
         float distToPlayer = Vector3.Distance(transform.position, targetPlayer.transform.position);
-
-        // Determine if player is in front by comparing the dot product of the forward direction 
-        // and the direction to the player. A value > 0 means "in front"; < 0 means "behind".
         Vector3 directionToPlayer = (targetPlayer.transform.position - transform.position).normalized;
         float dotProduct = Vector3.Dot(transform.forward, directionToPlayer);
-        Plugin.ExtendedLogging($"Dot product: {dotProduct} with distance: {distToPlayer}");
-        // Player must be within distance AND in front
+
         return distToPlayer <= agent.stoppingDistance + 2f && dotProduct > 0.25f;
     }
 
@@ -887,30 +781,30 @@ public class Janitor : CodeRebirthEnemyAI
         SetPlayerImmovableServerRpc(playerIndex);
     }
 
-    private bool IsPlayerTooFarFromCorner()
+    private bool IsPlayerTooFarFromFinalCorner()
     {
-        float distToLastCorner = Vector3.Distance(
-            targetPlayer.transform.position,
-            agent.path.corners[^1]
-        );
+        float distToLastCorner = Vector3.Distance(targetPlayer.transform.position, _pathCorners[^1]);
         return distToLastCorner > 3f && _currentCornerIndex != 0;
     }
 
     private bool TryFindAnyValidTrashCan()
     {
-        List<TrashCan> viableTrashCans = new();
+        List<(TrashCan trashCan, NavMeshPath path)> viableTrashCans = new();
         foreach (TrashCan trashCan in trashCans)
         {
             if (trashCan == null) continue;
             NavMesh.SamplePosition(trashCan.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas);
-            if (smartAgentNavigator.CanPathToPoint(this.transform.position, hit.position) >= 0)
+            if (ObjectIsPathable(hit.position, 500f, out NavMeshPath path))
             {
-                viableTrashCans.Add(trashCan);
+                viableTrashCans.Add((trashCan, path));
             }
         }
+        Plugin.ExtendedLogging($"Found {viableTrashCans.Count} viable trash cans");
         if (viableTrashCans.Count > 0)
         {
-            targetTrashCan = viableTrashCans[UnityEngine.Random.Range(0, viableTrashCans.Count)];
+            var (trashCan, path) = viableTrashCans[UnityEngine.Random.Range(0, viableTrashCans.Count)];
+            _targetTrashCan = trashCan;
+            SetPathAsDestination(path);
             return true;
         }
         return false;
@@ -933,7 +827,7 @@ public class Janitor : CodeRebirthEnemyAI
         scrap.isInShipRoom = false;
         scrap.playerHeldBy?.DiscardHeldObject();
         yield return new WaitForSeconds(0.2f);
-        storedScrapAndValueDict.Add(scrap, scrap.scrapValue);
+        _storedScrap.Add(scrap);
         scrap.parentObject = placeToHideScrap;
         scrap.transform.position = placeToHideScrap.position;
         scrap.EnableItemMeshes(false);
@@ -944,16 +838,16 @@ public class Janitor : CodeRebirthEnemyAI
 
     private void ResetToIdle()
     {
-        _isPathValid = false;
-        targetScrap = null;
+        agent.ResetPath();
+        _targetScrap = null;
         SwitchToBehaviourServerRpc((int)JanitorStates.Idle);
     }
 
     private void SwitchToChaseState(PlayerControllerB player)
     {
         sirenLights.SetActive(true);
-        _isPathValid = false;
-        targetScrap = null;
+        agent.ResetPath();
+        _targetScrap = null;
         targetPlayer = player;
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.FollowingPlayer);
         skinnedMeshRenderers[0].SetBlendShapeWeight(0, 100);
@@ -963,33 +857,36 @@ public class Janitor : CodeRebirthEnemyAI
         creatureAnimator.SetBool(IsAngryAnimation, true);
     }
 
-    /// <summary>
-    /// Finds scrap near the Janitor and attempts to path to it if reachable.
-    /// </summary>
     private void TryFindScrapNearby()
     {
-        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15f, hitColliders, CodeRebirthUtils.Instance.propsMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15f, _hitColliders, CodeRebirthUtils.Instance.propsMask, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)
         {
-            if (!hitColliders[i].TryGetComponent(out GrabbableObject grabbable) ||
+            if (!_hitColliders[i].TryGetComponent(out GrabbableObject grabbable) ||
                 grabbable.isHeld ||
                 grabbable.isHeldByEnemy ||
                 grabbable.playerHeldBy != null ||
-                storedScrapAndValueDict.ContainsKey(grabbable))
+                _storedScrap.Contains(grabbable))
             {
                 continue;
             }
 
-            // Ensure no other Janitor is already targeting this scrap
-            if (janitors.Any(j => j.targetScrap == grabbable)) continue;
-
-            NavMeshPath path = new NavMeshPath();
-            if (agent.CalculatePath(hitColliders[i].transform.position, path) &&
-                path.status == NavMeshPathStatus.PathComplete &&
-                DoCalculatePathDistance(path) <= 12.5f)
+            bool skipItem = false;
+            foreach (var janitor in janitors)
             {
-                targetScrap = grabbable;
+                if (janitor._targetScrap == grabbable)
+                {
+                    skipItem = true;
+                    break;
+                }
+            }
+            if (skipItem)
+                continue;
+
+            if (ObjectIsPathable(grabbable.transform.position, 12.5f, out NavMeshPath path))
+            {
+                _targetScrap = grabbable;
                 SetPathAsDestination(path);
                 SwitchToBehaviourServerRpc((int)JanitorStates.StoringScrap);
                 break;
@@ -997,14 +894,28 @@ public class Janitor : CodeRebirthEnemyAI
         }
     }
 
+    private bool ObjectIsPathable(Vector3 position, float maxPathLength, out NavMeshPath path)
+    {
+        path = new();
+        if (!agent.CalculatePath(position, path))
+            return false;
+
+        if (path.status != NavMeshPathStatus.PathComplete)
+            return false;
+
+        if (DoCalculatePathDistance(path) > maxPathLength)
+            return false;
+
+        return true;
+    }
+
     private void UpdateBlendShapeAndSpeedForChase()
     {
         SetBlendShapeWeightClientRpc(100);
         agent.speed = 15f;
         creatureAnimator.SetBool(IsAngryAnimation, true);
-        _isPathValid = false;
-        targetScrap = null;
+        agent.ResetPath();
+        _targetScrap = null;
     }
-
     #endregion
 }
