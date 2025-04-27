@@ -9821,6 +9821,7 @@ GameObject:
   - component: {fileID: 9160830032003701502}
   - component: {fileID: 7471079780989321030}
   - component: {fileID: 1948352126372878546}
+  - component: {fileID: 7421501779965017473}
   m_Layer: 21
   m_Name: EmergingCactus3
   m_TagString: Untagged
@@ -9836,7 +9837,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8354563397305030931}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9844,7 +9845,7 @@ Transform:
   - {fileID: 3524295214858711240}
   - {fileID: 3725637876081705379}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2812905920346977986
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9983,8 +9984,22 @@ MonoBehaviour:
   _particleSystems:
   - {fileID: 4142852268803717743}
   - {fileID: 5655874225009905554}
-  _playerDamageAmount: 10
+  _playerDamageAmount: 15
   _forceApplied: 5
+--- !u!114 &7421501779965017473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8354563397305030931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1017530846, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  depthToRaise: 3.68
+  raiseSpeed: 0.92
 --- !u!1 &8980730178061748041
 GameObject:
   m_ObjectHideFlags: 0

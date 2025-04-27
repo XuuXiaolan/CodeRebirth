@@ -605,7 +605,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             smartAgentNavigator.StopSearchRoutine();
             creatureNetworkAnimator.SetTrigger(startDeath);
         }
-        if (targetEnemy != null && targetEnemy.agent != null && !targetEnemy.agent.enabled)
+        if (targetEnemy != null && targetEnemy.agent != null)
         {
             if (IsServer && targetEnemy is DriftwoodMenaceAI driftwoodMenaceAI)
             {

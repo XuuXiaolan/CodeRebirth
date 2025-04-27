@@ -47,6 +47,7 @@ static class RoundManagerPatch
             Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
             if (hit.collider == null)
                 continue;
+
             GameObject spawnedPrefab = GameObject.Instantiate(prefabToSpawn, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             Plugin.ExtendedLogging($"Spawning {spawnedPrefab.name} at {hit.point}");
             if (mapObjDef.alignWithTerrain)

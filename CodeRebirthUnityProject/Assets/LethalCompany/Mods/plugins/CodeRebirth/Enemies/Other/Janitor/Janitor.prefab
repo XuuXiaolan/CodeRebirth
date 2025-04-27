@@ -2067,9 +2067,11 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
   creatureNetworkAnimator: {fileID: 578410016872127959}
   smartAgentNavigator: {fileID: 2398205560485261376}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
   sirenLights: {fileID: 6317738535433509279}
   handTransform: {fileID: 5815964725433825710}
   playerBoneTransform: {fileID: 3904122950325406940}
@@ -2085,6 +2087,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5484c58d17b8dba4e9f7d1c6b08b2a38, type: 3}
   - {fileID: 8300000, guid: f2b7d62fdcac9fb4789e44c2d7f30fbe, type: 3}
   - {fileID: 8300000, guid: 1712cd2d1fc95664b96df7f87b2691ca, type: 3}
+  postDeathSounds:
+  - {fileID: 8300000, guid: 1ef793cc292be3442929ff764e381d5d, type: 3}
+  - {fileID: 8300000, guid: 06a3a70a7393ab54f9e1b0fe7a4d0ae9, type: 3}
+  - {fileID: 8300000, guid: 8bf73a6fb840a1c4782ab017cc4e920f, type: 3}
   idleSounds:
   - {fileID: 8300000, guid: 8c5c9b810a20c9742b0eb23bcbabc208, type: 3}
   - {fileID: 8300000, guid: 3c1f64fbcafb7c0439ea1bd447227a5b, type: 3}
@@ -2170,6 +2176,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
 --- !u!1 &3763124428522132940
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,13 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using CodeRebirth.src.Content.Maps;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.InputSystem.Utilities;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
@@ -18,10 +25,17 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     [Header("Mechanics")]
     [SerializeField]
     private float _rollingDuration = 20f;
+    [SerializeField]
+    private float _rootingDuration = 60f;
+    [SerializeField]
+    private int _attackAmount = 5;
 
     private Vector3 _targetRootPosition = Vector3.zero;
     private Vector3 _targetRollingPosition = Vector3.zero;
     private float _rollingTimer = 20f;
+    private float _rootingTimer = 60f;
+    private float _attackInterval = 2f;
+    private List<GameObject> _budlingCacti = new();
     private CactusBudlingState _nextState = CactusBudlingState.Spawning;
     private Coroutine? _nextStateRoutine = null;
 
@@ -94,6 +108,11 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
+        foreach (var mapObjectDefinition in EnemyHandler.Instance.CactusBudling!.MapObjectDefinitions)
+        {
+            if (mapObjectDefinition.objectName.Contains("Cactus", StringComparison.OrdinalIgnoreCase))
+                _budlingCacti.Add(mapObjectDefinition.gameObject);
+        }
         _targetRootPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
         _nextStateRoutine = StartCoroutine(DelayToNextState(_spawnAnimation.length, 3f, CactusBudlingState.SearchingForRoot));
     }
@@ -101,6 +120,14 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     public override void Update()
     {
         base.Update();
+
+        if (currentBehaviourStateIndex != (int)CactusBudlingState.Rolling)
+            return;
+
+        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) < 15f)
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+        }
     }
     #endregion
 
@@ -111,7 +138,6 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         if (StartOfRound.Instance.allPlayersDead || isEnemyDead)
             return;
 
-        _rollingTimer -= AIIntervalTime;
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
         switch (currentBehaviourStateIndex)
         {
@@ -142,6 +168,10 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     {
         if (Vector3.Distance(transform.position, _targetRootPosition) < 2f + agent.stoppingDistance)
         {
+            if (_nextStateRoutine != null)
+                return;
+
+            _rootingTimer = _rootingDuration;
             smartAgentNavigator.StopAgent();
             creatureAnimator.SetBool(RootingAnimation, true);
             SwitchToBehaviourServerRpc((int)CactusBudlingState.Rooted);
@@ -152,24 +182,62 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
     private void DoRooted()
     {
+        _rootingTimer -= AIIntervalTime;
+        if (_rootingTimer <= 0)
+        {
+            if (_nextStateRoutine != null)
+                return;
 
+            creatureAnimator.SetBool(RootingAnimation, false);
+            _targetRootPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
+            _nextStateRoutine = StartCoroutine(DelayToNextState(_rollingEndAnimation.length, 3f, CactusBudlingState.SearchingForRoot));
+            return;
+        }
+
+        _attackInterval -= AIIntervalTime;
+        if (_attackInterval <= 0)
+        {
+            _attackInterval = _rootingDuration / _attackAmount;
+
+            List<PlayerControllerB> playersList = StartOfRound.Instance.allPlayerScripts.Where(x => !x.isPlayerDead && x.isPlayerControlled).ToList();
+            PlayerControllerB randomPlayer = playersList[UnityEngine.Random.Range(0, playersList.Count)];
+
+            Vector3 randomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(randomPlayer.transform.position, 3f);
+            Vector3 normal = Vector3.zero;
+            if (Physics.Raycast(randomPosition + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 5f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            {
+                randomPosition = hit.point;
+                normal = hit.normal;
+            }
+            int randomCactiIndex = UnityEngine.Random.Range(0, _budlingCacti.Count);
+            SpawnCactiServerRpc(randomPosition, normal, randomCactiIndex);
+        }
     }
 
     private void DoRolling()
     {
+        _rollingTimer -= AIIntervalTime;
         if (_rollingTimer <= 0)
         {
             if (_nextStateRoutine != null)
                 return;
+
             creatureAnimator.SetBool(RollingAnimation, false);
             _targetRootPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
             _nextStateRoutine = StartCoroutine(DelayToNextState(_rollingEndAnimation.length, 3f, CactusBudlingState.SearchingForRoot));
             return;
         }
 
-        if (Vector3.Distance(transform.position, _targetRollingPosition) < 2f + agent.stoppingDistance)
+        if (Vector3.Distance(transform.position, _targetRollingPosition) < 3f + agent.stoppingDistance)
         {
-            _targetRollingPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
+            for (int i = 0; i < 10; i++)
+            {
+                _targetRollingPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 75f, default);
+                if (smartAgentNavigator.CanPathToPoint(this.transform.position, _targetRollingPosition) > 0f)
+                {
+                    break;
+                }
+            }
         }
         smartAgentNavigator.DoPathingToDestination(_targetRollingPosition);
     }
@@ -192,6 +260,20 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         agent.speed = agentSpeed;
         _nextStateRoutine = null;
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnCactiServerRpc(Vector3 position, Vector3 normal, int index)
+    {
+        SpawnCactiClientRpc(position, normal, index);
+    }
+
+    [ClientRpc]
+    private void SpawnCactiClientRpc(Vector3 position, Vector3 normal, int index)
+    {
+        GameObject randomCacti = _budlingCacti[index];
+        var newCacti = GameObject.Instantiate(randomCacti, position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+        newCacti.transform.up = normal;
+    }
     #endregion
 
     #region Animation Events
@@ -205,7 +287,12 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         if (currentBehaviourStateIndex != (int)CactusBudlingState.Rolling)
             return;
 
-        // todo
+        Plugin.ExtendedLogging($"Collided with player: {other.gameObject.name}");
+        Vector3 directionToPush = this.transform.forward;
+        PlayerControllerB player = other.GetComponent<PlayerControllerB>();
+        player.externalForceAutoFade = directionToPush * 75f;
+        player.externalForces = directionToPush * 75f;
+        player.DamagePlayer(50, true, false, CauseOfDeath.Crushing, 0, false, directionToPush * 75f);
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)

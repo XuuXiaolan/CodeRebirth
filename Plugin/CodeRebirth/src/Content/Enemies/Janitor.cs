@@ -22,6 +22,7 @@ public class Janitor : CodeRebirthEnemyAI
     [Header("Audio & Sounds")]
     public AudioClip spawnSound = null!;
     public AudioClip[] deathSounds = [];
+    public AudioClip[] postDeathSounds = [];
     public AudioClip[] idleSounds = [];
     public AudioClip[] detectItemDroppedSounds = [];
     public AudioClip[] grabPlayerSounds = [];
@@ -639,8 +640,8 @@ public class Janitor : CodeRebirthEnemyAI
             return;
 
         _idleTimer = enemyRandom.Next(30, 150);
-        creatureVoice.PlayOneShot(idleSounds[enemyRandom.Next(idleSounds.Length)]);
-
+        AudioClip clip = isEnemyDead ? postDeathSounds[enemyRandom.Next(postDeathSounds.Length)] : idleSounds[enemyRandom.Next(idleSounds.Length)];
+        creatureVoice.PlayOneShot(clip);
     }
 
     private void KeepPlayerAttachedDuringZoom()
