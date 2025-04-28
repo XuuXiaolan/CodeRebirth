@@ -368,6 +368,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         if (_nextStateRoutine != null)
             StopCoroutine(_nextStateRoutine);
 
+        SwitchToBehaviourStateOnLocalClient((int)CactusBudlingState.Dead);
         if (!IsServer)
             return;
 

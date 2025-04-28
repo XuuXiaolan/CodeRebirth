@@ -101,7 +101,7 @@ public class GunslingerGreg : CodeRebirthHazard
         if (rechargeRocketTimer > 0)
             return;
 
-        rechargeRocketTimer = 0.5f;
+        rechargeRocketTimer = 30f;
         rocket.ready = true;
         rocket.gameObject.SetActive(true);
         missileToRecharge = null;
@@ -142,6 +142,9 @@ public class GunslingerGreg : CodeRebirthHazard
                     continue;
 
                 if (radmech.isEnemyDead)
+                    continue;
+
+                if (radmech.creatureAnimator == null)
                     continue;
 
                 Transform flyThingie = radmech.creatureAnimator.transform.Find("metarig");

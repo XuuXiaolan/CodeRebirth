@@ -1,8 +1,9 @@
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class DestructibleObject : MonoBehaviour
+public class DestructibleObject : MonoBehaviour, IHittable
 {
     [Header("References")]
     [SerializeField]
@@ -20,6 +21,43 @@ public class DestructibleObject : MonoBehaviour
 
     [SerializeField]
     private float _forceApplied = 5f;
+
+    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        Collider[] collidersHit = Physics.OverlapSphere(this.transform.position, 1f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
+        foreach (Collider collider in collidersHit)
+        {
+            if (collider.gameObject == this.gameObject)
+                continue;
+
+            if (!collider.TryGetComponent(out IHittable iHittable))
+                continue;
+
+            iHittable.Hit(1, this.transform.position, playerWhoHit, false, -1);
+        }
+
+        foreach (var collider in colliders)
+        {
+            collider.enabled = false;
+        }
+
+        foreach (var renderer in renderers)
+        {
+            renderer.enabled = false;
+        }
+
+        foreach (var particleSystem in _particleSystems)
+        {
+            particleSystem.Play();
+        }
+
+        float objectLifeTime = 0f;
+        if (_particleSystems[0] != null)
+            objectLifeTime = _particleSystems[0].main.duration;
+
+        Destroy(gameObject, objectLifeTime);
+        return true;
+    }
 
     public void OnTriggerEnter(Collider other)
     {

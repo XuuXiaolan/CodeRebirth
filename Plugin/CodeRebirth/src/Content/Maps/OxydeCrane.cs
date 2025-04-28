@@ -24,6 +24,7 @@ public class OxydeCrane : NetworkBehaviour
     public void Awake()
     {
         Instance = this;
+        RoundManager.Instance.SpawnOutsideHazards();
         CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = false;
         previousDisabledTriggerMessage = CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip;
         CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip = "Ship needs to be un-attached from the magnet.";

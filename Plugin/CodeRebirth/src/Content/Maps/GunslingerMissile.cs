@@ -29,7 +29,12 @@ public class GunslingerMissile : MonoBehaviour
     public void FixedUpdate()
     {
         if (_targetTransform == null)
+        {
+            this.transform.SetParent(_oldParent, true);
+            this.transform.SetPositionAndRotation(mainTransform.position, mainTransform.rotation);
+            this.gameObject.SetActive(false);
             return;
+        }
 
         int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, _cachedColliders, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Ignore);
         if (collidersFound > 0)
@@ -54,10 +59,10 @@ public class GunslingerMissile : MonoBehaviour
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             }
             // windSource.volume = 0f;
-            this.gameObject.SetActive(false);
             this.transform.SetParent(_oldParent, true);
             this.transform.SetPositionAndRotation(mainTransform.position, mainTransform.rotation);
             _targetTransform = null;
+            this.gameObject.SetActive(false);
             return;
         }
 
