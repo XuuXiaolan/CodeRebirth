@@ -215,6 +215,10 @@ public class CRUtilities
 
         foreach (EnemyAICollisionDetect enemy in enemyAICollisionDetectToDamage.Keys)
         {
+            if (enemy.mainScript == null)
+                continue;
+            if (!enemy.mainScript.IsSpawned)
+                continue;
             enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy], playerWhoHit: attacker);
         }
 

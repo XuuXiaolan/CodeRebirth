@@ -53,11 +53,12 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public ShipAnimator shipAnimator = null!;
     [HideInInspector] public StartMatchLever startMatchLever = null!;
     [HideInInspector] public static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
-    private System.Random? CRRandom = null;
+    [HideInInspector] public System.Random CRRandom = new();
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
     private void Awake()
     {
+        CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
         StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
         DoLayerMaskStuff();
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
@@ -194,8 +195,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
             return default;
         }
 
-        CRRandom ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
-
         Transform? parent = null;
         if (parent == null)
         {
@@ -203,7 +202,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
         GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
         go.GetComponent<NetworkObject>().Spawn();
-        int value = (int)(CRRandom.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
+        int value = (int)(UnityEngine.Random.Range(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
         ScanNodeProperties? scanNodeProperties = go.GetComponentInChildren<ScanNodeProperties>();
         if (scanNodeProperties != null)
         {

@@ -28,7 +28,7 @@ public class GunslingerGreg : CodeRebirthHazard
     private float rechargeRocketTimer = 30f;
     private float fireTimer = 1f;
     private GameObject MissilePrefab = null!;
-    private PlayerControllerB? lastPlayerTargetted = null;
+    private Transform? lastTransformTargetted = null;
 
     public override void Start()
     {
@@ -38,7 +38,7 @@ public class GunslingerGreg : CodeRebirthHazard
         {
             rockets.Enqueue(SpawnImmobileRocket(transform));
         }
-        lastPlayerTargetted = null;
+        lastTransformTargetted = null;
         // DetectPlayerAudioSound.volume = 0f;
         // GregTurningSound.volume = 0f;
     }
@@ -50,7 +50,8 @@ public class GunslingerGreg : CodeRebirthHazard
         {
             foreach (var rocket in rockets)
             {
-                if (rocket.ready) continue;
+                if (rocket.ready)
+                    continue;
                 missileToRecharge = rocket;
                 break;
             }
@@ -60,20 +61,23 @@ public class GunslingerGreg : CodeRebirthHazard
             RechargeRocket(missileToRecharge);
         }
 
-        if (Plugin.ModConfig.ConfigDebugMode.Value) return;
-        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rockets.Where(x => x.ready == true).Count() <= 0) return;
-        // Rotate the turret to look for targets
+        if (Plugin.ModConfig.ConfigDebugMode.Value) 
+            return;
+
+        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rockets.Where(x => x.ready == true).Count() <= 0)
+            return;
+
         FindAndAimAtTarget();
 
-        if (lastPlayerTargetted == null) return;
-        // Handle firing logic
+        if (lastTransformTargetted == null)
+            return;
+
         fireTimer -= Time.deltaTime;
         if (fireTimer <= 0f)
         {
             FireProjectile();
             fireTimer = fireRate;
         }
-        // UpdateAudio();
     }
 
     private void UpdateAudio()
@@ -94,17 +98,19 @@ public class GunslingerGreg : CodeRebirthHazard
     private void RechargeRocket(GunslingerMissile rocket)
     {
         rechargeRocketTimer -= Time.deltaTime;
-        if (rechargeRocketTimer > 0) return;
-        rechargeRocketTimer = 30f;
+        if (rechargeRocketTimer > 0)
+            return;
+
+        rechargeRocketTimer = 0.5f;
         rocket.ready = true;
         rocket.gameObject.SetActive(true);
         missileToRecharge = null;
     }
 
-    private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
+    private bool IsTransformNearGround(Transform toKillTransform)
     {
-        Ray ray = new Ray(playerControllerB.transform.position, -Vector3.up);
-        if (Physics.Raycast(ray, 8f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        Ray ray = new(toKillTransform.position, -Vector3.up);
+        if (Physics.Raycast(ray, 16f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             return true;
         }
@@ -113,76 +119,78 @@ public class GunslingerGreg : CodeRebirthHazard
 
     private void FindAndAimAtTarget()
     {
-        bool lockedOntoAPlayer = false;
-        if (lastPlayerTargetted != null)
+        bool lockedOntoATransform = false;
+        if (lastTransformTargetted != null)
         {
-            HandleTargettingToPlayer(lastPlayerTargetted, ref lockedOntoAPlayer);
+            HandleTargettingToTransform(lastTransformTargetted, ref lockedOntoATransform);
         }
         else
         {
             foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
             {
-                if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || playerControllerB.isInHangarShipRoom || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) || IsPlayerNearGround(playerControllerB) || PlayerInSafeBounds(playerControllerB))
+                if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || playerControllerB.isInHangarShipRoom || IsTransformNearGround(playerControllerB.transform) || TransformInSafeBounds(playerControllerB.transform))
                 {
                     continue;
                 }
 
-                HandleTargettingToPlayer(playerControllerB, ref lockedOntoAPlayer);
+                HandleTargettingToTransform(playerControllerB.transform, ref lockedOntoATransform);
+            }
+
+            foreach (EnemyAI enemyAI in RoundManager.Instance.SpawnedEnemies)
+            {
+                if (enemyAI is not RadMechAI radmech)
+                    continue;
+
+                if (radmech.isEnemyDead)
+                    continue;
+
+                Transform flyThingie = radmech.creatureAnimator.transform.Find("metarig");
+                if (TransformInSafeBounds(flyThingie))
+                    continue;
+
+                HandleTargettingToTransform(flyThingie, ref lockedOntoATransform);
             }
         }
-        if (!lockedOntoAPlayer)
+        if (!lockedOntoATransform)
         {
-            lastPlayerTargetted = null;
+            lastTransformTargetted = null;
             // DetectPlayerAudioSound.volume = 0f;
             // GregTurningSound.volume = 0f;
         }
     }
 
-    private bool PlayerInSafeBounds(PlayerControllerB playerControllerB)
+    private bool TransformInSafeBounds(Transform toKillTransform)
     {
         foreach (var bounds in safeBounds)
         {
-            if (bounds.BoundsContainTransform(playerControllerB.transform))
+            if (bounds.BoundsContainTransform(toKillTransform))
             {
                 return true;
             }
         }
         return false;
     }
-    private void HandleTargettingToPlayer(PlayerControllerB playerControllerB, ref bool lockedOntoAPlayer)
+    private void HandleTargettingToTransform(Transform toKilltransform, ref bool lockedOntoATransform)
     {
-        Rigidbody targetRigidbody = playerControllerB.playerRigidbody;
-        if (targetRigidbody == null) return;
+        float distanceToTransform = Vector3.Distance(gregCannon.position, toKilltransform.position);
 
-        float distanceToPlayer = Vector3.Distance(gregCannon.position, playerControllerB.transform.position);
+        Vector3 futurePosition = toKilltransform.position;
 
-        // Calculate the time needed for the projectile to reach the target
-        float timeToTarget = distanceToPlayer / 50f; // Bullet speed is 100 but we overshootin cuz overshooting is good
-
-        // Predict future position of the target based on its current velocity and time to target
-        Vector3 futurePosition = playerControllerB.transform.position + targetRigidbody.velocity * timeToTarget;
-
-        // Calculate direction to the predicted position
         Vector3 directionToTarget = futurePosition - gregBase.position;
         float angle = Vector3.Angle(gregBase.up, directionToTarget);
 
-        // Plugin.ExtendedLogging($"Angle: {angle} Distance: {distanceToPlayer} Locked: {lockedOntoAPlayer}");
-        // Check if player is within detection range and if there's line of sight
-        if (distanceToPlayer <= detectionRange && angle <= maxAngle)
+        // Plugin.ExtendedLogging($"Angle: {angle} Distance: {distanceToTransform} Locked: {lockedOntoATransform}");
+        if (distanceToTransform <= detectionRange && angle <= maxAngle)
         {
-            if (!Physics.Linecast(gregCannon.position, playerControllerB.transform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            if (!Physics.Linecast(gregCannon.position, toKilltransform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
-                lockedOntoAPlayer = true;
-                lastPlayerTargetted = playerControllerB;
+                lockedOntoATransform = true;
+                lastTransformTargetted = toKilltransform;
                 // DetectPlayerAudioSound.volume = Plugin.ModConfig.ConfigACUVolume.Value;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                 targetRotation.z = 0f;
                 targetRotation.x = 0f;
-
-                // Rotate the base turret (left/right)
                 gregBase.rotation = Quaternion.RotateTowards(gregBase.rotation, targetRotation, rotationSpeed * Time.deltaTime * 5f);
-
-                // Set the pitch angle for the turret cannon
                 Vector3 currentLocalEulerAngles = gregCannon.localEulerAngles;
                 gregCannon.localEulerAngles = new Vector3(-(maxAngle - angle), currentLocalEulerAngles.y, currentLocalEulerAngles.z);
             }
@@ -191,7 +199,9 @@ public class GunslingerGreg : CodeRebirthHazard
 
     private void FireProjectile()
     {
-        if (lastPlayerTargetted == null) return;
+        if (lastTransformTargetted == null)
+            return;
+
         // play shoot sound
         if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 50)
         {
@@ -201,13 +211,8 @@ public class GunslingerGreg : CodeRebirthHazard
 
         // GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
         GunslingerMissile rocket = rockets.Dequeue();
-        rocket.Initialize(lastPlayerTargetted, this);
+        rocket.Initialize(lastTransformTargetted.transform, this);
 
-        // Activate rockets via rpc similar to code below
-        // AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
-        // projectileComponent.Initialize(Plugin.ModConfig.ConfigAirControlUnitDamage.Value, currentAngle, lastPlayerTargetted);
-
-        // Rattle the cannon's transform to emulate a shake effect
         StartCoroutine(RattleCannon());
     }
 

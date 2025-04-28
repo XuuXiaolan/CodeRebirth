@@ -74,6 +74,9 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     {
         [LoadFromBundle("GregMissile.prefab")]
         public GameObject MissilePrefab { get; private set; } = null!;
+
+        [LoadFromBundle("DebrisExplosionEffect.prefab")]
+        public GameObject OldBirdExplosionPrefab { get; private set; } = null!;
     }
 
     public class OxydeCrashShipAssets(string bundleName) : AssetBundleLoader<OxydeCrashShipAssets>(bundleName)

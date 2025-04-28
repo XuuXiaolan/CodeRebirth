@@ -30,7 +30,7 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
 
             if (animClip.name == "ShipLeave")
             {
-                originalShipLeaveClip = animClip; // the new ship leave needs to do it from when the ship is on the ground, crane drops it at 10pm by default
+                originalShipLeaveClip = animClip;
                 continue;
             }
         }

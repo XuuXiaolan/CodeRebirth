@@ -202,12 +202,25 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
             List<PlayerControllerB> playersList = StartOfRound.Instance.allPlayerScripts.Where(x => !x.isPlayerDead && x.isPlayerControlled).ToList();
             PlayerControllerB randomPlayer = playersList[UnityEngine.Random.Range(0, playersList.Count)];
 
-            Vector3 randomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(randomPlayer.transform.position, 3f);
+            Vector3 randomPosition = Vector3.zero;
+            for (int i = 0; i < 5; i++)
+            {
+                randomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(randomPlayer.transform.position, 5f);
+                if (Vector3.Distance(randomPosition, randomPlayer.transform.position) > 1f)
+                {
+                    break;
+                }
+            }
             Vector3 normal = Vector3.zero;
             if (Physics.Raycast(randomPosition + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 5f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
                 randomPosition = hit.point;
                 normal = hit.normal;
+            }
+            else
+            {
+                _attackInterval = 0;
+                return;
             }
             int randomCactiIndex = UnityEngine.Random.Range(0, _budlingCacti.Count);
             SpawnCactiServerRpc(randomPosition, normal, randomCactiIndex);
