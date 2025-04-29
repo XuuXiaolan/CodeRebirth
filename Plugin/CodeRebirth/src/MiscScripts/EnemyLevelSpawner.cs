@@ -36,7 +36,7 @@ public class EnemyLevelSpawner : MonoBehaviour
         {
             foreach (var enemyType in CodeRebirthUtils.EnemyTypes)
             {
-                if (enemyType.enemyName == enemyNameWithRarity.EnemyName)
+                if (enemyType.enemyName != enemyNameWithRarity.EnemyName)
                     continue;
 
                 specialEnemies.Add((enemyType, enemyNameWithRarity.Rarity));
