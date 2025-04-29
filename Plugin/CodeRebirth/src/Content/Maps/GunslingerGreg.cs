@@ -17,7 +17,6 @@ public class GunslingerGreg : CodeRebirthHazard
     public AudioClip[] GregFireSounds = [];
     public AudioClip[] GregResupplySounds = [];
     public AudioSource DetectPlayerAudioSound = null!;
-    public AudioSource GregTurningSound = null!;
     public float playerHeadstart = 5f;
     public float maxAngle = 90f;
     public Queue<GunslingerMissile> rockets = new();
@@ -39,8 +38,7 @@ public class GunslingerGreg : CodeRebirthHazard
             rockets.Enqueue(SpawnImmobileRocket(transform));
         }
         lastTransformTargetted = null;
-        // DetectPlayerAudioSound.volume = 0f;
-        // GregTurningSound.volume = 0f;
+        DetectPlayerAudioSound.volume = 0f;
     }
 
     private void Update()
@@ -78,12 +76,6 @@ public class GunslingerGreg : CodeRebirthHazard
             FireProjectile();
             fireTimer = fireRate;
         }
-    }
-
-    private void UpdateAudio()
-    {
-        float volume = Plugin.ModConfig.ConfigACUVolume.Value;
-        GregSource.volume = volume;
     }
 
     private GunslingerMissile SpawnImmobileRocket(Transform rocketTransform)
@@ -157,8 +149,7 @@ public class GunslingerGreg : CodeRebirthHazard
         if (!lockedOntoATransform)
         {
             lastTransformTargetted = null;
-            // DetectPlayerAudioSound.volume = 0f;
-            // GregTurningSound.volume = 0f;
+            DetectPlayerAudioSound.volume = 0f;
         }
     }
 
@@ -189,7 +180,7 @@ public class GunslingerGreg : CodeRebirthHazard
             {
                 lockedOntoATransform = true;
                 lastTransformTargetted = toKilltransform;
-                // DetectPlayerAudioSound.volume = Plugin.ModConfig.ConfigACUVolume.Value;
+                DetectPlayerAudioSound.volume = 1f;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                 targetRotation.z = 0f;
                 targetRotation.x = 0f;
@@ -212,7 +203,7 @@ public class GunslingerGreg : CodeRebirthHazard
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         }
 
-        // GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
+        GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
         GunslingerMissile rocket = rockets.Dequeue();
         rocket.Initialize(lastTransformTargetted.transform, this);
 
@@ -233,6 +224,6 @@ public class GunslingerGreg : CodeRebirthHazard
         }
 
         gregCannon.localPosition = originalPosition;
-        // GregSource.PlayOneShot(GregResupplySounds[UnityEngine.Random.Range(0, GregResupplySounds.Length)]);
+        GregSource.PlayOneShot(GregResupplySounds[UnityEngine.Random.Range(0, GregResupplySounds.Length)]);
     }
 }
