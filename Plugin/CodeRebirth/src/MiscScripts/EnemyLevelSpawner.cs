@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using Unity.Netcode;
 using UnityEngine;
@@ -19,7 +18,7 @@ public class EnemyLevelSpawner : MonoBehaviour
     public float spawnTimerMax = 30f;
     [Header("Special Enemies")]
     [Tooltip("Use EnemyType.EnemyName here.")]
-    public List<StringWithRarity> specialEnemiesToInclude = new();
+    public List<string> specialEnemiesToSpawn = new();
 
     private float spawnTimer = 10f;
     private System.Random pipeRandom = new();
@@ -27,19 +26,19 @@ public class EnemyLevelSpawner : MonoBehaviour
     public static Dictionary<EnemyType, int> entitiesSpawned = new();
     private float enemiesSpawnedByPipe = 0;
     private List<(EnemyType, float)> specialEnemies = new();
-    private IEnumerable<(EnemyType, float)> outsideEnemies;
-    private IEnumerable<(EnemyType, float)> daytimeEnemies;
+    private IEnumerable<(EnemyType, float)> mainEnemiesToSpawn;
+    private IEnumerable<(EnemyType, float)> ambientEnemiesToSpawn;
 
     public void Start()
     {
-        foreach (var enemyNameWithRarity in specialEnemiesToInclude)
+        foreach (var enemyName in specialEnemiesToSpawn)
         {
-            foreach (var enemyType in CodeRebirthUtils.EnemyTypes)
+            foreach (var enemyTypeWithRarity in RoundManager.Instance.currentLevel.Enemies)
             {
-                if (enemyType.enemyName != enemyNameWithRarity.EnemyName)
+                if (enemyTypeWithRarity.enemyType.enemyName != enemyName)
                     continue;
 
-                specialEnemies.Add((enemyType, enemyNameWithRarity.Rarity));
+                specialEnemies.Add((enemyTypeWithRarity.enemyType, enemyTypeWithRarity.rarity));
                 break;
             }
         }
@@ -48,8 +47,8 @@ public class EnemyLevelSpawner : MonoBehaviour
         {
             Plugin.ExtendedLogging($"{entity.Key.enemyName} spawned {entity.Value} times");
         }
-        outsideEnemies = RoundManager.Instance.currentLevel.OutsideEnemies.Select(x => (x.enemyType, (float)x.rarity)).Concat(specialEnemies);
-        daytimeEnemies = RoundManager.Instance.currentLevel.DaytimeEnemies.Select(x => (x.enemyType, (float)x.rarity));
+        mainEnemiesToSpawn = RoundManager.Instance.currentLevel.OutsideEnemies.Select(x => (x.enemyType, (float)x.rarity)).Concat(specialEnemies);
+        ambientEnemiesToSpawn = RoundManager.Instance.currentLevel.DaytimeEnemies.Select(x => (x.enemyType, (float)x.rarity));
         spawnTimer = spawnTimerStart;
     }
 
@@ -73,11 +72,11 @@ public class EnemyLevelSpawner : MonoBehaviour
         EnemyType? enemyType;
         if (!daytimeSpawner)
         {
-            enemyType = CRUtilities.ChooseRandomWeightedType(outsideEnemies);
+            enemyType = CRUtilities.ChooseRandomWeightedType(mainEnemiesToSpawn);
         }
         else
         {
-            enemyType = CRUtilities.ChooseRandomWeightedType(daytimeEnemies);
+            enemyType = CRUtilities.ChooseRandomWeightedType(ambientEnemiesToSpawn);
         }
 
         if (enemyType == null)
