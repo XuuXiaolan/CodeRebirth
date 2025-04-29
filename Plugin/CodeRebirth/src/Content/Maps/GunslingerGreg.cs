@@ -180,7 +180,8 @@ public class GunslingerGreg : CodeRebirthHazard
             if (!Physics.Linecast(gregCannon.position, toKilltransform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
                 lockedOntoATransform = true;
-                GregSource.PlayOneShot(GregLockOnSound);
+                if (lastTransformTargetted == null)
+                    GregSource.PlayOneShot(GregLockOnSound);
                 lastTransformTargetted = toKilltransform;
                 DetectPlayerAudioSound.volume = 1f;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
@@ -226,6 +227,6 @@ public class GunslingerGreg : CodeRebirthHazard
         }
 
         gregCannon.localPosition = originalPosition;
-        GregSource.PlayOneShot(GregResupplySounds[UnityEngine.Random.Range(0, GregResupplySounds.Length)]);
+        // GregSource.PlayOneShot(GregResupplySounds[UnityEngine.Random.Range(0, GregResupplySounds.Length)]);
     }
 }
