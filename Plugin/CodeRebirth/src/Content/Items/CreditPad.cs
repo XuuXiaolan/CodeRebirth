@@ -1,4 +1,5 @@
 using System.Collections;
+using CodeRebirth.src.Util;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -27,7 +28,7 @@ public class CreditPad : GrabbableObject
     [ServerRpc(RequireOwnership = false)]
     public void IncreaseShipValueServerRpc()
     {
-        Terminal? terminal = GameObject.FindFirstObjectByType<Terminal>();
+        Terminal? terminal = CodeRebirthUtils.Instance.shipTerminal;
         if (terminal == null) return;
         int moneyToBe = terminal.groupCredits + creditValue;
         if (moneyToBe < 0) moneyToBe = 0;

@@ -14,7 +14,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
 {
     public Animator tobyAnimator = null!;
     public NetworkAnimator tobyNetworkAnimator = null!;
-    public GameObject[] spawnTransforms = [];
+    public List<EnemyLevelSpawner> enemyLevelSpawners = new();
 
     [HideInInspector] public bool compacting = false;
     private static readonly int HitAnimation = Animator.StringToHash("hit"); // Trigger
@@ -24,7 +24,15 @@ public class CompactorToby : NetworkBehaviour, IHittable
 
     public void Start()
     {
-        spawnTransforms = GameObject.FindGameObjectsWithTag("EnemySpawn");
+        var spawnTransforms = GameObject.FindGameObjectsWithTag("EnemySpawn");
+        foreach (var spawnTransform in spawnTransforms)
+        {
+            EnemyLevelSpawner? enemyLevelSpawner = spawnTransform.GetComponentInParent<EnemyLevelSpawner>();
+            if (enemyLevelSpawner != null)
+            {
+                enemyLevelSpawners.Add(enemyLevelSpawner);
+            }
+        }
     }
 
     public void CompactorInteract(PlayerControllerB player)
@@ -103,15 +111,19 @@ public class CompactorToby : NetworkBehaviour, IHittable
             {
                 Timethreshold = 2.4f;
                 Plugin.ExtendedLogging("Spawning Enemy");
-                int randomIndex = UnityEngine.Random.Range(0, spawnTransforms.Length);
-                EnemyType? enemyType = CRUtilities.ChooseRandomWeightedType(RoundManager.Instance.currentLevel.OutsideEnemies.Select(x => (x.enemyType, (float)x.rarity)));
-                if (enemyType != null && enemyType.MaxCount == 1 && RoundManager.Instance.SpawnedEnemies.Any(x => x.enemyType == enemyType))
+                int randomIndex = UnityEngine.Random.Range(0, enemyLevelSpawners.Count);
+                EnemyLevelSpawner enemyLevelSpawner = enemyLevelSpawners[randomIndex];
+                EnemyAI? enemyAI = null;
+                for (int i = 0; i < 5; i++)
                 {
-                    enemyType = null;
+                    enemyAI = enemyLevelSpawner.SpawnRandomEnemy();
+                    if (enemyAI != null)
+                    {
+                        break;
+                    }
                 }
 
-                var NetObjRef = RoundManager.Instance.SpawnEnemyGameObject(spawnTransforms[randomIndex].transform.position, -1, -3, enemyType);
-                if (((GameObject)NetObjRef).TryGetComponent(out EnemyAI enemyAI) && enemyAI.agent != null && enemyAI.agent.enabled)
+                if (enemyAI != null && enemyAI.agent != null && enemyAI.agent.enabled)
                 {
                     var component = enemyAI.gameObject.AddComponent<ForceEnemyToDestination>();
                     component.enemy = enemyAI;
@@ -122,7 +134,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
         StartOrStopCompactingClientRpc(false);
         if (deadPlayer)
         {
-            CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby?.ItemDefinitions.GetCRItemDefinitionWithItemName("Flat Shredded Scrap")?.item, randomPosition, false, true, value);
+            CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby?.ItemDefinitions.GetCRItemDefinitionWithItemName("Flattened Body")?.item, randomPosition, false, true, value);
             yield break;
         }
         CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby?.ItemDefinitions.GetCRItemDefinitionWithItemName("Sally Cube")?.item, randomPosition, false, true, value);

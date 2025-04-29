@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public class ShipUnlocker : GrabbableObject
     {
         base.ItemActivate(used, buttonDown);
         playerHeldBy.inSpecialInteractAnimation = true;
-        Terminal terminal = GameObject.FindFirstObjectByType<Terminal>();
+        Terminal terminal = CodeRebirthUtils.Instance.shipTerminal;
         List<UnlockableItem> unlockableItems = new();
         foreach (var item in StartOfRound.Instance.unlockablesList.unlockables)
         {

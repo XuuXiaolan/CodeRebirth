@@ -69,6 +69,11 @@ public class EnemyLevelSpawner : MonoBehaviour
 
         spawnTimer = pipeRandom.NextFloat(spawnTimerMin, spawnTimerMax);
 
+        SpawnRandomEnemy();
+    }
+
+    public EnemyAI? SpawnRandomEnemy()
+    {
         EnemyType? enemyType;
         if (!daytimeSpawner)
         {
@@ -80,17 +85,19 @@ public class EnemyLevelSpawner : MonoBehaviour
         }
 
         if (enemyType == null)
-            return;
+            return null;
 
         if (entitiesSpawned.TryGetValue(enemyType, out int value) && value >= enemyType.MaxCount)
-            return;
+            return null;
 
         entitiesSpawned[enemyType] = value + 1;
         enemiesSpawnedByPipe++;
         Plugin.ExtendedLogging($"Spawning {enemyType.enemyName}");
-        GameObject gameObject = RoundManager.Instance.SpawnEnemyGameObject(spawnPosition.position, -1, -3, enemyType);
-        var tracker = gameObject.AddComponent<EnemySpawnerTracker>();
-        tracker.enemyAI = gameObject.GetComponent<EnemyAI>();
+        GameObject enemyGameObject = RoundManager.Instance.SpawnEnemyGameObject(spawnPosition.position, -1, -3, enemyType);
+        var tracker = enemyGameObject.AddComponent<EnemySpawnerTracker>();
+        tracker.enemyAI = enemyGameObject.GetComponent<EnemyAI>();
+
+        return tracker.enemyAI;
     }
 
     public void OnDestroy()

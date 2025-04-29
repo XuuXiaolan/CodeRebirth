@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -16,9 +17,9 @@ public class SellingSally : NetworkBehaviour
     public Transform endOfBarrelTransform = null!;
     public Transform sallyLoaderTransform = null!;
 
-    private List<SallyCubes> sallyCubes = new();
+    private List<GrabbableObject> _sellableScraps = new();
     private static readonly int OpenedAnimation = Animator.StringToHash("open"); // Bool
-    private static readonly int ShootAnimation = Animator.StringToHash("shoot"); // Trigger // Won't shoot unless the scraps are only cubes inside sally
+    private static readonly int ShootAnimation = Animator.StringToHash("shoot"); // Trigger
     [HideInInspector] public static SellingSally? Instance = null;
 
     public override void OnNetworkSpawn()
@@ -85,21 +86,21 @@ public class SellingSally : NetworkBehaviour
 
     private bool CanCurrentlyShoot()
     {
-        sallyCubes.Clear();
+        _sellableScraps.Clear();
         foreach (var grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
         {
             if (grabbableObject.transform.parent != sallyLoaderTransform) continue;
-            if (grabbableObject is SallyCubes sallyCube)
+            if (grabbableObject.itemProperties.itemName == "Sally Cube" || grabbableObject.itemProperties.itemName == "Flattened Body")
             {
-                sallyCubes.Add(sallyCube);
+                _sellableScraps.Add(grabbableObject);
                 continue;
             }
-            sallyCubes.Clear();
+            _sellableScraps.Clear();
             return false;
         }
-        foreach (var sallyCube in sallyCubes)
+        foreach (var sellableScrap in _sellableScraps)
         {
-            sallyCube.grabbable = false;
+            sellableScrap.grabbable = false;
         }
         return true;
     }
@@ -114,13 +115,13 @@ public class SellingSally : NetworkBehaviour
         }
         int scrapValueToMake = 0;
         CanCurrentlyShoot();
-        foreach (var sallyCube in sallyCubes)
+        foreach (var sellableScrap in _sellableScraps)
         {
-            scrapValueToMake += sallyCube.scrapValue;
+            scrapValueToMake += sellableScrap.scrapValue;
         }
 
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-        SellAndDisplayItemProfits(scrapValueToMake, Object.FindFirstObjectByType<Terminal>());
+        SellAndDisplayItemProfits(scrapValueToMake, CodeRebirthUtils.Instance.shipTerminal);
     }
 
     private void SellAndDisplayItemProfits(int profit, Terminal terminal)
@@ -128,13 +129,14 @@ public class SellingSally : NetworkBehaviour
         terminal.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;
         TimeOfDay.Instance.quotaFulfilled += profit;
-        HUDManager.Instance.DisplayCreditsEarning(profit, sallyCubes.ToArray(), terminal.groupCredits);
+        // todo: maybe multiply profit
+        HUDManager.Instance.DisplayCreditsEarning(profit, _sellableScraps.ToArray(), terminal.groupCredits);
 
-        foreach (var sallyCube in sallyCubes)
+        foreach (var sellableScrap in _sellableScraps)
         {
-            if (IsServer) sallyCube.NetworkObject.Despawn();
+            if (IsServer) sellableScrap.NetworkObject.Despawn();
         }
-        sallyCubes.Clear();
+        _sellableScraps.Clear();
         TimeOfDay.Instance.UpdateProfitQuotaCurrentTime();
     }
 }

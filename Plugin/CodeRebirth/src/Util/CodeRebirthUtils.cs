@@ -52,6 +52,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public ES3Settings SaveSettings;
     [HideInInspector] public ShipAnimator shipAnimator = null!;
     [HideInInspector] public StartMatchLever startMatchLever = null!;
+    [HideInInspector] public Terminal shipTerminal = null!;
     [HideInInspector] public static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
     [HideInInspector] public System.Random CRRandom = new();
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
@@ -63,6 +64,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         DoLayerMaskStuff();
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
         Instance = this;
+        shipTerminal = FindFirstObjectByType<Terminal>(FindObjectsInactive.Exclude);
         startMatchLever = FindFirstObjectByType<StartMatchLever>(FindObjectsInactive.Exclude);
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
         shipAnimator.shipLandAnimation = ModifiedShipLandAnimation;

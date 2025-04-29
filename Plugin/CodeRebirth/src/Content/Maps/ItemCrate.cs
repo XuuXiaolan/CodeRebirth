@@ -79,7 +79,7 @@ public class ItemCrate : CRHittable
 
         if ((crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic) && ShopItemList.Count == 0)
         {
-            Terminal terminal = FindObjectOfType<Terminal>();
+            Terminal terminal = CodeRebirthUtils.Instance.shipTerminal;
 
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
