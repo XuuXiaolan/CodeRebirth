@@ -14,6 +14,7 @@ public class GunslingerGreg : CodeRebirthHazard
     public float fireRate = 1f;
     public float detectionRange = 50f;
     public AudioSource GregSource = null!;
+    public AudioClip GregLockOnSound = null!;
     public AudioClip[] GregFireSounds = [];
     public AudioClip[] GregResupplySounds = [];
     public AudioSource DetectPlayerAudioSound = null!;
@@ -179,6 +180,7 @@ public class GunslingerGreg : CodeRebirthHazard
             if (!Physics.Linecast(gregCannon.position, toKilltransform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
                 lockedOntoATransform = true;
+                GregSource.PlayOneShot(GregLockOnSound);
                 lastTransformTargetted = toKilltransform;
                 DetectPlayerAudioSound.volume = 1f;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
