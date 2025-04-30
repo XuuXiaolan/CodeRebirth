@@ -378,7 +378,7 @@ NavMeshObstacle:
   m_Shape: 1
   m_Extents: {x: 5.85, y: 3.03, z: 6.65}
   m_MoveThreshold: 0.1
-  m_Carve: 0
+  m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
@@ -655,7 +655,6 @@ MonoBehaviour:
   m_Script: {fileID: -1800618838, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arcHeight: 30
   launchSpeed: 50
   landingRadius: 8
   landingRaycastUp: 50

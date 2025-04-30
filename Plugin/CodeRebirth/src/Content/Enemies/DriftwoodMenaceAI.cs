@@ -440,8 +440,12 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, _cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable)) continue;
-            if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect && enemyAICollisionDetect.mainScript is DriftwoodMenaceAI) continue;
+            if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
+                continue;
+
+            if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect && enemyAICollisionDetect.mainScript is DriftwoodMenaceAI)
+                continue;
+
             iHittable.Hit(6, smashTransform.position, null, true, -1);
         }
 

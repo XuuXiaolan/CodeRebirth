@@ -15,6 +15,8 @@ public class CompactorToby : NetworkBehaviour, IHittable
     [SerializeField]
     private AudioSource _tobySource = null!;
     [SerializeField]
+    private AudioClip _buttonPressSound = null!;
+    [SerializeField]
     private AudioClip _compactorWhackedSound = null!;
     [SerializeField]
     private AudioSource _tobyMalfunctionSource = null!;
@@ -64,7 +66,10 @@ public class CompactorToby : NetworkBehaviour, IHittable
         List<Vector3> vectorPositions = new();
         foreach (var grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
         {
-            if (grabbableObject.isHeld) continue;
+            if (grabbableObject.isHeld)
+                continue;
+            
+            valueOfItems += grabbableObject.scrapValue;
             grabbableObjects.Add(grabbableObject);
             vectorPositions.Add(grabbableObject.transform.position);
             if (grabbableObject.itemProperties.itemName.Contains("Shredded Scraps"))
@@ -172,10 +177,12 @@ public class CompactorToby : NetworkBehaviour, IHittable
     public void StartOrStopCompactingClientRpc(bool starting, bool malfunctioning)
     {
         compacting = starting;
-        if (starting && malfunctioning)
-        {
 
-            PlaySourceWithDelay(21);
+        if (starting)
+        {
+            _tobySource.PlayOneShot(_buttonPressSound);
+            if (malfunctioning)
+                StartCoroutine(PlaySourceWithDelay(21));
         }
         else
         {
