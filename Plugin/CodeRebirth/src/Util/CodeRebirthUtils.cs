@@ -203,7 +203,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
             parent = StartOfRound.Instance.propsContainer;
         }
         GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
-        go.GetComponent<NetworkObject>().Spawn();
+        NetworkObject networkObject = go.GetComponent<NetworkObject>();
+        networkObject.Spawn();
+        UpdateParentServerRpc(new NetworkObjectReference(go));
         int value = (int)(UnityEngine.Random.Range(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
         ScanNodeProperties? scanNodeProperties = go.GetComponentInChildren<ScanNodeProperties>();
         if (scanNodeProperties != null)
@@ -211,20 +213,35 @@ internal class CodeRebirthUtils : NetworkBehaviour
             scanNodeProperties.scrapValue = value;
             scanNodeProperties.subText = $"Value: ${value}";
             go.GetComponent<GrabbableObject>().scrapValue = value;
-            UpdateScanNodeClientRpc(new NetworkObjectReference(go), value);
+            UpdateScanNodeServerRpc(new NetworkObjectReference(go), value);
         }
         if (isQuest)
         {
-            StartUIForItemClientRpc(go);
-            go.AddComponent<QuestItem>();
+            StartUIForItemServerRpc(go);
         }
         return new NetworkObjectReference(go);
     }
 
-    [ClientRpc]
-    public void StartUIForItemClientRpc(NetworkObjectReference go)
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateParentServerRpc(NetworkObjectReference go)
     {
-        DuckUI.Instance.itemUI.StartUIforItem(((GameObject)go).GetComponent<PhysicsProp>());
+        UpdateParentClientRpc(go);
+    }
+
+    [ClientRpc]
+    public void UpdateParentClientRpc(NetworkObjectReference go)
+    {
+        go.TryGet(out NetworkObject netObj);
+        if (netObj != null)
+        {
+            netObj.transform.parent = StartOfRound.Instance.propsContainer;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateScanNodeServerRpc(NetworkObjectReference go, int value)
+    {
+        UpdateScanNodeClientRpc(go, value);
     }
 
     [ClientRpc]
@@ -239,6 +256,19 @@ internal class CodeRebirthUtils : NetworkBehaviour
                 Plugin.ExtendedLogging($"Scrap Value: {value}");
             }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void StartUIForItemServerRpc(NetworkObjectReference go)
+    {
+        StartUIForItemClientRpc(go);
+    }
+
+    [ClientRpc]
+    public void StartUIForItemClientRpc(NetworkObjectReference go)
+    {
+        DuckUI.Instance.itemUI.StartUIforItem(((GameObject)go).GetComponent<PhysicsProp>());
+        ((GameObject)go).AddComponent<QuestItem>();
     }
 
     public void SaveCodeRebirthData()

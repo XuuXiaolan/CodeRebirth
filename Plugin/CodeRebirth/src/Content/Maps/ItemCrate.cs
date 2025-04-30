@@ -197,7 +197,7 @@ public class ItemCrate : CRHittable
                 }
                 grabbableObject.SetScrapValue((int)(crateRandom.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier * Plugin.ModConfig.ConfigMetalCrateValueMultiplier.Value));
                 grabbableObject.NetworkObject.Spawn();
-                CodeRebirthUtils.Instance.UpdateScanNodeClientRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
+                CodeRebirthUtils.Instance.UpdateScanNodeServerRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
             }
         }
         OpenCrateClientRpc();

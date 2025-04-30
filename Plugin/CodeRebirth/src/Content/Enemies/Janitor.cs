@@ -703,10 +703,10 @@ public class Janitor : CodeRebirthEnemyAI
             {
                 float dist = Vector3.Distance(path.corners[i - 1], path.corners[i]);
                 length += dist;
-                Plugin.ExtendedLogging($"Distance: {dist}");
+                // Plugin.ExtendedLogging($"Distance: {dist}");
             }
         }
-        Plugin.ExtendedLogging($"Path distance: {length}");
+        // Plugin.ExtendedLogging($"Path distance: {length}");
         return length;
     }
 
@@ -847,13 +847,13 @@ public class Janitor : CodeRebirthEnemyAI
     private void SwitchToChaseState(PlayerControllerB player)
     {
         sirenLights.SetActive(true);
-        agent.ResetPath();
         _targetScrap = null;
         targetPlayer = player;
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.FollowingPlayer);
         skinnedMeshRenderers[0].SetBlendShapeWeight(0, 100);
 
         if (!IsServer) return;
+        agent.ResetPath();
         agent.speed = 15f;
         creatureAnimator.SetBool(IsAngryAnimation, true);
     }
@@ -882,6 +882,7 @@ public class Janitor : CodeRebirthEnemyAI
                     break;
                 }
             }
+
             if (skipItem)
                 continue;
 

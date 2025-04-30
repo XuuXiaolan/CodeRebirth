@@ -123,7 +123,6 @@ public class ShreddingSarah : NetworkBehaviour
 
     private IEnumerator ShootItemRoutine(GrabbableObject grabbableObject, Vector3 landingPosition)
     {
-        Plugin.ExtendedLogging($"Scrap Cannon - Scrap landing at {landingPosition}");
         yield return new WaitForSeconds(0.5f);
 
         audioSource.PlayOneShot(shootSFX);
@@ -132,6 +131,8 @@ public class ShreddingSarah : NetworkBehaviour
         float launchTotalDistance = Vector3.Distance(shootPoint.position, landingPosition);
         float launchProgress = 0f;
 
+        Plugin.ExtendedLogging($"Old World position: {grabbableObject.transform.position}");
+        Plugin.ExtendedLogging($"Old Local position: {grabbableObject.transform.localPosition}");
         while (launchProgress < launchTotalDistance)
         {
             // Sample along the circular arc (chute) from shootPoint to landing position.

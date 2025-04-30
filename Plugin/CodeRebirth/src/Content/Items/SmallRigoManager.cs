@@ -61,6 +61,7 @@ public class SmallRigoManager : MonoBehaviour
             if (goldRigo == null)
             {
                 Plugin.Logger.LogError($"GoldRigo is null");
+                yield break;
             }
             GameObject smallRigo = Instantiate(smallRigoPrefab, goldRigo.transform.position, goldRigo.transform.rotation);
             smallRigosActive.Add(smallRigo.GetComponent<SmallRigo>());
@@ -84,7 +85,9 @@ public class SmallRigoManager : MonoBehaviour
         foreach (var smallRigo in smallRigosActive)
         {
             yield return null;
-            Plugin.ExtendedLogging($"SmallRigo: {smallRigo.transform.position}");
+            if (!smallRigo.agent.enabled || !smallRigo.agent.isOnNavMesh)
+                continue;
+
             smallRigo.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 3, default));
         }
         while (active)
@@ -98,6 +101,9 @@ public class SmallRigoManager : MonoBehaviour
                     {
                         smallRigo.agent.enabled = true;
                     }
+                    if (!smallRigo.agent.enabled || !smallRigo.agent.isOnNavMesh)
+                        continue;
+
                     smallRigo.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 5, default));
                 }
                 float distanceToKing = Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position);
@@ -105,7 +111,9 @@ public class SmallRigoManager : MonoBehaviour
                 {
                     if (distanceToKing <= 2f)
                     {
-                        if (smallRigo.jumping) continue;
+                        if (smallRigo.jumping)
+                            continue;
+
                         smallRigo.SetJumping(true);
                         continue;
                     }
