@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
@@ -12,9 +11,25 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Maps;
 public class CompactorToby : NetworkBehaviour, IHittable
 {
-    public Animator tobyAnimator = null!;
-    public NetworkAnimator tobyNetworkAnimator = null!;
-    public List<EnemyLevelSpawner> enemyLevelSpawners = new();
+    [Header("Sounds")]
+    [SerializeField]
+    private AudioSource _tobySource = null!;
+    [SerializeField]
+    private AudioClip _compactorWhackedSound = null!;
+    [SerializeField]
+    private AudioSource _tobyMalfunctionSource = null!;
+    [SerializeField]
+    private AudioClip _compactorCloseGateSound = null!;
+    [SerializeField]
+    private AudioClip _compactorEndSound = null!;
+
+    [Header("Animations")]
+    [SerializeField]
+    private Animator _tobyAnimator = null!;
+    [SerializeField]
+    private NetworkAnimator _tobyNetworkAnimator = null!;
+
+    private List<EnemyLevelSpawner> _enemyLevelSpawners = new();
 
     [HideInInspector] public bool compacting = false;
     private static readonly int HitAnimation = Animator.StringToHash("hit"); // Trigger
@@ -28,9 +43,9 @@ public class CompactorToby : NetworkBehaviour, IHittable
         foreach (var spawnTransform in spawnTransforms)
         {
             EnemyLevelSpawner? enemyLevelSpawner = spawnTransform.GetComponentInParent<EnemyLevelSpawner>();
-            if (enemyLevelSpawner != null)
+            if (enemyLevelSpawner != null && !enemyLevelSpawner.daytimeSpawner)
             {
-                enemyLevelSpawners.Add(enemyLevelSpawner);
+                _enemyLevelSpawners.Add(enemyLevelSpawner);
             }
         }
     }
@@ -82,24 +97,24 @@ public class CompactorToby : NetworkBehaviour, IHittable
     [ServerRpc(RequireOwnership = false)]
     public void TryCompactItemServerRpc(Vector3 randomPosition, int value, bool deadPlayer, bool fast)
     {
-        StartOrStopCompactingClientRpc(true);
+        StartOrStopCompactingClientRpc(true, fast);
         StartCoroutine(CompactProcess(randomPosition, value, deadPlayer, fast));
     }
 
     private IEnumerator CompactProcess(Vector3 randomPosition, int value, bool deadPlayer, bool fast)
     {
         Plugin.ExtendedLogging($"Value: {value} | Dead Player: {deadPlayer} | Fast: {fast}");
-        tobyNetworkAnimator.SetTrigger(StartCompactAnimation);
-        yield return new WaitForSeconds(20);
+        _tobyNetworkAnimator.SetTrigger(StartCompactAnimation);
+        yield return new WaitForSeconds(21);
         float timeElapsed = 0f;
         float timeToWait = fast ? 5f : 30f;
         if (fast)
         {
-            tobyNetworkAnimator.SetTrigger(FastEndCompactAnimation);
+            _tobyNetworkAnimator.SetTrigger(FastEndCompactAnimation);
         }
         else
         {
-            tobyNetworkAnimator.SetTrigger(SlowEndCompactAnimation);
+            _tobyNetworkAnimator.SetTrigger(SlowEndCompactAnimation);
         }
 
         float Timethreshold = 2.4f;
@@ -111,9 +126,9 @@ public class CompactorToby : NetworkBehaviour, IHittable
             if (Timethreshold <= 0f)
             {
                 Timethreshold = 2.4f;
-                Plugin.ExtendedLogging("Spawning Enemy");
-                int randomIndex = UnityEngine.Random.Range(0, enemyLevelSpawners.Count);
-                EnemyLevelSpawner enemyLevelSpawner = enemyLevelSpawners[randomIndex];
+                Plugin.ExtendedLogging("Toby Spawning Enemy");
+                int randomIndex = UnityEngine.Random.Range(0, _enemyLevelSpawners.Count);
+                EnemyLevelSpawner enemyLevelSpawner = _enemyLevelSpawners[randomIndex];
                 EnemyAI? enemyAI = null;
                 for (int i = 0; i < 5; i++)
                 {
@@ -132,7 +147,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
                 }
             }
         }
-        StartOrStopCompactingClientRpc(false);
+        StartOrStopCompactingClientRpc(false, false);
         if (deadPlayer)
         {
             CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby?.ItemDefinitions.GetCRItemDefinitionWithItemName("Flattened Body")?.item, randomPosition, false, true, value);
@@ -141,16 +156,31 @@ public class CompactorToby : NetworkBehaviour, IHittable
         CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby?.ItemDefinitions.GetCRItemDefinitionWithItemName("Sally Cube")?.item, randomPosition, false, true, value);
     }
 
+    private IEnumerator PlaySourceWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _tobyMalfunctionSource.Play();
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void TriggerAnimationServerRpc(int hash)
     {
-        tobyNetworkAnimator.SetTrigger(hash);
+        _tobyNetworkAnimator.SetTrigger(hash);
     }
 
     [ClientRpc]
-    public void StartOrStopCompactingClientRpc(bool starting)
+    public void StartOrStopCompactingClientRpc(bool starting, bool malfunctioning)
     {
         compacting = starting;
+        if (starting && malfunctioning)
+        {
+
+            PlaySourceWithDelay(21);
+        }
+        else
+        {
+            _tobyMalfunctionSource.Stop();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -158,5 +188,21 @@ public class CompactorToby : NetworkBehaviour, IHittable
     {
         networkBehaviourReference.TryGet(out GrabbableObject grabbableObject);
         grabbableObject.NetworkObject.Despawn();
+    }
+
+    public void PlayMiscSoundsAnimEvent(int SoundID)
+    {
+        switch (SoundID)
+        {
+            case 0:
+                _tobySource.PlayOneShot(_compactorWhackedSound);
+                break;
+            case 1:
+                _tobySource.PlayOneShot(_compactorCloseGateSound);
+                break;
+            case 2:
+                _tobySource.PlayOneShot(_compactorEndSound);
+                break;
+        }
     }
 }

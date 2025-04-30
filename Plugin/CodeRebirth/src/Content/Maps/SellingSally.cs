@@ -11,11 +11,29 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Maps;
 public class SellingSally : NetworkBehaviour
 {
-    public Animator animator = null!;
-    public SkinnedMeshRenderer bellRenderer = null!;
-    public NetworkAnimator networkAnimator = null!;
-    public Transform endOfBarrelTransform = null!;
-    public Transform sallyLoaderTransform = null!;
+    [Header("Sounds")]
+    [SerializeField]
+    private AudioSource buttonSource = null!;
+    [SerializeField]
+    private AudioClip buttonSound = null!;
+    [SerializeField]
+    private AudioSource bellSource = null!;
+    [SerializeField]
+    private AudioClip bellSound = null!;
+
+    [Header("Animations")]
+    [SerializeField]
+    private Animator sallyAnimator = null!;
+    [SerializeField]
+    private SkinnedMeshRenderer bellRenderer = null!;
+    [SerializeField]
+    private NetworkAnimator sallyNetworkAnimator = null!;
+    
+    [Header("Misc")]
+    [SerializeField]
+    private Transform endOfBarrelTransform = null!;
+    [SerializeField]
+    private Transform sallyLoaderTransform = null!;
 
     private List<GrabbableObject> _sellableScraps = new();
     private static readonly int OpenedAnimation = Animator.StringToHash("open"); // Bool
@@ -44,7 +62,8 @@ public class SellingSally : NetworkBehaviour
     public void PressButtonServerRpc()
     {
         if (!CanCurrentlyShoot()) return;
-        networkAnimator.SetTrigger(ShootAnimation);
+        PlayButtonSoundServerRpc();
+        sallyNetworkAnimator.SetTrigger(ShootAnimation);
     }
 
     public void OnBellInteract(PlayerControllerB player)
@@ -54,15 +73,28 @@ public class SellingSally : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
+    private void PlayButtonSoundServerRpc()
+    {
+        PlayButtonSoundClientRpc();
+    }
+
+    [ClientRpc]
+    private void PlayButtonSoundClientRpc()
+    {
+        buttonSource.PlayOneShot(buttonSound);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
     public void RingBellServerRpc()
     {
-        animator.SetBool(OpenedAnimation, !animator.GetBool(OpenedAnimation));
+        sallyAnimator.SetBool(OpenedAnimation, !sallyAnimator.GetBool(OpenedAnimation));
         AnimateBellClientRpc();
     }
 
     [ClientRpc]
     public void AnimateBellClientRpc()
     {
+        bellSource.PlayOneShot(bellSound);
         StartCoroutine(AnimateBell());
     }
 

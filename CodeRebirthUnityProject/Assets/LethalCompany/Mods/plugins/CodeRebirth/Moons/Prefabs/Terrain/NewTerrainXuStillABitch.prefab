@@ -24601,25 +24601,6 @@ MonoBehaviour:
   spawnTimerStart: 50
   spawnTimerMin: 20
   spawnTimerMax: 60
-  specialEnemiesToInclude:
-  - EnemyName: Cactus Budling
-    Rarity: 30
-  - EnemyName: Janitor
-    Rarity: 50
-  - EnemyName: Transporter
-    Rarity: 10
-  - EnemyName: Redwood Titan
-    Rarity: 20
-  - EnemyName: Driftwood Menace
-    Rarity: 30
-  - EnemyName: Peace Keeper
-    Rarity: 10
-  - EnemyName: Nancy
-    Rarity: 5
-  - EnemyName: Lord Of The Manor
-    Rarity: 1
-  - EnemyName: Mistress
-    Rarity: 1
   specialEnemiesToSpawn:
   - Cactus Budling
   - Janitor
@@ -26976,15 +26957,6 @@ MonoBehaviour:
   spawnTimerStart: 120
   spawnTimerMin: 45
   spawnTimerMax: 75
-  specialEnemiesToInclude:
-  - EnemyName: Cactus Budling
-    Rarity: 30
-  - EnemyName: Janitor
-    Rarity: 50
-  - EnemyName: Transporter
-    Rarity: 10
-  - EnemyName: Peace Keeper
-    Rarity: 10
   specialEnemiesToSpawn:
   - Cactus Budling
   - Janitor
@@ -31189,25 +31161,6 @@ MonoBehaviour:
   spawnTimerStart: 50
   spawnTimerMin: 20
   spawnTimerMax: 60
-  specialEnemiesToInclude:
-  - EnemyName: Cactus Budling
-    Rarity: 30
-  - EnemyName: Janitor
-    Rarity: 50
-  - EnemyName: Transporter
-    Rarity: 10
-  - EnemyName: Redwood Titan
-    Rarity: 20
-  - EnemyName: Driftwood Menace
-    Rarity: 30
-  - EnemyName: Peace Keeper
-    Rarity: 10
-  - EnemyName: Nancy
-    Rarity: 5
-  - EnemyName: Lord Of The Manor
-    Rarity: 1
-  - EnemyName: Mistress
-    Rarity: 1
   specialEnemiesToSpawn:
   - Cactus Budling
   - Janitor
@@ -33991,10 +33944,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
+      propertyPath: bellSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 8fabbc143740769429eb022af4cd5997, type: 3}
+    - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
+      propertyPath: bellSource
+      value: 
+      objectReference: {fileID: 7907758721860856684}
+    - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
       propertyPath: bellTrigger
       value: 
       objectReference: {fileID: 4618876613342225089, guid: f1ab898e1073b724f9641b286ab9c247,
         type: 3}
+    - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
+      propertyPath: buttonSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 1be4ebaa2d509eb448065f3e5d0f489d, type: 3}
     - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       propertyPath: bellRenderer
@@ -34002,10 +33970,20 @@ PrefabInstance:
       objectReference: {fileID: 4604772229570269446}
     - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
+      propertyPath: buttonSource
+      value: 
+      objectReference: {fileID: 8428843032759676587}
+    - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
       propertyPath: ButtonTrigger
       value: 
       objectReference: {fileID: 5384508942788405568, guid: f1ab898e1073b724f9641b286ab9c247,
         type: 3}
+    - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
+      propertyPath: sallyAnimator
+      value: 
+      objectReference: {fileID: 4931812865897500781}
     - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       propertyPath: endOfBarrelTransform
@@ -34016,6 +33994,11 @@ PrefabInstance:
       propertyPath: sallyLoaderTransform
       value: 
       objectReference: {fileID: 4336758173911912332}
+    - target: {fileID: 7440933132305580632, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
+      propertyPath: sallyNetworkAnimator
+      value: 
+      objectReference: {fileID: 1420501021974649342}
     - target: {fileID: 8175131182699620510, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -34108,11 +34091,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 222142098938089921, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1158523096910308228}
+      addedObject: {fileID: 8428843032759676587}
     - targetCorrespondingSourceObject: {fileID: 4786059030473727032, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4604772229570269446}
+    - targetCorrespondingSourceObject: {fileID: 4786059030473727032, guid: e4efbd87b159f874696f209f5debefa2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7907758721860856684}
     - targetCorrespondingSourceObject: {fileID: 5020928989920816041, guid: e4efbd87b159f874696f209f5debefa2,
         type: 3}
       insertIndex: -1
@@ -34124,6 +34111,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2380484234679007084}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1420501021974649342 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3656799665427672722, guid: e4efbd87b159f874696f209f5debefa2,
+    type: 3}
+  m_PrefabInstance: {fileID: 2380484234679007084}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8151800393824283386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2457866724342032045 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 222142098938089921, guid: e4efbd87b159f874696f209f5debefa2,
@@ -34138,48 +34137,102 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2457866724342032045}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &1158523096910308228
-MeshRenderer:
+--- !u!82 &8428843032759676587
+AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2457866724342032045}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 257
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 6
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &3064485288730777559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 832621598438645947, guid: e4efbd87b159f874696f209f5debefa2,
@@ -34189,6 +34242,12 @@ Transform:
 --- !u!4 &3629774471452928392 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1393478611638296292, guid: e4efbd87b159f874696f209f5debefa2,
+    type: 3}
+  m_PrefabInstance: {fileID: 2380484234679007084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &4931812865897500781 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7311730778536158977, guid: e4efbd87b159f874696f209f5debefa2,
     type: 3}
   m_PrefabInstance: {fileID: 2380484234679007084}
   m_PrefabAsset: {fileID: 0}
@@ -34264,6 +34323,102 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0, z: 0.69043416}
     m_Extent: {x: 1.0000364, y: 1.0000364, z: 0.6904705}
   m_DirtyAABB: 0
+--- !u!82 &7907758721860856684
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7161377171068054356}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 8
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7252134179620871365 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5020928989920816041, guid: e4efbd87b159f874696f209f5debefa2,
@@ -48201,23 +48356,6 @@ MonoBehaviour:
   spawnTimerStart: 50
   spawnTimerMin: 20
   spawnTimerMax: 60
-  specialEnemiesToInclude:
-  - EnemyName: Cactus Budling
-    Rarity: 30
-  - EnemyName: Janitor
-    Rarity: 50
-  - EnemyName: Transporter
-    Rarity: 10
-  - EnemyName: Driftwood Menace
-    Rarity: 30
-  - EnemyName: Peace Keeper
-    Rarity: 10
-  - EnemyName: Nancy
-    Rarity: 5
-  - EnemyName: Lord Of The Manor
-    Rarity: 1
-  - EnemyName: Mistress
-    Rarity: 1
   specialEnemiesToSpawn:
   - Cactus Budling
   - Janitor
@@ -62530,25 +62668,6 @@ MonoBehaviour:
   spawnTimerStart: 50
   spawnTimerMin: 20
   spawnTimerMax: 60
-  specialEnemiesToInclude:
-  - EnemyName: Cactus Budling
-    Rarity: 30
-  - EnemyName: Janitor
-    Rarity: 50
-  - EnemyName: Transporter
-    Rarity: 10
-  - EnemyName: Redwood Titan
-    Rarity: 20
-  - EnemyName: Driftwood Menace
-    Rarity: 30
-  - EnemyName: Peace Keeper
-    Rarity: 10
-  - EnemyName: Nancy
-    Rarity: 5
-  - EnemyName: Lord Of The Manor
-    Rarity: 1
-  - EnemyName: Mistress
-    Rarity: 1
   specialEnemiesToSpawn:
   - Cactus Budling
   - Janitor
@@ -97263,25 +97382,6 @@ MonoBehaviour:
   spawnTimerStart: 50
   spawnTimerMin: 20
   spawnTimerMax: 60
-  specialEnemiesToInclude:
-  - EnemyName: Cactus Budling
-    Rarity: 30
-  - EnemyName: Janitor
-    Rarity: 50
-  - EnemyName: Transporter
-    Rarity: 10
-  - EnemyName: Redwood Titan
-    Rarity: 20
-  - EnemyName: Driftwood Menace
-    Rarity: 30
-  - EnemyName: Peace Keeper
-    Rarity: 10
-  - EnemyName: Nancy
-    Rarity: 5
-  - EnemyName: Lord Of The Manor
-    Rarity: 1
-  - EnemyName: Mistress
-    Rarity: 1
   specialEnemiesToSpawn:
   - Cactus Budling
   - Janitor
@@ -104541,15 +104641,6 @@ MonoBehaviour:
   spawnTimerStart: 120
   spawnTimerMin: 45
   spawnTimerMax: 75
-  specialEnemiesToInclude:
-  - EnemyName: Cactus Budling
-    Rarity: 30
-  - EnemyName: Janitor
-    Rarity: 50
-  - EnemyName: Transporter
-    Rarity: 10
-  - EnemyName: Peace Keeper
-    Rarity: 10
   specialEnemiesToSpawn:
   - Cactus Budling
   - Janitor

@@ -12,7 +12,6 @@ public class KillAndCompactPlayer : MonoBehaviour
     {
         if (other.TryGetComponent(out PlayerControllerB player) && player.IsOwner)
         {
-            bool isFast = true;
             if (toby.compacting)
             {
                 player.KillPlayer(player.transform.position, true, CauseOfDeath.Crushing, 0, default);
@@ -23,31 +22,23 @@ public class KillAndCompactPlayer : MonoBehaviour
             int valueOfItems = 0;
             foreach (GrabbableObject grabbableObject in grabbableObjects)
             {
-                if (grabbableObject == null || grabbableObject.itemProperties == null) continue;
-                vectorPositions.Add(grabbableObject.transform.position);
-                if (grabbableObject.itemProperties.itemName.Contains("Shredded Scraps"))
-                {
-                    valueOfItems += grabbableObject.scrapValue;
+                if (grabbableObject == null || grabbableObject.itemProperties == null)
                     continue;
-                }
-                else if (grabbableObject is RagdollGrabbableObject)
-                {
-                    valueOfItems += grabbableObject.scrapValue + 12;
-                    continue;
-                }
 
-                isFast = false;
-                valueOfItems += grabbableObject.scrapValue - 5;
+                vectorPositions.Add(grabbableObject.transform.position);
+                valueOfItems += grabbableObject.scrapValue;
             }
             player.DropAllHeldItems();
             foreach (GrabbableObject grabbableObject in grabbableObjects)
             {
-                if (grabbableObject == null || grabbableObject.itemProperties == null) continue;
+                if (grabbableObject == null || grabbableObject.itemProperties == null)
+                    continue;
+
                 toby.DespawnItemServerRpc(new NetworkBehaviourReference(grabbableObject));
             }
             player.KillPlayer(player.transform.position, false, CauseOfDeath.Crushing, 0, default);
             Vector3 randomPosition = vectorPositions[UnityEngine.Random.Range(0, vectorPositions.Count)];
-            toby.TryCompactItemServerRpc(randomPosition, valueOfItems + 10, true, false);
+            toby.TryCompactItemServerRpc(randomPosition, valueOfItems, true, true);
         }
     }
 }
