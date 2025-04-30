@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -51,6 +49,7 @@ public class GunslingerGreg : CodeRebirthHazard
             {
                 if (rocket.ready)
                     continue;
+
                 missileToRecharge = rocket;
                 break;
             }
@@ -63,8 +62,11 @@ public class GunslingerGreg : CodeRebirthHazard
         if (Plugin.ModConfig.ConfigDebugMode.Value) 
             return;
 
-        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rockets.Where(x => x.ready == true).Count() <= 0)
+        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rockets.Count <= 0)
+        {
+            DetectPlayerAudioSound.volume = 0f;
             return;
+        }
 
         FindAndAimAtTarget();
 
@@ -147,6 +149,7 @@ public class GunslingerGreg : CodeRebirthHazard
                 HandleTargettingToTransform(flyThingie, ref lockedOntoATransform);
             }
         }
+
         if (!lockedOntoATransform)
         {
             lastTransformTargetted = null;
@@ -182,6 +185,7 @@ public class GunslingerGreg : CodeRebirthHazard
                 lockedOntoATransform = true;
                 if (lastTransformTargetted == null)
                     GregSource.PlayOneShot(GregLockOnSound);
+
                 lastTransformTargetted = toKilltransform;
                 DetectPlayerAudioSound.volume = 1f;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
@@ -209,24 +213,5 @@ public class GunslingerGreg : CodeRebirthHazard
         GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
         GunslingerMissile rocket = rockets.Dequeue();
         rocket.Initialize(lastTransformTargetted.transform, this);
-
-        StartCoroutine(RattleCannon());
-    }
-
-    private IEnumerator RattleCannon()
-    {
-        Vector3 originalPosition = gregCannon.localPosition;
-        float shakeDuration = 0.2f;
-        float shakeIntensity = 0.5f;
-
-        while (shakeDuration > 0f)
-        {
-            gregCannon.localPosition = originalPosition + (Vector3)UnityEngine.Random.insideUnitCircle * shakeIntensity;
-            shakeDuration -= Time.deltaTime;
-            yield return null;
-        }
-
-        gregCannon.localPosition = originalPosition;
-        // GregSource.PlayOneShot(GregResupplySounds[UnityEngine.Random.Range(0, GregResupplySounds.Length)]);
     }
 }

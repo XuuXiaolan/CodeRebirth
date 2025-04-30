@@ -18,7 +18,6 @@ public class GunslingerMissile : MonoBehaviour
     public void Initialize(Transform targetTransform, GunslingerGreg greg)
     {
         ready = false;
-        Plugin.ExtendedLogging($"Initializing rocket for target: {targetTransform.name} at position: ({targetTransform.position.x} {targetTransform.position.y} {targetTransform.position.z})");
         _targetTransform = targetTransform;
         gregScript = greg;
         _oldParent = transform.parent;
@@ -30,9 +29,12 @@ public class GunslingerMissile : MonoBehaviour
     {
         if (_targetTransform == null)
         {
-            this.transform.SetParent(_oldParent, true);
-            this.transform.SetPositionAndRotation(mainTransform.position, mainTransform.rotation);
-            this.gameObject.SetActive(false);
+            if (transform.parent == null)
+            {
+                this.transform.SetParent(_oldParent, true);
+                this.transform.SetPositionAndRotation(mainTransform.position, mainTransform.rotation);
+                this.gameObject.SetActive(false);
+            }
             return;
         }
 

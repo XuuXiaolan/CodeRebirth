@@ -109,7 +109,9 @@ public class SellingSally : NetworkBehaviour
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (!player.IsOwner || player.transform.parent != endOfBarrelTransform.parent) continue;
+            if (!player.IsOwner || player.transform.parent != endOfBarrelTransform.parent)
+                continue;
+
             player.transform.position = endOfBarrelTransform.position;
             player.DamagePlayer(9999, true, true, CauseOfDeath.Blast, 0, false, endOfBarrelTransform.forward * 100f);
         }
@@ -126,15 +128,16 @@ public class SellingSally : NetworkBehaviour
 
     private void SellAndDisplayItemProfits(int profit, Terminal terminal)
     {
+        profit *= 3;
         terminal.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;
         TimeOfDay.Instance.quotaFulfilled += profit;
-        // todo: maybe multiply profit
         HUDManager.Instance.DisplayCreditsEarning(profit, _sellableScraps.ToArray(), terminal.groupCredits);
 
         foreach (var sellableScrap in _sellableScraps)
         {
-            if (IsServer) sellableScrap.NetworkObject.Despawn();
+            if (IsServer)
+                sellableScrap.NetworkObject.Despawn();
         }
         _sellableScraps.Clear();
         TimeOfDay.Instance.UpdateProfitQuotaCurrentTime();

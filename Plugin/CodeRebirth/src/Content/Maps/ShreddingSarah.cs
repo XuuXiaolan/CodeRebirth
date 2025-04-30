@@ -1,7 +1,6 @@
 using System.Collections;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,7 +8,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Maps;
 public class ShreddingSarah : NetworkBehaviour
 {
-    public float arcHeight = 30f;
     public float launchSpeed = 30f;
     public float landingRadius = 8f;
     public float landingRaycastUp = 50f;
@@ -22,15 +20,6 @@ public class ShreddingSarah : NetworkBehaviour
     public AudioClip loadSFX = null!;
     public AudioClip shootSFX = null!;
 
-    private System.Random cannonRandom = new();
-
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        Plugin.ExtendedLogging("Scrap Cannon - Network spawned");
-        cannonRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
-    }
-
     public void Update()
     {
         cannonTrigger.hoverTip = $"Shred item : [{(StartOfRound.Instance.localPlayerUsingController ? "R-trigger" : "LMB")}]";
@@ -40,21 +29,23 @@ public class ShreddingSarah : NetworkBehaviour
 
     public void TryFeedItem(PlayerControllerB player)
     {
-        if (!player.IsOwner || player.currentlyHeldObjectServer == null) return;
+        if (!player.IsOwner || player.currentlyHeldObjectServer == null)
+            return;
+
         int value = 0;
+        bool isDeadBody = false;
         if (player.currentlyHeldObjectServer is RagdollGrabbableObject)
         {
-            player.DespawnHeldObject();
-            TryFeedItemServerRpc(true, 10);
-            return;
+            isDeadBody = true;
+            value = 10;
         }
         else if (player.currentlyHeldObjectServer.itemProperties.itemName.Contains("Shredded Scraps"))
         {
-            value = -24;
+            value = -10;
         }
         value += player.currentlyHeldObjectServer.scrapValue;
+        TryFeedItemServerRpc(isDeadBody, value);
         player.DespawnHeldObject();
-        TryFeedItemServerRpc(false, value + UnityEngine.Random.Range(10, 23));
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -87,7 +78,7 @@ public class ShreddingSarah : NetworkBehaviour
         float randAngle = UnityEngine.Random.Range(0, 1) * (360f * Mathf.Deg2Rad);
 
         // Use the computed target direction to set the distance.
-        Vector3 targetPos2D = new Vector3(randomizedTargetTransformPos.x, 0f, randomizedTargetTransformPos.z);
+        Vector3 targetPos2D = new(randomizedTargetTransformPos.x, 0f, randomizedTargetTransformPos.z);
         // Use the exact distance from the shootPoint to the target.
         float distance = Vector3.Distance(targetPos2D, new Vector3(shootPointPos.x, 0f, shootPointPos.z));
 
@@ -127,9 +118,6 @@ public class ShreddingSarah : NetworkBehaviour
         grabbableObject.EnableItemMeshes(false);
 
         audioSource.PlayOneShot(loadSFX);
-        // Don't shoot to same position on every client
-        cannonRandom.NextDouble();
-        cannonRandom.NextDouble();
         StartCoroutine(ShootItemRoutine(grabbableObject, landingPosition));
     }
 
@@ -147,7 +135,7 @@ public class ShreddingSarah : NetworkBehaviour
         while (launchProgress < launchTotalDistance)
         {
             // Sample along the circular arc (chute) from shootPoint to landing position.
-            Vector3 currentPosition = SampleChute(shootPoint.position, landingPosition, arcHeight, launchProgress / launchTotalDistance);
+            Vector3 currentPosition = SampleChute(shootPoint.position, landingPosition, launchProgress / launchTotalDistance);
             Vector3 localPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(currentPosition);
 
             grabbableObject.startFallingPosition = localPosition;
@@ -172,21 +160,20 @@ public class ShreddingSarah : NetworkBehaviour
     /// The circle’s center is forced directly below the start so that the tangent at the start is horizontal,
     /// and the arc proceeds monotonically downward onto the destination.
     /// </summary>
-    private Vector3 SampleChute(Vector3 start, Vector3 end, float arcHeight, float t)
+    private Vector3 SampleChute(Vector3 start, Vector3 end, float t)
     {
         // If start is nearly equal to end (or if start is not above end), just Lerp.
         if (Vector3.Distance(start, end) < 0.001f || start.y <= end.y)
             return Vector3.Lerp(start, end, t);
 
         // Compute the horizontal distance between start and end.
-        Vector3 horizontalDiff = new Vector3(end.x - start.x, 0f, end.z - start.z);
+        Vector3 horizontalDiff = new(end.x - start.x, 0f, end.z - start.z);
         float dxz = horizontalDiff.magnitude;
 
         // Compute the circle center assuming it lies directly below the start.
         // Derived from requiring |start - center| = |end - center| with center = (start.x, C_y, start.z):
         float centerY = (start.y + end.y - ((dxz * dxz) / (start.y - end.y))) / 2f;
-        Vector3 center = new Vector3(start.x, centerY, start.z);
-        float R = start.y - centerY; // radius
+        Vector3 center = new(start.x, centerY, start.z);
 
         // Offsets from the center.
         Vector3 startOffset = start - center; // This should be purely vertical.

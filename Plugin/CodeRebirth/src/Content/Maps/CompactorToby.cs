@@ -37,8 +37,12 @@ public class CompactorToby : NetworkBehaviour, IHittable
 
     public void CompactorInteract(PlayerControllerB player)
     {
-        if (compacting) return;
-        if (!player.IsOwner) return;
+        if (compacting)
+            return;
+
+        if (!player.IsOwner)
+            return;
+
         int valueOfItems = 0;
         bool isFast = true;
         List<GrabbableObject> grabbableObjects = new();
@@ -50,18 +54,14 @@ public class CompactorToby : NetworkBehaviour, IHittable
             vectorPositions.Add(grabbableObject.transform.position);
             if (grabbableObject.itemProperties.itemName.Contains("Shredded Scraps"))
             {
-                valueOfItems += grabbableObject.scrapValue + 12;
-                continue;
-            }
-            else if (grabbableObject is RagdollGrabbableObject)
-            {
-                valueOfItems += grabbableObject.scrapValue + 10;
                 continue;
             }
             isFast = false;
-            valueOfItems += grabbableObject.scrapValue - 5;
         }
-        if (valueOfItems == 0) return;
+
+        if (valueOfItems == 0)
+            return;
+
         foreach (GrabbableObject grabbableObject in grabbableObjects)
         {
             DespawnItemServerRpc(new NetworkBehaviourReference(grabbableObject));
@@ -72,8 +72,9 @@ public class CompactorToby : NetworkBehaviour, IHittable
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
-        Plugin.ExtendedLogging($"Hit");
-        if (compacting) return false;
+        if (compacting)
+            return false;
+
         TriggerAnimationServerRpc(HitAnimation);
         return true;
     }
