@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
@@ -27,6 +28,20 @@ public class TrackWeatherChanges : MonoBehaviour
                 bool success = EditEnemyRarityValues(spawnableEnemyWithRarity, weatherName, out int oldRarity, out int newRarity);
                 Plugin.ExtendedLogging($"EditEnemyRarityValues returned {success} for {spawnableEnemyWithRarity.enemyType.enemyName} on {level.name} with old rarity {oldRarity} and new rarity {newRarity}");
             }
+
+            foreach (var spawnableEnemyWithRarity in level.OutsideEnemies)
+            {
+                Plugin.ExtendedLogging($"By default, {spawnableEnemyWithRarity.enemyType.enemyName} has a weight of {spawnableEnemyWithRarity.rarity} on {level.name}");
+                bool success = EditEnemyRarityValues(spawnableEnemyWithRarity, weatherName, out int oldRarity, out int newRarity);
+                Plugin.ExtendedLogging($"EditEnemyRarityValues returned {success} for {spawnableEnemyWithRarity.enemyType.enemyName} on {level.name} with old rarity {oldRarity} and new rarity {newRarity}");
+            }
+
+            foreach (var spawnableEnemyWithRarity in level.DaytimeEnemies)
+            {
+                Plugin.ExtendedLogging($"By default, {spawnableEnemyWithRarity.enemyType.enemyName} has a weight of {spawnableEnemyWithRarity.rarity} on {level.name}");
+                bool success = EditEnemyRarityValues(spawnableEnemyWithRarity, weatherName, out int oldRarity, out int newRarity);
+                Plugin.ExtendedLogging($"EditEnemyRarityValues returned {success} for {spawnableEnemyWithRarity.enemyType.enemyName} on {level.name} with old rarity {oldRarity} and new rarity {newRarity}");
+            }
             // invoke an event detailing what previous weather was, what the current weather is, and what level it's on so that all enemies can take that info and change accordingly
         }
     }
@@ -50,6 +65,20 @@ public class TrackWeatherChanges : MonoBehaviour
                 bool success = EditEnemyRarityValues(spawnableEnemyWithRarity, currentWeatherName, out int oldRarity, out int newRarity);
                 Plugin.ExtendedLogging($"EditEnemyRarityValues returned {success} for {spawnableEnemyWithRarity.enemyType.enemyName} on {level.name} with old rarity {oldRarity} and new rarity {newRarity}");
             }
+
+            foreach (var spawnableEnemyWithRarity in level.OutsideEnemies)
+            {
+                Plugin.ExtendedLogging($"By default, {spawnableEnemyWithRarity.enemyType.enemyName} has a weight of {spawnableEnemyWithRarity.rarity} on {level.name}");
+                bool success = EditEnemyRarityValues(spawnableEnemyWithRarity, currentWeatherName, out int oldRarity, out int newRarity);
+                Plugin.ExtendedLogging($"EditEnemyRarityValues returned {success} for {spawnableEnemyWithRarity.enemyType.enemyName} on {level.name} with old rarity {oldRarity} and new rarity {newRarity}");
+            }
+
+            foreach (var spawnableEnemyWithRarity in level.DaytimeEnemies)
+            {
+                Plugin.ExtendedLogging($"By default, {spawnableEnemyWithRarity.enemyType.enemyName} has a weight of {spawnableEnemyWithRarity.rarity} on {level.name}");
+                bool success = EditEnemyRarityValues(spawnableEnemyWithRarity, currentWeatherName, out int oldRarity, out int newRarity);
+                Plugin.ExtendedLogging($"EditEnemyRarityValues returned {success} for {spawnableEnemyWithRarity.enemyType.enemyName} on {level.name} with old rarity {oldRarity} and new rarity {newRarity}");
+            }
         }
     }
 
@@ -64,14 +93,23 @@ public class TrackWeatherChanges : MonoBehaviour
         if (!_enemyTypesEdited.ContainsKey(spawnableEnemyWithRarity.enemyType))
         {
             _enemyTypesEdited.Add(spawnableEnemyWithRarity.enemyType, oldRarity);
+            return true;
         }
 
         if (CREnemyDefinition.WeatherMultipliers.TryGetValue(weatherName, out float multiplier))
         {
+            oldRarity = _enemyTypesEdited[spawnableEnemyWithRarity.enemyType];
             newRarity = Mathf.FloorToInt(oldRarity * multiplier + 0.5f);
             spawnableEnemyWithRarity.rarity = newRarity;
             return true;
         }
-        return true;
+        else
+        {
+            multiplier = 1f;
+            oldRarity = _enemyTypesEdited[spawnableEnemyWithRarity.enemyType];
+            newRarity = Mathf.FloorToInt(oldRarity * multiplier + 0.5f);
+            spawnableEnemyWithRarity.rarity = newRarity;
+            return true;
+        }
     }
 }
