@@ -36,6 +36,7 @@ static class StartOfRoundPatch
             {
                 GameObject utilsInstance = GameObject.Instantiate(Plugin.Assets.UtilsPrefab);
                 utilsInstance.AddComponent<LightUpdateManager>();
+                utilsInstance.AddComponent<TrackWeatherChanges>();
                 SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
                 utilsInstance.GetComponent<NetworkObject>().Spawn();
                 Plugin.ExtendedLogging($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
