@@ -25,7 +25,7 @@ public static class EnemyConfigManager
         {
             Enabled = CRConfigManager.CRConfigs[keyName].Enabled,
             SpawnWeights = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Spawn Weights", defaultSpawnWeights, $"Spawn weights for {enemyName}."),
-            WeatherMultipliers = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Weather Multpliers", defaultWeatherMultipliers, $"Weather x Spawnweight smultpliers for {enemyName}."),
+            WeatherMultipliers = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Weather Multipliers", defaultWeatherMultipliers, $"Weather x SpawnWeight multpliers for {enemyName}."),
             PowerLevel = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Power Level", defaultPowerLevel, $"Power level for {enemyName}."),
             MaxSpawnCount = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Max Spawn Count", defaultMaxSpawnCount, $"Max spawn count for {enemyName}.")
         };

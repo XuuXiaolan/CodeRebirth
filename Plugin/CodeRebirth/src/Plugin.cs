@@ -52,13 +52,12 @@ public class Plugin : BaseUnityPlugin
     {
         Logger = base.Logger;
         configFile = this.Config;
-        ModConfig = new CodeRebirthConfig
-        {
-            ConfigExtendedLogging = configFile.Bind("Debug Options",
-                                                "Debug Mode | Extended Logging",
-                                                false,
-                                                "Whether ExtendedLogging is enabled.")
-        };
+        ModConfig = new CodeRebirthConfig();
+
+        ModConfig.ConfigExtendedLogging = configFile.Bind("Debug Options",
+                                            "Debug Mode | Extended Logging",
+                                            false,
+                                            "Whether ExtendedLogging is enabled.");
 
         _harmony.PatchAll(typeof(QuickMenuManagerPatch));
         _harmony.PatchAll(typeof(PlayerControllerBPatch));

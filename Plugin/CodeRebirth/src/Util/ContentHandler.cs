@@ -29,14 +29,14 @@ public class ContentHandler<T> where T : ContentHandler<T>
         Instance = (T)this;
     }
 
-    protected void LoadEnemyConfigs(string enemyName, string keyName, string defaultSpawnWeight, string defaultWeatherMultpliers, float defaultPowerLevel, int defaultMaxSpawnCount)
+    protected void LoadEnemyConfigs(string enemyName, string keyName, string defaultSpawnWeight, string defaultWeatherMultipliers, float defaultPowerLevel, int defaultMaxSpawnCount)
     {
         EnemyConfigManager.LoadConfigForEnemy(
             Plugin.configFile,
             enemyName,
             keyName,
             defaultSpawnWeight,
-            defaultWeatherMultpliers,
+            defaultWeatherMultipliers,
             defaultPowerLevel,
             defaultMaxSpawnCount
         );
@@ -248,6 +248,10 @@ public class ContentHandler<T> where T : ContentHandler<T>
             AssetLoading.EnemyData enemyData = assetBundle.AssetBundleData.enemies[definitionIndex];
             Plugin.ExtendedLogging($"EnemyData {enemyData.entityName}");
             Plugin.ExtendedLogging($"EnemyDefinition {CREnemyDefinition.enemyType.enemyName}");
+            if (string.IsNullOrEmpty(enemyData.weatherMultipliers))
+            {
+                enemyData.weatherMultipliers = "None:1";
+            }
             LoadEnemyConfigs(CREnemyDefinition.enemyType.enemyName, assetBundle.AssetBundleData.configName, enemyData.spawnWeights, enemyData.weatherMultipliers, enemyData.powerLevel, enemyData.maxSpawnCount);
             var enemyConfig = EnemyConfigManager.GetEnemyConfig(assetBundle.AssetBundleData.configName, CREnemyDefinition.enemyType.enemyName);
             foreach (var configDefinition in CREnemyDefinition.ConfigEntries)
