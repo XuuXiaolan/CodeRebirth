@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
 namespace CodeRebirth.src.Util;
@@ -6,6 +7,7 @@ public class TrackWeatherChanges : MonoBehaviour
 {
     private List<SelectableLevel> _levels = new();
     private List<string> _weatherNames = new();
+    private Dictionary<EnemyType, int> _enemyTypesEdited = new();
     private int _numberOfLevels = 0;
 
     public void Start()
@@ -13,12 +15,17 @@ public class TrackWeatherChanges : MonoBehaviour
         foreach (var level in StartOfRound.Instance.levels)
         {
             _numberOfLevels++;
+            string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeatherName(level);
+
             _levels.Add(level);
-            _weatherNames.Add(WeatherRegistry.WeatherManager.GetCurrentWeatherName(level));
-            Plugin.ExtendedLogging($"Added level {level.name} with weather {_weatherNames[_levels.Count - 1]}");
+            _weatherNames.Add(weatherName);
+            Plugin.ExtendedLogging($"Added level {level.name} with weather {weatherName}");
+
             foreach (var spawnableEnemyWithRarity in level.Enemies)
             {
                 Plugin.ExtendedLogging($"By default, {spawnableEnemyWithRarity.enemyType.enemyName} has a weight of {spawnableEnemyWithRarity.rarity} on {level.name}");
+                bool success = EditEnemyRarityValues(spawnableEnemyWithRarity, weatherName, out int oldRarity, out int newRarity);
+                Plugin.ExtendedLogging($"EditEnemyRarityValues returned {success} for {spawnableEnemyWithRarity.enemyType.enemyName} on {level.name} with old rarity {oldRarity} and new rarity {newRarity}");
             }
             // invoke an event detailing what previous weather was, what the current weather is, and what level it's on so that all enemies can take that info and change accordingly
         }
@@ -29,13 +36,44 @@ public class TrackWeatherChanges : MonoBehaviour
         for (int i = 0; i < _numberOfLevels - 1; i++)
         {
             SelectableLevel level = _levels[i];
-            if (WeatherRegistry.WeatherManager.GetCurrentWeatherName(level) == _weatherNames[i])
+            string currentWeatherName = WeatherRegistry.WeatherManager.GetCurrentWeatherName(level);
+            if (currentWeatherName == _weatherNames[i])
                 continue;
 
             // invoke an event detailing what previous weather was, what the current weather is, and what level it's on so that all enemies can take that info and change accordingly
             string previousWeatherName = _weatherNames[i];
-            _weatherNames[i] = WeatherRegistry.WeatherManager.GetCurrentWeatherName(level);
+            _weatherNames[i] = currentWeatherName;
             Plugin.ExtendedLogging($"Updated level {level.name} with weather {_weatherNames[i]} from previous weather {previousWeatherName}");
+            foreach (var spawnableEnemyWithRarity in level.Enemies)
+            {
+                Plugin.ExtendedLogging($"By default, {spawnableEnemyWithRarity.enemyType.enemyName} has a weight of {spawnableEnemyWithRarity.rarity} on {level.name}");
+                bool success = EditEnemyRarityValues(spawnableEnemyWithRarity, currentWeatherName, out int oldRarity, out int newRarity);
+                Plugin.ExtendedLogging($"EditEnemyRarityValues returned {success} for {spawnableEnemyWithRarity.enemyType.enemyName} on {level.name} with old rarity {oldRarity} and new rarity {newRarity}");
+            }
         }
+    }
+
+    private bool EditEnemyRarityValues(SpawnableEnemyWithRarity spawnableEnemyWithRarity, string weatherName, out int oldRarity, out int newRarity)
+    {
+        oldRarity = spawnableEnemyWithRarity.rarity;
+        newRarity = spawnableEnemyWithRarity.rarity;
+        CREnemyDefinition? CREnemyDefinition = CodeRebirthRegistry.RegisteredCREnemies.GetCREnemyDefinitionWithEnemyName(spawnableEnemyWithRarity.enemyType.enemyName);
+        if (CREnemyDefinition == null)
+            return false;
+
+        if (!_enemyTypesEdited.ContainsKey(spawnableEnemyWithRarity.enemyType))
+        {
+            _enemyTypesEdited.Add(spawnableEnemyWithRarity.enemyType, oldRarity);
+        }
+
+        // todo: thing that looks up the weather name inside of a list, if the weather name isn't found, assume multiplier of 1 (meaning old rarity)
+        // todo: if weather name is found, take the multiplier value next to it and apply it to multiplier
+        // todo: each enemy has their own list of this, not too sure where to store it, probably best to have it in crenemydefinition or something similar I can access
+        // todo: could expand whatever is in CREnemyDefinition to be less generic and contain more "categories" like weather, current interior, etc for seperate trackers and whatnot.
+        // todo: in the case of above, the editenemyrarityvalues would be a more generic function that takes in the category or something similar that's relevant
+        float multiplier = 1;
+        newRarity = Mathf.FloorToInt(oldRarity * multiplier + 0.5f);
+        spawnableEnemyWithRarity.rarity = newRarity;
+        return true;
     }
 }

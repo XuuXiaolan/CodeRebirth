@@ -706,6 +706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tobySource: {fileID: 1244155886042247776}
+  _buttonPressSound: {fileID: 0}
   _compactorWhackedSound: {fileID: 8300000, guid: c36cb77ba025a0742b1e0f45c1049bf9,
     type: 3}
   _tobyMalfunctionSource: {fileID: 3396848544100649994}
@@ -1441,7 +1442,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 14855920622495329}
-  m_LocalEulerAnglesHint: {x: -0.000004761753, y: -0.000006936076, z: 90.00001}
+  m_LocalEulerAnglesHint: {x: -0.0000043257096, y: -0.000007698199, z: 90.00001}
 --- !u!65 &135222508731987065
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1653,7 +1654,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 14855920622495329}
-  m_LocalEulerAnglesHint: {x: -0.000004761753, y: 0.000006936076, z: -90.00001}
+  m_LocalEulerAnglesHint: {x: -0.0000043257096, y: 0.000007698199, z: -90.00001}
 --- !u!65 &4136186585431124521
 BoxCollider:
   m_ObjectHideFlags: 0
