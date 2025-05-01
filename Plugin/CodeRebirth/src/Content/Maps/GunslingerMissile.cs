@@ -25,7 +25,7 @@ public class GunslingerMissile : MonoBehaviour
         greg.rockets.Enqueue(this);
     }
 
-    public void FixedUpdate()
+    public void FixedUpdate() // this is kinda terrible
     {
         if (_targetTransform == null)
         {
@@ -38,10 +38,40 @@ public class GunslingerMissile : MonoBehaviour
             return;
         }
 
+        float distanceToTarget = Vector3.Distance(this.transform.position, _targetTransform.position);
+
+        if (distanceToTarget <= 0.5f)
+        {
+            if (_targetTransform.gameObject.layer == 19 && _targetTransform.name == "metarig")
+            {
+                RadMechAI radMechAI = _targetTransform.GetComponentInParent<RadMechAI>();
+                if (radMechAI != null)
+                {
+                    if (radMechAI.IsOwner)
+                        radMechAI.KillEnemyOnOwnerClient(overrideDestroy: true);                    
+
+                    var gameobject = GameObject.Instantiate(MapObjectHandler.Instance.GunslingerGreg!.OldBirdExplosionPrefab, this.transform.position, Quaternion.identity);
+                    Destroy(gameobject, 15f);
+                }
+            }
+            CRUtilities.CreateExplosion(this.transform.position, true, 15, 0, 4, 6, null, null, 20f);
+            // playerHitSoundSource.Play();
+            if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) < 10)
+            {
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+            }
+            // windSource.volume = 0f;
+            this.transform.SetParent(_oldParent, true);
+            this.transform.SetPositionAndRotation(mainTransform.position, mainTransform.rotation);
+            _targetTransform = null;
+            this.gameObject.SetActive(false);
+            return;
+        }
         int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, _cachedColliders, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Ignore);
         if (collidersFound > 0)
         {
-            if (Vector3.Distance(this.transform.position, _targetTransform.position) < 7.5f && _targetTransform.gameObject.layer == 19 && _targetTransform.name == "metarig")
+            if (distanceToTarget < 7.5f && _targetTransform.gameObject.layer == 19 && _targetTransform.name == "metarig")
             {
                 RadMechAI radMechAI = _targetTransform.GetComponentInParent<RadMechAI>();
                 if (radMechAI != null)
