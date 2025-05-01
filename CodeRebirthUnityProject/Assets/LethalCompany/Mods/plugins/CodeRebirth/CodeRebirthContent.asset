@@ -58,7 +58,11 @@ MonoBehaviour:
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: All - 0.00,0.00 ; 1.00, 2.00
+      defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.10 ; 0.22,0.20
+        ; 0.33,0.30 ; 0.44,0.40 ; 0.56,0.51 ; 0.67,0.62 ; 0.78,0.74 ; 0.89,0.84 ;
+        1.00,2.00 | Custom - 0.00,0.00 ; 0.11,0.10 ; 0.22,0.20 ; 0.33,0.30 ; 0.44,0.40
+        ; 0.56,0.51 ; 0.67,0.62 ; 0.78,0.74 ; 0.89,0.84 ; 1.00,2.00 | Oxyde - 0.00,0.00
+        ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
   - assetBundleName: beartrapassets
@@ -177,7 +181,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Cactus Budling
-      spawnWeights: All:1
+      spawnWeights: Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
+      weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1
       powerLevel: 2
       maxSpawnCount: 1
     items: []
@@ -221,7 +228,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Carnivorous Plant
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
+      weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1
       powerLevel: 1
       maxSpawnCount: 4
     items: []
@@ -354,6 +364,7 @@ MonoBehaviour:
     enemies:
     - entityName: Cutea
       spawnWeights: 
+      weatherMultipliers: 
       powerLevel: 0
       maxSpawnCount: 0
     items: []
@@ -364,7 +375,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Driftwood Menace
-      spawnWeights: Vanilla:5,Custom:10,Experimentation:3,Assurance:2,Vow:40,Offense:3,March:30,Adamance:35,Rend:5,Dine:5,Titan:1,Artifice:20,Embrion:5
+      spawnWeights: Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
+      weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1
       powerLevel: 2
       maxSpawnCount: 2
     items: []
@@ -375,7 +389,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Duck
-      spawnWeights: Vanilla:5,Custom:10,Experimentation:15,Assurance:10,Vow:5,Offense:10,March:5,Adamance:9,Rend:25,Dine:35,Titan:5,Artifice:5,Embrion:50
+      spawnWeights: Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 2
       maxSpawnCount: 2
     items:
@@ -570,7 +587,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Janitor
-      spawnWeights: ExperimentationLevel:20,AssuranceLevel:20,VowLevel:10,OffenseLevel:20,MarchLevel:10,AdamanceLevel:5,RendLevel:10,DineLevel:10,TitanLevel:60,ArtificeLevel:80,EmbrionLevel:90,Modded:20
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 1
       maxSpawnCount: 3
     items: []
@@ -593,7 +613,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: ManorLord
-      spawnWeights: 'ExperimentationLevel:2,AssuranceLevel:5,VowLevel:5,OffenseLevel:10,MarchLevel:10,AdamanceLevel:10,RendLevel:50,DineLevel:80,TitanLevel:20,ArtificeLevel:60,EmbrionLevel:10,Modded:10 '
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 2
       maxSpawnCount: 3
     items:
@@ -635,7 +658,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Guardsman
-      spawnWeights: 
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 0
       maxSpawnCount: 1
     items:
@@ -879,7 +905,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Mistress
-      spawnWeights: Vanilla:5,Custom:15,Experimentation:2,Assurance:2,Vow:20,Offense:5,March:15,Adamance:5,Rend:15,Dine:15,Titan:1,Artifice:20,Embrion:5
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 2
       maxSpawnCount: 1
     items:
@@ -898,11 +927,17 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Monarch
-      spawnWeights: 
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 3
       maxSpawnCount: 3
     - entityName: Cutiefly
-      spawnWeights: Vanilla:10,Custom:10,Experimentation:3,Assurance:2,Vow:40,Offense:3,March:30,Adamance:35,Rend:5,Dine:5,Titan:1,Artifice:5,Embrion:5
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 0.5
       maxSpawnCount: 6
     items: []
@@ -951,7 +986,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Nancy
-      spawnWeights: Vanilla:10,Custom:10,Experimentation:20,Assurance:20,Vow:10,Offense:40,March:5,Adamance:35,Rend:15,Dine:35,Titan:15,Artifice:20,Embrion:45
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 1
       maxSpawnCount: 1
     items: []
@@ -989,7 +1027,7 @@ MonoBehaviour:
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
   - assetBundleName: oxydeloreassets
-    configName: oxydelore
+    configName: Oxyde Lore
     weathers: []
     enemies: []
     items:
@@ -1121,6 +1159,7 @@ MonoBehaviour:
     enemies:
     - entityName: Pandora
       spawnWeights: 
+      weatherMultipliers: 
       powerLevel: 1
       maxSpawnCount: 1
     items: []
@@ -1131,7 +1170,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Peace Keeper
-      spawnWeights: Vanilla:30,ExperimentationLevel:5,AssuranceLevel:15,VowLevel:10,OffenseLevel:35,MarchLevel:15,AdamanceLevel:15,RendLevel:5,DineLevel:20,TitanLevel:50,ArtificeLevel:60,EmbrionLevel:60,Modded:20
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 1.5
       maxSpawnCount: 3
     items:
@@ -1187,7 +1229,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Rabbit Magician
-      spawnWeights: All:10
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 3
       maxSpawnCount: 1
     items: []
@@ -1198,7 +1243,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Redwood Titan
-      spawnWeights: ExperimentationLevel:1,AssuranceLevel:10,VowLevel:90,OffenseLevel:20,MarchLevel:90,AdamanceLevel:60,RendLevel:5,DineLevel:10,TitanLevel:2,ArtificeLevel:30,EmbrionLevel:10,Modded:50
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 1.5
       maxSpawnCount: 1
     items: []
@@ -1304,7 +1352,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: SnailCat
-      spawnWeights: Vanilla:15,Custom:15,Experimentation:5,Assurance:5,Vow:30,Offense:5,March:30,Adamance:20,Rend:5,Dine:5,Titan:1,Artifice:15,Embrion:2
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 0.5
       maxSpawnCount: 6
     items:
@@ -1415,7 +1466,10 @@ MonoBehaviour:
       excludeOrIncludeList: galetry;gordion
     enemies:
     - entityName: Tornado
-      spawnWeights: All:0
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 0
       maxSpawnCount: 1
     items: []
@@ -1426,7 +1480,10 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Transporter
-      spawnWeights: Vanilla:25,Custom:30,Experimentation:5,Assurance:10,Vow:20,Offense:5,March:20,Adamance:10,Rend:25,Dine:25,Titan:30,Artifice:50,Embrion:50
+      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 1
       maxSpawnCount: 3
     items: []

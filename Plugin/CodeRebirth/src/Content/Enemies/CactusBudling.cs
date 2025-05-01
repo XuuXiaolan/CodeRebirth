@@ -223,7 +223,8 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
                 return;
             }
             int randomCactiIndex = UnityEngine.Random.Range(0, _budlingCacti.Count);
-            SpawnCactiServerRpc(randomPosition, normal, randomCactiIndex);
+            int randomAngle = UnityEngine.Random.Range(0, 360);
+            SpawnCactiServerRpc(randomPosition, normal, randomAngle, randomCactiIndex);
         }
     }
 
@@ -261,7 +262,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     }
     #endregion
 
-    #region  Misc Functions
+    #region Misc Functions
     private IEnumerator DelayToNextState(float delay, float agentSpeed, CactusBudlingState nextState)
     {
         Plugin.ExtendedLogging($"Switching to next state: {nextState}");
@@ -275,16 +276,16 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void SpawnCactiServerRpc(Vector3 position, Vector3 normal, int index)
+    private void SpawnCactiServerRpc(Vector3 position, Vector3 normal, int angle, int index)
     {
-        SpawnCactiClientRpc(position, normal, index);
+        SpawnCactiClientRpc(position, normal, angle, index);
     }
 
     [ClientRpc]
-    private void SpawnCactiClientRpc(Vector3 position, Vector3 normal, int index)
+    private void SpawnCactiClientRpc(Vector3 position, Vector3 normal, int angle, int index)
     {
         GameObject randomCacti = _budlingCacti[index];
-        var newCacti = GameObject.Instantiate(randomCacti, position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+        var newCacti = GameObject.Instantiate(randomCacti, position, Quaternion.Euler(0, angle, 0), RoundManager.Instance.mapPropsContainer.transform);
         newCacti.transform.up = normal;
     }
     #endregion
