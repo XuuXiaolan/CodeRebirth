@@ -29,13 +29,14 @@ public class ContentHandler<T> where T : ContentHandler<T>
         Instance = (T)this;
     }
 
-    protected void LoadEnemyConfigs(string enemyName, string keyName, string defaultSpawnWeight, float defaultPowerLevel, int defaultMaxSpawnCount)
+    protected void LoadEnemyConfigs(string enemyName, string keyName, string defaultSpawnWeight, string defaultWeatherMultpliers, float defaultPowerLevel, int defaultMaxSpawnCount)
     {
         EnemyConfigManager.LoadConfigForEnemy(
             Plugin.configFile,
             enemyName,
             keyName,
             defaultSpawnWeight,
+            defaultWeatherMultpliers,
             defaultPowerLevel,
             defaultMaxSpawnCount
         );
@@ -247,7 +248,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             AssetLoading.EnemyData enemyData = assetBundle.AssetBundleData.enemies[definitionIndex];
             Plugin.ExtendedLogging($"EnemyData {enemyData.entityName}");
             Plugin.ExtendedLogging($"EnemyDefinition {CREnemyDefinition.enemyType.enemyName}");
-            LoadEnemyConfigs(CREnemyDefinition.enemyType.enemyName, assetBundle.AssetBundleData.configName, enemyData.spawnWeights, enemyData.powerLevel, enemyData.maxSpawnCount);
+            LoadEnemyConfigs(CREnemyDefinition.enemyType.enemyName, assetBundle.AssetBundleData.configName, enemyData.spawnWeights, enemyData.weatherMultipliers, enemyData.powerLevel, enemyData.maxSpawnCount);
             var enemyConfig = EnemyConfigManager.GetEnemyConfig(assetBundle.AssetBundleData.configName, CREnemyDefinition.enemyType.enemyName);
             foreach (var configDefinition in CREnemyDefinition.ConfigEntries)
             {
@@ -255,6 +256,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
             }
 
+            RegisterEnemyWeatherMultipliers(CREnemyDefinition, enemyConfig.WeatherMultpliers.Value);
             EnemyType enemy = CREnemyDefinition.enemyType;
             enemy.MaxCount = enemyConfig.MaxSpawnCount.Value;
             enemy.PowerLevel = enemyConfig.PowerLevel.Value;
@@ -497,6 +499,25 @@ public class ContentHandler<T> where T : ContentHandler<T>
             }
         };
         RoundManagerPatch.registeredMapObjects.Add(registeredMapObject);
+    }
+
+    protected void RegisterEnemyWeatherMultipliers(CREnemyDefinition enemyDefinition, string weatherMultipliers)
+    {
+        List<string> weatherMultipliersList = weatherMultipliers.Split(',').Select(s => s.Trim()).ToList();
+        List<(string weatherName, float Multiplier)> weatherNameWithMultplierList = new();
+        foreach (var weatherMultiplierInList in weatherMultipliersList.Select(s => s.Split(':')))
+        {
+            string weatherName = weatherMultiplierInList[0];
+            if (float.TryParse(weatherMultiplierInList[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float multiplier))
+            {
+                Plugin.ExtendedLogging($"Added Weather: {weatherName} to enemy: {enemyDefinition.enemyType.enemyName} with multiplier: {multiplier}");
+                enemyDefinition.WeatherMultipliers.Add(weatherName, multiplier);
+            }
+            else
+            {
+                Plugin.Logger.LogError($"Weather: {weatherName} given invalid multiplier: {weatherMultiplierInList[1]}");
+            }
+        }
     }
 
     protected bool TryGetCurveDictAndLevelTag(Dictionary<string, AnimationCurve> curvesByCustomLevel, SelectableLevel level, out string tagName)

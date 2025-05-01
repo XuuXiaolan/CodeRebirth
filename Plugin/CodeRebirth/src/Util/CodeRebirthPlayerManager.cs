@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using CodeRebirth.src.Content;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.MiscScripts.PathFinding;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

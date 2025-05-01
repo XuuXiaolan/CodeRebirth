@@ -66,14 +66,12 @@ public class TrackWeatherChanges : MonoBehaviour
             _enemyTypesEdited.Add(spawnableEnemyWithRarity.enemyType, oldRarity);
         }
 
-        // todo: thing that looks up the weather name inside of a list, if the weather name isn't found, assume multiplier of 1 (meaning old rarity)
-        // todo: if weather name is found, take the multiplier value next to it and apply it to multiplier
-        // todo: each enemy has their own list of this, not too sure where to store it, probably best to have it in crenemydefinition or something similar I can access
-        // todo: could expand whatever is in CREnemyDefinition to be less generic and contain more "categories" like weather, current interior, etc for seperate trackers and whatnot.
-        // todo: in the case of above, the editenemyrarityvalues would be a more generic function that takes in the category or something similar that's relevant
-        float multiplier = 1;
-        newRarity = Mathf.FloorToInt(oldRarity * multiplier + 0.5f);
-        spawnableEnemyWithRarity.rarity = newRarity;
+        if (CREnemyDefinition.WeatherMultipliers.TryGetValue(weatherName, out float multiplier))
+        {
+            newRarity = Mathf.FloorToInt(oldRarity * multiplier + 0.5f);
+            spawnableEnemyWithRarity.rarity = newRarity;
+            return true;
+        }
         return true;
     }
 }

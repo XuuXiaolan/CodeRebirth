@@ -43,6 +43,7 @@ public class WeatherData : EntityData
 public class EnemyData : EntityData
 {
     public string spawnWeights;
+    public string weatherMultipliers;
     public float powerLevel;
     public int maxSpawnCount;
 }

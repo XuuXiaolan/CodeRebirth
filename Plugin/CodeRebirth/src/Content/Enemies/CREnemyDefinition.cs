@@ -10,6 +10,9 @@ public class CREnemyDefinition : CRContentDefinition
     public TerminalNode? terminalNode;
     public TerminalKeyword? terminalKeyword;
 
+    [HideInInspector]
+    public Dictionary<string, float> WeatherMultipliers = new();
+
     public EnemyType? GetEnemyTypeOnName(string enemyName)
     {
         if (string.IsNullOrEmpty(enemyName))
