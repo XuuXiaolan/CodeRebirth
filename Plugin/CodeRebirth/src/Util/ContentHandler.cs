@@ -232,6 +232,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             WeatherRegistry.WeatherManager.RegisterWeather(weather);
             definitionIndex++;
         }
+        CodeRebirthRegistry.RegisteredCRWeathers.AddRange(assetBundle.WeatherDefinitions);
     }
 
     protected void RegisterEnemyAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
@@ -261,6 +262,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             Enemies.RegisterEnemy(enemy, spawnRateByLevelType, spawnRateByCustomLevelType, CREnemyDefinition.terminalNode, CREnemyDefinition.terminalKeyword);
             definitionIndex++;
         }
+        CodeRebirthRegistry.RegisteredCREnemies.AddRange(assetBundle.EnemyDefinitions);
     }
 
     protected void RegisterItemAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
@@ -293,6 +295,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             RegisterShopItemWithConfig(isShop, isScrap, item, CRItemDefinition.terminalNode, cost, spawnWeights, value);
             definitionIndex++;
         }
+        CodeRebirthRegistry.RegisteredCRItems.AddRange(assetBundle.ItemDefinitions);
     }
 
     protected void RegisterMapObjectAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
@@ -325,6 +328,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             RegisterMapObjectWithConfig(gameObject, CRObjectType, inside, insideCurveSpawnWeights, outside, alignWithTerrain, outsideCurveSpawnWeightsConfig);
             definitionIndex++;
         }
+        CodeRebirthRegistry.RegisteredCRMapObjects.AddRange(assetBundle.MapObjectDefinitions);
     }
 
     protected void RegisterUnlockableAssets<TAsset>(TAsset? assetBundle) where TAsset : AssetBundleLoader<TAsset>
@@ -354,6 +358,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             RegisterUnlockableWithConfig(CRUnlockableDefinition, cost, isShipUpgrade, isDecor, isProgressive);
             definitionIndex++;
         }
+        CodeRebirthRegistry.RegisteredCRUnlockables.AddRange(assetBundle.UnlockableDefinitions);
     }
 
     protected void RegisterUnlockableWithConfig(CRUnlockableDefinition unlockableDefinition, int cost, bool isShipUpgrade, bool isDecor, bool isProgressive)

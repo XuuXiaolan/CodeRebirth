@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class CRItemDefinition : CRContentDefinition
     public Item? GetItemOnName(string itemName)
     {
         if (string.IsNullOrEmpty(itemName)) return null;
-        if (item.itemName.ToLowerInvariant().Contains(itemName.ToLowerInvariant())) return item;
+        if (item.itemName.Contains(itemName, StringComparison.OrdinalIgnoreCase)) return item;
         return null;
     }
 }

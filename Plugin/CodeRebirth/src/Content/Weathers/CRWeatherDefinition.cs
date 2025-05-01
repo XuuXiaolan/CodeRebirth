@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CodeRebirth.src.Util.AssetLoading;
 using UnityEngine;
@@ -12,8 +13,12 @@ public class CRWeatherDefinition : CRContentDefinition
 
     public Weather? GetWeatherByName(string name)
     {
-        if (string.IsNullOrEmpty(name)) return null;
-        if (Weather.Name.ToLowerInvariant().Contains(name.ToLowerInvariant())) return Weather;
+        if (string.IsNullOrEmpty(name))
+            return null;
+
+        if (Weather.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+            return Weather;
+
         return null;
     }
 }
@@ -24,7 +29,8 @@ public static class CRWeatherDefinitionExtensions
     {
         foreach (var entry in WeatherDefinitions)
         {
-            if (entry.GetWeatherByName(weatherName) != null) return entry;
+            if (entry.GetWeatherByName(weatherName) != null)
+                return entry;
         }
         return null;
     }

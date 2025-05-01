@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.AssetLoading;
@@ -16,7 +17,7 @@ public class CRMapObjectDefinition : CRContentDefinition
     public GameObject? GetGameObjectOnName(string name)
     {
         if (string.IsNullOrEmpty(name)) return null;
-        if (objectName.ToLowerInvariant().Contains(name.ToLowerInvariant())) return gameObject;
+        if (objectName.Contains(name, StringComparison.OrdinalIgnoreCase)) return gameObject;
         return null;
     }
 }
