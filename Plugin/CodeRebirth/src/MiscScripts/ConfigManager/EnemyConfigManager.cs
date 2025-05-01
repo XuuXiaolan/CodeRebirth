@@ -5,7 +5,7 @@ namespace CodeRebirth.src.MiscScripts.ConfigManager;
 public class EnemyConfig : CRConfig
 {
     public ConfigEntry<string> SpawnWeights;
-    public ConfigEntry<string> WeatherMultpliers;
+    public ConfigEntry<string> WeatherMultipliers;
     public ConfigEntry<float> PowerLevel;
     public ConfigEntry<int> MaxSpawnCount;
 }
@@ -17,7 +17,7 @@ public static class EnemyConfigManager
         string enemyName,
         string keyName,
         string defaultSpawnWeights,
-        string defaultWeatherMultpliers,
+        string defaultWeatherMultipliers,
         float defaultPowerLevel,
         int defaultMaxSpawnCount)
     {
@@ -25,7 +25,7 @@ public static class EnemyConfigManager
         {
             Enabled = CRConfigManager.CRConfigs[keyName].Enabled,
             SpawnWeights = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Spawn Weights", defaultSpawnWeights, $"Spawn weights for {enemyName}."),
-            WeatherMultpliers = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Weather Multpliers", defaultWeatherMultpliers, $"Weather x Spawnweight smultpliers for {enemyName}."),
+            WeatherMultipliers = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Weather Multpliers", defaultWeatherMultipliers, $"Weather x Spawnweight smultpliers for {enemyName}."),
             PowerLevel = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Power Level", defaultPowerLevel, $"Power level for {enemyName}."),
             MaxSpawnCount = CRConfigManager.CreateEntry(configFile, keyName, $"{enemyName}", "Max Spawn Count", defaultMaxSpawnCount, $"Max spawn count for {enemyName}.")
         };
@@ -36,7 +36,7 @@ public static class EnemyConfigManager
         string enemyName,
         string keyName,
         string defaultSpawnWeight,
-        string defaultWeatherMultpliers,
+        string defaultWeatherMultipliers,
         float defaultPowerLevel,
         int defaultSpawnCount)
     {
@@ -45,7 +45,7 @@ public static class EnemyConfigManager
             enemyName,
             keyName,
             defaultSpawnWeight,
-            defaultWeatherMultpliers,
+            defaultWeatherMultipliers,
             defaultPowerLevel,
             defaultSpawnCount
         );

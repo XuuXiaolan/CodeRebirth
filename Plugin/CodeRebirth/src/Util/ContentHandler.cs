@@ -256,7 +256,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 ConfigMisc.CreateDynamicGeneralConfig(configDefinition, assetBundle.AssetBundleData.configName);
             }
 
-            RegisterEnemyWeatherMultipliers(CREnemyDefinition, enemyConfig.WeatherMultpliers.Value);
+            RegisterEnemyWeatherMultipliers(CREnemyDefinition, enemyConfig.WeatherMultipliers.Value);
             EnemyType enemy = CREnemyDefinition.enemyType;
             enemy.MaxCount = enemyConfig.MaxSpawnCount.Value;
             enemy.PowerLevel = enemyConfig.PowerLevel.Value;
@@ -503,22 +503,21 @@ public class ContentHandler<T> where T : ContentHandler<T>
 
     protected void RegisterEnemyWeatherMultipliers(CREnemyDefinition enemyDefinition, string weatherMultipliers)
     {
-        if (weatherMultipliers == string.Empty)
+        if (string.IsNullOrEmpty(weatherMultipliers))
             return;
 
-        List<string> weatherMultipliersList = weatherMultipliers.Split(',').Select(s => s.Trim()).ToList();
-        List<(string weatherName, float Multiplier)> weatherNameWithMultplierList = new();
+        List<string> weatherMultipliersList = weatherMultipliers.Split(',').ToList();
         foreach (var weatherMultiplierInList in weatherMultipliersList.Select(s => s.Split(':')))
         {
-            string weatherName = weatherMultiplierInList[0];
-            if (float.TryParse(weatherMultiplierInList[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float multiplier))
+            string weatherName = weatherMultiplierInList[0].Trim();
+            if (weatherMultiplierInList.Count() == 2 && float.TryParse(weatherMultiplierInList[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float multiplier))
             {
                 Plugin.ExtendedLogging($"Added Weather: {weatherName} to enemy: {enemyDefinition.enemyType.enemyName} with multiplier: {multiplier}");
                 enemyDefinition.WeatherMultipliers.Add(weatherName, multiplier);
             }
             else
             {
-                Plugin.Logger.LogError($"Weather: {weatherName} given invalid multiplier: {weatherMultiplierInList[1]}");
+                Plugin.Logger.LogError($"Weather: {weatherName} given invalid or empty multiplier");
             }
         }
     }
