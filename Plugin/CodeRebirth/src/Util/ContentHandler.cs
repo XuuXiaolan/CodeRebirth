@@ -503,6 +503,9 @@ public class ContentHandler<T> where T : ContentHandler<T>
 
     protected void RegisterEnemyWeatherMultipliers(CREnemyDefinition enemyDefinition, string weatherMultipliers)
     {
+        if (weatherMultipliers == string.Empty)
+            return;
+
         List<string> weatherMultipliersList = weatherMultipliers.Split(',').Select(s => s.Trim()).ToList();
         List<(string weatherName, float Multiplier)> weatherNameWithMultplierList = new();
         foreach (var weatherMultiplierInList in weatherMultipliersList.Select(s => s.Split(':')))
