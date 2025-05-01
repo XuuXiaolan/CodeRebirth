@@ -100,7 +100,7 @@ public class Janitor : CodeRebirthEnemyAI
     {
         base.Update();
 
-        if (currentBehaviourStateIndex == (int)JanitorStates.Idle)
+        if (currentBehaviourStateIndex == (int)JanitorStates.Idle || currentBehaviourStateIndex == (int)JanitorStates.Dead)
         {
             HandleIdleSoundTimer();
         }

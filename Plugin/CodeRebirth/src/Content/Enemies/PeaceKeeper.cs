@@ -48,6 +48,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     private List<Material> _materials = new();
     private float _backOffTimer = 0f;
     private bool _isShooting = false;
+    private bool _killedByPlayer = false;
     private float _damageInterval = 0f;
     private Coroutine? _bitchSlappingRoutine = null;
     private Collider[] _cachedColliders = new Collider[30];
@@ -56,7 +57,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int BitchSlapAnimation = Animator.StringToHash("bitchSlap"); // Trigger
 
-    private static int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Vector3
+    private static readonly int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Vector3
 
     public static List<PeaceKeeper> Instances = new();
     public enum PeaceKeeperState
@@ -397,7 +398,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        if (isEnemyDead) return;
+        if (isEnemyDead)
+            return;
 
         if (playerWhoHit != null)
         {
@@ -412,9 +414,13 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         }
         enemyHP -= force;
 
-        if (IsOwner && enemyHP <= 0)
+        if (enemyHP <= 0)
         {
-            KillEnemyOnOwnerClient();
+            if (playerWhoHit != null)
+                _killedByPlayer = true;
+
+            if (IsOwner)
+                KillEnemyOnOwnerClient();
         }
     }
 
@@ -425,7 +431,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         _aggroSFX.Stop();
         creatureVoice.PlayOneShot(dieSFX);
         if (!IsServer) return;
-        CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PeaceKeeper.ItemDefinitions.GetCRItemDefinitionWithItemName("Ceasefire")?.item, transform.position, false, true, 0);
+        if (_killedByPlayer)
+            CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PeaceKeeper!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ceasefire")?.item, transform.position, false, true, 0);
+
         creatureAnimator.SetBool(IsDeadAnimation, true);
     }
     #endregion
@@ -442,6 +450,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
             Plugin.ExtendedLogging($"Bitch Slap hit {collider.name}");
             if (!collider.TryGetComponent(out IHittable iHittable))
                 continue;
+
             if (iHittable is PlayerControllerB player)
             {
                 Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 100f;
