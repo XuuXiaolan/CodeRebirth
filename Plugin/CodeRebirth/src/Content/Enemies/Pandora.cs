@@ -40,7 +40,7 @@ public class Pandora : CodeRebirthEnemyAI
     {
         base.Start();
         // Start Pandora's roaming/search routine.
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
+        smartAgentNavigator.StartSearchRoutine(20);
         SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
         // todo: Pandora is meant to spawn on snowy moons and only after 11am.
     }
@@ -279,7 +279,7 @@ public class Pandora : CodeRebirthEnemyAI
             }
         }
         agent.Warp(randomPosition);
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
+        smartAgentNavigator.StartSearchRoutine(20);
     }
 
     private IEnumerator TeleportNearbyTargetPlayer(PlayerControllerB? targettedPlayer)

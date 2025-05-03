@@ -75,7 +75,7 @@ public class Transporter : CodeRebirthEnemyAI
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
         if (!IsServer) return;
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
+        smartAgentNavigator.StartSearchRoutine(20);
         var emptyNetworkObject = GameObject.Instantiate(Plugin.Assets.EmptyNetworkObject, palletTransform.position, Quaternion.identity);
         emptyNetworkObject.GetComponent<NetworkObject>().Spawn();
         SyncNetworkObjectParentServerRpc(new NetworkObjectReference(emptyNetworkObject));
@@ -204,7 +204,7 @@ public class Transporter : CodeRebirthEnemyAI
     {
         if (transportTarget == null)
         {
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
+            smartAgentNavigator.StartSearchRoutine(20);
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
@@ -238,7 +238,7 @@ public class Transporter : CodeRebirthEnemyAI
         if (transportTarget == null)
         {
             Plugin.Logger.LogError($"Transporter: transportTarget is null??");
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
+            smartAgentNavigator.StartSearchRoutine(20);
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
@@ -386,7 +386,7 @@ public class Transporter : CodeRebirthEnemyAI
         if (!IsServer) return;
         objectsToTransport.Add(transportTarget);
         transportTarget = null;
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 20);
+        smartAgentNavigator.StartSearchRoutine(20);
         TryFindAnyTransportableObjectViaAsyncPathfinding();
     }
     #endregion

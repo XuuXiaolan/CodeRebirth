@@ -140,7 +140,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         if (playBigSound) creatureUltraVoice.Play();
         yield return new WaitForSeconds(spawnAnimation.length);
-        smartAgentNavigator.StartSearchRoutine(transform.position, 40);
+        smartAgentNavigator.StartSearchRoutine(40);
         agent.speed = walkSpeed;
         creatureNetworkAnimator.SetTrigger(startWalkAnimation);
         SwitchToBehaviourClientRpc((int)State.Wandering);
@@ -342,7 +342,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             redoTimer = UnityEngine.Random.Range(180, 301);
         }
         StartCoroutine(RestartEnemy(redoTimer));
-        smartAgentNavigator.StartSearchRoutine(transform.position, 40);
+        smartAgentNavigator.StartSearchRoutine(40);
     }
 
     protected virtual IEnumerator RestartEnemy(float timer)

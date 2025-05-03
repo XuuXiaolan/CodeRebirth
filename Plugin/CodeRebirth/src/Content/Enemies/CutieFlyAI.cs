@@ -18,7 +18,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
 
         // Apply material variant
         ApplyMaterialVariant();
-        if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+        if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
     }
 
     private void ApplyMaterialVariant()

@@ -461,7 +461,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 {
                     SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
                     if (!IsServer) return;
-                    smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
+                    smartAgentNavigator.StartSearchRoutine(50f);
                     return;
                 }
                 enemyPositionBeforeDeath = targetEnemy.transform.position;
@@ -484,7 +484,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
         if (!IsServer) return;
         agent.speed = 7f;
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
+        smartAgentNavigator.StartSearchRoutine(50f);
     }
 
     #endregion
@@ -496,7 +496,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         yield return new WaitForSeconds(spawnAnimation.length);
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
         if (!IsServer) yield break;
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
+        smartAgentNavigator.StartSearchRoutine(50f);
         agent.speed = 7f;
     }
 
@@ -513,7 +513,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         yield return new WaitForSeconds(chestBangingAnimation.length);
         if (nextStateIndex == (int)DriftwoodState.SearchingForPrey)
         {
-            smartAgentNavigator.StartSearchRoutine(transform.position, 50f);
+            smartAgentNavigator.StartSearchRoutine(50f);
         }
         agent.speed = agentSpeed;
         SwitchToBehaviourServerRpc(nextStateIndex);
@@ -741,7 +741,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
             if (IsServer)
             {
-                smartAgentNavigator.StartSearchRoutine(this.transform.position, 50f);
+                smartAgentNavigator.StartSearchRoutine(50f);
             }
         }
     }

@@ -136,7 +136,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         }
         if (nearestPlayer == null)
         {
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 40);
+            smartAgentNavigator.StartSearchRoutine(40);
             SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
             return;
         }
@@ -164,7 +164,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             Plugin.ExtendedLogging("Target player is dead or not controlled, stopping attack.");
             creatureAnimator.SetBool(InCombatAnimation, false);
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 40);
+            smartAgentNavigator.StartSearchRoutine(40);
             SwitchToBehaviourServerRpc((int)PuppeteerState.Idle);
             return;
         }
@@ -475,7 +475,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         targetPlayer = null;
         agent.speed = sneakSpeed;
-        if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 40);
+        if (IsServer) smartAgentNavigator.StartSearchRoutine(40);
         SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Idle);
     }
 

@@ -50,7 +50,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         scanNodeProperties.headerText = randomName;
         currentName = randomName;
         isWiWiWiii = currentName == "Wiwiwii";
-        if (IsServer) smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+        if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
     }
 
     public override void Update()
@@ -157,7 +157,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
             // agent.speed = 4f;
             SetTargetServerRpc(-1);
             SwitchToBehaviourServerRpc((int)State.Wandering);
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+            smartAgentNavigator.StartSearchRoutine(50);
             return;
         }
     }
@@ -167,7 +167,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
     {
         yield return new WaitForSeconds(delay);
         if (currentBehaviourStateIndex != (int)stateToSwitchOutOf) yield break;
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+        smartAgentNavigator.StartSearchRoutine(50);
         creatureAnimator.SetBool(animationToSwitchOutOf, false);
         SwitchToBehaviourServerRpc((int)State.Wandering);
     }
@@ -248,7 +248,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!IsServer) return;
         agent.enabled = true;
         smartAgentNavigator.enabled = true;
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+        smartAgentNavigator.StartSearchRoutine(50);
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -269,7 +269,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!IsServer) yield break;
         agent.enabled = true;
         smartAgentNavigator.enabled = true;
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+        smartAgentNavigator.StartSearchRoutine(50);
     }
 
     public Transform ChooseClosestNodeToPositionNoPathCheck(Vector3 pos)
@@ -286,7 +286,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         smartAgentNavigator.enabled = enable;
         if (startSearchRoutine)
         {
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 50);
+            smartAgentNavigator.StartSearchRoutine(50);
         }
         else
         {

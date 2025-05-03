@@ -64,7 +64,7 @@ public class Nancy : CodeRebirthEnemyAI
         base.Start();
         idleTimer = enemyRandom.NextFloat(_idleAudioClipsWithTime.minTime, _idleAudioClipsWithTime.maxTime);
         PlayVoiceline(_spawnVoicelines);
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 30f);
+        smartAgentNavigator.StartSearchRoutine(30f);
     }
 
     #region StateMachine
@@ -119,7 +119,7 @@ public class Nancy : CodeRebirthEnemyAI
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
             SetTargetServerRpc(-1);
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 30f);
+            smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;
         }
@@ -150,7 +150,7 @@ public class Nancy : CodeRebirthEnemyAI
         {
             creatureAnimator.SetBool(HealModeAnimation, false);
             SetTargetServerRpc(-1);
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 30f);
+            smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;
         }
@@ -178,7 +178,7 @@ public class Nancy : CodeRebirthEnemyAI
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
             HealPlayerSuccessServerRpc();
             SetTargetServerRpc(-1);
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 30f);
+            smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;
         }
@@ -203,7 +203,7 @@ public class Nancy : CodeRebirthEnemyAI
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
             SetTargetServerRpc(-1);
-            smartAgentNavigator.StartSearchRoutine(this.transform.position, 30f);
+            smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;
         }

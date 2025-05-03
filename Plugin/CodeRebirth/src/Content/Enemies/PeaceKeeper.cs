@@ -275,7 +275,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         agent.speed = _walkingSpeed;
         SetTargetServerRpc(-1);
         SwitchToBehaviourServerRpc((int)PeaceKeeperState.Idle);
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 40);
+        smartAgentNavigator.StartSearchRoutine(40);
     }
 
     public IEnumerator DoBitchSlapping()

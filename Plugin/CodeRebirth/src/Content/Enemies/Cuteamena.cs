@@ -99,7 +99,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         smartAgentNavigator = GetComponent<SmartAgentNavigator>(); // todo: remove this
         base.Start();
         _headPatTrigger.onInteract.AddListener(OnHeadPatInteract);
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 40f);
+        smartAgentNavigator.StartSearchRoutine(40f);
         agent.speed = _wanderSpeed;
         // creatureSFX.PlayOneShot(_spawnSound);
         _healTimer = _healCooldown;

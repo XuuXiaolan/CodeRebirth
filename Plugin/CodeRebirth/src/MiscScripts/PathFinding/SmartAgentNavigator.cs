@@ -18,14 +18,12 @@ public class SmartAgentNavigator : NetworkBehaviour
     [HideInInspector] public UnityEvent<bool> OnEnterOrExitElevator = new();
     [HideInInspector] public EntranceTeleport lastUsedEntranceTeleport;
 
-    private float nonAgentMovementSpeed = 10f;
     private Vector3 pointToGo = Vector3.zero;
     private Coroutine? searchRoutine = null;
-    private bool isSearching = false;
-    private bool reachedDestination = false;
 
-    private SmartPathTask? task = null;
+    private SmartPathTask? pathingTask = null;
     private SmartPathTask? checkPathsTask = null;
+    private SmartPathTask? roamingTask = null;
 
     [HideInInspector]
     public NavMeshAgent agent = null!;
@@ -34,7 +32,14 @@ public class SmartAgentNavigator : NetworkBehaviour
     [HideInInspector]
     public Coroutine? checkPathsRoutine = null;
 
-    public SmartPathfindingLinkFlags allowedLinks = SmartPathfindingLinkFlags.InternalTeleports | SmartPathfindingLinkFlags.Elevators | SmartPathfindingLinkFlags.MainEntrance | SmartPathfindingLinkFlags.FireExits;
+    [Header("Search Algorithm")]
+    [SerializeField]
+    private float _nodeRemovalPrecision = 5f;
+    [SerializeField]
+    private bool _canWanderIntoOrOutOfInterior = false;
+    [SerializeField]
+    private SmartPathfindingLinkFlags _allowedLinks = SmartPathfindingLinkFlags.InternalTeleports | SmartPathfindingLinkFlags.Elevators | SmartPathfindingLinkFlags.MainEntrance | SmartPathfindingLinkFlags.FireExits;
+
     public enum GoToDestinationResult
     {
         Success,
@@ -55,7 +60,7 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     private SmartPathfindingLinkFlags GetAllowedPathLinks()
     {
-        return allowedLinks;
+        return _allowedLinks;
     }
 
     private void UseTeleport(EntranceTeleport teleport)
@@ -67,20 +72,39 @@ public class SmartAgentNavigator : NetworkBehaviour
         SetThingOutsideServerRpc(new NetworkBehaviourReference(teleport));
     }
 
+    public bool DoPathingToDestination(Vector3 destination)
+    {
+        if (searchRoutine != null)
+        {
+            StopSearchRoutine();
+        }
+
+        if (cantMove)
+            return false;
+
+        if (!agent.enabled)
+        {
+            HandleDisabledAgentPathing();
+            return false;
+        }
+        GoToDestinationResult result = GoToDestination(destination);
+        return result == GoToDestinationResult.Success || result == GoToDestinationResult.InProgress;
+    }
+
     private GoToDestinationResult GoToDestination(Vector3 targetPosition)
     {
         var result = GoToDestinationResult.InProgress;
 
-        if (task == null)
+        if (pathingTask == null)
         {
-            task = new SmartPathTask();
-            task.StartPathTask(this.agent, this.transform.position, targetPosition, GetAllowedPathLinks());
+            pathingTask = new SmartPathTask();
+            pathingTask.StartPathTask(this.agent, this.transform.position, targetPosition, GetAllowedPathLinks());
         }
 
-        if (!task.IsResultReady(0))
+        if (!pathingTask.IsResultReady(0))
             return result;
 
-        if (task.GetResult(0) is SmartPathDestination destination)
+        if (pathingTask.GetResult(0) is SmartPathDestination destination)
         {
             result = GoToSmartPathDestination(in destination) ? GoToDestinationResult.Success : GoToDestinationResult.Failure;
         }
@@ -89,7 +113,7 @@ public class SmartAgentNavigator : NetworkBehaviour
             result = GoToDestinationResult.Failure;
         }
 
-        task.StartPathTask(this.agent, this.transform.position, targetPosition, GetAllowedPathLinks());
+        pathingTask.StartPathTask(this.agent, this.transform.position, targetPosition, GetAllowedPathLinks());
         return result;
     }
 
@@ -160,25 +184,6 @@ public class SmartAgentNavigator : NetworkBehaviour
         agent.velocity = Vector3.zero;
     }
 
-    public bool DoPathingToDestination(Vector3 destination)
-    {
-        if (isSearching)
-        {
-            StopSearchRoutine();
-        }
-
-        if (cantMove)
-            return false;
-
-        if (!agent.enabled)
-        {
-            HandleDisabledAgentPathing();
-            return false;
-        }
-        GoToDestinationResult result = GoToDestination(destination);
-        return result == GoToDestinationResult.Success || result == GoToDestinationResult.InProgress;
-    }
-
     public void CheckPaths<T>(IEnumerable<(T, Vector3)> points, Action<List<T>> action)
     {
         if (checkPathsRoutine != null)
@@ -202,6 +207,9 @@ public class SmartAgentNavigator : NetworkBehaviour
         for (int i = 0; i < listSize; i++)
         {
             checkPathsTaskResults.Add(checkPathsTask.IsResultReady(i));
+            if (!checkPathsTask.IsResultReady(i))
+                continue;
+
             // Plugin.ExtendedLogging($"Checking result for task index: {i}, is result ready: {checkPathsTask.IsResultReady(i)}, result: {checkPathsTask.GetResult(i)}");
             if (checkPathsTask.GetResult(i) is not SmartPathDestination destination)
                 continue;
@@ -234,7 +242,7 @@ public class SmartAgentNavigator : NetworkBehaviour
 
         // Calculate the new position in an arcing motion
         float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
-        Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * nonAgentMovementSpeed);
+        Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * 10f);
         newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
 
         transform.SetPositionAndRotation(newPosition, Quaternion.LookRotation(targetPosition - transform.position));
@@ -331,19 +339,17 @@ public class SmartAgentNavigator : NetworkBehaviour
         return true;
     }
 
-    public void StartSearchRoutine(Vector3 position, float radius)
+    public void StartSearchRoutine(float radius)
     { // TODO: rework the search algorithm to use nodes and whatnot, similar to vanilla
         if (!agent.enabled)
             return;
 
         StopSearchRoutine();
-        isSearching = true;
-        searchRoutine = StartCoroutine(SearchAlgorithm(position, radius));
+        searchRoutine = StartCoroutine(SearchAlgorithm(radius));
     }
 
     public void StopSearchRoutine()
     {
-        isSearching = false;
         if (searchRoutine != null)
         {
             StopCoroutine(searchRoutine);
@@ -352,27 +358,97 @@ public class SmartAgentNavigator : NetworkBehaviour
         searchRoutine = null;
     }
 
-    private IEnumerator SearchAlgorithm(Vector3 position, float radius)
+    #region Search Algorithm
+    private readonly List<Vector3> _positionsToSearch = new();
+    private readonly List<Vector3> _roamingPointsVectorList = new();
+
+    private IEnumerator SearchAlgorithm(float radius)
     {
-        while (isSearching)
+        Plugin.ExtendedLogging($"Starting search routine for {this.gameObject.name} at {this.transform.position}");
+        _positionsToSearch.Clear();
+        yield return StartCoroutine(GetSetOfAcceptableNodesForRoaming(radius));
+        while (true)
         {
-            Vector3 positionToTravel = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, radius, default);
-            // Plugin.ExtendedLogging($"Search: {positionToTravel}");
-            reachedDestination = false;
-
-            while (!reachedDestination && isSearching)
+            Vector3 positionToTravel = _positionsToSearch.FirstOrDefault();
+            if (_positionsToSearch.Count == 0 || positionToTravel == Vector3.zero)
             {
-                Plugin.ExtendedLogging($"{this} Search: {positionToTravel}");
-                agent.SetDestination(positionToTravel);
-                yield return new WaitForSeconds(3f);
+                StartSearchRoutine(radius);
+                yield break;
+            }
+            _positionsToSearch.RemoveAt(0);
+            yield return StartCoroutine(ClearProximityNodes(_positionsToSearch, positionToTravel, _nodeRemovalPrecision));
+            bool reachedDestination = false;
+            while (!reachedDestination)
+            {
+                Plugin.ExtendedLogging($"{this.gameObject.name} Search: {positionToTravel}");
+                GoToDestination(positionToTravel);
+                yield return new WaitForSeconds(0.5f);
 
-                if (!agent.enabled || Vector3.Distance(this.transform.position, positionToTravel) <= 10f || agent.velocity.magnitude <= 1f)
+                if (!agent.enabled || Vector3.Distance(this.transform.position, positionToTravel) <= radius + agent.stoppingDistance || agent.velocity.magnitude <= 1f)
                 {
                     reachedDestination = true;
                 }
             }
         }
-
-        searchRoutine = null;
     }
+
+    private IEnumerator GetSetOfAcceptableNodesForRoaming(float radius)
+    {
+        _roamingPointsVectorList.Clear();
+
+        if (_canWanderIntoOrOutOfInterior)
+        {
+            _roamingPointsVectorList.AddRange(RoundManager.Instance.outsideAINodes.Select(x => x.transform.position));
+            _roamingPointsVectorList.AddRange(RoundManager.Instance.insideAINodes.Select(x => x.transform.position));
+        }
+        else if (isOutside)
+        {
+            _roamingPointsVectorList.AddRange(RoundManager.Instance.outsideAINodes.Select(x => x.transform.position));
+        }
+        else
+        {
+            _roamingPointsVectorList.AddRange(RoundManager.Instance.insideAINodes.Select(x => x.transform.position));
+        }
+
+        roamingTask ??= new SmartPathTask();
+        roamingTask.StartPathTask(this.agent, this.transform.position, _roamingPointsVectorList, GetAllowedPathLinks());
+        int listSize = _roamingPointsVectorList.Count;
+        Plugin.ExtendedLogging($"Checking paths for {listSize} objects");
+        yield return new WaitUntil(() => roamingTask.IsComplete);
+        List<bool> roamingPathsTaskResults = new();
+        for (int i = 0; i < listSize; i++)
+        {
+            roamingPathsTaskResults.Add(roamingTask.IsResultReady(i));
+            if (!roamingTask.IsResultReady(i))
+            {
+                Plugin.Logger.LogError($"Roaming task {i} is not ready");
+                continue;
+            }
+            if (roamingTask.GetResult(i) is not SmartPathDestination destination)
+                continue;
+
+            if (roamingTask.GetPathLength(i) > radius)
+                continue;
+
+            _positionsToSearch.Add(destination.Position);
+        }
+
+        for (int i = 0; i < listSize; i++)
+        {
+            Plugin.ExtendedLogging($"Checking result for task index: {i}, is result ready: {roamingPathsTaskResults[i]}");
+        }
+    }
+
+    private IEnumerator ClearProximityNodes(List<Vector3> positionsToSearch, Vector3 positionToTravel, float radius)
+    {
+        for (int i = positionsToSearch.Count - 1; i >= 0; i--)
+        {
+            if (Vector3.Distance(positionsToSearch[i], positionToTravel) <= radius)
+            {
+                positionsToSearch.RemoveAt(i);
+            }
+            yield return null;
+        }
+    }
+    #endregion
 }

@@ -50,7 +50,7 @@ public class Monarch : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        if (IsServer) smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+        if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
         SwitchToBehaviourStateOnLocalClient((int)MonarchState.Idle);
     }
 
@@ -98,7 +98,7 @@ public class Monarch : CodeRebirthEnemyAI
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
         if (closestPlayer == null && !isAttacking)
         {
-            smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+            smartAgentNavigator.StartSearchRoutine(50);
             agent.stoppingDistance = 1f;
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
             return;
@@ -132,7 +132,7 @@ public class Monarch : CodeRebirthEnemyAI
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
         if (closestPlayer == null && isAttacking)
         {
-            smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+            smartAgentNavigator.StartSearchRoutine(50);
             agent.stoppingDistance = 1f;
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
             return;

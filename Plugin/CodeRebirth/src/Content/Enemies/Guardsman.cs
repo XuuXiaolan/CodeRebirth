@@ -200,7 +200,7 @@ public class Guardsman : CodeRebirthEnemyAI
         yield return new WaitForSeconds(10f);
         skinnedMeshRenderers[0].updateWhenOffscreen = false;
         smartAgentNavigator.cantMove = false;
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 100f);
+        smartAgentNavigator.StartSearchRoutine(100f);
     }
 
     private float CalculateEnemySize(EnemyAI enemyAi)
@@ -221,7 +221,7 @@ public class Guardsman : CodeRebirthEnemyAI
         if (targetEnemy != null)
             yield break;
 
-        smartAgentNavigator.StartSearchRoutine(this.transform.position, 100f);
+        smartAgentNavigator.StartSearchRoutine(100f);
     }
 
     #endregion

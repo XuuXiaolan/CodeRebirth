@@ -386,7 +386,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             Plugin.ExtendedLogging("Stop Target Giant");
             SetAnimatorMotionBools(chasing: false, walking: true);
             agent.angularSpeed = 40f;
-            smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+            smartAgentNavigator.StartSearchRoutine(50);
             agent.speed = walkingSpeed;
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
@@ -396,7 +396,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             Plugin.ExtendedLogging("Stop Target Giant");
             agent.angularSpeed = 40f;
             SetAnimatorMotionBools(chasing: false, walking: true);
-            smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+            smartAgentNavigator.StartSearchRoutine(50);
             agent.speed = walkingSpeed;
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
@@ -508,7 +508,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (IsServer)
         {
             SetAnimatorMotionBools(chasing: false, walking: true);
-            smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+            smartAgentNavigator.StartSearchRoutine(50);
         }
         SwitchToBehaviourStateOnLocalClient((int)State.Wandering);
     }
@@ -663,7 +663,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (IsServer)
         {
             SetAnimatorMotionBools(chasing: false, walking: true);
-            smartAgentNavigator.StartSearchRoutine(transform.position, 50);
+            smartAgentNavigator.StartSearchRoutine(50);
         }
         Plugin.ExtendedLogging("Start Walking Around");
         agent.speed = walkingSpeed;

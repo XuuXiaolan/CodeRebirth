@@ -169,7 +169,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         smartAgentNavigator.enabled = true;
         agent.enabled = true;
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.Idle);
-        smartAgentNavigator.StartSearchRoutine(transform.position, 20);
+        smartAgentNavigator.StartSearchRoutine(20);
         _idleRoutine = null;
     }
 

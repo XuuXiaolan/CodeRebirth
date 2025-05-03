@@ -63,7 +63,7 @@ public class Tornados : CodeRebirthEnemyAI
 
     private void Init()
     {
-        smartAgentNavigator.StartSearchRoutine(eye.transform.position, 40f);
+        smartAgentNavigator.StartSearchRoutine(40f);
         agent.speed = initialSpeed;
     }
 
