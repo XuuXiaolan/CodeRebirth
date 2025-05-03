@@ -198,13 +198,20 @@ public class SmartAgentNavigator : NetworkBehaviour
         int listSize = pointsVectorList.Count;
         Plugin.ExtendedLogging($"Checking paths for {listSize} objects");
         yield return new WaitUntil(() => checkPathsTask.IsComplete);
+        List<bool> checkPathsTaskResults = new();
         for (int i = 0; i < listSize; i++)
         {
+            checkPathsTaskResults.Add(checkPathsTask.IsResultReady(i));
             // Plugin.ExtendedLogging($"Checking result for task index: {i}, is result ready: {checkPathsTask.IsResultReady(i)}, result: {checkPathsTask.GetResult(i)}");
             if (checkPathsTask.GetResult(i) is not SmartPathDestination destination)
                 continue;
 
             TList.Add(pointsTList[i]);
+        }
+
+        for (int i = 0; i < listSize; i++)
+        {
+            Plugin.ExtendedLogging($"Checking result for task index: {i}, is result ready: {checkPathsTaskResults[i]}");
         }
 
         action(TList);
