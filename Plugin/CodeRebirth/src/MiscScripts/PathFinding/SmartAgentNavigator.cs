@@ -203,23 +203,18 @@ public class SmartAgentNavigator : NetworkBehaviour
         int listSize = pointsVectorList.Count;
         Plugin.ExtendedLogging($"Checking paths for {listSize} objects");
         yield return new WaitUntil(() => checkPathsTask.IsComplete);
-        List<bool> checkPathsTaskResults = new();
         for (int i = 0; i < listSize; i++)
         {
-            checkPathsTaskResults.Add(checkPathsTask.IsResultReady(i));
             if (!checkPathsTask.IsResultReady(i))
+            {
+                Plugin.Logger.LogError($"Result for task index: {i} is not ready");
                 continue;
-
+            }
             // Plugin.ExtendedLogging($"Checking result for task index: {i}, is result ready: {checkPathsTask.IsResultReady(i)}, result: {checkPathsTask.GetResult(i)}");
             if (checkPathsTask.GetResult(i) is not SmartPathDestination destination)
                 continue;
 
             TList.Add(pointsTList[i]);
-        }
-
-        for (int i = 0; i < listSize; i++)
-        {
-            Plugin.ExtendedLogging($"Checking result for task index: {i}, is result ready: {checkPathsTaskResults[i]}");
         }
 
         action(TList);
@@ -364,6 +359,7 @@ public class SmartAgentNavigator : NetworkBehaviour
 
     private IEnumerator SearchAlgorithm(float radius)
     {
+        yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 3f));
         Plugin.ExtendedLogging($"Starting search routine for {this.gameObject.name} at {this.transform.position}");
         _positionsToSearch.Clear();
         yield return StartCoroutine(GetSetOfAcceptableNodesForRoaming(radius));
@@ -415,10 +411,8 @@ public class SmartAgentNavigator : NetworkBehaviour
         int listSize = _roamingPointsVectorList.Count;
         Plugin.ExtendedLogging($"Checking paths for {listSize} objects");
         yield return new WaitUntil(() => roamingTask.IsComplete);
-        List<bool> roamingPathsTaskResults = new();
         for (int i = 0; i < listSize; i++)
         {
-            roamingPathsTaskResults.Add(roamingTask.IsResultReady(i));
             if (!roamingTask.IsResultReady(i))
             {
                 Plugin.Logger.LogError($"Roaming task {i} is not ready");
@@ -432,16 +426,15 @@ public class SmartAgentNavigator : NetworkBehaviour
 
             _positionsToSearch.Add(destination.Position);
         }
-
-        for (int i = 0; i < listSize; i++)
-        {
-            Plugin.ExtendedLogging($"Checking result for task index: {i}, is result ready: {roamingPathsTaskResults[i]}");
-        }
     }
 
     private IEnumerator ClearProximityNodes(List<Vector3> positionsToSearch, Vector3 positionToTravel, float radius)
     {
-        for (int i = positionsToSearch.Count - 1; i >= 0; i--)
+        int count = positionsToSearch.Count;
+        if (count == 0)
+            yield break;
+
+        for (int i = count - 1; i >= 0; i--)
         {
             if (Vector3.Distance(positionsToSearch[i], positionToTravel) <= radius)
             {
