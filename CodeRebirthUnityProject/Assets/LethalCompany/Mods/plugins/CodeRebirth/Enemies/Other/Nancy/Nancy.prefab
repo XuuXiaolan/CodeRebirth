@@ -455,8 +455,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 1
+  _allowedLinks: -1
 --- !u!114 &1466305891617668654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -624,12 +625,11 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
-  hasVariants: 0
-  usesTemperature: 0
-  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 1466305891617668654}
   smartAgentNavigator: {fileID: 3442137185753197099}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
   _rollingSource: {fileID: 4590783949368486007}
   _idleAudioClipsWithTime:
     audioClips:

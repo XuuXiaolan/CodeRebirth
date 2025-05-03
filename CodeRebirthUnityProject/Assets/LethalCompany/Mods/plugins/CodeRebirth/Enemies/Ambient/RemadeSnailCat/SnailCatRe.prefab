@@ -352,8 +352,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 1
+  _allowedLinks: -1
 --- !u!114 &8802992103352183417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,12 +487,11 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
-  hasVariants: 1
-  usesTemperature: 1
-  specialRenderer: {fileID: 6177123933367798727}
   creatureNetworkAnimator: {fileID: 5861152159745177237}
   smartAgentNavigator: {fileID: 4184196377494464262}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
   propScript: {fileID: 4180001964916081428}
   randomizedNames:
   - Florpus

@@ -980,7 +980,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 1
+  _allowedLinks: -1
 --- !u!1 &6570641537456848073
 GameObject:
   m_ObjectHideFlags: 0

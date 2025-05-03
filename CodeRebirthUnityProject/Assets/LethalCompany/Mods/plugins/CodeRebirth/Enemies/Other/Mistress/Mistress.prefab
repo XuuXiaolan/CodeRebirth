@@ -1225,7 +1225,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 1
+  _allowedLinks: -1
 --- !u!114 &7423302728941841708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1350,9 +1352,11 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
   creatureNetworkAnimator: {fileID: 8001973664605584344}
   smartAgentNavigator: {fileID: 6419109921350317054}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
   teleportCooldown: 20
   killCooldown: 10
   HeadTransform: {fileID: 1212291645882394840}

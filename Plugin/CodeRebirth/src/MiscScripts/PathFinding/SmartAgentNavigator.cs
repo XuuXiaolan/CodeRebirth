@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Util.Extensions;
 using PathfindingLib.API.SmartPathfinding;
 using Unity.Netcode;
 using UnityEngine;
@@ -38,7 +39,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     [SerializeField]
     private bool _canWanderIntoOrOutOfInterior = false;
     [SerializeField]
-    private SmartPathfindingLinkFlags _allowedLinks = SmartPathfindingLinkFlags.InternalTeleports | SmartPathfindingLinkFlags.Elevators | SmartPathfindingLinkFlags.MainEntrance | SmartPathfindingLinkFlags.FireExits;
+    private SmartPathfindingLinkFlags _allowedLinks = (SmartPathfindingLinkFlags)(-1);
 
     public enum GoToDestinationResult
     {
@@ -335,7 +336,7 @@ public class SmartAgentNavigator : NetworkBehaviour
     }
 
     public void StartSearchRoutine(float radius)
-    { // TODO: rework the search algorithm to use nodes and whatnot, similar to vanilla
+    {
         if (!agent.enabled)
             return;
 
@@ -380,7 +381,7 @@ public class SmartAgentNavigator : NetworkBehaviour
                 GoToDestination(positionToTravel);
                 yield return new WaitForSeconds(0.5f);
 
-                if (!agent.enabled || Vector3.Distance(this.transform.position, positionToTravel) <= radius + agent.stoppingDistance || agent.velocity.magnitude <= 1f)
+                if (!agent.enabled || Vector3.Distance(this.transform.position, positionToTravel) <= 3 + agent.stoppingDistance)
                 {
                     reachedDestination = true;
                 }
@@ -394,8 +395,8 @@ public class SmartAgentNavigator : NetworkBehaviour
 
         if (_canWanderIntoOrOutOfInterior)
         {
-            _roamingPointsVectorList.AddRange(RoundManager.Instance.outsideAINodes.Select(x => x.transform.position));
             _roamingPointsVectorList.AddRange(RoundManager.Instance.insideAINodes.Select(x => x.transform.position));
+            _roamingPointsVectorList.AddRange(RoundManager.Instance.outsideAINodes.Select(x => x.transform.position));
         }
         else if (isOutside)
         {
@@ -418,14 +419,17 @@ public class SmartAgentNavigator : NetworkBehaviour
                 Plugin.Logger.LogError($"Roaming task {i} is not ready");
                 continue;
             }
+
             if (roamingTask.GetResult(i) is not SmartPathDestination destination)
                 continue;
 
+            // Plugin.ExtendedLogging($"Checking result for task index: {i}, pathLength: {roamingTask.GetPathLength(i)}, position: {destination.Position} with type: {destination.Type}");
             if (roamingTask.GetPathLength(i) > radius)
                 continue;
 
-            _positionsToSearch.Add(destination.Position);
+            _positionsToSearch.Add(_roamingPointsVectorList[i]);
         }
+        _positionsToSearch.Shuffle();
     }
 
     private IEnumerator ClearProximityNodes(List<Vector3> positionsToSearch, Vector3 positionToTravel, float radius)
