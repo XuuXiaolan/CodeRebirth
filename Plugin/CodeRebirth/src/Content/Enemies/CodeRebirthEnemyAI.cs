@@ -46,16 +46,18 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public override void Start()
     {
         base.Start();
-#if DEBUG
+/*#if DEBUG
         LineRenderer line = gameObject.AddComponent<LineRenderer>();
         line.widthMultiplier = 0.2f; // reduce width of the line
         StartCoroutine(DrawPath(line, agent));
-#endif
+#endif*/
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + 69);
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside);
         smartAgentNavigator.SetAllValues(isOutside);
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
-        GrabEnemyRarity(enemyType.enemyName);
+        if (Plugin.ModConfig.ConfigExtendedLogging.Value)
+            GrabEnemyRarity(enemyType.enemyName);
+
         if (_hasVariants && _specialRenderer != null)
         {
             ApplyVariants(_specialRenderer);
@@ -64,7 +66,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     private void ApplyVariants(Renderer renderer)
     {
-        System.Random random = new System.Random(RoundManager.Instance.SpawnedEnemies.Count + StartOfRound.Instance.randomMapSeed);
+        System.Random random = new(RoundManager.Instance.SpawnedEnemies.Count + StartOfRound.Instance.randomMapSeed);
         float number = random.NextFloat(0f, 1f);
         renderer.GetMaterial().SetFloat(ShiftHash, number);
         if (_usesTemperature)

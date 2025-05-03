@@ -91,15 +91,19 @@ public class Transporter : CodeRebirthEnemyAI
     {
         foreach (GrabbableObject grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
         {
-            if (grabbableObject == null) continue;
+            if (grabbableObject == null)
+                continue;
+
             grabbableObject.EnableItemMeshes(true);
             grabbableObject.EnablePhysics(true);
         }
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform) continue;
+            if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform)
+                continue;
+
             smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
-            player.transform.position = smartAgentNavigator.lastUsedEntranceTeleport.entrancePoint.position;
+            player.transform.position = smartAgentNavigator.lastUsedEntranceTeleport.exitPoint.position;
         }
     }
 
@@ -141,6 +145,7 @@ public class Transporter : CodeRebirthEnemyAI
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude);
     }
 
+    #region State Behaviors
     public override void DoAIInterval()
     {
         base.DoAIInterval();
@@ -157,8 +162,6 @@ public class Transporter : CodeRebirthEnemyAI
                 break;
         }
     }
-
-    #region State Behaviors
 
     private void DoIdle()
     {
@@ -182,10 +185,11 @@ public class Transporter : CodeRebirthEnemyAI
 
     public void CheckIfNeedToChangeState(List<GameObject> objects)
     {
-        if (objects.Count > 0)
+        int totalAmount = objects.Count;
+        if (totalAmount > 0)
         {
-            Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects");
-            transportTarget = objects[UnityEngine.Random.Range(0, objects.Count)];
+            Plugin.ExtendedLogging($"Transporter: Found {totalAmount} objects");
+            transportTarget = objects[UnityEngine.Random.Range(0, totalAmount)];
             objectsToTransport.Remove(transportTarget);
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
@@ -281,11 +285,9 @@ public class Transporter : CodeRebirthEnemyAI
             droppingObject = true;
         }
     }
-
     #endregion
 
     #region RPC's
-
     [ServerRpc(RequireOwnership = false)]
     public void SyncPositionRotationOfTransportTargetServerRpc(NetworkObjectReference netObjRef, Vector3 currentEndPosition)
     {
@@ -300,28 +302,9 @@ public class Transporter : CodeRebirthEnemyAI
         _transportTarget.transform.localRotation = Quaternion.identity;
         NavMesh.SamplePosition(currentEndPosition, out currentEndHit, 4f, NavMesh.AllAreas);
     }
-
-    #endregion
-
-    #region Example Utility
-
-    public (GameObject obj, Vector3 position) PickRandomOutsideOrInsideAINode()
-    {
-        IEnumerable<GameObject> allNodes = RoundManager.Instance.outsideAINodes
-            .Concat(RoundManager.Instance.insideAINodes);
-        if (allNodes.Count() == 0) return (gameObject, transform.position);
-
-        // Pick one randomly
-        int index = UnityEngine.Random.Range(0, allNodes.Count());
-        GameObject chosenNode = allNodes.ElementAt(index);
-
-        return (chosenNode, chosenNode.transform.position);
-    }
-
     #endregion
 
     #region Combat / Animation
-
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);

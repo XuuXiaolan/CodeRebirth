@@ -177,7 +177,6 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         ownerPlayer = null;
         DoGalRadarAction(false);
         GalVoice.PlayOneShot(DeactivateSound);
-        smartAgentNavigator.ResetAllValues();
         smartAgentNavigator.OnEnterOrExitElevator.RemoveListener(OnEnterOrExitElevator);
         smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnUseEntranceTeleport);
         smartAgentNavigator.OnEnableOrDisableAgent.RemoveListener(OnEnableOrDisableAgent);
@@ -298,7 +297,6 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         Instances.Remove(this);
         if (inActive) return;
         DoGalRadarAction(false);
-        smartAgentNavigator.ResetAllValues();
         smartAgentNavigator.OnEnterOrExitElevator.RemoveListener(OnEnterOrExitElevator);
         smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnUseEntranceTeleport);
         smartAgentNavigator.OnEnableOrDisableAgent.RemoveListener(OnEnableOrDisableAgent);

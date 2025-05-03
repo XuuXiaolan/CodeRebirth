@@ -1,4 +1,3 @@
-using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -24,16 +23,12 @@ public class DestructibleObject : MonoBehaviour, IHittable
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
-        Collider[] collidersHit = Physics.OverlapSphere(this.transform.position, 1f, CodeRebirthUtils.Instance.playersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
-        foreach (Collider collider in collidersHit)
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (collider.gameObject == this.gameObject)
+            if (Vector3.Distance(this.transform.position, player.transform.position) > 1f)
                 continue;
 
-            if (!collider.TryGetComponent(out IHittable iHittable))
-                continue;
-
-            iHittable.Hit(1, this.transform.position, playerWhoHit, false, -1);
+            player.DamagePlayer(5, true, false, CauseOfDeath.Stabbing, 0, false, default);
         }
 
         foreach (var collider in colliders)

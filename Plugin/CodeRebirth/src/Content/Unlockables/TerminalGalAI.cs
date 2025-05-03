@@ -238,7 +238,7 @@ public class TerminalGalAI : GalAI
         HashSet<GameObject> pointsOfInterestSet = new HashSet<GameObject>();
         Plugin.ExtendedLogging($"Found {numHits} interactable objects");
 
-        for (int i = 0; i < numHits; i++) // replace with pathfindinglib operations.
+        for (int i = 0; i < numHits; i++)
         {
             if (cachedColliders[i] == null) continue;
 
