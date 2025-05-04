@@ -5016,6 +5016,7 @@ GameObject:
   - component: {fileID: 7289646667291304479}
   - component: {fileID: 7373429093498572739}
   - component: {fileID: 867106333959097909}
+  - component: {fileID: 6690824342184625060}
   m_Layer: 21
   m_Name: EmergingCactus1
   m_TagString: Untagged
@@ -5125,6 +5126,7 @@ MonoBehaviour:
   - {fileID: 7289646667291304479}
   - {fileID: 676920627382263783}
   - {fileID: 3884358146667832921}
+  - {fileID: 6690824342184625060}
   renderers:
   - {fileID: 1097673285209092776}
   _particleSystems:
@@ -5145,7 +5147,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   depthToRaise: 3.38
-  raiseSpeed: 0.845
+  raiseSpeed: 7
+--- !u!136 &6690824342184625060
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6967185636124918851}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.3
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.59, z: 0}
 --- !u!1 &7668096676178335726
 GameObject:
   m_ObjectHideFlags: 0

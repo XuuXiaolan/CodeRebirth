@@ -51,32 +51,32 @@ MonoBehaviour:
   maxTotalScrapValue: 0
   levelAmbienceClips: {fileID: 11400000, guid: ba1bf23eed1efb941864af0d4bb79db3, type: 2}
   maxEnemyPowerCount: 12
-  maxOutsideEnemyPowerCount: 16
+  maxOutsideEnemyPowerCount: 25
   maxDaytimeEnemyPowerCount: 2
   Enemies: []
   OutsideEnemies:
   - enemyType: {fileID: 11400000, guid: 9a726758bfe9cd948a5e960ab7bdbea4, type: 2}
-    rarity: 75
+    rarity: 80
   - enemyType: {fileID: 11400000, guid: 8cb8b0df25a3f76439fefdb07040503c, type: 2}
-    rarity: 4
+    rarity: 3
   - enemyType: {fileID: 11400000, guid: d648d68b0b3a5e94ebab7fc9235024d8, type: 2}
     rarity: 1
   - enemyType: {fileID: 11400000, guid: 0d35d0655a7f83742a89ddc37223e58d, type: 2}
     rarity: 1
   - enemyType: {fileID: 11400000, guid: 6ee0c03ab1d4b8d46b2399ecc30174fe, type: 2}
-    rarity: 1
+    rarity: 3
   - enemyType: {fileID: 11400000, guid: 7712b157f6470c3428da58382131565a, type: 2}
-    rarity: 15
-  - enemyType: {fileID: 11400000, guid: d7491606a0cae444a8ac7bd3ae192ece, type: 2}
     rarity: 25
-  - enemyType: {fileID: 11400000, guid: fb0ffe9405fd3a04b8166e871975cb10, type: 2}
+  - enemyType: {fileID: 11400000, guid: d7491606a0cae444a8ac7bd3ae192ece, type: 2}
     rarity: 30
+  - enemyType: {fileID: 11400000, guid: 3842d26ac6753aa47a8ba4b09393abea, type: 2}
+    rarity: 60
   - enemyType: {fileID: 11400000, guid: cb18828f73f74ed419640ded79f9380f, type: 2}
+    rarity: 10
+  - enemyType: {fileID: 11400000, guid: 3c41db0f374c24c488ab343397e90999, type: 2}
     rarity: 5
-  - enemyType: {fileID: 11400000, guid: 3a674266a8643db4eb05132c87e7c388, type: 2}
-    rarity: 5
-  - enemyType: {fileID: 11400000, guid: 237d21d5f4d804b45990369a53c78029, type: 2}
-    rarity: 1
+  - enemyType: {fileID: 11400000, guid: c938484451d34b84aa83a828996c5929, type: 2}
+    rarity: 40
   DaytimeEnemies: []
   enemySpawnChanceThroughoutDay:
     serializedVersion: 2

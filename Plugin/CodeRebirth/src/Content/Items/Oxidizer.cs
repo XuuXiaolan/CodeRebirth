@@ -21,7 +21,6 @@ public class Oxidizer : GrabbableObject
     public float depleteMultiplier = 10f;
     public float rechargeMultiplier = 1f;
 
-
     private bool charged = true;
     private bool superCharged = false;
     private bool nerfed = false;
@@ -36,7 +35,7 @@ public class Oxidizer : GrabbableObject
         _iHittableList.Clear();
         _enemyAIList.Clear();
 
-        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, _cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndEnemiesMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, _cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (_cachedRaycastHits[i].transform == playerHeldBy.transform) continue;

@@ -1282,8 +1282,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 0
+  _allowedLinks: -1
 --- !u!114 &3489037866509937600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1485,6 +1486,7 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  BeamController: {fileID: 0}
   UltraCreatureVoice: {fileID: 3196441772831089106}
   AirAttackTransforms:
   - {fileID: 3906850990989520204}

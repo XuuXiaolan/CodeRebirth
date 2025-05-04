@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class Monarch : CodeRebirthEnemyAI
 {
+    public MonarchBeamController BeamController = null!;
     public AudioSource UltraCreatureVoice = null!;
     public Transform[] AirAttackTransforms = [];
     public Transform MouthTransform = null!;
