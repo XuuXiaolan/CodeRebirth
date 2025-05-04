@@ -6559,6 +6559,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6860810173738817917}
   m_LocalEulerAnglesHint: {x: 89.98021, y: 0, z: 0}
+--- !u!1 &6408496725356961893
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 991924248622085254}
+  - component: {fileID: 7427201271974742139}
+  - component: {fileID: 2208304247778114901}
+  m_Layer: 22
+  m_Name: ScanNode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &991924248622085254
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408496725356961893}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.014, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1205260954774247077}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7427201271974742139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408496725356961893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRange: 7
+  minRange: 5
+  requiresLineOfSight: 1
+  headerText: PeaceKeeper
+  subText: He keeps the peace...
+  scrapValue: 0
+  creatureScanID: -1
+  nodeType: 1
+--- !u!65 &2208304247778114901
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408496725356961893}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6630735914071720345
 GameObject:
   m_ObjectHideFlags: 0
@@ -6674,6 +6748,7 @@ Transform:
   - {fileID: 3694020517111378347}
   - {fileID: 2651107332769978485}
   - {fileID: 57577259473932458}
+  - {fileID: 991924248622085254}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6185491295985074601
@@ -6744,8 +6819,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 0
+  _allowedLinks: 15
 --- !u!95 &5589188166006889593
 Animator:
   serializedVersion: 5
@@ -6948,12 +7024,11 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
-  hasVariants: 0
-  usesTemperature: 0
-  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 290345020657837124}
   smartAgentNavigator: {fileID: 1172250703776549669}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
   _gunStartTransform: {fileID: 6310224351839325153}
   _gunEndTransform: {fileID: 5888558220192546133}
   _walkingSpeed: 2

@@ -173,6 +173,27 @@ internal class CodeRebirthUtils : NetworkBehaviour
         Plugin.Logger.LogError($"Couldn't find enemy of name '{enemyName}'!");
     }
 
+    private int _indexToSpawn = 0;
+    [ServerRpc(RequireOwnership = false)]
+    public void SpawnRandomCRHazardServerRpc(Vector3 position)
+    {
+        Plugin.ExtendedLogging("Spawning CR Hazard with index: " + _indexToSpawn);
+        if (position == Vector3.zero)
+        {
+            Plugin.Logger.LogError("Trying to spawn a hazard at Vector3.zero!");
+            return;
+        }
+        GameObject hazardToSpawn = CodeRebirthRegistry.RegisteredCRMapObjects[_indexToSpawn].gameObject;
+        if (hazardToSpawn != null)
+        {
+            var go = GameObject.Instantiate(hazardToSpawn, position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            go.GetComponent<NetworkObject>().Spawn(true);
+        }
+        _indexToSpawn++;
+        if (_indexToSpawn >= CodeRebirthRegistry.RegisteredCRMapObjects.Count - 1)
+            _indexToSpawn = 0;
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(string? itemName, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
     {

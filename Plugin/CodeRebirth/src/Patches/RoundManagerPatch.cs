@@ -181,11 +181,7 @@ static class RoundManagerPatch
         for (int i = 0; i < numHits; i++)
         {
             if (!RoundManager.Instance.tempColliderResults[i].TryGetComponent(out INoiseListener noiseListener)) continue;
-            GalAI? gal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<GalAI>();
-            SCP999GalAI? scp999Gal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<SCP999GalAI>();
-            BellCrabGalAI? bellCrabGal = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<BellCrabGalAI>();
-            FlashTurret? flashTurret = RoundManager.Instance.tempColliderResults[i].gameObject.GetComponent<FlashTurret>();
-            if (gal == null && flashTurret == null && scp999Gal == null && bellCrabGal == null)
+            if (noiseListener is GalAI || noiseListener is SCP999GalAI || noiseListener is BellCrabGalAI || noiseListener is FlashTurret)
             {
                 continue;
             }

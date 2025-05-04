@@ -73,7 +73,6 @@ public class CodeRebirthConfig
     public ConfigEntry<string> ConfigFloraGrassCurveSpawnWeight { get; set; }
     public ConfigEntry<string> ConfigFloraDesertCurveSpawnWeight { get; set; }
     public ConfigEntry<string> ConfigFloraSnowCurveSpawnWeight { get; set; }
-    public ConfigEntry<float> ConfigCritChance { get; private set; }
     public ConfigEntry<string> ConfigSeamineTinkEnemyBlacklist { get; private set; }
     public ConfigEntry<float> ConfigSeamineTinkRidingBruceVolume { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkAutomatic { get; private set; }
@@ -412,23 +411,6 @@ public class CodeRebirthConfig
                                             new ConfigDescription(
                                                 "Volume of tornados in the ship.",
                                                 new AcceptableValueRange<float>(0, 1f)
-                                            ));
-        #endregion
-        #region Weapons
-        ConfigCanBreakTrees = configFile.Bind("Weapon Options",
-                                            "Weapons | Can Break Trees",
-                                            true,
-                                            "Enables/Disables breaking trees in the game for code rebirth weapons.");
-        ConfigAllowCrits = configFile.Bind("Weapon Options",
-                                            "Weapons | Crits",
-                                            true,
-                                            "Enables/Disables crits in the game for code rebirth weapons.");
-        ConfigCritChance = configFile.Bind("Weapon Options",
-                                            "Weapons | Crit Chance",
-                                            25f,
-                                            new ConfigDescription(
-                                                "Chance of crits in the game for code rebirth weapons.",
-                                                new AcceptableValueRange<float>(0, 100f)
                                             ));
         #endregion
         #region Redwood
