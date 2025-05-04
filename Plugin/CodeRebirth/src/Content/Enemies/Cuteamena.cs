@@ -584,6 +584,8 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+        if (isEnemyDead)
+            return;
 
         enemyHP -= force;
         if (enemyHP < 0)
@@ -617,7 +619,9 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         base.KillEnemy(destroy);
         _griefingSource.Stop();
         _cleaverGameObject.SetActive(false);
-        if (!IsServer) return;
+        if (!IsServer)
+            return;
+
         creatureAnimator.SetBool(IsDeadAnimation, true);
         Plugin.ExtendedLogging("Cuteamena has been defeated.");
     }

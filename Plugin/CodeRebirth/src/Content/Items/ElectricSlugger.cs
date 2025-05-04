@@ -121,8 +121,11 @@ public class ElectricSlugger : GrabbableObject
         for (int i = 0; i < numHits; i++)
         {
             CRUtilities.CreateExplosion(cachedRaycastHits[i].transform.position, true, 0, 0, 0, 0, playerHeldBy, null, 0);
-            if (!cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable) || Vector3.Distance(cachedRaycastHits[i].transform.position, playerHeldBy.transform.position) <= 3) continue;
-            if (GameNetworkManager.Instance.localPlayerController == playerHeldBy) iHittable.Hit(2 * (pumpCount + 1), playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
+            if (!cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable) || Vector3.Distance(cachedRaycastHits[i].transform.position, playerHeldBy.transform.position) <= 3)
+                continue;
+
+            if (GameNetworkManager.Instance.localPlayerController == playerHeldBy)
+                iHittable.Hit(2 * (pumpCount + 1), playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
             // play sound and stuff prob
         }
         firingSource.PlayOneShot(fireSound);

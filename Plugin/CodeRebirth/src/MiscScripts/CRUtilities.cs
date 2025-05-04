@@ -157,6 +157,9 @@ public class CRUtilities
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
 
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
         int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
@@ -209,7 +212,7 @@ public class CRUtilities
         foreach (PlayerControllerB player in playerControllerBToDamage.Keys)
         {
             Vector3 directionFromCenter = (player.transform.position - explosionPosition).normalized;
-            player.DamagePlayer(playerControllerBToDamage[player], true, false, CauseOfDeath.Burning, 6, false, directionFromCenter * pushForce * 5f);
+            player.DamagePlayer(playerControllerBToDamage[player], true, true, CauseOfDeath.Burning, 6, false, directionFromCenter * pushForce * 5f);
             player.externalForceAutoFade += directionFromCenter * pushForce;
         }
 

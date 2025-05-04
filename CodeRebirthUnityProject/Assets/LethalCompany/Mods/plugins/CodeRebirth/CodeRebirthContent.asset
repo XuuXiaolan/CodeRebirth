@@ -183,9 +183,9 @@ MonoBehaviour:
     enemies:
     - entityName: Cactus Budling
       spawnWeights: Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
-      weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1
+      weatherMultipliers: None:1,DustClouds:1,Rainy:0.8,Stormy:0.8,Foggy:1.4,Flooded:0.5,Eclipsed:1,Meteor
+        Shower:0.5,Tornado:0.8,Night Shift:0.5,Snowfall:0,Blizzard:0,Heatwave:1.5,Solar
+        Flare:1.5,Toxic Smog:1,Cloudy:1.2,Blackout:0.5
       powerLevel: 2
       maxSpawnCount: 1
     items: []
@@ -381,9 +381,9 @@ MonoBehaviour:
     enemies:
     - entityName: Driftwood Menace
       spawnWeights: Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
-      weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1
+      weatherMultipliers: None:1,DustClouds:1,Rainy:1.4,Stormy:1.4,Foggy:1,Flooded:0.75,Eclipsed:1,Meteor
+        Shower:0.5,Tornado:0.7,Night Shift:0.5,Snowfall:0,Blizzard:0,Heatwave:0.5,Solar
+        Flare:0.5,Toxic Smog:1,Cloudy:1,Blackout:0.5
       powerLevel: 2
       maxSpawnCount: 2
     items: []
@@ -594,9 +594,9 @@ MonoBehaviour:
     enemies:
     - entityName: Janitor
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1,DustClouds:1,Rainy:0.75,Stormy:0.75,Foggy:1,Flooded:0.5,Eclipsed:1,Meteor
+        Shower:0.8,Tornado:1,Night Shift:2,Snowfall:1,Blizzard:1,Heatwave:0.75,Solar
+        Flare:0.75,Toxic Smog:1,Cloudy:1,Blackout:2
       powerLevel: 1
       maxSpawnCount: 3
     items: []
@@ -620,11 +620,11 @@ MonoBehaviour:
     enemies:
     - entityName: ManorLord
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1.25,Flooded:1.25,Eclipsed:1,Meteor
+        Shower:0.75,Tornado:1.25,Night Shift:1.5,Snowfall:1.4,Blizzard:1.4,Heatwave:0.75,Solar
+        Flare:0.75,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
       powerLevel: 2
-      maxSpawnCount: 3
+      maxSpawnCount: 1
     items:
     - entityName: Puppet
       spawnWeights: 
@@ -912,9 +912,9 @@ MonoBehaviour:
     enemies:
     - entityName: Mistress
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:1.4,Foggy:1.2,Flooded:0.5,Eclipsed:0.5,Meteor
+        Shower:0.5,Tornado:0.5,Night Shift:1.5,Snowfall:1.4,Blizzard:1.4,Heatwave:1.2,Solar
+        Flare:1,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
       powerLevel: 2
       maxSpawnCount: 1
     items:
@@ -941,9 +941,9 @@ MonoBehaviour:
       maxSpawnCount: 3
     - entityName: Cutiefly
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1.5,DustClouds:1.2,Rainy:0.5,Stormy:0.5,Foggy:1.25,Flooded:0,Eclipsed:0,Meteor
+        Shower:0,Tornado:0,Night Shift:0,Snowfall:0,Blizzard:0,Heatwave:1.5,Solar
+        Flare:1.5,Toxic Smog:0,Cloudy:1.25,Blackout:0
       powerLevel: 0.5
       maxSpawnCount: 6
     items: []
@@ -993,9 +993,9 @@ MonoBehaviour:
     enemies:
     - entityName: Nancy
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1,DustClouds:0.9,Rainy:0.75,Stormy:0.75,Foggy:0.9,Flooded:0.25,Eclipsed:1,Meteor
+        Shower:1,Tornado:1,Night Shift:1.25,Snowfall:0.5,Blizzard:0.5,Heatwave:0.75,Solar
+        Flare:0.75,Toxic Smog:1,Cloudy:0.9,Blackout:1.25
       powerLevel: 1
       maxSpawnCount: 1
     items: []
@@ -1178,9 +1178,9 @@ MonoBehaviour:
     enemies:
     - entityName: Peace Keeper
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:0.6,DustClouds:0.6,Rainy:0.4,Stormy:0.35,Foggy:0.6,Flooded:0.1,Eclipsed:2,Meteor
+        Shower:1,Tornado:1,Night Shift:0.7,Snowfall:1,Blizzard:1,Heatwave:1,Solar
+        Flare:1,Toxic Smog:1,Cloudy:1,Blackout:0.7
       powerLevel: 1.5
       maxSpawnCount: 3
     items:
@@ -1237,9 +1237,9 @@ MonoBehaviour:
     enemies:
     - entityName: Rabbit Magician
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:1.4,Foggy:1.2,Flooded:0.5,Eclipsed:0.5,Meteor
+        Shower:0.5,Tornado:0.5,Night Shift:1.5,Snowfall:1.4,Blizzard:1.4,Heatwave:1.2,Solar
+        Flare:1,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
       powerLevel: 3
       maxSpawnCount: 1
     items: []
@@ -1251,9 +1251,9 @@ MonoBehaviour:
     enemies:
     - entityName: Redwood Titan
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1,DustClouds:0.75,Rainy:1.25,Stormy:0.75,Foggy:0.75,Flooded:0.25,Eclipsed:1.2,Meteor
+        Shower:0.25,Tornado:0.651415926535,Night Shift:0.3,Snowfall:0.1,Blizzard:0.1,Heatwave:1.2,Solar
+        Flare:1.2,Toxic Smog:1,Cloudy:0.8,Blackout:0.3
       powerLevel: 1.5
       maxSpawnCount: 1
     items: []
@@ -1360,9 +1360,9 @@ MonoBehaviour:
     enemies:
     - entityName: SnailCat
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1.5,DustClouds:0.5,Rainy:0.5,Stormy:0.5,Foggy:0.5,Flooded:0.1,Eclipsed:0,Meteor
+        Shower:0,Tornado:0.1,Night Shift:0.1,Snowfall:0.1,Blizzard:0.1,Heatwave:0.7,Solar
+        Flare:0.7,Toxic Smog:0,Cloudy:0.8,Blackout:0.1
       powerLevel: 0.5
       maxSpawnCount: 6
     items:
@@ -1488,9 +1488,9 @@ MonoBehaviour:
     enemies:
     - entityName: Transporter
       spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      weatherMultipliers: None:1.5,DustClouds:0.9,Rainy:0.9,Stormy:0.8,Foggy:0.9,Flooded:0.25,Eclipsed:1.5,Meteor
+        Shower:1.5,Tornado:0.8,Night Shift:2,Snowfall:1.4,Blizzard:1.4,Heatwave:0.6,Solar
+        Flare:0.6,Toxic Smog:0,Cloudy:0.9,Blackout:2
       powerLevel: 1
       maxSpawnCount: 3
     items: []
