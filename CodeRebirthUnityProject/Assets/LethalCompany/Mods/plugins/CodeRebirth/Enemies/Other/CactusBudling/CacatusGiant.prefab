@@ -970,8 +970,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 0
+  _allowedLinks: 15
 --- !u!114 &8653537968367135705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1169,7 +1170,7 @@ MonoBehaviour:
     type: 2}
   _rollingDuration: 20
   _rootingDuration: 60
-  _attackAmount: 5
+  _attackAmount: 6
 --- !u!1 &5169185421139817056
 GameObject:
   m_ObjectHideFlags: 0
