@@ -4,6 +4,7 @@ using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class YandereCuteamena : CodeRebirthEnemyAI
@@ -11,56 +12,46 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     [Header("Misc")]
     [SerializeField]
     private InteractTrigger _headPatTrigger = null!;
-
     [SerializeField]
     private GameObject _cleaverGameObject = null!;
 
     [Header("Stats")]
     [SerializeField]
     private float _wanderSpeed = 2f;
-
     [SerializeField]
     private float _followSpeed = 4f;
-
     [SerializeField]
     private float _chasingSpeed = 6f;
-
     [SerializeField]
     private int _healAmount = 10;
-
     [SerializeField]
     private float _healCooldown = 5f;
-
     [SerializeField]
     private float _attentionDistanceThreshold = 8f;
-
     [SerializeField]
     private float _jealousAttackRange = 5f;
-
     [SerializeField]
     private float _detectionRange = 20f;
-
     [SerializeField]
     private float _doorLockpickInterval = 200f;
-
     [SerializeField]
     private float _attackInterval = 5f;
-
     [SerializeField]
     private float _threatFindInterval = 2f;
 
     [Header("Audio")]
     [SerializeField]
     private AudioSource _griefingSource = null!;
-
     [SerializeField]
     private AudioClip _spawnSound = null!;
-
     [SerializeField]
     private AudioClip _cheerUpSound = null!;
-
     [SerializeField]
     private AudioClip _yandereLaughSound = null!;
+    [SerializeField]
+    private AudioClip[] _patSounds = [];
+    [SerializeField]
+    private AudioClip[] _footstepSounds = [];
 
     private enum CuteamenaState
     {
@@ -96,23 +87,24 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     
     public override void Start()
     {
-        smartAgentNavigator = GetComponent<SmartAgentNavigator>(); // todo: remove this
         base.Start();
         _headPatTrigger.onInteract.AddListener(OnHeadPatInteract);
         smartAgentNavigator.StartSearchRoutine(40f);
         agent.speed = _wanderSpeed;
-        // creatureSFX.PlayOneShot(_spawnSound);
+        creatureSFX.PlayOneShot(_spawnSound);
         _healTimer = _healCooldown;
-        _doorLockpickTimer = _doorLockpickInterval;
+        _doorLockpickTimer = 5;
     }
 
     public override void Update()
     {
         base.Update();
+        _headPatTrigger.interactable = currentBehaviourStateIndex == (int)CuteamenaState.Passive || currentBehaviourStateIndex == (int)CuteamenaState.Jealous;
         if (isEnemyDead)
             return;
 
-        if (!IsServer) return;
+        if (!IsServer)
+            return;
 
         _healTimer -= Time.deltaTime;
         _doorLockpickTimer -= Time.deltaTime;
@@ -195,15 +187,17 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             return;
         }
 
-        if (_targetDoor)
+        if (_targetDoor != null && _doorLockpickTimer <= 0)
         {
-            smartAgentNavigator.DoPathingToDestination(_targetDoor!.transform.position);
+            Plugin.ExtendedLogging($"Cuteamena is going to {_targetDoor.name}");
+            smartAgentNavigator.DoPathingToDestination(RoundManager.Instance.GetRandomNavMeshPositionInRadius(_targetDoor.transform.position, 2f, default));
 
-            if (Vector3.Distance(transform.position, _targetDoor.transform.position) < 2f)
+            if (Vector3.Distance(transform.position, _targetDoor.transform.position) < agent.stoppingDistance)
             {
+                Plugin.ExtendedLogging($"Cuteamena headbutted {_targetDoor.name}");
                 creatureNetworkAnimator.SetTrigger(HeadbuttAnimation);
+                _doorLockpickTimer = _doorLockpickInterval;
             }
-            
             return;
         }
         
@@ -308,7 +302,6 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             Plugin.ExtendedLogging("body moved");
             creatureNetworkAnimator.SetTrigger(PullOutKnifeAnimation);
             agent.speed = _chasingSpeed;
-            StartOrStopGriefingSoundServerRpc(false);
             creatureAnimator.SetBool(CryingAnimation, false);
             SwitchToBehaviourServerRpc((int)CuteamenaState.Yandere);
         }
@@ -329,7 +322,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     {
         PlayerControllerB player = playerControllerReference;
         creatureNetworkAnimator.SetTrigger(PetAnimation);
-        // creatureVoice.PlayOneShot(patSounds[enemyRandom.Next(patSounds.Length)]);    
+        creatureSFX.PlayOneShot(_patSounds[UnityEngine.Random.Range(0, _patSounds.Length)]);    
 
         if (currentBehaviourStateIndex != (int)CuteamenaState.Jealous)
             return;
@@ -365,7 +358,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     {
         targetPlayer.DamagePlayerFromOtherClientServerRpc(-_healAmount, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
         Plugin.ExtendedLogging("Cuteamena healed her Senpai!");
-        // creatureSFX.PlayOneShot(_cheerUpSound);
+        creatureSFX.PlayOneShot(_cheerUpSound);
     }
 
     private void FindThreatsNearbySenpai()
@@ -377,7 +370,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             if (enemyAICollisionDetect == null)
                 continue;
 
-            if (!enemyAICollisionDetect.mainScript.enemyType.canDie)
+            if (!enemyAICollisionDetect.mainScript.enemyType.canDie || enemyAICollisionDetect.mainScript.isEnemyDead || enemyAICollisionDetect.mainScript.enemyType == this.enemyType)
                 continue;
 
             SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemyAICollisionDetect.mainScript));
@@ -388,12 +381,13 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
     private void ChooseDoorToLockpick()
     {
-        Collider[] doors = Physics.OverlapSphere(transform.position, 5f, CodeRebirthUtils.Instance.interactableMask, QueryTriggerInteraction.Collide);
+        Collider[] doors = Physics.OverlapSphere(transform.position, 10f, CodeRebirthUtils.Instance.interactableMask, QueryTriggerInteraction.Collide);
         foreach (var doorCollider in doors)
         {
             DoorLock door = doorCollider.GetComponent<DoorLock>();
             if (door != null && door.isLocked)
             {
+                door.gameObject.GetComponent<NavMeshObstacle>().carving = false;
                 _targetDoor = door;
                 // todo: probably headbutt the door, maybe set a target door for it to go towards first lol
                 Plugin.ExtendedLogging("Cuteamena chose a door to lockpick.");
@@ -449,11 +443,6 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         return dot > 0.7f;
     }
 
-    private bool IsSenpaiCheeringUp()
-    {
-        return UnityEngine.Random.Range(0, 1000) < 5;
-    }
-
     private bool HasBeenFurtherIgnored()
     {
         return UnityEngine.Random.Range(0, 1000) < 2;
@@ -461,7 +450,6 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
     private void AttackPlayer(PlayerControllerB player, float distanceToRival)
     {
-        Vector3 knockback = (player.transform.position - transform.position).normalized * 5f;
         smartAgentNavigator.DoPathingToDestination(player.transform.position);
 
         if (distanceToRival < agent.stoppingDistance + _jealousAttackRange)
@@ -472,12 +460,8 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         Plugin.ExtendedLogging("Cuteamena attacked a rival player out of jealousy!");
     }
 
-    [ClientRpc]
-    private void AttackPlayerClientRPC(PlayerControllerReference reference, AttackType attackType)
+    private void AttackPlayerWithAttackType(PlayerControllerB player, AttackType attackType)
     {
-        PlayerControllerB player = reference;
-        if (player != GameNetworkManager.Instance.localPlayerController) return;
-
         switch (attackType)
         {
             case AttackType.Cleaver:
@@ -500,34 +484,39 @@ public class YandereCuteamena : CodeRebirthEnemyAI
 
         return body.bodyMovedThisFrame;
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void StartOrStopGriefingSoundServerRpc(bool start)
-    {
-        StartOrStopGriefingSoundClientRpc(start);
-    }
-
-    [ClientRpc]
-    public void StartOrStopGriefingSoundClientRpc(bool start)
-    {
-        if (start)
-        {
-            _griefingSource.Play();
-        }
-        else
-        {
-            _griefingSource.Stop();
-        }
-    }
     #endregion
 
     #region Animation Events
+    public void StartPatAnimEvent()
+    {
+        smartAgentNavigator.cantMove = true;
+        smartAgentNavigator.StopAgent();
+    }
+
+    public void EndPatAnimEvent()
+    {
+        smartAgentNavigator.cantMove = false;
+    }
+
+    public void StartGriefingAnimEvent()
+    {
+        if (_griefingSource.isPlaying)
+            return;
+
+        _griefingSource.Play();
+    }
+
+    public void FootstepSoundAnimEvent()
+    {
+        creatureSFX.PlayOneShot(_footstepSounds[enemyRandom.Next(_footstepSounds.Length)]);
+    }
+
     public void DrawMeatCleaverAnimEvent()
     {
         _isCleaverDrawn = true;
         _cleaverGameObject.SetActive(true);
         Plugin.ExtendedLogging("Cuteamena has drawn her meat cleaver! Yandere mode engaged!");
-        // creatureSFX.PlayOneShot(_yandereLaughSound);
+        creatureSFX.PlayOneShot(_yandereLaughSound);
     }
 
     public void DropCleaverAnimEvent()
@@ -536,23 +525,25 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         Plugin.ExtendedLogging("Meat cleaver dropped as scrap.");
     }
     
-    public void OnSwingCleaverAnimEvent() {
-        if(!IsServer && !IsHost) return;
-        if(!_chasingPlayer) return;
-        
-        AttackPlayerClientRPC(_chasingPlayer!, AttackType.Cleaver);
+    public void OnSwingCleaverAnimEvent()
+    {
+        if (_chasingPlayer == null) 
+            return;
+
+        AttackPlayerWithAttackType(_chasingPlayer, AttackType.Cleaver);
     }
 
     public void HeadbuttAnimEvent()
     {
-        if(!IsServer && !IsHost) return;
-        if (_targetDoor)
+        if (_targetDoor != null)
         {
-            _targetDoor.UnlockDoorClientRpc();
+            _targetDoor.UnlockDoor();
+            _targetDoor.gameObject.GetComponent<NavMeshObstacle>().carving = true;
             _targetDoor = null;
-        } else if (_chasingPlayer)
+        }
+        else if (_chasingPlayer != null)
         {
-            AttackPlayerClientRPC(_chasingPlayer!, AttackType.Headbutt);
+            AttackPlayerWithAttackType(_chasingPlayer, AttackType.Headbutt);
         }
         else
         {
@@ -587,8 +578,9 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         if (isEnemyDead)
             return;
 
+        Plugin.ExtendedLogging($"Cuteamena has been hit for {force} damage and is now at {enemyHP - force} HP.");
         enemyHP -= force;
-        if (enemyHP < 0)
+        if (enemyHP <= 0)
         {
             if (IsOwner)
             {

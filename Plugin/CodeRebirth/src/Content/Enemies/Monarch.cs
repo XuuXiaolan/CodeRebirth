@@ -7,12 +7,14 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class Monarch : CodeRebirthEnemyAI
 {
-    public MonarchBeamController BeamController = null!;
-    public AudioSource UltraCreatureVoice = null!;
-    public Transform[] AirAttackTransforms = [];
-    public Transform MouthTransform = null!;
+    [SerializeField]
+    private MonarchBeamController BeamController = null!;
+    [SerializeField]
+    private AudioSource UltraCreatureVoice = null!;
+    [SerializeField]
+    private Transform MouthTransform = null!;
 
-    public static HashSet<Monarch> Monarchs = new();
+    public static List<Monarch> Monarchs = new();
 
     public enum MonarchState
     {
@@ -24,7 +26,7 @@ public class Monarch : CodeRebirthEnemyAI
 
     private bool canAttack = true;
     private bool isAttacking = false;
-    private Collider[] cachedHits = new Collider[8];
+    private Collider[] _cachedHits = new Collider[8];
     private static readonly int DoAttackAnimation = Animator.StringToHash("doAttack"); // trigger
     private static readonly int IsFlyingAnimation = Animator.StringToHash("isFlying"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
@@ -145,7 +147,10 @@ public class Monarch : CodeRebirthEnemyAI
             SwitchToBehaviourServerRpc((int)MonarchState.AttackingGround);
             return;
         }
-        if (isAttacking) closestPlayer = targetPlayer;
+
+        if (isAttacking)
+            closestPlayer = targetPlayer;
+
         if (closestPlayer == null)
         {
             Plugin.Logger.LogWarning($"closestPlayer is null, distanceToClosestPlayer: {distanceToClosestPlayer}, isAttacking: {isAttacking}, targetPlayer: {targetPlayer}");
@@ -183,7 +188,9 @@ public class Monarch : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
-        if (IsServer) creatureAnimator.SetBool(IsDeadAnimation, true);
+        if (IsServer)
+            creatureAnimator.SetBool(IsDeadAnimation, true);
+
         SwitchToBehaviourStateOnLocalClient((int)MonarchState.Death);
         Monarchs.Remove(this);
     }
@@ -191,7 +198,8 @@ public class Monarch : CodeRebirthEnemyAI
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        if (Monarchs.Contains(this)) Monarchs.Remove(this);
+        if (Monarchs.Contains(this))
+            Monarchs.Remove(this);
     }
 
     #region Misc Functions
@@ -225,10 +233,10 @@ public class Monarch : CodeRebirthEnemyAI
     #region Animation Events
     public void GroundAttackAnimationEvent()
     {
-        int numHits = Physics.OverlapSphereNonAlloc(MouthTransform.position, 1.5f, cachedHits, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Ignore);
+        int numHits = Physics.OverlapSphereNonAlloc(MouthTransform.position, 1.5f, _cachedHits, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
-            if (!cachedHits[i].TryGetComponent(out PlayerControllerB player) || player != GameNetworkManager.Instance.localPlayerController) continue;
+            if (!_cachedHits[i].TryGetComponent(out PlayerControllerB player) || player != GameNetworkManager.Instance.localPlayerController) continue;
             player.DamagePlayer(35, true, true, CauseOfDeath.Mauling, 0, false, default);
         }
         targetPlayer = null;
