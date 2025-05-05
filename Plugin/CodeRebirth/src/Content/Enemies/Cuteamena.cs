@@ -389,7 +389,6 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             {
                 door.gameObject.GetComponent<NavMeshObstacle>().carving = false;
                 _targetDoor = door;
-                // todo: probably headbutt the door, maybe set a target door for it to go towards first lol
                 Plugin.ExtendedLogging("Cuteamena chose a door to lockpick.");
                 break;
             }
@@ -407,6 +406,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         {
             if (player == targetPlayer || player.isPlayerDead)
                 continue;
+
             if (Vector3.Distance(targetPlayer.transform.position, player.transform.position) > 5f)
                 continue;
 

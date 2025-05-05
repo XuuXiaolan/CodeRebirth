@@ -155,7 +155,6 @@ public class Plugin : BaseUnityPlugin
             Logger.LogInfo(text);
         }
     }
-
     private void InitializeNetworkBehaviours()
     {
         var types = Assembly.GetExecutingAssembly().GetLoadableTypes();

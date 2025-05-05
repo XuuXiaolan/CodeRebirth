@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using Random = System.Random;
 
@@ -48,6 +47,6 @@ public static class RandomExtensions
 
     public static Quaternion NextQuaternion(this Random random)
     {
-        return quaternion.Euler(random.NextFloat(0f, 360f), random.NextFloat(0f, 360f), random.NextFloat(0f, 360f));
+        return Quaternion.Euler(random.NextFloat(0f, 360f), random.NextFloat(0f, 360f), random.NextFloat(0f, 360f));
     }
 }
