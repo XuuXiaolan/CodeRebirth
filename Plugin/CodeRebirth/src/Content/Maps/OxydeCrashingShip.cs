@@ -1,6 +1,5 @@
 using System.Collections;
 using CodeRebirth.src.Content.Items;
-using CodeRebirth.src.Content.MoonAddons;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
@@ -29,7 +28,6 @@ public class OxydeCrashingShip : FallingObjectBehaviour
         this.transform.position = new Vector3(9999, 9999, 9999);
         System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         StartCoroutine(WaitToDoYourThing(spawnPosition, random));
-
     }
 
     public IEnumerator WaitToDoYourThing(Vector3 spawnPosition, System.Random random)
@@ -93,7 +91,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
         CRUtilities.CreateExplosion(transform.position, true, 50, 0, 25, 4, null, null, 100f);
 
         if (!IsServer) yield break;
-        if (MoonAddonsHandler.Instance.MoonUnlocker == null) yield break;
-        CodeRebirthUtils.Instance.SpawnScrap(MoonAddonsHandler.Instance.MoonUnlocker.ItemDefinitions.GetCRItemDefinitionWithItemName("Oxyde")?.item, _itemSpawnTransform.position, false, true, 0);
+        if (ItemHandler.Instance.MoonUnlocker == null) yield break;
+        CodeRebirthUtils.Instance.SpawnScrap(ItemHandler.Instance.MoonUnlocker.ItemDefinitions.GetCRItemDefinitionWithItemName("Oxyde")?.item, _itemSpawnTransform.position, false, true, 0);
     }
 }

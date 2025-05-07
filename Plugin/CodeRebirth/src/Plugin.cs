@@ -95,8 +95,8 @@ public class Plugin : BaseUnityPlugin
 
         Logger.LogInfo("Registering CodeRebirth content.");
 
-        RegisterContentHandlers(Assembly.GetExecutingAssembly());
         ModConfig.InitCodeRebirthConfig(configFile);
+        RegisterContentHandlers(Assembly.GetExecutingAssembly());
 
         if (SubtitlesAPICompatibilityChecker.Enabled)
         {

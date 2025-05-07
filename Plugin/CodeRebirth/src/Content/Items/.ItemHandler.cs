@@ -43,6 +43,16 @@ public class ItemHandler : ContentHandler<ItemHandler>
         public GameObject SmallRigoPrefab { get; private set; } = null!;
     }
 
+    public class MoonUnlockerAssets(string bundleName) : AssetBundleLoader<MoonUnlockerAssets>(bundleName)
+    {
+    }
+
+    public class OxydeLoreAssets(string bundleName) : AssetBundleLoader<OxydeLoreAssets>(bundleName)
+    {
+    }
+
+    public MoonUnlockerAssets? MoonUnlocker { get; private set; } = null;
+    public OxydeLoreAssets? OxydeLore { get; private set; } = null;
     public XuAndRigoAssets? XuAndRigo { get; private set; } = null;
     public ZortAssets? Zort { get; private set; } = null;
     public HoverboardAssets? Hoverboard { get; private set; } = null;
@@ -55,7 +65,11 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public ItemHandler()
     {
-        XuAndRigo = LoadAndRegisterAssets<XuAndRigoAssets>("xuandrigoassets");
+        OxydeLore = LoadAndRegisterAssets<OxydeLoreAssets>("oxydeloreassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+
+        MoonUnlocker = LoadAndRegisterAssets<MoonUnlockerAssets>("moonunlockerassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+
+        XuAndRigo = LoadAndRegisterAssets<XuAndRigoAssets>("xuandrigoassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
         Zort = LoadAndRegisterAssets<ZortAssets>("zortassets");
 

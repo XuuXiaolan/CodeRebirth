@@ -3,28 +3,12 @@ using System.Linq;
 using LethalLevelLoader;
 using UnityEngine;
 
-namespace CodeRebirth.src.Content.MoonAddons;
+namespace CodeRebirth.src.Content.Items;
 public class PlanetUnlocker : GrabbableObject
 {
     public string moonSceneName = "Oxyde";
     public float timeBeforeDespawning = 5f;
     public AudioSource audioPlayer = null!;
-
-    public override void Start()
-    {
-        base.Start();
-        /*LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == moonSceneName).FirstOrDefault(), out ExtendedLevel? extendedLevel);
-        if (extendedLevel != null)
-        {
-            HUDManager.Instance.DisplayTip("Success", $"Disabling routing to {moonSceneName}", false);
-            extendedLevel.IsRouteHidden = true;
-            extendedLevel.IsRouteLocked = true;            
-        }
-        else
-        {
-            HUDManager.Instance.DisplayTip("Error", $"Could not find moon {moonSceneName}.", true);
-        }*/
-    }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
