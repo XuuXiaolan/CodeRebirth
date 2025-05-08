@@ -170,7 +170,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1458308409777058735}
   - component: {fileID: 4898359053044479854}
-  - component: {fileID: 6402301251060707118}
+  - component: {fileID: 3936767401102692775}
   m_Layer: 22
   m_Name: ScanNode
   m_TagString: Untagged
@@ -187,7 +187,7 @@ Transform:
   m_GameObject: {fileID: 3722263712871928472}
   serializedVersion: 2
   m_LocalRotation: {x: 0.69745475, y: 0.116434306, z: 0.116434306, w: 0.69745475}
-  m_LocalPosition: {x: -0.59, y: 0.08, z: 1.03}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.0052767, y: 3.0052762, z: 3.0052757}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -213,7 +213,7 @@ MonoBehaviour:
   scrapValue: 0
   creatureScanID: -1
   nodeType: 1
---- !u!65 &6402301251060707118
+--- !u!65 &3936767401102692775
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -232,5 +232,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: -0.45785704, y: 14.180626, z: 2.8887014}
+  m_Size: {x: 0.41284215, y: 0.39493442, z: 0.3643631}
+  m_Center: {x: -0.054740597, y: 0.24390803, z: -0.09310205}
