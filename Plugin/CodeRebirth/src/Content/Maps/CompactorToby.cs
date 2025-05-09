@@ -102,7 +102,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
     [ServerRpc(RequireOwnership = false)]
     public void TryCompactItemServerRpc(Vector3 randomPosition, int value, bool deadPlayer, bool fast)
     {
-        StartOrStopCompactingClientRpc(true, fast);
+        StartOrStopCompactingClientRpc(true, !fast);
         StartCoroutine(CompactProcess(randomPosition, value, deadPlayer, fast));
     }
 
@@ -151,6 +151,11 @@ public class CompactorToby : NetworkBehaviour, IHittable
                     component.Destination = this.transform.position;
                 }
             }
+
+            if (timeElapsed >= 11.1f && _tobyMalfunctionSource.isPlaying)
+            {
+                StopTobySourceClientRpc();
+            }
         }
         StartOrStopCompactingClientRpc(false, false);
         if (deadPlayer)
@@ -165,6 +170,12 @@ public class CompactorToby : NetworkBehaviour, IHittable
     {
         yield return new WaitForSeconds(delay);
         _tobyMalfunctionSource.Play();
+    }
+
+    [ClientRpc]
+    private void StopTobySourceClientRpc()
+    {
+        _tobyMalfunctionSource.Stop();
     }
 
     [ServerRpc(RequireOwnership = false)]
