@@ -433,7 +433,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ## Memorial/Graveyard
 
-- CoddingCat, Siphonife
+- CoddingCat
 
 ## Credits
 
@@ -448,6 +448,10 @@ If you're interested in helping with the development of the mod, feel free to re
 **Modeling/Designs:**
 
 - [QWERTYrodrigo](https://www.youtube.com/watch?v=AxE4TltnvjI), v0xx, S1ckboy, SolidStone, IntegrityChaos, and Bobilka
+
+**Visuals:**
+
+- Siphonife
 
 **Sounds:**
 
