@@ -15,7 +15,7 @@ public class TrackWeatherChanges : MonoBehaviour
         foreach (var level in StartOfRound.Instance.levels)
         {
             _numberOfLevels++;
-            string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeatherName(level);
+            string weatherName = level.currentWeather.ToString();
 
             _levels.Add(level);
             _weatherNames.Add(weatherName);
@@ -50,7 +50,7 @@ public class TrackWeatherChanges : MonoBehaviour
         for (int i = 0; i < _numberOfLevels - 1; i++)
         {
             SelectableLevel level = _levels[i];
-            string currentWeatherName = WeatherRegistry.WeatherManager.GetCurrentWeatherName(level);
+            string currentWeatherName = level.currentWeather.ToString();
             if (currentWeatherName == _weatherNames[i])
                 continue;
 
