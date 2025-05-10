@@ -8,7 +8,6 @@ using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
-using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
 using UnityEngine.AI;
 

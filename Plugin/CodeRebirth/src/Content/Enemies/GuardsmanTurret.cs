@@ -28,20 +28,20 @@ public class GuardsmanTurret : MonoBehaviour
             return;
         }
 
+        Vector3 direction = targetEnemy.transform.position - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+
         hitTimer -= Time.deltaTime;
         if (hitTimer > 0)
             return;
 
         hitTimer = 5f;
 
-        Vector3 direction = targetEnemy.transform.position - transform.position;
-
-        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
-
         if (Vector3.Dot(transform.forward, direction.normalized) > 0.7f)
             return;
 
+        Plugin.ExtendedLogging($"Turret can hit {targetEnemy.name} with {Vector3.Dot(transform.forward, direction.normalized)}");
         // CRUtilities.CreateExplosion(targetEnemy.transform.position, true, 25, 0, 6, 1, null, null, 25f);
     }
 
