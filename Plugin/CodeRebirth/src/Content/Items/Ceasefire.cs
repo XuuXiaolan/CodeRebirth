@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
@@ -219,9 +220,7 @@ public class Ceasefire : GrabbableObject
 
         Vector3 capsuleStart = _ceasefireBarrel.transform.position;
         Vector3 capsuleEnd = capsuleStart + playerHeldBy.transform.forward * _minigunRange;
-        int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth,
-            _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask,
-            QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)
         {
@@ -235,7 +234,7 @@ public class Ceasefire : GrabbableObject
                     continue;
 
                 Vector3 damageDirection = (player.transform.position - capsuleStart).normalized;
-                player.DamagePlayer(_minigunDamage, true, true, CauseOfDeath.Gunshots, 0, false, damageDirection * 10f);
+                player.DamagePlayerFromOtherClientServerRpc(_minigunDamage, damageDirection, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
                 player.externalForceAutoFade += damageDirection * 2f;
             }
             else if (hittable is EnemyAICollisionDetect enemy)

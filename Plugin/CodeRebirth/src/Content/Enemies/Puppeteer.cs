@@ -262,14 +262,24 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             Vector3 nodePos = gameObject.transform.position;
             bool isFar = pointsToStayAwayFrom.All(pt => Vector3.Distance(pt, nodePos) > 30f);
-            if (isFar)
-            {
-                possibleDestinations.Add(nodePos);
-            }
+            if (!isFar)
+                continue;
+
+            possibleDestinations.Add(nodePos);
         }
         if (possibleDestinations.Count == 0)
         {
-            return transform.position;
+            foreach (var gameObject in RoundManager.Instance.outsideAINodes)
+            {
+                Vector3 nodePos = gameObject.transform.position;
+                bool isFar = pointsToStayAwayFrom.All(pt => Vector3.Distance(pt, nodePos) > 30f);
+                if (!isFar)
+                    continue;
+
+                possibleDestinations.Add(nodePos);
+            }
+            if (possibleDestinations.Count == 0)
+                return transform.position;
         }
         return possibleDestinations[UnityEngine.Random.Range(0, possibleDestinations.Count)];
     }
