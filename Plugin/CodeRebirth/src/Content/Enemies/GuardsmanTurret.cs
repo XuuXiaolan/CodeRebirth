@@ -1,3 +1,5 @@
+using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
@@ -11,7 +13,7 @@ public class GuardsmanTurret : MonoBehaviour
 
     private float hitTimer = 5f;
 
-    public void LateUpdate()
+    public void Update()
     {
         if (GuardsmanOwner.isEnemyDead)
             return;
@@ -28,8 +30,8 @@ public class GuardsmanTurret : MonoBehaviour
             return;
         }
 
-        Vector3 direction = targetEnemy.transform.position - transform.position;
-        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        Vector3 normalizedDirection = (targetEnemy.transform.position - transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(normalizedDirection);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
 
         hitTimer -= Time.deltaTime;
@@ -38,11 +40,14 @@ public class GuardsmanTurret : MonoBehaviour
 
         hitTimer = 5f;
 
-        if (Vector3.Dot(transform.forward, direction.normalized) > 0.7f)
+        float dot = Vector3.Dot(transform.forward, normalizedDirection);
+        if (dot < 0.7)
             return;
 
-        Plugin.ExtendedLogging($"Turret can hit {targetEnemy.name} with {Vector3.Dot(transform.forward, direction.normalized)}");
-        // CRUtilities.CreateExplosion(targetEnemy.transform.position, true, 25, 0, 6, 1, null, null, 25f);
+        if (Physics.Raycast(this.transform.position, this.transform.forward, out RaycastHit hit, 999, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore))
+        {
+            CRUtilities.CreateExplosion(hit.point, true, 25, 0, 6, 1, null, null, 25f);
+        }
     }
 
     private void HandleFindingTargetEnemy()
@@ -52,14 +57,21 @@ public class GuardsmanTurret : MonoBehaviour
             if (enemy is Guardsman)
                 continue;
 
-            if (GuardsmanOwner.targetEnemy != null && GuardsmanOwner.targetEnemy == enemy)
+            if (GuardsmanOwner.targetEnemy == enemy)
                 continue;
 
-            if (GuardsmanOwner.EnemyHasLineOfSightToPosition(this.transform.position, 360, 70, 0))
-            {
-                targetEnemy = enemy;
-                break;
-            }
+            if (GuardsmanOwner._internalEnemyBlacklist.Contains(enemy.enemyType))
+                continue;
+
+            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distanceToEnemy > 140f)
+                continue;
+
+            if (Physics.Raycast(this.transform.position, enemy.transform.position - this.transform.position, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+                continue;
+
+            targetEnemy = enemy;
+            break;
         }
     }
 }

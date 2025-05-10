@@ -31,7 +31,7 @@ public class Guardsman : CodeRebirthEnemyAI
     private List<IHittable> _iHittableList = new();
     private List<EnemyAI> _enemyAIList = new();
     private Collider[] _cachedHits = new Collider[24];
-    private HashSet<EnemyType> _internalEnemyBlacklist = new();
+    internal HashSet<EnemyType> _internalEnemyBlacklist = new();
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
