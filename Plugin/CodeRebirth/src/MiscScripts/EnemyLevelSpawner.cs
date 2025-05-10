@@ -23,7 +23,7 @@ public class EnemyLevelSpawner : MonoBehaviour
     private float spawnTimer = 10f;
     private System.Random pipeRandom = new();
 
-    public static Dictionary<EnemyType, int> entitiesSpawned = new();
+    public static Dictionary<EnemyType, int> entitiesSpawned = new(); // fix a bunch of this stuff here, make this a list for example
     private float enemiesSpawnedByPipe = 0;
     private List<(EnemyType, float)> specialEnemies = new();
     private IEnumerable<(EnemyType, float)> mainEnemiesToSpawn;

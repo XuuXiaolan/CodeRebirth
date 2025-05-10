@@ -256,16 +256,20 @@ public class Mistress : CodeRebirthEnemyAI
 
     private bool PlayerLookingAtEnemy()
     {
-        if (cantLosePlayer) return true;
+        if (cantLosePlayer)
+            return true;
+
         float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (HeadTransform.position - targetPlayer.gameplayCamera.transform.position).normalized);
-        // Plugin.ExtendedLogging($"Vector Dot: {dot}");
-        if (dot <= 0.45f) return false;
-        if (Physics.Linecast(targetPlayer.gameplayCamera.transform.position, HeadTransform.position, out _, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
-        {
-            // Plugin.ExtendedLogging($"Linecast hit {hit.collider.name}");
+        if (dot <= 0.45f)
             return false;
-        }
-        // Plugin.ExtendedLogging($"Linecast did not hit anything");
+
+        float distanceToPlayer = Vector3.Distance(targetPlayer.gameplayCamera.transform.position, HeadTransform.position);
+        if (distanceToPlayer > 50f)
+            return false;
+
+        if (Physics.Raycast(targetPlayer.gameplayCamera.transform.position, targetPlayer.gameplayCamera.transform.position - HeadTransform.position, distanceToPlayer, CodeRebirthUtils.Instance.collidersAndRoomAndDefaultAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
+            return false;
+
         return true;
     }
 
