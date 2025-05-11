@@ -173,6 +173,9 @@
         },
         {
             "m_Id": "03f284cdf76042e0a266ea3dff9ad697"
+        },
+        {
+            "m_Id": "af1b5132cbda4cedaf4f7f503dd7137f"
         }
     ],
     "m_GroupDatas": [],
@@ -685,6 +688,20 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "af1b5132cbda4cedaf4f7f503dd7137f"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "6483241bca084df0a2ff210ce8ca0065"
+                },
+                "m_SlotId": 3
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "b0573d02e019479f8e90f30c31f13dd5"
                 },
                 "m_SlotId": 2
@@ -920,10 +937,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 2165.33349609375,
-            "y": 412.0,
+            "x": 2204.000244140625,
+            "y": 398.66668701171877,
             "width": 56.0,
-            "height": 23.99993896484375
+            "height": 24.0
         }
     },
     "m_Slots": [
@@ -3124,6 +3141,19 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SamplerStateMaterialSlot",
+    "m_ObjectId": "601e01932ab743fd9faae16095015430",
+    "m_Id": 0,
+    "m_DisplayName": "Out",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_BareResource": false
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "602b8fead1134b2f81a9dc3e900b1869",
     "m_Id": 0,
@@ -5144,6 +5174,42 @@
     "m_Property": {
         "m_Id": "687912e3d9f0457e8ed5a504abd40f47"
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SamplerStateNode",
+    "m_ObjectId": "af1b5132cbda4cedaf4f7f503dd7137f",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Sampler State",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -3883.333251953125,
+            "y": -170.0,
+            "width": 147.333251953125,
+            "height": 141.33331298828126
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "601e01932ab743fd9faae16095015430"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_filter": 0,
+    "m_wrap": 1,
+    "m_aniso": 0
 }
 
 {
