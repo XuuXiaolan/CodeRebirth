@@ -11,7 +11,7 @@ public class PlayerControllerReference : INetworkSerializable
     {
         serializer.SerializeValue(ref _playerID);
     }
-    
+
     public static implicit operator PlayerControllerB(PlayerControllerReference reference) => StartOfRound.Instance.allPlayerScripts[reference._playerID];
     public static implicit operator PlayerControllerReference(PlayerControllerB player) => new()
     {
@@ -22,8 +22,9 @@ public class PlayerControllerReference : INetworkSerializable
     {
         return obj is PlayerControllerReference other && other._playerID == _playerID;
     }
-    
-    public override int GetHashCode() {
+
+    public override int GetHashCode()
+    {
         return _playerID;
     }
 }

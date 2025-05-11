@@ -161,7 +161,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
     private void DoSpawning()
     {
-        
+
     }
 
     private void DoSearchingForRoot()
@@ -258,7 +258,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
     private void DoDead()
     {
-        
+
     }
     #endregion
 

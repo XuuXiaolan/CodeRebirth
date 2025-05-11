@@ -48,7 +48,7 @@ public class GunslingerMissile : MonoBehaviour
                 if (radMechAI != null)
                 {
                     if (radMechAI.IsOwner)
-                        radMechAI.KillEnemyOnOwnerClient(overrideDestroy: true);                    
+                        radMechAI.KillEnemyOnOwnerClient(overrideDestroy: true);
 
                     var gameobject = GameObject.Instantiate(MapObjectHandler.Instance.GunslingerGreg!.OldBirdExplosionPrefab, this.transform.position, Quaternion.identity);
                     Destroy(gameobject, 15f);
@@ -77,7 +77,7 @@ public class GunslingerMissile : MonoBehaviour
                 if (radMechAI != null)
                 {
                     if (radMechAI.IsOwner)
-                        radMechAI.KillEnemyOnOwnerClient(overrideDestroy: true);                    
+                        radMechAI.KillEnemyOnOwnerClient(overrideDestroy: true);
 
                     var gameobject = GameObject.Instantiate(MapObjectHandler.Instance.GunslingerGreg!.OldBirdExplosionPrefab, this.transform.position, Quaternion.identity);
                     Destroy(gameobject, 15f);

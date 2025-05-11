@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -35,14 +36,15 @@ public class Monarch : CodeRebirthEnemyAI
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        Monarchs.Add(this);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         UltraCreatureVoice.Play();
 
-        Monarchs.Add(this);
+        if (!IsServer)
+            return;
 
-        int randomNumberToSpawn = enemyRandom.Next(2, 5);
-        if (!IsServer) return;
+        int randomNumberToSpawn = UnityEngine.Random.Range(2, 5);
         for (int i = 0; i < randomNumberToSpawn; i++)
         {
             RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("CutieFly")!.enemyType);
@@ -52,15 +54,21 @@ public class Monarch : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
+        BeamController._monarchParticle.transform.SetParent(null);
+        BeamController._monarchParticle.transform.position = Vector3.zero;
         SwitchToBehaviourStateOnLocalClient((int)MonarchState.Idle);
+        if (!IsServer)
+            return;
+
+        smartAgentNavigator.StartSearchRoutine(50);
     }
 
     #region StateMachines
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (StartOfRound.Instance.allPlayersDead) return;
+        if (StartOfRound.Instance.allPlayersDead || isEnemyDead)
+            return;
 
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
         switch (currentBehaviourStateIndex)
@@ -228,6 +236,119 @@ public class Monarch : CodeRebirthEnemyAI
         return closestPlayer;
     }
 
+    private Vector3 _currentBeamEnd = Vector3.zero;
+    public IEnumerator ShootingEffect()
+    {
+        BeamController._monarchParticle.Play();
+
+        float totalDuration = 3f;
+        float damageInterval = 0.25f;
+        const float maxRange = 30f;
+        const float followRadius = 5f;
+        const float followSmoothing = 5f;
+
+        _currentBeamEnd = GetDesiredBeamEnd(maxRange, followRadius);
+        BeamController.SetBeamPosition(_currentBeamEnd);
+
+        while (totalDuration > 0f)
+        {
+            yield return null;
+
+            Vector3 targetEnd = GetDesiredBeamEnd(maxRange, followRadius);
+            _currentBeamEnd = Vector3.Lerp(_currentBeamEnd, targetEnd, followSmoothing * Time.deltaTime);
+            BeamController.SetBeamPosition(_currentBeamEnd);
+
+            if (damageInterval <= 0f)
+            {
+                DoHitStuff(1, _currentBeamEnd);
+                damageInterval = 0.25f;
+            }
+
+            damageInterval -= Time.deltaTime;
+            totalDuration -= Time.deltaTime;
+        }
+
+        agent.speed = 10f;
+        targetPlayer = null;
+        isAttacking = false;
+    }
+
+    private Vector3 GetDesiredBeamEnd(float maxRange, float followRadius)
+    {
+        Transform start = BeamController._startBeamTransform;
+        Transform dir = BeamController._raycastDirectionBeamTransform;
+        RaycastHit hit;
+
+        bool didHit = Physics.Raycast(
+            start.position,
+            dir.forward,
+            out hit,
+            maxRange,
+            StartOfRound.Instance.collidersRoomMaskDefaultAndPlayers,
+            QueryTriggerInteraction.Ignore
+        );
+
+        Vector3 rawEnd = didHit
+            ? hit.point
+            : start.position + dir.forward * maxRange;
+
+        if (didHit && targetPlayer != null)
+        {
+            float distToPlayer = Vector3.Distance(hit.point, targetPlayer.transform.position);
+            if (distToPlayer <= followRadius)
+                return targetPlayer.transform.position;
+        }
+
+        return rawEnd;
+    }
+
+    private Collider[] _cachedColliders = new Collider[24];
+    private List<IHittable> _iHittableList = new();
+    private List<EnemyAI> _enemyAIList = new();
+    private List<PlayerControllerB> _playerList = new();
+
+    private void DoHitStuff(int damageToDeal, Vector3 startPosition)
+    {
+        _iHittableList.Clear();
+        _enemyAIList.Clear();
+        _playerList.Clear();
+
+        int numHits = Physics.OverlapSphereNonAlloc(startPosition, 2f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < numHits; i++)
+        {
+            if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
+                continue;
+
+            if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
+            {
+                if (_enemyAIList.Contains(enemyAICollisionDetect.mainScript))
+                    continue;
+
+                _enemyAIList.Add(enemyAICollisionDetect.mainScript);
+                enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(damageToDeal, startPosition);
+            }
+            else if (iHittable is PlayerControllerB playerController)
+            {
+                if (_playerList.Contains(playerController))
+                    continue;
+
+                _playerList.Add(playerController);
+                playerController.DamagePlayer(damageToDeal, true, false, CauseOfDeath.Mauling, 0, false, default);
+            }
+            else
+            {
+                _iHittableList.Add(iHittable);
+            }
+        }
+
+        foreach (var iHittable in _iHittableList)
+        {
+            if (!IsOwner)
+                continue;
+
+            iHittable.Hit(damageToDeal, startPosition, null, true, -1);
+        }
+    }
     #endregion
 
     #region Animation Events
@@ -236,18 +357,18 @@ public class Monarch : CodeRebirthEnemyAI
         int numHits = Physics.OverlapSphereNonAlloc(MouthTransform.position, 1.5f, _cachedHits, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
-            if (!_cachedHits[i].TryGetComponent(out PlayerControllerB player) || player != GameNetworkManager.Instance.localPlayerController) continue;
-            player.DamagePlayer(35, true, true, CauseOfDeath.Mauling, 0, false, default);
+            if (!_cachedHits[i].TryGetComponent(out PlayerControllerB player))
+                continue;
+            player.DamagePlayer(35, true, false, CauseOfDeath.Mauling, 0, false, default);
         }
         targetPlayer = null;
         isAttacking = false;
     }
 
-    public void AirAttackAnimationEvent()
+    public void AirAttackStartAnimEvent()
     {
-        // aim at target player set before the animation event plays.
-        targetPlayer = null;
-        isAttacking = false;
+        agent.speed = 0.25f;
+        StartCoroutine(ShootingEffect());
     }
 
     #endregion
