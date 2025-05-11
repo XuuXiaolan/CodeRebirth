@@ -59,7 +59,7 @@ public class GunslingerGreg : CodeRebirthHazard
             RechargeRocket(missileToRecharge);
         }
 
-        if (Plugin.ModConfig.ConfigDebugMode.Value) 
+        if (Plugin.ModConfig.ConfigDebugMode.Value)
             return;
 
         if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rockets.Count <= 0)
@@ -105,7 +105,7 @@ public class GunslingerGreg : CodeRebirthHazard
     private bool IsTransformNearGround(Transform toKillTransform)
     {
         Ray ray = new(toKillTransform.position, -Vector3.up);
-        if (Physics.Raycast(ray, 16f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, 20f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             return true;
         }

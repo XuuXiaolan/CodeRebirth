@@ -46,11 +46,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public override void Start()
     {
         base.Start();
-/*#if DEBUG
-        LineRenderer line = gameObject.AddComponent<LineRenderer>();
-        line.widthMultiplier = 0.2f; // reduce width of the line
-        StartCoroutine(DrawPath(line, agent));
-#endif*/
+        /*#if DEBUG
+                LineRenderer line = gameObject.AddComponent<LineRenderer>();
+                line.widthMultiplier = 0.2f; // reduce width of the line
+                StartCoroutine(DrawPath(line, agent));
+        #endif*/
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + 69);
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside);
         smartAgentNavigator.SetAllValues(isOutside);

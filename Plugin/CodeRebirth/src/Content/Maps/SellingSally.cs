@@ -28,7 +28,7 @@ public class SellingSally : NetworkBehaviour
     private SkinnedMeshRenderer bellRenderer = null!;
     [SerializeField]
     private NetworkAnimator sallyNetworkAnimator = null!;
-    
+
     [Header("Misc")]
     [SerializeField]
     private Transform endOfBarrelTransform = null!;

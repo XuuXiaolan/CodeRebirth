@@ -4,9 +4,13 @@ using UnityEngine.VFX;
 public class MonarchBeamController : MonoBehaviour
 {
     [SerializeField]
-    private VisualEffect _monarchParticle = null!;
+    public VisualEffect _monarchParticle = null!;
     [SerializeField]
     private SkinnedMeshRenderer _wingMesh = null!;
+    [SerializeField]
+    public Transform _raycastDirectionBeamTransform = null!;
+    [SerializeField]
+    public Transform _startBeamTransform = null!;
     [SerializeField]
     private Transform _endBeamTransform = null!;
 

@@ -68,7 +68,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
         {
             if (grabbableObject.isHeld)
                 continue;
-            
+
             valueOfItems += grabbableObject.scrapValue;
             grabbableObjects.Add(grabbableObject);
             vectorPositions.Add(grabbableObject.transform.position);

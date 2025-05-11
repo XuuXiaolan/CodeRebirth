@@ -15,7 +15,7 @@ public class CactusAICollisionDetect : MonoBehaviour
         }
         else if (other.TryGetComponent(out EnemyAICollisionDetect enemyAICollisionDetect) && enemyAICollisionDetect.mainScript != this._mainScript)
         {
-			_mainScript.OnCollideWithEnemy(other, enemyAICollisionDetect.mainScript);
+            _mainScript.OnCollideWithEnemy(other, enemyAICollisionDetect.mainScript);
         }
     }
 }

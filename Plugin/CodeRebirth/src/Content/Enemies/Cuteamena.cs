@@ -84,7 +84,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     private static readonly int PetAnimation = Animator.StringToHash("pat"); // Trigger
     private static readonly int PullOutKnifeAnimation = Animator.StringToHash("pullOutKnife"); // Trigger
     private static readonly int SlashAnimation = Animator.StringToHash("slashAttack"); // Trigger
-    
+
     public override void Start()
     {
         base.Start();
@@ -200,7 +200,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             }
             return;
         }
-        
+
         smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
 
         if (_healTimer <= 0f && targetPlayer.health < 100)
@@ -216,7 +216,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             _threatFindTimer = _threatFindInterval;
             return;
         }
-        
+
         if (_doorLockpickTimer <= 0f)
         {
             ChooseDoorToLockpick();
@@ -322,7 +322,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     {
         PlayerControllerB player = playerControllerReference;
         creatureNetworkAnimator.SetTrigger(PetAnimation);
-        creatureSFX.PlayOneShot(_patSounds[UnityEngine.Random.Range(0, _patSounds.Length)]);    
+        creatureSFX.PlayOneShot(_patSounds[UnityEngine.Random.Range(0, _patSounds.Length)]);
 
         if (currentBehaviourStateIndex != (int)CuteamenaState.Jealous)
             return;
@@ -456,7 +456,6 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             return;
 
         creatureNetworkAnimator.SetTrigger(HeadbuttAnimation);
-        
         Plugin.ExtendedLogging("Cuteamena attacked a rival player out of jealousy!");
     }
 
@@ -477,7 +476,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
     {
         if (targetPlayer.deadBody == null)
             return false;
-        
+
         DeadBodyInfo body = targetPlayer.deadBody;
         if (body.grabBodyObject.isHeld)
             return true;
@@ -524,10 +523,10 @@ public class YandereCuteamena : CodeRebirthEnemyAI
         // todo: Instantiate or spawn the meat cleaver as scrap
         Plugin.ExtendedLogging("Meat cleaver dropped as scrap.");
     }
-    
+
     public void OnSwingCleaverAnimEvent()
     {
-        if (_chasingPlayer == null) 
+        if (_chasingPlayer == null)
             return;
 
         AttackPlayerWithAttackType(_chasingPlayer, AttackType.Cleaver);
@@ -550,7 +549,7 @@ public class YandereCuteamena : CodeRebirthEnemyAI
             Plugin.ExtendedLogging("reason to headbutt is unknown?");
         }
     }
-    
+
     #endregion
 
     /*private void AttemptShutOffPower()
