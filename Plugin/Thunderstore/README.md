@@ -433,7 +433,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ## Memorial/Graveyard
 
-- CoddingCat, Siphonife
+- CoddingCat
 
 ## Credits
 
@@ -448,6 +448,10 @@ If you're interested in helping with the development of the mod, feel free to re
 **Modeling/Designs:**
 
 - [QWERTYrodrigo](https://www.youtube.com/watch?v=AxE4TltnvjI), v0xx, S1ckboy, SolidStone, IntegrityChaos, and Bobilka
+
+**Visuals:**
+
+- Siphonife
 
 **Sounds:**
 
@@ -482,3 +486,4 @@ The 4 Instrument models and music are from the game "Zort" by Londer Software.
 "Baby Tomato Plant Scan (Low Poly)" (<https://skfb.ly/oHvNF>) by Marcos Silva is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
 "Tomato Plant" (<https://skfb.ly/69J7v>) by zvanstone is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
 "Wooden chair" (<https://skfb.ly/6WoYF>) by Kirhl is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
+"Carnivorous Plant" (<https://skfb.ly/oLzIp>) by mike69420 is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).

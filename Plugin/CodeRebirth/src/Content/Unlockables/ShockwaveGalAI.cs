@@ -234,7 +234,7 @@ public class ShockwaveGalAI : GalAI
             maxChargeCount = chargeCount;
             Agent.enabled = false;
             FlySource.volume = 0f;
-            List<CRDynamicConfig> configDefinitions = UnlockableHandler.Instance.ShockwaveBot!.UnlockableDefinitions.GetCRUnlockableDefinitionWithUnlockableName("Shockwave")!.ConfigEntries;
+            List<CRDynamicConfig> configDefinitions = UnlockableHandler.Instance.ShockwaveBot!.UnlockableDefinitions.GetCRUnlockableDefinitionWithUnlockableName("SWRD")!.ConfigEntries;
             CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Shockwave Gal", "Enemy Blacklist");
             if (configSetting != null)
             {

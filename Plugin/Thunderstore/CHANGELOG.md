@@ -1,6 +1,5 @@
 # v1.0.0
 
-- The semi-final update.
 - Lots of stuff lol.
 - Dozens of new items with special effects added.
 - Multiple enemies reworked and rewritten.

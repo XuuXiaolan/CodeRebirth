@@ -94,11 +94,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler()
     {
-        CactusBudling = LoadAndRegisterAssets<CactusBudlingAssets>("cactusbudlingassets");
+        CactusBudling = LoadAndRegisterAssets<CactusBudlingAssets>("cactusbudlingassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
         RabbitMagician = LoadAndRegisterAssets<RabbitMagicianAssets>("rabbitmagicianassets");
 
-        PeaceKeeper = LoadAndRegisterAssets<PeaceKeeperAssets>("peacekeeperassets");
+        PeaceKeeper = LoadAndRegisterAssets<PeaceKeeperAssets>("peacekeeperassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
         Pandora = LoadAndRegisterAssets<PandoraAssets>("pandoraassets");
 
@@ -106,11 +106,11 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         DriftwoodMenace = LoadAndRegisterAssets<DriftwoodMenaceAssets>("driftwoodmenaceassets");
 
-        Nancy = LoadAndRegisterAssets<NancyAssets>("nancyassets");
+        Nancy = LoadAndRegisterAssets<NancyAssets>("nancyassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
         Monarch = LoadAndRegisterAssets<MonarchAssets>("monarchassets");
 
-        Mistress = LoadAndRegisterAssets<MistressAssets>("mistressassets");
+        Mistress = LoadAndRegisterAssets<MistressAssets>("mistressassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
         RedwoodTitan = LoadAndRegisterAssets<RedwoodTitanAssets>("redwoodtitanassets");
 
@@ -120,10 +120,10 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         DuckSong = LoadAndRegisterAssets<DuckSongAssets>("ducksongassets");
 
-        Transporter = LoadAndRegisterAssets<TransporterAssets>("transporterassets");
+        Transporter = LoadAndRegisterAssets<TransporterAssets>("transporterassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        ManorLord = LoadAndRegisterAssets<ManorLordAssets>("manorlordassets");
+        ManorLord = LoadAndRegisterAssets<ManorLordAssets>("manorlordassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        Janitor = LoadAndRegisterAssets<JanitorAssets>("janitorassets");
+        Janitor = LoadAndRegisterAssets<JanitorAssets>("janitorassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
     }
 }

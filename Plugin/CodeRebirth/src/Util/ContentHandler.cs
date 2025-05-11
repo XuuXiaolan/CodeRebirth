@@ -485,6 +485,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
         }
         foreach (var entry in spawnRateByCustomLevelType)
         {
+            Plugin.ExtendedLogging($"Registering map object {prefab.name} for custom level {entry.Key} with curve {entry.Value}");
             curvesByCustomLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
         }
 
@@ -614,7 +615,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             return AnimationCurve.Linear(0, 0, 1, 0);
 
         Plugin.ExtendedLogging($"Registering prefab {prefab.name} for level {level}, vanillaCurveExists: {vanillaCurveExists}, moddedCurveExists: {moddedCurveExists}, allCurveExists: {allCurveExists}");
-        string actualLevelName = Levels.Compatibility.GetLLLNameOfLevel(level.name);
+        string actualLevelName = Levels.Compatibility.GetLLLNameOfLevel(level.sceneName);
         Plugin.ExtendedLogging($"actual level name: {actualLevelName}");
 
         bool isValidLevelType = Enum.TryParse(actualLevelName, true, out Levels.LevelTypes levelType);
@@ -690,7 +691,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 }
                 else
                 {
-                    Plugin.ExtendedLogging($"Failed to parse level type: {name}");
+                    Plugin.ExtendedLogging($"Parsing potential modded level or tag: {name}");
                     spawnRateByCustomLevelType[name] = spawnrate;
                 }
             }
@@ -714,7 +715,6 @@ public class ContentHandler<T> where T : ContentHandler<T>
             {
                 name = "modded";
             }
-
             if (System.Enum.TryParse(name, true, out Levels.LevelTypes levelType))
             {
                 spawnRateByLevelType[levelType] = entryParts[1];
@@ -730,6 +730,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 else
                 {
                     spawnRateByCustomLevelType[name] = entryParts[1];
+                    spawnRateByCustomLevelType[modifiedName] = entryParts[1];
                 }
             }
         }

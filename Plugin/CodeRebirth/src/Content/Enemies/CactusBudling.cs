@@ -297,7 +297,6 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     public override void OnCollideWithPlayer(Collider other)
     {
         base.OnCollideWithPlayer(other);
-
         if (currentBehaviourStateIndex != (int)CactusBudlingState.Rolling)
             return;
 

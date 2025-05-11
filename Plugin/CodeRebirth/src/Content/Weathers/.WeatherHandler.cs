@@ -43,6 +43,6 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     {
         Meteorite = LoadAndRegisterAssets<MeteoriteAssets>("meteorshowerassets");
         Tornado = LoadAndRegisterAssets<TornadoAssets>("tornadoassets");
-        NightShift = LoadAndRegisterAssets<NightShiftAssets>("nightshiftassets");
+        NightShift = LoadAndRegisterAssets<NightShiftAssets>("nightshiftassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
     }
 }

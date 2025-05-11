@@ -27,6 +27,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
     [HideInInspector] public static List<EnemyType> EnemyTypes = new();
     [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
+    [HideInInspector] public int collidersAndRoomAndDefaultAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndInteractableAndRailingAndTerrainAndHazardAndVehicleMask = 0;
     [HideInInspector] public int collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = 0;
@@ -96,6 +97,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask = collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask | defaultMask;
         collidersAndRoomAndInteractableAndRailingAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndRailingAndInteractableMask | hazardMask | terrainMask | vehicleMask;
         collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndInteractableAndRailingAndTerrainAndHazardAndVehicleMask | enemiesMask;
+        collidersAndRoomAndDefaultAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask = collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask | defaultMask;
     }
 
     public void PlayerPressedJump(PlayerControllerB player)
@@ -223,19 +225,24 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             parent = StartOfRound.Instance.propsContainer;
         }
-        GameObject go = Instantiate(item.spawnPrefab, position + Vector3.up * 0.2f, defaultRotation == true ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
+        Vector3 spawnPosition = position + Vector3.up * 0.2f;
+        GameObject go = Instantiate(item.spawnPrefab, spawnPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
         NetworkObject networkObject = go.GetComponent<NetworkObject>();
+        GrabbableObject grabbableObject = go.GetComponent<GrabbableObject>();
+        grabbableObject.fallTime = 0;
         networkObject.Spawn();
         UpdateParentServerRpc(new NetworkObjectReference(go));
+
         int value = (int)(UnityEngine.Random.Range(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
         ScanNodeProperties? scanNodeProperties = go.GetComponentInChildren<ScanNodeProperties>();
         if (scanNodeProperties != null)
         {
             scanNodeProperties.scrapValue = value;
             scanNodeProperties.subText = $"Value: ${value}";
-            go.GetComponent<GrabbableObject>().scrapValue = value;
-            UpdateScanNodeServerRpc(new NetworkObjectReference(go), value);
+            grabbableObject.scrapValue = value;
+            UpdateScanNodeServerRpc(new NetworkObjectReference(networkObject), value);
         }
+
         if (isQuest)
         {
             StartUIForItemServerRpc(go);

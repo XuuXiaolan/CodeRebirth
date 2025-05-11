@@ -157,9 +157,6 @@ public class CRUtilities
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
 
-        if (!NetworkManager.Singleton.IsServer)
-            return;
-
         int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
@@ -220,8 +217,13 @@ public class CRUtilities
         {
             if (enemy.mainScript == null)
                 continue;
+
             if (!enemy.mainScript.IsSpawned)
                 continue;
+
+            if (attacker != null && attacker != GameNetworkManager.Instance.localPlayerController)
+                continue;
+
             enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy], playerWhoHit: attacker);
         }
 
@@ -232,6 +234,9 @@ public class CRUtilities
 
         foreach (IHittable hittable in hittablesList)
         {
+            if (!NetworkManager.Singleton.IsServer)
+                continue;
+
             hittable.Hit(5, explosionPosition, attacker, true, -1);
         }
 

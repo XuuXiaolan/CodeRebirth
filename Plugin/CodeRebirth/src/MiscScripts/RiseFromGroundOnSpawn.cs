@@ -6,12 +6,13 @@ public class RiseFromGroundOnSpawn : MonoBehaviour
     public float depthToRaise = 1f;
     public float raiseSpeed = 0.25f;
     public ScreenShakeType screenShakeOnRise = ScreenShakeType.Small;
+    public float distanceToShake = 5f;
 
     private float _timeToTake = 4f;
     private Vector3 _originalPosition = Vector3.zero;
     public void Start()
     {
-        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 5f)
+        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= distanceToShake)
             HUDManager.Instance.ShakeCamera(screenShakeOnRise);
 
         _originalPosition = this.transform.position;

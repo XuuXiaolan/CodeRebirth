@@ -172,8 +172,6 @@ public class SeamineGalAI : GalAI
             physicsTemporarilyDisabled = true;
             EnablePhysics(false);
         }
-        ownerPlayer.enteringSpecialAnimation = true;
-        ownerPlayer.disableMoveInput = true;
         huggingOwner = true;
     }
 
@@ -234,7 +232,7 @@ public class SeamineGalAI : GalAI
             maxChargeCount = chargeCount;
             Agent.enabled = false;
 
-            List<CRDynamicConfig> configDefinitions = UnlockableHandler.Instance.SeamineTink!.UnlockableDefinitions.GetCRUnlockableDefinitionWithUnlockableName("Seamine")!.ConfigEntries;
+            List<CRDynamicConfig> configDefinitions = UnlockableHandler.Instance.SeamineTink!.UnlockableDefinitions.GetCRUnlockableDefinitionWithUnlockableName("SEA")!.ConfigEntries;
             CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Seamine Gal", "Enemy Blacklist");
             if (configSetting != null)
             {
@@ -477,6 +475,11 @@ public class SeamineGalAI : GalAI
     [ClientRpc]
     private void DoHugSoundClientRpc()
     {
+        if (ownerPlayer == null)
+            return;
+
+        ownerPlayer.enteringSpecialAnimation = true;
+        ownerPlayer.disableMoveInput = true;
         StartCoroutine(WaitUntilStopped());
     }
 

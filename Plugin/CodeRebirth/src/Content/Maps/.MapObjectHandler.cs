@@ -103,15 +103,15 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public MapObjectHandler()
     {
-        OxydeCrashShip = LoadAndRegisterAssets<OxydeCrashShipAssets>("oxydecrashshipassets");
+        OxydeCrashShip = LoadAndRegisterAssets<OxydeCrashShipAssets>("oxydecrashshipassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        CompactorToby = LoadAndRegisterAssets<CompactorTobyAssets>("compactortobyassets");
+        CompactorToby = LoadAndRegisterAssets<CompactorTobyAssets>("compactortobyassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        GunslingerGreg = LoadAndRegisterAssets<GunslingerGregAssets>("gunslingergregassets");
+        GunslingerGreg = LoadAndRegisterAssets<GunslingerGregAssets>("gunslingergregassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        ShredderSarah = LoadAndRegisterAssets<ShredderSarahAssets>("shreddersarahassets");
+        ShredderSarah = LoadAndRegisterAssets<ShredderSarahAssets>("shreddersarahassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        Merchant = LoadAndRegisterAssets<MerchantAssets>("merchantassets");
+        Merchant = LoadAndRegisterAssets<MerchantAssets>("merchantassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
         Crate = LoadAndRegisterAssets<CrateAssets>("crateassets");
 

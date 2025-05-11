@@ -407,6 +407,14 @@ public class SmartAgentNavigator : NetworkBehaviour
             _roamingPointsVectorList.AddRange(RoundManager.Instance.insideAINodes.Select(x => x.transform.position));
         }
 
+        if (_roamingPointsVectorList.Count == 0)
+        {
+
+            for (int i = 0; i < 20; i++)
+            {
+                _roamingPointsVectorList.Add(RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, radius, default));
+            }
+        }
         roamingTask ??= new SmartPathTask();
         roamingTask.StartPathTask(this.agent, this.transform.position, _roamingPointsVectorList, GetAllowedPathLinks());
         int listSize = _roamingPointsVectorList.Count;
