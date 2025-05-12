@@ -15,27 +15,27 @@ public class MarrowSplitter : GrabbableObject
     [SerializeField]
     private OwnerNetworkAnimator _marrowSplitterOwnerNetworkAnimator = null!;
     [SerializeField]
-    private Transform endTransform = null!;
+    private SkinnedMeshRenderer _skinnedMeshRenderer = null!;
+    [SerializeField]
+    private Transform _endTransform = null!;
     [SerializeField]
     private AudioSource _idleSource = null!;
     [SerializeField]
-    private AudioSource _audioSource = null!;
+    private int _increaseAmount = 1;
     [SerializeField]
-    private AudioClip _DeactivateSound = null!;
-    [SerializeField]
-    private AudioClip _activateSound = null!;
-    [SerializeField]
-    private AudioClip[] _tryHealPlayerSounds = [];
+    private int _decreaseAmount = 2;
 
     private float _tryHealPlayerTimer = 0f;
     private float _hitTimer = 0f;
+    private bool _isHealing = false;
 
     private static readonly int AttackingAnimation = Animator.StringToHash("isAttacking"); // Bool
 
     public override void GrabItem()
     {
         base.GrabItem();
-        Plugin.InputActionsInstance.MarrowHealPlayer.performed += OnTryHealPlayer;
+        Plugin.InputActionsInstance.MarrowHealPlayer.performed += OnTryStartHealPlayer;
+        Plugin.InputActionsInstance.MarrowHealPlayer.canceled += OnTryCancelHealPlayer;
     }
 
     public override void DiscardItem()
@@ -45,7 +45,8 @@ public class MarrowSplitter : GrabbableObject
         _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
         isBeingUsed = false;
 
-        Plugin.InputActionsInstance.MarrowHealPlayer.performed -= OnTryHealPlayer;
+        Plugin.InputActionsInstance.MarrowHealPlayer.performed -= OnTryStartHealPlayer;
+        Plugin.InputActionsInstance.MarrowHealPlayer.canceled -= OnTryCancelHealPlayer;
     }
 
     public override void PocketItem()
@@ -55,50 +56,101 @@ public class MarrowSplitter : GrabbableObject
 
         _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
         isBeingUsed = false;
+
+        Plugin.InputActionsInstance.MarrowHealPlayer.performed -= OnTryStartHealPlayer;
+        Plugin.InputActionsInstance.MarrowHealPlayer.canceled -= OnTryCancelHealPlayer;
     }
 
     public override void UseUpBatteries()
     {
         base.UseUpBatteries();
         if (IsOwner)
-        {
             _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
-        }
     }
 
-    public void OnTryHealPlayer(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    public void OnTryStartHealPlayer(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (_tryHealPlayerTimer > 0f || insertedBattery.empty || isBeingUsed || !isHeld || isPocketed) return;
-        if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
+        if (_tryHealPlayerTimer > 0f || isBeingUsed || !isHeld || isPocketed)
+            return;
+
+        if (GameNetworkManager.Instance.localPlayerController != playerHeldBy)
+            return;
+
         var btn = (ButtonControl)context.control;
 
         if (!btn.wasPressedThisFrame)
             return;
 
+        int currentAmount = Mathf.FloorToInt(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+
+        if (currentAmount <= 0)
+            return;
+
         _tryHealPlayerTimer = 1f;
-        _audioSource.PlayOneShot(_tryHealPlayerSounds[UnityEngine.Random.Range(0, _tryHealPlayerSounds.Length)]);
+        ActivateOrStopSourceForHealingServerRpc(true);
+        _marrowSplitterAnimator.SetBool(AttackingAnimation, true);
+    }
 
-        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
-        for (int i = 0; i < numHits; i++)
+    public void OnTryCancelHealPlayer(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (GameNetworkManager.Instance.localPlayerController != playerHeldBy || isPocketed || !isHeld)
+            return;
+
+        var btn = (ButtonControl)context.control;
+
+        if (!btn.wasReleasedThisFrame)
+            return;
+
+        if (!isBeingUsed)
+            return;
+
+        _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
+        ActivateOrStopSourceForHealingServerRpc(false);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ActivateOrStopSourceForHealingServerRpc(bool activate)
+    {
+        ActivateOrStopSourceForHealingClientRpc(activate);
+    }
+
+    [ClientRpc]
+    private void ActivateOrStopSourceForHealingClientRpc(bool activate)
+    {
+        if (activate)
         {
-            if (_cachedColliders[i].transform == playerHeldBy.transform) continue;
-            if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
-                continue;
-
-            if (iHittable is not PlayerControllerB playerControllerB)
-                continue;
-
-            playerControllerB.DamagePlayerFromOtherClientServerRpc(-25, playerHeldBy.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
+            isBeingUsed = true;
+            _isHealing = true;
+            _idleSource.volume = 1f;
+            _idleSource.Play();
+        }
+        else
+        {
+            isBeingUsed = false;
+            _isHealing = false;
+            _idleSource.volume = 0f;
+            _idleSource.Stop();
         }
     }
 
     public override void Update()
     {
         base.Update();
-        _tryHealPlayerTimer -= Time.deltaTime;
-        _hitTimer -= Time.deltaTime;
-        if (!isBeingUsed || _hitTimer > 0 || playerHeldBy == null) return;
-        DoHitStuff(1);
+        if (_isHealing && isBeingUsed)
+            _tryHealPlayerTimer -= Time.deltaTime;
+
+        if (!_isHealing && isBeingUsed)
+            _hitTimer -= Time.deltaTime;
+
+        if (!isBeingUsed || (_hitTimer > 0 && _tryHealPlayerTimer > 0) || playerHeldBy == null || isPocketed) return;
+        if (_isHealing)
+        {
+            DoHealingPlayers();
+        }
+        else
+        {
+            DoHitStuff(1);
+        }
     }
 
     private Collider[] _cachedColliders = new Collider[8];
@@ -111,52 +163,113 @@ public class MarrowSplitter : GrabbableObject
         _enemyAIList.Clear();
         bool hitSomething = false;
 
-        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (_cachedColliders[i].transform == playerHeldBy.transform) continue;
-            if (_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
+            Collider collider = _cachedColliders[i];
+            if (!collider.TryGetComponent(out IHittable hittable))
+                continue;
+
+            if (hittable is PlayerControllerB player)
             {
-                if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
-                {
-                    if (_enemyAIList.Contains(enemyAICollisionDetect.mainScript))
-                    {
-                        continue;
-                    }
-                    _enemyAIList.Add(enemyAICollisionDetect.mainScript);
-                }
+                if (player == playerHeldBy)
+                    continue;
+
                 hitSomething = true;
-                _iHittableList.Add(iHittable);
+
+                if (GameNetworkManager.Instance.localPlayerController != playerHeldBy)
+                    continue;
+
+                player.DamagePlayerFromOtherClientServerRpc(damageToDeal, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
             }
-        }
-        foreach (var iHittable in _iHittableList)
-        {
-            if (IsOwner)
-                iHittable.Hit(damageToDeal, playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
+            else if (hittable is EnemyAICollisionDetect enemy)
+            {
+                hitSomething = true;
+                if (_enemyAIList.Contains(enemy.mainScript))
+                    continue;
+
+                if (GameNetworkManager.Instance.localPlayerController != playerHeldBy)
+                    continue;
+
+                _enemyAIList.Add(enemy.mainScript);
+                enemy.mainScript.HitEnemyOnLocalClient(1, this.transform.position, playerHeldBy, true, -1);
+            }
+            else
+            {
+                hitSomething = true;
+                if (GameNetworkManager.Instance.localPlayerController != playerHeldBy)
+                    continue;
+
+                hittable.Hit(1, this.transform.position, playerHeldBy, true, -1);
+            }
         }
 
         if (hitSomething)
         {
             _hitTimer = 0.4f;
-            insertedBattery.charge -= 0.05f;
+            insertedBattery.charge -= 0.1f;
+            _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(_skinnedMeshRenderer.GetBlendShapeWeight(0) + _increaseAmount, 0, 100));
+        }
+    }
+
+    private void DoHealingPlayers()
+    {
+        int numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < numHits; i++)
+        {
+            if (_cachedColliders[i].transform == playerHeldBy.transform)
+                continue;
+
+            if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
+                continue;
+
+            if (iHittable is not PlayerControllerB playerControllerB)
+                continue;
+
+            int currentAmount = Mathf.FloorToInt(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+            _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentAmount - _decreaseAmount, 0, 100));
+
+            if (GameNetworkManager.Instance.localPlayerController == playerHeldBy)
+            {
+                playerControllerB.DamagePlayerFromOtherClientServerRpc(-_decreaseAmount, playerHeldBy.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
+            }
+
+            if (currentAmount - _decreaseAmount <= 0)
+            {
+                isBeingUsed = false;
+                _isHealing = false;
+                _idleSource.volume = 0f;
+                _idleSource.Stop();
+
+                if (IsOwner)
+                    _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
+                return;
+            }
         }
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
+        if (_isHealing)
+            return;
+
         Plugin.ExtendedLogging($"Marrow Splitter used and button down: {used} {buttonDown}");
         if (!buttonDown)
         {
+            isBeingUsed = false;
             _idleSource.volume = 0f;
             _idleSource.Stop();
-            if (IsOwner) _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
+            if (IsOwner)
+                _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
         }
         else
         {
+            isBeingUsed = true;
             _idleSource.volume = 1f;
             _idleSource.Play();
-            if (IsOwner) _marrowSplitterAnimator.SetBool(AttackingAnimation, true);
+            if (IsOwner)
+                _marrowSplitterAnimator.SetBool(AttackingAnimation, true);
         }
     }
 }

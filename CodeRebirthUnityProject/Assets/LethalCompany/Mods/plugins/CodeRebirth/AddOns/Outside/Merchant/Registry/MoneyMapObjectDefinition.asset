@@ -12,8 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: -1945150300, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: MoneyMapObjectDefinition
   m_EditorClassIdentifier: 
-  ConfigEntries: []
+  ConfigEntries:
+  - settingName: Money
+    settingDesc: Enemy Drop Rates
+    DynamicConfigType: 0
+    defaultString: Default Value
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 0
+    Description: EnemyName:DropRate for the chance of an enemy dropping a coin on
+      death via player damage.
   gameObject: {fileID: 5513136484485908551, guid: fdb53623495f3d44c9c0c650decfc810,
     type: 3}
   objectName: Money
+  alignWithTerrain: 1
   CRObjectType: 0
