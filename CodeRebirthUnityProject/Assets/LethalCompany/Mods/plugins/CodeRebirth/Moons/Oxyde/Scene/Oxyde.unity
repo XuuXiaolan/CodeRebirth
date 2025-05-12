@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4474913, g: 0.2402311, b: 0.07641309, a: 1}
+  m_IndirectSpecularColor: {r: 0.44811875, g: 0.24078181, b: 0.07642055, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8046,7 +8046,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2147483639
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -12560,7 +12560,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -1145.2354, y: -0, z: -0}
+    textureOffset: {x: -1918.1099, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -21456,12 +21456,12 @@ Transform:
   m_GameObject: {fileID: 1959721454}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 18.71032, y: -7.326942, z: 8.971304}
+  m_LocalPosition: {x: 1.2714634, y: 0.27843857, z: -7.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2065440290}
-  m_Father: {fileID: 1991192134}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
 --- !u!23 &1965684698 stripped
 MeshRenderer:
@@ -21782,7 +21782,6 @@ Transform:
   - {fileID: 294031820}
   - {fileID: 1624579920}
   - {fileID: 974463129}
-  - {fileID: 1959721455}
   - {fileID: 18808108}
   - {fileID: 823030625}
   - {fileID: 1026984391}
@@ -23995,21 +23994,6 @@ MonoBehaviour:
   specialItemNamesWithRarity:
   - Name: Director Diary 7
     Rarity: 1
---- !u!4 &1591289645488658085
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2116328079733001247}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 82.787834, y: 80.98974, z: 88.61727}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1660917560988073819
 GameObject:
   m_ObjectHideFlags: 0
@@ -24022,22 +24006,6 @@ GameObject:
   - component: {fileID: 3122558918930933783}
   m_Layer: 0
   m_Name: DiarySpawner10
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &2116328079733001247
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1591289645488658085}
-  m_Layer: 0
-  m_Name: SpikesNFlowers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24202,8 +24170,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2966558312835517803, guid: 360d370ce77a2374898653dd89fad135,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2963276231218698802}
   m_SourcePrefab: {fileID: 100100000, guid: 360d370ce77a2374898653dd89fad135, type: 3}
+--- !u!1 &2963276231218698801 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2966558312835517803, guid: 360d370ce77a2374898653dd89fad135,
+    type: 3}
+  m_PrefabInstance: {fileID: 2963276231218698800}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2963276231218698802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2963276231218698801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 14.995904, y: 18.291853, z: 10.214417}
+  m_Center: {x: -0.24839783, y: 1.3252585, z: 5.04058}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!114 &3122558918930933783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24809,11 +24803,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2763930501
       objectReference: {fileID: 0}
-    - target: {fileID: 8201113634922178522, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: shipNavColliders
-      value: 
-      objectReference: {fileID: 1959721454}
     - target: {fileID: 8866132944236790290, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash
@@ -24868,6 +24857,6 @@ SceneRoots:
   - {fileID: 995531750}
   - {fileID: 744122536}
   - {fileID: 656969839}
+  - {fileID: 1959721455}
   - {fileID: 1991192134}
   - {fileID: 1099028725}
-  - {fileID: 1591289645488658085}

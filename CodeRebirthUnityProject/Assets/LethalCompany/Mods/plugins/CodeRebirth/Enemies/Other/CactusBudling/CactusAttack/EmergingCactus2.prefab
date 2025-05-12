@@ -5049,6 +5049,7 @@ GameObject:
   - component: {fileID: 9085241170943661044}
   - component: {fileID: 7529845273229216528}
   - component: {fileID: 9190646513523604280}
+  - component: {fileID: 5657461040942401899}
   m_Layer: 0
   m_Name: CactusSpines.001 (1)
   m_TagString: Untagged
@@ -5121,6 +5122,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5657461040942401899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3723929253159111723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -537940332, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onChance:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9190646513523604280}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _chance: 50
 --- !u!1 &3917604733094966328
 GameObject:
   m_ObjectHideFlags: 0
@@ -5295,7 +5324,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.2
   m_Height: 3.24
   m_Direction: 1
   m_Center: {x: 0, y: 1.33, z: 0}
@@ -10312,6 +10341,7 @@ GameObject:
   - component: {fileID: 3510055264654005141}
   - component: {fileID: 2800140000028756849}
   - component: {fileID: 3542299154995313497}
+  - component: {fileID: 8096279441404341860}
   m_Layer: 0
   m_Name: CactusSpines.001
   m_TagString: Untagged
@@ -10384,3 +10414,31 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8096279441404341860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9010990319232404554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -537940332, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onChance:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3542299154995313497}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _chance: 50

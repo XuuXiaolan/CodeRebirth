@@ -5325,7 +5325,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.24
   m_Height: 4
   m_Direction: 1
   m_Center: {x: 0, y: 1.59, z: 0}
@@ -5340,6 +5340,7 @@ GameObject:
   - component: {fileID: 2655868863283089138}
   - component: {fileID: 3652888226196149782}
   - component: {fileID: 2685680648938202686}
+  - component: {fileID: 2805970052069792470}
   m_Layer: 0
   m_Name: CactusSpines.001
   m_TagString: Untagged
@@ -5412,6 +5413,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2805970052069792470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7593286613273645357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -537940332, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onChance:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2685680648938202686}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _chance: 50
 --- !u!1 &7668096676178335726
 GameObject:
   m_ObjectHideFlags: 0
