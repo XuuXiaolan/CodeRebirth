@@ -307,13 +307,16 @@ MonoBehaviour:
   reelingTime: 0.35
   swingTime: 0.13
   hitSFX:
-  - {fileID: 8300000, guid: 4333ddd1e9a773a43b3544452c27dae1, type: 3}
+  - {fileID: 8300000, guid: 6775649385be7f24b9dc58b51a3e2653, type: 3}
   reelUpSFX:
   - {fileID: 8300000, guid: 725d1c4040e47a449ba66c51175813ab, type: 3}
   swingSFX:
   - {fileID: 8300000, guid: 7e39dac39c455a64783fb3dd74758c46, type: 3}
   finishReelUpSFX: []
-  hitEnemySFX: []
+  hitEnemySFX:
+  - {fileID: 8300000, guid: d79f0ab7d9ff268418864a5d703106aa, type: 3}
+  - {fileID: 8300000, guid: bb1e55363e245584598c9632161d856c, type: 3}
+  - {fileID: 8300000, guid: bf6252b2c07b7a54e84e26e47d40f42a, type: 3}
   weaponAudio: {fileID: 1366941064414997930}
   tryHitAllTimes: 1
   heldOverHeadTimer: 0
@@ -321,6 +324,8 @@ MonoBehaviour:
   OnHitSuccess:
     m_PersistentCalls:
       m_Calls: []
+  _groundLaunchTimer: 1
+  _launchUpSound: {fileID: 8300000, guid: 69255d3c62bf9154ebdc121aff213e48, type: 3}
 --- !u!65 &1614619791538148048
 BoxCollider:
   m_ObjectHideFlags: 0
