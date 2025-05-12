@@ -340,8 +340,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.2979889, y: 0.43787384, z: 0.8745651}
-  m_Center: {x: -0.044288635, y: 0.048503876, z: -0.27927017}
+  m_Size: {x: 0.3811493, y: 0.43787384, z: 0.8745651}
+  m_Center: {x: -0.002708435, y: 0.048503876, z: -0.27927017}
 --- !u!82 &4005521916222698482
 AudioSource:
   m_ObjectHideFlags: 0
@@ -509,12 +509,11 @@ MonoBehaviour:
   hasBeenHeld: 0
   _marrowSplitterAnimator: {fileID: 6000667197330552496}
   _marrowSplitterOwnerNetworkAnimator: {fileID: 7863982260537457589}
-  endTransform: {fileID: 461932613215040267}
+  _skinnedMeshRenderer: {fileID: 1073458714853535489}
+  _endTransform: {fileID: 4041302732310657678}
   _idleSource: {fileID: 8764846700003574400}
-  _audioSource: {fileID: 4005521916222698482}
-  _DeactivateSound: {fileID: 0}
-  _activateSound: {fileID: 0}
-  _tryHealPlayerSounds: []
+  _increaseAmount: 1
+  _decreaseAmount: 2
 --- !u!95 &6000667197330552496
 Animator:
   serializedVersion: 5

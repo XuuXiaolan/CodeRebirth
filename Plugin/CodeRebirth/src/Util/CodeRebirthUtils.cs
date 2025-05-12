@@ -189,7 +189,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (hazardToSpawn != null)
         {
             var go = GameObject.Instantiate(hazardToSpawn, position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-            go.GetComponent<NetworkObject>().Spawn(true);
+            if (go.TryGetComponent(out NetworkObject networkObject))
+            {
+                networkObject.Spawn(true);
+            }
+            else
+            {
+                // if i wanted this sync'd i'd rpc the spawning
+            }
         }
         _indexToSpawn++;
         if (_indexToSpawn >= CodeRebirthRegistry.RegisteredCRMapObjects.Count - 1)

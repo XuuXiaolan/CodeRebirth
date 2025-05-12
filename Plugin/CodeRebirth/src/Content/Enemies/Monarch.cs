@@ -33,6 +33,8 @@ public class Monarch : CodeRebirthEnemyAI
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
+    private static readonly int ParallaxSwitch = Shader.PropertyToID("_ParallaxSwitch"); // Todo
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -268,7 +270,7 @@ public class Monarch : CodeRebirthEnemyAI
             totalDuration -= Time.deltaTime;
         }
 
-        agent.speed = 10f;
+        agent.speed = 5f;
         targetPlayer = null;
         isAttacking = false;
     }
