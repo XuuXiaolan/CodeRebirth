@@ -884,8 +884,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 0
+  _allowedLinks: 15
 --- !u!114 &7101249324309747651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1052,16 +1053,27 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
-  hasVariants: 0
-  usesTemperature: 0
-  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 7101249324309747651}
   smartAgentNavigator: {fileID: 6298933798719131011}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
+  _spawnAudioClip: {fileID: 8300000, guid: 449853db5efbc0643ac61466b275689c, type: 3}
+  _spottedAudioClip: {fileID: 8300000, guid: 1a0686b9c69de4945accf0293b0ee264, type: 3}
+  _fallingAudioClips:
+  - {fileID: 8300000, guid: aaa984372d7486f439bd6f6bdd1691f8, type: 3}
+  - {fileID: 8300000, guid: 9e15911f2eb188a4093d69a72902701e, type: 3}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: 31823145894bf7c4aa3dd31237fdf027, type: 3}
+    - {fileID: 8300000, guid: 8f3ed5191c3827043bf349f8ec5b3643, type: 3}
+    - {fileID: 8300000, guid: 165ae5f0fab5532489d8d3586f74aaf1, type: 3}
+    - {fileID: 8300000, guid: b2560c3a8fe0ed5498c82e604a1896d2, type: 3}
+    minTime: 7.5
+    maxTime: 12.5
   _spawnAnimation: {fileID: 7400000, guid: 2335550b60bcaa84c83e8601741d7bde, type: 2}
   _spottedAnimation: {fileID: 7400000, guid: a507cc332f3301347b400d430e7e9c7e, type: 2}
-  _latchOnAnimation: {fileID: 7400000, guid: f2baf8fbf2f55764298bc5f76916236a, type: 2}
-  _offsetPosition: {x: 0, y: 0, z: 0}
+  _offsetPosition: {x: 0.031, y: -0.109, z: -0.471}
 --- !u!114 &440978046141590845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1080,7 +1092,7 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
+  DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
 --- !u!1 &3973967187542933347
 GameObject:

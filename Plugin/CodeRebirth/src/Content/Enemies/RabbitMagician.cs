@@ -1,19 +1,30 @@
 using System;
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
 public class RabbitMagician : CodeRebirthEnemyAI
 {
+    [Header("Audio")]
+    [SerializeField]
+    private AudioClip _spawnAudioClip = null!;
+    [SerializeField]
+    private AudioClip _spottedAudioClip = null!;
+    [SerializeField]
+    private AudioClip[] _fallingAudioClips = null!;
+    [SerializeField]
+    private AudioClipsWithTime _idleAudioClips = null!;
+
+    [Header("Animation")]
     [SerializeField]
     private AnimationClip _spawnAnimation = null!;
     [SerializeField]
     private AnimationClip _spottedAnimation = null!;
-    [SerializeField]
-    private AnimationClip _latchOnAnimation = null!;
 
     [SerializeField]
     private Vector3 _offsetPosition = new Vector3(0.031f, -0.109f, -0.471f);
@@ -22,6 +33,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private Coroutine? _attachRoutine = null;
     private Coroutine? _idleRoutine = null;
     private Transform? _targetPlayerSpine3 = null;
+    private float _idleTimer = 1f;
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int LatchOnAnimation = Animator.StringToHash("LatchOn"); // Trigger
@@ -38,7 +50,8 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        _offsetPosition = new Vector3(0.031f, -0.109f, -0.471f);
+        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+        // creatureSFX.PlayOneShot(_spawnAudioClip);
         foreach (var enemyCollider in this.GetComponentsInChildren<Collider>())
         {
             foreach (var playerCollider in GameNetworkManager.Instance.localPlayerController.GetCRPlayerData().playerColliders)
@@ -49,6 +62,18 @@ public class RabbitMagician : CodeRebirthEnemyAI
         SwitchToBehaviourStateOnLocalClient((int)RabbitMagicianState.Spawn);
         if (!IsServer) return;
         _idleRoutine = StartCoroutine(SwitchToIdle());
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        _idleTimer -= Time.deltaTime;
+
+        if (_idleTimer > 0)
+            return;
+
+        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+        creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(_idleAudioClips.audioClips.Length)]);
     }
 
     public void LateUpdate()
@@ -103,11 +128,11 @@ public class RabbitMagician : CodeRebirthEnemyAI
         {
             if (player.isPlayerDead || !player.isPlayerControlled)
                 continue;
+
             if (!PlayerLookingAtEnemy(player, 0.2f))
                 continue;
+
             _attachRoutine = StartCoroutine(AttachToPlayer(player));
-            // do animation
-            // attach to a player bone
             return;
         }
     }
@@ -118,6 +143,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         {
             if (_killRoutine != null)
                 return;
+
             if (_idleRoutine != null)
                 return;
 
@@ -128,11 +154,14 @@ public class RabbitMagician : CodeRebirthEnemyAI
         {
             if (player.isPlayerDead || !player.isPlayerControlled)
                 continue;
+
             if (player == targetPlayer)
                 continue;
+
             if (!PlayerLookingAtEnemy(player, 0.2f))
                 continue;
-            if (Vector3.Dot(player.gameplayCamera.transform.forward, targetPlayer.gameplayCamera.transform.forward) <= 0.6f)
+
+            if (Vector3.Dot(player.gameplayCamera.transform.forward, targetPlayer.gameplayCamera.transform.forward) <= 0.45f)
                 continue;
 
             _killRoutine = StartCoroutine(KillPlayerAndSwitchTarget(player));
@@ -150,22 +179,27 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private IEnumerator KillPlayerAndSwitchTarget(PlayerControllerB newTargetPlayer)
     {
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.SwitchingTarget);
-        // UnhideRendererClientRpc();
+        FallSoundServerRpc();
         targetPlayer.DamagePlayerFromOtherClientServerRpc(9999, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, newTargetPlayer));
         _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer));
         yield return _attachRoutine;
     }
 
-    /*[ClientRpc]
-    public void UnhideRendererClientRpc()
+    [ServerRpc(RequireOwnership = false)]
+    private void FallSoundServerRpc()
     {
-        skinnedMeshRenderers[0].enabled = true;
-    }*/
+        FallSoundClientRpc();
+    }
+
+    [ClientRpc]
+    private void FallSoundClientRpc()
+    {
+        creatureSFX.PlayOneShot(_fallingAudioClips[enemyRandom.Next(_fallingAudioClips.Length)]);
+    }
 
     private IEnumerator SwitchToIdle()
     {
         yield return new WaitForSeconds(_spawnAnimation.length);
-        this.transform.localScale = Vector3.one;
         smartAgentNavigator.enabled = true;
         agent.enabled = true;
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.Idle);
@@ -180,7 +214,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         smartAgentNavigator.enabled = false;
         if (!agent.enabled)
         {
-            if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hit, 20, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(this.transform.position + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, 20, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
                 this.transform.position = hit.point;
             }
@@ -196,43 +230,49 @@ public class RabbitMagician : CodeRebirthEnemyAI
             yield break;
         }
 
-        bool lookedAt = true;
-        while (lookedAt)
-        {
-            yield return new WaitForSeconds(0.5f);
-            lookedAt = PlayerLookingAtEnemy(playerToAttachTo, 0.2f);
-        }
-
-        creatureNetworkAnimator.SetTrigger(LatchOnAnimation);
-        this.transform.localScale = new Vector3(0.8915618f, 0.8915618f, 0.8915618f);
-        SwitchToBehaviourServerRpc((int)RabbitMagicianState.Attached);
-        StartCoroutine(HideForTargetPlayer());
-        _attachRoutine = null;
+        AttachedPlayerHandleLOSClientRpc();
     }
 
-    public IEnumerator HideForTargetPlayer()
+    [ClientRpc]
+    private void AttachedPlayerHandleLOSClientRpc()
     {
-        yield return new WaitForSeconds(_latchOnAnimation.length);
-        if (targetPlayer == null || targetPlayer.isPlayerDead || currentBehaviourStateIndex != (int)RabbitMagicianState.Attached)
-            yield break;
-
-        // HideModelForTargetPlayerServerRpc();
-    }
-
-    /*[ServerRpc(RequireOwnership = false)]
-    private void HideModelForTargetPlayerServerRpc()
-    {
-        HideModelForTargetPlayerClientRpc();
-    }*/
-
-    /*[ClientRpc]
-    private void HideModelForTargetPlayerClientRpc()
-    {
-        skinnedMeshRenderers[0].enabled = true;
+        creatureSFX.PlayOneShot(_spottedAudioClip);
         if (GameNetworkManager.Instance.localPlayerController != targetPlayer)
             return;
 
-        skinnedMeshRenderers[0].enabled = false;
-    }*/
+        StartCoroutine(HandleLOS());
+    }
+
+    private IEnumerator HandleLOS()
+    {
+        bool lookedAt = true;
+        while (lookedAt)
+        {
+            yield return new WaitForSeconds(0.25f);
+            if (targetPlayer == null || targetPlayer.isPlayerDead)
+            {
+                BackToIdleServerRpc();
+                yield break;
+            }
+            lookedAt = PlayerLookingAtEnemy(targetPlayer, 0.2f);
+        }
+
+        StartAttachedServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void BackToIdleServerRpc()
+    {
+        _attachRoutine = null;
+        _idleRoutine = StartCoroutine(SwitchToIdle());
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void StartAttachedServerRpc()
+    {
+        _attachRoutine = null;
+        creatureNetworkAnimator.SetTrigger(LatchOnAnimation);
+        SwitchToBehaviourServerRpc((int)RabbitMagicianState.Attached);
+    }
     #endregion
 }
