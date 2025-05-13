@@ -10,6 +10,10 @@ using UnityEngine.Rendering.HighDefinition;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
+using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.MiscScripts.ConfigManager;
+using CodeRebirth.src.Util.AssetLoading;
+using System.Collections;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -55,22 +59,51 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public StartMatchLever startMatchLever = null!;
     [HideInInspector] public Terminal shipTerminal = null!;
     [HideInInspector] public static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
+    [HideInInspector] public Dictionary<EnemyType, float> enemyCoinDropRate = new();
     [HideInInspector] public System.Random CRRandom = new();
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
     private void Awake()
     {
+        Instance = this;
+        StartCoroutine(HandleEnemyDropRates());
         CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
         StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
         DoLayerMaskStuff();
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
-        Instance = this;
         shipTerminal = FindFirstObjectByType<Terminal>(FindObjectsInactive.Exclude);
         startMatchLever = FindFirstObjectByType<StartMatchLever>(FindObjectsInactive.Exclude);
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
         shipAnimator.shipLandAnimation = ModifiedShipLandAnimation;
         shipAnimator.shipNormalLeaveAnimation = ModifiedShipLeaveAnimation;
         StartCoroutine(ProgressiveUnlockables.LoadUnlockedIDs());
+    }
+
+    private IEnumerator HandleEnemyDropRates()
+    {
+        yield return new WaitUntil(() => EnemyTypes.Count > 0);
+        if (MapObjectHandler.Instance.Merchant == null)
+            yield break;
+
+        List<CRDynamicConfig> configDefinitions = MapObjectHandler.Instance.Merchant.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("Money")!.ConfigEntries;
+        CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Money", "Enemy Drop Rates");
+        if (configSetting == null)
+            yield break;
+
+        var enemyWithRarityDropRate = CRConfigManager.GetGeneralConfigEntry<string>(configSetting.settingName, configSetting.settingDesc).Value.Split(',').Select(s => s.Trim());
+        foreach (var enemyWithRarity in enemyWithRarityDropRate)
+        {
+            var split = enemyWithRarity.Split(':');
+            EnemyType? enemyType = EnemyTypes.Where(et => et.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (enemyType == null)
+            {
+                Plugin.Logger.LogWarning($"Couldn't find enemy of name '{split[0]}' for the money drop rate config!");
+                continue;
+            }
+            float dropRate = float.Parse(split[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture);
+            Plugin.ExtendedLogging($"{enemyType.enemyName} has a drop rate of {dropRate}");
+            enemyCoinDropRate.Add(enemyType, dropRate);
+        }
     }
 
     private void DoLayerMaskStuff()

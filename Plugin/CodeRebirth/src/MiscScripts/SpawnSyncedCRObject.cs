@@ -32,6 +32,7 @@ public class SpawnSyncedCRObject : MonoBehaviour
         CompactorToby,
         GunslingerGreg,
         AutonomousCrane,
+        Coin,
     }
 
     public IEnumerator Start()
