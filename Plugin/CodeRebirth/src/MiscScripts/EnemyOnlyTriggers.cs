@@ -5,13 +5,14 @@ public class EnemyOnlyTriggers : MonoBehaviour
 {
     public EnemyAI mainScript = null!;
 
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
-        Transform? parent = CRUtilities.TryFindRoot(other.transform);
-        if (parent != null && parent.TryGetComponent(out EnemyAI enemy) && !enemy.isEnemyDead)
+        if (other.TryGetComponent(out EnemyAICollisionDetect enemyAICollisionDetect) && !enemyAICollisionDetect.mainScript.isEnemyDead)
         {
-            if (enemy == mainScript) return;
-            mainScript.OnCollideWithEnemy(other, enemy);
+            if (enemyAICollisionDetect.mainScript == mainScript)
+                return;
+
+            mainScript.OnCollideWithEnemy(other, enemyAICollisionDetect.mainScript);
         }
     }
 }
