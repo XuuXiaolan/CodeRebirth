@@ -53,7 +53,11 @@ static class EnemyAIPatch
 
         if (RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase) return;
         self.SetEnemyOutside(true);
-        self.favoriteSpot = RoundManager.Instance.outsideAINodes.OrderBy(x => Vector3.Distance(x.transform.position, self.transform.position)).First().transform;
+        GameObject? favouriteSpot = RoundManager.Instance.outsideAINodes.OrderBy(x => Vector3.Distance(x.transform.position, self.transform.position)).FirstOrDefault();
+        if (favouriteSpot == null)
+            return;
+
+        self.favoriteSpot = favouriteSpot.transform;
     }
 
     private static void EnemyAI_Update(On.EnemyAI.orig_Update orig, EnemyAI self)
