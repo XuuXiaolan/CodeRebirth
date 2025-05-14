@@ -280,18 +280,18 @@ NavMeshAgent:
   m_GameObject: {fileID: 408929051958555687}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 1
+  m_Radius: 1.32
   m_Speed: 4
-  m_Acceleration: 10
+  m_Acceleration: 7
   avoidancePriority: 2
-  m_AngularSpeed: 400
+  m_AngularSpeed: 100
   m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 2.94
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 2045
   m_ObstacleAvoidanceType: 0
 --- !u!95 &4892806555230103814
 Animator:
@@ -475,12 +475,11 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
-  hasVariants: 0
-  usesTemperature: 0
-  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 1471202553139122210}
   smartAgentNavigator: {fileID: 4277607290375325627}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
   engineAndIdleSounds:
   - {fileID: 8300000, guid: 8fcb9a72420f2e541aaf3ebf56eb84b0, type: 3}
   - {fileID: 8300000, guid: 4494c21a4e3b8734baea2b94da444e3b, type: 3}
@@ -535,8 +534,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 0
+  _allowedLinks: 15
 --- !u!1 &528938990867653846
 GameObject:
   m_ObjectHideFlags: 0
