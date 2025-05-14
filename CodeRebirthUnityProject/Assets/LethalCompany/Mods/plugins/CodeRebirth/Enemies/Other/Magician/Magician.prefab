@@ -1073,6 +1073,8 @@ MonoBehaviour:
     maxTime: 12.5
   _spawnAnimation: {fileID: 7400000, guid: 2335550b60bcaa84c83e8601741d7bde, type: 2}
   _spottedAnimation: {fileID: 7400000, guid: a507cc332f3301347b400d430e7e9c7e, type: 2}
+  _collidersToDisable:
+  - {fileID: 1297681389355420121}
   _offsetPosition: {x: 0.031, y: -0.109, z: -0.471}
 --- !u!114 &440978046141590845
 MonoBehaviour:
@@ -1214,7 +1216,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2146959351
+    m_Bits: 2146958839
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

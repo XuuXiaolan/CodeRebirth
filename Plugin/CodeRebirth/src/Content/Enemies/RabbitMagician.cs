@@ -25,6 +25,9 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private AnimationClip _spawnAnimation = null!;
     [SerializeField]
     private AnimationClip _spottedAnimation = null!;
+    [Header("Misc")]
+    [SerializeField]
+    private Collider[] _collidersToDisable = null!;
 
     [SerializeField]
     private Vector3 _offsetPosition = new Vector3(0.031f, -0.109f, -0.471f);
@@ -236,6 +239,10 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [ClientRpc]
     private void AttachedPlayerHandleLOSClientRpc()
     {
+        foreach (var collider in _collidersToDisable)
+        {
+            collider.enabled = false;
+        }
         creatureSFX.PlayOneShot(_spottedAudioClip);
         if (GameNetworkManager.Instance.localPlayerController != targetPlayer)
             return;

@@ -8,7 +8,6 @@ using Unity.Netcode.Components;
 using CodeRebirth.src.Util.Extensions;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
