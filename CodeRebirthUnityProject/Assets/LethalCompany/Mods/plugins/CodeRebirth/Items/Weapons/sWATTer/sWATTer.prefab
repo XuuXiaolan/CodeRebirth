@@ -411,17 +411,24 @@ MonoBehaviour:
   reelingTime: 0.35
   swingTime: 0.13
   hitSFX:
-  - {fileID: 8300000, guid: 4333ddd1e9a773a43b3544452c27dae1, type: 3}
+  - {fileID: 8300000, guid: 1e20a2b04a690594f85f2f1e6bacadf2, type: 3}
   reelUpSFX:
   - {fileID: 8300000, guid: 725d1c4040e47a449ba66c51175813ab, type: 3}
   swingSFX:
   - {fileID: 8300000, guid: 7e39dac39c455a64783fb3dd74758c46, type: 3}
-  finishReelUpSFX: []
-  hitEnemySFX: []
+  finishReelUpSFX:
+  - {fileID: 8300000, guid: 2b1603c269ad7494cba5eff7c909a2a4, type: 3}
+  hitEnemySFX:
+  - {fileID: 8300000, guid: 55cda3e2819034a498a667f961aa83a8, type: 3}
+  - {fileID: 8300000, guid: c32d528015db2a04eb74578965b6e260, type: 3}
+  - {fileID: 8300000, guid: 4cfa390bbb7926c48a1bdf79c60ff1b1, type: 3}
   weaponAudio: {fileID: -3711927006579192727}
   tryHitAllTimes: 0
   heldOverHeadTimer: 0
   previousPlayerHeldBy: {fileID: 0}
+  OnHitSuccess:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8562375478621682718
 GameObject:
   m_ObjectHideFlags: 0

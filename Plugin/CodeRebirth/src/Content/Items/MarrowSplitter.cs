@@ -25,15 +25,15 @@ public class MarrowSplitter : GrabbableObject
     [SerializeField]
     private int _decreaseAmount = 2;
 
-    private float _tryHealPlayerTimer = 0f;
+    private float _tryHealPlayerTimer = 1f;
     private float _hitTimer = 0f;
     private bool _isHealing = false;
 
     private static readonly int AttackingAnimation = Animator.StringToHash("isAttacking"); // Bool
 
-    public override void GrabItem()
+    public override void EquipItem()
     {
-        base.GrabItem();
+        base.EquipItem();
         Plugin.InputActionsInstance.MarrowHealPlayer.performed += OnTryStartHealPlayer;
         Plugin.InputActionsInstance.MarrowHealPlayer.canceled += OnTryCancelHealPlayer;
     }
@@ -42,7 +42,10 @@ public class MarrowSplitter : GrabbableObject
     {
         base.DiscardItem();
         Plugin.ExtendedLogging($"Marrow Splitter Discarded and isBeingUsed: {isBeingUsed}");
-        _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
+
+        if (IsOwner)
+            _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
+
         isBeingUsed = false;
 
         Plugin.InputActionsInstance.MarrowHealPlayer.performed -= OnTryStartHealPlayer;
@@ -54,9 +57,10 @@ public class MarrowSplitter : GrabbableObject
         base.PocketItem();
         Plugin.ExtendedLogging($"Marrow Splitter Pocketed and isBeingUsed: {isBeingUsed}");
 
-        _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
-        isBeingUsed = false;
+        if (IsOwner)
+            _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
 
+        isBeingUsed = false;
         Plugin.InputActionsInstance.MarrowHealPlayer.performed -= OnTryStartHealPlayer;
         Plugin.InputActionsInstance.MarrowHealPlayer.canceled -= OnTryCancelHealPlayer;
     }
@@ -70,7 +74,7 @@ public class MarrowSplitter : GrabbableObject
 
     public void OnTryStartHealPlayer(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (_tryHealPlayerTimer > 0f || isBeingUsed || !isHeld || isPocketed)
+        if (isBeingUsed || !isHeld || isPocketed)
             return;
 
         if (GameNetworkManager.Instance.localPlayerController != playerHeldBy)
@@ -86,9 +90,8 @@ public class MarrowSplitter : GrabbableObject
         if (currentAmount <= 0)
             return;
 
-        _tryHealPlayerTimer = 1f;
-        ActivateOrStopSourceForHealingServerRpc(true);
         _marrowSplitterAnimator.SetBool(AttackingAnimation, true);
+        ActivateOrStopSourceForHealingServerRpc(true);
     }
 
     public void OnTryCancelHealPlayer(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -142,12 +145,12 @@ public class MarrowSplitter : GrabbableObject
         if (!_isHealing && isBeingUsed)
             _hitTimer -= Time.deltaTime;
 
-        if (!isBeingUsed || (_hitTimer > 0 && _tryHealPlayerTimer > 0) || playerHeldBy == null || isPocketed) return;
-        if (_isHealing)
+        if (!isBeingUsed || playerHeldBy == null || isPocketed) return;
+        if (_isHealing && _tryHealPlayerTimer <= 0)
         {
             DoHealingPlayers();
         }
-        else
+        else if (!_isHealing && _hitTimer <= 0)
         {
             DoHitStuff(1);
         }
@@ -208,7 +211,10 @@ public class MarrowSplitter : GrabbableObject
         {
             _hitTimer = 0.4f;
             insertedBattery.charge -= 0.1f;
-            _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(_skinnedMeshRenderer.GetBlendShapeWeight(0) + _increaseAmount, 0, 100));
+            float currentAmount = _skinnedMeshRenderer.GetBlendShapeWeight(0);
+            float newAmount = Mathf.Clamp(currentAmount + _increaseAmount, 0, 100);
+            Plugin.ExtendedLogging($"Increasing blendshape weight to {newAmount}");
+            _skinnedMeshRenderer.SetBlendShapeWeight(0, newAmount);
         }
     }
 

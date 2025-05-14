@@ -687,11 +687,12 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 string modifiedName = name + "Level";
                 if (System.Enum.TryParse(modifiedName, true, out levelType))
                 {
+                    Plugin.ExtendedLogging($"Parsing vanilla level: {name} with spawnrate: {spawnrate}");
                     spawnRateByLevelType[levelType] = spawnrate;
                 }
                 else
                 {
-                    Plugin.ExtendedLogging($"Parsing potential modded level or tag: {name}");
+                    Plugin.ExtendedLogging($"Parsing potential modded level or tag: {name} with spawnrate: {spawnrate}");
                     spawnRateByCustomLevelType[name] = spawnrate;
                 }
             }

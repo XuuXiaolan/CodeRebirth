@@ -8,7 +8,6 @@ using Unity.Netcode.Components;
 using CodeRebirth.src.Util.Extensions;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
@@ -214,7 +213,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         if (Vector3.Dot(player.gameplayCamera.transform.forward, directionToEnemy) < dotProductThreshold)
             return false;
 
-        if (Physics.Linecast(player.gameplayCamera.transform.position, transform.position, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Linecast(player.gameplayCamera.transform.position, transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             return false;
 
         return true;

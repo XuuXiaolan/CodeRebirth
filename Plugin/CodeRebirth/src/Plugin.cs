@@ -20,7 +20,6 @@ namespace CodeRebirth.src;
 [BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency("JustJelly.SubtitlesAPI", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("Zaggy1024.PathfindingLib", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(MoreCompany.PluginInformation.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
@@ -97,11 +96,6 @@ public class Plugin : BaseUnityPlugin
 
         ModConfig.InitCodeRebirthConfig(configFile);
         RegisterContentHandlers(Assembly.GetExecutingAssembly());
-
-        if (SubtitlesAPICompatibilityChecker.Enabled)
-        {
-            SubtitlesAPICompatibilityChecker.Init();
-        }
 
         if (OpenBodyCamCompatibilityChecker.Enabled)
         {

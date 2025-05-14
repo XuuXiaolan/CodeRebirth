@@ -31,9 +31,9 @@ public class MoleDigger : GrabbableObject
         lightObject.SetActive(false);
     }
 
-    public override void GrabItem()
+    public override void EquipItem()
     {
-        base.GrabItem();
+        base.EquipItem();
         Plugin.InputActionsInstance.PullChain.performed += OnChainYanked;
     }
 
@@ -41,9 +41,15 @@ public class MoleDigger : GrabbableObject
     {
         base.DiscardItem();
         Plugin.ExtendedLogging($"Mole Digger Discarded and isBeingUsed: {isBeingUsed}");
-        moleAnimator.SetBool(ActivatedAnimation, false);
-        moleAnimator.SetBool(AttackingAnimation, false);
-        ActivateLightObjectServerRpc(false);
+        if (IsOwner)
+        {
+            moleAnimator.SetBool(ActivatedAnimation, false);
+            moleAnimator.SetBool(AttackingAnimation, false);
+        }
+        idleSource.volume = 0f;
+        idleSource.clip = normalIdleSound;
+        audioSource.PlayOneShot(DeactivateSound);
+        lightObject.SetActive(false);
         isBeingUsed = false;
 
         Plugin.InputActionsInstance.PullChain.performed -= OnChainYanked;
@@ -54,9 +60,15 @@ public class MoleDigger : GrabbableObject
         base.PocketItem();
         Plugin.ExtendedLogging($"Mole Digger Pocketed and isBeingUsed: {isBeingUsed}");
 
-        moleAnimator.SetBool(ActivatedAnimation, false);
-        moleAnimator.SetBool(AttackingAnimation, false);
-        ActivateLightObjectServerRpc(false);
+        if (IsOwner)
+        {
+            moleAnimator.SetBool(ActivatedAnimation, false);
+            moleAnimator.SetBool(AttackingAnimation, false);
+        }
+        idleSource.volume = 0f;
+        idleSource.clip = normalIdleSound;
+        audioSource.PlayOneShot(DeactivateSound);
+        lightObject.SetActive(false);
         isBeingUsed = false;
     }
 
