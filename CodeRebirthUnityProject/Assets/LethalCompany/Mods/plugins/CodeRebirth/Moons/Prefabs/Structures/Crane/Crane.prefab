@@ -530,6 +530,7 @@ GameObject:
   - component: {fileID: 6825219803038951662}
   - component: {fileID: 858616656296888912}
   - component: {fileID: 2450091254189747189}
+  - component: {fileID: -7892374141663765155}
   m_Layer: 8
   m_Name: Crane
   m_TagString: Untagged
@@ -597,6 +598,26 @@ MonoBehaviour:
   craneAnimator: {fileID: 858616656296888912}
   leverAnimator: {fileID: 0}
   dropButton: {fileID: 0}
+--- !u!114 &-7892374141663765155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5382473434540292675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &5526167424960404672
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,7 +1379,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2691c346fe48b6e4790c6f93d770976e, type: 2}
+      objectReference: {fileID: 2100000, guid: ab8b2d90297f0894eae4cc7c22a721ac, type: 2}
     - target: {fileID: 919132149155446097, guid: e9c8a995ff29cd34f9d4e98d646d9cb6,
         type: 3}
       propertyPath: m_Name
