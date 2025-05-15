@@ -228,6 +228,9 @@ public class Ceasefire : GrabbableObject
             if (!collider.TryGetComponent(out IHittable hittable))
                 continue;
 
+            if (Physics.Linecast(capsuleStart, collider.gameObject.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+                continue;
+
             if (hittable is PlayerControllerB player)
             {
                 if (player == playerHeldBy)

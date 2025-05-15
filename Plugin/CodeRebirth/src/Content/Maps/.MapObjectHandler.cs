@@ -83,6 +83,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     {
     }
 
+    public class AutonomousCraneAssets(string bundleName) : AssetBundleLoader<AutonomousCraneAssets>(bundleName)
+    {
+    }
+
     public OxydeCrashShipAssets? OxydeCrashShip { get; private set; } = null;
     public GunslingerGregAssets? GunslingerGreg { get; private set; } = null;
     public CompactorTobyAssets? CompactorToby { get; private set; } = null;
@@ -98,6 +102,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     public TeslaShockAssets? TeslaShock { get; private set; } = null;
     public AirControlUnitAssets? AirControlUnit { get; private set; } = null;
     public FunctionalMicrowaveAssets? FunctionalMicrowave { get; private set; } = null;
+    public AutonomousCraneAssets? AutonomousCrane { get; private set; } = null;
 
     public Dictionary<SpawnSyncedCRObject.CRObjectType, GameObject> prefabMapping = new();
 
@@ -130,6 +135,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         GlowingGem = LoadAndRegisterAssets<GlowingGemAssets>("glowinggemassets");
 
         AirControlUnit = LoadAndRegisterAssets<AirControlUnitAssets>("aircontrolunitassets");
+
+        AutonomousCrane = LoadAndRegisterAssets<AutonomousCraneAssets>("autonomouscraneassets");
 
         Plugin.ModConfig.ConfigFloraEnabled = Plugin.configFile.Bind("Flora Options",
                                             "Flora | Enabled",

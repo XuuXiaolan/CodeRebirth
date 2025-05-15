@@ -1,3 +1,4 @@
+using System.Collections;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -28,7 +29,7 @@ public class JimothyNPC : NetworkBehaviour
     private static readonly int PickUpJimothyAnimation = Animator.StringToHash("pickUp"); // Trigger
     private static readonly int GreetPlayersAnimation = Animator.StringToHash("greetPlayers"); // Trigger
     private static readonly int RandomIdleAnimation = Animator.StringToHash("randomIdle"); // Trigger
-    private static readonly int RandomTypeAnimation = Animator.StringToHash("randomType"); // Trigger
+    private static readonly int IsTypingAnimation = Animator.StringToHash("isTyping"); // Bool
 
     public void Update()
     {
@@ -76,13 +77,20 @@ public class JimothyNPC : NetworkBehaviour
         switch (animationToDo)
         {
             case 0:
-                _jimothyNetworkAnimator.SetTrigger(RandomTypeAnimation);
+                _jimothyAnimator.SetBool(IsTypingAnimation, true);
+                StartCoroutine(StopTypingWithDelay());
                 break;
             case 1:
                 _jimothyNetworkAnimator.SetTrigger(RandomIdleAnimation);
                 break;
         }
         _idleTimer = Random.Range(_minIdleTime, _maxIdleTime);
+    }
+
+    private IEnumerator StopTypingWithDelay()
+    {
+        yield return new WaitForSeconds(15f);
+        _jimothyAnimator.SetBool(IsTypingAnimation, false);
     }
 
     public void PickupFallenJimothy(PlayerControllerB player)

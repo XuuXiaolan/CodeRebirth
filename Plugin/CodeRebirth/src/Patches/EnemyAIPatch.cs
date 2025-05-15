@@ -89,12 +89,8 @@ static class EnemyAIPatch
         {
             alreadyDead = true;
         }
-        orig(self, force, playerWhoHit, playHitSFX, hitID);
 
-        if (alreadyDead)
-            return;
-
-        if (self.IsServer && self.enemyHP - force <= 0 && playerWhoHit != null)
+        if (!alreadyDead && self.IsServer && self.enemyHP - force <= 0 && playerWhoHit != null)
         {
             if (!CodeRebirthUtils.Instance.enemyCoinDropRate.ContainsKey(self.enemyType))
             {
@@ -112,6 +108,8 @@ static class EnemyAIPatch
             GameObject coin = UnityEngine.Object.Instantiate(coinGO, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             coin.GetComponent<NetworkObject>().Spawn(true);
         }
+
+        orig(self, force, playerWhoHit, playHitSFX, hitID);
     }
 
     private static IEnumerator DelayResetSpeed(EnemyAI self)
