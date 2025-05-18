@@ -37,7 +37,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     [HideInInspector] public bool isAttacking = false;
     private bool enteredDefensiveModeOnce = false;
     private PlayerControllerB? targetPlayerToNeedle = null;
-    private static int instanceCount = 0;
     private PlayerControllerB? priorityPlayer = null;
     private float timeSinceLastTakenDamage = 0f;
     private bool teleporting = false;
@@ -65,7 +64,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        instanceCount++;
         agent.speed = 0f;
         SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Spawn);
     }
@@ -460,12 +458,6 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         return target;
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-        instanceCount--;
     }
 
     #region Animation Events

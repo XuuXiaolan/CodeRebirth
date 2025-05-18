@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class WrittenDocument : GrabbableObject
 {
     [Tooltip("In ascending order from first, to second, etc")]
@@ -34,5 +35,25 @@ public class WrittenDocument : GrabbableObject
 
         _orderedPages[activePage].SetActive(false);
         activePage++;
+    }
+
+    public override void PocketItem()
+    {
+        if (IsOwner && playerHeldBy != null && playerHeldBy.IsInspectingItem)
+        {
+            HUDManager.Instance.HideHUD(false);
+            HUDManager.Instance.SetNearDepthOfFieldEnabled(true);
+        }
+        base.PocketItem();
+    }
+
+    public override void DiscardItem()
+    {
+        if (IsOwner && playerHeldBy != null && playerHeldBy.IsInspectingItem)
+        {
+            HUDManager.Instance.HideHUD(false);
+            HUDManager.Instance.SetNearDepthOfFieldEnabled(true);
+        }
+        base.DiscardItem();
     }
 }
