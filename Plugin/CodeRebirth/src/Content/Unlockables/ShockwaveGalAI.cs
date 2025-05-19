@@ -503,7 +503,7 @@ public class ShockwaveGalAI : GalAI
         // Instantiate the laser beam on the server
         if (IsServer)
         {
-            GameObject laserPrefab = UnlockableHandler.Instance.ShockwaveBot.LasetShockBlast;
+            GameObject laserPrefab = UnlockableHandler.Instance.ShockwaveBot!.LasetShockBlast;
             GameObject laserInstance = Instantiate(laserPrefab, LaserOrigin.position, LaserOrigin.rotation);
             LaserShockBlast laserShockBlack = laserInstance.GetComponent<LaserShockBlast>();
 
@@ -522,7 +522,7 @@ public class ShockwaveGalAI : GalAI
         chargeCount--;
         if (chargeCount <= 0 && ownerPlayer == GameNetworkManager.Instance.localPlayerController)
         {
-            HUDManager.Instance.DisplayTip("WARNING", "DELILAH CHARGE COUNT EXHAUSTED", true);
+            HUDManager.Instance.DisplayTip("WARNING", "DELILAH ATTACK CHARGES EXHAUSTED", true);
         }
     }
 
