@@ -5,26 +5,40 @@ using System.Linq;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Guardsman : CodeRebirthEnemyAI
 {
+    [Header("Audio")]
+    [SerializeField]
+    private AudioClip _landAudioClip = null!;
+    [SerializeField]
+    private AudioClip _slamAudioClip = null!;
+    [SerializeField]
+    private AudioClip _ripApartAudioClip = null!;
+    [SerializeField]
+    private AudioClip[] _footstepAudioClips = [];
+    [SerializeField]
+    private AudioClip[] _enemySpottedAudioClips = [];
+    [SerializeField]
+    private AudioClipsWithTime _guardsmanIdleAudioClipsWithTime = new();
+
     [SerializeField]
     private Transform[] _enemyHoldingPoints = [];
-
     [SerializeField]
     private Transform _spotlightHead = null!;
-
     [SerializeField]
     private float _enemySizeThreshold = 69;
-
     [SerializeField]
     private ParticleSystem _dustParticleSystem = null!;
 
+    private float _idleTimer = 0f;
     private Coroutine? _messWithSizeOverTimeRoutine = null;
     private bool _killingLargeEnemy = false;
     private float _bufferTimer = 0f;
@@ -41,6 +55,9 @@ public class Guardsman : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        creatureSFX.PlayOneShot(_landAudioClip);
+        _idleTimer = enemyRandom.NextFloat(_guardsmanIdleAudioClipsWithTime.minTime, _guardsmanIdleAudioClipsWithTime.maxTime);
+
         List<CRDynamicConfig> configDefinitions = MapObjectHandler.Instance.Merchant!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
         CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Guardsman", "Enemy Blacklist");
         if (configSetting != null)
@@ -69,6 +86,12 @@ public class Guardsman : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer < 0)
+        {
+            _idleTimer = enemyRandom.NextFloat(_guardsmanIdleAudioClipsWithTime.minTime, _guardsmanIdleAudioClipsWithTime.maxTime);
+            creatureVoice.PlayOneShot(_guardsmanIdleAudioClipsWithTime.audioClips[enemyRandom.Next(_guardsmanIdleAudioClipsWithTime.audioClips.Length)]);
+        }
 
         if (_killingLargeEnemy && targetEnemy != null)
         {
@@ -175,6 +198,11 @@ public class Guardsman : CodeRebirthEnemyAI
         creatureAnimator.SetBool(IsDeadAnimation, true);
     }
 
+    public override void EnemySetAsTarget(EnemyAI? enemy)
+    {
+        base.EnemySetAsTarget(enemy);
+        creatureVoice.PlayOneShot(_enemySpottedAudioClips[enemyRandom.Next(_enemySpottedAudioClips.Length)]);
+    }
     #endregion
     #region Misc Functions
 
@@ -226,6 +254,11 @@ public class Guardsman : CodeRebirthEnemyAI
     #endregion
 
     #region Animation Events
+    public void PlayFootstepSoundAnimEvent()
+    {
+        creatureSFX.PlayOneShot(_footstepAudioClips[enemyRandom.Next(_footstepAudioClips.Length)]);
+    }
+
     public void ScreenShakeAnimEvent()
     {
         if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) <= 50f)
@@ -288,7 +321,7 @@ public class Guardsman : CodeRebirthEnemyAI
                 enemy.KillEnemyOnOwnerClient(overrideDestroy);
         }
 
-        // idk other stuff
+        creatureSFX.PlayOneShot(_slamAudioClip);
     }
 
     public void RipApartEnemyAnimEvent()
@@ -301,7 +334,7 @@ public class Guardsman : CodeRebirthEnemyAI
         if (targetEnemy.IsOwner)
             targetEnemy.KillEnemyOnOwnerClient(true);
 
-        // idk other stuff like particle effects ig        
+        creatureSFX.PlayOneShot(_ripApartAudioClip);     
     }
 
     #endregion

@@ -1,17 +1,11 @@
 using System.Collections;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
 public class OxydeCrashingShip : FallingObjectBehaviour
 {
-    [Header("Scrap")]
-    [SerializeField]
-    private Transform _itemSpawnTransform = null!;
-
     [Header("Audio")]
     [SerializeField]
     private AudioSource _ImpactAudio = null!;
@@ -40,7 +34,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
     protected override void OnImpact()
     {
         base.OnImpact();
-        StartCoroutine(Impact()); // Start the impact effects
+        Impact(); // Start the impact effects
     }
 
     protected override void OnSetup()
@@ -77,7 +71,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
                 _CloseTravelAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
                 _ImpactAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
             }
-            if (((1 - Progress) * _travelTime) <= 4.106f && !_CloseTravelAudio.isPlaying)
+            if (((1 - Progress) * _travelTime) <= _CloseTravelAudio.clip.length && !_CloseTravelAudio.isPlaying)
             {
                 _NormalTravelAudio.volume = 0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
                 _CloseTravelAudio.Play();
@@ -85,13 +79,10 @@ public class OxydeCrashingShip : FallingObjectBehaviour
         }
     }
 
-    private IEnumerator Impact()
+    private void Impact()
     {
         _ImpactAudio.Play();
+        HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         CRUtilities.CreateExplosion(transform.position, true, 50, 0, 25, 4, null, null, 100f);
-
-        if (!IsServer) yield break;
-        if (ItemHandler.Instance.MoonUnlocker == null) yield break;
-        CodeRebirthUtils.Instance.SpawnScrap(ItemHandler.Instance.MoonUnlocker.ItemDefinitions.GetCRItemDefinitionWithItemName("Oxyde")?.item, _itemSpawnTransform.position, false, true, 0);
     }
 }

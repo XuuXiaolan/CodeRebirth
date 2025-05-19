@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4474913, g: 0.2402311, b: 0.07641309, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12596,7 +12596,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -1302.5896, y: -0, z: -0}
+    textureOffset: {x: -333.14365, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -23919,6 +23919,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -23966,6 +23967,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -23983,6 +23985,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24027,6 +24030,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24059,6 +24063,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24178,6 +24183,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24298,6 +24304,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24583,6 +24590,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24600,6 +24608,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24632,6 +24641,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24683,6 +24693,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24700,6 +24711,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24717,6 +24729,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24734,6 +24747,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24848,6 +24862,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -24931,6 +24946,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:
@@ -25096,6 +25112,7 @@ MonoBehaviour:
   m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
   specialItemNamesWithRarity:

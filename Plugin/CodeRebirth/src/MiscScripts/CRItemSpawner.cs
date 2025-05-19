@@ -23,14 +23,19 @@ public class ItemNameWithRarity
 
 public class CRItemSpawner : MonoBehaviour
 {
-    public CRItemSpawnerType spawnerType;
-    public float spawnChance;
+    [SerializeField]
+    private bool _spawnOnStart = true;
+    [SerializeField]
+    private CRItemSpawnerType spawnerType;
+    [SerializeField]
+    private float spawnChance;
 
     [Header("Special Items")]
     public List<ItemNameWithRarity> specialItemNamesWithRarity = new();
 
     public void Start()
     {
+        if (!_spawnOnStart) return;
         if (!NetworkManager.Singleton.IsServer) return;
         switch (spawnerType)
         {
@@ -54,6 +59,7 @@ public class CRItemSpawner : MonoBehaviour
 
     public void DoSpecialItemSpawn()
     {
+        if (!NetworkManager.Singleton.IsServer) return;
         if (UnityEngine.Random.Range(0, 100) >= spawnChance)
             return;
 

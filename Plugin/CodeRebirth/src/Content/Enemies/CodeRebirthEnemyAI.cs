@@ -10,6 +10,7 @@ using System.Collections;
 using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 [RequireComponent(typeof(SmartAgentNavigator))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NetworkAnimator))]
@@ -289,14 +290,23 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         {
             targetEnemy = null;
             Plugin.ExtendedLogging($"Clearing Enemy target on {this}");
+            EnemySetAsTarget(null);
             return;
         }
+
         if (RoundManager.Instance.SpawnedEnemies[enemyID] == null)
         {
             Plugin.ExtendedLogging($"Enemy Index invalid! {this}");
+            EnemySetAsTarget(null);
             return;
         }
         targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
+        EnemySetAsTarget(targetEnemy);
+    }
+
+    public virtual void EnemySetAsTarget(EnemyAI? enemy)
+    {
+        
     }
 }
