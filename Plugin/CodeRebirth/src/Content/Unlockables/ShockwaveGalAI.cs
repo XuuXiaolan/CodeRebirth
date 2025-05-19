@@ -520,6 +520,10 @@ public class ShockwaveGalAI : GalAI
     {
         currentlyAttacking = false;
         chargeCount--;
+        if (chargeCount <= 0 && ownerPlayer == GameNetworkManager.Instance.localPlayerController)
+        {
+            HUDManager.Instance.DisplayTip("WARNING", "DELILAH CHARGE COUNT EXHAUSTED", true);
+        }
     }
 
     private void PlayFootstepSoundAnimEvent()

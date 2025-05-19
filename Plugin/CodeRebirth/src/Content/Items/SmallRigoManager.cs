@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Items;
 public class SmallRigoManager : MonoBehaviour
@@ -82,57 +83,82 @@ public class SmallRigoManager : MonoBehaviour
 
     public IEnumerator ActiveRoutine()
     {
+        const float maxSampleDistance = 2f; // how far from current position to look for NavMesh
+        NavMeshHit hit;
+
+        // Initial placement or re‐placement onto NavMesh
         foreach (var smallRigo in smallRigosActive)
         {
-            yield return null;
-            if (!smallRigo.agent.enabled || !smallRigo.agent.isOnNavMesh)
-                continue;
+            if (smallRigo == null) continue;
 
-            smallRigo.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 3, default));
+            // Try to sample the NavMesh at or around the current position
+            if (NavMesh.SamplePosition(goldRigo.transform.position, out hit, maxSampleDistance, smallRigo.agent.areaMask))
+            {
+                smallRigo.transform.position = hit.position;
+                smallRigo.agent.enabled = true;
+                smallRigo.agent.Warp(hit.position);
+            }
+            else
+            {
+                smallRigo.agent.enabled = false;
+            }
         }
+
+        // Main loop while active
         while (active)
         {
-            foreach (SmallRigo smallRigo in smallRigosActive)
+            foreach (var smallRigo in smallRigosActive)
             {
-                yield return null;
-                if (smallRigo.agent.path.status == UnityEngine.AI.NavMeshPathStatus.PathPartial || smallRigo.agent.path.status == UnityEngine.AI.NavMeshPathStatus.PathInvalid)
+                if (smallRigo == null) continue;
+
+                // If agent is disabled, keep checking for NavMesh to re‐enable it
+                if (!smallRigo.agent.enabled || !smallRigo.agent.isOnNavMesh)
                 {
-                    if (!smallRigo.agent.enabled)
+                    if (NavMesh.SamplePosition(goldRigo.transform.position, out hit, maxSampleDistance, smallRigo.agent.areaMask))
                     {
+                        smallRigo.transform.position = hit.position;
                         smallRigo.agent.enabled = true;
-                    }
-                    if (!smallRigo.agent.enabled || !smallRigo.agent.isOnNavMesh)
-                        continue;
-
-                    smallRigo.agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(goldRigo.transform.position, 5, default));
-                }
-                float distanceToKing = Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position);
-                if (goldRigo.playerHeldBy != null)
-                {
-                    if (distanceToKing <= 2f)
-                    {
-                        if (smallRigo.jumping)
-                            continue;
-
-                        smallRigo.SetJumping(true);
-                        continue;
+                        smallRigo.agent.Warp(hit.position);
                     }
                     else
                     {
-                        if (smallRigo.jumping)
-                        {
-                            smallRigo.SetJumping(false);
-                        }
+                        // Still no NavMesh nearby – skip pathing this frame
+                        continue;
                     }
-                    smallRigo.DoPathingToPosition(goldRigo.playerHeldBy.transform.position);
-                    continue;
                 }
-                if (distanceToKing <= 1f) continue;
-                smallRigo.DoPathingToPosition(goldRigo.transform.position);
+
+                // At this point, agent is on NavMesh
+                float distanceToKing = Vector3.Distance(smallRigo.transform.position, goldRigo.transform.position);
+
+                // Handle jumping logic if GoldRigo is being held
+                if (goldRigo.playerHeldBy != null)
+                {
+                    if (distanceToKing <= 2f && !smallRigo.jumping)
+                    {
+                        smallRigo.SetJumping(true);
+                        continue;
+                    }
+                    else if (distanceToKing > 2f && smallRigo.jumping)
+                    {
+                        smallRigo.SetJumping(false);
+                    }
+
+                    smallRigo.DoPathingToPosition(goldRigo.playerHeldBy.transform.position);
+                }
+                else
+                {
+                    if (distanceToKing > 1f)
+                        smallRigo.DoPathingToPosition(goldRigo.transform.position);
+                }
+
+                yield return null;
             }
+
+            // A short delay between waves of pathing checks
             yield return new WaitForSeconds(0.25f);
         }
     }
+
 
     public IEnumerator VoiceRoutine()
     {
