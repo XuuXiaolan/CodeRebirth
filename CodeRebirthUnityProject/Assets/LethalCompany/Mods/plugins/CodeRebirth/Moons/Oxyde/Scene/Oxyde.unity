@@ -12066,6 +12066,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1010571155}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1016920524
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1016920525}
+  m_Layer: 0
+  m_Name: ByrneJournals
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1016920525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1016920524}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -105.2525, y: -42.627335, z: 25.811079}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5718040300618548081}
+  - {fileID: 7022431918878005155}
+  - {fileID: 2792767607152743095}
+  - {fileID: 1313139135993785030}
+  - {fileID: 4110965686379946930}
+  m_Father: {fileID: 2048951566}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1018120469
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12560,7 +12596,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -373.95172, y: -0, z: -0}
+    textureOffset: {x: -1302.5896, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -22435,6 +22471,7 @@ Transform:
   - {fileID: 2122532832}
   - {fileID: 861483456}
   - {fileID: 502087271}
+  - {fileID: 1016920525}
   m_Father: {fileID: 1991192134}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2065440290 stripped
@@ -23934,6 +23971,23 @@ MonoBehaviour:
   specialItemNamesWithRarity:
   - Name: Director Diary 9
     Rarity: 1
+--- !u!114 &951201235208809503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3560681587554483027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnerType: 1
+  spawnChance: 100
+  specialItemNamesWithRarity:
+  - Name: Byrne Journal 2
+    Rarity: 1
 --- !u!4 &995458588850815934 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9132184563900755138, guid: 1109162ee094dea40a82d2c161aad356,
@@ -23978,6 +24032,21 @@ MonoBehaviour:
   specialItemNamesWithRarity:
   - Name: Director Diary 6
     Rarity: 1
+--- !u!4 &1313139135993785030
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4766937611869701686}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -42.926712, y: -8.4222145, z: -10.257937}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1016920525}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1372763901944359938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24007,6 +24076,23 @@ GameObject:
   - component: {fileID: 3122558918930933783}
   m_Layer: 0
   m_Name: DiarySpawner10
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &2252972777606705025
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5718040300618548081}
+  - component: {fileID: 2530292639029442765}
+  m_Layer: 0
+  m_Name: Journalspawner 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24080,6 +24166,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1109162ee094dea40a82d2c161aad356, type: 3}
+--- !u!114 &2530292639029442765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2252972777606705025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnerType: 1
+  spawnChance: 100
+  specialItemNamesWithRarity:
+  - Name: Byrne Journal 1
+    Rarity: 1
 --- !u!4 &2597137193979811395
 Transform:
   m_ObjectHideFlags: 0
@@ -24094,6 +24197,21 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 502087271}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2792767607152743095
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8565638416684645959}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 11.057541, y: -24.849197, z: 73.258125}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1016920525}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2963276231218698800
 PrefabInstance:
@@ -24295,6 +24413,23 @@ PrefabInstance:
       addedObject: {fileID: 1149170577986102861}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11f608029f0d26f40b881cd0a29dcc8c, type: 3}
+--- !u!1 &3560681587554483027
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7022431918878005155}
+  - component: {fileID: 951201235208809503}
+  m_Layer: 0
+  m_Name: Journalspawner 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &3610253148875408978
 Transform:
   m_ObjectHideFlags: 0
@@ -24342,6 +24477,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4110965686379946930
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7571589001104904002}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 123.53871, y: 28.83913, z: -68.450584}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1016920525}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4245559310310779931
 Transform:
   m_ObjectHideFlags: 0
@@ -24389,6 +24539,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &4766937611869701686
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1313139135993785030}
+  - component: {fileID: 9114966728823837050}
+  m_Layer: 0
+  m_Name: Journalspawner 4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &5121268076570284971
 Transform:
   m_ObjectHideFlags: 0
@@ -24421,6 +24588,38 @@ MonoBehaviour:
   specialItemNamesWithRarity:
   - Name: To-Do List
     Rarity: 1
+--- !u!114 &5369996871086418187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8565638416684645959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnerType: 1
+  spawnChance: 100
+  specialItemNamesWithRarity:
+  - Name: Byrne Journal 3
+    Rarity: 1
+--- !u!4 &5718040300618548081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2252972777606705025}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -24.912064, y: 6.2156334, z: 142.47752}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1016920525}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5939718509496290216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24472,6 +24671,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6146003258895833102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7571589001104904002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnerType: 1
+  spawnChance: 100
+  specialItemNamesWithRarity:
+  - Name: Byrne Journal 5
+    Rarity: 1
 --- !u!114 &6245552972327229351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24523,6 +24739,21 @@ MonoBehaviour:
   specialItemNamesWithRarity:
   - Name: Director Diary 8
     Rarity: 1
+--- !u!4 &7022431918878005155
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3560681587554483027}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 38.1047, y: -20.622387, z: 19.365423}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1016920525}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7062936735517747874
 GameObject:
   m_ObjectHideFlags: 0
@@ -24622,6 +24853,23 @@ MonoBehaviour:
   specialItemNamesWithRarity:
   - Name: Director Diary 3
     Rarity: 1
+--- !u!1 &7571589001104904002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4110965686379946930}
+  - component: {fileID: 6146003258895833102}
+  m_Layer: 0
+  m_Name: Journalspawner 5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &7707317183596904683
 GameObject:
   m_ObjectHideFlags: 0
@@ -24700,6 +24948,23 @@ GameObject:
   - component: {fileID: 5209831755372113407}
   m_Layer: 0
   m_Name: ToDoSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &8565638416684645959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2792767607152743095}
+  - component: {fileID: 5369996871086418187}
+  m_Layer: 0
+  m_Name: Journalspawner 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24819,6 +25084,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 502087271}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9114966728823837050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4766937611869701686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnerType: 1
+  spawnChance: 100
+  specialItemNamesWithRarity:
+  - Name: Byrne Journal 4
+    Rarity: 1
 --- !u!4 &9172391645742716862
 Transform:
   m_ObjectHideFlags: 0

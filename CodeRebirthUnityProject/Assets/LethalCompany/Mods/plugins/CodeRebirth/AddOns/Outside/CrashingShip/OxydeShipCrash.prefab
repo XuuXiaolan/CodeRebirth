@@ -123,6 +123,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2092534580480229871}
+        m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.CRItemSpawner, CodeRebirth
+        m_MethodName: DoSpecialItemSpawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2128641630491908994}
+        m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.CRItemSpawner, CodeRebirth
+        m_MethodName: DoSpecialItemSpawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _itemSpawnTransform: {fileID: 2435933137278178650}
   _ImpactAudio: {fileID: 6116050712077347010}
   _NormalTravelAudio: {fileID: 5183675186425966995}
@@ -185,6 +209,9 @@ Transform:
   - {fileID: 6815422166807168203}
   - {fileID: 5598696572989046013}
   - {fileID: 7923609809849504336}
+  - {fileID: 2435933137278178650}
+  - {fileID: 6918426340555840836}
+  - {fileID: 2081567775150873873}
   m_Father: {fileID: 4146576450745592220}
   m_LocalEulerAnglesHint: {x: -111.1, y: 0, z: 0}
 --- !u!33 &3277621281148521067
@@ -316,7 +343,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 39e1736b51c7a6847a7293773efbcd0b,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 3057ae5212672224f9c827042db35937, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 2bc1394b95d06d140a6a5c4c2409a990, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -411,8 +438,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2435933137278178650}
+  - component: {fileID: 2128641630491908994}
   m_Layer: 8
-  m_Name: itemSpawn
+  m_Name: TabletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,13 +454,79 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2710955665627225453}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 639, y: 747, z: -2308}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0.7054229, y: -0.048771158, z: 0.04877116, w: 0.7054229}
+  m_LocalPosition: {x: 0.5311508, y: 2.6811001, z: 2.9634352}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5598696572989046013}
+  m_Father: {fileID: 3902830893026060884}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2128641630491908994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710955665627225453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnerType: 1
+  spawnChance: 100
+  specialItemNamesWithRarity:
+  - Name: Oxyde Tablet
+    Rarity: 1
+--- !u!1 &3304031258227698243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6918426340555840836}
+  - component: {fileID: 2092534580480229871}
+  m_Layer: 8
+  m_Name: JournalSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6918426340555840836
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3304031258227698243}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7054229, y: -0.048771158, z: 0.04877116, w: 0.7054229}
+  m_LocalPosition: {x: 2.033, y: 0.033, z: 3.704}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3902830893026060884}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2092534580480229871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3304031258227698243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1960881034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnerType: 1
+  spawnChance: 100
+  specialItemNamesWithRarity:
+  - Name: Byrne Journal 6
+    Rarity: 1
 --- !u!1 &3427092710548710754
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,8 +557,7 @@ Transform:
   m_LocalPosition: {x: -0.276, y: -0.833, z: 1.703}
   m_LocalScale: {x: 0.0015225735, y: 0.0015225734, z: 0.001522573}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2435933137278178650}
+  m_Children: []
   m_Father: {fileID: 3902830893026060884}
   m_LocalEulerAnglesHint: {x: 90, y: -16.497986, z: -8.588013}
 --- !u!33 &7078254129782429360
@@ -1168,6 +1261,80 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
+--- !u!1 &5610978165103213231
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2081567775150873873}
+  - component: {fileID: 6463142906545524193}
+  - component: {fileID: 8136826179581044565}
+  m_Layer: 22
+  m_Name: ScanNode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2081567775150873873
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5610978165103213231}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.8246202, y: 0.0000016428528, z: 0.0000023869795, w: 0.5656868}
+  m_LocalPosition: {x: 1.1307449, y: 4.335, z: 2.718}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3902830893026060884}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6463142906545524193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5610978165103213231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRange: 5
+  minRange: 1
+  requiresLineOfSight: 0
+  headerText: Phillips
+  subText: 'Value: 0'
+  scrapValue: 0
+  creatureScanID: -1
+  nodeType: 1
+--- !u!65 &8136826179581044565
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5610978165103213231}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.4422701, y: 0.41171846, z: 0.44335514}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6914614068270801058
 GameObject:
   m_ObjectHideFlags: 0
@@ -1557,7 +1724,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 39e1736b51c7a6847a7293773efbcd0b,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: a25971ee0bb71164ab8664638d20448b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 27c3b5037da009c4e8caa14ddcfa5701, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1704,7 +1871,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300008, guid: 39e1736b51c7a6847a7293773efbcd0b,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 6c6ad21d4350f0544acec8ea861d500f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f6148dfbc3d9f9240976cce889ef7b6a, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
