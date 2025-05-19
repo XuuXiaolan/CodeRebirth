@@ -10,6 +10,7 @@ using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util.Extensions;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -172,6 +173,7 @@ public class Guardsman : CodeRebirthEnemyAI
             _bufferTimer = 7.5f;
             smartAgentNavigator.cantMove = true;
             smartAgentNavigator.StopAgent();
+            MiscSoundsClientRpc(1);
             creatureNetworkAnimator.SetTrigger(KillLargeAnimation);
         }
         else
@@ -180,6 +182,7 @@ public class Guardsman : CodeRebirthEnemyAI
             _bufferTimer = 7.5f;
             smartAgentNavigator.cantMove = true;
             smartAgentNavigator.StopAgent();
+            MiscSoundsClientRpc(0);
             creatureNetworkAnimator.SetTrigger(KillSmallAnimation);
         }
     }
@@ -205,6 +208,20 @@ public class Guardsman : CodeRebirthEnemyAI
     }
     #endregion
     #region Misc Functions
+
+    [ClientRpc]
+    public void MiscSoundsClientRpc(int soundID)
+    {
+        switch (soundID)
+        {
+            case 0:
+                creatureSFX.PlayOneShot(_slamAudioClip);
+                break;
+            case 1:
+                creatureSFX.PlayOneShot(_ripApartAudioClip);
+                break;
+        }
+    }
 
     private IEnumerator MessWithSizeOverTime(int sizeMultiplier)
     {
@@ -257,6 +274,11 @@ public class Guardsman : CodeRebirthEnemyAI
     public void PlayFootstepSoundAnimEvent()
     {
         creatureSFX.PlayOneShot(_footstepAudioClips[enemyRandom.Next(_footstepAudioClips.Length)]);
+
+        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) <= 10f)
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+        }
     }
 
     public void ScreenShakeAnimEvent()
@@ -320,8 +342,6 @@ public class Guardsman : CodeRebirthEnemyAI
             if (enemy.IsOwner)
                 enemy.KillEnemyOnOwnerClient(overrideDestroy);
         }
-
-        creatureSFX.PlayOneShot(_slamAudioClip);
     }
 
     public void RipApartEnemyAnimEvent()
@@ -333,8 +353,6 @@ public class Guardsman : CodeRebirthEnemyAI
 
         if (targetEnemy.IsOwner)
             targetEnemy.KillEnemyOnOwnerClient(true);
-
-        creatureSFX.PlayOneShot(_ripApartAudioClip);     
     }
 
     #endregion

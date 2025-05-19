@@ -175,6 +175,7 @@ public class SmallRigoManager : MonoBehaviour
         active = false;
         foreach (SmallRigo smallRigo in smallRigosActive)
         {
+            smallRigo.agent.enabled = false;
             smallRigo.gameObject.SetActive(false);
         }
     }
