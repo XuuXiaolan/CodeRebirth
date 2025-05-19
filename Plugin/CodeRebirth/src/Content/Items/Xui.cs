@@ -61,7 +61,8 @@ public class Xui : GrabbableObject
         List<PlayerControllerB> deadPlayers = new();
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead && player.spectatedPlayerScript != null)
+            Plugin.ExtendedLogging($"Checking player {player.name} | dead: {player.isPlayerDead} | controlled: {player.isPlayerControlled} | place of death: {player.placeOfDeath}");
+            if (player.isPlayerDead && player.placeOfDeath != Vector3.zero)
             {
                 Plugin.ExtendedLogging($"Player {player.name} is dead.");
                 deadPlayers.Add(player);
