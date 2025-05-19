@@ -17,7 +17,7 @@ public class SmallRigoManager : MonoBehaviour
     public void Start()
     {
         goldRigo = this.gameObject.GetComponent<GoldRigo>();
-        smallRigoPrefab = ItemHandler.Instance.XuAndRigo.SmallRigoPrefab;
+        smallRigoPrefab = ItemHandler.Instance.XuAndRigo!.SmallRigoPrefab;
         StartCoroutine(SpawnSmallRigos(numberOfSmallRigos));
         // Spawn and hide the SmallRigo's on the following conditions: we're in orbit, leaving and/or landing whilst the goldrigo isnt in the ship
     }

@@ -15,13 +15,13 @@ public class GuardPhone : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
+        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || playerHeldBy == null || playerHeldBy.isInsideFactory)
+        {
+            currentUseCooldown = 0f;
             return;
+        }
 
         if (!IsServer)
-            return;
-
-        if (playerHeldBy == null)
             return;
 
         Vector3 position = RoundManager.Instance.GetRandomNavMeshPositionInRadius(playerHeldBy.transform.position + playerHeldBy.transform.forward * 5f, 5f, default);
@@ -34,6 +34,6 @@ public class GuardPhone : GrabbableObject
         _callSource.PlayOneShot(_callSound);
         yield return new WaitForSeconds(_callSound.length);
         yield return new WaitForSeconds(3f);
-        RoundManager.Instance.SpawnEnemyGameObject(position, -1, -1, MapObjectHandler.Instance.Merchant.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Guardsman").enemyType);
+        RoundManager.Instance.SpawnEnemyGameObject(position, -1, -1, MapObjectHandler.Instance.Merchant!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Guardsman")!.enemyType);
     }
 }
