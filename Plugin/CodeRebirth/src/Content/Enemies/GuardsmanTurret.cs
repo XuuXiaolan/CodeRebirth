@@ -6,6 +6,10 @@ namespace CodeRebirth.src.Content.Enemies;
 public class GuardsmanTurret : MonoBehaviour
 {
     [SerializeField]
+    private AudioSource _audioSource = null!;
+    [SerializeField]
+    private AudioClip[] _shootSounds = null!;
+    [SerializeField]
     private Guardsman GuardsmanOwner = null!;
 
     [HideInInspector]
@@ -46,6 +50,7 @@ public class GuardsmanTurret : MonoBehaviour
 
         if (Physics.Raycast(this.transform.position, this.transform.forward, out RaycastHit hit, 999, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore))
         {
+            _audioSource.PlayOneShot(_shootSounds[Random.Range(0, _shootSounds.Length)]);
             CRUtilities.CreateExplosion(hit.point, true, 25, 0, 6, 1, null, null, 25f);
         }
     }
