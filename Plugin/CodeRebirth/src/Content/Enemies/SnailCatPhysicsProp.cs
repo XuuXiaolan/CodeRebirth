@@ -179,7 +179,6 @@ public class SnailCatPhysicsProp : GrabbableObject
 
     public override void DiscardItem()
     {
-        animator.SetBool(GrabbedAnimation, false);
         snailCatScript.DropBabyLocalClient();
         DropBabyServerRpc((int)GameNetworkManager.Instance.localPlayerController.playerClientId);
         previousPlayerHeldBy = playerHeldBy;
@@ -190,6 +189,7 @@ public class SnailCatPhysicsProp : GrabbableObject
     [ServerRpc(RequireOwnership = false)]
     public void DropBabyServerRpc(int playerClientId)
     {
+        animator.SetBool(GrabbedAnimation, false);
         DropBabyClientRpc(playerClientId);
     }
 
