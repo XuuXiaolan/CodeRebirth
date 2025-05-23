@@ -126,6 +126,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     {
         if (_attachRoutine != null)
             return;
+
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
@@ -135,7 +136,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
             if (!PlayerLookingAtEnemy(player, 0.2f))
                 continue;
 
-            _attachRoutine = StartCoroutine(AttachToPlayer(player));
+            _attachRoutine = StartCoroutine(AttachToPlayer(player, null));
             return;
         }
     }
@@ -182,21 +183,25 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private IEnumerator KillPlayerAndSwitchTarget(PlayerControllerB newTargetPlayer)
     {
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.SwitchingTarget);
-        FallSoundServerRpc();
+        FallSoundServerRpc(newTargetPlayer);
         targetPlayer.DamagePlayerFromOtherClientServerRpc(9999, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, newTargetPlayer));
-        _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer));
+        _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer, targetPlayer));
         yield return _attachRoutine;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void FallSoundServerRpc()
+    private void FallSoundServerRpc(PlayerControllerReference newTargetPlayer)
     {
-        FallSoundClientRpc();
+        FallSoundClientRpc(newTargetPlayer);
     }
 
     [ClientRpc]
-    private void FallSoundClientRpc()
+    private void FallSoundClientRpc(PlayerControllerReference newTargetPlayer)
     {
+        // add a local player check
+        if (newTargetPlayer != GameNetworkManager.Instance.localPlayerController)
+            return;
+
         creatureSFX.PlayOneShot(_fallingAudioClips[enemyRandom.Next(_fallingAudioClips.Length)]);
     }
 
@@ -210,7 +215,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         _idleRoutine = null;
     }
 
-    public IEnumerator AttachToPlayer(PlayerControllerB playerToAttachTo)
+    public IEnumerator AttachToPlayer(PlayerControllerB playerToAttachTo, PlayerControllerB? previouslyAttachedToPlayer)
     {
         smartAgentNavigator.StopSearchRoutine();
         SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
@@ -233,17 +238,19 @@ public class RabbitMagician : CodeRebirthEnemyAI
             yield break;
         }
 
-        AttachedPlayerHandleLOSClientRpc();
+        AttachedPlayerHandleLOSClientRpc(true);
     }
 
     [ClientRpc]
-    private void AttachedPlayerHandleLOSClientRpc()
+    private void AttachedPlayerHandleLOSClientRpc(bool firstSpotting)
     {
         foreach (var collider in _collidersToDisable)
         {
             collider.enabled = false;
         }
-        creatureSFX.PlayOneShot(_spottedAudioClip);
+        if (!firstSpotting && targetPlayer == GameNetworkManager.Instance.localPlayerController)
+            creatureSFX.PlayOneShot(_spottedAudioClip);
+
         if (GameNetworkManager.Instance.localPlayerController != targetPlayer)
             return;
 

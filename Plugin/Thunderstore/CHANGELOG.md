@@ -9,6 +9,68 @@
 - Got rid of model replacement suits per demand.
 
 <details>
+  <summary> Spoilers!!!</summary>
+
+- Moons
+  - Oxyde
+
+- Enemies
+  - Cactus Budling.
+  - Guardsman.
+  - Mistress.
+  - Monarch.
+  - Redid cutiefly.
+  - Nancy.
+  - Peacekeeper.
+  - Rabbit Magician.
+  - Snailcat redid.
+
+- Items
+  - Marrow Splitter.
+  - Credit Pad 100 500 and 1000.
+  - Fog Horn.
+  - Guardsman Phone.
+  - Infinikey.
+  - Lifeform Analyser.
+  - Mole Digger.
+  - Nitroglycerin Crate.
+  - Oxidizer.
+  - Rail Slugger.
+  - Remote Detonator.
+  - Rocky.
+  - Ship Upgrade Unlocker.
+  - Timestop watch.
+  - Walkie Yellie.
+  - Reverted wallet to only be the held version.
+  - Melanie's drawing.
+  - 6 new meteorite crystals.
+  - Talking head.
+  - Haemoglobin Tablet.
+  - Oxyde Tablet.
+  - Mountaineer.
+  - 32 Lore documents.
+  - Ceasefire.
+  - Swatter.
+  - Tomahop.
+  - Turbulence.
+  - Xui and KingRigo plushies.
+
+- Hazards
+  - Autonomous Crane.
+  - Gunslinger greg.
+  - Merchant.
+  - Naturally spawning cactus.
+  - Oxyde's crashing ship.
+
+- Weathers
+  - NightShift
+
+- Store Unlockables.
+  - Piggy bank.
+
+</details>
+
+<details>
   <summary>Older Versions</summary>
 
 ## v0.15.3
