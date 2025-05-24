@@ -20,7 +20,7 @@ MonoBehaviour:
   spawnEnemiesAndScrap: 0
   PlanetName: 745-Oxyde
   LevelDescription: "\u2014-----------------------------\r\nPOPULATION: None\r\nCONDITIONS:
-    Barren and dusty planet, dust storms plague its oxidised surface during the day.\r\nHISTORY:
+    Barren and dusty planet, dust storms plague its oxidised surface.\r\nHISTORY:
     Once used as a company mining site, now abandoned. Oxyde\u2019s core is one of
     the richest mineral deposits in the system. Hundreds of quarries litter the barren
     surface.\r \n"
@@ -56,7 +56,7 @@ MonoBehaviour:
   Enemies: []
   OutsideEnemies:
   - enemyType: {fileID: 11400000, guid: 9a726758bfe9cd948a5e960ab7bdbea4, type: 2}
-    rarity: 80
+    rarity: 70
   - enemyType: {fileID: 11400000, guid: 8cb8b0df25a3f76439fefdb07040503c, type: 2}
     rarity: 3
   - enemyType: {fileID: 11400000, guid: d648d68b0b3a5e94ebab7fc9235024d8, type: 2}
@@ -72,7 +72,7 @@ MonoBehaviour:
   - enemyType: {fileID: 11400000, guid: 3842d26ac6753aa47a8ba4b09393abea, type: 2}
     rarity: 60
   - enemyType: {fileID: 11400000, guid: cb18828f73f74ed419640ded79f9380f, type: 2}
-    rarity: 10
+    rarity: 6
   - enemyType: {fileID: 11400000, guid: c938484451d34b84aa83a828996c5929, type: 2}
     rarity: 40
   DaytimeEnemies: []

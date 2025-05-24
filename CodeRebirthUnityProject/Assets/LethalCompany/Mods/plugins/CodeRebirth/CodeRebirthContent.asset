@@ -650,7 +650,7 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: Marrow Splitter
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:2,Custom:3
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -728,16 +728,16 @@ MonoBehaviour:
       generateShopItemConfig: 0
       cost: 0
     - entityName: MoleDigger
-      spawnWeights: 
-      generateSpawnWeightsConfig: 0
+      spawnWeights: Rocky:5,Canyon:2,Amethyst:5
+      generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
     - entityName: NitroCrate
-      spawnWeights: 
-      generateSpawnWeightsConfig: 0
+      spawnWeights: Rocky:5,Canyon:5,Amethyst:5
+      generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
       isShopItem: 0
@@ -760,8 +760,8 @@ MonoBehaviour:
       generateShopItemConfig: 0
       cost: 0
     - entityName: Remote Detonator
-      spawnWeights: 
-      generateSpawnWeightsConfig: 0
+      spawnWeights: Rocky:5,Canyon:5,Amethyst:5
+      generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
       isShopItem: 0
@@ -776,8 +776,8 @@ MonoBehaviour:
       generateShopItemConfig: 0
       cost: 0
     - entityName: ShipUpgradeUnlocker
-      spawnWeights: 
-      generateSpawnWeightsConfig: 0
+      spawnWeights: Rocky:1
+      generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
       isShopItem: 0
@@ -806,7 +806,7 @@ MonoBehaviour:
       generateScrapConfig: 1
       isShopItem: 1
       generateShopItemConfig: 1
-      cost: 0
+      cost: 12
     - entityName: Melanie's Drawing
       spawnWeights: 
       generateSpawnWeightsConfig: 0
@@ -819,10 +819,10 @@ MonoBehaviour:
     - entityName: Money
       isInsideHazard: 1
       createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96
-        ; 0.33,2.20 ; 0.44,2.32 ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ;
-        1.00,3.00 | Custom - 0.00,1.00 ; 0.11,1.51 ; 0.22,1.96 ; 0.33,2.20 ; 0.44,2.32
-        ; 0.56,2.38 ; 0.67,2.42 ; 0.78,2.51 ; 0.89,2.70 ; 1.00,3.00
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.53 ; 0.22,2.14
+        ; 0.33,2.73 ; 0.44,3.24 ; 0.56,3.58 ; 0.67,3.61 ; 0.78,2.94 ; 0.89,3.09 ;
+        1.00,5.00 | Custom - 0.00,1.00 ; 0.11,1.53 ; 0.22,2.14 ; 0.33,2.73 ; 0.44,3.24
+        ; 0.56,3.58 ; 0.67,3.61 ; 0.78,2.94 ; 0.89,3.09 ; 1.00,5.00
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 0
       createOutsideHazardConfig: 0
@@ -978,7 +978,7 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: Brrreaker
-      spawnWeights: tundra:30
+      spawnWeights: tundra:2
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -1533,7 +1533,7 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: sWATTer
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:1,Custom:1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -1588,7 +1588,7 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: TomaHop
-      spawnWeights: Vanilla:20,Custom:20
+      spawnWeights: Vanilla:2,Custom:2
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -1638,8 +1638,8 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: Turbulence
-      spawnWeights: Vanilla:20,Custom:20
-      generateSpawnWeightsConfig: 1
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
       isScrap: 1
       generateScrapConfig: 0
       isShopItem: 0
