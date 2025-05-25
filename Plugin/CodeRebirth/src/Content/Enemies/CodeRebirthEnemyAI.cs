@@ -18,7 +18,8 @@ namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(Collider))]
 public abstract class CodeRebirthEnemyAI : EnemyAI
 {
-    internal EnemyAI? targetEnemy;
+    internal EnemyAI? targetEnemy = null;
+    internal PlayerControllerB? previousTargetPlayer = null;
 
     [Header("Required Components")]
     [SerializeField]
@@ -273,6 +274,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
             Plugin.ExtendedLogging($"Index invalid! {this}");
             return;
         }
+        previousTargetPlayer = targetPlayer;
         targetPlayer = StartOfRound.Instance.allPlayerScripts[PlayerID];
         Plugin.ExtendedLogging($"{this} setting target to: {targetPlayer.playerUsername}");
     }

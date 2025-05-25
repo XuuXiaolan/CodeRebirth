@@ -78,17 +78,29 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
+        if (targetPlayer != GameNetworkManager.Instance.localPlayerController)
+            return;
+
         _idleTimer -= Time.deltaTime;
 
         if (_idleTimer > 0)
             return;
 
-        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
-        creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(_idleAudioClips.audioClips.Length)]);
+        _idleTimer = UnityEngine.Random.Range(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+        creatureVoice.PlayOneShot(_idleAudioClips.audioClips[UnityEngine.Random.Range(0, _idleAudioClips.audioClips.Length)]);
     }
 
     public void LateUpdate()
     {
+        if (currentBehaviourStateIndex == (int)RabbitMagicianState.SwitchingTarget && previousTargetPlayer != null && !previousTargetPlayer.isPlayerDead)
+        {
+            _targetPlayerSpine3 = previousTargetPlayer.upperSpine;
+            var worldOffseta = _targetPlayerSpine3.rotation * _offsetPosition;
+            this.transform.position = _targetPlayerSpine3.position + worldOffseta;
+            this.transform.rotation = _targetPlayerSpine3.rotation;
+            return;
+        }
+
         if (currentBehaviourStateIndex != (int)RabbitMagicianState.Attached)
             return;
 
@@ -209,7 +221,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         if (newTargetPlayer != GameNetworkManager.Instance.localPlayerController)
             return;
 
-        creatureSFX.PlayOneShot(_fallingAudioClips[enemyRandom.Next(_fallingAudioClips.Length)]);
+        creatureSFX.PlayOneShot(_fallingAudioClips[UnityEngine.Random.Range(0, _fallingAudioClips.Length)]);
     }
 
     private IEnumerator SwitchToIdle()
@@ -225,6 +237,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public IEnumerator AttachToPlayer(PlayerControllerB playerToAttachTo, PlayerControllerB? previouslyAttachedToPlayer)
     {
         smartAgentNavigator.StopSearchRoutine();
+        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
         Plugin.ExtendedLogging($"Attaching to {playerToAttachTo}");
         if (previouslyAttachedToPlayer != null)
         {
@@ -232,11 +245,10 @@ public class RabbitMagician : CodeRebirthEnemyAI
             creatureNetworkAnimator.SetTrigger(SpottedFromBackAnimation);
             yield return new WaitForSeconds(8.54f);
             Plugin.ExtendedLogging($"Killed {previouslyAttachedToPlayer}");
-            _confettiParticles.Play(); // rpc this
+            PlayConfettiServerRpc();
             previouslyAttachedToPlayer.KillPlayerServerRpc((int)previouslyAttachedToPlayer.playerClientId, true, Vector3.zero, (int)CauseOfDeath.Unknown, 1, Vector3.zero);
         }
 
-        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
         smartAgentNavigator.enabled = false;
         if (!agent.enabled)
         {
@@ -255,7 +267,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         }
         else
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(_spottedFromBackAnimation.length - 8.54f);
         }
 
         if (playerToAttachTo == null || playerToAttachTo.isPlayerDead)
@@ -306,6 +318,18 @@ public class RabbitMagician : CodeRebirthEnemyAI
         }
 
         StartAttachedServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayConfettiServerRpc()
+    {
+        PlayConfettiClientRpc();
+    }
+
+    [ClientRpc]
+    public void PlayConfettiClientRpc()
+    {
+        _confettiParticles.Play();
     }
 
     [ServerRpc(RequireOwnership = false)]
