@@ -34,12 +34,11 @@ public class CRDropShip : ItemDropship
 
     private IEnumerator DestroyUnmovedCruiser(VehicleController vehicle)
     {
-        yield return new WaitUntil(() => shipTimer > 40f);
+        yield return new WaitUntil(() => shipTimer > 35f);
         if (colliderEncompasingDropship.bounds.Contains(vehicle.transform.position))
         {
             vehicle.DestroyCar();
         }
         Plugin.ExtendedLogging($"Doors closing, blowing up cruiser");
-        // vehicle.
     }
 }
