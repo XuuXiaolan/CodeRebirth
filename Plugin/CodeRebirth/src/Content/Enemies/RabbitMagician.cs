@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
@@ -14,7 +15,9 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [SerializeField]
     private AudioClip _spawnAudioClip = null!;
     [SerializeField]
-    private AudioClip _spottedAudioClip = null!;
+    private AudioClip _spottedFromGroundAudioClip = null!;
+    [SerializeField]
+    private AudioClip _spottedFromBackAudioClip = null!;
     [SerializeField]
     private AudioClip[] _fallingAudioClips = null!;
     [SerializeField]
@@ -24,10 +27,14 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [SerializeField]
     private AnimationClip _spawnAnimation = null!;
     [SerializeField]
-    private AnimationClip _spottedAnimation = null!;
+    private AnimationClip _spottedFromGroundAnimation = null!;
+    [SerializeField]
+    private AnimationClip _spottedFromBackAnimation = null!;
     [Header("Misc")]
     [SerializeField]
     private Collider[] _collidersToDisable = null!;
+    [SerializeField]
+    private ParticleSystem _confettiParticles = null!;
 
     [SerializeField]
     private Vector3 _offsetPosition = new Vector3(0.031f, -0.109f, -0.471f);
@@ -40,7 +47,8 @@ public class RabbitMagician : CodeRebirthEnemyAI
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int LatchOnAnimation = Animator.StringToHash("LatchOn"); // Trigger
-    private static readonly int SpottedAnimation = Animator.StringToHash("Spotted"); // Trigger
+    private static readonly int SpottedFromGroundAnimation = Animator.StringToHash("SpottedFromGround"); // Trigger
+    private static readonly int SpottedFromBackAnimation = Animator.StringToHash("SpottedFromBack"); // Trigger
 
     public enum RabbitMagicianState
     {
@@ -184,7 +192,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
     {
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.SwitchingTarget);
         FallSoundServerRpc(newTargetPlayer);
-        targetPlayer.DamagePlayerFromOtherClientServerRpc(9999, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, newTargetPlayer));
         _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer, targetPlayer));
         yield return _attachRoutine;
     }
@@ -218,6 +225,17 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public IEnumerator AttachToPlayer(PlayerControllerB playerToAttachTo, PlayerControllerB? previouslyAttachedToPlayer)
     {
         smartAgentNavigator.StopSearchRoutine();
+        Plugin.ExtendedLogging($"Attaching to {playerToAttachTo}");
+        if (previouslyAttachedToPlayer != null)
+        {
+            Plugin.ExtendedLogging($"Killing {previouslyAttachedToPlayer}");
+            creatureNetworkAnimator.SetTrigger(SpottedFromBackAnimation);
+            yield return new WaitForSeconds(8.54f);
+            Plugin.ExtendedLogging($"Killed {previouslyAttachedToPlayer}");
+            _confettiParticles.Play(); // rpc this
+            previouslyAttachedToPlayer.KillPlayerServerRpc((int)previouslyAttachedToPlayer.playerClientId, true, Vector3.zero, (int)CauseOfDeath.Unknown, 1, Vector3.zero);
+        }
+
         SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
         smartAgentNavigator.enabled = false;
         if (!agent.enabled)
@@ -229,8 +247,17 @@ public class RabbitMagician : CodeRebirthEnemyAI
             yield return null;
         }
         agent.enabled = false;
-        creatureNetworkAnimator.SetTrigger(SpottedAnimation);
-        yield return new WaitForSeconds(_spottedAnimation.length);
+
+        if (previouslyAttachedToPlayer == null)
+        {
+            creatureNetworkAnimator.SetTrigger(SpottedFromGroundAnimation);
+            yield return new WaitForSeconds(_spottedFromGroundAnimation.length);
+        }
+        else
+        {
+            yield return new WaitForSeconds(1f);
+        }
+
         if (playerToAttachTo == null || playerToAttachTo.isPlayerDead)
         {
             _idleRoutine = StartCoroutine(SwitchToIdle());
@@ -242,17 +269,24 @@ public class RabbitMagician : CodeRebirthEnemyAI
     }
 
     [ClientRpc]
-    private void AttachedPlayerHandleLOSClientRpc(bool firstSpotting)
+    private void AttachedPlayerHandleLOSClientRpc(bool previouslyAttachedToPlayer)
     {
         foreach (var collider in _collidersToDisable)
         {
             collider.enabled = false;
         }
-        if (!firstSpotting && targetPlayer == GameNetworkManager.Instance.localPlayerController)
-            creatureSFX.PlayOneShot(_spottedAudioClip);
 
         if (GameNetworkManager.Instance.localPlayerController != targetPlayer)
             return;
+
+        if (!previouslyAttachedToPlayer)
+        {
+            creatureSFX.PlayOneShot(_spottedFromGroundAudioClip);
+        }
+        else
+        {
+            creatureSFX.PlayOneShot(_spottedFromBackAudioClip);
+        }
 
         StartCoroutine(HandleLOS());
     }
@@ -288,5 +322,8 @@ public class RabbitMagician : CodeRebirthEnemyAI
         creatureNetworkAnimator.SetTrigger(LatchOnAnimation);
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.Attached);
     }
+    #endregion
+
+    #region Animation Event
     #endregion
 }
