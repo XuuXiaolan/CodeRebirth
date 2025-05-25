@@ -9,7 +9,7 @@ static class NetworkBehaviourPatch
     [HarmonyPatch(nameof(NetworkBehaviour.OnNetworkSpawn)), HarmonyPostfix]
     static void OnNetworkSpawnPatch(NetworkBehaviour __instance)
     {
-        if (!__instance.NetworkObject.IsSpawned || __instance.NetworkObject.gameObject.layer != 21 || __instance.NetworkObject.gameObject.name == "FunctionalMicrowave(Clone)") return;
+        if (!__instance.NetworkObject.IsSpawned || __instance.NetworkObject.gameObject.layer != 21 || __instance.NetworkObject.gameObject.name == "FunctionalMicrowave(Clone)" || __instance.NetworkObject.gameObject.name == "Crane(Clone)") return;
         Transporter.objectsToTransport.Add(__instance.NetworkObject.gameObject);
     }
 

@@ -3,9 +3,12 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class CRDropShip : ItemDropship
 {
-    public Collider colliderEncompasingDropship = null!;
+    public AudioSource rumbleSource = null!;
+    [SerializeField]
+    private Collider colliderEncompasingDropship = null!;
     // If it's items, then make it so it stays there for a set time forcibly, like 30 seconds, seems to work fine by itself.
     // If it's a vehicle, make it so the dropship stays for 30 seconds again.
     // Add a physics region onto the drop ship's floor.
