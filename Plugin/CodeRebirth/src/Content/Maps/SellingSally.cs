@@ -31,6 +31,8 @@ public class SellingSally : NetworkBehaviour
 
     [Header("Misc")]
     [SerializeField]
+    private JimothyNPC _jimothy = null!;
+    [SerializeField]
     private Transform endOfBarrelTransform = null!;
     [SerializeField]
     private Transform sallyLoaderTransform = null!;
@@ -75,6 +77,7 @@ public class SellingSally : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void PlayButtonSoundServerRpc()
     {
+        _jimothy.PlayerUsedSallyButton();
         PlayButtonSoundClientRpc();
     }
 
