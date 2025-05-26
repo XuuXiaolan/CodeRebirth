@@ -20,11 +20,12 @@ public class Pandora : CodeRebirthEnemyAI
     private float currentTeleportTimer = 0f;
     private float showdownTimer = 0f;
     private int _playerDefaultSensitivity = 10;
+    private float _retriggerTimer = 3f;
 
-    private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
-    private readonly static int RaiseArmsAnimation = Animator.StringToHash("raiseArms"); // Trigger
-    private readonly static int IsDeadAnimation = Animator.StringToHash("IsDead"); // Bool
-    private readonly static int RandomIdleAnimation = Animator.StringToHash("randomIdle"); // Trigger
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
+    private static readonly int RaiseArmsAnimation = Animator.StringToHash("raiseArms"); // Trigger
+    private static readonly int IsDeadAnimation = Animator.StringToHash("IsDead"); // Bool
+    private static readonly int RandomIdleAnimation = Animator.StringToHash("randomIdle"); // Trigger
 
     public enum State
     {
@@ -44,7 +45,7 @@ public class Pandora : CodeRebirthEnemyAI
         base.Start();
         _playerDefaultSensitivity = IngamePlayerSettings.Instance.settings.lookSensitivity;
         // Start Pandora's roaming/search routine.
-            smartAgentNavigator.StartSearchRoutine(20);
+        smartAgentNavigator.StartSearchRoutine(20);
         SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
         // todo: Pandora is meant to spawn on snowy moons and only after 11am.
     }
@@ -57,14 +58,16 @@ public class Pandora : CodeRebirthEnemyAI
             showdownTimer += Time.deltaTime;
             if (targetPlayer == GameNetworkManager.Instance.localPlayerController)
             {
-                CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = Mathf.Clamp01(showdownTimer / 6f * 0.3f);
+                ForceTurnTowardsTarget();
+                CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = Mathf.Clamp01(showdownTimer / 15f * 0.6f);
             }
             Plugin.ExtendedLogging($"Showdown timer: {showdownTimer}");
 
             // If the player breaks eye contact (escapes) after at least 0.5 seconds…
-            if (showdownTimer >= 0.5f && !PlayerLookingAtEnemy(targetPlayer, false))
+            if (showdownTimer >= 1f && !PlayerLookingAtEnemy(targetPlayer))
             {
                 fixationAttemptCount++;
+                _retriggerTimer = 2f;
                 if (fixationAttemptCount >= maxFixationAttempts)
                 {
                     // After too many escapes, Pandora loses interest and returns to roaming.
@@ -89,7 +92,7 @@ public class Pandora : CodeRebirthEnemyAI
             }
 
             // If the player stares for too long (6 seconds), kill them.
-            if (showdownTimer >= 6f)
+            if (showdownTimer >= 15f)
             {
                 fixationAttemptCount = 0;
                 showdownTimer = 0f;
@@ -139,6 +142,10 @@ public class Pandora : CodeRebirthEnemyAI
     #region State Machines
     private void DoLookingForPlayer()
     {
+        _retriggerTimer -= AIIntervalTime;
+        if (_retriggerTimer > 0)
+            return;
+
         PlayerControllerB? closestPlayer = null;
         float closestDistance = 30f;
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
@@ -155,14 +162,15 @@ public class Pandora : CodeRebirthEnemyAI
         if (closestPlayer != null)
         {
             Plugin.ExtendedLogging($"Closest player is {closestPlayer.playerUsername} at {closestDistance} meters.");
-            // If within fixation range (15 meters) try to check for direct gaze.
-            if (closestDistance <= 5f || (closestDistance <= 20f && PlayerLookingAtEnemy(closestPlayer, false)))
+            // If within fixation range (20 meters) try to check for direct gaze.
+            if (closestDistance <= 5f || (closestDistance <= 20f && PlayerLookingAtEnemy(closestPlayer)))
             {
                 // Direct line-of-sight within 15m triggers fixation.
                 int playerIndex = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer);
                 SetTargetServerRpc(playerIndex);
                 agent.velocity = Vector3.zero;
                 fixationAttemptCount = 0; // Reset count for new target.
+                creatureNetworkAnimator.SetTrigger(RaiseArmsAnimation);
                 // *** Animation placeholder ***
                 // Trigger "Raise Arms" animation and glowing radiance here.
                 TemporarilyCripplePlayerServerRpc(playerIndex, true);
@@ -188,7 +196,7 @@ public class Pandora : CodeRebirthEnemyAI
 
     private void DoShowdownWithPlayer()
     {
-        // In this state, Pandora and her target remain stationary.
+        // In targetPlayer state, Pandora and her target remain stationary.
         // The Update() method handles the countdown, fixation, and eventual outcome.
     }
 
@@ -239,13 +247,12 @@ public class Pandora : CodeRebirthEnemyAI
         }
     }
 
-    private bool PlayerLookingAtEnemy(PlayerControllerB player, bool triggerWhilstLookingAtGeneralDirection)
+    private bool PlayerLookingAtEnemy(PlayerControllerB player)
     {
         float dot = Vector3.Dot(player.gameplayCamera.transform.forward, (eye.position - player.gameplayCamera.transform.position).normalized);
         Plugin.ExtendedLogging($"Vector Dot: {dot}");
-        if (dot <= 0.65f) return false;
-        if (triggerWhilstLookingAtGeneralDirection) return true;
-        if (Physics.Linecast(player.gameplayCamera.transform.position, eye.position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (dot <= 0.5f) return false;
+        if (Physics.Linecast(player.gameplayCamera.transform.position, eye.position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMaskAndDefault | LayerMask.GetMask("InteractableObject"), QueryTriggerInteraction.Ignore))
         {
             Plugin.ExtendedLogging($"Linecast hit {hit.collider.name}");
             return false;
@@ -294,7 +301,7 @@ public class Pandora : CodeRebirthEnemyAI
             yield break;
         }
         smartAgentNavigator.DoPathingToDestination(targettedPlayer.transform.position);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.2f);
         if (currentBehaviourStateIndex == (int)State.ShowdownWithPlayer) yield break;
         agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 14f, default));
         smartAgentNavigator.DoPathingToDestination(targettedPlayer.transform.position);
@@ -316,21 +323,21 @@ public class Pandora : CodeRebirthEnemyAI
     {
         PlayerControllerB playerToCripple = StartOfRound.Instance.allPlayerScripts[playerToCrippleIndex];
         playerToCripple.disableMoveInput = cripple;
+        playerToCripple.inAnimationWithEnemy = null;
+        inSpecialAnimationWithPlayer = null;
+        playerToCripple.inSpecialInteractAnimation = false;
+        playerToCripple.shockingTarget = null;
         SetMouseSensitivity(playerToCripple, _playerDefaultSensitivity);
         if (!cripple)
             yield break;
 
-        SetMouseSensitivity(playerToCripple, 2);
+        SetMouseSensitivity(playerToCripple, 1);
         playerToCripple.inAnimationWithEnemy = this;
         inSpecialAnimationWithPlayer = playerToCripple;
         playerToCripple.inSpecialInteractAnimation = true;
         playerToCripple.shockingTarget = eye;
         playerToCripple.inShockingMinigame = true;
-        yield return new WaitForSeconds(0.45f);
-        playerToCripple.inAnimationWithEnemy = null;
-        inSpecialAnimationWithPlayer = null;
-        playerToCripple.inSpecialInteractAnimation = false;
-        playerToCripple.shockingTarget = null;
+        yield return new WaitForSeconds(0.5f);
         playerToCripple.inShockingMinigame = false;
         StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
     }
@@ -358,13 +365,64 @@ public class Pandora : CodeRebirthEnemyAI
         player.transform.position = destination;
         // *** Audio placeholder: Play "Have a nice journey" and optionally show subtitle with player's name.
     }
-    
-    private void SetMouseSensitivity(PlayerControllerB player, int sensitivity)
+
+    private IEnumerator SetMouseSensitivity(PlayerControllerB player, int sensitivity)
     {
         if (!player.IsOwner)
-            return;
+            yield break;
 
+        if (sensitivity == IngamePlayerSettings.Instance.settings.lookSensitivity)
+            yield break;
+
+        float duration = 0.5f;
+        while (duration > 0f)
+        {
+            duration -= Time.deltaTime;
+            IngamePlayerSettings.Instance.settings.lookSensitivity = (int)Mathf.Lerp(_playerDefaultSensitivity, sensitivity, duration * 2f);
+            player.lookSensitivity = IngamePlayerSettings.Instance.settings.lookSensitivity;
+            yield return null;
+        }
         IngamePlayerSettings.Instance.settings.lookSensitivity = sensitivity;
-        player.lookSensitivity = sensitivity;
+        player.lookSensitivity = IngamePlayerSettings.Instance.settings.lookSensitivity;
+    }
+
+    public void ForceTurnTowardsTarget()
+    {
+        if (targetPlayer.inSpecialInteractAnimation && targetPlayer.shockingTarget != null)
+        {
+            targetPlayer.targetScreenPos = targetPlayer.turnCompassCamera.WorldToViewportPoint(targetPlayer.shockingTarget.position);
+            targetPlayer.shockMinigamePullPosition = targetPlayer.targetScreenPos.x - 0.5f;
+            float num = Mathf.Clamp(Time.deltaTime, 0f, 0.1f);
+            if (targetPlayer.targetScreenPos.x > 0.52f)
+            {
+                targetPlayer.turnCompass.Rotate(Vector3.up * 400 * num * Mathf.Abs(targetPlayer.shockMinigamePullPosition));
+                targetPlayer.playerBodyAnimator.SetBool("PullingCameraRight", false);
+                targetPlayer.playerBodyAnimator.SetBool("PullingCameraLeft", true);
+            }
+            else if (targetPlayer.targetScreenPos.x < 0.48f)
+            {
+                targetPlayer.turnCompass.Rotate(Vector3.up * -400 * num * Mathf.Abs(targetPlayer.shockMinigamePullPosition));
+                targetPlayer.playerBodyAnimator.SetBool("PullingCameraLeft", false);
+                targetPlayer.playerBodyAnimator.SetBool("PullingCameraRight", true);
+            }
+            else
+            {
+                targetPlayer.playerBodyAnimator.SetBool("PullingCameraLeft", false);
+                targetPlayer.playerBodyAnimator.SetBool("PullingCameraRight", false);
+            }
+            targetPlayer.targetScreenPos = targetPlayer.gameplayCamera.WorldToViewportPoint(targetPlayer.shockingTarget.position + Vector3.up * 0.35f);
+            if (targetPlayer.targetScreenPos.y > 0.6f)
+            {
+                targetPlayer.cameraUp = Mathf.Clamp(Mathf.Lerp(targetPlayer.cameraUp, targetPlayer.cameraUp - 25f, 25f * num * Mathf.Abs(targetPlayer.targetScreenPos.y - 0.5f)), -89f, 89f);
+            }
+            else if (targetPlayer.targetScreenPos.y < 0.35f)
+            {
+                targetPlayer.cameraUp = Mathf.Clamp(Mathf.Lerp(targetPlayer.cameraUp, targetPlayer.cameraUp + 25f, 25f * num * Mathf.Abs(targetPlayer.targetScreenPos.y - 0.5f)), -89f, 89f);
+            }
+            targetPlayer.gameplayCamera.transform.localEulerAngles = new Vector3(targetPlayer.cameraUp, targetPlayer.gameplayCamera.transform.localEulerAngles.y, targetPlayer.gameplayCamera.transform.localEulerAngles.z);
+            Vector3 zero = Vector3.zero;
+            zero.y = targetPlayer.turnCompass.eulerAngles.y;
+            targetPlayer.thisPlayerBody.rotation = Quaternion.Lerp(targetPlayer.thisPlayerBody.rotation, Quaternion.Euler(zero), Time.deltaTime * 20f * (1f - Mathf.Abs(targetPlayer.shockMinigamePullPosition)));
+        }
     }
 }
