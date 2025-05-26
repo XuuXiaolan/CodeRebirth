@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class Pandora : CodeRebirthEnemyAI
 {
     public AnimationClip deathAnimation = null!;
@@ -17,6 +19,7 @@ public class Pandora : CodeRebirthEnemyAI
     private float currentTimerCooldown => GetTimerCooldown();
     private float currentTeleportTimer = 0f;
     private float showdownTimer = 0f;
+    private int _playerDefaultSensitivity = 10;
 
     private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
     private readonly static int RaiseArmsAnimation = Animator.StringToHash("raiseArms"); // Trigger
@@ -39,8 +42,9 @@ public class Pandora : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        _playerDefaultSensitivity = IngamePlayerSettings.Instance.settings.lookSensitivity;
         // Start Pandora's roaming/search routine.
-        smartAgentNavigator.StartSearchRoutine(20);
+            smartAgentNavigator.StartSearchRoutine(20);
         SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
         // todo: Pandora is meant to spawn on snowy moons and only after 11am.
     }
@@ -67,7 +71,7 @@ public class Pandora : CodeRebirthEnemyAI
                     fixationAttemptCount = 0;
                     showdownTimer = 0f;
                     CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = 0f;
-                    TemporarilyCripplePlayer(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false);
+                    StartCoroutine(TemporarilyCripplePlayer(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false));
                     targetPlayer = null;
                     SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
                     if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
@@ -77,7 +81,7 @@ public class Pandora : CodeRebirthEnemyAI
                 {
                     // Reset the timer and try to re-fixate by teleporting closer.
                     showdownTimer = 0f;
-                    TemporarilyCripplePlayer(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false);
+                    StartCoroutine(TemporarilyCripplePlayer(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false));
                     SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
                     if (IsServer) StartCoroutine(TeleportNearbyTargetPlayer(targetPlayer));
                     return;
@@ -305,40 +309,30 @@ public class Pandora : CodeRebirthEnemyAI
     [ClientRpc]
     private void TemporarilyCripplePlayerClientRpc(int playerToCrippleIndex, bool cripple)
     {
-        TemporarilyCripplePlayer(playerToCrippleIndex, cripple);
+        StartCoroutine(TemporarilyCripplePlayer(playerToCrippleIndex, cripple));
     }
 
-    private void TemporarilyCripplePlayer(int playerToCrippleIndex, bool cripple)
+    private IEnumerator TemporarilyCripplePlayer(int playerToCrippleIndex, bool cripple)
     {
         PlayerControllerB playerToCripple = StartOfRound.Instance.allPlayerScripts[playerToCrippleIndex];
-        if (cripple)
-        {
-            /*if (playerToCripple.IsOwner)
-            {
-                creatureVoice.PlayOneShot(AttackSounds[mistressRandom.Next(AttackSounds.Length)]);
-            }*/
-            playerToCripple.inAnimationWithEnemy = this;
-            inSpecialAnimationWithPlayer = playerToCripple;
-            playerToCripple.inSpecialInteractAnimation = true;
-            playerToCripple.shockingTarget = eye;
-            playerToCripple.inShockingMinigame = true;
-            // playerToCripple.movementSpeed /= 3;
-        }
-        else
-        {
-            /*if (playerToCripple.IsOwner)
-            {
-                creatureVoice.PlayOneShot(LoseSightSound, 0.75f);
-            }*/
-            playerToCripple.inAnimationWithEnemy = null;
-            inSpecialAnimationWithPlayer = null;
-            playerToCripple.inSpecialInteractAnimation = false;
-            playerToCripple.shockingTarget = null;
-            playerToCripple.inShockingMinigame = false;
-            // playerToCripple.movementSpeed *= 3;
-            StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
-        }
         playerToCripple.disableMoveInput = cripple;
+        SetMouseSensitivity(playerToCripple, _playerDefaultSensitivity);
+        if (!cripple)
+            yield break;
+
+        SetMouseSensitivity(playerToCripple, 2);
+        playerToCripple.inAnimationWithEnemy = this;
+        inSpecialAnimationWithPlayer = playerToCripple;
+        playerToCripple.inSpecialInteractAnimation = true;
+        playerToCripple.shockingTarget = eye;
+        playerToCripple.inShockingMinigame = true;
+        yield return new WaitForSeconds(0.45f);
+        playerToCripple.inAnimationWithEnemy = null;
+        inSpecialAnimationWithPlayer = null;
+        playerToCripple.inSpecialInteractAnimation = false;
+        playerToCripple.shockingTarget = null;
+        playerToCripple.inShockingMinigame = false;
+        StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
     }
 
     private IEnumerator ResetVolumeWeightTo0(PlayerControllerB targetPlayer)
@@ -363,5 +357,14 @@ public class Pandora : CodeRebirthEnemyAI
         }
         player.transform.position = destination;
         // *** Audio placeholder: Play "Have a nice journey" and optionally show subtitle with player's name.
+    }
+    
+    private void SetMouseSensitivity(PlayerControllerB player, int sensitivity)
+    {
+        if (!player.IsOwner)
+            return;
+
+        IngamePlayerSettings.Instance.settings.lookSensitivity = sensitivity;
+        player.lookSensitivity = sensitivity;
     }
 }
