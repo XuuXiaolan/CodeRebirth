@@ -50,7 +50,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -3610,6 +3610,7 @@ MonoBehaviour:
     type: 2}
   _collidersToDisable:
   - {fileID: 1297681389355420121}
+  _confettiParticles: {fileID: 5486606603710160512}
   _offsetPosition: {x: 0.031, y: -0.109, z: -0.471}
 --- !u!114 &440978046141590845
 MonoBehaviour:
@@ -3935,7 +3936,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3472914878957267562
 Transform:
   m_ObjectHideFlags: 0
@@ -3969,7 +3970,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
