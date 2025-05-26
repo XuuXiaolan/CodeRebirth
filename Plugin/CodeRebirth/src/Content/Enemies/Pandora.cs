@@ -16,7 +16,7 @@ public class Pandora : CodeRebirthEnemyAI
     private const int maxFixationAttempts = 4; // After 3 escapes, Pandora loses interest
     private float currentTimerCooldown => GetTimerCooldown();
     private float currentTeleportTimer = 0f;
-    private float resistanceTimer = 0f;
+    private float showdownTimer = 0f;
 
     private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
     private readonly static int RaiseArmsAnimation = Animator.StringToHash("raiseArms"); // Trigger
@@ -50,23 +50,22 @@ public class Pandora : CodeRebirthEnemyAI
         base.Update();
         if (currentBehaviourStateIndex == (int)State.ShowdownWithPlayer && targetPlayer != null)
         {
-            resistanceTimer += Time.deltaTime;
+            showdownTimer += Time.deltaTime;
             if (targetPlayer == GameNetworkManager.Instance.localPlayerController)
             {
-                CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = Mathf.Clamp01(resistanceTimer / 6f * 0.3f);
-                HandlePlayerLookingAtEnemy(targetPlayer, 1 - (resistanceTimer / 6));
+                CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = Mathf.Clamp01(showdownTimer / 6f * 0.3f);
             }
-            Plugin.ExtendedLogging($"Showdown timer: {resistanceTimer}");
+            Plugin.ExtendedLogging($"Showdown timer: {showdownTimer}");
 
-            // If the player breaks eye contact (escapes) after at least 1.5 seconds…
-            if (resistanceTimer >= 1.5f && !PlayerLookingAtEnemy(targetPlayer, false))
+            // If the player breaks eye contact (escapes) after at least 0.5 seconds…
+            if (showdownTimer >= 0.5f && !PlayerLookingAtEnemy(targetPlayer, false))
             {
                 fixationAttemptCount++;
                 if (fixationAttemptCount >= maxFixationAttempts)
                 {
                     // After too many escapes, Pandora loses interest and returns to roaming.
                     fixationAttemptCount = 0;
-                    resistanceTimer = 0f;
+                    showdownTimer = 0f;
                     CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = 0f;
                     TemporarilyCripplePlayer(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false);
                     targetPlayer = null;
@@ -77,7 +76,7 @@ public class Pandora : CodeRebirthEnemyAI
                 else
                 {
                     // Reset the timer and try to re-fixate by teleporting closer.
-                    resistanceTimer = 0f;
+                    showdownTimer = 0f;
                     TemporarilyCripplePlayer(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false);
                     SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
                     if (IsServer) StartCoroutine(TeleportNearbyTargetPlayer(targetPlayer));
@@ -86,10 +85,10 @@ public class Pandora : CodeRebirthEnemyAI
             }
 
             // If the player stares for too long (6 seconds), kill them.
-            if (resistanceTimer >= 6f)
+            if (showdownTimer >= 6f)
             {
                 fixationAttemptCount = 0;
-                resistanceTimer = 0f;
+                showdownTimer = 0f;
                 SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
                 if (IsServer) StartCoroutine(TeleportAndResetSearchRoutine());
                 if (targetPlayer.IsOwner)
@@ -153,7 +152,7 @@ public class Pandora : CodeRebirthEnemyAI
         {
             Plugin.ExtendedLogging($"Closest player is {closestPlayer.playerUsername} at {closestDistance} meters.");
             // If within fixation range (15 meters) try to check for direct gaze.
-            if (closestDistance <= 2.5f || (closestDistance <= 15f && PlayerLookingAtEnemy(closestPlayer, false)))
+            if (closestDistance <= 5f || (closestDistance <= 20f && PlayerLookingAtEnemy(closestPlayer, false)))
             {
                 // Direct line-of-sight within 15m triggers fixation.
                 int playerIndex = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer);
@@ -236,95 +235,6 @@ public class Pandora : CodeRebirthEnemyAI
         }
     }
 
-    // Serialized fields to tweak pull behavior
-    [SerializeField] private float horizontalPullStrength = 2000f;
-    [SerializeField] private float verticalPullStrength = 25f;
-    [SerializeField] private Vector2 horizontalDeadzone = new Vector2(0.46f, 0.54f); // x=left, y=right thresholds
-    [SerializeField] private Vector2 verticalDeadzone = new Vector2(0.35f, 0.6f);   // x=lower, y=upper thresholds
-    [SerializeField] private float cameraLerpSpeed = 20f;
-    [SerializeField] private bool forceAlign = true;       // snap camera fully toward target when in deadzone
-    [SerializeField] private float forceAlignMinPull = 0.01f; // minimum pull to consider for forcing
-
-    /// <summary>
-    /// Adjusts the player's camera and body to look toward the target, with configurable pull strength.
-    /// </summary>
-    private void HandlePlayerLookingAtEnemy(PlayerControllerB player, float normalizedStrength)
-    {
-        // HORIZONTAL AIMING ------------------------------------------------
-        // Get target position in compass viewport
-        player.targetScreenPos = player.turnCompassCamera.WorldToViewportPoint(this.transform.position);
-        // Offset from screen center
-        player.shockMinigamePullPosition = player.targetScreenPos.x - 0.5f;
-        
-        float dt = Mathf.Clamp(Time.deltaTime, 0f, 0.1f);
-        float absPull = Mathf.Abs(player.shockMinigamePullPosition);
-        float horizStrength = horizontalPullStrength * normalizedStrength;
-
-        // If outside horizontal deadzone, rotate compass and play animations
-        if (player.targetScreenPos.x > horizontalDeadzone.y || player.targetScreenPos.x < horizontalDeadzone.x)
-        {
-            float dir = Mathf.Sign(player.shockMinigamePullPosition);
-            float rotationAmount = dir * horizStrength * dt * absPull;
-            player.turnCompass.Rotate(Vector3.up * rotationAmount);
-
-            // Animations
-            player.playerBodyAnimator.SetBool("PullingCameraRight", dir > 0f);
-            player.playerBodyAnimator.SetBool("PullingCameraLeft", dir < 0f);
-        }
-        else
-        {
-            // Inside deadzone: reset animations
-            player.playerBodyAnimator.SetBool("PullingCameraLeft", false);
-            player.playerBodyAnimator.SetBool("PullingCameraRight", false);
-
-            // Optionally snap compass to face the target directly
-            if (forceAlign && absPull < forceAlignMinPull)
-            {
-                Vector3 lookDir = (this.transform.position - player.turnCompass.position).normalized;
-                Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
-                player.turnCompass.rotation = Quaternion.Slerp(
-                    player.turnCompass.rotation,
-                    targetRot,
-                    dt * cameraLerpSpeed * normalizedStrength
-                );
-            }
-        }
-
-        // VERTICAL AIMING --------------------------------------------------
-        // Slightly offset target upward for vertical aiming
-        player.targetScreenPos = player.gameplayCamera.WorldToViewportPoint(this.transform.position + Vector3.up * 0.35f);
-        float vertOffset = player.targetScreenPos.y - 0.5f;
-        float absVert = Mathf.Abs(vertOffset);
-        float vertStrength = verticalPullStrength * normalizedStrength;
-
-        if (player.targetScreenPos.y > verticalDeadzone.y)
-        {
-            player.cameraUp = Mathf.Clamp(
-                Mathf.Lerp(player.cameraUp, player.cameraUp - vertStrength, vertStrength * dt * absVert),
-                -89f, 89f
-            );
-        }
-        else if (player.targetScreenPos.y < verticalDeadzone.x)
-        {
-            player.cameraUp = Mathf.Clamp(
-                Mathf.Lerp(player.cameraUp, player.cameraUp + vertStrength, vertStrength * dt * absVert),
-                -89f, 89f
-            );
-        }
-
-        // Apply vertical rotation
-        var euler = player.gameplayCamera.transform.localEulerAngles;
-        player.gameplayCamera.transform.localEulerAngles = new Vector3(player.cameraUp, euler.y, euler.z);
-
-        // PLAYER BODY ALIGNMENT --------------------------------------------
-        Vector3 bodyEuler = Vector3.up * player.turnCompass.eulerAngles.y;
-        player.thisPlayerBody.rotation = Quaternion.Lerp(
-            player.thisPlayerBody.rotation,
-            Quaternion.Euler(bodyEuler),
-            dt * cameraLerpSpeed * (1f - absPull)
-        );
-    }
-
     private bool PlayerLookingAtEnemy(PlayerControllerB player, bool triggerWhilstLookingAtGeneralDirection)
     {
         float dot = Vector3.Dot(player.gameplayCamera.transform.forward, (eye.position - player.gameplayCamera.transform.position).normalized);
@@ -352,7 +262,7 @@ public class Pandora : CodeRebirthEnemyAI
             foreach (var player in StartOfRound.Instance.allPlayerScripts)
             {
                 if (player.isPlayerDead || !player.isPlayerControlled || !player.isInsideFactory) continue;
-                if (Vector3.Distance(randomPosition, player.transform.position) < 5f)
+                if (Vector3.Distance(randomPosition, player.transform.position) < 8f)
                 {
                     suitable = false;
                     break;
@@ -382,7 +292,7 @@ public class Pandora : CodeRebirthEnemyAI
         smartAgentNavigator.DoPathingToDestination(targettedPlayer.transform.position);
         yield return new WaitForSeconds(1f);
         if (currentBehaviourStateIndex == (int)State.ShowdownWithPlayer) yield break;
-        agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 9, default));
+        agent.Warp(RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 14f, default));
         smartAgentNavigator.DoPathingToDestination(targettedPlayer.transform.position);
     }
 
@@ -409,6 +319,9 @@ public class Pandora : CodeRebirthEnemyAI
             }*/
             playerToCripple.inAnimationWithEnemy = this;
             inSpecialAnimationWithPlayer = playerToCripple;
+            playerToCripple.inSpecialInteractAnimation = true;
+            playerToCripple.shockingTarget = eye;
+            playerToCripple.inShockingMinigame = true;
             // playerToCripple.movementSpeed /= 3;
         }
         else
@@ -419,6 +332,10 @@ public class Pandora : CodeRebirthEnemyAI
             }*/
             playerToCripple.inAnimationWithEnemy = null;
             inSpecialAnimationWithPlayer = null;
+            playerToCripple.inSpecialInteractAnimation = false;
+            playerToCripple.shockingTarget = null;
+            playerToCripple.inShockingMinigame = false;
+            // playerToCripple.movementSpeed *= 3;
             StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
         }
         playerToCripple.disableMoveInput = cripple;
