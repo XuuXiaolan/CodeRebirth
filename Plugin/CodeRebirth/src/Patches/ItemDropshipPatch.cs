@@ -16,12 +16,14 @@ public static class ItemDropshipPatch
         if (self is CRDropShip cRDropShip)
         {
             cRDropShip.rumbleSource.Play();
+            cRDropShip.shipTimer = 0f;
         }
         orig(self);
     }
 
     private static void ItemDropship_Update(On.ItemDropship.orig_Update orig, ItemDropship self)
     {
+        orig(self);
         if (self is CRDropShip cRDropShip)
         {
             if (cRDropShip.shipTimer < 40f && cRDropShip.shipTimer + cRDropShip.rumbleSource.clip.length > 40f)
@@ -36,7 +38,6 @@ public static class ItemDropshipPatch
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
             }
         }
-        orig(self);
     }
 
     private static void ItemDropship_DeliverVehicleOnServer(On.ItemDropship.orig_DeliverVehicleOnServer orig, ItemDropship self)
