@@ -723,32 +723,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         targetEnemy = null;
     }
 
-    public void ShakePlayerCamera()
-    { // AnimEvent
-        float distance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
-        switch (distance)
-        {
-            case < 15f:
-
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                break;
-            case < 30 and >= 15:
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                break;
-            case < 50f and >= 30:
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                break;
-        }
-    }
-
     public void FootStepSounds()
     {
         creatureSFX.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, stompSounds.Length)]);

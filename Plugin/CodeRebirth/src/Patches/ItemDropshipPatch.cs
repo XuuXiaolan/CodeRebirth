@@ -22,13 +22,13 @@ public static class ItemDropshipPatch
 
     private static void ItemDropship_Update(On.ItemDropship.orig_Update orig, ItemDropship self)
     {
-        if (self.shipTimer < 40f && self is CRDropShip cRDropShip)
+        if (self is CRDropShip cRDropShip)
         {
-            if (cRDropShip.shipTimer + cRDropShip.rumbleSource.clip.length > 40f)
+            if (cRDropShip.shipTimer < 40f && cRDropShip.shipTimer + cRDropShip.rumbleSource.clip.length > 40f)
             {
                 if (!cRDropShip.rumbleSource.isPlaying)
                 {
-                    cRDropShip.rumbleSource.Play();
+                    cRDropShip.PlayRumbleClientRpc();
                 }
             }
             if (cRDropShip.rumbleSource.isPlaying)

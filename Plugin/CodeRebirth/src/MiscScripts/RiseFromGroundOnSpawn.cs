@@ -1,12 +1,25 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CodeRebirth.src.MiscScripts;
 public class RiseFromGroundOnSpawn : MonoBehaviour
 {
-    public float depthToRaise = 1f;
-    public float raiseSpeed = 0.25f;
-    public ScreenShakeType screenShakeOnRise = ScreenShakeType.Small;
-    public float distanceToShake = 5f;
+    [Header("Events")]
+    [SerializeField]
+    private UnityEvent onRiseComplete = new();
+
+    [Header("Rising Settings")]
+    [SerializeField]
+    private float depthToRaise = 1f;
+    [SerializeField]
+    private float raiseSpeed = 0.25f;
+
+    [Header("Camera Shake")]
+    [SerializeField]
+    private ScreenShakeType screenShakeOnRise = ScreenShakeType.Small;
+    [SerializeField]
+    private float distanceToShake = 5f;
+
 
     private float _timeToTake = 4f;
     private Vector3 _originalPosition = Vector3.zero;
@@ -28,6 +41,7 @@ public class RiseFromGroundOnSpawn : MonoBehaviour
         if (_timeToTake <= 0)
         {
             this.transform.position = _originalPosition;
+            onRiseComplete.Invoke();
             Destroy(this);
         }
     }

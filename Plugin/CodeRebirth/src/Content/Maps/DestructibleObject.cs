@@ -7,19 +7,18 @@ public class DestructibleObject : MonoBehaviour, IHittable
     [Header("References")]
     [SerializeField]
     private Collider[] colliders = [];
-
     [SerializeField]
     private Renderer[] renderers = [];
-
     [SerializeField]
     private ParticleSystem[] _particleSystems = [];
 
     [Header("Settings")]
     [SerializeField]
     private int _playerDamageAmount = 5;
-
     [SerializeField]
     private float _forceApplied = 5f;
+
+    private bool _isDestructible = false;
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
@@ -56,6 +55,9 @@ public class DestructibleObject : MonoBehaviour, IHittable
 
     public void OnTriggerEnter(Collider other)
     {
+        if (!_isDestructible)
+            return;
+
         if (other.gameObject.TryGetComponent(out PlayerControllerB player))
         {
             player.DamagePlayer(_playerDamageAmount, true, false, CauseOfDeath.Unknown, 0, false, (player.transform.position - this.transform.position).normalized * _forceApplied);
@@ -80,5 +82,10 @@ public class DestructibleObject : MonoBehaviour, IHittable
 
             Destroy(gameObject, objectLifeTime);
         }
+    }
+
+    public void SetDestructible()
+    {
+        _isDestructible = true;
     }
 }

@@ -44,4 +44,10 @@ public class CRDropShip : ItemDropship
         }
         Plugin.ExtendedLogging($"Doors closing, blowing up cruiser");
     }
+
+    [ClientRpc]
+    public void PlayRumbleClientRpc()
+    {
+        rumbleSource.Play();
+    }
 }
