@@ -15,16 +15,28 @@ public class ScreenShakeOnAnimation : MonoBehaviour
         {
             foreach (var ScreenShakeTarget in _screenShakeTargets)
             {
-                if (ScreenShakeTarget.screenShakeTarget.name == animationEvent.stringParameter)
+                if (ScreenShakeTarget.screenShakeTarget.name != animationEvent.stringParameter)
+                    continue;
+                shakeStartPosition = ScreenShakeTarget.transform.position;
+                if (ScreenShakeTarget.nearAudioClips.Length > 0)
                 {
-                    shakeStartPosition = ScreenShakeTarget.transform.position;
-                    if (ScreenShakeTarget.audioSource != null && ScreenShakeTarget.audioClips.Length > 0)
+                    AudioClip clipToPlay = ScreenShakeTarget.nearAudioClips[CodeRebirthUtils.Instance.CRRandom.Next(ScreenShakeTarget.nearAudioClips.Length)];
+                    if (ScreenShakeTarget.audioSourceNear != null)
                     {
-                        ScreenShakeTarget.audioSource.transform.position = shakeStartPosition;
-                        ScreenShakeTarget.audioSource.PlayOneShot(ScreenShakeTarget.audioClips[CodeRebirthUtils.Instance.CRRandom.Next(ScreenShakeTarget.audioClips.Length)]);
+                        ScreenShakeTarget.audioSourceNear.transform.position = shakeStartPosition;
+                        ScreenShakeTarget.audioSourceNear.PlayOneShot(clipToPlay);
                     }
-                    break;
                 }
+                if (ScreenShakeTarget.farAudioClips.Length > 0)
+                {
+                    AudioClip clipToPlay = ScreenShakeTarget.farAudioClips[CodeRebirthUtils.Instance.CRRandom.Next(ScreenShakeTarget.farAudioClips.Length)];
+                    if (ScreenShakeTarget.audioSourceFar != null)
+                    {
+                        ScreenShakeTarget.audioSourceFar.transform.position = shakeStartPosition;
+                        ScreenShakeTarget.audioSourceFar.PlayOneShot(clipToPlay);
+                    }
+                }
+                break;
             }            
         }
 
@@ -67,9 +79,11 @@ public class ScreenShakeOnAnimation : MonoBehaviour
                 }
 
                 if (distanceToPlayer > outwardDistance + outwardDistanceIncrease)
-                    return;
+                    continue;
 
+                Plugin.ExtendedLogging($"ShakeType: {shakeType} - i: {i} - outwardDistanceIncrease: {outwardDistanceIncrease} - distanceToPlayer: {distanceToPlayer} - outwardDistance: {outwardDistance}");
                 HUDManager.Instance.ShakeCamera((ScreenShakeType)shakeType - i);
+                break;
             }
         }
     }

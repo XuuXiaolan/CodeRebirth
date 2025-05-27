@@ -17599,18 +17599,19 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.7916667
-    functionName: ShakePlayerCamera
+    functionName: LeftFootStepInteractions
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.7916667
-    functionName: LeftFootStepInteractions
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
+    functionName: ShakeScreenAnimEvent
+    data: Foot.L_end
+    objectReferenceParameter: {fileID: 11400000, guid: f11b1e3c92b78434b8ea4b4dae1fea44,
+      type: 2}
+    floatParameter: 10
+    intParameter: 3
     messageOptions: 0
   - time: 7.0416665
     functionName: RightFootStepInteractions
@@ -17620,9 +17621,10 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 7.0416665
-    functionName: ShakePlayerCamera
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
+    functionName: ShakeScreenAnimEvent
+    data: Foot.R_end
+    objectReferenceParameter: {fileID: 11400000, guid: f11b1e3c92b78434b8ea4b4dae1fea44,
+      type: 2}
+    floatParameter: 10
+    intParameter: 3
     messageOptions: 0

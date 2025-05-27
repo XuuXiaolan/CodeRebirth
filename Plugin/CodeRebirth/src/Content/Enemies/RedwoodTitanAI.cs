@@ -723,12 +723,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         targetEnemy = null;
     }
 
-    public void FootStepSounds()
-    {
-        creatureSFX.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, stompSounds.Length)]);
-        creatureSFXFar.PlayOneShot(farStompSounds[UnityEngine.Random.Range(0, farStompSounds.Length)]);
-    }
-
     public void LeftFootStepInteractions()
     { // AnimEvent
         FootstepInteractions(ref CollisionFootL, ref DustParticlesLeft);
@@ -742,7 +736,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public void FootstepInteractions(ref Collider foot, ref ParticleSystem footParticles)
     {
         footParticles.Play(); // Play the particle system with the updated color
-        FootStepSounds();
         PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
         if (player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom)
         {

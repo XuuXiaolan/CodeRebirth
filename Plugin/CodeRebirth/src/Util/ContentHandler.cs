@@ -53,7 +53,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
             isScrapItem,
             createIsScrapItemConfig,
             isShopItem,
-            createIsScrapItemConfig,
+            createIsShopItemConfig,
             cost
         );
     }
