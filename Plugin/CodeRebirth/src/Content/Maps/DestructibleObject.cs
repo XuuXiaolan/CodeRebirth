@@ -84,8 +84,8 @@ public class DestructibleObject : MonoBehaviour, IHittable
         }
     }
 
-    public void SetDestructible()
+    public void SetDestructible(bool isDestructible)
     {
-        _isDestructible = true;
+        _isDestructible = isDestructible;
     }
 }
