@@ -58,7 +58,7 @@ public class EnemySpawnerTracker : MonoBehaviour
         ExtraEnemyData extraEnemyData = CodeRebirthUtils.ExtraEnemyDataDict[enemyAI];
         foreach (var enemyAICollisionDetect in extraEnemyData.enemyAICollisionDetects)
         {
-            enemyAICollisionDetect.enabled = false;
+            Destroy(enemyAICollisionDetect);
         }
 
         EnemyLevelSpawner.entitiesSpawned[enemyAI.enemyType]--;

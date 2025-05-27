@@ -210,7 +210,7 @@ public class MarrowSplitter : GrabbableObject
         if (hitSomething)
         {
             _hitTimer = 0.4f;
-            insertedBattery.charge -= 0.1f;
+            insertedBattery.charge -= 0.05f;
             float currentAmount = _skinnedMeshRenderer.GetBlendShapeWeight(0);
             float newAmount = Mathf.Clamp(currentAmount + _increaseAmount, 0, 100);
             Plugin.ExtendedLogging($"Increasing blendshape weight to {newAmount}");

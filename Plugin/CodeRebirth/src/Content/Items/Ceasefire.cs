@@ -219,7 +219,7 @@ public class Ceasefire : GrabbableObject
         enemyAIs.Clear();
 
         Vector3 capsuleStart = _ceasefireBarrel.transform.position;
-        Vector3 capsuleEnd = capsuleStart + playerHeldBy.transform.forward * _minigunRange;
+        Vector3 capsuleEnd = capsuleStart + (-_ceasefireBarrel.transform.up) * _minigunRange;
         int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)
