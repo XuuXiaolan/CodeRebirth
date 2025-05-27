@@ -179,11 +179,7 @@ public class MarrowSplitter : GrabbableObject
                     continue;
 
                 hitSomething = true;
-
-                if (GameNetworkManager.Instance.localPlayerController != playerHeldBy)
-                    continue;
-
-                player.DamagePlayerFromOtherClientServerRpc(damageToDeal, this.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
+                player.DamagePlayer(damageToDeal, true, false, CauseOfDeath.Fan, 0, false, default);
             }
             else if (hittable is EnemyAICollisionDetect enemy)
             {

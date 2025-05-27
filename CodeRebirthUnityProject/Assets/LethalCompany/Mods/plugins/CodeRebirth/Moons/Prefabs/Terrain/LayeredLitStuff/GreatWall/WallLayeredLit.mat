@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DiffusionProfileReferences: []
   m_MaterialReferences:
   - {fileID: 0}
-  - {fileID: 2100000, guid: 5cb6c88611e99b7408dd0c0a5f03a8d1, type: 2}
-  - {fileID: 2100000, guid: 5cb6c88611e99b7408dd0c0a5f03a8d1, type: 2}
-  - {fileID: 2100000, guid: 5cb6c88611e99b7408dd0c0a5f03a8d1, type: 2}
+  - {fileID: 2100000, guid: 1ca58b5ff21ae9b4ba6ce6c5f01253fb, type: 2}
+  - {fileID: 2100000, guid: 432af25fddf4df449836c247905f743b, type: 2}
+  - {fileID: 2100000, guid: 432af25fddf4df449836c247905f743b, type: 2}
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -31,6 +31,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _LAYEREDLIT_4_LAYERS
+  - _MAIN_LAYER_INFLUENCE_MODE
   - _MASKMAP1
   - _MASKMAP2
   - _MASKMAP3
@@ -603,7 +604,7 @@ Material:
     - _UseDensityMode: 0
     - _UseEmissiveIntensity: 0
     - _UseHeightBasedBlend: 0
-    - _UseMainLayerInfluence: 0
+    - _UseMainLayerInfluence: 1
     - _UseShadowThreshold: 0
     - _VertexColorMode: 0
     - _ZTestDepthEqualForOpaque: 3
