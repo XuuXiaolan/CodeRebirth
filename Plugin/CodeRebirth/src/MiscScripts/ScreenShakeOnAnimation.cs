@@ -1,3 +1,4 @@
+using CodeRebirth.src.Util;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -10,18 +11,29 @@ public class ScreenShakeOnAnimation : MonoBehaviour
     public void ShakeScreenAnimEvent(AnimationEvent animationEvent)
     {
         Vector3 shakeStartPosition = this.transform.position;
-        if (string.IsNullOrEmpty(animationEvent.stringParameter))
+        if (!string.IsNullOrEmpty(animationEvent.stringParameter))
         {
             foreach (var ScreenShakeTarget in _screenShakeTargets)
             {
-                if (ScreenShakeTarget.gameObject.name == animationEvent.stringParameter)
+                if (ScreenShakeTarget.screenShakeTarget.name == animationEvent.stringParameter)
                 {
                     shakeStartPosition = ScreenShakeTarget.transform.position;
+                    if (ScreenShakeTarget.audioSource != null && ScreenShakeTarget.audioClips.Length > 0)
+                    {
+                        ScreenShakeTarget.audioSource.transform.position = shakeStartPosition;
+                        ScreenShakeTarget.audioSource.PlayOneShot(ScreenShakeTarget.audioClips[CodeRebirthUtils.Instance.CRRandom.Next(ScreenShakeTarget.audioClips.Length)]);
+                    }
+                    break;
                 }
             }            
         }
 
-        ShakeScreen(animationEvent.floatParameter, animationEvent.intParameter, shakeStartPosition);
+        DynamicScreenShakeFalloff? shakeFalloff = null;
+        if (animationEvent.objectReferenceParameter is DynamicScreenShakeFalloff shakeFalloff1)
+        {
+            shakeFalloff = shakeFalloff1;
+        }
+        ShakeScreen(animationEvent.floatParameter, animationEvent.intParameter, shakeStartPosition, shakeFalloff);
     }
 
     private void ShakeScreen(float outwardDistance, int shakeType, Vector3 shakeStartPosition, DynamicScreenShakeFalloff? dynamicFalloffSO = null)

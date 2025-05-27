@@ -58,6 +58,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [HideInInspector] public ShipAnimator shipAnimator = null!;
     [HideInInspector] public StartMatchLever startMatchLever = null!;
     [HideInInspector] public Terminal shipTerminal = null!;
+    [HideInInspector] public static Dictionary<EnemyAI, ExtraEnemyData> ExtraEnemyDataDict = new();
     [HideInInspector] public static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
     [HideInInspector] public Dictionary<EnemyType, float> enemyCoinDropRate = new();
     [HideInInspector] public System.Random CRRandom = new();
@@ -67,7 +68,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         Instance = this;
         StartCoroutine(HandleEnemyDropRates());
-        CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
+        CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
         DoLayerMaskStuff();
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);

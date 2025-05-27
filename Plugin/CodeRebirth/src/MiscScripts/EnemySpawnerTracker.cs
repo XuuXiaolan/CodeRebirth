@@ -1,4 +1,5 @@
 using System.Collections;
+using CodeRebirth.src.Util;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -16,6 +17,9 @@ public class EnemySpawnerTracker : MonoBehaviour
             return;
         }
 
+        if (_removedFromSpawnedEnemies)
+            return;
+
         if (enemyAI.isEnemyDead)
         {
             StartCoroutine(HandleRemovingFromSpawnedEnemies(false));
@@ -29,18 +33,11 @@ public class EnemySpawnerTracker : MonoBehaviour
 
     private IEnumerator HandleRemovingFromSpawnedEnemies(bool immediate)
     {
-        if (_removedFromSpawnedEnemies && !immediate)
-            yield break;
-
         _removedFromSpawnedEnemies = true;
 
         if (!immediate)
         {
-            yield return new WaitForSeconds(10f);
-        }
-        if (enemyAI.agent != null)
-        {
-            enemyAI.agent.enabled = false;
+            yield return new WaitForSeconds(15);
         }
 
         if (enemyAI.creatureAnimator != null)
@@ -56,6 +53,12 @@ public class EnemySpawnerTracker : MonoBehaviour
         if (enemyAI.creatureSFX != null)
         {
             enemyAI.creatureSFX.enabled = false;
+        }
+
+        ExtraEnemyData extraEnemyData = CodeRebirthUtils.ExtraEnemyDataDict[enemyAI];
+        foreach (var enemyAICollisionDetect in extraEnemyData.enemyAICollisionDetects)
+        {
+            enemyAICollisionDetect.enabled = false;
         }
 
         EnemyLevelSpawner.entitiesSpawned[enemyAI.enemyType]--;

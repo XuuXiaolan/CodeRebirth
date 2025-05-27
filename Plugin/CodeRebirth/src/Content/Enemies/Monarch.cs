@@ -198,6 +198,7 @@ public class Monarch : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        smartAgentNavigator.StopSearchRoutine();
         if (IsServer)
             creatureAnimator.SetBool(IsDeadAnimation, true);
 

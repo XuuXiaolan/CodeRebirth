@@ -14,7 +14,7 @@ using UnityEngine;
 namespace CodeRebirth.src.Patches;
 static class EnemyAIPatch
 {
-    private static Dictionary<EnemyAI, Coroutine> slowedEnemies = new();
+    private static Dictionary<EnemyAI, Coroutine> _slowedEnemies = new();
 
     public static void Init()
     {
@@ -22,6 +22,13 @@ static class EnemyAIPatch
         On.EnemyAI.HitEnemy += EnemyAI_HitEnemy;
         On.EnemyAI.Update += EnemyAI_Update;
         On.EnemyAI.OnCollideWithPlayer += EnemyAI_OnCollideWithPlayer;
+        On.EnemyAI.OnDestroy += EnemyAI_OnDestroy;
+    }
+
+    private static void EnemyAI_OnDestroy(On.EnemyAI.orig_OnDestroy orig, EnemyAI self)
+    {
+        CodeRebirthUtils.ExtraEnemyDataDict.Remove(self);
+        orig(self);
     }
 
     private static void EnemyAI_OnCollideWithPlayer(On.EnemyAI.orig_OnCollideWithPlayer orig, EnemyAI self, Collider other)
@@ -46,12 +53,17 @@ static class EnemyAIPatch
     private static void EnemyAI_Start(On.EnemyAI.orig_Start orig, EnemyAI self)
     {
         orig(self);
+        ExtraEnemyData extraEnemyData = self.gameObject.AddComponent<ExtraEnemyData>();
+        extraEnemyData.enemyAI = self;
+        CodeRebirthUtils.ExtraEnemyDataDict.Add(self, extraEnemyData);
         if (self is CaveDwellerAI)
         {
             self.gameObject.transform.Find("BabyMeshContainer").Find("BabyManeaterMesh").gameObject.layer = 19;
         }
 
-        if (RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase) return;
+        if (RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase)
+            return;
+
         self.SetEnemyOutside(true);
         GameObject? favouriteSpot = RoundManager.Instance.outsideAINodes.OrderBy(x => Vector3.Distance(x.transform.position, self.transform.position)).FirstOrDefault();
         if (favouriteSpot == null)
@@ -63,7 +75,7 @@ static class EnemyAIPatch
     private static void EnemyAI_Update(On.EnemyAI.orig_Update orig, EnemyAI self)
     {
         orig(self);
-        if (slowedEnemies.TryGetValue(self, out _))
+        if (_slowedEnemies.TryGetValue(self, out _))
         {
             self.agent.velocity = Vector3.zero;
         }
@@ -76,11 +88,11 @@ static class EnemyAIPatch
             if (CodeRebirthUtils.Instance.CRRandom.NextFloat(0, 100) <= mountaineer.FreezePercentile)
             {
                 Plugin.ExtendedLogging("Slowed enemy");
-                if (slowedEnemies.ContainsKey(self) && slowedEnemies[self] != null)
+                if (_slowedEnemies.ContainsKey(self) && _slowedEnemies[self] != null)
                 {
-                    self.StopCoroutine(slowedEnemies[self]);
+                    self.StopCoroutine(_slowedEnemies[self]);
                 }
-                slowedEnemies[self] = self.StartCoroutine(DelayResetSpeed(self));
+                _slowedEnemies[self] = self.StartCoroutine(DelayResetSpeed(self));
             }
         }
 
@@ -115,6 +127,6 @@ static class EnemyAIPatch
     private static IEnumerator DelayResetSpeed(EnemyAI self)
     {
         yield return new WaitForSeconds(4f);
-        slowedEnemies.Remove(self);
+        _slowedEnemies.Remove(self);
     }
 }

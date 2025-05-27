@@ -6,7 +6,7 @@ namespace CodeRebirth.src.MiscScripts;
 public class ChanceScript : MonoBehaviour
 {
     [SerializeField]
-    private UnityEvent _onChance;
+    private UnityEvent _onChance = new();
     [SerializeField]
     [Range(0, 100)]
     private int _chance = 50;
@@ -14,6 +14,7 @@ public class ChanceScript : MonoBehaviour
     public void Start()
     {
         int randomNumber = CodeRebirthUtils.Instance.CRRandom.Next(0, 100) + 1;
+        Plugin.ExtendedLogging($"Random Number: {randomNumber}");
         if (randomNumber > _chance)
             return;
 
