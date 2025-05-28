@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44811875, g: 0.24078181, b: 0.07642055, a: 1}
+  m_IndirectSpecularColor: {r: 0.4474913, g: 0.2402311, b: 0.07641309, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12548,7 +12548,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -29.928764, y: -0, z: -0}
+    textureOffset: {x: -215.79266, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -24898,10 +24898,40 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1991192134}
     m_Modifications:
+    - target: {fileID: 1124194885563073503, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: specialEnemiesToSpawn.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1124194885563073503, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: specialEnemiesToSpawn.Array.data[5]
+      value: Guardsman
+      objectReference: {fileID: 0}
+    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: specialEnemiesToSpawn.Array.size
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: specialEnemiesToSpawn.Array.data[9]
+      value: Guardsman
+      objectReference: {fileID: 0}
     - target: {fileID: 2930116566415988962, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 4276347940
+      objectReference: {fileID: 0}
+    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: specialEnemiesToSpawn.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: specialEnemiesToSpawn.Array.data[7]
+      value: Guardsman
       objectReference: {fileID: 0}
     - target: {fileID: 4648469477059554915, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
