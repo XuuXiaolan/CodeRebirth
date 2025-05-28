@@ -26,10 +26,11 @@ public static class ItemDropshipPatch
         orig(self);
         if (self is CRDropShip cRDropShip)
         {
-            if (cRDropShip.shipTimer < 40f && cRDropShip.shipTimer + cRDropShip.rumbleSource.clip.length > 40f)
+            if (!cRDropShip.deliveringOrder && cRDropShip.IsServer && cRDropShip.shipTimer < 34f && cRDropShip.shipTimer + cRDropShip.rumbleSource.clip.length >= 40f)
             {
                 if (!cRDropShip.rumbleSource.isPlaying)
                 {
+                    Plugin.ExtendedLogging($"PlayRumbleClientRpc");
                     cRDropShip.PlayRumbleClientRpc();
                 }
             }

@@ -101,7 +101,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -4.072298e-13, y: -0.00008196226, z: 8.526513e-14}
+  m_LocalEulerAnglesHint: {x: -4.6069377e-13, y: -0.000082708306, z: 3.5697328e-19}
 --- !u!1 &221956974942095590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,7 +1255,7 @@ Transform:
   m_Children:
   - {fileID: 6847377070032893279}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: 28.348156, y: 179.9998, z: 179.99994}
+  m_LocalEulerAnglesHint: {x: 1.1841612, y: 179.99982, z: 179.99995}
 --- !u!1 &3046098352530209006
 GameObject:
   m_ObjectHideFlags: 0
@@ -6514,6 +6514,7 @@ GameObject:
   - component: {fileID: 7465995943950830732}
   - component: {fileID: 3031542207564503112}
   - component: {fileID: 304452976297062379}
+  - component: {fileID: 6461234671983769321}
   m_Layer: 0
   m_Name: DrillPodBigJim
   m_TagString: Untagged
@@ -6614,7 +6615,7 @@ MonoBehaviour:
   deliveringVehicle: 0
   untetheredVehicle: 0
   rumbleSource: {fileID: 7072793685641617759}
-  colliderEncompasingDropship: {fileID: 8523404476780707022}
+  colliderEncompasingDropship: {fileID: 5493185891558238108}
 --- !u!114 &3031542207564503112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6643,6 +6644,25 @@ MonoBehaviour:
   m_Script: {fileID: 207563165, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenShakeTargets:
+  - {fileID: 6461234671983769321}
+--- !u!114 &6461234671983769321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4615298961571888421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1857289257, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenShakeTarget: {fileID: 4615298961571888421}
+  audioSourceNear: {fileID: 0}
+  nearAudioClips: []
+  audioSourceFar: {fileID: 0}
+  farAudioClips: []
 --- !u!1 &4710120134802729133
 GameObject:
   m_ObjectHideFlags: 0
@@ -6924,7 +6944,7 @@ Transform:
   m_Children:
   - {fileID: 6250964242324012859}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: 1.2132842e-20, y: -0.000013660376, z: 1.01777744e-13}
+  m_LocalEulerAnglesHint: {x: -17.620676, y: -0.000013398456, z: 1.2720658e-13}
 --- !u!1 &5056238825419603813
 GameObject:
   m_ObjectHideFlags: 0
@@ -7280,7 +7300,7 @@ Transform:
   m_Children:
   - {fileID: 980335814079662923}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: 6.0664356e-21, y: -0.000027320752, z: 2.5444438e-14}
+  m_LocalEulerAnglesHint: {x: -17.620676, y: -0.000026796917, z: 2.3038123e-13}
 --- !u!1 &6030487064349414643
 GameObject:
   m_ObjectHideFlags: 0
@@ -7312,7 +7332,7 @@ Transform:
   m_Children:
   - {fileID: 5936719320554896405}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: 43.417046, y: -90.0001, z: 89.99998}
+  m_LocalEulerAnglesHint: {x: -89.98605, y: -0.00008326872, z: 0}
 --- !u!1 &6153629614187099389
 GameObject:
   m_ObjectHideFlags: 0
@@ -7375,7 +7395,7 @@ Transform:
   m_Children:
   - {fileID: 3286358984923104516}
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: 41.249023, y: 89.99992, z: -89.99999}
+  m_LocalEulerAnglesHint: {x: -90, y: -0.00008142965, z: 0}
 --- !u!1 &6614232562372427730
 GameObject:
   m_ObjectHideFlags: 0
@@ -7570,7 +7590,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8780984237916370573}
-  m_LocalEulerAnglesHint: {x: -0.00002434282, y: -179.9999, z: -0.0000056613953}
+  m_LocalEulerAnglesHint: {x: -0.000020413956, y: -17.161713, z: -0.00000022179535}
 --- !u!1 &7339301815827033654
 GameObject:
   m_ObjectHideFlags: 0
@@ -8113,7 +8133,7 @@ Transform:
   - {fileID: 8716940420017821710}
   - {fileID: 8396380368049172447}
   m_Father: {fileID: 248359961754222167}
-  m_LocalEulerAnglesHint: {x: 89.98021, y: 0.00008697111, z: 0}
+  m_LocalEulerAnglesHint: {x: 51.172718, y: 179.9999, z: 179.99992}
 --- !u!1 &8691676997024596700
 GameObject:
   m_ObjectHideFlags: 0

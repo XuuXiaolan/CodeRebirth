@@ -9,6 +9,8 @@ public class CRDropShip : ItemDropship
     public AudioSource rumbleSource = null!;
     [SerializeField]
     private Collider colliderEncompasingDropship = null!;
+
+    private VehicleController? _lastSpawnedVehicle = null;
     // If it's items, then make it so it stays there for a set time forcibly, like 30 seconds, seems to work fine by itself.
     // If it's a vehicle, make it so the dropship stays for 30 seconds again.
     // Add a physics region onto the drop ship's floor.
@@ -25,7 +27,7 @@ public class CRDropShip : ItemDropship
             {
                 GameObject.Instantiate<GameObject>(terminalScript.buyableVehicles[terminalScript.orderedVehicleFromTerminal].secondaryPrefab, RoundManager.Instance.VehiclesContainer).GetComponent<NetworkObject>().Spawn(false);
             }
-            StartCoroutine(DestroyUnmovedCruiser(vehicleGO.GetComponent<VehicleController>()));
+            _lastSpawnedVehicle = vehicleGO.GetComponent<VehicleController>();
         }
         untetheredVehicle = false;
         deliveringOrder = true;
@@ -35,19 +37,26 @@ public class CRDropShip : ItemDropship
         triggerScript.interactable = false;
     }
 
-    private IEnumerator DestroyUnmovedCruiser(VehicleController vehicle)
-    {
-        yield return new WaitUntil(() => shipTimer > 35f);
-        if (colliderEncompasingDropship.bounds.Contains(vehicle.transform.position))
-        {
-            vehicle.DestroyCar();
-        }
-        Plugin.ExtendedLogging($"Doors closing, blowing up cruiser");
-    }
-
     [ClientRpc]
     public void PlayRumbleClientRpc()
     {
         rumbleSource.Play();
+    }
+
+    public void PlayRumbleAnimEvent()
+    {
+        Plugin.ExtendedLogging($"PlayRumbleAnimEvent");
+        rumbleSource.Play();
+    }
+
+    public void DestroyAnyVehiclesAnimEvent()
+    {
+        if (_lastSpawnedVehicle == null)
+            return;
+
+        if (!colliderEncompasingDropship.bounds.Contains(_lastSpawnedVehicle.transform.position))
+            return;
+
+        _lastSpawnedVehicle.DestroyCar();
     }
 }
