@@ -9,12 +9,28 @@ public static class ItemDropshipPatch
         On.ItemDropship.Update += ItemDropship_Update;
         On.ItemDropship.ShipLeave += ItemDropship_ShipLeave;
         On.ItemDropship.DeliverVehicleOnServer += ItemDropship_DeliverVehicleOnServer;
+        On.ItemDropship.ShipLandedAnimationEvent += ItemDropship_ShipLandedAnimationEvent;
+    }
+
+    private static void ItemDropship_ShipLandedAnimationEvent(On.ItemDropship.orig_ShipLandedAnimationEvent orig, ItemDropship self)
+    {
+        orig(self);
+        if (self is CRDropShip cRDropShip)
+        {
+            cRDropShip.audioSource.Stop();
+            cRDropShip.audioSource.clip = cRDropShip.musicSound;
+            cRDropShip.audioSource.Play();
+        }
     }
 
     private static void ItemDropship_ShipLeave(On.ItemDropship.orig_ShipLeave orig, ItemDropship self)
     {
         if (self is CRDropShip cRDropShip)
         {
+            cRDropShip.audioSource.Stop();
+            cRDropShip.audioSource.clip = cRDropShip.leaveSound;
+            cRDropShip.audioSource.Play();
+
             cRDropShip.rumbleSource.Play();
             cRDropShip.shipTimer = 0f;
         }

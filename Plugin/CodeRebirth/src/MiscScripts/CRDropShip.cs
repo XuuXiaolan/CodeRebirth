@@ -1,4 +1,3 @@
-using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -6,7 +5,12 @@ namespace CodeRebirth.src.MiscScripts;
 
 public class CRDropShip : ItemDropship
 {
+    [Header("Audio")]
     public AudioSource rumbleSource = null!;
+    public AudioSource audioSource = null!;
+    public AudioClip musicSound = null!;
+    public AudioClip leaveSound = null!;
+
     [SerializeField]
     private Collider colliderEncompasingDropship = null!;
 
@@ -45,7 +49,6 @@ public class CRDropShip : ItemDropship
 
     public void PlayRumbleAnimEvent()
     {
-        Plugin.ExtendedLogging($"PlayRumbleAnimEvent");
         rumbleSource.Play();
     }
 

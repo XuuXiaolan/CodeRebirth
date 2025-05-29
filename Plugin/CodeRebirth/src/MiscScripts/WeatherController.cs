@@ -33,7 +33,7 @@ public class WeatherController : MonoBehaviour
         {
             light.intensity = 0;
         }
-        localVolumetricFog.parameters.meanFreePath = 25f;
+        localVolumetricFog.parameters.meanFreePath = 20f;
 
         Material material = renderersToDisableEmissiveness[0].GetSharedMaterial();
         material.SetColor("_EmissiveColor", Color.white);

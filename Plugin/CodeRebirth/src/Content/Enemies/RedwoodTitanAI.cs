@@ -21,8 +21,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public ParticleSystem DeathParticles = null!;
     public ParticleSystem BigSmokeEffect = null!;
     public AudioSource creatureSFXFar = null!;
-    public AudioClip[] stompSounds = null!;
-    public AudioClip[] farStompSounds = null!;
     public AudioClip eatenSound = null!;
     public AudioClip spawnSound = null!;
     public AudioClip roarSound = null!;
