@@ -15113,12 +15113,28 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0.041666668
+    functionName: ShakeScreenAnimEvent
+    data: 
+    objectReferenceParameter: {fileID: 11400000, guid: f11b1e3c92b78434b8ea4b4dae1fea44,
+      type: 2}
+    floatParameter: 45
+    intParameter: 2
+    messageOptions: 0
   - time: 1.7083334
     functionName: EnableDeathColliders
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
+    messageOptions: 0
+  - time: 2.25
+    functionName: ShakeScreenAnimEvent
+    data: 
+    objectReferenceParameter: {fileID: 11400000, guid: f11b1e3c92b78434b8ea4b4dae1fea44,
+      type: 2}
+    floatParameter: 75
+    intParameter: 3
     messageOptions: 0
   - time: 2.7083333
     functionName: DisableDeathColliders
