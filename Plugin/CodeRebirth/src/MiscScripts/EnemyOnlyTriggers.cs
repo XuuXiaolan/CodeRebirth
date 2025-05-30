@@ -5,7 +5,7 @@ public class EnemyOnlyTriggers : MonoBehaviour
 {
     public EnemyAI mainScript = null!;
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerStay(Collider other)
     {
         if (other.TryGetComponent(out EnemyAICollisionDetect enemyAICollisionDetect) && !enemyAICollisionDetect.mainScript.isEnemyDead)
         {

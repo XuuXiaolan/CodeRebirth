@@ -89,6 +89,13 @@ public class SmartAgentNavigator : NetworkBehaviour
             return false;
         }
         GoToDestinationResult result = GoToDestination(destination);
+        if (result == GoToDestinationResult.Failure)
+        {
+            if (DetermineIfNeedToDisableAgent(destination))
+            {
+                return false;
+            }
+        }
         return result == GoToDestinationResult.Success || result == GoToDestinationResult.InProgress;
     }
 
@@ -233,6 +240,15 @@ public class SmartAgentNavigator : NetworkBehaviour
             OnEnableOrDisableAgent.Invoke(true);
             agent.enabled = true;
             agent.Warp(targetPosition);
+            if (pathingTask != null)
+            {
+                pathingTask.StartPathTask(this.agent, this.transform.position, targetPosition, GetAllowedPathLinks());
+            }
+            else
+            {
+                pathingTask = new SmartPathTask();
+                pathingTask.StartPathTask(this.agent, this.transform.position, targetPosition, GetAllowedPathLinks());
+            }
             return;
         }
 
@@ -240,7 +256,6 @@ public class SmartAgentNavigator : NetworkBehaviour
         float normalizedDistance = Mathf.Clamp01(Vector3.Distance(transform.position, targetPosition) / distanceToTarget);
         Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * 10f);
         newPosition.y += Mathf.Sin(normalizedDistance * Mathf.PI) * arcHeight;
-
         transform.SetPositionAndRotation(newPosition, Quaternion.LookRotation(targetPosition - transform.position));
     }
 
@@ -335,6 +350,7 @@ public class SmartAgentNavigator : NetworkBehaviour
         return true;
     }
 
+    #region Search Algorithm
     public void StartSearchRoutine(float radius)
     {
         if (!agent.enabled)
@@ -354,14 +370,13 @@ public class SmartAgentNavigator : NetworkBehaviour
         searchRoutine = null;
     }
 
-    #region Search Algorithm
     private readonly List<Vector3> _positionsToSearch = new();
     private readonly List<Vector3> _roamingPointsVectorList = new();
 
     private IEnumerator SearchAlgorithm(float radius)
     {
         yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 3f));
-        Plugin.ExtendedLogging($"Starting search routine for {this.gameObject.name} at {this.transform.position}");
+        Plugin.ExtendedLogging($"Starting search routine for {this.gameObject.name} at {this.transform.position} with radius {radius}");
         _positionsToSearch.Clear();
         yield return StartCoroutine(GetSetOfAcceptableNodesForRoaming(radius));
         while (true)

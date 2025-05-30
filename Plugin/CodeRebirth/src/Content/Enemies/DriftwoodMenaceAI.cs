@@ -27,7 +27,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public float awarenessIncreaseMultiplier = 2.0f; // Multiplier for awareness increase based on proximity
     public Transform smashTransform = null!;
 
-    private static Collider[] _cachedColliders = new Collider[12];
+    private static Collider[] _cachedColliders = new Collider[24];
     private Vector3 enemyPositionBeforeDeath = Vector3.zero;
     private bool currentlyGrabbed = false;
     private bool canSmash = true;
@@ -153,6 +153,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+        Plugin.ExtendedLogging($"Current Behaviour State: {currentBehaviourStateIndex}");
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
         switch (currentBehaviourStateIndex)
         {
@@ -260,8 +261,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void DoSmashingPrey()
     {
-        if (targetEnemy == null || targetEnemy.isEnemyDead)
+        if (targetEnemy == null || targetEnemy.isEnemyDead && canSmash)
         {
+            Plugin.ExtendedLogging("If you see this, something went wrong, likely an enemy randomly died.");
             SetEnemyTargetServerRpc(-1);
             StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
             agent.speed = 0f;
@@ -282,6 +284,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         if (!canSmash) return;
 
+        Plugin.ExtendedLogging($"Distance to enemy: {distanceToEnemy}, Stopping distance: {agent.stoppingDistance + 1.0f}");
         if (distanceToEnemy < agent.stoppingDistance + 1.0f)
         {
             // creatureSFX.PlayOneShot(smashSound);
