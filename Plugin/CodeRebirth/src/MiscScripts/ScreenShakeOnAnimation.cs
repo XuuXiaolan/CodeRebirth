@@ -6,6 +6,7 @@ namespace CodeRebirth.src.MiscScripts;
 public class ScreenShakeOnAnimation : MonoBehaviour
 {
     [SerializeField]
+    [Tooltip("List of screen shake targets that can be used to play audio when the screen shake is triggered.")]
     private ScreenShakeTarget[] _screenShakeTargets = [];
 
     public void ShakeScreenAnimEvent(AnimationEvent animationEvent)
@@ -18,27 +19,9 @@ public class ScreenShakeOnAnimation : MonoBehaviour
                 if (ScreenShakeTarget.screenShakeTarget.name != animationEvent.stringParameter)
                     continue;
 
-                shakeStartPosition = ScreenShakeTarget.transform.position;
-                if (ScreenShakeTarget.nearAudioClips.Length > 0)
-                {
-                    AudioClip clipToPlay = ScreenShakeTarget.nearAudioClips[CodeRebirthUtils.Instance.CRRandom.Next(ScreenShakeTarget.nearAudioClips.Length)];
-                    if (ScreenShakeTarget.audioSourceNear != null)
-                    {
-                        ScreenShakeTarget.audioSourceNear.transform.position = shakeStartPosition;
-                        ScreenShakeTarget.audioSourceNear.PlayOneShot(clipToPlay);
-                    }
-                }
-                if (ScreenShakeTarget.farAudioClips.Length > 0)
-                {
-                    AudioClip clipToPlay = ScreenShakeTarget.farAudioClips[CodeRebirthUtils.Instance.CRRandom.Next(ScreenShakeTarget.farAudioClips.Length)];
-                    if (ScreenShakeTarget.audioSourceFar != null)
-                    {
-                        ScreenShakeTarget.audioSourceFar.transform.position = shakeStartPosition;
-                        ScreenShakeTarget.audioSourceFar.PlayOneShot(clipToPlay);
-                    }
-                }
+                PlayScreenShakeAudio(ScreenShakeTarget, ref shakeStartPosition);
                 break;
-            }            
+            }
         }
 
         DynamicScreenShakeFalloff? shakeFalloff = null;
@@ -85,6 +68,29 @@ public class ScreenShakeOnAnimation : MonoBehaviour
                 Plugin.ExtendedLogging($"ShakeType: {shakeType} - i: {i} - outwardDistanceIncrease: {outwardDistanceIncrease} - distanceToPlayer: {distanceToPlayer} - outwardDistance: {outwardDistance}");
                 HUDManager.Instance.ShakeCamera((ScreenShakeType)shakeType - i);
                 break;
+            }
+        }
+    }
+    
+    private void PlayScreenShakeAudio(ScreenShakeTarget screenShakeTarget, ref Vector3 shakeStartPosition)
+    {
+        shakeStartPosition = screenShakeTarget.transform.position;
+        if (screenShakeTarget.nearAudioClips.Length > 0)
+        {
+            AudioClip clipToPlay = screenShakeTarget.nearAudioClips[CodeRebirthUtils.Instance.CRRandom.Next(screenShakeTarget.nearAudioClips.Length)];
+            if (screenShakeTarget.audioSourceNear != null)
+            {
+                screenShakeTarget.audioSourceNear.transform.position = shakeStartPosition;
+                screenShakeTarget.audioSourceNear.PlayOneShot(clipToPlay);
+            }
+        }
+        if (screenShakeTarget.farAudioClips.Length > 0)
+        {
+            AudioClip clipToPlay = screenShakeTarget.farAudioClips[CodeRebirthUtils.Instance.CRRandom.Next(screenShakeTarget.farAudioClips.Length)];
+            if (screenShakeTarget.audioSourceFar != null)
+            {
+                screenShakeTarget.audioSourceFar.transform.position = shakeStartPosition;
+                screenShakeTarget.audioSourceFar.PlayOneShot(clipToPlay);
             }
         }
     }
