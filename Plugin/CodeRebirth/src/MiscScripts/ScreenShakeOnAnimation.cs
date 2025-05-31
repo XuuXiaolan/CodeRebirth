@@ -17,6 +17,7 @@ public class ScreenShakeOnAnimation : MonoBehaviour
             {
                 if (ScreenShakeTarget.screenShakeTarget.name != animationEvent.stringParameter)
                     continue;
+
                 shakeStartPosition = ScreenShakeTarget.transform.position;
                 if (ScreenShakeTarget.nearAudioClips.Length > 0)
                 {
