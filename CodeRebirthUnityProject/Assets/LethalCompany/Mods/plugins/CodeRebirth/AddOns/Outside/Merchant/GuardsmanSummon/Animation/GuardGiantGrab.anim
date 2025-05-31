@@ -44955,13 +44955,6 @@ AnimationClip:
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 3.3333333
-    functionName: ShakeScreenAnimEvent
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 30
-    intParameter: 2
-    messageOptions: 0
   - time: 3.5
     functionName: MessWithSizeAnimEvent
     data: 
@@ -44982,13 +44975,6 @@ AnimationClip:
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: -1
-    messageOptions: 0
-  - time: 4.016667
-    functionName: ShakeScreenAnimEvent
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 30
-    intParameter: 2
     messageOptions: 0
   - time: 4.05
     functionName: MessWithSizeAnimEvent
@@ -45077,7 +45063,8 @@ AnimationClip:
   - time: 5.9166665
     functionName: ShakeScreenAnimEvent
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 11400000, guid: df0a2a3244d56b64eae0d70c5199153c,
+      type: 2}
     floatParameter: 60
     intParameter: 3
     messageOptions: 0
