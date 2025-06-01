@@ -81,6 +81,16 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         return 0.75f;
     }
 
+	bool IVisibleThreat.IsThreatDead()
+	{
+		return this.isEnemyDead;
+	}
+
+	GrabbableObject? IVisibleThreat.GetHeldObject()
+	{
+		return null;
+	}
+
     [HideInInspector] public static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     [HideInInspector] public static readonly int GrabPlayerAnimation = Animator.StringToHash("GrabPlayer"); // Trigger
     [HideInInspector] public static readonly int DoAggroAnimation = Animator.StringToHash("DoAggro"); // Trigger

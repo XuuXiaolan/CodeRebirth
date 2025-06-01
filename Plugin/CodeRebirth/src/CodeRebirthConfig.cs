@@ -14,7 +14,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigFloraEnabled { get; set; }
     public ConfigEntry<bool> ConfigRedwoodHeartEnabled { get; private set; }
     public ConfigEntry<bool> ConfigSnowGlobeMusic { get; private set; }
-    public ConfigEntry<bool> ConfigAllowCrits { get; private set; }
     #endregion
     #region Spawn Weights
     #endregion
@@ -60,20 +59,17 @@ public class CodeRebirthConfig
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
     public ConfigEntry<int> ConfigShockwaveCharges { get; private set; }
-    public ConfigEntry<string> ConfigShockwaveBotEnemyBlacklist { get; private set; }
     public ConfigEntry<int> ConfigWoodenCrateHealth { get; private set; }
     public ConfigEntry<float> ConfigMetalHoldTimer { get; private set; }
     public ConfigEntry<int> ConfigCrateNumberToSpawn { get; private set; }
     public ConfigEntry<string> ConfigWoodenCratesBlacklist { get; private set; }
     public ConfigEntry<string> ConfigMetalCratesBlacklist { get; private set; }
     public ConfigEntry<bool> ConfigShovelCratesOnly { get; private set; }
-    public ConfigEntry<bool> ConfigCanBreakTrees { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
     public ConfigEntry<bool> ConfigExtendedLogging { get; set; }
     public ConfigEntry<string> ConfigFloraGrassCurveSpawnWeight { get; set; }
     public ConfigEntry<string> ConfigFloraDesertCurveSpawnWeight { get; set; }
     public ConfigEntry<string> ConfigFloraSnowCurveSpawnWeight { get; set; }
-    public ConfigEntry<string> ConfigSeamineTinkEnemyBlacklist { get; private set; }
     public ConfigEntry<float> ConfigSeamineTinkRidingBruceVolume { get; private set; }
     public ConfigEntry<bool> ConfigSeamineTinkAutomatic { get; private set; }
     public ConfigEntry<float> ConfigMicrowaveVolume { get; private set; }
@@ -249,10 +245,6 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Holds Four Items",
                                             false,
                                             "Whether the Shockwave Gal holds four items regardless of singleplayer or multiplayer.");
-        ConfigShockwaveBotEnemyBlacklist = configFile.Bind("Shockwave Options",
-                                            "Shockwave Gal | Enemy Blacklist",
-                                            "Pikmin, Centipede, Red Locust Bees, Docile Locust Bees, Manticoil, SnailCat, Tornado, RadMech, Earth Leviathan, Puffer, Jester, Blob, Girl, Spring, Clay Surgeon",
-                                            "Comma separated list of enemies that the Shockwave Gal will not target (immortal enemies should be counted by default, just not in config).");
         ConfigShockwaveBotPropellerVolume = configFile.Bind("Shockwave Options",
                                             "Shockwave Gal | Propeller Volume",
                                             0.75f,
@@ -270,10 +262,6 @@ public class CodeRebirthConfig
                                             "Seamine Gal | Charges",
                                             3,
                                             "How many charges the Seamine Gal has.");
-        ConfigSeamineTinkEnemyBlacklist = configFile.Bind("Seamine Options",
-                                            "Seamine Gal | Enemy Blacklist",
-                                            "Pikmin, Docile Locust Bees, Manticoil, Nemo, Horse, Shisha, Tornado, Scary",
-                                            "Comma separated list of enemies that the Seamine Gal will not target (keep in mind she targets ALL enemies).");
         ConfigSeamineTinkRidingBruceVolume = configFile.Bind("Seamine Options",
                                             "Seamine Gal | Riding Bruce Volume",
                                             0.75f,
