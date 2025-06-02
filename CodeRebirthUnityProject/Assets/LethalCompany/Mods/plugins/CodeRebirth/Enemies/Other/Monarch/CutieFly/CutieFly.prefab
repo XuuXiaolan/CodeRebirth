@@ -604,7 +604,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 16
+  MaxDistance: 20.41
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -696,6 +696,7 @@ GameObject:
   - component: {fileID: 4385716292994341020}
   - component: {fileID: 944425438071910137}
   - component: {fileID: 8402524520908088191}
+  - component: {fileID: 192519686547840233}
   m_Layer: 19
   m_Name: CutieFly
   m_TagString: Enemy
@@ -811,8 +812,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 0
+  _allowedLinks: -1
 --- !u!114 &8953742048132873015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -874,10 +876,10 @@ MonoBehaviour:
   - {fileID: 2691229703377825362}
   meshRenderers: []
   creatureAnimator: {fileID: 3297561972244241224}
-  creatureVoice: {fileID: 0}
-  creatureSFX: {fileID: 0}
+  creatureVoice: {fileID: 7546877217272748999}
+  creatureSFX: {fileID: 5288110577682777568}
   eye: {fileID: 0}
-  dieSFX: {fileID: 0}
+  dieSFX: {fileID: 8300000, guid: 7b73c6d92faf8fd4d9dce6ce3b300ebc, type: 3}
   enemyBehaviourStates: []
   currentBehaviourState:
     name: 
@@ -949,12 +951,11 @@ MonoBehaviour:
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
-  hasVariants: 0
-  usesTemperature: 0
-  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 8953742048132873015}
   smartAgentNavigator: {fileID: 1180008600302926976}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
   variantMaterials:
   - {fileID: 2100000, guid: 7eed73b9efdcb1340ba771dd9a5dda26, type: 2}
   - {fileID: 2100000, guid: 7c764a5e0f05d0146828729eeec44a69, type: 2}
@@ -983,3 +984,21 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &192519686547840233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8976022966261238567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 26720462, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundSource: {fileID: 5288110577682777568}
+  _clips:
+  - {fileID: 8300000, guid: a53905821a34d4e4cbeed20ccd64cbcc, type: 3}
+  - {fileID: 8300000, guid: cbdd5249a0fa78943ae015847e7aa2f7, type: 3}
+  - {fileID: 8300000, guid: de3888b827bb7374699d2a4518b99f84, type: 3}
+  _specialClips: []
