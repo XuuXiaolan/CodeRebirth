@@ -266,16 +266,19 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         if (PlayerID == -1)
         {
             targetPlayer = null;
+            PlayerSetAsTarget(null);
             Plugin.ExtendedLogging($"Clearing target on {this}");
             return;
         }
         if (StartOfRound.Instance.allPlayerScripts[PlayerID] == null)
         {
+            PlayerSetAsTarget(null);
             Plugin.ExtendedLogging($"Index invalid! {this}");
             return;
         }
         previousTargetPlayer = targetPlayer;
         targetPlayer = StartOfRound.Instance.allPlayerScripts[PlayerID];
+        PlayerSetAsTarget(targetPlayer);
         Plugin.ExtendedLogging($"{this} setting target to: {targetPlayer.playerUsername}");
     }
 
@@ -309,6 +312,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     public virtual void EnemySetAsTarget(EnemyAI? enemy)
     {
-        
+
+    }
+
+    public virtual void PlayerSetAsTarget(PlayerControllerB? player)
+    {
+
     }
 }
