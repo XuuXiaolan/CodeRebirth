@@ -1445,7 +1445,7 @@ MonoBehaviour:
   creatureVoice: {fileID: 61054457652523813}
   creatureSFX: {fileID: 1517031706188325757}
   eye: {fileID: 491313640230377570}
-  dieSFX: {fileID: 0}
+  dieSFX: {fileID: 8300000, guid: 541bca1c73fab3842bde3dc5b95bcc5f, type: 3}
   enemyBehaviourStates:
   - name: Idle
     VoiceClip: {fileID: 0}
@@ -1563,6 +1563,12 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 3e9544d62d20c5348bbfd5c19ea6f63a, type: 3}
     minTime: 10
     maxTime: 20
+  _hitBodySounds:
+  - {fileID: 8300000, guid: 5bd7f70927dd8ae49978f9a5fd26ba0c, type: 3}
+  - {fileID: 8300000, guid: 1e6b44f37f93c8940bb2bf5fce3d5b6d, type: 3}
+  - {fileID: 8300000, guid: fe1f9ab50bb26a74a800189dd14bf400, type: 3}
+  - {fileID: 8300000, guid: 26c603e9e915ff24ba4410a386a96951, type: 3}
+  spawnSound: {fileID: 8300000, guid: eee13037b9c1dd14895190ecaf2a86c1, type: 3}
   _idleTimer: 1
   BeamController: {fileID: 6331020970013911093}
   UltraCreatureVoice: {fileID: 3196441772831089106}
