@@ -9,7 +9,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
-public class Monarch : CodeRebirthEnemyAI
+public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
 {
     [SerializeField]
     private MonarchBeamController BeamController = null!;
@@ -40,7 +40,66 @@ public class Monarch : CodeRebirthEnemyAI
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
     private static readonly int ParallaxSwitch = Shader.PropertyToID("_ParallaxSwitch"); // TODO
+    #region IVisibleThreat
+    public ThreatType type => ThreatType.EyelessDog;
 
+    int IVisibleThreat.SendSpecialBehaviour(int id)
+    {
+        return 0;
+    }
+
+    int IVisibleThreat.GetThreatLevel(Vector3 seenByPosition)
+    {
+        return 18;
+    }
+
+    int IVisibleThreat.GetInterestLevel()
+    {
+        return 0;
+    }
+
+    Transform IVisibleThreat.GetThreatLookTransform()
+    {
+        return base.transform;
+    }
+
+    Transform IVisibleThreat.GetThreatTransform()
+    {
+        return base.transform;
+    }
+
+    Vector3 IVisibleThreat.GetThreatVelocity()
+    {
+        if (base.IsOwner)
+        {
+            return agent.velocity;
+        }
+        return Vector3.zero;
+    }
+
+    float IVisibleThreat.GetVisibility()
+    {
+        if (isEnemyDead)
+        {
+            return 0f;
+        }
+        if (agent.velocity.sqrMagnitude > 0f)
+        {
+            return 1f;
+        }
+        return 0.75f;
+    }
+
+	bool IVisibleThreat.IsThreatDead()
+	{
+		return isEnemyDead;
+	}
+
+	GrabbableObject? IVisibleThreat.GetHeldObject()
+	{
+		return null;
+	}
+    #endregion
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();

@@ -10,7 +10,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PeaceKeeper : CodeRebirthEnemyAI
+public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
 {
     [SerializeField]
     private Transform _gunStartTransform = null!;
@@ -53,6 +53,66 @@ public class PeaceKeeper : CodeRebirthEnemyAI
 
     private static readonly int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Vector3
 
+    #region IVisibleThreat
+    public ThreatType type => ThreatType.RadMech;
+
+    int IVisibleThreat.SendSpecialBehaviour(int id)
+    {
+        return 0;
+    }
+
+    int IVisibleThreat.GetThreatLevel(Vector3 seenByPosition)
+    {
+        return 18;
+    }
+
+    int IVisibleThreat.GetInterestLevel()
+    {
+        return 0;
+    }
+
+    Transform IVisibleThreat.GetThreatLookTransform()
+    {
+        return base.transform;
+    }
+
+    Transform IVisibleThreat.GetThreatTransform()
+    {
+        return base.transform;
+    }
+
+    Vector3 IVisibleThreat.GetThreatVelocity()
+    {
+        if (base.IsOwner)
+        {
+            return agent.velocity;
+        }
+        return Vector3.zero;
+    }
+
+    float IVisibleThreat.GetVisibility()
+    {
+        if (isEnemyDead)
+        {
+            return 0f;
+        }
+        if (agent.velocity.sqrMagnitude > 0f)
+        {
+            return 1f;
+        }
+        return 0.75f;
+    }
+
+	bool IVisibleThreat.IsThreatDead()
+	{
+		return isEnemyDead;
+	}
+
+	GrabbableObject? IVisibleThreat.GetHeldObject()
+	{
+		return null;
+	}
+    #endregion
     public static List<PeaceKeeper> Instances = new();
     public enum PeaceKeeperState
     {
