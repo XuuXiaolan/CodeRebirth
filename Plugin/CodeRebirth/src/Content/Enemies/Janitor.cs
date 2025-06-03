@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -23,14 +24,12 @@ public class Janitor : CodeRebirthEnemyAI
     public AudioClip spawnSound = null!;
     public AudioClip[] deathSounds = [];
     public AudioClip[] postDeathSounds = [];
-    public AudioClip[] idleSounds = [];
     public AudioClip[] detectItemDroppedSounds = [];
     public AudioClip[] grabPlayerSounds = [];
     public AudioClip[] throwPlayerSounds = [];
     public Material[] variantMaterials = [];
 
     private Collider[] _hitColliders = new Collider[12];
-    private float _idleTimer = 60f;
 
     public enum JanitorStates
     {
@@ -639,8 +638,8 @@ public class Janitor : CodeRebirthEnemyAI
         if (_idleTimer > 0)
             return;
 
-        _idleTimer = enemyRandom.Next(30, 150);
-        AudioClip clip = isEnemyDead ? postDeathSounds[enemyRandom.Next(postDeathSounds.Length)] : idleSounds[enemyRandom.Next(idleSounds.Length)];
+        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+        AudioClip clip = isEnemyDead ? postDeathSounds[enemyRandom.Next(postDeathSounds.Length)] : _idleAudioClips.audioClips[enemyRandom.Next(_idleAudioClips.audioClips.Length)];
         creatureVoice.PlayOneShot(clip);
     }
 

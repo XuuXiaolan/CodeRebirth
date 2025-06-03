@@ -27,8 +27,6 @@ public class Guardsman : CodeRebirthEnemyAI
     private AudioClip[] _footstepAudioClips = [];
     [SerializeField]
     private AudioClip[] _enemySpottedAudioClips = [];
-    [SerializeField]
-    private AudioClipsWithTime _guardsmanIdleAudioClipsWithTime = new();
 
     [SerializeField]
     private Transform[] _enemyHoldingPoints = [];
@@ -39,7 +37,6 @@ public class Guardsman : CodeRebirthEnemyAI
     [SerializeField]
     private ParticleSystem _dustParticleSystem = null!;
 
-    private float _idleTimer = 0f;
     private Coroutine? _messWithSizeOverTimeRoutine = null;
     private bool _killingLargeEnemy = false;
     private float _bufferTimer = 0f;
@@ -57,7 +54,6 @@ public class Guardsman : CodeRebirthEnemyAI
     {
         base.Start();
         creatureSFX.PlayOneShot(_landAudioClip);
-        _idleTimer = enemyRandom.NextFloat(_guardsmanIdleAudioClipsWithTime.minTime, _guardsmanIdleAudioClipsWithTime.maxTime);
 
         List<CRDynamicConfig> configDefinitions = MapObjectHandler.Instance.Merchant!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
         CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Guardsman", "Enemy Blacklist");
@@ -90,8 +86,8 @@ public class Guardsman : CodeRebirthEnemyAI
         _idleTimer -= Time.deltaTime;
         if (_idleTimer < 0)
         {
-            _idleTimer = enemyRandom.NextFloat(_guardsmanIdleAudioClipsWithTime.minTime, _guardsmanIdleAudioClipsWithTime.maxTime);
-            creatureVoice.PlayOneShot(_guardsmanIdleAudioClipsWithTime.audioClips[enemyRandom.Next(_guardsmanIdleAudioClipsWithTime.audioClips.Length)]);
+            _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+            creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(_idleAudioClips.audioClips.Length)]);
         }
 
         if (_killingLargeEnemy && targetEnemy != null)

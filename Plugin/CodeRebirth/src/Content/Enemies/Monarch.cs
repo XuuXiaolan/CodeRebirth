@@ -16,7 +16,7 @@ public class Monarch : CodeRebirthEnemyAI
     [SerializeField]
     private AudioSource UltraCreatureVoice = null!;
     [SerializeField]
-    private AudioClip _biteSound = null!;
+    private AudioClip[] _biteSounds = [];
     [SerializeField]
     private Transform MouthTransform = null!;
 
@@ -398,7 +398,7 @@ public class Monarch : CodeRebirthEnemyAI
 
             player.DamagePlayer(35, true, false, CauseOfDeath.Mauling, 0, false, default);
         }
-        creatureSFX.PlayOneShot(_biteSound);
+        creatureSFX.PlayOneShot(_biteSounds[enemyRandom.Next(0, _biteSounds.Length)]);
         targetPlayer = null;
         isAttacking = false;
     }
