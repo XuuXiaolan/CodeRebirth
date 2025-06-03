@@ -37,6 +37,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     [Header("Inherited Fields")]
     public AudioClipsWithTime _idleAudioClips = null!;
+    public AudioClip[] _hitBodySounds = [];
     public AudioClip spawnSound = null!;
 
     [HideInInspector] public float _idleTimer = 1f;
@@ -67,6 +68,15 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         if (_hasVariants && _specialRenderer != null)
         {
             ApplyVariants(_specialRenderer);
+        }
+    }
+
+    public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
+        if (playHitSFX && _hitBodySounds.Length > 0)
+        {
+            creatureSFX.PlayOneShot(_hitBodySounds[enemyRandom.Next(_hitBodySounds.Length)]);
         }
     }
 
