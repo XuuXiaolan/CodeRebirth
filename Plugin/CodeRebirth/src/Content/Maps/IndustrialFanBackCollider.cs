@@ -1,6 +1,5 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Analytics;
 
 namespace CodeRebirth.src.Content.Maps;
 public class IndustrialFanBackCollider : NetworkBehaviour

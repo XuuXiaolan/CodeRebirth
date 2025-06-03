@@ -30,7 +30,7 @@ public class IndustrialFan : CodeRebirthHazard
         if (other.TryGetComponent(out PlayerControllerB player))
         {
             cutAudioSource.Play();
-            player.KillPlayer(player.velocityLastFrame, !Plugin.ModConfig.ConfigHazardsDeleteBodies.Value, CauseOfDeath.Fan, 0, default);
+            player.KillPlayer(player.velocityLastFrame, !Plugin.ModConfig.ConfigHazardsDeleteBodies.Value, CauseOfDeath.Fan, 9, default);
             PlayRedMist();
         }
     }

@@ -428,7 +428,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
                     continue;
 
                 _playerList.Add(playerController);
-                playerController.DamagePlayer(damageToDeal * 10, true, false, CauseOfDeath.Mauling, 0, false, default);
+                playerController.DamagePlayer(damageToDeal * 10, true, false, CauseOfDeath.Burning, 0, false, default);
             }
             else
             {
@@ -455,7 +455,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             if (!_cachedHits[i].TryGetComponent(out PlayerControllerB player))
                 continue;
 
-            player.DamagePlayer(35, true, false, CauseOfDeath.Mauling, 0, false, default);
+            player.DamagePlayer(35, true, false, CauseOfDeath.Snipped, 7, false, default);
         }
         creatureSFX.PlayOneShot(_biteSounds[enemyRandom.Next(0, _biteSounds.Length)]);
         targetPlayer = null;
