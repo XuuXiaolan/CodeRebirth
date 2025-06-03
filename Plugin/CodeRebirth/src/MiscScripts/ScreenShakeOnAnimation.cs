@@ -11,6 +11,7 @@ public class ScreenShakeOnAnimation : MonoBehaviour
 
     public void ShakeScreenAnimEvent(AnimationEvent animationEvent)
     {
+        Plugin.ExtendedLogging($"ShakeScreenAnimEvent called with AnimationEvent: {animationEvent}");
         Vector3 shakeStartPosition = this.transform.position;
         if (!string.IsNullOrEmpty(animationEvent.stringParameter))
         {
