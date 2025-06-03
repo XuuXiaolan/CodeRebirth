@@ -13,7 +13,10 @@ using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
 using BepInEx.Configuration;
-
+/*
+Big todo
+Give the configs some sort of listener for lethal config so i can detect runtime changes.
+*/
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]

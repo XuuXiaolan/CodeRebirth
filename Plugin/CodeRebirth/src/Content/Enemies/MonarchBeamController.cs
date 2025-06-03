@@ -3,14 +3,13 @@ using UnityEngine.VFX;
 
 public class MonarchBeamController : MonoBehaviour
 {
-    [SerializeField]
+    public Transform _raycastDirectionBeamTransform = null!;
+    public Transform _startBeamTransform = null!;
+    public AudioClip _beamSound = null!;
     public VisualEffect _monarchParticle = null!;
+
     [SerializeField]
     private SkinnedMeshRenderer _wingMesh = null!;
-    [SerializeField]
-    public Transform _raycastDirectionBeamTransform = null!;
-    [SerializeField]
-    public Transform _startBeamTransform = null!;
     [SerializeField]
     private Transform _endBeamTransform = null!;
 

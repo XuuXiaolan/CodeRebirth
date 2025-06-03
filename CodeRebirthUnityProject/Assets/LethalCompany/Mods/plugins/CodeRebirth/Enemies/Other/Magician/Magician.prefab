@@ -3579,6 +3579,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -3587,14 +3588,6 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
-  _spawnAudioClip: {fileID: 8300000, guid: 449853db5efbc0643ac61466b275689c, type: 3}
-  _spottedFromGroundAudioClip: {fileID: 8300000, guid: 1a0686b9c69de4945accf0293b0ee264,
-    type: 3}
-  _spottedFromBackAudioClip: {fileID: 8300000, guid: 1a0686b9c69de4945accf0293b0ee264,
-    type: 3}
-  _fallingAudioClips:
-  - {fileID: 8300000, guid: aaa984372d7486f439bd6f6bdd1691f8, type: 3}
-  - {fileID: 8300000, guid: 9e15911f2eb188a4093d69a72902701e, type: 3}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: 31823145894bf7c4aa3dd31237fdf027, type: 3}
@@ -3603,6 +3596,14 @@ MonoBehaviour:
     - {fileID: 8300000, guid: b2560c3a8fe0ed5498c82e604a1896d2, type: 3}
     minTime: 7.5
     maxTime: 12.5
+  _idleTimer: 1
+  _spawnAudioClip: {fileID: 8300000, guid: 449853db5efbc0643ac61466b275689c, type: 3}
+  _spottedFromGroundAudioClip: {fileID: 0}
+  _spottedFromBackAudioClip: {fileID: 8300000, guid: 1a0686b9c69de4945accf0293b0ee264,
+    type: 3}
+  _fallingAudioClips:
+  - {fileID: 8300000, guid: aaa984372d7486f439bd6f6bdd1691f8, type: 3}
+  - {fileID: 8300000, guid: 9e15911f2eb188a4093d69a72902701e, type: 3}
   _spawnAnimation: {fileID: 7400000, guid: 2335550b60bcaa84c83e8601741d7bde, type: 2}
   _spottedFromGroundAnimation: {fileID: 7400000, guid: a507cc332f3301347b400d430e7e9c7e,
     type: 2}

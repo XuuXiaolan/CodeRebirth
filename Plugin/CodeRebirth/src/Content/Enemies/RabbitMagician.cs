@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
@@ -58,7 +57,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
         // creatureSFX.PlayOneShot(_spawnAudioClip);
         foreach (var enemyCollider in this.GetComponentsInChildren<Collider>())
         {
@@ -79,12 +77,11 @@ public class RabbitMagician : CodeRebirthEnemyAI
             return;
 
         _idleTimer -= Time.deltaTime;
-
         if (_idleTimer > 0)
             return;
 
-        _idleTimer = UnityEngine.Random.Range(_idleAudioClips.minTime, _idleAudioClips.maxTime);
-        creatureVoice.PlayOneShot(_idleAudioClips.audioClips[UnityEngine.Random.Range(0, _idleAudioClips.audioClips.Length)]);
+        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+        creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(0, _idleAudioClips.audioClips.Length)]);
     }
 
     public void LateUpdate()
@@ -153,6 +150,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
             if (!PlayerLookingAtEnemy(player, 0.2f))
                 continue;
 
+            SpottedSoundServerRpc(player, true);
             _attachRoutine = StartCoroutine(AttachToPlayer(player, null));
             return;
         }
@@ -200,9 +198,32 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private IEnumerator KillPlayerAndSwitchTarget(PlayerControllerB newTargetPlayer)
     {
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.SwitchingTarget);
-        FallSoundServerRpc(newTargetPlayer);
+        SpottedSoundServerRpc(targetPlayer, false);
         _attachRoutine = StartCoroutine(AttachToPlayer(newTargetPlayer, targetPlayer));
         yield return _attachRoutine;
+        _killRoutine = null;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SpottedSoundServerRpc(PlayerControllerReference oldTargetPlayer, bool fromGround)
+    {
+        SpottedSoundClientRpc(oldTargetPlayer, fromGround);
+    }
+
+    [ClientRpc]
+    private void SpottedSoundClientRpc(PlayerControllerReference oldTargetPlayer, bool fromGround)
+    {
+        if (GameNetworkManager.Instance.localPlayerController != oldTargetPlayer)
+            return;
+
+        if (fromGround)
+        {
+            creatureSFX.PlayOneShot(_spottedFromGroundAudioClip);
+        }
+        else
+        {
+            creatureSFX.PlayOneShot(_spottedFromBackAudioClip);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -214,7 +235,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [ClientRpc]
     private void FallSoundClientRpc(PlayerControllerReference newTargetPlayer)
     {
-        // add a local player check
         if (newTargetPlayer != GameNetworkManager.Instance.localPlayerController)
             return;
 
@@ -238,11 +258,10 @@ public class RabbitMagician : CodeRebirthEnemyAI
         Plugin.ExtendedLogging($"Attaching to {playerToAttachTo}");
         if (previouslyAttachedToPlayer != null)
         {
-            Plugin.ExtendedLogging($"Killing {previouslyAttachedToPlayer}");
             creatureNetworkAnimator.SetTrigger(SpottedFromBackAnimation);
             yield return new WaitForSeconds(8.54f);
-            Plugin.ExtendedLogging($"Killed {previouslyAttachedToPlayer}");
             PlayConfettiServerRpc();
+            FallSoundServerRpc(playerToAttachTo);
             previouslyAttachedToPlayer.KillPlayerServerRpc((int)previouslyAttachedToPlayer.playerClientId, true, Vector3.zero, (int)CauseOfDeath.Unknown, 1, Vector3.zero);
         }
 
@@ -274,11 +293,11 @@ public class RabbitMagician : CodeRebirthEnemyAI
             yield break;
         }
 
-        AttachedPlayerHandleLOSClientRpc(true);
+        AttachedPlayerHandleLOSClientRpc();
     }
 
     [ClientRpc]
-    private void AttachedPlayerHandleLOSClientRpc(bool previouslyAttachedToPlayer)
+    private void AttachedPlayerHandleLOSClientRpc()
     {
         foreach (var collider in _collidersToDisable)
         {
@@ -287,15 +306,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
 
         if (GameNetworkManager.Instance.localPlayerController != targetPlayer)
             return;
-
-        if (!previouslyAttachedToPlayer)
-        {
-            creatureSFX.PlayOneShot(_spottedFromGroundAudioClip);
-        }
-        else
-        {
-            creatureSFX.PlayOneShot(_spottedFromBackAudioClip);
-        }
 
         StartCoroutine(HandleLOS());
     }

@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -12,6 +15,8 @@ public class Monarch : CodeRebirthEnemyAI
     private MonarchBeamController BeamController = null!;
     [SerializeField]
     private AudioSource UltraCreatureVoice = null!;
+    [SerializeField]
+    private AudioClip _biteSound = null!;
     [SerializeField]
     private Transform MouthTransform = null!;
 
@@ -28,12 +33,13 @@ public class Monarch : CodeRebirthEnemyAI
     private bool canAttack = true;
     private bool isAttacking = false;
     private Collider[] _cachedHits = new Collider[8];
+    private bool wasParallaxOnLastFrame = false;
     private static readonly int DoAttackAnimation = Animator.StringToHash("doAttack"); // trigger
     private static readonly int IsFlyingAnimation = Animator.StringToHash("isFlying"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
-    private static readonly int ParallaxSwitch = Shader.PropertyToID("_ParallaxSwitch"); // Todo
+    private static readonly int ParallaxSwitch = Shader.PropertyToID("_ParallaxSwitch"); // TODO
 
     public override void OnNetworkSpawn()
     {
@@ -47,7 +53,7 @@ public class Monarch : CodeRebirthEnemyAI
             return;
 
         int randomNumberToSpawn = UnityEngine.Random.Range(2, 5);
-        for (int i = 0; i < randomNumberToSpawn; i++)
+        for (int i = 0; i <= randomNumberToSpawn; i++)
         {
             RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("CutieFly")!.enemyType);
         }
@@ -56,6 +62,13 @@ public class Monarch : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.Monarch!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
+        CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Monarch", "Parallax Wings");
+        if (configSetting != null)
+        {
+            wasParallaxOnLastFrame = CRConfigManager.GetGeneralConfigEntry<bool>(configSetting.settingName, configSetting.settingDesc).Value;
+            skinnedMeshRenderers[0].sharedMaterials[0].SetInt(ParallaxSwitch, wasParallaxOnLastFrame ? 1 : 0);
+        }
         BeamController._monarchParticle.transform.SetParent(null);
         BeamController._monarchParticle.transform.position = Vector3.zero;
         SwitchToBehaviourStateOnLocalClient((int)MonarchState.Idle);
@@ -63,6 +76,21 @@ public class Monarch : CodeRebirthEnemyAI
             return;
 
         smartAgentNavigator.StartSearchRoutine(50);
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (isEnemyDead)
+            return;
+
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer > 0)
+            return;
+
+        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+        creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(0, _idleAudioClips.audioClips.Length)]);
     }
 
     #region StateMachines
@@ -94,8 +122,12 @@ public class Monarch : CodeRebirthEnemyAI
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled) continue;
-            if (Vector3.Distance(transform.position, player.transform.position) > 40) continue;
+            if (player.isPlayerDead || !player.isPlayerControlled)
+                continue;
+
+            if (Vector3.Distance(transform.position, player.transform.position) > 40)
+                continue;
+
             creatureAnimator.SetBool(IsFlyingAnimation, true);
             smartAgentNavigator.StopSearchRoutine();
             agent.speed = 10f;
@@ -242,6 +274,7 @@ public class Monarch : CodeRebirthEnemyAI
     private Vector3 _currentBeamEnd = Vector3.zero;
     public IEnumerator ShootingEffect()
     {
+        creatureSFX.PlayOneShot(BeamController._beamSound);
         BeamController._monarchParticle.Play();
 
         float totalDuration = 3f;
@@ -263,7 +296,7 @@ public class Monarch : CodeRebirthEnemyAI
 
             if (damageInterval <= 0f)
             {
-                DoHitStuff(1, _currentBeamEnd);
+                DoHitStuff(2, _currentBeamEnd);
                 damageInterval = 0.25f;
             }
 
@@ -336,7 +369,7 @@ public class Monarch : CodeRebirthEnemyAI
                     continue;
 
                 _playerList.Add(playerController);
-                playerController.DamagePlayer(damageToDeal, true, false, CauseOfDeath.Mauling, 0, false, default);
+                playerController.DamagePlayer(damageToDeal * 10, true, false, CauseOfDeath.Mauling, 0, false, default);
             }
             else
             {
@@ -362,8 +395,10 @@ public class Monarch : CodeRebirthEnemyAI
         {
             if (!_cachedHits[i].TryGetComponent(out PlayerControllerB player))
                 continue;
+
             player.DamagePlayer(35, true, false, CauseOfDeath.Mauling, 0, false, default);
         }
+        creatureSFX.PlayOneShot(_biteSound);
         targetPlayer = null;
         isAttacking = false;
     }

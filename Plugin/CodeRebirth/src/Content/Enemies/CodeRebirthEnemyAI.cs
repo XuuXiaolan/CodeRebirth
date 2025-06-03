@@ -49,15 +49,14 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public override void Start()
     {
         base.Start();
-        /*#if DEBUG
-                LineRenderer line = gameObject.AddComponent<LineRenderer>();
-                line.widthMultiplier = 0.2f; // reduce width of the line
-                StartCoroutine(DrawPath(line, agent));
-        #endif*/
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + 69);
+
+        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside);
         smartAgentNavigator.SetAllValues(isOutside);
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
+
         if (Plugin.ModConfig.ConfigExtendedLogging.Value)
             GrabEnemyRarity(enemyType.enemyName);
 
@@ -128,24 +127,6 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         else
         {
             Plugin.Logger.LogWarning("Enemy not found.");
-        }
-    }
-
-    public IEnumerator DrawPath(LineRenderer line, NavMeshAgent agent)
-    {
-        while (true)
-        {
-            yield return new WaitUntil(() => agent.enabled);
-            yield return new WaitForSeconds(1f);
-            yield return new WaitForEndOfFrame();
-            if (!agent.enabled) yield break;
-            line.SetPosition(0, agent.transform.position); //set the line's origin
-
-            line.positionCount = agent.path.corners.Length; //set the array of positions to the amount of corners
-            for (var i = 1; i < agent.path.corners.Length; i++)
-            {
-                line.SetPosition(i, agent.path.corners[i]); //go through each corner and set that to the line renderer's position
-            }
         }
     }
 
