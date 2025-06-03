@@ -18,8 +18,6 @@ public class Guardsman : CodeRebirthEnemyAI
 {
     [Header("Audio")]
     [SerializeField]
-    private AudioClip _landAudioClip = null!;
-    [SerializeField]
     private AudioClip _slamAudioClip = null!;
     [SerializeField]
     private AudioClip _ripApartAudioClip = null!;
@@ -53,8 +51,6 @@ public class Guardsman : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        creatureSFX.PlayOneShot(_landAudioClip);
-
         List<CRDynamicConfig> configDefinitions = MapObjectHandler.Instance.Merchant!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
         CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Guardsman", "Enemy Blacklist");
         if (configSetting != null)

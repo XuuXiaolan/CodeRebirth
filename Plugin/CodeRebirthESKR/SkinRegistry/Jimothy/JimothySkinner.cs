@@ -34,8 +34,8 @@ public class JimothySkinner(JimothySkin skinData) : Skinner, JimothyEventHandler
 
         vanillaLightMaterial = SkinData.LightMaterialAction.Apply(transporter.skinnedMeshRenderers[1], 2);
 
-        vanillaJimHonkVoiceAudio = SkinData.JimHonkVoiceAudioAction.Apply(ref transporter.jimHonkSound);
-        vanillaDumpAudio = SkinData.DumpAudioAction.Apply(ref transporter.jimHonkSound);
+        // vanillaJimHonkVoiceAudio = SkinData.JimHonkVoiceAudioAction.Apply(ref transporter.jimHonkSound);
+        vanillaDumpAudio = SkinData.DumpAudioAction.Apply(ref transporter.dumpHazardSound);
         vanillaPickUpHazardAudio = SkinData.PickUpHazardAudioAction.Apply(ref transporter.pickUpHazardSound);
         vanillaHitJimothyAudio = SkinData.HitJimothyAudioAction.Apply(ref transporter.hitJimothySound);
 
@@ -59,8 +59,8 @@ public class JimothySkinner(JimothySkin skinData) : Skinner, JimothyEventHandler
 
         SkinData.LightMaterialAction.Remove(transporter.skinnedMeshRenderers[1], 2, vanillaLightMaterial);
 
-        SkinData.JimHonkVoiceAudioAction.Remove(ref transporter.jimHonkSound, vanillaJimHonkVoiceAudio);
-        SkinData.DumpAudioAction.Remove(ref transporter.jimHonkSound, vanillaDumpAudio);
+        // SkinData.JimHonkVoiceAudioAction.Remove(ref transporter.jimHonkSound, vanillaJimHonkVoiceAudio);
+        SkinData.DumpAudioAction.Remove(ref transporter.dumpHazardSound, vanillaDumpAudio);
         SkinData.PickUpHazardAudioAction.Remove(ref transporter.pickUpHazardSound, vanillaPickUpHazardAudio);
         SkinData.HitJimothyAudioAction.Remove(ref transporter.hitJimothySound, vanillaHitJimothyAudio);
 

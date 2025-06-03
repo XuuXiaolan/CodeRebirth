@@ -22,7 +22,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public ParticleSystem BigSmokeEffect = null!;
     public AudioSource creatureSFXFar = null!;
     public AudioClip eatenSound = null!;
-    public AudioClip spawnSound = null!;
     public AudioClip roarSound = null!;
     public AudioClip jumpSound = null!;
     public AudioClip kickSound = null!;
@@ -132,7 +131,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
         enemyColliders = GetComponentsInChildren<Collider>();
 
-        creatureSFX.PlayOneShot(spawnSound);
         creatureSFXFar.PlayOneShot(spawnSound);
         creatureVoice.PlayOneShot(roarSound);
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,7 +14,6 @@ public class Transporter : CodeRebirthEnemyAI
     public AudioClip[] engineAndIdleSounds = null!;
     public AudioClip dumpHazardSound = null!;
     public AudioClip hitJimothySound = null!;
-    public AudioClip jimHonkSound = null!;
     public AudioClip pickUpHazardSound = null!;
 
     public Transform palletTransform = null!;
@@ -21,7 +21,6 @@ public class Transporter : CodeRebirthEnemyAI
 
     [HideInInspector] public static List<GameObject> objectsToTransport = new();
 
-    private float idleTimer = 20f;
     private Coroutine? onHitRoutine = null;
     private GameObject? transportTarget = null;
     private Scene previousSceneOfTransportTarget = new();
@@ -135,11 +134,11 @@ public class Transporter : CodeRebirthEnemyAI
             creatureSFX.Play();
         }
 
-        idleTimer -= Time.deltaTime;
-        if (idleTimer <= 0)
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer <= 0)
         {
-            idleTimer = 25;
-            creatureVoice.PlayOneShot(jimHonkSound);
+            _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+            creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(_idleAudioClips.audioClips.Length)]);
         }
         if (!IsServer) return;
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude);

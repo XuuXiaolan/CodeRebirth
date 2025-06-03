@@ -472,6 +472,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -480,12 +481,17 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: b7beca64239e4074f9465d802687c889, type: 3}
+    minTime: 20
+    maxTime: 20
+  _idleTimer: 1
   engineAndIdleSounds:
   - {fileID: 8300000, guid: 8fcb9a72420f2e541aaf3ebf56eb84b0, type: 3}
   - {fileID: 8300000, guid: 4494c21a4e3b8734baea2b94da444e3b, type: 3}
   dumpHazardSound: {fileID: 8300000, guid: 787d097c1bf391047bf07b88b90043bd, type: 3}
   hitJimothySound: {fileID: 8300000, guid: 7b2a5e385e014574bb25c58154483669, type: 3}
-  jimHonkSound: {fileID: 8300000, guid: b7beca64239e4074f9465d802687c889, type: 3}
   pickUpHazardSound: {fileID: 8300000, guid: d375e14f496bcc84b992b8057dae50f8, type: 3}
   palletTransform: {fileID: 4300921835721107226}
   jimothyTransform: {fileID: 8645046058554956699}

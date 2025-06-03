@@ -5,6 +5,7 @@ using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -30,8 +31,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     [SerializeField]
     private AudioSource _aggroSFX = null!;
     [SerializeField]
-    private AudioClip _spawnSound = null!;
-    [SerializeField]
     private AudioClip _revUpSound = null!;
     [SerializeField]
     private AudioClip _revDownSound = null!;
@@ -39,12 +38,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     private AudioClip _bitchSlapSound = null!;
     [SerializeField]
     private AudioClip _bitchSlapStartSound = null!;
-    [SerializeField]
-    private AudioClip[] _idleSounds = [];
-    [SerializeField]
-    private float _idleSoundsTimer = 12.5f;
 
-    private float _idleSoundTimer = 12.5f;
     private List<Material> _materials = new();
     private float _backOffTimer = 0f;
     private bool _isShooting = false;
@@ -82,7 +76,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        creatureVoice.PlayOneShot(_spawnSound);
         _materials.Add(skinnedMeshRenderers[0].materials[2]);
         _materials.Add(skinnedMeshRenderers[0].materials[3]);
         if (!IsServer) return;
@@ -95,11 +88,11 @@ public class PeaceKeeper : CodeRebirthEnemyAI
         if (isEnemyDead)
             return;
 
-        _idleSoundTimer -= Time.deltaTime;
-        if (_idleSoundTimer <= 0f)
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer <= 0)
         {
-            creatureVoice.PlayOneShot(_idleSounds[UnityEngine.Random.Range(0, _idleSounds.Length)]);
-            _idleSoundTimer = _idleSoundsTimer;
+            _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+            creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(0, _idleAudioClips.audioClips.Length)]);
         }
 
         if (!_aggroSFX.isPlaying && currentBehaviourStateIndex == (int)PeaceKeeperState.AttackingPlayer)

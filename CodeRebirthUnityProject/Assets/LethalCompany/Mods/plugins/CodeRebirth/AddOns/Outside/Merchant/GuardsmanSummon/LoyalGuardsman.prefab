@@ -7042,6 +7042,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -7050,7 +7051,18 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
-  _landAudioClip: {fileID: 8300000, guid: b174819cbda63e543ae19de345dc8d8e, type: 3}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: f3ccf0485bbde024a8a3edfc1afbbfb9, type: 3}
+    - {fileID: 8300000, guid: a6c2f4fc8ba221447b4755c3621bc9d4, type: 3}
+    - {fileID: 8300000, guid: ad0c069591d3d71409f1126875b72d42, type: 3}
+    - {fileID: 8300000, guid: df2d835a74b0c2940b54011482f34f74, type: 3}
+    - {fileID: 8300000, guid: db5411887a6988b42a6f93f2e256c977, type: 3}
+    - {fileID: 8300000, guid: 9fa43e44c930d164dbb6aa2865fd3dc1, type: 3}
+    minTime: 10
+    maxTime: 15
+  spawnSound: {fileID: 8300000, guid: b174819cbda63e543ae19de345dc8d8e, type: 3}
+  _idleTimer: 1
   _slamAudioClip: {fileID: 8300000, guid: be9baa5bea1540d49aad45c2717c9781, type: 3}
   _ripApartAudioClip: {fileID: 8300000, guid: aa446bc60d040114c9e193b2a0c3a586, type: 3}
   _footstepAudioClips:
@@ -7060,21 +7072,11 @@ MonoBehaviour:
   _enemySpottedAudioClips:
   - {fileID: 8300000, guid: 26f74b4e2cd85b54496c5794bc45b4fc, type: 3}
   - {fileID: 8300000, guid: 35db5b70422d41a46a685b99f861d5b7, type: 3}
-  _guardsmanIdleAudioClipsWithTime:
-    audioClips:
-    - {fileID: 8300000, guid: 9fa43e44c930d164dbb6aa2865fd3dc1, type: 3}
-    - {fileID: 8300000, guid: db5411887a6988b42a6f93f2e256c977, type: 3}
-    - {fileID: 8300000, guid: df2d835a74b0c2940b54011482f34f74, type: 3}
-    - {fileID: 8300000, guid: ad0c069591d3d71409f1126875b72d42, type: 3}
-    - {fileID: 8300000, guid: a6c2f4fc8ba221447b4755c3621bc9d4, type: 3}
-    - {fileID: 8300000, guid: f3ccf0485bbde024a8a3edfc1afbbfb9, type: 3}
-    minTime: 10
-    maxTime: 15
   _enemyHoldingPoints:
   - {fileID: 8565382373057596078}
   - {fileID: 5292036373717274597}
   _spotlightHead: {fileID: 7220987923014140000}
-  _enemySizeThreshold: 40
+  _enemySizeThreshold: 35
   _dustParticleSystem: {fileID: 871313460824519449}
 --- !u!114 &7093993988679924568
 MonoBehaviour:
@@ -7108,6 +7110,7 @@ MonoBehaviour:
   m_Script: {fileID: 207563165, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenShakeTargets: []
 --- !u!1 &6066258181163581967
 GameObject:
   m_ObjectHideFlags: 0

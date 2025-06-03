@@ -214,8 +214,11 @@ public class Mistress : CodeRebirthEnemyAI
     {
         Plugin.ExtendedLogging($"Resetting mistress to stalking phase!");
         killTimer = 0f;
-        previousTargetPlayers.Add(targetPlayer);
-        targetPlayer = null;
+        if (targetPlayer != null)
+        {
+            previousTargetPlayers.Add(targetPlayer);
+            targetPlayer = null;
+        }
         if (!IsServer) yield break;
         playerToKill = null;
         SetTargetServerRpc(-1);

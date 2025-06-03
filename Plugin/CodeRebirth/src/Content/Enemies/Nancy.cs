@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -15,12 +14,6 @@ public class Nancy : CodeRebirthEnemyAI
     private AudioSource _rollingSource = null!;
 
     [Header("Voicelines")]
-    [SerializeField]
-    private AudioClipsWithTime _idleAudioClipsWithTime = null!;
-
-    [SerializeField]
-    private AudioClip[] _spawnVoicelines = [];
-
     [SerializeField]
     private AudioClip[] _detectInjuredPlayerVoicelines = [];
 
@@ -45,7 +38,6 @@ public class Nancy : CodeRebirthEnemyAI
     private Vector3 playersLastPosition = Vector3.zero;
     private float healTimer = 1f;
     private float failTimer = 1f;
-    private float idleTimer = 1f;
 
     private static readonly int HealModeAnimation = Animator.StringToHash("HealMode"); // Bool
     private static readonly int HealingPlayerAnimation = Animator.StringToHash("HealingPlayer"); // Bool
@@ -62,8 +54,6 @@ public class Nancy : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        idleTimer = enemyRandom.NextFloat(_idleAudioClipsWithTime.minTime, _idleAudioClipsWithTime.maxTime);
-        PlayVoiceline(_spawnVoicelines);
         smartAgentNavigator.StartSearchRoutine(30f);
     }
 
@@ -75,11 +65,11 @@ public class Nancy : CodeRebirthEnemyAI
         if (isEnemyDead)
             return;
 
-        idleTimer -= Time.deltaTime;
-        if (idleTimer <= 0f)
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer <= 0f)
         {
-            PlayVoiceline(_idleAudioClipsWithTime.audioClips);
-            idleTimer = enemyRandom.NextFloat(_idleAudioClipsWithTime.minTime, _idleAudioClipsWithTime.maxTime);
+            PlayVoiceline(_idleAudioClips.audioClips);
+            _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
         }
 
         _rollingSource.volume = creatureAnimator.GetFloat(RunSpeedFloat) > 0.01 ? 1 : 0;

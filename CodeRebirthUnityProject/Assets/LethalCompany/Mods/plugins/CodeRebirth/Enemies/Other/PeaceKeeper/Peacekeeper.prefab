@@ -7021,6 +7021,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -7029,6 +7030,17 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: 02712a9abb14dd941ad729c3c63bed0b, type: 3}
+    - {fileID: 8300000, guid: 93353aa6ca43f0e4fa3392831ad5973b, type: 3}
+    - {fileID: 8300000, guid: 9f930518baa908c4d8eb29f52b105955, type: 3}
+    - {fileID: 8300000, guid: 8a7197689e776df40b5bfa9255ec1fff, type: 3}
+    - {fileID: 8300000, guid: 27f24591a361be145896e3a0fc605aae, type: 3}
+    minTime: 10
+    maxTime: 15
+  spawnSound: {fileID: 8300000, guid: a00f33af26d31814ba6dbc7ebda35732, type: 3}
+  _idleTimer: 1
   _gunStartTransform: {fileID: 6310224351839325153}
   _gunEndTransform: {fileID: 5888558220192546133}
   _walkingSpeed: 2
@@ -7042,13 +7054,6 @@ MonoBehaviour:
   _bitchSlapSound: {fileID: 8300000, guid: 696c4285dd9898042bed4b5b3238c3ba, type: 3}
   _bitchSlapStartSound: {fileID: 8300000, guid: ed259afb46741cc4f8268c668442ef78,
     type: 3}
-  _idleSounds:
-  - {fileID: 8300000, guid: 02712a9abb14dd941ad729c3c63bed0b, type: 3}
-  - {fileID: 8300000, guid: 93353aa6ca43f0e4fa3392831ad5973b, type: 3}
-  - {fileID: 8300000, guid: 9f930518baa908c4d8eb29f52b105955, type: 3}
-  - {fileID: 8300000, guid: 8a7197689e776df40b5bfa9255ec1fff, type: 3}
-  - {fileID: 8300000, guid: 27f24591a361be145896e3a0fc605aae, type: 3}
-  _idleSoundsTimer: 12.5
   _gatlingDamageInterval: 0.1
   _minigunRange: 90
   _minigunWidth: 2

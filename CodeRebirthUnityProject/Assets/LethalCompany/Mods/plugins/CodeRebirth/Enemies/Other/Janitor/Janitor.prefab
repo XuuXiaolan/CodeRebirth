@@ -2064,6 +2064,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -2072,6 +2073,23 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: 8c5c9b810a20c9742b0eb23bcbabc208, type: 3}
+    - {fileID: 8300000, guid: 3c1f64fbcafb7c0439ea1bd447227a5b, type: 3}
+    - {fileID: 8300000, guid: 8ff93df851fa3374990ecfc23cf17083, type: 3}
+    - {fileID: 8300000, guid: c1ddd9ba2abbace40aefa6712e795f6c, type: 3}
+    - {fileID: 8300000, guid: 18ddd2a0bd5a0994394502e1de510c51, type: 3}
+    - {fileID: 8300000, guid: 57597a38066515841a376e1e7dca543e, type: 3}
+    - {fileID: 8300000, guid: 862a5ea97c697704a9ed44398a2afc70, type: 3}
+    - {fileID: 8300000, guid: c7f678d781536014a81b6e5894b9215a, type: 3}
+    - {fileID: 8300000, guid: a32f97915cb99a74da57330ae0b3dad0, type: 3}
+    - {fileID: 8300000, guid: 2c625c0e6babf624bb7e0f546f471966, type: 3}
+    - {fileID: 8300000, guid: 34bbd63a63a10a545ac840c5c98306c6, type: 3}
+    - {fileID: 8300000, guid: 524b6c04f37899e4a94a68aa63db094e, type: 3}
+    minTime: 10
+    maxTime: 15
+  _idleTimer: 1
   sirenLights: {fileID: 6317738535433509279}
   handTransform: {fileID: 5815964725433825710}
   playerBoneTransform: {fileID: 3904122950325406940}
@@ -2091,19 +2109,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1ef793cc292be3442929ff764e381d5d, type: 3}
   - {fileID: 8300000, guid: 06a3a70a7393ab54f9e1b0fe7a4d0ae9, type: 3}
   - {fileID: 8300000, guid: 8bf73a6fb840a1c4782ab017cc4e920f, type: 3}
-  idleSounds:
-  - {fileID: 8300000, guid: 8c5c9b810a20c9742b0eb23bcbabc208, type: 3}
-  - {fileID: 8300000, guid: 3c1f64fbcafb7c0439ea1bd447227a5b, type: 3}
-  - {fileID: 8300000, guid: 8ff93df851fa3374990ecfc23cf17083, type: 3}
-  - {fileID: 8300000, guid: c1ddd9ba2abbace40aefa6712e795f6c, type: 3}
-  - {fileID: 8300000, guid: 18ddd2a0bd5a0994394502e1de510c51, type: 3}
-  - {fileID: 8300000, guid: 57597a38066515841a376e1e7dca543e, type: 3}
-  - {fileID: 8300000, guid: 862a5ea97c697704a9ed44398a2afc70, type: 3}
-  - {fileID: 8300000, guid: c7f678d781536014a81b6e5894b9215a, type: 3}
-  - {fileID: 8300000, guid: a32f97915cb99a74da57330ae0b3dad0, type: 3}
-  - {fileID: 8300000, guid: 2c625c0e6babf624bb7e0f546f471966, type: 3}
-  - {fileID: 8300000, guid: 34bbd63a63a10a545ac840c5c98306c6, type: 3}
-  - {fileID: 8300000, guid: 524b6c04f37899e4a94a68aa63db094e, type: 3}
   detectItemDroppedSounds:
   - {fileID: 8300000, guid: 887981be221ecfc4ab4e5d1bb37aef1b, type: 3}
   - {fileID: 8300000, guid: 4cec30ad537a15b48adc30f2d4295108, type: 3}

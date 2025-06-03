@@ -12,8 +12,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
 {
     [Header("Audio")]
     [SerializeField]
-    private AudioClip _spawnAudioClip = null!;
-    [SerializeField]
     private AudioClip _spottedFromGroundAudioClip = null!;
     [SerializeField]
     private AudioClip _spottedFromBackAudioClip = null!;
@@ -57,7 +55,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        // creatureSFX.PlayOneShot(_spawnAudioClip);
         foreach (var enemyCollider in this.GetComponentsInChildren<Collider>())
         {
             foreach (var playerCollider in GameNetworkManager.Instance.localPlayerController.GetCRPlayerData().playerColliders)

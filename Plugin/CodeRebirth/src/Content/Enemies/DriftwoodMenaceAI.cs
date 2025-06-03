@@ -11,7 +11,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public GameObject grabArea = null!;
     public AnimationClip spawnAnimation = null!;
     public AnimationClip chestBangingAnimation = null!;
-    public AudioClip spawnSound = null!;
     public AudioClip eatingSound = null!;
     public AudioClip screamSound = null!;
     public AudioClip throwSound = null!;
@@ -116,7 +115,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        // creatureSFX.PlayOneShot(spawnSound);
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Spawn);
         StartCoroutine(SpawnAnimationCooldown());
     }

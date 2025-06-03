@@ -125,20 +125,17 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     private static readonly int runSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
     public override void Start()
-    { // Animations and sounds arent here yet so you might get bugs probably lol.
+    {
         base.Start();
-
-        smartAgentNavigator.SetAllValues(this.isOutside);
         if (!IsHost) return;
         agent.speed = spawnSpeed;
 
-        StartCoroutine(DoSpawning(true));
+        StartCoroutine(DoSpawning());
         SwitchToBehaviourClientRpc((int)State.Spawning);
     }
 
-    protected virtual IEnumerator DoSpawning(bool playBigSound)
+    protected virtual IEnumerator DoSpawning()
     {
-        if (playBigSound) creatureUltraVoice.Play();
         yield return new WaitForSeconds(spawnAnimation.length);
         smartAgentNavigator.StartSearchRoutine(40);
         agent.speed = walkSpeed;
@@ -319,17 +316,15 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
                 }
         }
         questItemsList.Clear();
-        bool doOtherQuest = false;
-        if (IsHost && UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes.Value <= questRepeats)
+        if (UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes.Value <= questRepeats)
         {
-            doOtherQuest = true;
             questStarted.Value = false;
             questTimedOut.Value = false;
             questCompleted.Value = true;
             SwitchToBehaviourClientRpc((int)State.Wandering);
             return;
         }
-        else if (reason == QuestCompletion.Completed && !doOtherQuest)
+        else if (reason == QuestCompletion.Completed)
         {
             PlayMiscSoundsClientRpc(3);
         }
@@ -361,7 +356,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         questOrder.Value = 0;
         internalQuestTimer = 0f;
         agent.speed = spawnSpeed;
-        StartCoroutine(DoSpawning(false));
+        StartCoroutine(DoSpawning());
         SwitchToBehaviourClientRpc((int)State.Spawning);
     }
 

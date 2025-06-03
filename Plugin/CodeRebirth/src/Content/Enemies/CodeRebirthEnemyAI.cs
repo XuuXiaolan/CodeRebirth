@@ -37,6 +37,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     [Header("Inherited Fields")]
     public AudioClipsWithTime _idleAudioClips = null!;
+    public AudioClip spawnSound = null!;
 
     [HideInInspector] public float _idleTimer = 1f;
     [HideInInspector]
@@ -50,6 +51,9 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     {
         base.Start();
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + 69);
+
+        if (spawnSound != null)
+            creatureVoice.PlayOneShot(spawnSound);
 
         _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
 

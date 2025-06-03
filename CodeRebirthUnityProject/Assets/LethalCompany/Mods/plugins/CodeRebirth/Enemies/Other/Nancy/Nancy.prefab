@@ -623,6 +623,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -631,16 +632,16 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
-  _rollingSource: {fileID: 4590783949368486007}
-  _idleAudioClipsWithTime:
+  _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: d4f97e6187e7b714d8996899e4607cf0, type: 3}
     - {fileID: 8300000, guid: 60c92edb39c071c4db3e05adf73669fb, type: 3}
     - {fileID: 8300000, guid: 9fefcf17bb1f1964bb37d915e76562cc, type: 3}
-    minTime: 25
-    maxTime: 60
-  _spawnVoicelines:
-  - {fileID: 8300000, guid: 67c5c3c67cde9514685c5cdfce4c8c21, type: 3}
+    minTime: 10
+    maxTime: 15
+  spawnSound: {fileID: 8300000, guid: 67c5c3c67cde9514685c5cdfce4c8c21, type: 3}
+  _idleTimer: 1
+  _rollingSource: {fileID: 4590783949368486007}
   _detectInjuredPlayerVoicelines:
   - {fileID: 8300000, guid: e14f6022252f30444aeb417573233d70, type: 3}
   - {fileID: 8300000, guid: f6dc609c58b829b4f9b03d8b3d9cac75, type: 3}

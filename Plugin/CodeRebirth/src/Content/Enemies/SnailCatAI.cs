@@ -15,18 +15,15 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public SnailCatPhysicsProp propScript = null!;
     public string[] randomizedNames = [];
     public ScanNodeProperties scanNodeProperties = null!;
-    public AudioClip[] randomNoises = [];
     public AudioClip[] hitSounds = [];
     public AudioClip enemyDetectSound = null!;
     public AudioClip[] wiwiwiiiSound = [];
-    public AudioClip[] footStepSounds = [];
 
     private string currentName = "";
     private bool holdingBaby = false;
     private Coroutine? dropBabyCoroutine = null;
     private PlayerControllerB? playerHolding = null;
     private float specialActionTimer = 1f;
-    private float randomNoiseInterval = 0f;
     private float detectEnemyInterval = 0f;
     private bool isWiWiWiii = false;
 
@@ -57,17 +54,17 @@ public class SnailCatAI : CodeRebirthEnemyAI
     {
         base.Update();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
-        randomNoiseInterval -= Time.deltaTime;
-        if (randomNoiseInterval <= 0)
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer <= 0)
         {
-            randomNoiseInterval = enemyRandom.NextFloat(7.5f, 15.5f);
+            _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
             if (isWiWiWiii)
             {
                 creatureVoice.PlayOneShot(wiwiwiiiSound[enemyRandom.Next(wiwiwiiiSound.Length)]);
             }
             else
             {
-                creatureVoice.PlayOneShot(randomNoises[enemyRandom.Next(randomNoises.Length)]);
+                creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(_idleAudioClips.audioClips.Length)]);
             }
         }
 
@@ -298,10 +295,5 @@ public class SnailCatAI : CodeRebirthEnemyAI
     {
         base.OnNetworkDespawn();
         // CRUtilities.CreateExplosion(this.transform.position, true, 99999, 0, 15, 999, null, null, 1000f);
-    }
-
-    public void PlayFootStepSoundAnimEvent()
-    {
-        // creatureSFX.PlayOneShot(footStepSounds[UnityEngine.Random.Range(0, footStepSounds.Length)]);
     }
 }

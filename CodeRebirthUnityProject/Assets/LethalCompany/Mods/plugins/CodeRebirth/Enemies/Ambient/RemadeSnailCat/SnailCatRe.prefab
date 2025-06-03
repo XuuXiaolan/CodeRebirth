@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 8802992103352183417}
   - component: {fileID: 6361777462172498345}
   - component: {fileID: 1712777916534107672}
+  - component: {fileID: 5937143807448691065}
   m_Layer: 6
   m_Name: SnailCatRe
   m_TagString: PhysicsProp
@@ -260,6 +261,7 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
+  rotateObject: 0
   animator: {fileID: 1514618610394664556}
   ownerNetworkAnimator: {fileID: 5861152159745177237}
   snailCatScript: {fileID: 8802992103352183417}
@@ -484,6 +486,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -492,6 +495,17 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: 0c683a03269ebc14fb5105852420f620, type: 3}
+    - {fileID: 8300000, guid: 209538b93e4e65441899635fe7f69ca4, type: 3}
+    - {fileID: 8300000, guid: ca3bc8106d39c2b4e974bdd4f754d0e5, type: 3}
+    - {fileID: 8300000, guid: 33f6a7a531123fe4ea26ed081492f6ca, type: 3}
+    - {fileID: 8300000, guid: d43cfea372d4d8d478099ee584da668d, type: 3}
+    - {fileID: 8300000, guid: c890c970249bc00409c877f10a6fff84, type: 3}
+    minTime: 10
+    maxTime: 15
+  _idleTimer: 1
   propScript: {fileID: 4180001964916081428}
   randomizedNames:
   - Florpus
@@ -527,13 +541,6 @@ MonoBehaviour:
   - Evil SnailCat
   - Testy
   scanNodeProperties: {fileID: 2181669798328249144}
-  randomNoises:
-  - {fileID: 8300000, guid: 0c683a03269ebc14fb5105852420f620, type: 3}
-  - {fileID: 8300000, guid: 209538b93e4e65441899635fe7f69ca4, type: 3}
-  - {fileID: 8300000, guid: ca3bc8106d39c2b4e974bdd4f754d0e5, type: 3}
-  - {fileID: 8300000, guid: 33f6a7a531123fe4ea26ed081492f6ca, type: 3}
-  - {fileID: 8300000, guid: d43cfea372d4d8d478099ee584da668d, type: 3}
-  - {fileID: 8300000, guid: c890c970249bc00409c877f10a6fff84, type: 3}
   hitSounds:
   - {fileID: 8300000, guid: 1738a016b4e2aeb41aa6fe43bb3f84a0, type: 3}
   - {fileID: 8300000, guid: 417b6623a695fc24fb61e099eaa24d66, type: 3}
@@ -543,11 +550,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 99139c9555744b54f936e78661190010, type: 3}
   - {fileID: 8300000, guid: 4896327b7d9d5c848b1d9e27607345de, type: 3}
   - {fileID: 8300000, guid: afbfdfece397a6f41a64ff80268df836, type: 3}
-  footStepSounds:
-  - {fileID: 8300000, guid: 7aca801ef185f0c4b81cb3903edfe0c5, type: 3}
-  - {fileID: 8300000, guid: aeb53d16eabfa5f4a9e941cf9a1e144e, type: 3}
-  - {fileID: 8300000, guid: 30a22714dc933564895e96395a93923e, type: 3}
-  - {fileID: 8300000, guid: 6b68f04ab4fc57249861270136a37eb8, type: 3}
 --- !u!82 &6361777462172498345
 AudioSource:
   m_ObjectHideFlags: 0
@@ -674,6 +676,27 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &5937143807448691065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 26720462, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioSourcesWithClips:
+  - nearAudioSource: {fileID: 8047301203869942705}
+    nearClips:
+    - {fileID: 8300000, guid: 7aca801ef185f0c4b81cb3903edfe0c5, type: 3}
+    - {fileID: 8300000, guid: aeb53d16eabfa5f4a9e941cf9a1e144e, type: 3}
+    - {fileID: 8300000, guid: 30a22714dc933564895e96395a93923e, type: 3}
+    - {fileID: 8300000, guid: 6b68f04ab4fc57249861270136a37eb8, type: 3}
+    farAudioSource: {fileID: 0}
+    farClips: []
 --- !u!1 &361247180470767358
 GameObject:
   m_ObjectHideFlags: 0

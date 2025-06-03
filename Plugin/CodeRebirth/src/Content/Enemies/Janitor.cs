@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
-public class Janitor : CodeRebirthEnemyAI
+public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
 {
     #region Fields & Properties
     [Header("References & Transforms")]
@@ -21,7 +21,6 @@ public class Janitor : CodeRebirthEnemyAI
     public GameObject[] headLights = [];
 
     [Header("Audio & Sounds")]
-    public AudioClip spawnSound = null!;
     public AudioClip[] deathSounds = [];
     public AudioClip[] postDeathSounds = [];
     public AudioClip[] detectItemDroppedSounds = [];
@@ -47,6 +46,7 @@ public class Janitor : CodeRebirthEnemyAI
     private bool _isRotating = false;
     private TrashCan? _targetTrashCan = null;
     private GrabbableObject? _targetScrap = null;
+    private GrabbableObject? _lastScrapGrabbed = null;
     private List<GrabbableObject?> _storedScrap = new();
 
     [HideInInspector]
@@ -66,8 +66,68 @@ public class Janitor : CodeRebirthEnemyAI
     private static readonly int GrabScrapAnimation = Animator.StringToHash("grabScrap");
     private static readonly int BreakMovementAnimation = Animator.StringToHash("break");
     private static readonly int ThrowPlayerAnimation = Animator.StringToHash("throwPlayer");
-    #endregion
 
+    #endregion
+    #region IVisibleThreat
+    public ThreatType type => ThreatType.Player;
+
+    int IVisibleThreat.SendSpecialBehaviour(int id)
+    {
+        return 0;
+    }
+
+    int IVisibleThreat.GetThreatLevel(Vector3 seenByPosition)
+    {
+        return 18;
+    }
+
+    int IVisibleThreat.GetInterestLevel()
+    {
+        return 0;
+    }
+
+    Transform IVisibleThreat.GetThreatLookTransform()
+    {
+        return base.transform;
+    }
+
+    Transform IVisibleThreat.GetThreatTransform()
+    {
+        return base.transform;
+    }
+
+    Vector3 IVisibleThreat.GetThreatVelocity()
+    {
+        if (base.IsOwner)
+        {
+            return agent.velocity;
+        }
+        return Vector3.zero;
+    }
+
+    float IVisibleThreat.GetVisibility()
+    {
+        if (isEnemyDead)
+        {
+            return 0f;
+        }
+        if (agent.velocity.sqrMagnitude > 0f)
+        {
+            return 1f;
+        }
+        return 0.75f;
+    }
+
+	bool IVisibleThreat.IsThreatDead()
+	{
+		return isEnemyDead;
+	}
+
+	GrabbableObject? IVisibleThreat.GetHeldObject()
+	{
+		return _lastScrapGrabbed;
+	}
+    #endregion
     #region Unity Lifecycle
     public override void OnNetworkSpawn()
     {
@@ -85,8 +145,6 @@ public class Janitor : CodeRebirthEnemyAI
     {
         base.Start();
         ApplyMaterialVariant();
-
-        creatureVoice.PlayOneShot(spawnSound);
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
 
         if (!IsServer)
@@ -827,6 +885,7 @@ public class Janitor : CodeRebirthEnemyAI
         scrap.isInShipRoom = false;
         scrap.playerHeldBy?.DiscardHeldObject();
         yield return new WaitForSeconds(0.2f);
+        _lastScrapGrabbed = scrap;
         _storedScrap.Add(scrap);
         scrap.parentObject = placeToHideScrap;
         scrap.transform.position = placeToHideScrap.position;
