@@ -36,9 +36,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     private Renderer? _specialRenderer = null;
 
     [Header("Inherited Fields")]
+    public AudioClipsWithTime _idleAudioClips = null!;
 
+    [HideInInspector] public float _idleTimer = 1f;
     [HideInInspector]
-    public System.Random enemyRandom = new System.Random();
+    public System.Random enemyRandom = new();
 
     private float _previousLightValue = 0f;
     private static int ShiftHash = Shader.PropertyToID("_Shift");

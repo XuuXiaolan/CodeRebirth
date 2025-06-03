@@ -20,8 +20,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private AudioClip _spottedFromBackAudioClip = null!;
     [SerializeField]
     private AudioClip[] _fallingAudioClips = null!;
-    [SerializeField]
-    private AudioClipsWithTime _idleAudioClips = null!;
 
     [Header("Animation")]
     [SerializeField]
@@ -43,7 +41,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private Coroutine? _attachRoutine = null;
     private Coroutine? _idleRoutine = null;
     private Transform? _targetPlayerSpine3 = null;
-    private float _idleTimer = 1f;
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int LatchOnAnimation = Animator.StringToHash("LatchOn"); // Trigger

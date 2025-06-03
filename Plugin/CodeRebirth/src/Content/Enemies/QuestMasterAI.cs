@@ -115,9 +115,9 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         Null,
     }
 
-    private readonly static int startWalkAnimation = Animator.StringToHash("startWalk"); // Trigger
-    private readonly static int startGiveQuestAnimation = Animator.StringToHash("startGiveQuest"); // Trigger
-    private readonly static int startQuestAnimation = Animator.StringToHash("startQuest"); // Trigger
+    private static readonly int startWalkAnimation = Animator.StringToHash("startWalk"); // Trigger
+    private static readonly int startGiveQuestAnimation = Animator.StringToHash("startGiveQuest"); // Trigger
+    private static readonly int startQuestAnimation = Animator.StringToHash("startQuest"); // Trigger
     private static readonly int startFailQuestAnimation = Animator.StringToHash("startFailQuest"); // Trigger
     private static readonly int startSucceedQuestAnimation = Animator.StringToHash("startSucceedQuest"); // Trigger
     private static readonly int isTalkingAnimation = Animator.StringToHash("isTalking"); // Bool

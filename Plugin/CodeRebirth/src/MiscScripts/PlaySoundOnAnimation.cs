@@ -8,13 +8,45 @@ public class PlaySoundOnAnimation : MonoBehaviour
     [SerializeField]
     private List<AudioSourceWithClips> _audioSourcesWithClips = new List<AudioSourceWithClips>();
 
-    public void PlaySelectSourceWithRandomSound(int index)
+    public void PlaySelectSourcesWithRandomSound(int index)
     {
         if (index < 0 || index >= _audioSourcesWithClips.Count)
         {
             Plugin.Logger.LogWarning($"Index {index} is out of range for audio sources with clips.");
             return;
         }
-        _audioSourcesWithClips[index]._audioSource.PlayOneShot(_audioSourcesWithClips[index]._clips[UnityEngine.Random.Range(0, _audioSourcesWithClips[index]._clips.Length)]);
+
+        AudioSourceWithClips audioSourceWithClips = _audioSourcesWithClips[index];
+        if (audioSourceWithClips.nearAudioSource != null && audioSourceWithClips.nearClips.Length > 0)
+        {
+            PlayNearAudioClip(audioSourceWithClips);
+        }
+        else
+        {
+            Plugin.Logger.LogWarning("No valid near audio source or clips found for the specified index.");
+        }
+        if (audioSourceWithClips.farAudioSource != null && audioSourceWithClips.farClips.Length > 0)
+        {
+            PlayFarAudioClip(audioSourceWithClips);
+        }
+        {
+            Plugin.Logger.LogWarning("No valid far audio source or clips found for the specified index.");
+        }
+    }
+
+    private void PlayNearAudioClip(AudioSourceWithClips audioSourceWithClips)
+    {
+        int randomIndex = Random.Range(0, audioSourceWithClips.nearClips.Length);
+        AudioClip clip = audioSourceWithClips.nearClips[randomIndex];
+        audioSourceWithClips.nearAudioSource.PlayOneShot(clip);
+        Plugin.ExtendedLogging($"Playing near audio clip: {clip.name}");
+    }
+    
+    private void PlayFarAudioClip(AudioSourceWithClips audioSourceWithClips)
+    {
+        int randomIndex = Random.Range(0, audioSourceWithClips.farClips.Length);
+        AudioClip clip = audioSourceWithClips.farClips[randomIndex];
+        audioSourceWithClips.farAudioSource.PlayOneShot(clip);
+        Plugin.ExtendedLogging($"Playing far audio clip: {clip.name}");
     }
 }

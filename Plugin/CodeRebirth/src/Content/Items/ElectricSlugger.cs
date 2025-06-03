@@ -1,7 +1,6 @@
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
@@ -10,7 +9,6 @@ namespace CodeRebirth.src.Content.Items;
 public class ElectricSlugger : GrabbableObject
 {
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
-    public LineRenderer[] lineRenderers = null!;
     public Transform weaponTip = null!;
     public AudioSource idleSource = null!;
     public AudioSource firingSource = null!;
@@ -25,10 +23,6 @@ public class ElectricSlugger : GrabbableObject
     public override void Start()
     {
         base.Start();
-        foreach (var renderer in lineRenderers)
-        {
-            renderer.enabled = false;
-        }
     }
 
     public override void GrabItem()
@@ -135,21 +129,5 @@ public class ElectricSlugger : GrabbableObject
         int intensity = (pumpCount + 1) * 2;
         StartCoroutine(CRUtilities.ForcePlayerLookup(playerHeldBy, intensity));
         pumpCount = 0;
-        foreach (var renderer in lineRenderers)
-        {
-            renderer.enabled = true;
-            renderer.SetPosition(0, weaponTip.transform.position);
-            renderer.SetPosition(1, playerHeldBy.gameplayCamera.transform.position + playerHeldBy.gameplayCamera.transform.forward * 999);
-        }
-        StartCoroutine(DisableRenderersRoutine());
-    }
-
-    private IEnumerator DisableRenderersRoutine()
-    {
-        yield return new WaitForSeconds(0.5f);
-        foreach (var renderer in lineRenderers)
-        {
-            renderer.enabled = false;
-        }
     }
 }
