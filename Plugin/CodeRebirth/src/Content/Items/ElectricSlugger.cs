@@ -1,6 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
@@ -115,8 +116,17 @@ public class ElectricSlugger : GrabbableObject
         for (int i = 0; i < numHits; i++)
         {
             CRUtilities.CreateExplosion(cachedRaycastHits[i].transform.position, true, 0, 0, 0, 0, playerHeldBy, null, 0);
-            if (!cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable) || Vector3.Distance(cachedRaycastHits[i].transform.position, playerHeldBy.transform.position) <= 3)
+            if (!cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
                 continue;
+
+            if (iHittable is PlayerControllerB playerController)
+            {
+                if (playerController == playerHeldBy)
+                    continue;
+
+                if (playerController.isPlayerDead)
+                    continue;
+            }
 
             if (GameNetworkManager.Instance.localPlayerController == playerHeldBy)
                 iHittable.Hit(2 * (pumpCount + 1), playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
