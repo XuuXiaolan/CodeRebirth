@@ -5,12 +5,15 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Items;
 public class ElectricSlugger : GrabbableObject
 {
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
     public Transform weaponTip = null!;
+    public VisualEffect shootVFX = null!;
+    [Header("Audio")]
     public AudioSource idleSource = null!;
     public AudioSource firingSource = null!;
     public AudioClip fireSound = null!;
@@ -133,6 +136,7 @@ public class ElectricSlugger : GrabbableObject
             // play sound and stuff prob
         }
         firingSource.PlayOneShot(fireSound);
+        shootVFX.Play();
         insertedBattery.charge -= 0.1f * (pumpCount + 1);
         if (playerHeldBy == GameNetworkManager.Instance.localPlayerController) HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * (pumpCount + 1) * 5f * (playerHeldBy.isCrouching ? 0.25f : 1f);

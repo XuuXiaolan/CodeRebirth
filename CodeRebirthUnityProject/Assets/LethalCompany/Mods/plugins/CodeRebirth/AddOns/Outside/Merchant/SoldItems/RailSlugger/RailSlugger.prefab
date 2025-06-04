@@ -285,8 +285,8 @@ MonoBehaviour:
   hasBeenHeld: 0
   rotateObject: 0
   skinnedMeshRenderer: {fileID: 3560938563223285182}
-  lineRenderers: []
   weaponTip: {fileID: 3361662970384125776}
+  shootVFX: {fileID: 2159683547169772138}
   idleSource: {fileID: 3460553245864983987}
   firingSource: {fileID: -5835546687973521565}
   fireSound: {fileID: 8300000, guid: 86e10b339ce549443bc6bbd00f684e5a, type: 3}
@@ -399,8 +399,8 @@ VisualEffect:
   m_GameObject: {fileID: 7306819294387787740}
   m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 402938cbf3030e940b5d878205dc5c28, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 1
+  m_InitialEventName: 
+  m_InitialEventNameOverriden: 0
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_AllowInstancing: 1
@@ -418,10 +418,10 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: EndPoint_position
         m_Overridden: 1
-      - m_Value: {x: 5.651347, y: 2.3707397, z: 4.1957126}
+      - m_Value: {x: -3.5278234, y: 0.074334145, z: 1.9439254}
         m_Name: ShotStart
         m_Overridden: 1
-      - m_Value: {x: 5.651347, y: 2.3534913, z: -2.9879274}
+      - m_Value: {x: -3.5278234, y: 0.05457878, z: 9.127559}
         m_Name: ShotEnd
         m_Overridden: 1
       - m_Value: {x: 0, y: 0, z: 0}
@@ -430,10 +430,10 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: ShotEnd_position
         m_Overridden: 1
-      - m_Value: {x: 270, y: 0, z: 0}
+      - m_Value: {x: 270, y: 180, z: 0}
         m_Name: GunTransform_angles
         m_Overridden: 1
-      - m_Value: {x: 5.651347, y: 2.296, z: 5.359928}
+      - m_Value: {x: -3.5278234, y: 0.0000009536743, z: 0.77968407}
         m_Name: GunTransform_position
         m_Overridden: 1
       - m_Value: {x: 0.57492113, y: 0.57492113, z: 0.57492113}
