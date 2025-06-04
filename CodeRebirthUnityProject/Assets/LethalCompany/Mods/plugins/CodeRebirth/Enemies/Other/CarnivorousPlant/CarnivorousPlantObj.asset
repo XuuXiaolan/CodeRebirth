@@ -87,11 +87,13 @@ MonoBehaviour:
   pushPlayerForce: 0
   pushPlayerDistance: 0
   SizeLimit: 0
+  EnemySize: 1
   timeToPlayAudio: 15
   loudnessMultiplier: 1
   overrideVentSFX: {fileID: 0}
   nestSpawnPrefab: {fileID: 0}
   nestSpawnPrefabWidth: 2
+  nestDistanceFromShip: -1
   useMinEnemyThresholdForNest: 0
   minEnemiesToSpawnNest: 0
   hitBodySFX: {fileID: 8300000, guid: 8e171fe11cd731445b017f7fec55d951, type: 3}
