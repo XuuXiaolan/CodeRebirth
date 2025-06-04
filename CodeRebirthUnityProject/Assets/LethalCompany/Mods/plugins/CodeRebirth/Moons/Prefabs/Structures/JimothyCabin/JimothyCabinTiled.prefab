@@ -396,7 +396,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 432af25fddf4df449836c247905f743b, type: 2}
+  - {fileID: 2100000, guid: ab8b2d90297f0894eae4cc7c22a721ac, type: 2}
   - {fileID: 2100000, guid: 4cfb050feb630a5498ca2df817eabe75, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -909,6 +909,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
