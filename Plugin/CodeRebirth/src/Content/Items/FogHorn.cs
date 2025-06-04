@@ -1,9 +1,12 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Items;
 public class FogHorn : GrabbableObject
 {
+    public VisualEffect fogHornEffect = null!;
+    [Header("Audio")]
     public AudioSource audioSource = null!;
     public AudioClip useSound = null!;
     public AudioClip failSound = null!;
@@ -50,6 +53,7 @@ public class FogHorn : GrabbableObject
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             audioSource.PlayOneShot(useSound);
+            fogHornEffect.Play();
         }
         else
         {

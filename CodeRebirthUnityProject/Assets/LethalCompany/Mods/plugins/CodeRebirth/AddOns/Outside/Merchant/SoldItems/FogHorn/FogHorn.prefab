@@ -103,13 +103,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6962374408673854069}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.70550346, y: 0.04761283, z: 0.047579754, w: 0.7055027}
   m_LocalPosition: {x: 0, y: 0, z: 1.104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6291950211223517835}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 97.718994, y: -89.997986, z: -90.00101}
 --- !u!2083052967 &7444382032538411442
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -119,15 +119,21 @@ VisualEffect:
   m_GameObject: {fileID: 6962374408673854069}
   m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: af990f847cbb5694280133ed28396b26, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
+  m_InitialEventName: 
+  m_InitialEventNameOverriden: 1
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_AllowInstancing: 1
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 15
+        m_Name: RingsPerSecond
+        m_Overridden: 1
+      - m_Value: 80
+        m_Name: ImpactSparkVelocityMultiplier
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -141,10 +147,10 @@ VisualEffect:
       - m_Value: {x: 1, y: 1, z: 1}
         m_Name: GameObjectTransform_scale
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0, z: 1}
+      - m_Value: {x: 0.13431734, y: -0.0003501772, z: 0.9909383}
         m_Name: ObjectForward
         m_Overridden: 1
-      - m_Value: {x: 0, y: 1, z: 0}
+      - m_Value: {x: 0.000046749003, y: 0.99999994, z: 0.00034704278}
         m_Name: ObjectUp
         m_Overridden: 1
     m_Vector4f:
@@ -233,7 +239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Property:
     m_Name: GameObjectTransform
-  Target: {fileID: 6647889969297720671}
+  Target: {fileID: 6291950211223517835}
 --- !u!114 &6157017510200875778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,6 +414,8 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
+  fogHornEffect: {fileID: 7444382032538411442}
   audioSource: {fileID: 9075621103460162310}
   useSound: {fileID: 8300000, guid: 195db6a6d35fc4843bf0b16dd7d4dceb, type: 3}
   failSound: {fileID: 8300000, guid: a73a8a34826f1e84d8150319509eba3f, type: 3}

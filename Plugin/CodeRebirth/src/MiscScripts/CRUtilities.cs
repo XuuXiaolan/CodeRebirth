@@ -332,7 +332,7 @@ public class CRUtilities
         return count > 0 ? sumPosition / count : Vector3.zero;
     }
 
-    public static IEnumerator ForcePlayerLookup(PlayerControllerB player, int intensity)
+    public static IEnumerator ForcePlayerLookup(PlayerControllerB player, float intensity)
     {
         float totalTime = 1f / intensity;
         float timeElapsed = 0f;
