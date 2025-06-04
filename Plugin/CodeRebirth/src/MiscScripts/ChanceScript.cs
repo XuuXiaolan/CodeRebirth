@@ -12,7 +12,7 @@ public class ChanceScript : MonoBehaviour
     [Range(0, 100)]
     private int _chance = 50;
 
-    public void Start()
+    public void Awake()
     {
         int randomNumber = CodeRebirthUtils.Instance.CRRandom.Next(0, 100) + 1;
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");
