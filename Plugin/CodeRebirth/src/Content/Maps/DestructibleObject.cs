@@ -11,6 +11,10 @@ public class DestructibleObject : MonoBehaviour, IHittable
     private Renderer[] renderers = [];
     [SerializeField]
     private ParticleSystem[] _particleSystems = [];
+    [SerializeField]
+    private AudioSource _audioSource = null!;
+    [SerializeField]
+    private AudioClip _destroySound = null!;
 
     [Header("Settings")]
     [SerializeField]
@@ -49,6 +53,7 @@ public class DestructibleObject : MonoBehaviour, IHittable
         if (_particleSystems[0] != null)
             objectLifeTime = _particleSystems[0].main.duration;
 
+        _audioSource.PlayOneShot(_destroySound);
         Destroy(gameObject, objectLifeTime);
         return true;
     }
@@ -80,6 +85,7 @@ public class DestructibleObject : MonoBehaviour, IHittable
             if (_particleSystems[0] != null)
                 objectLifeTime = _particleSystems[0].main.duration;
 
+            _audioSource.PlayOneShot(_destroySound);
             Destroy(gameObject, objectLifeTime);
         }
     }
