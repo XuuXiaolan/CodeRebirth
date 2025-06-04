@@ -10,6 +10,12 @@ public class EnemyLevelSpawner : MonoBehaviour
 {
     [Header("Misc")]
     public bool daytimeSpawner = false;
+    public List<EnemySize> enemySizesAllowed = new()
+    {
+        EnemySize.Tiny,
+        EnemySize.Medium,
+        EnemySize.Giant
+    };
     public Transform spawnPosition = null!;
     public int maxEnemiesToSpawn = 999;
     [Header("Timers")]
@@ -48,6 +54,7 @@ public class EnemyLevelSpawner : MonoBehaviour
             Plugin.ExtendedLogging($"{entity.Key.enemyName} spawned {entity.Value} times");
         }
         mainEnemiesToSpawn = RoundManager.Instance.currentLevel.OutsideEnemies.Select(x => (x.enemyType, (float)x.rarity)).Concat(specialEnemies);
+        mainEnemiesToSpawn = mainEnemiesToSpawn.Where(x => enemySizesAllowed.Contains(x.Item1.EnemySize));
         ambientEnemiesToSpawn = RoundManager.Instance.currentLevel.DaytimeEnemies.Select(x => (x.enemyType, (float)x.rarity));
         spawnTimer = spawnTimerStart;
     }
