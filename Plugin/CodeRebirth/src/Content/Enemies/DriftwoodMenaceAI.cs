@@ -5,6 +5,7 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using System.Linq;
 using Unity.Netcode;
+using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -119,10 +120,30 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         base.Update();
         if (isEnemyDead) return;
 
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer <= 0 && targetPlayer == null)
+        {
+            _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+            creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(0, _idleAudioClips.audioClips.Length)]);
+        }
+
         // Plugin.ExtendedLogging($"Awareness: {awarenessLevel}");
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (currentlyGrabbed)
+        if (currentlyGrabbed && targetPlayer != null)
         {
+            if (Vector3.Distance(targetPlayer.transform.position, grabArea.transform.position) > 10f)
+            {
+                // If the target player is too far away or null, we can't grab them.
+                Plugin.ExtendedLogging("Target player is too far away or null, cannot grab.");
+                currentlyGrabbed = false;
+                targetPlayer.inAnimationWithEnemy = null;
+                targetPlayer = null;
+                SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.ChestBang);
+                if (!IsServer) return;
+                agent.speed = 0f;
+                StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
+                return;
+            }
             targetPlayer.transform.position = grabArea.transform.position;
             targetPlayer.ResetFallGravity();
             return;
@@ -397,11 +418,30 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             Plugin.Logger.LogError("No player to smash onto the ground, This is a bug, please report this");
             return;
         }
+
+        if (Vector3.Distance(targetPlayer.transform.position, grabArea.transform.position) > 10f)
+        {
+            // If the target player is too far away or null, we can't grab them.
+            Plugin.ExtendedLogging("Target player is too far away or null, cannot grab.");
+            return;
+        }
         targetPlayer.DamagePlayer(5, true, false, CauseOfDeath.Gravity, 0, false, default);
     }
 
     public void GrabPlayerAnimEvent()
     {
+        if (targetPlayer == null)
+        {
+            Plugin.Logger.LogError("No player to grab, This is a bug, please report this");
+            return;
+        }
+
+        if (Vector3.Distance(targetPlayer.transform.position, grabArea.transform.position) > 10f)
+        {
+            // If the target player is too far away or null, we can't grab them.
+            Plugin.ExtendedLogging("Target player is too far away or null, cannot grab.");
+            return;
+        }
         currentlyGrabbed = true;
         targetPlayer.inAnimationWithEnemy = this;
     }
