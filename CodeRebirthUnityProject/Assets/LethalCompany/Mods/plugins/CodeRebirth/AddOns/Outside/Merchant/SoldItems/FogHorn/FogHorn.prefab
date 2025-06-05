@@ -85,7 +85,6 @@ GameObject:
   - component: {fileID: 6647889969297720671}
   - component: {fileID: 7444382032538411442}
   - component: {fileID: 8190689906677230341}
-  - component: {fileID: 1262671717208248794}
   m_Layer: 6
   m_Name: VFX
   m_TagString: Untagged
@@ -102,7 +101,7 @@ Transform:
   m_GameObject: {fileID: 6962374408673854069}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70550346, y: 0.04761283, z: 0.047579754, w: 0.7055027}
-  m_LocalPosition: {x: 0, y: 0, z: 1.104}
+  m_LocalPosition: {x: 0, y: 0.21, z: 1.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -129,7 +128,7 @@ VisualEffect:
       - m_Value: 15
         m_Name: RingsPerSecond
         m_Overridden: 1
-      - m_Value: 80
+      - m_Value: 65
         m_Name: ImpactSparkVelocityMultiplier
         m_Overridden: 1
     m_Vector2f:
@@ -207,19 +206,6 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1262671717208248794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6962374408673854069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 136626529, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _fogEffect: {fileID: 7444382032538411442}
 --- !u!1 &8695348052769010099
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,6 +221,7 @@ GameObject:
   - component: {fileID: 4777190615751347363}
   - component: {fileID: 5398529444623756126}
   - component: {fileID: 9075621103460162310}
+  - component: {fileID: 5513184042074248531}
   m_Layer: 6
   m_Name: FogHorn
   m_TagString: PhysicsProp
@@ -502,3 +489,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5513184042074248531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8695348052769010099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 136626529, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fogEffect: {fileID: 7444382032538411442}
