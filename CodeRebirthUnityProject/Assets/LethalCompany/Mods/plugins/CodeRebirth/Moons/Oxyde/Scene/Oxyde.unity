@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44811875, g: 0.24078181, b: 0.07642055, a: 1}
+  m_IndirectSpecularColor: {r: 0.4474913, g: 0.2402311, b: 0.07641309, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12341,7 +12341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1315802090
+  GlobalObjectIdHash: 2649430739
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -12548,7 +12548,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -196.66293, y: -0, z: -0}
+    textureOffset: {x: -913.4897, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -21708,7 +21708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2827945761
+  GlobalObjectIdHash: 1912428692
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -24898,180 +24898,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1991192134}
     m_Modifications:
-    - target: {fileID: 1124194885563073503, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1124194885563073503, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[0]
-      value: Janitor
-      objectReference: {fileID: 0}
-    - target: {fileID: 1124194885563073503, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[1]
-      value: Transporter
-      objectReference: {fileID: 0}
-    - target: {fileID: 1124194885563073503, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[2]
-      value: Peace Keeper
-      objectReference: {fileID: 0}
-    - target: {fileID: 1124194885563073503, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[3]
-      value: Lord Of The Manor
-      objectReference: {fileID: 0}
-    - target: {fileID: 1124194885563073503, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[4]
-      value: Guardsman
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[0]
-      value: Janitor
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[1]
-      value: Transporter
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[2]
-      value: Peace Keeper
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[3]
-      value: Nancy
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[4]
-      value: Lord Of The Manor
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[5]
-      value: Mistress
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[6]
-      value: Guardsman
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[7]
-      value: Guardsman
-      objectReference: {fileID: 0}
-    - target: {fileID: 2334076638776276931, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[8]
-      value: Guardsman
-      objectReference: {fileID: 0}
     - target: {fileID: 2930116566415988962, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 4276347940
-      objectReference: {fileID: 0}
-    - target: {fileID: 3596051819050311307, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3596051819050311307, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[0]
-      value: Janitor
-      objectReference: {fileID: 0}
-    - target: {fileID: 3596051819050311307, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[1]
-      value: Transporter
-      objectReference: {fileID: 0}
-    - target: {fileID: 3596051819050311307, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[2]
-      value: Peace Keeper
-      objectReference: {fileID: 0}
-    - target: {fileID: 3761157712942371144, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3761157712942371144, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[0]
-      value: Janitor
-      objectReference: {fileID: 0}
-    - target: {fileID: 3761157712942371144, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[1]
-      value: Transporter
-      objectReference: {fileID: 0}
-    - target: {fileID: 3761157712942371144, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[2]
-      value: Peace Keeper
-      objectReference: {fileID: 0}
-    - target: {fileID: 3761157712942371144, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[3]
-      value: Nancy
-      objectReference: {fileID: 0}
-    - target: {fileID: 3761157712942371144, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[4]
-      value: Lord Of The Manor
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[0]
-      value: Janitor
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[1]
-      value: Transporter
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[2]
-      value: Peace Keeper
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[3]
-      value: Nancy
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[4]
-      value: Guardsman
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[5]
-      value: Guardsman
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138156473101094241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[6]
-      value: Guardsman
+      value: 1279392855
       objectReference: {fileID: 0}
     - target: {fileID: 4648469477059554915, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
@@ -25081,12 +24911,7 @@ PrefabInstance:
     - target: {fileID: 4731290813148189042, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3859113280
-      objectReference: {fileID: 0}
-    - target: {fileID: 5629096149443665824, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialItemNamesWithRarity.Array.data[1].Name
-      value: Pro-flashlight
+      value: 906450679
       objectReference: {fileID: 0}
     - target: {fileID: 7071544595146402373, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
@@ -25141,82 +24966,17 @@ PrefabInstance:
     - target: {fileID: 7323025457004641576, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2763930501
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[0]
-      value: Janitor
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[1]
-      value: Transporter
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[2]
-      value: Peace Keeper
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[3]
-      value: Nancy
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[4]
-      value: Lord Of The Manor
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[5]
-      value: Mistress
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[6]
-      value: Mistress
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081335507179108147, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[7]
-      value: Mistress
+      value: 444081035
       objectReference: {fileID: 0}
     - target: {fileID: 8201113634922178522, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: shipNavColliders
       value: 
       objectReference: {fileID: 1959721454}
-    - target: {fileID: 8474609755237170627, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8474609755237170627, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[0]
-      value: Janitor
-      objectReference: {fileID: 0}
-    - target: {fileID: 8474609755237170627, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[1]
-      value: Transporter
-      objectReference: {fileID: 0}
-    - target: {fileID: 8474609755237170627, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: specialEnemiesToSpawn.Array.data[2]
-      value: Peace Keeper
-      objectReference: {fileID: 0}
     - target: {fileID: 8866132944236790290, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3047293677
+      value: 1592712622
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
