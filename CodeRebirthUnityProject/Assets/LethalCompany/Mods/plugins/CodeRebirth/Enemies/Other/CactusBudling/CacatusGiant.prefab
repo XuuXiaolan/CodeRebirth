@@ -1293,7 +1293,7 @@ MonoBehaviour:
   ventAnimationFinished: 0
   isEnemyDead: 0
   daytimeEnemyLeaving: 0
-  enemyHP: 16
+  enemyHP: 10
   nodesTempArray: []
   openDoorSpeedMultiplier: 1
   useSecondaryAudiosOnAnimatedObjects: 0
@@ -1320,6 +1320,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -1328,6 +1329,13 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
+  _hitBodySounds: []
+  spawnSound: {fileID: 0}
+  _idleTimer: 1
   _spawnAnimation: {fileID: 7400000, guid: 4b655cc88e5710f44ac0e1544cc95e5e, type: 2}
   _rootingEndAnimation: {fileID: 7400000, guid: 978c729735aacba45b2d5fd4ab0b21df,
     type: 2}
