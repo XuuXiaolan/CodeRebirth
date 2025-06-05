@@ -33,11 +33,54 @@ public class AutonomousCrane : NetworkBehaviour
 
     public void Update()
     {
+        switch (_currentState)
+        {
+            case CraneState.Idle:
+                DoIdleBehaviour();
+                break;
+            case CraneState.TargetingPlayer:
+                DoTargetingBehaviour();
+                break;
+            case CraneState.DroppingMagnet:
+                DoDroppingMagnetBehaviour();
+                break;
+        }
+    }
 
+    private void DoIdleBehaviour()
+    {
+        // Check for players in range and switch to TargetingPlayer state if found
+        if (_targetPlayer != null)
+        {
+            _currentState = CraneState.TargetingPlayer;
+            return;
+        }
+
+        // Random movement logic here
+        MoveCrane();
+    }
+
+    private void DoTargetingBehaviour()
+    {
+        // Logic to target the player
+        if (_targetPlayer == null || Vector3.Distance(transform.position, _targetPlayer.transform.position) > 10f)
+        {
+            _currentState = CraneState.Idle;
+            return;
+        }
+
+        // Move towards the player and prepare to drop the magnet
+        MoveCrane();
+    }
+
+    private void DoDroppingMagnetBehaviour()
+    {
+        // Logic to drop the magnet
+        MoveCrane();
     }
 
     public void MoveCrane()
     {
-        
+
     }
 }

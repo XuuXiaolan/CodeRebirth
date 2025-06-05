@@ -4,6 +4,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 using CodeRebirth.src.Util;
 using System.Linq;
+using Unity.Netcode;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -11,13 +12,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public GameObject grabArea = null!;
     public AnimationClip spawnAnimation = null!;
     public AnimationClip chestBangingAnimation = null!;
-    public AudioClip eatingSound = null!;
     public AudioClip screamSound = null!;
-    public AudioClip throwSound = null!;
-    public AudioClip smashSound = null!;
-    public AudioClip[] hitSound = [];
-    public AudioClip[] walkSounds = [];
-    public AudioClip[] stompSounds = [];
     public float seeingRange = 60f;
     public float awarenessLevel = 0.0f; // Giant's awareness level of the player
     public float maxAwarenessLevel = 100.0f; // Maximum awareness level
@@ -295,7 +290,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         Plugin.ExtendedLogging($"Distance to enemy: {distanceToEnemy}, Stopping distance: {agent.stoppingDistance + 1.0f}");
         if (distanceToEnemy < agent.stoppingDistance + 1.0f)
         {
-            // creatureSFX.PlayOneShot(smashSound);
             creatureNetworkAnimator.SetTrigger(DriftwoodSmashAnimation);
             canSmash = false;
             StartCoroutine(SmashCooldown());
@@ -342,30 +336,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     #endregion
 
     #region Animation Events
-    public void ShakePlayerCameraOnDistanceAnimEvent()
-    {
-        float distance = Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position);
-        switch (distance)
-        {
-            case < 8f:
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                break;
-            case < 20 and >= 8:
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                break;
-            case < 40f and >= 20:
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                break;
-        }
-    }
-
     public void DriftwoodChestBangAnimEvent()
     { // run this multiple times in one scream animation
         PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
@@ -387,16 +357,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         // Use enemyPositionBeforeDeath
         // Make some like, red, steaming hot particles come out of the enemy corpses.
         // Also colour the hands a bit red.
-    }
-
-    public void PlayRunFootstepsAnimEvent()
-    {
-        // creatureVoice.PlayOneShot(stompSounds[UnityEngine.Random.Range(0, stompSounds.Length)]);
-    }
-
-    public void PlayWalkFootstepsAnimEvent()
-    {
-        // creatureVoice.PlayOneShot(walkSounds[UnityEngine.Random.Range(0, walkSounds.Length)]);
     }
 
     public void ThrowPlayerAnimEvent()
@@ -478,7 +438,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 enemyPositionBeforeDeath = targetEnemy.transform.position;
                 agent.speed = 0f;
                 SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.EatingPrey);
-                // creatureVoice.PlayOneShot(eatingSound);
                 targetEnemy = null;
                 if (!IsServer) return;
                 smartAgentNavigator.DoPathingToDestination(enemyPositionBeforeDeath);
@@ -521,6 +480,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public IEnumerator ChestBangPause(int nextStateIndex, float agentSpeed)
     {
         creatureNetworkAnimator.SetTrigger(DoAggroAnimation);
+        PlayScreamSoundServerRpc();
         yield return new WaitForSeconds(chestBangingAnimation.length);
         if (nextStateIndex == (int)DriftwoodState.SearchingForPrey)
         {
@@ -528,6 +488,17 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         agent.speed = agentSpeed;
         SwitchToBehaviourServerRpc(nextStateIndex);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayScreamSoundServerRpc()
+    {
+        PlayScreamSoundClientRpc();
+    }
+    [ClientRpc]
+    public void PlayScreamSoundClientRpc()
+    {
+        creatureVoice.PlayOneShot(screamSound);
     }
 
     public void RunFarAway()
@@ -707,7 +678,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         if (collidedPlayer == targetPlayer && currentBehaviourStateIndex == (int)DriftwoodState.RunningToPrey)
         {
-            // creatureSFX.PlayOneShot(throwSound);
             SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.PlayingWithPrey);
             if (!IsServer) return;
             agent.speed = 0f;
@@ -719,8 +689,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead) return;
-
-        // creatureVoice.PlayOneShot(hitSound[UnityEngine.Random.Range(0, hitSound.Length)]);
 
         enemyHP -= force;
         Plugin.ExtendedLogging("Enemy HP: " + enemyHP);
@@ -760,7 +728,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
-        // creatureVoice.PlayOneShot(dieSFX);
         smartAgentNavigator.StopSearchRoutine();
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Death);
 
