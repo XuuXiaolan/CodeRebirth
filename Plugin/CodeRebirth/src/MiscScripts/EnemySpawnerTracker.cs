@@ -55,10 +55,12 @@ public class EnemySpawnerTracker : MonoBehaviour
             enemyAI.creatureSFX.enabled = false;
         }
 
-        ExtraEnemyData extraEnemyData = CodeRebirthUtils.ExtraEnemyDataDict[enemyAI];
-        foreach (var enemyAICollisionDetect in extraEnemyData.enemyAICollisionDetects)
+        if (CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(enemyAI, out ExtraEnemyData extraEnemyData))
         {
-            Destroy(enemyAICollisionDetect);
+            foreach (var enemyAICollisionDetect in extraEnemyData.enemyAICollisionDetects)
+            {
+                Destroy(enemyAICollisionDetect);
+            }
         }
 
         EnemyLevelSpawner.entitiesSpawned[enemyAI.enemyType]--;
