@@ -57,7 +57,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable, IVisibleThreat
     [HideInInspector] public PlayerControllerB? playerControlled = null;
 
     #region IVisibleThreat
-    public ThreatType type => ThreatType.Player;
+    public ThreatType type => ThreatType.EyelessDog;
 
     int IVisibleThreat.SendSpecialBehaviour(int id)
     {

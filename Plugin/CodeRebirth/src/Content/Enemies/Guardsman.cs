@@ -5,7 +5,6 @@ using System.Linq;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.AssetLoading;
@@ -14,7 +13,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Guardsman : CodeRebirthEnemyAI
+public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
 {
     [Header("Audio")]
     [SerializeField]
@@ -42,6 +41,67 @@ public class Guardsman : CodeRebirthEnemyAI
     private List<EnemyAI> _enemyAIList = new();
     private Collider[] _cachedHits = new Collider[24];
     internal HashSet<EnemyType> _internalEnemyBlacklist = new();
+
+    #region IVisibleThreat
+    public ThreatType type => ThreatType.RadMech;
+
+    int IVisibleThreat.SendSpecialBehaviour(int id)
+    {
+        return 0;
+    }
+
+    int IVisibleThreat.GetThreatLevel(Vector3 seenByPosition)
+    {
+        return 18;
+    }
+
+    int IVisibleThreat.GetInterestLevel()
+    {
+        return 0;
+    }
+
+    Transform IVisibleThreat.GetThreatLookTransform()
+    {
+        return base.transform;
+    }
+
+    Transform IVisibleThreat.GetThreatTransform()
+    {
+        return base.transform;
+    }
+
+    Vector3 IVisibleThreat.GetThreatVelocity()
+    {
+        if (base.IsOwner)
+        {
+            return agent.velocity;
+        }
+        return Vector3.zero;
+    }
+
+    float IVisibleThreat.GetVisibility()
+    {
+        if (isEnemyDead)
+        {
+            return 0f;
+        }
+        if (agent.velocity.sqrMagnitude > 0f)
+        {
+            return 1f;
+        }
+        return 0.75f;
+    }
+
+	bool IVisibleThreat.IsThreatDead()
+	{
+		return isEnemyDead;
+	}
+
+	GrabbableObject? IVisibleThreat.GetHeldObject()
+	{
+		return null;
+	}
+    #endregion
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool

@@ -436,14 +436,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
-        if (Vector3.Distance(targetPlayer.transform.position, grabArea.transform.position) > 10f)
-        {
-            // If the target player is too far away or null, we can't grab them.
-            Plugin.ExtendedLogging("Target player is too far away or null, cannot grab.");
-            return;
-        }
         currentlyGrabbed = true;
         targetPlayer.inAnimationWithEnemy = this;
+        targetPlayer.transform.position = grabArea.transform.position;
+        targetPlayer.ResetFallGravity();
     }
 
     public void SmashEnemyAnimEvent()

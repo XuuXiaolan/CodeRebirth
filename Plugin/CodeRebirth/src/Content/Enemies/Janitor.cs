@@ -69,7 +69,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
 
     #endregion
     #region IVisibleThreat
-    public ThreatType type => ThreatType.Player;
+    public ThreatType type => ThreatType.BaboonHawk;
 
     int IVisibleThreat.SendSpecialBehaviour(int id)
     {

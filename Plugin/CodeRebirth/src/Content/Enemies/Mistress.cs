@@ -13,7 +13,6 @@ using UnityEngine.AI;
 namespace CodeRebirth.src.Content.Enemies;
 public class Mistress : CodeRebirthEnemyAI
 {
-
     public float teleportCooldown = 20f;
     public float killCooldown = 10f;
     public Transform HeadTransform = null!;
