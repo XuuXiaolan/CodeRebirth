@@ -6,7 +6,7 @@ public class PlayerOnlyTriggers : MonoBehaviour
 {
     public EnemyAI mainScript = null!;
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerStay(Collider other)
     {
         if (other.TryGetComponent(out PlayerControllerB player) && !player.isPlayerDead)
         {
