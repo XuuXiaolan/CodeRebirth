@@ -315,11 +315,9 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
     public static void DoStuffToRevivePlayer(Vector3 revivePosition, int PlayerScriptIndex)
     {
         PlayerControllerB PlayerScript = StartOfRound.Instance.allPlayerScripts[PlayerScriptIndex];
-        DeadBodyInfo deadBodyInfo = PlayerScript.deadBody;
         PlayerScript.isInsideFactory = false;
         PlayerScript.isInElevator = true;
         PlayerScript.isInHangarShipRoom = true;
-
         PlayerScript.ResetPlayerBloodObjects(PlayerScript.isPlayerDead);
         PlayerScript.health = 5;
         PlayerScript.isClimbingLadder = false;
@@ -332,7 +330,6 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         PlayerScript.thisController.enabled = true;
         if (PlayerScript.isPlayerDead)
         {
-            Plugin.ExtendedLogging("playerInital is dead, reviving them.");
             PlayerScript.thisController.enabled = true;
             PlayerScript.isPlayerDead = false;
             PlayerScript.isPlayerControlled = true;
@@ -348,9 +345,12 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             PlayerScript.DisablePlayerModel(PlayerScript.gameObject, enable: true, disableLocalArms: true);
             PlayerScript.helmetLight.enabled = false;
             PlayerScript.Crouch(crouch: false);
-            if (PlayerScript.playerBodyAnimator != null)
+            PlayerScript.playerBodyAnimator?.SetBool("Limp", false);
+            PlayerScript.bleedingHeavily = false;
+            if (PlayerScript.deadBody != null)
             {
-                PlayerScript.playerBodyAnimator.SetBool("Limp", value: false);
+                PlayerScript.deadBody.enabled = false;
+                PlayerScript.deadBody.gameObject.SetActive(false);
             }
             PlayerScript.bleedingHeavily = true;
             PlayerScript.deadBody = null;
@@ -375,7 +375,6 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             PlayerScript.isMovementHindered = 0;
             PlayerScript.sourcesCausingSinking = 0;
             PlayerScript.reverbPreset = StartOfRound.Instance.shipReverb;
-
             SoundManager.Instance.earsRingingTimer = 0f;
             PlayerScript.voiceMuffledByEnemy = false;
             SoundManager.Instance.playerVoicePitchTargets[Array.IndexOf(StartOfRound.Instance.allPlayerScripts, PlayerScript)] = 1f;
@@ -385,29 +384,28 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             {
                 StartOfRound.Instance.RefreshPlayerVoicePlaybackObjects();
             }
-
             if (PlayerScript.currentVoiceChatIngameSettings != null)
             {
                 if (PlayerScript.currentVoiceChatIngameSettings.voiceAudio == null)
                 {
                     PlayerScript.currentVoiceChatIngameSettings.InitializeComponents();
                 }
-
                 if (PlayerScript.currentVoiceChatIngameSettings.voiceAudio == null)
                 {
                     return;
                 }
-
                 PlayerScript.currentVoiceChatIngameSettings.voiceAudio.GetComponent<OccludeAudio>().overridingLowPass = false;
             }
-        }
 
+            HUDManager.Instance.UpdateBoxesSpectateUI();
+            HUDManager.Instance.UpdateSpectateBoxSpeakerIcons();
+        }
         if (GameNetworkManager.Instance.localPlayerController == PlayerScript)
         {
             PlayerScript.bleedingHeavily = false;
             PlayerScript.criticallyInjured = false;
             PlayerScript.health = 5;
-            HUDManager.Instance.UpdateHealthUI(5, hurtPlayer: true);
+            HUDManager.Instance.UpdateHealthUI(5, true);
             PlayerScript.playerBodyAnimator?.SetBool("Limp", false);
             PlayerScript.spectatedPlayerScript = null;
             StartOfRound.Instance.SetSpectateCameraToGameOverMode(false, PlayerScript);
@@ -417,12 +415,9 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             HUDManager.Instance.RemoveSpectateUI();
             HUDManager.Instance.gameOverAnimator.SetTrigger("revive");
         }
-
         StartOfRound.Instance.allPlayersDead = false;
         StartOfRound.Instance.livingPlayers++;
         StartOfRound.Instance.UpdatePlayerVoiceEffects();
-
-        deadBodyInfo.DeactivateBody(false);
     }
 
     [ServerRpc(RequireOwnership = false)]

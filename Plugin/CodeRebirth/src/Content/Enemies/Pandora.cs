@@ -46,7 +46,7 @@ public class Pandora : CodeRebirthEnemyAI
         base.Start();
         _playerDefaultSensitivity = IngamePlayerSettings.Instance.settings.lookSensitivity;
         // Start Pandora's roaming/search routine.
-        smartAgentNavigator.StartSearchRoutine(20);
+        smartAgentNavigator.StartSearchRoutine(50);
         SwitchToBehaviourStateOnLocalClient((int)State.LookingForPlayer);
         // todo: Pandora is meant to spawn on snowy moons and only after 11am.
     }
@@ -61,6 +61,10 @@ public class Pandora : CodeRebirthEnemyAI
             {
                 ForceTurnTowardsTarget();
                 CodeRebirthUtils.Instance.StaticCloseEyeVolume.weight = Mathf.Clamp01(showdownTimer / 15f * 0.6f);
+            }
+            else if (Vector3.Distance(this.transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) < 1.5f || Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, targetPlayer.transform.position) < 1.5f)
+            {
+                TeleportPlayerAway(GameNetworkManager.Instance.localPlayerController);
             }
             Plugin.ExtendedLogging($"Showdown timer: {showdownTimer}");
 
@@ -241,6 +245,7 @@ public class Pandora : CodeRebirthEnemyAI
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead)
             return;
+
         enemyHP -= force;
         if (IsOwner && enemyHP <= 0)
         {
@@ -268,8 +273,7 @@ public class Pandora : CodeRebirthEnemyAI
             yield break;
 
         smartAgentNavigator.StopSearchRoutine();
-        Vector3 randomPosition = this.transform.position;
-        // RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
+        Vector3 randomPosition = RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
         bool foundSuitablePosition = false;
         while (!foundSuitablePosition)
         {
@@ -294,7 +298,7 @@ public class Pandora : CodeRebirthEnemyAI
             }
         }
         agent.Warp(randomPosition);
-        smartAgentNavigator.StartSearchRoutine(20);
+        smartAgentNavigator.StartSearchRoutine(50);
     }
 
     private void TeleportNearbyTargetPlayer(PlayerControllerB? targettedPlayer)
@@ -360,7 +364,9 @@ public class Pandora : CodeRebirthEnemyAI
 
     private void TeleportPlayerAway(PlayerControllerB player)
     {
-        if (!player.IsOwner) return;
+        if (!player.IsOwner)
+            return;
+
         // Teleport the player to a designated location outside the main entrance.
         Vector3 destination = RoundManager.Instance.outsideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
         // With a small chance, teleport the player onto the ship instead.
@@ -368,8 +374,9 @@ public class Pandora : CodeRebirthEnemyAI
         {
             destination = StartOfRound.Instance.shipDoorNode.position;
         }
+        RoundManager.FindMainEntranceScript(false).TeleportPlayer();
         player.transform.position = destination;
-        // *** Audio placeholder: Play "Have a nice journey" and optionally show subtitle with player's name.
+        // *** Audio placeholder: Play "Have a nice journey"
     }
 
     private IEnumerator SetMouseSensitivity(PlayerControllerB player, int sensitivity)

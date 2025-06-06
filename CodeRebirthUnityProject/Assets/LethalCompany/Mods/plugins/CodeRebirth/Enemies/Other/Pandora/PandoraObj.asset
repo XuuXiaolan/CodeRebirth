@@ -80,18 +80,20 @@ MonoBehaviour:
   doorSpeedMultiplier: 99
   stunGameDifficultyMultiplier: 1
   canBeStunned: 1
-  canDie: 0
+  canDie: 1
   canBeDestroyed: 0
   destroyOnDeath: 0
   canSeeThroughFog: 0
   pushPlayerForce: 0.16
   pushPlayerDistance: 1.26
   SizeLimit: 0
+  EnemySize: 0
   timeToPlayAudio: 15
   loudnessMultiplier: 1
   overrideVentSFX: {fileID: 0}
   nestSpawnPrefab: {fileID: 0}
   nestSpawnPrefabWidth: 2
+  nestDistanceFromShip: -1
   useMinEnemyThresholdForNest: 0
   minEnemiesToSpawnNest: 0
   hitBodySFX: {fileID: 0}
