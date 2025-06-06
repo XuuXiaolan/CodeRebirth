@@ -32,6 +32,8 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     [SerializeField]
     private float _enemySizeThreshold = 69;
     [SerializeField]
+    private GameObject _dustLandDecal = null!;
+    [SerializeField]
     private ParticleSystem _dustParticleSystem = null!;
 
     private Coroutine? _messWithSizeOverTimeRoutine = null;
@@ -127,6 +129,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
             Plugin.ExtendedLogging($"Adding {nameEntry} to Guardsman's internal blacklist.");
         }
         StartCoroutine(StartDelay());
+        StartCoroutine(ProjectorUnparentDelay());
         /*foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
         {
             if (enemyType.enemyPrefab == null || enemyType.enemyPrefab.GetComponent<EnemyAI>() == null)
@@ -299,6 +302,12 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         smartAgentNavigator.StartSearchRoutine(100f);
     }
 
+    private IEnumerator ProjectorUnparentDelay()
+    {
+        yield return new WaitUntil(() => _dustLandDecal.activeSelf);
+        _dustLandDecal.transform.SetParent(RoundManager.Instance.mapPropsContainer.transform, true);
+    }
+
     private float CalculateEnemySize(EnemyAI enemyAi)
     {
         NavMeshAgent agent = enemyAi.gameObject.GetComponent<NavMeshAgent>();
@@ -331,12 +340,6 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
         }
-    }
-
-    public void ScreenShakeAnimEvent()
-    {
-        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) <= 50f)
-            HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
     }
 
     public void MessWithSizeAnimEvent(int sizeMultiplier)
