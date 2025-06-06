@@ -204,7 +204,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 50
+  MaxDistance: 30
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -239,7 +239,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -291,7 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: -396689606, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ambientAudioSource: {fileID: 0}
+  _ambientAudioSource: {fileID: 272870940966533634}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: 8644cebd1393fce4c8f147df9e95805d, type: 3}
@@ -299,8 +299,8 @@ MonoBehaviour:
     - {fileID: 8300000, guid: b98bac50630ee5e45985055e3ae3a309, type: 3}
     - {fileID: 8300000, guid: 71e3d1b7ff9f72741ba2c1e95d4bdcbe, type: 3}
     - {fileID: 8300000, guid: 1f03bee0c7099b34aa37d1b705e9c607, type: 3}
-    minTime: 40
-    maxTime: 120
+    minTime: 30
+    maxTime: 60
   _playOnStart: 0
   _onAmbientSoundPlayed:
     m_PersistentCalls:

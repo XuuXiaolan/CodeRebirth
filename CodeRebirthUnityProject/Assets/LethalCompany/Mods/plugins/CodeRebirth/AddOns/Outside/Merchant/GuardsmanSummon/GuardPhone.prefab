@@ -183,7 +183,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 25
+  MaxDistance: 10
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -348,5 +348,6 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
   _callSource: {fileID: -6749566012724284502}
   _callSound: {fileID: 8300000, guid: 5abc6ae5ea9e1224e8758398b246eb7b, type: 3}
