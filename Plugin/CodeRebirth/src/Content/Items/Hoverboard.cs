@@ -7,6 +7,10 @@ using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem;
 using System.Linq;
 using CodeRebirth.src.Util;
+using CullFactory;
+using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts.ConfigManager;
+using CodeRebirth.src.Util.AssetLoading;
 
 namespace CodeRebirth.src.Content.Items;
 public class Hoverboard : GrabbableObject, IHittable
@@ -28,6 +32,8 @@ public class Hoverboard : GrabbableObject, IHittable
     public Transform hoverboardChild = null!;
     private HoverboardTypes hoverboardType = HoverboardTypes.Regular;
     private bool weightApplied = false;
+    private float _speedMultiplier = 1f;
+    private float _chargeIncreaseMultiplier = 1f;
     public enum HoverboardMode
     {
         None,
@@ -42,7 +48,6 @@ public class Hoverboard : GrabbableObject, IHittable
     private HoverboardMode hoverboardMode;
     private Quaternion resetChildRotation;
     private bool isAdjusting = false;
-    private Quaternion targetRotation;
     // Variables to store initial anchor positions and rotations
     private readonly Vector3[] initialAnchorPositions = new Vector3[4];
     private readonly Quaternion[] initialAnchorRotations = new Quaternion[4];
@@ -50,6 +55,7 @@ public class Hoverboard : GrabbableObject, IHittable
     public override void Start()
     {
         StartBaseImportant();
+        ConfigureHoverboard();
         this.EnablePhysics(false);
         this.insertedBattery = new Battery(false, 1f);
         this.ChargeBatteries();
@@ -85,6 +91,21 @@ public class Hoverboard : GrabbableObject, IHittable
             initialAnchorRotations[i] = anchors[i].localRotation;
         }
         SetHoverboardState(0);
+    }
+
+    private void ConfigureHoverboard()
+    {
+        List<CRDynamicConfig> configDefinitions = ItemHandler.Instance.Hoverboard!.ItemDefinitions.GetCRItemDefinitionWithItemName(itemProperties.itemName)!.ConfigEntries;
+        CRDynamicConfig? speedMultiplierConfigSetting = configDefinitions.GetCRDynamicConfigWithSetting("Hoverboard", "Speed Multiplier");
+        if (speedMultiplierConfigSetting != null)
+        {
+            _speedMultiplier = CRConfigManager.GetGeneralConfigEntry<float>(speedMultiplierConfigSetting.settingName, speedMultiplierConfigSetting.settingDesc).Value;
+        }
+        CRDynamicConfig? chargeIncraseMultiplierConfigSetting = configDefinitions.GetCRDynamicConfigWithSetting("Hoverboard", "Charge Increase Multiplier");
+        if (chargeIncraseMultiplierConfigSetting != null)
+        {
+            _chargeIncreaseMultiplier = CRConfigManager.GetGeneralConfigEntry<float>(chargeIncraseMultiplierConfigSetting.settingName, chargeIncraseMultiplierConfigSetting.settingDesc).Value;
+        }
     }
 
     public void OnInteract(PlayerControllerB player)
@@ -219,7 +240,7 @@ public class Hoverboard : GrabbableObject, IHittable
         else
         {
             this.isBeingUsed = false;
-            this.insertedBattery.charge = Mathf.Clamp(this.insertedBattery.charge + (Time.deltaTime / this.itemProperties.batteryUsage), 0f, 1f);
+            this.insertedBattery.charge = Mathf.Clamp(this.insertedBattery.charge + (Time.deltaTime + _chargeIncreaseMultiplier / this.itemProperties.batteryUsage), 0f, 1f);
             if (this.insertedBattery.charge >= 0.15f && this.insertedBattery.empty)
             {
                 this.insertedBattery.empty = false;
@@ -266,19 +287,19 @@ public class Hoverboard : GrabbableObject, IHittable
             playerControlling.transform.position = hoverboardSeat.transform.position;
             if (_isHoverForwardHeld)
             {
-                hb.AddForce((Vector3.zero + hoverboardChild.right) * 25f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
+                hb.AddForce(hoverboardChild.right * _speedMultiplier * 25f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
             }
             if (_isHoverBackwardHeld)
             {
-                hb.AddForce((Vector3.zero - hoverboardChild.right) * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
+                hb.AddForce(-hoverboardChild.right * _speedMultiplier * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
             }
             if (_isHoverLeftHeld)
             {
-                hb.AddForce((Vector3.zero + hoverboardChild.forward) * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
+                hb.AddForce(hoverboardChild.forward * _speedMultiplier * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
             }
             if (_isHoverRightHeld)
             {
-                hb.AddForce((Vector3.zero - hoverboardChild.forward) * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
+                hb.AddForce(-hoverboardChild.forward * _speedMultiplier * 5f * ((_isSprintHeld && !this.insertedBattery.empty) ? 2f : 1f), ForceMode.Acceleration);
             }
 
             if (!isAdjusting)
@@ -756,12 +777,12 @@ public class Hoverboard : GrabbableObject, IHittable
         if (angle > 60f)
         {
             // Start the adjustment process
-            targetRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(hoverboardChild.forward, Vector3.up), Vector3.up);
-            StartCoroutine(AdjustOrientation());
+            Quaternion targetRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(hoverboardChild.forward, Vector3.up), Vector3.up);
+            StartCoroutine(AdjustOrientation(targetRotation));
         }
     }
 
-    private IEnumerator AdjustOrientation()
+    private IEnumerator AdjustOrientation(Quaternion targetRotation)
     {
         isAdjusting = true;
         float duration = 0.5f; // Duration of the rotation
