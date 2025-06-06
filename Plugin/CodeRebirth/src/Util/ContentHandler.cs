@@ -230,6 +230,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
                 LevelFilters = new(weatherData.excludeOrIncludeList),
             };
 
+            CRWeatherDefinition.Weather = weather;
             WeatherRegistry.WeatherManager.RegisterWeather(weather);
             definitionIndex++;
         }

@@ -9,6 +9,9 @@ using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Content.Weathers;
+using LethalLevelLoader;
+using System.Linq;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -104,5 +107,30 @@ static class StartOfRoundPatch
             if (gal.IdleSounds.Length <= 0) continue;
             gal.GalVoice.PlayOneShot(gal.IdleSounds[gal.galRandom.Next(gal.IdleSounds.Length)]);
         }
+    }
+
+    [HarmonyPatch(nameof(StartOfRound.SetShipReadyToLand)), HarmonyPostfix]
+    static void ForceChangeWeathersForOxyde()
+    {
+        LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
+        Plugin.ExtendedLogging($"Extended level: {extendedLevel?.SelectableLevel}");
+        if (extendedLevel == null)
+            return;
+
+        if (WeatherHandler.Instance.NightShift == null)
+            return;
+
+        if (TimeOfDay.Instance.daysUntilDeadline <= 0)
+        {
+            WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, LevelWeatherType.None);
+            return;
+        }
+
+        CRWeatherDefinition? nightShiftCRWeatherDefinition = CodeRebirthRegistry.RegisteredCRWeathers.GetCRWeatherDefinitionWithWeatherName("night shift");
+        Plugin.ExtendedLogging($"Night shift weather: {nightShiftCRWeatherDefinition?.Weather}");
+        if (nightShiftCRWeatherDefinition == null)
+            return;
+
+        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftCRWeatherDefinition.Weather);
     }
 }

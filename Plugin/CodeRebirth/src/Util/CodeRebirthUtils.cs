@@ -14,6 +14,8 @@ using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util.AssetLoading;
 using System.Collections;
+using CodeRebirth.src.Content.Weathers;
+using LethalLevelLoader;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -77,7 +79,34 @@ internal class CodeRebirthUtils : NetworkBehaviour
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
         shipAnimator.shipLandAnimation = ModifiedShipLandAnimation;
         shipAnimator.shipNormalLeaveAnimation = ModifiedShipLeaveAnimation;
+        StartCoroutine(HandleWRSetupWithOxyde());
         StartCoroutine(ProgressiveUnlockables.LoadUnlockedIDs());
+    }
+
+    private IEnumerator HandleWRSetupWithOxyde()
+    {
+        yield return new WaitUntil(() => WeatherRegistry.WeatherManager.IsSetupFinished);
+
+        LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
+        Plugin.ExtendedLogging($"Extended level: {extendedLevel?.SelectableLevel}");
+        if (extendedLevel == null)
+            yield break;
+
+        if (WeatherHandler.Instance.NightShift == null)
+            yield break;
+
+        if (TimeOfDay.Instance.daysUntilDeadline <= 0)
+        {
+            WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, LevelWeatherType.None);
+            yield break;
+        }
+
+        CRWeatherDefinition? nightShiftCRWeatherDefinition = CodeRebirthRegistry.RegisteredCRWeathers.GetCRWeatherDefinitionWithWeatherName("night shift");
+        Plugin.ExtendedLogging($"Night shift weather: {nightShiftCRWeatherDefinition?.Weather}");
+        if (nightShiftCRWeatherDefinition == null)
+            yield break;
+
+        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftCRWeatherDefinition.Weather);
     }
 
     private IEnumerator HandleEnemyDropRates()

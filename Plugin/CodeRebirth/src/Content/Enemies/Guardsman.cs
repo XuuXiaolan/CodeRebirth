@@ -21,8 +21,6 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     [SerializeField]
     private AudioClip _ripApartAudioClip = null!;
     [SerializeField]
-    private AudioClip[] _footstepAudioClips = [];
-    [SerializeField]
     private AudioClip[] _enemySpottedAudioClips = [];
 
     [SerializeField]
@@ -332,16 +330,6 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     #endregion
 
     #region Animation Events
-    public void PlayFootstepSoundAnimEvent()
-    {
-        creatureSFX.PlayOneShot(_footstepAudioClips[enemyRandom.Next(_footstepAudioClips.Length)]);
-
-        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, transform.position) <= 10f)
-        {
-            HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-        }
-    }
-
     public void MessWithSizeAnimEvent(int sizeMultiplier)
     {
         if (_messWithSizeOverTimeRoutine != null)
