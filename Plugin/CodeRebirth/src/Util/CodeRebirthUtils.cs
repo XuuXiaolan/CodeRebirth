@@ -179,6 +179,25 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void ReactToVehicleCollisionServerRpc(int obstacleId)
+    {
+        ReactToVehicleCollisionClientRpc(obstacleId);
+    }
+
+    [ClientRpc]
+    public void ReactToVehicleCollisionClientRpc(int obstacleId)
+    {
+        if (ReactToVehicleCollision.TryGetById(obstacleId, out ReactToVehicleCollision? reactToVehicleCollision) && reactToVehicleCollision != null)
+        {
+            reactToVehicleCollision.InvokeCollisionEvent();
+        }
+        else
+        {
+            Plugin.Logger.LogError($"ReactToVehicleCollision with ID {obstacleId} not found!");
+        }
+    }
+
     public void OnNewRoundStart()
     {
         entrancePoints = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);

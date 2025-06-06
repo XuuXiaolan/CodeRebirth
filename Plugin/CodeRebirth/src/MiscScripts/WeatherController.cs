@@ -26,7 +26,7 @@ public class WeatherController : MonoBehaviour
     {
         foreach (GameObject gameObject in gameObjectsToActivate)
         {
-            gameObject.SetActive(true);
+            gameObject.SetActive(!gameObject.activeSelf);
         }
 
         foreach (Light light in lightsToDeactivate)
