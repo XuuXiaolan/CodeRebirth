@@ -11,13 +11,24 @@ public class ReactToVehicleCollision : MonoBehaviour
     private UnityEvent _onVehicleCollision = new();
 
     private int _obstacleId = -1;
+    private static int _nextObstacleId = 1;
     private static readonly Dictionary<int, ReactToVehicleCollision> _reactToVehicleCollisions = new();
 
     private void Awake()
     {
-        _obstacleId = _reactToVehicleCollisions.Count + 1;
+        _obstacleId = _nextObstacleId;
+        _nextObstacleId++;
         _reactToVehicleCollisions.Add(_obstacleId, this);
         Plugin.ExtendedLogging($"ReactToVehicleCollision: Registered vehicle reaction with ID {_obstacleId} at position {transform.position}");
+    }
+
+    public void OnDestroy()
+    {
+        if (_reactToVehicleCollisions.ContainsKey(_obstacleId))
+        {
+            _reactToVehicleCollisions.Remove(_obstacleId);
+            Plugin.ExtendedLogging($"ReactToVehicleCollision: Unregistered vehicle reaction with ID {_obstacleId}");
+        }
     }
 
     public void OnTriggerEnter(Collider other)
