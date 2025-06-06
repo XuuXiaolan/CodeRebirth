@@ -15,6 +15,8 @@ public class AmbientNoisePlayer : MonoBehaviour
 
     [Header("Extras")]
     [SerializeField]
+    private bool _playOnStart = false;
+    [SerializeField]
     private UnityEvent _onAmbientSoundPlayed = new();
 
     private bool _canPlaySounds = true;
@@ -23,6 +25,9 @@ public class AmbientNoisePlayer : MonoBehaviour
     public void Start()
     {
         _idleTimer = CodeRebirthUtils.Instance.CRRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+        if (!_playOnStart)
+            return;
+
         PlayRandomAmbientSound();
     }
 

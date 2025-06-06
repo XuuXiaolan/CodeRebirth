@@ -20,7 +20,9 @@ public class ScreenShakeOnAnimation : MonoBehaviour
                 if (ScreenShakeTarget.screenShakeTarget.name != animationEvent.stringParameter)
                     continue;
 
-                PlayScreenShakeAudio(ScreenShakeTarget, ref shakeStartPosition);
+                shakeStartPosition = ScreenShakeTarget.screenShakeTarget.transform.position;
+                PlayScreenShakeAudio(ScreenShakeTarget, shakeStartPosition);
+                PlayScreenShakeParticles(ScreenShakeTarget, shakeStartPosition);
                 break;
             }
         }
@@ -72,10 +74,9 @@ public class ScreenShakeOnAnimation : MonoBehaviour
             }
         }
     }
-    
-    private void PlayScreenShakeAudio(ScreenShakeTarget screenShakeTarget, ref Vector3 shakeStartPosition)
+
+    private void PlayScreenShakeAudio(ScreenShakeTarget screenShakeTarget, Vector3 shakeStartPosition)
     {
-        shakeStartPosition = screenShakeTarget.transform.position;
         if (screenShakeTarget.nearAudioClips.Length > 0)
         {
             AudioClip clipToPlay = screenShakeTarget.nearAudioClips[CodeRebirthUtils.Instance.CRRandom.Next(screenShakeTarget.nearAudioClips.Length)];
@@ -93,6 +94,18 @@ public class ScreenShakeOnAnimation : MonoBehaviour
                 screenShakeTarget.audioSourceFar.transform.position = shakeStartPosition;
                 screenShakeTarget.audioSourceFar.PlayOneShot(clipToPlay);
             }
+        }
+    }
+
+    private void PlayScreenShakeParticles(ScreenShakeTarget screenShakeTarget, Vector3 shakeStartPosition)
+    {
+        if (screenShakeTarget.particleSystems.Length <= 0)
+            return;
+
+        foreach (ParticleSystem particleSystem in screenShakeTarget.particleSystems)
+        {
+            particleSystem.transform.position = shakeStartPosition;
+            particleSystem.Play();
         }
     }
 }
