@@ -37,7 +37,7 @@ public class AutonomousCrane : NetworkBehaviour
 
     public void Update()
     {
-        switch (_currentState)
+        /*switch (_currentState)
         {
             case CraneState.Idle:
                 DoIdleBehaviour();
@@ -48,7 +48,7 @@ public class AutonomousCrane : NetworkBehaviour
             case CraneState.DroppingMagnet:
                 DoDroppingMagnetBehaviour();
                 break;
-        }
+        }*/
     }
 
     private void DoIdleBehaviour()

@@ -52,6 +52,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
             {
                 if (playerInTargetablePlayers)
                 {
+                    Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is dead or not controlled, removing from targetable players.");
                     _mainScript._targetablePlayers.Remove(player);
                 }
                 continue;
@@ -62,6 +63,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
             {
                 if (playerInTargetablePlayers)
                 {
+                    Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is inside the exemption area at position {player.transform.position}, removing from targetable players.");
                     _mainScript._targetablePlayers.Remove(player);
                 }
                 continue;
@@ -72,6 +74,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
             {
                 if (!insideMain)
                 {
+                    Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is outside the crane's targetable area at position {player.transform.position}, removing from targetable players.");
                     _mainScript._targetablePlayers.Remove(player);
                 }
                 continue;
@@ -79,6 +82,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
 
             if (insideMain)
             {
+                Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is inside the crane's targetable area at position {player.transform.position}");
                 _mainScript._targetablePlayers.Add(player);
             }
         }
