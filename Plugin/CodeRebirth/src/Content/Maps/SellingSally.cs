@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -9,13 +7,22 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class SellingSally : NetworkBehaviour
 {
     [Header("Sounds")]
     [SerializeField]
+    private AudioSource sallySource = null!;
+    [SerializeField]
+    private AudioClip warningSound = null!;
+
+    [SerializeField]
     private AudioSource buttonSource = null!;
     [SerializeField]
     private AudioClip buttonSound = null!;
+    [SerializeField]
+    private AudioClip errorSound = null!;
+
     [SerializeField]
     private AudioSource bellSource = null!;
     [SerializeField]
@@ -65,7 +72,11 @@ public class SellingSally : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PressButtonServerRpc()
     {
-        if (!CanCurrentlyShoot()) return;
+        if (!CanCurrentlyShoot())
+        {
+            PlayErrorSoundClientRpc();
+            return;
+        }
         PlayButtonSoundServerRpc();
         sallyNetworkAnimator.SetTrigger(ShootAnimation);
     }
@@ -86,6 +97,7 @@ public class SellingSally : NetworkBehaviour
     [ClientRpc]
     private void PlayButtonSoundClientRpc()
     {
+        sallySource.PlayOneShot(warningSound);
         buttonSource.PlayOneShot(buttonSound);
     }
 
@@ -155,7 +167,11 @@ public class SellingSally : NetworkBehaviour
         }
 
         int scrapValueToMake = 0;
-        CanCurrentlyShoot();
+        if (!CanCurrentlyShoot())
+        {
+            PlayErrorSound();
+            return;
+        }
         foreach (var sellableScrap in _sellableScraps)
         {
             scrapValueToMake += sellableScrap.scrapValue;
@@ -180,5 +196,16 @@ public class SellingSally : NetworkBehaviour
         }
         _sellableScraps.Clear();
         TimeOfDay.Instance.UpdateProfitQuotaCurrentTime();
+    }
+
+    [ClientRpc]
+    public void PlayErrorSoundClientRpc()
+    {
+        PlayErrorSound();
+    }
+
+    public void PlayErrorSound()
+    {
+        buttonSource.PlayOneShot(errorSound);
     }
 }

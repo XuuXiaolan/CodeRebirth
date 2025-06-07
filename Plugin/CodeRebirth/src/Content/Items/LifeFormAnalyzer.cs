@@ -11,11 +11,19 @@ public class LifeFormAnalyzer : GrabbableObject
     public TerrainScanner terrainScanner = null!;
     public AudioSource _audioSource = null!;
     public AudioClip _hazardPingSound = null!;
+    public AudioClip _activatedSound = null!;
+    public AudioClip _deactivatedSound = null!;
 
     private List<Coroutine> customPassRoutines = new();
     private float scanTimer = 0f;
     private bool turnedOn = false;
     private static readonly int ActivatedAnimation = Animator.StringToHash("activated");
+
+    public override void Start()
+    {
+        base.Start();
+        useCooldown = scanInterval;
+    }
 
     public override void Update()
     {
@@ -64,8 +72,18 @@ public class LifeFormAnalyzer : GrabbableObject
         scanTimer = scanInterval;
         if (turnedOn)
         {
+            _audioSource.PlayOneShot(_activatedSound);
             _audioSource.PlayOneShot(_hazardPingSound);
             DoRevealScan();
+        }
+        else
+        {
+            _audioSource.PlayOneShot(_deactivatedSound);
+            foreach (Coroutine coroutine in customPassRoutines)
+            {
+                StopCoroutine(coroutine);
+            }
+            customPassRoutines.Clear();
         }
     }
 }

@@ -19,6 +19,10 @@ public class MarrowSplitter : GrabbableObject
     [SerializeField]
     private Transform _endTransform = null!;
     [SerializeField]
+    private AudioClip _hitEnemySound = null!;
+    [SerializeField]
+    private AudioClip _healingSound = null!;
+    [SerializeField]
     private AudioSource _idleSource = null!;
     [SerializeField]
     private int _increaseAmount = 1;
@@ -205,6 +209,7 @@ public class MarrowSplitter : GrabbableObject
 
         if (hitSomething)
         {
+            _idleSource.PlayOneShot(_hitEnemySound);
             _hitTimer = 0.4f;
             insertedBattery.charge -= 0.05f;
             float currentAmount = _skinnedMeshRenderer.GetBlendShapeWeight(0);
@@ -217,6 +222,7 @@ public class MarrowSplitter : GrabbableObject
     private void DoHealingPlayers()
     {
         int numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        bool healingAnotherPlayer = false;
         for (int i = 0; i < numHits; i++)
         {
             if (_cachedColliders[i].transform == playerHeldBy.transform)
@@ -225,12 +231,20 @@ public class MarrowSplitter : GrabbableObject
             if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))
                 continue;
 
-            if (iHittable is not PlayerControllerB playerControllerB)
+            if (iHittable is not PlayerControllerB playerControllerB || playerControllerB == playerHeldBy)
+                continue;
+
+            if (playerControllerB.IsPseudoDead() || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled)
+                continue;
+
+            if (playerControllerB.health >= 100)
                 continue;
 
             int currentAmount = Mathf.FloorToInt(_skinnedMeshRenderer.GetBlendShapeWeight(0));
             _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentAmount - _decreaseAmount, 0, 100));
 
+            healingAnotherPlayer = true;
+            _idleSource.PlayOneShot(_healingSound);
             if (GameNetworkManager.Instance.localPlayerController == playerHeldBy)
             {
                 playerControllerB.DamagePlayerFromOtherClientServerRpc(-_decreaseAmount, playerHeldBy.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
@@ -246,6 +260,25 @@ public class MarrowSplitter : GrabbableObject
                 if (IsOwner)
                     _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
                 return;
+            }
+        }
+
+        if (!healingAnotherPlayer && playerHeldBy.health < 100)
+        {
+            _idleSource.PlayOneShot(_healingSound);
+            int currentAmount = Mathf.FloorToInt(_skinnedMeshRenderer.GetBlendShapeWeight(0));
+            _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentAmount - _decreaseAmount, 0, 100));
+            playerHeldBy.DamagePlayer(-_decreaseAmount, true, false, CauseOfDeath.Stabbing, 0, false, default);
+
+            if (currentAmount - _decreaseAmount <= 0)
+            {
+                isBeingUsed = false;
+                _isHealing = false;
+                _idleSource.volume = 0f;
+                _idleSource.Stop();
+
+                if (IsOwner)
+                    _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
             }
         }
     }

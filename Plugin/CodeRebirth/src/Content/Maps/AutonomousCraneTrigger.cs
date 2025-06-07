@@ -74,7 +74,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
                     _mainScript._targetablePlayers.Remove(player);
                 }
             }
-            else if (insideMain)
+            else if (insideMain && player != _mainScript._targetPlayer)
             {
                 Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is inside the crane's targetable area at position {player.transform.position}.");
                 _mainScript._targetablePlayers.Add(player);
