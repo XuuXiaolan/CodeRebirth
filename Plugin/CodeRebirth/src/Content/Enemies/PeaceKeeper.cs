@@ -27,6 +27,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
 
     [SerializeField]
     private GameObject _gunParticleSystemGO = null!;
+    [SerializeField]
+    private GameObject _fakeGunGO = null!;
 
     [SerializeField]
     private AudioSource _aggroSFX = null!;
@@ -470,8 +472,10 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         if (enemyHP <= 0)
         {
             if (playerWhoHit != null)
+            {
+                Plugin.ExtendedLogging($"PeaceKeeper killed by player: {playerWhoHit.name} who dealt {force} damage with hit ID: {hitID}.");
                 _killedByPlayer = true;
-
+            }
             if (IsOwner)
                 KillEnemyOnOwnerClient();
         }
@@ -483,10 +487,18 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         smartAgentNavigator.StopSearchRoutine();
         _aggroSFX.Stop();
         creatureVoice.PlayOneShot(dieSFX);
-        if (!IsServer) return;
         if (_killedByPlayer)
-            CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PeaceKeeper!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ceasefire")?.item, transform.position, false, true, 0);
+        {
+            _fakeGunGO.transform.parent.gameObject.SetActive(false);
+        }
 
+        if (!IsServer)
+            return;
+
+        if (_killedByPlayer)
+        {
+            CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PeaceKeeper!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ceasefire")?.item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.parent.rotation);
+        }
         creatureAnimator.SetBool(IsDeadAnimation, true);
     }
     #endregion

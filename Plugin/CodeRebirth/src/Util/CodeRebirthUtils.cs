@@ -302,7 +302,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         SpawnScrap(item, position, isQuest, defaultRotation, valueIncrease);
     }
 
-    public NetworkObjectReference SpawnScrap(Item? item, Vector3 position, bool isQuest, bool defaultRotation, int valueIncrease)
+    public NetworkObjectReference SpawnScrap(Item? item, Vector3 position, bool isQuest, bool defaultRotation, int valueIncrease, Quaternion rotation = default)
     {
         if (StartOfRound.Instance == null || item == null)
         {
@@ -315,7 +315,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             parent = StartOfRound.Instance.propsContainer;
         }
         Vector3 spawnPosition = position + Vector3.up * 0.2f;
-        GameObject go = Instantiate(item.spawnPrefab, spawnPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : Quaternion.identity, parent);
+        GameObject go = Instantiate(item.spawnPrefab, spawnPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation, parent);
         NetworkObject networkObject = go.GetComponent<NetworkObject>();
         GrabbableObject grabbableObject = go.GetComponent<GrabbableObject>();
         grabbableObject.fallTime = 0;
