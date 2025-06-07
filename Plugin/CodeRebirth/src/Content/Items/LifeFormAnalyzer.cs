@@ -9,6 +9,8 @@ public class LifeFormAnalyzer : GrabbableObject
     public Animator animator = null!;
     public float scanInterval = 10f;
     public TerrainScanner terrainScanner = null!;
+    public AudioSource _audioSource = null!;
+    public AudioClip _hazardPingSound = null!;
 
     private List<Coroutine> customPassRoutines = new();
     private float scanTimer = 0f;
@@ -25,6 +27,7 @@ public class LifeFormAnalyzer : GrabbableObject
         if (scanTimer <= 0f)
         {
             scanTimer = scanInterval;
+            _audioSource.PlayOneShot(_hazardPingSound);
             DoRevealScan();
             // do scan
         }
@@ -56,10 +59,13 @@ public class LifeFormAnalyzer : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-
         turnedOn = !turnedOn;
         animator.SetBool(ActivatedAnimation, turnedOn);
         scanTimer = scanInterval;
-        DoRevealScan();
+        if (turnedOn)
+        {
+            _audioSource.PlayOneShot(_hazardPingSound);
+            DoRevealScan();
+        }
     }
 }

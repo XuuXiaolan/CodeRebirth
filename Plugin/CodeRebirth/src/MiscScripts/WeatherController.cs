@@ -18,7 +18,7 @@ public class WeatherController : MonoBehaviour
         Plugin.ExtendedLogging($"Weather: {weatherName}");
         if (weatherName == "blackout" || weatherName == "night shift")
         {
-            HandleDarkness();
+            // HandleDarkness();
         }
     }
 

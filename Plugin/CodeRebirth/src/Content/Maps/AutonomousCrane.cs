@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,7 +14,10 @@ public class AutonomousCrane : NetworkBehaviour
     private InteractTrigger _disableInteract = null!;
 
     private bool _craneIsActive = false;
-    private PlayerControllerB? _targetPlayer = null;
+    [HideInInspector]
+    public List<PlayerControllerB> _targetablePlayers = new();
+    [HideInInspector]
+    public PlayerControllerB? _targetPlayer = null;
     private CraneState _currentState = CraneState.Idle;
 
     public enum CraneState
@@ -50,9 +54,21 @@ public class AutonomousCrane : NetworkBehaviour
     private void DoIdleBehaviour()
     {
         // Check for players in range and switch to TargetingPlayer state if found
-        if (_targetPlayer != null)
+        if (_targetablePlayers.Count > 0)
         {
             _currentState = CraneState.TargetingPlayer;
+            foreach (var player in _targetablePlayers.ToArray())
+            {
+                if (player.isPlayerDead || !player.isPlayerControlled)
+                {
+                    _targetablePlayers.Remove(player);
+                    continue;
+                }
+
+                _targetPlayer = player;
+                _targetablePlayers.Remove(player);
+                break;
+            }
             return;
         }
 
