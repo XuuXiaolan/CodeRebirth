@@ -36,6 +36,8 @@ public class SellingSally : NetworkBehaviour
     private Transform endOfBarrelTransform = null!;
     [SerializeField]
     private Transform sallyLoaderTransform = null!;
+    [SerializeField]
+    private Collider sallyLargePlatformCollider = null!;
 
     private List<GrabbableObject> _sellableScraps = new();
     private static readonly int OpenedAnimation = Animator.StringToHash("open"); // Bool
@@ -142,14 +144,16 @@ public class SellingSally : NetworkBehaviour
 
     public void DoShootScrapAnimEvent()
     {
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        if (GameNetworkManager.Instance.localPlayerController.transform.parent == endOfBarrelTransform.parent)
         {
-            if (!player.IsOwner || player.transform.parent != endOfBarrelTransform.parent)
-                continue;
-
-            player.transform.position = endOfBarrelTransform.position;
-            player.DamagePlayer(9999, true, true, CauseOfDeath.Blast, 0, false, endOfBarrelTransform.forward * 100f);
+            GameNetworkManager.Instance.localPlayerController.transform.position = endOfBarrelTransform.position;
+            GameNetworkManager.Instance.localPlayerController.DamagePlayer(9999, true, true, CauseOfDeath.Blast, 0, false, endOfBarrelTransform.forward * 100f);
         }
+        else if (sallyLargePlatformCollider.bounds.Contains(GameNetworkManager.Instance.localPlayerController.transform.position))
+        {
+            GameNetworkManager.Instance.localPlayerController.KillPlayer(GameNetworkManager.Instance.localPlayerController.velocityLastFrame, true, CauseOfDeath.Blast, 9);
+        }
+
         int scrapValueToMake = 0;
         CanCurrentlyShoot();
         foreach (var sellableScrap in _sellableScraps)
