@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util.Extensions;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -27,8 +26,6 @@ public class EnemyLevelSpawner : MonoBehaviour
     public List<string> specialEnemiesToSpawn = new();
 
     private float spawnTimer = 10f;
-    private System.Random pipeRandom = new();
-
     public static Dictionary<EnemyType, int> entitiesSpawned = new(); // fix a bunch of this stuff here, make this a list for example
     private float enemiesSpawnedByPipe = 0;
     private List<(EnemyType, float)> specialEnemies = new();
@@ -48,7 +45,6 @@ public class EnemyLevelSpawner : MonoBehaviour
                 break;
             }
         }
-        pipeRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
         foreach (var entity in entitiesSpawned)
         {
             Plugin.ExtendedLogging($"{entity.Key.enemyName} spawned {entity.Value} times");
@@ -74,7 +70,7 @@ public class EnemyLevelSpawner : MonoBehaviour
         if (spawnTimer > 0)
             return;
 
-        spawnTimer = pipeRandom.NextFloat(spawnTimerMin, spawnTimerMax);
+        spawnTimer = UnityEngine.Random.Range(spawnTimerMin, spawnTimerMax);
 
         SpawnRandomEnemy();
     }
