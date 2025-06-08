@@ -74,7 +74,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        if (playHitSFX && _hitBodySounds.Length > 0)
+        if (!isEnemyDead && playHitSFX && _hitBodySounds.Length > 0)
         {
             creatureSFX.PlayOneShot(_hitBodySounds[enemyRandom.Next(_hitBodySounds.Length)]);
         }

@@ -17,6 +17,8 @@ public class MarrowSplitter : GrabbableObject
     [SerializeField]
     private SkinnedMeshRenderer _skinnedMeshRenderer = null!;
     [SerializeField]
+    private ParticleSystem _bloodParticles = null!;
+    [SerializeField]
     private Transform _endTransform = null!;
     [SerializeField]
     private AudioClip _hitEnemySound = null!;
@@ -209,6 +211,7 @@ public class MarrowSplitter : GrabbableObject
 
         if (hitSomething)
         {
+            _bloodParticles.Play(true);
             _idleSource.PlayOneShot(_hitEnemySound);
             _hitTimer = 0.4f;
             insertedBattery.charge -= 0.05f;
@@ -244,7 +247,8 @@ public class MarrowSplitter : GrabbableObject
             _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentAmount - _decreaseAmount, 0, 100));
 
             healingAnotherPlayer = true;
-            _idleSource.PlayOneShot(_healingSound);
+            _bloodParticles.Play(true);
+            _idleSource.PlayOneShot(_hitEnemySound);
             if (GameNetworkManager.Instance.localPlayerController == playerHeldBy)
             {
                 playerControllerB.DamagePlayerFromOtherClientServerRpc(-_decreaseAmount, playerHeldBy.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
@@ -265,6 +269,7 @@ public class MarrowSplitter : GrabbableObject
 
         if (!healingAnotherPlayer && playerHeldBy.health < 100)
         {
+            _bloodParticles.Play(true);
             _idleSource.PlayOneShot(_healingSound);
             int currentAmount = Mathf.FloorToInt(_skinnedMeshRenderer.GetBlendShapeWeight(0));
             _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentAmount - _decreaseAmount, 0, 100));
