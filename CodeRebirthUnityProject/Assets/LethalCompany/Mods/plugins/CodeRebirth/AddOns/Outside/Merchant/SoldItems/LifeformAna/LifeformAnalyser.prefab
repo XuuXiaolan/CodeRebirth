@@ -5284,9 +5284,14 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
   animator: {fileID: 3080454174146170937}
   scanInterval: 20
   terrainScanner: {fileID: 53070962513724276}
+  _audioSource: {fileID: 6007421936011103432}
+  _hazardPingSound: {fileID: 8300000, guid: 0b8ab78313933374fb7734a866a867b9, type: 3}
+  _activatedSound: {fileID: 8300000, guid: f36455600bc9f5141a79c0a0bcd38ca8, type: 3}
+  _deactivatedSound: {fileID: 8300000, guid: 974089ad7c4c0a74f9197d701af94ca1, type: 3}
 --- !u!95 &3080454174146170937
 Animator:
   serializedVersion: 5

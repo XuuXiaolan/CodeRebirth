@@ -12581,11 +12581,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 41b2a8a760a2dc245b1feba7acb655ff, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -15149,7 +15149,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 25
+  MaxDistance: 35
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -15334,17 +15334,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 3201107318740133310}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 4112450f0bde3f34a9d325c4afa9f4f0,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   HitId: 1
   isHeavyWeapon: 1
   reelingTime: 2
   swingTime: 0.13
   hitSFX:
-  - {fileID: 8300000, guid: 4333ddd1e9a773a43b3544452c27dae1, type: 3}
+  - {fileID: 8300000, guid: 3284b7d2a941b6f45850650a0fe14ba9, type: 3}
   reelUpSFX:
-  - {fileID: 8300000, guid: 725d1c4040e47a449ba66c51175813ab, type: 3}
+  - {fileID: 8300000, guid: 4379a592d1bf606458b83c9546e97dde, type: 3}
   swingSFX:
-  - {fileID: 8300000, guid: 7e39dac39c455a64783fb3dd74758c46, type: 3}
-  finishReelUpSFX: []
+  - {fileID: 8300000, guid: b5313470e89f7254da37a23499507b71, type: 3}
+  finishReelUpSFX:
+  - {fileID: 8300000, guid: 42d3f4c991c142b4580e6dbcb4b2841e, type: 3}
   hitEnemySFX: []
   weaponAudio: {fileID: 3201107318740133310}
   tryHitAllTimes: 0
