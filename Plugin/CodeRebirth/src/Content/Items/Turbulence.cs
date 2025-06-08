@@ -4,6 +4,11 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class Turbulence : CRWeapon
 {
+    [SerializeField]
+    private AudioSource _jetActiveIdleSource = null!;
+    [SerializeField]
+    private ParticleSystem _jetParticles = null!;
+
     private bool stuckToGround = false;
 
     public override void OnNetworkSpawn()
@@ -45,6 +50,7 @@ public class Turbulence : CRWeapon
 
     public void OnHitSuccessEvent()
     {
+        RoundManager.Instance.DestroyTreeOnLocalClient(this.transform.position);
         OnHitSuccessServerRpc(this.transform.position, this.transform.rotation);
     }
 
@@ -73,6 +79,97 @@ public class Turbulence : CRWeapon
         }
         playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 120f * (playerHeldBy.isCrouching ? 0.25f : 1f);
         StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
+    }
+
+    public override void OnStartReelup()
+    {
+        base.OnStartReelup();
+        _jetParticles.Play(true);
+
+        PlayJetParticlesServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayJetParticlesServerRpc()
+    {
+        PlayJetParticlesClientRpc();
+    }
+
+    [ClientRpc]
+    public void PlayJetParticlesClientRpc()
+    {
+        if (IsOwner)
+            return;
+
+        _jetParticles.Play(true);
+    }
+
+    public override void EndWeaponHit(bool success)
+    {
+        base.EndWeaponHit(success);
+        _jetParticles.Stop(true);
+        StopJetParticlesServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void StopJetParticlesServerRpc()
+    {
+        StopJetParticlesClientRpc();
+    }
+
+    [ClientRpc]
+    public void StopJetParticlesClientRpc()
+    {
+        if (IsOwner)
+            return;
+
+        _jetParticles.Stop(true);
+    }
+
+    public override void StartHeldOverHead()
+    {
+        base.StartHeldOverHead();
+        _jetActiveIdleSource.Play();
+
+        ActivateJetIdleSoundServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ActivateJetIdleSoundServerRpc()
+    {
+        ActivateJetIdleSoundClientRpc();
+    }
+
+    [ClientRpc]
+    public void ActivateJetIdleSoundClientRpc()
+    {
+        if (IsOwner)
+            return;
+
+        _jetActiveIdleSource.Play();
+    }
+
+    public override void EndHeldOverHead()
+    {
+        base.EndHeldOverHead();
+        _jetActiveIdleSource.Stop();
+
+        DeactivateJetIdleSoundServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DeactivateJetIdleSoundServerRpc()
+    {
+        DeactivateJetIdleSoundClientRpc();
+    }
+
+    [ClientRpc]
+    public void DeactivateJetIdleSoundClientRpc()
+    {
+        if (IsOwner)
+            return;
+
+        _jetActiveIdleSource.Stop();
     }
 
     public override void FallWithCurve()

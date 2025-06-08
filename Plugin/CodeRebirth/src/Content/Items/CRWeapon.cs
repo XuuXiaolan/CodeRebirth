@@ -46,6 +46,9 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     [Tooltip("Passes a Surface that has been damaged by the weapon")]
     public UnityEvent<int> OnSurfaceHit = new UnityEvent<int>();
 
+    [Tooltip("On success of hitting anything.")]
+    public UnityEvent OnHitSuccess = new UnityEvent();
+
     [Tooltip("Default: 1\nPop Butlers: 5")]
     public int HitId = 1;
 
@@ -75,7 +78,6 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     [HideInInspector] public RaycastHit[] cachedRaycastHits = new RaycastHit[16];
     [HideInInspector] public PlayerControllerB? previousPlayerHeldBy = null;
 
-    [HideInInspector] public UnityEvent OnHitSuccess = new UnityEvent();
     private List<IHittable> _iHittableList = new();
     private List<VehicleController> _hitVehicles = new();
     private List<PlayerControllerB> _hitPlayers = new();
@@ -131,35 +133,37 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         reelingAnimSpeed = 0.35f / reelingTime;
         playerHeldBy.playerBodyAnimator.speed = reelingAnimSpeed;
         PlayRandomSFX(reelUpSFX);
+        OnStartReelup();
         ReelUpSFXServerRpc();
         yield return new WaitForSeconds(reelingTime);
         playerHeldBy.playerBodyAnimator.speed = 1f;
         PlayRandomSFX(finishReelUpSFX);
+        StartHeldOverHead();
         while (isHoldingButton && isHeld)
         {
             heldOverHeadTimer += Time.deltaTime;
             yield return null;
         }
-
+        EndHeldOverHead();
         yield return new WaitUntil(() => !isHoldingButton || !isHeld);
         SwingHeavyWeapon(!isHeld);
+        bool success = false;
         if (tryHitAllTimes)
         {
             float timeElapsed = 0f;
-            bool success = false;
             while (timeElapsed <= swingTime && !success)
             {
                 timeElapsed += Time.deltaTime;
                 yield return null;
-                yield return new WaitForEndOfFrame();
                 success = HitWeapon(!isHeld);
             }
         }
         else
         {
             yield return new WaitForSeconds(swingTime);
-            HitWeapon(!isHeld);
+            success = HitWeapon(!isHeld);
         }
+        EndWeaponHit(success);
         yield return new WaitForSeconds(weaponCooldown);
         heldOverHeadTimer = 0f;
         _reelingRoutine = null;
@@ -197,6 +201,26 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             PlayRandomSFX(swingSFX);
             previousPlayerHeldBy.UpdateSpecialAnimationValue(specialAnimation: true, (short)previousPlayerHeldBy.transform.localEulerAngles.y, 0.4f);
         }
+    }
+
+    public virtual void OnStartReelup()
+    {
+        
+    }
+
+    public virtual void EndWeaponHit(bool success)
+    {
+
+    }
+
+    public virtual void StartHeldOverHead()
+    {
+
+    }
+
+    public virtual void EndHeldOverHead()
+    {
+
     }
 
     public bool HitWeapon(bool cancel = false)
