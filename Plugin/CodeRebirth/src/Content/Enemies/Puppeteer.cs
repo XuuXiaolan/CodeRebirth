@@ -17,6 +17,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     public Transform playerStabPosition = null!;
 
     [Header("Puppeteer Configuration")]
+    public float dissolveSpeed = 0.1f;
     public float sneakSpeed = 1.5f;
     public float chaseSpeed = 3.0f;
     public float detectionRange = 20f;
@@ -32,7 +33,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     public AudioClip swipeSound = null!;
     public AudioClip maskDefensiveSound = null!;
     public AudioClip[] reflectSounds = null!;
-    public AudioClip[] puppeteerHitSounds = [];
 
     [HideInInspector] public bool isAttacking = false;
     private bool enteredDefensiveModeOnce = false;
@@ -325,7 +325,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         enemyHP -= force;
-        creatureVoice.PlayOneShot(puppeteerHitSounds[enemyRandom.Next(puppeteerHitSounds.Length)]);
+        creatureVoice.PlayOneShot(_hitBodySounds[enemyRandom.Next(_hitBodySounds.Length)]);
         if (IsServer && currentBehaviourStateIndex != (int)PuppeteerState.Attacking) creatureNetworkAnimator.SetTrigger(DoHitAnimation);
         if (enemyHP <= 0 && !isEnemyDead)
         {
@@ -425,6 +425,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         // Make all puppets scrap
         agent.enabled = false;
         smartAgentNavigator.enabled = false;
+        StartCoroutine(DoDissolveAnimation());
         if (!IsServer) return;
         creatureAnimator.SetBool(DeadAnimation, true);
         foreach (var kvp in playerPuppetMap)
@@ -439,6 +440,27 @@ public class Puppeteer : CodeRebirthEnemyAI
         playerPuppetMap.Clear();
         if (EnemyHandler.Instance.ManorLord == null) return;
         CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.GetCRItemDefinitionWithItemName("Needle")?.item.itemName, transform.position);
+    }
+
+    private static readonly int DissolveAmount = Shader.PropertyToID("_Dissolve");
+    private IEnumerator DoDissolveAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        float dissolveAmount = 0f;
+        List<Material> materials = new();
+        foreach (var renderer in skinnedMeshRenderers)
+        {
+            materials.AddRange(renderer.materials);
+        }
+        while (dissolveAmount < 1f)
+        {
+            dissolveAmount += Time.deltaTime * dissolveSpeed;
+            foreach (var material in materials)
+            {
+                material.SetFloat(DissolveAmount, dissolveAmount);
+            }
+            yield return null;
+        }
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

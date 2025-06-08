@@ -2874,15 +2874,24 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
-  hasVariants: 0
-  usesTemperature: 0
-  specialRenderer: {fileID: 0}
   creatureNetworkAnimator: {fileID: 2919410584223474381}
   smartAgentNavigator: {fileID: 1299754130320147181}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
+  _hitBodySounds:
+  - {fileID: 8300000, guid: 6c0db1e1e6176724084b00dd61c2087e, type: 3}
+  - {fileID: 8300000, guid: b88bbef8a6208dd4ba64358acdadc419, type: 3}
+  spawnSound: {fileID: 0}
+  _idleTimer: 1
   puppetDamageDealer: {fileID: 2167556560943370418}
   playerStabPosition: {fileID: 2078151550481931162}
   sneakSpeed: 4
@@ -2909,7 +2918,6 @@ MonoBehaviour:
   puppeteerHitSounds:
   - {fileID: 8300000, guid: 6c0db1e1e6176724084b00dd61c2087e, type: 3}
   - {fileID: 8300000, guid: b88bbef8a6208dd4ba64358acdadc419, type: 3}
-  puppeteerDeathSound: {fileID: 8300000, guid: bbc4f6a7ae667be468e54d875710c709, type: 3}
   isAttacking: 0
 --- !u!114 &1299754130320147181
 MonoBehaviour:
@@ -2936,8 +2944,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
+  _canWanderIntoOrOutOfInterior: 0
+  _allowedLinks: -1
 --- !u!1 &6926373206089999037
 GameObject:
   m_ObjectHideFlags: 0

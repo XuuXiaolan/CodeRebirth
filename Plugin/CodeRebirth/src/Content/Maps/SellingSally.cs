@@ -177,7 +177,6 @@ public class SellingSally : NetworkBehaviour
             scrapValueToMake += sellableScrap.scrapValue;
         }
 
-        HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         SellAndDisplayItemProfits(scrapValueToMake, CodeRebirthUtils.Instance.shipTerminal);
     }
 

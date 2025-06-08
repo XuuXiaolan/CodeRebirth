@@ -8,6 +8,15 @@ public class ExtraEnemyData : MonoBehaviour
     public EnemyAI enemyAI = null!;
 
     [HideInInspector]
+    public float coinDropChance = 0f;
+
+    [HideInInspector]
+    public bool rolledForCoin = false;
+
+    [HideInInspector]
+    public bool enemyKilledByPlayer = false;
+
+    [HideInInspector]
     public EnemyAICollisionDetect[] enemyAICollisionDetects = [];
 
     public void Start()
