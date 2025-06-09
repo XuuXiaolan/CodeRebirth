@@ -134,6 +134,7 @@ public class MarrowSplitter : GrabbableObject
         {
             isBeingUsed = true;
             _isHealing = true;
+            _idleSource.PlayOneShot(_healingSound);
             _idleSource.volume = 1f;
             _idleSource.Play();
         }
@@ -252,7 +253,6 @@ public class MarrowSplitter : GrabbableObject
 
             healingAnotherPlayer = true;
             _bloodParticles.Play(true);
-            _idleSource.PlayOneShot(_hitEnemySound);
             if (GameNetworkManager.Instance.localPlayerController == playerHeldBy)
             {
                 playerControllerB.DamagePlayerFromOtherClientServerRpc(-_decreaseAmount, playerHeldBy.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerHeldBy));
@@ -287,7 +287,6 @@ public class MarrowSplitter : GrabbableObject
         if (!healingAnotherPlayer && playerHeldBy.health < 100)
         {
             _bloodParticles.Play(true);
-            _idleSource.PlayOneShot(_healingSound);
             int currentAmount = Mathf.FloorToInt(_skinnedMeshRenderer.GetBlendShapeWeight(0));
             _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentAmount - _decreaseAmount, 0, 100));
             playerHeldBy.DamagePlayer(-_decreaseAmount, true, false, CauseOfDeath.Stabbing, 0, false, default);
