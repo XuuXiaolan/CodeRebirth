@@ -2444,8 +2444,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: bce59a83515ba37439da955aaf86b6ac, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 0
   m_Pitch: 1
   Loop: 1
@@ -5256,9 +5256,23 @@ MonoBehaviour:
   _skinnedMeshRenderer: {fileID: 1073458714853535489}
   _bloodParticles: {fileID: 3966976080263872651}
   _endTransform: {fileID: 4041302732310657678}
-  _hitEnemySound: {fileID: 0}
-  _healingSound: {fileID: 0}
   _idleSource: {fileID: 8764846700003574400}
+  _fillUpSounds:
+  - {fileID: 8300000, guid: ad8d1c563d393fc4a90d12d859706ea1, type: 3}
+  - {fileID: 8300000, guid: 200d31e3b127e7f4bb4d5503ecf62bf0, type: 3}
+  - {fileID: 8300000, guid: 8fdc105f1992df7468171a224939d934, type: 3}
+  _hitEnemySounds:
+  - {fileID: 8300000, guid: 0d6471b1d74ade244bb01204b9ac0e83, type: 3}
+  - {fileID: 8300000, guid: 0911be7617b111e4a905dab8712babb2, type: 3}
+  - {fileID: 8300000, guid: 772eba83bbe460948a59348e96bd7118, type: 3}
+  _healingSound: {fileID: 8300000, guid: 9d2257362fb2be945b70edafe343e4cb, type: 3}
+  _hitObjectSounds:
+  - {fileID: 8300000, guid: c72b1a019d292e048b20a370cbece7cd, type: 3}
+  - {fileID: 8300000, guid: 40c94e150d4ce7a48953be1e2702fb92, type: 3}
+  - {fileID: 8300000, guid: 28cbc1a7f5e662547ae736bb50ea680b, type: 3}
+  - {fileID: 8300000, guid: ce4eed19bc422f14487bb83c35e8a974, type: 3}
+  - {fileID: 8300000, guid: 1b568bdacd853a247b5bb7dca83f896b, type: 3}
+  - {fileID: 8300000, guid: f89b82fcf2791ba45841c16d4a177df3, type: 3}
   _increaseAmount: 1
   _decreaseAmount: 2
 --- !u!95 &6000667197330552496
