@@ -25,7 +25,7 @@ public class MarrowSplitter : GrabbableObject
     [SerializeField]
     private AudioClip[] _fillUpSounds = [];
     [SerializeField]
-    private AudioClip _hitEnemySound = null!;
+    private AudioClip[] _hitEnemySounds = [];
     [SerializeField]
     private AudioClip _healingSound = null!;
 
@@ -219,7 +219,7 @@ public class MarrowSplitter : GrabbableObject
         if (hitSomething)
         {
             _bloodParticles.Play(true);
-            _idleSource.PlayOneShot(_hitEnemySound);
+            _idleSource.PlayOneShot(_hitEnemySounds[UnityEngine.Random.Range(0, _hitEnemySounds.Length)]);
             _hitTimer = 0.4f;
             insertedBattery.charge -= 0.05f;
             float currentAmount = _skinnedMeshRenderer.GetBlendShapeWeight(0);
