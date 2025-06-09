@@ -14,7 +14,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
     // Main cylinder local data
     private Vector3 _mainLocalCenter;
     private Vector2 _mainLocalRadii;  // x = radiusX, y = radiusZ
-    private float   _mainLocalHalfH;
+    private float _mainLocalHalfH;
 
     // Exemption cylinder local data
     private Vector3 _exemptLocalCenter;
@@ -44,15 +44,14 @@ public class AutonomousCraneTrigger : MonoBehaviour
                 continue;
 
             bool inTargets = _mainScript._targetablePlayers.Contains(player);
-
-            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
+            bool playerInvalid = player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead();
+            if (inTargets)
             {
-                if (inTargets)
+                if (playerInvalid)
                 {
                     Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is dead or not controlled, removing from targetable players.");
                     _mainScript._targetablePlayers.Remove(player);
                 }
-                continue;
             }
 
             if (IsInsideLocalCylinder(player.transform.position, _exemptionCollider.transform, _exemptLocalCenter, _exemptLocalRadii, _exemptLocalHalfH))

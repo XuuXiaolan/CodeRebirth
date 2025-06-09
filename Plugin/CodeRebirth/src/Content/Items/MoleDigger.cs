@@ -15,7 +15,8 @@ public class MoleDigger : GrabbableObject
     public AudioSource idleSource = null!;
     public AudioClip attackIdleSound = null!;
     public AudioClip normalIdleSound = null!;
-    public AudioSource audioSource = null!;
+    public AudioClip[] hitObjectSounds = [];
+    public AudioClip[] hitEnemiesSounds = [];
     public AudioClip DeactivateSound = null!;
     public AudioClip[] chainYankSound = [];
     public AudioClip activateSound = null!;
@@ -48,7 +49,7 @@ public class MoleDigger : GrabbableObject
         }
         idleSource.volume = 0f;
         idleSource.clip = normalIdleSound;
-        audioSource.PlayOneShot(DeactivateSound);
+        idleSource.PlayOneShot(DeactivateSound);
         lightObject.SetActive(false);
         isBeingUsed = false;
 
@@ -67,7 +68,7 @@ public class MoleDigger : GrabbableObject
         }
         idleSource.volume = 0f;
         idleSource.clip = normalIdleSound;
-        audioSource.PlayOneShot(DeactivateSound);
+        idleSource.PlayOneShot(DeactivateSound);
         lightObject.SetActive(false);
         isBeingUsed = false;
     }
@@ -94,7 +95,7 @@ public class MoleDigger : GrabbableObject
     {
         idleSource.volume = enable ? 1f : 0f;
         idleSource.clip = normalIdleSound;
-        audioSource.PlayOneShot(enable ? activateSound : DeactivateSound);
+        idleSource.PlayOneShot(enable ? activateSound : DeactivateSound);
         lightObject.SetActive(enable);
     }
 
@@ -107,7 +108,7 @@ public class MoleDigger : GrabbableObject
         if (btn.wasPressedThisFrame)
         {
             _yankChainTimer = 1f;
-            audioSource.PlayOneShot(chainYankSound[UnityEngine.Random.Range(0, chainYankSound.Length)]);
+            idleSource.PlayOneShot(chainYankSound[UnityEngine.Random.Range(0, chainYankSound.Length)]);
             if (UnityEngine.Random.Range(0, 100) < 25)
             {
                 moleAnimator.SetBool(ActivatedAnimation, true);
@@ -127,7 +128,7 @@ public class MoleDigger : GrabbableObject
         DoHitStuff(1);
     }
 
-    private Collider[] _cachedColliders = new Collider[8];
+    private Collider[] _cachedColliders = new Collider[16];
     private List<IHittable> _iHittableList = new();
     private List<EnemyAI> _enemyAIList = new();
 
@@ -149,12 +150,27 @@ public class MoleDigger : GrabbableObject
                     {
                         continue;
                     }
+                    idleSource.PlayOneShot(hitEnemiesSounds[UnityEngine.Random.Range(0, hitEnemiesSounds.Length)]);
                     _enemyAIList.Add(enemyAICollisionDetect.mainScript);
                 }
                 hitSomething = true;
                 _iHittableList.Add(iHittable);
             }
         }
+
+        int surfaceSound = -1;
+        numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < numHits; i++)
+        {
+            for (int j = 0; j < StartOfRound.Instance.footstepSurfaces.Length; j++)
+            {
+                if (!_cachedColliders[i].gameObject.CompareTag(StartOfRound.Instance.footstepSurfaces[j].surfaceTag)) continue;
+                surfaceSound = j;
+                break;
+            }
+        }
+        HandleHittingSurface(surfaceSound);
+
         foreach (var iHittable in _iHittableList)
         {
             if (IsOwner)
@@ -166,6 +182,14 @@ public class MoleDigger : GrabbableObject
             _hitTimer = 0.4f;
             insertedBattery.charge -= 0.05f;
         }
+    }
+
+    private void HandleHittingSurface(int surfaceID)
+    {
+        if (surfaceID == -1) return;
+        idleSource.PlayOneShot(StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
+        WalkieTalkie.TransmitOneShotAudio(idleSource, StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
+        idleSource.PlayOneShot(hitObjectSounds[UnityEngine.Random.Range(0, hitObjectSounds.Length)]);
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)

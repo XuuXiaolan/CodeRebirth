@@ -7,7 +7,6 @@ using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem;
 using System.Linq;
 using CodeRebirth.src.Util;
-using CullFactory;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util.AssetLoading;
@@ -22,7 +21,6 @@ public class Hoverboard : GrabbableObject, IHittable
     public Transform[] anchors = new Transform[4];
     [NonSerialized]
     public PlayerControllerB? playerControlling;
-    private RaycastHit[] hits = new RaycastHit[4];
     private bool _isHoverForwardHeld = false;
     private bool _isHoverBackwardHeld = false;
     private bool _isHoverLeftHeld = false;
@@ -219,7 +217,7 @@ public class Hoverboard : GrabbableObject, IHittable
         {
             for (int i = 0; i < 4; i++)
             {
-                ApplyForce(anchors[i], hits[i]);
+                ApplyForce(anchors[i]);
             }
         }
     }
@@ -365,9 +363,9 @@ public class Hoverboard : GrabbableObject, IHittable
         jumpCooldown = true;
     }
 
-    public void ApplyForce(Transform anchor, RaycastHit hit)
+    public void ApplyForce(Transform anchor)
     {
-        if (Physics.Raycast(anchor.position, -anchor.up, out hit, 1000f, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
+        if (Physics.Raycast(anchor.position, -anchor.up, out RaycastHit hit, 1000f, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
         {
             float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, this.isInShipRoom ? 3f : 100f);
             // Debug log for force and anchor positions
@@ -534,17 +532,12 @@ public class Hoverboard : GrabbableObject, IHittable
         }
         // Reset hoverboardChild's rotation and position
         hoverboardChild.rotation = resetChildRotation;
-        Plugin.ExtendedLogging($"Rotation: {hoverboardChild.rotation}");
-        /*if (hoverboardMode == HoverboardMode.Held) {
-            hoverboardChild.rotation = playerCurrentlyControlling.transform.rotation * Quaternion.Euler(0, -90, 0);
-        }*/
         hoverboardChild.position += Vector3.up * 0.3f;
         for (int i = 0; i < anchors.Length; i++)
         {
             anchors[i].localPosition = initialAnchorPositions[i];
             anchors[i].localRotation = initialAnchorRotations[i];
         }
-        // Debug log for position and rotation
         if (IsServer) playerCurrentlyControlling.transform.SetParent(hoverboardSeat.transform, true);
         playerCurrentlyControlling.GetCRPlayerData().ridingHoverboard = true;
         playerCurrentlyControlling.GetCRPlayerData().hoverboardRiding = this;

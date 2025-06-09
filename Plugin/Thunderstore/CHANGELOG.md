@@ -67,6 +67,9 @@
 
 - Store Unlockables.
   - Piggy bank.
+  
+- Misc
+  - New lore accurate manor lord death animation/effect.
 
 </details>
 

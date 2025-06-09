@@ -21,11 +21,15 @@ public class MarrowSplitter : GrabbableObject
     [SerializeField]
     private Transform _endTransform = null!;
     [SerializeField]
+    private AudioSource _idleSource = null!;
+    [SerializeField]
     private AudioClip _hitEnemySound = null!;
     [SerializeField]
     private AudioClip _healingSound = null!;
+
     [SerializeField]
-    private AudioSource _idleSource = null!;
+    private AudioClip[] _hitObjectSounds = [];
+
     [SerializeField]
     private int _increaseAmount = 1;
     [SerializeField]
@@ -267,6 +271,19 @@ public class MarrowSplitter : GrabbableObject
             }
         }
 
+        int surfaceSound = -1;
+        numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < numHits; i++)
+        {
+            for (int j = 0; j < StartOfRound.Instance.footstepSurfaces.Length; j++)
+            {
+                if (!_cachedColliders[i].gameObject.CompareTag(StartOfRound.Instance.footstepSurfaces[j].surfaceTag)) continue;
+                surfaceSound = j;
+                break;
+            }
+        }
+        HandleHittingSurface(surfaceSound);
+
         if (!healingAnotherPlayer && playerHeldBy.health < 100)
         {
             _bloodParticles.Play(true);
@@ -286,6 +303,14 @@ public class MarrowSplitter : GrabbableObject
                     _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
             }
         }
+    }
+
+    private void HandleHittingSurface(int surfaceID)
+    {
+        if (surfaceID == -1) return;
+        _idleSource.PlayOneShot(StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
+        WalkieTalkie.TransmitOneShotAudio(_idleSource, StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
+        _idleSource.PlayOneShot(_hitObjectSounds[UnityEngine.Random.Range(0, _hitObjectSounds.Length)]);
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)

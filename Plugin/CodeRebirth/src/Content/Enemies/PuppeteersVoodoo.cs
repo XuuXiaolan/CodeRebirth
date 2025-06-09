@@ -12,7 +12,7 @@ using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
-public class PuppeteersVoodoo : NetworkBehaviour, IHittable, IVisibleThreat
+public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 {
     public NavMeshAgent agent = null!;
     public Animator animator = null!;
@@ -56,65 +56,13 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable, IVisibleThreat
     [HideInInspector] public Puppeteer puppeteerCreatedBy = null!;
     [HideInInspector] public PlayerControllerB? playerControlled = null;
 
-    #region IVisibleThreat
-    public ThreatType type => ThreatType.EyelessDog;
-
-    int IVisibleThreat.SendSpecialBehaviour(int id)
-    {
-        return 0;
-    }
-
-    int IVisibleThreat.GetThreatLevel(Vector3 seenByPosition)
-    {
-        return 18;
-    }
-
-    int IVisibleThreat.GetInterestLevel()
-    {
-        return 0;
-    }
-
-    Transform IVisibleThreat.GetThreatLookTransform()
-    {
-        return base.transform;
-    }
-
-    Transform IVisibleThreat.GetThreatTransform()
-    {
-        return base.transform;
-    }
-
-    Vector3 IVisibleThreat.GetThreatVelocity()
-    {
-        if (base.IsOwner)
-        {
-            return agent.velocity;
-        }
-        return Vector3.zero;
-    }
-
-    float IVisibleThreat.GetVisibility()
-    {
-        return 1f;
-    }
-
-	bool IVisibleThreat.IsThreatDead()
-	{
-		return false;
-	}
-
-	GrabbableObject? IVisibleThreat.GetHeldObject()
-	{
-		return null;
-	}
-    #endregion
     private static readonly int OnHitAnimation = Animator.StringToHash("onHit"); // Triger
     private static readonly int IsKickedAnimation = Animator.StringToHash("isKicked"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
 
-    private System.Random puppetRandom = new System.Random(69);
-    public static List<PuppeteersVoodoo> puppeteerList = new List<PuppeteersVoodoo>();
+    private System.Random puppetRandom = new(69);
+    public static List<PuppeteersVoodoo> puppeteerList = new();
 
     public override void OnNetworkSpawn()
     {

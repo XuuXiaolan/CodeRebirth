@@ -99,7 +99,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 	{
 		return this.isEnemyDead;
 	}
-	GrabbableObject IVisibleThreat.GetHeldObject()
+	GrabbableObject? IVisibleThreat.GetHeldObject()
 	{
 		return null;
 	}
