@@ -23,6 +23,8 @@ public class MarrowSplitter : GrabbableObject
     [SerializeField]
     private AudioSource _idleSource = null!;
     [SerializeField]
+    private AudioClip[] _fillUpSounds = [];
+    [SerializeField]
     private AudioClip _hitEnemySound = null!;
     [SerializeField]
     private AudioClip _healingSound = null!;
@@ -222,6 +224,10 @@ public class MarrowSplitter : GrabbableObject
             insertedBattery.charge -= 0.05f;
             float currentAmount = _skinnedMeshRenderer.GetBlendShapeWeight(0);
             float newAmount = Mathf.Clamp(currentAmount + _increaseAmount, 0, 100);
+            if (newAmount > currentAmount)
+            {
+                _idleSource.PlayOneShot(_fillUpSounds[UnityEngine.Random.Range(0, _fillUpSounds.Length)]);
+            }
             Plugin.ExtendedLogging($"Increasing blendshape weight to {newAmount}");
             _skinnedMeshRenderer.SetBlendShapeWeight(0, newAmount);
         }
