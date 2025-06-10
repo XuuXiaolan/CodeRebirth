@@ -126,9 +126,16 @@ static class EnemyAIPatch
             }
         }
 
-        if (!self.isEnemyDead && CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(self, out ExtraEnemyData extraEnemyData) && self.enemyHP - force <= 0 && playerWhoHit != null)
+        if (CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(self, out ExtraEnemyData extraEnemyData))
         {
-            extraEnemyData.enemyKilledByPlayer = true;
+            if (playerWhoHit != null)
+            {
+                extraEnemyData.playerThatLastHit = playerWhoHit;
+            }
+            if (!self.isEnemyDead && self.enemyHP - force <= 0 && playerWhoHit != null)
+            {
+                extraEnemyData.enemyKilledByPlayer = true;
+            }
         }
 
         orig(self, force, playerWhoHit, playHitSFX, hitID);

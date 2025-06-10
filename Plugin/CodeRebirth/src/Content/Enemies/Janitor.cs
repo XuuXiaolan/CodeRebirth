@@ -941,6 +941,11 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
                 }
             }
 
+            if (grabbable.gameObject.GetComponent<EnemyAI>())
+            {
+                skipItem = true;
+            }
+
             if (skipItem)
                 continue;
 

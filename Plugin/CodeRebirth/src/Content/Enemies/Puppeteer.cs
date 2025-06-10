@@ -415,7 +415,10 @@ public class Puppeteer : CodeRebirthEnemyAI
         if (timeSinceLastTakenDamage < 0.5f) return;
         if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
         {
-            // try to reflect to nearest player?
+            if (CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(this, out ExtraEnemyData extraEnemyData))
+            {
+                extraEnemyData.playerThatLastHit?.KillPlayer(extraEnemyData.playerThatLastHit.velocityLastFrame, true, CauseOfDeath.Burning, 6, default);
+            }
             return;
         }
         base.KillEnemy(destroy);
