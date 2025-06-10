@@ -63,10 +63,11 @@ public class TomaHop : CRWeapon
         if (previousPlayerHeldBy.fallValue >= -3)
             return;
 
-        int newFallValue = (int)previousPlayerHeldBy.fallValue * -1;
+        float newFallValue = previousPlayerHeldBy.fallValue * -1;
         previousPlayerHeldBy.ResetFallGravity();
-        previousPlayerHeldBy.externalForces = Vector3.up * newFallValue;
-        previousPlayerHeldBy.externalForceAutoFade += Vector3.up * newFallValue;
-        enemyAI.HitEnemyOnLocalClient(Math.Clamp((newFallValue / 10) - 1, 0, 10), transform.position, previousPlayerHeldBy, true, -1);
+        Vector3 randomDirectionOffset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0f, UnityEngine.Random.Range(-1f, 1f)).normalized * 4f;
+        previousPlayerHeldBy.externalForces = Vector3.up * newFallValue + randomDirectionOffset;
+        previousPlayerHeldBy.externalForceAutoFade += Vector3.up * newFallValue + randomDirectionOffset;
+        enemyAI.HitEnemyOnLocalClient(Math.Clamp((int)(newFallValue / 10) - 1, 0, 10), transform.position, previousPlayerHeldBy, true, -1);
     }
 }
