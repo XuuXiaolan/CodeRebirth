@@ -78,7 +78,7 @@ public class Turbulence : CRWeapon
         {
             return;
         }
-        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 120f * (playerHeldBy.isCrouching ? 0.25f : 1f);
+        playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 150f;
         StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
     }
 
@@ -184,6 +184,7 @@ public class Turbulence : CRWeapon
     public override void EquipItem()
     {
         base.EquipItem();
+        heldOverHeadTimer.Value = 0f;
         grabbable = true;
         stuckToGround = false;
     }
