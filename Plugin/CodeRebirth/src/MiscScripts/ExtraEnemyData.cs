@@ -1,3 +1,4 @@
+using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -12,6 +13,9 @@ public class ExtraEnemyData : MonoBehaviour
 
     [HideInInspector]
     public bool rolledForCoin = false;
+
+    [HideInInspector]
+    public PlayerControllerB? playerThatLastHit = null;
 
     [HideInInspector]
     public bool enemyKilledByPlayer = false;

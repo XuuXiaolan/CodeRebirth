@@ -399,7 +399,7 @@ public class Puppeteer : CodeRebirthEnemyAI
 
     public override void KillEnemy(bool destroy = false)
     {
-        Plugin.ExtendedLogging("Puppeteer killed");
+        Plugin.ExtendedLogging("Puppeteer killed?");
         if (!enteredDefensiveModeOnce)
         {
             timeSinceLastTakenDamage = 0f;

@@ -63,7 +63,7 @@
   - Oxyde's crashing ship.
 
 - Weathers
-  - NightShift
+  - NightShift (Oxyde Only)
 
 - Store Unlockables.
   - Piggy bank.

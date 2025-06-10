@@ -18,6 +18,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     [SerializeField]
     private Transform _gunEndTransform = null!;
 
+    [Header("Movement")]
     [SerializeField]
     private float _walkingSpeed = 2f;
     [SerializeField]
@@ -25,11 +26,15 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     [SerializeField]
     private float _shootingSpeed = 0.1f;
 
+    [Header("Visuals")]
     [SerializeField]
     private GameObject _gunParticleSystemGO = null!;
     [SerializeField]
     private GameObject _fakeGunGO = null!;
 
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource _treadsSource = null!;
     [SerializeField]
     private AudioSource _aggroSFX = null!;
     [SerializeField]
@@ -191,6 +196,14 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         creatureAnimator.SetFloat(RunSpeedFloat, velocity);
         _materials[0].SetVector(ScrollSpeedID, new Vector3(0, -velocity, 0)); // Left Tread
         _materials[1].SetVector(ScrollSpeedID, new Vector3(0, velocity, 0)); // Right Tread
+        if (velocity > 0)
+        {
+            _treadsSource.volume = 1f;
+        }
+        else
+        {
+            _treadsSource.volume = 0f;
+        }
         switch (currentBehaviourStateIndex)
         {
             case (int)PeaceKeeperState.Idle:
@@ -340,6 +353,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         _bitchSlappingRoutine = null;
     }
 
+    [Header("Gatling Gun")]
     [SerializeField]
     private float _gatlingDamageInterval = 0.21f;
     [SerializeField]
