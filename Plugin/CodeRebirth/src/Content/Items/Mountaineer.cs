@@ -39,15 +39,15 @@ public class Mountaineer : CRWeapon
     public override void Update()
     {
         base.Update();
-        if (heldOverHeadTimer > 0f && iceMaterial.color.a < 1)
+        if (heldOverHeadTimer.Value > 0f && iceMaterial.color.a < 1)
         {
             iceMaterial.color = new Color(iceMaterial.color.r, iceMaterial.color.g, iceMaterial.color.b, iceMaterial.color.a + Time.deltaTime / 5f);
         }
-        else if (heldOverHeadTimer <= 0f && iceMaterial.color.a > 0)
+        else if (heldOverHeadTimer.Value <= 0f && iceMaterial.color.a > 0)
         {
             iceMaterial.color = new Color(iceMaterial.color.r, iceMaterial.color.g, iceMaterial.color.b, 0f);
         }
-        iceMaterial.color = new Color(iceMaterial.color.r, iceMaterial.color.g, iceMaterial.color.b, heldOverHeadTimer);
+        iceMaterial.color = new Color(iceMaterial.color.r, iceMaterial.color.g, iceMaterial.color.b, heldOverHeadTimer.Value);
         if (stuckPlayer != null && stuckToWall && !stuckPlayer.isGrabbingObjectAnimation) // this wont be sync'd, which is okay!
         {
             stuckPlayer.transform.position = stuckPosition;

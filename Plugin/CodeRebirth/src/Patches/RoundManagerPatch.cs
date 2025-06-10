@@ -38,7 +38,7 @@ static class RoundManagerPatch
             return;
 
         animationCurve = mapObjDef.spawnRateFunction(level);
-        int randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0f, 1f)) + 0.5f);
+        int randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0f, 1f)));
         Plugin.ExtendedLogging($"Spawning {randomNumberToSpawn} of {prefabToSpawn.name} for level {level}");
         for (int i = 0; i < randomNumberToSpawn; i++)
         {
@@ -95,7 +95,7 @@ static class RoundManagerPatch
     private static void SpawnFlora(GameObject staticBatchedParent, System.Random random, SpawnableFlora flora, ref int spawnCount)
     {
         AnimationCurve animationCurve = flora.spawnCurveFunction(RoundManager.Instance.currentLevel);
-        int targetSpawns = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0, 1)) + 0.5f);
+        int targetSpawns = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0, 1)));
         for (int i = 0; i < targetSpawns; i++)
         {
             if (!TryGetValidFloraSpawnPoint(random, out RaycastHit hit))

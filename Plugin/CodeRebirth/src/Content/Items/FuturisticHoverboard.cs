@@ -1,7 +1,9 @@
+using System.Linq;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace CodeRebirth.src.Content.Items;
 public enum HoverboardTypes
@@ -18,23 +20,33 @@ public class FuturisticHoverboard : NetworkBehaviour
     private InteractTrigger _sitTrigger = null!;
     [SerializeField]
     private Transform[] _anchors = new Transform[4];
+    [SerializeField]
+    private float _jumpTimer = 5f;
 
-    private RaycastHit[] _hits = new RaycastHit[4];
-    private bool _isHoverForwardHeld = false;
-    private bool _isHoverBackwardHeld = false;
-    private bool _isHoverLeftHeld = false;
-    private bool _isHoverRightHeld = false;
-    private bool _isSprintHeld = false;
-    private bool jumpCooldown = true;
     private bool _turnedOn = false;
     private float _speedMultiplier = 1f;
     private float _chargeIncreaseMultiplier = 1f;
+    private InputAction _moveAction = null!;
+    private InputAction _sprintAction = null!;
+    private InputAction _jumpAction = null!;
+    private InputAction _crouchAction = null!;
     private PlayerControllerB? _playerRiding = null;
     private HoverboardTypes _hoverboardType = HoverboardTypes.Regular;
 
     #region Unity Methods
     private void Start()
     {
+        _moveAction = GameNetworkManager.Instance.localPlayerController.playerActions.m_Movement.FindAction("Move");
+
+        /*Vector2 move = _moveAction.ReadValue<Vector2>();
+        float forward  = Mathf.Max(0, move.y);
+        float backward = Mathf.Max(0, -move.y);
+        float right    = Mathf.Max(0, move.x);
+        float left     = Mathf.Max(0, -move.x);*/
+
+        _sprintAction = GameNetworkManager.Instance.localPlayerController.playerActions.m_Movement.FindAction("Sprint");
+        _jumpAction = GameNetworkManager.Instance.localPlayerController.playerActions.m_Movement.FindAction("Jump");
+        _crouchAction = GameNetworkManager.Instance.localPlayerController.playerActions.m_Movement.FindAction("Crouch");
         _sitTrigger.onInteract.AddListener(OnInteract);
         // ConfigureHoverboard();
         // this.insertedBattery = new Battery(false, 1f);
@@ -68,7 +80,7 @@ public class FuturisticHoverboard : NetworkBehaviour
         if (Physics.Raycast(anchor.position, -anchor.up, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             float force = Mathf.Clamp(Mathf.Abs(1 / (hit.point.y - anchor.position.y)), 0, _playerRiding.isInHangarShipRoom ? 3f : 100f);
-            // Debug log for force and anchor positions
+            Plugin.ExtendedLogging($"Force: {force}");
             _rigidBody.AddForceAtPosition(_playerRiding.transform.up * force * 8f, anchor.position, ForceMode.Acceleration);
         }
     }

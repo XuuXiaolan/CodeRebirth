@@ -136,7 +136,11 @@ public class SellingSally : NetworkBehaviour
     private bool CanCurrentlyShoot()
     {
         _sellableScraps.Clear();
-        foreach (var grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
+        GrabbableObject[] grabbableObjects = transform.GetComponentsInChildren<GrabbableObject>();
+        if (grabbableObjects.Length == 0)
+            return false;
+
+        foreach (var grabbableObject in grabbableObjects)
         {
             if (grabbableObject.transform.parent != sallyLoaderTransform) continue;
             if (grabbableObject.itemProperties.itemName == "Sally Cube" || grabbableObject.itemProperties.itemName == "Flattened Body")

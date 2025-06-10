@@ -13,6 +13,7 @@ public class MoleDigger : GrabbableObject
     public Transform endTransform = null!;
     public GameObject lightObject = null!;
     public AudioSource idleSource = null!;
+    public AudioSource audioSource = null!;
     public AudioClip attackIdleSound = null!;
     public AudioClip normalIdleSound = null!;
     public AudioClip[] hitObjectSounds = [];
@@ -29,6 +30,10 @@ public class MoleDigger : GrabbableObject
     public override void Start() // when battery runs out,
     {
         base.Start();
+        foreach (var action in GameNetworkManager.Instance.localPlayerController.playerActions.m_Movement.actions)
+        {
+            Plugin.ExtendedLogging($"name: {action.name} type: {action.id}");
+        }
         lightObject.SetActive(false);
     }
 
@@ -49,7 +54,7 @@ public class MoleDigger : GrabbableObject
         }
         idleSource.volume = 0f;
         idleSource.clip = normalIdleSound;
-        idleSource.PlayOneShot(DeactivateSound);
+        audioSource.PlayOneShot(DeactivateSound);
         lightObject.SetActive(false);
         isBeingUsed = false;
 
@@ -68,7 +73,7 @@ public class MoleDigger : GrabbableObject
         }
         idleSource.volume = 0f;
         idleSource.clip = normalIdleSound;
-        idleSource.PlayOneShot(DeactivateSound);
+        audioSource.PlayOneShot(DeactivateSound);
         lightObject.SetActive(false);
         isBeingUsed = false;
     }
@@ -81,7 +86,11 @@ public class MoleDigger : GrabbableObject
             moleAnimator.SetBool(ActivatedAnimation, false);
             moleAnimator.SetBool(AttackingAnimation, false);
         }
+        idleSource.volume = 0f;
+        idleSource.clip = normalIdleSound;
+        audioSource.PlayOneShot(DeactivateSound);
         lightObject.SetActive(false);
+        isBeingUsed = false;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -95,20 +104,20 @@ public class MoleDigger : GrabbableObject
     {
         idleSource.volume = enable ? 1f : 0f;
         idleSource.clip = normalIdleSound;
-        idleSource.PlayOneShot(enable ? activateSound : DeactivateSound);
+        audioSource.PlayOneShot(enable ? activateSound : DeactivateSound);
         lightObject.SetActive(enable);
     }
 
     public void OnChainYanked(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (_yankChainTimer > 0f || insertedBattery.empty || isBeingUsed || moleAnimator.GetBool(ActivatedAnimation)) return;
+        if (_yankChainTimer > 0f || insertedBattery.empty || isBeingUsed || isPocketed || moleAnimator.GetBool(ActivatedAnimation)) return;
         if (GameNetworkManager.Instance.localPlayerController != playerHeldBy) return;
         var btn = (ButtonControl)context.control;
 
         if (btn.wasPressedThisFrame)
         {
             _yankChainTimer = 1f;
-            idleSource.PlayOneShot(chainYankSound[UnityEngine.Random.Range(0, chainYankSound.Length)]);
+            audioSource.PlayOneShot(chainYankSound[UnityEngine.Random.Range(0, chainYankSound.Length)]);
             if (UnityEngine.Random.Range(0, 100) < 25)
             {
                 moleAnimator.SetBool(ActivatedAnimation, true);
@@ -150,26 +159,13 @@ public class MoleDigger : GrabbableObject
                     {
                         continue;
                     }
-                    idleSource.PlayOneShot(hitEnemiesSounds[UnityEngine.Random.Range(0, hitEnemiesSounds.Length)]);
+                    audioSource.PlayOneShot(hitEnemiesSounds[UnityEngine.Random.Range(0, hitEnemiesSounds.Length)]);
                     _enemyAIList.Add(enemyAICollisionDetect.mainScript);
                 }
                 hitSomething = true;
                 _iHittableList.Add(iHittable);
             }
         }
-
-        int surfaceSound = -1;
-        numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-        for (int i = 0; i < numHits; i++)
-        {
-            for (int j = 0; j < StartOfRound.Instance.footstepSurfaces.Length; j++)
-            {
-                if (!_cachedColliders[i].gameObject.CompareTag(StartOfRound.Instance.footstepSurfaces[j].surfaceTag)) continue;
-                surfaceSound = j;
-                break;
-            }
-        }
-        HandleHittingSurface(surfaceSound);
 
         foreach (var iHittable in _iHittableList)
         {
@@ -182,14 +178,28 @@ public class MoleDigger : GrabbableObject
             _hitTimer = 0.4f;
             insertedBattery.charge -= 0.05f;
         }
+        else
+        {
+            numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < numHits; i++)
+            {
+                for (int j = 0; j < StartOfRound.Instance.footstepSurfaces.Length; j++)
+                {
+                    if (!_cachedColliders[i].gameObject.CompareTag(StartOfRound.Instance.footstepSurfaces[j].surfaceTag)) continue;
+                    HandleHittingSurface(j);
+                    _hitTimer = 0.4f;
+                    break;
+                }
+            }
+        }
     }
 
     private void HandleHittingSurface(int surfaceID)
     {
         if (surfaceID == -1) return;
-        idleSource.PlayOneShot(StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
-        WalkieTalkie.TransmitOneShotAudio(idleSource, StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
-        idleSource.PlayOneShot(hitObjectSounds[UnityEngine.Random.Range(0, hitObjectSounds.Length)]);
+        audioSource.PlayOneShot(StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
+        WalkieTalkie.TransmitOneShotAudio(audioSource, StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
+        audioSource.PlayOneShot(hitObjectSounds[UnityEngine.Random.Range(0, hitObjectSounds.Length)]);
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)

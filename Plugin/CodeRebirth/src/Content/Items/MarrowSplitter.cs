@@ -72,6 +72,9 @@ public class MarrowSplitter : GrabbableObject
         if (IsOwner)
             _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
 
+        _isHealing = false;
+        _idleSource.volume = 0f;
+        _idleSource.Stop();
         isBeingUsed = false;
         Plugin.InputActionsInstance.MarrowHealPlayer.performed -= OnTryStartHealPlayer;
         Plugin.InputActionsInstance.MarrowHealPlayer.canceled -= OnTryCancelHealPlayer;
@@ -82,6 +85,13 @@ public class MarrowSplitter : GrabbableObject
         base.UseUpBatteries();
         if (IsOwner)
             _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
+
+        _isHealing = false;
+        _idleSource.volume = 0f;
+        _idleSource.Stop();
+        isBeingUsed = false;
+        Plugin.InputActionsInstance.MarrowHealPlayer.performed -= OnTryStartHealPlayer;
+        Plugin.InputActionsInstance.MarrowHealPlayer.canceled -= OnTryCancelHealPlayer;
     }
 
     public void OnTryStartHealPlayer(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -231,6 +241,20 @@ public class MarrowSplitter : GrabbableObject
             Plugin.ExtendedLogging($"Increasing blendshape weight to {newAmount}");
             _skinnedMeshRenderer.SetBlendShapeWeight(0, newAmount);
         }
+        else
+        {
+            numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < numHits; i++)
+            {
+                for (int j = 0; j < StartOfRound.Instance.footstepSurfaces.Length; j++)
+                {
+                    if (!_cachedColliders[i].gameObject.CompareTag(StartOfRound.Instance.footstepSurfaces[j].surfaceTag)) continue;
+                    HandleHittingSurface(j);
+                    _hitTimer = 0.4f;
+                    break;
+                }
+            }
+        }
     }
 
     private void DoHealingPlayers()
@@ -276,19 +300,6 @@ public class MarrowSplitter : GrabbableObject
                 return;
             }
         }
-
-        int surfaceSound = -1;
-        numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-        for (int i = 0; i < numHits; i++)
-        {
-            for (int j = 0; j < StartOfRound.Instance.footstepSurfaces.Length; j++)
-            {
-                if (!_cachedColliders[i].gameObject.CompareTag(StartOfRound.Instance.footstepSurfaces[j].surfaceTag)) continue;
-                surfaceSound = j;
-                break;
-            }
-        }
-        HandleHittingSurface(surfaceSound);
 
         if (!healingAnotherPlayer && playerHeldBy.health < 100)
         {

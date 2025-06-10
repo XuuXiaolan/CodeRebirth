@@ -2,6 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Turbulence : CRWeapon
 {
     [SerializeField]
@@ -174,7 +175,9 @@ public class Turbulence : CRWeapon
 
     public override void FallWithCurve()
     {
-        if (stuckToGround) return;
+        if (stuckToGround)
+            return;
+
         base.FallWithCurve();
     }
 
@@ -183,5 +186,24 @@ public class Turbulence : CRWeapon
         base.EquipItem();
         grabbable = true;
         stuckToGround = false;
+    }
+
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
+        if (reelingUp.Value)
+        {
+            heldOverHeadTimer.Value += Time.deltaTime;
+        }
+        ShakeTransform(this.transform, Mathf.Clamp(heldOverHeadTimer.Value, 0, 10));
+    }
+
+    public void ShakeTransform(Transform _transform, float intensity)
+    {
+        if (intensity <= 0)
+            return;
+
+        float offset = Mathf.Clamp(intensity * 0.00025f * UnityEngine.Random.Range(-1, 2), -0.002f, 0.002f);
+        _transform.localPosition = new Vector3(_transform.localPosition.x + offset, _transform.localPosition.y + offset, _transform.localPosition.z + offset);
     }
 }

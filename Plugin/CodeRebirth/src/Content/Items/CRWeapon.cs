@@ -73,7 +73,9 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     public AudioSource weaponAudio;
     public bool tryHitAllTimes = false;
 
-    [HideInInspector] public float heldOverHeadTimer = 0f;
+    [HideInInspector] public NetworkVariable<float> heldOverHeadTimer = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [HideInInspector] public NetworkVariable<bool> reelingUp = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
     private Coroutine? _reelingRoutine = null;
     [HideInInspector] public RaycastHit[] cachedRaycastHits = new RaycastHit[16];
     [HideInInspector] public PlayerControllerB? previousPlayerHeldBy = null;
@@ -125,7 +127,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     private IEnumerator ReelBackWeapon()
     {
-        heldOverHeadTimer = 0f;
+        heldOverHeadTimer.Value = 0f;
         playerHeldBy.activatingItem = true;
         playerHeldBy.twoHanded = true;
         playerHeldBy.playerBodyAnimator.ResetTrigger(ShovelHitAnimation);
@@ -141,7 +143,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         StartHeldOverHead();
         while (isHoldingButton && isHeld)
         {
-            heldOverHeadTimer += Time.deltaTime;
+            heldOverHeadTimer.Value += Time.deltaTime;
             yield return null;
         }
         EndHeldOverHead();
@@ -165,7 +167,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         }
         EndWeaponHit(success);
         yield return new WaitForSeconds(weaponCooldown);
-        heldOverHeadTimer = 0f;
+        heldOverHeadTimer.Value = 0f;
         _reelingRoutine = null;
     }
 
@@ -205,7 +207,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     public virtual void OnStartReelup()
     {
-        
+        reelingUp.Value = true;
     }
 
     public virtual void EndWeaponHit(bool success)
@@ -215,7 +217,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     public virtual void StartHeldOverHead()
     {
-
+        reelingUp.Value = true;
     }
 
     public virtual void EndHeldOverHead()
