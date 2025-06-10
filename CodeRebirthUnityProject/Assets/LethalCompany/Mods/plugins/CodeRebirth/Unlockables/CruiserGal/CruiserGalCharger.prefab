@@ -248,6 +248,7 @@ MonoBehaviour:
   AllowPlacementOnWalls: 0
   AllowPlacementOnCounters: 1
   inUse: 0
+  lastTimeScrapWasPlaced: 0
 --- !u!82 &8516802905230436228
 AudioSource:
   m_ObjectHideFlags: 0
@@ -585,9 +586,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverIcon: {fileID: 21300000, guid: 2ddfac2ef940d4d4f988fe785eba3972, type: 3}
-  hoverTip: Poke
+  hoverTip: Activate Cruiser
   disabledHoverIcon: {fileID: 0}
-  disabledHoverTip: Can't Poke currently.
+  disabledHoverTip: Can't Activate currently.
   interactable: 1
   oneHandedItemAllowed: 1
   twoHandedItemAllowed: 1
@@ -631,6 +632,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
