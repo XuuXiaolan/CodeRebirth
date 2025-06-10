@@ -4,6 +4,16 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class WalkieYellie : GrabbableObject
 {
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource _idleSource = null!;
+    [SerializeField]
+    private AudioSource _audioSource = null!;
+    [SerializeField]
+    private AudioClip _activateSound = null!;
+    [SerializeField]
+    private AudioClip _deactivateSound = null!;
+
     public override void ItemActivate(bool used, bool buttonDown = true) // look into audio reverb zones
     {
         base.ItemActivate(used, buttonDown);
@@ -24,10 +34,16 @@ public class WalkieYellie : GrabbableObject
                 StartCoroutine(ResetVoiceChatAudioSource(playerHeldBy.currentVoiceChatAudioSource, playerHeldBy.currentVoiceChatAudioSource.maxDistance));
                 playerHeldBy.currentVoiceChatAudioSource.maxDistance = 999f;
             }
+            _idleSource.Play();
+            _audioSource.PlayOneShot(_activateSound);
         }
-        else if (IsOwner)
+        else
         {
-            SoundManager.Instance.SetEchoFilter(false);
+            if (IsOwner)
+                SoundManager.Instance.SetEchoFilter(false);
+
+            _idleSource.Stop();
+            _audioSource.PlayOneShot(_deactivateSound);
         }
 
         if (!IsOwner) Plugin.ExtendedLogging($"Setting voice distance of playerHeldBy to: {playerHeldBy.currentVoiceChatAudioSource.maxDistance}");

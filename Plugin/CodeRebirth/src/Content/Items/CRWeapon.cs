@@ -217,7 +217,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     public virtual void StartHeldOverHead()
     {
-        reelingUp.Value = true;
+        reelingUp.Value = false;
     }
 
     public virtual void EndHeldOverHead()

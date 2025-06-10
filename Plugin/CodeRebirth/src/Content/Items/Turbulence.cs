@@ -184,7 +184,6 @@ public class Turbulence : CRWeapon
     public override void EquipItem()
     {
         base.EquipItem();
-        heldOverHeadTimer.Value = 0f;
         grabbable = true;
         stuckToGround = false;
     }
@@ -196,7 +195,7 @@ public class Turbulence : CRWeapon
         {
             heldOverHeadTimer.Value += Time.deltaTime;
         }
-        ShakeTransform(this.transform, Mathf.Clamp(heldOverHeadTimer.Value, 0, 10));
+        ShakeTransform(this.transform, Mathf.Clamp(heldOverHeadTimer.Value * 2f, 0, 20));
     }
 
     public void ShakeTransform(Transform _transform, float intensity)
@@ -204,7 +203,7 @@ public class Turbulence : CRWeapon
         if (intensity <= 0)
             return;
 
-        float offset = Mathf.Clamp(intensity * 0.00025f * UnityEngine.Random.Range(-1, 2), -0.002f, 0.002f);
+        float offset = Mathf.Clamp(intensity * 0.00025f * UnityEngine.Random.Range(-1, 2), -0.004f, 0.004f);
         _transform.localPosition = new Vector3(_transform.localPosition.x + offset, _transform.localPosition.y + offset, _transform.localPosition.z + offset);
     }
 }
