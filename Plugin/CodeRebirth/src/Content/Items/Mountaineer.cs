@@ -60,6 +60,9 @@ public class Mountaineer : CRWeapon
     public void OnSurfaceHitEvent(int surfaceID)
     {
         if (!playerHeldBy.IsOwner) return;
+        if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
+            return;
+
         OnSurfaceHitServerRpc(surfaceID, this.transform.position, this.transform.rotation);
     }
 
