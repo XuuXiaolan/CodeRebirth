@@ -867,14 +867,22 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
   moleAnimator: {fileID: 7649735607237880221}
   moleOwnerNetworkAnimator: {fileID: 6727420671627930091}
   endTransform: {fileID: 5347509267497047824}
   lightObject: {fileID: 3650093881404420006}
   idleSource: {fileID: 2990119371895374498}
+  audioSource: {fileID: 5583701338116237926}
   attackIdleSound: {fileID: 8300000, guid: 6d9b3d46562c5be4d974a1dc1ed1a4c1, type: 3}
   normalIdleSound: {fileID: 8300000, guid: eec02cc99940537478bd0bd972b2c0e4, type: 3}
-  audioSource: {fileID: 5583701338116237926}
+  hitObjectSounds:
+  - {fileID: 8300000, guid: 38e27ca04d774b04297cb35b3b5daff2, type: 3}
+  - {fileID: 8300000, guid: bb8317b5d8741734f87dc7366d3d07eb, type: 3}
+  hitEnemiesSounds:
+  - {fileID: 8300000, guid: fb1dd2260c5d674458fc3e5508c37536, type: 3}
+  - {fileID: 8300000, guid: 4399eada50f02c0498bb7159337fa80b, type: 3}
+  - {fileID: 8300000, guid: fc92f22d678a7af4db8fc6c6f549d1e8, type: 3}
   DeactivateSound: {fileID: 8300000, guid: a35dedd2284478940bdf2048a1e55af3, type: 3}
   chainYankSound:
   - {fileID: 8300000, guid: e65e63200c491484fb2e759b801d14b8, type: 3}
