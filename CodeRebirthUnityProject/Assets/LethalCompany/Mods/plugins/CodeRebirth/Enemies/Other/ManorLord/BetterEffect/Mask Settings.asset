@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4abac20f735e4c8e35934525aec7d, type: 3}
+  m_Name: Mask Settings
+  m_EditorClassIdentifier: 
+  Color: {r: 0, g: 1, b: 0, a: 0.7}
+  NormalSize: 0.5
+  PlaneSize: 2
+  PlaneMesh: {fileID: -462981019419857548, guid: 82c0653f9285da2409cb7dc2953e54fc, type: 3}
+  SphereMesh: {fileID: 4711208715938537054, guid: b294aceaefdc73544bd6551191ac7295, type: 3}
+  BoxMesh: {fileID: -3262789968867269347, guid: 8423398dc2f7e494e9b2edc161db1fc6, type: 3}
+  SolidAngleMesh: {fileID: -8596524602940804141, guid: 97f2539ee448f1a4d86be65211175c38, type: 3}
+  PreviewMaterial: {fileID: 2100000, guid: 258f52a28be8faf40baa958445a9b619, type: 2}
+  PreviewPlaneMesh: {fileID: -462981019419857548, guid: 82c0653f9285da2409cb7dc2953e54fc, type: 3}
+  PreviewSphereMesh: {fileID: 1141411432980370904, guid: 5fb148d23f0072e44a1ad6ca534663f2, type: 3}
+  PreviewBoxMesh: {fileID: -2925726880426445707, guid: 17db3a26f8a17ed4fa552060f3965e6d, type: 3}
+  PreviewSolidAngleMesh: {fileID: -2581276420747252115, guid: 96b9998ad32a15943b8e5c2140a4994b, type: 3}
+  seeThroughColliderRadius: 0.1
