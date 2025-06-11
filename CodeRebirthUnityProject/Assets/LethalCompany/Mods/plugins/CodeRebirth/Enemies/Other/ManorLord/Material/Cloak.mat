@@ -24,18 +24,17 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Cloak
-  m_Shader: {fileID: -6465566751694194690, guid: cfde6535f2c558443a9f7147fe365d07,
-    type: 3}
+  m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _DISABLE_SSR_TRANSPARENT
-  - _TYPE_PLANE
-  m_InvalidKeywords:
   - _MASKMAP
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
+  m_InvalidKeywords:
+  - _TYPE_PLANE
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -202,7 +201,7 @@ Material:
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
     - _CullModeForward: 2
-    - _Cutoff: 0.0001
+    - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
     - _DetailNormalMapScale: 1
@@ -247,7 +246,7 @@ Material:
     - _HeightTessAmplitude: 2
     - _HeightTessCenter: 0.5
     - _InvTilingScale: 1
-    - _Invert: 0
+    - _Invert: 1
     - _Ior: 1.5
     - _IridescenceMask: 1
     - _IridescenceThickness: 1
@@ -346,7 +345,7 @@ Material:
     - _NoiseUVSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _Offest: {r: 0, g: 0, b: 0, a: 0}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
-    - _PositionVector: {r: -2.029189, g: 3.8649995, b: -13.4192505, a: 0}
+    - _PositionVector: {r: -2.6187382, g: -1.3899999, b: -13.135711, a: 0}
     - _RightVector: {r: 0, g: 0, b: 0, a: 0}
     - _ScaleVector: {r: 0.33988073, g: 0.33988073, b: 0.33988073, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
