@@ -648,10 +648,13 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         {
             if (item == null)
                 continue;
+
             item.EnableItemMeshes(true);
             item.EnablePhysics(true);
             item.grabbable = true;
             item.grabbableToEnemies = true;
+            item.isHeldByEnemy = false;
+            item.isHeld = false;
             if (!HoarderBugAI.grabbableObjectsInMap.Contains(item.gameObject))
             {
                 HoarderBugAI.grabbableObjectsInMap.Add(item.gameObject);
@@ -659,6 +662,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         _storedScrap.Clear();
+        _targetScrap = null;
         creatureSFX.volume = 0f;
 
         // Turn off lights and blend shape

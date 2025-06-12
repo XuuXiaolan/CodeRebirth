@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.MiscScripts.DissolveEffect;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -428,7 +429,6 @@ public class Puppeteer : CodeRebirthEnemyAI
         // Make all puppets scrap
         agent.enabled = false;
         smartAgentNavigator.enabled = false;
-        StartCoroutine(DoDissolveAnimation());
         if (!IsServer) return;
         creatureAnimator.SetBool(DeadAnimation, true);
         foreach (var kvp in playerPuppetMap)
@@ -443,27 +443,6 @@ public class Puppeteer : CodeRebirthEnemyAI
         playerPuppetMap.Clear();
         if (EnemyHandler.Instance.ManorLord == null) return;
         CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.GetCRItemDefinitionWithItemName("Needle")?.item.itemName, transform.position);
-    }
-
-    private static readonly int DissolveAmount = Shader.PropertyToID("_Dissolve");
-    private IEnumerator DoDissolveAnimation()
-    {
-        yield return new WaitForSeconds(0.5f);
-        float dissolveAmount = 0f;
-        List<Material> materials = new();
-        foreach (var renderer in skinnedMeshRenderers)
-        {
-            materials.AddRange(renderer.materials);
-        }
-        while (dissolveAmount < 1f)
-        {
-            dissolveAmount += Time.deltaTime * dissolveSpeed;
-            foreach (var material in materials)
-            {
-                material.SetFloat(DissolveAmount, dissolveAmount);
-            }
-            yield return null;
-        }
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)
@@ -486,6 +465,14 @@ public class Puppeteer : CodeRebirthEnemyAI
     }
 
     #region Animation Events
+    public void StartDissolvingAnimEvent()
+    {
+        foreach (var InteractiveEffect in GetComponentsInChildren<InteractiveEffect>())
+        {
+            InteractiveEffect.PlayEffect();
+        }
+    }
+
     public void PlayFootstepSoundAnimEvent()
     {
         if (currentBehaviourStateIndex == (int)PuppeteerState.Attacking)

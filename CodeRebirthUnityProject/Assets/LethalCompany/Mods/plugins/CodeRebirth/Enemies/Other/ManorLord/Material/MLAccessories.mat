@@ -24,17 +24,18 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MLAccessories
-  m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: cfde6535f2c558443a9f7147fe365d07,
+    type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _DISABLE_SSR_TRANSPARENT
+  - _TYPE_PLANE
+  m_InvalidKeywords:
   - _MASKMAP
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
-  m_InvalidKeywords:
-  - _TYPE_PLANE
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -93,7 +94,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GuideTexture:
-        m_Texture: {fileID: 2800000, guid: d346299f162b4ff4089a40a54931a88b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0f483ed4ae04dad44ab55b9d28034051, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HeightMap:
@@ -195,8 +196,8 @@ Material:
     - _Anisotropy: 0
     - _BlendMode: 0
     - _BumpScale: 1
-    - _BurnHardness: 0.535
-    - _BurnOffset: 0.18
+    - _BurnHardness: 0.506
+    - _BurnOffset: 0.12
     - _CoatMask: 0
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
@@ -219,9 +220,9 @@ Material:
     - _DstBlend: 0
     - _EdgeColorIntensity: 5000
     - _EdgeWidth: 0.04
-    - _EmberOffset: 0.042
-    - _EmberSmoothness: 0.42
-    - _EmberWidth: 0.092
+    - _EmberOffset: 0
+    - _EmberSmoothness: 0.036
+    - _EmberWidth: 0
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -233,8 +234,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GuideStrength: 0.87
-    - _GuideTiling: 1
+    - _GuideStrength: 0.221
+    - _GuideTiling: 2
     - _HeightAmplitude: 0.02
     - _HeightCenter: 0.5
     - _HeightMapParametrization: 0
@@ -325,12 +326,12 @@ Material:
     - _BackColor: {r: 0, g: 0, b: 0, a: 1}
     - _BaseColor: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
-    - _BurnColor: {r: 8, g: 0.20735976, b: 0, a: 1}
+    - _BurnColor: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EdgeColor: {r: 5.992157, g: 0.046997312, b: 0, a: 1}
-    - _EmberColor: {r: 8, g: 0.20735976, b: 0, a: 1}
+    - _EmberColor: {r: 9.60907, g: 1.0564947, b: 0, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
@@ -340,9 +341,9 @@ Material:
     - _NoiseUVSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _Offest: {r: 0, g: 0, b: 0, a: 0}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
-    - _PositionVector: {r: -2.6187382, g: -1.2259998, b: -13.135711, a: 0}
+    - _PositionVector: {r: 2.6005874, g: 0, b: -1.6102636, a: 0}
     - _RightVector: {r: 0, g: 0, b: 0, a: 0}
-    - _ScaleVector: {r: 0.33988073, g: 0.33988073, b: 0.33988073, a: 0}
+    - _ScaleVector: {r: 1.2936684, g: 1.2936686, b: 1.2936686, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
@@ -350,5 +351,5 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
-    - _UpVector: {r: 0, g: 1, b: 0, a: 0}
+    - _UpVector: {r: 0, g: -0.00000011920929, b: 1.0000001, a: 0}
   m_BuildTextureStacks: []
