@@ -1190,6 +1190,11 @@ public class InteractiveEffect : MonoBehaviour
         if (visualEffect) visualEffect.Play();
     }
 
+    public void ResetEffect()
+    {
+        if (resetOnInitial) StartTransformCheck(initialLerpValue);
+    }
+
     /// <summary>
     /// Sends a stop event to the VFX Graph.
     /// </summary>

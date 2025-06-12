@@ -18,7 +18,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     public Transform playerStabPosition = null!;
 
     [Header("Puppeteer Configuration")]
-    public float dissolveSpeed = 0.1f;
+    public InteractiveEffect[] interactiveEffects = [];
     public float sneakSpeed = 1.5f;
     public float chaseSpeed = 3.0f;
     public float detectionRange = 20f;
@@ -465,11 +465,20 @@ public class Puppeteer : CodeRebirthEnemyAI
     }
 
     #region Animation Events
-    public void StartDissolvingAnimEvent()
+    public void ReverseDissolvingAnimEvent()
     {
-        foreach (var InteractiveEffect in GetComponentsInChildren<InteractiveEffect>())
+        foreach (var interactiveEffect in interactiveEffects)
         {
-            InteractiveEffect.PlayEffect();
+            interactiveEffect.ResetEffect();
+        }
+    }
+
+    public void StartDissolvingAnimEvent(float duration)
+    {
+        foreach (var interactiveEffect in interactiveEffects)
+        {
+            interactiveEffect.duration = duration;
+            interactiveEffect.PlayEffect();
         }
     }
 
