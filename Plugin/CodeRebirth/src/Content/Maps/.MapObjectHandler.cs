@@ -120,7 +120,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
         Crate = LoadAndRegisterAssets<CrateAssets>("crateassets");
 
-        Biome = LoadAndRegisterAssets<BiomeAssets>("biomeassets");
+        // Biome = LoadAndRegisterAssets<BiomeAssets>("biomeassets");
 
         TeslaShock = LoadAndRegisterAssets<TeslaShockAssets>("teslashockassets");
 
