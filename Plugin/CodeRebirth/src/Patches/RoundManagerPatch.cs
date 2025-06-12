@@ -38,12 +38,29 @@ static class RoundManagerPatch
             return;
 
         animationCurve = mapObjDef.spawnRateFunction(level);
-        int randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0f, 1f) + 0.5f));
+        int randomNumberToSpawn;
+        if (mapObjDef.hasNetworkObject)
+        {
+            randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(UnityEngine.Random.Range(0f, 1f)) + 0.5f);
+        }
+        else
+        {
+            randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0f, 1f)) + 0.5f);
+        }
+
         Plugin.ExtendedLogging($"Spawning {randomNumberToSpawn} of {prefabToSpawn.name} for level {level}");
         for (int i = 0; i < randomNumberToSpawn; i++)
         {
-            Vector3 spawnPos = RoundManager.Instance.outsideAINodes[random.Next(RoundManager.Instance.outsideAINodes.Length)].transform.position;
-            spawnPos = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(spawnPos, 10f, default, random, -1) + (Vector3.up * 2);
+            Vector3 spawnPos;
+            if (mapObjDef.hasNetworkObject)
+            {
+                spawnPos = RoundManager.Instance.outsideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
+            }
+            else
+            {
+                spawnPos = RoundManager.Instance.outsideAINodes[random.Next(RoundManager.Instance.outsideAINodes.Length)].transform.position;
+            }
+            spawnPos = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(spawnPos, 10f, default, new System.Random(UnityEngine.Random.Range(0, 10000)), -1) + (Vector3.up * 2);
             Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
             if (hit.collider == null)
                 continue;
