@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4474913, g: 0.2402311, b: 0.07641309, a: 1}
+  m_IndirectSpecularColor: {r: 0.44811875, g: 0.24078181, b: 0.07642055, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12549,7 +12549,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -711.6031, y: -0, z: -0}
+    textureOffset: {x: -45.17788, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -13126,8 +13126,8 @@ MonoBehaviour:
   - {fileID: 8716840396897723494}
   - {fileID: 8716840396897723493}
   - {fileID: 8716840396897723492}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1807015247}
+  - {fileID: 8716840396897723491}
 --- !u!4 &1099028725
 Transform:
   m_ObjectHideFlags: 0
@@ -20313,6 +20313,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1801605427}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1807015247 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1510450081455061282, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8716840396897723490}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1812577203
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24990,6 +24996,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0ceccc0fe1c44d429ec5a7053532a6e, type: 3}
+--- !u!1 &8716840396897723491 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5172888194293984271, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8716840396897723490}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8716840396897723492 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5269211656438849556, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
