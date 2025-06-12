@@ -38,7 +38,7 @@ static class RoundManagerPatch
             return;
 
         animationCurve = mapObjDef.spawnRateFunction(level);
-        int randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0f, 1f)));
+        int randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0f, 1f) + 0.5f));
         Plugin.ExtendedLogging($"Spawning {randomNumberToSpawn} of {prefabToSpawn.name} for level {level}");
         for (int i = 0; i < randomNumberToSpawn; i++)
         {

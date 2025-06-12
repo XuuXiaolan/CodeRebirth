@@ -12,6 +12,13 @@ public class SellingSally : NetworkBehaviour
 {
     [Header("Sounds")]
     [SerializeField]
+    private AudioSource sallyElevatorSource = null!;
+    [SerializeField]
+    private AudioClip elevatorOpenSound = null!;
+    [SerializeField]
+    private AudioClip elevatorCloseSound = null!;
+
+    [SerializeField]
     private AudioSource sallySource = null!;
     [SerializeField]
     private AudioClip warningSound = null!;
@@ -104,13 +111,15 @@ public class SellingSally : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RingBellServerRpc()
     {
-        sallyAnimator.SetBool(OpenedAnimation, !sallyAnimator.GetBool(OpenedAnimation));
-        AnimateBellClientRpc();
+        bool openedElevator = sallyAnimator.GetBool(OpenedAnimation);
+        sallyAnimator.SetBool(OpenedAnimation, !openedElevator);
+        AnimateBellClientRpc(!openedElevator);
     }
 
     [ClientRpc]
-    public void AnimateBellClientRpc()
+    public void AnimateBellClientRpc(bool openingElevator)
     {
+        sallyElevatorSource.PlayOneShot(openingElevator ? elevatorOpenSound : elevatorCloseSound);
         bellSource.PlayOneShot(bellSound);
         StartCoroutine(AnimateBell());
     }
