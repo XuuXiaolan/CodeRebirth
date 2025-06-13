@@ -325,14 +325,13 @@ public class ContentHandler<T> where T : ContentHandler<T>
             }
 
             GameObject gameObject = CRMapObjectDefinition.gameObject;
-            SpawnSyncedCRObject.CRObjectType CRObjectType = CRMapObjectDefinition.CRObjectType;
             bool alignWithTerrain = CRMapObjectDefinition.alignWithTerrain;
             bool inside = mapObjectConfig.InsideHazard?.Value ?? mapObjectData.isInsideHazard;
             string insideCurveSpawnWeights = mapObjectConfig.InsideCurveSpawnWeights?.Value ?? mapObjectData.defaultInsideCurveSpawnWeights;
             bool outside = mapObjectConfig.OutsideHazard?.Value ?? mapObjectData.isOutsideHazard;
             string outsideCurveSpawnWeightsConfig = mapObjectConfig.OutsideCurveSpawnWeights?.Value ?? mapObjectData.defaultOutsideCurveSpawnWeights;
 
-            RegisterMapObjectWithConfig(gameObject, CRObjectType, inside, insideCurveSpawnWeights, outside, alignWithTerrain, outsideCurveSpawnWeightsConfig);
+            RegisterMapObjectWithConfig(gameObject, CRMapObjectDefinition.objectName, inside, insideCurveSpawnWeights, outside, alignWithTerrain, outsideCurveSpawnWeightsConfig);
             definitionIndex++;
         }
         CodeRebirthRegistry.RegisteredCRMapObjects.AddRange(assetBundle.MapObjectDefinitions);
@@ -423,7 +422,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
         }
     }
 
-    protected void RegisterMapObjectWithConfig(GameObject prefab, SpawnSyncedCRObject.CRObjectType CRObjectType, bool inside, string insideConfigString, bool outside, bool alignWithTerrain, string outsideConfigString)
+    protected void RegisterMapObjectWithConfig(GameObject prefab, string objectName, bool inside, string insideConfigString, bool outside, bool alignWithTerrain, string outsideConfigString)
     {
         if (inside)
         {
@@ -433,8 +432,7 @@ public class ContentHandler<T> where T : ContentHandler<T>
         {
             RegisterOutsideMapObjectWithConfig(prefab, alignWithTerrain, outsideConfigString);
         }
-        Plugin.ExtendedLogging($"Registered map object: {prefab.name} to outside: {outside} and inside: {inside} to {CRObjectType} with inside config: {insideConfigString} and outside config: {outsideConfigString}");
-        MapObjectHandler.Instance.prefabMapping[CRObjectType] = prefab;
+        Plugin.ExtendedLogging($"Registered map object: {objectName} to outside: {outside} and inside: {inside}, with inside config: {insideConfigString} and outside config: {outsideConfigString}");
     }
 
     protected void RegisterOutsideMapObjectWithConfig(GameObject prefab, bool _alignWithTerrain, string configString)

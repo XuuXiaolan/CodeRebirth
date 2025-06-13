@@ -104,8 +104,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     public FunctionalMicrowaveAssets? FunctionalMicrowave { get; private set; } = null;
     public AutonomousCraneAssets? AutonomousCrane { get; private set; } = null;
 
-    public Dictionary<SpawnSyncedCRObject.CRObjectType, GameObject> prefabMapping = new();
-
     public MapObjectHandler()
     {
         OxydeCrashShip = LoadAndRegisterAssets<OxydeCrashShipAssets>("oxydecrashshipassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
@@ -145,12 +143,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
         if (Plugin.ModConfig.ConfigFloraEnabled.Value)
             RegisterOutsideFlora();
-    }
-
-    public GameObject? GetPrefabFor(SpawnSyncedCRObject.CRObjectType objectType)
-    {
-        prefabMapping.TryGetValue(objectType, out var prefab);
-        return prefab;
     }
 
     public void RegisterOutsideFlora()

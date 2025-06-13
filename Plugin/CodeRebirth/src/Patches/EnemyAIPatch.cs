@@ -29,7 +29,7 @@ static class EnemyAIPatch
     private static void EnemyAI_KillEnemy(On.EnemyAI.orig_KillEnemy orig, EnemyAI self, bool destroy)
     {
         orig(self, destroy);
-        if (CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(self, out ExtraEnemyData extraEnemyData) && !extraEnemyData.rolledForCoin && self.isEnemyDead && extraEnemyData.enemyKilledByPlayer)
+        if (self.isEnemyDead && CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(self, out ExtraEnemyData extraEnemyData) && extraEnemyData.enemyKilledByPlayer && !extraEnemyData.rolledForCoin)
         {
             float coinChance = extraEnemyData.coinDropChance;
             Plugin.ExtendedLogging($"Rolling to drop coin {coinChance}");
@@ -41,11 +41,11 @@ static class EnemyAIPatch
             if (!NetworkManager.Singleton.IsServer)
                 return;
 
-            GameObject? coinGO = MapObjectHandler.Instance.GetPrefabFor(SpawnSyncedCRObject.CRObjectType.Coin);
-            if (coinGO == null)
+            CRMapObjectDefinition? coinMapObjectDefinition = CodeRebirthRegistry.RegisteredCRMapObjects.GetCRMapObjectDefinitionWithObjectName("Money");
+            if (coinMapObjectDefinition == null || coinMapObjectDefinition.gameObject == null)
                 return;
 
-            GameObject coin = UnityEngine.Object.Instantiate(coinGO, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            GameObject coin = UnityEngine.Object.Instantiate(coinMapObjectDefinition.gameObject, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             coin.GetComponent<NetworkObject>().Spawn(true);
         }
     }

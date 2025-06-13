@@ -4,6 +4,7 @@ using CodeRebirth.src.Content.Maps;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.MiscScripts;
 public class SpawnSyncedCRObject : MonoBehaviour
@@ -12,28 +13,6 @@ public class SpawnSyncedCRObject : MonoBehaviour
     public float chanceOfSpawningAny = 100f;
     public bool automaticallyAlignWithTerrain = false;
     public List<CRObjectTypeWithRarity> objectTypesWithRarity = new();
-    public enum CRObjectType
-    {
-        None,
-        Merchant,
-        LaserTurret,
-        FunctionalMicrowave,
-        FlashTurret,
-        IndustrialFan,
-        BugZapper,
-        AirControlUnit,
-        MimicMetalCrate,
-        MimicWoodenCrate,
-        MetalCrate,
-        WoodenCrate,
-        BearTrap,
-        BoomTrap,
-        ShredderSarah,
-        CompactorToby,
-        GunslingerGreg,
-        AutonomousCrane,
-        Coin,
-    }
 
     public IEnumerator Start()
     {
@@ -46,13 +25,13 @@ public class SpawnSyncedCRObject : MonoBehaviour
         List<(GameObject objectType, float weight)> spawnableObjectsList = new();
         foreach (var objectTypeWithRarity in objectTypesWithRarity)
         {
-            GameObject? selectedPrefab = MapObjectHandler.Instance.GetPrefabFor(objectTypeWithRarity.CRObjectType);
-            if (selectedPrefab == null)
+            CRMapObjectDefinition? CRMapObjectDefinition = CodeRebirthRegistry.RegisteredCRMapObjects.GetCRMapObjectDefinitionWithObjectName(objectTypeWithRarity.CRObjectName);
+            if (CRMapObjectDefinition == null || CRMapObjectDefinition.gameObject == null)
             {
-                Plugin.Logger.LogWarning($"No prefab found for spawning: {objectTypeWithRarity.CRObjectType}");
+                Plugin.Logger.LogWarning($"No prefab found for spawning: {objectTypeWithRarity.CRObjectName}");
                 continue;
             }
-            spawnableObjectsList.Add((selectedPrefab, objectTypeWithRarity.Rarity));
+            spawnableObjectsList.Add((CRMapObjectDefinition.gameObject, objectTypeWithRarity.Rarity));
         }
 
         if (spawnableObjectsList.Count <= 0)
@@ -66,7 +45,7 @@ public class SpawnSyncedCRObject : MonoBehaviour
         // Instantiate and spawn the object on the network.
         if (prefabToSpawn == null)
         {
-            Plugin.Logger.LogError($"Did you really set something to spawn at a weight of 0? Couldn't find prefab for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectType))}");
+            Plugin.Logger.LogError($"Did you really set something to spawn at a weight of 0? Couldn't find prefab for spawning: {string.Join(", ", objectTypesWithRarity.Select(objectType => objectType.CRObjectName))}");
             yield break;
         }
 
