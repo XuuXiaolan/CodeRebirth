@@ -85,10 +85,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     {
         if (currentBehaviourStateIndex == (int)RabbitMagicianState.SwitchingTarget && previousTargetPlayer != null && !previousTargetPlayer.isPlayerDead)
         {
-            _targetPlayerSpine3 = previousTargetPlayer.upperSpine;
-            var worldOffseta = _targetPlayerSpine3.rotation * _offsetPosition;
-            this.transform.position = _targetPlayerSpine3.position + worldOffseta;
-            this.transform.rotation = _targetPlayerSpine3.rotation;
+            SetPositionAndRotation(previousTargetPlayer);
             return;
         }
 
@@ -101,10 +98,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         if (targetPlayer == null)
             return;
 
-        _targetPlayerSpine3 = targetPlayer.upperSpine;
-        Vector3 worldOffset = _targetPlayerSpine3.rotation * _offsetPosition;
-        this.transform.position = _targetPlayerSpine3.position + worldOffset;
-        this.transform.rotation = _targetPlayerSpine3.rotation;
+        SetPositionAndRotation(targetPlayer);
     }
 
     #region State Machines
@@ -191,6 +185,23 @@ public class RabbitMagician : CodeRebirthEnemyAI
     #endregion
 
     #region Misc Functions
+
+    private void SetPositionAndRotation(PlayerControllerB player)
+    {
+        Vector3 worldOffset;
+        if (player.IsOwner)
+        {
+            _targetPlayerSpine3 = player.gameplayCamera.transform;
+            worldOffset = _targetPlayerSpine3.rotation * (_offsetPosition + new Vector3(0f, -0.32f, 0.1f));
+            this.transform.position = _targetPlayerSpine3.position + worldOffset;
+            this.transform.rotation = _targetPlayerSpine3.rotation;
+            return;
+        }
+        _targetPlayerSpine3 = player.upperSpine;
+        worldOffset = _targetPlayerSpine3.rotation * _offsetPosition;
+        this.transform.position = _targetPlayerSpine3.position + worldOffset;
+        this.transform.rotation = _targetPlayerSpine3.rotation;
+    }
 
     private IEnumerator KillPlayerAndSwitchTarget(PlayerControllerB newTargetPlayer)
     {
