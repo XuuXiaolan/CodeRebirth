@@ -29,16 +29,17 @@ static class EnemyAIPatch
     private static void EnemyAI_KillEnemy(On.EnemyAI.orig_KillEnemy orig, EnemyAI self, bool destroy)
     {
         orig(self, destroy);
+
         if (self.isEnemyDead && CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(self, out ExtraEnemyData extraEnemyData) && extraEnemyData.enemyKilledByPlayer && !extraEnemyData.rolledForCoin)
         {
             float coinChance = extraEnemyData.coinDropChance;
             Plugin.ExtendedLogging($"Rolling to drop coin {coinChance}");
             extraEnemyData.rolledForCoin = true;
 
-            if (CodeRebirthUtils.Instance.CRRandom.NextFloat(0f, 100f) >= coinChance)
+            if (!NetworkManager.Singleton.IsServer)
                 return;
 
-            if (!NetworkManager.Singleton.IsServer)
+            if (UnityEngine.Random.Range(0f, 100f) >= coinChance)
                 return;
 
             CRMapObjectDefinition? coinMapObjectDefinition = CodeRebirthRegistry.RegisteredCRMapObjects.GetCRMapObjectDefinitionWithObjectName("Money");
