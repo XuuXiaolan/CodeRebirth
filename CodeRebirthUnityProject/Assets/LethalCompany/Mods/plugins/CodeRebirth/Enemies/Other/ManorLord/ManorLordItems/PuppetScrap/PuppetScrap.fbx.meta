@@ -3,7 +3,12 @@ guid: 442ce9f7e42cdd644a6a5d4f03d6bd4d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: puppet
+    second: {fileID: 2100000, guid: f4a819828c697fd40b3ec35ec4cc8b28, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
