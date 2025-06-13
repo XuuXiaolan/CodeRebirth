@@ -501,23 +501,30 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         smartAgentNavigator.StopSearchRoutine();
         _aggroSFX.Stop();
         creatureVoice.PlayOneShot(dieSFX);
-        if (_killedByPlayer)
-        {
-            _fakeGunGO.transform.parent.gameObject.SetActive(false);
-        }
-
         if (!IsServer)
             return;
 
-        if (_killedByPlayer)
-        {
-            CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PeaceKeeper!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ceasefire")?.item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.parent.rotation);
-        }
         creatureAnimator.SetBool(IsDeadAnimation, true);
     }
     #endregion
 
     #region Animation Events
+
+    public void ReplaceAndSpawnRealGunAnimationEvent()
+    {
+        Plugin.ExtendedLogging($"PeaceKeeper has been defeated by player? {_killedByPlayer}.");
+        if (!_killedByPlayer)
+        {
+            _fakeGunGO.SetActive(true);
+            return;
+        }
+        _fakeGunGO.transform.gameObject.SetActive(false);
+
+        if (!IsServer)
+            return;
+
+        CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PeaceKeeper!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ceasefire")?.item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.rotation);
+    }
 
     public void BitchSlapAnimationEvent()
     {

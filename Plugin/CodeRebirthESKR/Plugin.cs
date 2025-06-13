@@ -29,6 +29,7 @@ public class Plugin : BaseUnityPlugin
             return;
         }
 
+        return;
         EnemyAIPatches.Init();
         SkinsHandler.RegisterSkins();
 

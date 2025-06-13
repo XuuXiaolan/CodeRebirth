@@ -315,12 +315,12 @@ internal class CodeRebirthUtils : NetworkBehaviour
             parent = StartOfRound.Instance.propsContainer;
         }
         Vector3 spawnPosition = position + Vector3.up * 0.2f;
-        GameObject go = Instantiate(item.spawnPrefab, spawnPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation, parent);
+        GameObject go = Instantiate(item.spawnPrefab, spawnPosition, Quaternion.identity, parent);
         NetworkObject networkObject = go.GetComponent<NetworkObject>();
         GrabbableObject grabbableObject = go.GetComponent<GrabbableObject>();
         grabbableObject.fallTime = 0;
         networkObject.Spawn();
-        UpdateParentServerRpc(new NetworkObjectReference(go));
+        UpdateParentAndRotationsServerRpc(new NetworkObjectReference(go), defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation);
 
         int value = (int)(UnityEngine.Random.Range(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
         ScanNodeProperties? scanNodeProperties = go.GetComponentInChildren<ScanNodeProperties>();
@@ -340,18 +340,30 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void UpdateParentServerRpc(NetworkObjectReference go)
+    public void UpdateParentAndRotationsServerRpc(NetworkObjectReference go, Quaternion rotation)
     {
-        UpdateParentClientRpc(go);
+        UpdateParentAndRotationsClientRpc(go, rotation);
     }
 
     [ClientRpc]
-    public void UpdateParentClientRpc(NetworkObjectReference go)
+    public void UpdateParentAndRotationsClientRpc(NetworkObjectReference go, Quaternion rotation)
     {
         go.TryGet(out NetworkObject netObj);
         if (netObj != null)
         {
             netObj.transform.parent = StartOfRound.Instance.propsContainer;
+            StartCoroutine(ForceRotationForABit(netObj.gameObject, rotation));
+        }
+    }
+
+    private IEnumerator ForceRotationForABit(GameObject go, Quaternion rotation)
+    {
+        float duration = 0.25f;
+        while (duration > 0)
+        {
+            duration -= Time.deltaTime;
+            go.transform.rotation = rotation;
+            yield return null;
         }
     }
 
