@@ -18,8 +18,8 @@ static class KeyItemPatch
         {
             if (raycastHit.transform.TryGetComponent(out Pickable pickable) && pickable.enabled && pickable.IsLocked)
             {
-                pickable.UnlockStuffLocally();
-                if (__instance.playerHeldBy.currentlyHeldObjectServer != null && __instance.playerHeldBy.currentlyHeldObjectServer.IsSpawned) __instance.playerHeldBy.DespawnHeldObject();
+                pickable.UnlockStuffServerRpc();
+                if (__instance.IsSpawned && __instance.playerHeldBy.currentlyHeldObjectServer == __instance) __instance.playerHeldBy.DespawnHeldObject();
             }
         }
     }

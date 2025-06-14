@@ -98,9 +98,9 @@ public class ContentHandler<T> where T : ContentHandler<T>
     protected TAsset? LoadAndRegisterAssets<TAsset>(string assetBundleName, bool overrideEnabledConfig = false) where TAsset : AssetBundleLoader<TAsset>
     {
         AssetBundleData? assetBundleData = Plugin.Assets.CodeRebirthContent.assetBundles.Where(bundle => bundle.assetBundleName == assetBundleName).FirstOrDefault();
-        if (assetBundleData == null)
+        if (assetBundleData == null || assetBundleData.alreadyLoaded)
         {
-            Plugin.ExtendedLogging($"Plugin with assetbundle name: {assetBundleName} is not implemented yet!");
+            Plugin.ExtendedLogging($"Plugin with assetbundle name: {assetBundleName} is not implemented yet or already loaded: {assetBundleData?.alreadyLoaded}!");
             return null;
         }
         LoadEnabledConfigs(assetBundleData.configName);
@@ -110,6 +110,8 @@ public class ContentHandler<T> where T : ContentHandler<T>
         // hacky workaround because generic functions can't create instances using new with parameters???
         TAsset assetBundle = (TAsset)Activator.CreateInstance(typeof(TAsset), new object[] { assetBundleName });
         assetBundle.AssetBundleData = assetBundleData;
+        assetBundleData.alreadyLoaded = true;
+        assetBundleData.assetBundleReference = assetBundle.bundle;
 
         // do the loadfrombundle for all CRContentDefinitions
 

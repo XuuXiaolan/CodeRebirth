@@ -2,16 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem.Utilities;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 {
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource _rollingSource = null!;
+
     [Header("Animations")]
     [SerializeField]
     private AnimationClip _spawnAnimation = null!;
@@ -130,6 +133,13 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     public override void Update()
     {
         base.Update();
+
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer <= 0)
+        {
+            _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+            creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(0, _idleAudioClips.audioClips.Length)]);
+        }
 
         if (currentBehaviourStateIndex != (int)CactusBudlingState.Rolling)
             return;
@@ -285,6 +295,17 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         _nextStateRoutine = null;
     }
 
+    private IEnumerator RollingSoundStuff()
+    {
+        yield return new WaitForSeconds(_rollingStartAnimation.length);
+        _rollingSource.Play();
+        while (_rollingTimer > 0)
+        {
+            yield return null;
+        }
+        _rollingSource.Stop();
+    }
+
     [ServerRpc(RequireOwnership = false)]
     private void SpawnCactiServerRpc(Vector3 position, Vector3 normal, int angle, int index)
     {
@@ -358,6 +379,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
                 creatureAnimator.SetBool(RootingAnimation, false);
                 creatureAnimator.SetBool(RollingAnimation, true);
             }
+            StartCoroutine(RollingSoundStuff());
 
             _rollingTimer = _rollingDuration;
             _targetRollingPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);

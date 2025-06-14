@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6122073919466985004
 Transform:
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9074500884930967531}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.630907, y: -49.677948, z: 29.310438}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -48,13 +48,13 @@ MonoBehaviour:
   chanceOfSpawningAny: 10
   automaticallyAlignWithTerrain: 1
   objectTypesWithRarity:
-  - CRObjectType: 11
+  - CRObjectName: Normal Wooden Crate
     Rarity: 10
-  - CRObjectType: 10
+  - CRObjectName: Normal Metal Crate
     Rarity: 5
-  - CRObjectType: 9
+  - CRObjectName: Mimic Metal Crate
     Rarity: 5
-  - CRObjectType: 8
+  - CRObjectName: Mimic Wooden Crate
     Rarity: 1
 --- !u!114 &2576193278008148040
 MonoBehaviour:

@@ -20,7 +20,7 @@ Give the configs some sort of listener for lethal config so i can detect runtime
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency(WeatherRegistry.Plugin.GUID, BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(WeatherRegistry.PluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
@@ -137,9 +137,18 @@ public class Plugin : BaseUnityPlugin
 
     private void OnDisable()
     {
-        foreach (AssetBundle bundle in LoadedBundles.Values)
+        foreach (AssetBundleData bundleData in Assets.CodeRebirthContent.assetBundles)
         {
-            bundle.Unload(false);
+            if (!bundleData.alreadyLoaded)
+                continue;
+
+            if (bundleData.keepLoaded)
+                continue;
+
+            if (bundleData.assetBundleReference == null)
+                continue;
+
+            bundleData.assetBundleReference.Unload(false);
         }
         Logger.LogDebug("Unloaded assetbundles.");
         LoadedBundles.Clear();

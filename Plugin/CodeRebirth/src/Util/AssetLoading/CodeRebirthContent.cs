@@ -1,9 +1,8 @@
-namespace CodeRebirth.src.Util.AssetLoading;
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace CodeRebirth.src.Util.AssetLoading;
 [CreateAssetMenu(fileName = "CodeRebirthContent", menuName = "CodeRebirth/CodeRebirthContent", order = 0)]
 public class CodeRebirthContent : ScriptableObject
 {
@@ -14,12 +13,18 @@ public class CodeRebirthContent : ScriptableObject
 public class AssetBundleData
 {
     public string assetBundleName;
+    public bool keepLoaded;
     public string configName;
     public List<WeatherData> weathers;
     public List<EnemyData> enemies;
     public List<ItemData> items;
     public List<MapObjectData> mapObjects;
     public List<UnlockableData> unlockables;
+
+    [HideInInspector]
+    public bool alreadyLoaded;
+    [HideInInspector]
+    public AssetBundle? assetBundleReference;
 }
 
 [Serializable]
