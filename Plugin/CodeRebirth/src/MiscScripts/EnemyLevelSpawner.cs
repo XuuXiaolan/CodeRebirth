@@ -98,7 +98,9 @@ public class EnemyLevelSpawner : MonoBehaviour
         Plugin.ExtendedLogging($"Spawning {enemyType.enemyName}");
         GameObject enemyGameObject = RoundManager.Instance.SpawnEnemyGameObject(spawnPosition.position, -1, -3, enemyType);
         var tracker = enemyGameObject.AddComponent<EnemySpawnerTracker>();
-        tracker.enemyAI = enemyGameObject.GetComponent<EnemyAI>();
+        EnemyAI enemyAI = enemyGameObject.GetComponent<EnemyAI>();
+        tracker.enemyAI = enemyAI;
+        RoundManager.Instance.currentOutsideEnemyPower += enemyAI.enemyType.PowerLevel;
 
         return tracker.enemyAI;
     }
