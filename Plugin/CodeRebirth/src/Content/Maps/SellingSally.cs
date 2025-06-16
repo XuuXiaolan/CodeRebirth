@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -165,6 +166,9 @@ public class SellingSally : NetworkBehaviour
         {
             sellableScrap.grabbable = false;
         }
+        if (_sellableScraps.Count == 0)
+            return false;
+
         return true;
     }
 
@@ -196,13 +200,14 @@ public class SellingSally : NetworkBehaviour
 
     private void SellAndDisplayItemProfits(int profit, Terminal terminal)
     {
-        if (!_usedOnce && profit > 0)
+        if (!_usedOnce)
         {
             foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
             {
                 enemyLevelSpawner.spawnTimerMin /= 2f;
                 enemyLevelSpawner.spawnTimerMax /= 2f;
             }
+            OxydeLightsManager.oxydeLightsManager.IncrementLights();
             _usedOnce = true;
             HUDManager.Instance.DisplayTip("Warning!", "Rampant underground activity detected, evacuation recommended.", true);
         }

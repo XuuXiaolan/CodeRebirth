@@ -24,6 +24,12 @@ public class WeatherController : MonoBehaviour
 
     private void HandleDarkness()
     {
+        foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
+        {
+            enemyLevelSpawner.spawnTimerMax /= 4f;
+            enemyLevelSpawner.spawnTimerMin /= 4f;
+        }
+
         foreach (GameObject gameObject in gameObjectsToActivate)
         {
             gameObject.SetActive(!gameObject.activeSelf);

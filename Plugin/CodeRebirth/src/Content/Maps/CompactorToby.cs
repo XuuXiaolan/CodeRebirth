@@ -205,6 +205,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
                     enemyLevelSpawner.spawnTimerMin /= 2f;
                     enemyLevelSpawner.spawnTimerMax /= 2f;
                 }
+                OxydeLightsManager.oxydeLightsManager.IncrementLights();
                 _usedOnce = true;
                 HUDManager.Instance.DisplayTip("Warning!", "Site machinery activated, anomaly levels rising.", true);
             }
