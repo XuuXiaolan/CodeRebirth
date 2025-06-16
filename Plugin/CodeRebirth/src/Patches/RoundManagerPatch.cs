@@ -15,7 +15,7 @@ static class RoundManagerPatch
     internal static List<RegisteredCRMapObject> registeredMapObjects = [];
     internal static List<SpawnableFlora> spawnableFlora = [];
 
-    [HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPostfix]
+    [HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPrefix]
     private static void SpawnOutsideMapObjects()
     {
         if (Plugin.ModConfig.ConfigFloraEnabled.Value)
