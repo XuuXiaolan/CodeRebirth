@@ -31,9 +31,12 @@ public class EnemyLevelSpawner : MonoBehaviour
     private List<(EnemyType, float)> specialEnemies = new();
     private IEnumerable<(EnemyType, float)> mainEnemiesToSpawn;
     private IEnumerable<(EnemyType, float)> ambientEnemiesToSpawn;
+    [HideInInspector]
+    public static List<EnemyLevelSpawner> enemyLevelSpawners = new();
 
     public void Start()
     {
+        enemyLevelSpawners.Add(this);
         foreach (var enemyName in specialEnemiesToSpawn)
         {
             foreach (var enemyTypeWithRarity in RoundManager.Instance.currentLevel.Enemies)
@@ -52,7 +55,13 @@ public class EnemyLevelSpawner : MonoBehaviour
         mainEnemiesToSpawn = RoundManager.Instance.currentLevel.OutsideEnemies.Select(x => (x.enemyType, (float)x.rarity)).Concat(specialEnemies);
         mainEnemiesToSpawn = mainEnemiesToSpawn.Where(x => enemySizesAllowed.Contains(x.Item1.EnemySize));
         ambientEnemiesToSpawn = RoundManager.Instance.currentLevel.DaytimeEnemies.Select(x => (x.enemyType, (float)x.rarity));
-        spawnTimer = spawnTimerStart;
+        spawnTimer = spawnTimerStart * 4f;
+        spawnTimerMax *= 4f;
+        spawnTimerMin *= 4f;
+        if (spawnTimerMin > spawnTimerMax)
+        {
+            spawnTimerMin = spawnTimerMax;
+        }
     }
 
     public void Update()
@@ -100,13 +109,16 @@ public class EnemyLevelSpawner : MonoBehaviour
         var tracker = enemyGameObject.AddComponent<EnemySpawnerTracker>();
         EnemyAI enemyAI = enemyGameObject.GetComponent<EnemyAI>();
         tracker.enemyAI = enemyAI;
-        RoundManager.Instance.currentOutsideEnemyPower += enemyAI.enemyType.PowerLevel;
-
+        if (enemyAI.enemyType.canDie)
+        {
+            RoundManager.Instance.currentOutsideEnemyPower += enemyAI.enemyType.PowerLevel;
+        }
         return tracker.enemyAI;
     }
 
     public void OnDestroy()
     {
+        enemyLevelSpawners.Remove(this);
         entitiesSpawned.Clear();
     }
 }

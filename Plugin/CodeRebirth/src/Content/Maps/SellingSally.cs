@@ -56,6 +56,7 @@ public class SellingSally : NetworkBehaviour
     private List<GrabbableObject> _sellableScraps = new();
     private static readonly int OpenedAnimation = Animator.StringToHash("open"); // Bool
     private static readonly int ShootAnimation = Animator.StringToHash("shoot"); // Trigger
+    private bool _usedOnce = false;
     [HideInInspector] public static SellingSally? Instance = null;
 
     public override void OnNetworkSpawn()
@@ -195,6 +196,16 @@ public class SellingSally : NetworkBehaviour
 
     private void SellAndDisplayItemProfits(int profit, Terminal terminal)
     {
+        if (!_usedOnce && profit > 0)
+        {
+            foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
+            {
+                enemyLevelSpawner.spawnTimerMin /= 2f;
+                enemyLevelSpawner.spawnTimerMax /= 2f;
+            }
+            _usedOnce = true;
+            HUDManager.Instance.DisplayTip("Warning!", "Rampant underground activity detected, evacuation recommended.", true);
+        }
         profit *= 3;
         terminal.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;

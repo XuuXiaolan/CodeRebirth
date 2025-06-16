@@ -34,6 +34,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
     private List<EnemyLevelSpawner> _enemyLevelSpawners = new();
 
     [HideInInspector] public bool compacting = false;
+    private bool _usedOnce = false;
     private static readonly int HitAnimation = Animator.StringToHash("hit"); // Trigger
     private static readonly int StartCompactAnimation = Animator.StringToHash("startCompact"); // Trigger
     private static readonly int FastEndCompactAnimation = Animator.StringToHash("fastEnd"); // Trigger
@@ -197,6 +198,16 @@ public class CompactorToby : NetworkBehaviour, IHittable
         }
         else
         {
+            if (!_usedOnce)
+            {
+                foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
+                {
+                    enemyLevelSpawner.spawnTimerMin /= 2f;
+                    enemyLevelSpawner.spawnTimerMax /= 2f;
+                }
+                _usedOnce = true;
+                HUDManager.Instance.DisplayTip("Warning!", "Site machinery activated, anomaly levels rising.", true);
+            }
             _tobyMalfunctionSource.Stop();
         }
     }
@@ -204,8 +215,10 @@ public class CompactorToby : NetworkBehaviour, IHittable
     [ServerRpc(RequireOwnership = false)]
     public void DespawnItemServerRpc(NetworkBehaviourReference networkBehaviourReference)
     {
-        networkBehaviourReference.TryGet(out GrabbableObject grabbableObject);
-        grabbableObject.NetworkObject.Despawn();
+        if (networkBehaviourReference.TryGet(out GrabbableObject grabbableObject))
+        {
+            grabbableObject.NetworkObject.Despawn();
+        }
     }
 
     public void PlayMiscSoundsAnimEvent(int SoundID)
