@@ -12,6 +12,8 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Content.Weathers;
 using LethalLevelLoader;
 using System.Linq;
+using WeatherRegistry;
+using System;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -129,6 +131,11 @@ static class StartOfRoundPatch
         CRWeatherDefinition? nightShiftCRWeatherDefinition = CodeRebirthRegistry.RegisteredCRWeathers.GetCRWeatherDefinitionWithWeatherName("night shift");
         Plugin.ExtendedLogging($"Night shift weather: {nightShiftCRWeatherDefinition?.Weather}");
         if (nightShiftCRWeatherDefinition == null)
+            return;
+
+        string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeather(extendedLevel.SelectableLevel).name.ToLowerInvariant();
+        Plugin.ExtendedLogging($"Current weather: {weatherName}");
+        if (weatherName.Equals("night shift") || weatherName.Equals("blackout"))
             return;
 
         WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftCRWeatherDefinition.Weather);
