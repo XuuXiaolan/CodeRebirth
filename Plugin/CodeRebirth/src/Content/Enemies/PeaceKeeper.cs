@@ -269,6 +269,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     {
         if (targetPlayer == null || targetPlayer.isPlayerDead)
         {
+            _isShooting = false;
+            creatureAnimator.SetBool(ShootingAnimation, false);
             HandleSwitchingToIdle();
             return;
         }

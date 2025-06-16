@@ -21,7 +21,7 @@ public class OxydeLightsManager : MonoBehaviour
 
     public void IncrementLights()
     {
-        if (_currentLightIndex >= _colors.Length - 1 || _colors.Length == 0)
+        if (_currentLightIndex > _colors.Length - 1 || _colors.Length == 0)
             return;
 
         foreach (var light in _lights)
