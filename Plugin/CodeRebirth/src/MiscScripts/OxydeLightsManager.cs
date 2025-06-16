@@ -8,10 +8,10 @@ public class OxydeLightsManager : MonoBehaviour
     private Color[] _colors = [];
     [SerializeField]
     private Renderer[] _renderers = [];
-
+    [SerializeField]
     private Light[] _lights = [];
-    private int _currentLightIndex = 0;
 
+    private int _currentLightIndex = 0;
     internal static OxydeLightsManager oxydeLightsManager = null!;
     private void Start()
     {
@@ -25,14 +25,13 @@ public class OxydeLightsManager : MonoBehaviour
             return;
 
         foreach (var light in _lights)
+        {
             light.color = _colors[_currentLightIndex];
+        }
 
         foreach (var renderer in _renderers)
         {
-            foreach (var sharedMaterial in renderer.sharedMaterials)
-            {
-                sharedMaterial.color = _colors[_currentLightIndex];
-            }
+            renderer.sharedMaterials[1].color = _colors[_currentLightIndex];
         }
         _currentLightIndex++;
     }
