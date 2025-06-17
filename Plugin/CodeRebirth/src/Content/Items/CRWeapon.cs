@@ -7,6 +7,7 @@ using System.Collections;
 using UnityEngine.Events;
 using CodeRebirth.src.Util;
 using System;
+using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Content.Items;
 public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's JMeleeWeapon
@@ -238,7 +239,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
         if (cancel) return false;
         previousPlayerHeldBy.twoHanded = false;
-        int numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore);
+        int numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, MoreLayerMasks.collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore);
         var objectsHit = cachedRaycastHits.Take(numHits).OrderBy(hit => hit.distance);
 
         _hitVehicles.Clear();

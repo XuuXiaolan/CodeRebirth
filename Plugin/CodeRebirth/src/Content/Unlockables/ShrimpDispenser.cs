@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Linq;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;

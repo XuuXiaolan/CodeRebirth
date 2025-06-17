@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using UnityEngine;

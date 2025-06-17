@@ -5,6 +5,7 @@ using UnityEngine.Rendering.HighDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Content.Maps;
 public class BiomeManager : CodeRebirthHazard
@@ -64,7 +65,7 @@ public class BiomeManager : CodeRebirthHazard
     private IEnumerator CheckAndDestroyFoliage()
     {
         yield return new WaitForSeconds(40f);
-        Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, 250 / 3.5f, CodeRebirthUtils.Instance.terrainAndFoliageMask);
+        Collider[] hitColliders = Physics.OverlapSphere(activeProjector.transform.position, 250 / 3.5f, MoreLayerMasks.terrainAndFoliageMask);
         foreach (var hitCollider in hitColliders)
         {
             if (IsTree(hitCollider) || IsFoliage(hitCollider))
@@ -84,7 +85,7 @@ public class BiomeManager : CodeRebirthHazard
         //Stopwatch timer = new Stopwatch();
         //timer.Start();
         // Perform sphere cast
-        int numHit = Physics.OverlapSphereNonAlloc(activeProjector.transform.position, activeProjector.size.y / 3.5f, cachedColliders, CodeRebirthUtils.Instance.terrainAndFoliageMask);
+        int numHit = Physics.OverlapSphereNonAlloc(activeProjector.transform.position, activeProjector.size.y / 3.5f, cachedColliders, MoreLayerMasks.terrainAndFoliageMask);
         int foliageOrTreeCount = 0;
         for (int i = numHit - 1; i >= 0; i--)
         {

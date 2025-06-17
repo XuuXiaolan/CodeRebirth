@@ -5,6 +5,7 @@ using GameNetcodeStuff;
 using System;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class LaserShockBlast : NetworkBehaviour
@@ -41,7 +42,7 @@ public class LaserShockBlast : NetworkBehaviour
         Vector3 origin = laserOrigin.position;
         Vector3 direction = laserOrigin.forward;
 
-        var raycastHits = Physics.RaycastAll(origin, direction, LaserRange, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
+        var raycastHits = Physics.RaycastAll(origin, direction, LaserRange, MoreLayerMasks.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
         Array.Sort(raycastHits, (a, b) => a.distance.CompareTo(b.distance));
 
         Vector3 finalHitPoint = origin + (direction * LaserRange);

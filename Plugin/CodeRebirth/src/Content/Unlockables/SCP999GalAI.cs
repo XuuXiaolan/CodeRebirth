@@ -19,7 +19,6 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
 
     [NonSerialized] public float boomboxTimer = 0f;
     [NonSerialized] public NetworkVariable<bool> boomboxPlaying = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    private System.Random random = new();
     private List<GameObject> particlesSpawned = new();
     private bool currentlyHealing = false;
     private NetworkVariable<float> cooldownTimer = new(5f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -39,7 +38,6 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         Instances.Add(this);
         UpdatePlayerHealths();
         QualitySettings.skinWeights = SkinWeights.FourBones;
-        random = new System.Random(StartOfRound.Instance.randomMapSeed + 40);
         if (IsServer)
         {
             RechargeGalHealsAndRevivesServerRpc(true, true);

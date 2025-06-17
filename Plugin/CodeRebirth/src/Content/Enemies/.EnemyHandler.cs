@@ -1,77 +1,78 @@
-﻿using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
+﻿using CodeRebirthLib;
+using CodeRebirthLib.AssetManagement;
+using CodeRebirthLib.ContentManagement;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class EnemyHandler : ContentHandler<EnemyHandler>
 {
-    public class SnailCatAssets(string bundleName) : AssetBundleLoader<SnailCatAssets>(bundleName)
+    public class SnailCatAssets(CRMod mod, string filePath) : AssetBundleLoader<SnailCatAssets>(mod, filePath)
     {
     }
 
-    public class CarnivorousPlantAssets(string bundleName) : AssetBundleLoader<CarnivorousPlantAssets>(bundleName)
+    public class CarnivorousPlantAssets(CRMod mod, string filePath) : AssetBundleLoader<CarnivorousPlantAssets>(mod, filePath)
     {
     }
 
-    public class RedwoodTitanAssets(string bundleName) : AssetBundleLoader<RedwoodTitanAssets>(bundleName)
+    public class RedwoodTitanAssets(CRMod mod, string filePath) : AssetBundleLoader<RedwoodTitanAssets>(mod, filePath)
     {
     }
 
-    public class DuckSongAssets(string bundleName) : AssetBundleLoader<DuckSongAssets>(bundleName)
+    public class DuckSongAssets(CRMod mod, string filePath) : AssetBundleLoader<DuckSongAssets>(mod, filePath)
     {
         [LoadFromBundle("DuckHolder.prefab")]
         public GameObject DuckUIPrefab { get; private set; } = null!;
     }
 
-    public class ManorLordAssets(string bundleName) : AssetBundleLoader<ManorLordAssets>(bundleName)
+    public class ManorLordAssets(CRMod mod, string filePath) : AssetBundleLoader<ManorLordAssets>(mod, filePath)
     {
         [LoadFromBundle("PuppeteerPuppet.prefab")]
         public GameObject PuppeteerPuppetPrefab { get; private set; } = null!;
     }
 
-    public class MistressAssets(string bundleName) : AssetBundleLoader<MistressAssets>(bundleName)
+    public class MistressAssets(CRMod mod, string filePath) : AssetBundleLoader<MistressAssets>(mod, filePath)
     {
         [LoadFromBundle("GuillotinePrefab.prefab")]
         public GameObject GuillotinePrefab { get; private set; } = null!;
     }
 
-    public class JanitorAssets(string bundleName) : AssetBundleLoader<JanitorAssets>(bundleName)
+    public class JanitorAssets(CRMod mod, string filePath) : AssetBundleLoader<JanitorAssets>(mod, filePath)
     {
     }
 
-    public class TransporterAssets(string bundleName) : AssetBundleLoader<TransporterAssets>(bundleName)
+    public class TransporterAssets(CRMod mod, string filePath) : AssetBundleLoader<TransporterAssets>(mod, filePath)
     {
     }
 
-    public class MonarchAssets(string bundleName) : AssetBundleLoader<MonarchAssets>(bundleName)
+    public class MonarchAssets(CRMod mod, string filePath) : AssetBundleLoader<MonarchAssets>(mod, filePath)
     {
     }
 
-    public class PandoraAssets(string bundleName) : AssetBundleLoader<PandoraAssets>(bundleName)
+    public class PandoraAssets(CRMod mod, string filePath) : AssetBundleLoader<PandoraAssets>(mod, filePath)
     {
     }
 
-    public class NancyAssets(string bundleName) : AssetBundleLoader<NancyAssets>(bundleName)
+    public class NancyAssets(CRMod mod, string filePath) : AssetBundleLoader<NancyAssets>(mod, filePath)
     {
     }
 
-    public class DriftwoodMenaceAssets(string bundleName) : AssetBundleLoader<DriftwoodMenaceAssets>(bundleName)
+    public class DriftwoodMenaceAssets(CRMod mod, string filePath) : AssetBundleLoader<DriftwoodMenaceAssets>(mod, filePath)
     {
     }
 
-    public class CuteaAssets(string bundleName) : AssetBundleLoader<CuteaAssets>(bundleName)
+    public class CuteaAssets(CRMod mod, string filePath) : AssetBundleLoader<CuteaAssets>(mod, filePath)
     {
     }
 
-    public class PeaceKeeperAssets(string bundleName) : AssetBundleLoader<PeaceKeeperAssets>(bundleName)
+    public class PeaceKeeperAssets(CRMod mod, string filePath) : AssetBundleLoader<PeaceKeeperAssets>(mod, filePath)
     {
     }
 
-    public class RabbitMagicianAssets(string bundleName) : AssetBundleLoader<RabbitMagicianAssets>(bundleName)
+    public class RabbitMagicianAssets(CRMod mod, string filePath) : AssetBundleLoader<RabbitMagicianAssets>(mod, filePath)
     {
     }
 
-    public class CactusBudlingAssets(string bundleName) : AssetBundleLoader<CactusBudlingAssets>(bundleName)
+    public class CactusBudlingAssets(CRMod mod, string filePath) : AssetBundleLoader<CactusBudlingAssets>(mod, filePath)
     {
     }
 
@@ -92,38 +93,96 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     public CarnivorousPlantAssets? CarnivorousPlant { get; private set; }
     public RedwoodTitanAssets? RedwoodTitan { get; private set; }
 
-    public EnemyHandler()
+    public EnemyHandler(CRMod mod) : base(mod)
     {
-        CactusBudling = LoadAndRegisterAssets<CactusBudlingAssets>("cactusbudlingassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("cactusbudlingassets", out CactusBudlingAssets? cactusBudlingAssets))
+        {
+            CactusBudling = cactusBudlingAssets;
+            LoadAllContent(cactusBudlingAssets!); // todo: needs override
+        }
 
-        RabbitMagician = LoadAndRegisterAssets<RabbitMagicianAssets>("rabbitmagicianassets");
+        if (TryLoadContentBundle("rabbitmagicianassets", out RabbitMagicianAssets? rabbitMagicianAssets))
+        {
+            RabbitMagician = rabbitMagicianAssets;
+            LoadAllContent(rabbitMagicianAssets!);
+        }
 
-        PeaceKeeper = LoadAndRegisterAssets<PeaceKeeperAssets>("peacekeeperassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("peacekeeperassets", out PeaceKeeperAssets? peaceKeeperAssets))
+        {
+            PeaceKeeper = peaceKeeperAssets;
+            LoadAllContent(peaceKeeperAssets!);
+        }
 
-        Pandora = LoadAndRegisterAssets<PandoraAssets>("pandoraassets");
+        if (TryLoadContentBundle("manorlordassets", out ManorLordAssets? manorLordAssets))
+        {
+            ManorLord = manorLordAssets;
+            LoadAllContent(manorLordAssets!);
+        }
 
-        Cutea = LoadAndRegisterAssets<CuteaAssets>("cuteaassets");
+        if (TryLoadContentBundle("janitorassets", out JanitorAssets? janitorAssets))
+        {
+            Janitor = janitorAssets;
+            LoadAllContent(janitorAssets!);
+        }
 
-        DriftwoodMenace = LoadAndRegisterAssets<DriftwoodMenaceAssets>("driftwoodmenaceassets");
+        if (TryLoadContentBundle("pandoraassets", out PandoraAssets? pandoraAssets))
+        {
+            Pandora = pandoraAssets;
+            LoadAllContent(pandoraAssets!);
+        }
 
-        Nancy = LoadAndRegisterAssets<NancyAssets>("nancyassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("driftwoodmenaceassets", out DriftwoodMenaceAssets? driftwoodMenaceAssets))
+        {
+            DriftwoodMenace = driftwoodMenaceAssets;
+            LoadAllContent(driftwoodMenaceAssets!);
+        }
 
-        Monarch = LoadAndRegisterAssets<MonarchAssets>("monarchassets");
+        if (TryLoadContentBundle("nancyassets", out NancyAssets? nancyAssets))
+        {
+            Nancy = nancyAssets;
+            LoadAllContent(nancyAssets!);
+        }
 
-        Mistress = LoadAndRegisterAssets<MistressAssets>("mistressassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("monarchassets", out MonarchAssets? monarchAssets))
+        {
+            Monarch = monarchAssets;
+            LoadAllContent(monarchAssets!);
+        }
 
-        RedwoodTitan = LoadAndRegisterAssets<RedwoodTitanAssets>("redwoodtitanassets");
+        if (TryLoadContentBundle("mistressassets", out MistressAssets? mistressAssets))
+        {
+            Mistress = mistressAssets;
+            LoadAllContent(mistressAssets!);
+        }
 
-        CarnivorousPlant = LoadAndRegisterAssets<CarnivorousPlantAssets>("carnivorousplantassets");
+        if (TryLoadContentBundle("redwoodtitanassets", out RedwoodTitanAssets? redwoodTitanAssets))
+        {
+            RedwoodTitan = redwoodTitanAssets;
+            LoadAllContent(redwoodTitanAssets!);
+        }
 
-        SnailCat = LoadAndRegisterAssets<SnailCatAssets>("snailcatassets");
+        if (TryLoadContentBundle("carnivorousplantassets", out CarnivorousPlantAssets? carnivorousPlantAssets))
+        {
+            CarnivorousPlant = carnivorousPlantAssets;
+            LoadAllContent(carnivorousPlantAssets!);
+        }
 
-        DuckSong = LoadAndRegisterAssets<DuckSongAssets>("ducksongassets");
+        if (TryLoadContentBundle("snailcatassets", out SnailCatAssets? snailCatAssets))
+        {
+            SnailCat = snailCatAssets;
+            LoadAllContent(snailCatAssets!);
+        }
 
-        Transporter = LoadAndRegisterAssets<TransporterAssets>("transporterassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("ducksongassets", out DuckSongAssets? duckSongAssets))
+        {
+            DuckSong = duckSongAssets;
+            LoadAllContent(duckSongAssets!);
+        }
 
-        ManorLord = LoadAndRegisterAssets<ManorLordAssets>("manorlordassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
-
-        Janitor = LoadAndRegisterAssets<JanitorAssets>("janitorassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("transporterassets", out TransporterAssets? transporterAssets))
+        {
+            Transporter = transporterAssets;
+            LoadAllContent(transporterAssets!);
+        }
     }
 }

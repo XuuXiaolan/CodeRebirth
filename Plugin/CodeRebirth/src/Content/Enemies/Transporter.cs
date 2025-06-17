@@ -182,13 +182,13 @@ public class Transporter : CodeRebirthEnemyAI
         smartAgentNavigator.CheckPaths(candidateObjects, CheckIfNeedToChangeState);
     }
 
-    public void CheckIfNeedToChangeState(List<GameObject> objects)
+    public void CheckIfNeedToChangeState(List<(GameObject gameObject, float distance)> args)
     {
-        int totalAmount = objects.Count;
+        int totalAmount = args.Count;
         if (totalAmount > 0)
         {
             Plugin.ExtendedLogging($"Transporter: Found {totalAmount} objects");
-            transportTarget = objects[UnityEngine.Random.Range(0, totalAmount)];
+            transportTarget = args[UnityEngine.Random.Range(0, totalAmount)].gameObject;
             objectsToTransport.Remove(transportTarget);
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
@@ -232,7 +232,7 @@ public class Transporter : CodeRebirthEnemyAI
         }
     }
 
-    public void CheckIfCanReposition(List<GameObject> objects)
+    public void CheckIfCanReposition(List<(GameObject gameObject, float distance)> args)
     {
         if (transportTarget == null)
         {
@@ -241,10 +241,11 @@ public class Transporter : CodeRebirthEnemyAI
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             return;
         }
-        if (objects.Count > 0)
+
+        if (args.Count > 0)
         {
             // Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects");
-            Vector3 currentEndDestination = objects[UnityEngine.Random.Range(0, objects.Count)].transform.position;
+            Vector3 currentEndDestination = args[UnityEngine.Random.Range(0, args.Count)].gameObject.transform.position;
             creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
             agent.speed = 0f;
             agent.velocity = Vector3.zero;

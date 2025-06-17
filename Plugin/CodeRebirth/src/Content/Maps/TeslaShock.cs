@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -100,7 +101,7 @@ public class TeslaShock : CodeRebirthHazard
             if (!ShouldContinueCharging(affectedPlayer))
             {
                 float distanceFromItem = Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position);
-                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (chargedItemPlayerWasHolding.transform.position - transform.position).normalized, out _, distanceFromItem, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore))
+                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (chargedItemPlayerWasHolding.transform.position - transform.position).normalized, out _, distanceFromItem, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore))
                 {
                     validTargets.Add(startChainPoint);
                     validTargets.Add(chargedItemPlayerWasHolding.transform);
@@ -135,7 +136,7 @@ public class TeslaShock : CodeRebirthHazard
             && !affectedPlayer.isPlayerDead
             && affectedPlayer.isPlayerControlled
             && PlayerCarryingSomethingConductive(affectedPlayer)
-            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out _, distanceToPlayer, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
+            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out _, distanceToPlayer, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
     }
 
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)

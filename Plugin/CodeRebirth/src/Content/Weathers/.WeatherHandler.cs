@@ -1,11 +1,12 @@
-﻿using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
+﻿using CodeRebirthLib;
+using CodeRebirthLib.AssetManagement;
+using CodeRebirthLib.ContentManagement;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class WeatherHandler : ContentHandler<WeatherHandler>
 {
-    public class MeteoriteAssets(string bundleName) : AssetBundleLoader<MeteoriteAssets>(bundleName)
+    public class MeteoriteAssets(CRMod mod, string filePath) : AssetBundleLoader<MeteoriteAssets>(mod, filePath)
     {
         [LoadFromBundle("BetterCrater.prefab")]
         public GameObject CraterPrefab { get; private set; } = null!;
@@ -20,15 +21,15 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
         public GameObject FloatingMeteorPrefab { get; private set; } = null!;
     }
 
-    public class TornadoAssets(string bundleName) : AssetBundleLoader<TornadoAssets>(bundleName)
+    public class TornadoAssets(CRMod mod, string filePath) : AssetBundleLoader<TornadoAssets>(mod, filePath)
     {
     }
 
-    public class NightShiftAssets(string bundleName) : AssetBundleLoader<NightShiftAssets>(bundleName)
+    public class NightShiftAssets(CRMod mod, string filePath) : AssetBundleLoader<NightShiftAssets>(mod, filePath)
     {
     }
 
-    public class GodRaysAssets(string bundleName) : AssetBundleLoader<GodRaysAssets>(bundleName)
+    public class GodRaysAssets(CRMod mod, string filePath) : AssetBundleLoader<GodRaysAssets>(mod, filePath)
     {
         [LoadFromBundle("GodRayWeather.prefab")]
         public GameObject GodRayPermanentEffectPrefab { get; private set; } = null!;
@@ -39,10 +40,24 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     public TornadoAssets? Tornado { get; private set; } = null;
     public GodRaysAssets? GodRays { get; private set; } = null;
 
-    public WeatherHandler()
+    public WeatherHandler(CRMod mod) : base(mod)
     {
-        Meteorite = LoadAndRegisterAssets<MeteoriteAssets>("meteorshowerassets");
-        Tornado = LoadAndRegisterAssets<TornadoAssets>("tornadoassets");
-        NightShift = LoadAndRegisterAssets<NightShiftAssets>("nightshiftassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("meteorshowerassets", out MeteoriteAssets? meteoriteAssets))
+        {
+            Meteorite = meteoriteAssets;
+            LoadAllContent(meteoriteAssets!);
+        }
+
+        if (TryLoadContentBundle("tornadoassets", out TornadoAssets? tornadoAssets))
+        {
+            Tornado = tornadoAssets;
+            LoadAllContent(tornadoAssets!);
+        }
+
+        if (TryLoadContentBundle("nightshiftassets", out NightShiftAssets? nightShiftAssets))
+        {
+            NightShift = nightShiftAssets;
+            LoadAllContent(nightShiftAssets!);
+        }
     }
 }

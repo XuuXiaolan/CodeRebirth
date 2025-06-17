@@ -6,6 +6,7 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.DissolveEffect;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Enemies;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -416,10 +417,8 @@ public class Puppeteer : CodeRebirthEnemyAI
         if (timeSinceLastTakenDamage < 0.5f) return;
         if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
         {
-            if (CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(this, out ExtraEnemyData extraEnemyData))
-            {
-                extraEnemyData.playerThatLastHit?.KillPlayer(extraEnemyData.playerThatLastHit.velocityLastFrame, true, CauseOfDeath.Burning, 6, default);
-            }
+            CREnemyAdditionalData enemyAdditionalData = CREnemyAdditionalData.CreateOrGet(this);
+            enemyAdditionalData.PlayerThatLastHit?.KillPlayer(enemyAdditionalData.PlayerThatLastHit.velocityLastFrame, true, CauseOfDeath.Burning, 6, default);
             return;
         }
         base.KillEnemy(destroy);

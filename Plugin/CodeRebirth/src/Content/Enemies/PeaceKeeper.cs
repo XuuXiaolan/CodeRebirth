@@ -6,6 +6,7 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -391,7 +392,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
             Vector3 capsuleStart = gunTransform.position;
             Vector3 capsuleEnd = gunTransform.position + gunTransform.forward * _minigunRange;
 
-            int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, MoreLayerMasks.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < numHits; i++)
             {
@@ -531,7 +532,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     public void BitchSlapAnimationEvent()
     {
         if (!IsServer) return;
-        int numHits = Physics.OverlapCapsuleNonAlloc(_gunStartTransform.position, _gunEndTransform.position, 2f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapCapsuleNonAlloc(_gunStartTransform.position, _gunEndTransform.position, 2f, _cachedColliders, MoreLayerMasks.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];

@@ -1,4 +1,5 @@
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -12,7 +13,7 @@ public class CasetteTape : GrabbableObject
     {
         base.ItemActivate(used, buttonDown);
         Ray ray = new Ray(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
-        if (!Physics.Raycast(ray, out RaycastHit raycastHit, 3f, CodeRebirthUtils.Instance.propsMask, QueryTriggerInteraction.Ignore))
+        if (!Physics.Raycast(ray, out RaycastHit raycastHit, 3f, MoreLayerMasks.propsMask, QueryTriggerInteraction.Ignore))
             return;
 
         if (!raycastHit.transform.TryGetComponent(out CasettePlayer casettePlayer))

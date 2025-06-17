@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
-using CodeRebirth.src.MiscScripts.ConfigManager;
-using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirthLib.ConfigManagement;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class Duck : QuestMasterAI
@@ -10,7 +8,7 @@ public class Duck : QuestMasterAI
     {
         base.Start();
         questTimer = 120f;
-        List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.DuckSong!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
+        List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.DuckSong!.Content.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
         CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Duck", "Quest Timer");
         if (configSetting != null)
         {

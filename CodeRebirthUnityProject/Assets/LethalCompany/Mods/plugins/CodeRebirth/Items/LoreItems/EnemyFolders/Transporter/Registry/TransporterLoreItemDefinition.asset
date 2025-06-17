@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 2031755773, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1217196896, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: TransporterLoreItemDefinition
   m_EditorClassIdentifier: 
-  ConfigEntries: []
-  item: {fileID: 11400000, guid: e2df34ffefce2014299f4d9bc660b851, type: 2}
-  terminalNode: {fileID: 0}
+  _configEntries: []
+  <EntityNameReference>k__BackingField: Transporter
+  <Item>k__BackingField: {fileID: 11400000, guid: e2df34ffefce2014299f4d9bc660b851,
+    type: 2}
+  <TerminalNode>k__BackingField: {fileID: 0}

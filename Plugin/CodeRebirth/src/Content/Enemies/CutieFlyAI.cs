@@ -80,7 +80,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
             {
                 if (UnityEngine.Random.Range(0, 100) < 50) yield break;
             }
-            RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Monarch")?.enemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.Content.GetCREnemyDefinitionWithEnemyName("Monarch")?.enemyType);
         }
         HUDManager.Instance.DisplayTip("WARNING", "SEISMIC ACTIVITY DETECTED", true);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);

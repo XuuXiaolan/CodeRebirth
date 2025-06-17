@@ -51,12 +51,6 @@ static class EnemyAIPatch
         }
     }
 
-    private static void EnemyAI_OnDestroy(On.EnemyAI.orig_OnDestroy orig, EnemyAI self)
-    {
-        orig(self);
-        CodeRebirthUtils.ExtraEnemyDataDict.Remove(self);
-    }
-
     private static void EnemyAI_OnCollideWithPlayer(On.EnemyAI.orig_OnCollideWithPlayer orig, EnemyAI self, Collider other)
     {
         if (other.gameObject.layer == 19 && other.TryGetComponent(out PuppeteersVoodoo puppet))

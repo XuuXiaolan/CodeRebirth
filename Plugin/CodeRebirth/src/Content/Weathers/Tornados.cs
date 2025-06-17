@@ -9,6 +9,7 @@ using CodeRebirth.src.Util.Extensions;
 using System;
 using static CodeRebirth.src.Util.PlayerControllerBExtensions;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Tornados : CodeRebirthEnemyAI
@@ -263,7 +264,7 @@ public class Tornados : CodeRebirthEnemyAI
             float distance = Vector3.Distance(eye.transform.position, player.transform.position);
             if (distance > range) continue;
             bestDistanceOverall = Mathf.Min(bestDistanceOverall, distance);
-            if (Physics.Linecast(eye.transform.position, eye.position, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore)) continue;
+            if (Physics.Linecast(eye.transform.position, eye.position, MoreLayerMasks.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore)) continue;
             bestDistanceLOS = Mathf.Min(bestDistanceLOS, distance);
         }
         // Plugin.ExtendedLogging($"Best distance with LOS: {bestDistanceLOS} and overall: {bestDistanceOverall}");

@@ -4,6 +4,7 @@ using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

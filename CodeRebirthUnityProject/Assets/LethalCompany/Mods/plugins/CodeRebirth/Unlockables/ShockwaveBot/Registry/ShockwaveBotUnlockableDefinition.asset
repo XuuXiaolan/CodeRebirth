@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1183736322, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1859490669, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: ShockwaveBotUnlockableDefinition
   m_EditorClassIdentifier: 
-  ConfigEntries:
-  - settingName: Shockwave Bot
-    settingDesc: Enemy Blacklist
+  _configEntries:
+  - settingName: Shockwave Bot | Enemy Blacklist
     DynamicConfigType: 0
     defaultString: Pikmin, SnailCat, CutieFly, Nancy, Transporter, Docile Locust
       Bees, Red Locust Bees, Manticoil, Tulip Snake, Nemo, Horse, Mistress, Girl,
@@ -22,6 +21,18 @@ MonoBehaviour:
     defaultInt: 0
     defaultFloat: 0
     defaultBool: 0
+    defaultBoundedRange:
+      <Min>k__BackingField: 0
+      <Max>k__BackingField: 0
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     Description: Enemy name blacklist for what the shockwave bot won't attack.
-  unlockableItemDef: {fileID: 11400000, guid: ac526f56cd55d0948a5ad569988cea1c, type: 2}
-  DenyPurchaseNode: {fileID: 11400000, guid: af44c760fb93299418fb0069c610ecd1, type: 2}
+  <EntityNameReference>k__BackingField: Shockwave Bot
+  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: ac526f56cd55d0948a5ad569988cea1c,
+    type: 2}
+  <ProgressiveDenyNode>k__BackingField: {fileID: 11400000, guid: af44c760fb93299418fb0069c610ecd1,
+    type: 2}

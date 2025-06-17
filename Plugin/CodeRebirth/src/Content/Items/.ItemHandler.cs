@@ -1,53 +1,54 @@
-﻿using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
+﻿using CodeRebirthLib;
+using CodeRebirthLib.AssetManagement;
+using CodeRebirthLib.ContentManagement;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class ItemHandler : ContentHandler<ItemHandler>
 {
-    public class HoverboardAssets(string bundleName) : AssetBundleLoader<HoverboardAssets>(bundleName)
+    public class HoverboardAssets(CRMod mod, string filePath) : AssetBundleLoader<HoverboardAssets>(mod, filePath)
     {
     }
 
-    public class BrrreakerAssets(string bundleName) : AssetBundleLoader<BrrreakerAssets>(bundleName)
+    public class BrrreakerAssets(CRMod mod, string filePath) : AssetBundleLoader<BrrreakerAssets>(mod, filePath)
     {
     }
 
-    public class TurbulenceAssets(string bundleName) : AssetBundleLoader<TurbulenceAssets>(bundleName)
+    public class TurbulenceAssets(CRMod mod, string filePath) : AssetBundleLoader<TurbulenceAssets>(mod, filePath)
     {
     }
 
-    public class MarrowSplitterAssets(string bundleName) : AssetBundleLoader<MarrowSplitterAssets>(bundleName)
+    public class MarrowSplitterAssets(CRMod mod, string filePath) : AssetBundleLoader<MarrowSplitterAssets>(mod, filePath)
     {
     }
 
-    public class SwatterAssets(string bundleName) : AssetBundleLoader<SwatterAssets>(bundleName)
+    public class SwatterAssets(CRMod mod, string filePath) : AssetBundleLoader<SwatterAssets>(mod, filePath)
     {
     }
 
-    public class TomaHopAssets(string bundleName) : AssetBundleLoader<TomaHopAssets>(bundleName)
+    public class TomaHopAssets(CRMod mod, string filePath) : AssetBundleLoader<TomaHopAssets>(mod, filePath)
     {
     }
 
-    public class SnowGlobeAssets(string bundleName) : AssetBundleLoader<SnowGlobeAssets>(bundleName)
+    public class SnowGlobeAssets(CRMod mod, string filePath) : AssetBundleLoader<SnowGlobeAssets>(mod, filePath)
     {
     }
 
-    public class ZortAssets(string bundleName) : AssetBundleLoader<ZortAssets>(bundleName)
+    public class ZortAssets(CRMod mod, string filePath) : AssetBundleLoader<ZortAssets>(mod, filePath)
     {
     }
 
-    public class XuAndRigoAssets(string bundleName) : AssetBundleLoader<XuAndRigoAssets>(bundleName)
+    public class XuAndRigoAssets(CRMod mod, string filePath) : AssetBundleLoader<XuAndRigoAssets>(mod, filePath)
     {
         [LoadFromBundle("RodFollower.prefab")]
         public GameObject SmallRigoPrefab { get; private set; } = null!;
     }
 
-    public class MoonUnlockerAssets(string bundleName) : AssetBundleLoader<MoonUnlockerAssets>(bundleName)
+    public class MoonUnlockerAssets(CRMod mod, string filePath) : AssetBundleLoader<MoonUnlockerAssets>(mod, filePath)
     {
     }
 
-    public class OxydeLoreAssets(string bundleName) : AssetBundleLoader<OxydeLoreAssets>(bundleName)
+    public class OxydeLoreAssets(CRMod mod, string filePath) : AssetBundleLoader<OxydeLoreAssets>(mod, filePath)
     {
     }
 
@@ -63,28 +64,72 @@ public class ItemHandler : ContentHandler<ItemHandler>
     public SwatterAssets? Swatter { get; private set; } = null;
     public TomaHopAssets? TomaHop { get; private set; } = null;
 
-    public ItemHandler()
+    public ItemHandler(CRMod mod) : base(mod)
     {
-        OxydeLore = LoadAndRegisterAssets<OxydeLoreAssets>("oxydeloreassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("oxydeloreassets", out OxydeLoreAssets? oxydeLoreAssets))
+        {
+            OxydeLore = oxydeLoreAssets;
+            LoadAllContent(oxydeLoreAssets!);
+        }
 
-        MoonUnlocker = LoadAndRegisterAssets<MoonUnlockerAssets>("moonunlockerassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("moonunlockerassets", out MoonUnlockerAssets? moonUnlockerAssets))
+        {
+            MoonUnlocker = moonUnlockerAssets;
+            LoadAllContent(moonUnlockerAssets!);
+        }
 
-        XuAndRigo = LoadAndRegisterAssets<XuAndRigoAssets>("xuandrigoassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        if (TryLoadContentBundle("xuandrigoassets", out XuAndRigoAssets? xuAndRigoAssets))
+        {
+            XuAndRigo = xuAndRigoAssets;
+            LoadAllContent(xuAndRigoAssets!);
+        }
 
-        Zort = LoadAndRegisterAssets<ZortAssets>("zortassets");
+        if (TryLoadContentBundle("zortassets", out ZortAssets? zortAssets))
+        {
+            Zort = zortAssets;
+            LoadAllContent(zortAssets!);
+        }
 
-        Hoverboard = LoadAndRegisterAssets<HoverboardAssets>("hoverboardassets");
+        if (TryLoadContentBundle("hoverboardassets", out HoverboardAssets? hoverboardAssets))
+        {
+            Hoverboard = hoverboardAssets;
+            LoadAllContent(hoverboardAssets!);
+        }
 
-        SnowGlobe = LoadAndRegisterAssets<SnowGlobeAssets>("snowglobeassets");
+        if (TryLoadContentBundle("snowglobeassets", out SnowGlobeAssets? snowGlobeAssets))
+        {
+            SnowGlobe = snowGlobeAssets;
+            LoadAllContent(snowGlobeAssets!);
+        }
 
-        Brrreaker = LoadAndRegisterAssets<BrrreakerAssets>("mountaineerassets");
+        if (TryLoadContentBundle("mountaineerassets", out BrrreakerAssets? brrreakerAssets))
+        {
+            Brrreaker = brrreakerAssets;
+            LoadAllContent(brrreakerAssets!);
+        }
 
-        Turbulence = LoadAndRegisterAssets<TurbulenceAssets>("turbulenceassets");
+        if (TryLoadContentBundle("turbulenceassets", out TurbulenceAssets? turbulenceAssets))
+        {
+            Turbulence = turbulenceAssets;
+            LoadAllContent(turbulenceAssets!);
+        }
 
-        MarrowSplitter = LoadAndRegisterAssets<MarrowSplitterAssets>("marrowsplitterassets");
+        if (TryLoadContentBundle("marrowsplitterassets", out MarrowSplitterAssets? marrowSplitterAssets))
+        {
+            MarrowSplitter = marrowSplitterAssets;
+            LoadAllContent(marrowSplitterAssets!);
+        }
 
-        Swatter = LoadAndRegisterAssets<SwatterAssets>("swatterassets");
+        if (TryLoadContentBundle("swatterassets", out SwatterAssets? swatterAssets))
+        {
+            Swatter = swatterAssets;
+            LoadAllContent(swatterAssets!);
+        }
 
-        TomaHop = LoadAndRegisterAssets<TomaHopAssets>("tomahopassets");
+        if (TryLoadContentBundle("tomahopassets", out TomaHopAssets? tomaHopAssets))
+        {
+            TomaHop = tomaHopAssets;
+            LoadAllContent(tomaHopAssets!);
+        }
     }
 }

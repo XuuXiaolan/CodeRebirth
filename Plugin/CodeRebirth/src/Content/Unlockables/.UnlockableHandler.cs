@@ -1,12 +1,13 @@
-using CodeRebirth.src.Util.AssetLoading;
-using CodeRebirth.src.Util;
 using LethalLib.Extras;
 using UnityEngine;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.AssetManagement;
+using CodeRebirthLib;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockableHandler : ContentHandler<UnlockableHandler>
 {
-    public class ShockwaveBotAssets(string bundleName) : AssetBundleLoader<ShockwaveBotAssets>(bundleName)
+    public class ShockwaveBotAssets(CRMod mod, string filePath) : AssetBundleLoader<ShockwaveBotAssets>(mod, filePath)
     {
         [LoadFromBundle("LaserShockBlast.prefab")]
         public GameObject LasetShockBlast { get; private set; } = null!;
@@ -15,55 +16,55 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
         public GameObject ShockWaveDronePrefab { get; private set; } = null!;
     }
 
-    public class PlantPotAssets(string bundleName) : AssetBundleLoader<PlantPotAssets>(bundleName)
+    public class PlantPotAssets(CRMod mod, string filePath) : AssetBundleLoader<PlantPotAssets>(mod, filePath)
     {
     }
 
-    public class SeamineTinkAssets(string bundleName) : AssetBundleLoader<SeamineTinkAssets>(bundleName)
+    public class SeamineTinkAssets(CRMod mod, string filePath) : AssetBundleLoader<SeamineTinkAssets>(mod, filePath)
     {
         [LoadFromBundle("SeamineGal.prefab")]
         public GameObject SeamineGalPrefab { get; private set; } = null!;
     }
 
-    public class TerminalBotAssets(string bundleName) : AssetBundleLoader<TerminalBotAssets>(bundleName)
+    public class TerminalBotAssets(CRMod mod, string filePath) : AssetBundleLoader<TerminalBotAssets>(mod, filePath)
     {
         [LoadFromBundle("TerminalGalDaisy.prefab")]
         public GameObject TerminalGalPrefab { get; private set; } = null!;
     }
 
-    public class BellCrabAssets(string bundleName) : AssetBundleLoader<BellCrabAssets>(bundleName)
+    public class BellCrabAssets(CRMod mod, string filePath) : AssetBundleLoader<BellCrabAssets>(mod, filePath)
     {
     }
 
-    public class ACUnitGalAssets(string bundleName) : AssetBundleLoader<ACUnitGalAssets>(bundleName)
+    public class ACUnitGalAssets(CRMod mod, string filePath) : AssetBundleLoader<ACUnitGalAssets>(mod, filePath)
     {
     }
 
-    public class BearTrapGalAssets(string bundleName) : AssetBundleLoader<BearTrapGalAssets>(bundleName)
+    public class BearTrapGalAssets(CRMod mod, string filePath) : AssetBundleLoader<BearTrapGalAssets>(mod, filePath)
     {
     }
 
-    public class SCP999Assets(string bundleName) : AssetBundleLoader<SCP999Assets>(bundleName)
+    public class SCP999Assets(CRMod mod, string filePath) : AssetBundleLoader<SCP999Assets>(mod, filePath)
     {
     }
 
-    public class Fishdispenserassets(string bundleName) : AssetBundleLoader<Fishdispenserassets>(bundleName)
+    public class Fishdispenserassets(CRMod mod, string filePath) : AssetBundleLoader<Fishdispenserassets>(mod, filePath)
     {
     }
 
-    public class FriendAssets(string bundleName) : AssetBundleLoader<FriendAssets>(bundleName)
+    public class FriendAssets(CRMod mod, string filePath) : AssetBundleLoader<FriendAssets>(mod, filePath)
     {
         [LoadFromBundle("GlitchedPlushieUnlockable.asset")]
         public UnlockableItemDef GlitchedPlushieUnlockable { get; private set; } = null!;
     }
 
-    public class CleanerDroneGalAssets(string bundleName) : AssetBundleLoader<CleanerDroneGalAssets>(bundleName)
+    public class CleanerDroneGalAssets(CRMod mod, string filePath) : AssetBundleLoader<CleanerDroneGalAssets>(mod, filePath)
     {
         [LoadFromBundle("JaneFogUnlockable.asset")]
         public UnlockableItemDef CleanerDroneGalUnlockable { get; private set; } = null!;
     }
 
-    public class CruiserGalAssets(string bundleName) : AssetBundleLoader<CruiserGalAssets>(bundleName)
+    public class CruiserGalAssets(CRMod mod, string filePath) : AssetBundleLoader<CruiserGalAssets>(mod, filePath)
     {
         [LoadFromBundle("CruiserGal.prefab")]
         public GameObject CruiserGalPrefab { get; private set; } = null!;
@@ -82,31 +83,78 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
     public CleanerDroneGalAssets? CleanerDroneGal { get; private set; } = null;
     public CruiserGalAssets? CruiserGal { get; private set; } = null;
 
-    public UnlockableHandler()
+    public UnlockableHandler(CRMod mod) : base(mod)
     {
+        if (TryLoadContentBundle("shockwavebotassets", out ShockwaveBotAssets? shockwaveBotAssets))
+        {
+            ShockwaveBot = shockwaveBotAssets;
+            LoadAllContent(shockwaveBotAssets!);
+        }
 
-        ShockwaveBot = LoadAndRegisterAssets<ShockwaveBotAssets>("shockwavebotassets");
+        if (TryLoadContentBundle("plantpotassets", out PlantPotAssets? plantPotAssets))
+        {
+            PlantPot = plantPotAssets;
+            LoadAllContent(plantPotAssets!);
+        }
 
-        PlantPot = LoadAndRegisterAssets<PlantPotAssets>("plantpotassets");
+        if (TryLoadContentBundle("terminalbotassets", out TerminalBotAssets? terminalBotAssets))
+        {
+            TerminalBot = terminalBotAssets;
+            LoadAllContent(terminalBotAssets!);
+        }
 
-        TerminalBot = LoadAndRegisterAssets<TerminalBotAssets>("terminalbotassets");
+        if (TryLoadContentBundle("cruisergalassets", out CruiserGalAssets? cruiserGalAssets))
+        {
+            CruiserGal = cruiserGalAssets;
+            LoadAllContent(cruiserGalAssets!);
+        }
 
-        CruiserGal = LoadAndRegisterAssets<CruiserGalAssets>("cruisergalassets");
+        if (TryLoadContentBundle("scp999galassets", out SCP999Assets? scp999Assets))
+        {
+            SCP999 = scp999Assets;
+            LoadAllContent(scp999Assets!);
+        }
 
-        SCP999 = LoadAndRegisterAssets<SCP999Assets>("scp999galassets");
+        if (TryLoadContentBundle("fishdispenserassets", out Fishdispenserassets? shrimpDispenserAssets))
+        {
+            ShrimpDispenser = shrimpDispenserAssets;
+            LoadAllContent(shrimpDispenserAssets!);
+        }
 
-        ShrimpDispenser = LoadAndRegisterAssets<Fishdispenserassets>("fishdispenserassets");
+        if (TryLoadContentBundle("seaminetinkassets", out SeamineTinkAssets? seamineTinkAssets))
+        {
+            SeamineTink = seamineTinkAssets;
+            LoadAllContent(seamineTinkAssets!);
+        }
 
-        SeamineTink = LoadAndRegisterAssets<SeamineTinkAssets>("seaminetinkassets");
+        if (TryLoadContentBundle("cleanerdronegalassets", out CleanerDroneGalAssets? cleanerDroneGalAssets))
+        {
+            CleanerDroneGal = cleanerDroneGalAssets;
+            LoadAllContent(cleanerDroneGalAssets!);
+        }
 
-        CleanerDroneGal = LoadAndRegisterAssets<CleanerDroneGalAssets>("cleanerdronegalassets");
+        if (TryLoadContentBundle("acunitgalassets", out ACUnitGalAssets? acUnitGalAssets))
+        {
+            ACUnitGal = acUnitGalAssets;
+            LoadAllContent(acUnitGalAssets!);
+        }
 
-        ACUnitGal = LoadAndRegisterAssets<ACUnitGalAssets>("acunitgalassets");
+        if (TryLoadContentBundle("beartrapgalassets", out BearTrapGalAssets? bearTrapGalAssets))
+        {
+            BearTrapGal = bearTrapGalAssets;
+            LoadAllContent(bearTrapGalAssets!);
+        }
 
-        BearTrapGal = LoadAndRegisterAssets<BearTrapGalAssets>("beartrapgalassets");
+        if (TryLoadContentBundle("friendassets", out FriendAssets? friendAssets))
+        {
+            Friend = friendAssets;
+            LoadAllContent(friendAssets!);
+        }
 
-        Friend = LoadAndRegisterAssets<FriendAssets>("friendassets");
-
-        BellCrab = LoadAndRegisterAssets<BellCrabAssets>("bellcrabgalassets");
+        if (TryLoadContentBundle("bellcrabgalassets", out BellCrabAssets? bellCrabAssets))
+        {
+            BellCrab = bellCrabAssets;
+            LoadAllContent(bellCrabAssets!);
+        }
     }
 }

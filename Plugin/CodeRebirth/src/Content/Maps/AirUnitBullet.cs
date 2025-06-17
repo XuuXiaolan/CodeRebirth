@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -41,7 +42,7 @@ public class AirUnitProjectile : NetworkBehaviour
         {
             return;
         }
-        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, cachedColliders, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
+        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, cachedColliders, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
         if (!explodedOnTarget && collidersFound != 0 && playerToTarget.playerSteamId != Plugin.GLITCH_STEAM_ID)
         {
             CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, null, null, 5f);
