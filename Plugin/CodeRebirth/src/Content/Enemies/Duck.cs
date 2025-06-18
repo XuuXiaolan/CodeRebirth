@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using CodeRebirthLib.ConfigManagement;
+using CodeRebirthLib.ContentManagement.Enemies;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class Duck : QuestMasterAI
@@ -8,11 +7,9 @@ public class Duck : QuestMasterAI
     {
         base.Start();
         questTimer = 120f;
-        List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.DuckSong!.Content.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
-        CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Duck", "Quest Timer");
-        if (configSetting != null)
+        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Duck", out CREnemyDefinition? CREnemyDefinition))
         {
-            questTimer = CRConfigManager.GetGeneralConfigEntry<float>(configSetting.settingName, configSetting.settingDesc).Value;
+            questTimer = CREnemyDefinition.GetGeneralConfig<float>("Duck | Quest Timer").Value;
         }
     }
 }

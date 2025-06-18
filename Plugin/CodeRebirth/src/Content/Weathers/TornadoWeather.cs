@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirthLib.ContentManagement.Enemies;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
@@ -43,7 +44,10 @@ public class TornadoWeather : CodeRebirthWeathers
 
     private void SpawnTornado(Vector3 target)
     {
-        var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, WeatherHandler.Instance.Tornado?.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Tornado")?.enemyType);
+        if (!Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Tornado", out CREnemyDefinition? tornadoEnemyDefinition))
+            return;
+
+        var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, tornadoEnemyDefinition.EnemyType);
         spawnedTornados.Add(((GameObject)tornado).GetComponent<Tornados>());
     }
 }

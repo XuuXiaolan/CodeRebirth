@@ -101,7 +101,7 @@ public class TeslaShock : CodeRebirthHazard
             if (!ShouldContinueCharging(affectedPlayer))
             {
                 float distanceFromItem = Vector3.Distance(this.transform.position, chargedItemPlayerWasHolding.transform.position);
-                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (chargedItemPlayerWasHolding.transform.position - transform.position).normalized, out _, distanceFromItem, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore))
+                if (distanceFromItem <= distanceFromPlayer && !Physics.Raycast(this.transform.position, (chargedItemPlayerWasHolding.transform.position - transform.position).normalized, out _, distanceFromItem, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore))
                 {
                     validTargets.Add(startChainPoint);
                     validTargets.Add(chargedItemPlayerWasHolding.transform);
@@ -136,7 +136,7 @@ public class TeslaShock : CodeRebirthHazard
             && !affectedPlayer.isPlayerDead
             && affectedPlayer.isPlayerControlled
             && PlayerCarryingSomethingConductive(affectedPlayer)
-            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out _, distanceToPlayer, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
+            && !Physics.Raycast(affectedPlayer.transform.position, (transform.position - affectedPlayer.transform.position).normalized, out _, distanceToPlayer, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
     }
 
     private IEnumerator ChargePlayer(PlayerControllerB affectedPlayer)

@@ -4,11 +4,11 @@ using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirthLib.ContentManagement.Unlockables;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -232,11 +232,9 @@ public class SeamineGalAI : GalAI
             maxChargeCount = chargeCount;
             Agent.enabled = false;
 
-            List<CRDynamicConfig> configDefinitions = UnlockableHandler.Instance.SeamineTink!.UnlockableDefinitions.GetCRUnlockableDefinitionWithUnlockableName("SEA")!.ConfigEntries;
-            CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Seamine Gal", "Enemy Blacklist");
-            if (configSetting != null)
+            if (Plugin.Mod.UnlockableRegistry().TryGetFromUnlockableName("SEA", out CRUnlockableDefinition? seamineUnlockableDefinition))
             {
-                var enemyBlacklist = CRConfigManager.GetGeneralConfigEntry<string>(configSetting.settingName, configSetting.settingDesc).Value.Split(',').Select(s => s.Trim());
+                var enemyBlacklist = seamineUnlockableDefinition.GetGeneralConfig<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
                 foreach (var nameEntry in enemyBlacklist)
                 {
                     enemyTargetBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
@@ -520,7 +518,7 @@ public class SeamineGalAI : GalAI
             if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory))
                 continue;
 
-            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide);
             Plugin.ExtendedLogging($"Found {numHits} enemies");
             for (int i = 0; i < numHits; i++)
             {
@@ -557,7 +555,7 @@ public class SeamineGalAI : GalAI
         GalSFX.PlayOneShot(explosionSound);
         CRUtilities.CreateExplosion(beltInteractTrigger.gameObject.transform.position, true, 10, 0, 6, 1, null, null, 5f);
         List<EnemyAI> enemiesToKill = new();
-        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 15, cachedColliders, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)
         {

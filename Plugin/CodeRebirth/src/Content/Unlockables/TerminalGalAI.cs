@@ -234,7 +234,7 @@ public class TerminalGalAI : GalAI
     [ServerRpc(RequireOwnership = false)]
     private void KeyHandInteractServerRpc()
     {
-        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 7.5f, cachedColliders, MoreLayerMasks.interactableMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 7.5f, cachedColliders, MoreLayerMasks.InteractableMask, QueryTriggerInteraction.Collide);
 
         HashSet<GameObject> pointsOfInterestSet = new HashSet<GameObject>();
         Plugin.ExtendedLogging($"Found {numHits} interactable objects");

@@ -1,8 +1,11 @@
 using System;
 using System.Linq;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Unlockables;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
+using static CodeRebirthLib.Util.HUDDisplayTip;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockShipUnlockable : NetworkBehaviour
@@ -33,8 +36,11 @@ public class UnlockShipUnlockable : NetworkBehaviour
         if (player.currentlyHeldObjectServer is UnlockableUpgradeScrap unlockableUpgradeScrap)
         {
             UnlockableItem unlockableItem = unlockableUpgradeScrap.unlockableItemDef.unlockable;
-            int index = ProgressiveUnlockables.unlockableIDs.Keys.ToList().IndexOf(unlockableItem);
-            CodeRebirthUtils.Instance.UnlockProgressively(index, playerIndex, false, true, "Assembled Parts", $"Congratulations on finding the parts, Unlocked {ProgressiveUnlockables.unlockableNames[index]}.");
+            if (unlockableItem.TryGetDefinition(out CRUnlockableDefinition? unlockableDefinition) && unlockableDefinition.ProgressiveData != null)
+            {
+                HUDDisplayTip hUDDisplayTip = new("Assembled Parts", $"Congratulations on finding the parts, Unlocked {unlockableDefinition.ProgressiveData.OriginalName}.", AlertType.Hint);
+                unlockableDefinition.ProgressiveData.Unlock(hUDDisplayTip);
+            }
             if (unlockableUpgradeScrap.IsOwner) player.DespawnHeldObject();
         }
         else

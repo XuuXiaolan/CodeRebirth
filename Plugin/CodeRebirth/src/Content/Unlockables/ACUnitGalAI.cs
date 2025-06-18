@@ -49,7 +49,7 @@ public class ACUnitGalAI : NetworkBehaviour
     {
         PlayerControllerB affectedPlayer = StartOfRound.Instance.allPlayerScripts[playerIndex];
         Ray ray = new Ray(gunTransform.position, gunTransform.forward);
-        Physics.Raycast(ray, out RaycastHit hit, 100f, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
+        Physics.Raycast(ray, out RaycastHit hit, 100f, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
         Vector3 endPosition = hit.point;
         CRUtilities.CreateExplosion(endPosition, true, 50, 0, 1, 5, affectedPlayer, null, 10f);
         networkAnimator.SetTrigger(ShootingAnimation);

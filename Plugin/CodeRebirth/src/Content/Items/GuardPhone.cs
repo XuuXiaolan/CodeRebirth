@@ -1,6 +1,8 @@
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
+using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.ContentManagement.Items;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -34,6 +36,9 @@ public class GuardPhone : GrabbableObject
         _callSource.PlayOneShot(_callSound);
         yield return new WaitForSeconds(_callSound.length);
         yield return new WaitForSeconds(3f);
-        RoundManager.Instance.SpawnEnemyGameObject(position, -1, -1, MapObjectHandler.Instance.Merchant!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Guardsman")!.enemyType);
+        if (!Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Guardsman", out CREnemyDefinition? guardsmanEnemyDefinition))
+            yield break;
+
+        RoundManager.Instance.SpawnEnemyGameObject(position, -1, -1, guardsmanEnemyDefinition.EnemyType);
     }
 }

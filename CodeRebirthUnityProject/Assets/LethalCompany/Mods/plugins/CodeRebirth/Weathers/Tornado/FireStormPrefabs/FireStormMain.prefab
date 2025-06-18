@@ -5070,8 +5070,8 @@ GameObject:
   - component: {fileID: 6241107426132404908}
   - component: {fileID: 388305594167037398}
   - component: {fileID: 5625804633934992006}
-  - component: {fileID: 1031825619401334313}
   - component: {fileID: 3118335380633157005}
+  - component: {fileID: 2745893082054032241}
   m_Layer: 19
   m_Name: FireStormMain
   m_TagString: Enemy
@@ -5187,12 +5187,22 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
-  targetEnemy: {fileID: 0}
   creatureNetworkAnimator: {fileID: 3118335380633157005}
-  smartAgentNavigator: {fileID: 1031825619401334313}
+  smartAgentNavigator: {fileID: 2745893082054032241}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
+  _hitBodySounds: []
+  spawnSound: {fileID: 0}
+  _idleTimer: 1
   initialSpeed: 5
   normalTravelAudio: {fileID: 4817902241299625418}
   closeTravelAudio: {fileID: 1368164148512413936}
@@ -5323,7 +5333,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.2214966, z: 1}
   m_Center: {x: 0, y: 1.2737024, z: 0}
---- !u!114 &1031825619401334313
+--- !u!114 &3118335380633157005
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5332,7 +5342,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 2459062693091599277}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 388305594167037398}
+--- !u!114 &2745893082054032241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2459062693091599277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
@@ -5349,20 +5373,8 @@ MonoBehaviour:
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
---- !u!114 &3118335380633157005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2459062693091599277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 388305594167037398}
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &2636611910086258852
 GameObject:
   m_ObjectHideFlags: 0

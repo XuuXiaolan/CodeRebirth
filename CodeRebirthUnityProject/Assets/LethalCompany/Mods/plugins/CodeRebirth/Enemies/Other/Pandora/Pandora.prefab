@@ -4183,12 +4183,12 @@ GameObject:
   - component: {fileID: 6651428024867823410}
   - component: {fileID: 8447416284983727410}
   - component: {fileID: 8132456705990685167}
-  - component: {fileID: 8703156663634935664}
   - component: {fileID: 4761475966915995278}
   - component: {fileID: 6377412261977741814}
   - component: {fileID: 3339810588545434970}
   - component: {fileID: 6013123331491736766}
   - component: {fileID: 4697796601391389815}
+  - component: {fileID: 6944989776284411048}
   m_Layer: 19
   m_Name: Pandora
   m_TagString: Enemy
@@ -4266,34 +4266,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &8703156663634935664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4859729760429208540}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: -1
 --- !u!95 &4761475966915995278
 Animator:
   serializedVersion: 5
@@ -4328,13 +4300,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 2081823275
-    DestinationState: 153412885
-    TransitionDuration: 0.42959213
-    TriggerNameHash: -1948948554
-    TransitionIndex: 1
   - IsCrossFadeExit: 0
     Layer: 0
     OriginatingState: 2081823275
@@ -4497,7 +4462,7 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 6377412261977741814}
-  smartAgentNavigator: {fileID: 8703156663634935664}
+  smartAgentNavigator: {fileID: 6944989776284411048}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
@@ -4530,6 +4495,34 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &6944989776284411048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859729760429208540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &5039892094157279804
 GameObject:
   m_ObjectHideFlags: 0

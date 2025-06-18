@@ -41,7 +41,7 @@ public class InfiniKey : GrabbableObject
         previousPlayerHeldBy.activatingItem = false;
         int hitSurfaceIndex = -1;
         this.previousPlayerHeldBy.twoHanded = false;
-        int numHits = Physics.SphereCastNonAlloc(previousPlayerHeldBy.gameplayCamera.transform.position + previousPlayerHeldBy.gameplayCamera.transform.right * 0.1f, 0.3f, previousPlayerHeldBy.gameplayCamera.transform.forward, cachedHits, 0.75f, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.SphereCastNonAlloc(previousPlayerHeldBy.gameplayCamera.transform.position + previousPlayerHeldBy.gameplayCamera.transform.right * 0.1f, 0.3f, previousPlayerHeldBy.gameplayCamera.transform.forward, cachedHits, 0.75f, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (cachedHits[i].transform.gameObject.layer == 8 || cachedHits[i].transform.gameObject.layer == 11)

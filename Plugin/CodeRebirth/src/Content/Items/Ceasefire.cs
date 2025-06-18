@@ -221,7 +221,7 @@ public class Ceasefire : GrabbableObject
 
         Vector3 capsuleStart = _ceasefireBarrel.transform.position;
         Vector3 capsuleEnd = capsuleStart + (-_ceasefireBarrel.transform.up) * _minigunRange;
-        int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, MoreLayerMasks.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)
         {

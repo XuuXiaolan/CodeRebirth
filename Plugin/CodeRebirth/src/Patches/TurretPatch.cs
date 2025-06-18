@@ -1,5 +1,6 @@
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ public static class TurretPatch
         {
             var shootRay = new Ray(self.centerPoint.position - Vector3.up * 0.3f, self.aimPoint.forward - Vector3.up * 0.3f);
             Plugin.ExtendedLogging($"Raycast from {self.centerPoint.position} to {self.aimPoint.forward}");
-            if (!Physics.Raycast(shootRay, out var hit, 30f, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide))
+            if (!Physics.Raycast(shootRay, out var hit, 30f, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide))
             {
                 goto ret;
             }

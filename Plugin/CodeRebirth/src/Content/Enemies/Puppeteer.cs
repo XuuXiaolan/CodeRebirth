@@ -6,7 +6,9 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.DissolveEffect;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -440,8 +442,10 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         playerPuppetMap.Clear();
-        if (EnemyHandler.Instance.ManorLord == null) return;
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.GetCRItemDefinitionWithItemName("Needle")?.item.itemName, transform.position);
+        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Pin Needle", out CRItemDefinition? pinNeedleItemDefinition))
+            return;
+
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(pinNeedleItemDefinition.Item.itemName, transform.position);
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

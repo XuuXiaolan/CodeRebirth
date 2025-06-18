@@ -565,7 +565,7 @@ GameObject:
   - component: {fileID: 4269174617254375689}
   - component: {fileID: 3567973626803899908}
   - component: {fileID: -9173766493286187039}
-  - component: {fileID: 3804565374324884659}
+  - component: {fileID: 4928147142300678127}
   m_Layer: 19
   m_Name: PuppeteerPuppet
   m_TagString: Player
@@ -613,7 +613,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a4356f1ce205bb949b6a509fe6f31f02, type: 2}
   - {fileID: 2100000, guid: f7976b49d7b9c054a96561ae75550a5d, type: 2}
   - {fileID: 2100000, guid: 4e540cb64fc84044f9205165fb7127dc, type: 2}
-  smartAgentNavigator: {fileID: 3804565374324884659}
+  smartAgentNavigator: {fileID: 4928147142300678127}
   ballHitUpwardAmount: 0.5
   puppetFootstepSounds:
   - {fileID: 8300000, guid: be493e6410e234e459dbfe5102683e18, type: 3}
@@ -955,7 +955,7 @@ MonoBehaviour:
   InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &3804565374324884659
+--- !u!114 &4928147142300678127
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -964,7 +964,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5909732099304660934}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
@@ -980,9 +980,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 1
-  _allowedLinks: -1
 --- !u!1 &6570641537456848073
 GameObject:
   m_ObjectHideFlags: 0

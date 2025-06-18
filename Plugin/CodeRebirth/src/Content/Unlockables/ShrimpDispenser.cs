@@ -1,6 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,7 +26,10 @@ public class ShrimpDispenser : NetworkBehaviour
     public void Start()
     {
         shrimpRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
-        itemToSpawn = UnlockableHandler.Instance.ShrimpDispenser!.ItemDefinitions.GetCRItemDefinitionWithItemName("Shrimp")!.item;
+        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Blue Shrimp", out CRItemDefinition? blueShrimpItemDefinition))
+            return;
+
+        itemToSpawn = blueShrimpItemDefinition.Item;
         dispenserTrigger.onInteract.AddListener(OnDispenserInteract);
     }
 

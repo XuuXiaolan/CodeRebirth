@@ -5,6 +5,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -196,7 +197,7 @@ public class Mistress : CodeRebirthEnemyAI
             entrance?.TeleportPlayer();
         }
         if (!IsServer) yield break;
-        GameObject GuillotineGO = GameObject.Instantiate(EnemyHandler.Instance.Mistress.GuillotinePrefab, hit.point, Quaternion.Euler(-90, 0, 0), RoundManager.Instance.mapPropsContainer.transform);
+        GameObject GuillotineGO = GameObject.Instantiate(EnemyHandler.Instance.Mistress!.GuillotinePrefab, hit.point, Quaternion.Euler(-90, 0, 0), RoundManager.Instance.mapPropsContainer.transform);
         var netObj = GuillotineGO.GetComponent<NetworkObject>();
         netObj.Spawn(false);
         var Guillotine = GuillotineGO.GetComponent<Guillotine>();
@@ -269,7 +270,7 @@ public class Mistress : CodeRebirthEnemyAI
         if (distanceToPlayer > 50f)
             return false;
 
-        if (Physics.Raycast(targetPlayer.gameplayCamera.transform.position, targetPlayer.gameplayCamera.transform.position - HeadTransform.position, distanceToPlayer, CodeRebirthUtils.Instance.collidersAndRoomAndDefaultAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(targetPlayer.gameplayCamera.transform.position, targetPlayer.gameplayCamera.transform.position - HeadTransform.position, distanceToPlayer, MoreLayerMasks.CollidersAndRoomAndDefaultAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
             return false;
 
         return true;

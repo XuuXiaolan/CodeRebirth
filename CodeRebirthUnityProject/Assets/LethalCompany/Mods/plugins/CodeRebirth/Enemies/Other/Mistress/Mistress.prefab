@@ -1044,8 +1044,8 @@ GameObject:
   - component: {fileID: 1863459963605651966}
   - component: {fileID: 7916223780313904949}
   - component: {fileID: 8001973664605584344}
-  - component: {fileID: 6419109921350317054}
   - component: {fileID: 7423302728941841708}
+  - component: {fileID: 4261352933600808359}
   m_Layer: 19
   m_Name: Mistress
   m_TagString: Enemy
@@ -1200,34 +1200,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
   m_Animator: {fileID: 1863459963605651966}
---- !u!114 &6419109921350317054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6386906853206818203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 1
-  _allowedLinks: -1
 --- !u!114 &7423302728941841708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1349,14 +1321,22 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 8001973664605584344}
-  smartAgentNavigator: {fileID: 6419109921350317054}
+  smartAgentNavigator: {fileID: 4261352933600808359}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
+  _hitBodySounds: []
+  spawnSound: {fileID: 0}
+  _idleTimer: 1
   teleportCooldown: 20
   killCooldown: 10
   HeadTransform: {fileID: 1212291645882394840}
@@ -1367,6 +1347,34 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0917208964dc6a240bf356f010bbf559, type: 3}
   - {fileID: 8300000, guid: ddc181f80ab107847a307fbdbfa7e8d3, type: 3}
   - {fileID: 8300000, guid: d28db6a7e745a3f4e94b624b25044163, type: 3}
+--- !u!114 &4261352933600808359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6386906853206818203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &6478745463343962421
 GameObject:
   m_ObjectHideFlags: 0

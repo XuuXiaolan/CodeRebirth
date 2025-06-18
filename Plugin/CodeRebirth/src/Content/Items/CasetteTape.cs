@@ -13,7 +13,7 @@ public class CasetteTape : GrabbableObject
     {
         base.ItemActivate(used, buttonDown);
         Ray ray = new Ray(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
-        if (!Physics.Raycast(ray, out RaycastHit raycastHit, 3f, MoreLayerMasks.propsMask, QueryTriggerInteraction.Ignore))
+        if (!Physics.Raycast(ray, out RaycastHit raycastHit, 3f, MoreLayerMasks.PropsMask, QueryTriggerInteraction.Ignore))
             return;
 
         if (!raycastHit.transform.TryGetComponent(out CasettePlayer casettePlayer))

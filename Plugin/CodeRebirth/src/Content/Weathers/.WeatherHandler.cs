@@ -35,29 +35,17 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
         public GameObject GodRayPermanentEffectPrefab { get; private set; } = null!;
     }
 
-    public NightShiftAssets? NightShift { get; private set; } = null;
-    public MeteoriteAssets? Meteorite { get; private set; } = null;
-    public TornadoAssets? Tornado { get; private set; } = null;
-    public GodRaysAssets? GodRays { get; private set; } = null;
+    public NightShiftAssets? NightShift = null;
+    public MeteoriteAssets? Meteorite = null;
+    public TornadoAssets? Tornado = null;
+    public GodRaysAssets? GodRays = null;
 
     public WeatherHandler(CRMod mod) : base(mod)
     {
-        if (TryLoadContentBundle("meteorshowerassets", out MeteoriteAssets? meteoriteAssets))
-        {
-            Meteorite = meteoriteAssets;
-            LoadAllContent(meteoriteAssets!);
-        }
+        RegisterContent("meteorshowerassets", out Meteorite);
 
-        if (TryLoadContentBundle("tornadoassets", out TornadoAssets? tornadoAssets))
-        {
-            Tornado = tornadoAssets;
-            LoadAllContent(tornadoAssets!);
-        }
+        RegisterContent("tornadoassets", out Tornado);
 
-        if (TryLoadContentBundle("nightshiftassets", out NightShiftAssets? nightShiftAssets))
-        {
-            NightShift = nightShiftAssets;
-            LoadAllContent(nightShiftAssets!);
-        }
+        RegisterContent("nightshiftassets", out NightShift, Plugin.ModConfig.ConfigOxydeEnabled.Value);
     }
 }

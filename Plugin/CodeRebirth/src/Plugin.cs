@@ -1,10 +1,7 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using UnityEngine;
 using BepInEx;
 using BepInEx.Logging;
-using System.Collections.Generic;
-using System.Linq;
 using HarmonyLib;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirth.src.ModCompats;
@@ -12,27 +9,36 @@ using CodeRebirth.src.Patches;
 using Unity.Netcode;
 using BepInEx.Configuration;
 using CodeRebirthLib;
+using CodeRebirthLib.AssetManagement;
 /*
 Big todo
 Give the configs some sort of listener for lethal config so i can detect runtime changes.
 */
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency(LethalLib.Plugin.ModGUID)]
 [BepInDependency("mrov.WeatherRegistry")]
 [BepInDependency("com.rune580.LethalCompanyInputUtils")]
+[BepInDependency(CodeRebirthLib.MyPluginInfo.PLUGIN_GUID)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("Zaggy1024.PathfindingLib")]
 [BepInDependency(MoreCompany.PluginInformation.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
 {
-    internal static new ManualLogSource Logger = null!;
+    internal new static ManualLogSource Logger = null!;
     internal static readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
     internal static IngameKeybinds InputActionsInstance = null!;
     public static ConfigFile configFile { get; private set; } = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
 	public static CRMod Mod { get; private set; }
+    internal class MainAssets(AssetBundle bundle) : AssetBundleLoader<MainAssets>(bundle)
+    {
+        [LoadFromBundle("CodeRebirthUtils.prefab")]
+        public GameObject UtilsPrefab { get; private set; } = null!;
+
+        [LoadFromBundle("EmptyNetworkObject.prefab")]
+        public GameObject EmptyNetworkObject { get; private set; } = null!;
+    }
+    internal static MainAssets Assets { get; private set; } = null!;
 
     internal const ulong GLITCH_STEAM_ID = 9;
 
@@ -60,7 +66,6 @@ public class Plugin : BaseUnityPlugin
         _harmony.PatchAll(typeof(HDAdditionalLightDataPatch));
 
         ItemDropshipPatch.Init();
-        TerminalPatch.Init();
         KnifeItemPatch.Init();
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
@@ -78,23 +83,19 @@ public class Plugin : BaseUnityPlugin
         InitializeNetworkBehaviours();
         InputActionsInstance = new IngameKeybinds();
 
-		AssetBundle mainBundle = CRLib.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
-		Mod = CRLib.RegisterMod(this, mainBundle);
+        ModConfig.InitCodeRebirthConfig(configFile);
+
+        AssetBundle mainBundle = CRLib.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
+        Assets = new MainAssets(mainBundle);
+        Mod = CRLib.RegisterMod(this, mainBundle);
 		Mod.RegisterContentHandlers();
         // Register Keybinds
 
         Logger.LogInfo("Registering CodeRebirth content.");
 
-        ModConfig.InitCodeRebirthConfig(configFile);
-
         if (OpenBodyCamCompatibilityChecker.Enabled)
         {
             OpenBodyCamCompatibilityChecker.Init();
-        }
-
-        if (MoreSuitsCompatibilityChecker.Enabled)
-        {
-            MoreSuitsCompatibilityChecker.Init();
         }
 
         if (ModConfig.ConfigCleanUnusedConfigs.Value)

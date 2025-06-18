@@ -20560,6 +20560,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screenShakeTarget: {fileID: 2355986219245707053}
+  particleSystems: []
   audioSourceNear: {fileID: 848744891434479662}
   nearAudioClips:
   - {fileID: 8300000, guid: e17592a456c84034d954d4e4ea85b0d7, type: 3}
@@ -46356,6 +46357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screenShakeTarget: {fileID: 6129580063063455351}
+  particleSystems: []
   audioSourceNear: {fileID: 848744891434479662}
   nearAudioClips:
   - {fileID: 8300000, guid: e17592a456c84034d954d4e4ea85b0d7, type: 3}
@@ -46415,8 +46417,8 @@ GameObject:
   - component: {fileID: 6190392053031910777}
   - component: {fileID: 6280165044034835773}
   - component: {fileID: 7240510479046683112}
-  - component: {fileID: 7132943189166769425}
   - component: {fileID: 410828306200048651}
+  - component: {fileID: 7822534254777382931}
   m_Layer: 19
   m_Name: RedwoodTitan
   m_TagString: Enemy
@@ -46602,14 +46604,22 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 1
   hitsPhysicsObjects: 1
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 6190392053031910777}
-  smartAgentNavigator: {fileID: 7132943189166769425}
+  smartAgentNavigator: {fileID: 7822534254777382931}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
+  _hitBodySounds: []
+  spawnSound: {fileID: 8300000, guid: eaef63b734a1bc347b1f624d85966587, type: 3}
+  _idleTimer: 1
   AlbinoMaterials:
   - {fileID: 2100000, guid: b2f4cfae3f887b645b9bc3d5040ef296, type: 2}
   - {fileID: 2100000, guid: ecbba3b3c81707549abd5460f942000c, type: 2}
@@ -46631,17 +46641,7 @@ MonoBehaviour:
   DeathParticles: {fileID: 7968070030579549643}
   BigSmokeEffect: {fileID: 1035805282096699522}
   creatureSFXFar: {fileID: 6109531878674377141}
-  stompSounds:
-  - {fileID: 8300000, guid: e17592a456c84034d954d4e4ea85b0d7, type: 3}
-  - {fileID: 8300000, guid: e93354b9019b18a4882d7a5f2dc11dfd, type: 3}
-  - {fileID: 8300000, guid: bc8409c1c959f5f41abcf57143df0aa4, type: 3}
-  - {fileID: 8300000, guid: 61ac1fac7ebe1fe43882166d84386101, type: 3}
-  farStompSounds:
-  - {fileID: 8300000, guid: a2e52141f9aa49343b95da103945a4c5, type: 3}
-  - {fileID: 8300000, guid: 4ccc3b68af4274549b90e21f5c574f2c, type: 3}
-  - {fileID: 8300000, guid: dea5506c2865e4e47a0af77af6e0b524, type: 3}
   eatenSound: {fileID: 8300000, guid: 1914de16a7f12394c96022b7b3b360a5, type: 3}
-  spawnSound: {fileID: 8300000, guid: eaef63b734a1bc347b1f624d85966587, type: 3}
   roarSound: {fileID: 8300000, guid: 751dff49638e1a745ba3cc2b49f5c3ff, type: 3}
   jumpSound: {fileID: 8300000, guid: f0d887763cb2b75449274632c63fff98, type: 3}
   kickSound: {fileID: 8300000, guid: 72c04d9b290f586428e1568a199e1256, type: 3}
@@ -46787,34 +46787,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 927
   m_ObstacleAvoidanceType: 1
---- !u!114 &7132943189166769425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6657914976785946626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: -1
 --- !u!114 &410828306200048651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46830,6 +46802,34 @@ MonoBehaviour:
   _screenShakeTargets:
   - {fileID: 8095783887917850014}
   - {fileID: 3909222443939795507}
+--- !u!114 &7822534254777382931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6657914976785946626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &6862261050158760410
 GameObject:
   m_ObjectHideFlags: 0

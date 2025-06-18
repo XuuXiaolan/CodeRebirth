@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 1332206447354298532}
   - component: {fileID: 6644502847299280838}
   - component: {fileID: 5171524813891045079}
-  - component: {fileID: 4277607290375325627}
+  - component: {fileID: 3135059767831087649}
   m_Layer: 19
   m_Name: Transporter
   m_TagString: Enemy
@@ -477,7 +477,7 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 1471202553139122210}
-  smartAgentNavigator: {fileID: 4277607290375325627}
+  smartAgentNavigator: {fileID: 3135059767831087649}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
@@ -486,6 +486,8 @@ MonoBehaviour:
     - {fileID: 8300000, guid: b7beca64239e4074f9465d802687c889, type: 3}
     minTime: 20
     maxTime: 20
+  _hitBodySounds: []
+  spawnSound: {fileID: 0}
   _idleTimer: 1
   engineAndIdleSounds:
   - {fileID: 8300000, guid: 8fcb9a72420f2e541aaf3ebf56eb84b0, type: 3}
@@ -515,7 +517,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
---- !u!114 &4277607290375325627
+--- !u!114 &3135059767831087649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -524,7 +526,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 408929051958555687}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
@@ -540,9 +542,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: 15
 --- !u!1 &528938990867653846
 GameObject:
   m_ObjectHideFlags: 0

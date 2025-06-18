@@ -116,7 +116,7 @@ public class ElectricSlugger : GrabbableObject
     {
         base.ItemActivate(used, buttonDown);
         if (!canFire || insertedBattery.empty || insertedBattery.charge <= 0) return;
-        int numHits = Physics.SphereCastNonAlloc(playerHeldBy.gameplayCamera.transform.position, 1, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, 999, MoreLayerMasks.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.SphereCastNonAlloc(playerHeldBy.gameplayCamera.transform.position, 1, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, 999, MoreLayerMasks.CollidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             CRUtilities.CreateExplosion(cachedRaycastHits[i].transform.position, true, 0, 0, 0, 0, playerHeldBy, null, 0);

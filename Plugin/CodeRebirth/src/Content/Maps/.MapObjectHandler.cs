@@ -6,6 +6,8 @@ using LethalLib.Modules;
 using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib;
 using CodeRebirthLib.AssetManagement;
+using CodeRebirthLib.ConfigManagement;
+using CodeRebirthLib.ContentManagement.MapObjects;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
@@ -87,102 +89,50 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     {
     }
 
-    public OxydeCrashShipAssets? OxydeCrashShip { get; private set; } = null;
-    public GunslingerGregAssets? GunslingerGreg { get; private set; } = null;
-    public CompactorTobyAssets? CompactorToby { get; private set; } = null;
-    public ShredderSarahAssets? ShredderSarah { get; private set; } = null;
-    public MerchantAssets? Merchant { get; private set; } = null;
-    public CrateAssets? Crate { get; private set; } = null;
-    public FloraAssets? Flora { get; private set; } = null;
-    public BiomeAssets? Biome { get; private set; } = null;
-    public BearTrapAssets? BearTrap { get; private set; } = null;
-    public GlowingGemAssets? GlowingGem { get; private set; } = null;
-    public IndustrialFanAssets? IndustrialFan { get; private set; } = null;
-    public FlashTurretAssets? FlashTurret { get; private set; } = null;
-    public TeslaShockAssets? TeslaShock { get; private set; } = null;
-    public AirControlUnitAssets? AirControlUnit { get; private set; } = null;
-    public FunctionalMicrowaveAssets? FunctionalMicrowave { get; private set; } = null;
-    public AutonomousCraneAssets? AutonomousCrane { get; private set; } = null;
+    public OxydeCrashShipAssets? OxydeCrashShip = null;
+    public GunslingerGregAssets? GunslingerGreg = null;
+    public CompactorTobyAssets? CompactorToby = null;
+    public ShredderSarahAssets? ShredderSarah = null;
+    public MerchantAssets? Merchant = null;
+    public CrateAssets? Crate = null;
+    public FloraAssets? Flora = null;
+    public BiomeAssets? Biome = null;
+    public BearTrapAssets? BearTrap = null;
+    public GlowingGemAssets? GlowingGem = null;
+    public IndustrialFanAssets? IndustrialFan = null;
+    public FlashTurretAssets? FlashTurret = null;
+    public TeslaShockAssets? TeslaShock = null;
+    public AirControlUnitAssets? AirControlUnit = null;
+    public FunctionalMicrowaveAssets? FunctionalMicrowave = null;
+    public AutonomousCraneAssets? AutonomousCrane = null;
 
     public MapObjectHandler(CRMod mod) : base(mod)
     {
-        if (TryLoadContentBundle("oxydecrashshipassets", out OxydeCrashShipAssets? oxydecrashshipassets))
-        {
-            OxydeCrashShip = oxydecrashshipassets;
-            LoadAllContent(oxydecrashshipassets!);
-        }
+        RegisterContent("oxydecrashshipassets", out OxydeCrashShip, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("compactortobyassets", out CompactorTobyAssets? compactortobyassets))
-        {
-            CompactorToby = compactortobyassets;
-            LoadAllContent(compactortobyassets!);
-        }
+        RegisterContent("compactortobyassets", out CompactorToby, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("gunslingergregassets", out GunslingerGregAssets? gunslingergregassets))
-        {
-            GunslingerGreg = gunslingergregassets;
-            LoadAllContent(gunslingergregassets!);
-        }
+        RegisterContent("gunslingergregassets", out GunslingerGreg, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("shreddersarahassets", out ShredderSarahAssets? shreddersarahassets))
-        {
-            ShredderSarah = shreddersarahassets;
-            LoadAllContent(shreddersarahassets!);
-        }
+        RegisterContent("shreddersarahassets", out ShredderSarah, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("merchantassets", out MerchantAssets? merchantassets))
-        {
-            Merchant = merchantassets;
-            LoadAllContent(merchantassets!);
-        }
+        RegisterContent("merchantassets", out Merchant, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("crateassets", out CrateAssets? crateassets))
-        {
-            Crate = crateassets;
-            LoadAllContent(crateassets!);
-        }
+        RegisterContent("crateassets", out Crate);
 
-        if (TryLoadContentBundle("biomeassets", out BiomeAssets? biomeassets))
-        {
-            Biome = biomeassets;
-            LoadAllContent(biomeassets!);
-        }
+        // RegisterContent("biomeassets", out Biome);
 
-        if (TryLoadContentBundle("teslashockassets", out TeslaShockAssets? teslashockassets))
-        {
-            TeslaShock = teslashockassets;
-            LoadAllContent(teslashockassets!);
-        }
+        // RegisterContent("teslashockassets", out TeslaShock);
 
-        if (TryLoadContentBundle("beartrapassets", out BearTrapAssets? beartrapassets))
-        {
-            BearTrap = beartrapassets;
-            LoadAllContent(beartrapassets!);
-        }
+        RegisterContent("beartrapassets", out BearTrap);
 
-        if (TryLoadContentBundle("functionalmicrowaveassets", out FunctionalMicrowaveAssets? functionalmicrowaveassets))
-        {
-            FunctionalMicrowave = functionalmicrowaveassets;
-            LoadAllContent(functionalmicrowaveassets!);
-        }
+        RegisterContent("functionalmicrowaveassets", out FunctionalMicrowave);
 
-        if (TryLoadContentBundle("autonomouscraneassets", out AutonomousCraneAssets? autonomouscraneassets))
-        {
-            AutonomousCrane = autonomouscraneassets;
-            LoadAllContent(autonomouscraneassets!);
-        }
+        RegisterContent("autonomouscraneassets", out AutonomousCrane);
 
-        if (TryLoadContentBundle("glowinggemassets", out GlowingGemAssets? glowinggemassets))
-        {
-            GlowingGem = glowinggemassets;
-            LoadAllContent(glowinggemassets!);
-        }
+        RegisterContent("glowinggemassets", out GlowingGem);
 
-        if (TryLoadContentBundle("industrialfanassets", out IndustrialFanAssets? industrialfanassets))
-        {
-            IndustrialFan = industrialfanassets;
-            LoadAllContent(industrialfanassets!);
-        }
+        RegisterContent("industrialfanassets", out IndustrialFan);
 
         Plugin.ModConfig.ConfigFloraEnabled = Plugin.configFile.Bind("Flora Options",
                                             "Flora | Enabled",
@@ -233,53 +183,13 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public void RegisterFlora(GameObject prefab, FloraTag tag, string configString)
     {
-        (Dictionary<Levels.LevelTypes, string> spawnRateByLevelType, Dictionary<string, string> spawnRateByCustomLevelType) = ConfigParsingWithCurve(configString);
-
-        // Create dictionaries to hold animation curves for each level type
-        Dictionary<Levels.LevelTypes, AnimationCurve> curvesByLevelType = new();
-        Dictionary<string, AnimationCurve> curvesByCustomLevelType = new();
-
-        bool allCurveExists = false;
-        AnimationCurve allAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
-
-        bool vanillaCurveExists = false;
-        AnimationCurve vanillaAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
-
-        bool moddedCurveExists = false;
-        AnimationCurve moddedAnimationCurve = AnimationCurve.Linear(0, 0, 1, 0);
-
-        // Populate the animation curves
-        foreach (var entry in spawnRateByLevelType)
-        {
-            Plugin.ExtendedLogging($"Registering flora {prefab.name} for level {entry.Key} with curve {entry.Value}");
-            curvesByLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key.ToString());
-            if (entry.Key == Levels.LevelTypes.Vanilla)
-            {
-                vanillaCurveExists = true;
-                vanillaAnimationCurve = curvesByLevelType[entry.Key];
-            }
-            else if (entry.Key == Levels.LevelTypes.Modded)
-            {
-                moddedCurveExists = true;
-                moddedAnimationCurve = curvesByLevelType[entry.Key];
-            }
-            else if (entry.Key == Levels.LevelTypes.All)
-            {
-                allCurveExists = true;
-                allAnimationCurve = curvesByLevelType[entry.Key];
-            }
-        }
-        foreach (var entry in spawnRateByCustomLevelType)
-        {
-            curvesByCustomLevelType[entry.Key] = CreateCurveFromString(entry.Value, prefab.name, entry.Key);
-        }
+        MapObjectSpawnMechanics floraMapObjectSpawnMechanics = new MapObjectSpawnMechanics(configString);
 
         RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora()
         {
             prefab = prefab,
             floraTag = tag,
-            spawnCurveFunction =
-            level => CurveFunction(level, prefab, curvesByLevelType, curvesByCustomLevelType, vanillaCurveExists, vanillaAnimationCurve, moddedCurveExists, moddedAnimationCurve, allCurveExists, allAnimationCurve)
+            spawnCurveFunction = floraMapObjectSpawnMechanics.CurveFunction,
         });
     }
 }

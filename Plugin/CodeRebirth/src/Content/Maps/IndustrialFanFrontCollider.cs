@@ -14,7 +14,7 @@ public class IndustrialFanFrontCollider : NetworkBehaviour
         {
             Vector3 pushDirection = (other.transform.position - industrialFan.fanTransform.position).normalized;
             Vector3 targetPosition = other.transform.position + (pushDirection * industrialFan.pushForce);
-            if (Physics.Linecast(other.transform.position, targetPosition, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore))
+            if (Physics.Linecast(other.transform.position, targetPosition, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore))
             {
                 other.transform.position = Vector3.Lerp(other.transform.position, targetPosition, industrialFan.pushForce * Time.fixedDeltaTime * 0.1f);
             }

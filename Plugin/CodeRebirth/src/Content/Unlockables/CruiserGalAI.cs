@@ -216,17 +216,17 @@ public class CruiserGalAI : GalAI
         NetworkAnimator.SetTrigger(pullLeverAnimation);
     }
 
-    private void CheckIfCanPathToEntrances(List<EntranceTeleport> teleports)
+    private void CheckIfCanPathToEntrances(List<(EntranceTeleport entranceTeleport, float distanceToTeleport)> args)
     {
         smartAgentNavigator.cantMove = false;
-        Plugin.ExtendedLogging($"Pathable entrances: {teleports.Count}");
-        if (teleports.Count <= 0)
+        Plugin.ExtendedLogging($"Pathable entrances: {args.Count}");
+        if (args.Count <= 0)
         {
             ContainerGO.SetActive(false);
             // todo: Maybe play a sound that she can't route to any exit?
             return;
         }
-        entranceToGoTo = teleports[UnityEngine.Random.Range(0, teleports.Count)];
+        entranceToGoTo = args[UnityEngine.Random.Range(0, args.Count)].entranceTeleport;
         HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringPlayer);
     }
 

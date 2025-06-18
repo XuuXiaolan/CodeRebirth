@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Linq;
+using CodeRebirthLib;
+using CodeRebirthLib.ContentManagement.Enemies;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -80,7 +82,10 @@ public class CutieFlyAI : CodeRebirthEnemyAI
             {
                 if (UnityEngine.Random.Range(0, 100) < 50) yield break;
             }
-            RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, EnemyHandler.Instance.Monarch.Content.GetCREnemyDefinitionWithEnemyName("Monarch")?.enemyType);
+            if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Monarch", out CREnemyDefinition? CREnemyDefinition))
+            {
+                RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, CREnemyDefinition.EnemyType);
+            }
         }
         HUDManager.Instance.DisplayTip("WARNING", "SEISMIC ACTIVITY DETECTED", true);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);

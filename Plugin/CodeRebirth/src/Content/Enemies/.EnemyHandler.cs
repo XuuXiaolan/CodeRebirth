@@ -76,113 +76,53 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
     {
     }
 
-    public CactusBudlingAssets? CactusBudling { get; private set; }
-    public RabbitMagicianAssets? RabbitMagician { get; private set; }
-    public PeaceKeeperAssets? PeaceKeeper { get; private set; }
-    public CuteaAssets? Cutea { get; private set; }
-    public NancyAssets? Nancy { get; private set; }
-    public DriftwoodMenaceAssets? DriftwoodMenace { get; private set; }
-    public PandoraAssets? Pandora { get; private set; }
-    public MonarchAssets? Monarch { get; private set; }
-    public MistressAssets? Mistress { get; private set; }
-    public TransporterAssets? Transporter { get; private set; }
-    public JanitorAssets? Janitor { get; private set; }
-    public ManorLordAssets? ManorLord { get; private set; }
-    public DuckSongAssets? DuckSong { get; private set; }
-    public SnailCatAssets? SnailCat { get; private set; }
-    public CarnivorousPlantAssets? CarnivorousPlant { get; private set; }
-    public RedwoodTitanAssets? RedwoodTitan { get; private set; }
+    public CactusBudlingAssets? CactusBudling = null;
+    public RabbitMagicianAssets? RabbitMagician = null;
+    public PeaceKeeperAssets? PeaceKeeper = null;
+    public CuteaAssets? Cutea = null;
+    public NancyAssets? Nancy = null;
+    public DriftwoodMenaceAssets? DriftwoodMenace = null;
+    public PandoraAssets? Pandora = null;
+    public MonarchAssets? Monarch = null;
+    public MistressAssets? Mistress = null;
+    public TransporterAssets? Transporter = null;
+    public JanitorAssets? Janitor = null;
+    public ManorLordAssets? ManorLord = null;
+    public DuckSongAssets? DuckSong = null;
+    public SnailCatAssets? SnailCat = null;
+    public CarnivorousPlantAssets? CarnivorousPlant = null;
+    public RedwoodTitanAssets? RedwoodTitan = null;
 
     public EnemyHandler(CRMod mod) : base(mod)
     {
-        if (TryLoadContentBundle("cactusbudlingassets", out CactusBudlingAssets? cactusBudlingAssets))
-        {
-            CactusBudling = cactusBudlingAssets;
-            LoadAllContent(cactusBudlingAssets!); // todo: needs override
-        }
+        RegisterContent("cactusbudlingassets", out CactusBudling, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("rabbitmagicianassets", out RabbitMagicianAssets? rabbitMagicianAssets))
-        {
-            RabbitMagician = rabbitMagicianAssets;
-            LoadAllContent(rabbitMagicianAssets!);
-        }
+        RegisterContent("rabbitmagicianassets", out RabbitMagician);
 
-        if (TryLoadContentBundle("peacekeeperassets", out PeaceKeeperAssets? peaceKeeperAssets))
-        {
-            PeaceKeeper = peaceKeeperAssets;
-            LoadAllContent(peaceKeeperAssets!);
-        }
+        RegisterContent("peacekeeperassets", out PeaceKeeper, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("manorlordassets", out ManorLordAssets? manorLordAssets))
-        {
-            ManorLord = manorLordAssets;
-            LoadAllContent(manorLordAssets!);
-        }
+        RegisterContent("manorlordassets", out ManorLord, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("janitorassets", out JanitorAssets? janitorAssets))
-        {
-            Janitor = janitorAssets;
-            LoadAllContent(janitorAssets!);
-        }
+        RegisterContent("janitorassets", out Janitor, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("pandoraassets", out PandoraAssets? pandoraAssets))
-        {
-            Pandora = pandoraAssets;
-            LoadAllContent(pandoraAssets!);
-        }
+        RegisterContent("pandoraassets", out Pandora);
 
-        if (TryLoadContentBundle("driftwoodmenaceassets", out DriftwoodMenaceAssets? driftwoodMenaceAssets))
-        {
-            DriftwoodMenace = driftwoodMenaceAssets;
-            LoadAllContent(driftwoodMenaceAssets!);
-        }
+        RegisterContent("driftwoodmenaceassets", out DriftwoodMenace);
 
-        if (TryLoadContentBundle("nancyassets", out NancyAssets? nancyAssets))
-        {
-            Nancy = nancyAssets;
-            LoadAllContent(nancyAssets!);
-        }
+        RegisterContent("nancyassets", out Nancy, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("monarchassets", out MonarchAssets? monarchAssets))
-        {
-            Monarch = monarchAssets;
-            LoadAllContent(monarchAssets!);
-        }
+        RegisterContent("monarchassets", out Monarch);
 
-        if (TryLoadContentBundle("mistressassets", out MistressAssets? mistressAssets))
-        {
-            Mistress = mistressAssets;
-            LoadAllContent(mistressAssets!);
-        }
+        RegisterContent("mistressassets", out Mistress, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        if (TryLoadContentBundle("redwoodtitanassets", out RedwoodTitanAssets? redwoodTitanAssets))
-        {
-            RedwoodTitan = redwoodTitanAssets;
-            LoadAllContent(redwoodTitanAssets!);
-        }
+        RegisterContent("redwoodtitanassets", out RedwoodTitan);
 
-        if (TryLoadContentBundle("carnivorousplantassets", out CarnivorousPlantAssets? carnivorousPlantAssets))
-        {
-            CarnivorousPlant = carnivorousPlantAssets;
-            LoadAllContent(carnivorousPlantAssets!);
-        }
+        RegisterContent("carnivorousplantassets", out CarnivorousPlant);
 
-        if (TryLoadContentBundle("snailcatassets", out SnailCatAssets? snailCatAssets))
-        {
-            SnailCat = snailCatAssets;
-            LoadAllContent(snailCatAssets!);
-        }
+        RegisterContent("snailcatassets", out SnailCat);
 
-        if (TryLoadContentBundle("ducksongassets", out DuckSongAssets? duckSongAssets))
-        {
-            DuckSong = duckSongAssets;
-            LoadAllContent(duckSongAssets!);
-        }
+        RegisterContent("ducksongassets", out DuckSong);
 
-        if (TryLoadContentBundle("transporterassets", out TransporterAssets? transporterAssets))
-        {
-            Transporter = transporterAssets;
-            LoadAllContent(transporterAssets!);
-        }
+        RegisterContent("transporterassets", out Transporter, Plugin.ModConfig.ConfigOxydeEnabled.Value);
     }
 }

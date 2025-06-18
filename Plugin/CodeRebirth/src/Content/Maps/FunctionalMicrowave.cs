@@ -3,6 +3,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -75,19 +76,22 @@ public class FunctionalMicrowave : CodeRebirthHazard
 
     private Item? ChooseRandomMicrowaveScrap()
     {
-        if (MapObjectHandler.Instance.FunctionalMicrowave == null) return null;
         int result = microwaveRandom.Next(4);
+        var itemRegistry = Plugin.Mod.ItemRegistry();
         if (result == 0)
         {
-            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.GetCRItemDefinitionWithItemName("Spork")?.item;
+            itemRegistry.TryGetFromItemName("Spork", out CRItemDefinition? sporkItemDefinition);
+            return sporkItemDefinition?.Item;
         }
         else if (result == 1)
         {
-            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.GetCRItemDefinitionWithItemName("Fork")?.item;
+            itemRegistry.TryGetFromItemName("Fork", out CRItemDefinition? forkItemDefinition);
+            return forkItemDefinition?.Item;
         }
         else if (result == 2)
         {
-            return MapObjectHandler.Instance.FunctionalMicrowave.ItemDefinitions.GetCRItemDefinitionWithItemName("Baby")?.item;
+            itemRegistry.TryGetFromItemName("Baby", out CRItemDefinition? charredItemDefinition);
+            return charredItemDefinition?.Item;
         }
         return null;
     }

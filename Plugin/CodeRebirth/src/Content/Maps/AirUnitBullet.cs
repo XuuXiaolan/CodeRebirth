@@ -42,7 +42,7 @@ public class AirUnitProjectile : NetworkBehaviour
         {
             return;
         }
-        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, cachedColliders, MoreLayerMasks.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
+        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, cachedColliders, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
         if (!explodedOnTarget && collidersFound != 0 && playerToTarget.playerSteamId != Plugin.GLITCH_STEAM_ID)
         {
             CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, null, null, 5f);

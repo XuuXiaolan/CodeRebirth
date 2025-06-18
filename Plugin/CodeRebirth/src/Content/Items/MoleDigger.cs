@@ -148,7 +148,7 @@ public class MoleDigger : GrabbableObject
         _enemyAIList.Clear();
         bool hitSomething = false;
 
-        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, MoreLayerMasks.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(endTransform.position, 1f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (_cachedColliders[i].transform == playerHeldBy.transform) continue;

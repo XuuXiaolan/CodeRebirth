@@ -3342,12 +3342,12 @@ GameObject:
   - component: {fileID: 6265036336448907126}
   - component: {fileID: 2643178545942564688}
   - component: {fileID: 6570976075383222441}
-  - component: {fileID: 6055292053354850403}
   - component: {fileID: 8653537968367135705}
   - component: {fileID: 7288074083113443494}
   - component: {fileID: 595643781457485384}
   - component: {fileID: 3316662169070848032}
   - component: {fileID: 8560094686645187079}
+  - component: {fileID: 6229482424810426120}
   m_Layer: 19
   m_Name: CacatusGiant
   m_TagString: Enemy
@@ -3455,34 +3455,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
---- !u!114 &6055292053354850403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4779950444079482818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: 15
 --- !u!114 &8653537968367135705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3668,7 +3640,7 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 6265036336448907126}
-  smartAgentNavigator: {fileID: 6055292053354850403}
+  smartAgentNavigator: {fileID: 6229482424810426120}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
@@ -3738,6 +3710,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _screenShakeTargets:
   - {fileID: 5854487359199667049}
+--- !u!114 &6229482424810426120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779950444079482818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &5169185421139817056
 GameObject:
   m_ObjectHideFlags: 0

@@ -42,7 +42,7 @@ public class LaserShockBlast : NetworkBehaviour
         Vector3 origin = laserOrigin.position;
         Vector3 direction = laserOrigin.forward;
 
-        var raycastHits = Physics.RaycastAll(origin, direction, LaserRange, MoreLayerMasks.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
+        var raycastHits = Physics.RaycastAll(origin, direction, LaserRange, MoreLayerMasks.CollidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
         Array.Sort(raycastHits, (a, b) => a.distance.CompareTo(b.distance));
 
         Vector3 finalHitPoint = origin + (direction * LaserRange);

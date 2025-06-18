@@ -216,7 +216,7 @@ public class Transporter : CodeRebirthEnemyAI
             transportTarget.transform.position
         );
 
-        if (dist <= agent.stoppingDistance && smartAgentNavigator.checkPathsRoutine == null && !repositioning)
+        if (dist <= agent.stoppingDistance && smartAgentNavigator.CheckPathsOngoing() && !repositioning)
         {
             repositioning = true;
             // Change from IEnumerable to List

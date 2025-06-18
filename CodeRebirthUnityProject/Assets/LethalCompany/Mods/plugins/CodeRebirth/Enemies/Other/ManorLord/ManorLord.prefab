@@ -26098,7 +26098,7 @@ VisualEffect:
       - m_Value: {x: -0, y: 0, z: 0}
         m_Name: Transform_angles
         m_Overridden: 1
-      - m_Value: {x: 2.675064, y: 0.00000023841858, z: 3.600207}
+      - m_Value: {x: 2.644897, y: 0, z: 0.15556192}
         m_Name: Transform_position
         m_Overridden: 1
       - m_Value: {x: 1, y: 1, z: 1}
@@ -26109,7 +26109,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 1, w: 0}
         m_Name: Mask Forward
         m_Overridden: 1
-      - m_Value: {x: 2.675064, y: 0.00000023841858, z: 2.539207, w: 0}
+      - m_Value: {x: 2.644897, y: 0, z: -0.90543807, w: 0}
         m_Name: Mask Position
         m_Overridden: 1
       - m_Value: {x: 1, y: 0, z: 0, w: 0}
@@ -43254,7 +43254,7 @@ GameObject:
   - component: {fileID: 3712906773473528773}
   - component: {fileID: 2919410584223474381}
   - component: {fileID: 4997557075965351894}
-  - component: {fileID: 1299754130320147181}
+  - component: {fileID: 4583551478409341992}
   m_Layer: 19
   m_Name: ManorLord
   m_TagString: Enemy
@@ -43622,7 +43622,7 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 2919410584223474381}
-  smartAgentNavigator: {fileID: 1299754130320147181}
+  smartAgentNavigator: {fileID: 4583551478409341992}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
@@ -43662,7 +43662,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d70959c8a5e28bd4fb7e4120e95883d8, type: 3}
   - {fileID: 8300000, guid: e0e3f5470a9f24348bd7b65338068200, type: 3}
   isAttacking: 0
---- !u!114 &1299754130320147181
+--- !u!114 &4583551478409341992
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43671,7 +43671,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6915492018009237873}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
@@ -43687,9 +43687,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: -1
 --- !u!1 &6926373206089999037
 GameObject:
   m_ObjectHideFlags: 0
@@ -44464,7 +44464,7 @@ VisualEffect:
       - m_Value: {x: -0, y: 0, z: 0}
         m_Name: Transform_angles
         m_Overridden: 1
-      - m_Value: {x: 2.675064, y: 0.00000023841858, z: 3.600207}
+      - m_Value: {x: 2.644897, y: 0, z: 0.15556192}
         m_Name: Transform_position
         m_Overridden: 1
       - m_Value: {x: 1, y: 1, z: 1}
@@ -44475,7 +44475,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 1, w: 0}
         m_Name: Mask Forward
         m_Overridden: 1
-      - m_Value: {x: 2.675064, y: 0.00000023841858, z: 2.539207, w: 0}
+      - m_Value: {x: 2.644897, y: 0, z: -0.90543807, w: 0}
         m_Name: Mask Position
         m_Overridden: 1
       - m_Value: {x: 1, y: 0, z: 0, w: 0}

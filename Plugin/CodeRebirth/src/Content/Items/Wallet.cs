@@ -37,7 +37,7 @@ public class Wallet : GrabbableObject
             return;
 
         Ray interactRay = new(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
-        RaycastHit[] hits = Physics.RaycastAll(interactRay, playerHeldBy.grabDistance, MoreLayerMasks.propsAndHazardMask, QueryTriggerInteraction.Collide);
+        RaycastHit[] hits = Physics.RaycastAll(interactRay, playerHeldBy.grabDistance, MoreLayerMasks.PropsAndHazardMask, QueryTriggerInteraction.Collide);
         foreach (RaycastHit hit in hits)
         {
             Money? coin = hit.collider.transform.gameObject.GetComponent<Money>();

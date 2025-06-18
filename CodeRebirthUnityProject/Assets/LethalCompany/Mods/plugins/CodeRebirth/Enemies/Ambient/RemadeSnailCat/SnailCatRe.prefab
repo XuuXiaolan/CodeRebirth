@@ -144,11 +144,11 @@ GameObject:
   - component: {fileID: 1205186133716411918}
   - component: {fileID: 1442048396993938519}
   - component: {fileID: 3362384424286290396}
-  - component: {fileID: 4184196377494464262}
   - component: {fileID: 8802992103352183417}
   - component: {fileID: 6361777462172498345}
   - component: {fileID: 1712777916534107672}
   - component: {fileID: 5937143807448691065}
+  - component: {fileID: 5031116663094599004}
   m_Layer: 6
   m_Name: SnailCatRe
   m_TagString: PhysicsProp
@@ -329,34 +329,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4184196377494464262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 222362860697320849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 1
-  _allowedLinks: -1
 --- !u!114 &8802992103352183417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,10 +463,10 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 5861152159745177237}
-  smartAgentNavigator: {fileID: 4184196377494464262}
-  _hasVariants: 0
+  smartAgentNavigator: {fileID: 5031116663094599004}
+  _hasVariants: 1
   _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
+  _specialRenderer: {fileID: 6177123933367798727}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: 0c683a03269ebc14fb5105852420f620, type: 3}
@@ -505,6 +477,8 @@ MonoBehaviour:
     - {fileID: 8300000, guid: c890c970249bc00409c877f10a6fff84, type: 3}
     minTime: 10
     maxTime: 15
+  _hitBodySounds: []
+  spawnSound: {fileID: 0}
   _idleTimer: 1
   propScript: {fileID: 4180001964916081428}
   randomizedNames:
@@ -697,6 +671,34 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 6b68f04ab4fc57249861270136a37eb8, type: 3}
     farAudioSource: {fileID: 0}
     farClips: []
+--- !u!114 &5031116663094599004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222362860697320849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &361247180470767358
 GameObject:
   m_ObjectHideFlags: 0

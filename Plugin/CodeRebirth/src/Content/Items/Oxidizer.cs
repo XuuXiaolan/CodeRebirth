@@ -36,7 +36,7 @@ public class Oxidizer : GrabbableObject
         _iHittableList.Clear();
         _enemyAIList.Clear();
 
-        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, _cachedRaycastHits, 6, MoreLayerMasks.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, _cachedRaycastHits, 6, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (_cachedRaycastHits[i].transform == playerHeldBy.transform) continue;

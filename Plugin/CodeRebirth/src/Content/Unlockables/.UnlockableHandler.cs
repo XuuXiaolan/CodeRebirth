@@ -70,91 +70,43 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
         public GameObject CruiserGalPrefab { get; private set; } = null!;
     }
 
-    public FriendAssets? Friend { get; private set; } = null;
-    public Fishdispenserassets? ShrimpDispenser { get; private set; } = null;
-    public SCP999Assets? SCP999 { get; private set; } = null;
-    public BellCrabAssets? BellCrab { get; private set; } = null;
-    public SeamineTinkAssets? SeamineTink { get; private set; } = null;
-    public TerminalBotAssets? TerminalBot { get; private set; } = null;
-    public PlantPotAssets? PlantPot { get; private set; } = null;
-    public ShockwaveBotAssets? ShockwaveBot { get; private set; } = null;
-    public ACUnitGalAssets? ACUnitGal { get; private set; } = null;
-    public BearTrapGalAssets? BearTrapGal { get; private set; } = null;
-    public CleanerDroneGalAssets? CleanerDroneGal { get; private set; } = null;
-    public CruiserGalAssets? CruiserGal { get; private set; } = null;
+    public FriendAssets? Friend = null;
+    public Fishdispenserassets? ShrimpDispenser = null;
+    public SCP999Assets? SCP999 = null;
+    public BellCrabAssets? BellCrab = null;
+    public SeamineTinkAssets? SeamineTink = null;
+    public TerminalBotAssets? TerminalBot = null;
+    public PlantPotAssets? PlantPot = null;
+    public ShockwaveBotAssets? ShockwaveBot = null;
+    public ACUnitGalAssets? ACUnitGal = null;
+    public BearTrapGalAssets? BearTrapGal = null;
+    public CleanerDroneGalAssets? CleanerDroneGal = null;
+    public CruiserGalAssets? CruiserGal = null;
 
     public UnlockableHandler(CRMod mod) : base(mod)
     {
-        if (TryLoadContentBundle("shockwavebotassets", out ShockwaveBotAssets? shockwaveBotAssets))
-        {
-            ShockwaveBot = shockwaveBotAssets;
-            LoadAllContent(shockwaveBotAssets!);
-        }
+        RegisterContent("shockwavebotassets", out ShockwaveBot);
 
-        if (TryLoadContentBundle("plantpotassets", out PlantPotAssets? plantPotAssets))
-        {
-            PlantPot = plantPotAssets;
-            LoadAllContent(plantPotAssets!);
-        }
+        RegisterContent("plantpotassets", out PlantPot);
 
-        if (TryLoadContentBundle("terminalbotassets", out TerminalBotAssets? terminalBotAssets))
-        {
-            TerminalBot = terminalBotAssets;
-            LoadAllContent(terminalBotAssets!);
-        }
+        RegisterContent("terminalbotassets", out TerminalBot);
 
-        if (TryLoadContentBundle("cruisergalassets", out CruiserGalAssets? cruiserGalAssets))
-        {
-            CruiserGal = cruiserGalAssets;
-            LoadAllContent(cruiserGalAssets!);
-        }
+        RegisterContent("cruisergalassets", out CruiserGal);
 
-        if (TryLoadContentBundle("scp999galassets", out SCP999Assets? scp999Assets))
-        {
-            SCP999 = scp999Assets;
-            LoadAllContent(scp999Assets!);
-        }
+        RegisterContent("scp999galassets", out SCP999);
 
-        if (TryLoadContentBundle("fishdispenserassets", out Fishdispenserassets? shrimpDispenserAssets))
-        {
-            ShrimpDispenser = shrimpDispenserAssets;
-            LoadAllContent(shrimpDispenserAssets!);
-        }
+        RegisterContent("fishdispenserassets", out ShrimpDispenser);
 
-        if (TryLoadContentBundle("seaminetinkassets", out SeamineTinkAssets? seamineTinkAssets))
-        {
-            SeamineTink = seamineTinkAssets;
-            LoadAllContent(seamineTinkAssets!);
-        }
+        RegisterContent("seaminetinkassets", out SeamineTink);
 
-        if (TryLoadContentBundle("cleanerdronegalassets", out CleanerDroneGalAssets? cleanerDroneGalAssets))
-        {
-            CleanerDroneGal = cleanerDroneGalAssets;
-            LoadAllContent(cleanerDroneGalAssets!);
-        }
+        RegisterContent("cleanerdronegalassets", out CleanerDroneGal);
 
-        if (TryLoadContentBundle("acunitgalassets", out ACUnitGalAssets? acUnitGalAssets))
-        {
-            ACUnitGal = acUnitGalAssets;
-            LoadAllContent(acUnitGalAssets!);
-        }
+        RegisterContent("acunitgalassets", out ACUnitGal);
 
-        if (TryLoadContentBundle("beartrapgalassets", out BearTrapGalAssets? bearTrapGalAssets))
-        {
-            BearTrapGal = bearTrapGalAssets;
-            LoadAllContent(bearTrapGalAssets!);
-        }
+        RegisterContent("beartrapgalassets", out BearTrapGal);
 
-        if (TryLoadContentBundle("friendassets", out FriendAssets? friendAssets))
-        {
-            Friend = friendAssets;
-            LoadAllContent(friendAssets!);
-        }
+        RegisterContent("friendassets", out Friend);
 
-        if (TryLoadContentBundle("bellcrabgalassets", out BellCrabAssets? bellCrabAssets))
-        {
-            BellCrab = bellCrabAssets;
-            LoadAllContent(bellCrabAssets!);
-        }
+        RegisterContent("bellcrabgalassets", out BellCrab);
     }
 }

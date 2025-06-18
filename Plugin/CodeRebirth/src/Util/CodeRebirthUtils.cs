@@ -14,6 +14,10 @@ using CodeRebirth.src.Content.Maps;
 using System.Collections;
 using CodeRebirth.src.Content.Weathers;
 using LethalLevelLoader;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.ContentManagement.MapObjects;
+using CodeRebirthLib.ContentManagement.Weathers;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -73,12 +77,11 @@ internal class CodeRebirthUtils : NetworkBehaviour
             yield break;
         }
 
-        CRWeatherDefinition? nightShiftCRWeatherDefinition = CodeRebirthRegistry.RegisteredCRWeathers.GetCRWeatherDefinitionWithWeatherName("night shift");
-        Plugin.ExtendedLogging($"Night shift weather: {nightShiftCRWeatherDefinition?.Weather}");
-        if (nightShiftCRWeatherDefinition == null)
+        if (!Plugin.Mod.WeatherRegistry().TryGetFromWeatherName("night shift", out CRWeatherDefinition? nightShiftWeatherDefinition))
             yield break;
 
-        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftCRWeatherDefinition.Weather);
+        Plugin.ExtendedLogging($"Night shift weather: {nightShiftWeatherDefinition.Weather}");
+        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftWeatherDefinition.Weather);
     }
 
     private IEnumerator HandleEnemyDropRates()
@@ -87,12 +90,10 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (MapObjectHandler.Instance.Merchant == null)
             yield break;
 
-        List<CRDynamicConfig> configDefinitions = MapObjectHandler.Instance.Merchant.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("Money")!.ConfigEntries;
-        CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Money", "Enemy Drop Rates");
-        if (configSetting == null)
+        if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Money", out CRMapObjectDefinition? moneyMapObjectDefinition))
             yield break;
 
-        var enemyWithRarityDropRate = CRConfigManager.GetGeneralConfigEntry<string>(configSetting.settingName, configSetting.settingDesc).Value.Split(',').Select(s => s.Trim());
+        var enemyWithRarityDropRate = moneyMapObjectDefinition.GetGeneralConfig<string>("Money | Enemy Drop Rates").Value.Split(',').Select(s => s.Trim());
         foreach (var enemyWithRarity in enemyWithRarityDropRate)
         {
             var split = enemyWithRarity.Split(':');
@@ -155,32 +156,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
     }
 
-    public void UnlockProgressively(int unlockableIndex, int playerIndex, bool local, bool displayTip, string messageHeader, string messagBody)
-    {
-        UnlockableItem unlockable = ProgressiveUnlockables.unlockableIDs.Keys.ElementAt(unlockableIndex);
-        ProgressiveUnlockables.unlockableIDs[unlockable] = true;
-        unlockable.unlockableName = ProgressiveUnlockables.unlockableNames[unlockableIndex];
-        if (!displayTip) return;
-        if (local && GameNetworkManager.Instance.localPlayerController != StartOfRound.Instance.allPlayerScripts[playerIndex]) return;
-        HUDManager.Instance.DisplayTip(messageHeader, messagBody);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestProgressiveUnlocksFromHostServerRpc(int playerIndex, bool displayTip, bool local, string messageHeader, string messagBody)
-    {
-        for (int i = 0; i < ProgressiveUnlockables.unlockableIDs.Count; i++)
-        {
-            if (!ProgressiveUnlockables.unlockableIDs.Values.ElementAt(i)) continue;
-            RequestProgressiveUnlocksFromHostClientRpc(i, playerIndex, local, displayTip, messageHeader, messagBody);
-        }
-    }
-
-    [ClientRpc]
-    public void RequestProgressiveUnlocksFromHostClientRpc(int unlockableID, int playerIndex, bool local, bool displayTip, string messageHeader, string messagBody)
-    {
-        UnlockProgressively(unlockableID, playerIndex, local, displayTip, messageHeader, messagBody);
-    }
-
     [ServerRpc(RequireOwnership = false)]
     public void SpawnEnemyServerRpc(Vector3 position, string enemyName)
     {
@@ -212,7 +187,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
             Plugin.Logger.LogError("Trying to spawn a hazard at Vector3.zero!");
             return;
         }
-        GameObject hazardToSpawn = CodeRebirthRegistry.RegisteredCRMapObjects[_indexToSpawn].gameObject;
+
+        List<CRMapObjectDefinition> mapObjectDefinitions = Plugin.Mod.MapObjectRegistry().ToList();
+        GameObject hazardToSpawn = mapObjectDefinitions[_indexToSpawn].GameObject;
         if (hazardToSpawn != null)
         {
             var go = GameObject.Instantiate(hazardToSpawn, position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
@@ -225,8 +202,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
                 // if i wanted this sync'd i'd rpc the spawning
             }
         }
+
         _indexToSpawn++;
-        if (_indexToSpawn >= CodeRebirthRegistry.RegisteredCRMapObjects.Count - 1)
+        if (_indexToSpawn >= mapObjectDefinitions.Count - 1)
             _indexToSpawn = 0;
     }
 
@@ -237,14 +215,16 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             return;
         }
-        Plugin.samplePrefabs.TryGetValue(itemName, out Item item);
-        if (item == null)
+        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName(itemName, out CRItemDefinition? itemDefinition))
+            return;
+
+        if (itemDefinition.Item == null)
         {
             // throw for stacktrace
             Plugin.Logger.LogError($"'{itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
             return;
         }
-        SpawnScrap(item, position, isQuest, defaultRotation, valueIncrease);
+        SpawnScrap(itemDefinition.Item, position, isQuest, defaultRotation, valueIncrease);
     }
 
     public NetworkObjectReference SpawnScrap(Item? item, Vector3 position, bool isQuest, bool defaultRotation, int valueIncrease, Quaternion rotation = default)
@@ -353,7 +333,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             plantpot.SavePlantData();
         }
-        ProgressiveUnlockables.SaveUnlockedIDs();
     }
 
     public static void ResetCodeRebirthData(ES3Settings saveSettings)

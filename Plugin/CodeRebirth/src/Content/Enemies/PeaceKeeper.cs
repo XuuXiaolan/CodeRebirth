@@ -6,6 +6,8 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -392,7 +394,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
             Vector3 capsuleStart = gunTransform.position;
             Vector3 capsuleEnd = gunTransform.position + gunTransform.forward * _minigunRange;
 
-            int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, MoreLayerMasks.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < numHits; i++)
             {
@@ -526,13 +528,16 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         if (!IsServer)
             return;
 
-        CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.PeaceKeeper!.ItemDefinitions.GetCRItemDefinitionWithItemName("Ceasefire")?.item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.rotation);
+        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Ceasefire", out CRItemDefinition? ceasefireItemDefinition))
+            return;
+
+        CodeRebirthUtils.Instance.SpawnScrap(ceasefireItemDefinition.Item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.rotation);
     }
 
     public void BitchSlapAnimationEvent()
     {
         if (!IsServer) return;
-        int numHits = Physics.OverlapCapsuleNonAlloc(_gunStartTransform.position, _gunEndTransform.position, 2f, _cachedColliders, MoreLayerMasks.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapCapsuleNonAlloc(_gunStartTransform.position, _gunEndTransform.position, 2f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];
