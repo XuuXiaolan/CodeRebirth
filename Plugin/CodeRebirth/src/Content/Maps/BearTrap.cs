@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using CodeRebirthLib.ContentManagement.MapObjects;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -34,7 +35,6 @@ public class BearTrap : CodeRebirthHazard
         if (!IsServer || byProduct) return;
         var random = new System.Random(StartOfRound.Instance.randomMapSeed);
         Vector3 position = this.transform.position;
-        if (MapObjectHandler.Instance.BearTrap == null) return;
         for (int i = 0; i < random.Next(4, 8); i++)
         {
             Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
@@ -42,23 +42,38 @@ public class BearTrap : CodeRebirthHazard
             Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
 
             if (hit.collider == null) continue;
-            GameObject beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("gravel")!.gameObject;
+            if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Gravel", out CRMapObjectDefinition? gravelMapObjectDefinition))
+                return;
+
+            GameObject beartrap = gravelMapObjectDefinition.GameObject;
             if (hit.collider.CompareTag("Grass"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("grass")!.gameObject; ;
+                if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Grass", out CRMapObjectDefinition? grassMapObjectDefinition))
+                    return;
+
+                beartrap = grassMapObjectDefinition.GameObject; ;
             }
             else if (hit.collider.CompareTag("Snow"))
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("snow")!.gameObject; ;
+                if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Snow", out CRMapObjectDefinition? snowMapObjectDefinition))
+                    return;
+
+                beartrap = snowMapObjectDefinition.GameObject; ;
             }
 
             if (this is BoomTrap)
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("boom")!.gameObject;
+                if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Boom", out CRMapObjectDefinition? boomMapObjectDefinition))
+                    return;
+
+                beartrap = boomMapObjectDefinition.GameObject;
             }
             else if (random.Next(100) < 5)
             {
-                beartrap = MapObjectHandler.Instance.BearTrap.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("boom")!.gameObject;
+                if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Boom", out CRMapObjectDefinition? boomMapObjectDefinition))
+                    return;
+
+                beartrap = boomMapObjectDefinition.GameObject;
             }
             GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedTrap.GetComponent<BearTrap>().byProduct = true;

@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.Content.Items;
-using CodeRebirth.src.MiscScripts.PathFinding;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.Util.Pathfinding;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -190,10 +191,12 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         PlayMiscSoundsServerRpc(0);
         animator.SetBool(IsDeadAnimation, true);
         yield return new WaitForSeconds(4f);
-        if (EnemyHandler.Instance.ManorLord == null) yield break;
+        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Puppeteer's Voodoo", out CRItemDefinition? voodooItemDefinition))
+            yield break;
+
         if (playerControlled != null && !playerControlled.isPlayerDead)
         {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc(EnemyHandler.Instance.ManorLord.ItemDefinitions.GetCRItemDefinitionWithItemName("Voodoo")?.item.itemName, transform.position);
+            CodeRebirthUtils.Instance.SpawnScrapServerRpc(voodooItemDefinition.Item.itemName, transform.position);
         }
         NetworkObject.Despawn();
     }

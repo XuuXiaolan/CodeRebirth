@@ -1,5 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.ContentManagement.Items;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Video;
@@ -54,7 +56,10 @@ public class CasettePlayer : MonoBehaviour
         if (!NetworkManager.Singleton.IsServer)
             yield break;
 
-        Item item = CodeRebirthRegistry.RegisteredCRItems.GetCRItemDefinitionWithItemName(itemName)!.item;
+        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName(itemName, out CRItemDefinition? casetteItemDefinition))
+            yield break;
+
+        Item item = casetteItemDefinition.Item;
         CodeRebirthUtils.Instance.SpawnScrap(item, _tapeRespawnTransform.position, false, true, 0);
     }
 }

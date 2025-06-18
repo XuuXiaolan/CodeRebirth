@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1945150300, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: 1096989729, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: MoneyMapObjectDefinition
   m_EditorClassIdentifier: 
-  ConfigEntries:
-  - settingName: Money
-    settingDesc: Enemy Drop Rates
+  _configEntries:
+  - settingName: Money | Enemy Drop Rates
     DynamicConfigType: 0
     defaultString: Baboon hawk:2,Crawler:10,Maneater:30,Centipede:1,Flowerman:20,ForestGiant:10,Nutcracker:10,Hoarding
       Bug:1,Bunker Spider:5,MouthDog:10,Masked:1, Butler:5,Driftwood Menace:5,Cactus
@@ -23,10 +22,19 @@ MonoBehaviour:
     defaultInt: 0
     defaultFloat: 0
     defaultBool: 0
+    defaultBoundedRange:
+      <Min>k__BackingField: 0
+      <Max>k__BackingField: 0
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     Description: EnemyName:DropRate for the chance of an enemy dropping a coin on
       death via player damage.
-  gameObject: {fileID: 5513136484485908551, guid: fdb53623495f3d44c9c0c650decfc810,
+  <EntityNameReference>k__BackingField: Money
+  <GameObject>k__BackingField: {fileID: 5513136484485908551, guid: fdb53623495f3d44c9c0c650decfc810,
     type: 3}
-  objectName: Money
-  alignWithTerrain: 1
-  CRObjectType: 18
+  <ObjectName>k__BackingField: Money
+  <AlignWithTerrain>k__BackingField: 1

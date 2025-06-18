@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -189,7 +190,7 @@ public class MarrowSplitter : GrabbableObject
         _enemyAIList.Clear();
         bool hitSomething = false;
 
-        int numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];
@@ -259,7 +260,7 @@ public class MarrowSplitter : GrabbableObject
 
     private void DoHealingPlayers()
     {
-        int numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         bool healingAnotherPlayer = false;
         for (int i = 0; i < numHits; i++)
         {

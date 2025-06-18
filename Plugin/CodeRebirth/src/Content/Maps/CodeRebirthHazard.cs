@@ -1,5 +1,6 @@
 using System.Collections;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ public class CodeRebirthHazard : NetworkBehaviour
     private IEnumerator DecideHazardSpawningStuff()
     {
         yield return new WaitForSeconds(UnityEngine.Random.Range(0, 2f));
-        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 1f, cachedColliders, CodeRebirthUtils.Instance.interactableMask, QueryTriggerInteraction.Ignore);
+        int numHits = Physics.OverlapSphereNonAlloc(transform.position, 1f, cachedColliders, MoreLayerMasks.InteractableMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
             if (!cachedColliders[i].GetComponent<DoorLock>()) continue;

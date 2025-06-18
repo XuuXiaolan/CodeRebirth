@@ -52,7 +52,6 @@ static class PlayerControllerBPatch
 
     public static void Init()
     {
-        On.GameNetcodeStuff.PlayerControllerB.ConnectClientToPlayerObject += PlayerControllerB_ConnectClientToPlayerObject;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.Update += PlayerControllerB_Update;
@@ -67,7 +66,9 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_Interact_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Interact_performed orig, PlayerControllerB self, InputAction.CallbackContext context)
     {
         orig(self, context);
-        if (self != GameNetworkManager.Instance.localPlayerController) return;
+        if (self != GameNetworkManager.Instance.localPlayerController)
+            return;
+
         Plugin.ExtendedLogging($"{self.playerUsername} pressed interact.");
         CodeRebirthUtils.Instance.PlayerPressedInteract(self);
     }
@@ -75,7 +76,9 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_Jump_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Jump_performed orig, PlayerControllerB self, InputAction.CallbackContext context)
     {
         orig(self, context);
-        if (self != GameNetworkManager.Instance.localPlayerController) return;
+        if (self != GameNetworkManager.Instance.localPlayerController)
+            return;
+
         Plugin.ExtendedLogging($"{self.playerUsername} pressed jump.");
         CodeRebirthUtils.Instance.PlayerPressedJump(self);
     }
@@ -134,22 +137,6 @@ static class PlayerControllerBPatch
             }
         }
         return orig(self, force, hitDirection, playerWhoHit, playHitSFX, hitID);
-    }
-
-    private static void PlayerControllerB_ConnectClientToPlayerObject(On.GameNetcodeStuff.PlayerControllerB.orig_ConnectClientToPlayerObject orig, PlayerControllerB self)
-    {
-        orig(self);
-        Plugin.ExtendedLogging("PlayerControllerB_ConnectClientToPlayerObject called");
-        if (GameNetworkManager.Instance.localPlayerController == self)
-        {
-            self.StartCoroutine(WaitToLoadUnlockableData(self));
-        }
-    }
-
-    private static IEnumerator WaitToLoadUnlockableData(PlayerControllerB self)
-    {
-        yield return new WaitUntil(() => CodeRebirthUtils.Instance != null);
-        CodeRebirthUtils.Instance.RequestProgressiveUnlocksFromHostServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self), true, true, "Requesting Data", "Requesting unlockable information from host...");
     }
 
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)

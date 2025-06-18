@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.MiscScripts.ConfigManager;
+using BepInEx.Configuration;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -34,6 +36,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     private bool isAttacking = false;
     private Collider[] _cachedHits = new Collider[8];
     private bool wasParallaxOnLastFrame = false;
+    private ConfigEntry<bool> _parallaxWingConfig = null!;
     private static readonly int DoAttackAnimation = Animator.StringToHash("doAttack"); // trigger
     private static readonly int IsFlyingAnimation = Animator.StringToHash("isFlying"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
@@ -112,22 +115,25 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             return;
 
         int randomNumberToSpawn = UnityEngine.Random.Range(2, 5);
+        if (!Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Cutiefly", out CREnemyDefinition? cutieflyEnemyDefinition))
+            return;
+
         for (int i = 0; i <= randomNumberToSpawn; i++)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, EnemyHandler.Instance.Monarch!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("CutieFly")!.enemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, cutieflyEnemyDefinition.EnemyType);
         }
     }
 
     public override void Start()
     {
         base.Start();
-        List<CRDynamicConfig> configDefinitions = EnemyHandler.Instance.Monarch!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
-        CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Monarch", "Parallax Wings");
-        if (configSetting != null)
+        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Monarch", out CREnemyDefinition? monarchEnemyDefinition))
         {
-            wasParallaxOnLastFrame = CRConfigManager.GetGeneralConfigEntry<bool>(configSetting.settingName, configSetting.settingDesc).Value;
+            _parallaxWingConfig = monarchEnemyDefinition.GetGeneralConfig<bool>("Monarch | Parallax Wings");
+            wasParallaxOnLastFrame = _parallaxWingConfig.Value;
             skinnedMeshRenderers[0].sharedMaterials[0].SetInt(ParallaxSwitch, wasParallaxOnLastFrame ? 1 : 0);
         }
+
         BeamController._monarchParticle.transform.SetParent(null);
         BeamController._monarchParticle.transform.position = Vector3.zero;
         SwitchToBehaviourStateOnLocalClient((int)MonarchState.Idle);
@@ -408,7 +414,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         _enemyAIList.Clear();
         _playerList.Clear();
 
-        int numHits = Physics.OverlapSphereNonAlloc(startPosition, 2f, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(startPosition, 2f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))

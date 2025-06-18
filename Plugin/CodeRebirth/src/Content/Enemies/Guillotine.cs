@@ -3,6 +3,8 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -87,11 +89,13 @@ public class Guillotine : NetworkBehaviour
             return;
         }
         playerToKill = null;
-        if (EnemyHandler.Instance.Mistress == null) return;
-        GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(EnemyHandler.Instance.Mistress.ItemDefinitions.GetCRItemDefinitionWithItemName("Talking Head")?.item, scrapSpawnTransform.position, false, true, 0);
-        TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();
-        talkingHeadScript.player = playerToKill;
-        talkingHeadScript.SyncTalkingHeadServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
+        if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Talking Head", out CRItemDefinition? talkingHeadItemDef))
+        {
+            GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(talkingHeadItemDef.Item, scrapSpawnTransform.position, false, true, 0);
+            TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();
+            talkingHeadScript.player = playerToKill;
+            talkingHeadScript.SyncTalkingHeadServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
+        }
     }
 
     public void PlayGuillotineSoundAnimEvent()

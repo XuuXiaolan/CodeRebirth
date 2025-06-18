@@ -3543,7 +3543,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8976022966261238567}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
@@ -3559,9 +3559,9 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: -1
 --- !u!114 &8953742048132873015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3695,6 +3695,7 @@ MonoBehaviour:
   postStunInvincibilityTimer: 0
   stunnedByPlayer: {fileID: 0}
   debugEnemyAI: 0
+  removedPowerLevel: 0
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
@@ -3703,6 +3704,13 @@ MonoBehaviour:
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
+  _hitBodySounds: []
+  spawnSound: {fileID: 0}
+  _idleTimer: 1
   variantMaterials:
   - {fileID: 2100000, guid: 7eed73b9efdcb1340ba771dd9a5dda26, type: 2}
   - {fileID: 2100000, guid: 7c764a5e0f05d0146828729eeec44a69, type: 2}
@@ -3743,9 +3751,4 @@ MonoBehaviour:
   m_Script: {fileID: 26720462, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soundSource: {fileID: 5288110577682777568}
-  _clips:
-  - {fileID: 8300000, guid: a53905821a34d4e4cbeed20ccd64cbcc, type: 3}
-  - {fileID: 8300000, guid: cbdd5249a0fa78943ae015847e7aa2f7, type: 3}
-  - {fileID: 8300000, guid: de3888b827bb7374699d2a4518b99f84, type: 3}
-  _specialClips: []
+  _audioSourcesWithClips: []

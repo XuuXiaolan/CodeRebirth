@@ -6,6 +6,7 @@ using CodeRebirth.src.Util;
 using System.Linq;
 using Unity.Netcode;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -440,7 +441,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void SmashEnemyAnimEvent()
     {
-        int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, _cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(smashTransform.position, 8f, _cachedColliders, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (!_cachedColliders[i].gameObject.TryGetComponent(out IHittable iHittable))

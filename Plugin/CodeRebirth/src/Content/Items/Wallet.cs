@@ -1,6 +1,7 @@
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -36,7 +37,7 @@ public class Wallet : GrabbableObject
             return;
 
         Ray interactRay = new(playerHeldBy.gameplayCamera.transform.position, playerHeldBy.gameplayCamera.transform.forward);
-        RaycastHit[] hits = Physics.RaycastAll(interactRay, playerHeldBy.grabDistance, CodeRebirthUtils.Instance.propsAndHazardMask, QueryTriggerInteraction.Collide);
+        RaycastHit[] hits = Physics.RaycastAll(interactRay, playerHeldBy.grabDistance, MoreLayerMasks.PropsAndHazardMask, QueryTriggerInteraction.Collide);
         foreach (RaycastHit hit in hits)
         {
             Money? coin = hit.collider.transform.gameObject.GetComponent<Money>();

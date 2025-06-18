@@ -1,90 +1,91 @@
-﻿using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
+﻿using CodeRebirthLib;
+using CodeRebirthLib.AssetManagement;
+using CodeRebirthLib.ContentManagement;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class ItemHandler : ContentHandler<ItemHandler>
 {
-    public class HoverboardAssets(string bundleName) : AssetBundleLoader<HoverboardAssets>(bundleName)
+    public class HoverboardAssets(CRMod mod, string filePath) : AssetBundleLoader<HoverboardAssets>(mod, filePath)
     {
     }
 
-    public class BrrreakerAssets(string bundleName) : AssetBundleLoader<BrrreakerAssets>(bundleName)
+    public class BrrreakerAssets(CRMod mod, string filePath) : AssetBundleLoader<BrrreakerAssets>(mod, filePath)
     {
     }
 
-    public class TurbulenceAssets(string bundleName) : AssetBundleLoader<TurbulenceAssets>(bundleName)
+    public class TurbulenceAssets(CRMod mod, string filePath) : AssetBundleLoader<TurbulenceAssets>(mod, filePath)
     {
     }
 
-    public class MarrowSplitterAssets(string bundleName) : AssetBundleLoader<MarrowSplitterAssets>(bundleName)
+    public class MarrowSplitterAssets(CRMod mod, string filePath) : AssetBundleLoader<MarrowSplitterAssets>(mod, filePath)
     {
     }
 
-    public class SwatterAssets(string bundleName) : AssetBundleLoader<SwatterAssets>(bundleName)
+    public class SwatterAssets(CRMod mod, string filePath) : AssetBundleLoader<SwatterAssets>(mod, filePath)
     {
     }
 
-    public class TomaHopAssets(string bundleName) : AssetBundleLoader<TomaHopAssets>(bundleName)
+    public class TomaHopAssets(CRMod mod, string filePath) : AssetBundleLoader<TomaHopAssets>(mod, filePath)
     {
     }
 
-    public class SnowGlobeAssets(string bundleName) : AssetBundleLoader<SnowGlobeAssets>(bundleName)
+    public class SnowGlobeAssets(CRMod mod, string filePath) : AssetBundleLoader<SnowGlobeAssets>(mod, filePath)
     {
     }
 
-    public class ZortAssets(string bundleName) : AssetBundleLoader<ZortAssets>(bundleName)
+    public class ZortAssets(CRMod mod, string filePath) : AssetBundleLoader<ZortAssets>(mod, filePath)
     {
     }
 
-    public class XuAndRigoAssets(string bundleName) : AssetBundleLoader<XuAndRigoAssets>(bundleName)
+    public class XuAndRigoAssets(CRMod mod, string filePath) : AssetBundleLoader<XuAndRigoAssets>(mod, filePath)
     {
         [LoadFromBundle("RodFollower.prefab")]
         public GameObject SmallRigoPrefab { get; private set; } = null!;
     }
 
-    public class MoonUnlockerAssets(string bundleName) : AssetBundleLoader<MoonUnlockerAssets>(bundleName)
+    public class MoonUnlockerAssets(CRMod mod, string filePath) : AssetBundleLoader<MoonUnlockerAssets>(mod, filePath)
     {
     }
 
-    public class OxydeLoreAssets(string bundleName) : AssetBundleLoader<OxydeLoreAssets>(bundleName)
+    public class OxydeLoreAssets(CRMod mod, string filePath) : AssetBundleLoader<OxydeLoreAssets>(mod, filePath)
     {
     }
 
-    public MoonUnlockerAssets? MoonUnlocker { get; private set; } = null;
-    public OxydeLoreAssets? OxydeLore { get; private set; } = null;
-    public XuAndRigoAssets? XuAndRigo { get; private set; } = null;
-    public ZortAssets? Zort { get; private set; } = null;
-    public HoverboardAssets? Hoverboard { get; private set; } = null;
-    public SnowGlobeAssets? SnowGlobe { get; private set; } = null;
-    public BrrreakerAssets? Brrreaker { get; private set; } = null;
-    public TurbulenceAssets? Turbulence { get; private set; } = null;
-    public MarrowSplitterAssets? MarrowSplitter { get; private set; } = null;
-    public SwatterAssets? Swatter { get; private set; } = null;
-    public TomaHopAssets? TomaHop { get; private set; } = null;
+    public MoonUnlockerAssets? MoonUnlocker = null;
+    public OxydeLoreAssets? OxydeLore = null;
+    public XuAndRigoAssets? XuAndRigo = null;
+    public ZortAssets? Zort = null;
+    public HoverboardAssets? Hoverboard = null;
+    public SnowGlobeAssets? SnowGlobe = null;
+    public BrrreakerAssets? Brrreaker = null;
+    public TurbulenceAssets? Turbulence = null;
+    public MarrowSplitterAssets? MarrowSplitter = null;
+    public SwatterAssets? Swatter = null;
+    public TomaHopAssets? TomaHop = null;
 
-    public ItemHandler()
+    public ItemHandler(CRMod mod) : base(mod)
     {
-        OxydeLore = LoadAndRegisterAssets<OxydeLoreAssets>("oxydeloreassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("oxydeloreassets", out OxydeLore, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        MoonUnlocker = LoadAndRegisterAssets<MoonUnlockerAssets>("moonunlockerassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("moonunlockerassets", out MoonUnlocker, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        XuAndRigo = LoadAndRegisterAssets<XuAndRigoAssets>("xuandrigoassets", Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("xuandrigoassets", out XuAndRigo, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        Zort = LoadAndRegisterAssets<ZortAssets>("zortassets");
+        RegisterContent("zortassets", out Zort);
 
-        Hoverboard = LoadAndRegisterAssets<HoverboardAssets>("hoverboardassets");
+        RegisterContent("hoverboardassets", out Hoverboard);
 
-        SnowGlobe = LoadAndRegisterAssets<SnowGlobeAssets>("snowglobeassets");
+        RegisterContent("snowglobeassets", out SnowGlobe);
 
-        Brrreaker = LoadAndRegisterAssets<BrrreakerAssets>("mountaineerassets");
+        RegisterContent("mountaineerassets", out Brrreaker);
 
-        Turbulence = LoadAndRegisterAssets<TurbulenceAssets>("turbulenceassets");
+        RegisterContent("turbulenceassets", out Turbulence);
 
-        MarrowSplitter = LoadAndRegisterAssets<MarrowSplitterAssets>("marrowsplitterassets");
+        RegisterContent("marrowsplitterassets", out MarrowSplitter);
 
-        Swatter = LoadAndRegisterAssets<SwatterAssets>("swatterassets");
+        RegisterContent("swatterassets", out Swatter);
 
-        TomaHop = LoadAndRegisterAssets<TomaHopAssets>("tomahopassets");
+        RegisterContent("tomahopassets", out TomaHop);
     }
 }

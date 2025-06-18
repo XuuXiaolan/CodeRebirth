@@ -431,6 +431,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -5899,6 +5900,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -6506,7 +6508,7 @@ GameObject:
   - component: {fileID: 7592945855864169215}
   - component: {fileID: 8018356608788192341}
   - component: {fileID: 3700905411237787667}
-  - component: {fileID: 7940445235199083832}
+  - component: {fileID: 1725624128612335907}
   m_Layer: 6
   m_Name: TerminalGalDaisy
   m_TagString: InteractTrigger
@@ -6602,12 +6604,11 @@ MonoBehaviour:
   GalHead: {fileID: 5809364581625673545}
   GalEye: {fileID: 5809364581625673545}
   renderersToHideIn: []
-  smartAgentNavigator: {fileID: 7940445235199083832}
+  smartAgentNavigator: {fileID: 1725624128612335907}
   boomboxPlaying: 0
   staringTimer: 0
   targetEnemy: {fileID: 0}
   ownerPlayer: {fileID: 0}
-  enemyTargetBlacklist: []
   chargeCount: 10
   maxChargeCount: 0
   currentlyAttacking: 0
@@ -6886,7 +6887,7 @@ CapsuleCollider:
   m_Height: 2.8825874
   m_Direction: 1
   m_Center: {x: 0, y: 1.4353113, z: 0}
---- !u!114 &7940445235199083832
+--- !u!114 &1725624128612335907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6895,7 +6896,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4310659828419143592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
@@ -6908,9 +6909,12 @@ MonoBehaviour:
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &4401192424927566945
 GameObject:
   m_ObjectHideFlags: 0
@@ -7003,6 +7007,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -7720,6 +7725,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

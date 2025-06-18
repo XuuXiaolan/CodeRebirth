@@ -1,4 +1,5 @@
 ﻿using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;
@@ -157,7 +158,7 @@ public class CRUtilities
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
 
-        int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (!cachedColliders[i].TryGetComponent(out IHittable ihittable)) continue;

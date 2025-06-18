@@ -2,6 +2,8 @@ using System.Collections;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.ContentManagement.MapObjects;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -98,9 +100,12 @@ public class PiggyBank : NetworkBehaviour, IHittable
     {
         if (IsServer)
         {
+            if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Money", out CRMapObjectDefinition? moneyMapObjectDefinition))
+                return;
+
             for (int i = 0; i < coinsStored.Value; i++)
             {
-                var coin = GameObject.Instantiate(MapObjectHandler.Instance.Merchant?.MapObjectDefinitions.GetCRMapObjectDefinitionWithObjectName("money")?.gameObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
+                var coin = GameObject.Instantiate(moneyMapObjectDefinition.GameObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
                 coin.GetComponent<NetworkObject>().Spawn(true);
             }
             coinsStored.Value = 0;

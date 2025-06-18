@@ -81,7 +81,7 @@ public static class ShovelPatch
     {
         // if (!CRWeapon.canBreakTrees) return;
 
-        int numHits = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
+        /*int numHits = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
         RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
         if (numHits <= 0) return;
         if (EnemyHandler.Instance.RedwoodTitan != null && UnityEngine.Random.Range(0, 100) <= 5)
@@ -93,6 +93,6 @@ public static class ShovelPatch
         {
             Plugin.ExtendedLogging("Tree Destroyed with luck");
             CodeRebirthUtils.Instance.SpawnScrapServerRpc(UnlockableHandler.Instance.PlantPot.ItemDefinitions.GetCRItemDefinitionWithItemName("Seed")?.item.itemName, CRWeapon.weaponTip.position, false, true, 5);
-        }
+        }*/
     }
 }

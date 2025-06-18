@@ -8,8 +8,8 @@ using UnityEngine.InputSystem;
 using System.Linq;
 using CodeRebirth.src.Util;
 using System.Collections.Generic;
-using CodeRebirth.src.MiscScripts.ConfigManager;
-using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.ContentManagement.Items;
 
 namespace CodeRebirth.src.Content.Items;
 public class Hoverboard : GrabbableObject, IHittable
@@ -93,16 +93,10 @@ public class Hoverboard : GrabbableObject, IHittable
 
     private void ConfigureHoverboard()
     {
-        List<CRDynamicConfig> configDefinitions = ItemHandler.Instance.Hoverboard!.ItemDefinitions.GetCRItemDefinitionWithItemName(itemProperties.itemName)!.ConfigEntries;
-        CRDynamicConfig? speedMultiplierConfigSetting = configDefinitions.GetCRDynamicConfigWithSetting("Hoverboard", "Speed Multiplier");
-        if (speedMultiplierConfigSetting != null)
+        if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Hoverboard", out CRItemDefinition? hoverboardItemDefinition))
         {
-            _speedMultiplier = CRConfigManager.GetGeneralConfigEntry<float>(speedMultiplierConfigSetting.settingName, speedMultiplierConfigSetting.settingDesc).Value;
-        }
-        CRDynamicConfig? chargeIncraseMultiplierConfigSetting = configDefinitions.GetCRDynamicConfigWithSetting("Hoverboard", "Charge Increase Multiplier");
-        if (chargeIncraseMultiplierConfigSetting != null)
-        {
-            _chargeIncreaseMultiplier = CRConfigManager.GetGeneralConfigEntry<float>(chargeIncraseMultiplierConfigSetting.settingName, chargeIncraseMultiplierConfigSetting.settingDesc).Value;
+            _speedMultiplier = hoverboardItemDefinition.GetGeneralConfig<float>("Hoverboard | Speed Multiplier").Value;
+            _chargeIncreaseMultiplier = hoverboardItemDefinition.GetGeneralConfig<float>("Hoverboard | Charge Increase Multiplier").Value;
         }
     }
 

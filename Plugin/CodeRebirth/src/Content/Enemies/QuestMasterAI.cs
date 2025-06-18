@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -234,7 +236,10 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         SetDuckUIItemUIPlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
         yield return new WaitForSeconds(delay / 5);
-        NetworkObjectReference item = CodeRebirthUtils.Instance.SpawnScrap(Plugin.samplePrefabs[questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]], randomSpawnPosition, true, true, 0);
+        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName(questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)], out CRItemDefinition? itemDefinition))
+            yield break;
+
+        NetworkObjectReference item = CodeRebirthUtils.Instance.SpawnScrap(itemDefinition.Item, randomSpawnPosition, true, true, 0);
         questItemsList.Add(item);
         currentQuestOrder.Value = Math.Clamp(questOrder.Value, 0, questItems.Length - 1);
         questOrder.Value++;

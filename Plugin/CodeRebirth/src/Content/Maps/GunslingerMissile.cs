@@ -1,5 +1,6 @@
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -68,7 +69,7 @@ public class GunslingerMissile : MonoBehaviour
             this.gameObject.SetActive(false);
             return;
         }
-        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, _cachedColliders, CodeRebirthUtils.Instance.collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Ignore);
+        int collidersFound = Physics.OverlapSphereNonAlloc(this.transform.position, 2f, _cachedColliders, MoreLayerMasks.CollidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Ignore);
         if (collidersFound > 0)
         {
             if (distanceToTarget < 7.5f && _targetTransform.gameObject.layer == 19 && _targetTransform.name == "metarig")

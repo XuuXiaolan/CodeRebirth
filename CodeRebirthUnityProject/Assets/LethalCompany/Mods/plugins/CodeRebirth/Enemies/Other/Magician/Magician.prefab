@@ -3262,10 +3262,10 @@ GameObject:
   - component: {fileID: 451046932555745374}
   - component: {fileID: 683587321391011673}
   - component: {fileID: 8923084416706812666}
-  - component: {fileID: 6298933798719131011}
   - component: {fileID: 7101249324309747651}
   - component: {fileID: 7633330517046212098}
   - component: {fileID: 440978046141590845}
+  - component: {fileID: 6411669062981447372}
   m_Layer: 19
   m_Name: Magician
   m_TagString: Enemy
@@ -3388,34 +3388,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &6298933798719131011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3558322033508364302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: 15
 --- !u!114 &7101249324309747651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3584,7 +3556,7 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 7101249324309747651}
-  smartAgentNavigator: {fileID: 6298933798719131011}
+  smartAgentNavigator: {fileID: 6411669062981447372}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
@@ -3596,8 +3568,9 @@ MonoBehaviour:
     - {fileID: 8300000, guid: b2560c3a8fe0ed5498c82e604a1896d2, type: 3}
     minTime: 7.5
     maxTime: 12.5
+  _hitBodySounds: []
+  spawnSound: {fileID: 0}
   _idleTimer: 1
-  _spawnAudioClip: {fileID: 8300000, guid: 449853db5efbc0643ac61466b275689c, type: 3}
   _spottedFromGroundAudioClip: {fileID: 0}
   _spottedFromBackAudioClip: {fileID: 8300000, guid: 1a0686b9c69de4945accf0293b0ee264,
     type: 3}
@@ -3633,6 +3606,34 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &6411669062981447372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558322033508364302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &3973967187542933347
 GameObject:
   m_ObjectHideFlags: 0

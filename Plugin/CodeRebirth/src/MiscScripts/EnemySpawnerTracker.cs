@@ -1,5 +1,6 @@
 using System.Collections;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Enemies;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -55,12 +56,10 @@ public class EnemySpawnerTracker : MonoBehaviour
             enemyAI.creatureSFX.enabled = false;
         }
 
-        if (CodeRebirthUtils.ExtraEnemyDataDict.TryGetValue(enemyAI, out ExtraEnemyData extraEnemyData))
+        CREnemyAdditionalData enemyAdditionalData = CREnemyAdditionalData.CreateOrGet(enemyAI);
+        foreach (var enemyAICollisionDetect in enemyAdditionalData.EnemyAICollisionDetects)
         {
-            foreach (var enemyAICollisionDetect in extraEnemyData.enemyAICollisionDetects)
-            {
-                Destroy(enemyAICollisionDetect);
-            }
+            Destroy(enemyAICollisionDetect);
         }
 
         EnemyLevelSpawner.entitiesSpawned[enemyAI.enemyType]--;

@@ -341,6 +341,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -12418,6 +12419,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -12461,7 +12463,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  trigger: {fileID: 1610500622595437455}
 --- !u!1 &8273578112294545693
 GameObject:
   m_ObjectHideFlags: 0
@@ -12480,7 +12481,7 @@ GameObject:
   - component: {fileID: 5566525298447519921}
   - component: {fileID: 4700214953185172717}
   - component: {fileID: 6377546833133129263}
-  - component: {fileID: 2868968128230755024}
+  - component: {fileID: 4510377789924975223}
   m_Layer: 6
   m_Name: SeamineGal
   m_TagString: InteractTrigger
@@ -12568,12 +12569,11 @@ MonoBehaviour:
   GalEye: {fileID: 0}
   renderersToHideIn:
   - {fileID: 3308942315980270621}
-  smartAgentNavigator: {fileID: 2868968128230755024}
+  smartAgentNavigator: {fileID: 4510377789924975223}
   boomboxPlaying: 0
   staringTimer: 0
   targetEnemy: {fileID: 0}
   ownerPlayer: {fileID: 0}
-  enemyTargetBlacklist: []
   chargeCount: 10
   maxChargeCount: 0
   currentlyAttacking: 0
@@ -12889,7 +12889,7 @@ MonoBehaviour:
   TerrainScannerPrefab: {fileID: 8390653160204047038}
   duration: 8
   size: 500
---- !u!114 &2868968128230755024
+--- !u!114 &4510377789924975223
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12898,7 +12898,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8273578112294545693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
@@ -12911,9 +12911,12 @@ MonoBehaviour:
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   isOutside: 1
   exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &8390653160204047038
 GameObject:
   m_ObjectHideFlags: 0
@@ -13157,6 +13160,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

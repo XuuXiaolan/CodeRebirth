@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
+using CodeRebirthLib.ConfigManagement;
+using CodeRebirthLib.ContentManagement.Unlockables;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -234,11 +235,10 @@ public class ShockwaveGalAI : GalAI
             maxChargeCount = chargeCount;
             Agent.enabled = false;
             FlySource.volume = 0f;
-            List<CRDynamicConfig> configDefinitions = UnlockableHandler.Instance.ShockwaveBot!.UnlockableDefinitions.GetCRUnlockableDefinitionWithUnlockableName("SWRD")!.ConfigEntries;
-            CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Shockwave Gal", "Enemy Blacklist");
-            if (configSetting != null)
+
+            if (Plugin.Mod.UnlockableRegistry().TryGetFromUnlockableName("SWRD", out CRUnlockableDefinition? seamineUnlockableDefinition))
             {
-                var enemyBlacklist = CRConfigManager.GetGeneralConfigEntry<string>(configSetting.settingName, configSetting.settingDesc).Value.Split(',').Select(s => s.Trim());
+                var enemyBlacklist = seamineUnlockableDefinition.GetGeneralConfig<string>("Shockwave Bot | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
                 foreach (var nameEntry in enemyBlacklist)
                 {
                     enemyTargetBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
@@ -464,7 +464,7 @@ public class ShockwaveGalAI : GalAI
 
             if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || !smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory || smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory) continue;
 
-            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, CodeRebirthUtils.Instance.enemiesMask, QueryTriggerInteraction.Collide);
+            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < numHits; i++)
             {
@@ -482,7 +482,7 @@ public class ShockwaveGalAI : GalAI
                 if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType))
                     continue;
 
-                if (!Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, collider.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomMaskAndDefaultAndEnemies, QueryTriggerInteraction.Collide))
+                if (!Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, collider.transform.position, out RaycastHit hit, MoreLayerMasks.CollidersAndRoomMaskAndDefaultAndEnemies, QueryTriggerInteraction.Collide))
                     continue;
 
                 // Make sure the hit belongs to the same GameObject as the enemy

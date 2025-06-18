@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.MapObjects;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -121,10 +122,13 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        foreach (var mapObjectDefinition in EnemyHandler.Instance.CactusBudling!.MapObjectDefinitions)
+        foreach (var crContentDefinition in EnemyHandler.Instance.CactusBudling!.Content)
         {
-            if (mapObjectDefinition.objectName.Contains("Cactus", StringComparison.OrdinalIgnoreCase))
-                _budlingCacti.Add(mapObjectDefinition.gameObject);
+            if (crContentDefinition is not CRMapObjectDefinition crMapObjectDefinition)
+                continue;
+
+            if (crMapObjectDefinition.EntityNameReference.Contains("Cactus", StringComparison.OrdinalIgnoreCase))
+                _budlingCacti.Add(crMapObjectDefinition.GameObject);
         }
         _targetRootPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
         _nextStateRoutine = StartCoroutine(DelayToNextState(_spawnAnimation.length, 3f, CactusBudlingState.SearchingForRoot));

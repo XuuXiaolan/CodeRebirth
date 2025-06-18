@@ -332,11 +332,11 @@ GameObject:
   - component: {fileID: 1048730069709000307}
   - component: {fileID: 3284587385436963289}
   - component: {fileID: 6158736080623659982}
-  - component: {fileID: 3442137185753197099}
   - component: {fileID: 1466305891617668654}
   - component: {fileID: 94270163540468230}
   - component: {fileID: 311618072864790486}
   - component: {fileID: 890549359934255411}
+  - component: {fileID: 2024023877430634483}
   m_Layer: 19
   m_Name: Nancy
   m_TagString: Enemy
@@ -431,34 +431,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3442137185753197099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1716716536538948652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 1
-  _allowedLinks: -1
 --- !u!114 &1466305891617668654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -628,7 +600,7 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 1466305891617668654}
-  smartAgentNavigator: {fileID: 3442137185753197099}
+  smartAgentNavigator: {fileID: 2024023877430634483}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
@@ -639,6 +611,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 9fefcf17bb1f1964bb37d915e76562cc, type: 3}
     minTime: 10
     maxTime: 15
+  _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: 67c5c3c67cde9514685c5cdfce4c8c21, type: 3}
   _idleTimer: 1
   _rollingSource: {fileID: 4590783949368486007}
@@ -674,6 +647,34 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &2024023877430634483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716716536538948652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &2118059335650884489
 GameObject:
   m_ObjectHideFlags: 0

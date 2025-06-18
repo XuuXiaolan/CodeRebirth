@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.Content.Maps;
-using CodeRebirth.src.MiscScripts.ConfigManager;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.Util;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -111,12 +110,10 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        List<CRDynamicConfig> configDefinitions = MapObjectHandler.Instance.Merchant!.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName(enemyType.enemyName)!.ConfigEntries;
-        CRDynamicConfig? configSetting = configDefinitions.GetCRDynamicConfigWithSetting("Guardsman", "Enemy Blacklist");
-        if (configSetting != null)
+        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Guardsman", out CREnemyDefinition? CREnemyDefinition))
         {
-            var enemyBlacklistArray = CRConfigManager.GetGeneralConfigEntry<string>(configSetting.settingName, configSetting.settingDesc).Value.Split(',').Select(s => s.Trim());
-            foreach (var nameEntry in enemyBlacklistArray)
+            var enemyBlacklistArray = CREnemyDefinition.GetGeneralConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+            foreach (var nameEntry in enemyBlacklistArray.ToList())
             {
                 _internalEnemyBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)));
             }
@@ -349,7 +346,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         _dustParticleSystem.Play();
 
         Vector3 hitPosition = (_enemyHoldingPoints[0].position + _enemyHoldingPoints[1].position) / 2;
-        int numHits = Physics.OverlapSphereNonAlloc(hitPosition, 6f, _cachedHits, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(hitPosition, 6f, _cachedHits, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
 
         _iHittableList.Clear();
         _enemyAIList.Clear();

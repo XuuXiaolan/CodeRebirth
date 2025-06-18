@@ -5,6 +5,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -197,7 +198,7 @@ public class Merchant : NetworkBehaviour
                 // Fire at player and deal damage.
                 if (localDamageCooldownPerTurret[turret] <= 0)
                 {
-                    bool blocked = Physics.Linecast(turret.position, currentTargetPlayer.transform.position, out RaycastHit hit, CodeRebirthUtils.Instance.collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Collide);
+                    bool blocked = Physics.Linecast(turret.position, currentTargetPlayer.transform.position, out RaycastHit hit, MoreLayerMasks.CollidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Collide);
                     // Plugin.ExtendedLogging($"Linecast hit {hit.transform.name}");
                     Vector3 explosionPosition = blocked ? hit.point : currentTargetPlayer.transform.position;
                     if (!blocked)

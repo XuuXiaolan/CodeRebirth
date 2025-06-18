@@ -14,6 +14,7 @@ using LethalLevelLoader;
 using System.Linq;
 using WeatherRegistry;
 using System;
+using CodeRebirthLib.ContentManagement.Weathers;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -41,7 +42,6 @@ static class StartOfRoundPatch
             {
                 GameObject utilsInstance = GameObject.Instantiate(Plugin.Assets.UtilsPrefab);
                 utilsInstance.AddComponent<LightUpdateManager>();
-                utilsInstance.AddComponent<TrackWeatherChanges>();
                 SceneManager.MoveGameObjectToScene(utilsInstance, StartOfRound.Instance.gameObject.scene);
                 utilsInstance.GetComponent<NetworkObject>().Spawn();
                 Plugin.ExtendedLogging($"Created CodeRebirthUtils. Scene is: '{utilsInstance.scene.name}'");
@@ -119,18 +119,13 @@ static class StartOfRoundPatch
         if (extendedLevel == null)
             return;
 
-        if (WeatherHandler.Instance.NightShift == null)
-            return;
-
         if (TimeOfDay.Instance.daysUntilDeadline <= 0)
         {
             WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, LevelWeatherType.None);
             return;
         }
 
-        CRWeatherDefinition? nightShiftCRWeatherDefinition = CodeRebirthRegistry.RegisteredCRWeathers.GetCRWeatherDefinitionWithWeatherName("night shift");
-        Plugin.ExtendedLogging($"Night shift weather: {nightShiftCRWeatherDefinition?.Weather}");
-        if (nightShiftCRWeatherDefinition == null)
+        if (!Plugin.Mod.WeatherRegistry().TryGetFromWeatherName("night shift", out CRWeatherDefinition? nightShiftWeatherDefinition))
             return;
 
         string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeather(extendedLevel.SelectableLevel).name.ToLowerInvariant();
@@ -138,6 +133,6 @@ static class StartOfRoundPatch
         if (weatherName.Equals("night shift") || weatherName.Equals("blackout"))
             return;
 
-        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftCRWeatherDefinition.Weather);
+        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftWeatherDefinition.Weather);
     }
 }

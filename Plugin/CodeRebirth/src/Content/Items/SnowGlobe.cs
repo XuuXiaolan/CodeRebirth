@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using GameNetcodeStuff;
-using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Content.Items;
 public class SnowGlobe : GrabbableObject

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -161,10 +162,13 @@ public class CompactorToby : NetworkBehaviour, IHittable
         StartOrStopCompactingClientRpc(false, false);
         if (deadPlayer)
         {
-            CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby?.ItemDefinitions.GetCRItemDefinitionWithItemName("Flattened Body")?.item, randomPosition, false, true, value);
+            Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition);
+            CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition?.Item, randomPosition, false, true, value);
             yield break;
         }
-        CodeRebirthUtils.Instance.SpawnScrap(MapObjectHandler.Instance.CompactorToby?.ItemDefinitions.GetCRItemDefinitionWithItemName("Sally Cube")?.item, randomPosition, false, true, value);
+
+        Plugin.Mod.ItemRegistry().TryGetFromItemName("Sally Cubes", out CRItemDefinition? sallyCubesItemDefinition);
+        CodeRebirthUtils.Instance.SpawnScrap(sallyCubesItemDefinition?.Item, randomPosition, false, true, value);
     }
 
     private IEnumerator PlaySourceWithDelay(float delay)

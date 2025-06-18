@@ -7,6 +7,7 @@ using UnityEngine.AI;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
+using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -20,62 +21,6 @@ static class RoundManagerPatch
     {
         if (Plugin.ModConfig.ConfigFloraEnabled.Value)
             SpawnFlora();
-
-        System.Random random = new(StartOfRound.Instance.randomMapSeed + 69);
-        foreach (RegisteredCRMapObject registeredMapObject in registeredMapObjects)
-        {
-            HandleSpawningOutsideMapObjects(registeredMapObject, random);
-        }
-    }
-
-    private static void HandleSpawningOutsideMapObjects(RegisteredCRMapObject mapObjDef, System.Random random)
-    {
-        SelectableLevel level = RoundManager.Instance.currentLevel;
-        AnimationCurve animationCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 0));
-        GameObject prefabToSpawn = mapObjDef.outsideObject.spawnableObject.prefabToSpawn;
-
-        if (mapObjDef.hasNetworkObject && !NetworkManager.Singleton.IsServer)
-            return;
-
-        animationCurve = mapObjDef.spawnRateFunction(level);
-        int randomNumberToSpawn;
-        if (mapObjDef.hasNetworkObject)
-        {
-            randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(UnityEngine.Random.Range(0f, 1f)) + 0.5f);
-        }
-        else
-        {
-            randomNumberToSpawn = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0f, 1f)) + 0.5f);
-        }
-
-        Plugin.ExtendedLogging($"Spawning {randomNumberToSpawn} of {prefabToSpawn.name} for level {level}");
-        for (int i = 0; i < randomNumberToSpawn; i++)
-        {
-            Vector3 spawnPos;
-            if (mapObjDef.hasNetworkObject)
-            {
-                spawnPos = RoundManager.Instance.outsideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.outsideAINodes.Length)].transform.position;
-            }
-            else
-            {
-                spawnPos = RoundManager.Instance.outsideAINodes[random.Next(RoundManager.Instance.outsideAINodes.Length)].transform.position;
-            }
-            spawnPos = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(spawnPos, 10f, default, new System.Random(UnityEngine.Random.Range(0, 10000)), -1) + (Vector3.up * 2);
-            Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-            if (hit.collider == null)
-                continue;
-
-            GameObject spawnedPrefab = GameObject.Instantiate(prefabToSpawn, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-            Plugin.ExtendedLogging($"Spawning {spawnedPrefab.name} at {hit.point}");
-            if (mapObjDef.alignWithTerrain)
-            {
-                spawnedPrefab.transform.up = hit.normal;
-            }
-            if (!mapObjDef.hasNetworkObject)
-                continue;
-
-            spawnedPrefab.GetComponent<NetworkObject>().Spawn(true);
-        }
     }
 
     private static void SpawnFlora()
@@ -195,7 +140,7 @@ static class RoundManagerPatch
             noiseRange /= 2f;
         }
 
-        int numHits = Physics.OverlapSphereNonAlloc(noisePosition, noiseRange, RoundManager.Instance.tempColliderResults, CodeRebirthUtils.Instance.propsAndHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapSphereNonAlloc(noisePosition, noiseRange, RoundManager.Instance.tempColliderResults, MoreLayerMasks.PropsAndHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (!RoundManager.Instance.tempColliderResults[i].TryGetComponent(out INoiseListener noiseListener)) continue;

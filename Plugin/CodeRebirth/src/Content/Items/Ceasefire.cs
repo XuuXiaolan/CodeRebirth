@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -220,7 +221,7 @@ public class Ceasefire : GrabbableObject
 
         Vector3 capsuleStart = _ceasefireBarrel.transform.position;
         Vector3 capsuleEnd = capsuleStart + (-_ceasefireBarrel.transform.up) * _minigunRange;
-        int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.OverlapCapsuleNonAlloc(capsuleStart, capsuleEnd, _minigunWidth, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
 
         for (int i = 0; i < numHits; i++)
         {

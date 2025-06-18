@@ -6972,12 +6972,12 @@ GameObject:
   - component: {fileID: 1205260954774247077}
   - component: {fileID: 6185491295985074601}
   - component: {fileID: 798435412459675781}
-  - component: {fileID: 1172250703776549669}
   - component: {fileID: 5589188166006889593}
   - component: {fileID: 290345020657837124}
   - component: {fileID: 4687689657460642596}
   - component: {fileID: 762053588088254881}
   - component: {fileID: 6401745051562329849}
+  - component: {fileID: 9038374897764814506}
   m_Layer: 19
   m_Name: Peacekeeper
   m_TagString: Enemy
@@ -7052,34 +7052,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1172250703776549669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6729101629155576095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: 15
 --- !u!95 &5589188166006889593
 Animator:
   serializedVersion: 5
@@ -7284,7 +7256,7 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 290345020657837124}
-  smartAgentNavigator: {fileID: 1172250703776549669}
+  smartAgentNavigator: {fileID: 9038374897764814506}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
@@ -7340,6 +7312,34 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &9038374897764814506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6729101629155576095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &6761455667277072204
 GameObject:
   m_ObjectHideFlags: 0

@@ -395,6 +395,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -546,7 +547,7 @@ GameObject:
   - component: {fileID: 628193322848618802}
   - component: {fileID: 8144318307373106634}
   - component: {fileID: 5627089283044738071}
-  - component: {fileID: 3297163771968334546}
+  - component: {fileID: 4322979011219931231}
   m_Layer: 6
   m_Name: ShockwaveDrone
   m_TagString: InteractTrigger
@@ -726,12 +727,11 @@ MonoBehaviour:
   GalEye: {fileID: 0}
   renderersToHideIn:
   - {fileID: 9145391281392864541}
-  smartAgentNavigator: {fileID: 3297163771968334546}
+  smartAgentNavigator: {fileID: 4322979011219931231}
   boomboxPlaying: 0
   staringTimer: 0
   targetEnemy: {fileID: 0}
   ownerPlayer: {fileID: 0}
-  enemyTargetBlacklist: []
   chargeCount: 10
   maxChargeCount: 0
   currentlyAttacking: 0
@@ -948,7 +948,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &3297163771968334546
+--- !u!114 &4322979011219931231
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -957,7 +957,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1574516792246697467}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
@@ -975,6 +975,7 @@ MonoBehaviour:
   isOutside: 1
   exitPoints: []
   mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &2060832966963771189
 GameObject:
   m_ObjectHideFlags: 0
@@ -2076,6 +2077,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -2568,6 +2570,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -3080,6 +3083,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

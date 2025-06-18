@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1765893468, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: CodeRebirthContent
+  m_Script: {fileID: -395348975, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: CodeRebirthContentContainer
   m_EditorClassIdentifier: 
   assetBundles:
   - assetBundleName: acunitgalassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: ACUnit Gal
     weathers: []
     enemies: []
@@ -27,10 +27,8 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: aircontrolunitassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: AirControlUnit
     weathers: []
     enemies: []
@@ -49,10 +47,8 @@ MonoBehaviour:
         ; 0.56,1.67 ; 0.67,1.73 ; 0.78,1.82 ; 0.89,2.12 ; 1.00,2.50
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: autonomouscraneassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Autonomous Crane
     weathers: []
     enemies: []
@@ -72,10 +68,8 @@ MonoBehaviour:
         ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: beartrapassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: BearTrap
     weathers: []
     enemies: []
@@ -142,10 +136,8 @@ MonoBehaviour:
         ; 0.56,2.09 ; 0.67,2.32 ; 0.78,2.54 ; 0.89,2.77 ; 1.00,3.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: beartrapgalassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: BearTrap Gal
     weathers: []
     enemies: []
@@ -158,10 +150,8 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: bellcrabgalassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: BellCrab Gal
     weathers: []
     enemies: []
@@ -174,10 +164,8 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: biomeassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Biomes
     weathers: []
     enemies: []
@@ -196,10 +184,8 @@ MonoBehaviour:
         ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: cactusbudlingassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Cactus Budling
     weathers: []
     enemies:
@@ -246,10 +232,8 @@ MonoBehaviour:
         ; 1.00,30.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: carnivorousplantassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Carnivorous Plant
     weathers: []
     enemies:
@@ -263,26 +247,22 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: cleanerdronegalassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Cleaner Drone Gal
     weathers: []
     enemies: []
     items: []
     mapObjects: []
     unlockables:
-    - entityName: Cleaner Drone Gal
+    - entityName: Jane Fogg
       cost: 200
       isShipUpgrade: 1
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: compactortobyassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Compactor Toby
     weathers: []
     enemies: []
@@ -295,7 +275,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: Sally Cube
+    - entityName: Sally Cubes
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -314,10 +294,8 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: crateassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Crate
     weathers: []
     enemies: []
@@ -376,10 +354,8 @@ MonoBehaviour:
         ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: cruisergalassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Cruiser
     weathers: []
     enemies: []
@@ -400,25 +376,8 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
-  - assetBundleName: cuteaassets
-    keepLoaded: 0
-    configName: Cutea
-    weathers: []
-    enemies:
-    - entityName: Cutea
-      spawnWeights: 
-      weatherMultipliers: 
-      powerLevel: 0
-      maxSpawnCount: 0
-    items: []
-    mapObjects: []
-    unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: driftwoodmenaceassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Driftwood Menace
     weathers: []
     enemies:
@@ -432,10 +391,8 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: ducksongassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Duck
     weathers: []
     enemies:
@@ -455,7 +412,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: Lemonade
+    - entityName: Lemonade Pitcher
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -465,10 +422,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: fishdispenserassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Shrimp Dispenser
     weathers: []
     enemies: []
@@ -489,10 +444,8 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: flashturretassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: FlashTurret
     weathers: []
     enemies: []
@@ -511,10 +464,8 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: functionalmicrowaveassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: FunctionalMicrowave
     weathers: []
     enemies: []
@@ -557,10 +508,8 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: friendassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Friend
     weathers: []
     enemies: []
@@ -573,10 +522,8 @@ MonoBehaviour:
       isDecor: 1
       isProgressive: 0
       createProgressiveConfig: 0
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: glowinggemassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: LaserTurret
     weathers: []
     enemies: []
@@ -595,10 +542,8 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: gunslingergregassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Gunslinger Greg
     weathers: []
     enemies: []
@@ -618,10 +563,8 @@ MonoBehaviour:
         ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: hoverboardassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Hoverboard
     weathers: []
     enemies: []
@@ -636,10 +579,8 @@ MonoBehaviour:
       cost: 350
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: industrialfanassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: IndustrialFan
     weathers: []
     enemies: []
@@ -658,10 +599,8 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: janitorassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Janitor
     weathers: []
     enemies:
@@ -687,14 +626,12 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: manorlordassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: ManorLord
     weathers: []
     enemies:
-    - entityName: ManorLord
+    - entityName: Manor Lord
       spawnWeights: Vanilla:10,Custom:10,Valley:10,Canyon:5,Tundra:30,Marsh:3,Military:5,Rocky:5,Amythest:5,Experimentation:1,Assurance:3,Vow:30,Offense:3,March:3,Adamance:7,Rend:50,Dine:40,Titan:4,Artifice:40,Embrion:0,Oxyde:5
       weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1.25,Flooded:1.25,Eclipsed:1,Meteor
         Shower:0.75,Tornado:1.25,Night Shift:1.5,Snowfall:1.4,Blizzard:1.4,Heatwave:0.75,Solar
@@ -702,7 +639,7 @@ MonoBehaviour:
       powerLevel: 2
       maxSpawnCount: 1
     items:
-    - entityName: Puppet
+    - entityName: Puppeteer's Voodoo
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -720,10 +657,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: marrowsplitterassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Marrow Splitter
     weathers: []
     enemies: []
@@ -738,10 +673,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: merchantassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Merchant
     weathers: []
     enemies:
@@ -753,7 +686,7 @@ MonoBehaviour:
       powerLevel: 0
       maxSpawnCount: 1
     items:
-    - entityName: CreditPad100cc
+    - entityName: Credit Pad 100cc
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -761,7 +694,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: CreditPad500cc
+    - entityName: Credit Pad 500cc
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -769,7 +702,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: CreditPad1000cc
+    - entityName: Credit Pad 1000cc
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -777,7 +710,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: FogHorn
+    - entityName: Fog Horn
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -785,7 +718,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: GuardsmanPhone
+    - entityName: Guardsman Phone
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -801,7 +734,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: LifeformAnalyser
+    - entityName: Lifeform Analyser
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -809,7 +742,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: MoleDigger
+    - entityName: Mole Digger
       spawnWeights: Rocky:5,Canyon:2,Amethyst:5
       generateSpawnWeightsConfig: 1
       isScrap: 1
@@ -817,7 +750,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: NitroCrate
+    - entityName: Nitroglycerin Crate
       spawnWeights: Rocky:5,Canyon:5,Amethyst:5
       generateSpawnWeightsConfig: 1
       isScrap: 1
@@ -833,7 +766,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: RailSlugger
+    - entityName: Rail Slugger
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -857,7 +790,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: ShipUpgradeUnlocker
+    - entityName: Ship Upgrade Unlocker
       spawnWeights: Rocky:1
       generateSpawnWeightsConfig: 1
       isScrap: 1
@@ -865,7 +798,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: StoptimeWatch
+    - entityName: Stoptime Watch
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -873,7 +806,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: WalkieYellie
+    - entityName: Walkie Yellie
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -881,7 +814,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: WalletItem
+    - entityName: Wallet
       spawnWeights: 
       generateSpawnWeightsConfig: 1
       isScrap: 0
@@ -889,7 +822,7 @@ MonoBehaviour:
       isShopItem: 1
       generateShopItemConfig: 1
       cost: 12
-    - entityName: Melanie's Drawing
+    - entityName: Worthless
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -920,16 +853,14 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables:
-    - entityName: Piggy
+    - entityName: Piggy Bank
       cost: 200
       isShipUpgrade: 1
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: meteorshowerassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: MeteorShower
     weathers:
     - entityName: Meteor Shower
@@ -991,10 +922,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: mistressassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Mistress
     weathers: []
     enemies:
@@ -1016,10 +945,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: monarchassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Monarch
     weathers: []
     enemies:
@@ -1040,10 +967,8 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: moonunlockerassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Moon Unlockers
     weathers: []
     enemies: []
@@ -1066,10 +991,8 @@ MonoBehaviour:
       cost: 999
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: mountaineerassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Brrreaker
     weathers: []
     enemies: []
@@ -1084,10 +1007,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: nancyassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Nancy
     weathers: []
     enemies:
@@ -1101,10 +1022,8 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: nightshiftassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Night Shift
     weathers:
     - entityName: Night Shift
@@ -1118,16 +1037,14 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: oxydecrashshipassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Crashing Ship
     weathers: []
     enemies: []
     items: []
     mapObjects:
-    - entityName: Crashing Ship
+    - entityName: Oxyde Crashed Ship
       isInsideHazard: 0
       createInsideHazardConfig: 0
       defaultInsideCurveSpawnWeights: 
@@ -1139,15 +1056,13 @@ MonoBehaviour:
         | Oxyde - 0.00,0.00 ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: oxydeloreassets
-    keepLoaded: 1
+    <AlwaysKeepLoaded>k__BackingField: 1
     configName: Oxyde Lore
     weathers: []
     enemies: []
     items:
-    - entityName: TransporterDocument
+    - entityName: Transporter Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1155,7 +1070,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: DuckDocument
+    - entityName: Duck Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1163,7 +1078,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: JanitorDocument
+    - entityName: Janitor Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1171,7 +1086,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: MagicianDocument
+    - entityName: Rabbit Magician Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1179,7 +1094,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: ManorLordDocument
+    - entityName: Manor Lord Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1187,7 +1102,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: MistressDocument
+    - entityName: Mistress Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1195,7 +1110,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: NancyDocument
+    - entityName: Nancy Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1203,7 +1118,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: CactusBudlingDocument
+    - entityName: Cactus Budling Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1211,7 +1126,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: DriftwoodMenaceDocument
+    - entityName: Driftwood Menace Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1219,7 +1134,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: CutieMonarchDocument
+    - entityName: Cutiefly Monarch Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1227,7 +1142,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: RedwoodDocument
+    - entityName: Redwood Titan Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1235,7 +1150,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: SnailCatDocument
+    - entityName: Snail Cat Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1243,7 +1158,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: PeaceKeeperDocument
+    - entityName: PeaceKeeper Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1251,7 +1166,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: GuardsmanDocument
+    - entityName: Guardsman Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1259,7 +1174,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: IntroDocument
+    - entityName: Intro Lore
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1421,10 +1336,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: pandoraassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Pandora
     weathers: []
     enemies:
@@ -1436,14 +1349,12 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: peacekeeperassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Peace Keeper
     weathers: []
     enemies:
-    - entityName: Peace Keeper
+    - entityName: PeaceKeeper
       spawnWeights: Vanilla:8,Custom:10,Valley:5,Canyon:7,Tundra:10,Marsh:2,Military:40,Rocky:10,Amythest:5,Experimentation:0,Assurance:1,Vow:1,Offense:1,March:3,Adamance:15,Rend:20,Dine:25,Titan:30,Artifice:40,Embrion:20,Oxyde:10
       weatherMultipliers: None:0.6,DustClouds:0.6,Rainy:0.4,Stormy:0.35,Foggy:0.6,Flooded:0.1,Eclipsed:2,Meteor
         Shower:1,Tornado:1,Night Shift:0.7,Snowfall:1,Blizzard:1,Heatwave:1,Solar
@@ -1461,10 +1372,8 @@ MonoBehaviour:
       cost: 2000
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: plantpotassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Plant Pot
     weathers: []
     enemies: []
@@ -1501,10 +1410,8 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: rabbitmagicianassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Rabbit Magician
     weathers: []
     enemies:
@@ -1518,10 +1425,8 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: redwoodtitanassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Redwood
     weathers: []
     enemies:
@@ -1535,15 +1440,13 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: scp999galassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: SCP 999 Gal
     weathers: []
     enemies: []
     items:
-    - entityName: SCP999 Scrap Heap
+    - entityName: Jar of 999
       spawnWeights: All:1
       generateSpawnWeightsConfig: 1
       isScrap: 1
@@ -1559,11 +1462,9 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: seaminetinkassets
-    keepLoaded: 0
-    configName: Seamine
+    <AlwaysKeepLoaded>k__BackingField: 0
+    configName: Seamine Tink
     weathers: []
     enemies: []
     items:
@@ -1577,16 +1478,14 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables:
-    - entityName: Seamine Gal
+    - entityName: Seamine Tink
       cost: 1500
       isShipUpgrade: 1
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: shockwavebotassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Shockwave
     weathers: []
     enemies: []
@@ -1601,16 +1500,14 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables:
-    - entityName: Shockwave Gal
+    - entityName: Shockwave Bot
       cost: 2200
       isShipUpgrade: 1
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: shreddersarahassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Shredder Sarah
     weathers: []
     enemies: []
@@ -1623,7 +1520,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    - entityName: Shredded Scrap
+    - entityName: Normal Shredded Scrap
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1642,14 +1539,12 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: snailcatassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: SnailCat
     weathers: []
     enemies:
-    - entityName: SnailCat
+    - entityName: Snail Cat
       spawnWeights: Vanilla:20,Custom:20,Valley:40,Canyon:5,Tundra:5,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:20,Offense:0,March:30,Adamance:45,Rend:2,Dine:3,Titan:0,Artifice:0,Embrion:0,Oxyde:1
       weatherMultipliers: None:1.5,DustClouds:0.5,Rainy:0.5,Stormy:0.2,Foggy:0.2,Flooded:0.1,Eclipsed:0,Meteor
         Shower:0,Tornado:0.1,Night Shift:0.1,Snowfall:0.1,Blizzard:0.1,Heatwave:0.7,Solar
@@ -1657,7 +1552,7 @@ MonoBehaviour:
       powerLevel: 0.5
       maxSpawnCount: 6
     items:
-    - entityName: SnailCat
+    - entityName: Snail Cat
       spawnWeights: 
       generateSpawnWeightsConfig: 0
       isScrap: 1
@@ -1667,10 +1562,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: snowglobeassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: SnowGlobe
     weathers: []
     enemies: []
@@ -1685,10 +1578,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: swatterassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: sWATTer
     weathers: []
     enemies: []
@@ -1703,10 +1594,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: terminalbotassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Terminal
     weathers: []
     enemies: []
@@ -1721,16 +1610,14 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables:
-    - entityName: Terminal Gal
+    - entityName: Terminal Bot
       cost: 2200
       isShipUpgrade: 1
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: teslashockassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: BugZapper
     weathers: []
     enemies: []
@@ -1749,10 +1636,8 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: tomahopassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: TomaHop
     weathers: []
     enemies: []
@@ -1767,10 +1652,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: tornadoassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Tornado
     weathers:
     - entityName: Tornado
@@ -1791,10 +1674,8 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: transporterassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Transporter
     weathers: []
     enemies:
@@ -1808,10 +1689,8 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: turbulenceassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Turbulence
     weathers: []
     enemies: []
@@ -1826,10 +1705,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: xuandrigoassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: XuRigo.
     weathers: []
     enemies: []
@@ -1842,7 +1719,7 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 1
       cost: 300
-    - entityName: GoldRigo
+    - entityName: KingRigo
       spawnWeights: All:1
       generateSpawnWeightsConfig: 1
       isScrap: 1
@@ -1852,10 +1729,8 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}
   - assetBundleName: zortassets
-    keepLoaded: 0
+    <AlwaysKeepLoaded>k__BackingField: 0
     configName: Zort
     weathers: []
     enemies: []
@@ -1894,5 +1769,3 @@ MonoBehaviour:
       cost: 150
     mapObjects: []
     unlockables: []
-    alreadyLoaded: 0
-    assetBundleReference: {fileID: 0}

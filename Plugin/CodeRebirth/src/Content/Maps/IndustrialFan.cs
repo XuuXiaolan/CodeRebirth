@@ -1,4 +1,5 @@
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ public class IndustrialFan : CodeRebirthHazard
 
     public bool IsObstructed(Vector3 targetPosition)
     {
-        return Physics.Linecast(fanTransform.position, targetPosition, out _, CodeRebirthUtils.Instance.collidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
+        return Physics.Linecast(fanTransform.position, targetPosition, out _, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
     }
 
     private void PlayRedMist()

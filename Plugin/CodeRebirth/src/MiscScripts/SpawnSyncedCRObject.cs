@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.MapObjects;
 
 namespace CodeRebirth.src.MiscScripts;
 public class SpawnSyncedCRObject : MonoBehaviour
@@ -25,13 +26,10 @@ public class SpawnSyncedCRObject : MonoBehaviour
         List<(GameObject objectType, float weight)> spawnableObjectsList = new();
         foreach (var objectTypeWithRarity in objectTypesWithRarity)
         {
-            CRMapObjectDefinition? CRMapObjectDefinition = CodeRebirthRegistry.RegisteredCRMapObjects.GetCRMapObjectDefinitionWithObjectName(objectTypeWithRarity.CRObjectName);
-            if (CRMapObjectDefinition == null || CRMapObjectDefinition.gameObject == null)
-            {
-                Plugin.Logger.LogWarning($"No prefab found for spawning: {objectTypeWithRarity.CRObjectName}");
+            if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName(objectTypeWithRarity.CRObjectName, out CRMapObjectDefinition? CRMapObjectDefinition))
                 continue;
-            }
-            spawnableObjectsList.Add((CRMapObjectDefinition.gameObject, objectTypeWithRarity.Rarity));
+
+            spawnableObjectsList.Add((CRMapObjectDefinition.GameObject, objectTypeWithRarity.Rarity));
         }
 
         if (spawnableObjectsList.Count <= 0)

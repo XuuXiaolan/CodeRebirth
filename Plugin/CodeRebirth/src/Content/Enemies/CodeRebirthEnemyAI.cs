@@ -1,13 +1,12 @@
 ﻿using Unity.Netcode;
 using GameNetcodeStuff;
 using UnityEngine;
-using UnityEngine.AI;
 using System.Linq;
-using CodeRebirth.src.MiscScripts.PathFinding;
 using Unity.Netcode.Components;
 using CodeRebirth.src.Util.Extensions;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirthLib.Util.Pathfinding;
 
 namespace CodeRebirth.src.Content.Enemies;
 

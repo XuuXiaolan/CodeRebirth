@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
@@ -35,7 +36,7 @@ public class Oxidizer : GrabbableObject
         _iHittableList.Clear();
         _enemyAIList.Clear();
 
-        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, _cachedRaycastHits, 6, CodeRebirthUtils.Instance.playersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, _cachedRaycastHits, 6, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             if (_cachedRaycastHits[i].transform == playerHeldBy.transform) continue;

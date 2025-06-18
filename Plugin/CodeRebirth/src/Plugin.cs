@@ -1,54 +1,46 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using UnityEngine;
 using BepInEx;
 using BepInEx.Logging;
-using System.Collections.Generic;
-using System.Linq;
 using HarmonyLib;
-using CodeRebirth.src.Util.AssetLoading;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
-using CodeRebirth.src.Util;
 using Unity.Netcode;
 using BepInEx.Configuration;
+using CodeRebirthLib;
+using CodeRebirthLib.AssetManagement;
 /*
 Big todo
 Give the configs some sort of listener for lethal config so i can detect runtime changes.
 */
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency(LethalLib.Plugin.ModGUID)]
 [BepInDependency("mrov.WeatherRegistry")]
 [BepInDependency("com.rune580.LethalCompanyInputUtils")]
+[BepInDependency(CodeRebirthLib.MyPluginInfo.PLUGIN_GUID)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("Zaggy1024.PathfindingLib")]
 [BepInDependency(MoreCompany.PluginInformation.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
 {
-    internal static new ManualLogSource Logger = null!;
+    internal new static ManualLogSource Logger = null!;
     internal static readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
-    internal static readonly Dictionary<string, AssetBundle> LoadedBundles = [];
-    internal static bool MoreSuitsIsOn = false;
-    internal static readonly Dictionary<string, Item> samplePrefabs = [];
     internal static IngameKeybinds InputActionsInstance = null!;
     public static ConfigFile configFile { get; private set; } = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
-    internal const ulong GLITCH_STEAM_ID = 9;
-    internal class MainAssets(string bundleName) : AssetBundleLoader<MainAssets>(bundleName)
+	public static CRMod Mod { get; private set; }
+    internal class MainAssets(AssetBundle bundle) : AssetBundleLoader<MainAssets>(bundle)
     {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
         public GameObject UtilsPrefab { get; private set; } = null!;
 
         [LoadFromBundle("EmptyNetworkObject.prefab")]
         public GameObject EmptyNetworkObject { get; private set; } = null!;
-
-        [LoadFromBundle("CodeRebirthContent.asset")]
-        public CodeRebirthContent CodeRebirthContent { get; private set; } = null!;
     }
     internal static MainAssets Assets { get; private set; } = null!;
+
+    internal const ulong GLITCH_STEAM_ID = 9;
 
     private void Awake()
     {
@@ -74,7 +66,6 @@ public class Plugin : BaseUnityPlugin
         _harmony.PatchAll(typeof(HDAdditionalLightDataPatch));
 
         ItemDropshipPatch.Init();
-        TerminalPatch.Init();
         KnifeItemPatch.Init();
         PlayerControllerBPatch.Init();
         EnemyAIPatch.Init();
@@ -92,22 +83,19 @@ public class Plugin : BaseUnityPlugin
         InitializeNetworkBehaviours();
         InputActionsInstance = new IngameKeybinds();
 
-        Assets = new MainAssets("coderebirthasset");
+        ModConfig.InitCodeRebirthConfig(configFile);
+
+        AssetBundle mainBundle = CRLib.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
+        Assets = new MainAssets(mainBundle);
+        Mod = CRLib.RegisterMod(this, mainBundle);
+		Mod.RegisterContentHandlers();
         // Register Keybinds
 
         Logger.LogInfo("Registering CodeRebirth content.");
 
-        ModConfig.InitCodeRebirthConfig(configFile);
-        RegisterContentHandlers(Assembly.GetExecutingAssembly());
-
         if (OpenBodyCamCompatibilityChecker.Enabled)
         {
             OpenBodyCamCompatibilityChecker.Init();
-        }
-
-        if (MoreSuitsCompatibilityChecker.Enabled)
-        {
-            MoreSuitsCompatibilityChecker.Init();
         }
 
         if (ModConfig.ConfigCleanUnusedConfigs.Value)
@@ -121,39 +109,6 @@ public class Plugin : BaseUnityPlugin
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 
-    public static void RegisterContentHandlers(Assembly assembly)
-    {
-        IEnumerable<Type> contentHandlers = assembly.GetLoadableTypes().Where(x =>
-            x.BaseType != null
-            && x.BaseType.IsGenericType
-            && x.BaseType.GetGenericTypeDefinition() == typeof(ContentHandler<>)
-        );
-
-        foreach (Type type in contentHandlers)
-        {
-            type.GetConstructor([]).Invoke([]);
-        }
-    }
-
-    private void OnDisable()
-    {
-        foreach (AssetBundleData bundleData in Assets.CodeRebirthContent.assetBundles)
-        {
-            if (!bundleData.alreadyLoaded)
-                continue;
-
-            if (bundleData.keepLoaded)
-                continue;
-
-            if (bundleData.assetBundleReference == null)
-                continue;
-
-            bundleData.assetBundleReference.Unload(false);
-        }
-        Logger.LogDebug("Unloaded assetbundles.");
-        LoadedBundles.Clear();
-    }
-
     internal static void ExtendedLogging(object text)
     {
         if (ModConfig.ConfigExtendedLogging.Value)
@@ -161,23 +116,23 @@ public class Plugin : BaseUnityPlugin
             Logger.LogInfo(text);
         }
     }
+
     private void InitializeNetworkBehaviours()
     {
         var types = Assembly.GetExecutingAssembly().GetLoadableTypes();
         foreach (var type in types)
         {
             if (type.IsNested || !typeof(NetworkBehaviour).IsAssignableFrom(type))
-            {
                 continue; // we do not care about fixing it, if it is not a network behaviour
-            }
+
             var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             foreach (var method in methods)
             {
                 var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    method.Invoke(null, null);
-                }
+				if (attributes.Length <= 0)
+					continue;
+
+				method.Invoke(null, null);
             }
         }
     }

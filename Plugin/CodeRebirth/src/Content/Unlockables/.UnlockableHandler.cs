@@ -1,12 +1,13 @@
-using CodeRebirth.src.Util.AssetLoading;
-using CodeRebirth.src.Util;
 using LethalLib.Extras;
 using UnityEngine;
+using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib.AssetManagement;
+using CodeRebirthLib;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockableHandler : ContentHandler<UnlockableHandler>
 {
-    public class ShockwaveBotAssets(string bundleName) : AssetBundleLoader<ShockwaveBotAssets>(bundleName)
+    public class ShockwaveBotAssets(CRMod mod, string filePath) : AssetBundleLoader<ShockwaveBotAssets>(mod, filePath)
     {
         [LoadFromBundle("LaserShockBlast.prefab")]
         public GameObject LasetShockBlast { get; private set; } = null!;
@@ -15,98 +16,97 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
         public GameObject ShockWaveDronePrefab { get; private set; } = null!;
     }
 
-    public class PlantPotAssets(string bundleName) : AssetBundleLoader<PlantPotAssets>(bundleName)
+    public class PlantPotAssets(CRMod mod, string filePath) : AssetBundleLoader<PlantPotAssets>(mod, filePath)
     {
     }
 
-    public class SeamineTinkAssets(string bundleName) : AssetBundleLoader<SeamineTinkAssets>(bundleName)
+    public class SeamineTinkAssets(CRMod mod, string filePath) : AssetBundleLoader<SeamineTinkAssets>(mod, filePath)
     {
         [LoadFromBundle("SeamineGal.prefab")]
         public GameObject SeamineGalPrefab { get; private set; } = null!;
     }
 
-    public class TerminalBotAssets(string bundleName) : AssetBundleLoader<TerminalBotAssets>(bundleName)
+    public class TerminalBotAssets(CRMod mod, string filePath) : AssetBundleLoader<TerminalBotAssets>(mod, filePath)
     {
         [LoadFromBundle("TerminalGalDaisy.prefab")]
         public GameObject TerminalGalPrefab { get; private set; } = null!;
     }
 
-    public class BellCrabAssets(string bundleName) : AssetBundleLoader<BellCrabAssets>(bundleName)
+    public class BellCrabAssets(CRMod mod, string filePath) : AssetBundleLoader<BellCrabAssets>(mod, filePath)
     {
     }
 
-    public class ACUnitGalAssets(string bundleName) : AssetBundleLoader<ACUnitGalAssets>(bundleName)
+    public class ACUnitGalAssets(CRMod mod, string filePath) : AssetBundleLoader<ACUnitGalAssets>(mod, filePath)
     {
     }
 
-    public class BearTrapGalAssets(string bundleName) : AssetBundleLoader<BearTrapGalAssets>(bundleName)
+    public class BearTrapGalAssets(CRMod mod, string filePath) : AssetBundleLoader<BearTrapGalAssets>(mod, filePath)
     {
     }
 
-    public class SCP999Assets(string bundleName) : AssetBundleLoader<SCP999Assets>(bundleName)
+    public class SCP999Assets(CRMod mod, string filePath) : AssetBundleLoader<SCP999Assets>(mod, filePath)
     {
     }
 
-    public class Fishdispenserassets(string bundleName) : AssetBundleLoader<Fishdispenserassets>(bundleName)
+    public class Fishdispenserassets(CRMod mod, string filePath) : AssetBundleLoader<Fishdispenserassets>(mod, filePath)
     {
     }
 
-    public class FriendAssets(string bundleName) : AssetBundleLoader<FriendAssets>(bundleName)
+    public class FriendAssets(CRMod mod, string filePath) : AssetBundleLoader<FriendAssets>(mod, filePath)
     {
         [LoadFromBundle("GlitchedPlushieUnlockable.asset")]
         public UnlockableItemDef GlitchedPlushieUnlockable { get; private set; } = null!;
     }
 
-    public class CleanerDroneGalAssets(string bundleName) : AssetBundleLoader<CleanerDroneGalAssets>(bundleName)
+    public class CleanerDroneGalAssets(CRMod mod, string filePath) : AssetBundleLoader<CleanerDroneGalAssets>(mod, filePath)
     {
         [LoadFromBundle("JaneFogUnlockable.asset")]
         public UnlockableItemDef CleanerDroneGalUnlockable { get; private set; } = null!;
     }
 
-    public class CruiserGalAssets(string bundleName) : AssetBundleLoader<CruiserGalAssets>(bundleName)
+    public class CruiserGalAssets(CRMod mod, string filePath) : AssetBundleLoader<CruiserGalAssets>(mod, filePath)
     {
         [LoadFromBundle("CruiserGal.prefab")]
         public GameObject CruiserGalPrefab { get; private set; } = null!;
     }
 
-    public FriendAssets? Friend { get; private set; } = null;
-    public Fishdispenserassets? ShrimpDispenser { get; private set; } = null;
-    public SCP999Assets? SCP999 { get; private set; } = null;
-    public BellCrabAssets? BellCrab { get; private set; } = null;
-    public SeamineTinkAssets? SeamineTink { get; private set; } = null;
-    public TerminalBotAssets? TerminalBot { get; private set; } = null;
-    public PlantPotAssets? PlantPot { get; private set; } = null;
-    public ShockwaveBotAssets? ShockwaveBot { get; private set; } = null;
-    public ACUnitGalAssets? ACUnitGal { get; private set; } = null;
-    public BearTrapGalAssets? BearTrapGal { get; private set; } = null;
-    public CleanerDroneGalAssets? CleanerDroneGal { get; private set; } = null;
-    public CruiserGalAssets? CruiserGal { get; private set; } = null;
+    public FriendAssets? Friend = null;
+    public Fishdispenserassets? ShrimpDispenser = null;
+    public SCP999Assets? SCP999 = null;
+    public BellCrabAssets? BellCrab = null;
+    public SeamineTinkAssets? SeamineTink = null;
+    public TerminalBotAssets? TerminalBot = null;
+    public PlantPotAssets? PlantPot = null;
+    public ShockwaveBotAssets? ShockwaveBot = null;
+    public ACUnitGalAssets? ACUnitGal = null;
+    public BearTrapGalAssets? BearTrapGal = null;
+    public CleanerDroneGalAssets? CleanerDroneGal = null;
+    public CruiserGalAssets? CruiserGal = null;
 
-    public UnlockableHandler()
+    public UnlockableHandler(CRMod mod) : base(mod)
     {
+        RegisterContent("shockwavebotassets", out ShockwaveBot);
 
-        ShockwaveBot = LoadAndRegisterAssets<ShockwaveBotAssets>("shockwavebotassets");
+        RegisterContent("plantpotassets", out PlantPot);
 
-        PlantPot = LoadAndRegisterAssets<PlantPotAssets>("plantpotassets");
+        RegisterContent("terminalbotassets", out TerminalBot);
 
-        TerminalBot = LoadAndRegisterAssets<TerminalBotAssets>("terminalbotassets");
+        RegisterContent("cruisergalassets", out CruiserGal);
 
-        CruiserGal = LoadAndRegisterAssets<CruiserGalAssets>("cruisergalassets");
+        RegisterContent("scp999galassets", out SCP999);
 
-        SCP999 = LoadAndRegisterAssets<SCP999Assets>("scp999galassets");
+        RegisterContent("fishdispenserassets", out ShrimpDispenser);
 
-        ShrimpDispenser = LoadAndRegisterAssets<Fishdispenserassets>("fishdispenserassets");
+        RegisterContent("seaminetinkassets", out SeamineTink);
 
-        SeamineTink = LoadAndRegisterAssets<SeamineTinkAssets>("seaminetinkassets");
+        RegisterContent("cleanerdronegalassets", out CleanerDroneGal);
 
-        CleanerDroneGal = LoadAndRegisterAssets<CleanerDroneGalAssets>("cleanerdronegalassets");
+        RegisterContent("acunitgalassets", out ACUnitGal);
 
-        ACUnitGal = LoadAndRegisterAssets<ACUnitGalAssets>("acunitgalassets");
+        RegisterContent("beartrapgalassets", out BearTrapGal);
 
-        BearTrapGal = LoadAndRegisterAssets<BearTrapGalAssets>("beartrapgalassets");
+        RegisterContent("friendassets", out Friend);
 
-        Friend = LoadAndRegisterAssets<FriendAssets>("friendassets");
-
-        BellCrab = LoadAndRegisterAssets<BellCrabAssets>("bellcrabgalassets");
+        RegisterContent("bellcrabgalassets", out BellCrab);
     }
 }
