@@ -572,7 +572,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
 
         Vector3 forceDirection = (_targetTrashCan != null) ? (_targetTrashCan.transform.position - previousTargetPlayer.transform.position).normalized : transform.forward;
 
-        previousTargetPlayer.externalForceAutoFade = Vector3.up * 5f + forceDirection * 25f;
+        previousTargetPlayer.externalForceAutoFade = Vector3.up * 25f + forceDirection * 25f;
 
         // Reset states
         _targetTrashCan = null;

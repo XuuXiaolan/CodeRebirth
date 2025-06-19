@@ -4,13 +4,14 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class TrashCan : NetworkBehaviour
 {
-    public MeshFilter meshFilter = null!;
+    [SerializeField]
+    private MeshFilter? meshFilter = null;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         Janitor.trashCans.Add(this);
-        if (Plugin.ModConfig.ConfigDisableTrashCans.Value)
+        if (Plugin.ModConfig.ConfigDisableTrashCans.Value && meshFilter != null)
         {
             meshFilter.gameObject.SetActive(false);
         }
