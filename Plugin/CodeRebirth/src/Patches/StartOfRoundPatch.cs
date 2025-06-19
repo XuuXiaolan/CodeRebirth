@@ -125,7 +125,7 @@ static class StartOfRoundPatch
         if (!Plugin.Mod.WeatherRegistry().TryGetFromWeatherName("night shift", out CRWeatherDefinition? nightShiftWeatherDefinition))
             return;
 
-        string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeather(extendedLevel.SelectableLevel).name.ToLowerInvariant();
+        string weatherName = WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant();
         Plugin.ExtendedLogging($"Current weather: {weatherName}");
         if (weatherName.Equals("night shift") || weatherName.Equals("blackout"))
             return;

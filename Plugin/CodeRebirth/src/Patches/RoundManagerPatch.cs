@@ -5,8 +5,6 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.AI;
 using CodeRebirth.src.Content.Unlockables;
-using CodeRebirth.src.Util;
-using Unity.Netcode;
 using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Patches;
@@ -115,7 +113,6 @@ static class RoundManagerPatch
     [HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
     private static void ReturnToOrbitMiscPatch()
     {
-        // if (StartOfRound.Instance.days)
         PiggyBank.Instance?.RepairPiggyBankServerRpc();
         foreach (GalAI gal in GalAI.Instances)
         {
@@ -126,7 +123,6 @@ static class RoundManagerPatch
         {
             gal.MakeTriggerInteractableServerRpc(false);
         }
-        CodeRebirthUtils.Instance.ResetEntrancePointsServerRpc();
     }
 
     [HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]

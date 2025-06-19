@@ -339,18 +339,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         ES3.DeleteFile(saveSettings);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void ResetEntrancePointsServerRpc()
-    {
-        ResetEntrancePointsClientRpc();
-    }
-
-    [ClientRpc]
-    public void ResetEntrancePointsClientRpc()
-    {
-        entrancePoints = [];
-    }
-
     public T? CreateFallingObject<T>(GameObject prefab, Vector3 origin, Vector3 target, float speed) where T : FallingObjectBehaviour
     {
         Plugin.ExtendedLogging($"creating falling object: {prefab.name} going from {origin} to {target}");
