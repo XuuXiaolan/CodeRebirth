@@ -29,11 +29,11 @@ public class Transporter : CodeRebirthEnemyAI
     private bool repositioning = false;
     private float speedIncrease = 0f;
 
-    private readonly static int PickUpObjectAnimation = Animator.StringToHash("pickUpObject"); // Trigger
-    private readonly static int DropObjectAnimation = Animator.StringToHash("dropObject"); // Trigger
-    private readonly static int OnHitAnim = Animator.StringToHash("onHit"); // Trigger
-    private readonly static int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
-    private readonly static int RotationSpeed = Animator.StringToHash("RotationSpeed"); // Float
+    private static readonly int PickUpObjectAnimation = Animator.StringToHash("pickUpObject"); // Trigger
+    private static readonly int DropObjectAnimation = Animator.StringToHash("dropObject"); // Trigger
+    private static readonly int OnHitAnim = Animator.StringToHash("onHit"); // Trigger
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
+    private static readonly int RotationSpeed = Animator.StringToHash("RotationSpeed"); // Float
 
     public enum TransporterStates
     {
@@ -148,6 +148,9 @@ public class Transporter : CodeRebirthEnemyAI
     public override void DoAIInterval()
     {
         base.DoAIInterval();
+        if (smartAgentNavigator.CheckPathsOngoing())
+            return;
+
         switch (currentBehaviourStateIndex)
         {
             case (int)TransporterStates.Idle:
@@ -195,6 +198,11 @@ public class Transporter : CodeRebirthEnemyAI
         }
         else
         {
+            currentEndHit = new();
+            agent.speed = 4 + speedIncrease;
+            droppingObject = false;
+            SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
+            smartAgentNavigator.StartSearchRoutine(20);
             Plugin.ExtendedLogging($"Transporter: No more objects to transport");
         }
     }
@@ -203,8 +211,12 @@ public class Transporter : CodeRebirthEnemyAI
     {
         if (transportTarget == null)
         {
-            smartAgentNavigator.StartSearchRoutine(20);
+            currentEndHit = new();
+            agent.speed = 4 + speedIncrease;
+            droppingObject = false;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
+            smartAgentNavigator.StartSearchRoutine(20);
+            TryFindAnyTransportableObjectViaAsyncPathfinding();
             return;
         }
         // Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}");
@@ -216,7 +228,7 @@ public class Transporter : CodeRebirthEnemyAI
             transportTarget.transform.position
         );
 
-        if (dist <= agent.stoppingDistance && smartAgentNavigator.CheckPathsOngoing() && !repositioning)
+        if (dist <= agent.stoppingDistance + 1f && smartAgentNavigator.CheckPathsOngoing() && !repositioning)
         {
             repositioning = true;
             // Change from IEnumerable to List
@@ -228,6 +240,7 @@ public class Transporter : CodeRebirthEnemyAI
             candidateObjects = allNodes
                 .Select(kv => (kv, kv.transform.position));
 
+            smartAgentNavigator.StopAgent();
             smartAgentNavigator.CheckPaths(candidateObjects, CheckIfCanReposition);
         }
     }
@@ -237,8 +250,12 @@ public class Transporter : CodeRebirthEnemyAI
         if (transportTarget == null)
         {
             Plugin.Logger.LogError($"Transporter: transportTarget is null??");
-            smartAgentNavigator.StartSearchRoutine(20);
+            currentEndHit = new();
+            agent.speed = 4 + speedIncrease;
+            droppingObject = false;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
+            smartAgentNavigator.StartSearchRoutine(20);
+            TryFindAnyTransportableObjectViaAsyncPathfinding();
             return;
         }
 
@@ -247,8 +264,6 @@ public class Transporter : CodeRebirthEnemyAI
             // Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects");
             Vector3 currentEndDestination = args[UnityEngine.Random.Range(0, args.Count)].gameObject.transform.position;
             creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
-            agent.speed = 0f;
-            agent.velocity = Vector3.zero;
             previousSceneOfTransportTarget = transportTarget.scene;
             transportTarget.transform.SetParent(palletTransform, true);
             SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget), currentEndDestination);
@@ -262,8 +277,16 @@ public class Transporter : CodeRebirthEnemyAI
 
     private void DoRepositioning()
     {
+        if (droppingObject)
+            return;
+
         if (transportTarget == null)
         {
+            currentEndHit = new();
+            agent.speed = 4 + speedIncrease;
+            droppingObject = false;
+            SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
+            smartAgentNavigator.StartSearchRoutine(20);
             TryFindAnyTransportableObjectViaAsyncPathfinding();
             return;
         }
@@ -274,13 +297,13 @@ public class Transporter : CodeRebirthEnemyAI
         );
 
         // If we reached or nearly reached the drop-off
-        if (Vector3.Distance(transform.position, currentEndHit.position) <= agent.stoppingDistance && !droppingObject)
+        if (Vector3.Distance(transform.position, currentEndHit.position) <= agent.stoppingDistance + 1f)
         {
             // Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}");
             var directionToLookAt = (currentEndHit.position - transform.position).normalized;
             directionToLookAt.y = 0f;
             transform.LookAt(directionToLookAt);
-            agent.velocity = Vector3.zero;
+            smartAgentNavigator.StopAgent();
             creatureNetworkAnimator.SetTrigger(DropObjectAnimation);
             droppingObject = true;
         }
