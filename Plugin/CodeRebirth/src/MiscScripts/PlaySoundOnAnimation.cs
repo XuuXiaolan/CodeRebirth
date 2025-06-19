@@ -16,21 +16,24 @@ public class PlaySoundOnAnimation : MonoBehaviour
             return;
         }
 
+        bool isNear = false;
+        bool isFar = false;
         AudioSourceWithClips audioSourceWithClips = _audioSourcesWithClips[index];
         if (audioSourceWithClips.nearAudioSource != null && audioSourceWithClips.nearClips.Length > 0)
         {
+            isNear = true;
             PlayNearAudioClip(audioSourceWithClips);
         }
-        else
-        {
-            Plugin.Logger.LogWarning("No valid near audio source or clips found for the specified index.");
-        }
+
         if (audioSourceWithClips.farAudioSource != null && audioSourceWithClips.farClips.Length > 0)
         {
+            isFar = true;
             PlayFarAudioClip(audioSourceWithClips);
         }
+
+        if (!isNear && !isFar)
         {
-            Plugin.Logger.LogWarning("No valid far audio source or clips found for the specified index.");
+            Plugin.Logger.LogWarning("No valid audio sources or clips found for the specified index.");
         }
     }
 
