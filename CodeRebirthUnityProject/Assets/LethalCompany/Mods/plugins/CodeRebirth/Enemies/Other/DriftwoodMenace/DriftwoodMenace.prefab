@@ -802,12 +802,12 @@ GameObject:
   - component: {fileID: 1250949955446419862}
   - component: {fileID: 2326066620762745353}
   - component: {fileID: 1574797065783151164}
-  - component: {fileID: 7910133953166310392}
   - component: {fileID: 8632879953552201403}
   - component: {fileID: 8218711953330236280}
   - component: {fileID: 2305020962103078160}
   - component: {fileID: 4189782787398397864}
   - component: {fileID: 184172387633389021}
+  - component: {fileID: 7949557366426040061}
   m_Layer: 19
   m_Name: DriftwoodMenace
   m_TagString: Enemy
@@ -900,34 +900,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 2013
   m_ObstacleAvoidanceType: 4
---- !u!114 &7910133953166310392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3141116158837514582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 532098812, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  _nodeRemovalPrecision: 5
-  _canWanderIntoOrOutOfInterior: 0
-  _allowedLinks: 15
 --- !u!114 &8632879953552201403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1195,7 +1167,7 @@ MonoBehaviour:
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 8632879953552201403}
-  smartAgentNavigator: {fileID: 7910133953166310392}
+  smartAgentNavigator: {fileID: 7949557366426040061}
   _hasVariants: 0
   _usesTemperature: 0
   _specialRenderer: {fileID: 0}
@@ -1279,6 +1251,34 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 6820722e6fa1f2745b8a98867e0b21db, type: 3}
     farAudioSource: {fileID: 0}
     farClips: []
+--- !u!114 &7949557366426040061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3141116158837514582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -412051436, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cantMove: 0
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnterOrExitElevator:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
+  _nodeRemovalPrecision: 5
 --- !u!1 &3161862691732673129
 GameObject:
   m_ObjectHideFlags: 0
