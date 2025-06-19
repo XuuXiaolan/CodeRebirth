@@ -22,12 +22,6 @@ public class LightningStrikeScript
         LightningBoltPrefabScript localLightningBoltPrefabScript = UnityEngine.Object.Instantiate(stormyWeather.targetedThunder);
         localLightningBoltPrefabScript.enabled = true;
 
-        if (localLightningBoltPrefabScript == null)
-        {
-            Plugin.Logger.LogWarning("localLightningBoltPrefabScript not found");
-            return;
-        }
-
         localLightningBoltPrefabScript.GlowWidthMultiplier = 2.5f;
         localLightningBoltPrefabScript.DurationRange = new RangeOfFloats { Minimum = 0.6f, Maximum = 1.2f };
         localLightningBoltPrefabScript.TrunkWidthRange = new RangeOfFloats { Minimum = 0.6f, Maximum = 1.2f };

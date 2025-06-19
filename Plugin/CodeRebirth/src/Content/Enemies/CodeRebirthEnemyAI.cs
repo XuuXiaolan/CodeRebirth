@@ -57,7 +57,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
         _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
 
-        smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside);
+        smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside); // todo driftwood
         smartAgentNavigator.SetAllValues(isOutside);
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
 

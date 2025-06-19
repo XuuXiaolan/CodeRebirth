@@ -14,7 +14,6 @@ using CodeRebirth.src.Content.Maps;
 using System.Collections;
 using CodeRebirth.src.Content.Weathers;
 using LethalLevelLoader;
-using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using CodeRebirthLib.ContentManagement.Weathers;

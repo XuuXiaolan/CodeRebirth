@@ -9,11 +9,8 @@ using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Content.Weathers;
 using LethalLevelLoader;
 using System.Linq;
-using WeatherRegistry;
-using System;
 using CodeRebirthLib.ContentManagement.Weathers;
 
 namespace CodeRebirth.src.Patches;
