@@ -74,7 +74,6 @@ public class Transporter : CodeRebirthEnemyAI
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
         if (!IsServer) return;
-        smartAgentNavigator.StartSearchRoutine(20);
         var emptyNetworkObject = GameObject.Instantiate(Plugin.Assets.EmptyNetworkObject, palletTransform.position, Quaternion.identity);
         emptyNetworkObject.GetComponent<NetworkObject>().Spawn();
         SyncNetworkObjectParentServerRpc(new NetworkObjectReference(emptyNetworkObject));
@@ -96,6 +95,7 @@ public class Transporter : CodeRebirthEnemyAI
             grabbableObject.EnableItemMeshes(true);
             grabbableObject.EnablePhysics(true);
         }
+
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
             if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform)
@@ -149,7 +149,9 @@ public class Transporter : CodeRebirthEnemyAI
     {
         base.DoAIInterval();
         if (smartAgentNavigator.CheckPathsOngoing())
+        {
             return;
+        }
 
         switch (currentBehaviourStateIndex)
         {
@@ -198,8 +200,6 @@ public class Transporter : CodeRebirthEnemyAI
         }
         else
         {
-            currentEndHit = new();
-            agent.speed = 4 + speedIncrease;
             droppingObject = false;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             smartAgentNavigator.StartSearchRoutine(20);
@@ -211,11 +211,8 @@ public class Transporter : CodeRebirthEnemyAI
     {
         if (transportTarget == null)
         {
-            currentEndHit = new();
-            agent.speed = 4 + speedIncrease;
             droppingObject = false;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
-            smartAgentNavigator.StartSearchRoutine(20);
             TryFindAnyTransportableObjectViaAsyncPathfinding();
             return;
         }
@@ -228,7 +225,7 @@ public class Transporter : CodeRebirthEnemyAI
             transportTarget.transform.position
         );
 
-        if (dist <= agent.stoppingDistance + 1f && smartAgentNavigator.CheckPathsOngoing() && !repositioning)
+        if (dist <= agent.stoppingDistance)
         {
             repositioning = true;
             // Change from IEnumerable to List
@@ -240,6 +237,10 @@ public class Transporter : CodeRebirthEnemyAI
             candidateObjects = allNodes
                 .Select(kv => (kv, kv.transform.position));
 
+            creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
+            previousSceneOfTransportTarget = transportTarget.scene;
+            transportTarget.transform.SetParent(palletTransform, true);
+            SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget));
             smartAgentNavigator.StopAgent();
             smartAgentNavigator.CheckPaths(candidateObjects, CheckIfCanReposition);
         }
@@ -250,11 +251,7 @@ public class Transporter : CodeRebirthEnemyAI
         if (transportTarget == null)
         {
             Plugin.Logger.LogError($"Transporter: transportTarget is null??");
-            currentEndHit = new();
-            agent.speed = 4 + speedIncrease;
-            droppingObject = false;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
-            smartAgentNavigator.StartSearchRoutine(20);
             TryFindAnyTransportableObjectViaAsyncPathfinding();
             return;
         }
@@ -263,45 +260,39 @@ public class Transporter : CodeRebirthEnemyAI
         {
             // Plugin.ExtendedLogging($"Transporter: Found {objects.Count} objects");
             Vector3 currentEndDestination = args[UnityEngine.Random.Range(0, args.Count)].gameObject.transform.position;
-            creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
-            previousSceneOfTransportTarget = transportTarget.scene;
-            transportTarget.transform.SetParent(palletTransform, true);
-            SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget), currentEndDestination);
+            NavMesh.SamplePosition(currentEndDestination, out currentEndHit, 4f, NavMesh.AllAreas);
+            if (repositioning)
+            {
+                SwitchToBehaviourServerRpc((int)TransporterStates.Repositioning);
+            }
         }
         else
         {
-            repositioning = false;
-            currentEndHit.position = Vector3.zero;
+            // drop hazard?
         }
     }
 
     private void DoRepositioning()
     {
-        if (droppingObject)
+        if (droppingObject || repositioning)
             return;
 
         if (transportTarget == null)
         {
-            currentEndHit = new();
-            agent.speed = 4 + speedIncrease;
             droppingObject = false;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
-            smartAgentNavigator.StartSearchRoutine(20);
             TryFindAnyTransportableObjectViaAsyncPathfinding();
             return;
         }
 
         // Move to that final location
-        smartAgentNavigator.DoPathingToDestination(
-            currentEndHit.position
-        );
+        smartAgentNavigator.DoPathingToDestination(currentEndHit.position);
 
         // If we reached or nearly reached the drop-off
-        if (Vector3.Distance(transform.position, currentEndHit.position) <= agent.stoppingDistance + 1f)
+        if (Vector3.Distance(transform.position, currentEndHit.position) <= agent.stoppingDistance)
         {
             // Plugin.ExtendedLogging($"Transporter: Dropped off {transportTarget.name}");
             var directionToLookAt = (currentEndHit.position - transform.position).normalized;
-            directionToLookAt.y = 0f;
             transform.LookAt(directionToLookAt);
             smartAgentNavigator.StopAgent();
             creatureNetworkAnimator.SetTrigger(DropObjectAnimation);
@@ -312,18 +303,17 @@ public class Transporter : CodeRebirthEnemyAI
 
     #region RPC's
     [ServerRpc(RequireOwnership = false)]
-    public void SyncPositionRotationOfTransportTargetServerRpc(NetworkObjectReference netObjRef, Vector3 currentEndPosition)
+    public void SyncPositionRotationOfTransportTargetServerRpc(NetworkObjectReference netObjRef)
     {
-        SyncPositionRotationOfTransportTargetClientRpc(netObjRef, currentEndPosition);
+        SyncPositionRotationOfTransportTargetClientRpc(netObjRef);
     }
 
     [ClientRpc]
-    public void SyncPositionRotationOfTransportTargetClientRpc(NetworkObjectReference netObjRef, Vector3 currentEndPosition)
+    public void SyncPositionRotationOfTransportTargetClientRpc(NetworkObjectReference netObjRef)
     {
         var _transportTarget = (GameObject)netObjRef;
         _transportTarget.transform.localPosition = Vector3.zero;
         _transportTarget.transform.localRotation = Quaternion.identity;
-        NavMesh.SamplePosition(currentEndPosition, out currentEndHit, 4f, NavMesh.AllAreas);
     }
     #endregion
 
@@ -339,8 +329,8 @@ public class Transporter : CodeRebirthEnemyAI
     public IEnumerator OnHitAnimation(PlayerControllerB playerWhoHit)
     {
         creatureNetworkAnimator.SetTrigger(OnHitAnim);
+        smartAgentNavigator.StopAgent();
         agent.speed = 0f;
-        agent.velocity = Vector3.zero;
 
         Vector3 direction = (playerWhoHit.transform.position - jimothyTransform.position).normalized;
         direction.y = 0f;
@@ -380,11 +370,21 @@ public class Transporter : CodeRebirthEnemyAI
 
     public void OnLiftHazardAnimEvent()
     {
+        StartCoroutine(WaitUntilFinishedCalculatingPath());
+    }
+
+    private IEnumerator WaitUntilFinishedCalculatingPath()
+    {
+        while (smartAgentNavigator.CheckPathsOngoing())
+        {
+            yield return null;
+        }
+
         repositioning = false;
-        agent.speed = 4 + speedIncrease;
+        if ((int)currentBehaviourStateIndex == (int)TransporterStates.Repositioning)
+            yield break;
+
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Repositioning);
-        if (!IsServer) return;
-        smartAgentNavigator.StopSearchRoutine();
     }
 
     public void OnReleaseHazardAnimEvent()
@@ -400,8 +400,6 @@ public class Transporter : CodeRebirthEnemyAI
 
         transportTarget.transform.position = currentEndHit.position;
         transportTarget.transform.up = currentEndHit.normal;
-        currentEndHit = new();
-        agent.speed = 4 + speedIncrease;
         droppingObject = false;
 
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
@@ -409,7 +407,6 @@ public class Transporter : CodeRebirthEnemyAI
         if (!IsServer) return;
         objectsToTransport.Add(transportTarget);
         transportTarget = null;
-        smartAgentNavigator.StartSearchRoutine(20);
         TryFindAnyTransportableObjectViaAsyncPathfinding();
     }
     #endregion

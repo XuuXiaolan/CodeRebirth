@@ -105,7 +105,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         RegisterContent("janitorassets", out Janitor, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
-        RegisterContent("pandoraassets", out Pandora);
+        // RegisterContent("pandoraassets", out Pandora);
 
         RegisterContent("driftwoodmenaceassets", out DriftwoodMenace);
 

@@ -187,17 +187,7 @@ public class ItemCrate : CRHittable
                 }
 
                 if (item == null || item.spawnPrefab == null) continue;
-                GameObject spawned = Instantiate(item.spawnPrefab, transform.position + Vector3.up * 0.6f + Vector3.right * crateRandom.NextFloat(-0.2f, 0.2f) + Vector3.forward * crateRandom.NextFloat(-0.2f, 0.2f), Quaternion.Euler(item.restingRotation), RoundManager.Instance.spawnedScrapContainer);
-
-                GrabbableObject grabbableObject = spawned.GetComponent<GrabbableObject>();
-                if (grabbableObject == null)
-                {
-                    Destroy(spawned);
-                    continue;
-                }
-                grabbableObject.SetScrapValue((int)(crateRandom.Next(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier * Plugin.ModConfig.ConfigMetalCrateValueMultiplier.Value));
-                grabbableObject.NetworkObject.Spawn();
-                CodeRebirthUtils.Instance.UpdateScanNodeServerRpc(new NetworkObjectReference(spawned), grabbableObject.scrapValue);
+                CodeRebirthUtils.Instance.SpawnScrap(item, transform.position + Vector3.up + Vector3.right * crateRandom.NextFloat(-0.25f, 0.25f) + Vector3.forward * crateRandom.NextFloat(-0.25f, 0.25f), false, true, 0);
             }
         }
         OpenCrateClientRpc();

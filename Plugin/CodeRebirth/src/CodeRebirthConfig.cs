@@ -54,7 +54,6 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigTerminalBotAutomatic { get; private set; }
     public ConfigEntry<int> ConfigWoodenSeedTreeSpawnChance { get; private set; }
     public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
-    public ConfigEntry<float> ConfigMetalCrateValueMultiplier { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotAutomatic { get; private set; }
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
@@ -542,10 +541,6 @@ public class CodeRebirthConfig
                                             "Crate | Shovel Crates Only",
                                             true,
                                             "Only Shovels can hit Crates.");
-        ConfigMetalCrateValueMultiplier = configFile.Bind("Crate Options",
-                                            "Crate | Metal Value Multiplier",
-                                            1.4f,
-                                            "Value Multiplier for Metal Crates.");
         #endregion
     }
 }
