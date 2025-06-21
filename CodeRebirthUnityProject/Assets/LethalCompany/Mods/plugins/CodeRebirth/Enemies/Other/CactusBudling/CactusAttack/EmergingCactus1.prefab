@@ -7476,7 +7476,6 @@ GameObject:
   - component: {fileID: 867106333959097909}
   - component: {fileID: 6690824342184625060}
   - component: {fileID: 7327991143382998800}
-  - component: {fileID: 5490484304852794099}
   - component: {fileID: 3924713172246190961}
   m_Layer: 21
   m_Name: EmergingCactus1
@@ -7753,35 +7752,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5490484304852794099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6967185636124918851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -537940332, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _onChance:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7327991143382998800}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: set_clip
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 18d077fa9fad610448c70fe8127a8f1c,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _chance: 50
 --- !u!114 &3924713172246190961
 MonoBehaviour:
   m_ObjectHideFlags: 0
