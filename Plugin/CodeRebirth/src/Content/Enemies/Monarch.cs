@@ -129,7 +129,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         base.Start();
         if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Monarch", out CREnemyDefinition? monarchEnemyDefinition))
         {
-            _parallaxWingConfig = monarchEnemyDefinition.GetGeneralConfig<bool>("Monarch | Parallax Wings");
+            _parallaxWingConfig = monarchEnemyDefinition.GetGeneralConfig<bool>("Monarch | Parallax Wing Effect");
             wasParallaxOnLastFrame = _parallaxWingConfig.Value;
             skinnedMeshRenderers[0].sharedMaterials[0].SetInt(ParallaxSwitch, wasParallaxOnLastFrame ? 1 : 0);
         }

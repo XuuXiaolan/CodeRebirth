@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;

@@ -12,11 +12,11 @@ public class AutonomousCrane : NetworkBehaviour
     [SerializeField]
     private GameObject _cabinHead = null!; // this can turn in a 360 degree circle
     [SerializeField]
-    private GameObject _craneArm = null!; // When this moves up or down, magnet needs to rotate to still always be facing downwards and be straight under the arm, can only change it's x rotation to between 80 - 20 degrees at most
+    private GameObject _craneArmStart = null!;
+    [SerializeField]
+    private GameObject _craneArmEnd = null!;
     [SerializeField]
     private GameObject _magnet = null!; // this can move up and down, but not rotate, it should always be facing downwards, and be straight under the arm, it can't get closer than 5 units of the arm's downward raycast
-    [SerializeField]
-    private GameObject _craneArmDownwardRaycast = null!;
 
     [Header("Disabling Interacts")]
     [SerializeField]
@@ -31,7 +31,6 @@ public class AutonomousCrane : NetworkBehaviour
 
     private bool _craneIsActive = false;
     private Vector3 _targetPosition = Vector3.zero;
-    private Coroutine _findingTargetRoutine = null!;
     private CraneState _currentState = CraneState.Idle;
 
     public enum CraneState
@@ -42,14 +41,6 @@ public class AutonomousCrane : NetworkBehaviour
         MoveCraneArm,
         DropMagnet
     }
-
-    /*
-        if nobody's in range, it just does random movements, picks a direction, left or right, moves for a bit, stops, then rolls a decent chance to drop the magnet.
-        picks it's magnet back up
-        if a player comes into range at any point, it stops what it's doing, makes sure it's magnet goes up, then moves left and right trying to target where the player is, then drops when the player is directly under it.
-        if the player moves out of range, it goes back to random movements.
-        it shouldn't look for any target players unless it's in Idle state.
-    */
 
     public void Update()
     {
@@ -79,42 +70,27 @@ public class AutonomousCrane : NetworkBehaviour
         if (_targetablePlayers.Count <= 0)
             return;
 
-        foreach (var player in _targetablePlayers.ToArray())
+        foreach (var player in _targetablePlayers)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled)
-            {
-                _targetablePlayers.Remove(player);
-                continue;
-            }
-
             Plugin.ExtendedLogging($"AutonomousCrane: Player {player} is in range, switching to GetTargetPosition state.");
-            _currentState = CraneState.GetTargetPosition;
-            _targetPlayer = player;
             _targetPosition = Vector3.zero;
             _targetablePlayers.Remove(player);
+            _targetPlayer = player;
+            _currentState = CraneState.GetTargetPosition;
             break;
         }
-        return;
     }
 
     private void DoGetTargetPositionBehaviour()
     {
         // Logic to target the player
-        if (_targetPlayer == null || Vector3.Distance(transform.position, _targetPlayer.transform.position) <= 10f)
+        if (_targetPlayer == null)
         {
-            _targetPlayer = null;
             _currentState = CraneState.Idle;
             return;
         }
 
-        if (_findingTargetRoutine != null)
-            return;
-
-        if (_targetPosition == Vector3.zero)
-        {
-            _findingTargetRoutine = StartCoroutine(GetTargetPosition());
-            return;
-        }
+        GetTargetPosition(_targetPlayer);
 
         Plugin.ExtendedLogging($"Move crane head time");
         _currentState = CraneState.MoveCraneHead;
@@ -122,6 +98,15 @@ public class AutonomousCrane : NetworkBehaviour
 
     private void DoMovingCraneHeadBehaviour()
     {
+        if (_targetPlayer == null)
+        {
+            // reset stuff
+            _currentState = CraneState.Idle;
+            return;
+        }
+
+        GetTargetPosition(_targetPlayer);
+
         if (RotateCraneHead())
         {
             Plugin.ExtendedLogging($"Move crane arm time");
@@ -131,62 +116,61 @@ public class AutonomousCrane : NetworkBehaviour
 
     private void DoMovingCraneArmBehaviour()
     {
-        if (MoveCraneArm())
+        if (_targetPlayer == null) // || far enough away from the direction, maybe read the Vector3.Dot or something
+        {
+            // reset stuff
+            _currentState = CraneState.Idle;
+            return;
+        }
+
+        if (MoveCraneArm()) // crane arm's end might be kinda misplaced cuz im noticing the arm adjusts itself a tiny bit off.
         {
             Plugin.ExtendedLogging($"Move magnet time");
             _currentState = CraneState.DropMagnet;
         }
     }
 
-    private void DoDroppingMagnetBehaviour()
+    private void DoDroppingMagnetBehaviour() // just drop pretty fast and align self with terrain
     {
+        // not implemented properly yet
         MoveMagnet();
     }
 
     private bool RotateCraneHead()
     {
-        float dot = Vector2.Dot(
-            new Vector2(_targetPosition.x - transform.position.x, _targetPosition.z - transform.position.z).normalized,
-            new Vector2(_cabinHead.transform.forward.x, _cabinHead.transform.forward.z).normalized
-        );
-        if (dot < 0.99f)
-        {
-            Vector3 targetDirection = (_targetPosition - _cabinHead.transform.position).normalized;
-            targetDirection.x = 0; // Ignore x-axis for rotation
-            targetDirection.y = 0; // Ignore z-axis for rotation
-            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            _cabinHead.transform.rotation = Quaternion.RotateTowards(_cabinHead.transform.rotation, targetRotation, 45f * Time.deltaTime);
-            return false; // Still rotating
-        }
-        return true;
+        Vector3 directionToTarget = _targetPosition - _cabinHead.transform.position;
+        directionToTarget.y = 0f;
+
+        Quaternion targetRot = Quaternion.LookRotation(directionToTarget, Vector3.up);
+        _cabinHead.transform.rotation = Quaternion.RotateTowards(_cabinHead.transform.rotation, targetRot, 25f * Time.deltaTime);
+        float angleDelta = Quaternion.Angle(_cabinHead.transform.rotation, targetRot);
+
+        return angleDelta < 0.1f;
     }
 
     private bool MoveCraneArm()
     {
-        Vector3 pivotPos = _craneArmDownwardRaycast.transform.position;
-        Vector3 toTarget = _targetPosition - pivotPos;
-        float flatDist = new Vector2(toTarget.x, toTarget.z).magnitude;
-        float heightDiff = toTarget.y;
-        float desiredAngle = Mathf.Atan2(heightDiff, flatDist) * Mathf.Rad2Deg;
+        Vector3 worldDir = _targetPosition - _craneArmStart.transform.position;
+        if (worldDir.sqrMagnitude < 0.001f)
+            return true; // nothing to do if we’re basically on top of it
+ 
+        Quaternion worldTargetRot = Quaternion.LookRotation(worldDir, Vector3.up);
 
-        Plugin.ExtendedLogging($"{this} flatDist: {flatDist} heightDiff: {heightDiff} desiredAngle: {desiredAngle}");
-        desiredAngle = Mathf.Clamp(desiredAngle, 20f, 80f);
+        float headYaw = _cabinHead.transform.eulerAngles.y;
+        Quaternion undoYaw = Quaternion.Euler(0f, headYaw, 0f);
+        Quaternion localTargetRot = Quaternion.Inverse(undoYaw) * worldTargetRot;
 
-        Vector3 euler = _craneArm.transform.localEulerAngles;
-        float currentAngle = euler.x > 180f ? euler.x - 360f : euler.x; // unwrap
-        float maxStep = 30f * Time.deltaTime;
-        float newAngle = Mathf.MoveTowards(currentAngle, desiredAngle, maxStep);
-        float deltaAngle = newAngle - currentAngle;
+        Vector3 localEulerAngles = localTargetRot.eulerAngles;
+        float pitch = localEulerAngles.x > 180f ? localEulerAngles.x - 360f : localEulerAngles.x;
+        pitch = Mathf.Clamp(pitch, 20f, 80f);
+        localTargetRot = Quaternion.Euler(pitch, 0f, 0f);
 
-        euler.x = newAngle;
-        _craneArm.transform.localEulerAngles = euler;
+        _craneArmStart.transform.localRotation = Quaternion.RotateTowards(_craneArmStart.transform.localRotation, localTargetRot, 25f * Time.deltaTime);
 
-        Vector3 magEuler = _magnet.transform.localEulerAngles;
-        magEuler.x -= deltaAngle;
-        _magnet.transform.localEulerAngles = magEuler;
+        float angleLeft = Quaternion.Angle(_craneArmStart.transform.localRotation, localTargetRot);
+        Plugin.ExtendedLogging($"Arm pitch remaining: {angleLeft:F2}°");
 
-        Plugin.ExtendedLogging($"{this} desiredAngle: {desiredAngle} currentAngle: {currentAngle} newAngle: {newAngle} deltaAngle: {deltaAngle}");
-        return Mathf.Approximately(newAngle, desiredAngle);
+        return angleLeft < 0.1f;
     }
 
     [SerializeField]
@@ -200,97 +184,22 @@ public class AutonomousCrane : NetworkBehaviour
         if (_movingMagnet)
             return;
 
-        Vector3 targetPos = _magnet.transform.position;
-        Vector3 normal = Vector3.up;
-
-        if (Physics.Raycast(_magnet.transform.position, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (!Physics.Raycast(_magnet.transform.position, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
-            targetPos = hit.point;
-            normal = hit.normal;
-        }
-        else
-        {
-            // if there's nothing downwards then it shouldnt send the magnet down onto the ground
+            // shouldnt really ever be possible lol
             return;
         }
 
+        Vector3 targetPos = hit.point;
+        Vector3 normal = hit.normal;
+
         _movingMagnet = true;
         Plugin.ExtendedLogging($"Moving magnet from: {_magnet.transform.position} to: {targetPos}");
-        StartCoroutine(FinalizeMagnetDrop(normal, targetPos));
     }
 
-    private IEnumerator FinalizeMagnetDrop(Vector3 normal, Vector3 targetPos)
+    private void GetTargetPosition(PlayerControllerB targetPlayer)
     {
-        Vector3 originalPos = _magnet.transform.position;
-        while (Vector3.Distance(_magnet.transform.position, targetPos) > 0.1f)
-        {
-            float t = Time.deltaTime * _magnetSpeed;
-            _magnet.transform.position = Vector3.MoveTowards(_magnet.transform.position, targetPos, t);
-            yield return null;
-        }
-
-        float duration = 0.2f;
-        float elapsed = 0f;
-        Quaternion startRot = _magnet.transform.rotation;
-        Quaternion endRot = Quaternion.FromToRotation(_magnet.transform.up, normal);
-        Vector3 startPos = _magnet.transform.position;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float p = Mathf.SmoothStep(0f, 1f, elapsed / duration);
-            _magnet.transform.position = Vector3.Lerp(startPos, targetPos, p);
-            _magnet.transform.rotation = Quaternion.Slerp(startRot, endRot, p);
-            yield return null;
-        }
-
-        // ensure exact end state
-        _magnet.transform.position = targetPos;
-        _magnet.transform.rotation = endRot;
-
-        yield return new WaitForSeconds(3f);
-        // move it up again
-
-        elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float p = Mathf.SmoothStep(0f, 1f, elapsed / duration);
-            _magnet.transform.position = Vector3.Lerp(targetPos, startPos, p);
-            _magnet.transform.rotation = Quaternion.Slerp(endRot, startRot, p);
-            yield return null;
-        }
-        _magnet.transform.rotation = startRot;
-
-        while (Vector3.Distance(_magnet.transform.position, originalPos) > 0.1f)
-        {
-            float t = Time.deltaTime * _magnetSpeed;
-            _magnet.transform.position = Vector3.MoveTowards(_magnet.transform.position, originalPos, t);
-            yield return null;
-        }
-        _magnet.transform.position = originalPos;
-        _movingMagnet = false;
-
-        // OnMagnetHitGround();
-    }
-
-    private IEnumerator GetTargetPosition()
-    {
-        if (_targetPlayer != null)
-        {
-            _targetPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(_targetPlayer.transform.position, 5f, default);
-            Plugin.ExtendedLogging($"AutonomousCrane: Target position set to {_targetPosition} for crane at {transform.position} and target player at {_targetPlayer.transform.position}");
-        }
-        while (_targetPosition == Vector3.zero)
-        {
-            _targetPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(transform.position, 40f, default);
-            if (Vector3.Distance(_targetPosition, transform.position) <= 13f)
-            {
-                _targetPosition = Vector3.zero;
-            }
-            yield return null;
-        }
-        Plugin.ExtendedLogging($"AutonomousCrane: Target position set to {_targetPosition} for crane at {transform.position}");
-        _findingTargetRoutine = null!;
+        _targetPosition = targetPlayer.transform.position;
+        Plugin.ExtendedLogging($"Target position set to: {_targetPosition}");
     }
 }

@@ -44,40 +44,29 @@ public class AutonomousCraneTrigger : MonoBehaviour
                 continue;
 
             bool inTargets = _mainScript._targetablePlayers.Contains(player);
-            bool playerInvalid = player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead();
-            if (inTargets)
-            {
-                if (playerInvalid)
-                {
-                    Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is dead or not controlled, removing from targetable players.");
-                    _mainScript._targetablePlayers.Remove(player);
-                }
-            }
+            bool insideMain = IsInsideLocalCylinder(player.transform.position, _mainCollider.transform, _mainLocalCenter, _mainLocalRadii, _mainLocalHalfH);
+            bool insideExemption = IsInsideLocalCylinder(player.transform.position, _exemptionCollider.transform, _exemptLocalCenter, _exemptLocalRadii, _exemptLocalHalfH);
+            bool playerInvalid = player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || !insideMain || insideExemption;
 
-            if (IsInsideLocalCylinder(player.transform.position, _exemptionCollider.transform, _exemptLocalCenter, _exemptLocalRadii, _exemptLocalHalfH))
+            if (playerInvalid)
             {
                 if (inTargets)
                 {
-                    Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is inside the exemption area at position {player.transform.position}, removing from targetable players.");
                     _mainScript._targetablePlayers.Remove(player);
+                }
+                else if (_mainScript._targetPlayer == player)
+                {
+                    _mainScript._targetPlayer = null;
                 }
                 continue;
             }
 
-            bool insideMain = IsInsideLocalCylinder(player.transform.position, _mainCollider.transform, _mainLocalCenter, _mainLocalRadii, _mainLocalHalfH);
-            if (inTargets)
+            if (player == _mainScript._targetPlayer)
             {
-                if (!insideMain)
-                {
-                    Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is outside the crane's targetable area at position {player.transform.position}, removing from targetable players.");
-                    _mainScript._targetablePlayers.Remove(player);
-                }
+                continue;
             }
-            else if (insideMain && player != _mainScript._targetPlayer)
-            {
-                Plugin.ExtendedLogging($"AutonomousCraneTrigger: Player {player} is inside the crane's targetable area at position {player.transform.position}.");
-                _mainScript._targetablePlayers.Add(player);
-            }
+
+            _mainScript._targetablePlayers.Add(player);
         }
     }
 

@@ -153,6 +153,24 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
         }
     }
+
+    public void LateUpdate()
+    {
+        if (!base.IsOwner)
+            return;
+
+        if (_rootingTimer <= 0)
+            return;
+
+        if (!Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            return;
+
+        Vector3 hitNormal = hit.normal;
+        Vector3 projectedForward = Vector3.ProjectOnPlane(transform.forward, hitNormal).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(projectedForward, hitNormal);
+
+        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 5f);
+    }
     #endregion
 
     #region StateMachines
@@ -400,6 +418,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.KillEnemy(destroy);
         agent.speed = 0f;
+        _rollingTimer = 0f;
 
         if (_nextStateRoutine != null)
             StopCoroutine(_nextStateRoutine);
