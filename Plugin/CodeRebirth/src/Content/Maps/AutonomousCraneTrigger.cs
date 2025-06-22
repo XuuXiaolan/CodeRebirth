@@ -66,6 +66,11 @@ public class AutonomousCraneTrigger : MonoBehaviour
                 continue;
             }
 
+            if (inTargets)
+            {
+                continue;
+            }
+
             _mainScript._targetablePlayers.Add(player);
         }
     }
