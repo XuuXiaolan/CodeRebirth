@@ -19,7 +19,7 @@ MonoBehaviour:
   twoHandedAnimation: 1
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 0
-  weight: 1.15
+  weight: 2
   itemIsTrigger: 0
   holdButtonUse: 0
   itemSpawnsOnGround: 1
@@ -41,9 +41,9 @@ MonoBehaviour:
   pocketAnim: 
   throwAnim: 
   grabAnimationTime: 0
-  grabSFX: {fileID: 0}
-  dropSFX: {fileID: 0}
-  pocketSFX: {fileID: 0}
+  grabSFX: {fileID: 8300000, guid: 42a877e7cf307bb4486bdc9a331bd9f8, type: 3}
+  dropSFX: {fileID: 8300000, guid: 986ed99b891c7a446bd18d9e8caba90e, type: 3}
+  pocketSFX: {fileID: 8300000, guid: 8f82fdef50af20b40b0603ffc2dff400, type: 3}
   throwSFX: {fileID: 0}
   syncGrabFunction: 0
   syncUseFunction: 1
