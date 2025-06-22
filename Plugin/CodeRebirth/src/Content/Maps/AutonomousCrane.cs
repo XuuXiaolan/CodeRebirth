@@ -91,8 +91,6 @@ public class AutonomousCrane : NetworkBehaviour
         }
 
         GetTargetPosition(_targetPlayer);
-
-        Plugin.ExtendedLogging($"Move crane head time");
         _currentState = CraneState.MoveCraneHead;
     }
 
@@ -107,11 +105,12 @@ public class AutonomousCrane : NetworkBehaviour
 
         GetTargetPosition(_targetPlayer);
 
-        if (RotateCraneHead())
+        if (!RotateCraneHead())
         {
-            Plugin.ExtendedLogging($"Move crane arm time");
-            _currentState = CraneState.MoveCraneArm;
+            return;
         }
+
+        _currentState = CraneState.MoveCraneArm;
     }
 
     private void DoMovingCraneArmBehaviour()
@@ -123,11 +122,22 @@ public class AutonomousCrane : NetworkBehaviour
             return;
         }
 
-        if (MoveCraneArm()) // crane arm's end might be kinda misplaced cuz im noticing the arm adjusts itself a tiny bit off.
+        Vector3 newTargetPosition = _targetPosition;
+        newTargetPosition.y = _cabinHead.transform.position.y;
+        float dot = Vector3.Dot(_cabinHead.transform.forward, (newTargetPosition - _cabinHead.transform.position).normalized);
+        if (dot < 0.98f)
         {
-            Plugin.ExtendedLogging($"Move magnet time");
-            _currentState = CraneState.DropMagnet;
+            _currentState = CraneState.MoveCraneHead;
+            return;
         }
+
+        GetTargetPosition(_targetPlayer);
+        if (!MoveCraneArm()) // crane arm's end might be kinda misplaced cuz im noticing the arm adjusts itself a tiny bit off.
+        {
+            return;
+        }
+
+        // _currentState = CraneState.DropMagnet;
     }
 
     private void DoDroppingMagnetBehaviour() // just drop pretty fast and align self with terrain
@@ -150,27 +160,26 @@ public class AutonomousCrane : NetworkBehaviour
 
     private bool MoveCraneArm()
     {
-        Vector3 worldDir = _targetPosition - _craneArmStart.transform.position;
-        if (worldDir.sqrMagnitude < 0.001f)
-            return true; // nothing to do if we’re basically on top of it
- 
-        Quaternion worldTargetRot = Quaternion.LookRotation(worldDir, Vector3.up);
+        Vector3 localTarget = _craneArmStart.transform.parent.InverseTransformPoint(_targetPosition);
 
-        float headYaw = _cabinHead.transform.eulerAngles.y;
-        Quaternion undoYaw = Quaternion.Euler(0f, headYaw, 0f);
-        Quaternion localTargetRot = Quaternion.Inverse(undoYaw) * worldTargetRot;
+        float horiz = new Vector2(localTarget.x, localTarget.z).magnitude;
+        float armLen = Vector3.Distance(_craneArmStart.transform.position, _craneArmEnd.transform.position);
 
-        Vector3 localEulerAngles = localTargetRot.eulerAngles;
-        float pitch = localEulerAngles.x > 180f ? localEulerAngles.x - 360f : localEulerAngles.x;
-        pitch = Mathf.Clamp(pitch, 20f, 80f);
-        localTargetRot = Quaternion.Euler(pitch, 0f, 0f);
+        float rawAngle = Mathf.Asin(Mathf.Clamp01(horiz / armLen)) * Mathf.Rad2Deg;
+        if (rawAngle < 20f)
+            return true;
 
-        _craneArmStart.transform.localRotation = Quaternion.RotateTowards(_craneArmStart.transform.localRotation, localTargetRot, 25f * Time.deltaTime);
+        float pitch = Mathf.Clamp(rawAngle, 20f, 80f);
 
-        float angleLeft = Quaternion.Angle(_craneArmStart.transform.localRotation, localTargetRot);
-        Plugin.ExtendedLogging($"Arm pitch remaining: {angleLeft:F2}°");
+        Quaternion want = Quaternion.Euler(pitch, _craneArmStart.transform.localRotation.eulerAngles.y, _craneArmStart.transform.localRotation.eulerAngles.z);
+        _craneArmStart.transform.localRotation = Quaternion.RotateTowards(_craneArmStart.transform.localRotation, want, 25f * Time.deltaTime);
 
-        return angleLeft < 0.1f;
+        Quaternion targetEndRot = Quaternion.Euler(80f - pitch, 0f, 0f);
+        _craneArmEnd.transform.localRotation = Quaternion.RotateTowards(_craneArmEnd.transform.localRotation, targetEndRot, 25f * Time.deltaTime);
+
+        float remaining = Quaternion.Angle(_craneArmStart.transform.localRotation, want);
+
+        return remaining < 0.1f;
     }
 
     [SerializeField]

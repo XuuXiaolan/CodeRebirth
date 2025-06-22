@@ -36,8 +36,9 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
     private Vector3 _targetRootPosition = Vector3.zero;
     private Vector3 _targetRollingPosition = Vector3.zero;
-    private float _rollingTimer = 20f;
-    private float _rootingTimer = 60f;
+    private float _rotationProgressTimer = 0f;
+    private float _rollingTimer = 0f;
+    private float _rootingTimer = 0f;
     private float _attackInterval = 2f;
     private List<GameObject> _budlingCacti = new();
     private CactusBudlingState _nextState = CactusBudlingState.Spawning;
@@ -159,7 +160,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         if (!base.IsOwner)
             return;
 
-        if (_rootingTimer <= 0)
+        if (_rootingTimer <= 0 && _rotationProgressTimer <= 0)
             return;
 
         if (!Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
@@ -169,7 +170,15 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         Vector3 projectedForward = Vector3.ProjectOnPlane(transform.forward, hitNormal).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(projectedForward, hitNormal);
 
-        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 5f);
+        if (_rootingTimer > 0)
+        {
+            _rotationProgressTimer += Mathf.Clamp01(Time.deltaTime * 0.5f);
+        }
+        else
+        {
+            _rotationProgressTimer -= Mathf.Clamp01(Time.deltaTime * 0.5f);
+        }
+        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, _rotationProgressTimer);
     }
     #endregion
 

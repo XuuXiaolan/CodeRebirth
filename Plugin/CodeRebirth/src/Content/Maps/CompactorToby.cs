@@ -167,7 +167,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
             yield break;
         }
 
-        Plugin.Mod.ItemRegistry().TryGetFromItemName("Sally Cubes", out CRItemDefinition? sallyCubesItemDefinition);
+        Plugin.Mod.ItemRegistry().TryGetFromItemName("Sally Cube", out CRItemDefinition? sallyCubesItemDefinition);
         CodeRebirthUtils.Instance.SpawnScrap(sallyCubesItemDefinition?.Item, randomPosition, false, true, value);
     }
 
