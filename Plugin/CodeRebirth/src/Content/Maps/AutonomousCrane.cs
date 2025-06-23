@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Maps;
-
 public class AutonomousCrane : NetworkBehaviour
 {
+    [SerializeField]
+    private UnityEvent _onMagnetHitGround = new();
+    [SerializeField]
+    private UnityEvent _onActivateCrane = new();
+    [SerializeField]
+    private UnityEvent _onDeactivateCrane = new();
     [Header("Crane Parts")]
     [SerializeField]
-    private GameObject _craneMagnetResetGOPosition = null!; // TODO use this gameobject to reset where the magnet will go when it comes back up.
+    private GameObject _properCraneArmEndGO = null!;
     [SerializeField]
     private GameObject _cabinHead = null!; // this can turn in a 360 degree circle
     [SerializeField]
@@ -31,7 +37,7 @@ public class AutonomousCrane : NetworkBehaviour
     [HideInInspector]
     public PlayerControllerB? _targetPlayer = null;
 
-    private bool _craneIsActive = false;
+    private bool _craneIsActive = true;
     private Vector3 _targetPosition = Vector3.zero;
     private CraneState _currentState = CraneState.Idle;
 
@@ -44,8 +50,39 @@ public class AutonomousCrane : NetworkBehaviour
         DropMagnet
     }
 
+    public void Awake()
+    {
+
+    }
+
+    private void DeactivateCraneTrigger(PlayerControllerB player)
+    {
+        if (!_craneIsActive)
+            return;
+
+        if (!player.IsOwner)
+            return;
+
+        DisableCraneServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DisableCraneServerRpc()
+    {
+        DisableCraneClientRpc();
+    }
+
+    [ClientRpc]
+    private void DisableCraneClientRpc()
+    {
+        StartCoroutine(ReEnableCraneAfterDelay());
+    }
+
     public void Update()
     {
+        if (!_craneIsActive)
+            return;
+
         switch (_currentState)
         {
             case CraneState.Idle:
@@ -171,21 +208,15 @@ public class AutonomousCrane : NetworkBehaviour
 
         Quaternion want = Quaternion.Euler(pitch, _craneArmStart.transform.localRotation.eulerAngles.y, _craneArmStart.transform.localRotation.eulerAngles.z);
         _craneArmStart.transform.localRotation = Quaternion.RotateTowards(_craneArmStart.transform.localRotation, want, 25f * Time.deltaTime);
-
-        Quaternion targetEndRot = Quaternion.Euler(80f - pitch, 0f, 0f);
-        _craneArmEnd.transform.localRotation = Quaternion.RotateTowards(_craneArmEnd.transform.localRotation, targetEndRot, 25f * Time.deltaTime);
-
         float remaining = Quaternion.Angle(_craneArmStart.transform.localRotation, want);
 
+        _craneArmEnd.transform.position = _properCraneArmEndGO.transform.position;
         return remaining < 0.1f;
     }
 
     private Vector3 _magnetTargetPosition = Vector3.zero;
     private Vector3 _originalMagnetPosition = Vector3.zero;
-    private Vector3 _magnetOriginalNormals = Vector3.zero;
-    private Vector3 _magnetTargetNormals = Vector3.zero;
     private float _magnetMovingProgress = 0f;
-    private Coroutine? _adjustMagnetRotationRoutine = null;
     private enum MagnetState
     {
         IdleTop,
@@ -197,12 +228,10 @@ public class AutonomousCrane : NetworkBehaviour
 
     private void MoveMagnet()
     {
-        if (_magnetState == MagnetState.IdleTop && Physics.Raycast(_targetPosition + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (_magnetState == MagnetState.IdleTop && Physics.Raycast(_magnet.transform.position, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             _originalMagnetPosition = _magnet.transform.position;
-            _magnetOriginalNormals = _magnet.transform.up;
             _magnetTargetPosition = hit.point;
-            _magnetTargetNormals = hit.normal;
             _magnetMovingProgress = 0f;
             _magnetState = MagnetState.MovingDown;
             Plugin.ExtendedLogging($"Moving magnet to {hit.point}");
@@ -211,16 +240,13 @@ public class AutonomousCrane : NetworkBehaviour
         if (_magnetState == MagnetState.MovingDown)
         {
             _magnetMovingProgress += Time.deltaTime * 2.5f;
+            _magnet.transform.position = Vector3.Lerp(_originalMagnetPosition, _magnetTargetPosition, _magnetMovingProgress);
             if (_magnetMovingProgress >= 1f)
             {
                 _magnetMovingProgress = 1f;
                 _magnetState = MagnetState.IdleBottom;
+                _onMagnetHitGround.Invoke();
             }
-            else if (_magnetMovingProgress >= 0.5f && _adjustMagnetRotationRoutine == null)
-            {
-                _adjustMagnetRotationRoutine = StartCoroutine(AdjustMagnetRotation(_magnetState));
-            }
-            _magnet.transform.position = Vector3.Lerp(_originalMagnetPosition, _magnetTargetPosition, _magnetMovingProgress);
         }
         else if (_magnetState == MagnetState.IdleBottom)
         {
@@ -228,7 +254,6 @@ public class AutonomousCrane : NetworkBehaviour
             if (_magnetMovingProgress <= 0)
             {
                 _magnetMovingProgress = 0f;
-                _adjustMagnetRotationRoutine = StartCoroutine(AdjustMagnetRotation(_magnetState));
                 _magnetState = MagnetState.MovingUp;
             }
         }
@@ -244,29 +269,17 @@ public class AutonomousCrane : NetworkBehaviour
         }
     }
 
-    private IEnumerator AdjustMagnetRotation(MagnetState magnetState)
-    {
-        float timeElapsed = 0f;
-
-        while (timeElapsed <= 1f)
-        {
-            timeElapsed += Time.deltaTime * 0.25f;
-            if (magnetState == MagnetState.MovingDown)
-            {
-                _magnet.transform.up = Vector3.Lerp(_magnetOriginalNormals, _magnetTargetNormals, timeElapsed);
-            }
-            else if (magnetState == MagnetState.MovingUp)
-            {
-                _magnet.transform.up = Vector3.Lerp(_magnetTargetNormals, _magnetOriginalNormals, timeElapsed);
-            }
-
-            yield return null;
-        }
-        _adjustMagnetRotationRoutine = null;
-    }
-
     private void GetTargetPosition(PlayerControllerB targetPlayer)
     {
         _targetPosition = targetPlayer.transform.position;
+    }
+
+    private IEnumerator ReEnableCraneAfterDelay()
+    {
+        _craneIsActive = false;
+        _onDeactivateCrane.Invoke();
+        yield return new WaitForSeconds(15f);
+        _craneIsActive = true;
+        _onActivateCrane.Invoke();
     }
 }
