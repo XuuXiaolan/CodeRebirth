@@ -1,5 +1,4 @@
 using System.Collections;
-using CodeRebirth.src.Util;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -7,7 +6,7 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class Swatter : CRWeapon
 {
-    private Collider[] cachedColliders = new Collider[16];
+    private Collider[] cachedColliders = new Collider[24];
     public override void Start()
     {
         base.Start();

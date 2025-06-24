@@ -4,7 +4,6 @@ using UnityEngine;
 using Random = System.Random;
 
 namespace CodeRebirth.src.Util.Extensions;
-
 public static class RandomExtensions
 {
     public static T NextEnum<T>(this Random random) where T : struct, Enum

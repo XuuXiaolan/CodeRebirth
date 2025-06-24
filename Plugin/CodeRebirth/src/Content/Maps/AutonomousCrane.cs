@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -245,7 +247,7 @@ public class AutonomousCrane : NetworkBehaviour
             {
                 _magnetMovingProgress = 1f;
                 _magnetState = MagnetState.IdleBottom;
-                _onMagnetHitGround.Invoke();
+                CraneHitBottom();
             }
         }
         else if (_magnetState == MagnetState.IdleBottom)
@@ -272,6 +274,26 @@ public class AutonomousCrane : NetworkBehaviour
     private void GetTargetPosition(PlayerControllerB targetPlayer)
     {
         _targetPosition = targetPlayer.transform.position;
+    }
+
+    private void CraneHitBottom()
+    {
+        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        {
+            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || player.isInHangarShipRoom)
+                continue;
+
+            if (Vector3.Distance(player.transform.position, _magnetTargetPosition) > 2.5f)
+                continue;
+
+            if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
+            {
+                CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);
+            }
+
+            player.KillPlayer(player.velocityLastFrame, false, CauseOfDeath.Crushing, 0, default);
+        }
+        _onMagnetHitGround.Invoke();
     }
 
     private IEnumerator ReEnableCraneAfterDelay()
