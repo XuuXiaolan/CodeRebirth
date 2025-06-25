@@ -120,6 +120,10 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
         RegisterContent("crateassets", out Crate);
 
+        RegisterContent("aircontrolunitassets", out AirControlUnit);
+
+        RegisterContent("flashturretassets", out FlashTurret);
+
         // RegisterContent("biomeassets", out Biome);
 
         // RegisterContent("teslashockassets", out TeslaShock);
