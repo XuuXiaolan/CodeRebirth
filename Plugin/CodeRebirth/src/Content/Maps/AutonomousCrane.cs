@@ -4,12 +4,26 @@ using CodeRebirth.src.Util;
 using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Maps;
 public class AutonomousCrane : NetworkBehaviour
 {
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource _audioSource = null!;
+    [SerializeField]
+    private AudioClip _craneTurningSound = null!;
+    [SerializeField]
+    private AudioClip _magnetDroppingSound = null!;
+    [SerializeField]
+    private AudioClip _magnetImpactSound = null!;
+    [SerializeField]
+    private AudioClip _magnetReelingUpSound = null!;
+
+    [Header("Events")]
     [SerializeField]
     private UnityEvent _onMagnetHitGround = new();
     [SerializeField]
@@ -32,6 +46,8 @@ public class AutonomousCrane : NetworkBehaviour
     [SerializeField]
     private Animator _leverAnimator = null!;
     [SerializeField]
+    private NetworkAnimator _leverNetworkAnimator = null!;
+    [SerializeField]
     private InteractTrigger _disableInteract = null!;
 
     [HideInInspector]
@@ -52,9 +68,11 @@ public class AutonomousCrane : NetworkBehaviour
         DropMagnet
     }
 
+    private static readonly int PullLeverAnimation = Animator.StringToHash("pullLever");
+    private static readonly int UnpullLeverAnimation = Animator.StringToHash("unpullLever");
     public void Awake()
     {
-        // _disableInteract.onInteract.AddListener(DeactivateCraneTrigger);
+        _disableInteract.onInteract.AddListener(DeactivateCraneTrigger);
     }
 
     private void DeactivateCraneTrigger(PlayerControllerB player)
@@ -71,6 +89,7 @@ public class AutonomousCrane : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void DisableCraneServerRpc()
     {
+        _leverNetworkAnimator.SetTrigger(PullLeverAnimation);
         DisableCraneClientRpc();
     }
 
@@ -125,11 +144,17 @@ public class AutonomousCrane : NetworkBehaviour
     {
         if (_targetPlayer == null)
         {
+            _audioSource.clip = null;
+            _audioSource.Stop();
             _currentState = CraneState.Idle;
             return;
         }
 
         GetTargetPosition(_targetPlayer);
+        _audioSource.clip = null;
+        _audioSource.Stop();
+        _audioSource.clip = _craneTurningSound;
+        _audioSource.Play();
         _currentState = CraneState.MoveCraneHead;
     }
 
@@ -137,6 +162,8 @@ public class AutonomousCrane : NetworkBehaviour
     {
         if (_targetPlayer == null)
         {
+            _audioSource.clip = null;
+            _audioSource.Stop();
             _currentState = CraneState.Idle;
             return;
         }
@@ -155,6 +182,8 @@ public class AutonomousCrane : NetworkBehaviour
     {
         if (_targetPlayer == null)
         {
+            _audioSource.clip = null;
+            _audioSource.Stop();
             _currentState = CraneState.Idle;
             return;
         }
@@ -174,6 +203,10 @@ public class AutonomousCrane : NetworkBehaviour
             return;
         }
 
+        _audioSource.clip = null;
+        _audioSource.Stop();
+        _audioSource.clip = _magnetDroppingSound;
+        _audioSource.Play();
         _targetPlayer = null;
         _currentState = CraneState.DropMagnet;
     }
@@ -256,6 +289,10 @@ public class AutonomousCrane : NetworkBehaviour
             if (_magnetMovingProgress <= 0)
             {
                 _magnetMovingProgress = 0f;
+                _audioSource.clip = null;
+                _audioSource.Stop();
+                _audioSource.clip = _magnetReelingUpSound;
+                _audioSource.Play();
                 _magnetState = MagnetState.MovingUp;
             }
         }
@@ -264,6 +301,9 @@ public class AutonomousCrane : NetworkBehaviour
             _magnetMovingProgress += Time.deltaTime * 0.5f;
             if (_magnetMovingProgress >= 1f)
             {
+                _magnetMovingProgress = 1f;
+                _audioSource.clip = null;
+                _audioSource.Stop();
                 _magnetState = MagnetState.IdleTop;
                 _currentState = CraneState.Idle;
             }
@@ -278,12 +318,32 @@ public class AutonomousCrane : NetworkBehaviour
 
     private void CraneHitBottom()
     {
+        float distanceToLocalPlayer = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, _magnetTargetPosition);
+        if (distanceToLocalPlayer >= 40 && distanceToLocalPlayer < 60)
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+        }
+        else if (distanceToLocalPlayer >= 20 && distanceToLocalPlayer < 40)
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+        }
+        else if (distanceToLocalPlayer > 10 && distanceToLocalPlayer < 20)
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+        }
+        else
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+        }
+
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
             if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || player.isInHangarShipRoom)
                 continue;
 
-            if (Vector3.Distance(player.transform.position, _magnetTargetPosition) > 2.5f)
+            float distanceToPlayer = Vector3.Distance(player.transform.position, _magnetTargetPosition);
+
+            if (distanceToPlayer > 2.5f)
                 continue;
 
             if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
@@ -293,15 +353,29 @@ public class AutonomousCrane : NetworkBehaviour
 
             player.KillPlayer(player.velocityLastFrame, false, CauseOfDeath.Crushing, 0, default);
         }
+        _audioSource.clip = null;
+        _audioSource.Stop();
+        _audioSource.PlayOneShot(_magnetImpactSound);
         _onMagnetHitGround.Invoke();
     }
 
     private IEnumerator ReEnableCraneAfterDelay()
     {
+        bool wasPlaying = _audioSource.isPlaying;
+        _audioSource.Stop();
         _craneIsActive = false;
         _onDeactivateCrane.Invoke();
         yield return new WaitForSeconds(15f);
         _craneIsActive = true;
         _onActivateCrane.Invoke();
+        if (wasPlaying && _audioSource.clip != null)
+        {
+            _audioSource.Play();
+        }
+
+        if (IsServer)
+        {
+            _leverNetworkAnimator.SetTrigger(UnpullLeverAnimation);
+        }
     }
 }

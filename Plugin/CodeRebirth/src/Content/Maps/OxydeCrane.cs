@@ -18,7 +18,7 @@ public class OxydeCrane : NetworkBehaviour
     private string previousDisabledTriggerMessage = "";
     private bool alreadyDropped = false;
     private static readonly int MoveBackAnimation = Animator.StringToHash("MoveBack");
-    private static readonly int PullLeverAnimation = Animator.StringToHash("PullLever");
+    private static readonly int PullLeverAnimation = Animator.StringToHash("pullLever");
     [HideInInspector] public static OxydeCrane? Instance = null;
 
     public void Awake()
