@@ -54,7 +54,7 @@ public class AutonomousCrane : NetworkBehaviour
 
     public void Awake()
     {
-
+        // _disableInteract.onInteract.AddListener(DeactivateCraneTrigger);
     }
 
     private void DeactivateCraneTrigger(PlayerControllerB player)
@@ -189,7 +189,7 @@ public class AutonomousCrane : NetworkBehaviour
         directionToTarget.y = 0f;
 
         Quaternion targetRot = Quaternion.LookRotation(directionToTarget, Vector3.up);
-        _cabinHead.transform.rotation = Quaternion.RotateTowards(_cabinHead.transform.rotation, targetRot, 25f * Time.deltaTime);
+        _cabinHead.transform.rotation = Quaternion.RotateTowards(_cabinHead.transform.rotation, targetRot, 12.5f * Time.deltaTime);
         float angleDelta = Quaternion.Angle(_cabinHead.transform.rotation, targetRot);
 
         return angleDelta < 0.1f;
@@ -209,7 +209,7 @@ public class AutonomousCrane : NetworkBehaviour
         float pitch = Mathf.Clamp(rawAngle, 20f, 80f);
 
         Quaternion want = Quaternion.Euler(pitch, _craneArmStart.transform.localRotation.eulerAngles.y, _craneArmStart.transform.localRotation.eulerAngles.z);
-        _craneArmStart.transform.localRotation = Quaternion.RotateTowards(_craneArmStart.transform.localRotation, want, 25f * Time.deltaTime);
+        _craneArmStart.transform.localRotation = Quaternion.RotateTowards(_craneArmStart.transform.localRotation, want, 12.5f * Time.deltaTime);
         float remaining = Quaternion.Angle(_craneArmStart.transform.localRotation, want);
 
         _craneArmEnd.transform.position = _properCraneArmEndGO.transform.position;

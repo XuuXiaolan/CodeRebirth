@@ -41,7 +41,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     private float _rootingTimer = 0f;
     private float _attackInterval = 2f;
     private List<GameObject> _budlingCacti = new();
-    private CactusBudlingState _nextState = CactusBudlingState.Spawning;
+    private NetworkVariable<int> _nextStateInt = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private Coroutine? _nextStateRoutine = null;
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
@@ -131,8 +131,11 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
             if (crMapObjectDefinition.EntityNameReference.Contains("Cactus", StringComparison.OrdinalIgnoreCase))
                 _budlingCacti.Add(crMapObjectDefinition.GameObject);
         }
-        _targetRootPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
-        _nextStateRoutine = StartCoroutine(DelayToNextState(_spawnAnimation.length, 3f, CactusBudlingState.SearchingForRoot));
+
+        if (!IsServer)
+            return;
+
+        GetNextRootPosition();
     }
 
     public override void Update()
@@ -157,7 +160,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
     public void LateUpdate()
     {
-        if (!base.IsOwner)
+        if (!IsServer)
             return;
 
         if (_rootingTimer <= 0 && _rotationProgressTimer <= 0)
@@ -172,11 +175,11 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
         if (_rootingTimer > 0)
         {
-            _rotationProgressTimer += Mathf.Clamp01(Time.deltaTime * 0.5f);
+            _rotationProgressTimer = Mathf.Clamp01(_rotationProgressTimer + Time.deltaTime * 0.5f);
         }
         else
         {
-            _rotationProgressTimer -= Mathf.Clamp01(Time.deltaTime * 0.5f);
+            _rotationProgressTimer = Mathf.Clamp01(_rotationProgressTimer - Time.deltaTime * 0.5f);
         }
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, _rotationProgressTimer);
     }
@@ -240,8 +243,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
                 return;
 
             creatureAnimator.SetBool(RootingAnimation, false);
-            _targetRootPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
-            _nextStateRoutine = StartCoroutine(DelayToNextState(_rollingEndAnimation.length, 3f, CactusBudlingState.SearchingForRoot));
+            GetNextRootPosition();
             return;
         }
 
@@ -288,8 +290,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
                 return;
 
             creatureAnimator.SetBool(RollingAnimation, false);
-            _targetRootPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
-            _nextStateRoutine = StartCoroutine(DelayToNextState(_rollingEndAnimation.length, 3f, CactusBudlingState.SearchingForRoot));
+            GetNextRootPosition();
             return;
         }
 
@@ -314,14 +315,31 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     #endregion
 
     #region Misc Functions
+    private void GetNextRootPosition()
+    {
+        List<(Vector3 position, Vector3 alsoPosition)> possiblePositions = new();
+        for (int i = 10; i < 10; i++)
+        {
+            Vector3 randomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
+            possiblePositions.Add((randomPosition, randomPosition));
+        }
+        smartAgentNavigator.CheckPaths(possiblePositions, FoundNextRootPosition);
+    }
+
+    private void FoundNextRootPosition(List<(Vector3 rootPosition, float distances)> args)
+    {
+        _targetRootPosition = args[UnityEngine.Random.Range(0, args.Count)].rootPosition;
+        _nextStateRoutine = StartCoroutine(DelayToNextState(_rollingStartAnimation.length, 3f, CactusBudlingState.SearchingForRoot));
+    }
+
     private IEnumerator DelayToNextState(float delay, float agentSpeed, CactusBudlingState nextState)
     {
         Plugin.ExtendedLogging($"Switching to next state: {nextState}");
-        _nextState = nextState;
+        _nextStateInt.Value = (int)nextState;
         agent.speed = 0f;
         smartAgentNavigator.StopAgent();
         yield return new WaitForSeconds(delay);
-        SwitchToBehaviourStateOnLocalClient((int)nextState);
+        SwitchToBehaviourServerRpc(_nextStateInt.Value);
         agent.speed = agentSpeed;
         _nextStateRoutine = null;
     }
@@ -394,11 +412,12 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
         if (currentBehaviourStateIndex != (int)CactusBudlingState.Rolling)
         {
-            if (_nextStateRoutine != null)
+            if (_nextStateRoutine != null || !IsServer)
             {
-                if (_nextState != CactusBudlingState.Rolling)
+                if (_nextStateInt.Value != (int)CactusBudlingState.Rolling)
                 {
-                    StopCoroutine(_nextStateRoutine);
+                    if (IsServer)
+                        StopCoroutine(_nextStateRoutine);
                 }
                 else
                 {
