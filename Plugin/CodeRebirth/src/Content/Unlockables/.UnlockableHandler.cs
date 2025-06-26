@@ -87,7 +87,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
     {
         RegisterContent("shockwavebotassets", out ShockwaveBot);
 
-        RegisterContent("plantpotassets", out PlantPot);
+        // RegisterContent("plantpotassets", out PlantPot);
 
         RegisterContent("terminalbotassets", out TerminalBot);
 

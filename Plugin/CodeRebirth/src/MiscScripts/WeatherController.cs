@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
@@ -18,12 +19,13 @@ public class WeatherController : MonoBehaviour
         Plugin.ExtendedLogging($"Weather: {weatherName}");
         if (weatherName == "blackout" || weatherName == "night shift")
         {
-            // HandleDarkness();
+            StartCoroutine(HandleDarkness());
         }
     }
 
-    private void HandleDarkness()
+    private IEnumerator HandleDarkness()
     {
+        yield return new WaitUntil(() => EnemyLevelSpawner.enemyLevelSpawners.Count > 0);
         foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
         {
             enemyLevelSpawner.spawnTimerMax /= 4f;
