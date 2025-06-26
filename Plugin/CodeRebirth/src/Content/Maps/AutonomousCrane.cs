@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
 using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -58,6 +59,7 @@ public class AutonomousCrane : NetworkBehaviour
     private bool _craneIsActive = true;
     private Vector3 _targetPosition = Vector3.zero;
     private CraneState _currentState = CraneState.Idle;
+    private Collider[] _cachedColliders = new Collider[24];
 
     public enum CraneState
     {
@@ -336,23 +338,40 @@ public class AutonomousCrane : NetworkBehaviour
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         }
 
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        int numHits = Physics.OverlapSphereNonAlloc(_magnetTargetPosition, 5f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < numHits; i++)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || player.isInHangarShipRoom)
+            Collider collider = _cachedColliders[i];
+            if (!collider.TryGetComponent(out IHittable hittable))
                 continue;
 
-            float distanceToPlayer = Vector3.Distance(player.transform.position, _magnetTargetPosition);
-
-            if (distanceToPlayer > 2.5f)
-                continue;
-
-            if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
+            if (hittable is PlayerControllerB player)
             {
-                CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);
-            }
+                if (!player.IsOwner)
+                    continue;
 
-            player.KillPlayer(player.velocityLastFrame, false, CauseOfDeath.Crushing, 0, default);
+                if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
+                {
+                    CodeRebirthUtils.Instance.SpawnScrapServerRpc(flattedBodyItemDefinition.Item.itemName, player.transform.position, false, true, 0);
+                }
+                player.KillPlayer(player.velocityLastFrame, false, CauseOfDeath.Crushing, 0, default);
+            }
+            else if (hittable is EnemyAICollisionDetect enemy)
+            {
+                if (!enemy.mainScript.IsOwner)
+                    continue;
+
+                enemy.mainScript.KillEnemyOnOwnerClient();
+            }
+            else
+            {
+                if (!NetworkManager.Singleton.IsServer)
+                    continue;
+
+                hittable.Hit(99, _magnetTargetPosition, null, true, -1);
+            }
         }
+
         _audioSource.clip = null;
         _audioSource.Stop();
         _audioSource.PlayOneShot(_magnetImpactSound);
