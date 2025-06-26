@@ -84,7 +84,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
         RegisterContent("marrowsplitterassets", out MarrowSplitter);
 
-        RegisterContent("swatterassets", out Swatter);
+        // RegisterContent("swatterassets", out Swatter);
 
         RegisterContent("tomahopassets", out TomaHop);
     }
