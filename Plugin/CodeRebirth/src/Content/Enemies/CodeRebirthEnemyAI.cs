@@ -39,7 +39,8 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public AudioClip[] _hitBodySounds = [];
     public AudioClip spawnSound = null!;
 
-    [HideInInspector] public float _idleTimer = 1f;
+    [HideInInspector]
+    public float _idleTimer = 1f;
     [HideInInspector]
     public System.Random enemyRandom = new();
 

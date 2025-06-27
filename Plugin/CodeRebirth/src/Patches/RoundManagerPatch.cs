@@ -113,7 +113,7 @@ static class RoundManagerPatch
     [HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
     private static void ReturnToOrbitMiscPatch()
     {
-        PiggyBank.Instance?.RepairPiggyBankServerRpc();
+        PiggyBank.Instance?.RepairOrBreakPiggyBankServerRpc(false);
         foreach (GalAI gal in GalAI.Instances)
         {
             gal.RefillChargesServerRpc();

@@ -32,6 +32,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         Death,
     }
 
+    private GameObject vfxObject = null!;
     private bool canAttack = true;
     private bool isAttacking = false;
     private Collider[] _cachedHits = new Collider[8];
@@ -146,7 +147,6 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public override void Update()
     {
         base.Update();
-
         if (isEnemyDead)
             return;
 
@@ -295,6 +295,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        Destroy(BeamController._monarchParticle?.gameObject);
         smartAgentNavigator.StopSearchRoutine();
         if (IsServer)
             creatureAnimator.SetBool(IsDeadAnimation, true);
@@ -306,6 +307,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+        Destroy(BeamController._monarchParticle?.gameObject);
         if (Monarchs.Contains(this))
             Monarchs.Remove(this);
     }

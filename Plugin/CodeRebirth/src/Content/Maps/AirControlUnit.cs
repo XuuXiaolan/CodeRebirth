@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -22,6 +24,8 @@ public class AirControlUnit : CodeRebirthHazard
     public float playerHeadstart = 10f;
     public float maxAngle = 75f;
 
+    [HideInInspector]
+    public static List<ACUnitBounds> safeBounds = new();
     private float currentAngle = 0f;
     private float fireTimer = 3f;
     private GameObject projectilePrefab = null!;
@@ -65,8 +69,11 @@ public class AirControlUnit : CodeRebirthHazard
 
     private bool IsPlayerNearGround(PlayerControllerB playerControllerB)
     {
+        if (playerControllerB.isClimbingLadder)
+            return true;
+
         Ray ray = new Ray(playerControllerB.gameplayCamera.transform.position, -Vector3.up);
-        if (Physics.Raycast(ray, out _, 6f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out _, 6f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             return true;
         }
@@ -84,7 +91,7 @@ public class AirControlUnit : CodeRebirthHazard
         {
             foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
             {
-                if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) || IsPlayerNearGround(playerControllerB))
+                if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(playerControllerB.transform.position) || IsPlayerNearGround(playerControllerB) || TransformInSafeBounds(playerControllerB.transform))
                 {
                     continue;
                 }
@@ -100,6 +107,18 @@ public class AirControlUnit : CodeRebirthHazard
             ACUClickingAudioSource.clip = null;
             ACUTurnAudioSource.volume = 0f;
         }
+    }
+
+    private bool TransformInSafeBounds(Transform toKillTransform)
+    {
+        foreach (var bounds in safeBounds)
+        {
+            if (bounds.BoundsContainTransform(toKillTransform))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void HandleTargettingToPlayer(PlayerControllerB playerControllerB, ref bool lockedOntoAPlayer)

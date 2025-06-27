@@ -318,7 +318,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     private void GetNextRootPosition()
     {
         List<(Vector3 position, Vector3 alsoPosition)> possiblePositions = new();
-        for (int i = 10; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             Vector3 randomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
             possiblePositions.Add((randomPosition, randomPosition));

@@ -78,7 +78,7 @@ public class DestructibleObject : MonoBehaviour, IHittable
 
         float objectLifeTime = 0f;
         if (_particleSystems[0] != null)
-            objectLifeTime = _particleSystems[0].main.duration;
+            objectLifeTime = _particleSystems[0].main.duration + 1;
 
         _audioSource.PlayOneShot(_destroySound);
         Destroy(gameObject, objectLifeTime);

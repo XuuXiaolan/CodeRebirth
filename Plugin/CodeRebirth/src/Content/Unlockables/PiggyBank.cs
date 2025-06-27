@@ -17,10 +17,10 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public Animator piggyBankAnimator = null!;
     public NetworkAnimator piggyBankNetworkAnimator = null!;
 
-    [HideInInspector] public bool broken = false;
-    private NetworkVariable<int> coinsStored = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    private static readonly int BreakAnimation = Animator.StringToHash("borked"); // Bool
-    private static readonly int InsertCoinAnimation = Animator.StringToHash("insertCoin"); // Trigger
+    private NetworkVariable<bool> _broken = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<int> _coinsStored = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private static readonly int _BreakAnimation = Animator.StringToHash("borked"); // Bool
+    private static readonly int _InsertCoinAnimation = Animator.StringToHash("insertCoin"); // Trigger
 
     public static PiggyBank? Instance = null;
     public override void OnNetworkSpawn()
@@ -54,16 +54,16 @@ public class PiggyBank : NetworkBehaviour, IHittable
         Material variantMaterial = variantMaterials[piggyRandom.Next(variantMaterials.Length)];
         Material[] currentMaterials = skinnedMeshRenderer.sharedMaterials;
         currentMaterials[0] = variantMaterial;
-        skinnedMeshRenderer.SetMaterials(currentMaterials.ToList());
+        skinnedMeshRenderer.sharedMaterials = currentMaterials;
     }
 
     public int AddCoinsToPiggyBank(int amount)
     {
-        if (broken) return 0;
+        if (_broken.Value) return 0;
         if (IsServer)
         {
-            coinsStored.Value += amount;
-            piggyBankNetworkAnimator.SetTrigger(InsertCoinAnimation);
+            _coinsStored.Value += amount;
+            piggyBankNetworkAnimator.SetTrigger(_InsertCoinAnimation);
             if (StartOfRound.Instance.inShipPhase) SaveCurrentCoins();
         }
         return amount;
@@ -72,28 +72,29 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public void SaveCurrentCoins()
     {
         if (!IsHost) return;
-        ES3.Save<int>("coinsStoredCR", coinsStored.Value, CodeRebirthUtils.Instance.SaveSettings);
+        ES3.Save<int>("coinsStoredCR", _coinsStored.Value, CodeRebirthUtils.Instance.SaveSettings);
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
-        if (broken) return false;
-        if (IsServer) piggyBankAnimator.SetBool(BreakAnimation, true);
-        broken = true;
+        if (_broken.Value)
+            return false;
+
+        RepairOrBreakPiggyBankServerRpc(true);
         return true;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void RepairPiggyBankServerRpc()
+    public void SetPiggyBankBrokenServerRpc()
     {
-        piggyBankAnimator.SetBool(BreakAnimation, false);
-        RepairPiggyBankClientRpc();
+        piggyBankAnimator.SetBool(_BreakAnimation, true);
     }
 
-    [ClientRpc]
-    private void RepairPiggyBankClientRpc()
+    [ServerRpc(RequireOwnership = false)]
+    public void RepairOrBreakPiggyBankServerRpc(bool broken)
     {
-        broken = false;
+        piggyBankAnimator.SetBool(_BreakAnimation, broken);
+        _broken.Value = broken;
     }
 
     public void SpawnAllCoinsAnimEvent()
@@ -103,12 +104,12 @@ public class PiggyBank : NetworkBehaviour, IHittable
             if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Money", out CRMapObjectDefinition? moneyMapObjectDefinition))
                 return;
 
-            for (int i = 0; i < coinsStored.Value; i++)
+            for (int i = 0; i < _coinsStored.Value; i++)
             {
                 var coin = GameObject.Instantiate(moneyMapObjectDefinition.GameObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
                 coin.GetComponent<NetworkObject>().Spawn(true);
             }
-            coinsStored.Value = 0;
+            _coinsStored.Value = 0;
         }
     }
 }

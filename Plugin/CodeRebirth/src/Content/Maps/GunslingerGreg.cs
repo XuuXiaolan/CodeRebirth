@@ -168,6 +168,7 @@ public class GunslingerGreg : CodeRebirthHazard
         }
         return false;
     }
+
     private void HandleTargettingToTransform(Transform toKilltransform, ref bool lockedOntoATransform)
     {
         float distanceToTransform = Vector3.Distance(gregCannon.position, toKilltransform.position);
