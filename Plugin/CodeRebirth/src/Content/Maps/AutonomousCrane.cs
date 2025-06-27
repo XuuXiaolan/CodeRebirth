@@ -347,6 +347,9 @@ public class AutonomousCrane : NetworkBehaviour
 
             if (hittable is PlayerControllerB player)
             {
+                if (player.isPlayerDead || !player.isPlayerControlled)
+                    continue;
+
                 if (!player.IsOwner)
                     continue;
 
