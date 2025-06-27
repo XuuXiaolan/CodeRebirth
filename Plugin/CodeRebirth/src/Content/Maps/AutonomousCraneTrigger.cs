@@ -46,7 +46,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
             bool inTargets = _mainScript._targetablePlayers.Contains(player);
             bool insideMain = IsInsideLocalCylinder(player.transform.position, _mainCollider.transform, _mainLocalCenter, _mainLocalRadii, _mainLocalHalfH);
             bool insideExemption = IsInsideLocalCylinder(player.transform.position, _exemptionCollider.transform, _exemptLocalCenter, _exemptLocalRadii, _exemptLocalHalfH);
-            bool playerInvalid = player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || !insideMain || insideExemption;
+            bool playerInvalid = player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || !insideMain || insideExemption || player.isInHangarShipRoom;
 
             if (playerInvalid)
             {

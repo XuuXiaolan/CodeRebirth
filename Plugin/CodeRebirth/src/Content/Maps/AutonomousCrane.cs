@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Maps;
-public class AutonomousCrane : NetworkBehaviour
+public class AutonomousCrane : NetworkBehaviour // todo: for some reason it sometimes drops when a person leaves the area while rotating towards them or smthn
 {
     [Header("Audio")]
     [SerializeField]
@@ -345,6 +345,9 @@ public class AutonomousCrane : NetworkBehaviour
             if (!collider.TryGetComponent(out IHittable hittable))
                 continue;
 
+            if (Physics.Raycast(collider.transform.position, (collider.transform.position - _magnetTargetPosition).normalized, 5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+                continue;
+
             if (hittable is PlayerControllerB player)
             {
                 if (player.isPlayerDead || !player.isPlayerControlled)
@@ -387,7 +390,7 @@ public class AutonomousCrane : NetworkBehaviour
         _audioSource.Stop();
         _craneIsActive = false;
         _onDeactivateCrane.Invoke();
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(30f);
         _craneIsActive = true;
         _onActivateCrane.Invoke();
         if (wasPlaying && _audioSource.clip != null)

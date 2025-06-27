@@ -275,7 +275,15 @@ internal class CodeRebirthUtils : NetworkBehaviour
         go.TryGet(out NetworkObject netObj);
         if (netObj != null)
         {
-            netObj.transform.parent = StartOfRound.Instance.propsContainer;
+            if (netObj.AutoObjectParentSync && IsServer)
+            {
+                netObj.transform.parent = StartOfRound.Instance.propsContainer; // only the server can reparent network objects error?
+            }
+            else if (!netObj.AutoObjectParentSync)
+            {
+                netObj.transform.parent = StartOfRound.Instance.propsContainer;
+            }
+            Plugin.ExtendedLogging($"This object just spawned: {netObj.gameObject.name}");
             StartCoroutine(ForceRotationForABit(netObj.gameObject, rotation));
         }
     }
