@@ -123,7 +123,7 @@ public class GunslingerGreg : CodeRebirthHazard
         {
             foreach (PlayerControllerB playerControllerB in StartOfRound.Instance.allPlayerScripts)
             {
-                if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || playerControllerB.isInHangarShipRoom || IsTransformNearGround(playerControllerB.transform) || TransformInSafeBounds(playerControllerB.transform))
+                if (playerControllerB == null || playerControllerB.isPlayerDead || !playerControllerB.isPlayerControlled || playerControllerB.isInHangarShipRoom || playerControllerB.isClimbingLadder || IsTransformNearGround(playerControllerB.transform) || TransformInSafeBounds(playerControllerB.transform))
                 {
                     continue;
                 }
