@@ -63,7 +63,7 @@ public class MeteorShower : CodeRebirthWeathers
 
         if (!IsAuthority()) return;
         Direction[] directions = [Direction.Random, Direction.East, Direction.West, Direction.North, Direction.South];
-        int index = random.Next(directions.Length);
+        int index = UnityEngine.Random.Range(0, directions.Length);
         direction = directions[index];
 
         spawnHandler = StartCoroutine(MeteorSpawnerHandler());
@@ -78,7 +78,9 @@ public class MeteorShower : CodeRebirthWeathers
         ClearMeteors();
         if (!IsAuthority()) return;
 
-        if (spawnHandler != null) StopCoroutine(spawnHandler);
+        if (spawnHandler != null)
+            StopCoroutine(spawnHandler);
+
         spawnHandler = null;
     }
 
@@ -153,12 +155,12 @@ public class MeteorShower : CodeRebirthWeathers
         yield return new WaitForSeconds(25f); // inital delay to get everything started
         while (true)
         {
-            for (int i = 0; i < random.Next(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++)
+            for (int i = 0; i < UnityEngine.Random.Range(minMeteorsPerSpawn, maxMeteorsPerSpawn); i++)
             {
                 SpawnMeteor(GetRandomTargetPosition(nodes, alreadyUsedNodes, minX: -2, maxX: 2, minY: -5, maxY: 5, minZ: -2, maxZ: 2, radius: 25));
                 yield return null;
             }
-            float delay = random.NextFloat(minTimeBetweenSpawns, maxTimeBetweenSpawns);
+            float delay = UnityEngine.Random.Range(minTimeBetweenSpawns, maxTimeBetweenSpawns);
             yield return new WaitForSeconds(delay);
         }
     }
@@ -166,8 +168,8 @@ public class MeteorShower : CodeRebirthWeathers
     public Vector3 CalculateSkyOrigin(Vector3 target)
     {
         float x = 0, z = 0;
-        float distanceX = random.NextFloat(250, 500);
-        float distanceZ = random.NextFloat(250, 500);
+        float distanceX = UnityEngine.Random.Range(250, 500);
+        float distanceZ = UnityEngine.Random.Range(250, 500);
 
         switch (direction)
         {
@@ -185,7 +187,7 @@ public class MeteorShower : CodeRebirthWeathers
                 break;
         }
 
-        float y = random.NextFloat(600, 900); // Fixed vertical range
+        float y = UnityEngine.Random.Range(600, 900); // Fixed vertical range
 
         return target + new Vector3(x, y, z);
     }
@@ -202,9 +204,9 @@ public class MeteorShower : CodeRebirthWeathers
         if (direction == Direction.Random)
         {
             origin = target + new Vector3(
-                random.NextFloat(250, 500) * random.NextSign(),
-                random.NextFloat(600, 900),
-                random.NextFloat(250, 500) * random.NextSign()
+                UnityEngine.Random.Range(250, 500) * random.NextSign(),
+                UnityEngine.Random.Range(600, 900),
+                UnityEngine.Random.Range(250, 500) * random.NextSign()
             );
         }
         else

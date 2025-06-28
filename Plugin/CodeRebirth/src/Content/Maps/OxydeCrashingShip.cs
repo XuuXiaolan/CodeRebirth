@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
@@ -20,15 +21,17 @@ public class OxydeCrashingShip : FallingObjectBehaviour
         base.OnNetworkSpawn();
         Vector3 spawnPosition = this.transform.position;
         this.transform.position = new Vector3(9999, 9999, 9999);
-        System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
-        StartCoroutine(WaitToDoYourThing(spawnPosition, random));
+        if (!IsServer)
+            return;
+
+        StartCoroutine(WaitToDoYourThing(spawnPosition));
     }
 
-    public IEnumerator WaitToDoYourThing(Vector3 spawnPosition, System.Random random)
+    public IEnumerator WaitToDoYourThing(Vector3 spawnPosition)
     {
-        yield return new WaitForSeconds(random.NextFloat(180f, 360f));
-        Vector3 origin = CalculateRandomSkyOrigin(Direction.East, spawnPosition, random);
-        SetupFallingObject(origin, spawnPosition, 25);
+        yield return new WaitForSeconds(UnityEngine.Random.Range(180f, 360f));
+        Vector3 origin = CalculateRandomSkyOrigin((Direction)UnityEngine.Random.Range(0, Enum.GetValues(typeof(Direction)).Length), spawnPosition, new System.Random(UnityEngine.Random.Range(0, 10000)));
+        SetupFallingObjectServerRpc(origin, spawnPosition, 25);
     }
 
     protected override void OnImpact()

@@ -117,7 +117,7 @@ public class FallingObjectBehaviour : NetworkBehaviour
         _speed = speed;
         float distance = Vector3.Distance(_origin, _target);
         Ray ray = new Ray(_origin, _target - _origin);
-        Physics.Raycast(ray, out RaycastHit hit, distance + 5f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
+        Physics.Raycast(ray, out RaycastHit hit, distance + 5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
         Plugin.ExtendedLogging($"Raycast started at: {_origin} and wanted to end at: {_target}, hit: {hit.point} with normal: {hit.normal}");
         _target = hit.point;
         _normal = hit.normal;

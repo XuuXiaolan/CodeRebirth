@@ -27,7 +27,8 @@ static class RoundManagerPatch
         System.Random random = new(StartOfRound.Instance.randomMapSeed + 2358);
         int spawnCount = 0;
         GameObject staticBatchedParent = new("Flora Parent");
-        staticBatchedParent.transform.SetParent(RoundManager.Instance.mapPropsContainer.transform);
+        if (RoundManager.Instance.mapPropsContainer != null)
+            staticBatchedParent.transform.SetParent(RoundManager.Instance.mapPropsContainer.transform);
 
         foreach (SpawnableFlora flora in spawnableFlora)
         {

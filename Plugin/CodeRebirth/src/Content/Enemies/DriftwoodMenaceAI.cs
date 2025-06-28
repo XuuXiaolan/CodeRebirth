@@ -634,7 +634,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy is RedwoodTitanAI || enemy is DriftwoodMenaceAI || enemy is ForestGiantAI || enemy is CactusBudling || enemy is Puppeteer || enemy is CutieFlyAI) continue;
+            if (enemy is RedwoodTitanAI || enemy is DriftwoodMenaceAI || enemy is ForestGiantAI || enemy is CactusBudling || enemy is Puppeteer || enemy is CutieFlyAI || enemy is DocileLocustBeesAI || enemy is RedLocustBees) continue;
             if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0) continue;
             if (EnemyHasLineOfSightToPosition(enemy.transform.position, 75f, range))
             {

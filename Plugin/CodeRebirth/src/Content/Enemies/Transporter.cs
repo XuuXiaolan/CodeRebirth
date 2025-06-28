@@ -221,9 +221,7 @@ public class Transporter : CodeRebirthEnemyAI
         float dist = Vector3.Distance(transportTarget.transform.position, transform.position);
 
         // Path to the object's position
-        smartAgentNavigator.DoPathingToDestination(
-            transportTarget.transform.position
-        );
+        smartAgentNavigator.DoPathingToDestination(transportTarget.transform.position);
 
         if (dist <= agent.stoppingDistance)
         {
@@ -232,7 +230,9 @@ public class Transporter : CodeRebirthEnemyAI
             IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = [];
 
             // Loop 20 times, pick random nodes, add them to the list
-            IEnumerable<GameObject> allNodes = [.. RoundManager.Instance.outsideAINodes, .. RoundManager.Instance.insideAINodes];
+            List<GameObject> allNodes = new();
+            allNodes.AddRange(RoundManager.Instance.outsideAINodes);
+            allNodes.AddRange(RoundManager.Instance.insideAINodes);
 
             candidateObjects = allNodes
                 .Select(kv => (kv, kv.transform.position));

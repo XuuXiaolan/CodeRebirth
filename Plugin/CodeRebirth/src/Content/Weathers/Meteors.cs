@@ -4,8 +4,6 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Events;
-using CodeRebirth.src.Content.Items;
-using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.ContentManagement.Items;
 
 namespace CodeRebirth.src.Content.Weathers;

@@ -47,11 +47,10 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     private float _previousLightValue = 0f;
     private static int ShiftHash = Shader.PropertyToID("_Shift");
     private static int TemperatureHash = Shader.PropertyToID("_Temperature");
-
     public override void Start()
     {
         base.Start();
-        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + RoundManager.Instance.SpawnedEnemies.Count + 69);
+        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
 
         if (spawnSound != null)
             creatureVoice.PlayOneShot(spawnSound);
