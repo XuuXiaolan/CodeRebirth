@@ -52,7 +52,7 @@ MonoBehaviour:
   subText: 
   scrapValue: 0
   creatureScanID: -1
-  nodeType: 2
+  nodeType: 1
 --- !u!65 &4073497105482225915
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -380,6 +380,7 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
+  rotateObject: 0
   playerBone: {fileID: 9071345765933573330}
   meshRenderer: {fileID: 7293944502871028870}
   player: {fileID: 0}
