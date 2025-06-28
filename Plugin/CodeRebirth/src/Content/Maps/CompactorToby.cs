@@ -4,6 +4,7 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -89,7 +90,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
             DespawnItemServerRpc(new NetworkBehaviourReference(grabbableObject));
         }
         Vector3 randomPosition = vectorPositions[UnityEngine.Random.Range(0, vectorPositions.Count)];
-        TryCompactItemServerRpc(randomPosition, valueOfItems, false, isFast);
+        TryCompactItemServerRpc(randomPosition, valueOfItems, null, isFast);
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -102,13 +103,13 @@ public class CompactorToby : NetworkBehaviour, IHittable
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TryCompactItemServerRpc(Vector3 randomPosition, int value, bool deadPlayer, bool fast)
+    public void TryCompactItemServerRpc(Vector3 randomPosition, int value, PlayerControllerReference? deadPlayer, bool fast)
     {
         StartOrStopCompactingClientRpc(true, !fast);
         StartCoroutine(CompactProcess(randomPosition, value, deadPlayer, fast));
     }
 
-    private IEnumerator CompactProcess(Vector3 randomPosition, int value, bool deadPlayer, bool fast)
+    private IEnumerator CompactProcess(Vector3 randomPosition, int value, PlayerControllerReference? deadPlayer, bool fast)
     {
         Plugin.ExtendedLogging($"Value: {value} | Dead Player: {deadPlayer} | Fast: {fast}");
         _tobyNetworkAnimator.SetTrigger(StartCompactAnimation);
@@ -160,10 +161,15 @@ public class CompactorToby : NetworkBehaviour, IHittable
             }
         }
         StartOrStopCompactingClientRpc(false, false);
-        if (deadPlayer)
+        if (deadPlayer != null)
         {
             Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition);
-            CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition?.Item, randomPosition, false, true, value);
+            NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition?.Item, randomPosition, false, true, value);
+            if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
+            {
+                PlayerControllerB player = deadPlayer;
+                flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName.Value = player.playerUsername;
+            }
             yield break;
         }
 

@@ -38,7 +38,7 @@ public class KillAndCompactPlayer : MonoBehaviour
             }
             player.KillPlayer(player.transform.position, false, CauseOfDeath.Crushing, 0, default);
             Vector3 randomPosition = vectorPositions[UnityEngine.Random.Range(0, vectorPositions.Count)];
-            toby.TryCompactItemServerRpc(randomPosition, valueOfItems, true, true);
+            toby.TryCompactItemServerRpc(randomPosition, valueOfItems, player, true);
         }
     }
 }

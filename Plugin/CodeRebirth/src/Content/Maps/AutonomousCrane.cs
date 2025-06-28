@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.Util;
@@ -353,13 +354,18 @@ public class AutonomousCrane : NetworkBehaviour // todo: for some reason it some
                 if (player.isPlayerDead || !player.isPlayerControlled)
                     continue;
 
+                if (IsServer && Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
+                {
+                    NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);
+                    if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
+                    {
+                        flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName.Value = player.playerUsername;
+                    }
+                }
+
                 if (!player.IsOwner)
                     continue;
 
-                if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
-                {
-                    CodeRebirthUtils.Instance.SpawnScrapServerRpc(flattedBodyItemDefinition.Item.itemName, player.transform.position, false, true, 0);
-                }
                 player.KillPlayer(player.velocityLastFrame, false, CauseOfDeath.Crushing, 0, default);
             }
             else if (hittable is EnemyAICollisionDetect enemy)

@@ -41,11 +41,15 @@ public class SnailCatAI : CodeRebirthEnemyAI
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
         string randomName = randomizedNames[enemyRandom.Next(randomizedNames.Length)];
-        float randomScale = enemyRandom.NextFloat(0.9f, 1.1f);
+        float randomScale = enemyRandom.NextFloat(0.75f, 1.25f);
         this.transform.localScale *= randomScale;
-        propScript.originalScale = this.transform.localScale;
         scanNodeProperties.headerText = randomName;
         currentName = randomName;
+        if (currentName == "Mu")
+        {
+            this.transform.localScale *= 0.1f;
+        }
+        propScript.originalScale = this.transform.localScale;
         isWiWiWiii = currentName == "Wiwiwii";
         if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
     }
