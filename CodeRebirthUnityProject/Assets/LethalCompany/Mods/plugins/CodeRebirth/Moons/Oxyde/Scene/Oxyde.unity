@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4474913, g: 0.2402311, b: 0.07641309, a: 1}
+  m_IndirectSpecularColor: {r: 0.4481235, g: 0.2407966, b: 0.07644642, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11924,7 +11924,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -129.0726, y: -0, z: -0}
+    textureOffset: {x: -707.7876, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -24166,10 +24166,50 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1991192134}
     m_Modifications:
+    - target: {fileID: 362893737317668507, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 623696490023969267, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
+      objectReference: {fileID: 0}
+    - target: {fileID: 1445921170423930576, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722642801340587300, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
+      objectReference: {fileID: 0}
     - target: {fileID: 2930116566415988962, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1279392855
+      objectReference: {fileID: 0}
+    - target: {fileID: 2985319380067415448, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3586009789288108585, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
+      objectReference: {fileID: 0}
+    - target: {fileID: 4182767588071774970, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
+      objectReference: {fileID: 0}
+    - target: {fileID: 4552701650799913343, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
       objectReference: {fileID: 0}
     - target: {fileID: 4648469477059554915, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
@@ -24180,6 +24220,26 @@ PrefabInstance:
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 906450679
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148247999311717101, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
+      objectReference: {fileID: 0}
+    - target: {fileID: 5361812990526420264, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3489670630
+      objectReference: {fileID: 0}
+    - target: {fileID: 5573488105010534400, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
+      objectReference: {fileID: 0}
+    - target: {fileID: 7062095984909605378, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
       objectReference: {fileID: 0}
     - target: {fileID: 7071544595146402373, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
@@ -24241,6 +24301,16 @@ PrefabInstance:
       propertyPath: shipNavColliders
       value: 
       objectReference: {fileID: 1959721454}
+    - target: {fileID: 8437786212718181220, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8548979592992798241, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Catwalk
+      objectReference: {fileID: 0}
     - target: {fileID: 8866132944236790290, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: GlobalObjectIdHash
