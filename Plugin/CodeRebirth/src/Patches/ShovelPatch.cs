@@ -1,9 +1,6 @@
 ﻿using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util;
 using UnityEngine;
-using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.Content.Unlockables;
-using CodeRebirth.src.Content.Items;
 using Unity.Netcode;
 
 namespace CodeRebirth.src.Patches;

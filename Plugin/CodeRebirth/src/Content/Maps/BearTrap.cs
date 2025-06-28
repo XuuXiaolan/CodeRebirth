@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
-using System.Linq;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class BearTrap : CodeRebirthHazard
 {
     public Animator trapAnimator = null!;
@@ -32,10 +32,16 @@ public class BearTrap : CodeRebirthHazard
     public override void Start()
     {
         base.Start();
-        if (!IsServer || byProduct) return;
-        var random = new System.Random(StartOfRound.Instance.randomMapSeed);
+        if (!IsServer)
+            return;
+
+        float newTrapTime = UnityEngine.Random.Range(trapTrigger.timeToHold - 1.5f, trapTrigger.timeToHold + 0.5f);
+        SyncRandomResetTrapTimeClientRpc(newTrapTime);
+        if (byProduct)
+            return;
+
         Vector3 position = this.transform.position;
-        for (int i = 0; i < random.Next(4, 8); i++)
+        for (int i = 0; i < UnityEngine.Random.Range(4, 8); i++)
         {
             Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
 
@@ -68,7 +74,7 @@ public class BearTrap : CodeRebirthHazard
 
                 beartrap = boomMapObjectDefinition.GameObject;
             }
-            else if (random.Next(100) < 5)
+            else if (UnityEngine.Random.Range(0, 100) < 5)
             {
                 if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Boom", out CRMapObjectDefinition? boomMapObjectDefinition))
                     return;
@@ -309,5 +315,11 @@ public class BearTrap : CodeRebirthHazard
     {
         yield return new WaitForSeconds(delay);
         trapAnimator.SetBool(parameterHash, false);
+    }
+
+    [ClientRpc]
+    private void SyncRandomResetTrapTimeClientRpc(float resetTime)
+    {
+        trapTrigger.timeToHold = resetTime;
     }
 }

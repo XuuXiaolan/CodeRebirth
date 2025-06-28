@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ConfigManagement;
 using CodeRebirthLib.ContentManagement.Unlockables;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;

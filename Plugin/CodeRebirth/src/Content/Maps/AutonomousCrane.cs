@@ -238,8 +238,8 @@ public class AutonomousCrane : NetworkBehaviour // todo: for some reason it some
         float armLen = Vector3.Distance(_craneArmStart.transform.position, _craneArmEnd.transform.position);
 
         float rawAngle = Mathf.Asin(Mathf.Clamp01(horiz / armLen)) * Mathf.Rad2Deg;
-        if (rawAngle < 20f)
-            return true;
+        if (rawAngle < 10f || rawAngle > 90f)
+            return false;
 
         float pitch = Mathf.Clamp(rawAngle, 20f, 80f);
 

@@ -7,6 +7,8 @@ using System.Linq;
 using Unity.Netcode;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
+using CodeRebirthLib.ContentManagement.Enemies;
+using System.Collections.Generic;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -28,6 +30,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     private bool currentlyGrabbed = false;
     private bool canSmash = true;
     private EnemyAI? ScaryThing = null;
+    private HashSet<EnemyType> _enemyTargetBlacklist = new();
 
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
     int IVisibleThreat.SendSpecialBehaviour(int id)
@@ -112,6 +115,14 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
+        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Driftwood", out CREnemyDefinition? driftwoodEnemyDefinition))
+        {
+            var enemyBlacklist = driftwoodEnemyDefinition.GetGeneralConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+            foreach (var nameEntry in enemyBlacklist)
+            {
+                _enemyTargetBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+            }
+        }
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Spawn);
         StartCoroutine(SpawnAnimationCooldown());
     }
@@ -634,8 +645,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy is RedwoodTitanAI || enemy is DriftwoodMenaceAI || enemy is ForestGiantAI || enemy is CactusBudling || enemy is Puppeteer || enemy is CutieFlyAI || enemy is DocileLocustBeesAI || enemy is RedLocustBees) continue;
             if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0) continue;
+            if (_enemyTargetBlacklist.Contains(enemy.enemyType))
+                continue;
+
             if (EnemyHasLineOfSightToPosition(enemy.transform.position, 75f, range))
             {
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
