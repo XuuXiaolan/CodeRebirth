@@ -190,9 +190,9 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Cactus Budling
-      spawnWeights: Vanilla:10,Custom:10,Valley:5,Canyon:35,Tundra:0,Marsh:15,Military:0,Rocky:0,Amythest:0,Experimentation:1,Assurance:50,Vow:3,Offense:40,March:5,Adamance:1,Rend:0,Dine:0,Titan:0,Artifice:10,Embrion:0,Oxyde:35
+      spawnWeights: Vanilla:10,Custom:10,Valley:5,Canyon:35,Tundra:0,Marsh:15,Military:0,Rocky:10,Amythest:0,Experimentation:1,Assurance:50,Vow:3,Offense:40,March:5,Adamance:1,Rend:0,Dine:0,Titan:0,Artifice:10,Embrion:0,Oxyde:25
       weatherMultipliers: None:1,DustClouds:1,Rainy:0.8,Stormy:0.8,Foggy:1.4,Flooded:0.5,Eclipsed:1,Meteor
-        Shower:0.5,Tornado:0.8,Night Shift:0.5,Snowfall:0,Blizzard:0,Heatwave:1.5,Solar
+        Shower:0.5,Tornado:0.8,Night Shift:0.1,Snowfall:0,Blizzard:0,Heatwave:1.5,Solar
         Flare:1.5,Toxic Smog:1,Cloudy:1.2,Blackout:0.5
       powerLevel: 2
       maxSpawnCount: 3
@@ -382,9 +382,9 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Driftwood Menace
-      spawnWeights: Vanilla:10,Custom:10,Valley:30,Canyon:5,Tundra:0,Marsh:40,Military:0,Rocky:0,Amythest:0,Experimentation:1,Assurance:5,Vow:45,Offense:3,March:35,Adamance:40,Rend:0,Dine:0,Titan:0,Artifice:10,Embrion:0,Oxyde:20
+      spawnWeights: Vanilla:10,Custom:10,Valley:30,Canyon:5,Tundra:0,Marsh:40,Military:0,Rocky:0,Amythest:0,Experimentation:1,Assurance:5,Vow:45,Offense:3,March:35,Adamance:40,Rend:0,Dine:0,Titan:0,Artifice:10,Embrion:0,Oxyde:40
       weatherMultipliers: None:1,DustClouds:1,Rainy:1.4,Stormy:1.4,Foggy:1,Flooded:0.75,Eclipsed:1,Meteor
-        Shower:0.5,Tornado:0.7,Night Shift:0.5,Snowfall:0,Blizzard:0,Heatwave:0.5,Solar
+        Shower:0.5,Tornado:0.7,Night Shift:0.7,Snowfall:0,Blizzard:0,Heatwave:0.5,Solar
         Flare:0.5,Toxic Smog:1,Cloudy:1,Blackout:0.5
       powerLevel: 2
       maxSpawnCount: 2
@@ -402,7 +402,7 @@ MonoBehaviour:
         Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
         Smog:1,Cloudy:1,Blackout:1 '
       powerLevel: 2
-      maxSpawnCount: 2
+      maxSpawnCount: 1
     items:
     - entityName: Grape
       spawnWeights: 
@@ -634,7 +634,7 @@ MonoBehaviour:
     - entityName: Manor Lord
       spawnWeights: Vanilla:10,Custom:10,Valley:10,Canyon:5,Tundra:30,Marsh:3,Military:5,Rocky:5,Amythest:5,Experimentation:1,Assurance:3,Vow:30,Offense:3,March:3,Adamance:7,Rend:50,Dine:40,Titan:4,Artifice:40,Embrion:0,Oxyde:5
       weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1.25,Flooded:1.25,Eclipsed:1,Meteor
-        Shower:0.75,Tornado:1.25,Night Shift:1.5,Snowfall:1.4,Blizzard:1.4,Heatwave:0.75,Solar
+        Shower:0.75,Tornado:1.25,Night Shift:100,Snowfall:1.4,Blizzard:1.4,Heatwave:0.75,Solar
         Flare:0.75,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
       powerLevel: 2
       maxSpawnCount: 1
@@ -834,10 +834,10 @@ MonoBehaviour:
     - entityName: Money
       isInsideHazard: 1
       createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: Vanilla - 0.00,1.00 ; 0.11,1.53 ; 0.22,2.14
-        ; 0.33,2.73 ; 0.44,3.24 ; 0.56,3.58 ; 0.67,3.61 ; 0.78,2.94 ; 0.89,3.09 ;
-        1.00,5.00 | Custom - 0.00,1.00 ; 0.11,1.53 ; 0.22,2.14 ; 0.33,2.73 ; 0.44,3.24
-        ; 0.56,3.58 ; 0.67,3.61 ; 0.78,2.94 ; 0.89,3.09 ; 1.00,5.00
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,3.00 ; 0.11,3.72 ; 0.22,4.44
+        ; 0.33,4.96 ; 0.44,5.10 ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82 ;
+        1.00,8.00 | Custom - 0.00,3.00 ; 0.11,3.72 ; 0.22,4.44 ; 0.33,4.96 ; 0.44,5.10
+        ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82 ; 1.00,8.00
       createInsideCurveSpawnWeightsConfig: 0
       isOutsideHazard: 0
       createOutsideHazardConfig: 0
@@ -854,7 +854,7 @@ MonoBehaviour:
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables:
     - entityName: Piggy Bank
-      cost: 200
+      cost: 100
       isShipUpgrade: 1
       isDecor: 0
       isProgressive: 0
@@ -930,7 +930,7 @@ MonoBehaviour:
     - entityName: Mistress
       spawnWeights: Vanilla:2,Custom:2,Valley:1,Canyon:2,Tundra:5,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:10,Offense:0,March:1,Adamance:3,Rend:10,Dine:15,Titan:0,Artifice:10,Embrion:0,Oxyde:1
       weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:1.4,Foggy:1.2,Flooded:0.5,Eclipsed:0.5,Meteor
-        Shower:0.5,Tornado:0.5,Night Shift:1.5,Snowfall:1.4,Blizzard:1.4,Heatwave:1.2,Solar
+        Shower:0.5,Tornado:0.5,Night Shift:100,Snowfall:1.4,Blizzard:1.4,Heatwave:1.2,Solar
         Flare:1,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
       powerLevel: 2
       maxSpawnCount: 1
@@ -951,14 +951,14 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Monarch
-      spawnWeights: Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
+      spawnWeights: Vanilla:0,Custom:0,Valley:1,Canyon:1,Tundra:0,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:1,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
+      weatherMultipliers: 'None:1,DustClouds:1,Rainy:0,Stormy:0,Foggy:0,Flooded:0,Eclipsed:1.5,Meteor
+        Shower:0,Tornado:0,Night Shift:0,Snowfall:0,Blizzard:0,Heatwave:2,Solar Flare:0,Toxic
+        Smog:0,Cloudy:0,Blackout:0 '
       powerLevel: 3
-      maxSpawnCount: 3
+      maxSpawnCount: 1
     - entityName: Cutiefly
-      spawnWeights: Vanilla:20,Custom:20,Valley:40,Canyon:1,Tundra:0,Marsh:10,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:30,Offense:0,March:45,Adamance:55,Rend:0,Dine:0,Titan:0,Artifice:1,Embrion:0,Oxyde:15
+      spawnWeights: Vanilla:20,Custom:20,Valley:40,Canyon:1,Tundra:0,Marsh:10,Military:0,Rocky:0,Amythest:0,Experimentation:1,Assurance:5,Vow:30,Offense:5,March:45,Adamance:55,Rend:0,Dine:0,Titan:0,Artifice:10,Embrion:0,Oxyde:15
       weatherMultipliers: None:1.5,DustClouds:1.2,Rainy:0.5,Stormy:0.5,Foggy:1.25,Flooded:0,Eclipsed:0,Meteor
         Shower:0,Tornado:0,Night Shift:0,Snowfall:0,Blizzard:0,Heatwave:1.5,Solar
         Flare:1.5,Toxic Smog:0,Cloudy:1.25,Blackout:0
@@ -998,7 +998,7 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: Brrreaker
-      spawnWeights: tundra:2
+      spawnWeights: All:1,Tundra:5
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -1356,10 +1356,10 @@ MonoBehaviour:
     enemies:
     - entityName: PeaceKeeper
       spawnWeights: Vanilla:8,Custom:10,Valley:5,Canyon:7,Tundra:10,Marsh:2,Military:40,Rocky:10,Amythest:5,Experimentation:0,Assurance:1,Vow:1,Offense:1,March:3,Adamance:15,Rend:20,Dine:25,Titan:30,Artifice:40,Embrion:20,Oxyde:10
-      weatherMultipliers: None:0.6,DustClouds:0.6,Rainy:0.4,Stormy:0.35,Foggy:0.6,Flooded:0.1,Eclipsed:2,Meteor
-        Shower:1,Tornado:1,Night Shift:0.7,Snowfall:1,Blizzard:1,Heatwave:1,Solar
-        Flare:1,Toxic Smog:1,Cloudy:1,Blackout:0.7
-      powerLevel: 2.5
+      weatherMultipliers: None:1,DustClouds:0.6,Rainy:0.4,Stormy:0.35,Foggy:0.6,Flooded:0.1,Eclipsed:2,Meteor
+        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
+        Smog:1,Cloudy:1,Blackout:0.7
+      powerLevel: 3
       maxSpawnCount: 1
     items:
     - entityName: Ceasefire
@@ -1417,7 +1417,7 @@ MonoBehaviour:
     enemies:
     - entityName: Rabbit Magician
       spawnWeights: Vanilla:3,Custom:3,Valley:3,Canyon:1,Tundra:8,Marsh:1,Military:5,Rocky:1,Amythest:1,Experimentation:1,Assurance:1,Vow:12,Offense:1,March:1,Adamance:1,Rend:30,Dine:50,Titan:10,Artifice:30,Embrion:1,Oxyde:0
-      weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:1.4,Foggy:1.2,Flooded:0.5,Eclipsed:0.5,Meteor
+      weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:2,Foggy:1.2,Flooded:0.5,Eclipsed:2,Meteor
         Shower:0.5,Tornado:0.5,Night Shift:1.5,Snowfall:1.5,Blizzard:1.5,Heatwave:0.5,Solar
         Flare:1,Toxic Smog:1,Cloudy:1,Blackout:2
       powerLevel: 3
@@ -1547,7 +1547,7 @@ MonoBehaviour:
     - entityName: Snail Cat
       spawnWeights: Vanilla:20,Custom:20,Valley:40,Canyon:5,Tundra:5,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:20,Offense:0,March:30,Adamance:45,Rend:2,Dine:3,Titan:0,Artifice:0,Embrion:0,Oxyde:1
       weatherMultipliers: None:1.5,DustClouds:0.5,Rainy:0.5,Stormy:0.2,Foggy:0.2,Flooded:0.1,Eclipsed:0,Meteor
-        Shower:0,Tornado:0.1,Night Shift:0.1,Snowfall:0.1,Blizzard:0.1,Heatwave:0.7,Solar
+        Shower:0,Tornado:0.1,Night Shift:0,Snowfall:0,Blizzard:0,Heatwave:0.7,Solar
         Flare:0.7,Toxic Smog:0,Cloudy:0.8,Blackout:0
       powerLevel: 0.5
       maxSpawnCount: 6
@@ -1569,7 +1569,7 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: Snow Globe
-      spawnWeights: Vanilla:15,Custom:15,Experimentation:10,Assurance:20,Vow:15,Offense:30,March:20,Adamance:20,Rend:40,Dine:45,Titan:30,Artifice:20,Embrion:1
+      spawnWeights: Vanilla:5,Custom:5
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -1680,7 +1680,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Transporter
-      spawnWeights: Vanilla:20,Custom:20,Valley:20,Canyon:20,Tundra:10,Marsh:20,Military:15,Rocky:10,Amythest:1,Experimentation:1,Assurance:10,Vow:15,Offense:25,March:15,Adamance:10,Rend:5,Dine:5,Titan:25,Artifice:30,Embrion:5,Oxyde:100
+      spawnWeights: Vanilla:20,Custom:20,Valley:20,Canyon:20,Tundra:10,Marsh:20,Military:15,Rocky:10,Amythest:1,Experimentation:1,Assurance:10,Vow:15,Offense:25,March:15,Adamance:10,Rend:5,Dine:5,Titan:25,Artifice:30,Embrion:5,Oxyde:75
       weatherMultipliers: None:1.5,DustClouds:0.9,Rainy:0.9,Stormy:0.8,Foggy:0.9,Flooded:0.25,Eclipsed:1.5,Meteor
         Shower:1.5,Tornado:0.8,Night Shift:2,Snowfall:1.4,Blizzard:1.4,Heatwave:0.6,Solar
         Flare:0.6,Toxic Smog:0,Cloudy:0.9,Blackout:2
@@ -1696,7 +1696,7 @@ MonoBehaviour:
     enemies: []
     items:
     - entityName: Turbulence
-      spawnWeights: 
+      spawnWeights: Military:1
       generateSpawnWeightsConfig: 0
       isScrap: 1
       generateScrapConfig: 0

@@ -497,7 +497,7 @@ MonoBehaviour:
   oneHandedItemAllowed: 1
   twoHandedItemAllowed: 1
   holdInteraction: 1
-  timeToHold: 4.5
+  timeToHold: 4
   timeToHoldSpeedMultiplier: 1
   holdTip: Disabling Trap...
   isBeingHeldByPlayer: 0
@@ -572,6 +572,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

@@ -12,7 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: -1637512502, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: DriftwoodEnemyDefinition
   m_EditorClassIdentifier: 
-  _configEntries: []
+  _configEntries:
+  - settingName: Driftwood | Enemy Blacklist
+    DynamicConfigType: 0
+    defaultString: SnailCat, CutieFly, Nancy, Transporter, Docile Locust Bees, Red
+      Locust Bees, Manticoil, Tulip Snake, Horse, Mistress, Girl, Lord of the manor
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 0
+    defaultBoundedRange:
+      <Min>k__BackingField: 0
+      <Max>k__BackingField: 0
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Enemy name Blacklist for what the Driftwood won't attack.
   <EntityNameReference>k__BackingField: Driftwood Menace
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 560802ac9add3a544bc2b1cebb1fcf88,
     type: 2}

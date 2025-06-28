@@ -12619,6 +12619,7 @@ GameObject:
   - component: {fileID: 1556312768562416083}
   - component: {fileID: 7798144519244149779}
   - component: {fileID: 8237670972598894822}
+  - component: {fileID: 390161506240652677}
   m_Layer: 21
   m_Name: EmergingCactus3
   m_TagString: Untagged
@@ -12974,6 +12975,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &390161506240652677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8354563397305030931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 1
 --- !u!1 &8980730178061748041
 GameObject:
   m_ObjectHideFlags: 0

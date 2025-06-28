@@ -147,6 +147,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: a09a8c3d5d36f62408dc75fa7c5bb525, type: 3}
     minTime: 120
     maxTime: 120
+  _playOnStart: 0
   _onAmbientSoundPlayed:
     m_PersistentCalls:
       m_Calls: []
@@ -303,7 +304,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 3e4ba469eb877fe4f98450557795ccab, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.8
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 1
   Mute: 0
