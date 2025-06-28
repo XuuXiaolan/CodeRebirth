@@ -433,7 +433,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             Plugin.ExtendedLogging("Target player is too far away or null, cannot grab.");
             return;
         }
-        targetPlayer.DamagePlayer(5, true, false, CauseOfDeath.Gravity, 0, false, default);
+        targetPlayer.DamagePlayer(5, true, true, CauseOfDeath.Gravity, 0, false, default);
     }
 
     public void GrabPlayerAnimEvent()

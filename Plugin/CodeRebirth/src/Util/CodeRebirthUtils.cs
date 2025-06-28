@@ -17,6 +17,7 @@ using LethalLevelLoader;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using CodeRebirthLib.ContentManagement.Weathers;
+using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -55,24 +56,26 @@ internal class CodeRebirthUtils : NetworkBehaviour
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
         shipAnimator.shipLandAnimation = ModifiedShipLandAnimation;
         shipAnimator.shipNormalLeaveAnimation = ModifiedShipLeaveAnimation;
-        StartCoroutine(HandleWRSetupWithOxyde());
-    }
-
-    private IEnumerator HandleWRSetupWithOxyde()
-    {
-        yield return new WaitUntil(() => WeatherRegistry.WeatherManager.IsSetupFinished);
 
         LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
         Plugin.ExtendedLogging($"Extended level: {extendedLevel?.SelectableLevel}");
         if (extendedLevel == null)
-            yield break;
+            return;
+
+        CheckWithHostToUnlockOxydeServerRpc(new NetworkExtendedLevelReference(extendedLevel));
+        StartCoroutine(HandleWRSetupWithOxyde(extendedLevel));
+    }
+
+    private IEnumerator HandleWRSetupWithOxyde(ExtendedLevel oxydeExtendedLevel)
+    {
+        yield return new WaitUntil(() => WeatherRegistry.WeatherManager.IsSetupFinished);
 
         if (WeatherHandler.Instance.NightShift == null)
             yield break;
 
         if (TimeOfDay.Instance.daysUntilDeadline <= 0)
         {
-            WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, LevelWeatherType.None);
+            WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, LevelWeatherType.None);
             yield break;
         }
 
@@ -80,7 +83,26 @@ internal class CodeRebirthUtils : NetworkBehaviour
             yield break;
 
         Plugin.ExtendedLogging($"Night shift weather: {nightShiftWeatherDefinition.Weather}");
-        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftWeatherDefinition.Weather);
+        WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, nightShiftWeatherDefinition.Weather);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void CheckWithHostToUnlockOxydeServerRpc(NetworkExtendedLevelReference extendedLevelNetworkReference)
+    {
+        if (extendedLevelNetworkReference.TryGet(out ExtendedLevel? extendedLevel) && extendedLevel != null)
+        {
+            CheckWithHostToUnlockOxydeClientRpc(extendedLevelNetworkReference, !extendedLevel.IsRouteLocked);
+        }
+    }
+
+    [ClientRpc]
+    private void CheckWithHostToUnlockOxydeClientRpc(NetworkExtendedLevelReference extendedLevelNetworkReference, bool unlockOxyde)
+    {
+        if (extendedLevelNetworkReference.TryGet(out ExtendedLevel? extendedLevel) && extendedLevel != null)
+        {
+            extendedLevel.IsRouteLocked = !unlockOxyde;
+            extendedLevel.IsRouteHidden = !unlockOxyde;
+        }
     }
 
     private IEnumerator HandleEnemyDropRates()
@@ -122,6 +144,24 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             instance.InteractActionTriggered(player);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DamagePlayerOnOwnerServerRpc(PlayerControllerReference playerControllerB, int damageAmount, bool hasDamageSFX, int causeOfDeathInt, int deathAnimationInt, bool fallDamage, Vector3 force)
+    {
+        DamagePlayerOnOwnerClientRpc(playerControllerB, damageAmount, hasDamageSFX, causeOfDeathInt, deathAnimationInt, fallDamage, force);
+    }
+
+    [ClientRpc]
+    public void DamagePlayerOnOwnerClientRpc(PlayerControllerReference playerControllerB, int damageAmount, bool hasDamageSFX, int causeOfDeathInt, int deathAnimationInt, bool fallDamage, Vector3 force)
+    {
+        PlayerControllerB playerBeingDamaged = playerControllerB;
+        DamagePlayerOnOwner(playerBeingDamaged, damageAmount, hasDamageSFX, causeOfDeathInt, deathAnimationInt, fallDamage, force);
+    }
+
+    private void DamagePlayerOnOwner(PlayerControllerB playerBeingDamaged, int damageNumber, bool hasDamageSFX, int causeOfDeathInt, int deathAnimationInt, bool fallDamage, Vector3 force)
+    {
+        playerBeingDamaged.DamagePlayer(damageNumber, hasDamageSFX, true, (CauseOfDeath)causeOfDeathInt, deathAnimationInt, fallDamage, force);
     }
 
     [ServerRpc(RequireOwnership = false)]

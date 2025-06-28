@@ -580,7 +580,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         previousTargetPlayer.disableMoveInput = false;
         currentlyThrowingPlayer = false;
         previousTargetPlayer.inAnimationWithEnemy = null;
-        previousTargetPlayer.DamagePlayer(15, true, false, CauseOfDeath.Gravity, 0, false, default);
+        previousTargetPlayer.DamagePlayer(15, true, true, CauseOfDeath.Gravity, 0, false, default);
 
         if (!IsServer)
             return;

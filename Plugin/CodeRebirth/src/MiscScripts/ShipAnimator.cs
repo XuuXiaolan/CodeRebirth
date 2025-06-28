@@ -1,6 +1,5 @@
 
 using System.Collections;
-using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util;
 using UnityEngine;
 
@@ -14,6 +13,7 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
     [HideInInspector] public AnimationClip originalShipLeaveClip = null!;
     private RuntimeAnimatorController animatorController = null!; // turn off animator after finishing
     [HideInInspector] public AnimatorOverrideController overrideController = null!;
+    private Coroutine? _messWithEyeVolumeRoutine = null;
 
     private void Start()
     {
@@ -50,7 +50,7 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             StartOfRound.Instance.shipAnimator.enabled = true;
             // re-enable animator
             yield return new WaitUntil(() => RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase);
-            UnReplaceAnimationClip();
+            StartCoroutine(UnReplaceAnimationClip());
         }
     }
 
@@ -68,7 +68,7 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
         Plugin.ExtendedLogging($"Animation Event worked");
         StartOfRound.Instance.shipDoorAudioSource.PlayOneShot(StartOfRound.Instance.alarmSFX);
         SoundManager.Instance.earsRingingTimer = 0.6f;
-        StartCoroutine(MessWithEyeVolume());
+        _messWithEyeVolumeRoutine = StartCoroutine(MessWithEyeVolume());
         CRUtilities.CreateExplosion(StartOfRound.Instance.shipAnimatorObject.transform.position + Vector3.back * 3f, true, 0, 0, 10, 0, null, null, 0);
     }
 
@@ -103,12 +103,18 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             yield return null;
             CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 1, 0.4f * Time.deltaTime);
         }
+        _messWithEyeVolumeRoutine = null;
     }
 
-    private void UnReplaceAnimationClip()
+    private IEnumerator UnReplaceAnimationClip()
     {
         hangarShipAnimator.runtimeAnimatorController = animatorController;
-        if (CodeRebirthUtils.Instance.CloseEyeVolume.weight >= 0.29f) CodeRebirthUtils.Instance.CloseEyeVolume.weight = 0;
+        yield return new WaitUntil(() => _messWithEyeVolumeRoutine == null);
+        while (CodeRebirthUtils.Instance.CloseEyeVolume.weight > 0)
+        {
+            yield return null;
+            CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 0, Time.deltaTime);
+        }
 
         Plugin.ExtendedLogging("Reverted to the original HangarShipLand animation clip.");
     }

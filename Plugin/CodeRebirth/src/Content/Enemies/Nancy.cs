@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -80,21 +81,26 @@ public class Nancy : CodeRebirthEnemyAI
 
         checkTimer = checkLengthTimer;
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (localPlayer.isInsideFactory && isOutside || !isOutside && !localPlayer.isInsideFactory)
+        if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled)
             return;
 
         if (localPlayer.health >= 100)
             return;
 
+        if ((localPlayer.isInsideFactory && isOutside) || (!isOutside && !localPlayer.isInsideFactory))
+            return;
+
         float distance = Vector3.Distance(transform.position, localPlayer.transform.position);
-        float pathDistance = smartAgentNavigator.CanPathToPoint(this.transform.position, localPlayer.transform.position);
-        if (distance < 30 && pathDistance != 0 && pathDistance <= 20f)
-        {
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
-            DoBoolAnimationServerRpc(HealModeAnimation, true);
-            smartAgentNavigator.StopSearchRoutine();
-            SwitchToBehaviourServerRpc((int)NancyState.ChasingHealTarget);
-        }
+        if (distance > 30)
+            return;
+
+        float pathDistance = smartAgentNavigator.CanPathToPoint(this.transform.position, localPlayer.transform.position); // todo: switch this to the async version
+        if (pathDistance == 0 || pathDistance > 20f)
+            return;
+
+        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
+        DoBoolAnimationServerRpc(HealModeAnimation, true);
+        SwitchToBehaviourServerRpc((int)NancyState.ChasingHealTarget);
     }
 
     public override void DoAIInterval()
@@ -166,7 +172,7 @@ public class Nancy : CodeRebirthEnemyAI
         {
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
-            HealPlayerSuccessServerRpc();
+            // HealPlayerSuccessServerRpc();
             SetTargetServerRpc(-1);
             smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
@@ -180,12 +186,26 @@ public class Nancy : CodeRebirthEnemyAI
         {
             failTimer = 1f;
             creatureNetworkAnimator.SetTrigger(FailHealAnimation);
-            targetPlayer.DamagePlayer(20, true, true, CauseOfDeath.Stabbing, 0, false, default);
+            if (targetPlayer.IsOwner)
+            {
+                targetPlayer.DamagePlayer(20, true, true, CauseOfDeath.Stabbing, 0, false, default);
+            }
+            else
+            {
+                CodeRebirthUtils.Instance.DamagePlayerOnOwnerServerRpc(targetPlayer, 20, true, (int)CauseOfDeath.Stabbing, 0, false, default);
+            }
         }
         else if (currentHealth < 100 && healTimer <= 0)
         {
             healTimer = 1f;
-            targetPlayer.DamagePlayer(-10, false, true, CauseOfDeath.Unknown, 0, false, default);
+            if (targetPlayer.IsOwner)
+            {
+                targetPlayer.DamagePlayer(-10, false, true, CauseOfDeath.Unknown, 0, false, default);
+            }
+            else
+            {
+                CodeRebirthUtils.Instance.DamagePlayerOnOwnerServerRpc(targetPlayer, -10, false, (int)CauseOfDeath.Unknown, 0, false, default);
+            }
         }
 
         if (distanceToPlayer > 35)
@@ -229,7 +249,7 @@ public class Nancy : CodeRebirthEnemyAI
     [ClientRpc]
     private void HealPlayerSuccessClientRpc()
     {
-        PlayVoiceline(_healSuccessVoiceline);
+        // PlayVoiceline(_healSuccessVoiceline);
     }
 
     [ServerRpc(RequireOwnership = false)]

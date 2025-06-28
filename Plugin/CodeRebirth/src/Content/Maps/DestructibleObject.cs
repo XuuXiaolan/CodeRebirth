@@ -40,7 +40,7 @@ public class DestructibleObject : NetworkBehaviour, IHittable
 
         if (other.gameObject.TryGetComponent(out PlayerControllerB player))
         {
-            player.DamagePlayer(_playerDamageAmount, true, false, CauseOfDeath.Unknown, 0, false, (player.transform.position - this.transform.position).normalized * _forceApplied);
+            player.DamagePlayer(_playerDamageAmount, true, true, CauseOfDeath.Unknown, 0, false, (player.transform.position - this.transform.position).normalized * _forceApplied);
             DestroyDestructibleObject();
         }
     }
@@ -72,7 +72,7 @@ public class DestructibleObject : NetworkBehaviour, IHittable
             if (Vector3.Distance(this.transform.position, player.transform.position) > 1f)
                 continue;
 
-            player.DamagePlayer(5, true, false, CauseOfDeath.Stabbing, 0, false, default);
+            player.DamagePlayer(5, true, true, CauseOfDeath.Stabbing, 0, false, default);
         }
 
         foreach (var collider in colliders)

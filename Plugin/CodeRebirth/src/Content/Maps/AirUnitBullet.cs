@@ -83,7 +83,7 @@ public class AirUnitProjectile : NetworkBehaviour
         {
             Vector3 forceFlung = transform.up * Plugin.ModConfig.ConfigAirControlUnitKnockbackPower.Value;
             CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, null, null, 5f);
-            player.DamagePlayer((int)damage, true, false, CauseOfDeath.Blast, 0, false, forceFlung);
+            player.DamagePlayer((int)damage, true, true, CauseOfDeath.Blast, 0, false, forceFlung);
             playerHitSoundSource.Play();
             if (player == GameNetworkManager.Instance.localPlayerController)
             {

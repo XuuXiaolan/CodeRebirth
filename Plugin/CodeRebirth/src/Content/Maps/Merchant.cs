@@ -203,7 +203,7 @@ public class Merchant : NetworkBehaviour
                     Vector3 explosionPosition = blocked ? hit.point : currentTargetPlayer.transform.position;
                     if (!blocked)
                     {
-                        currentTargetPlayer.DamagePlayer(30, true, false, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
+                        currentTargetPlayer.DamagePlayer(30, true, true, CauseOfDeath.Blast, 0, false, currentTargetPlayer.velocityLastFrame);
                     }
                     CRUtilities.CreateExplosion(explosionPosition, true, 10, 0, 3, 2, currentTargetPlayer, null, 50f);
                     localDamageCooldownPerTurret[turret] = 2f;

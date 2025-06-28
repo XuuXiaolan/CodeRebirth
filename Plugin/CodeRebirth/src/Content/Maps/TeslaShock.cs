@@ -85,7 +85,7 @@ public class TeslaShock : CodeRebirthHazard
         {
             Vector3 direction = (player.transform.position - this.transform.position).normalized;
             Vector3 force = direction * pushMultiplier;
-            player.DamagePlayer(50, true, false, CauseOfDeath.Blast, 0, false, force);
+            player.DamagePlayer(50, true, true, CauseOfDeath.Blast, 0, false, force);
 
             teslaAudioSource.PlayOneShot(teslaTouchSound);
         }
@@ -239,7 +239,7 @@ public class TeslaShock : CodeRebirthHazard
             EnemyAI enemy = RoundManager.Instance.SpawnedEnemies.FirstOrDefault(e => e.transform == currentTarget);
             if (player != null)
             {
-                player.DamagePlayer(80 * (player.playerSteamId == Plugin.GLITCH_STEAM_ID ? 2 : 1), true, false, CauseOfDeath.Burning, 0, false, default);
+                player.DamagePlayer(80 * (player.playerSteamId == Plugin.GLITCH_STEAM_ID ? 2 : 1), true, true, CauseOfDeath.Burning, 0, false, default);
             }
             else if (enemy != null)
             {

@@ -209,7 +209,7 @@ public class CRUtilities
         foreach (PlayerControllerB player in playerControllerBToDamage.Keys)
         {
             Vector3 directionFromCenter = (player.transform.position - explosionPosition).normalized;
-            player.DamagePlayer(playerControllerBToDamage[player], true, false, CauseOfDeath.Burning, 6, false, directionFromCenter * pushForce * 5f);
+            player.DamagePlayer(playerControllerBToDamage[player], true, true, CauseOfDeath.Burning, 6, false, directionFromCenter * pushForce * 5f);
             player.externalForceAutoFade += directionFromCenter * pushForce;
         }
 

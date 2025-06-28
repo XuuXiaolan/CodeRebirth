@@ -295,7 +295,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             // Reflect incoming damage
             creatureSFX.PlayOneShot(reflectSounds[enemyRandom.Next(reflectSounds.Length)]);
-            playerWhoHit.DamagePlayer(force * 25, true, false, CauseOfDeath.Unknown, 0, false, default);
+            playerWhoHit.DamagePlayer(force * 25, true, true, CauseOfDeath.Unknown, 0, false, default);
             return;
         }
         force = 1;

@@ -450,7 +450,7 @@ public class ItemCrate : CRHittable
         {
             yield return new WaitForSeconds(4f);
             if (player.isPlayerDead || Vector3.Distance(transform.position, player.transform.position) > 3f) trueing = false;
-            player.DamagePlayer(10, false, false, CauseOfDeath.Suffocation, 0, false, default);
+            player.DamagePlayer(10, false, true, CauseOfDeath.Suffocation, 0, false, default);
             player.Crouch(true);
         }
     }

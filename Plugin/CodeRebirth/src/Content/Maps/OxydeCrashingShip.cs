@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
+using LethalLevelLoader;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -19,6 +21,15 @@ public class OxydeCrashingShip : FallingObjectBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
+        if (extendedLevel == null || (!extendedLevel.IsRouteHidden && !extendedLevel.IsRouteLocked))
+        {
+            if (IsServer)
+            {
+                this.NetworkObject.Despawn(true);
+            }
+            return;
+        }
         Vector3 spawnPosition = this.transform.position;
         this.transform.position = new Vector3(9999, 9999, 9999);
         if (!IsServer)

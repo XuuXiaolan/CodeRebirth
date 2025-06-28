@@ -178,7 +178,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
             if (damageTimerDecrease <= 0f)
             {
                 damageTimerDecrease = damageTimer;
-                playerControllerB.DamagePlayer(damageAmount, true, false, CauseOfDeath.Burning, 0, false, default);
+                playerControllerB.DamagePlayer(damageAmount, true, true, CauseOfDeath.Burning, 0, false, default);
             }
         }
     }

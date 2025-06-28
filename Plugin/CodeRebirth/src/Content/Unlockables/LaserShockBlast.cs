@@ -119,7 +119,7 @@ public class LaserShockBlast : NetworkBehaviour
         int damageAmount = player.health - 1;
         if (damageAmount > 0)
         {
-            player.DamagePlayer(damageAmount, true, true);
+            player.DamagePlayer(damageAmount);
         }
         return true;
     }

@@ -43,8 +43,9 @@ public class PiggyBank : NetworkBehaviour, IHittable
         Instance = null;
     }
 
-    public void Start()
+    public IEnumerator Start()
     {
+        yield return new WaitUntil(() => StartOfRound.Instance.randomMapSeed != 0);
         ApplyVariantMaterial();
     }
 
@@ -59,7 +60,9 @@ public class PiggyBank : NetworkBehaviour, IHittable
 
     public int AddCoinsToPiggyBank(int amount)
     {
-        if (_broken.Value) return 0;
+        if (_broken.Value)
+            return 0;
+
         if (IsServer)
         {
             _coinsStored.Value += amount;

@@ -203,7 +203,7 @@ public class MarrowSplitter : GrabbableObject
                     continue;
 
                 hitSomething = true;
-                player.DamagePlayer(damageToDeal, true, false, CauseOfDeath.Fan, 0, false, default);
+                player.DamagePlayer(damageToDeal, true, true, CauseOfDeath.Fan, 0, false, default);
             }
             else if (hittable is EnemyAICollisionDetect enemy)
             {
@@ -307,7 +307,7 @@ public class MarrowSplitter : GrabbableObject
             _bloodParticles.Play(true);
             int currentAmount = Mathf.FloorToInt(_skinnedMeshRenderer.GetBlendShapeWeight(0));
             _skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(currentAmount - _decreaseAmount, 0, 100));
-            playerHeldBy.DamagePlayer(-_decreaseAmount, true, false, CauseOfDeath.Stabbing, 0, false, default);
+            playerHeldBy.DamagePlayer(-_decreaseAmount, true, true, CauseOfDeath.Stabbing, 0, false, default);
 
             if (currentAmount - _decreaseAmount <= 0)
             {

@@ -175,7 +175,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
                 lastTimeTakenDamageFromEnemy = 0;
                 if (playerControlled != null)
                 {
-                    playerControlled.DamagePlayer(finalDamage, true, false, CauseOfDeath.Unknown);
+                    playerControlled.DamagePlayer(finalDamage, true, true, CauseOfDeath.Unknown);
                 }
                 else
                 {

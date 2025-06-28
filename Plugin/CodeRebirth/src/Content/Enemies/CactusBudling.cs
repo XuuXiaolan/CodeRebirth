@@ -390,7 +390,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         PlayerControllerB player = other.GetComponent<PlayerControllerB>();
         player.externalForceAutoFade = directionToPush * 75f;
         player.externalForces = directionToPush * 75f;
-        player.DamagePlayer(50, true, false, CauseOfDeath.Crushing, 0, false, directionToPush * 75f);
+        player.DamagePlayer(50, true, true, CauseOfDeath.Crushing, 0, false, directionToPush * 75f);
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)

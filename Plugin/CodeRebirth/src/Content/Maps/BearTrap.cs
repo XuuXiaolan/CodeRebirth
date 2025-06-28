@@ -178,7 +178,7 @@ public class BearTrap : CodeRebirthHazard
         isTriggered = true;
         playerCaught = player;
         playerCaught.disableMoveInput = true;
-        playerCaught.DamagePlayer(25, true, false, CauseOfDeath.Crushing, 0, false, default);
+        playerCaught.DamagePlayer(25, true, true, CauseOfDeath.Crushing, 0, false, default);
         caughtPosition = playerCaught.transform.position;
         trapAnimator.SetBool(IsTrapTriggered, true);
         StartCoroutine(ResetBooleanAfterDelay(IsTrapTriggered, 0.5f));
