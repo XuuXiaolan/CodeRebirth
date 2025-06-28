@@ -1,9 +1,11 @@
+using System.Collections;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
 
-public class DestructibleObject : MonoBehaviour, IHittable
+public class DestructibleObject : NetworkBehaviour, IHittable
 {
     [Header("References")]
     [SerializeField]
@@ -26,8 +28,8 @@ public class DestructibleObject : MonoBehaviour, IHittable
     private bool _isDestructible = false;
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
-    {   
-        DestroyDestructibleObject();
+    {
+        DestroyDestructibleObjectServerRpc();
         return true;
     }
 
@@ -46,6 +48,18 @@ public class DestructibleObject : MonoBehaviour, IHittable
     public void SetDestructible(bool isDestructible)
     {
         _isDestructible = isDestructible;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DestroyDestructibleObjectServerRpc()
+    {
+        DestroyDestructibleObjectClientRpc();
+    }
+
+    [ClientRpc]
+    private void DestroyDestructibleObjectClientRpc()
+    {
+        DestroyDestructibleObject();
     }
 
     public void DestroyDestructibleObject()
@@ -82,5 +96,17 @@ public class DestructibleObject : MonoBehaviour, IHittable
 
         _audioSource.PlayOneShot(_destroySound);
         Destroy(gameObject, objectLifeTime);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DestroyDestructibleObjectServerRpc(float delay)
+    {
+        StartCoroutine(DestroyObjectWithDelay(delay));
+    }
+
+    private IEnumerator DestroyObjectWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        this.NetworkObject.Despawn();
     }
 }

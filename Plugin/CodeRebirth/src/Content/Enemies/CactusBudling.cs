@@ -358,15 +358,20 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     [ServerRpc(RequireOwnership = false)]
     private void SpawnCactiServerRpc(Vector3 position, Vector3 normal, int angle, int index)
     {
-        SpawnCactiClientRpc(position, normal, angle, index);
+        GameObject randomCacti = _budlingCacti[index];
+        var newCacti = GameObject.Instantiate(randomCacti, position, Quaternion.Euler(0, angle, 0), RoundManager.Instance.mapPropsContainer.transform);
+        var netObj = newCacti.GetComponent<NetworkObject>();
+        netObj.Spawn(true);
+        SpawnCactiClientRpc(netObj, normal);
     }
 
     [ClientRpc]
-    private void SpawnCactiClientRpc(Vector3 position, Vector3 normal, int angle, int index)
+    private void SpawnCactiClientRpc(NetworkObjectReference netObjRef, Vector3 normal)
     {
-        GameObject randomCacti = _budlingCacti[index];
-        var newCacti = GameObject.Instantiate(randomCacti, position, Quaternion.Euler(0, angle, 0), RoundManager.Instance.mapPropsContainer.transform);
-        newCacti.transform.up = normal;
+        if (netObjRef.TryGet(out NetworkObject netObj))
+        {
+            netObj.transform.up = normal;
+        }
     }
     #endregion
 
