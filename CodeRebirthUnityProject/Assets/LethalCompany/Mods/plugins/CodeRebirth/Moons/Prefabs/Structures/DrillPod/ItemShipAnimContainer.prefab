@@ -416,7 +416,7 @@ GameObject:
   - component: {fileID: 4552850540607646464}
   m_Layer: 8
   m_Name: RampCollider
-  m_TagString: Untagged
+  m_TagString: Aluminum
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -469,7 +469,7 @@ GameObject:
   - component: {fileID: 1069879988309864569}
   m_Layer: 8
   m_Name: DoorCollider
-  m_TagString: Untagged
+  m_TagString: Catwalk
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -983,7 +983,7 @@ GameObject:
   - component: {fileID: 1490198405607417424}
   m_Layer: 8
   m_Name: TankColliders
-  m_TagString: Untagged
+  m_TagString: Aluminum
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1061,7 +1061,7 @@ GameObject:
   - component: {fileID: 7835380561649376555}
   m_Layer: 8
   m_Name: FloorCollider
-  m_TagString: Catwalk
+  m_TagString: Aluminum
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1409,7 +1409,7 @@ GameObject:
   - component: {fileID: 7919574788850963768}
   m_Layer: 8
   m_Name: TreadCollider
-  m_TagString: Metal
+  m_TagString: Aluminum
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7846,7 +7846,6 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
-  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -8516,7 +8515,7 @@ GameObject:
   - component: {fileID: 309956236499559884}
   m_Layer: 8
   m_Name: DoorCollider
-  m_TagString: Untagged
+  m_TagString: Catwalk
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8922,7 +8921,7 @@ GameObject:
   - component: {fileID: 5165031558577991710}
   m_Layer: 8
   m_Name: TreadCollider
-  m_TagString: Metal
+  m_TagString: Aluminum
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9056,7 +9055,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 39c02b14695925a48b1be9b08684e5c4,
         type: 3}
       propertyPath: m_TagString
-      value: Catwalk
+      value: Aluminum
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -7511558181221131132, guid: 39c02b14695925a48b1be9b08684e5c4, type: 3}
