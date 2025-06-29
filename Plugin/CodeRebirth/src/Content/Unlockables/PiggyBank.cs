@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Linq;
-using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -10,8 +7,12 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class PiggyBank : NetworkBehaviour, IHittable
 {
+    public AudioSource _audioSource = null!;
+    public AudioClip _breakBankSound = null!;
+    public AudioClip _storeCoinSound = null!;
     public Material[] variantMaterials = [];
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
     public Animator piggyBankAnimator = null!;
@@ -102,6 +103,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
 
     public void SpawnAllCoinsAnimEvent()
     {
+        _audioSource.PlayOneShot(_breakBankSound);
         if (IsServer)
         {
             if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Money", out CRMapObjectDefinition? moneyMapObjectDefinition))
@@ -114,5 +116,10 @@ public class PiggyBank : NetworkBehaviour, IHittable
             }
             _coinsStored.Value = 0;
         }
+    }
+
+    public void StoreCoinSoundAnimEvent()
+    {
+        _audioSource.PlayOneShot(_storeCoinSound);
     }
 }

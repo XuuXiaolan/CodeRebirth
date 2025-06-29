@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8780418704460175559}
   - component: {fileID: 3772969002886483734}
   - component: {fileID: 6994438248522370116}
+  - component: {fileID: -8999058014383396309}
   m_Layer: 6
   m_Name: FlatBody
   m_TagString: PhysicsProp
@@ -224,6 +225,55 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   rotateObject: 0
+--- !u!114 &-8999058014383396309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2911150502268147426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf88883f6da836f018db4dd67f32b4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerObjectId: 0
+  setMaterialToPlayerSuit: 1
+  playerScript: {fileID: 0}
+  bodyParts: []
+  attachedLimb: {fileID: 0}
+  attachedTo: {fileID: 0}
+  secondaryAttachedLimb: {fileID: 0}
+  secondaryAttachedTo: {fileID: 0}
+  timesOutOfBounds: 0
+  spawnPosition: {x: 0, y: 0, z: 0}
+  maxVelocity: 0
+  speedMultiplier: 0
+  matchPositionExactly: 1
+  wasMatchingPosition: 0
+  bodyBleedingHeavily: 1
+  bodyBloodDecals: []
+  seenByLocalPlayer: 0
+  bodyAudio: {fileID: 0}
+  radarDot: {fileID: 0}
+  parentedToShip: 0
+  detachedHead: 0
+  detachedHeadObject: {fileID: 0}
+  detachedHeadVelocity: {x: 0, y: 0, z: 0}
+  bloodSplashParticle: {fileID: 0}
+  beamUpParticle: {fileID: 0}
+  beamOutParticle: {fileID: 0}
+  playAudioOnDeath: {fileID: 0}
+  causeOfDeath: 0
+  grabBodyObject: {fileID: 0}
+  lerpBeforeMatchingPosition: 0
+  canBeGrabbedBackByPlayers: 0
+  isInShip: 0
+  deactivated: 0
+  overrideSpawnPosition: 0
+  physicsParent: {fileID: 0}
+  isParentedToPhysicsRegion: 0
+  nightVisionRadar: {fileID: 0}
 --- !u!1 &4443506330685774107
 GameObject:
   m_ObjectHideFlags: 0
