@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 589960968890740112}
   - component: {fileID: 4638084073588414561}
   - component: {fileID: 6613878427625144039}
+  - component: {fileID: 2164760057231751167}
   m_Layer: 21
   m_Name: OxydePipe
   m_TagString: EnemySpawn
@@ -272,3 +273,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2164760057231751167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6566448370868237077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1027359893, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  daytimeSpawner: 0
+  enemySizesAllowed: 000000000200000001000000
+  spawnPosition: {fileID: 3830983924572449870}
+  maxEnemiesToSpawn: 999
+  spawnTimerStart: 50
+  spawnTimerMin: 20
+  spawnTimerMax: 60
+  specialEnemiesToSpawn:
+  - Transporter
+  - Janitor
+  - Peace Keeper
+  - Nancy
+  - Lord Of The Manor
+  - Mistress
