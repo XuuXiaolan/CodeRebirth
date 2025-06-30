@@ -7,7 +7,6 @@ namespace CodeRebirth.src.Content.Items;
 public class PlanetUnlocker : GrabbableObject
 {
     public string moonSceneName = "Oxyde";
-    public float timeBeforeDespawning = 5f;
     public AudioSource audioPlayer = null!;
 
     public override void ItemActivate(bool used, bool buttonDown = true)
@@ -15,7 +14,6 @@ public class PlanetUnlocker : GrabbableObject
         base.ItemActivate(used, buttonDown);
         playerHeldBy.inSpecialInteractAnimation = true;
         audioPlayer.Play();
-        // playerHeldBy.inSpecialInteractAnimation = true;
         LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == moonSceneName).FirstOrDefault(), out ExtendedLevel? extendedLevel);
         if (extendedLevel != null)
         {
@@ -32,7 +30,7 @@ public class PlanetUnlocker : GrabbableObject
 
     private IEnumerator WaitForEndOfFrame()
     {
-        yield return new WaitForSeconds(timeBeforeDespawning);
+        yield return new WaitForSeconds(audioPlayer.clip.length);
         playerHeldBy.inSpecialInteractAnimation = false;
         if (!playerHeldBy.IsOwner)
             yield break;
