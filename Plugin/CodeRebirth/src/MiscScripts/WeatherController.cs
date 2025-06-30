@@ -19,13 +19,17 @@ public class WeatherController : MonoBehaviour
         Plugin.ExtendedLogging($"Weather: {weatherName}");
         if (weatherName == "blackout" || weatherName == "night shift")
         {
-            StartCoroutine(HandleDarkness());
+            // StartCoroutine(HandleDarkness());
         }
     }
 
     private IEnumerator HandleDarkness()
     {
         yield return new WaitUntil(() => EnemyLevelSpawner.enemyLevelSpawners.Count > 0);
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
         foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
         {
             enemyLevelSpawner.spawnTimerMax /= 4f;

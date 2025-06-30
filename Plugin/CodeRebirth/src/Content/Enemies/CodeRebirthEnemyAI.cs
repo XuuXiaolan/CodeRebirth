@@ -44,13 +44,15 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [HideInInspector]
     public System.Random enemyRandom = new();
 
+    private static int _randomNumberForRandomThings = 0;
     private float _previousLightValue = 0f;
     private static int ShiftHash = Shader.PropertyToID("_Shift");
     private static int TemperatureHash = Shader.PropertyToID("_Temperature");
     public override void Start()
     {
         base.Start();
-        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
+        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69 + _randomNumberForRandomThings);
+        _randomNumberForRandomThings++;
 
         if (spawnSound != null)
             creatureVoice.PlayOneShot(spawnSound);

@@ -168,7 +168,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
             if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
             {
                 PlayerControllerB player = deadPlayer;
-                flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName.Value = player.playerUsername;
+                flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName.Value = (PlayerControllerReference)player;
             }
             yield break;
         }

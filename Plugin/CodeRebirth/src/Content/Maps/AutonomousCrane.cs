@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Maps;
-public class AutonomousCrane : NetworkBehaviour // todo: for some reason it sometimes drops when a person leaves the area while rotating towards them or smthn
+public class AutonomousCrane : NetworkBehaviour
 {
     [Header("Audio")]
     [SerializeField]
@@ -104,6 +104,9 @@ public class AutonomousCrane : NetworkBehaviour // todo: for some reason it some
 
     public void Update()
     {
+        if (!IsServer)
+            return;
+
         if (!_craneIsActive)
             return;
 
@@ -283,7 +286,7 @@ public class AutonomousCrane : NetworkBehaviour // todo: for some reason it some
             {
                 _magnetMovingProgress = 1f;
                 _magnetState = MagnetState.IdleBottom;
-                CraneHitBottom();
+                CraneHitBottomServerRpc();
             }
         }
         else if (_magnetState == MagnetState.IdleBottom)
@@ -319,7 +322,14 @@ public class AutonomousCrane : NetworkBehaviour // todo: for some reason it some
         _targetPosition = targetPlayer.transform.position;
     }
 
-    private void CraneHitBottom()
+    [ServerRpc(RequireOwnership = false)]
+    private void CraneHitBottomServerRpc()
+    {
+        CraneHitBottomClientRpc();
+    }
+
+    [ClientRpc]
+    private void CraneHitBottomClientRpc()
     {
         float distanceToLocalPlayer = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, _magnetTargetPosition);
         if (distanceToLocalPlayer >= 40 && distanceToLocalPlayer < 60)
@@ -334,7 +344,7 @@ public class AutonomousCrane : NetworkBehaviour // todo: for some reason it some
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         }
-        else
+        else if (distanceToLocalPlayer <= 10)
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         }
@@ -346,7 +356,7 @@ public class AutonomousCrane : NetworkBehaviour // todo: for some reason it some
             if (!collider.TryGetComponent(out IHittable hittable))
                 continue;
 
-            if (Physics.Raycast(collider.transform.position, (collider.transform.position - _magnetTargetPosition).normalized, 5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            if (Physics.Linecast(_magnetTargetPosition, collider.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
                 continue;
 
             if (hittable is PlayerControllerB player)
@@ -359,7 +369,7 @@ public class AutonomousCrane : NetworkBehaviour // todo: for some reason it some
                     NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);
                     if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
                     {
-                        flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName.Value = player.playerUsername;
+                        flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName.Value = (PlayerControllerReference)player;
                     }
                 }
 
