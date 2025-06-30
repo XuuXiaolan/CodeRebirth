@@ -1,12 +1,14 @@
 using System;
+using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class BellCrabGalAI : NetworkBehaviour, INoiseListener
+public class BellCrabGalAI : NetworkBehaviour
 {
+    public CRNoiseListener _BellCrabGalNoiseListener = null!; // todo implement this
     public Animator animator;
     public NetworkAnimator networkAnimator;
     public InteractTrigger SwitchPoseTrigger;
@@ -18,6 +20,7 @@ public class BellCrabGalAI : NetworkBehaviour, INoiseListener
 
     public void Start()
     {
+        _BellCrabGalNoiseListener._onNoiseDetected.AddListener(OnNoiseDetected);
         SwitchPoseTrigger.onInteract.AddListener(SwitchPose);
     }
 
@@ -28,7 +31,8 @@ public class BellCrabGalAI : NetworkBehaviour, INoiseListener
 
     private void BoomboxUpdate()
     {
-        if (!boomboxPlaying || !IsServer) return;
+        if (!boomboxPlaying || !IsServer)
+            return;
 
         boomboxTimer += Time.deltaTime;
         if (boomboxTimer >= 2f)
@@ -38,6 +42,7 @@ public class BellCrabGalAI : NetworkBehaviour, INoiseListener
             animator.SetBool(isDancing, false);
         }
     }
+
     private void SwitchPose(PlayerControllerB playerInteracting)
     {
         if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
@@ -59,13 +64,16 @@ public class BellCrabGalAI : NetworkBehaviour, INoiseListener
         }
     }
 
-    public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)
+    public void OnNoiseDetected(NoiseParams noiseParams)
     {
-        if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
-        {
-            boomboxTimer = 0f;
-            boomboxPlaying = true;
-            animator.SetBool(isDancing, true);
-        }
+        if (!IsServer)
+            return;
+
+        if (noiseParams.noiseID != 5 || Physics.Linecast(transform.position, noiseParams.noisePosition, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            return;
+
+        boomboxTimer = 0f;
+        boomboxPlaying = true;
+        animator.SetBool(isDancing, true);
     }
 }

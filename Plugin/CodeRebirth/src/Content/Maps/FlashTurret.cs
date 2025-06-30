@@ -1,10 +1,11 @@
+using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class FlashTurret : CodeRebirthHazard, INoiseListener
+public class FlashTurret : CodeRebirthHazard
 {
+    public CRNoiseListener _FlashTurretNoiseListener = null!; // todo implement this
     public Transform turretTransform = null!;
     public Light flashLight = null!;
     public float rotationSpeed = 90f;
@@ -26,6 +27,7 @@ public class FlashTurret : CodeRebirthHazard, INoiseListener
     public override void Start()
     {
         base.Start();
+        _FlashTurretNoiseListener._onNoiseDetected.AddListener(OnNoiseDetected);
         Plugin.ExtendedLogging("Flash Turret initialized");
     }
 
@@ -76,37 +78,29 @@ public class FlashTurret : CodeRebirthHazard, INoiseListener
         cameraAudioSource.volume = Plugin.ModConfig.ConfigFlashTurretVolume.Value;
     }
 
-    public void OnNoiseDetected(Vector3 noisePosition, int noiseID)
+    public void OnNoiseDetected(NoiseParams noiseParams)
     {
-        OnNoiseDetectedServerRpc(noisePosition, noiseID);
-    }
+        Plugin.ExtendedLogging($"Flash turret hearing noiseID: {noiseParams.noiseID}");
+        if (noiseParams.noiseID != 6)
+            return;
 
-    [ServerRpc(RequireOwnership = false)]
-    public void OnNoiseDetectedServerRpc(Vector3 noisePosition, int noiseID)
-    {
-        OnNoiseDetectedClientRpc(noisePosition, noiseID);
-    }
+        if (detectedPlayer != null || cooldownTimer > 0f)
+            return;
 
-    [ClientRpc]
-    public void OnNoiseDetectedClientRpc(Vector3 noisePosition, int noiseID)
-    {
-        if (detectedPlayer != null || cooldownTimer > 0f) return;
+        float distance = Vector3.Distance(turretTransform.position, noiseParams.noisePosition);
+        if (distance > detectionRange)
+            return;
 
-        float distance = Vector3.Distance(turretTransform.position, noisePosition);
-        int playerNoiseID = 6;
-        if (distance <= detectionRange && noiseID == playerNoiseID)
-        {
-            Ray ray = new Ray(turretTransform.position, noisePosition - turretTransform.position);
-            if (Physics.Raycast(ray, out RaycastHit hit, detectionRange, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
-            {
-                if (hit.collider != null && hit.collider.TryGetComponent(out PlayerControllerB player))
-                {
-                    detectedPlayer = player;
-                    isTriggered = true;
-                    cameraAudioSource.PlayOneShot(spotPlayerSound);
-                }
-            }
-        }
+        Ray ray = new Ray(turretTransform.position, noiseParams.noisePosition - turretTransform.position);
+        if (!Physics.Raycast(ray, out RaycastHit hit, distance + 1f, StartOfRound.Instance.collidersAndRoomMaskAndPlayers, QueryTriggerInteraction.Collide))
+            return;
+
+        if (hit.collider == null || !hit.collider.TryGetComponent(out PlayerControllerB player))
+            return;
+
+        detectedPlayer = player;
+        isTriggered = true;
+        cameraAudioSource.PlayOneShot(spotPlayerSound);
     }
 
     private void TriggerFlash(float dotProduct)
@@ -130,10 +124,5 @@ public class FlashTurret : CodeRebirthHazard, INoiseListener
     {
         isTriggered = false;
         detectedPlayer = null;
-    }
-
-    public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)
-    {
-        OnNoiseDetected(noisePosition, noiseID);
     }
 }

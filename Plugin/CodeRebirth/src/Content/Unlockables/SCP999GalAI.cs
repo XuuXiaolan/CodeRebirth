@@ -1,16 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirth.src.MiscScripts;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class SCP999GalAI : NetworkBehaviour, INoiseListener
+public class SCP999GalAI : NetworkBehaviour
 {
+    public CRNoiseListener _SCP999GalNoiseListener = null!; // todo implement this 
     public Animator animator = null!;
     public NetworkAnimator networkAnimator = null!;
     public InteractTrigger HealTrigger = null!;
@@ -44,6 +44,7 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
             StartCoroutine(DetectingNearbyPlayer());
             MakeTriggerInteractableServerRpc(!StartOfRound.Instance.inShipPhase);
         }
+        _SCP999GalNoiseListener._onNoiseDetected.AddListener(DetectNoise);
         HealTrigger.onInteract.AddListener(HealPlayerInteraction);
     }
 
@@ -458,15 +459,17 @@ public class SCP999GalAI : NetworkBehaviour, INoiseListener
         HealTrigger.interactable = interactable;
     }
 
-    public void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)
+    public void DetectNoise(NoiseParams noiseParams)
     {
-        if (!IsServer) return;
-        if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
-        {
-            boomboxTimer = 0f;
-            boomboxPlaying.Value = true;
-            animator.SetBool(isDancing, true);
-        }
+        if (!IsServer)
+            return;
+
+        if (noiseParams.noiseID != 5 || Physics.Linecast(transform.position, noiseParams.noisePosition, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            return;
+
+        boomboxTimer = 0f;
+        boomboxPlaying.Value = true;
+        animator.SetBool(isDancing, true);
     }
 
     public override void OnNetworkDespawn()

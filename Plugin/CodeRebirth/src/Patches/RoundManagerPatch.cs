@@ -126,29 +126,6 @@ static class RoundManagerPatch
         }
     }
 
-    [HarmonyPatch(nameof(RoundManager.PlayAudibleNoise)), HarmonyPostfix]
-    public static void PlayAudibleNoiseForShockwaveGalPostfix(RoundManager __instance, ref Vector3 noisePosition, ref float noiseRange, ref float noiseLoudness, ref int timesPlayedInSameSpot, ref bool noiseIsInsideClosedShip, ref int noiseID)
-    {
-        if (noiseID != 5 && noiseID != 6)
-            return;
-
-        if (noiseIsInsideClosedShip)
-        {
-            noiseRange /= 2f;
-        }
-
-        int numHits = Physics.OverlapSphereNonAlloc(noisePosition, noiseRange, RoundManager.Instance.tempColliderResults, MoreLayerMasks.PropsAndHazardMask, QueryTriggerInteraction.Collide);
-        for (int i = 0; i < numHits; i++)
-        {
-            if (!RoundManager.Instance.tempColliderResults[i].TryGetComponent(out INoiseListener noiseListener)) continue;
-            if (noiseListener is GalAI || noiseListener is SCP999GalAI || noiseListener is BellCrabGalAI || noiseListener is FlashTurret)
-            {
-                continue;
-            }
-            noiseListener.DetectNoise(noisePosition, noiseLoudness, timesPlayedInSameSpot, noiseID);
-        }
-    }
-
     [HarmonyPatch(nameof(RoundManager.LoadNewLevelWait))]
     [HarmonyPrefix]
     public static void LoadNewLevelWaitPatch(RoundManager __instance)

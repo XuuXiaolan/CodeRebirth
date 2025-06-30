@@ -83,8 +83,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     private void ApplyVariants(Renderer renderer)
     {
-        System.Random random = new(RoundManager.Instance.SpawnedEnemies.Count + StartOfRound.Instance.randomMapSeed);
-        float number = random.NextFloat(0f, 1f);
+        float number = enemyRandom.NextFloat(0f, 1f);
         renderer.GetMaterial().SetFloat(ShiftHash, number);
         if (_usesTemperature)
         {

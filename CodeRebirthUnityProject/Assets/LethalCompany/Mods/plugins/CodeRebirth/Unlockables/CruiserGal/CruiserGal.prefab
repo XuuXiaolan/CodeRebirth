@@ -121,6 +121,53 @@ Transform:
   - {fileID: 7677407719512541931}
   m_Father: {fileID: 8372534089666902423}
   m_LocalEulerAnglesHint: {x: 0.0031296378, y: 31.70641, z: 7.660314}
+--- !u!1 &423004326785190380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4474283190691382596}
+  - component: {fileID: 6774899935066851037}
+  m_Layer: 19
+  m_Name: CRNoiseListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4474283190691382596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423004326785190380}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.38, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8687297032391409077}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6774899935066851037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423004326785190380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1331605367, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onNoiseDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &559396180125795860
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,10 +942,11 @@ Transform:
   m_GameObject: {fileID: 2039687054478570247}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 31.950148, y: 0, z: -9.827646}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4474283190691382596}
   - {fileID: 650069877674889981}
   - {fileID: 8413139886792013921}
   - {fileID: 2805379808319199940}
@@ -973,6 +1021,7 @@ MonoBehaviour:
   m_Script: {fileID: -1068363462, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _GalAINoiseListener: {fileID: 6774899935066851037}
   GalName: Eleanora
   Animator: {fileID: 5326531890941614610}
   NetworkAnimator: {fileID: 4917579483300113075}

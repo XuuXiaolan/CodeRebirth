@@ -534,6 +534,7 @@ MonoBehaviour:
   AllowPlacementOnWalls: 0
   AllowPlacementOnCounters: 1
   inUse: 0
+  lastTimeScrapWasPlaced: 0
 --- !u!82 &1672242118150164464
 AudioSource:
   m_ObjectHideFlags: 0
@@ -801,6 +802,53 @@ Transform:
   - {fileID: 3199814514916977392}
   m_Father: {fileID: 5799226392655759254}
   m_LocalEulerAnglesHint: {x: -0.000008537736, y: 90.00001, z: 130.05283}
+--- !u!1 &3668513522262951636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7305444642525607542}
+  - component: {fileID: 4033738344314786410}
+  m_Layer: 19
+  m_Name: CRNoiseListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7305444642525607542
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3668513522262951636}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9148923595524229102}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4033738344314786410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3668513522262951636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1331605367, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onNoiseDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4034649209321179031
 GameObject:
   m_ObjectHideFlags: 0
@@ -1439,6 +1487,7 @@ Transform:
   - {fileID: 8109608421954276652}
   - {fileID: 2706430143477621676}
   - {fileID: 1070116220872334898}
+  - {fileID: 7305444642525607542}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &3209006961590831282
@@ -1513,6 +1562,7 @@ MonoBehaviour:
   m_Script: {fileID: -1873921644, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _BellCrabGalNoiseListener: {fileID: 4033738344314786410}
   animator: {fileID: 3209006961590831282}
   networkAnimator: {fileID: 4511801445071158541}
   SwitchPoseTrigger: {fileID: 6620017609285394777}
@@ -1971,6 +2021,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

@@ -6489,6 +6489,53 @@ Transform:
   - {fileID: 1448213807232507839}
   m_Father: {fileID: 7559913197163619111}
   m_LocalEulerAnglesHint: {x: -180, y: -3.6510003, z: -90}
+--- !u!1 &4071753475441005207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2160395837382636756}
+  - component: {fileID: 7740132197119641065}
+  m_Layer: 19
+  m_Name: CRNoiseListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2160395837382636756
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4071753475441005207}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.884, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4270605388990098884}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7740132197119641065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4071753475441005207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1331605367, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onNoiseDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4310659828419143592
 GameObject:
   m_ObjectHideFlags: 0
@@ -6525,10 +6572,11 @@ Transform:
   m_GameObject: {fileID: 4310659828419143592}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.061027482, y: 0, z: 0.5971813}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2160395837382636756}
   - {fileID: 7425672419251502726}
   - {fileID: 1937083391680677889}
   - {fileID: 2865924773460094743}
@@ -6567,6 +6615,7 @@ MonoBehaviour:
   m_Script: {fileID: 600328161, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _GalAINoiseListener: {fileID: 7740132197119641065}
   GalName: Daisy
   Animator: {fileID: 3259738094434479708}
   NetworkAnimator: {fileID: 850045977774335525}

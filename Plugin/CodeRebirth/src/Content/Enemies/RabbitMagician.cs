@@ -44,6 +44,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private static readonly int LatchOnAnimation = Animator.StringToHash("LatchOn"); // Trigger
     private static readonly int SpottedFromGroundAnimation = Animator.StringToHash("SpottedFromGround"); // Trigger
     private static readonly int SpottedFromBackAnimation = Animator.StringToHash("SpottedFromBack"); // Trigger
+    private static readonly int ResetToIdleAnimation = Animator.StringToHash("ResetToIdle"); // Trigger
 
     public enum RabbitMagicianState
     {
@@ -252,6 +253,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
 
     private IEnumerator SwitchToIdle()
     {
+        creatureNetworkAnimator.SetTrigger(ResetToIdleAnimation);
         yield return new WaitForSeconds(_spawnAnimation.length);
         smartAgentNavigator.enabled = true;
         agent.enabled = true;
@@ -264,14 +266,20 @@ public class RabbitMagician : CodeRebirthEnemyAI
     {
         smartAgentNavigator.StopSearchRoutine();
         SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
-        Plugin.ExtendedLogging($"Attaching to {playerToAttachTo}");
+        Plugin.ExtendedLogging($"Attaching to {playerToAttachTo} from {previouslyAttachedToPlayer}");
         if (previouslyAttachedToPlayer != null)
         {
             creatureNetworkAnimator.SetTrigger(SpottedFromBackAnimation);
             yield return new WaitForSeconds(8.54f);
+            if (playerToAttachTo.isPlayerDead)
+            {
+                SwitchToBehaviourServerRpc((int)RabbitMagicianState.Attached);
+                SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
+                yield break;
+            }
             PlayConfettiServerRpc();
             FallSoundServerRpc(playerToAttachTo);
-            previouslyAttachedToPlayer.KillPlayerServerRpc((int)previouslyAttachedToPlayer.playerClientId, true, Vector3.zero, (int)CauseOfDeath.Unknown, 1, Vector3.zero);
+            CodeRebirthUtils.Instance.KillPlayerOnOwnerServerRpc(previouslyAttachedToPlayer, true, (int)CauseOfDeath.Unknown, 1, Vector3.zero);
         }
 
         smartAgentNavigator.enabled = false;

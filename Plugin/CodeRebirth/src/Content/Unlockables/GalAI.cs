@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util.Pathfinding;
 using GameNetcodeStuff;
@@ -10,8 +11,9 @@ using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Unlockables;
 [RequireComponent(typeof(SmartAgentNavigator))]
-public class GalAI : NetworkBehaviour, IHittable, INoiseListener
+public class GalAI : NetworkBehaviour, IHittable
 {
+    public CRNoiseListener _GalAINoiseListener = null!; // todo implement this
     public string GalName = "";
     public Animator Animator = null!;
     public NetworkAnimator NetworkAnimator = null!;
@@ -57,6 +59,7 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
     {
         base.OnNetworkSpawn();
         Instances.Add(this);
+        _GalAINoiseListener._onNoiseDetected.AddListener(DetectNoise);
         if (!IsServer) return;
 
         transform.SetParent(GalCharger.transform, false);
@@ -262,14 +265,19 @@ public class GalAI : NetworkBehaviour, IHittable, INoiseListener
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
     }
 
-    public virtual void DetectNoise(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot = 0, int noiseID = 0)
+    public virtual void DetectNoise(NoiseParams noiseParams)
     {
-        if (inActive) return;
-        if (noiseID == 5 && !Physics.Linecast(transform.position, noisePosition, StartOfRound.Instance.collidersAndRoomMask))
-        {
-            boomboxTimer = 0f;
-            boomboxPlaying = true;
-        }
+        if (inActive)
+            return;
+
+        if (!IsServer)
+            return;
+
+        if (noiseParams.noiseID != 5 || Physics.Linecast(transform.position, noiseParams.noisePosition, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            return;
+
+        boomboxTimer = 0f;
+        boomboxPlaying = true;
     }
 
     public virtual bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)

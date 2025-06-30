@@ -165,6 +165,25 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
+    public void KillPlayerOnOwnerServerRpc(PlayerControllerReference playerControllerB, bool spawnBody, int causeOfDeathInt, int deathAnimationInt, Vector3 positionOffset)
+    {
+        KillPlayerOnOwnerClientRpc(playerControllerB, spawnBody, causeOfDeathInt, deathAnimationInt, positionOffset);
+    }
+
+    [ClientRpc]
+    public void KillPlayerOnOwnerClientRpc(PlayerControllerReference playerControllerB, bool spawnBody, int causeOfDeathInt, int deathAnimationInt, Vector3 positionOffset)
+    {
+        PlayerControllerB playerBeingDamaged = playerControllerB;
+        KillPlayerOnOwner(playerBeingDamaged, spawnBody, causeOfDeathInt, deathAnimationInt, positionOffset);
+    }
+
+    private void KillPlayerOnOwner(PlayerControllerB playerBeingDamaged, bool spawnBody, int causeOfDeathInt, int deathAnimationInt, Vector3 positionOffset)
+    {
+        playerBeingDamaged.KillPlayer(playerBeingDamaged.velocityLastFrame, spawnBody, (CauseOfDeath)causeOfDeathInt, deathAnimationInt, positionOffset);
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
     public void ReactToVehicleCollisionServerRpc(int obstacleId)
     {
         ReactToVehicleCollisionClientRpc(obstacleId);

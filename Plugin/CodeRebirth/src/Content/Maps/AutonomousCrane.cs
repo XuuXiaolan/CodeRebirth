@@ -328,6 +328,8 @@ public class AutonomousCrane : NetworkBehaviour
         CraneHitBottomClientRpc();
     }
 
+    private List<PlayerControllerB> _playerKillList = new();
+
     [ClientRpc]
     private void CraneHitBottomClientRpc()
     {
@@ -349,6 +351,7 @@ public class AutonomousCrane : NetworkBehaviour
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         }
 
+        _playerKillList.Clear();
         int numHits = Physics.OverlapSphereNonAlloc(_magnetTargetPosition, 5f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
@@ -361,9 +364,10 @@ public class AutonomousCrane : NetworkBehaviour
 
             if (hittable is PlayerControllerB player)
             {
-                if (player.isPlayerDead || !player.isPlayerControlled)
+                if (player.isPlayerDead || !player.isPlayerControlled || _playerKillList.Contains(player))
                     continue;
 
+                _playerKillList.Add(player);
                 if (IsServer && Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
                 {
                     NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);

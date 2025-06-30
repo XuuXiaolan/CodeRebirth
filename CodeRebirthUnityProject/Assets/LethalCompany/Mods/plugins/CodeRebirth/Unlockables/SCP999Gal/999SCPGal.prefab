@@ -5135,6 +5135,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -5202,6 +5203,53 @@ Transform:
   - {fileID: 288951172969874795}
   m_Father: {fileID: 8142781882389419872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2237836052458411064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1207408960443636712}
+  - component: {fileID: 369256683272036656}
+  m_Layer: 19
+  m_Name: CRNoiseListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1207408960443636712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2237836052458411064}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1125388112618245037}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &369256683272036656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2237836052458411064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1331605367, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onNoiseDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2847133091953200092
 GameObject:
   m_ObjectHideFlags: 0
@@ -7892,6 +7940,7 @@ MonoBehaviour:
   AllowPlacementOnWalls: 0
   AllowPlacementOnCounters: 1
   inUse: 0
+  lastTimeScrapWasPlaced: 0
 --- !u!82 &908113957585724739
 AudioSource:
   m_ObjectHideFlags: 0
@@ -27721,6 +27770,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1207408960443636712}
   - {fileID: 5753967120321964547}
   - {fileID: 7735307970511947859}
   - {fileID: 6878348555065927339}
@@ -27811,6 +27861,7 @@ MonoBehaviour:
   m_Script: {fileID: 387630716, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _SCP999GalNoiseListener: {fileID: 369256683272036656}
   animator: {fileID: 2723831814068335644}
   networkAnimator: {fileID: 3181639373923165739}
   HealTrigger: {fileID: 8344203627012748592}
