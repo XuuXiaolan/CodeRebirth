@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src;
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -49,6 +47,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     [SerializeField]
     private AudioClip _bitchSlapStartSound = null!;
 
+    private Vector3 _lastPosition = Vector3.zero;
     private List<Material> _materials = new();
     private float _backOffTimer = 0f;
     private bool _isShooting = false;
@@ -146,6 +145,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
+        _lastPosition = this.transform.position;
         _materials.Add(skinnedMeshRenderers[0].materials[2]);
         _materials.Add(skinnedMeshRenderers[0].materials[3]);
         if (!IsServer) return;
@@ -169,6 +169,19 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         {
             _aggroSFX.Play();
         }
+
+        float velocity = (_lastPosition - this.transform.position).magnitude;
+        _materials[0].SetVector(ScrollSpeedID, new Vector3(0, -velocity, 0)); // Left Tread
+        _materials[1].SetVector(ScrollSpeedID, new Vector3(0, velocity, 0)); // Right Tread
+        if (velocity > 0)
+        {
+            _treadsSource.volume = 1f;
+        }
+        else
+        {
+            _treadsSource.volume = 0f;
+        }
+        _lastPosition = this.transform.position;
 
         if (!IsServer)
             return;
@@ -197,16 +210,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
 
         float velocity = agent.velocity.magnitude / 3;
         creatureAnimator.SetFloat(RunSpeedFloat, velocity);
-        _materials[0].SetVector(ScrollSpeedID, new Vector3(0, -velocity, 0)); // Left Tread
-        _materials[1].SetVector(ScrollSpeedID, new Vector3(0, velocity, 0)); // Right Tread
-        if (velocity > 0)
-        {
-            _treadsSource.volume = 1f;
-        }
-        else
-        {
-            _treadsSource.volume = 0f;
-        }
         switch (currentBehaviourStateIndex)
         {
             case (int)PeaceKeeperState.Idle:
@@ -510,6 +513,18 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
             return;
 
         creatureAnimator.SetBool(IsDeadAnimation, true);
+        float velocity = agent.velocity.magnitude / 3;
+        creatureAnimator.SetFloat(RunSpeedFloat, velocity);
+        _materials[0].SetVector(ScrollSpeedID, new Vector3(0, -velocity, 0)); // Left Tread
+        _materials[1].SetVector(ScrollSpeedID, new Vector3(0, velocity, 0)); // Right Tread
+        if (velocity > 0)
+        {
+            _treadsSource.volume = 1f;
+        }
+        else
+        {
+            _treadsSource.volume = 0f;
+        }
     }
     #endregion
 

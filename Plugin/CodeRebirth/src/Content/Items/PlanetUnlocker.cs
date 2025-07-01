@@ -30,7 +30,14 @@ public class PlanetUnlocker : GrabbableObject
 
     private IEnumerator WaitForEndOfFrame()
     {
-        yield return new WaitForSeconds(audioPlayer.clip.length);
+        if (audioPlayer.clip != null)
+        {
+            yield return new WaitForSeconds(audioPlayer.clip.length);
+        }
+        else
+        {
+            yield return new WaitForSeconds(1f);
+        }
         playerHeldBy.inSpecialInteractAnimation = false;
         if (!playerHeldBy.IsOwner)
             yield break;
