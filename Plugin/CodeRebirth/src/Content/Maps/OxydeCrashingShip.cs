@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util.Extensions;
 using LethalLevelLoader;
 using UnityEngine;
 
@@ -66,7 +65,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.1f);
             if (GameNetworkManager.Instance.localPlayerController.isInsideFactory)
             {
                 _NormalTravelAudio.volume = 0;
@@ -85,7 +84,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
                 _CloseTravelAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
                 _ImpactAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
             }
-            if (((1 - Progress) * _travelTime) <= _CloseTravelAudio.clip.length && !_CloseTravelAudio.isPlaying)
+            if (!_CloseTravelAudio.isPlaying && ((1 - Progress) * _travelTime) <= _CloseTravelAudio.clip.length)
             {
                 _NormalTravelAudio.volume = 0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
                 _CloseTravelAudio.Play();

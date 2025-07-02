@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -19,7 +18,7 @@ public class AirUnitProjectile : NetworkBehaviour
     public AudioSource windSource = null!;
     public MeshFilter bulletMesh = null!;
 
-    private Collider[] cachedColliders = new Collider[5];
+    private Collider[] cachedColliders = new Collider[8];
     [NonSerialized] public bool explodedOnTarget = false;
     private float anglePointingTo = 0f;
     private PlayerControllerB playerToTarget = null!;
@@ -29,6 +28,7 @@ public class AirUnitProjectile : NetworkBehaviour
         damage = damageAmount;
         anglePointingTo = angle; // Assign the angle to use for rotation
         playerToTarget = targetPlayer; // Assign the player to target
+        curveStrength *= targetPlayer.currentlyHeldObjectServer is JetpackItem ? 1.5f : 0.5f;
         StartCoroutine(DespawnAfterDelay(lifetime));
 
         // Set the initial rotation of the projectile based on the angle

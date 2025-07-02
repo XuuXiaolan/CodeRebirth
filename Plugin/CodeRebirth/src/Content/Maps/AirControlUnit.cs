@@ -21,7 +21,7 @@ public class AirControlUnit : CodeRebirthHazard
     public AudioSource DetectPlayerAudioSound = null!;
     public AudioClip ACUStartOrEndSound = null!;
     public AudioSource ACUTurnAudioSource = null!;
-    public float playerHeadstart = 10f;
+    private float playerHeadstart = 20f;
     public float maxAngle = 75f;
 
     [HideInInspector]
@@ -73,7 +73,7 @@ public class AirControlUnit : CodeRebirthHazard
             return true;
 
         Ray ray = new Ray(playerControllerB.gameplayCamera.transform.position, -Vector3.up);
-        if (Physics.Raycast(ray, out _, 6f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out _, 20f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             return true;
         }

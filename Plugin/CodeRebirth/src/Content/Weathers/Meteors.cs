@@ -9,8 +9,7 @@ using CodeRebirthLib.ContentManagement.Items;
 namespace CodeRebirth.src.Content.Weathers;
 public class Meteors : FallingObjectBehaviour
 {
-    [Header("Properties")]
-    public float chanceToSpawnScrap;
+    private float chanceToSpawnScrap;
 
     [Header("Audio")]
     public AudioSource ImpactAudio = null!;
@@ -80,7 +79,7 @@ public class Meteors : FallingObjectBehaviour
                 CloseTravelAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
                 ImpactAudio.volume = Plugin.ModConfig.ConfigMeteorShowerInShipVolume.Value * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
             }
-            if (((1 - Progress) * _travelTime) <= 4.106f && !CloseTravelAudio.isPlaying)
+            if (((1 - Progress) * _travelTime) <= CloseTravelAudio.clip.length && !CloseTravelAudio.isPlaying)
             {
                 NormalTravelAudio.volume = 0.5f * Plugin.ModConfig.ConfigMeteorsDefaultVolume.Value;
                 CloseTravelAudio.Play();
