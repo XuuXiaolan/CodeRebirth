@@ -22,7 +22,6 @@ public class Meteors : FallingObjectBehaviour
     [Header("Events")]
     public UnityEvent _onMeteorLand;
 
-
     protected override void OnImpact()
     {
         base.OnImpact();
@@ -41,8 +40,8 @@ public class Meteors : FallingObjectBehaviour
         StopMoving();
         if (!isBig)
         {
-            NormalTravelAudio.volume = 0f;
-            CloseTravelAudio.volume = 0f;
+            NormalTravelAudio.enabled = false;
+            CloseTravelAudio.enabled = false;
             return;
         }
         StartCoroutine(UpdateAudio()); // Make sure audio works correctly on the first frame.
