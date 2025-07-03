@@ -83,13 +83,14 @@ public class Plugin : BaseUnityPlugin
         InitializeNetworkBehaviours();
         InputActionsInstance = new IngameKeybinds();
 
-        ModConfig.InitCodeRebirthConfig(configFile);
+        ModConfig.InitMainCodeRebirthConfig(configFile);
 
         AssetBundle mainBundle = CRLib.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
         Assets = new MainAssets(mainBundle);
         Mod = CRLib.RegisterMod(this, mainBundle);
 		Mod.RegisterContentHandlers();
-        // Register Keybinds
+
+        ModConfig.InitCodeRebirthConfig(configFile);
 
         Logger.LogInfo("Registering CodeRebirth content.");
 

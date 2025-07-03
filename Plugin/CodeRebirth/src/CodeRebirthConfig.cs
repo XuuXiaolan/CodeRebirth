@@ -4,7 +4,6 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
-    public ConfigEntry<bool> ConfigUnlockAllGals { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
@@ -95,25 +94,21 @@ public class CodeRebirthConfig
     #endregion
     public ConfigEntry<bool> ConfigDebugMode { get; private set; }
 
-    public void InitCodeRebirthConfig(ConfigFile configFile)
+    public void InitMainCodeRebirthConfig(ConfigFile configFile)
     {
         #region Debug
-        ConfigDebugMode = configFile.Bind("Debug Options",
-                                            "Debug Mode | Hazard Spawning Enabled",
-                                            false,
-                                            "Whether debug mode is enabled (for hazard spawning stuff).");
         ConfigExtendedLogging = configFile.Bind("Debug Options",
                                             "Debug Mode | Extended Logging",
                                             false,
                                             "Whether ExtendedLogging is enabled.");
+        ConfigDebugMode = configFile.Bind("Debug Options",
+                                            "Debug Mode | Hazard Spawning Enabled",
+                                            false,
+                                            "Whether debug mode is enabled (for hazard spawning stuff).");
         ConfigRemoveInteriorFog = configFile.Bind("Debug Options",
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
-        ConfigUnlockAllGals = configFile.Bind("Debug Options",
-                                            "Debug Mode | Unlock All Gals",
-                                            false,
-                                            "Whether all Gal unlockables are unlocked by default.");
         #endregion
         #region Oxyde
         ConfigOxydeEnabled = configFile.Bind("??? Options",
@@ -121,40 +116,51 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
         #endregion
-        #region Gunslinger Greg
+        #region General
+        ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",
+                                            "Allow Power Level Changes From Weather",
+                                            true,
+                                            "Whether power level changes from CodeRebirth weathers are allowed.");
+        ConfigOnlyOwnerDisablesGal = configFile.Bind("General",
+                                            "Gal AI | Owner Power",
+                                            false,
+                                            "Whether only the current owner of the gal can disable her.");
+        ConfigDontTargetFarEnemies = configFile.Bind("General",
+                                            "Gal AI | Dont Stray Too Far",
+                                            false,
+                                            "Whether the Gal AI should stop targetting enemies when she is far from her owner's position.");
+        ConfigHazardsDeleteBodies = configFile.Bind("General",
+                                            "Hazards | Delete Bodies",
+                                            true,
+                                            "Whether hazards like IndustrialFan and LaserTurret should delete player bodies.");
+        ConfigCleanUnusedConfigs = configFile.Bind("General",
+                                            "Clean Unusued Configs",
+                                            true,
+                                            "Whether CodeRebirth should delete old confing information that are unused.");
         #endregion
-        #region Driftwood Menace
+        #region Flora
+        ConfigFloraGrassCurveSpawnWeight = configFile.Bind("Flora Options",
+                                            "Flora | Grass CurveSpawnWeight",
+                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00 | Oxyde - 0.00,0.00 ; 1.00,0.00",
+                                            "MoonName - CurveSpawnWeight for Grass flora (moon tags also work).");
+        ConfigFloraDesertCurveSpawnWeight = configFile.Bind("Flora Options",
+                                            "Flora | Desert CurveSpawnWeight",
+                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00 | Oxyde - 0.00,0.00 ; 1.00,0.00",
+                                            "MoonName - CurveSpawnWeight for Desert flora (moon tags also work).");
+        ConfigFloraSnowCurveSpawnWeight = configFile.Bind("Flora Options",
+                                            "Flora | Snow CurveSpawnWeight",
+                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00 | Oxyde - 0.00,0.00 ; 1.00,0.00",
+                                            "MoonName - CurveSpawnWeight for Snowy flora (moon tags also work).");
         #endregion
-        #region Nancy
-        #endregion
-        #region Merchant
-        #endregion
-        #region Transporter
-        #endregion
-        #region Cleaner Drone Gal
-        #endregion
-
+    }
+    
+    public void InitCodeRebirthConfig(ConfigFile configFile)
+    {
         #region Janitor
         ConfigDisableTrashCans = configFile.Bind("Janitor Options",
                                             "Janitor | Disable Trash Cans",
                                             false,
                                             "Whether trash cans are disabled (this is only visually, trash cans still exist).");
-        #endregion
-        #region Mistress
-        #endregion
-        #region Lord Of The Manor
-        #endregion
-        #region Zort Stuff
-        #endregion
-        #region BearTrap Gal
-        #endregion
-        #region ACUnit Gal
-        #endregion
-        #region Friend Stuff
-        #endregion
-        #region Duck Song
-        #endregion
-        #region Shrimp Dispenser
         #endregion
         #region Functional Microwave
         ConfigMicrowaveVolume = configFile.Bind("FunctionalMicrowave Options",
@@ -184,8 +190,6 @@ public class CodeRebirthConfig
                                             1f,
                                             "The volume of the Flash Turret.");
         #endregion
-        #region Industrial Fan
-        #endregion
         #region Bug Zapper
         ConfigBugZapperVolume = configFile.Bind("BugZapper Options",
                                             "Bug Zapper | Volume",
@@ -206,28 +210,6 @@ public class CodeRebirthConfig
                                             "Air Control Unit | Volume",
                                             1f,
                                             "The volume of the Air Control Unit.");
-        #endregion
-        #region General
-        ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",
-                                            "Allow Power Level Changes From Weather",
-                                            true,
-                                            "Whether power level changes from CodeRebirth weathers are allowed.");
-        ConfigOnlyOwnerDisablesGal = configFile.Bind("General",
-                                            "Gal AI | Owner Power",
-                                            false,
-                                            "Whether only the current owner of the gal can disable her.");
-        ConfigDontTargetFarEnemies = configFile.Bind("General",
-                                            "Gal AI | Dont Stray Too Far",
-                                            false,
-                                            "Whether the Gal AI should stop targetting enemies when she is far from her owner's position.");
-        ConfigHazardsDeleteBodies = configFile.Bind("General",
-                                            "Hazards | Delete Bodies",
-                                            true,
-                                            "Whether hazards like IndustrialFan and LaserTurret should delete player bodies.");
-        ConfigCleanUnusedConfigs = configFile.Bind("General",
-                                            "Clean Unusued Configs",
-                                            true,
-                                            "Whether CodeRebirth should delete old confing information that are unused.");
         #endregion
         #region Cruiser Gal
         ConfigCruiserGalAutomatic = configFile.Bind("Cruiser Options",
@@ -307,8 +289,6 @@ public class CodeRebirthConfig
                                             0.75f,
                                             "Volume of the Terminal Gal's Flying animation.");
         #endregion
-        #region Bell Crab Gal
-        #endregion
         #region SCP 999 Gal
         Config999GalHealCooldown = configFile.Bind("SCP 999 Gal Options",
                                             "SCP 999 Gal | Heal Cooldown",
@@ -350,12 +330,6 @@ public class CodeRebirthConfig
                                             "SCP 999 Gal | Scale Heal and Revive with Player Count",
                                             true,
                                             "Whether the gal scales the heals and revives with player count.");
-        #endregion
-        #region Biomes
-        #endregion
-        #region DangerousFlora
-        #endregion
-        #region Flora
         #endregion
         #region Farming
         ConfigWoodenSeedTreeSpawnChance = configFile.Bind("Farming Options",
@@ -499,12 +473,6 @@ public class CodeRebirthConfig
                                                 "Multiplier of the meteors volume for when the player is in the ship and the ship door is closed.",
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
-        #endregion
-        #region Monarch+Cutiefly
-        #endregion
-        #region SnailCat
-        #endregion
-        #region Hoverboard
         #endregion
         #region SnowGlobe
         ConfigSnowGlobeMusic = configFile.Bind("SnowGlobe Options",

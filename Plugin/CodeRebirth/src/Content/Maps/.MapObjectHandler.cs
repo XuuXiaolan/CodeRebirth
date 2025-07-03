@@ -152,19 +152,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         Flora = new FloraAssets(mod, "floraassets");
         Flora floraStuff = Flora.AllFloraPrefab.GetComponent<Flora>();
 
-        Plugin.ModConfig.ConfigFloraGrassCurveSpawnWeight = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Grass CurveSpawnWeight",
-                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00 | Oxyde - 0.00,0.00 ; 1.00,0.00",
-                                            "MoonName - CurveSpawnWeight for Grass flora (moon tags also work).");
-        Plugin.ModConfig.ConfigFloraDesertCurveSpawnWeight = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Desert CurveSpawnWeight",
-                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00 | Oxyde - 0.00,0.00 ; 1.00,0.00",
-                                            "MoonName - CurveSpawnWeight for Desert flora (moon tags also work).");
-        Plugin.ModConfig.ConfigFloraSnowCurveSpawnWeight = Plugin.configFile.Bind("Flora Options",
-                                            "Flora | Snow CurveSpawnWeight",
-                                            "Vanilla - 0.00,30.00 ; 1.00,60.00 | Custom - 0.00,30.00 ; 1.00,60.00 | Oxyde - 0.00,0.00 ; 1.00,0.00",
-                                            "MoonName - CurveSpawnWeight for Snowy flora (moon tags also work).");
-
         foreach (var flora in floraStuff.Desert)
         {
             RegisterFlora(flora, FloraTag.Desert, Plugin.ModConfig.ConfigFloraDesertCurveSpawnWeight.Value);

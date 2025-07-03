@@ -34,7 +34,7 @@ public class AirControlUnit : CodeRebirthHazard
     public override void Start()
     {
         base.Start();
-        projectilePrefab = MapObjectHandler.Instance.AirControlUnit.ProjectilePrefab;
+        projectilePrefab = MapObjectHandler.Instance.AirControlUnit!.ProjectilePrefab;
         lastPlayerTargetted = null;
         DetectPlayerAudioSound.volume = 0f;
         ACUClickingAudioSource.Stop();
