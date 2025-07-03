@@ -219,7 +219,6 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         if (CalculateEnemySize(_targetEnemy) > _enemySizeThreshold)
         {
             // force enemies to stop moving
-            Plugin.ExtendedLogging($"Killing Large Enemy: {_targetEnemy.enemyType.enemyName} with Size: {CalculateEnemySize(_targetEnemy)}");
             _bufferTimer = 7.5f;
             smartAgentNavigator.cantMove = true;
             smartAgentNavigator.StopAgent();
@@ -228,7 +227,6 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         }
         else
         {
-            Plugin.ExtendedLogging($"Killing Small Enemy: {_targetEnemy.enemyType.enemyName} with Size: {CalculateEnemySize(_targetEnemy)}");
             _bufferTimer = 7.5f;
             smartAgentNavigator.cantMove = true;
             smartAgentNavigator.StopAgent();

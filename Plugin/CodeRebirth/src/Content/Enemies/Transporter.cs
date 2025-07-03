@@ -235,7 +235,7 @@ public class Transporter : CodeRebirthEnemyAI
             allNodes.AddRange(RoundManager.Instance.insideAINodes);
 
             candidateObjects = allNodes
-                .Select(kv => (kv, kv.transform.position));
+                .Where(kv => kv != null).Select(kv => (kv, kv.transform.position));
 
             creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
             previousSceneOfTransportTarget = transportTarget.scene;
