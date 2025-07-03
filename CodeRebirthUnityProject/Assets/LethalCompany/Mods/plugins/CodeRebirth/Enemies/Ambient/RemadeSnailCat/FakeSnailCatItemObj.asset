@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
-  m_Name: SnailCatItemObj
+  m_Name: FakeSnailCatItemObj
   m_EditorClassIdentifier: 
   itemId: 0
-  itemName: Real Item SnailCat
+  itemName: Fake Item SnailCat
   spawnPositionTypes: []
   twoHanded: 1
   twoHandedAnimation: 1
@@ -28,9 +28,9 @@ MonoBehaviour:
   creditsWorth: 0
   lockedInDemo: 0
   highestSalePercentage: 80
-  maxValue: 140
-  minValue: 90
-  spawnPrefab: {fileID: 222362860697320849, guid: 40c6b80018aac694a86c6e18db5b201b,
+  maxValue: 5
+  minValue: 5
+  spawnPrefab: {fileID: 222362860697320849, guid: d00c8c68fe90217409dff6469aee2581,
     type: 3}
   requiresBattery: 0
   batteryUsage: 5

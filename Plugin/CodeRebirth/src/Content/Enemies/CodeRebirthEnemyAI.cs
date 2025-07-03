@@ -9,7 +9,6 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirthLib.Util.Pathfinding;
 
 namespace CodeRebirth.src.Content.Enemies;
-
 [RequireComponent(typeof(SmartAgentNavigator))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NetworkAnimator))]
@@ -32,7 +31,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [SerializeField]
     private bool _usesTemperature = false;
     [SerializeField]
-    private Renderer? _specialRenderer = null;
+    internal Renderer? _specialRenderer = null;
 
     [Header("Inherited Fields")]
     public AudioClipsWithTime _idleAudioClips = null!;
@@ -46,8 +45,10 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     private static int _randomNumberForRandomThings = 0;
     private float _previousLightValue = 0f;
-    private static int ShiftHash = Shader.PropertyToID("_Shift");
+    internal DetectLightInSurroundings? detectLightInSurroundings = null;
+    internal static int ShiftHash = Shader.PropertyToID("_Shift");
     private static int TemperatureHash = Shader.PropertyToID("_Temperature");
+
     public override void Start()
     {
         base.Start();
@@ -72,6 +73,12 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         }
     }
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        detectLightInSurroundings?.OnLightValueChange.RemoveListener(OnLightValueChange);
+    }
+
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
@@ -87,7 +94,8 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         renderer.GetMaterial().SetFloat(ShiftHash, number);
         if (_usesTemperature)
         {
-            this.gameObject.AddComponent<DetectLightInSurroundings>().OnLightValueChange.AddListener(OnLightValueChange);
+            detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
+            detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
         }
     }
 

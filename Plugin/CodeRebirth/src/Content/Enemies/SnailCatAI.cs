@@ -3,13 +3,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class SnailCatAI : CodeRebirthEnemyAI
 {
     public SnailCatPhysicsProp propScript = null!;
@@ -167,7 +171,9 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public IEnumerator ChangeStateWithDelayRoutine(float delay, State stateToSwitchOutOf, int animationToSwitchOutOf)
     {
         yield return new WaitForSeconds(delay);
-        if (currentBehaviourStateIndex != (int)stateToSwitchOutOf) yield break;
+        if (currentBehaviourStateIndex != (int)stateToSwitchOutOf)
+            yield break;
+
         smartAgentNavigator.StartSearchRoutine(50);
         creatureAnimator.SetBool(animationToSwitchOutOf, false);
         SwitchToBehaviourServerRpc((int)State.Wandering);
@@ -298,6 +304,43 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+
+        if (!IsServer)
+            return;
+
+        if (!StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(this.transform.position))
+            return;
+
+        if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Fake Item SnailCat", out CRItemDefinition? fakeSnailCatItemDefinition))
+        {
+            NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(fakeSnailCatItemDefinition.Item, this.transform.position, false, true, 0);
+            FakeSnailCat fakeSnailCat = ((NetworkObject)netObjRef).GetComponent<FakeSnailCat>();
+            fakeSnailCat.localScale = propScript.originalScale;
+            fakeSnailCat.snailCatName = currentName;
+            fakeSnailCat.shiftHash = _specialRenderer!.materials[0].GetFloat(ShiftHash);
+        }
         // CRUtilities.CreateExplosion(this.transform.position, true, 99999, 0, 15, 999, null, null, 1000f);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncNewSnailCatServerRpc(Vector3 scale, string name, float magicalHashNumber)
+    {
+        SyncNewSnailCatClientRpc(scale, name, magicalHashNumber);
+    }
+
+    [ClientRpc]
+    private void SyncNewSnailCatClientRpc(Vector3 scale, string name, float magicalHashNumber)
+    {
+        StartCoroutine(InitaliseRealSnailCat(scale, name, magicalHashNumber));
+    }
+
+    private IEnumerator InitaliseRealSnailCat(Vector3 scale, string name, float magicalHashNumber)
+    {
+        yield return new WaitUntil(() => detectLightInSurroundings != null);
+        this.transform.localScale = scale;
+        propScript.originalScale = scale;
+        currentName = name;
+        isWiWiWiii = currentName == "Wiwiwii";
+        _specialRenderer!.materials[0].SetFloat(ShiftHash, magicalHashNumber);
     }
 }
