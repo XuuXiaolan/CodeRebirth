@@ -353,7 +353,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [ClientRpc]
     public void PlayConfettiClientRpc()
     {
-        _confettiParticles.Play();
+        _confettiParticles.Play(true);
     }
 
     [ServerRpc(RequireOwnership = false)]

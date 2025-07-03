@@ -44,6 +44,8 @@ public class Ceasefire : GrabbableObject
     private float _maxEmissionIntensity = 10f;
     [SerializeField]
     private float _maxDamageIntervalAtMaxCharge = 2f;
+    [SerializeField]
+    private ParticleSystem _overheatEffect = null!;
 
     private float _startingTime = 0f;
     private float _endingTime = 0f;
@@ -112,7 +114,7 @@ public class Ceasefire : GrabbableObject
         }
         else if (!isBeingUsed && _chargedTime > 0f)
         {
-            _chargedTime -= Time.deltaTime;
+            _chargedTime -= Time.deltaTime * 0.5f;
         }
 
         float tNorm = Mathf.Clamp01(_chargedTime / _maxChargedTime);
@@ -126,6 +128,14 @@ public class Ceasefire : GrabbableObject
             {
                 playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.25f : 1f) * Time.deltaTime * (rotationDelta / 35f);
             }
+        }
+        if (tNorm >= 0.8f)
+        {
+            _overheatEffect.Play();
+        }
+        else if (tNorm <= 0.45f && _overheatEffect.isPlaying)
+        {
+            _overheatEffect.Stop();
         }
 
         // Slow down particle systems as charge increases

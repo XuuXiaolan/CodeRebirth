@@ -3047,7 +3047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3414213219811245600
 Transform:
   m_ObjectHideFlags: 0
@@ -3080,7 +3080,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -5591,6 +5591,7 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
+  rotateObject: 0
   _ceasefireBarrel: {fileID: 4793269125566295088}
   _particleSystemsGO: {fileID: 7208520598602796459}
   _particleSystems:
@@ -5608,6 +5609,7 @@ MonoBehaviour:
   _minEmissionIntensity: 0
   _maxEmissionIntensity: 10
   _maxDamageIntervalAtMaxCharge: 1
+  _overheatEffect: {fileID: 8572332115556941923}
   _minigunDamageInterval: 0.1
   _minigunRange: 60
   _minigunWidth: 1.5
