@@ -111,10 +111,10 @@ public class CodeRebirthConfig
                                             "Whether zeekerss' horrible interior fog is removed.");
         #endregion
         #region Oxyde
-        ConfigOxydeEnabled = configFile.Bind("??? Options",
-                                            "??? | Enabled",
+        ConfigOxydeEnabled = configFile.Bind("Oxyde Options",
+                                            "Oxyde | Enabled",
                                             true,
-                                            "Whether the ??? is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
+                                            "Whether Oxyde is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
         #endregion
         #region General
         ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",
