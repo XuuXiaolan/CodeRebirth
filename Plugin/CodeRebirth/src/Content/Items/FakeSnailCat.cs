@@ -8,7 +8,6 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
-
 public class FakeSnailCat : GrabbableObject
 {
     [SerializeField]

@@ -359,6 +359,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         this.transform.localScale = scale;
         propScript.originalScale = scale;
         currentName = name;
+        scanNodeProperties.headerText = currentName;
         isWiWiWiii = currentName == "Wiwiwii";
         _specialRenderer!.materials[0].SetFloat(ShiftHash, magicalHashNumber);
     }
