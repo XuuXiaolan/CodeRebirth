@@ -30,6 +30,9 @@ public class SnailCatAI : CodeRebirthEnemyAI
     private float specialActionTimer = 1f;
     private float detectEnemyInterval = 0f;
     private bool isWiWiWiii = false;
+    internal Vector3 localScale = Vector3.one;
+    internal string snailCatName = "Mu";
+    internal float shiftHash = 0;
 
     public enum State
     {
@@ -38,6 +41,22 @@ public class SnailCatAI : CodeRebirthEnemyAI
         Sleeping,
         Sitting,
         Grabbed
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (!IsServer)
+            return;
+
+        StartCoroutine(DelayForBit());
+    }
+
+    private IEnumerator DelayForBit()
+    {
+        yield return new WaitForSeconds(0.1f);
+        SyncNewSnailCatServerRpc(localScale, snailCatName, shiftHash);
     }
 
     public override void Start()

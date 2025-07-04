@@ -34,12 +34,12 @@ public class OxydeCrashingShip : FallingObjectBehaviour
         if (!IsServer)
             return;
 
-        StartCoroutine(WaitToDoYourThing(spawnPosition));
+        StartCoroutine(WaitToDoYourThing(spawnPosition, UnityEngine.Random.Range(180f, 360f)));
     }
 
-    public IEnumerator WaitToDoYourThing(Vector3 spawnPosition)
+    public IEnumerator WaitToDoYourThing(Vector3 spawnPosition, float delay)
     {
-        yield return new WaitForSeconds(UnityEngine.Random.Range(180f, 360f));
+        yield return new WaitForSeconds(delay);
         Vector3 origin = CalculateRandomSkyOrigin((Direction)UnityEngine.Random.Range(0, Enum.GetValues(typeof(Direction)).Length), spawnPosition, new System.Random(UnityEngine.Random.Range(0, 10000)));
         SetupFallingObjectServerRpc(origin, spawnPosition, 25);
     }
