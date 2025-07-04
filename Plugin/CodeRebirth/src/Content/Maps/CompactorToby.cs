@@ -19,6 +19,8 @@ public class CompactorToby : NetworkBehaviour, IHittable
     [SerializeField]
     private AudioClip _buttonPressSound = null!;
     [SerializeField]
+    private AudioClip _buttonErrorSound = null!;
+    [SerializeField]
     private AudioClip _compactorWhackedSound = null!;
     [SerializeField]
     private AudioSource _tobyMalfunctionSource = null!;
@@ -83,7 +85,10 @@ public class CompactorToby : NetworkBehaviour, IHittable
         }
 
         if (valueOfItems == 0)
+        {
+            ErrorSoundServerRpc();
             return;
+        }
 
         foreach (GrabbableObject grabbableObject in grabbableObjects)
         {
@@ -100,6 +105,18 @@ public class CompactorToby : NetworkBehaviour, IHittable
 
         TriggerAnimationServerRpc(HitAnimation);
         return true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ErrorSoundServerRpc()
+    {
+        ErrorSoundClientRpc();
+    }
+
+    [ClientRpc]
+    private void ErrorSoundClientRpc()
+    {
+        _tobySource.PlayOneShot(_buttonErrorSound);
     }
 
     [ServerRpc(RequireOwnership = false)]
