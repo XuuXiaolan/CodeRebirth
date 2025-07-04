@@ -706,7 +706,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tobySource: {fileID: 1244155886042247776}
-  _buttonPressSound: {fileID: 0}
+  _buttonPressSound: {fileID: 8300000, guid: 92fe2e21fcbc9d440b5d992d753fb915, type: 3}
+  _buttonErrorSound: {fileID: 8300000, guid: a293f7f399ecc1f4cb4721e6d96aedce, type: 3}
   _compactorWhackedSound: {fileID: 8300000, guid: c36cb77ba025a0742b1e0f45c1049bf9,
     type: 3}
   _tobyMalfunctionSource: {fileID: 3396848544100649994}
@@ -957,6 +958,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
