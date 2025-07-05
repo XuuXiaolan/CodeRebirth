@@ -74,12 +74,12 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     public AudioSource weaponAudio;
     public bool tryHitAllTimes = false;
 
-    [HideInInspector] public NetworkVariable<float> heldOverHeadTimer = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    [HideInInspector] public NetworkVariable<bool> reelingUp = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    internal NetworkVariable<float> heldOverHeadTimer = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    internal bool reelingUp = false;
 
     private Coroutine? _reelingRoutine = null;
-    [HideInInspector] public RaycastHit[] cachedRaycastHits = new RaycastHit[16];
-    [HideInInspector] public PlayerControllerB? previousPlayerHeldBy = null;
+    internal RaycastHit[] cachedRaycastHits = new RaycastHit[16];
+    internal PlayerControllerB? previousPlayerHeldBy = null;
 
     private List<IHittable> _iHittableList = new();
     private List<VehicleController> _hitVehicles = new();
@@ -208,7 +208,19 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     public virtual void OnStartReelup()
     {
-        reelingUp.Value = true;
+        StartOrStopReelingUpServerRpc(true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartOrStopReelingUpServerRpc(bool start)
+    {
+        StartOrStopReelingUpClientRpc(start);
+    }
+
+    [ClientRpc]
+    private void StartOrStopReelingUpClientRpc(bool start)
+    {
+        reelingUp = start;
     }
 
     public virtual void EndWeaponHit(bool success)
@@ -218,7 +230,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     public virtual void StartHeldOverHead()
     {
-        reelingUp.Value = false;
+        StartOrStopReelingUpServerRpc(false);
     }
 
     public virtual void EndHeldOverHead()

@@ -262,6 +262,9 @@ public class Puppeteer : CodeRebirthEnemyAI
         List<Vector3> possibleDestinations = new();
         foreach (var gameObject in RoundManager.Instance.insideAINodes)
         {
+            if (gameObject == null)
+                continue;
+
             Vector3 nodePos = gameObject.transform.position;
             bool isFar = pointsToStayAwayFrom.All(pt => Vector3.Distance(pt, nodePos) > 30f);
             if (!isFar)

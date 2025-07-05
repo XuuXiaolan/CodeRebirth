@@ -279,7 +279,7 @@ public class AutonomousCrane : NetworkBehaviour
             {
                 _magnetMovingProgress = 1f;
                 _magnetState = MagnetState.IdleBottom;
-                CraneHitBottomServerRpc();
+                CraneHitBottomServerRpc(_magnetTargetPosition);
             }
         }
         else if (_magnetState == MagnetState.IdleBottom)
@@ -312,17 +312,17 @@ public class AutonomousCrane : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void CraneHitBottomServerRpc()
+    private void CraneHitBottomServerRpc(Vector3 magnetTargetPosition)
     {
-        CraneHitBottomClientRpc();
+        CraneHitBottomClientRpc(magnetTargetPosition);
     }
 
     private List<PlayerControllerB> _playerKillList = new();
 
     [ClientRpc]
-    private void CraneHitBottomClientRpc()
+    private void CraneHitBottomClientRpc(Vector3 magnetTargetPosition)
     {
-        float distanceToLocalPlayer = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, _magnetTargetPosition);
+        float distanceToLocalPlayer = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, magnetTargetPosition);
         if (distanceToLocalPlayer >= 40 && distanceToLocalPlayer < 60)
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
@@ -341,14 +341,15 @@ public class AutonomousCrane : NetworkBehaviour
         }
 
         _playerKillList.Clear();
-        int numHits = Physics.OverlapSphereNonAlloc(_magnetTargetPosition, 5f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
+        int numHits = Physics.OverlapSphereNonAlloc(magnetTargetPosition, 5f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];
+            Plugin.ExtendedLogging($"Collider: {collider.name}");
             if (!collider.TryGetComponent(out IHittable hittable))
                 continue;
 
-            if (Physics.Linecast(_magnetTargetPosition, collider.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            if (Physics.Linecast(magnetTargetPosition, collider.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
                 continue;
 
             if (hittable is PlayerControllerB player)
@@ -366,9 +367,7 @@ public class AutonomousCrane : NetworkBehaviour
                     }
                 }
 
-                if (!player.IsOwner)
-                    continue;
-
+                Plugin.ExtendedLogging($"Killing player through crane");
                 player.KillPlayer(player.velocityLastFrame, false, CauseOfDeath.Crushing, 0, default);
             }
             else if (hittable is EnemyAICollisionDetect enemy)
@@ -383,7 +382,7 @@ public class AutonomousCrane : NetworkBehaviour
                 if (!NetworkManager.Singleton.IsServer)
                     continue;
 
-                hittable.Hit(99, _magnetTargetPosition, null, true, -1);
+                hittable.Hit(99, magnetTargetPosition, null, true, -1);
             }
         }
 

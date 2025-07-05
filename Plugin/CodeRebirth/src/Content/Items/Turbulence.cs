@@ -191,7 +191,7 @@ public class Turbulence : CRWeapon
     public override void LateUpdate()
     {
         base.LateUpdate();
-        if (reelingUp.Value && IsServer)
+        if (reelingUp && IsServer)
         {
             heldOverHeadTimer.Value += Time.deltaTime;
         }
