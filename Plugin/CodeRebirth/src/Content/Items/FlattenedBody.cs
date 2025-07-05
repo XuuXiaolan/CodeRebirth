@@ -1,31 +1,44 @@
 using System.Collections;
-using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
-
 public class FlattenedBody : GrabbableObject
 {
-    internal NetworkVariable<PlayerControllerReference> _flattenedBodyName = new NetworkVariable<PlayerControllerReference>(null, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    internal PlayerControllerB? _flattenedBodyName = null;
+
+    [SerializeField]
+    private ScanNodeProperties _scanNodeProperties = null!;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        if (!IsServer)
+            return;
+
         StartCoroutine(WaitUntilNameSet());
     }
 
     private IEnumerator WaitUntilNameSet()
     {
-        yield return new WaitForSeconds(UnityEngine.Random.Range(0.8f, 1.2f));
-        if (_flattenedBodyName.Value == null)
+        yield return null;
+        yield return null;
+        if (_flattenedBodyName == null)
             yield break;
 
-        ScanNodeProperties? scannode = this.GetComponentInChildren<ScanNodeProperties>();
-        if (scannode == null)
-            yield break;
+        ChangeScanNodeNameServerRpc($"{_scanNodeProperties.headerText} Of {_flattenedBodyName.playerUsername}");
+    }
 
-        PlayerControllerB player = _flattenedBodyName.Value;
-        scannode.headerText = $"{scannode.headerText} Of {player.playerUsername}";
+    [ServerRpc]
+    private void ChangeScanNodeNameServerRpc(string newName)
+    {
+        ChangeScanNodeNameClientRpc(newName);
+    }
+
+    [ClientRpc]
+    private void ChangeScanNodeNameClientRpc(string newName)
+    {
+        _scanNodeProperties.headerText = newName;
     }
 }

@@ -362,7 +362,7 @@ public class AutonomousCrane : NetworkBehaviour
                     NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);
                     if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
                     {
-                        flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName.Value = (PlayerControllerReference)player;
+                        flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName = player;
                     }
                 }
 
