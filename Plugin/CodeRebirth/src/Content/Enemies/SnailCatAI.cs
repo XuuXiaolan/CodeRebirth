@@ -301,7 +301,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public Transform ChooseClosestNodeToPositionNoPathCheck(Vector3 pos)
     {
         List<GameObject> allAINodes = RoundManager.Instance.insideAINodes.Concat(RoundManager.Instance.outsideAINodes).ToList();
-        var nodesTempArray = allAINodes.OrderBy(x => Vector3.Distance(pos, x.transform.position));
+        var nodesTempArray = allAINodes.Where(x => x != null).OrderBy(x => Vector3.Distance(pos, x.transform.position));
         return nodesTempArray.First().transform;
     }
 
