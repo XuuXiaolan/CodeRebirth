@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.MiscScripts;
+[RequireComponent(typeof(Collider))]
 public class CRNoiseListener : MonoBehaviour, INoiseListener
 {
     [SerializeField]
@@ -13,6 +15,7 @@ public class CRNoiseListener : MonoBehaviour, INoiseListener
     }
 }
 
+[Serializable]
 public class NoiseParams(Vector3 noisePosition, float noiseLoudness, int timesPlayedInOneSpot, int noiseID)
 {
     internal Vector3 noisePosition = noisePosition;

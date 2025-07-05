@@ -333,6 +333,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2452800086519545950}
   - component: {fileID: 1639163085720443870}
+  - component: {fileID: 768087998276508417}
   m_Layer: 19
   m_Name: CRNoiseListener
   m_TagString: Untagged
@@ -349,7 +350,7 @@ Transform:
   m_GameObject: {fileID: 2265658966621403742}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.961, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -370,6 +371,27 @@ MonoBehaviour:
   _onNoiseDetected:
     m_PersistentCalls:
       m_Calls: []
+--- !u!135 &768087998276508417
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2265658966621403742}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3877912705352127051
 GameObject:
   m_ObjectHideFlags: 0
