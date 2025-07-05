@@ -78,24 +78,21 @@ public class Guillotine : NetworkBehaviour
         playerToKill.headCostumeContainer.gameObject.SetActive(false);
         playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
         playerToKill.playerBetaBadgeMesh.gameObject.SetActive(false);
+        playerToKill.inSpecialInteractAnimation = true;
+        playerToKill.playingQuickSpecialAnimation = true;
         if (GameNetworkManager.Instance.localPlayerController == playerToKill)
         {
             HUDManager.Instance.HideHUD(true);
             StartOfRound.Instance.allowLocalPlayerDeath = false;
         }
-        if (!IsServer)
-        {
-            playerToKill = null;
-            return;
-        }
-        playerToKill = null;
-        if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Talking Head", out CRItemDefinition? talkingHeadItemDef))
+        if (IsServer && Plugin.Mod.ItemRegistry().TryGetFromItemName("Talking Head", out CRItemDefinition? talkingHeadItemDef))
         {
             GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(talkingHeadItemDef.Item, scrapSpawnTransform.position, false, true, 0);
             TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();
             talkingHeadScript.player = playerToKill;
-            talkingHeadScript.SyncTalkingHeadServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
+            talkingHeadScript.SyncTalkingHeadServerRpc(playerToKill);
         }
+        playerToKill = null;
     }
 
     public void PlayGuillotineSoundAnimEvent()

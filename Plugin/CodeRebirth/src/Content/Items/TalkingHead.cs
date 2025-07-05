@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -32,15 +33,23 @@ public class TalkingHead : GrabbableObject
     public override void Update()
     {
         base.Update();
-        if (player == null) return;
+        if (player == null)
+            return;
+
         if (isInFactory != wasInFactoryLastFrame && GameNetworkManager.Instance.localPlayerController == player && RoundManager.Instance.currentLevel.planetHasTime)
         {
             Plugin.ExtendedLogging("Teleporting player.");
-            var entranceTeleport = CodeRebirthUtils.entrancePoints.Where(p => p.isEntranceToBuilding == !wasInFactoryLastFrame).FirstOrDefault();
+            var entranceTeleport = CodeRebirthLibNetworker.EntrancePoints.Where(p => p.isEntranceToBuilding == !wasInFactoryLastFrame).FirstOrDefault();
             entranceTeleport?.TeleportPlayer();
         }
         wasInFactoryLastFrame = this.isInFactory;
-        if (GameNetworkManager.Instance.localPlayerController == player) meshRenderer.enabled = false;
+        if (GameNetworkManager.Instance.localPlayerController == player)
+        {
+            meshRenderer.enabled = false;
+        }
+
+        player.inSpecialInteractAnimation = true;
+        player.playingQuickSpecialAnimation = true;
         player.thisPlayerModelLOD1.gameObject.SetActive(false);
         player.thisPlayerModelLOD2.gameObject.SetActive(false);
         player.thisPlayerModel.gameObject.SetActive(false);
@@ -48,7 +57,6 @@ public class TalkingHead : GrabbableObject
         player.disableInteract = true;
         player.transform.SetPositionAndRotation(playerBone.position, transform.rotation);
         int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
-        Plugin.ExtendedLogging($"alive players: {alivePlayers}");
         if (StartOfRound.Instance.shipIsLeaving || StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 0)
         {
             MoreCompanySoftCompat.TryDisableOrEnableCosmetics(player, false);
@@ -64,6 +72,8 @@ public class TalkingHead : GrabbableObject
             player.playerBetaBadgeMesh.gameObject.SetActive(true);
             player.SetPseudoDead(false);
             player.gameObject.layer = 3;
+            player.inSpecialInteractAnimation = false;
+            player.playingQuickSpecialAnimation = false;
             if (GameNetworkManager.Instance.localPlayerController == player)
             {
                 HUDManager.Instance.HideHUD(false);
@@ -76,15 +86,15 @@ public class TalkingHead : GrabbableObject
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SyncTalkingHeadServerRpc(int playerIndex)
+    public void SyncTalkingHeadServerRpc(PlayerControllerReference playerControllerReference)
     {
-        SyncTalkingHeadClientRpc(playerIndex);
+        SyncTalkingHeadClientRpc(playerControllerReference);
     }
 
     [ClientRpc]
-    private void SyncTalkingHeadClientRpc(int playerIndex)
+    private void SyncTalkingHeadClientRpc(PlayerControllerReference playerControllerReference)
     {
-        player = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        player = playerControllerReference;
         if (GameNetworkManager.Instance.localPlayerController == player)
         {
             meshRenderer.enabled = false;

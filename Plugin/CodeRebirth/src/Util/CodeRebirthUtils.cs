@@ -33,15 +33,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public AnimationClip ModifiedDangerousShipLeaveAnimation = null!;
     public AnimationClip ModifiedShipLeaveAnimation = null!;
 
-    [HideInInspector] public static List<EnemyType> EnemyTypes = new();
-    [HideInInspector] public static EntranceTeleport[] entrancePoints = [];
-    [HideInInspector] public ES3Settings SaveSettings;
-    [HideInInspector] public ShipAnimator shipAnimator = null!;
-    [HideInInspector] public StartMatchLever startMatchLever = null!;
-    [HideInInspector] public Terminal shipTerminal = null!;
-    [HideInInspector] public static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
-    [HideInInspector] public Dictionary<EnemyType, float> enemyCoinDropRate = new();
-    [HideInInspector] public System.Random CRRandom = new();
+    internal static List<EnemyType> EnemyTypes = new();
+    internal ES3Settings SaveSettings;
+    internal ShipAnimator shipAnimator = null!;
+    internal StartMatchLever startMatchLever = null!;
+    internal Terminal shipTerminal = null!;
+    internal static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
+    internal Dictionary<EnemyType, float> enemyCoinDropRate = new();
+    internal System.Random CRRandom = new();
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
     private void Awake()
@@ -49,7 +48,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         Instance = this;
         StartCoroutine(HandleEnemyDropRates());
         CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
-        StartOfRound.Instance.StartNewRoundEvent.AddListener(OnNewRoundStart);
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
         shipTerminal = FindFirstObjectByType<Terminal>(FindObjectsInactive.Exclude);
         startMatchLever = FindFirstObjectByType<StartMatchLever>(FindObjectsInactive.Exclude);
@@ -199,18 +197,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         else
         {
             Plugin.Logger.LogError($"ReactToVehicleCollision with ID {obstacleId} not found!");
-        }
-    }
-
-    public void OnNewRoundStart()
-    {
-        entrancePoints = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.InstanceID);
-        foreach (var entrance in entrancePoints)
-        {
-            if (!entrance.FindExitPoint())
-            {
-                Plugin.Logger.LogError("Something went wrong in the generation of the fire exits");
-            }
         }
     }
 
