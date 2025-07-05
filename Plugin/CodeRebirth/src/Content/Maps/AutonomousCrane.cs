@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class AutonomousCrane : NetworkBehaviour
 {
     [Header("Audio")]
@@ -150,17 +151,13 @@ public class AutonomousCrane : NetworkBehaviour
     {
         if (_targetPlayer == null)
         {
-            _audioSource.clip = null;
-            _audioSource.Stop();
+            DisableAudioSourceServerRpc();
             _currentState = CraneState.Idle;
             return;
         }
 
         GetTargetPosition(_targetPlayer);
-        _audioSource.clip = null;
-        _audioSource.Stop();
-        _audioSource.clip = _craneTurningSound;
-        _audioSource.Play();
+        ChangeAudioSourceClipServerRpc(0);
         _currentState = CraneState.MoveCraneHead;
     }
 
@@ -168,8 +165,7 @@ public class AutonomousCrane : NetworkBehaviour
     {
         if (_targetPlayer == null)
         {
-            _audioSource.clip = null;
-            _audioSource.Stop();
+            DisableAudioSourceServerRpc();
             _currentState = CraneState.Idle;
             return;
         }
@@ -188,8 +184,7 @@ public class AutonomousCrane : NetworkBehaviour
     {
         if (_targetPlayer == null)
         {
-            _audioSource.clip = null;
-            _audioSource.Stop();
+            DisableAudioSourceServerRpc();
             _currentState = CraneState.Idle;
             return;
         }
@@ -209,10 +204,8 @@ public class AutonomousCrane : NetworkBehaviour
             return;
         }
 
-        _audioSource.clip = null;
-        _audioSource.Stop();
-        _audioSource.clip = _magnetDroppingSound;
-        _audioSource.Play();
+        DisableAudioSourceServerRpc();
+        ChangeAudioSourceClipServerRpc(1);
         _targetPlayer = null;
         _currentState = CraneState.DropMagnet;
     }
@@ -295,10 +288,7 @@ public class AutonomousCrane : NetworkBehaviour
             if (_magnetMovingProgress <= 0)
             {
                 _magnetMovingProgress = 0f;
-                _audioSource.clip = null;
-                _audioSource.Stop();
-                _audioSource.clip = _magnetReelingUpSound;
-                _audioSource.Play();
+                ChangeAudioSourceClipServerRpc(2);
                 _magnetState = MagnetState.MovingUp;
             }
         }
@@ -308,8 +298,7 @@ public class AutonomousCrane : NetworkBehaviour
             if (_magnetMovingProgress >= 1f)
             {
                 _magnetMovingProgress = 1f;
-                _audioSource.clip = null;
-                _audioSource.Stop();
+                DisableAudioSourceServerRpc();
                 _magnetState = MagnetState.IdleTop;
                 _currentState = CraneState.Idle;
             }
@@ -422,5 +411,54 @@ public class AutonomousCrane : NetworkBehaviour
         {
             _leverNetworkAnimator.SetTrigger(UnpullLeverAnimation);
         }
+    }
+
+    [ServerRpc]
+    private void DisableAudioSourceServerRpc()
+    {
+        DisableAudioSourceClientRpc();
+    }
+
+    [ClientRpc]
+    private void DisableAudioSourceClientRpc()
+    {
+        DisableAudioSource();
+    }
+
+    private void DisableAudioSource()
+    {
+        _audioSource.clip = null;
+        _audioSource.Stop();
+    }
+
+    [ServerRpc]
+    private void ChangeAudioSourceClipServerRpc(int soundID)
+    {
+        ChangeAudioSourceClipClientRpc(soundID);
+    }
+
+    [ClientRpc]
+    public void ChangeAudioSourceClipClientRpc(int soundID)
+    {
+        ChangeAudioSourceClip(soundID);
+    }
+
+    private void ChangeAudioSourceClip(int soundID)
+    {
+        DisableAudioSource();
+
+        switch (soundID)
+        {
+            case 0:
+                _audioSource.clip = _craneTurningSound;
+                break;
+            case 1:
+                _audioSource.clip = _magnetDroppingSound;
+                break;
+            case 2:
+                _audioSource.clip = _magnetReelingUpSound;
+                break;
+        }
+        _audioSource.Play();
     }
 }
