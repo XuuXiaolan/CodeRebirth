@@ -41,7 +41,6 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     private float _rootingTimer = 0f;
     private float _attackInterval = 2f;
     private List<GameObject> _budlingCacti = new();
-    private NetworkVariable<int> _nextStateInt = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private Coroutine? _nextStateRoutine = null;
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
@@ -328,18 +327,29 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
     private void FoundNextRootPosition(List<(Vector3 rootPosition, float distances)> args)
     {
-        _targetRootPosition = args[UnityEngine.Random.Range(0, args.Count)].rootPosition;
+        SyncRootPositionServerRpc(args[UnityEngine.Random.Range(0, args.Count)].rootPosition);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SyncRootPositionServerRpc(Vector3 rootPosition)
+    {
+        SyncRootPositionClientRpc(rootPosition);
+    }
+
+    [ClientRpc]
+    private void SyncRootPositionClientRpc(Vector3 rootPosition)
+    {
+        _targetRootPosition = rootPosition;
         _nextStateRoutine = StartCoroutine(DelayToNextState(_rollingStartAnimation.length, 3f, CactusBudlingState.SearchingForRoot));
     }
 
     private IEnumerator DelayToNextState(float delay, float agentSpeed, CactusBudlingState nextState)
     {
         Plugin.ExtendedLogging($"Switching to next state: {nextState}");
-        _nextStateInt.Value = (int)nextState;
         agent.speed = 0f;
         smartAgentNavigator.StopAgent();
+        SwitchToBehaviourStateOnLocalClient((int)nextState);
         yield return new WaitForSeconds(delay);
-        SwitchToBehaviourServerRpc(_nextStateInt.Value);
         agent.speed = agentSpeed;
         _nextStateRoutine = null;
     }
@@ -417,17 +427,9 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
         if (currentBehaviourStateIndex != (int)CactusBudlingState.Rolling)
         {
-            if (_nextStateRoutine != null || !IsServer)
+            if (_nextStateRoutine != null)
             {
-                if (_nextStateInt.Value != (int)CactusBudlingState.Rolling)
-                {
-                    if (IsServer)
-                        StopCoroutine(_nextStateRoutine);
-                }
-                else
-                {
-                    return;
-                }
+                StopCoroutine(_nextStateRoutine);
             }
             if (IsServer)
             {
@@ -436,13 +438,20 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
             }
             StartCoroutine(RollingSoundStuff());
 
-            _rollingTimer = _rollingDuration;
-            _targetRollingPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 40f, default);
+            for (int i = 0; i < 10; i++)
+            {
+                _targetRollingPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 75f, default);
+                if (smartAgentNavigator.CanPathToPoint(this.transform.position, _targetRollingPosition) > 0f)
+                {
+                    break;
+                }
+            }
             float delayTimer = _rollingStartAnimation.length;
             if (currentBehaviourStateIndex == (int)CactusBudlingState.Rooted)
             {
                 delayTimer += _rootingEndAnimation.length;
             }
+            _rollingTimer = _rollingDuration + delayTimer;
             _nextStateRoutine = StartCoroutine(DelayToNextState(delayTimer, 10f, CactusBudlingState.Rolling));
         }
     }
