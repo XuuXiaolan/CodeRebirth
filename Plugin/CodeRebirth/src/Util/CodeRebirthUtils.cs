@@ -283,10 +283,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             parent = StartOfRound.Instance.propsContainer;
         }
-        Vector3 spawnPosition = position + Vector3.up * 0.2f;
+
+        if (!Physics.Raycast(position + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            return default;
+
+        Vector3 spawnPosition = hit.point + Vector3.up * item.verticalOffset;
         GameObject go = Instantiate(item.spawnPrefab, spawnPosition, Quaternion.identity, parent);
-        NetworkObject networkObject = go.GetComponent<NetworkObject>();
         GrabbableObject grabbableObject = go.GetComponent<GrabbableObject>();
+        NetworkObject networkObject = grabbableObject.NetworkObject;
         grabbableObject.fallTime = 0;
         networkObject.Spawn();
         UpdateParentAndRotationsServerRpc(new NetworkObjectReference(go), defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation);
