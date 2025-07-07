@@ -1,3 +1,4 @@
+using CodeRebirth.src.Content.Maps;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -32,6 +33,17 @@ public class OxydeLightsManager : MonoBehaviour
         foreach (var renderer in _renderers)
         {
             renderer.sharedMaterials[1].color = _colors[_currentLightIndex];
+        }
+
+        if (_currentLightIndex != 0)
+        {
+            foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
+            {
+                if (enemyLevelSpawner is CompactorEnemyLevelSpawner)
+                    continue;
+
+                enemyLevelSpawner.spawnTimer = UnityEngine.Random.Range(5, 10);
+            }
         }
         _currentLightIndex++;
     }

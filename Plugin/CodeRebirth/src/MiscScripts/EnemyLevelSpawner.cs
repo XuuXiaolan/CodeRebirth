@@ -25,7 +25,7 @@ public class EnemyLevelSpawner : MonoBehaviour
     [Tooltip("Use EnemyType.EnemyName here.")]
     public List<string> specialEnemiesToSpawn = new();
 
-    private float spawnTimer = 10f;
+    internal float spawnTimer = 10f;
     public static Dictionary<EnemyType, int> entitiesSpawned = new(); // fix a bunch of this stuff here, make this a list for example
     private float enemiesSpawnedByPipe = 0;
     private List<(EnemyType, float)> specialEnemies = new();
