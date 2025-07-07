@@ -17,7 +17,7 @@ using LethalLevelLoader;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using CodeRebirthLib.ContentManagement.Weathers;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.INetworkSerializables;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour

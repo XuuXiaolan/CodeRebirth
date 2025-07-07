@@ -213,6 +213,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -333,7 +334,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3244500461203868027}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 224771636, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: 1986756608, guid: 9098a5b45f08a1341be2008bfe361aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1
@@ -342,9 +343,9 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -574,6 +575,7 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
   hb: {fileID: 242724457207671706}
   trigger: {fileID: 8455382249001226961}
   hoverboardSeat: {fileID: 3399338272138284559}

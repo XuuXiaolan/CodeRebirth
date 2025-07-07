@@ -1,4 +1,4 @@
-using CodeRebirth.src.MiscScripts;
+using CodeRebirthLib.MiscScriptManagement;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -6,7 +6,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class SnailCatPhysicsProp : GrabbableObject
 {
-
     public Animator animator = null!;
     public OwnerNetworkAnimator ownerNetworkAnimator = null!;
     public SnailCatAI snailCatScript = null!;

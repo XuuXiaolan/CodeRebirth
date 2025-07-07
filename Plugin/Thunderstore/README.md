@@ -387,29 +387,27 @@ Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
 
 </details>
 
-
-
 # Credits
 
-- [Xu Xiaolan](https://www.youtube.com/shorts/gOS-SWIFDW8) : Coding, Moon work,
+- [Xu Xiaolan](https://www.youtube.com/shorts/gOS-SWIFDW8) : Coding, Moon work, Main Co-Creator of CR
 
-- [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc) : Modeling/Designs, Moon work, Sounds, Ideas/lore, Voice acting
+- [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc) : Modeling/Designs, Moon work, Sounds, Ideas/lore, Voice acting, Main Co-Creator of CR
 
 - [Bongo](https://thunderstore.io/c/lethal-company/p/loaforc/) : Coding
 
-- [S1ckboy](https://thunderstore.io/c/lethal-company/p/s1ckboy/Seichi/) : Modeling/Designs, Moon work,
-
-- MrSaltedBeef : Concept art, Art, New mod icon
-
-- Siphonife : Modeling/Designs, Visuals
-
-- [SolidStone](https://thunderstore.io/c/lethal-company/p/SolidStone/) : Modeling/Designs, Moon work,
-
-- [TestAccount666](https://thunderstore.io/c/lethal-company/p/TestAccount666/) : Coding
+- [S1ckboy](https://thunderstore.io/c/lethal-company/p/s1ckboy/Seichi/) : Modeling/Designs, Moon work
 
 - WhiteSpike : Coding
 
+- MrSaltedBeef : Concept art, Art, New mod icon
+
+- [SolidStone](https://thunderstore.io/c/lethal-company/p/SolidStone/) : Modeling/Designs, Moon work
+
+- Siphonife : Modeling/Designs, Visuals
+
 - v0xx : Modeling/Designs
+
+- [TestAccount666](https://thunderstore.io/c/lethal-company/p/TestAccount666/) : Coding
 
 - [IntegrityChaos](https://thunderstore.io/c/lethal-company/p/IntegrityChaos/) : Modeling/Designs
 
@@ -435,7 +433,7 @@ Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
 
 - [NatsuBerry](https://bsky.app/profile/natsuberry.bsky.social) : Shockwave and Seamine gal art on the cabin magazine
 
-- [SkittyMuffins](https://www.twitch.tv/skittymuffins) : Made a funny trailer that one time
+- [SkittyMuffins](https://www.twitch.tv/skittymuffins) : CEO of CodeRebirth, Made a funny trailer that one time
 
 - [Fumo M. Borsh](https://www.youtube.com/watch?v=exbCTZAMaVk&ab_channel=Gulliver) : Backseating
 

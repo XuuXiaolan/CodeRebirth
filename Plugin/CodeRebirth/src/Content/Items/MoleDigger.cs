@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
+using CodeRebirthLib.MiscScriptManagement;
 using CodeRebirthLib.Util;
 using Unity.Netcode;
 using UnityEngine;

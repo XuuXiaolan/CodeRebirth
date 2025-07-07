@@ -1,8 +1,8 @@
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.MiscScriptManagement;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

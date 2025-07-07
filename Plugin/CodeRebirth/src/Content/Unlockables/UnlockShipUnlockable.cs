@@ -1,9 +1,9 @@
 using System;
 using CodeRebirthLib.ContentManagement.Unlockables;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using static CodeRebirthLib.Util.HUDDisplayTip;
+using static CodeRebirthLib.Util.INetworkSerializables.HUDDisplayTip;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockShipUnlockable : NetworkBehaviour

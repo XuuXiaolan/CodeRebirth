@@ -4,7 +4,7 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;

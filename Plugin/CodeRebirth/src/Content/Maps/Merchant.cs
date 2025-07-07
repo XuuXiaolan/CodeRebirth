@@ -5,6 +5,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.MiscScriptManagement;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;

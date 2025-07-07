@@ -3,6 +3,7 @@ using System.Linq;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
 using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
