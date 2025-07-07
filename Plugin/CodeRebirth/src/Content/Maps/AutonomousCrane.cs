@@ -341,7 +341,7 @@ public class AutonomousCrane : NetworkBehaviour
         }
 
         _playerKillList.Clear();
-        int numHits = Physics.OverlapSphereNonAlloc(magnetTargetPosition, 5f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
+        int numHits = Physics.OverlapSphereNonAlloc(magnetTargetPosition, 5f * this.transform.localScale.x, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];
