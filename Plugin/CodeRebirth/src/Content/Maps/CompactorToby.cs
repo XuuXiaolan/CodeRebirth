@@ -35,7 +35,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
     [SerializeField]
     private NetworkAnimator _tobyNetworkAnimator = null!;
 
-    private List<EnemyLevelSpawner> _enemyLevelSpawners = new();
+    private List<CompactorEnemyLevelSpawner> _compactorEnemyLevelSpawners = new();
 
     [HideInInspector] public bool compacting = false;
     private bool _usedOnce = false;
@@ -46,13 +46,11 @@ public class CompactorToby : NetworkBehaviour, IHittable
 
     public void Start()
     {
-        var spawnTransforms = GameObject.FindGameObjectsWithTag("EnemySpawn");
-        foreach (var spawnTransform in spawnTransforms)
+        foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
         {
-            EnemyLevelSpawner? enemyLevelSpawner = spawnTransform.GetComponentInParent<EnemyLevelSpawner>();
-            if (enemyLevelSpawner != null && !enemyLevelSpawner.daytimeSpawner)
+            if (enemyLevelSpawner is CompactorEnemyLevelSpawner compactorSpawner)
             {
-                _enemyLevelSpawners.Add(enemyLevelSpawner);
+                _compactorEnemyLevelSpawners.Add(compactorSpawner);
             }
         }
     }
@@ -152,8 +150,8 @@ public class CompactorToby : NetworkBehaviour, IHittable
             {
                 Timethreshold = 2.4f;
                 Plugin.ExtendedLogging("Toby Spawning Enemy");
-                int randomIndex = UnityEngine.Random.Range(0, _enemyLevelSpawners.Count);
-                EnemyLevelSpawner enemyLevelSpawner = _enemyLevelSpawners[randomIndex];
+                int randomIndex = UnityEngine.Random.Range(0, _compactorEnemyLevelSpawners.Count);
+                CompactorEnemyLevelSpawner enemyLevelSpawner = _compactorEnemyLevelSpawners[randomIndex];
                 EnemyAI? enemyAI = null;
                 for (int i = 0; i < 5; i++)
                 {

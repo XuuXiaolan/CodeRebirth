@@ -204,8 +204,8 @@ public class SellingSally : NetworkBehaviour
         {
             foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
             {
-                enemyLevelSpawner.spawnTimerMin /= 2f;
-                enemyLevelSpawner.spawnTimerMax /= 2f;
+                enemyLevelSpawner.spawnTimerMin /= 4f;
+                enemyLevelSpawner.spawnTimerMax /= 4f;
             }
             OxydeLightsManager.oxydeLightsManager.IncrementLights();
             _usedOnce = true;
