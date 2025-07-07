@@ -443,10 +443,10 @@ MonoBehaviour:
       - m_Target: {fileID: 2851295282374575768}
         m_TargetAssemblyTypeName: CodeRebirth.src.Content.Maps.ItemCrate, CodeRebirth
         m_MethodName: OnInteract
-        m_Mode: 2
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: GameNetcodeStuff.PlayerControllerB, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -494,6 +494,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

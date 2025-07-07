@@ -1,3 +1,4 @@
+using System.Collections;
 using CodeRebirth.src.Util;
 using UnityEngine;
 
@@ -21,8 +22,9 @@ public class AutonomousCraneTrigger : MonoBehaviour
     private Vector2 _exemptLocalRadii;
     private float _exemptLocalHalfH;
 
-    private void Awake()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(1f);
         // Cache main collider bounds
         var mb = _mainCollider.sharedMesh.bounds;
         _mainLocalCenter = mb.center;

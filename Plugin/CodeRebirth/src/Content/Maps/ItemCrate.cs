@@ -126,7 +126,9 @@ public class ItemCrate : CRHittable
 
     public void OnInteract(PlayerControllerB player)
     {
-        if (opened) return;
+        if (opened)
+            return;
+
         OpenCrateServerRpc();
     }
 
