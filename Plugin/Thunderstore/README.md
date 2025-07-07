@@ -1,201 +1,219 @@
-# CodeRebirth
+# ![He's Doing good](https://i.postimg.cc/VvcrQvDk/Code-Rebirth-Logo.png)
+*With everything we've mined... We've dug our own graves. Enraged forces beyond our comprehension...*
+## Welcome to the team miner!⛏️
 
-Code Rebirth is a big general content mod expanding on all parts of the game. This mod is highly configurable and each feature can be disabled separately.
+You've been selected to join Project Rebirth, only the best of the best are selected to partake in this highly prized intergalactic mining operation. So grab your trusty mole digger and get out there!
 
-If you're interested in helping with the development of the mod, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on the Lethal Modding Discord!
+If you're interested in helping with the development of the mod or have issues or questions, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on the Lethal Modding Discord!
+
+Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
 
 ![GoodJob](https://i.postimg.cc/9Mr5sSZj/image.png)
 
--Jimothy, Employee of the year
+### Remember, a good job starts with you!
+
+*-Jimothy, Employee of the millennium*
 
 ## Current Additions
 
-- 9 Unique Hazards
-- 4 Inside enemies
-- 2 Outside Enemies
+- 1 Moon and lore
+- 12 Unique Hazards
+- 8 Inside enemies
+- 6 Outside Enemies
 - 2 Ambient Enemies
-- 2 Custom Weathers with variations
+- 3 Custom Weathers with variations
 - Equipment Crates and Item Safes
-- 6 Helpful Ship Upgrades
-- 1 [̷͈̇̂ͅṘ̸̮̯E̶̺͊͛́D̸̨̉̌̃Ą̴̭͛C̵̨̪͑̈́̚Ṭ̵̝̙͋͂͊Ê̵̞̣͜͠D̷̝̟͛̈]̶̫͋̐͠
+- 8 Unlockable Ship Upgrades
 - 160+ Plant types!!!
-- 4 Ship Decorations
+- 5 Ship Decorations
 - 2 Shop Items
-- 11 Scrap with unique effects
+- 19 Scrap with unique effects
+- 9 Weapons
+- 1 [Redacted]
 
-## Hazard Config
+![Enemies](https://i.postimg.cc/RCwmPk6z/image.png)
 
-- Small tidbit on how the hazard config works for the inside hazards such as LaserTurret, FlashTurret, TeslaShock, etc.
-- Config follows this structure: `MoonName - X1,Y1 ; X2,Y2 ; X3,Y3 | MoonName2 - Etc....`.
-- The separators are:
-  - `-` for MoonName and Coordinates
-  - `,` for x and y value of a coordinate.
-  - `;` for separating coordinates.
-  - `|` for separating entries.
-- This follows how vanilla spawns hazards on moons accurately, where vanilla generates a number between 0 and 1 and assigns it to the `X-axis`.
-- Using that X-axis value, it picks the corresponding Y-value, rounds it to an integer and spawns that amount of hazards.
-- It's done as a curve so that, depending on luck, you can have days where you spawn almost no hazards and on some days you have `Microwave Hell`, similar to some moons' `Turret Hell` rare occurance.
-- Tool for visualising and creating curves easily <https://cosmobrain0.github.io/graph-generation/>.
+![Merchant](https://i.postimg.cc/sx2gdKZr/CRItems.png)
 
-## Preview (Spoilers ahead!)
+![OldOxyde](https://i.postimg.cc/KzD5yXRb/Oxyde-Readme.png)
+
+## Feature Details
+
+<details>
+  <summary><mark><strong>[Login to site terminal]</strong></mark></summary>
+
+#
+
+>*All files are property of Halden Electronics. Activity may be monitored. Do not share any classified information.*
+
+<details>
+  <summary><strong>📁 745-Oxyde</strong></summary>
+
+> Long abandoned by the company, this moon has laid dormant for decades. Once a bustling hub for all mining activity, now a dust-ridden scrapyard. While no crewmate has stepped foot here for years, malfunctioning ships and machinery have brought multiple creatures to its once lifeless surface. Grab your trusty mole digger and start digging into Project Rebirth's mysterious past...
+
+![RuinedOxyde](https://i.postimg.cc/3R2KQYCR/Oxyde-Thumbnail.png)
+
+> Access to this moon has been prohibited by the company, however be on the lookout for a stray crashing ship. It may hold the key to your entry.
+
+> This moon acts like the company building where employees can sell their scrap for increased sell value, however this comes at a cost, creatures roam, weather shifts, danger lies around every corner. Pay a visit to the director's cabin to learn more about the standard selling process via the upstairs projector.
+</details>
+
+<details>
+  <summary><strong>📁 Entities</strong></summary>
+
+<details>
+  <summary>--📁 Workforce Entities</summary>
+
+# Workforce [Access Clearance Level: *LOW*]
+
+![WorkForce](https://i.postimg.cc/g07Q44H7/Enemy-Divier-3.png)
+>Access to this information is **AVAILABLE** to all and part of basic company teaching. This class of entities are the backbone of any mining operation and crew. These company units serve a variety of functions, from transportation to defense. Make sure to read all instruction manuals and maintenance of units before acquisition.
+
+## Jimothy (Transporter)
+![Jim](https://i.postimg.cc/9MJNMm31/Jim-Sighting.png)
+>Strong. Fast. Reliable. Transporter units are known for their ability to move around cargo with ease. This friendly little fellow will move around hazards and crates around throwing a wrench into crewmates plans. He doesn't do this out of malice, he just thinks he's doing a good job.
+
+## Scrap-E (Janitor)
+![Scrappy](https://i.postimg.cc/bNGFyfmH/Janitor-Sighting.png)
+>Scrap-E's keep the site clean. Armed with strong claws, a body cavity for storage and old trash cans, these robots make quick work of debris. They even clean up scrap off the floor and keep it. If this proves to be an inconvenience, simply ask them nicely, if this fails give them a good whack. Just don't get grabbed. Trash.
+
+## Nancy
+![Heal](https://i.postimg.cc/fbsHftDB/Nancy-Sighting.png)
+>The backbone of any team, this medical unit will fix your backbone and more. Possessing great medical knowledge and expertise, this robot can suture up any wound with ease. Just make sure to hold still while getting operated on to prevent injuries.
+
+## Peacekeeper
+![Shredder](https://i.postimg.cc/cLw93Myv/Peace-Keeper-Sighting.jpg)
+>Robust and deadly, do not fret, these big robots are here to keep the peace. Once used during war, now they serve as loyal guardians. They are totally harmless so long as crewmates show no suspicious or aggressive behavior towards others.
+
+## Guardsman
+![Strikebreaker](https://i.postimg.cc/pVc6MLJL/Guardsman-Sighting-1.jpg)
+>In the event of mass entity activity, a loyal guardsman may be sent down to clear the moons. Armed with giant shoulder cannons, strong claws and a robust frame, these units can tank and crush even the mightiest foes. Truly the pinnacle of war engineering.
 
 </details>
 
 <details>
-  <summary><strong>Hazards</strong></summary>
+  <summary>--📁 Natural Entities</summary>
 
-### Bug Zapper
+# Nature [Access Clearance Level: *NORMAL*]
 
-![BZ](https://i.postimg.cc/GpGRtvjj/image.png)
+![Nature](https://i.postimg.cc/CxmWnwBS/Enemy-Divier-2.png)
 
-> Designation : Bug Zapper  
-> Objective : Pest Control  
->
-> These giant electric zappers, capable of delivering fatal electric shocks, were instrumental in the protection of valuable assets. After detecting a threat, the giant tesla coil would charge up before delivering a strong shock, deterring or killing any attackers.  
-> [Final Recorded Equipment Transmission]  
-> [ERROR] Software critical failure - Objective updated : Zap metal carrier, Zap bug, Zap, Zap, Zap.
+>Access to this information is **AVAILABLE** to all. This class of entities is found naturally inhabiting many moons in the system. Danger level varies highly from entity to entity. Make sure to keep up to date with all information and new research conducted on these entities.
 
-### Laser Turret
+## Snail Cat
+![Creatura](https://i.postimg.cc/8CbZKpCD/Snail-Cat-Sighting.png)
+>Small docile creature, feline in nature. This curious friend will follow crewmates around and even allow themselves to be picked up. And no, you can't keep them.
 
-![LT](https://i.postimg.cc/1t3v2Q4N/image.png)
+## Cutiefly
+![Cutie](https://i.postimg.cc/DytpmpDV/Cutiefly-Sighting-1.png)
+>Delicate and graceful, these butterflies have wings akin to glass. Be careful not to step on them or to injure them. Help us preserve nature's beauty.
 
-> Designation : Laser Assisted Soil Excavation Rig (L.A.S.E.R.)  
-> Objective : Mine and Extract minerals
->
-> The L.A.S.E.R. is the back bone of mining operations, this experimental tech uses a massive carved ruby that focuses light into a single point creating a laser capable of melting solid rock. Energy efficient and powerful, this device is instrumental in the quick extraction of ores.  
-> [Final Recorded Equipment Transmission]  
-> [ERROR] Software critical failure - Objective updated : Spin, Mine, Spin, Mine,Spin, Mine.
+## Monarch
+![Monarch](https://i.postimg.cc/HxsBFqJM/Monarch.png)
+>Nobody knows where they come from, a shattering and then a rumble. King of the skies, wings shimmering bright. strikes with a vengeance of blinding light. 
 
-### Industrial Fan
+## Redwood Titan
+![Redwood](https://i.postimg.cc/fyyqSGDs/Redwood-Sighting.jpg)
+>Surpassing the trees themselves, towering over the mountains, this titan roams the land in search of food. Stand clear of its path and try not to upset it.
 
-![IF](https://i.postimg.cc/htGbKrcH/image.png)
+## Driftwood Menace
+![Driftwood](https://i.postimg.cc/ZqzQssFP/Drift-Wood-Sighting.png)
+>Stay away from this creature. Its violence and rage knows no bounds. Its strong arms crush any foes, its scream is deafening. 
 
-> Designation : Industrial Fan  
-> Objective : Aeration  
->
-> These giant industrial fans were used for aeration during mining operations, keeping dust off equipment and keeping crewmates cooled down. The fan's automated system would control fan speed by detecting the amount of dust, gas and other various aerosols.  
-> [Final Recorded Equipment Transmission]  
-> [ERROR] Software critical failure - Objective updated : Fan Speed - Max, Maximum aeration mode - 360 degree coverage  
-
-### Functional Microwave
-
-![FM](https://i.postimg.cc/x84jMnNG/image.png)
-
-> Designation : Experimental Microwave  
-> Objective : Microwave rock
->
-> These modified microwave ovens were used alongside L.A.S.E.R. devices to help in the mining operation. Using a modified power supply, the microwave shoots high microwave radiation at rocky surfaces to weaken and fracture surfaces. Once a surface is weakened by an automated microwave, the mining crew can start extraction using manual tools and L.A.S.E.R devices.  
-> [Final Recorded Equipment Transmission]  
-> [ERROR] Software critical failure  
-> [Log] Crewmate found with content of 6% various minerals  
-> [Update] Weaken minerals from crewmate  
-> [Update] Objective updated : Microwave crewmate
-
-### Flash Turret
-
-![FT](https://i.postimg.cc/FH9mzY6t/image.png)
-
-> Designation : WunderFoto Pro Flash Camera  
-> Objective : Survey and Photograph
->
-> The WunderFoto Pro Flash Cameras were deployed early on into mining operations to survey the local terrain for ores and photograph local wildlife for research purposes. These state of the art cameras are controlled by the latest company software with a reliable AI that will photograph and send data directly to the ship.  
-> [Final Recorded Equipment Transmission]  
-> [ERROR] Software critical failure - Objective updated : photograph crew, photograph crew, photograph crew, photograph crew.
-
-### Bear Trap
-
-![BT](https://i.postimg.cc/xdF738T4/image.png)
-
-> Designation : Bear Trap  
-> Objective : Wildlife control  
->
-> These old mechanical bear traps, rusty but reliable, were used as a defensive measure against the local hostile wildlife trying to interrupt mining operations.  
->
-> [Final Recorded Equipment Transmission]  
-> N/A
-
-### Air Control Unit
-
-![ACU](https://i.postimg.cc/jS9Rj24y/image.png)
-
-> Designation : Air Control Unit  
-> Objective : Shoot down threats  
->
-> An old heavy anti air canon repurposed for shooting down airborne threats. These were the last defense measure against hostile wildlife during mining operations. The AC unit uses a powerful pneumatic system that compresses surrounding air to launch heavy air seeking projectiles.  
-> [Final Recorded Equipment Transmission]  
-> [ERROR] Software critical failure - Objective updated : Clear skies
-
-### Item Crate
-
-![ICW](https://i.postimg.cc/3Jz8Lfy1/image.png)
-![SW](https://i.postimg.cc/k4NV8KT0/image.png)
-![ICWM](https://i.postimg.cc/T2nKcWSF/image.png)
-![ICMM](https://i.postimg.cc/K8fLDgKx/image.png)
-
-> Safe: Spawns outside and is unlockable with a key, manually open it with the dial to get a random pieces of scrap!
-> Metal (Mimic): Will trap you and digest you slowly...
-> Wooden: Similar except you keep bashing it! gives you shop items.
-> Wooden (Mimic): 20% Chance to replace a normal wooden crate with a mimic'd one...
-</details>
-
-<details>
-  <summary><strong>Inside Enemies</strong></summary>
-
-### Jimothy (Transporter)
-
-![Jim](https://i.postimg.cc/mD7ZxNL2/image.png)
-
-> Carries around hazards and crates, inside and outside, and relocates them.
-> Due to his cheap circuits frying, he think he's doing a good job.
-> I'd keep an eye out on where he's going...
-
-### Scrap-E (Janitor)
-
-![SE](https://i.postimg.cc/rm7NwbLB/image.png)
-
-> A different take on the hoarding bug mechanic, will not be very happy if he sees you littering.
-> The green one is bald.
-
-### Puppeteer (Manor Lord)
-
-![ML](https://i.postimg.cc/FsPQfn1J/image.png)
-![VP](https://i.postimg.cc/0NCXZC41/image.png)
-
-> Once betrayed, he haunts the mansion looking for the one who backstabbed him.
-> On player contact, stabs the player with his pin and spawns a voodoo puppet following the player anywhere.
-> If the puppet is damaged by any source, turret, landmine, other enemies, players, etc, the player would also be damaged.
-> Keep your puppet safe.
-
-### Duck Song
-
-![DS](https://i.postimg.cc/1zw6FNrm/image.png)
-![DB1](https://i.postimg.cc/kGpDznvY/image.png)
-![DB2](https://i.postimg.cc/YqThxC9h/image.png)
-![DB3](https://i.postimg.cc/LXhp7jQR/image.png)
-
-> Gives a quest to find grapes to a player. Won't butcher you in any way whatsoever...
-> The one and only duck from the hit DUCK song.
-> and he waddled away, waddle waddle waddle... till the very next day bam bam bam bum ba ra ra bam.
-</details>
-
-<details>
-  <summary><strong>Outside Enemies</strong></summary>
-
-### Redwood Titan
-
-![RT](https://i.postimg.cc/FHXjYh5p/image-removebg.png)
-
-> Stomps around outside, crushing anything in its way
-> Staying too close may prompt aggressive behavior.
-
-### Carnivorous Plant
-
-![CarnPlant](https://i.postimg.cc/d0xDgKFr/image.png)
+## Cactus Budling
+![Cactus](https://i.postimg.cc/8cYKRZz6/Cactus-Sighting.png)
+>Don't let its cute appearance fool you. This giant, while small compared to its peers, is even more dangerous than the others. Its cactus appendages can reach far and wide to strike its prey. 
 
 </details>
 
 <details>
-  <summary><strong>Weathers</strong></summary>
+  <summary>--📁 Manor Entities</summary>
+
+# Manor [Access Clearance Level: *HIGH*]
+
+![Manor](https://i.postimg.cc/mrkKQKCM/Enemy-Divier-4.png)
+> Access to this information is **RESTRICTED** to all unqualified personnel. This class of entities is anomalous in nature and poses a high risk to all. They mostly reside within abandoned locales and old living spaces. 
+> Any entity found in this classification should be reported to the site director if spotted.
+
+## Puppeteer (Manor Lord)
+![ManorLord](https://i.postimg.cc/KzZHxKWR/Manor-Lord-Sighting-1.png)
+>Little is known of its origin or motivations. This tall figure is an imposing sight, however it still manages to sneak around unseen. Inhabiting the manor, this entity creates puppets linked to its victims. While not directly deadly, the puppet puts the crewmate in great danger.
+
+## Magician
+![Magician](https://i.postimg.cc/vT4XZ5tH/Magician-Sightning.png)
+> An old child's doll roaming the halls of the manor. Once it picks a crewmate, do not let anybody else see it.
+
+## Mistress 
+
+
+</details>
+
+<details>
+  <summary>--📁 Unknown Entities</summary>
+
+# Unknown [Access Clearance Level: *FORBIDDEN*]
+
+![unknown](https://i.postimg.cc/QxkLsQjB/Enemy-Divier-1.png)
+
+> Access to this information is **FORBIDDEN** to all. This class of entities does not conform to any known laws of nature.
+> Any entity found in this classification should be reported to corporate if spotted **IMMEDIATELY**.
+
+## Duck song
+![Duck](https://i.postimg.cc/W3WXV5rH/Duck-Sighting.png)
+> We don't know where it came from or why its here, but beware of its twisted games.
+
+</details>
+</details>
+
+<details>
+  <summary><strong>📁 Hazards</strong></summary>
+
+## Air Control Unit
+![Hazard](https://i.postimg.cc/Y0j0FyNr/Hazard-CR-5.png)
+> An old military anti air cannon repurposed for defensive capabilities. It specializes in anti air and helps keep a clear sky. Essential kit for any mining crew.
+
+## Bear Traps
+![Hazard](https://i.postimg.cc/KcsRbxFR/Hazard-CR-6.png)
+> Rusty but reliable, these traps snap once stepped on. If caught by one, they can be slowly pried open. Make sure to remember where you set them up. Stay clear of the red ones.
+
+## Cargo Crane
+![Hazard](https://i.postimg.cc/W46dcZbv/Hazard-CR-2.png)
+> Towering crane specializing in cargo carrying. Its strong frame is the backbone of company shipping. However stand clear of its heavy magnet when in use, less you be pancaked.
+
+## Industrial Fan
+![Hazard](https://i.postimg.cc/MGkSntqV/image-2025-07-07-072850118.png)
+> Aeration device capable of producing fresh air to poorly ventilated mineshafts. Be cautious around the blades however.
+
+## Microwave Cart
+![Hazard](https://i.postimg.cc/NMBrK4PF/Hazard-CR-10.png)
+> Experimental mining technology used to weaken and crack rock using microwave radiation. Slowly traversing the halls on an automatic timer, results for this technology have showed great promise.
+
+## Flash Turret
+![Hazard](https://i.postimg.cc/BvxKZypR/Hazard-CR-8.png)
+> Surveying camera equipped with various photoreceptors and movement detectors. Great for capturing critters and wildlife in action. Say cheese!
+
+## L.A.S.E.R Mining Rig
+![Hazard](https://i.postimg.cc/L6ngghvt/Hazard-CR-11.png)
+> Experimental mining technology using giant crystal rubies. Its powerful laser melts away rock with ease. 
+
+## Cacti
+![Hazard](https://i.postimg.cc/FKmKpKbn/Hazard-CR-7.png)
+> Naturally growing cacti with a rigid structure. Grazing these prickly plants causes them to quickly break open, releasing a blast of thorns. The earth blooms and more and more dangerous flora have started appearing...
+
+## Crates
+![Hazard](https://i.postimg.cc/KzGRGYRg/Hazard-CR-3.png)
+![Hazard](https://i.postimg.cc/PqkC7yHy/Hazard-CR-1.png)
+> Wooden crates are used to store equipment while metal crates bring back valuables. Every mining crew uses these convenient containers. Pry open wooden crates with any tool but use a key to unlock a safe.
+
+## Infected Crates
+![Hazard](https://i.postimg.cc/qR1gzd3D/Hazard-CR-4.png)
+![Hazard](https://i.postimg.cc/nhmsT5yM/Hazard-CR-9.png)
+> Beware of false crates, while visibly identical, listen to their growls. Crimson blight stirs within them. Who knows what else awaits on Haemoglobin's surface...
+
+</details>
+
+<details>
+  <summary><strong>📁 Weathers</strong></summary>
 
 ### Windy
 
@@ -214,7 +232,73 @@ If you're interested in helping with the development of the mod, feel free to re
 </details>
 
 <details>
-  <summary><strong>Helpful Ship Upgrades</strong></summary>
+  <summary><strong>📁 Shop Items</strong></summary>
+
+### Hoverboard
+
+![HB](https://i.postimg.cc/wj6mw7Nc/hoverboard.png)
+
+> Shop Item that allows you to drift around the world, should be faster than walking speed and allows a boost using sprint.
+
+### Wallet
+
+![W](https://i.postimg.cc/wMBrg32r/imwadadage-removebg-preview.png)
+
+> Shop Item to get some extra cash for the quota can pick up coins.
+
+</details>
+
+<details>
+  <summary><strong>📁 Scraps</strong></summary>
+
+### Guitar
+
+![GU](https://i.postimg.cc/5025L276/Guitar-Icon.png)
+
+> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+
+### Recorder
+
+![RE](https://i.postimg.cc/DwStd7Np/Recorder-Icon.png)
+
+> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+
+### Violin
+
+![VI](https://i.postimg.cc/wT7Wn0k7/Violin-Icon.png)
+
+> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+
+### Accordion
+
+![AC](https://i.postimg.cc/4d0ccbHS/Accordion-Icon.png)
+
+> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+
+### Snow Globe
+
+![SG](https://i.postimg.cc/NfBS0qgy/snowglobe-icon.png)
+
+> Cracked, rare and unique. This Snow Globe is found deep inside of abandoned moons.
+
+</details>
+<details>
+  <summary><strong>📁 Moon Changes</strong></summary>
+
+### Diverse Flora
+
+![F](https://i.postimg.cc/8C8k191j/image.png)
+
+</details>
+
+<details>
+  <summary><strong>📁 Unlockable Ship Upgrades</strong></summary>
+
+### Piggy Bank
+
+![Piggy](https://i.postimg.cc/kX44LM5h/image-2025-07-07-081319598.png)
+
+> While wallets can be fickle things and vanish on team wipe. Coins stored withing this bank will be saved. To regain your stored coins simply whack it open.
 
 ### Shockwave Gal (SWRD-1)
 
@@ -249,7 +333,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### 999 Gal (LIZ-ZIE)
 
-![LIZ](https://i.postimg.cc/nzS1XSXT/image.png)
+![LIZ](https://i.postimg.cc/V67HdFcw/Screenshot-2025-07-07-080351.png)
 
 > Friendly Gelatinous smile dressed as a nurse that heals players that interact with her.
 > Can also revive players nearby.
@@ -258,7 +342,7 @@ If you're interested in helping with the development of the mod, feel free to re
 
 ### Shrimp Dispenser
 
-![SD](https://i.postimg.cc/SNnzQNLB/image.png)
+![SD](https://i.postimg.cc/s2rL8XJk/Screenshot-2025-07-07-080532.png)
 
 > Dispenses Shrimp that deals 3 damage to enemies and 60 damage to players.
 > One time use unless you dispense another.
@@ -266,7 +350,7 @@ If you're interested in helping with the development of the mod, feel free to re
 > Inspired by the shrimp from lockdown protocol, it's a lovely game.
 </details>
 <details>
-  <summary><strong>Ship Decorations</strong></summary>
+  <summary><strong>📁 Ship Decorations</strong></summary>
 
 ![SB](https://i.postimg.cc/mZJGVMzg/image.png)
 
@@ -274,215 +358,91 @@ If you're interested in helping with the development of the mod, feel free to re
 > Animated Ship decorations, no practical use.
 > Zedfox not included.
 </details>
+
 <details>
-  <summary><strong>Shop Items</strong></summary>
+  <summary><strong>📁 Melanie [File Access Restricted]</strong></summary>
 
-### Hoverboard
+![MelanieMelicious](https://i.postimg.cc/Z50yNshc/image-2025-06-25-135027948.png)
 
-![HB](https://i.postimg.cc/wj6mw7Nc/hoverboard.png)
+> Yeehaw
 
-> Shop Item that allows you to drift around the world, should be faster than walking speed and allows a boost using sprint.
+</details>
+</details>
 
-### Wallet
+## Hazard Config Explanation
+<details>
+  <summary><strong>Hazard Config and tool</strong></summary>
 
-![W](https://i.postimg.cc/wMBrg32r/imwadadage-removebg-preview.png)
-
-> Shop Item to get some extra cash for the quota can pick up coins.
+- Small tidbit on how the hazard config works for the inside hazards such as LaserTurret, FlashTurret, TeslaShock, etc.
+- Config follows this structure: `MoonName - X1,Y1 ; X2,Y2 ; X3,Y3 | MoonName2 - Etc....`.
+- The separators are:
+  - `-` for MoonName and Coordinates
+  - `,` for x and y value of a coordinate.
+  - `;` for separating coordinates.
+  - `|` for separating entries.
+- This follows how vanilla spawns hazards on moons accurately, where vanilla generates a number between 0 and 1 and assigns it to the `X-axis`.
+- Using that X-axis value, it picks the corresponding Y-value, rounds it to an integer and spawns that amount of hazards.
+- It's done as a curve so that, depending on luck, you can have days where you spawn almost no hazards and on some days you have `Microwave Hell`, similar to some moons' `Turret Hell` rare occurance.
+- Tool for visualising and creating curves easily <https://cosmobrain0.github.io/graph-generation/>.
 
 </details>
 
-<details>
-  <summary><strong>Scraps</strong></summary>
 
-### Guitar
 
-![GU](https://i.postimg.cc/5025L276/Guitar-Icon.png)
+# Credits
 
-> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+- [Xu Xiaolan](https://www.youtube.com/shorts/gOS-SWIFDW8) : Coding, Moon work,
 
-### Recorder
+- [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc) : Modeling/Designs, Moon work, Sounds, Ideas/lore, Voice acting
 
-![RE](https://i.postimg.cc/DwStd7Np/Recorder-Icon.png)
+- [Bongo](https://thunderstore.io/c/lethal-company/p/loaforc/) : Coding
 
-> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+- [S1ckboy](https://thunderstore.io/c/lethal-company/p/s1ckboy/Seichi/) : Modeling/Designs, Moon work,
 
-### Violin
+- MrSaltedBeef : Concept art, Art, New mod icon
 
-![VI](https://i.postimg.cc/wT7Wn0k7/Violin-Icon.png)
+- Siphonife : Modeling/Designs, Visuals
 
-> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+- [SolidStone](https://thunderstore.io/c/lethal-company/p/SolidStone/) : Modeling/Designs, Moon work,
 
-### Accordion
+- [TestAccount666](https://thunderstore.io/c/lethal-company/p/TestAccount666/) : Coding
 
-![AC](https://i.postimg.cc/4d0ccbHS/Accordion-Icon.png)
+- WhiteSpike : Coding
 
-> From hit game "Zort", this instrument can be harmonised with the 3 other instruments added for beautiful music.
+- v0xx : Modeling/Designs
 
-### Snow Globe
+- [IntegrityChaos](https://thunderstore.io/c/lethal-company/p/IntegrityChaos/) : Modeling/Designs
 
-![SG](https://i.postimg.cc/NfBS0qgy/snowglobe-icon.png)
+- Bobilka : Modeling/Designs
 
-> Cracked, rare and unique. This Snow Globe is found deep inside of abandoned moons.
+- Oof Bubble : Sounds
 
-### Meteorite (Sapphire)
+- Moroxide : Sounds
 
-![MS](https://i.postimg.cc/gJff3RxD/image.png)
+- Flameburnt : Concept art
 
-### Meteorite (Emerald)
+- NutDaddy : Ideas, Testing
 
-![ME](https://i.postimg.cc/8PsDsz8n/image.png)
+- Lizziegirl0099 : Voice acting, Testing
 
-### Meteorite (Ruby)
+- [A Glitched NPC](https://www.twitch.tv/a_glitched_npc) : Testing, [Bald](https://www.youtube.com/watch?v=yArdSNcTiAs)
 
-![MR](https://i.postimg.cc/prXbTzmp/image.png)
+- [Smxrez](https://www.youtube.com/shorts/6Mo9MJFu89M) : Misc/Organisation
 
-> Valuable rare Scrap found from the remaining debris of some Meteors.
-> Yes I'm aware the ruby looks ass.
+- [Slayer6409](https://thunderstore.io/c/lethal-company/p/slayer6409/Emergency_Dice_Updated/) : Testing
 
-### Epic Axe
+- CoddingCat : Old snail cat model
 
-![EA](https://i.postimg.cc/wxWPFcTY/imwadaage-removebg-preview.png)
+- [NatsuBerry](https://bsky.app/profile/natsuberry.bsky.social) : Shockwave and Seamine gal art on the cabin magazine
 
-> Cool glowy Axe!
-> Can crit and deal 2x damage.
+- [SkittyMuffins](https://www.twitch.tv/skittymuffins) : Made a funny trailer that one time
 
-### Nature's Mace
+- [Fumo M. Borsh](https://www.youtube.com/watch?v=exbCTZAMaVk&ab_channel=Gulliver) : Backseating
 
-![NM](https://i.postimg.cc/zvKF6H00/image.png)
+The 4 Instrument models and music are from the game "Zort" by Londer Software. (Great game, grab some friends and play it)
 
-> Mace that uses the power of nature to strike your enemies.
-> Heals enemies and players alike (players to 80 hp max, enemies infinitely).
-> Can crit and deal 2x damage.
+## Credits - Misc Online Assets
 
-### Spiky Mace
-
-![SM](https://i.postimg.cc/5tr5tSrs/image.png)
-
-> Looks like it would hurt a lot...
-> Deals 2 damage by default, very powerful!
-> Can crit and deal 2x damage.
-
-### Icy Hammer
-
-![IH](https://i.postimg.cc/G2NsQgQD/image.png)
-
-> With the power of ice, enemies may be slowed down temporarily...
-> Can crit and deal 2x damage.
-
-### Pointy Needle
-
-![PN](https://i.postimg.cc/6QfKxn8B/image.png)
-
-> Obtained by defeating the Lord Of The Manor.
-> Might have more to it later on.
-
-### Puppet
-
-![PS](https://i.postimg.cc/YSC7kjYg/image.png)
-
-> Obtained by defeating the Manor Lord that puppetted the player.
-> It's you, but better!
-
-### Coin
-
-![C](https://i.postimg.cc/cC5bHZ5L/imagwadae-removebg-preview.png)
-
-> Scrap to get some extra cash for the quota, Coin doesn't affect normal-level scrap spawn rates and is not included in the pool normally.
-> Rumours say this ancient currency can be used to trade with [INFORMATION NOT AVAILABLE].
-</details>
-<details>
-  <summary><strong>Moon Changes</strong></summary>
-
-### Diverse Flora
-
-![F](https://i.postimg.cc/8C8k191j/image.png)
-
-### Infectious Biomes
-
-![IBCo](https://i.postimg.cc/G380FxFx/image.png)
-![IBH](https://i.postimg.cc/wjRJfCfv/image.png)
-![IBCr](https://i.postimg.cc/jq3xFLJx/image.png)
-
-</details>
-<details>
-  <summary><strong>Ambient Enemies</strong></summary>
-
-### Cutiefly
-
-![CF](https://i.postimg.cc/zvmYv21Z/image-207-removebg-preview.png)
-
-> Flies around occasionally resting on the ground. (harmless?????)
-> DO NOT APPROACH DO NOT APPROACH [REDACTED].
-> ON DEATH IT LIVES YET AGAIN, REBORN A NEW.
-
-### Snailcat
-
-![SC](https://i.postimg.cc/qMzFFhzh/imawadge-removebg-preview.png)
-
-> Roams the land slowly (harmless)
-
-</details>
-<details>
-  <summary><strong>Melanie</strong></summary>
-
-![MelanieMelicious](https://i.postimg.cc/xd3PhrJ0/grinning-face.png)
-
-> Fear the low value 2 handers
-
-</details>
-
-## Memorial/Graveyard
-
-- CoddingCat
-
-## Credits
-
-**Moon Work:**
-
-- Xu Xiaolan, [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc), SolidStone, S1ckboy, MrSaltedBeef, NutDaddy
-
-**Coding:**
-
-- Xu Xiaolan, Bongo, TestAccount666, and WhiteSpike
-
-**Modeling/Designs:**
-
-- [QWERTYrodrigo](https://www.youtube.com/watch?v=AxE4TltnvjI), v0xx, S1ckboy, SolidStone, IntegrityChaos, and Bobilka
-
-**Visuals:**
-
-- Siphonife
-
-**Sounds:**
-
-- Oof Bubble, Moroxide
-
-**Ideas/Lore:**
-
-- [QWERTYrodrigo](https://www.youtube.com/watch?v=AxE4TltnvjI)
-
-**Voice Acting:**
-
-- Rodrigo, Lizzie
-
-**Concept Art:**
-
-- Flameburnt
-
-**Misc/Organisation:**
-
-- [Smxrez](https://www.youtube.com/shorts/6Mo9MJFu89M)
-
-**Testing:**
-
-- A Glitched NPC, QWERTYrodrigo, Lizzie, Slayer6409.
-
-## Credits - Zort
-
-The 4 Instrument models and music are from the game "Zort" by Londer Software.
-
-## Credits - Misc Models
-
-"Baby Tomato Plant Scan (Low Poly)" (<https://skfb.ly/oHvNF>) by Marcos Silva is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
-"Tomato Plant" (<https://skfb.ly/69J7v>) by zvanstone is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
 "Carnivorous Plant" (<https://skfb.ly/oLzIp>) by mike69420 is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
+
+"Various Sound Effects" (<https://pixabay.com>)
