@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using CodeRebirth.src.Util;
 using CodeRebirthLib.ContentManagement.Unlockables;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
