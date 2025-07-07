@@ -52,11 +52,11 @@ public class AutonomousCrane : NetworkBehaviour
     private NetworkAnimator _leverNetworkAnimator = null!;
     [SerializeField]
     private InteractTrigger _disableInteract = null!;
+    [SerializeField]
+    private float _rotationSpeed = 12.5f;
 
-    [HideInInspector]
-    public List<PlayerControllerB> _targetablePlayers = new();
-    [HideInInspector]
-    public PlayerControllerB? _targetPlayer = null;
+    internal List<PlayerControllerB> _targetablePlayers = new();
+    internal PlayerControllerB? _targetPlayer = null;
 
     private bool _craneIsActive = true;
     private Vector3 _targetPosition = Vector3.zero;
@@ -221,7 +221,7 @@ public class AutonomousCrane : NetworkBehaviour
         directionToTarget.y = 0f;
 
         Quaternion targetRot = Quaternion.LookRotation(directionToTarget, Vector3.up);
-        _cabinHead.transform.rotation = Quaternion.RotateTowards(_cabinHead.transform.rotation, targetRot, 12.5f * Time.deltaTime);
+        _cabinHead.transform.rotation = Quaternion.RotateTowards(_cabinHead.transform.rotation, targetRot, (_rotationSpeed * Time.deltaTime) / this.transform.localScale.x);
         float angleDelta = Quaternion.Angle(_cabinHead.transform.rotation, targetRot);
 
         return angleDelta < 0.1f;
@@ -241,7 +241,7 @@ public class AutonomousCrane : NetworkBehaviour
         float pitch = Mathf.Clamp(rawAngle, 20f, 80f);
 
         Quaternion want = Quaternion.Euler(pitch, _craneArmStart.transform.localRotation.eulerAngles.y, _craneArmStart.transform.localRotation.eulerAngles.z);
-        _craneArmStart.transform.localRotation = Quaternion.RotateTowards(_craneArmStart.transform.localRotation, want, 12.5f * Time.deltaTime);
+        _craneArmStart.transform.localRotation = Quaternion.RotateTowards(_craneArmStart.transform.localRotation, want, (_rotationSpeed * Time.deltaTime) / this.transform.localScale.x);
         float remaining = Quaternion.Angle(_craneArmStart.transform.localRotation, want);
 
         _craneArmEnd.transform.position = _properCraneArmEndGO.transform.position;
