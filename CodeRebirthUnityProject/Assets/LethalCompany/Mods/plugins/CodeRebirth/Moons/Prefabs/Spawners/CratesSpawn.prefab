@@ -42,20 +42,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 9074500884930967531}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 761130553, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: 387502498, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chanceOfSpawningAny: 10
   automaticallyAlignWithTerrain: 1
   objectTypesWithRarity:
-  - CRObjectName: Normal Wooden Crate
-    Rarity: 10
-  - CRObjectName: Normal Metal Crate
+  - CRLibObjectName: Normal Wooden Crate
+    Rarity: 30
+  - CRLibObjectName: Normal Metal Crate
+    Rarity: 15
+  - CRLibObjectName: Mimic Wooden Crate
     Rarity: 5
-  - CRObjectName: Mimic Metal Crate
+  - CRLibObjectName: Mimic Metal Crate
     Rarity: 5
-  - CRObjectName: Mimic Wooden Crate
-    Rarity: 1
 --- !u!114 &2576193278008148040
 MonoBehaviour:
   m_ObjectHideFlags: 0

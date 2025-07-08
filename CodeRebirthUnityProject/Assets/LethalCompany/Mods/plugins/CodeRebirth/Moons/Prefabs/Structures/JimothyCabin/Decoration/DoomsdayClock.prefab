@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5294536245390395009}
   - component: {fileID: 3304925439984374020}
-  - component: {fileID: 7141491258869255693}
+  - component: {fileID: 6729460955607108724}
   m_Layer: 0
   m_Name: ChimeAudio
   m_TagString: Untagged
@@ -129,7 +129,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7141491258869255693
+--- !u!114 &6729460955607108724
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,10 +138,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2633103131448443010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -396689606, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1791394503, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ambientAudioSource: {fileID: 3304925439984374020}
+  _ambientAudioSource: {fileID: 0}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: a09a8c3d5d36f62408dc75fa7c5bb525, type: 3}
