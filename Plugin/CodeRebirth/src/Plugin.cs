@@ -79,6 +79,7 @@ public class Plugin : BaseUnityPlugin
         TurretPatch.Init();
         GameNetworkManagerPatch.Init();
         DeleteFileButtonPatch.Init();
+        SoccerBallPropPatch.Init();
         // This should be ran before Network Prefabs are registered.
         InitializeNetworkBehaviours();
         InputActionsInstance = new IngameKeybinds();

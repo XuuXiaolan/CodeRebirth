@@ -76,6 +76,8 @@ GameObject:
   - component: {fileID: 1105176634358873676}
   - component: {fileID: 4258152207416354869}
   - component: {fileID: 3093429683643569574}
+  - component: {fileID: 4046484630740507066}
+  - component: {fileID: 5946739543090165893}
   m_Layer: 6
   m_Name: Ballmithy
   m_TagString: PhysicsProp
@@ -96,6 +98,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7345076061521671449}
   - {fileID: 2207914695726450589}
   - {fileID: 2255323685278171423}
   - {fileID: 7075409519104707463}
@@ -259,6 +262,227 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4046484630740507066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460931862825512180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1777455197, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabbable: 1
+  isHeld: 0
+  isHeldByEnemy: 0
+  deactivated: 0
+  parentObject: {fileID: 0}
+  targetFloorPosition: {x: 0, y: 0, z: 0}
+  startFallingPosition: {x: 0, y: 0, z: 0}
+  floorYRot: 0
+  fallTime: 0
+  hasHitGround: 0
+  scrapValue: 0
+  itemUsedUp: 0
+  playerHeldBy: {fileID: 0}
+  isPocketed: 0
+  isBeingUsed: 0
+  isInElevator: 0
+  isInShipRoom: 0
+  isInFactory: 1
+  useCooldown: 0
+  currentUseCooldown: 0
+  itemProperties: {fileID: 11400000, guid: e5c547d707c120341b6fbe68baaf963c, type: 2}
+  insertedBattery:
+    empty: 0
+    charge: 0
+  customGrabTooltip: 
+  propBody: {fileID: 0}
+  propColliders: []
+  originalScale: {x: 0, y: 0, z: 0}
+  wasOwnerLastFrame: 0
+  mainObjectRenderer: {fileID: 0}
+  isSendingItemRPC: 0
+  scrapPersistedThroughRounds: 0
+  heldByPlayerOnServer: 0
+  radarIcon: {fileID: 0}
+  reachedFloorTarget: 0
+  grabbableToEnemies: 1
+  hasBeenHeld: 0
+  rotateObject: 0
+  ballHitUpwardAmount: 0.4
+  grenadeFallCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  grenadeVerticalFallCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.116908506
+      outSlope: 0.116908506
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.27230743
+    - serializedVersion: 3
+      time: 0.49081117
+      value: 1
+      inSlope: 4.1146584
+      outSlope: -0.05124634
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07234045
+      outWeight: 0.53743875
+    - serializedVersion: 3
+      time: 0.9393898
+      value: 1
+      inSlope: 0.086045995
+      outSlope: -0.029021755
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.19120142
+      outWeight: 1
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  soccerBallVerticalOffset:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 7.136612
+      outSlope: 7.136612
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.049382716
+    - serializedVersion: 3
+      time: 0.4666463
+      value: 1.4733374
+      inSlope: 0.066513546
+      outSlope: 0.066513546
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.24691361
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.748699
+      value: 0
+      inSlope: -11.150795
+      outSlope: 5.008659
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07596545
+      outWeight: 0.17332579
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -7.1532235
+      outSlope: -7.1532235
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.061550993
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  grenadeVerticalFallCurveNoBounce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.116908506
+      outSlope: 0.116908506
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.27230743
+    - serializedVersion: 3
+      time: 0.49081117
+      value: 1
+      inSlope: 4.1146584
+      outSlope: 0.06098772
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07234045
+      outWeight: 0.20768756
+    - serializedVersion: 3
+      time: 0.9393898
+      value: 1
+      inSlope: 0.06394797
+      outSlope: -0.029021755
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.1980713
+      outWeight: 1
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  hitBallSFX: []
+  ballHitFloorSFX: []
+  soccerBallAudio: {fileID: 6146669311982000740}
+  ballCollider: {fileID: 7345076061521671449}
+  _ownerNetworkAnimator: {fileID: 5946739543090165893}
+  _animator: {fileID: 3093429683643569574}
+--- !u!114 &5946739543090165893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460931862825512180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1868746800, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 3093429683643569574}
 --- !u!1 &1697641180056658387
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,6 +970,110 @@ Transform:
   - {fileID: 8299849486161082529}
   m_Father: {fileID: 6707886766586302608}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4680209250074910168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7345076061521671449}
+  - component: {fileID: 5520666761052423677}
+  - component: {fileID: 5563235469098590253}
+  - component: {fileID: 3966535651626444249}
+  - component: {fileID: 3596562012996184256}
+  m_Layer: 11
+  m_Name: Sphere
+  m_TagString: DoNotSet
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7345076061521671449
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680209250074910168}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.273, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 898781888399286495}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &5520666761052423677
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680209250074910168}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!135 &5563235469098590253
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680209250074910168}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3966535651626444249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680209250074910168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13502f3bd547ff482433fba7c0d5b3c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemScript: {fileID: 4046484630740507066}
+--- !u!54 &3596562012996184256
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680209250074910168}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!1 &5146700443233461314
 GameObject:
   m_ObjectHideFlags: 0
