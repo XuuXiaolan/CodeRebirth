@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -187,7 +186,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         while (true)
         {
             yield return new WaitUntil(() => currentBehaviourStateIndex == (int)JanitorStates.Idle && _targetScrap == null);
-            yield return null;
             TryFindScrapNearby();
         }
     }
@@ -257,7 +255,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     {
         if (!IsScrapStillValid())
         {
-            ResetToIdle();
+            ResetToIdleServerRpc();
             return;
         }
 
@@ -369,11 +367,13 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         if (!NavMesh.SamplePosition(noisePosition, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             return;
 
-        if (ObjectIsPathable(hit.position, 20f, out NavMeshPath path))
+        if (ObjectIsPathable(hit.position, 20f, out _))
         {
+            targetPlayer = StartOfRound.Instance.allPlayerScripts[playerWhoDroppedIndex];
             SetTargetClientRpc(playerWhoDroppedIndex);
             UpdateBlendShapeAndSpeedForChase();
             SwitchToBehaviourClientRpc((int)JanitorStates.FollowingPlayer);
+            UpdatePathToTargetPlayer();
         }
         PlayDetectScrapSoundClientRpc();
     }
@@ -460,18 +460,24 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         if (_pathCorners.Length == 0)
             return;
 
-        Vector3 direction = GetRotationDirection();
-        float signedAngle = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
+        Vector3 axis = transform.up;
+
+        Vector3 flatForward = Vector3.ProjectOnPlane(transform.forward,   axis).normalized;
+        Vector3 flatDirection = Vector3.ProjectOnPlane(GetRotationDirection(), axis).normalized;
+
+        float signedAngle = Vector3.SignedAngle(flatForward, flatDirection, axis);
+
         bool turningRight = signedAngle > 0f;
 
-        float rotateSpeed = 60f * Time.deltaTime * (turningRight ? 1 : -1) * (sirenLights.activeSelf ? 6 : 1);
-        transform.Rotate(Vector3.up, rotateSpeed);
+        float speedMultiplier = sirenLights.activeSelf ? 6 : 1;
+        float rotateSpeed = 60f * Time.deltaTime * speedMultiplier * (turningRight ? 1 : -1);
+        transform.Rotate(axis, rotateSpeed, Space.World);
 
         creatureAnimator.SetFloat(LeftTreadFloat, turningRight ? 1f : -1f);
         creatureAnimator.SetFloat(RightTreadFloat, turningRight ? -1f : 1f);
         creatureSFX.volume = 1f;
 
-        if (Mathf.Abs(signedAngle) < 2.5f)
+        if (Mathf.Abs(signedAngle) <= 2.5f)
         {
             StopRotating();
         }
@@ -479,17 +485,14 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
 
     private Vector3 GetRotationDirection()
     {
-        Vector3 direction;
-        if (_currentCornerIndex < _pathCorners.Length - 1)
-        {
-            direction = (_pathCorners[_currentCornerIndex + 1] - transform.position).normalized;
-        }
-        else
-        {
-            direction = (_pathCorners[_currentCornerIndex] - transform.position).normalized;
-        }
-        direction.y = 0f;
-        return direction;
+        Vector3 target = (_currentCornerIndex < _pathCorners.Length - 1) ? _pathCorners[_currentCornerIndex + 1] : _pathCorners[_currentCornerIndex];
+        Vector3 delta = target - transform.position;
+        delta = Vector3.ProjectOnPlane(delta, Vector3.up);
+
+        if (delta.sqrMagnitude < Mathf.Epsilon)
+            return transform.forward;
+
+        return delta.normalized;
     }
 
     private void HandleMovement()
@@ -530,7 +533,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     {
         if (_targetScrap == null)
         {
-            _targetScrap = null;
             ResetToIdle();
             return;
         }
@@ -900,11 +902,23 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         currentlyGrabbingScrap = false;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void ResetToIdleServerRpc()
+    {
+        ResetToIdleClientRpc();
+    }
+
+    [ClientRpc]
+    private void ResetToIdleClientRpc()
+    {
+        ResetToIdle();
+    }
+
     private void ResetToIdle()
     {
-        agent.ResetPath();
+        smartAgentNavigator.StopAgent();
         _targetScrap = null;
-        SwitchToBehaviourServerRpc((int)JanitorStates.Idle);
+        SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
     }
 
     private void SwitchToChaseState(PlayerControllerB player)
@@ -914,9 +928,10 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         targetPlayer = player;
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.FollowingPlayer);
         skinnedMeshRenderers[0].SetBlendShapeWeight(0, 100);
+        smartAgentNavigator.StopAgent();
+        UpdatePathToTargetPlayer();
 
         if (!IsServer) return;
-        agent.ResetPath();
         agent.speed = 15f;
         creatureAnimator.SetBool(IsAngryAnimation, true);
     }
