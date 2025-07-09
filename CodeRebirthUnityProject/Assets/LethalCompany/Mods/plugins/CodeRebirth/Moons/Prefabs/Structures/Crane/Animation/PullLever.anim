@@ -210,4 +210,12 @@ AnimationClip:
     flags: 0
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.1
+    functionName: ShakeScreenAnimEvent
+    data: Magnet
+    objectReferenceParameter: {fileID: 11400000, guid: 0bd18c0e68c9d6247b5b3af3bb4abcbc,
+      type: 2}
+    floatParameter: 60
+    intParameter: 3
+    messageOptions: 0

@@ -537,8 +537,7 @@ MonoBehaviour:
   _leverAnimator: {fileID: 3939411310800624979}
   _leverNetworkAnimator: {fileID: 7364236184348094428}
   _disableInteract: {fileID: 903419754823951601}
-  _targetablePlayers: []
-  _targetPlayer: {fileID: 0}
+  _rotationSpeed: 12.5
 --- !u!114 &8446445322963834555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2303,7 +2302,7 @@ Animator:
   m_GameObject: {fileID: 5256549387237368274}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2dbebdc88337afe47bfb6cb92972a588, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9496d3008cf2b7c438f31ab0d38afe44, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
