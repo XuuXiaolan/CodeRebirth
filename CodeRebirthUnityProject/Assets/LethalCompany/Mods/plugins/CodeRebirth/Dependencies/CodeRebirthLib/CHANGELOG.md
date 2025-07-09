@@ -1,4 +1,28 @@
-# v0.7.1
+# v0.9.0
+
+- Implemented ZIP building for no-code mods.
+
+## v0.8.2
+
+- Fixed a tiny whoopsie with authorname + modname GUID being XuXiaolanCodeRebirth instead of XuXiaolan.CodeRebirth
+
+## v0.8.1
+
+- Renamed some internal file names for clarity.
+- Added AuthorName and ModName to CRModInformation.
+
+## v0.8.0
+
+- Improved readme and added a wiki in thunderstore with different registerations.
+- Fixed editor only registerations.
+- Added more logs and more error handling.
+
+## v0.7.2
+
+- Improve LethalConfig Patch
+  - It will no longer display (harmless) errors, and more configs will display inside LethalConfig.
+
+## v0.7.1
 
 - Forgot to add OwnerNetworkAnimator and ClientNetworkTransform.
 

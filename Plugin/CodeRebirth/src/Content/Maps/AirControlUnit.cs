@@ -146,7 +146,7 @@ public class AirControlUnit : CodeRebirthHazard
         // Check if player is within detection range and if there's line of sight
         if (distanceToPlayer <= detectionRange && angle <= maxAngle)
         {
-            if (!Physics.Linecast(turretCannonTransform.position, playerControllerB.transform.position, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Collide))
+            if (!Physics.Linecast(turretCannonTransform.position, playerControllerB.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
                 lockedOntoAPlayer = true;
                 lastPlayerTargetted = playerControllerB;
