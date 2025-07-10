@@ -1,4 +1,5 @@
 using System;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -47,7 +48,7 @@ public class InteractSeatable : InteractTrigger // I stole this from paco
     {
         onInteractEarlyOtherClients.AddListener(player =>
         {
-            if (player.IsOwner)
+            if (player.IsLocalPlayer())
             {
                 SetPlayerOnSeatServerRpc(player);
             }
@@ -74,7 +75,7 @@ public class InteractSeatable : InteractTrigger // I stole this from paco
 
     public void SetPlayerOnSeatLocal(PlayerControllerB playerSitting)
     {
-        if (playerSitting.IsOwner)
+        if (playerSitting.IsLocalPlayer())
         {
             PlayerExitPoint = playerSitting.visorCamera.transform.position;
             LocalPlayerSeated = true;

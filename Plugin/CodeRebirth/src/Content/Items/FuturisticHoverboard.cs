@@ -1,5 +1,6 @@
 using System.Linq;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -63,7 +64,7 @@ public class FuturisticHoverboard : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (_playerRiding != GameNetworkManager.Instance.localPlayerController)
+        if (!_playerRiding.IsLocalPlayer())
             return;
 
         if (_turnedOn)
@@ -88,7 +89,7 @@ public class FuturisticHoverboard : NetworkBehaviour
 
     private void OnInteract(PlayerControllerB player)
     {
-        if (!player.IsOwner)
+        if (!player.IsLocalPlayer())
             return;
 
         if (_playerRiding != null)

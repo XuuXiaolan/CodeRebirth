@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -29,7 +30,7 @@ public class ACUnitGalAI : NetworkBehaviour
 
     private void ShootPlayer(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
         ShootPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
     }
 
@@ -58,7 +59,7 @@ public class ACUnitGalAI : NetworkBehaviour
 
     private void SwitchPose(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
         IncreaseOrDecreaseStageServerRpc();
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
@@ -60,7 +61,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
         if (compacting)
             return;
 
-        if (!player.IsOwner)
+        if (!player.IsLocalPlayer())
             return;
 
         int valueOfItems = 0;

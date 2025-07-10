@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -147,7 +148,7 @@ public class BearTrap : CodeRebirthHazard
             trapAudioSource.PlayOneShot(poppingTireSound);
             SetWheelFriction(wheel.gameObject);
         }
-        else if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player == GameNetworkManager.Instance.localPlayerController)
+        else if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             TriggerTrapServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }

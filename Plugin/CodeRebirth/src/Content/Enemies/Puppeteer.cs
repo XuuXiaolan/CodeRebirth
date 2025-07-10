@@ -6,6 +6,7 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.DissolveEffect;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.ContentManagement.Items;
@@ -350,7 +351,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         teleporting = true;
         targetPlayerToNeedle = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        if (targetPlayerToNeedle == GameNetworkManager.Instance.localPlayerController) creatureSFX.PlayOneShot(grabPlayerSound);
+        if (targetPlayerToNeedle.IsLocalPlayer()) creatureSFX.PlayOneShot(grabPlayerSound);
         targetPlayerToNeedle.disableMoveInput = true;
         targetPlayerToNeedle.disableLookInput = true;
         targetPlayerToNeedle.inAnimationWithEnemy = this;

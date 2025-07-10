@@ -1,6 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.MiscScriptManagement;
 using GameNetcodeStuff;
@@ -65,7 +66,7 @@ public class FakeSnailCat : GrabbableObject
             }
         }
 
-        if (closestPlayer.IsOwner)
+        if (closestPlayer.IsLocalPlayer())
             CRUtilities.MakePlayerGrabObject(closestPlayer, this);
 
         this.transform.localScale = scale;

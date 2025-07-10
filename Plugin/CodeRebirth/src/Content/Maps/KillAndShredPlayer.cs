@@ -1,3 +1,4 @@
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class KillAndShredPlayer : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out PlayerControllerB player) && player.IsOwner)
+        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             player.KillPlayer(player.transform.position, false, CauseOfDeath.Crushing, 0, default);
             sarah.TryFeedItemServerRpc(true, 10);

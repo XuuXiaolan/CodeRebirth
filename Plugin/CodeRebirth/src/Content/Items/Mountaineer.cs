@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -59,7 +60,7 @@ public class Mountaineer : CRWeapon
 
     public void OnSurfaceHitEvent(int surfaceID)
     {
-        if (!playerHeldBy.IsOwner) return;
+        if (!playerHeldBy.IsLocalPlayer()) return;
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
             return;
 
@@ -87,7 +88,7 @@ public class Mountaineer : CRWeapon
             return;
         }*/ // doesn't work too well :/
 
-        if (playerHeldBy != GameNetworkManager.Instance.localPlayerController)
+        if (!playerHeldBy.IsLocalPlayer())
         {
             grabbable = false;
             return;

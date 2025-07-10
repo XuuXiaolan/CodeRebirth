@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -84,7 +85,7 @@ public class AutonomousCrane : NetworkBehaviour
         if (!_craneIsActive)
             return;
 
-        if (!player.IsOwner)
+        if (!player.IsLocalPlayer())
             return;
 
         DisableCraneServerRpc();

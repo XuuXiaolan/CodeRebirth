@@ -1,4 +1,5 @@
 using System.Collections;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -95,7 +96,7 @@ public class JimothyNPC : NetworkBehaviour
 
     public void PickupFallenJimothy(PlayerControllerB player)
     {
-        if (player != GameNetworkManager.Instance.localPlayerController)
+        if (!player.IsLocalPlayer())
             return;
 
         PickupFallenJimothyServerRpc();

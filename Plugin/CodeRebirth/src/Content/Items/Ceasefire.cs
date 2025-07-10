@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -124,7 +125,7 @@ public class Ceasefire : GrabbableObject
             rotationDelta *= 1 - evaluatedValue;
             _currentBarrelRotationX += rotationDelta;
             _ceasefireBarrel.transform.localEulerAngles = new Vector3(-280 + _currentBarrelRotationX, 270f, 90f);
-            if (playerHeldBy != null && playerHeldBy.IsOwner && _particleSystemsGO.activeSelf)
+            if (playerHeldBy != null && playerHeldBy.IsLocalPlayer() && _particleSystemsGO.activeSelf)
             {
                 playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.25f : 1f) * Time.deltaTime * (rotationDelta / 35f);
             }
@@ -218,7 +219,7 @@ public class Ceasefire : GrabbableObject
             _damageInterval += Time.deltaTime;
             return;
         }
-        if (playerHeldBy.IsOwner) HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+        if (playerHeldBy.IsLocalPlayer()) HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         if (damageThreshold >= _maxDamageIntervalAtMaxCharge - 0.25f)
         {
             playerHeldBy.DamagePlayer(5, true, true, CauseOfDeath.Gunshots, 0, false, -playerHeldBy.gameplayCamera.transform.forward * 20f);

@@ -1,3 +1,4 @@
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using System.Collections;
 using TMPro;
@@ -112,7 +113,7 @@ public class DuckUI : NetworkBehaviour
     {
         if (targetPlayer == null) return;
 
-        if (targetPlayer != GameNetworkManager.Instance.localPlayerController && !isGlobal) return;
+        if (!targetPlayer.IsLocalPlayer() && !isGlobal) return;
 
         if (duckCoroutine != null)
         {

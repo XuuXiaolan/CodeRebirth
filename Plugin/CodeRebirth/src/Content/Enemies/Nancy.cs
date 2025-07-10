@@ -186,7 +186,7 @@ public class Nancy : CodeRebirthEnemyAI
         {
             failTimer = 1f;
             creatureNetworkAnimator.SetTrigger(FailHealAnimation);
-            if (targetPlayer.IsOwner)
+            if (targetPlayer.IsLocalPlayer())
             {
                 targetPlayer.DamagePlayer(20, true, true, CauseOfDeath.Stabbing, 0, false, default);
             }
@@ -198,7 +198,7 @@ public class Nancy : CodeRebirthEnemyAI
         else if (currentHealth < 100 && healTimer <= 0)
         {
             healTimer = 1f;
-            if (targetPlayer.IsOwner)
+            if (targetPlayer.IsLocalPlayer())
             {
                 targetPlayer.DamagePlayer(-10, false, true, CauseOfDeath.Unknown, 0, false, default);
             }

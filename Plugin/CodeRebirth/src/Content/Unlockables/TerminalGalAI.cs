@@ -127,7 +127,7 @@ public class TerminalGalAI : GalAI
 
     private void OnTeleporterInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         TeleporterInteractServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
     }
 
@@ -157,7 +157,7 @@ public class TerminalGalAI : GalAI
 
     private void OnZapperInteract(PlayerControllerB playerInteracting)
     {
-        if (zapperRoutine != null || playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (zapperRoutine != null || !playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         ZapperInteractServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
     }
 
@@ -177,7 +177,7 @@ public class TerminalGalAI : GalAI
     {
         if (playerToRecharge.isPlayerDead || !playerToRecharge.isPlayerControlled || playerToRecharge.currentlyHeldObjectServer == null || !playerToRecharge.currentlyHeldObjectServer.itemProperties.requiresBattery)
         {
-            if (playerToRecharge == GameNetworkManager.Instance.localPlayerController) HUDManager.Instance.DisplayTip("Error", "What you're holding cannot be charged", false);
+            if (playerToRecharge.IsLocalPlayer()) HUDManager.Instance.DisplayTip("Error", "What you're holding cannot be charged", false);
             yield break;
         }
         else
@@ -199,7 +199,7 @@ public class TerminalGalAI : GalAI
 
     private void OnKeyboardInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         KeyboardInteractServerRpc();
     }
 
@@ -219,7 +219,7 @@ public class TerminalGalAI : GalAI
 
     private void OnKeyHandInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         KeyHandInteractServerRpc();
     }
 

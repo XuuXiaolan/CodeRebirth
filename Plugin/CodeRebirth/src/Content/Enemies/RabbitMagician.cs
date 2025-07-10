@@ -72,7 +72,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (targetPlayer != GameNetworkManager.Instance.localPlayerController)
+        if (!targetPlayer.IsLocalPlayer())
             return;
 
         _idleTimer -= Time.deltaTime;
@@ -191,7 +191,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private void SetPositionAndRotation(PlayerControllerB player)
     {
         Vector3 worldOffset;
-        if (player.IsOwner)
+        if (player.IsLocalPlayer())
         {
             _targetPlayerSpine3 = player.gameplayCamera.transform;
             worldOffset = _targetPlayerSpine3.rotation * (_offsetPosition + new Vector3(0f, -0.32f, 0.1f));
@@ -245,7 +245,8 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [ClientRpc]
     private void FallSoundClientRpc(PlayerControllerReference newTargetPlayer)
     {
-        if (newTargetPlayer != GameNetworkManager.Instance.localPlayerController)
+        PlayerControllerB player = newTargetPlayer;
+        if (!player.IsLocalPlayer())
             return;
 
         creatureSFX.PlayOneShot(_fallingAudioClips[UnityEngine.Random.Range(0, _fallingAudioClips.Length)]);

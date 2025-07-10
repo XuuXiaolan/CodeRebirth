@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class KillAndCompactPlayer : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out PlayerControllerB player) && player.IsOwner)
+        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             if (toby.compacting)
             {

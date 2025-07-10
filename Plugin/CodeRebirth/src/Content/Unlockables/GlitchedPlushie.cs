@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class GlitchedPlushie : NetworkBehaviour
 
     public void ItemActivateTrigger(PlayerControllerB player)
     {
-        if (player == null || player != GameNetworkManager.Instance.localPlayerController) return;
+        if (player == null || !player.IsLocalPlayer()) return;
         PlayStuffServerRpc();
     }
 

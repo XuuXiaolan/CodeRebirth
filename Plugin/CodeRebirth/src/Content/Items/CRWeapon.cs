@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using CodeRebirth.src.Util;
 using System;
 using CodeRebirthLib.Util;
+using CodeRebirth.src.Util.Extensions;
 
 namespace CodeRebirth.src.Content.Items;
 public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's JMeleeWeapon
@@ -114,7 +115,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         {
             PlayRandomSFX(swingSFX);
 
-            if (previousPlayerHeldBy.IsOwner)
+            if (previousPlayerHeldBy.IsLocalPlayer())
             {
                 previousPlayerHeldBy.playerBodyAnimator.SetTrigger(UseHeldItem1Animation);
             }
@@ -190,7 +191,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         if (playerHeldBy != null)
         {
             playerHeldBy.activatingItem = false;
-            if (playerHeldBy.IsOwner) playerHeldBy.playerBodyAnimator.speed = 1f;
+            if (playerHeldBy.IsLocalPlayer()) playerHeldBy.playerBodyAnimator.speed = 1f;
         }
 
         base.DiscardItem();

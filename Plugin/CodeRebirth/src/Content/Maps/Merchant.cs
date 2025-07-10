@@ -5,6 +5,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.MiscScriptManagement;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -357,7 +358,7 @@ public class Merchant : NetworkBehaviour
     public void TryDepositCoinsOntoBarrel(PlayerControllerB? playerWhoInteracted)
     {
         Plugin.ExtendedLogging("player interacted: " + playerWhoInteracted);
-        if (playerWhoInteracted == null || playerWhoInteracted != GameNetworkManager.Instance.localPlayerController || playerWhoInteracted.currentlyHeldObjectServer == null || playerWhoInteracted.currentlyHeldObjectServer is not Wallet wallet) return;
+        if (playerWhoInteracted == null || !playerWhoInteracted.IsLocalPlayer() || playerWhoInteracted.currentlyHeldObjectServer == null || playerWhoInteracted.currentlyHeldObjectServer is not Wallet wallet) return;
         if (wallet.coinsStored.Value <= 0) return;
         IncreaseCoinsServerRpc(wallet.coinsStored.Value);
         wallet.ResetCoinsServerRpc(0);

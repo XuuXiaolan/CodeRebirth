@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Unlockables;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -132,13 +133,13 @@ public class ShockwaveGalAI : GalAI
 
     private void OnChestInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         DropAllHeldItemsServerRpc();
     }
 
     private void OnHeadInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         if ((UnityEngine.Random.Range(0f, 1f) < 0.9f || catPosing) && headPatCoroutine == null) StartPetAnimationServerRpc();
         else if (!catPosing) StartCatPoseAnimationServerRpc();
     }
@@ -519,7 +520,7 @@ public class ShockwaveGalAI : GalAI
     {
         currentlyAttacking = false;
         chargeCount--;
-        if (chargeCount <= 0 && ownerPlayer == GameNetworkManager.Instance.localPlayerController)
+        if (chargeCount <= 0 && ownerPlayer.IsLocalPlayer())
         {
             HUDManager.Instance.DisplayTip("WARNING", "DELILAH ATTACK CHARGES EXHAUSTED", true);
         }

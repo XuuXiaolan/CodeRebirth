@@ -1,5 +1,6 @@
 using System;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -20,7 +21,7 @@ public class InfiniKey : GrabbableObject
         if (playerHeldBy != null)
         {
             previousPlayerHeldBy = playerHeldBy;
-            if (playerHeldBy.IsOwner)
+            if (playerHeldBy.IsLocalPlayer())
             {
                 playerHeldBy.playerBodyAnimator.SetTrigger("UseHeldItem1");
             }

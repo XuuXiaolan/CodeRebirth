@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -38,7 +39,7 @@ public class OxydeCrane : NetworkBehaviour
 
     public void DropInteract(PlayerControllerB player)
     {
-        if (!player.IsOwner || alreadyDropped) return;
+        if (!player.IsLocalPlayer() || alreadyDropped) return;
         TryDropShipFromCraneServerRpc();
         StartCoroutine(TryDropShipFromCrane());
     }

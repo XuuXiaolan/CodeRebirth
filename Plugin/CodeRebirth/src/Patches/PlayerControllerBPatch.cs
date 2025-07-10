@@ -4,6 +4,7 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -66,7 +67,7 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_Interact_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Interact_performed orig, PlayerControllerB self, InputAction.CallbackContext context)
     {
         orig(self, context);
-        if (self != GameNetworkManager.Instance.localPlayerController)
+        if (!self.IsLocalPlayer())
             return;
 
         Plugin.ExtendedLogging($"{self.playerUsername} pressed interact.");
@@ -76,7 +77,7 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_Jump_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Jump_performed orig, PlayerControllerB self, InputAction.CallbackContext context)
     {
         orig(self, context);
-        if (self != GameNetworkManager.Instance.localPlayerController)
+        if (!self.IsLocalPlayer())
             return;
 
         Plugin.ExtendedLogging($"{self.playerUsername} pressed jump.");
@@ -85,7 +86,7 @@ static class PlayerControllerBPatch
 
     private static void PlayerControllerB_Update(On.GameNetcodeStuff.PlayerControllerB.orig_Update orig, PlayerControllerB self)
     {
-        if (self != GameNetworkManager.Instance.localPlayerController && self.IsPseudoDead())
+        if (!self.IsLocalPlayer() && self.IsPseudoDead())
         {
             // Plugin.ExtendedLogging($"Setting player layer to 0.");
             self.gameObject.layer = 0;
@@ -95,7 +96,7 @@ static class PlayerControllerBPatch
 
     /*private static bool PlayerControllerB_NearOtherPlayers(On.GameNetcodeStuff.PlayerControllerB.orig_NearOtherPlayers orig, PlayerControllerB self, PlayerControllerB playerScript, float checkRadius)
     {
-        if (self == GameNetworkManager.Instance.localPlayerController && TalkingHead.talkingHeads.Count > 0 && TalkingHead.talkingHeads.Any(x => x.player == self)) return false;
+        if (self.IsLocalPlayer() && TalkingHead.talkingHeads.Count > 0 && TalkingHead.talkingHeads.Any(x => x.player == self)) return false;
         return orig(self, playerScript, checkRadius);
     }*/
 
@@ -143,7 +144,7 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)
     {
         orig(self);
-        if (self != GameNetworkManager.Instance.localPlayerController && self.IsPseudoDead())
+        if (!self.IsLocalPlayer() && self.IsPseudoDead())
         {
             // Plugin.ExtendedLogging($"Setting player layer to 0.");
             self.gameObject.layer = 0;
@@ -151,7 +152,7 @@ static class PlayerControllerBPatch
         if (self.ContainsCRPlayerData() && ((self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
         {
             Hoverboard? hoverboard = self.TryGetHoverboardRiding();
-            if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self == GameNetworkManager.Instance.localPlayerController)
+            if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self.IsLocalPlayer())
             {
                 HUDManager.Instance.batteryMeter.fillAmount = hoverboard.insertedBattery.charge / 1.3f;
                 HUDManager.Instance.batteryMeter.gameObject.SetActive(true);

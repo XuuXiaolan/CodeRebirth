@@ -3,6 +3,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
@@ -31,7 +32,7 @@ public class Guillotine : NetworkBehaviour
     public void FinishGuillotineSequenceAnimEvent()
     {
         sequenceFinished = true;
-        if (playerToKill == GameNetworkManager.Instance.localPlayerController)
+        if (playerToKill.IsLocalPlayer())
         {
             PseudoKillPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
         }
@@ -63,7 +64,7 @@ public class Guillotine : NetworkBehaviour
         int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
         if (StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 1)
         {
-            if (playerToKill.IsOwner) playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
+            if (playerToKill.IsLocalPlayer()) playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
             return;
         }
         // if this is the last person left alive, then just kill em.

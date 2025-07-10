@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.ModCompats;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -41,7 +42,7 @@ public class Charger : NetworkBehaviour
     public void OnActivateGal(PlayerControllerB playerInteracting)
     {
         if (!NetworkObject.IsSpawned) return;
-        if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving || (RoundManager.Instance.currentLevel.levelID == 3 && !NavmeshInCompanyCompat.Enabled)) return;
         if (!GalAI.Animator.GetBool("activated"))
         {

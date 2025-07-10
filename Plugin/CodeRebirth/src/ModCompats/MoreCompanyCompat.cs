@@ -31,7 +31,7 @@ internal static class MoreCompanySoftCompat
         }
         else
         {
-            cosmeticApplication.UpdateAllCosmeticVisibilities(targetPlayer == GameNetworkManager.Instance.localPlayerController);
+            cosmeticApplication.UpdateAllCosmeticVisibilities(targetPlayer.IsLocalPlayer());
         }
     }
 }

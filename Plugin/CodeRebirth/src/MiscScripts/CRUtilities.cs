@@ -1,4 +1,5 @@
-﻿using CodeRebirthLib.Util;
+﻿using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ public class CRUtilities
         playerControllerB.velocityLastFrame = Vector3.zero;
         StartOfRound.Instance.allPlayerScripts[playerObj].TeleportPlayer(teleportPos);
         StartOfRound.Instance.allPlayerScripts[playerObj].beamOutParticle.Play();
-        if (playerControllerB == GameNetworkManager.Instance.localPlayerController)
+        if (playerControllerB.IsLocalPlayer())
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
@@ -221,7 +222,7 @@ public class CRUtilities
             if (!enemy.mainScript.IsSpawned)
                 continue;
 
-            if (attacker != null && attacker != GameNetworkManager.Instance.localPlayerController)
+            if (attacker != null && !attacker.IsLocalPlayer())
                 continue;
 
             enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy], playerWhoHit: attacker);

@@ -1,5 +1,6 @@
 using System;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -45,7 +46,7 @@ public class BellCrabGalAI : NetworkBehaviour
 
     private void SwitchPose(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || playerInteracting != GameNetworkManager.Instance.localPlayerController) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
         IncreaseOrDecreaseStageServerRpc();
     }
 

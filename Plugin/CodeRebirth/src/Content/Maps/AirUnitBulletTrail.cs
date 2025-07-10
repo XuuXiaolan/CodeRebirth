@@ -12,7 +12,7 @@ public class AirUnitBulletTrail : NetworkBehaviour
         if (!mainProjectile.explodedOnTarget && other.TryGetComponent(out PlayerControllerB player))
         {
             Vector3 forceFlung = (mainProjectile.transform.position - this.transform.position).normalized * mainProjectile.bulletTrailForce;
-            if (player == GameNetworkManager.Instance.localPlayerController)
+            if (player.IsLocalPlayer())
             {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);

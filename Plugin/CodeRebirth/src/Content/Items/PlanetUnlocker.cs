@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using CodeRebirth.src.Util.Extensions;
 using LethalLevelLoader;
 using UnityEngine;
 
@@ -39,7 +40,7 @@ public class PlanetUnlocker : GrabbableObject
             yield return new WaitForSeconds(1f);
         }
         playerHeldBy.inSpecialInteractAnimation = false;
-        if (!playerHeldBy.IsOwner)
+        if (!playerHeldBy.IsLocalPlayer())
             yield break;
 
         playerHeldBy.DespawnHeldObject();

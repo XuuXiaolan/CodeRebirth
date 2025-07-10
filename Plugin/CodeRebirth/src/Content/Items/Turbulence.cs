@@ -1,3 +1,4 @@
+using CodeRebirth.src.Util.Extensions;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -74,7 +75,7 @@ public class Turbulence : CRWeapon
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         }
-        if (playerHeldBy != GameNetworkManager.Instance.localPlayerController)
+        if (!playerHeldBy.IsLocalPlayer())
         {
             return;
         }

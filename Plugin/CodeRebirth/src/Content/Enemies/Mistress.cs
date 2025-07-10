@@ -191,7 +191,7 @@ public class Mistress : CodeRebirthEnemyAI
     private IEnumerator InitiateKillingSequence(PlayerControllerB playerToExecute)
     {
         Physics.Raycast(Vector3.zero + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
-        if (playerToExecute.isInsideFactory && playerToExecute == GameNetworkManager.Instance.localPlayerController)
+        if (playerToExecute.isInsideFactory && playerToExecute.IsLocalPlayer())
         {
             var entrance = CodeRebirthLibNetworker.EntrancePoints.Where(entrance => !entrance.isEntranceToBuilding).FirstOrDefault(); // todo, swap with coderebirthlibnetworker's
             entrance?.TeleportPlayer();
@@ -349,7 +349,7 @@ public class Mistress : CodeRebirthEnemyAI
 
     private IEnumerator ResetVolumeWeightTo0(PlayerControllerB targetPlayer)
     {
-        if (targetPlayer != GameNetworkManager.Instance.localPlayerController) yield break;
+        if (!targetPlayer.IsLocalPlayer()) yield break;
         while (CodeRebirthUtils.Instance.CloseEyeVolume.weight > 0f)
         {
             yield return null;
@@ -394,7 +394,7 @@ public class Mistress : CodeRebirthEnemyAI
         PlayerControllerB playerToCripple = StartOfRound.Instance.allPlayerScripts[playerToCrippleIndex];
         if (cripple)
         {
-            if (playerToCripple.IsOwner)
+            if (playerToCripple.IsLocalPlayer())
             {
                 creatureVoice.PlayOneShot(AttackSounds[enemyRandom.Next(AttackSounds.Length)]);
             }
@@ -409,7 +409,7 @@ public class Mistress : CodeRebirthEnemyAI
         }
         else
         {
-            if (playerToCripple.IsOwner)
+            if (playerToCripple.IsLocalPlayer())
             {
                 creatureVoice.PlayOneShot(LoseSightSound, 0.75f);
             }

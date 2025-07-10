@@ -1,4 +1,5 @@
 using System;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Unlockables;
 using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
@@ -17,7 +18,7 @@ public class UnlockShipUnlockable : NetworkBehaviour
 
     private void OnInteract(PlayerControllerB player)
     {
-        if (player != GameNetworkManager.Instance.localPlayerController || player.currentlyHeldObjectServer is not UnlockableUpgradeScrap) return;
+        if (!player.IsLocalPlayer() || player.currentlyHeldObjectServer is not UnlockableUpgradeScrap) return;
         UnlockShipUpgradeServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
     }
 

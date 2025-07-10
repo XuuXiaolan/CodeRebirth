@@ -1,6 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -30,7 +31,7 @@ public class ShreddingSarah : NetworkBehaviour
 
     public void TryFeedItem(PlayerControllerB player)
     {
-        if (!player.IsOwner || player.currentlyHeldObjectServer == null)
+        if (!player.IsLocalPlayer() || player.currentlyHeldObjectServer == null)
             return;
 
         int value = 0;

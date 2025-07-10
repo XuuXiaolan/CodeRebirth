@@ -7,6 +7,7 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Unlockables;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -133,7 +134,7 @@ public class SeamineGalAI : GalAI
 
     private void OnFlashLightInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         StartFlashLightInteractServerRpc();
     }
 
@@ -153,7 +154,7 @@ public class SeamineGalAI : GalAI
 
     private void OnHugInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting != GameNetworkManager.Instance.localPlayerController || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         StartHugInteractServerRpc();
     }
 

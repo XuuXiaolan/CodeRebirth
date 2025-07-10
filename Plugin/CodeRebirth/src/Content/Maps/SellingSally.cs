@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -46,7 +47,7 @@ public class SellingSally : NetworkBehaviour
 
     [Header("Misc")]
     [SerializeField]
-    private JimothyNPC _jimothy = null!;
+    private JimothyNPC? _jimothy = null;
     [SerializeField]
     private Transform endOfBarrelTransform = null!;
     [SerializeField]
@@ -74,7 +75,7 @@ public class SellingSally : NetworkBehaviour
 
     public void OnButtonInteract(PlayerControllerB player)
     {
-        if (!player.IsOwner) return;
+        if (!player.IsLocalPlayer()) return;
         PressButtonServerRpc();
     }
 
@@ -92,14 +93,14 @@ public class SellingSally : NetworkBehaviour
 
     public void OnBellInteract(PlayerControllerB player)
     {
-        if (!player.IsOwner) return;
+        if (!player.IsLocalPlayer()) return;
         RingBellServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void PlayButtonSoundServerRpc()
     {
-        _jimothy.PlayerUsedSallyButton();
+        _jimothy?.PlayerUsedSallyButton();
         PlayButtonSoundClientRpc();
     }
 
