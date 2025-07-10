@@ -1,4 +1,5 @@
 using BepInEx.Bootstrap;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using MoreCompany.Cosmetics;
 using System;

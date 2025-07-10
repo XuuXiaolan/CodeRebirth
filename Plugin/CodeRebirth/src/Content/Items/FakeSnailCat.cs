@@ -106,6 +106,7 @@ public class FakeSnailCat : GrabbableObject
         {
             NetworkObjectReference netObjRef = RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, realEnemySnailCatEnemyDefinition.EnemyType);
             SnailCatAI snailCatAI = ((NetworkObject)netObjRef).GetComponent<SnailCatAI>();
+            snailCatAI.wasFake = true;
             snailCatAI.localScale = this.transform.localScale;
             snailCatAI.snailCatName = snailCatName;
             snailCatAI.shiftHash = _renderer.GetMaterial().GetFloat(CodeRebirthEnemyAI.ShiftHash);

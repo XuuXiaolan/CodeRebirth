@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

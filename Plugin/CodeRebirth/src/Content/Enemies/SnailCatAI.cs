@@ -33,6 +33,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
     internal Vector3 localScale = Vector3.one;
     internal string snailCatName = "Mu";
     internal float shiftHash = 0;
+    internal bool wasFake = false;
 
     public enum State
     {
@@ -46,8 +47,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
-        if (!IsServer)
+        if (!IsServer || !wasFake)
             return;
 
         StartCoroutine(DelayForBit());
