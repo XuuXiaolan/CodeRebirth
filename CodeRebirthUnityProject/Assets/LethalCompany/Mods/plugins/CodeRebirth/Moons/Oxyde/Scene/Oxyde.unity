@@ -2502,7 +2502,7 @@ Transform:
   m_GameObject: {fileID: 195526973}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.1122494, z: 0, w: 0.99368006}
-  m_LocalPosition: {x: 218.30229, y: 77.175606, z: 72.24643}
+  m_LocalPosition: {x: 203.57852, y: 125.8, z: 110.30253}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2521,25 +2521,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters:
-    albedo: {r: 0.46666667, g: 0.227451, b: 0.31234473, a: 1}
-    meanFreePath: 49.9
+    albedo: {r: 1, g: 0.29368412, b: 0, a: 1}
+    meanFreePath: 72.19
     blendingMode: 1
     priority: 0
     anisotropy: 0
     volumeMask: {fileID: 11700000, guid: 558aefef897d9784d935fa3ba081c1b1, type: 2}
     textureScrollingSpeed: {x: 0.5, y: 0, z: 0}
     textureTiling: {x: 1, y: 1, z: 1}
-    positiveFade: {x: 0, y: 0.54320174, z: 0}
-    negativeFade: {x: 0.07490658, y: 0.17009202, z: 0}
+    positiveFade: {x: 0, y: 0.2798627, z: 0}
+    negativeFade: {x: 0.04842262, y: 0.08763302, z: 0}
     m_EditorUniformFade: 0.5
-    m_EditorPositiveFade: {x: 0, y: 0.54320174, z: 0}
-    m_EditorNegativeFade: {x: 0.07490658, y: 0.17009202, z: 0}
+    m_EditorPositiveFade: {x: 0, y: 0.2798627, z: 0}
+    m_EditorNegativeFade: {x: 0.04842262, y: 0.08763302, z: 0}
     m_EditorAdvancedFade: 1
-    size: {x: 400.49884, y: 84.61571, z: 399.48526}
+    size: {x: 619.54504, y: 164.23555, z: 605.83093}
     invertFade: 0
     distanceFadeStart: 100
     distanceFadeEnd: 500
-    textureOffset: {x: -871.57764, y: -0, z: -0}
+    textureOffset: {x: -6148.306, y: -0, z: -0}
     falloffMode: 0
     maskMode: 0
     materialMask: {fileID: 0}
@@ -11357,7 +11357,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -522.9466, y: -0, z: -0}
+    textureOffset: {x: -3688.984, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -11915,7 +11915,7 @@ MonoBehaviour:
   - {fileID: 8716840396897723506}
   - {fileID: 8716840396897723505}
   - {fileID: 8716840396897723504}
-  cubemapReplacement: {fileID: 8900000, guid: 9c0cbad0ca253044abff02a96d553a4e, type: 3}
+  cubemapReplacement: {fileID: 8900000, guid: 4ad2061aef011a64c99d923dc768ef74, type: 3}
   volumeProfile: {fileID: 11400000, guid: da7fddaf6271d30498ae71d6f3f5c62e, type: 2}
   lightsToDeactivate:
   - {fileID: 167730187}
