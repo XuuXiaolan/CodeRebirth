@@ -36,7 +36,7 @@ public class GuardsmanBullet : NetworkBehaviour
         if (IsServer)
             this.transform.position = this.transform.position + _movingDirection * 2.5f * Time.fixedDeltaTime;
 
-        if (!Physics.CheckSphere(this.transform.position, 2.5f, MoreLayerMasks.CollidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Ignore) && _endTimer > 0f)
+        if (!Physics.CheckSphere(this.transform.position, 2.5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore) && _endTimer > 0f)
             return;
 
         CRUtilities.CreateExplosion(this.transform.position, true, 25, 0, 6, 1, null, null, 25f);

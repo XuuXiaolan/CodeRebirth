@@ -298,7 +298,10 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     private IEnumerator ProjectorUnparentDelay()
     {
         yield return new WaitUntil(() => _dustLandDecal.activeSelf);
-        _dustLandDecal.transform.SetParent(RoundManager.Instance.mapPropsContainer.transform, true);
+        Vector3 previousPosition = _dustLandDecal.transform.position;
+        _dustLandDecal.transform.SetParent(RoundManager.Instance.mapPropsContainer.transform);
+        _dustLandDecal.transform.position = previousPosition;
+        _dustLandDecal.gameObject.SetActive(true);
     }
 
     private float CalculateEnemySize(EnemyAI enemyAi)
