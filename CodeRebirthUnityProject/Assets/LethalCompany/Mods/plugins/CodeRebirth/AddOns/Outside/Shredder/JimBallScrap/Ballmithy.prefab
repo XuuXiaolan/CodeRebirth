@@ -463,8 +463,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  hitBallSFX: []
-  ballHitFloorSFX: []
+  hitBallSFX:
+  - {fileID: 8300000, guid: 69288fecf6bcd51478af3202a0bf8f7f, type: 3}
+  - {fileID: 8300000, guid: 598b2b046f6ce81498523344a964e8aa, type: 3}
+  - {fileID: 8300000, guid: 5ab7366150bc6b44e828e91505e5f5f2, type: 3}
+  ballHitFloorSFX:
+  - {fileID: 8300000, guid: c361a3c5c2a31d94b8a7f50fb8653aab, type: 3}
+  - {fileID: 8300000, guid: 0596eb190aade5b46ac84390cf178115, type: 3}
+  - {fileID: 8300000, guid: ac9bd77c6ea9f434fb5bd9d0d5cd245d, type: 3}
   soccerBallAudio: {fileID: 6146669311982000740}
   ballCollider: {fileID: 7345076061521671449}
   _ownerNetworkAnimator: {fileID: 5946739543090165893}
