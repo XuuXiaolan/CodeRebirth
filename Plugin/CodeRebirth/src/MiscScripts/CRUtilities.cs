@@ -13,7 +13,7 @@ public class CRUtilities
 {
     private static Dictionary<int, int> _masksByLayer = new();
     private static AudioReverbPresets? audioReverbPreset = null;
-    private static Collider[] cachedColliders = new Collider[32];
+    private static Collider[] cachedColliders = new Collider[64];
 
     public static void Init()
     {
@@ -161,7 +161,9 @@ public class CRUtilities
         int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (!cachedColliders[i].TryGetComponent(out IHittable ihittable)) continue;
+            if (!cachedColliders[i].TryGetComponent(out IHittable ihittable))
+                continue;
+
             Plugin.ExtendedLogging($"Explosion hit {cachedColliders[i].name}");
             float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, cachedColliders[i].ClosestPoint(explosionPosition));
             if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, cachedColliders[i].transform.position + Vector3.up * 0.3f, out _, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))

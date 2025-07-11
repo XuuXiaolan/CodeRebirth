@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -32,7 +34,7 @@ public class KamikazeJimothy : NetworkBehaviour
     private InteractTrigger _headTrigger = null!;
 
     private Coroutine? _feedingRoutine = null;
-    private List<GrabbableObject> _grabbables = new();
+    private List<int> _grabbablesValues = new();
     private static readonly int AssembleHeadAnimationHash = Animator.StringToHash("assembleHead"); // Trigger
 
     private void Start()
@@ -45,32 +47,33 @@ public class KamikazeJimothy : NetworkBehaviour
         if (!playerControllerB.IsLocalPlayer() || playerControllerB.currentlyHeldObjectServer == null || playerControllerB.currentlyHeldObjectServer is not JimBall)
             return;
 
-        PlaceHeadOnJimothyServerRpc();
+        playerControllerB.DespawnHeldObject();
+        PlaceHeadOnJimothyServerRpc(playerControllerB);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void PlaceHeadOnJimothyServerRpc()
+    private void PlaceHeadOnJimothyServerRpc(PlayerControllerReference playerControllerReference)
     {
         _networkAnimator.SetTrigger(AssembleHeadAnimationHash);
+        PlaceHeadOnJimothyClientRpc(playerControllerReference);
         StartCoroutine(AnimationDelay());
     }
 
     private IEnumerator AnimationDelay()
     {
-        PlaceHeadOnJimothyClientRpc();
+        foreach (var grabbableObject in transform.GetComponentsInChildren<GrabbableObject>().ToArray())
+        {
+            _grabbablesValues.Add(grabbableObject.scrapValue);
+            grabbableObject.NetworkObject.Despawn(true);
+        }
         yield return new WaitForSeconds(_jimFixAnimation.length);
         _agent.enabled = true;
     }
 
     [ClientRpc]
-    private void PlaceHeadOnJimothyClientRpc()
+    private void PlaceHeadOnJimothyClientRpc(PlayerControllerReference playerControllerReference)
     {
-        foreach (var grabbableObject in transform.GetComponentsInChildren<GrabbableObject>())
-        {
-            grabbableObject.grabbable = false;
-            grabbableObject.grabbableToEnemies = false;
-            _grabbables.Add(grabbableObject);
-        }
+        PlayerControllerB player = playerControllerReference;
         _headTrigger.enabled = false;
     }
 
@@ -80,7 +83,7 @@ public class KamikazeJimothy : NetworkBehaviour
             return;
 
         _agent.SetDestination(ShreddingSarah.Instance.shreddingPoint.position);
-        if (Vector3.Distance(transform.position, ShreddingSarah.Instance.shreddingPoint.transform.position) < 0.5f)
+        if (Vector3.Distance(transform.position, ShreddingSarah.Instance.shreddingPoint.transform.position) < 1f + _agent.stoppingDistance)
         {
             _feedingRoutine = StartCoroutine(FeedTheShredder());
         }
@@ -92,16 +95,11 @@ public class KamikazeJimothy : NetworkBehaviour
         {
             renderer.enabled = false;
         }
-        foreach (var grabbableObject in _grabbables)
-        {
-            if (grabbableObject.mainObjectRenderer != null)
-                grabbableObject.mainObjectRenderer.enabled = false;
-        }
 
-        foreach (var grabbableObject in _grabbables)
+        foreach (var grabbableObjectValue in _grabbablesValues)
         {
-            ShreddingSarah.Instance!.TryFeedItemServerRpc(false, grabbableObject.scrapValue);
-            yield return new WaitForSeconds(0.1f);
+            ShreddingSarah.Instance!.TryFeedItemServerRpc(false, grabbableObjectValue);
+            yield return new WaitForSeconds(0.2f);
         }
 
         NetworkObject.Despawn(true);

@@ -25,10 +25,14 @@ public class CRItemSpawner : MonoBehaviour
 {
     [SerializeField]
     private bool _spawnOnStart = true;
+
     [SerializeField]
     private CRItemSpawnerType spawnerType = CRItemSpawnerType.Vanilla;
+
     [SerializeField]
+    [Range(0f, 100f)]
     private float spawnChance = 0f;
+
     [SerializeField]
     private List<Transform> spawnSpots = new();
 
