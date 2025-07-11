@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4146576450745592220}
   - component: {fileID: 2203593460612700723}
   - component: {fileID: 528353545927368527}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: OxydeShipCrash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5236,6 +5236,7 @@ MonoBehaviour:
   _spawnOnStart: 0
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Oxyde Tablet
     Rarity: 1
@@ -5317,6 +5318,7 @@ MonoBehaviour:
   _spawnOnStart: 0
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Byrne Journal 6
     Rarity: 1

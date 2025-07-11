@@ -19,8 +19,9 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
     public InteractTrigger cannonTrigger = null!;
     public Transform shootPoint = null!;
     public Transform targetTransform = null!;
-    public AudioSource audioSource = null!;
+    public AudioSource loadAudioSource = null!;
     public AudioClip loadSFX = null!;
+    public AudioSource shootAudioSource = null!;
     public AudioClip shootSFX = null!;
 
     public void Start()
@@ -130,15 +131,15 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
         grabbableObject.EnablePhysics(false);
         grabbableObject.EnableItemMeshes(false);
 
-        audioSource.PlayOneShot(loadSFX);
+        loadAudioSource.PlayOneShot(loadSFX);
         StartCoroutine(ShootItemRoutine(grabbableObject, landingPosition));
     }
 
     private IEnumerator ShootItemRoutine(GrabbableObject grabbableObject, Vector3 landingPosition)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(loadSFX.length + 0.25f);
 
-        audioSource.PlayOneShot(shootSFX);
+        shootAudioSource.PlayOneShot(shootSFX);
         grabbableObject.EnableItemMeshes(true);
 
         float launchTotalDistance = Vector3.Distance(shootPoint.position, landingPosition);
