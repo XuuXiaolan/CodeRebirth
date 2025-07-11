@@ -31,8 +31,9 @@ public class GuardsmanTurret : MonoBehaviour
             yield return null;
 
             var bullet = Instantiate(MapObjectHandler.Instance.Merchant!.ProjectilePrefab, transform.position, Quaternion.identity);
-            bullet.GetComponent<NetworkObject>().Spawn();
-            bullet.GetComponent<GuardsmanBullet>().GuardsmanTurret = this;
+            GuardsmanBullet GSbullet = bullet.GetComponent<GuardsmanBullet>();
+            GSbullet.GuardsmanTurret = this;
+            GSbullet.NetworkObject.Spawn();
         }
     }
 
@@ -95,11 +96,12 @@ public class GuardsmanTurret : MonoBehaviour
             if (GuardsmanOwner._internalEnemyBlacklist.Contains(enemy.enemyType))
                 continue;
 
+            Vector3 direction = (enemy.transform.position - transform.position).normalized;
             float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
             if (distanceToEnemy > 140f)
                 continue;
 
-            if (Physics.Raycast(this.transform.position, enemy.transform.position - this.transform.position, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(this.transform.position, direction, distanceToEnemy, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
                 continue;
 
             targetEnemy = enemy;

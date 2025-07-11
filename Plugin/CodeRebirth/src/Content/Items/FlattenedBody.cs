@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -19,23 +18,6 @@ public class FlattenedBody : GrabbableObject
             return;
 
         StartCoroutine(WaitUntilNameSet());
-
-        /*foreach (var level in StartOfRound.Instance.levels)
-        {
-            float cumulativeWeight = 0;
-            float zeddogWeight = 0;
-            foreach (var item in level.spawnableScrap)
-            {
-                cumulativeWeight += item.rarity;
-                if (item.spawnableItem.itemName.Equals("Zed Dog", StringComparison.OrdinalIgnoreCase))
-                {
-                    zeddogWeight = item.rarity;
-                }
-            }
-            float chances = (zeddogWeight / cumulativeWeight) * 100;
-            Plugin.Logger.LogFatal($"Level {level.sceneName} has a cumulative weight of {cumulativeWeight} and a zed dog weight of {zeddogWeight} so the chances are {chances} for each scrap rolling");
-            Plugin.Logger.LogError($"that same level rolls inbetween min: {level.minScrap} and max: {level.maxScrap} so the actual chance is {(level.minScrap + level.maxScrap)/2 * chances}");
-        }*/
     }
 
     private IEnumerator WaitUntilNameSet()

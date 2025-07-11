@@ -19,7 +19,7 @@ public class GuardsmanBullet : NetworkBehaviour
         _endTimer = endTimer;
         _movingDirection = direction;
         this.transform.position = startingPosition;
-        this.transform.rotation = Quaternion.Euler(direction);
+        this.transform.forward = direction;
     }
 
     private void Start()
@@ -34,9 +34,9 @@ public class GuardsmanBullet : NetworkBehaviour
 
         _endTimer -= Time.fixedDeltaTime;
         if (IsServer)
-            this.transform.position = this.transform.position + _movingDirection * 2.5f * Time.fixedDeltaTime;
+            this.transform.position = this.transform.position + _movingDirection * 50 * Time.fixedDeltaTime;
 
-        if (!Physics.CheckSphere(this.transform.position, 2.5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore) && _endTimer > 0f)
+        if (!Physics.CheckSphere(this.transform.position, 2f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore) && _endTimer > 0f)
             return;
 
         CRUtilities.CreateExplosion(this.transform.position, true, 25, 0, 6, 1, null, null, 25f);
