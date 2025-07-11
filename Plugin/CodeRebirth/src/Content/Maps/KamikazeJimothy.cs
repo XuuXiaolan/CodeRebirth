@@ -9,6 +9,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Maps;
 
@@ -16,6 +17,9 @@ namespace CodeRebirth.src.Content.Maps;
 [RequireComponent(typeof(NetworkTransform))]
 public class KamikazeJimothy : NetworkBehaviour
 {
+    [SerializeField]
+    private UnityEvent _onJimFix = new();
+
     [SerializeField]
     private Animator _animator = null!;
     [SerializeField]
@@ -48,14 +52,14 @@ public class KamikazeJimothy : NetworkBehaviour
             return;
 
         playerControllerB.DespawnHeldObject();
-        PlaceHeadOnJimothyServerRpc(playerControllerB);
+        PlaceHeadOnJimothyServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void PlaceHeadOnJimothyServerRpc(PlayerControllerReference playerControllerReference)
+    private void PlaceHeadOnJimothyServerRpc()
     {
         _networkAnimator.SetTrigger(AssembleHeadAnimationHash);
-        PlaceHeadOnJimothyClientRpc(playerControllerReference);
+        PlaceHeadOnJimothyClientRpc();
         StartCoroutine(AnimationDelay());
     }
 
@@ -66,14 +70,14 @@ public class KamikazeJimothy : NetworkBehaviour
             _grabbablesValues.Add(grabbableObject.scrapValue);
             grabbableObject.NetworkObject.Despawn(true);
         }
-        yield return new WaitForSeconds(_jimFixAnimation.length);
+        yield return new WaitForSeconds(_jimFixAnimation.length + 1);
         _agent.enabled = true;
     }
 
     [ClientRpc]
-    private void PlaceHeadOnJimothyClientRpc(PlayerControllerReference playerControllerReference)
+    private void PlaceHeadOnJimothyClientRpc()
     {
-        PlayerControllerB player = playerControllerReference;
+        _onJimFix.Invoke();
         _headTrigger.enabled = false;
     }
 
