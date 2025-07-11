@@ -418,6 +418,8 @@ Over 30+ lore documents, regular scrap and other references.
 
 - CoddingCat : Old snail cat model
 
+- [MayaModez](https://mayamodez.straw.page/) : Visit Bozoros poster in shipyard
+
 - [NatsuBerry](https://bsky.app/profile/natsuberry.bsky.social) : Shockwave and Seamine gal art on the cabin magazine
 
 - [SkittyMuffins](https://www.twitch.tv/skittymuffins) : Made a funny trailer that one time
