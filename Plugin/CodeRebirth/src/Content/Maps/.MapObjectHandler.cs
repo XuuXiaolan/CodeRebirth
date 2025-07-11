@@ -70,6 +70,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public class MerchantAssets(CRMod mod, string filePath) : AssetBundleLoader<MerchantAssets>(mod, filePath)
     {
+        [LoadFromBundle("GuardsmanProjectile.prefab")]
+        public GameObject ProjectilePrefab { get; private set; } = null!;
     }
 
     public class GunslingerGregAssets(CRMod mod, string filePath) : AssetBundleLoader<GunslingerGregAssets>(mod, filePath)

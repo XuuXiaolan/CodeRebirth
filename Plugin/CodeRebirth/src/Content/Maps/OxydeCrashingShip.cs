@@ -53,12 +53,12 @@ public class OxydeCrashingShip : FallingObjectBehaviour
     protected override void OnSetup()
     {
         base.OnSetup();
+        _NormalTravelAudio.Play();
         StartCoroutine(UpdateAudio()); // Make sure audio works correctly on the first frame.
     }
 
     public void Start()
     {
-        _NormalTravelAudio.Play();
     }
 
     private IEnumerator UpdateAudio()

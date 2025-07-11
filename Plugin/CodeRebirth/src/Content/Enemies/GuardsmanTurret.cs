@@ -1,9 +1,11 @@
-using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
-using CodeRebirthLib.Util;
+using System.Collections;
+using System.Collections.Generic;
+using CodeRebirth.src.Content.Maps;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class GuardsmanTurret : MonoBehaviour
 {
     [SerializeField]
@@ -16,11 +18,30 @@ public class GuardsmanTurret : MonoBehaviour
     [HideInInspector]
     public EnemyAI? targetEnemy = null;
 
+    internal List<GuardsmanBullet> bulletsPool = new();
     private float hitTimer = 5f;
+
+    private IEnumerator Start()
+    {
+        if (!NetworkManager.Singleton.IsServer)
+            yield break;
+
+        for (int i = 0; i < 5; i++)
+        {
+            yield return null;
+
+            var bullet = Instantiate(MapObjectHandler.Instance.Merchant!.ProjectilePrefab, transform.position, Quaternion.identity);
+            bullet.GetComponent<NetworkObject>().Spawn();
+            bullet.GetComponent<GuardsmanBullet>().GuardsmanTurret = this;
+        }
+    }
 
     public void Update()
     {
         if (GuardsmanOwner.isEnemyDead)
+            return;
+
+        if (bulletsPool.Count == 0)
             return;
 
         if (targetEnemy == null)
@@ -49,11 +70,16 @@ public class GuardsmanTurret : MonoBehaviour
         if (dot < 0.7)
             return;
 
-        if (Physics.Raycast(this.transform.position, this.transform.forward, out RaycastHit hit, 999, MoreLayerMasks.CollidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore))
-        {
-            _audioSource.PlayOneShot(_shootSounds[Random.Range(0, _shootSounds.Length)]);
-            CRUtilities.CreateExplosion(hit.point, true, 25, 0, 6, 1, null, null, 25f);
-        }
+        ShootShot();
+    }
+
+    private void ShootShot()
+    {
+        Vector3 startingPosition = this.transform.position + (this.transform.forward * 2f);
+        Vector3 directionOfTravel = this.transform.forward;
+        _audioSource.transform.position = startingPosition;
+        _audioSource.PlayOneShot(_shootSounds[Random.Range(0, _shootSounds.Length)]); // play this on OnNetworkSpawn
+        bulletsPool[0].SetMovingDirection(startingPosition, directionOfTravel, 30f);
     }
 
     private void HandleFindingTargetEnemy()
@@ -78,6 +104,17 @@ public class GuardsmanTurret : MonoBehaviour
 
             targetEnemy = enemy;
             break;
+        }
+    }
+
+    public void OnDestroy()
+    {
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
+        foreach (var bullet in bulletsPool.ToArray())
+        {
+            bullet.NetworkObject.Despawn(true);
         }
     }
 }

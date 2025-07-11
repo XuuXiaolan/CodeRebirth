@@ -48,7 +48,23 @@ public class AirUnitProjectile : NetworkBehaviour
         {
             CRUtilities.CreateExplosion(this.transform.position, true, 100, 0, 10, 6, null, null, 5f);
             playerHitSoundSource.Play();
-            HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+            float distanceToLocalPlayer = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position);
+            if (distanceToLocalPlayer <= 10)
+            {
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
+            }
+            else if (distanceToLocalPlayer <= 20)
+            {
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
+            }
+            else if (distanceToLocalPlayer <= 30)
+            {
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+            }
+            else if (distanceToLocalPlayer <= 40)
+            {
+                HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
+            }
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             explodedOnTarget = true;
             bulletMesh.mesh = null;
