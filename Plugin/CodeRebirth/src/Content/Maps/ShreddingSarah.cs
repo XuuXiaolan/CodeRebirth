@@ -1,14 +1,14 @@
 using System.Collections;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class ShreddingSarah : NetworkBehaviour
+public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
 {
     public float launchSpeed = 30f;
     public float landingRadius = 8f;
@@ -22,10 +22,14 @@ public class ShreddingSarah : NetworkBehaviour
     public AudioClip loadSFX = null!;
     public AudioClip shootSFX = null!;
 
-    public void Update()
+    public void Start()
     {
         cannonTrigger.hoverTip = $"Shred item : [{(StartOfRound.Instance.localPlayerUsingController ? "R-trigger" : "LMB")}]";
         cannonTrigger.disabledHoverTip = "Hold item to Shred";
+    }
+
+    public void Update()
+    {
         cannonTrigger.interactable = GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null;
     }
 

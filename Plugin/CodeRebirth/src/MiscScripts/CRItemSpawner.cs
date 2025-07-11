@@ -26,17 +26,26 @@ public class CRItemSpawner : MonoBehaviour
     [SerializeField]
     private bool _spawnOnStart = true;
     [SerializeField]
-    private CRItemSpawnerType spawnerType;
+    private CRItemSpawnerType spawnerType = CRItemSpawnerType.Vanilla;
     [SerializeField]
-    private float spawnChance;
+    private float spawnChance = 0f;
+    [SerializeField]
+    private List<Transform> spawnSpots = new();
 
     [Header("Special Items")]
     public List<ItemNameWithRarity> specialItemNamesWithRarity = new();
 
     public void Start()
     {
-        if (!_spawnOnStart) return;
-        if (!NetworkManager.Singleton.IsServer) return;
+        if (spawnSpots.Count == 0)
+            spawnSpots.Add(transform);
+
+        if (!_spawnOnStart)
+            return;
+
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
         switch (spawnerType)
         {
             case CRItemSpawnerType.Vanilla:
@@ -54,12 +63,15 @@ public class CRItemSpawner : MonoBehaviour
             return;
 
         Item? item = Merchant.GetRandomVanillaItem(false);
-        CodeRebirthUtils.Instance.SpawnScrap(item, transform.position, false, true, 0);
+        Vector3 spawnPosition = spawnSpots[UnityEngine.Random.Range(0, spawnSpots.Count)].position;
+        CodeRebirthUtils.Instance.SpawnScrap(item, spawnPosition, false, true, 0);
     }
 
     public void DoSpecialItemSpawn()
     {
-        if (!NetworkManager.Singleton.IsServer) return;
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
         if (UnityEngine.Random.Range(0, 100) >= spawnChance)
             return;
 
@@ -79,6 +91,7 @@ public class CRItemSpawner : MonoBehaviour
             return;
 
         Item? item = CRUtilities.ChooseRandomWeightedType(specialItems);
-        CodeRebirthUtils.Instance.SpawnScrap(item, transform.position, false, true, 0);
+        Vector3 spawnPosition = spawnSpots[UnityEngine.Random.Range(0, spawnSpots.Count)].position;
+        CodeRebirthUtils.Instance.SpawnScrap(item, spawnPosition, false, true, 0);
     }
 }
