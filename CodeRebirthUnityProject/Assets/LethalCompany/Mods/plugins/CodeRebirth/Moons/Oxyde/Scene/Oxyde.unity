@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44811875, g: 0.24078181, b: 0.07642055, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -875,6 +875,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6195808655429185816, guid: 9c1e33c92155ede4cba01196f6a19159,
     type: 3}
   m_PrefabInstance: {fileID: 30765830}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &39060901 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5491844295775077837, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8716840396897723490}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &59645959
 PrefabInstance:
@@ -2318,6 +2324,80 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 187364427}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &188519102
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 39060901}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 47.782974
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -29.579725
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.5853806
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.4294144
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.06510939
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.13503283
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.89057857
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -107.243
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -28.335999
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4ff4d45f379371c41a61918bcb7365f5,
+        type: 3}
+      propertyPath: m_Name
+      value: boombird
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4ff4d45f379371c41a61918bcb7365f5, type: 3}
+--- !u!4 &188519103 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4ff4d45f379371c41a61918bcb7365f5,
+    type: 3}
+  m_PrefabInstance: {fileID: 188519102}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &192768317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2539,7 +2619,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 100
     distanceFadeEnd: 500
-    textureOffset: {x: -46.210567, y: -0, z: -0}
+    textureOffset: {x: -368.93494, y: -0, z: -0}
     falloffMode: 0
     maskMode: 0
     materialMask: {fileID: 0}
@@ -11357,7 +11437,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -27.726341, y: -0, z: -0}
+    textureOffset: {x: -221.36098, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -23949,7 +24029,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5491844295775077837, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 188519103}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0ceccc0fe1c44d429ec5a7053532a6e, type: 3}
 --- !u!1 &8716840396897723491 stripped
