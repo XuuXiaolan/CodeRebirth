@@ -622,6 +622,7 @@ Transform:
   - {fileID: 2057002804558574577}
   - {fileID: 5107834334257286726}
   - {fileID: 5553995157062159080}
+  - {fileID: 4439125759254321541}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -61.949, z: 0}
 --- !u!95 &6829265566899377948
@@ -661,6 +662,7 @@ MonoBehaviour:
   landingRadius: 8
   landingRaycastUp: 50
   landingRaycastDown: 100
+  shreddingPoint: {fileID: 0}
   cannonTrigger: {fileID: 5017277305554012214}
   shootPoint: {fileID: 2969865355853654695}
   targetTransform: {fileID: 5267940555364374480}
@@ -1189,6 +1191,37 @@ Transform:
   - {fileID: 5267940555364374480}
   m_Father: {fileID: 3678082404979693710}
   m_LocalEulerAnglesHint: {x: -28.219322, y: -0.0000023733023, z: 0.000014644801}
+--- !u!1 &8160971986665489536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4439125759254321541}
+  m_Layer: 0
+  m_Name: shreddingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4439125759254321541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8160971986665489536}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 2.53, z: 1.795}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5059114603359312635}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8202346164578410061
 GameObject:
   m_ObjectHideFlags: 0

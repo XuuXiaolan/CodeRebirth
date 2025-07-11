@@ -15,6 +15,7 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
     public float landingRaycastUp = 50f;
     public float landingRaycastDown = 100f;
 
+    public Transform shreddingPoint = null!;
     public InteractTrigger cannonTrigger = null!;
     public Transform shootPoint = null!;
     public Transform targetTransform = null!;

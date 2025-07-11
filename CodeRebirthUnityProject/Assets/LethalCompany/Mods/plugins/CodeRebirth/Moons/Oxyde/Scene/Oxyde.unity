@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4474913, g: 0.2402311, b: 0.07641309, a: 1}
+  m_IndirectSpecularColor: {r: 0.44811875, g: 0.24078181, b: 0.07642055, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2539,7 +2539,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 100
     distanceFadeEnd: 500
-    textureOffset: {x: -2552.4426, y: -0, z: -0}
+    textureOffset: {x: -769.3296, y: -0, z: -0}
     falloffMode: 0
     maskMode: 0
     materialMask: {fileID: 0}
@@ -11357,7 +11357,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -1531.4656, y: -0, z: -0}
+    textureOffset: {x: -461.59778, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -22033,6 +22033,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: IntroDocument
     Rarity: 1
@@ -22081,6 +22082,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 9
     Rarity: 1
@@ -22099,6 +22101,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Byrne Journal 2
     Rarity: 1
@@ -22129,6 +22132,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 6
     Rarity: 1
@@ -22162,6 +22166,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 7
     Rarity: 1
@@ -22282,6 +22287,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Byrne Journal 1
     Rarity: 1
@@ -22403,6 +22409,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 10
     Rarity: 1
@@ -22691,6 +22698,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: To-Do List
     Rarity: 1
@@ -22709,6 +22717,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Byrne Journal 3
     Rarity: 1
@@ -22742,6 +22751,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 4
     Rarity: 1
@@ -22794,6 +22804,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Byrne Journal 5
     Rarity: 1
@@ -22812,6 +22823,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 5
     Rarity: 1
@@ -22830,6 +22842,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 1
     Rarity: 1
@@ -22848,6 +22861,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 8
     Rarity: 1
@@ -22930,6 +22944,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 3
     Rarity: 1
@@ -23014,6 +23029,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Director Diary 2
     Rarity: 1
@@ -23088,6 +23104,11 @@ PrefabInstance:
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3961294411
+      objectReference: {fileID: 0}
+    - target: {fileID: 6406818381667563353, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: chanceOfSpawningAny
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7071544595146402373, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
@@ -23297,6 +23318,7 @@ MonoBehaviour:
   _spawnOnStart: 1
   spawnerType: 1
   spawnChance: 100
+  spawnSpots: []
   specialItemNamesWithRarity:
   - Name: Byrne Journal 4
     Rarity: 1
