@@ -160,10 +160,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            bool onSight = player.IsSpawned && player.isPlayerControlled && !player.isPlayerDead && !player.isInHangarShipRoom && EnemyHasLineOfSightToPosition(player.transform.position, 60f, range);
-            if (!onSight) continue;
+            if (player == null || !player.isPlayerControlled || player.isPlayerDead || player.isInHangarShipRoom || !EnemyHasLineOfSightToPosition(player.transform.position, 60f, range)
+                continue;
 
-            if (CheckIfPersonAlreadyTargetted(targetAlreadyTargettedPerson, player)) continue;
+            if (CheckIfPersonAlreadyTargetted(targetAlreadyTargettedPerson, player))
+                continue;
 
             float distance = Vector3.Distance(transform.position, player.transform.position);
             bool closer = distance < minDistance;
