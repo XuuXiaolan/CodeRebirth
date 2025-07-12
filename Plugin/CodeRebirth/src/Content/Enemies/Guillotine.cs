@@ -1,11 +1,10 @@
-using System;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,6 +16,7 @@ public class Guillotine : NetworkBehaviour
     public Transform playerBone = null!;
     public AudioSource audioSource = null!;
     public AudioClip GuillotineSound = null!;
+    internal Mistress mistress = null!;
 
     [HideInInspector] public PlayerControllerB? playerToKill = null;
     [HideInInspector] public bool sequenceFinished = false;
@@ -32,39 +32,42 @@ public class Guillotine : NetworkBehaviour
     public void FinishGuillotineSequenceAnimEvent()
     {
         sequenceFinished = true;
-        if (playerToKill.IsLocalPlayer())
+        if (playerToKill != null && playerToKill.IsLocalPlayer())
         {
-            PseudoKillPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
+            PseudoKillPlayerServerRpc(playerToKill);
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SyncGuillotineServerRpc(int playerIndex)
+    public void SyncGuillotineServerRpc(PlayerControllerReference playerControllerReference, NetworkBehaviourReference mistressNetworkBehaviourReference)
     {
-        SyncGuillotineClientRpc(playerIndex);
+        SyncGuillotineClientRpc(playerControllerReference, mistressNetworkBehaviourReference);
     }
 
     [ClientRpc]
-    public void SyncGuillotineClientRpc(int playerIndex)
+    public void SyncGuillotineClientRpc(PlayerControllerReference playerControllerReference, NetworkBehaviourReference mistressNetworkBehaviourReference)
     {
-        playerToKill = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        playerToKill = playerControllerReference;
+        mistress = (Mistress)mistressNetworkBehaviourReference;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PseudoKillPlayerServerRpc(int playerIndex)
+    public void PseudoKillPlayerServerRpc(PlayerControllerReference playerControllerReference)
     {
-        PseudoKillPlayerClientRpc(playerIndex);
+        PseudoKillPlayerClientRpc(playerControllerReference);
     }
 
     [ClientRpc]
-    private void PseudoKillPlayerClientRpc(int playerIndex)
+    private void PseudoKillPlayerClientRpc(PlayerControllerReference playerControllerReference)
     {
-        playerToKill = StartOfRound.Instance.allPlayerScripts[playerIndex];
+        playerToKill = playerControllerReference;
         Plugin.ExtendedLogging($"Killing player {playerToKill}!");
         int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
         if (StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 1)
         {
-            if (playerToKill.IsLocalPlayer()) playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
+            if (playerToKill.IsLocalPlayer())
+                playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
+
             return;
         }
         // if this is the last person left alive, then just kill em.
@@ -79,8 +82,6 @@ public class Guillotine : NetworkBehaviour
         playerToKill.headCostumeContainer.gameObject.SetActive(false);
         playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
         playerToKill.playerBetaBadgeMesh.gameObject.SetActive(false);
-        playerToKill.inSpecialInteractAnimation = true;
-        playerToKill.playingQuickSpecialAnimation = true;
         if (GameNetworkManager.Instance.localPlayerController == playerToKill)
         {
             HUDManager.Instance.HideHUD(true);

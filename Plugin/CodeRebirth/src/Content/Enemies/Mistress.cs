@@ -202,9 +202,9 @@ public class Mistress : CodeRebirthEnemyAI
         netObj.Spawn(false);
         var Guillotine = GuillotineGO.GetComponent<Guillotine>();
         yield return new WaitUntil(() => netObj.IsSpawned);
-        Guillotine.SyncGuillotineServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToKill));
+        Guillotine.SyncGuillotineServerRpc(playerToExecute, new NetworkBehaviourReference(this));
         yield return new WaitUntil(() => Guillotine.sequenceFinished); // Have the player stick to guillotine script.
-        StartCoroutine(ResetMistressToStalking(targetPlayer));
+        StartCoroutine(ResetMistressToStalking(playerToExecute));
         yield return new WaitForSeconds(20f);
         Guillotine.NetworkObject.Despawn();
         // todo: Find Valid spot to spawn guillotine.
@@ -219,9 +219,8 @@ public class Mistress : CodeRebirthEnemyAI
             previousTargetPlayers.Add(targetPlayer);
             targetPlayer = null;
         }
-        if (!IsServer) yield break;
         playerToKill = null;
-        ClearPlayerTargetServerRpc();
+        if (!IsServer) yield break;
         creatureNetworkAnimator.SetTrigger(DoVanishAnimation);
         yield return new WaitForSeconds(1f);
         if (lastTargetPlayer != null)

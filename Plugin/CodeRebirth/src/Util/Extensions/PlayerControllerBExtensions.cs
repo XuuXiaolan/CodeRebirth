@@ -5,6 +5,6 @@ public static class PlayerControllerBExtensions
 {
     public static bool IsLocalPlayer(this PlayerControllerB player)
     {
-        return player.IsOwner;
+        return player == GameNetworkManager.Instance.localPlayerController;
     }
 }

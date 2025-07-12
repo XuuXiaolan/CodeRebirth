@@ -162,7 +162,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         if (!IsServer)
             return;
 
-        if (_rootingTimer <= 0 && _rotationProgressTimer <= 0)
+        if (currentBehaviourStateIndex != (int)CactusBudlingState.Rooted && _rotationProgressTimer <= 0)
             return;
 
         if (!Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
@@ -172,7 +172,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         Vector3 projectedForward = Vector3.ProjectOnPlane(transform.forward, hitNormal).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(projectedForward, hitNormal);
 
-        if (_rootingTimer > 0)
+        if (currentBehaviourStateIndex == (int)CactusBudlingState.Rooted)
         {
             _rotationProgressTimer = Mathf.Clamp01(_rotationProgressTimer + Time.deltaTime * 0.5f);
         }

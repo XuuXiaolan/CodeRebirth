@@ -73,8 +73,6 @@ public class TalkingHead : GrabbableObject
             player.playerBetaBadgeMesh.gameObject.SetActive(true);
             player.SetPseudoDead(false);
             player.gameObject.layer = 3;
-            player.inSpecialInteractAnimation = false;
-            player.playingQuickSpecialAnimation = false;
             if (GameNetworkManager.Instance.localPlayerController == player)
             {
                 HUDManager.Instance.HideHUD(false);
