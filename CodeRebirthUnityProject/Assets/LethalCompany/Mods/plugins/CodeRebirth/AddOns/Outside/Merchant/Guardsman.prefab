@@ -358,6 +358,12 @@ MonoBehaviour:
     maxPrice: 5
     borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
     textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
+  - itemName: Pandora's box
+    rarity: 25
+    minPrice: 3
+    maxPrice: 5
+    borderColor: {r: 0, g: 0.40784314, b: 0.972549, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
   textMeshPro: {fileID: 4196939461208763335}
   barrelSpawnPoint: {fileID: 8693615149441997582}
 --- !u!1 &680574876329626848
@@ -902,7 +908,7 @@ GameObject:
   - component: {fileID: 7080530422077554847}
   m_Layer: 8
   m_Name: SpawnPoint
-  m_TagString: Untagged
+  m_TagString: Carpet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -957,7 +963,7 @@ GameObject:
   - component: {fileID: 721292049598629854}
   m_Layer: 8
   m_Name: MainBarrel
-  m_TagString: Untagged
+  m_TagString: Carpet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1076,7 +1082,7 @@ GameObject:
   - component: {fileID: 1757089838917883390}
   m_Layer: 8
   m_Name: SpawnPoint
-  m_TagString: Untagged
+  m_TagString: Carpet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1860,7 +1866,7 @@ Transform:
   m_GameObject: {fileID: 2676063445181720350}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -1.4479692, y: 0.92339534, z: 8.956744}
+  m_LocalPosition: {x: -44.66375, y: -29.96527, z: -121.894264}
   m_LocalScale: {x: 0.9999999, y: 0.9999999, z: 0.9999999}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2233,6 +2239,150 @@ MonoBehaviour:
     maxPrice: 1
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Action Figure
+    rarity: 3
+    minPrice: 1
+    maxPrice: 1
+    borderColor: {r: 0.4039216, g: 0.13333334, b: 0, a: 1}
+    textColor: {r: 0.49056602, g: 0.1613704, b: 0, a: 1}
+  - itemName: Glowing vial
+    rarity: 5
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Exotic mushroom
+    rarity: 6
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Cheese ball
+    rarity: 15
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Cheese wedge
+    rarity: 15
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Uchiwa
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Taiko
+    rarity: 7
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Shamisen
+    rarity: 7
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Pezley dispenser
+    rarity: 5
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Chammer
+    rarity: 4
+    minPrice: 4
+    maxPrice: 6
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: pikaSleep
+    rarity: 1
+    minPrice: 5
+    maxPrice: 5
+    borderColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+    textColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 1}
+  - itemName: Biomonty
+    rarity: 1
+    minPrice: 5
+    maxPrice: 5
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: Coconikki
+    rarity: 1
+    minPrice: 5
+    maxPrice: 5
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: Genericapple
+    rarity: 1
+    minPrice: 5
+    maxPrice: 5
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: nethersome duck
+    rarity: 1
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: coil-shell
+    rarity: 1
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Webley
+    rarity: 1
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: Pikachu
+    rarity: 1
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: Homemade timebomb
+    rarity: 4
+    minPrice: 1
+    maxPrice: 3
+    borderColor: {r: 0.79215693, g: 0.5372549, b: 0.011764707, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Sledgehammer
+    rarity: 4
+    minPrice: 1
+    maxPrice: 3
+    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Piranha solution
+    rarity: 4
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Maneater plushie
+    rarity: 8
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Big dynamite
+    rarity: 6
+    minPrice: 2
+    maxPrice: 4
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Flag
+    rarity: 5
+    minPrice: 2
+    maxPrice: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
   textMeshPro: {fileID: 9140578443034586371}
   barrelSpawnPoint: {fileID: 8996456538382694786}
 --- !u!1 &2685888227207986660
@@ -4277,7 +4427,7 @@ GameObject:
   - component: {fileID: 5812800697203139206}
   m_Layer: 8
   m_Name: SpawnPoint
-  m_TagString: Untagged
+  m_TagString: Carpet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4847,6 +4997,156 @@ MonoBehaviour:
     maxPrice: 1
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Uchiwa
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Action Figure
+    rarity: 3
+    minPrice: 1
+    maxPrice: 1
+    borderColor: {r: 0.4039216, g: 0.13333334, b: 0, a: 1}
+    textColor: {r: 0.49056602, g: 0.1613704, b: 0, a: 1}
+  - itemName: Mushroom staff
+    rarity: 10
+    minPrice: 2
+    maxPrice: 4
+    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Syringe
+    rarity: 10
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.5377358, g: 0.17750505, b: 0, a: 1}
+    textColor: {r: 0.5660378, g: 0.18566039, b: 0, a: 1}
+  - itemName: Cheese wedge
+    rarity: 15
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Cheese ball
+    rarity: 15
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Exotic mushroom
+    rarity: 6
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Glowing vial
+    rarity: 5
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Taiko
+    rarity: 7
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Shamisen
+    rarity: 7
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Pezley dispenser
+    rarity: 5
+    minPrice: 2
+    maxPrice: 3
+    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Chammer
+    rarity: 4
+    minPrice: 4
+    maxPrice: 6
+    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
+    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
+  - itemName: pikaSleep
+    rarity: 1
+    minPrice: 5
+    maxPrice: 5
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: Biomonty
+    rarity: 1
+    minPrice: 5
+    maxPrice: 5
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: Coconikki
+    rarity: 1
+    minPrice: 5
+    maxPrice: 5
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: Webley
+    rarity: 1
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: Pikachu
+    rarity: 1
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
+    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  - itemName: nethersome duck
+    rarity: 1
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: coil-shell
+    rarity: 1
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Homemade timebomb
+    rarity: 4
+    minPrice: 1
+    maxPrice: 3
+    borderColor: {r: 0.79215693, g: 0.5372549, b: 0.011764707, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Sledgehammer
+    rarity: 5
+    minPrice: 1
+    maxPrice: 3
+    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Piranha solution
+    rarity: 4
+    minPrice: 1
+    maxPrice: 2
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Maneater plushie
+    rarity: 8
+    minPrice: 3
+    maxPrice: 4
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Big dynamite
+    rarity: 6
+    minPrice: 2
+    maxPrice: 4
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Flag
+    rarity: 5
+    minPrice: 2
+    maxPrice: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
   textMeshPro: {fileID: 1717170170684254663}
   barrelSpawnPoint: {fileID: 5087414292805205031}
 --- !u!1 &8202763550955054907
@@ -5303,6 +5603,12 @@ MonoBehaviour:
     maxPrice: 1
     borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
     textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+  - itemName: Pilum
+    rarity: 5
+    minPrice: 7
+    maxPrice: 10
+    borderColor: {r: 0.79215693, g: 0.5372549, b: 0.011764707, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
   textMeshPro: {fileID: 4412735403398847839}
   barrelSpawnPoint: {fileID: 794146360343781012}
 --- !u!1 &8291131645556859678
@@ -5741,7 +6047,6 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
-  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -6213,7 +6518,7 @@ GameObject:
   - component: {fileID: 4040043446637638393}
   m_Layer: 8
   m_Name: SpawnPoint
-  m_TagString: Untagged
+  m_TagString: Carpet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
