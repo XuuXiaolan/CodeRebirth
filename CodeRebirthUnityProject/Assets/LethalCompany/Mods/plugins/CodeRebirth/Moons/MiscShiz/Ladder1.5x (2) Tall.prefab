@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507293d35d7a13e5b9ca9bb60e082e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverIcon: {fileID: 21300000, guid: 9bddd123b33a9534daa42bd143de6d9b, type: 2}
+  hoverIcon: {fileID: 21300000, guid: 6f3e77b1e1e2c8f4a9e5796e7782ab71, type: 2}
   hoverTip: 'Climb : [LMB]'
   disabledHoverIcon: {fileID: 0}
   disabledHoverTip: 
@@ -232,6 +232,7 @@ MonoBehaviour:
   animationString: SA_PullLever
   lockPlayerPosition: 1
   playerPositionNode: {fileID: 137453702065479349}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

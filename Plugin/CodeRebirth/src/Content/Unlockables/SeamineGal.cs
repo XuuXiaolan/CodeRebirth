@@ -358,7 +358,7 @@ public class SeamineGalAI : GalAI
     {
         if (targetEnemy == null || targetEnemy.isEnemyDead || chargeCount <= 0 || ownerPlayer == null)
         {
-            if (targetEnemy != null && targetEnemy.isEnemyDead) SetEnemyTargetServerRpc(-1);
+            if (targetEnemy != null && targetEnemy.isEnemyDead) ClearEnemyTargetServerRpc();
             if (ownerPlayer != null)
             {
                 HandleStateAnimationSpeedChanges(State.FollowingPlayer);
@@ -544,7 +544,7 @@ public class SeamineGalAI : GalAI
                 //Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
 
 
-                SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
+                SetEnemyTargetServerRpc(new NetworkBehaviourReference(enemy));
                 HandleStateAnimationSpeedChanges(State.AttackMode);
                 break;
             }

@@ -229,7 +229,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position);
         if (canAttack && distanceToClosestPlayer <= 1.5f + agent.stoppingDistance)
         {
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer));
+            SetPlayerTargetServerRpc(closestPlayer);
             StartCoroutine(AttackCooldownTimer(1.5f));
             isAttacking = true;
             creatureNetworkAnimator.SetTrigger(DoAttackAnimation);
@@ -266,7 +266,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position);
         if (canAttack && distanceToClosestPlayer <= 5f + agent.stoppingDistance)
         {
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer));
+            SetPlayerTargetServerRpc(closestPlayer);
             StartCoroutine(AttackCooldownTimer(5f));
             isAttacking = true;
             creatureNetworkAnimator.SetTrigger(DoAttackAnimation);

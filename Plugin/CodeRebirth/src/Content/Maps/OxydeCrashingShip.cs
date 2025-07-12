@@ -16,6 +16,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
     [SerializeField]
     private AudioSource _CloseTravelAudio = null!;
 
+    private Coroutine? _fallingRoutine = null!;
 
     public override void OnNetworkSpawn()
     {
@@ -34,7 +35,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
         if (!IsServer)
             return;
 
-        StartCoroutine(WaitToDoYourThing(spawnPosition, UnityEngine.Random.Range(180f, 360f)));
+        _fallingRoutine = StartCoroutine(WaitToDoYourThing(spawnPosition, UnityEngine.Random.Range(180f, 360f)));
     }
 
     public IEnumerator WaitToDoYourThing(Vector3 spawnPosition, float delay)
@@ -42,6 +43,16 @@ public class OxydeCrashingShip : FallingObjectBehaviour
         yield return new WaitForSeconds(delay);
         Vector3 origin = CalculateRandomSkyOrigin((Direction)UnityEngine.Random.Range(0, Enum.GetValues(typeof(Direction)).Length), spawnPosition, new System.Random(UnityEngine.Random.Range(0, 10000)));
         SetupFallingObjectServerRpc(origin, spawnPosition, 25);
+    }
+
+    public void Fall(Vector3 fallPosition, float speed)
+    {
+        if (_fallingRoutine != null)
+            StopCoroutine(_fallingRoutine);
+
+        Vector3 origin = CalculateRandomSkyOrigin((Direction)UnityEngine.Random.Range(0, Enum.GetValues(typeof(Direction)).Length), fallPosition, new System.Random(UnityEngine.Random.Range(0, 10000)));
+
+        SetupFallingObjectServerRpc(origin, fallPosition, speed);
     }
 
     protected override void OnImpact()

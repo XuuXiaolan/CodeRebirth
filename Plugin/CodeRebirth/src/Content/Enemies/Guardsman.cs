@@ -203,7 +203,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
             if (EnemyHasLineOfSightToPosition(enemy.transform.position, 60, 45, 5))
                 continue;
 
-            SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
+            SetEnemyTargetServerRpc(new NetworkBehaviourReference(enemy));
             smartAgentNavigator.StopSearchRoutine();
             return;
         }

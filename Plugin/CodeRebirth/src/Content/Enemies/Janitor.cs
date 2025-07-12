@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -194,7 +195,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     {
         yield return new WaitUntil(() => !currentlyGrabbingScrap && !currentlyGrabbingPlayer && !currentlyThrowingPlayer);
         yield return null;
-        DetectDroppedScrapServerRpc(playerWhoHit.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
+        DetectDroppedScrapServerRpc(playerWhoHit.transform.position, playerWhoHit);
     }
     #endregion
 
@@ -362,15 +363,15 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DetectDroppedScrapServerRpc(Vector3 noisePosition, int playerWhoDroppedIndex)
+    public void DetectDroppedScrapServerRpc(Vector3 noisePosition, PlayerControllerReference playerControllerReference)
     {
         if (!NavMesh.SamplePosition(noisePosition, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             return;
 
         if (ObjectIsPathable(hit.position, 20f, out _))
         {
-            targetPlayer = StartOfRound.Instance.allPlayerScripts[playerWhoDroppedIndex];
-            SetTargetClientRpc(playerWhoDroppedIndex);
+            targetPlayer = playerControllerReference;
+            SetPlayerTargetClientRpc(playerControllerReference);
             UpdateBlendShapeAndSpeedForChase();
             SwitchToBehaviourClientRpc((int)JanitorStates.FollowingPlayer);
             UpdatePathToTargetPlayer();
@@ -621,7 +622,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
 
         if (!currentlyGrabbingPlayer && !currentlyGrabbingScrap && !currentlyThrowingPlayer)
         {
-            DetectDroppedScrapServerRpc(playerWhoHit.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerWhoHit));
+            DetectDroppedScrapServerRpc(playerWhoHit.transform.position, playerWhoHit);
         }
         else
         {

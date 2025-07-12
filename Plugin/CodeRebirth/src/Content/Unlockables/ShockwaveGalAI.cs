@@ -401,7 +401,7 @@ public class ShockwaveGalAI : GalAI
     {
         if (targetEnemy == null || targetEnemy.isEnemyDead || chargeCount <= 0 || ownerPlayer == null)
         {
-            if (targetEnemy != null && targetEnemy.isEnemyDead) SetEnemyTargetServerRpc(-1);
+            if (targetEnemy != null && targetEnemy.isEnemyDead) ClearEnemyTargetServerRpc();
             if (ownerPlayer != null)
             {
                 HandleStateAnimationSpeedChanges(State.FollowingPlayer, Emotion.OpenEye);
@@ -489,7 +489,7 @@ public class ShockwaveGalAI : GalAI
                 if (hit.collider.gameObject != enemy.gameObject && !hit.collider.transform.IsChildOf(enemy.transform))
                     continue;
 
-                SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(enemy));
+                SetEnemyTargetServerRpc(new NetworkBehaviourReference(enemy));
                 HandleStateAnimationSpeedChanges(State.AttackMode, Emotion.OpenEye);
                 break;  // Exit loop after targeting one enemy, depending on game logic
             }

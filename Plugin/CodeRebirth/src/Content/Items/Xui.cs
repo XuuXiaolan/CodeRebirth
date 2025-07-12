@@ -9,6 +9,8 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class Xui : GrabbableObject
 {
+    [SerializeField]
+    private AudioClip[] _differentPickupAndPocketSounds = []; 
 
     private bool beenUsed = false;
     private System.Random rand = new();
@@ -16,6 +18,15 @@ public class Xui : GrabbableObject
     {
         base.Start();
         rand = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
+    }
+
+    public override void EquipItem()
+    {
+        base.EquipItem();
+        AudioClip randomSound = _differentPickupAndPocketSounds[rand.Next(_differentPickupAndPocketSounds.Length)];
+        AudioClip randomSound2 = _differentPickupAndPocketSounds[rand.Next(_differentPickupAndPocketSounds.Length)];
+        this.itemProperties.pocketSFX = randomSound;
+        this.itemProperties.grabSFX = randomSound2;
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)

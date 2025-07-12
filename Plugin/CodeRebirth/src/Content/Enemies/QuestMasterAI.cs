@@ -147,7 +147,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     protected virtual void DoWandering()
     {
         if (changingState || !FindClosestPlayerInRange(range)) return;
-        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
+        SetPlayerTargetServerRpc(targetPlayer);
         StartCoroutine(ChangingToApproaching(questCompleted.Value));
     }
 

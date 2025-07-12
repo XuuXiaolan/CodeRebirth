@@ -112,7 +112,7 @@ static class PlayerControllerBPatch
             {
                 if (!janitor.currentlyGrabbingPlayer && !janitor.currentlyGrabbingScrap && !janitor.currentlyThrowingPlayer)
                 {
-                    janitor.DetectDroppedScrapServerRpc(self.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, self));
+                    janitor.DetectDroppedScrapServerRpc(self.transform.position, self);
                 }
                 else
                 {

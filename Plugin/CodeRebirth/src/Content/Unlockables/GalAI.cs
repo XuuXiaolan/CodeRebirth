@@ -242,27 +242,28 @@ public class GalAI : NetworkBehaviour, IHittable
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetEnemyTargetServerRpc(int enemyID)
+    public void SetEnemyTargetServerRpc(NetworkBehaviourReference networkBehaviourReference)
     {
-        SetEnemyTargetClientRpc(enemyID);
+        SetEnemyTargetClientRpc(networkBehaviourReference);
     }
 
     [ClientRpc]
-    public void SetEnemyTargetClientRpc(int enemyID)
+    public void SetEnemyTargetClientRpc(NetworkBehaviourReference networkBehaviourReference)
     {
-        if (enemyID == -1)
-        {
-            targetEnemy = null;
-            Plugin.ExtendedLogging($"Clearing Enemy target on {this}");
-            return;
-        }
-        if (RoundManager.Instance.SpawnedEnemies[enemyID] == null)
-        {
-            Plugin.ExtendedLogging($"Enemy Index invalid! {this}");
-            return;
-        }
-        targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
+        targetEnemy = (EnemyAI)networkBehaviourReference;
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ClearEnemyTargetServerRpc()
+    {
+        ClearEnemyTargetClientRpc();
+    }
+
+    [ClientRpc]
+    public void ClearEnemyTargetClientRpc()
+    {
+        targetEnemy = null;
     }
 
     public virtual void DetectNoise(NoiseParams noiseParams)

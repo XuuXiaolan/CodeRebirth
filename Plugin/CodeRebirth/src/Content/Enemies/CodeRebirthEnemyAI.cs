@@ -7,6 +7,7 @@ using CodeRebirth.src.Util.Extensions;
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirthLib.Util.Pathfinding;
+using CodeRebirthLib.Util.INetworkSerializables;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
@@ -260,57 +261,57 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetTargetServerRpc(int PlayerID)
+    public void ClearPlayerTargetServerRpc()
     {
-        SetTargetClientRpc(PlayerID);
+        ClearPlayerTargetClientRpc();
     }
 
     [ClientRpc]
-    public void SetTargetClientRpc(int PlayerID)
+    public void ClearPlayerTargetClientRpc()
     {
-        if (PlayerID == -1)
-        {
-            targetPlayer = null;
-            PlayerSetAsTarget(null);
-            Plugin.ExtendedLogging($"Clearing target on {this}");
-            return;
-        }
-        if (StartOfRound.Instance.allPlayerScripts[PlayerID] == null)
-        {
-            PlayerSetAsTarget(null);
-            Plugin.ExtendedLogging($"Index invalid! {this}");
-            return;
-        }
+        targetPlayer = null;
+        PlayerSetAsTarget(null);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetPlayerTargetServerRpc(PlayerControllerReference playerControllerReference)
+    {
+        SetPlayerTargetClientRpc(playerControllerReference);
+    }
+
+    [ClientRpc]
+    public void SetPlayerTargetClientRpc(PlayerControllerReference playerControllerReference)
+    {
+        PlayerControllerB player = playerControllerReference;
         previousTargetPlayer = targetPlayer;
-        targetPlayer = StartOfRound.Instance.allPlayerScripts[PlayerID];
+        targetPlayer = player;
         PlayerSetAsTarget(targetPlayer);
         Plugin.ExtendedLogging($"{this} setting target to: {targetPlayer.playerUsername}");
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetEnemyTargetServerRpc(int enemyID)
+    public void ClearEnemyTargetServerRpc()
     {
-        SetEnemyTargetClientRpc(enemyID);
+        ClearEnemyTargetClientRpc();
     }
 
     [ClientRpc]
-    public void SetEnemyTargetClientRpc(int enemyID)
+    public void ClearEnemyTargetClientRpc()
     {
-        if (enemyID == -1)
-        {
-            targetEnemy = null;
-            Plugin.ExtendedLogging($"Clearing Enemy target on {this}");
-            EnemySetAsTarget(null);
-            return;
-        }
+        targetEnemy = null;
+        EnemySetAsTarget(null);
+    }
 
-        if (RoundManager.Instance.SpawnedEnemies[enemyID] == null)
-        {
-            Plugin.ExtendedLogging($"Enemy Index invalid! {this}");
-            EnemySetAsTarget(null);
-            return;
-        }
-        targetEnemy = RoundManager.Instance.SpawnedEnemies[enemyID];
+    [ServerRpc(RequireOwnership = false)]
+    public void SetEnemyTargetServerRpc(NetworkBehaviourReference networkBehaviourReference)
+    {
+        SetEnemyTargetClientRpc(networkBehaviourReference);
+    }
+
+    [ClientRpc]
+    public void SetEnemyTargetClientRpc(NetworkBehaviourReference networkBehaviourReference)
+    {
+        targetEnemy = (EnemyAI)networkBehaviourReference;
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
         EnemySetAsTarget(targetEnemy);
     }

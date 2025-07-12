@@ -388,7 +388,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         // Keep targetting closest Giant, unless they are over 20 units away and we can't see them.
         if (targetEnemy == null || targetEnemy.isEnemyDead)
         {
-            SetEnemyTargetServerRpc(-1);
+            ClearEnemyTargetServerRpc();
             Plugin.ExtendedLogging("Stop Target Giant");
             SetAnimatorMotionBools(false, true);
             agent.angularSpeed = 40f;
@@ -470,7 +470,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         if (closestEnemy != null)
         {
-            SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(closestEnemy));
+            SetEnemyTargetServerRpc(new NetworkBehaviourReference(closestEnemy));
             return true;
         }
         return false;

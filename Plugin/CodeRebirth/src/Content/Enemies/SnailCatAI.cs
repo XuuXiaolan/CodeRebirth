@@ -146,7 +146,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
             if (player.isPlayerDead || !player.isPlayerControlled) continue;
             float distance = Vector3.Distance(transform.position, player.transform.position);
             if (distance > 5) continue;
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+            SetPlayerTargetServerRpc(player);
             SwitchToBehaviourServerRpc((int)State.Following);
             return;
         }
@@ -179,7 +179,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (distanceToPlayer > 15)
         {
             // agent.speed = 4f;
-            SetTargetServerRpc(-1);
+            ClearPlayerTargetServerRpc();
             SwitchToBehaviourServerRpc((int)State.Wandering);
             smartAgentNavigator.StartSearchRoutine(50);
             return;

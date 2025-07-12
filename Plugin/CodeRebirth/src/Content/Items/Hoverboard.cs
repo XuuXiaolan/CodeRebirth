@@ -112,7 +112,7 @@ public class Hoverboard : GrabbableObject, IHittable
 
     public IEnumerator OnInteractCoroutine(PlayerControllerB player)
     {
-        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+        SetPlayerTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         yield return new WaitUntil(() => playerControlling == player);
         SetHoverboardStateServerRpc(2);
     }
@@ -330,7 +330,7 @@ public class Hoverboard : GrabbableObject, IHittable
     public void DropHoverboard()
     {
         SetHoverboardStateServerRpc(0);
-        SetTargetServerRpc(-1);
+        SetPlayerTargetServerRpc(-1);
         SwitchModeExtension(true);
     }
 
@@ -369,13 +369,13 @@ public class Hoverboard : GrabbableObject, IHittable
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SetTargetServerRpc(int PlayerID)
+    public void SetPlayerTargetServerRpc(int PlayerID)
     {
-        SetTargetClientRpc(PlayerID);
+        SetPlayerTargetClientRpc(PlayerID);
     }
 
     [ClientRpc]
-    public void SetTargetClientRpc(int PlayerID)
+    public void SetPlayerTargetClientRpc(int PlayerID)
     {
         if (PlayerID == -1 && playerControlling != null)
         {

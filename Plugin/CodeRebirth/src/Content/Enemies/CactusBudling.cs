@@ -180,7 +180,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         {
             _rotationProgressTimer = Mathf.Clamp01(_rotationProgressTimer - Time.deltaTime * 0.5f);
         }
-        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, _rotationProgressTimer);
+        this.transform.rotation = Quaternion.Slerp(Quaternion.identity, targetRotation, _rotationProgressTimer);
     }
     #endregion
 

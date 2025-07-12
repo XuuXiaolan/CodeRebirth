@@ -221,7 +221,7 @@ public class Mistress : CodeRebirthEnemyAI
         }
         if (!IsServer) yield break;
         playerToKill = null;
-        SetTargetServerRpc(-1);
+        ClearPlayerTargetServerRpc();
         creatureNetworkAnimator.SetTrigger(DoVanishAnimation);
         yield return new WaitForSeconds(1f);
         if (lastTargetPlayer != null)
@@ -315,7 +315,7 @@ public class Mistress : CodeRebirthEnemyAI
 
         IEnumerable<PlayerControllerB> orderedPlayerList = playersWithPriorityDict.OrderByDescending(kvp => kvp.Value).Select(kvp => kvp.Key);
 
-        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, orderedPlayerList.First()));
+        SetPlayerTargetServerRpc(orderedPlayerList.First());
     }
 
     private Vector3 ChooseNewTeleportPoint()

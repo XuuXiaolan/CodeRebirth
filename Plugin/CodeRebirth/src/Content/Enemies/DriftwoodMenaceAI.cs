@@ -259,8 +259,8 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             Plugin.ExtendedLogging("If you see this, something went wrong, likely an enemy or player randomly died.");
             Plugin.ExtendedLogging("Resettings state to Scream Animation");
-            SetTargetServerRpc(-1);
-            SetEnemyTargetServerRpc(-1);
+            ClearPlayerTargetServerRpc();
+            ClearEnemyTargetServerRpc();
             StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
             agent.speed = 0f;
             SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
@@ -272,7 +272,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             if (Vector3.Distance(transform.position, targetEnemy.transform.position) > seeingRange + 10f && !EnemyHasLineOfSightToPosition(targetEnemy.transform.position))
             {
                 Plugin.ExtendedLogging("Stop chasing target enemy");
-                SetEnemyTargetServerRpc(-1);
+                ClearEnemyTargetServerRpc();
                 StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
                 agent.speed = 0f;
                 SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
@@ -285,7 +285,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             if (Vector3.Distance(transform.position, targetPlayer.transform.position) > seeingRange + 10f && !EnemyHasLineOfSightToPosition(targetPlayer.transform.position) || StartOfRound.Instance.shipBounds.bounds.Contains(targetPlayer.transform.position))
             {
                 Plugin.ExtendedLogging("Stop chasing target player");
-                SetTargetServerRpc(-1);
+                ClearPlayerTargetServerRpc();
                 StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
                 agent.speed = 0f;
                 SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
@@ -300,7 +300,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         if (targetEnemy == null || targetEnemy.isEnemyDead && canSmash)
         {
             Plugin.ExtendedLogging("If you see this, something went wrong, likely an enemy randomly died.");
-            SetEnemyTargetServerRpc(-1);
+            ClearEnemyTargetServerRpc();
             StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
             agent.speed = 0f;
             SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
@@ -311,7 +311,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         if (distanceToEnemy > seeingRange + 10f && !EnemyHasLineOfSightToPosition(targetEnemy.transform.position))
         {
-            SetEnemyTargetServerRpc(-1);
+            ClearEnemyTargetServerRpc();
             StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
             agent.speed = 0f;
             SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
@@ -661,7 +661,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         if (closestEnemy != null)
         {
-            SetEnemyTargetServerRpc(RoundManager.Instance.SpawnedEnemies.IndexOf(closestEnemy));
+            SetEnemyTargetServerRpc(new NetworkBehaviourReference(closestEnemy));
             return true;
         }
         return false;
@@ -687,7 +687,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         if (closestPlayer != null)
         {
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, closestPlayer));
+            SetPlayerTargetServerRpc(closestPlayer);
             return true;
         }
         return false;

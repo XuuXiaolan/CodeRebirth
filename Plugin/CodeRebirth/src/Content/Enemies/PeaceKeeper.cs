@@ -238,7 +238,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
                 continue;
 
             smartAgentNavigator.StopSearchRoutine();
-            SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+            SetPlayerTargetServerRpc(player);
             SwitchToBehaviourServerRpc((int)PeaceKeeperState.FollowPlayer);
             smartAgentNavigator.DoPathingToDestination(player.transform.position);
             Plugin.ExtendedLogging($"Player spotted holding weapon: {player.name}");
@@ -349,7 +349,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     {
         _backOffTimer = 0f;
         agent.speed = _walkingSpeed;
-        SetTargetServerRpc(-1);
+        ClearPlayerTargetServerRpc();
         SwitchToBehaviourServerRpc((int)PeaceKeeperState.Idle);
         smartAgentNavigator.StartSearchRoutine(40);
     }

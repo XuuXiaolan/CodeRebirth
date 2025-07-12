@@ -98,7 +98,7 @@ public class Nancy : CodeRebirthEnemyAI
         if (pathDistance == 0 || pathDistance > 20f)
             return;
 
-        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, localPlayer));
+        SetPlayerTargetServerRpc(localPlayer);
         DoBoolAnimationServerRpc(HealModeAnimation, true);
         SwitchToBehaviourServerRpc((int)NancyState.ChasingHealTarget);
     }
@@ -114,7 +114,7 @@ public class Nancy : CodeRebirthEnemyAI
         {
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
-            SetTargetServerRpc(-1);
+            ClearPlayerTargetServerRpc();
             smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;
@@ -145,7 +145,7 @@ public class Nancy : CodeRebirthEnemyAI
         if (distanceToPlayer > 35)
         {
             creatureAnimator.SetBool(HealModeAnimation, false);
-            SetTargetServerRpc(-1);
+            ClearPlayerTargetServerRpc();
             smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;
@@ -173,7 +173,7 @@ public class Nancy : CodeRebirthEnemyAI
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
             // HealPlayerSuccessServerRpc();
-            SetTargetServerRpc(-1);
+            ClearPlayerTargetServerRpc();
             smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;
@@ -212,7 +212,7 @@ public class Nancy : CodeRebirthEnemyAI
         {
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
-            SetTargetServerRpc(-1);
+            ClearPlayerTargetServerRpc();
             smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;

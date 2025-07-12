@@ -72,7 +72,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (!targetPlayer.IsLocalPlayer())
+        if (targetPlayer == null || !targetPlayer.IsLocalPlayer())
             return;
 
         _idleTimer -= Time.deltaTime;
@@ -260,13 +260,23 @@ public class RabbitMagician : CodeRebirthEnemyAI
         agent.enabled = true;
         SwitchToBehaviourServerRpc((int)RabbitMagicianState.Idle);
         smartAgentNavigator.StartSearchRoutine(20);
+        TurnOnCollidersClientRpc();
         _idleRoutine = null;
+    }
+
+    [ClientRpc]
+    private void TurnOnCollidersClientRpc()
+    {
+        foreach (var col in _collidersToDisable)
+        {
+            col.gameObject.SetActive(true);
+        }
     }
 
     public IEnumerator AttachToPlayer(PlayerControllerB playerToAttachTo, PlayerControllerB? previouslyAttachedToPlayer)
     {
         smartAgentNavigator.StopSearchRoutine();
-        SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
+        SetPlayerTargetServerRpc(playerToAttachTo);
         Plugin.ExtendedLogging($"Attaching to {playerToAttachTo} from {previouslyAttachedToPlayer}");
         if (previouslyAttachedToPlayer != null)
         {
@@ -275,7 +285,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
             if (playerToAttachTo.isPlayerDead)
             {
                 SwitchToBehaviourServerRpc((int)RabbitMagicianState.Attached);
-                SetTargetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerToAttachTo));
+                SetPlayerTargetServerRpc(playerToAttachTo);
                 yield break;
             }
             PlayConfettiServerRpc();
@@ -319,7 +329,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     {
         foreach (var collider in _collidersToDisable)
         {
-            collider.enabled = false;
+            collider.gameObject.SetActive(false);
         }
 
         if (GameNetworkManager.Instance.localPlayerController != targetPlayer)
