@@ -82,6 +82,7 @@ public class Guillotine : NetworkBehaviour
         playerToKill.headCostumeContainer.gameObject.SetActive(false);
         playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
         playerToKill.playerBetaBadgeMesh.gameObject.SetActive(false);
+        playerToKill.inAnimationWithEnemy = mistress;
         if (GameNetworkManager.Instance.localPlayerController == playerToKill)
         {
             HUDManager.Instance.HideHUD(true);

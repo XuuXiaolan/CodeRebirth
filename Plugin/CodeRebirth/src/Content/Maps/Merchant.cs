@@ -24,6 +24,7 @@ public class Merchant : NetworkBehaviour
     public AudioSource[] TurretAudioSources = [];
     public AudioClip[] TurretAudioClips = [];
 
+    private System.Random storeSeededRandom = new();
     private Dictionary<GrabbableObject, int> itemsSpawned = new();
     private List<PlayerControllerB> targetPlayers = new();
     private Dictionary<Transform, float> localDamageCooldownPerTurret = new();
@@ -38,6 +39,7 @@ public class Merchant : NetworkBehaviour
 
     public void Start()
     {
+        storeSeededRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 37325);
         DisableOrEnableCoinObjects();
         localDamageCooldownPerTurret.Add(turretBones[0], 0.2f);
         localDamageCooldownPerTurret.Add(turretBones[1], 0.2f);
@@ -220,26 +222,27 @@ public class Merchant : NetworkBehaviour
 
     public void PopulateItemsWithRarityList()
     {
-        List<(Item item, string itemName)> items = new();
+        Dictionary<string, Item> itemsByName = new();
         foreach (var item in StartOfRound.Instance.allItemsList.itemsList)
         {
             Plugin.ExtendedLogging($"Item: {item.itemName}");
             bool duplicate = false;
-            foreach (var itemAndName in items)
+            foreach (var itemAndName in itemsByName)
             {
-                if (itemAndName.itemName.ToLowerInvariant().Trim() == item.itemName.ToLowerInvariant().Trim())
+                if (itemAndName.Value.itemName.ToLowerInvariant().Trim() == item.itemName.ToLowerInvariant().Trim())
                 {
                     Plugin.Logger.LogError($"Some mod added a duplicate item.... {item.itemName}");
                     duplicate = true;
                     break;
                 }
             }
-            if (duplicate) continue;
-            items.Add((item, item.itemName));
-        }
-        Dictionary<string, Item> itemsByName = items.Select(item => item.item)
-            .ToDictionary(item => item.itemName.ToLowerInvariant().Trim());
 
+            if (duplicate)
+                continue;
+
+            itemsByName.Add(item.itemName.ToLowerInvariant().Trim(), item);
+        }
+        
         foreach (var barrel in merchantBarrels)
         {
             barrel.validItemsWithRarityAndColor.Clear();
@@ -280,6 +283,23 @@ public class Merchant : NetworkBehaviour
 
                     barrel.validItemsWithRarityAndColor.Add((matchingItem, rarity, minPrice, maxPrice, borderColor, textColor));
                 }
+                else
+                {
+                    List<Item> possibleItemsToAdd = new();
+                    foreach (var itemByName in itemsByName)
+                    {
+                        if (!itemByName.Key.Contains(normalizedName, StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        Plugin.ExtendedLogging($"Thinking about adding item: {itemByName.Value.itemName} to barrel: {name}");
+                        possibleItemsToAdd.Add(itemByName.Value);
+                    }
+                    if (possibleItemsToAdd.Count <= 0)
+                        continue;
+
+                    Item itemToAdd = possibleItemsToAdd[storeSeededRandom.Next(0, possibleItemsToAdd.Count)];
+                    barrel.validItemsWithRarityAndColor.Add((itemToAdd, rarity, minPrice, maxPrice, borderColor, textColor));
+                }
             }
         }
     }
@@ -302,9 +322,11 @@ public class Merchant : NetworkBehaviour
             Color _textColor = Color.white;
             foreach (var (item, rarity, minPrice, maxprice, borderColor, textColor) in barrel.validItemsWithRarityAndColor)
             {
-                if (selectedItem != item) continue;
+                if (selectedItem != item)
+                    continue;
+
                 selectedItem = item;
-                _price = UnityEngine.Random.Range(minPrice, maxprice + 1);
+                _price = storeSeededRandom.Next(minPrice, maxprice + 1);
                 _borderColor = borderColor;
                 _textColor = textColor;
                 break;
@@ -313,7 +335,7 @@ public class Merchant : NetworkBehaviour
             if (selectedItem == null)
             {
                 Plugin.ExtendedLogging("Item selection failed for barrel at " + spawnPosition + "Assuming Random item");
-                Item item = GetRandomVanillaItem(false);
+                Item item = GetRandomVanillaItem(false, storeSeededRandom);
                 selectedItem = item;
             }
 
@@ -324,14 +346,15 @@ public class Merchant : NetworkBehaviour
         }
     }
 
-    public static Item GetRandomVanillaItem(bool excludeShopItems)
+    public static Item GetRandomVanillaItem(bool excludeShopItems, System.Random? storeSeededRandom = null)
     {
+        storeSeededRandom ??= new System.Random(UnityEngine.Random.Range(0, 1000000));
         var vanillaItems = LethalLevelLoader.OriginalContent.Items;
         if (excludeShopItems)
         {
             vanillaItems = vanillaItems.Where(x => x.isScrap).ToList();
         }
-        int randomIndex = UnityEngine.Random.Range(0, vanillaItems.Count);
+        int randomIndex = storeSeededRandom.Next(0, vanillaItems.Count);
         return vanillaItems[randomIndex];
     }
 

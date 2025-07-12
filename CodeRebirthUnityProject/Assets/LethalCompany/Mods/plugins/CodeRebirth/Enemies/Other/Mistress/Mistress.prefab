@@ -964,6 +964,7 @@ Transform:
   - {fileID: 4329605565067746976}
   - {fileID: 8167587873630588910}
   - {fileID: 6307895147890817074}
+  - {fileID: 1718780153641041557}
   m_Father: {fileID: 6278981704610500248}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6065521496404322610
@@ -1339,7 +1340,7 @@ MonoBehaviour:
   _idleTimer: 1
   teleportCooldown: 20
   killCooldown: 10
-  HeadTransform: {fileID: 1212291645882394840}
+  HeadTransform: {fileID: 1718780153641041557}
   LoseSightSound: {fileID: 8300000, guid: 91d31c44e40da1642bd8c4b943309df6, type: 3}
   AttackSounds:
   - {fileID: 8300000, guid: b7dcd65547bb64b43a934baeecc7d22f, type: 3}
@@ -1360,20 +1361,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   _nodeRemovalPrecision: 5
 --- !u!1 &6478745463343962421
 GameObject:
@@ -2142,6 +2143,37 @@ Transform:
   m_Children:
   - {fileID: 6913560088577807094}
   m_Father: {fileID: 2844300639812161845}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9081867149824839005
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1718780153641041557}
+  m_Layer: 0
+  m_Name: MistressHead
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1718780153641041557
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9081867149824839005}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.778, z: 0.825}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1212291645882394840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9141740814446413018
 GameObject:

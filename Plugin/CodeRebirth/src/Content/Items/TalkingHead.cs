@@ -49,19 +49,23 @@ public class TalkingHead : GrabbableObject
             meshRenderer.enabled = false;
         }
 
-        player.inSpecialInteractAnimation = true;
-        player.playingQuickSpecialAnimation = true;
         player.thisPlayerModelLOD1.gameObject.SetActive(false);
         player.thisPlayerModelLOD2.gameObject.SetActive(false);
         player.thisPlayerModel.gameObject.SetActive(false);
         player.disableMoveInput = true;
         player.disableInteract = true;
-        player.transform.SetPositionAndRotation(playerBone.position, transform.rotation);
+        Quaternion rotation = transform.rotation;
+        if (!isHeld)
+        {
+            rotation *= Quaternion.Euler(0, 180, 0);
+        }
+        player.transform.SetPositionAndRotation(playerBone.position, rotation);
         int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
         if (StartOfRound.Instance.shipIsLeaving || StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 0)
         {
             MoreCompanySoftCompat.TryDisableOrEnableCosmetics(player, false);
             player.DisablePlayerModel(player.gameObject, true, false);
+            player.inAnimationWithEnemy = null;
             player.disableMoveInput = false;
             player.disableInteract = false;
             player.thisPlayerModel.gameObject.SetActive(true);
@@ -72,6 +76,7 @@ public class TalkingHead : GrabbableObject
             player.headCostumeContainerLocal.gameObject.SetActive(true);
             player.playerBetaBadgeMesh.gameObject.SetActive(true);
             player.SetPseudoDead(false);
+
             player.gameObject.layer = 3;
             if (GameNetworkManager.Instance.localPlayerController == player)
             {

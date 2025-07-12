@@ -10,13 +10,15 @@ namespace CodeRebirth.src.Content.Items;
 public class Xui : GrabbableObject
 {
     [SerializeField]
-    private AudioClip[] _differentPickupAndPocketSounds = []; 
+    private AudioClip[] _differentPickupAndPocketSounds = [];
 
+    private AudioSource _audioSource = null!;
     private bool beenUsed = false;
     private System.Random rand = new();
     public override void Start()
     {
         base.Start();
+        _audioSource = GetComponent<AudioSource>();
         rand = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
     }
 
@@ -38,7 +40,12 @@ public class Xui : GrabbableObject
         grabbable = false;
         grabbableToEnemies = false;
         beenUsed = true;
-        StartCoroutine(DoAnimation(1f));
+        AudioClip randomSound = _differentPickupAndPocketSounds[rand.Next(_differentPickupAndPocketSounds.Length)];
+        AudioClip randomSound2 = _differentPickupAndPocketSounds[rand.Next(_differentPickupAndPocketSounds.Length)];
+        this.itemProperties.pocketSFX = randomSound;
+        this.itemProperties.grabSFX = randomSound2;
+        _audioSource.PlayOneShot(itemProperties.grabSFX);
+        StartCoroutine(DoAnimation(itemProperties.grabSFX.length));
         // do animation where it hovers, particle effects etc, then despawn it
     }
 

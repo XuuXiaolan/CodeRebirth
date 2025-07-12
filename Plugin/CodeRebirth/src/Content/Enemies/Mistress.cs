@@ -52,7 +52,7 @@ public class Mistress : CodeRebirthEnemyAI
 
         killTimer += Time.deltaTime;
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (localPlayer == targetPlayer)
+        if (localPlayer == targetPlayer && playerToKill == null)
         {
             localPlayer.JumpToFearLevel(0.7f);
             CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer / killCooldown);
@@ -190,6 +190,7 @@ public class Mistress : CodeRebirthEnemyAI
 
     private IEnumerator InitiateKillingSequence(PlayerControllerB playerToExecute)
     {
+        yield return new WaitForSeconds(0.5f);
         Physics.Raycast(Vector3.zero + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
         if (playerToExecute.isInsideFactory && playerToExecute.IsLocalPlayer())
         {
@@ -269,7 +270,7 @@ public class Mistress : CodeRebirthEnemyAI
         if (distanceToPlayer > 50f)
             return false;
 
-        if (Physics.Raycast(targetPlayer.gameplayCamera.transform.position, targetPlayer.gameplayCamera.transform.position - HeadTransform.position, distanceToPlayer, MoreLayerMasks.CollidersAndRoomAndDefaultAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(targetPlayer.gameplayCamera.transform.position, targetPlayer.gameplayCamera.transform.position - HeadTransform.position, distanceToPlayer, MoreLayerMasks.CollidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore))
             return false;
 
         return true;
