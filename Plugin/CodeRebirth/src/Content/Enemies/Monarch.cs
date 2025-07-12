@@ -307,7 +307,10 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        Destroy(BeamController._monarchParticle?.gameObject);
+        if (BeamController != null && BeamController._monarchParticle != null && BeamController._monarchParticle.gameObject != null)
+        {
+            Destroy(BeamController._monarchParticle.gameObject);
+        }
         if (Monarchs.Contains(this))
             Monarchs.Remove(this);
     }
