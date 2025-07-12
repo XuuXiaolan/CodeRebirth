@@ -631,6 +631,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3970912442632244758}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a42f00c9bc1f1cd4cb061eab2b0ac37a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1073773020671610137}
     - targetCorrespondingSourceObject: {fileID: 235832503693718611, guid: a42f00c9bc1f1cd4cb061eab2b0ac37a,
         type: 3}
       insertIndex: -1
@@ -788,6 +792,25 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3acb0a71d23df4644acbb7c0fa4433ae, type: 3}
   audioSourceFar: {fileID: 0}
   farAudioClips: []
+--- !u!114 &1073773020671610137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619334102228878659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!4 &2646378099317674799 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6854221241984062659, guid: a42f00c9bc1f1cd4cb061eab2b0ac37a,

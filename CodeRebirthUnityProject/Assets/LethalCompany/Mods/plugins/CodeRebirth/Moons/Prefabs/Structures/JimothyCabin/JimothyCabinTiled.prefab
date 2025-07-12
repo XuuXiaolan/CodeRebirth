@@ -1998,6 +1998,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8376600036052654355}
   - component: {fileID: 8449984344867353352}
+  - component: {fileID: 9076805850045375300}
   m_Layer: 0
   m_Name: JimothyCabinTiled
   m_TagString: Untagged
@@ -2053,5 +2054,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Size: {x: 10.8, y: 12.85, z: 19.03}
   m_Center: {x: 0, y: 5.9, z: 0}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &9076805850045375300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9184099640214094761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 13, y: 3.5, z: 20}
+  m_Center: {x: 0, y: 12, z: 0}
   m_Area: 1
   m_AffectedAgents: ffffffff

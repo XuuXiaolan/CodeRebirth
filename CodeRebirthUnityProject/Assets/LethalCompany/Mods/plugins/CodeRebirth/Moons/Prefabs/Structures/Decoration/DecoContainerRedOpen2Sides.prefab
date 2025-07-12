@@ -338,6 +338,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5444474708972824092}
+  - component: {fileID: 5652362082410536359}
   m_Layer: 0
   m_Name: DecoContainerRedOpen2Sides
   m_TagString: Catwalk
@@ -365,6 +366,22 @@ Transform:
   - {fileID: 2806496090999306722}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5652362082410536359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4633633695591237459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 4, y: 1, z: 7}
+  m_Center: {x: 0, y: 4.5, z: -0.22}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &5003402127225484502
 GameObject:
   m_ObjectHideFlags: 0
