@@ -429,7 +429,7 @@ Transform:
   m_Children:
   - {fileID: 1311555954130789418}
   m_Father: {fileID: 5144139436110715135}
-  m_LocalEulerAnglesHint: {x: -29.502403, y: 73.82151, z: -25.775291}
+  m_LocalEulerAnglesHint: {x: -29.5024, y: 73.8215, z: -25.775291}
 --- !u!1 &3140746198095748483
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,10 +659,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -797,7 +797,7 @@ Transform:
   m_Children:
   - {fileID: 6941228610954620080}
   m_Father: {fileID: 280548060335895703}
-  m_LocalEulerAnglesHint: {x: 49.912594, y: 158.94214, z: 164.16925}
+  m_LocalEulerAnglesHint: {x: 69.21834, y: -168.96945, z: 169.09372}
 --- !u!1 &4398361549256621889
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,7 +957,7 @@ Transform:
   m_Children:
   - {fileID: 5164000207845810830}
   m_Father: {fileID: 7751999215350315423}
-  m_LocalEulerAnglesHint: {x: -14.908388, y: -62.14116, z: 1.3182034}
+  m_LocalEulerAnglesHint: {x: -29.502403, y: -73.82151, z: 25.775303}
 --- !u!1 &5198431927748574238
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,7 +989,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1148377741165564418}
-  m_LocalEulerAnglesHint: {x: 2.5444512e-14, y: 0.000013660376, z: -3.3744484e-20}
+  m_LocalEulerAnglesHint: {x: 0.00000684509, y: 152.05286, z: -0.0000032010096}
 --- !u!65 &1325213511254234916
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1042,7 +1042,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5634666551054733319}
-  m_LocalEulerAnglesHint: {x: -21.208889, y: -10.783789, z: 41.287678}
+  m_LocalEulerAnglesHint: {x: 0.00000021344516, y: 0.000041834912, z: -0.000004749116}
 --- !u!1 &6150662511227584478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1210,6 +1210,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8729696816876779269}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   _animator: {fileID: 6806764646758187942}
   _networkAnimator: {fileID: 7769677126634797958}
@@ -1443,7 +1455,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6941228610954620080}
-  m_LocalEulerAnglesHint: {x: -8.052341, y: -12.486527, z: 3.2849393}
+  m_LocalEulerAnglesHint: {x: -0.00000021344208, y: -0.00004010068, z: 0.0000038419807}
 --- !u!1 &7514362247795278877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,7 +1487,7 @@ Transform:
   m_Children:
   - {fileID: 5634666551054733319}
   m_Father: {fileID: 280548060335895703}
-  m_LocalEulerAnglesHint: {x: 69.57494, y: -14.270805, z: 20.072115}
+  m_LocalEulerAnglesHint: {x: 69.21834, y: 168.96945, z: -169.09372}
 --- !u!1 &7683040168521116689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1830,7 +1842,7 @@ Transform:
   - {fileID: 7751999215350315423}
   - {fileID: 5144139436110715135}
   m_Father: {fileID: 7045920720276703550}
-  m_LocalEulerAnglesHint: {x: -0.00000060953005, y: 26.305592, z: 0.0000014561448}
+  m_LocalEulerAnglesHint: {x: -4.0711092e-13, y: 0, z: 0}
 --- !u!1 &8729696816876779269
 GameObject:
   m_ObjectHideFlags: 0
