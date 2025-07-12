@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using CodeRebirth.src.Patches;
+﻿using CodeRebirth.src.Patches;
 using UnityEngine;
-using LethalLib.Modules;
 using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib;
 using CodeRebirthLib.AssetManagement;
-using CodeRebirthLib.ConfigManagement;
 using CodeRebirthLib.ContentManagement.MapObjects;
 
 namespace CodeRebirth.src.Content.Maps;
