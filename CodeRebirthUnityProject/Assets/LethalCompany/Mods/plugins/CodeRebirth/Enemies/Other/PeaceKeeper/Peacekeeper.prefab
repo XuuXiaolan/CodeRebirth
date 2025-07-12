@@ -6863,8 +6863,8 @@ MonoBehaviour:
   maxRange: 7
   minRange: 5
   requiresLineOfSight: 1
-  headerText: PeaceKeeper
-  subText: He keeps the peace...
+  headerText: Peacekeeper
+  subText: 
   scrapValue: 0
   creatureScanID: -1
   nodeType: 1
@@ -7325,20 +7325,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   _nodeRemovalPrecision: 5
 --- !u!1 &6761455667277072204
 GameObject:

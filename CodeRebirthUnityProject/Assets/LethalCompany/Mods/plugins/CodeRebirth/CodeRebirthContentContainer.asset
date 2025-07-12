@@ -42,9 +42,10 @@ MonoBehaviour:
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
       defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.16 ; 0.22,0.34
-        ; 0.33,0.66 ; 0.44,1.32 ; 0.56,1.67 ; 0.67,1.73 ; 0.78,1.82 ; 0.89,2.12 ;
-        1.00,2.50 | Custom - 0.00,0.00 ; 0.11,0.16 ; 0.22,0.34 ; 0.33,0.66 ; 0.44,1.32
-        ; 0.56,1.67 ; 0.67,1.73 ; 0.78,1.82 ; 0.89,2.12 ; 1.00,2.50
+        ; 0.33,0.40 ; 0.44,0.63 ; 0.56,1.02 ; 0.67,1.26 ; 0.78,1.41 ; 0.89,1.83 ;
+        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.16 ; 0.22,0.34 ; 0.33,0.40 ; 0.44,0.63
+        ; 0.56,1.02 ; 0.67,1.26 ; 0.78,1.41 ; 0.89,1.83 ; 1.00,3.00 | Oxyde - 0.00,0.00
+        ; 1.00, 0.10
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
   - assetBundleName: autonomouscraneassets
@@ -62,9 +63,9 @@ MonoBehaviour:
       isOutsideHazard: 1
       createOutsideHazardConfig: 0
       defaultOutsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.06 ; 0.22,0.12
-        ; 0.33,0.20 ; 0.44,0.33 ; 0.56,0.54 ; 0.67,0.77 ; 0.78,0.99 ; 0.89,1.06 ;
-        1.00,2.00 | Custom - 0.00,0.00 ; 0.11,0.06 ; 0.22,0.12 ; 0.33,0.20 ; 0.44,0.33
-        ; 0.56,0.54 ; 0.67,0.77 ; 0.78,0.99 ; 0.89,1.06 ; 1.00,2.00 | Oxyde - 0.00,0.00
+        ; 0.33,0.20 ; 0.44,0.33 ; 0.56,0.40 ; 0.74,0.60 ; 0.78,0.89 ; 0.89,1.06 ;
+        1.00,1.75 | Custom - 0.00,0.00 ; 0.11,0.06 ; 0.22,0.12 ; 0.33,0.20 ; 0.44,0.33
+        ; 0.56,0.40 ; 0.74,0.60 ; 0.78,0.89 ; 0.89,1.06 ; 1.00,1.75 | Oxyde - 0.00,0.00
         ; 1.00, 0.10
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
@@ -500,7 +501,7 @@ MonoBehaviour:
       createInsideHazardConfig: 0
       defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.13 ; 0.22,0.17
         ; 0.33,0.20 ; 0.44,0.32 ; 0.56,0.60 ; 0.67,1.15 ; 0.78,2.14 ; 0.89,3.56 ;
-        1.00,5.00 | Custom - 0.00,0.00 ; 0.11,0.13 ; 0.22,0.17 ; 0.33,0.20 ; 0.44,0.32
+        1.00,5.00 | Custom- 0.00,0.00 ; 0.11,0.13 ; 0.22,0.17 ; 0.33,0.20 ; 0.44,0.32
         ; 0.56,0.60 ; 0.67,1.15 ; 0.78,2.14 ; 0.89,3.56 ; 1.00,5.00
       createInsideCurveSpawnWeightsConfig: 1
       isOutsideHazard: 0
@@ -532,10 +533,10 @@ MonoBehaviour:
     - entityName: Laser Turret
       isInsideHazard: 1
       createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29
-        ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ;
-        1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
-        ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.13 ; 0.22,0.17
+        ; 0.33,0.20 ; 0.44,0.32 ; 0.56,0.60 ; 0.67,1.15 ; 0.78,2.14 ; 0.89,3.56 ;
+        1.00,5.00 | Custom- 0.00,0.00 ; 0.11,0.13 ; 0.22,0.17 ; 0.33,0.20 ; 0.44,0.32
+        ; 0.56,0.60 ; 0.67,1.15 ; 0.78,2.14 ; 0.89,3.56 ; 1.00,5.00
       createInsideCurveSpawnWeightsConfig: 1
       isOutsideHazard: 0
       createOutsideHazardConfig: 0
@@ -589,10 +590,10 @@ MonoBehaviour:
     - entityName: Industrial Fan
       isInsideHazard: 1
       createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.09 ; 0.22,0.17
-        ; 0.33,0.28 ; 0.44,0.50 ; 0.56,0.87 ; 0.67,1.35 ; 0.78,1.86 ; 0.89,2.42 ;
-        1.00,3.00 | Custom - 0.00,0.00 ; 0.11,0.09 ; 0.22,0.17 ; 0.33,0.28 ; 0.44,0.50
-        ; 0.56,0.87 ; 0.67,1.35 ; 0.78,1.86 ; 0.89,2.42 ; 1.00,3.00
+      defaultInsideCurveSpawnWeights: Vanilla - 0.00,0.00 ; 0.11,0.13 ; 0.22,0.17
+        ; 0.33,0.20 ; 0.44,0.32 ; 0.56,0.60 ; 0.67,1.15 ; 0.78,2.14 ; 0.89,3.56 ;
+        1.00,5.00 | Custom- 0.00,0.00 ; 0.11,0.13 ; 0.22,0.17 ; 0.33,0.20 ; 0.44,0.32
+        ; 0.56,0.60 ; 0.67,1.15 ; 0.78,2.14 ; 0.89,3.56 ; 1.00,5.00
       createInsideCurveSpawnWeightsConfig: 1
       isOutsideHazard: 0
       createOutsideHazardConfig: 0
@@ -1333,19 +1334,6 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
-    mapObjects: []
-    unlockables: []
-  - assetBundleName: pandoraassets
-    <AlwaysKeepLoaded>k__BackingField: 0
-    configName: Pandora
-    weathers: []
-    enemies:
-    - entityName: Pandora
-      spawnWeights: 
-      weatherMultipliers: 
-      powerLevel: 1
-      maxSpawnCount: 1
-    items: []
     mapObjects: []
     unlockables: []
   - assetBundleName: peacekeeperassets

@@ -77,6 +77,16 @@ public class AutonomousCrane : NetworkBehaviour
     private static readonly int UnpullLeverAnimation = Animator.StringToHash("unpullLever");
     public void Awake()
     {
+        if (Vector3.Distance(this.transform.position, StartOfRound.Instance.shipLandingPosition.position) < 20f)
+        {
+            if (IsServer)
+            {
+                _leverNetworkAnimator.SetTrigger(PullLeverAnimation);
+            }
+            _audioSource.Stop();
+            _craneIsActive = false;
+            _onDeactivateCrane.Invoke();
+        }
         _disableInteract.onInteract.AddListener(DeactivateCraneTrigger);
     }
 

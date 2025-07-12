@@ -394,6 +394,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -785,7 +786,7 @@ MonoBehaviour:
   m_Script: {fileID: -1857289257, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenShakeTarget: {fileID: 0}
+  screenShakeTarget: {fileID: 619334102228878659}
   particleSystems: []
   audioSourceNear: {fileID: 465626752542132410}
   nearAudioClips:

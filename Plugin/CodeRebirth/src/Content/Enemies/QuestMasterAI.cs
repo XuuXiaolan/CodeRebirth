@@ -128,11 +128,12 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        if (!IsHost) return;
         agent.speed = spawnSpeed;
+        SwitchToBehaviourStateOnLocalClient((int)State.Spawning);
+
+        if (!IsServer) return;
 
         StartCoroutine(DoSpawning());
-        SwitchToBehaviourClientRpc((int)State.Spawning);
     }
 
     protected virtual IEnumerator DoSpawning()
@@ -141,7 +142,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         smartAgentNavigator.StartSearchRoutine(40);
         agent.speed = walkSpeed;
         creatureNetworkAnimator.SetTrigger(startWalkAnimation);
-        SwitchToBehaviourClientRpc((int)State.Wandering);
+        SwitchToBehaviourServerRpc((int)State.Wandering);
     }
 
     protected virtual void DoWandering()
@@ -361,7 +362,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         internalQuestTimer = 0f;
         agent.speed = spawnSpeed;
         StartCoroutine(DoSpawning());
-        SwitchToBehaviourClientRpc((int)State.Spawning);
+        SwitchToBehaviourServerRpc((int)State.Spawning);
     }
 
     protected virtual IEnumerator QuestSucceedSequence()

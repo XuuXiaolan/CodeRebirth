@@ -295,19 +295,26 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
-        Destroy(BeamController._monarchParticle?.gameObject);
+        StopAllCoroutines();
+
+        if (BeamController._monarchParticle != null)
+        {
+            Destroy(BeamController._monarchParticle.gameObject);
+        }
         smartAgentNavigator.StopSearchRoutine();
         if (IsServer)
             creatureAnimator.SetBool(IsDeadAnimation, true);
 
         SwitchToBehaviourStateOnLocalClient((int)MonarchState.Death);
-        Monarchs.Remove(this);
+        if (Monarchs.Contains(this))
+            Monarchs.Remove(this);
     }
 
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        if (BeamController != null && BeamController._monarchParticle != null && BeamController._monarchParticle.gameObject != null)
+        StopAllCoroutines();
+        if (BeamController._monarchParticle != null)
         {
             Destroy(BeamController._monarchParticle.gameObject);
         }
@@ -383,12 +390,11 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     {
         Transform start = BeamController._startBeamTransform;
         Transform dir = BeamController._raycastDirectionBeamTransform;
-        RaycastHit hit;
 
         bool didHit = Physics.Raycast(
             start.position,
             dir.forward,
-            out hit,
+            out RaycastHit hit,
             maxRange,
             StartOfRound.Instance.collidersRoomMaskDefaultAndPlayers,
             QueryTriggerInteraction.Ignore

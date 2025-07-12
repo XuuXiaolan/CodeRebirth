@@ -90,13 +90,13 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 		return null;
 	}
 
-    [HideInInspector] public static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
-    [HideInInspector] public static readonly int GrabPlayerAnimation = Animator.StringToHash("GrabPlayer"); // Trigger
-    [HideInInspector] public static readonly int DoAggroAnimation = Animator.StringToHash("DoAggro"); // Trigger
-    [HideInInspector] public static readonly int DriftwoodSmashAnimation = Animator.StringToHash("DriftwoodSmash"); // Trigger
-    [HideInInspector] public static readonly int EatEnemyAnimation = Animator.StringToHash("EatEnemy"); // Trigger
-    [HideInInspector] public static readonly int GrabbedAnimation = Animator.StringToHash("Grabbed"); // Bool
-    [HideInInspector] public static readonly int DeadAnimation = Animator.StringToHash("Dead"); // Bool
+    internal static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    internal static readonly int GrabPlayerAnimation = Animator.StringToHash("GrabPlayer"); // Trigger
+    internal static readonly int DoAggroAnimation = Animator.StringToHash("DoAggro"); // Trigger
+    internal static readonly int DriftwoodSmashAnimation = Animator.StringToHash("DriftwoodSmash"); // Trigger
+    internal static readonly int EatEnemyAnimation = Animator.StringToHash("EatEnemy"); // Trigger
+    internal static readonly int GrabbedAnimation = Animator.StringToHash("Grabbed"); // Bool
+    internal static readonly int DeadAnimation = Animator.StringToHash("Dead"); // Bool
 
     public enum DriftwoodState
     {
@@ -140,7 +140,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         // Plugin.ExtendedLogging($"Awareness: {awarenessLevel}");
-        PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
         if (currentlyGrabbed && targetPlayer != null)
         {
             if (Vector3.Distance(targetPlayer.transform.position, grabArea.transform.position) > 10f)
@@ -161,6 +160,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
+        PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
         if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.isInsideFactory || localPlayer.isInHangarShipRoom) return;
 
         if (EnemyHasLineOfSightToPosition(localPlayer.transform.position, 60f, seeingRange, 5))
@@ -189,7 +189,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.DoAIInterval();
         if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
-        Plugin.ExtendedLogging($"Current Behaviour State: {currentBehaviourStateIndex}");
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
         switch (currentBehaviourStateIndex)
         {
@@ -645,7 +644,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0) continue;
+            if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0 || enemy is DriftwoodMenaceAI) continue;
             if (_enemyTargetBlacklist.Contains(enemy.enemyType))
                 continue;
 

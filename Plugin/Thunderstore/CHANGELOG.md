@@ -1,4 +1,16 @@
-# v1.0.0
+# v1.0.1
+
+- Fixed duck not aggroing on another player.
+- Fixed Driftwood not moving because it would target itself.
+- Fixed some scannode inconsistencies with vanilla.
+- Decreased Crane hazard defaults.
+- Decreased other hazards defaults.
+- Made tornado a bit weaker, it's a bit overwhelming rn even if you arent super close.
+- Fixed a rare monarch error.
+- Crane deactivates fully if its too close to the ship on spawn.
+- Maybe fixed flash turrets not working, someone reported they dont work, they work in dev version so uh maybe its fixed now.
+
+## v1.0.0
 
 - Lots of stuff lol.
 - Dozens of new items with special effects added.

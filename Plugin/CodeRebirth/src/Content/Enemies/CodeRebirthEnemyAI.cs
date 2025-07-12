@@ -160,30 +160,34 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player == null || !player.isPlayerControlled || player.isPlayerDead || player.isInHangarShipRoom || !EnemyHasLineOfSightToPosition(player.transform.position, 60f, range)
+            if (player == null || !player.isPlayerControlled || player.isPlayerDead || player.isInHangarShipRoom || !EnemyHasLineOfSightToPosition(player.transform.position, 60f, range))
                 continue;
 
-            if (CheckIfPersonAlreadyTargetted(targetAlreadyTargettedPerson, player))
+            if (!targetAlreadyTargettedPerson && CheckIfPersonAlreadyTargetted(player))
                 continue;
 
             float distance = Vector3.Distance(transform.position, player.transform.position);
-            bool closer = distance < minDistance;
-            if (!closer) continue;
+            if (distance >= minDistance)
+                continue;
 
             minDistance = distance;
             closestPlayer = player;
         }
-        if (closestPlayer == null) return false;
 
-        targetPlayer = closestPlayer;
+        if (closestPlayer == null)
+            return false;
+
+        SetPlayerTargetServerRpc(closestPlayer);
         return true;
     }
 
-    public bool CheckIfPersonAlreadyTargetted(bool targetAlreadyTargettedPerson, PlayerControllerB playerToCheck)
+    public bool CheckIfPersonAlreadyTargetted(PlayerControllerB playerToCheck)
     {
-        if (!targetAlreadyTargettedPerson) return false;
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
+            if (enemy == this)
+                continue;
+
             if (enemy is CodeRebirthEnemyAI codeRebirthEnemyAI)
             {
                 if (codeRebirthEnemyAI.targetPlayer == playerToCheck)
