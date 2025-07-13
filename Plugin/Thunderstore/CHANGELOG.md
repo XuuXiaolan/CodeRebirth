@@ -1,4 +1,9 @@
-# v1.0.1
+# v1.0.2
+
+- Fixed the 4 main gals' colliders not properly disabling with the disable interact.
+- Fixed Mistress README not having description or image.
+
+## v1.0.1
 
 - Fixed duck not aggroing on another player.
 - Fixed Driftwood not moving because it would target itself.
