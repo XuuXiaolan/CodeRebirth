@@ -11,11 +11,11 @@ public class SnailCatPhysicsProp : GrabbableObject
     public SnailCatAI snailCatScript = null!;
     public PlayerControllerB? previousPlayerHeldBy = null;
 
-    [HideInInspector] public static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
-    [HideInInspector] public static readonly int HitAnimation = Animator.StringToHash("doHit"); // Trigger
-    [HideInInspector] public static readonly int GrabbedAnimation = Animator.StringToHash("grabbed"); // Bool
-    [HideInInspector] public static readonly int SittingAnimation = Animator.StringToHash("sitting"); // Bool
-    [HideInInspector] public static readonly int SleepingAnimation = Animator.StringToHash("sleeping"); // Bool
+    internal static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    internal static readonly int HitAnimation = Animator.StringToHash("doHit"); // Trigger
+    internal static readonly int GrabbedAnimation = Animator.StringToHash("grabbed"); // Bool
+    internal static readonly int SittingAnimation = Animator.StringToHash("sitting"); // Bool
+    internal static readonly int SleepingAnimation = Animator.StringToHash("sleeping"); // Bool
 
     public override void EquipItem()
     {

@@ -1,5 +1,4 @@
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +18,6 @@ public class SnailCatAI : CodeRebirthEnemyAI
 {
     public SnailCatPhysicsProp propScript = null!;
     public ScanNodeProperties scanNodeProperties = null!;
-    public AudioClip[] hitSounds = [];
     public AudioClip enemyDetectSound = null!;
     public AudioClip[] wiwiwiiiSound = [];
 
@@ -286,9 +284,8 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        if (propScript.IsOwner) propScript.ownerNetworkAnimator.SetTrigger(SnailCatPhysicsProp.HitAnimation);
-        // trigger hit animation
-        creatureVoice.PlayOneShot(hitSounds[enemyRandom.Next(hitSounds.Length)]);
+        if (propScript.IsOwner)
+            propScript.ownerNetworkAnimator.SetTrigger(SnailCatPhysicsProp.HitAnimation);
     }
 
     private IEnumerator DropBabyAnimation(Vector3 dropOnPosition)

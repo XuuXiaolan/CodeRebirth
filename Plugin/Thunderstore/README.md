@@ -1,5 +1,7 @@
 # ![He's Doing good](https://i.postimg.cc/VvcrQvDk/Code-Rebirth-Logo.png)
+
 *With everything we've mined... We've dug our own graves. Enraged forces beyond our comprehension...*
+
 ## Welcome to the team miner!⛏️
 
 You've been selected to join Project Rebirth, only the best of the best are selected to partake in this highly prized intergalactic mining operation. So grab your trusty mole digger and get out there!
@@ -70,22 +72,27 @@ Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
 >Access to this information is **AVAILABLE** to all and part of basic company teaching. This class of entities are the backbone of any mining operation and crew. These company units serve a variety of functions, from transportation to defense. Make sure to read all instruction manuals and maintenance of units before acquisition.
 
 ## Jimothy (Transporter)
+
 ![Jim](https://i.postimg.cc/9MJNMm31/Jim-Sighting.png)
 >Strong. Fast. Reliable. Transporter units are known for their ability to move around cargo with ease. This friendly little fellow will move around hazards and crates around throwing a wrench into crewmates plans. He doesn't do this out of malice, he just thinks he's doing a good job.
 
 ## Scrap-E (Janitor)
+
 ![Scrappy](https://i.postimg.cc/bNGFyfmH/Janitor-Sighting.png)
 >Scrap-E's keep the site clean. Armed with strong claws, a body cavity for storage and old trash cans, these robots make quick work of debris. They even clean up scrap off the floor and keep it. If this proves to be an inconvenience, simply ask them nicely, if this fails give them a good whack. Just don't get grabbed. Trash.
 
 ## Nancy
+
 ![Heal](https://i.postimg.cc/fbsHftDB/Nancy-Sighting.png)
 >The backbone of any team, this medical unit will fix your backbone and more. Possessing great medical knowledge and expertise, this robot can suture up any wound with ease. Just make sure to hold still while getting operated on to prevent injuries.
 
 ## Peacekeeper
+
 ![Shredder](https://i.postimg.cc/cLw93Myv/Peace-Keeper-Sighting.jpg)
 >Robust and deadly, do not fret, these big robots are here to keep the peace. Once used during war, now they serve as loyal guardians. They are totally harmless so long as crewmates show no suspicious or aggressive behavior towards others.
 
 ## Guardsman
+
 ![Strikebreaker](https://i.postimg.cc/pVc6MLJL/Guardsman-Sighting-1.jpg)
 >In the event of mass entity activity, a loyal guardsman may be sent down to clear the moons. Armed with giant shoulder cannons, strong claws and a robust frame, these units can tank and crush even the mightiest foes. Truly the pinnacle of war engineering.
 
@@ -101,28 +108,34 @@ Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
 >Access to this information is **AVAILABLE** to all. This class of entities is found naturally inhabiting many moons in the system. Danger level varies highly from entity to entity. Make sure to keep up to date with all information and new research conducted on these entities.
 
 ## Snail Cat
+
 ![Creatura](https://i.postimg.cc/8CbZKpCD/Snail-Cat-Sighting.png)
 >Small docile creature, feline in nature. This curious friend will follow crewmates around and even allow themselves to be picked up. And no, you can't keep them.
 
 ## Cutiefly
+
 ![Cutie](https://i.postimg.cc/DytpmpDV/Cutiefly-Sighting-1.png)
 >Delicate and graceful, these butterflies have wings akin to glass. Be careful not to step on them or to injure them. Help us preserve nature's beauty.
 
 ## Monarch
+
 ![Monarch](https://i.postimg.cc/HxsBFqJM/Monarch.png)
->Nobody knows where they come from, a shattering and then a rumble. King of the skies, wings shimmering bright. strikes with a vengeance of blinding light. 
+>Nobody knows where they come from, a shattering and then a rumble. King of the skies, wings shimmering bright. strikes with a vengeance of blinding light.
 
 ## Redwood Titan
+
 ![Redwood](https://i.postimg.cc/fyyqSGDs/Redwood-Sighting.jpg)
 >Surpassing the trees themselves, towering over the mountains, this titan roams the land in search of food. Stand clear of its path and try not to upset it.
 
 ## Driftwood Menace
+
 ![Driftwood](https://i.postimg.cc/ZqzQssFP/Drift-Wood-Sighting.png)
->Stay away from this creature. Its violence and rage knows no bounds. Its strong arms crush any foes, its scream is deafening. 
+>Stay away from this creature. Its violence and rage knows no bounds. Its strong arms crush any foes, its scream is deafening.
 
 ## Cactus Budling
+
 ![Cactus](https://i.postimg.cc/8cYKRZz6/Cactus-Sighting.png)
->Don't let its cute appearance fool you. This giant, while small compared to its peers, is even more dangerous than the others. Its cactus appendages can reach far and wide to strike its prey. 
+>Don't let its cute appearance fool you. This giant, while small compared to its peers, is even more dangerous than the others. Its cactus appendages can reach far and wide to strike its prey.
 
 </details>
 
@@ -132,19 +145,18 @@ Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
 # Manor [Access Clearance Level: *HIGH*]
 
 ![Manor](https://i.postimg.cc/mrkKQKCM/Enemy-Divier-4.png)
-> Access to this information is **RESTRICTED** to all unqualified personnel. This class of entities is anomalous in nature and poses a high risk to all. They mostly reside within abandoned locales and old living spaces. 
+> Access to this information is **RESTRICTED** to all unqualified personnel. This class of entities is anomalous in nature and poses a high risk to all. They mostly reside within abandoned locales and old living spaces.
 > Any entity found in this classification should be reported to the site director if spotted.
 
 ## Puppeteer (Manor Lord)
+
 ![ManorLord](https://i.postimg.cc/KzZHxKWR/Manor-Lord-Sighting-1.png)
 >Little is known of its origin or motivations. This tall figure is an imposing sight, however it still manages to sneak around unseen. Inhabiting the manor, this entity creates puppets linked to its victims. While not directly deadly, the puppet puts the crewmate in great danger.
 
 ## Magician
+
 ![Magician](https://i.postimg.cc/vT4XZ5tH/Magician-Sightning.png)
 > An old child's doll roaming the halls of the manor. Once it picks a crewmate, do not let anybody else see it.
-
-## Mistress 
-
 
 </details>
 
@@ -159,6 +171,7 @@ Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
 > Any entity found in this classification should be reported to corporate if spotted **IMMEDIATELY**.
 
 ## Duck song
+
 ![Duck](https://i.postimg.cc/W3WXV5rH/Duck-Sighting.png)
 > We don't know where it came from or why its here, but beware of its twisted games.
 
@@ -169,43 +182,53 @@ Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
   <summary><strong>📁 Hazards</strong></summary>
 
 ## Air Control Unit
+
 ![Hazard](https://i.postimg.cc/Y0j0FyNr/Hazard-CR-5.png)
 > An old military anti air cannon repurposed for defensive capabilities. It specializes in anti air and helps keep a clear sky. Essential kit for any mining crew.
 
 ## Bear Traps
+
 ![Hazard](https://i.postimg.cc/KcsRbxFR/Hazard-CR-6.png)
 > Rusty but reliable, these traps snap once stepped on. If caught by one, they can be slowly pried open. Make sure to remember where you set them up. Stay clear of the red ones.
 
 ## Cargo Crane
+
 ![Hazard](https://i.postimg.cc/W46dcZbv/Hazard-CR-2.png)
 > Towering crane specializing in cargo carrying. Its strong frame is the backbone of company shipping. However stand clear of its heavy magnet when in use, less you be pancaked.
 
 ## Industrial Fan
+
 ![Hazard](https://i.postimg.cc/MGkSntqV/image-2025-07-07-072850118.png)
 > Aeration device capable of producing fresh air to poorly ventilated mineshafts. Be cautious around the blades however.
 
 ## Microwave Cart
+
 ![Hazard](https://i.postimg.cc/NMBrK4PF/Hazard-CR-10.png)
 > Experimental mining technology used to weaken and crack rock using microwave radiation. Slowly traversing the halls on an automatic timer, results for this technology have showed great promise.
 
 ## Flash Turret
+
 ![Hazard](https://i.postimg.cc/BvxKZypR/Hazard-CR-8.png)
 > Surveying camera equipped with various photoreceptors and movement detectors. Great for capturing critters and wildlife in action. Say cheese!
 
 ## L.A.S.E.R Mining Rig
+
 ![Hazard](https://i.postimg.cc/L6ngghvt/Hazard-CR-11.png)
 > Experimental mining technology using giant crystal rubies. Its powerful laser melts away rock with ease. 
 
 ## Cacti
+
 ![Hazard](https://i.postimg.cc/FKmKpKbn/Hazard-CR-7.png)
 > Naturally growing cacti with a rigid structure. Grazing these prickly plants causes them to quickly break open, releasing a blast of thorns. The earth blooms and more and more dangerous flora have started appearing...
 
 ## Crates
+
 ![Hazard](https://i.postimg.cc/KzGRGYRg/Hazard-CR-3.png)
 ![Hazard](https://i.postimg.cc/PqkC7yHy/Hazard-CR-1.png)
 > Wooden crates are used to store equipment while metal crates bring back valuables. Every mining crew uses these convenient containers. Pry open wooden crates with any tool but use a key to unlock a safe.
 
 ## Infected Crates
+
 ![Hazard](https://i.postimg.cc/qR1gzd3D/Hazard-CR-4.png)
 ![Hazard](https://i.postimg.cc/nhmsT5yM/Hazard-CR-9.png)
 > Beware of false crates, while visibly identical, listen to their growls. Crimson blight stirs within them. Who knows what else awaits on Haemoglobin's surface...
@@ -252,18 +275,22 @@ Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
   <summary><strong>📁 Scraps</strong></summary>
 
 # Weapons
+
 ![Weapons](https://i.postimg.cc/gj3BrCzn/image-2025-07-10-233811822.jpg)
 > With the appearance of stronger foes, you will need better equipment. Whether its company issued monster mashers or rickety hunks of junk built in a cave with a box of scraps, these are sure to pack a punch.
 
 # Special items
+
 ![Special](https://i.postimg.cc/RFkDSSzk/image-2025-07-10-233840666.jpg)
 > Many items possess special capabilities, most of these are beneficial and can help crewmates in their endeavors. So long as you can find them or cough up a coin or two.
 
 # Ship upgrade unlockers
+
 ![Unlockers](https://i.postimg.cc/Qt9zZBvg/image-2025-07-10-233906116-1.png)
 > Some helpful robots and ship upgrades lay mangled and unusable. They might as well be hunks of junk, less you can find a way to fix them.
 
 # Many More!
+
 Over 30+ lore documents, regular scrap and other references.
 
 </details>
@@ -355,6 +382,7 @@ Over 30+ lore documents, regular scrap and other references.
 </details>
 
 ## Hazard Config Explanation
+
 <details>
   <summary><strong>Hazard Config and tool</strong></summary>
 
@@ -371,8 +399,6 @@ Over 30+ lore documents, regular scrap and other references.
 - Tool for visualising and creating curves easily <https://cosmobrain0.github.io/graph-generation/>.
 
 </details>
-
-
 
 # Credits
 
