@@ -187,7 +187,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled)
+            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
                 continue;
 
             if (Vector3.Distance(transform.position, player.transform.position) > 40)
@@ -336,7 +336,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         distanceToClosestPlayer = -1;
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled) continue;
+            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead()) continue;
             float distance = Vector3.Distance(transform.position, player.transform.position);
             if (distance > 50) continue;
             if (closestPlayer == null || distance < distanceToClosestPlayer)

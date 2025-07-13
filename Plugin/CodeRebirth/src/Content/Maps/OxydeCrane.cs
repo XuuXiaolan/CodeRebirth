@@ -18,6 +18,7 @@ public class OxydeCrane : NetworkBehaviour
 
     private string previousDisabledTriggerMessage = "";
     private bool alreadyDropped = false;
+    private static readonly int StartAnimation = Animator.StringToHash("startAnimation"); // Trigger
     private static readonly int MoveBackAnimation = Animator.StringToHash("MoveBack");
     private static readonly int PullLeverAnimation = Animator.StringToHash("pullLever");
     [HideInInspector] public static OxydeCrane? Instance = null;
@@ -30,6 +31,13 @@ public class OxydeCrane : NetworkBehaviour
         previousDisabledTriggerMessage = CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip;
         CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip = "Ship needs to be un-attached from the magnet.";
         // stop ship lever from being unable to be pulled until ship's already been dropped.
+        StartCoroutine(WaitUntilShipLoads());
+    }
+
+    private IEnumerator WaitUntilShipLoads()
+    {
+        yield return new WaitUntil(() => !StartOfRound.Instance.inShipPhase);
+        craneAnimator.SetTrigger(StartAnimation);
     }
 
     public void Update()

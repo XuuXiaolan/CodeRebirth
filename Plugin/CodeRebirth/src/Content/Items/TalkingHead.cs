@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
 using CodeRebirthLib.Util;
@@ -12,11 +13,14 @@ namespace CodeRebirth.src.Content.Items;
 public class TalkingHead : GrabbableObject
 {
     public Transform playerBone = null!;
+    public Vector3 rotationOffset = new Vector3(90, 0, 0);
+    public Vector3 positionOffset = new Vector3(-2.5f, -2.2f, 0);
     public MeshRenderer meshRenderer = null!;
-    [HideInInspector] public PlayerControllerB? player = null;
+    internal Mistress? mistress = null;
+    internal PlayerControllerB? player = null;
     private bool wasInFactoryLastFrame = false;
 
-    [HideInInspector] public static List<TalkingHead> talkingHeads = new();
+    internal static List<TalkingHead> talkingHeads = new();
 
     public override void OnNetworkSpawn()
     {
@@ -49,17 +53,21 @@ public class TalkingHead : GrabbableObject
             meshRenderer.enabled = false;
         }
 
+        if (mistress != null)
+        {
+            player.inAnimationWithEnemy = mistress;
+        }
         player.thisPlayerModelLOD1.gameObject.SetActive(false);
         player.thisPlayerModelLOD2.gameObject.SetActive(false);
         player.thisPlayerModel.gameObject.SetActive(false);
         player.disableMoveInput = true;
         player.disableInteract = true;
-        Quaternion rotation = transform.rotation;
         if (!isHeld)
         {
-            rotation *= Quaternion.Euler(0, 180, 0);
+            Quaternion rotation = transform.rotation;
+            rotation *= Quaternion.Euler(rotationOffset);
+            player.transform.SetPositionAndRotation(playerBone.position + positionOffset, rotation);
         }
-        player.transform.SetPositionAndRotation(playerBone.position, rotation);
         int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
         if (StartOfRound.Instance.shipIsLeaving || StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 0)
         {
@@ -90,15 +98,16 @@ public class TalkingHead : GrabbableObject
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SyncTalkingHeadServerRpc(PlayerControllerReference playerControllerReference)
+    public void SyncTalkingHeadServerRpc(PlayerControllerReference playerControllerReference, NetworkBehaviourReference networkBehaviourReference)
     {
-        SyncTalkingHeadClientRpc(playerControllerReference);
+        SyncTalkingHeadClientRpc(playerControllerReference, networkBehaviourReference);
     }
 
     [ClientRpc]
-    private void SyncTalkingHeadClientRpc(PlayerControllerReference playerControllerReference)
+    private void SyncTalkingHeadClientRpc(PlayerControllerReference playerControllerReference, NetworkBehaviourReference networkBehaviourReference)
     {
         player = playerControllerReference;
+        mistress = (Mistress)networkBehaviourReference;
         if (GameNetworkManager.Instance.localPlayerController == player)
         {
             meshRenderer.enabled = false;

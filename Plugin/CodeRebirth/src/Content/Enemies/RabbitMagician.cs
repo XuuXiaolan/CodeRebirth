@@ -137,7 +137,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled)
+            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
                 continue;
 
             if (!PlayerLookingAtEnemy(player, 0.2f))
@@ -151,7 +151,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
 
     public void DoAttached()
     {
-        if (targetPlayer == null || targetPlayer.isPlayerDead)
+        if (targetPlayer == null || targetPlayer.isPlayerDead || targetPlayer.IsPseudoDead())
         {
             if (_killRoutine != null)
                 return;
@@ -164,7 +164,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         }
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled)
+            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
                 continue;
 
             if (player == targetPlayer)
@@ -282,7 +282,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         {
             creatureNetworkAnimator.SetTrigger(SpottedFromBackAnimation);
             yield return new WaitForSeconds(8.54f);
-            if (playerToAttachTo.isPlayerDead)
+            if (playerToAttachTo.isPlayerDead || playerToAttachTo.IsPseudoDead())
             {
                 SwitchToBehaviourServerRpc((int)RabbitMagicianState.Attached);
                 SetPlayerTargetServerRpc(playerToAttachTo);
@@ -314,7 +314,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
             yield return new WaitForSeconds(_spottedFromBackAnimation.length - 8.54f);
         }
 
-        if (playerToAttachTo == null || playerToAttachTo.isPlayerDead)
+        if (playerToAttachTo == null || playerToAttachTo.isPlayerDead || playerToAttachTo.IsPseudoDead())
         {
             _idleRoutine = StartCoroutine(SwitchToIdle());
             _attachRoutine = null;
@@ -344,7 +344,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         while (lookedAt)
         {
             yield return new WaitForSeconds(0.25f);
-            if (targetPlayer == null || targetPlayer.isPlayerDead)
+            if (targetPlayer == null || targetPlayer.isPlayerDead || targetPlayer.IsPseudoDead())
             {
                 BackToIdleServerRpc();
                 yield break;

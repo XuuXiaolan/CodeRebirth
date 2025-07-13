@@ -76,7 +76,8 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (!player.isPlayerControlled || player.isPlayerDead) continue;
+            if (!player.isPlayerControlled || player.isPlayerDead)
+                continue;
             CRUtilities.CreateExplosion(player.transform.position, true, 999, 0, 5, 50, null, null, 100f);
         }
         CRUtilities.CreateExplosion(StartOfRound.Instance.shipAnimatorObject.transform.position + Vector3.forward * 3f + Vector3.left * 3f, true, 0, 0, 10, 0, null, null, 0);

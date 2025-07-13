@@ -1,4 +1,14 @@
-# v1.0.2
+# v1.1.0
+
+- Misc changes to mistress.
+  - Uncrouch crouched player.
+  - Mess with head rotations.
+  - Drop entire inventory on grab.
+  - Make head players unable to pick up anything.
+  - Rewrite some of the LOS stuff.
+- Fixed SnailCat name desync between players.
+
+## v1.0.2
 
 - Fixed the 4 main gals' colliders not properly disabling with the disable interact.
 - Added config for snailcat names editing.

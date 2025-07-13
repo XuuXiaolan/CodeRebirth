@@ -194,9 +194,10 @@ public class Mistress : CodeRebirthEnemyAI
         Physics.Raycast(Vector3.zero + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
         if (playerToExecute.isInsideFactory && playerToExecute.IsLocalPlayer())
         {
-            var entrance = CodeRebirthLibNetworker.EntrancePoints.Where(entrance => !entrance.isEntranceToBuilding).FirstOrDefault(); // todo, swap with coderebirthlibnetworker's
+            var entrance = CodeRebirthLibNetworker.EntrancePoints.Where(entrance => !entrance.isEntranceToBuilding).FirstOrDefault();
             entrance?.TeleportPlayer();
         }
+        playerToExecute.DropAllHeldItems();
         if (!IsServer) yield break;
         GameObject GuillotineGO = GameObject.Instantiate(EnemyHandler.Instance.Mistress!.GuillotinePrefab, hit.point, Quaternion.Euler(-90, 0, 0), RoundManager.Instance.mapPropsContainer.transform);
         var netObj = GuillotineGO.GetComponent<NetworkObject>();

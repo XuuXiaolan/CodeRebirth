@@ -83,7 +83,10 @@ public class ScaryShrimp : Shovel
         Plugin.ExtendedLogging($"Hit player {playerIndex} with {playerHp} hp and dead: {isDead}");
 
         PlayerControllerB playerHit = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        if (playerHp - 60 <= 0 || isDead) lastPlayerHeld.itemAudio.PlayOneShot(killClip);
+        if (playerHp - 60 <= 0 || isDead)
+        {
+            lastPlayerHeld.itemAudio.PlayOneShot(killClip);
+        }
         else
         {
             playerHit.drunknessInertia = Mathf.Clamp(playerHit.drunknessInertia + 3f * playerHit.drunknessSpeed, 0.1f, 3f);

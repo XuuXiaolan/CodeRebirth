@@ -375,7 +375,7 @@ public class AutonomousCrane : NetworkBehaviour
 
             if (hittable is PlayerControllerB player)
             {
-                if (player.isPlayerDead || !player.isPlayerControlled || _playerKillList.Contains(player))
+                if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || _playerKillList.Contains(player))
                     continue;
 
                 _playerKillList.Add(player);

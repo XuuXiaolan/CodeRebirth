@@ -49,6 +49,10 @@ public class Guillotine : NetworkBehaviour
     {
         playerToKill = playerControllerReference;
         mistress = (Mistress)mistressNetworkBehaviourReference;
+        if (playerToKill.IsLocalPlayer() && playerToKill.isCrouching)
+        {
+            playerToKill.Crouch(false);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -93,7 +97,8 @@ public class Guillotine : NetworkBehaviour
             GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(talkingHeadItemDef.Item, scrapSpawnTransform.position, false, true, 0);
             TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();
             talkingHeadScript.player = playerToKill;
-            talkingHeadScript.SyncTalkingHeadServerRpc(playerToKill);
+            talkingHeadScript.mistress = mistress;
+            talkingHeadScript.SyncTalkingHeadServerRpc(playerToKill, new NetworkBehaviourReference(mistress));
         }
         playerToKill = null;
     }
