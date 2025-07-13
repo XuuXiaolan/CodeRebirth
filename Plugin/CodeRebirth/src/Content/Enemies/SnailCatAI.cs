@@ -6,6 +6,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.ContentManagement.Items;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -17,7 +18,6 @@ namespace CodeRebirth.src.Content.Enemies;
 public class SnailCatAI : CodeRebirthEnemyAI
 {
     public SnailCatPhysicsProp propScript = null!;
-    public string[] randomizedNames = [];
     public ScanNodeProperties scanNodeProperties = null!;
     public AudioClip[] hitSounds = [];
     public AudioClip enemyDetectSound = null!;
@@ -63,7 +63,13 @@ public class SnailCatAI : CodeRebirthEnemyAI
     {
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
-        string randomName = randomizedNames[enemyRandom.Next(randomizedNames.Length)];
+        List<string> randomizedNames = new();
+        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Real Enemy SnailCat", out CREnemyDefinition? CREnemyDefinition))
+        {
+            randomizedNames = CREnemyDefinition.GetGeneralConfig<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
+        }
+        if (randomizedNames.Count == 0) randomizedNames.Add("Mu");
+        string randomName = randomizedNames[enemyRandom.Next(randomizedNames.Count)];
         float randomScale = enemyRandom.NextFloat(0.75f, 1.25f);
         this.transform.localScale *= randomScale;
         scanNodeProperties.headerText = randomName;

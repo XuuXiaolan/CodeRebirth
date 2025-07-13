@@ -4,6 +4,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigOxydeEnabledFromStart { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
@@ -111,6 +112,10 @@ public class CodeRebirthConfig
                                             "Whether zeekerss' horrible interior fog is removed.");
         #endregion
         #region Oxyde
+        ConfigOxydeEnabledFromStart = configFile.Bind("Oxyde Options",
+                                            "Oxyde | Enabled From Start",
+                                            true,
+                                            "Whether Oxyde is enabled from the very start.");
         ConfigOxydeEnabled = configFile.Bind("Oxyde Options",
                                             "Oxyde | Enabled",
                                             true,

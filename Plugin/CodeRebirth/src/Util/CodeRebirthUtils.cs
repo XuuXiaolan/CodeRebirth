@@ -89,17 +89,21 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         if (extendedLevelNetworkReference.TryGet(out ExtendedLevel? extendedLevel) && extendedLevel != null)
         {
-            CheckWithHostToUnlockOxydeClientRpc(extendedLevelNetworkReference, !extendedLevel.IsRouteLocked);
+            if (Plugin.ModConfig.ConfigOxydeEnabledFromStart.Value)
+            {
+                extendedLevel.IsRouteLocked = false;
+            }
+            CheckWithHostToUnlockOxydeClientRpc(extendedLevelNetworkReference, extendedLevel.IsRouteLocked);
         }
     }
 
     [ClientRpc]
-    private void CheckWithHostToUnlockOxydeClientRpc(NetworkExtendedLevelReference extendedLevelNetworkReference, bool unlockOxyde)
+    private void CheckWithHostToUnlockOxydeClientRpc(NetworkExtendedLevelReference extendedLevelNetworkReference, bool lockOxyde)
     {
         if (extendedLevelNetworkReference.TryGet(out ExtendedLevel? extendedLevel) && extendedLevel != null)
         {
-            extendedLevel.IsRouteLocked = !unlockOxyde;
-            extendedLevel.IsRouteHidden = !unlockOxyde;
+            extendedLevel.IsRouteHidden = lockOxyde;
+            extendedLevel.IsRouteLocked = lockOxyde;
         }
     }
 

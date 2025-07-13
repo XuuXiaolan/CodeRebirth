@@ -1,7 +1,11 @@
 # v1.0.2
 
 - Fixed the 4 main gals' colliders not properly disabling with the disable interact.
-- Fixed Mistress README not having description or image.
+- Fixed Mistress README not having a description (image not there is intended).
+- Added config for snailcat names editing.
+- Bigger range for crane to deactivate and smaller range for crane to despawn.
+- Config added for Oxyde to always be enabled.
+- Fixed Oxyde name to not have the dash in it.
 
 ## v1.0.1
 

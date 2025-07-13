@@ -12,7 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: -1637512502, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: SnailCatEnemyDefinition
   m_EditorClassIdentifier: 
-  _configEntries: []
+  _configEntries:
+  - settingName: SnailCat | Possible SnailCat Names
+    DynamicConfigType: 0
+    defaultString: Florpus; Gnarp; Plink; Greedy; Gaycob; Webley; Baldi; Swayer;
+      Rodigo; Xuwu; St1nky; Snowy; Funo; Lizzie; Pacho; And now, time for the real
+      deal, Solid Stone; Fren; Beanie :SnailCatGreed:; No; Dalice; Smxres; Narpy
+      (Immersion breaking name); Fluff Father; Planet Annihilator; Wiwiwii; Mu; Jimothy;
+      GOLB; Salted Beef; Soup; Pizza Crust; Evil SnailCat; Testy
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 0
+    defaultBoundedRange:
+      <Min>k__BackingField: 0
+      <Max>k__BackingField: 0
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: The different possible names that snailcat can spawn with, please
+      don't empty it, semi-colon separated list. ListSeparator=;
   <EntityNameReference>k__BackingField: Real Enemy SnailCat
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 8550551a5aa69c748aba1f22aa43ecb2,
     type: 2}
