@@ -1,10 +1,22 @@
-# v1.1.1
+# v1.1.2
+
+- Added a new item to the microwave charred list.
+- Added a greg spawn weight config.
+- Adjusted a bunch of enemy weights on dine to be a lot less due to vanilla weights being less.
+- Fixed wallet not working with merchant due to rename.
+- Made it so that other weathers can take over other than nightshift for oxyde (requires a config option to be specifically turned off and other weathers set to oxyde to spawn).
+- Fixed some stuff in relating to vehicle spawning.
+  - Thanks to Scandal for the help in deciphering some cruiser code!
+
+## v1.1.1
 
 - Renamed Wallet to something else for compatibility reasons.
 - Fixed host with oxyde crane animation not working properly.
 - Fixed Oxyde config in terms of not unlocking.
 - Fixed spawn weight configs on CodeRebirthLib's end.
 - Fixed snailcat not being able to be brought into orbit.
+- Fixed Xui desync issues in latejoin between players.
+- Edited some scannodes and some Oxyde layout stuff.
 
 ## v1.1.0
 

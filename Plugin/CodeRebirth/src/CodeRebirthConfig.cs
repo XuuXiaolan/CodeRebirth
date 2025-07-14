@@ -4,6 +4,7 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
+    public ConfigEntry<bool> ConfigOxydeNeedsNightShift { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabledFromStart { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabled { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
@@ -112,14 +113,18 @@ public class CodeRebirthConfig
                                             "Whether zeekerss' horrible interior fog is removed.");
         #endregion
         #region Oxyde
+        ConfigOxydeEnabled = configFile.Bind("Oxyde Options",
+                                            "Oxyde | Enabled",
+                                            true,
+                                            "Whether Oxyde is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, Most of the hazards, Wallet+Coins+Merchant.");
         ConfigOxydeEnabledFromStart = configFile.Bind("Oxyde Options",
                                             "Oxyde | Enabled from Start",
                                             false,
                                             "Whether Oxyde is enabled from the very start.");
-        ConfigOxydeEnabled = configFile.Bind("Oxyde Options",
-                                            "Oxyde | Enabled",
+        ConfigOxydeNeedsNightShift = configFile.Bind("Oxyde Options",
+                                            "Oxyde | Needs Night Shift",
                                             true,
-                                            "Whether Oxyde is enabled, keep in mind enabling this option enables the following parts of this mod automatically.\nThis includes but is not limited to the following: Janitor, Transporter, All the hazards, Wallet+Coins, Merchant.");
+                                            "Whether Oxyde needs night shift (it'll still be forced to Night Shift is the weather is None on non-company days).");
         #endregion
         #region General
         ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",

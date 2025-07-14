@@ -17,7 +17,7 @@ public class WeatherController : MonoBehaviour
     {
         string weatherName = WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant();
         Plugin.ExtendedLogging($"Weather: {weatherName}");
-        if (weatherName == "blackout" || weatherName == "night shift")
+        if (weatherName != "none")
         {
             StartCoroutine(HandleDarkness());
         }

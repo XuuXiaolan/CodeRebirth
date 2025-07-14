@@ -495,6 +495,14 @@ MonoBehaviour:
       isShopItem: 0
       generateShopItemConfig: 0
       cost: 0
+    - entityName: Sapsucker Omelette
+      spawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      cost: 0
     mapObjects:
     - entityName: Functional Microwave
       isInsideHazard: 1
@@ -562,7 +570,7 @@ MonoBehaviour:
         1.00,1.20 | Custom - 0.00,0.00 ; 0.11,0.05 ; 0.22,0.08 ; 0.33,0.09 ; 0.44,0.12
         ; 0.56,0.18 ; 0.67,0.28 ; 0.78,0.46 ; 0.89,0.77 ; 1.00,1.20 | Oxyde - 0.00,0.00
         ; 1.00,0.00
-      createOutsideCurveSpawnWeightsConfig: 0
+      createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
   - assetBundleName: hoverboardassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -606,7 +614,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Janitor
-      spawnWeights: Vanilla:10,Custom:10,Valley:20,Canyon:20,Tundra:10,Marsh:10,Military:40,Rocky:20,Amythest:25,Experimentation:5,Assurance:10,Vow:20,Offense:15,March:25,Adamance:30,Rend:5,Dine:5,Titan:20,Artifice:15,Embrion:2,Oxyde:50
+      spawnWeights: Vanilla:10,Custom:10,Valley:20,Canyon:20,Tundra:10,Marsh:10,Military:40,Rocky:20,Amythest:25,Experimentation:5,Assurance:10,Vow:20,Offense:15,March:25,Adamance:30,Rend:5,Dine:2,Titan:20,Artifice:15,Embrion:2,Oxyde:50
       weatherMultipliers: None:1,DustClouds:1,Rainy:0.75,Stormy:0.75,Foggy:1,Flooded:0.5,Eclipsed:1,Meteor
         Shower:0.8,Tornado:1,Night Shift:2,Snowfall:1,Blizzard:1,Heatwave:0.75,Solar
         Flare:0.75,Toxic Smog:1,Cloudy:1,Blackout:2
@@ -633,7 +641,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Manor Lord
-      spawnWeights: Vanilla:10,Custom:10,Valley:10,Canyon:5,Tundra:30,Marsh:3,Military:5,Rocky:5,Amythest:5,Experimentation:1,Assurance:3,Vow:30,Offense:3,March:3,Adamance:7,Rend:50,Dine:40,Titan:4,Artifice:40,Embrion:0,Oxyde:5
+      spawnWeights: Vanilla:10,Custom:10,Valley:10,Canyon:5,Tundra:30,Marsh:3,Military:5,Rocky:5,Amythest:5,Experimentation:1,Assurance:3,Vow:30,Offense:3,March:3,Adamance:7,Rend:50,Dine:20,Titan:4,Artifice:40,Embrion:0,Oxyde:5
       weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1.25,Flooded:1.25,Eclipsed:1,Meteor
         Shower:0.75,Tornado:1.25,Night Shift:100,Snowfall:1.4,Blizzard:1.4,Heatwave:0.75,Solar
         Flare:0.75,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
@@ -929,7 +937,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Mistress
-      spawnWeights: Vanilla:2,Custom:2,Valley:1,Canyon:2,Tundra:5,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:10,Offense:0,March:1,Adamance:3,Rend:10,Dine:15,Titan:0,Artifice:10,Embrion:0,Oxyde:1
+      spawnWeights: Vanilla:2,Custom:2,Valley:1,Canyon:2,Tundra:5,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:10,Offense:0,March:1,Adamance:3,Rend:20,Dine:5,Titan:0,Artifice:10,Embrion:0,Oxyde:1
       weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:1.4,Foggy:1.2,Flooded:0.5,Eclipsed:0.5,Meteor
         Shower:0.5,Tornado:0.5,Night Shift:100,Snowfall:1.4,Blizzard:1.4,Heatwave:1.2,Solar
         Flare:1,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
@@ -1014,7 +1022,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Nancy
-      spawnWeights: Vanilla:10,Custom:10,Valley:15,Canyon:15,Tundra:10,Marsh:5,Military:20,Rocky:10,Amythest:3,Experimentation:1,Assurance:20,Vow:20,Offense:10,March:10,Adamance:25,Rend:5,Dine:8,Titan:30,Artifice:25,Embrion:1,Oxyde:3
+      spawnWeights: Vanilla:10,Custom:10,Valley:15,Canyon:15,Tundra:10,Marsh:5,Military:20,Rocky:10,Amythest:3,Experimentation:1,Assurance:20,Vow:20,Offense:10,March:10,Adamance:25,Rend:6,Dine:3,Titan:30,Artifice:25,Embrion:1,Oxyde:3
       weatherMultipliers: None:1,DustClouds:0.9,Rainy:0.75,Stormy:0.75,Foggy:0.9,Flooded:0.25,Eclipsed:1,Meteor
         Shower:1,Tornado:1,Night Shift:1.25,Snowfall:0.5,Blizzard:0.5,Heatwave:0.75,Solar
         Flare:0.75,Toxic Smog:1,Cloudy:0.9,Blackout:1.25
@@ -1342,7 +1350,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: PeaceKeeper
-      spawnWeights: Vanilla:8,Custom:10,Valley:5,Canyon:7,Tundra:10,Marsh:2,Military:40,Rocky:10,Amythest:5,Experimentation:0,Assurance:1,Vow:1,Offense:1,March:3,Adamance:15,Rend:20,Dine:25,Titan:30,Artifice:40,Embrion:20,Oxyde:10
+      spawnWeights: Vanilla:8,Custom:10,Valley:5,Canyon:7,Tundra:10,Marsh:2,Military:40,Rocky:10,Amythest:5,Experimentation:0,Assurance:1,Vow:1,Offense:1,March:3,Adamance:15,Rend:20,Dine:8,Titan:30,Artifice:40,Embrion:20,Oxyde:10
       weatherMultipliers: None:1,DustClouds:0.6,Rainy:0.4,Stormy:0.35,Foggy:0.6,Flooded:0.1,Eclipsed:2,Meteor
         Shower:1,Tornado:1,Night Shift:100,Snowfall:1,Blizzard:1,Heatwave:1,Solar
         Flare:1,Toxic Smog:1,Cloudy:1,Blackout:0.7
@@ -1403,7 +1411,7 @@ MonoBehaviour:
     weathers: []
     enemies:
     - entityName: Rabbit Magician
-      spawnWeights: Vanilla:3,Custom:3,Valley:3,Canyon:1,Tundra:8,Marsh:1,Military:5,Rocky:1,Amythest:1,Experimentation:1,Assurance:1,Vow:12,Offense:1,March:1,Adamance:1,Rend:30,Dine:50,Titan:10,Artifice:30,Embrion:1,Oxyde:0
+      spawnWeights: Vanilla:3,Custom:3,Valley:3,Canyon:1,Tundra:8,Marsh:1,Military:5,Rocky:1,Amythest:1,Experimentation:1,Assurance:1,Vow:12,Offense:1,March:1,Adamance:1,Rend:30,Dine:15,Titan:10,Artifice:30,Embrion:1,Oxyde:0
       weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:2,Foggy:1.2,Flooded:0.5,Eclipsed:2,Meteor
         Shower:0.5,Tornado:0.5,Night Shift:1.5,Snowfall:1.5,Blizzard:1.5,Heatwave:0.5,Solar
         Flare:1,Toxic Smog:1,Cloudy:1,Blackout:2

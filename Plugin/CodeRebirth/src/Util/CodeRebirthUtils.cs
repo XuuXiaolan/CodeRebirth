@@ -69,19 +69,18 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         yield return new WaitUntil(() => WeatherRegistry.WeatherManager.IsSetupFinished);
 
-        if (WeatherHandler.Instance.NightShift == null)
-            yield break;
-
         if (TimeOfDay.Instance.daysUntilDeadline <= 0)
         {
             WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, LevelWeatherType.None);
             yield break;
         }
 
+        if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && WeatherRegistry.WeatherManager.GetCurrentWeather(oxydeExtendedLevel.SelectableLevel).name.ToLowerInvariant().Trim() != "none")
+            yield break;
+
         if (!Plugin.Mod.WeatherRegistry().TryGetFromWeatherName("night shift", out CRWeatherDefinition? nightShiftWeatherDefinition))
             yield break;
 
-        Plugin.ExtendedLogging($"Night shift weather: {nightShiftWeatherDefinition.Weather}");
         WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, nightShiftWeatherDefinition.Weather);
     }
 

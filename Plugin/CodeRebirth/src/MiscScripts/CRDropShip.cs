@@ -33,7 +33,7 @@ public class CRDropShip : ItemDropship
             }
             _lastSpawnedVehicle = vehicleGO.GetComponent<VehicleController>();
         }
-        untetheredVehicle = false;
+        untetheredVehicle = true;
         deliveringOrder = true;
         terminalScript.orderedVehicleFromTerminal = -1;
         terminalScript.vehicleInDropship = false;
