@@ -1,4 +1,13 @@
-# v1.1.2
+# v1.1.4
+
+- Renamed wallet again cuz name sucked.
+- Fixed issues with Sapsucker Omelette.
+
+## v1.1.3
+
+- Renamed wallet to avoid problems with bestiary.
+
+## v1.1.2
 
 - Added a new item to the microwave charred list.
 - Added a greg spawn weight config.
