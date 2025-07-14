@@ -1,4 +1,8 @@
-# v1.1.4
+# v1.1.5
+
+- Fixed the mod, blame rodrigo.
+
+## v1.1.4
 
 - Renamed wallet again cuz name sucked.
 - Fixed issues with Sapsucker Omelette.
