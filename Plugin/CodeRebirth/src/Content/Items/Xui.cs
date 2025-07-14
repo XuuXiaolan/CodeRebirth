@@ -14,19 +14,19 @@ public class Xui : GrabbableObject
 
     private AudioSource _audioSource = null!;
     private bool beenUsed = false;
-    private System.Random rand = new();
+    private System.Random xuiRandom = new();
     public override void Start()
     {
         base.Start();
         _audioSource = GetComponent<AudioSource>();
-        rand = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
+        xuiRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
     }
 
     public override void EquipItem()
     {
         base.EquipItem();
-        AudioClip randomSound = _differentPickupAndPocketSounds[rand.Next(_differentPickupAndPocketSounds.Length)];
-        AudioClip randomSound2 = _differentPickupAndPocketSounds[rand.Next(_differentPickupAndPocketSounds.Length)];
+        AudioClip randomSound = _differentPickupAndPocketSounds[xuiRandom.Next(_differentPickupAndPocketSounds.Length)];
+        AudioClip randomSound2 = _differentPickupAndPocketSounds[xuiRandom.Next(_differentPickupAndPocketSounds.Length)];
         this.itemProperties.pocketSFX = randomSound;
         this.itemProperties.grabSFX = randomSound2;
     }
@@ -40,8 +40,8 @@ public class Xui : GrabbableObject
         grabbable = false;
         grabbableToEnemies = false;
         beenUsed = true;
-        AudioClip randomSound = _differentPickupAndPocketSounds[rand.Next(_differentPickupAndPocketSounds.Length)];
-        AudioClip randomSound2 = _differentPickupAndPocketSounds[rand.Next(_differentPickupAndPocketSounds.Length)];
+        AudioClip randomSound = _differentPickupAndPocketSounds[xuiRandom.Next(_differentPickupAndPocketSounds.Length)];
+        AudioClip randomSound2 = _differentPickupAndPocketSounds[xuiRandom.Next(_differentPickupAndPocketSounds.Length)];
         this.itemProperties.pocketSFX = randomSound;
         this.itemProperties.grabSFX = randomSound2;
         _audioSource.PlayOneShot(itemProperties.grabSFX);
@@ -62,6 +62,10 @@ public class Xui : GrabbableObject
     public IEnumerator DoAnimation(float delay)
     {
         if (!IsServer) yield break;
+        if (delay > 5)
+        {
+            delay = 3f;
+        }
         yield return new WaitForSeconds(delay);
         NetworkObject.Despawn();
     }
@@ -69,7 +73,7 @@ public class Xui : GrabbableObject
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        int randomNumber = rand.Next(100);
+        int randomNumber = xuiRandom.Next(100);
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");
         if (randomNumber <= 35)
         {
@@ -89,7 +93,7 @@ public class Xui : GrabbableObject
 
         if (deadPlayers.Count > 0)
         {
-            SCP999GalAI.DoStuffToRevivePlayer(this.transform.position, System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, deadPlayers[rand.Next(deadPlayers.Count)]));
+            SCP999GalAI.DoStuffToRevivePlayer(this.transform.position, System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, deadPlayers[xuiRandom.Next(deadPlayers.Count)]));
         }
         else if (randomNumber <= 70)
         {
