@@ -43,8 +43,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
     internal System.Random CRRandom = new();
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         Instance = this;
         StartCoroutine(HandleEnemyDropRates());
         CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);

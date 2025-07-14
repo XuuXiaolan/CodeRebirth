@@ -44,8 +44,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [HideInInspector]
     public System.Random enemyRandom = new();
 
-    private static int _randomNumberForRandomThings = 0;
-    private NetworkVariable<int> randomNumber = new(_randomNumberForRandomThings, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<int> randomNumber = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private float _previousLightValue = 0f;
     internal DetectLightInSurroundings? detectLightInSurroundings = null;
     internal static int ShiftHash = Shader.PropertyToID("_Shift");
@@ -55,10 +54,13 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     {
         base.Start();
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 6699 + randomNumber.Value);
-        _randomNumberForRandomThings++;
+        if (IsServer)
+        {
+            randomNumber.Value++;
+        }
 
         if (spawnSound != null)
-                creatureVoice.PlayOneShot(spawnSound);
+            creatureVoice.PlayOneShot(spawnSound);
 
         _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
 

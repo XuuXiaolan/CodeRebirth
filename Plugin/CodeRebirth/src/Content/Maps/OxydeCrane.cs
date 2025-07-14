@@ -26,14 +26,19 @@ public class OxydeCrane : NetworkBehaviour
     public void Awake()
     {
         Instance = this;
-        RoundManager.Instance.SpawnOutsideHazards();
         CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = false;
         previousDisabledTriggerMessage = CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip;
         CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip = "Ship needs to be un-attached from the magnet.";
         // stop ship lever from being unable to be pulled until ship's already been dropped.
+        StartCoroutine(SpawnOutsideHazards());
         StartCoroutine(WaitUntilShipLoads());
     }
 
+    private IEnumerator SpawnOutsideHazards()
+    {
+        yield return new WaitUntil(() => RoundManager.Instance.dungeonCompletedGenerating);
+        RoundManager.Instance.SpawnOutsideHazards();
+    }
     private IEnumerator WaitUntilShipLoads()
     {
         yield return new WaitUntil(() => !StartOfRound.Instance.inShipPhase);

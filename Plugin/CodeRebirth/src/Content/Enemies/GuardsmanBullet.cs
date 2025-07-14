@@ -1,5 +1,4 @@
 using CodeRebirth.src.MiscScripts;
-using CodeRebirthLib.Util;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -45,9 +44,11 @@ public class GuardsmanBullet : NetworkBehaviour
 
     private void ResetBullet()
     {
-        this.transform.localPosition = Vector3.zero;
+        if (IsServer)
+            this.transform.localPosition = Vector3.zero;
         _movingDirection = Vector3.zero;
-        GuardsmanTurret.bulletsPool.Add(this);
+        if (IsServer)
+            GuardsmanTurret.bulletsPool.Add(this);
         this.gameObject.SetActive(false);
     }
 }

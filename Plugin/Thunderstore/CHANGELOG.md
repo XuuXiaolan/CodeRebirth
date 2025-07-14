@@ -1,4 +1,10 @@
-# v1.1.0
+# v1.1.1
+
+- Renamed Wallet to something else for compatibility reasons.
+- Fixed host with oxyde crane animation not working properly.
+- Fixed Oxyde config in terms of not unlocking.
+
+## v1.1.0
 
 - Misc changes to mistress.
   - Uncrouch crouched player.
@@ -6,7 +12,7 @@
   - Drop entire inventory on grab.
   - Make head players unable to pick up anything.
   - Rewrite some of the LOS stuff.
-- Fixed SnailCat name desync between players.
+- Probably fixed SnailCat name desync between players. (might've made it worse, not sure, i realised too late the desync comes from late joiners lol)
 
 ## v1.0.2
 
