@@ -3,6 +3,8 @@
 - Renamed Wallet to something else for compatibility reasons.
 - Fixed host with oxyde crane animation not working properly.
 - Fixed Oxyde config in terms of not unlocking.
+- Fixed spawn weight configs on CodeRebirthLib's end.
+- Fixed snailcat not being able to be brought into orbit.
 
 ## v1.1.0
 

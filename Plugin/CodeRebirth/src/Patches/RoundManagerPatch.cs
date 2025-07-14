@@ -5,7 +5,6 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.AI;
 using CodeRebirth.src.Content.Unlockables;
-using CodeRebirthLib.Util;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -56,7 +55,7 @@ static class RoundManagerPatch
     private static void SpawnFlora(GameObject staticBatchedParent, System.Random random, SpawnableFlora flora, ref int spawnCount)
     {
         AnimationCurve animationCurve = flora.spawnCurveFunction(RoundManager.Instance.currentLevel);
-        int targetSpawns = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0, 1)));
+        int targetSpawns = Mathf.FloorToInt(animationCurve.Evaluate(random.NextFloat(0, 1)) + 0.5f);
         for (int i = 0; i < targetSpawns; i++)
         {
             if (!TryGetValidFloraSpawnPoint(random, out RaycastHit hit))

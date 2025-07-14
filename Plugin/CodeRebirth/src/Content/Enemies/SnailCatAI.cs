@@ -335,7 +335,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(this.transform.position))
             return;
 
-        if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Fake Item SnailCat", out CRItemDefinition? fakeSnailCatItemDefinition))
+        if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Fake SnailCat", out CRItemDefinition? fakeSnailCatItemDefinition))
         {
             NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(fakeSnailCatItemDefinition.Item, this.transform.position, false, true, 0);
             FakeSnailCat fakeSnailCat = ((NetworkObject)netObjRef).GetComponent<FakeSnailCat>();

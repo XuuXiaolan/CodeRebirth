@@ -90,8 +90,10 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         if (extendedLevelNetworkReference.TryGet(out ExtendedLevel? extendedLevel) && extendedLevel != null)
         {
+            Plugin.ExtendedLogging($"Extended level is real: {extendedLevel.SelectableLevel}");
             if (Plugin.ModConfig.ConfigOxydeEnabledFromStart.Value)
             {
+                extendedLevel.IsRouteHidden = false;
                 extendedLevel.IsRouteLocked = false;
             }
             CheckWithHostToUnlockOxydeClientRpc(extendedLevelNetworkReference, extendedLevel.IsRouteLocked);

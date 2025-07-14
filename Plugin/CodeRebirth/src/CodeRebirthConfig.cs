@@ -113,8 +113,8 @@ public class CodeRebirthConfig
         #endregion
         #region Oxyde
         ConfigOxydeEnabledFromStart = configFile.Bind("Oxyde Options",
-                                            "Oxyde | Enabled From Start",
-                                            true,
+                                            "Oxyde | Enabled from Start",
+                                            false,
                                             "Whether Oxyde is enabled from the very start.");
         ConfigOxydeEnabled = configFile.Bind("Oxyde Options",
                                             "Oxyde | Enabled",
