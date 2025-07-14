@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -16,7 +18,7 @@ public enum CodeRebirthStatusEffects
     // Add other status effects here
 }
 
-public class CodeRebirthPlayerManager : NetworkBehaviour
+public class CodeRebirthPlayerManager : NetworkSingleton<CodeRebirthPlayerManager>
 {
     private bool previousDoorClosed;
     public static List<InteractTrigger> triggersTampered = new();
@@ -53,6 +55,135 @@ public class CodeRebirthPlayerManager : NetworkBehaviour
             }
             triggersTampered.Clear();
         }
+    }
+
+    public static void RevivePlayer(PlayerControllerB player, Vector3 position)
+    {
+        if(!player.isPlayerDead) return;
+
+        if (Instance.IsHost)
+        {
+            Instance.RevivePlayerClientRPC(player, position);
+        }
+        else
+        {
+            Instance.RevivePlayerServerRPC(player, position);
+        }
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    void RevivePlayerServerRPC(PlayerControllerReference playerRef, Vector3 position)
+    {
+        RevivePlayerClientRPC(playerRef, position);
+    }
+
+    [ClientRpc]
+    void RevivePlayerClientRPC(PlayerControllerReference playerRef, Vector3 position)
+    {
+        PlayerControllerB player = playerRef;
+        player.isInsideFactory = false;
+        player.isInElevator = true;
+        player.isInHangarShipRoom = true;
+        player.ResetPlayerBloodObjects(player.isPlayerDead);
+        player.health = 5;
+        player.isClimbingLadder = false;
+        player.clampLooking = false;
+        player.inVehicleAnimation = false;
+        player.disableMoveInput = false;
+        player.disableLookInput = false;
+        player.disableInteract = false;
+        player.ResetZAndXRotation();
+        player.thisController.enabled = true;
+        if (player.isPlayerDead)
+        {
+            player.thisController.enabled = true;
+            player.isPlayerDead = false;
+            player.isPlayerControlled = true;
+            player.health = 5;
+            player.hasBeenCriticallyInjured = false;
+            player.criticallyInjured = false;
+            player.playerBodyAnimator.SetBool("Limp", value: false);
+            player.TeleportPlayer(position, false, 0f, false, true);
+            player.parentedToElevatorLastFrame = false;
+            player.overrideGameOverSpectatePivot = null;
+            StartOfRound.Instance.SetPlayerObjectExtrapolate(enable: false);
+            player.setPositionOfDeadPlayer = false;
+            player.DisablePlayerModel(player.gameObject, enable: true, disableLocalArms: true);
+            player.helmetLight.enabled = false;
+            player.Crouch(crouch: false);
+            player.playerBodyAnimator?.SetBool("Limp", false);
+            player.bleedingHeavily = false;
+            if (player.deadBody != null)
+            {
+                player.deadBody.enabled = false;
+                player.deadBody.gameObject.SetActive(false);
+            }
+            player.bleedingHeavily = true;
+            player.deadBody = null;
+            player.activatingItem = false;
+            player.twoHanded = false;
+            player.inShockingMinigame = false;
+            player.inSpecialInteractAnimation = false;
+            player.freeRotationInInteractAnimation = false;
+            player.disableSyncInAnimation = false;
+            player.inAnimationWithEnemy = null;
+            player.holdingWalkieTalkie = false;
+            player.speakingToWalkieTalkie = false;
+            player.isSinking = false;
+            player.isUnderwater = false;
+            player.sinkingValue = 0f;
+            player.statusEffectAudio.Stop();
+            player.DisableJetpackControlsLocally();
+            player.mapRadarDotAnimator.SetBool("dead", value: false);
+            player.hasBegunSpectating = false;
+            player.externalForceAutoFade = Vector3.zero;
+            player.hinderedMultiplier = 1f;
+            player.isMovementHindered = 0;
+            player.sourcesCausingSinking = 0;
+            player.reverbPreset = StartOfRound.Instance.shipReverb;
+            SoundManager.Instance.earsRingingTimer = 0f;
+            player.voiceMuffledByEnemy = false;
+            SoundManager.Instance.playerVoicePitchTargets[Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player)] = 1f;
+            SoundManager.Instance.SetPlayerPitch(1f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+
+            if (player.currentVoiceChatIngameSettings == null)
+            {
+                StartOfRound.Instance.RefreshPlayerVoicePlaybackObjects();
+            }
+            if (player.currentVoiceChatIngameSettings != null)
+            {
+                if (player.currentVoiceChatIngameSettings.voiceAudio == null)
+                {
+                    player.currentVoiceChatIngameSettings.InitializeComponents();
+                }
+                if (player.currentVoiceChatIngameSettings.voiceAudio == null)
+                {
+                    return;
+                }
+                player.currentVoiceChatIngameSettings.voiceAudio.GetComponent<OccludeAudio>().overridingLowPass = false;
+            }
+
+            HUDManager.Instance.UpdateBoxesSpectateUI();
+            HUDManager.Instance.UpdateSpectateBoxSpeakerIcons();
+        }
+        if (GameNetworkManager.Instance.localPlayerController == player)
+        {
+            player.bleedingHeavily = false;
+            player.criticallyInjured = false;
+            player.health = 5;
+            HUDManager.Instance.UpdateHealthUI(5, true);
+            player.playerBodyAnimator?.SetBool("Limp", false);
+            player.spectatedPlayerScript = null;
+            StartOfRound.Instance.SetSpectateCameraToGameOverMode(false, player);
+            StartOfRound.Instance.SetPlayerObjectExtrapolate(false);
+            HUDManager.Instance.audioListenerLowPass.enabled = false;
+            HUDManager.Instance.gasHelmetAnimator.SetBool("gasEmitting", false);
+            HUDManager.Instance.RemoveSpectateUI();
+            HUDManager.Instance.gameOverAnimator.SetTrigger("revive");
+        }
+        StartOfRound.Instance.allPlayersDead = false;
+        StartOfRound.Instance.livingPlayers++;
+        StartOfRound.Instance.UpdatePlayerVoiceEffects();
     }
 }
 

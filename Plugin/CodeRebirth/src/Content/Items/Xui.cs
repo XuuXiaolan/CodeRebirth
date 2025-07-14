@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.Extensions;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -73,11 +74,14 @@ public class Xui : GrabbableObject
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+        
+        if(!CodeRebirthPlayerManager.Instance.IsServer) return;
+        
         int randomNumber = xuiRandom.Next(100);
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");
         if (randomNumber <= 35)
         {
-            if (IsServer) RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
             return;
         }
         List<PlayerControllerB> deadPlayers = new();
@@ -93,11 +97,11 @@ public class Xui : GrabbableObject
 
         if (deadPlayers.Count > 0)
         {
-            SCP999GalAI.DoStuffToRevivePlayer(this.transform.position, System.Array.IndexOf(StartOfRound.Instance.allPlayerScripts, deadPlayers[xuiRandom.Next(deadPlayers.Count)]));
+            CodeRebirthPlayerManager.RevivePlayer(xuiRandom.NextItem(deadPlayers), transform.position);
         }
         else if (randomNumber <= 70)
         {
-            if (IsServer) RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
         }
     }
 }
