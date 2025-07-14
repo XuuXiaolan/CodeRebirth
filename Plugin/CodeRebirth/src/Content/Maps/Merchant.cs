@@ -99,7 +99,7 @@ public class Merchant : NetworkBehaviour
             merchantAnimator.SetBool(Activated, true);
             isActive.Value = true;
         }
-        walletTrigger.interactable = GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Wallet";
+        walletTrigger.interactable = GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Coin Wallet";
         foreach (KeyValuePair<GrabbableObject, int> item in itemsSpawned.ToArray())
         {
             if (item.Value == -1) continue;

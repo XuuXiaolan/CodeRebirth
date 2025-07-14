@@ -122,12 +122,11 @@ static class StartOfRoundPatch
             return;
         }
 
-        if (!Plugin.Mod.WeatherRegistry().TryGetFromWeatherName("night shift", out CRWeatherDefinition? nightShiftWeatherDefinition))
+        string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeather(extendedLevel.SelectableLevel).name.ToLowerInvariant().Trim();
+        if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && weatherName != "none")
             return;
 
-        string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeather(extendedLevel.SelectableLevel).name.ToLowerInvariant();
-        Plugin.ExtendedLogging($"Current weather: {weatherName}");
-        if (weatherName.Equals("night shift") || weatherName.Equals("blackout"))
+        if (!Plugin.Mod.WeatherRegistry().TryGetFromWeatherName("night shift", out CRWeatherDefinition? nightShiftWeatherDefinition))
             return;
 
         WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftWeatherDefinition.Weather);

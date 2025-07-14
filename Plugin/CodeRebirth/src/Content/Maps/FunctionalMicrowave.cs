@@ -76,7 +76,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
 
     private Item? ChooseRandomMicrowaveScrap()
     {
-        int result = microwaveRandom.Next(4);
+        int result = microwaveRandom.Next(5);
         var itemRegistry = Plugin.Mod.ItemRegistry();
         if (result == 0)
         {
@@ -92,6 +92,11 @@ public class FunctionalMicrowave : CodeRebirthHazard
         {
             itemRegistry.TryGetFromItemName("Baby", out CRItemDefinition? charredItemDefinition);
             return charredItemDefinition?.Item;
+        }
+        else if (result == 3)
+        {
+            itemRegistry.TryGetFromItemName("Sapsucker Omelette", out CRItemDefinition? normalItemDefinition);
+            return normalItemDefinition?.Item;
         }
         return null;
     }
