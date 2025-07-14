@@ -1,4 +1,9 @@
-# v1.1.5
+# v1.1.6
+
+- Some sort of incompatibility with fairai and cutieflys/monarchs so watch out.
+- Added some null checks tocutiefly.
+
+## v1.1.5
 
 - Fixed the mod, blame rodrigo.
 

@@ -52,7 +52,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     {
         base.KillEnemy(destroy);
         smartAgentNavigator.StopSearchRoutine();
-        if (IsServer) creatureNetworkAnimator.SetTrigger(IsDeadAnimation);
+        if (IsServer && creatureNetworkAnimator !=  null) creatureNetworkAnimator.SetTrigger(IsDeadAnimation);
     }
 
     public void LandCutieflyAnimEvent()
