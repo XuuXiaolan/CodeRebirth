@@ -191,7 +191,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     {
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy == null || enemy.isEnemyDead || enemy is Guardsman)
+            if (enemy == null || enemy.isEnemyDead || enemy is Guardsman || enemy is SandWormAI)
                 continue;
 
             if (_internalEnemyBlacklist.Contains(enemy.enemyType))

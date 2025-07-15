@@ -1,4 +1,9 @@
-# v1.1.6
+# v1.1.7
+
+- Guardsman no longer targets earth leviathan.
+- Fixed dropping rotation of Brrreaker.
+
+## v1.1.6
 
 - Some sort of incompatibility with fairai and cutieflys/monarchs so watch out.
 - Added some null checks tocutiefly.

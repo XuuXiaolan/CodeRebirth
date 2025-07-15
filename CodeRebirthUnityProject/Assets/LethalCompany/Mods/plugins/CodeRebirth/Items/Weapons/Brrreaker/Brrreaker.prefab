@@ -393,6 +393,7 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
   HitForce: 1
   weaponTip: {fileID: 1401333191433680181}
   weaponRange: 0.1
@@ -418,6 +419,9 @@ MonoBehaviour:
   OnSurfaceHit:
     m_PersistentCalls:
       m_Calls: []
+  OnHitSuccess:
+    m_PersistentCalls:
+      m_Calls: []
   HitId: 1
   isHeavyWeapon: 1
   reelingTime: 0.2
@@ -436,11 +440,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3e077a900eadf47479d0a64cf76a3f43, type: 3}
   weaponAudio: {fileID: 1406158027474613143}
   tryHitAllTimes: 1
-  heldOverHeadTimer: 0
-  previousPlayerHeldBy: {fileID: 0}
-  OnHitSuccess:
-    m_PersistentCalls:
-      m_Calls: []
   iceRenderer: {fileID: 8675561301612511079}
   unlatchSounds:
   - {fileID: 8300000, guid: 5c78852394eba0d41b4a214d8bdea374, type: 3}
