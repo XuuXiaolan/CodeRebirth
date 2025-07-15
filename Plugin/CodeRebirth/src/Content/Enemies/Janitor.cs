@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
 using CodeRebirthLib.Util.INetworkSerializables;
@@ -263,8 +264,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         if (_isRotating)
             return;
 
-        HandleMovement();
-
         if (ReachedCurrentCorner())
         {
             if (IsAtFinalCorner())
@@ -275,18 +274,21 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             {
                 BeginRotation();
             }
+            return;
         }
+
+        HandleMovement();
     }
 
     private void DoFollowingPlayer()
     {
-        if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.isPlayerControlled)
+        if (targetPlayer == null || targetPlayer.isPlayerDead || !targetPlayer.isPlayerControlled || targetPlayer.IsPseudoDead())
         {
             ResetChaseAndRevertToIdle();
             return;
         }
 
-        if (_isRotating)
+        if (_isRotating || currentlyGrabbingPlayer)
             return;
 
         if (!IsPathValid())
@@ -295,12 +297,10 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
-
-        HandleMovement();
-
         if (IsPlayerInRange() && !currentlyGrabbingPlayer)
         {
             StartGrabPlayer();
+            return;
         }
         else if (ReachedCurrentCorner())
         {
@@ -312,7 +312,10 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             {
                 BeginRotation();
             }
+            return;
         }
+
+        HandleMovement();
     }
 
     private void DoZoomingOff()
@@ -332,8 +335,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         if (_isRotating)
             return;
 
-        HandleMovement();
-
         if (ReachedCurrentCorner())
         {
             if (IsAtFinalCorner() && !currentlyThrowingPlayer)
@@ -344,7 +345,10 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             {
                 BeginRotation();
             }
+            return;
         }
+
+        HandleMovement();
     }
     #endregion
 
