@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.ContentManagement.Unlockables;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -241,7 +242,7 @@ public class ShockwaveGalAI : GalAI
                 var enemyBlacklist = seamineUnlockableDefinition.GetGeneralConfig<string>("Shockwave Bot | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
                 foreach (var nameEntry in enemyBlacklist)
                 {
-                    enemyTargetBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+                    enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
                 }
             }
             StartUpDelay();

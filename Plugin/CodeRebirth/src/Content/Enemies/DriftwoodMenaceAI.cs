@@ -118,9 +118,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Driftwood", out CREnemyDefinition? driftwoodEnemyDefinition))
         {
             var enemyBlacklist = driftwoodEnemyDefinition.GetGeneralConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
-            foreach (var nameEntry in enemyBlacklist)
+            foreach (var nameEntry in enemyBlacklist.ToList())
             {
-                _enemyTargetBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+                _enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
             }
         }
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Spawn);

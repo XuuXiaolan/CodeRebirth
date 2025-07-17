@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeRebirth.src.Content.Maps;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using GameNetcodeStuff;
@@ -381,6 +383,8 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         if (netObjRef.TryGet(out NetworkObject netObj))
         {
             netObj.transform.up = normal;
+            DestructibleObject destructibleObject = netObj.gameObject.GetComponent<DestructibleObject>();
+            destructibleObject._destroyCactiRoutine = destructibleObject.StartCoroutine(destructibleObject.DestroyObjectWithDelay(enemyRandom.NextFloat(30f, 45f), true));
         }
     }
     #endregion

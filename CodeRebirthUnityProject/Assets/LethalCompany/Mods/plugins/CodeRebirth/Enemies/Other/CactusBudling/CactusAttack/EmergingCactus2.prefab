@@ -5100,6 +5100,8 @@ GameObject:
   - component: {fileID: 7921535333808985979}
   - component: {fileID: 6900432030905747508}
   - component: {fileID: 7776434566633987108}
+  - component: {fileID: 2716741878555815869}
+  - component: {fileID: 8178727602899717787}
   m_Layer: 21
   m_Name: EmergingCactus2
   m_TagString: Untagged
@@ -5141,7 +5143,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2147483639
+    m_Bits: 1073741815
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -5164,7 +5166,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2147483639
+    m_Bits: 1073741815
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -5187,7 +5189,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2147483639
+    m_Bits: 1073741815
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -5238,26 +5240,72 @@ MonoBehaviour:
   m_Script: {fileID: -1017530846, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onRiseComplete:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8546430566792156315}
-        m_TargetAssemblyTypeName: CodeRebirth.src.Content.Maps.DestructibleObject,
-          CodeRebirth
-        m_MethodName: SetDestructible
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  depthToRaise: 2.902
-  raiseSpeed: 6
-  screenShakeOnRise: 0
-  distanceToShake: 7
+  _riseFromDifferentGroundTypes:
+  - groundTag: Gravel
+    onRiseStart:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2716741878555815869}
+          m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.TriggerAnimationUnityEvent,
+            CodeRebirth
+          m_MethodName: TriggerScreenShake
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    onRiseComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8546430566792156315}
+          m_TargetAssemblyTypeName: CodeRebirth.src.Content.Maps.DestructibleObject,
+            CodeRebirth
+          m_MethodName: SetDestructible
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    onGroundStart:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7921535333808985979}
+          m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 593614420329579928}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    onGroundComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    depthToRaise: 2.902
+    raiseSpeed: 6
 --- !u!136 &6113721888330608052
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5425,6 +5473,57 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &2716741878555815869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3917604733094966328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 706588349, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationUnityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8178727602899717787}
+        m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.ScreenShakeTarget,
+          CodeRebirth
+        m_MethodName: ShakeScreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  animationEventParameters:
+    floatParameter: 5
+    intParameter: 0
+    stringParameter: 
+    objectReferenceParameter: {fileID: 0}
+--- !u!114 &8178727602899717787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3917604733094966328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1857289257, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenShakeTarget: {fileID: 0}
+  particleSystems: []
+  audioSourceNear: {fileID: 0}
+  nearAudioClips: []
+  audioSourceFar: {fileID: 0}
+  farAudioClips: []
 --- !u!1 &4811782575482537730
 GameObject:
   m_ObjectHideFlags: 0

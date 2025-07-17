@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3565935444937518052}
   - component: {fileID: 6160766039648882065}
   - component: {fileID: 3291055553321171071}
+  - component: {fileID: 5548359870335774724}
   m_Layer: 0
   m_Name: CodeRebirthUtils
   m_TagString: Untagged
@@ -71,7 +72,6 @@ MonoBehaviour:
   m_Script: {fileID: -1422513921, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExplosionCreator: {fileID: 0}
   WireframeMaterial: {fileID: 2100000, guid: 890cd0d7011a0ce4e8fe0b8ce11f8d83, type: 2}
   SeeThroughShader: {fileID: 4800000, guid: 793acbe0596a2e14481dd68a72d2248c, type: 3}
   TimeSlowVolume: {fileID: 789975294119285480}
@@ -85,30 +85,6 @@ MonoBehaviour:
     type: 2}
   ModifiedShipLeaveAnimation: {fileID: 7400000, guid: 74a9061b128806542851ab7b24162171,
     type: 2}
-  collidersAndRoomAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask: 0
-  collidersAndRoomAndInteractableAndRailingAndTerrainAndHazardAndVehicleMask: 0
-  collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleAndDefaultMask: 0
-  collidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask: 0
-  collidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask: 0
-  collidersAndRoomAndRailingAndInteractableMask: 0
-  collidersAndRoomAndPlayersAndInteractableMask: 0
-  playersAndInteractableAndEnemiesAndPropsHazardMask: 0
-  collidersAndRoomMaskAndDefaultAndEnemies: 0
-  playersAndEnemiesAndHazardMask: 0
-  playersAndRagdollMask: 0
-  propsAndHazardMask: 0
-  terrainAndFoliageMask: 0
-  playersAndEnemiesMask: 0
-  defaultMask: 0
-  propsMask: 0
-  hazardMask: 0
-  enemiesMask: 0
-  interactableMask: 0
-  railingMask: 0
-  terrainMask: 0
-  vehicleMask: 0
-  shipAnimator: {fileID: 0}
-  startMatchLever: {fileID: 0}
 --- !u!114 &3291055553321171071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,6 +95,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -222393523, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5548359870335774724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222572066768883343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -430761741, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3587829296263914092

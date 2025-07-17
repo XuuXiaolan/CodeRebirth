@@ -115,7 +115,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
             var enemyBlacklistArray = CREnemyDefinition.GetGeneralConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklistArray.ToList())
             {
-                _internalEnemyBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)));
+                _internalEnemyBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)));
             }
         }
 

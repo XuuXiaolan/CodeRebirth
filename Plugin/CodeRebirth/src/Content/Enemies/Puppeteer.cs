@@ -378,21 +378,21 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             if (randomNumber < 1)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Jester").FirstOrDefault());
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, VanillaEnemies.AllEnemyTypes.Where(x => x.enemyName == "Jester").FirstOrDefault());
             }
             else if (randomNumber < 20)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Nutcracker").FirstOrDefault());
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, VanillaEnemies.AllEnemyTypes.Where(x => x.enemyName == "Nutcracker").FirstOrDefault());
             }
             else if (randomNumber < 30)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Butler").FirstOrDefault());
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, VanillaEnemies.AllEnemyTypes.Where(x => x.enemyName == "Butler").FirstOrDefault());
             }
             else
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, VanillaEnemies.AllEnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
             }
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, CodeRebirthUtils.EnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, VanillaEnemies.AllEnemyTypes.Where(x => x.enemyName == "Masked").FirstOrDefault());
         }
         yield return new WaitForSeconds(delay);
         if (state == PuppeteerState.Attacking) smartAgentNavigator.StopSearchRoutine();

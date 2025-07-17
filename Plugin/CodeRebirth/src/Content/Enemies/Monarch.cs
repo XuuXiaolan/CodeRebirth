@@ -35,7 +35,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     private GameObject vfxObject = null!;
     private bool canAttack = true;
     private bool isAttacking = false;
-    private Collider[] _cachedHits = new Collider[8];
+    private RaycastHit[] _cachedHits = new RaycastHit[16];
     private bool wasParallaxOnLastFrame = false;
     private ConfigEntry<bool> _parallaxWingConfig = null!;
     private static readonly int DoAttackAnimation = Animator.StringToHash("doAttack"); // trigger
@@ -149,6 +149,15 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         base.Update();
         if (isEnemyDead)
             return;
+
+        if (targetPlayer != null && isAttacking && currentBehaviourStateIndex == (int)MonarchState.AttackingGround)
+        {
+            Vector3 direction = targetPlayer.gameplayCamera.transform.position - transform.position;
+            direction.y = 0;
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+        }
 
         _idleTimer -= Time.deltaTime;
         if (_idleTimer > 0)
@@ -356,8 +365,8 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
 
         float totalDuration = 3f;
         float damageInterval = 0.25f;
-        const float maxRange = 30f;
-        const float followRadius = 5f;
+        const float maxRange = 40f;
+        const float followRadius = 7.5f;
         const float followSmoothing = 5f;
 
         _currentBeamEnd = GetDesiredBeamEnd(maxRange, followRadius);
@@ -466,13 +475,13 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     #region Animation Events
     public void GroundAttackAnimationEvent()
     {
-        int numHits = Physics.OverlapSphereNonAlloc(MouthTransform.position, 1.5f, _cachedHits, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Ignore);
+        int numHits = Physics.SphereCastNonAlloc(MouthTransform.position, 2.5f, this.transform.up, _cachedHits, 1f, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
-            if (!_cachedHits[i].TryGetComponent(out PlayerControllerB player))
+            if (!_cachedHits[i].collider.TryGetComponent(out PlayerControllerB player))
                 continue;
 
-            player.DamagePlayer(35, true, false, CauseOfDeath.Snipped, 7, true, default);
+            player.DamagePlayer(33, true, false, CauseOfDeath.Snipped, 7, true, default);
         }
         creatureSFX.PlayOneShot(_biteSounds[enemyRandom.Next(0, _biteSounds.Length)]);
         targetPlayer = null;

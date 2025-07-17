@@ -53,7 +53,6 @@ public class Plugin : BaseUnityPlugin
                                             false,
                                             "Whether ExtendedLogging is enabled.");
 
-        _harmony.PatchAll(typeof(QuickMenuManagerPatch));
         _harmony.PatchAll(typeof(PlayerControllerBPatch));
         _harmony.PatchAll(typeof(EnemyAIPatch));
         _harmony.PatchAll(typeof(ShovelPatch));

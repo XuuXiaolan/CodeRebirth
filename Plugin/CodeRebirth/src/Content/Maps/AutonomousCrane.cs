@@ -75,9 +75,11 @@ public class AutonomousCrane : NetworkBehaviour
 
     private static readonly int PullLeverAnimation = Animator.StringToHash("pullLever");
     private static readonly int UnpullLeverAnimation = Animator.StringToHash("unpullLever");
-    public void Awake()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         float distanceToShip = Vector3.Distance(this.transform.position, StartOfRound.Instance.shipLandingPosition.position);
+        Plugin.ExtendedLogging($"Distance to ship: {distanceToShip}");
         if (distanceToShip <= 10f)
         {
             if (IsServer)

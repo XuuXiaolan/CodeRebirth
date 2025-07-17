@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HoverboardItemDefinition
   m_EditorClassIdentifier: 
   _configEntries:
-  - settingName: Hoverboard
+  - settingName: Hoverboard | Speed Multiplier
     DynamicConfigType: 2
     defaultString: 
     defaultInt: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Description: Speed multiplier for the hoverboard's movements.
-  - settingName: Hoverboard
+  - settingName: Hoverboard | Charge Increase Multiplier
     DynamicConfigType: 2
     defaultString: 
     defaultInt: 0

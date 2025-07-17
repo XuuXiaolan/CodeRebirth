@@ -12,12 +12,12 @@ using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using CodeRebirth.src.Content.Maps;
 using System.Collections;
-using CodeRebirth.src.Content.Weathers;
 using LethalLevelLoader;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using CodeRebirthLib.ContentManagement.Weathers;
 using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib.ContentManagement.Enemies;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -28,12 +28,10 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public Volume FireyVolume = null!;
     public Volume SmokyVolume = null!;
     public Volume CloseEyeVolume = null!;
-    public Volume StaticCloseEyeVolume = null!;
     public AnimationClip ModifiedShipLandAnimation = null!;
     public AnimationClip ModifiedDangerousShipLeaveAnimation = null!;
     public AnimationClip ModifiedShipLeaveAnimation = null!;
 
-    internal static List<EnemyType> EnemyTypes = new();
     internal ES3Settings SaveSettings;
     internal ShipAnimator shipAnimator = null!;
     internal StartMatchLever startMatchLever = null!;
@@ -47,7 +45,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         Instance = this;
-        StartCoroutine(HandleEnemyDropRates());
+        HandleEnemyDropRates();
         CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
         shipTerminal = FindFirstObjectByType<Terminal>(FindObjectsInactive.Exclude);
@@ -109,20 +107,19 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
     }
 
-    private IEnumerator HandleEnemyDropRates()
+    private void HandleEnemyDropRates()
     {
-        yield return new WaitUntil(() => EnemyTypes.Count > 0);
         if (MapObjectHandler.Instance.Merchant == null)
-            yield break;
+            return;
 
         if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Money", out CRMapObjectDefinition? moneyMapObjectDefinition))
-            yield break;
+            return;
 
         var enemyWithRarityDropRate = moneyMapObjectDefinition.GetGeneralConfig<string>("Money | Enemy Drop Rates").Value.Split(',').Select(s => s.Trim());
         foreach (var enemyWithRarity in enemyWithRarityDropRate)
         {
             var split = enemyWithRarity.Split(':');
-            EnemyType? enemyType = EnemyTypes.Where(et => et.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            EnemyType? enemyType = VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (enemyType == null)
             {
                 Plugin.Logger.LogWarning($"Couldn't find enemy of name '{split[0]}' for the money drop rate config!");
@@ -204,27 +201,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             Plugin.Logger.LogError($"ReactToVehicleCollision with ID {obstacleId} not found!");
         }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SpawnEnemyServerRpc(Vector3 position, string enemyName)
-    {
-        if (position == Vector3.zero)
-        {
-            Plugin.Logger.LogError("Trying to spawn an enemy at Vector3.zero!");
-            return;
-        }
-
-        foreach (EnemyType enemyType in EnemyTypes)
-        {
-            Plugin.ExtendedLogging("Trying to spawn: " + enemyType.enemyName);
-            if (enemyType.enemyName == enemyName)
-            {
-                RoundManager.Instance.SpawnEnemyGameObject(position, -1, 0, enemyType);
-                return;
-            }
-        }
-        Plugin.Logger.LogError($"Couldn't find enemy of name '{enemyName}'!");
     }
 
     private int _indexToSpawn = 0;

@@ -8,6 +8,7 @@ using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.ContentManagement.Unlockables;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -238,7 +239,7 @@ public class SeamineGalAI : GalAI
                 var enemyBlacklist = seamineUnlockableDefinition.GetGeneralConfig<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
                 foreach (var nameEntry in enemyBlacklist)
                 {
-                    enemyTargetBlacklist.UnionWith(CodeRebirthUtils.EnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+                    enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
                 }
             }
             StartUpDelay();

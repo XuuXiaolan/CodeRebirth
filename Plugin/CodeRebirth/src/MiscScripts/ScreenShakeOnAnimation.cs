@@ -12,12 +12,22 @@ public class ScreenShakeOnAnimation : MonoBehaviour
     public void ShakeScreenAnimEvent(AnimationEvent animationEvent)
     {
         Plugin.ExtendedLogging($"ShakeScreenAnimEvent called with AnimationEvent: {animationEvent}");
+        ShakeScreen(animationEvent.floatParameter, animationEvent.intParameter, animationEvent.stringParameter, animationEvent.objectReferenceParameter);
+    }
+
+    public void ShakeScreen(float outwardDistance, int shakeType, string shakeGameObjectName, Object objectReferenceParameter)
+    {
+        DynamicScreenShakeFalloff? dynamicFalloffSO = null;
+        if (objectReferenceParameter is DynamicScreenShakeFalloff shakeFalloff)
+        {
+            dynamicFalloffSO = shakeFalloff;
+        }
         Vector3 shakeStartPosition = this.transform.position;
-        if (!string.IsNullOrEmpty(animationEvent.stringParameter))
+        if (!string.IsNullOrEmpty(shakeGameObjectName))
         {
             foreach (var ScreenShakeTarget in _screenShakeTargets)
             {
-                if (ScreenShakeTarget.screenShakeTarget.name != animationEvent.stringParameter)
+                if (ScreenShakeTarget.screenShakeTarget.name != shakeGameObjectName)
                     continue;
 
                 shakeStartPosition = ScreenShakeTarget.screenShakeTarget.transform.position;
@@ -27,16 +37,6 @@ public class ScreenShakeOnAnimation : MonoBehaviour
             }
         }
 
-        DynamicScreenShakeFalloff? shakeFalloff = null;
-        if (animationEvent.objectReferenceParameter is DynamicScreenShakeFalloff shakeFalloff1)
-        {
-            shakeFalloff = shakeFalloff1;
-        }
-        ShakeScreen(animationEvent.floatParameter, animationEvent.intParameter, shakeStartPosition, shakeFalloff);
-    }
-
-    private void ShakeScreen(float outwardDistance, int shakeType, Vector3 shakeStartPosition, DynamicScreenShakeFalloff? dynamicFalloffSO = null)
-    {
         shakeType = Mathf.Clamp(shakeType, 0, 3);
         float distanceToPlayer = Vector3.Distance(shakeStartPosition, GameNetworkManager.Instance.localPlayerController.transform.position);
         if (outwardDistance == -1 || distanceToPlayer < outwardDistance)

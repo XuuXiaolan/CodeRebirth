@@ -2,6 +2,17 @@
 
 - Guardsman no longer targets earth leviathan.
 - Fixed dropping rotation of Brrreaker.
+- Guardsman blacklist not working for cutiefly fixed?.
+- MeteorShower meteors hitting the top meteor fixed.
+- Extended the monarch's bite hitbox a bit up.
+- Gave the monarch beam more outward range.
+- Disable collision on enemy deaths like monarch, peacekeeper, driftwood, redwood, etc.
+- Fixed cruiser not dealing damage to cacti.
+- Cacti go back to the ground after 30 to 45 seconds (if spawned in).
+- Fixed a despawning issue with cacti.
+- Fixed hoverboard.
+- Got rid of GhostGirl from oxyde.
+- Buffed monarch laser up a bit.
 
 ## v1.1.6
 

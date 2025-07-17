@@ -634,7 +634,6 @@ GameObject:
   - component: {fileID: 6225972248290590245}
   - component: {fileID: 7314892536705987918}
   - component: {fileID: 583417179999914601}
-  - component: {fileID: 5854487359199667049}
   m_Layer: 19
   m_Name: Forearm.R
   m_TagString: Enemy
@@ -697,26 +696,6 @@ MonoBehaviour:
   mainScript: {fileID: 595643781457485384}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
---- !u!114 &5854487359199667049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3226247441481020460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1857289257, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screenShakeTarget: {fileID: 3226247441481020460}
-  particleSystems:
-  - {fileID: 2850705110522820256}
-  audioSourceNear: {fileID: 3610498774584530019}
-  nearAudioClips:
-  - {fileID: 8300000, guid: 82ab417790f2685428082591981d6512, type: 3}
-  audioSourceFar: {fileID: 0}
-  farAudioClips: []
 --- !u!1 &3511196076600514509
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,6 +1010,7 @@ GameObject:
   - component: {fileID: 3316662169070848032}
   - component: {fileID: 8560094686645187079}
   - component: {fileID: 6229482424810426120}
+  - component: {fileID: 4236743864150035401}
   m_Layer: 19
   m_Name: CacatusGiant
   m_TagString: Enemy
@@ -1391,7 +1371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _screenShakeTargets:
-  - {fileID: 5854487359199667049}
+  - {fileID: 4236743864150035401}
 --- !u!114 &6229482424810426120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1405,21 +1385,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   _nodeRemovalPrecision: 5
+--- !u!114 &4236743864150035401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779950444079482818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1857289257, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenShakeTarget: {fileID: 3226247441481020460}
+  particleSystems:
+  - {fileID: 2850705110522820256}
+  audioSourceNear: {fileID: 3610498774584530019}
+  nearAudioClips:
+  - {fileID: 8300000, guid: 82ab417790f2685428082591981d6512, type: 3}
+  audioSourceFar: {fileID: 0}
+  farAudioClips: []
 --- !u!1 &5169185421139817056
 GameObject:
   m_ObjectHideFlags: 0

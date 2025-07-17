@@ -1,10 +1,11 @@
 using System.Collections;
+using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Util.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-
 public class DestructibleObject : NetworkBehaviour, IHittable
 {
     [Header("References")]
@@ -26,6 +27,7 @@ public class DestructibleObject : NetworkBehaviour, IHittable
     private float _forceApplied = 5f;
 
     private bool _isDestructible = false;
+    internal Coroutine? _destroyCactiRoutine = null;
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
@@ -38,10 +40,10 @@ public class DestructibleObject : NetworkBehaviour, IHittable
         if (!_isDestructible)
             return;
 
-        if (other.gameObject.TryGetComponent(out PlayerControllerB player))
+        if (other.gameObject.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             player.DamagePlayer(_playerDamageAmount, true, true, CauseOfDeath.Unknown, 0, false, (player.transform.position - this.transform.position).normalized * _forceApplied);
-            DestroyDestructibleObject();
+            DestroyDestructibleObjectServerRpc();
         }
     }
 
@@ -67,12 +69,9 @@ public class DestructibleObject : NetworkBehaviour, IHittable
         if (!_isDestructible)
             return;
 
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        if (Vector3.Distance(this.transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) <= 1f)
         {
-            if (Vector3.Distance(this.transform.position, player.transform.position) > 1f)
-                continue;
-
-            player.DamagePlayer(5, true, true, CauseOfDeath.Stabbing, 0, false, default);
+            GameNetworkManager.Instance.localPlayerController.DamagePlayer(5, true, true, CauseOfDeath.Stabbing, 0, false, default);
         }
 
         foreach (var collider in colliders)
@@ -95,18 +94,25 @@ public class DestructibleObject : NetworkBehaviour, IHittable
             objectLifeTime = _particleSystems[0].main.duration + 1;
 
         _audioSource.PlayOneShot(_destroySound);
-        Destroy(gameObject, objectLifeTime);
+        if (_destroyCactiRoutine != null)
+        {
+            StopCoroutine(_destroyCactiRoutine);
+        }
+        _destroyCactiRoutine = StartCoroutine(DestroyObjectWithDelay(objectLifeTime, false));
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void DestroyDestructibleObjectServerRpc(float delay)
-    {
-        StartCoroutine(DestroyObjectWithDelay(delay));
-    }
-
-    private IEnumerator DestroyObjectWithDelay(float delay)
+    internal IEnumerator DestroyObjectWithDelay(float delay, bool bringDown)
     {
         yield return new WaitForSeconds(delay);
+        if (bringDown)
+        {
+            RiseFromGroundOnSpawn riseFromGroundOnSpawn = this.GetComponent<RiseFromGroundOnSpawn>();
+            riseFromGroundOnSpawn.enabled = true;
+            yield return new WaitForSeconds(riseFromGroundOnSpawn._timeToTake);
+        }
+        if (!IsServer)
+            yield break;
+
         this.NetworkObject.Despawn();
     }
 }

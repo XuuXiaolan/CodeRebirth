@@ -7472,12 +7472,14 @@ GameObject:
   - component: {fileID: 3884358146667832921}
   - component: {fileID: 676920627382263783}
   - component: {fileID: 7289646667291304479}
-  - component: {fileID: 7373429093498572739}
-  - component: {fileID: 867106333959097909}
   - component: {fileID: 6690824342184625060}
+  - component: {fileID: 7373429093498572739}
   - component: {fileID: 7327991143382998800}
   - component: {fileID: 3924713172246190961}
   - component: {fileID: 4621532624827926749}
+  - component: {fileID: 867106333959097909}
+  - component: {fileID: 4727073445485919373}
+  - component: {fileID: 3301600127249482299}
   m_Layer: 21
   m_Name: EmergingCactus1
   m_TagString: Untagged
@@ -7518,7 +7520,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2147483639
+    m_Bits: 1073741815
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -7541,7 +7543,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2147483639
+    m_Bits: 1073741815
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -7564,7 +7566,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2147483639
+    m_Bits: 1073741815
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -7574,6 +7576,29 @@ CapsuleCollider:
   m_Height: 1.8019545
   m_Direction: 1
   m_Center: {x: 0.73, y: 1.56, z: 0}
+--- !u!136 &6690824342184625060
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6967185636124918851}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Height: 3.9
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.59, z: 0}
 --- !u!114 &7373429093498572739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7602,61 +7627,6 @@ MonoBehaviour:
   _destroySound: {fileID: 8300000, guid: 870979c833c644b4f84779a81a6ddd85, type: 3}
   _playerDamageAmount: 15
   _forceApplied: 5
---- !u!114 &867106333959097909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6967185636124918851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1017530846, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onRiseComplete:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7373429093498572739}
-        m_TargetAssemblyTypeName: CodeRebirth.src.Content.Maps.DestructibleObject,
-          CodeRebirth
-        m_MethodName: SetDestructible
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  depthToRaise: 3.38
-  raiseSpeed: 7
-  screenShakeOnRise: 0
-  distanceToShake: 7
---- !u!136 &6690824342184625060
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6967185636124918851}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.2
-  m_Height: 3.9
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.59, z: 0}
 --- !u!82 &7327991143382998800
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7801,6 +7771,135 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &867106333959097909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6967185636124918851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1017530846, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _riseFromDifferentGroundTypes:
+  - groundTag: Gravel
+    onRiseStart:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3301600127249482299}
+          m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.TriggerAnimationUnityEvent,
+            CodeRebirth
+          m_MethodName: TriggerScreenShake
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    onRiseComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7373429093498572739}
+          m_TargetAssemblyTypeName: CodeRebirth.src.Content.Maps.DestructibleObject,
+            CodeRebirth
+          m_MethodName: SetDestructible
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    onGroundStart:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7327991143382998800}
+          m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7829999779066002039}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    onGroundComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    depthToRaise: 3.38
+    raiseSpeed: 7
+--- !u!114 &4727073445485919373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6967185636124918851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1857289257, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenShakeTarget: {fileID: 6967185636124918851}
+  particleSystems: []
+  audioSourceNear: {fileID: 0}
+  nearAudioClips: []
+  audioSourceFar: {fileID: 0}
+  farAudioClips: []
+--- !u!114 &3301600127249482299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6967185636124918851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 706588349, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationUnityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4727073445485919373}
+        m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.ScreenShakeTarget,
+          CodeRebirth
+        m_MethodName: ShakeScreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  animationEventParameters:
+    floatParameter: 5
+    intParameter: 0
+    stringParameter: 
+    objectReferenceParameter: {fileID: 0}
 --- !u!1 &7593286613273645357
 GameObject:
   m_ObjectHideFlags: 0

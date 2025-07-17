@@ -1091,6 +1091,8 @@ GameObject:
   - component: {fileID: 2207914695726450589}
   - component: {fileID: 2046950288951998730}
   - component: {fileID: 8318799046035530100}
+  - component: {fileID: 6009433061473003191}
+  - component: {fileID: 5043533047119955109}
   m_Layer: 22
   m_Name: ScanNode
   m_TagString: Untagged
@@ -1154,6 +1156,59 @@ MonoBehaviour:
   scrapValue: 0
   creatureScanID: -1
   nodeType: 2
+--- !u!114 &6009433061473003191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146700443233461314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1448563922, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scanNodeProperties: {fileID: 8318799046035530100}
+  _editedScanNodeData:
+    editMinRange: 0
+    minRange: 0
+    editMaxRange: 0
+    maxRange: 0
+    editHeader: 1
+    headerText: Jacobian Core
+    editSubText: 0
+    subText: 
+    editNodeType: 0
+    nodeType: 0
+--- !u!114 &5043533047119955109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146700443233461314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1930892067, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onChance:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6009433061473003191}
+        m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.EditScanNodeProperties,
+          CodeRebirth
+        m_MethodName: EditScanNode
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _chance: 20
 --- !u!1 &5414985630587621555
 GameObject:
   m_ObjectHideFlags: 0

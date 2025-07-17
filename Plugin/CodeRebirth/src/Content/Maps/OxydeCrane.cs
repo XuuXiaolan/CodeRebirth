@@ -41,7 +41,7 @@ public class OxydeCrane : NetworkBehaviour
     }
     private IEnumerator WaitUntilShipLoads()
     {
-        yield return new WaitUntil(() => !StartOfRound.Instance.inShipPhase);
+        yield return new WaitUntil(() => !StartOfRound.Instance.inShipPhase && this.NetworkObject.IsSpawned);
         craneAnimator.SetTrigger(StartAnimation);
     }
 
