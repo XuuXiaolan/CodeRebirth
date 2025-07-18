@@ -1,4 +1,16 @@
-# v1.1.7
+# v1.1.8
+
+- Fixed issues with enemies getting stuck in pipes on oxyde.
+- Fixed Driftwood issues with targetting other enemies and stutter moving and letting go of the player randomly.
+- Potentially fixed issues with scrap-e getting stuck in places.
+- Added extra text to the oxyde tablet.
+- Addressed issues with redwood titan attacking new ForestGiantAI enemies that are bigger, because why? idk.
+- Fixed Crane inconsistencies with killing players.
+- Fixed Crane slight delay between clients and host resulting in clients dying on the hosts end.
+- Finally fixed the sapsucker omelette holding.
+- Potentially fixed an issue with oxyde enemies all bugging out randomly on first quota only???
+
+## v1.1.7
 
 - Guardsman no longer targets earth leviathan.
 - Fixed dropping rotation of Brrreaker.
@@ -13,6 +25,7 @@
 - Fixed hoverboard.
 - Got rid of GhostGirl from oxyde.
 - Buffed monarch laser up a bit.
+- Made training tape slightly shorter.
 
 ## v1.1.6
 

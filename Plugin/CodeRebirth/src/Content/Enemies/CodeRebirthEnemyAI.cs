@@ -8,6 +8,7 @@ using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirthLib.Util.Pathfinding;
 using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
@@ -44,7 +45,6 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [HideInInspector]
     public System.Random enemyRandom = new();
 
-    private NetworkVariable<int> randomNumber = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private float _previousLightValue = 0f;
     internal DetectLightInSurroundings? detectLightInSurroundings = null;
     internal static int ShiftHash = Shader.PropertyToID("_Shift");
@@ -53,11 +53,7 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     public override void Start()
     {
         base.Start();
-        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 6699 + randomNumber.Value);
-        if (IsServer)
-        {
-            randomNumber.Value++;
-        }
+        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 6699 + CodeRebirthUtils.Instance.CRRandom.Next(100000));
 
         if (spawnSound != null)
             creatureVoice.PlayOneShot(spawnSound);

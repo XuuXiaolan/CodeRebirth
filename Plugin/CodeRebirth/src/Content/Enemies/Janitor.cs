@@ -158,7 +158,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     public override void Update()
     {
         base.Update();
-
         if (currentBehaviourStateIndex == (int)JanitorStates.Idle || currentBehaviourStateIndex == (int)JanitorStates.Dead)
         {
             HandleIdleSoundTimer();
@@ -195,7 +194,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     public IEnumerator WaitUntilNotDoingAnythingCurrently(PlayerControllerB playerWhoHit)
     {
         yield return new WaitUntil(() => !currentlyGrabbingScrap && !currentlyGrabbingPlayer && !currentlyThrowingPlayer);
-        yield return null;
         DetectDroppedScrapServerRpc(playerWhoHit.transform.position, playerWhoHit);
     }
     #endregion
@@ -264,6 +262,8 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         if (_isRotating)
             return;
 
+        HandleMovement();
+
         if (ReachedCurrentCorner())
         {
             if (IsAtFinalCorner())
@@ -274,10 +274,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             {
                 BeginRotation();
             }
-            return;
         }
-
-        HandleMovement();
     }
 
     private void DoFollowingPlayer()
@@ -288,7 +285,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
-        if (_isRotating || currentlyGrabbingPlayer)
+        if (_isRotating)
             return;
 
         if (!IsPathValid())
@@ -297,10 +294,11 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
+        HandleMovement();
+
         if (IsPlayerInRange() && !currentlyGrabbingPlayer)
         {
             StartGrabPlayer();
-            return;
         }
         else if (ReachedCurrentCorner())
         {
@@ -312,10 +310,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             {
                 BeginRotation();
             }
-            return;
         }
-
-        HandleMovement();
     }
 
     private void DoZoomingOff()
@@ -335,6 +330,8 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         if (_isRotating)
             return;
 
+        HandleMovement();
+
         if (ReachedCurrentCorner())
         {
             if (IsAtFinalCorner() && !currentlyThrowingPlayer)
@@ -345,10 +342,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             {
                 BeginRotation();
             }
-            return;
         }
-
-        HandleMovement();
     }
     #endregion
 
@@ -463,20 +457,22 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     private void HandleRotation()
     {
         if (_pathCorners.Length == 0)
+        {
+            StopRotating();
             return;
+        }
 
-        Vector3 axis = transform.up;
+        Plugin.ExtendedLogging($"Rotating: Current corner index: {_currentCornerIndex}");
+        Vector3 flatForward = Vector3.ProjectOnPlane(transform.forward, transform.up).normalized;
+        Vector3 flatDirection = Vector3.ProjectOnPlane(GetRotationDirection(), transform.up).normalized;
 
-        Vector3 flatForward = Vector3.ProjectOnPlane(transform.forward,   axis).normalized;
-        Vector3 flatDirection = Vector3.ProjectOnPlane(GetRotationDirection(), axis).normalized;
-
-        float signedAngle = Vector3.SignedAngle(flatForward, flatDirection, axis);
+        float signedAngle = Vector3.SignedAngle(flatForward, flatDirection, transform.up);
 
         bool turningRight = signedAngle > 0f;
 
         float speedMultiplier = sirenLights.activeSelf ? 6 : 1;
         float rotateSpeed = 60f * Time.deltaTime * speedMultiplier * (turningRight ? 1 : -1);
-        transform.Rotate(axis, rotateSpeed, Space.World);
+        transform.Rotate(transform.up, rotateSpeed, Space.World);
 
         creatureAnimator.SetFloat(LeftTreadFloat, turningRight ? 1f : -1f);
         creatureAnimator.SetFloat(RightTreadFloat, turningRight ? -1f : 1f);
@@ -735,7 +731,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         }
     }
 
-    private void CalculateAndSetNewPath(Vector3 targetPosition)
+    internal void CalculateAndSetNewPath(Vector3 targetPosition)
     {
         NavMeshPath path = new();
         agent.CalculatePath(targetPosition, path);

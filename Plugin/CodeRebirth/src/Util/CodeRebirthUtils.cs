@@ -183,6 +183,26 @@ internal class CodeRebirthUtils : NetworkBehaviour
         playerBeingDamaged.KillPlayer(playerBeingDamaged.velocityLastFrame, spawnBody, (CauseOfDeath)causeOfDeathInt, deathAnimationInt, positionOffset);
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void KillEnemyOnOwnerServerRpc(NetworkBehaviourReference networkBehaviourReference, bool overrideDestroy)
+    {
+        KillEnemyOnOwnerClientRpc(networkBehaviourReference, overrideDestroy);
+    }
+
+    [ClientRpc]
+    public void KillEnemyOnOwnerClientRpc(NetworkBehaviourReference networkBehaviourReference, bool overrideDestroy)
+    {
+        EnemyAI enemyBeingKilled = (EnemyAI)networkBehaviourReference;
+        KillEnemyOnOwner(enemyBeingKilled, overrideDestroy);
+    }
+
+    private void KillEnemyOnOwner(EnemyAI enemyAI, bool overrideDestroy)
+    {
+        if (!enemyAI.IsOwner)
+            return;
+
+        enemyAI.KillEnemyOnOwnerClient(overrideDestroy);
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void ReactToVehicleCollisionServerRpc(int obstacleId)

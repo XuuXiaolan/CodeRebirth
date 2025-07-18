@@ -123,6 +123,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 _enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
             }
         }
+
+        foreach (var enemy in _enemyTargetBlacklist)
+        {
+            Plugin.ExtendedLogging($"Enemy Blacklist: {enemy.enemyName}");
+        }
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Spawn);
         StartCoroutine(SpawnAnimationCooldown());
     }
@@ -150,8 +155,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 targetPlayer.inAnimationWithEnemy = null;
                 targetPlayer = null;
                 SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.ChestBang);
-                if (!IsServer) return;
+                if (!IsServer)
+                    return;
+
                 agent.speed = 0f;
+                smartAgentNavigator.StopAgent();
                 StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
                 return;
             }
@@ -243,6 +251,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             smartAgentNavigator.StopSearchRoutine();
             StartCoroutine(ChestBangPause((int)DriftwoodState.RunningToPrey, 20f));
             agent.speed = 0f;
+            smartAgentNavigator.StopAgent();
             SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
         }
     }
@@ -262,6 +271,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             ClearEnemyTargetServerRpc();
             StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
             agent.speed = 0f;
+            smartAgentNavigator.StopAgent();
             SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
             return;
         }
@@ -274,6 +284,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 ClearEnemyTargetServerRpc();
                 StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
                 agent.speed = 0f;
+                smartAgentNavigator.StopAgent();
                 SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
                 return;
             }
@@ -287,6 +298,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 ClearPlayerTargetServerRpc();
                 StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
                 agent.speed = 0f;
+                smartAgentNavigator.StopAgent();
                 SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
                 return;
             }
@@ -302,6 +314,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             ClearEnemyTargetServerRpc();
             StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
             agent.speed = 0f;
+            smartAgentNavigator.StopAgent();
             SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
             return;
         }
@@ -313,6 +326,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             ClearEnemyTargetServerRpc();
             StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
             agent.speed = 0f;
+            smartAgentNavigator.StopAgent();
             SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
             return;
         }
@@ -415,6 +429,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.ChestBang);
         if (!IsServer) return;
         agent.speed = 0f;
+        smartAgentNavigator.StopAgent();
         StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
     }
 
@@ -423,13 +438,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         if (targetPlayer == null)
         {
             Plugin.Logger.LogError("No player to smash onto the ground, This is a bug, please report this");
-            return;
-        }
-
-        if (Vector3.Distance(targetPlayer.transform.position, grabArea.transform.position) > 10f)
-        {
-            // If the target player is too far away or null, we can't grab them.
-            Plugin.ExtendedLogging("Target player is too far away or null, cannot grab.");
             return;
         }
         targetPlayer.DamagePlayer(5, true, true, CauseOfDeath.Gravity, 0, false, default);
@@ -480,6 +488,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 }
                 enemyPositionBeforeDeath = targetEnemy.transform.position;
                 agent.speed = 0f;
+                smartAgentNavigator.StopAgent();
                 SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.EatingPrey);
                 targetEnemy = null;
                 if (!IsServer) return;
@@ -704,28 +713,39 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy)
     {
-        if (isEnemyDead || targetEnemy == null) return;
+        if (isEnemyDead || targetEnemy == null)
+            return;
+
         if (collidedEnemy == targetEnemy)
         {
             SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SmashingPrey);
-            if (!IsServer) return;
+            if (!IsServer)
+                return;
+
             agent.speed = 0f;
+            smartAgentNavigator.StopAgent();
         }
     }
 
     public override void OnCollideWithPlayer(Collider other)
     {
-        if (isEnemyDead) return;
+        if (isEnemyDead)
+            return;
 
         PlayerControllerB? collidedPlayer = other.GetComponent<PlayerControllerB>();
-        if (collidedPlayer == null) return;
+        if (collidedPlayer == null)
+            return;
+
         awarenessLevel += 10f;
 
         if (collidedPlayer == targetPlayer && currentBehaviourStateIndex == (int)DriftwoodState.RunningToPrey)
         {
             SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.PlayingWithPrey);
-            if (!IsServer) return;
+            if (!IsServer)
+                return;
+
             agent.speed = 0f;
+            smartAgentNavigator.StopAgent();
             creatureNetworkAnimator.SetTrigger(GrabPlayerAnimation);
         }
     }
@@ -736,14 +756,15 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         if (isEnemyDead) return;
 
         enemyHP -= force;
-        Plugin.ExtendedLogging("Enemy HP: " + enemyHP);
-        if (IsOwner && enemyHP <= 0)
+        if (enemyHP <= 0)
         {
-            KillEnemyOnOwnerClient();
+            if (IsOwner)
+            {
+                KillEnemyOnOwnerClient();
+            }
             return;
         }
 
-        if (enemyHP <= 0 || isEnemyDead) return;
 
         if (IsServer && force == 6 && currentBehaviourStateIndex != (int)DriftwoodState.RunningAway)
         {
@@ -757,6 +778,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 StartCoroutine(ChestBangPause((int)DriftwoodState.RunningToPrey, 20f));
                 agent.speed = 0f;
+                smartAgentNavigator.StopAgent();
                 SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
             }
         }

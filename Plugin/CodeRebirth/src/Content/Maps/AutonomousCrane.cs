@@ -80,26 +80,22 @@ public class AutonomousCrane : NetworkBehaviour
         base.OnNetworkSpawn();
         float distanceToShip = Vector3.Distance(this.transform.position, StartOfRound.Instance.shipLandingPosition.position);
         Plugin.ExtendedLogging($"Distance to ship: {distanceToShip}");
-        if (distanceToShip <= 10f)
+        if (distanceToShip <= 20f)
         {
             if (IsServer)
             {
-                NetworkObject.Despawn(true);
+                _craneIsActive = false;
+                StartCoroutine(DiscardAfterABit());
             }
-            return;
-        }
-        else if (distanceToShip <= 25f)
-        {
-            if (IsServer)
-            {
-                _leverNetworkAnimator.SetTrigger(PullLeverAnimation);
-            }
-            _audioSource.Stop();
-            _craneIsActive = false;
-            _onDeactivateCrane.Invoke();
             return;
         }
         _disableInteract.onInteract.AddListener(DeactivateCraneTrigger);
+    }
+
+    private IEnumerator DiscardAfterABit()
+    {
+        yield return new WaitForSeconds(0.1f);
+        NetworkObject.Despawn(true);
     }
 
     private void DeactivateCraneTrigger(PlayerControllerB player)
@@ -337,13 +333,64 @@ public class AutonomousCrane : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void CraneHitBottomServerRpc(Vector3 magnetTargetPosition)
     {
-        CraneHitBottomClientRpc(magnetTargetPosition);
+        _playerKillList.Clear();
+        _enemyKillList.Clear();
+        int numHits = Physics.OverlapSphereNonAlloc(magnetTargetPosition, 5f * this.transform.localScale.x, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < numHits; i++)
+        {
+            Collider collider = _cachedColliders[i];
+            Plugin.ExtendedLogging($"Collider: {collider.name}");
+            if (!collider.TryGetComponent(out IHittable hittable))
+                continue;
+
+            if (hittable is PlayerControllerB player)
+            {
+                if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || _playerKillList.Contains(player))
+                    continue;
+
+                if (Physics.Linecast(magnetTargetPosition, collider.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+                    continue;
+
+                _playerKillList.Add(player);
+                if (IsServer && Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
+                {
+                    NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);
+                    if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
+                    {
+                        flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName = player;
+                    }
+                }
+
+                Plugin.ExtendedLogging($"Killing player through crane");
+            }
+            else if (hittable is EnemyAICollisionDetect enemy)
+            {
+                if (_enemyKillList.Contains(enemy.mainScript))
+                    continue;
+
+                _enemyKillList.Add(enemy.mainScript);
+            }
+            else
+            {
+                hittable.Hit(99, magnetTargetPosition, null, true, -1);
+            }
+        }
+        foreach (PlayerControllerB player in _playerKillList)
+        {
+            CodeRebirthUtils.Instance.KillPlayerOnOwnerClientRpc(player, false, 0, 0, Vector3.zero);
+        }
+        foreach (EnemyAI enemy in _enemyKillList)
+        {
+            CodeRebirthUtils.Instance.KillEnemyOnOwnerClientRpc(new NetworkBehaviourReference(enemy), false);
+        }
+        CraneHitBottomResultsClientRpc(magnetTargetPosition);
     }
 
     private List<PlayerControllerB> _playerKillList = new();
+    private List<EnemyAI> _enemyKillList = new();
 
     [ClientRpc]
-    private void CraneHitBottomClientRpc(Vector3 magnetTargetPosition)
+    private void CraneHitBottomResultsClientRpc(Vector3 magnetTargetPosition)
     {
         float distanceToLocalPlayer = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, magnetTargetPosition);
         if (distanceToLocalPlayer >= 40 && distanceToLocalPlayer < 60)
@@ -361,52 +408,6 @@ public class AutonomousCrane : NetworkBehaviour
         else if (distanceToLocalPlayer <= 10)
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-        }
-
-        _playerKillList.Clear();
-        int numHits = Physics.OverlapSphereNonAlloc(magnetTargetPosition, 5f * this.transform.localScale.x, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
-        for (int i = 0; i < numHits; i++)
-        {
-            Collider collider = _cachedColliders[i];
-            Plugin.ExtendedLogging($"Collider: {collider.name}");
-            if (!collider.TryGetComponent(out IHittable hittable))
-                continue;
-
-            if (Physics.Linecast(magnetTargetPosition, collider.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-                continue;
-
-            if (hittable is PlayerControllerB player)
-            {
-                if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || _playerKillList.Contains(player))
-                    continue;
-
-                _playerKillList.Add(player);
-                if (IsServer && Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
-                {
-                    NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);
-                    if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
-                    {
-                        flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName = player;
-                    }
-                }
-
-                Plugin.ExtendedLogging($"Killing player through crane");
-                player.KillPlayer(player.velocityLastFrame, false, CauseOfDeath.Crushing, 0, default);
-            }
-            else if (hittable is EnemyAICollisionDetect enemy)
-            {
-                if (!enemy.mainScript.IsOwner)
-                    continue;
-
-                enemy.mainScript.KillEnemyOnOwnerClient();
-            }
-            else
-            {
-                if (!NetworkManager.Singleton.IsServer)
-                    continue;
-
-                hittable.Hit(99, magnetTargetPosition, null, true, -1);
-            }
         }
 
         _audioSource.clip = null;

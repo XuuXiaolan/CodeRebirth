@@ -36,9 +36,10 @@ public class OxydeCrane : NetworkBehaviour
 
     private IEnumerator SpawnOutsideHazards()
     {
-        yield return new WaitUntil(() => RoundManager.Instance.dungeonCompletedGenerating);
+        yield return new WaitUntil(() => RoundManager.Instance.dungeonCompletedGenerating && RoundManager.Instance.mapPropsContainer != null);
         RoundManager.Instance.SpawnOutsideHazards();
     }
+
     private IEnumerator WaitUntilShipLoads()
     {
         yield return new WaitUntil(() => !StartOfRound.Instance.inShipPhase && this.NetworkObject.IsSpawned);
@@ -47,6 +48,7 @@ public class OxydeCrane : NetworkBehaviour
 
     public void Update()
     {
+        RoundManager.Instance.currentDungeonType = -1;
         CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = !dropButton.interactable;
     }
 
