@@ -12,7 +12,88 @@ MonoBehaviour:
   m_Script: {fileID: 1096989729, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: WoodenCrateMapObjectDefinition
   m_EditorClassIdentifier: 
-  _configEntries: []
+  _configEntries:
+  - settingName: Wooden Crate | Health
+    DynamicConfigType: 4
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 3
+      <Max>k__BackingField: 5
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Health of the Wooden Crate (includes Wooden Mimic crate).
+  - settingName: Wooden Crate | Shovellin
+    DynamicConfigType: 3
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 12.5
+      <Max>k__BackingField: 15
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Only Shovels can damage Wooden Crates.
+  - settingName: Wooden Crate | Blacklist
+    DynamicConfigType: 0
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 12.5
+      <Max>k__BackingField: 15
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Timer for how long opening the metal crate takes.
+  - settingName: Wooden Crate | Blacklist Or Whitelist
+    DynamicConfigType: 3
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 12.5
+      <Max>k__BackingField: 15
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Whether Wooden Crate's blacklist config is a blacklist (ticked)
+      or whitelist (unticked).
+  - settingName: Wooden Crate | Scrap Spawn Number
+    DynamicConfigType: 4
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 2
+      <Max>k__BackingField: 4
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: The range amount of Scrap that the Wooden Crate is allowed to spawn.
   <EntityNameReference>k__BackingField: Normal Wooden Crate
   <GameObject>k__BackingField: {fileID: 7952619480326014836, guid: 19586e5766c295043b07cfa9e2d1937b,
     type: 3}

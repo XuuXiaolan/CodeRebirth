@@ -12,7 +12,89 @@ MonoBehaviour:
   m_Script: {fileID: 1096989729, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
   m_Name: MetalCrateMapObjectDefinition
   m_EditorClassIdentifier: 
-  _configEntries: []
+  _configEntries:
+  - settingName: Metal Safe | Scrap Spawn Number
+    DynamicConfigType: 4
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 2
+      <Max>k__BackingField: 4
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: The range amount of Scrap that the Metal Safe is allowed to spawn.
+  - settingName: Metal Safe | Shovellin
+    DynamicConfigType: 3
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 12.5
+      <Max>k__BackingField: 15
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Only Shovels can damage Metal Safes.
+  - settingName: Metal Safe | Hold Timer
+    DynamicConfigType: 4
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 12.5
+      <Max>k__BackingField: 15
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Timer for how long opening the metal crate takes.
+  - settingName: Metal Safe | Blacklist
+    DynamicConfigType: 0
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 12.5
+      <Max>k__BackingField: 15
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Blacklist of items that can spawn from Metal Safes (comma separated,
+      recommend leaving empty).
+  - settingName: Metal Safe | Blacklist Or Whitelist
+    DynamicConfigType: 3
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 0
+      <Max>k__BackingField: 0
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Whether Metal Safe's blacklist config is a blacklist (ticked) or
+      whitelist (unticked).
   <EntityNameReference>k__BackingField: Normal Metal Crate
   <GameObject>k__BackingField: {fileID: 2083264772084459009, guid: 1f50dff2d9fa99043aaee09390b48219,
     type: 3}

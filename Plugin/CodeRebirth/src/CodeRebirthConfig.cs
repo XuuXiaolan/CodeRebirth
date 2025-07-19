@@ -54,17 +54,10 @@ public class CodeRebirthConfig
     public ConfigEntry<bool> ConfigCruiserGalAutomatic { get; private set; }
     public ConfigEntry<bool> ConfigTerminalBotAutomatic { get; private set; }
     public ConfigEntry<int> ConfigWoodenSeedTreeSpawnChance { get; private set; }
-    public ConfigEntry<bool> ConfigWoodenCrateIsWhitelist { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveBotAutomatic { get; private set; }
     public ConfigEntry<float> ConfigShockwaveBotPropellerVolume { get; private set; }
     public ConfigEntry<bool> ConfigShockwaveHoldsFourItems { get; private set; }
     public ConfigEntry<int> ConfigShockwaveCharges { get; private set; }
-    public ConfigEntry<int> ConfigWoodenCrateHealth { get; private set; }
-    public ConfigEntry<float> ConfigMetalHoldTimer { get; private set; }
-    public ConfigEntry<int> ConfigCrateNumberToSpawn { get; private set; }
-    public ConfigEntry<string> ConfigWoodenCratesBlacklist { get; private set; }
-    public ConfigEntry<string> ConfigMetalCratesBlacklist { get; private set; }
-    public ConfigEntry<bool> ConfigShovelCratesOnly { get; private set; }
     public ConfigEntry<bool> ConfigAllowPowerLevelChangesFromWeather { get; private set; }
     public ConfigEntry<bool> ConfigExtendedLogging { get; set; }
     public ConfigEntry<string> ConfigFloraGrassCurveSpawnWeight { get; set; }
@@ -489,36 +482,6 @@ public class CodeRebirthConfig
                                             "Snow Globe | Music",
                                             true,
                                             "Enables/Disables the music in the snow globe.");
-        #endregion
-        #region ItemCrate
-        ConfigCrateNumberToSpawn = configFile.Bind("Crate Options",
-                                            "Crate | Scrap Number To Spawn",
-                                            3,
-                                            "Number of items that spawn inside a crate (between 0 and your number).");
-        ConfigWoodenCrateHealth = configFile.Bind("Crate Options",
-                                            "Crate | Wooden Crate Health",
-                                            4,
-                                            "Hits to open Wooden crate");
-        ConfigMetalHoldTimer = configFile.Bind("Crate Options",
-                                            "Crate | Metal Hold Timer",
-                                            15f,
-                                            "Timer to open Metal crate");
-        ConfigWoodenCratesBlacklist = configFile.Bind("Crate Options",
-                                            "Crate | Wooden Blacklist",
-                                            "",
-                                            "Blacklist of Items that can spawn from wooden crates (comma separated, recommend leaving empty, CAN become a whitelist).");
-        ConfigWoodenCrateIsWhitelist = configFile.Bind("Crate Options",
-                                            "Crate | Wooden Crate Is Whitelist",
-                                            false,
-                                            "If true, Wooden Crates will spawn using a whitelist which CAN include both shop and non shop items, if false, they will spawn from shop items pool with the blacklist.");
-        ConfigMetalCratesBlacklist = configFile.Bind("Crate Options",
-                                            "Crate | Metal Blacklist",
-                                            "",
-                                            "Blacklist of Items that can spawn from metal crates (comma separated, recommend leaving empty).");
-        ConfigShovelCratesOnly = configFile.Bind("Crate Options",
-                                            "Crate | Shovel Crates Only",
-                                            true,
-                                            "Only Shovels can hit Crates.");
         #endregion
     }
 }

@@ -333,7 +333,6 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         enemyHP -= force;
-        creatureVoice.PlayOneShot(_hitBodySounds[enemyRandom.Next(_hitBodySounds.Length)]);
         if (IsServer && currentBehaviourStateIndex != (int)PuppeteerState.Attacking) creatureNetworkAnimator.SetTrigger(DoHitAnimation);
         if (enemyHP <= 0 && !isEnemyDead)
         {

@@ -10,6 +10,8 @@ using UnityEngine;
 using System;
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirthLib.ContentManagement.MapObjects;
+using CodeRebirthLib.Data;
 
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable
@@ -45,10 +47,19 @@ public class ItemCrate : CRHittable
     public GrabAndLaunchPlayer? grabAndLaunchPlayerScript = null;
 
     private bool openedOnce = false;
+    private CRMapObjectDefinition crateDefinitionForConfigs = null!;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        if (crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic)
+        {
+            Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Normal Wooden Crate", out crateDefinitionForConfigs!);
+        }
+        else
+        {
+            Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Normal Metal Crate", out crateDefinitionForConfigs!);
+        }
         Transporter.objectsToTransport.Add(gameObject);
     }
 
@@ -63,16 +74,21 @@ public class ItemCrate : CRHittable
         if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = false;
         if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = false;
         crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
-        health = Plugin.ModConfig.ConfigWoodenCrateHealth.Value;
         digProgress = crateRandom.NextFloat(0.01f, 0.1f);
         transform.position = transform.position + transform.up * -0.6f;
         originalPosition = transform.position;
         UpdateDigPosition(0, digProgress);
 
-        Plugin.ExtendedLogging("ItemCrate successfully spawned with health: " + health);
+        if (crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic)
+        {
+            var healthBoundedRange = crateDefinitionForConfigs.GetGeneralConfig<BoundedRange>("Wooden Crate | Health").Value;
+            health = crateRandom.Next((int)healthBoundedRange.Min, (int)healthBoundedRange.Max + 1);
+        }
+
         if ((crateType == CrateType.Metal || crateType == CrateType.MetalMimic) && trigger != null)
         {
-            trigger.timeToHold = Plugin.ModConfig.ConfigMetalHoldTimer.Value;
+            var holdTimerBoundedRange = crateDefinitionForConfigs.GetGeneralConfig<BoundedRange>("Metal Safe | Hold Timer").Value;
+            trigger.timeToHold = crateRandom.NextFloat(holdTimerBoundedRange.Min, holdTimerBoundedRange.Max);
             animator.SetFloat("openingSpeed", 11.875f / trigger.timeToHold);
             Plugin.ExtendedLogging("Crate time to hold: " + trigger.timeToHold);
         }
@@ -160,7 +176,19 @@ public class ItemCrate : CRHittable
     {
         if (!openedOnce && crateType != CrateType.MetalMimic && crateType != CrateType.WoodenMimic)
         {
-            for (int i = 0; i < Plugin.ModConfig.ConfigCrateNumberToSpawn.Value; i++)
+            int numberOfScrapToSpawn = 3;
+            if (crateType == CrateType.Metal)
+            {
+                var boundedRange = crateDefinitionForConfigs.GetGeneralConfig<BoundedRange>("Metal Safe | Scrap Spawn Number").Value;
+                numberOfScrapToSpawn = UnityEngine.Random.Range((int)boundedRange.Min, (int)boundedRange.Max + 1);
+            }
+            else if (crateType == CrateType.Wooden)
+            {
+                var boundedRange = crateDefinitionForConfigs.GetGeneralConfig<BoundedRange>("Wooden Crate | Scrap Spawn Number").Value;
+                numberOfScrapToSpawn = UnityEngine.Random.Range((int)boundedRange.Min, (int)boundedRange.Max + 1);
+            }
+
+            for (int i = 0; i < numberOfScrapToSpawn; i++)
             {
                 SpawnableItemWithRarity chosenItemWithRarity;
                 Item? item = null;
@@ -168,14 +196,19 @@ public class ItemCrate : CRHittable
                 switch (crateType)
                 {
                     case CrateType.Metal:
-                        string blackListedScrapConfig = Plugin.ModConfig.ConfigMetalCratesBlacklist.Value;
-                        string[] blackListedScrap = [];
-                        blackListedScrap = blackListedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
+                        string potentiallyBlacklistedScrapConfig = crateDefinitionForConfigs.GetGeneralConfig<string>("Metal Safe | Blacklist").Value;
+                        bool actuallyABlacklist = crateDefinitionForConfigs.GetGeneralConfig<bool>("Metal Safe | Blacklist Or Whitelist").Value;
+
+                        string[] blacklistedOrWhitelistedScrap = potentiallyBlacklistedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
                         List<SpawnableItemWithRarity> acceptableItems = new();
                         foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
                         {
                             Plugin.ExtendedLogging("Moon's item pool: " + spawnableItemWithRarity.spawnableItem.itemName);
-                            if (!blackListedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
+                            if (actuallyABlacklist && !blacklistedOrWhitelistedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
+                            {
+                                acceptableItems.Add(spawnableItemWithRarity);
+                            }
+                            else if (!actuallyABlacklist && blacklistedOrWhitelistedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
                             {
                                 acceptableItems.Add(spawnableItemWithRarity);
                             }
@@ -281,7 +314,22 @@ public class ItemCrate : CRHittable
 
     public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
-        if (opened || playerWhoHit == null || (playerWhoHit.currentlyHeldObjectServer == null && Plugin.ModConfig.ConfigShovelCratesOnly.Value)) return false;
+        if (opened || playerWhoHit == null) return false;
+
+        bool shovelOnly = false;
+        if (crateType == CrateType.Metal || crateType == CrateType.MetalMimic)
+        {
+            Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Normal Metal Crate", out CRMapObjectDefinition? metalCrateDefinition);
+            shovelOnly = metalCrateDefinition!.GetGeneralConfig<bool>("Metal Safe | Shovellin").Value;
+        }
+        else if (crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic)
+        {
+            Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Normal Wooden Crate", out CRMapObjectDefinition? woodenCrateDefinition);
+            shovelOnly = woodenCrateDefinition!.GetGeneralConfig<bool>("Wooden Crate | Shovellin").Value;
+        }
+
+        if (playerWhoHit.currentlyHeldObjectServer == null && shovelOnly)
+            return false;
 
         if (digProgress < 1)
         {
@@ -304,8 +352,8 @@ public class ItemCrate : CRHittable
 
     public Item GetRandomShopItem()
     {
-        string woodenCrateItemConfig = Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value;
-        bool isWhitelist = Plugin.ModConfig.ConfigWoodenCrateIsWhitelist.Value;
+        string woodenCrateItemConfig = crateDefinitionForConfigs.GetGeneralConfig<string>("Wooden Crate | Blacklist").Value;
+        bool isWhitelist = !crateDefinitionForConfigs.GetGeneralConfig<bool>("Wooden Crate | Blacklist Or Whitelist").Value;
         string[] blackListedScrap = [];
         string[] whiteListedScrap = [];
         List<Item> acceptableItems = [];
@@ -326,8 +374,8 @@ public class ItemCrate : CRHittable
             if (string.IsNullOrEmpty(woodenCrateItemConfig))
             {
                 // generate a whitelist and set it to the config
-                Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value = GenerateWhiteList();
-                woodenCrateItemConfig = Plugin.ModConfig.ConfigWoodenCratesBlacklist.Value;
+                crateDefinitionForConfigs.GetGeneralConfig<string>("Wooden Crate | Blacklist").Value = GenerateWhiteList();
+                woodenCrateItemConfig = crateDefinitionForConfigs.GetGeneralConfig<string>("Wooden Crate | Blacklist").Value;
             }
 
             whiteListedScrap = woodenCrateItemConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();

@@ -73,7 +73,7 @@ public class FakeSnailCat : GrabbableObject
         originalScale = scale;
         snailCatName = name;
         this.GetComponentInChildren<ScanNodeProperties>().headerText = snailCatName;
-        _renderer.GetMaterial().SetFloat(CodeRebirthEnemyAI.ShiftHash, magicalHashNumber);
+        _renderer.GetMaterial().SetFloat(SnailCatAI.ShiftHash, magicalHashNumber);
     }
 
     public override void EquipItem()
@@ -109,7 +109,7 @@ public class FakeSnailCat : GrabbableObject
             snailCatAI.wasFake = true;
             snailCatAI.localScale = this.transform.localScale;
             snailCatAI.snailCatName = snailCatName;
-            snailCatAI.shiftHash = _renderer.GetMaterial().GetFloat(CodeRebirthEnemyAI.ShiftHash);
+            snailCatAI.shiftHash = _renderer.GetMaterial().GetFloat(SnailCatAI.ShiftHash);
             this.NetworkObject.Despawn();
         }
     }

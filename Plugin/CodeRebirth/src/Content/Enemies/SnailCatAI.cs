@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Enemies;
@@ -20,6 +21,8 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public ScanNodeProperties scanNodeProperties = null!;
     public AudioClip enemyDetectSound = null!;
     public AudioClip[] wiwiwiiiSound = [];
+    [SerializeField]
+    internal Renderer _specialRenderer = null!;
 
     private string currentName = "";
     private bool holdingBaby = false;
@@ -41,6 +44,11 @@ public class SnailCatAI : CodeRebirthEnemyAI
         Sitting,
         Grabbed
     }
+
+    private float _previousLightValue = 0f;
+    private DetectLightInSurroundings detectLightInSurroundings = null!;
+    internal static int ShiftHash = Shader.PropertyToID("_Shift");
+    private static int TemperatureHash = Shader.PropertyToID("_Temperature");
 
     public override void OnNetworkSpawn()
     {
@@ -81,6 +89,34 @@ public class SnailCatAI : CodeRebirthEnemyAI
         propScript.originalScale = this.transform.localScale;
         isWiWiWiii = currentName == "Wiwiwii";
         if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
+        ApplyVariants(_specialRenderer);
+    }
+
+    private void ApplyVariants(Renderer renderer)
+    {
+        float number = enemyRandom.NextFloat(0f, 1f);
+        renderer.GetMaterial().SetFloat(ShiftHash, number);
+        detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
+        detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
+    }
+
+    public virtual void OnLightValueChange(float lightValue)
+    {
+        // Plugin.ExtendedLogging($"Light Value: {lightValue}");
+        float newLightValue = Mathf.Sqrt(lightValue);
+        StartCoroutine(LerpToHotOrCold(_previousLightValue, newLightValue));
+    }
+
+    private IEnumerator LerpToHotOrCold(float oldValue, float newValue)
+    {
+        if (_specialRenderer == null) yield break;
+        for (int i = 1; i <= 3; i++)
+        {
+            float step = Mathf.Lerp(oldValue, newValue, i / 3f);
+            _specialRenderer.GetMaterial().SetFloat(TemperatureHash, Mathf.Clamp(step / 5f - 0.5f, -0.5f, 0.5f));
+            yield return null;
+        }
+        _previousLightValue = newValue;
     }
 
     public override void Update()
@@ -328,6 +364,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+        detectLightInSurroundings?.OnLightValueChange.RemoveListener(OnLightValueChange);
 
         if (!IsServer)
             return;

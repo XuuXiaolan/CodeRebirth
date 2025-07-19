@@ -27,56 +27,48 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [SerializeField]
     internal SmartAgentNavigator smartAgentNavigator = null!;
 
-    [Header("Optional Settings: Palettes")]
-    [SerializeField]
-    private bool _hasVariants = false;
-    [SerializeField]
-    private bool _usesTemperature = false;
-    [SerializeField]
-    internal Renderer? _specialRenderer = null;
-
     [Header("Inherited Fields")]
-    public AudioClipsWithTime _idleAudioClips = null!;
-    public AudioClip[] _hitBodySounds = [];
-    public AudioClip spawnSound = null!;
+    [SerializeField]
+    internal AudioClipsWithTime _idleAudioClips = null!;
+    [SerializeField]
+    private AudioClip[] _hitBodySounds = [];
+    [SerializeField]
+    internal AudioClip spawnSound = null!;
+    [SerializeField]
+    private Material[] _variantMaterials = [];
 
-    [HideInInspector]
-    public float _idleTimer = 1f;
-    [HideInInspector]
-    public System.Random enemyRandom = new();
-
-    private float _previousLightValue = 0f;
-    internal DetectLightInSurroundings? detectLightInSurroundings = null;
-    internal static int ShiftHash = Shader.PropertyToID("_Shift");
-    private static int TemperatureHash = Shader.PropertyToID("_Temperature");
+    internal float _idleTimer = 1f;
+    internal System.Random enemyRandom = new();
 
     public override void Start()
     {
         base.Start();
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 6699 + CodeRebirthUtils.Instance.CRRandom.Next(100000));
 
+        if (_variantMaterials.Length > 0)
+        {
+            ApplyMaterialVariant();
+        }
+
         if (spawnSound != null)
             creatureVoice.PlayOneShot(spawnSound);
 
         _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
 
-        smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside); // todo driftwood
+        smartAgentNavigator.OnUseEntranceTeleport.AddListener(SetEnemyOutside);
         smartAgentNavigator.SetAllValues(isOutside);
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
 
         if (Plugin.ModConfig.ConfigExtendedLogging.Value)
             GrabEnemyRarity(enemyType.enemyName);
-
-        if (_hasVariants && _specialRenderer != null)
-        {
-            ApplyVariants(_specialRenderer);
-        }
     }
 
-    public override void OnNetworkDespawn()
+    private void ApplyMaterialVariant()
     {
-        base.OnNetworkDespawn();
-        detectLightInSurroundings?.OnLightValueChange.RemoveListener(OnLightValueChange);
+        Material variantMaterial = _variantMaterials[enemyRandom.Next(_variantMaterials.Length)];
+        Material[] currentMaterials = skinnedMeshRenderers[0].sharedMaterials;
+        currentMaterials[1] = variantMaterial;
+        skinnedMeshRenderers[0].SetSharedMaterials(currentMaterials.ToList());
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -88,34 +80,13 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         }
     }
 
-    private void ApplyVariants(Renderer renderer)
+    public override void KillEnemy(bool destroy = false)
     {
-        float number = enemyRandom.NextFloat(0f, 1f);
-        renderer.GetMaterial().SetFloat(ShiftHash, number);
-        if (_usesTemperature)
+        base.KillEnemy(destroy);
+        if (isEnemyDead)
         {
-            detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
-            detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
+            smartAgentNavigator.DisposeOfTasks();
         }
-    }
-
-    public virtual void OnLightValueChange(float lightValue)
-    {
-        // Plugin.ExtendedLogging($"Light Value: {lightValue}");
-        float newLightValue = Mathf.Sqrt(lightValue);
-        StartCoroutine(LerpToHotOrCold(_previousLightValue, newLightValue));
-    }
-
-    private IEnumerator LerpToHotOrCold(float oldValue, float newValue)
-    {
-        if (_specialRenderer == null) yield break;
-        for (int i = 1; i <= 3; i++)
-        {
-            float step = Mathf.Lerp(oldValue, newValue, i / 3f);
-            _specialRenderer.GetMaterial().SetFloat(TemperatureHash, Mathf.Clamp(step / 5f - 0.5f, -0.5f, 0.5f));
-            yield return null;
-        }
-        _previousLightValue = newValue;
     }
 
     public void GrabEnemyRarity(string enemyName)
