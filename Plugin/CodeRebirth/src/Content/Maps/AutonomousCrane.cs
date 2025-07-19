@@ -62,7 +62,7 @@ public class AutonomousCrane : NetworkBehaviour
     private bool _craneIsActive = true;
     private Vector3 _targetPosition = Vector3.zero;
     private CraneState _currentState = CraneState.Idle;
-    private Collider[] _cachedColliders = new Collider[24];
+    private Collider[] _cachedColliders = new Collider[32];
 
     public enum CraneState
     {
@@ -335,7 +335,7 @@ public class AutonomousCrane : NetworkBehaviour
     {
         _playerKillList.Clear();
         _enemyKillList.Clear();
-        int numHits = Physics.OverlapSphereNonAlloc(magnetTargetPosition, 5f * this.transform.localScale.x, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Ignore);
+        int numHits = Physics.OverlapSphereNonAlloc(magnetTargetPosition, 5f * this.transform.localScale.x, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             Collider collider = _cachedColliders[i];
