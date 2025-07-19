@@ -383,8 +383,15 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         creatureNetworkAnimator.SetTrigger(startEnrage);
         yield return new WaitForSeconds(6.9f);
         if (currentBehaviourStateIndex != (int)State.RunningToTarget)
+        {
+            Plugin.Logger.LogWarning($"Redwood Not running to target with speed: {agent.speed}, plus is dead: {isEnemyDead}");
+            if (agent.speed < 0.5f && !isEnemyDead)
+            {
+                agent.angularSpeed = 40f;
+                agent.speed = walkingSpeed;
+            }
             yield break;
-
+        }
         agent.angularSpeed = 100f;
         agent.speed = walkingSpeed * 4;
     }

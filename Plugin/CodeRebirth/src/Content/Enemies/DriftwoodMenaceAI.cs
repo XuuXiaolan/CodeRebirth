@@ -333,9 +333,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         if (!canSmash) return;
 
-        Plugin.ExtendedLogging($"Distance to enemy: {distanceToEnemy}, Stopping distance: {agent.stoppingDistance + 1.0f}");
-        if (distanceToEnemy < agent.stoppingDistance + 1.0f)
+        Plugin.ExtendedLogging($"Distance to enemy: {distanceToEnemy}, Stopping distance: {agent.stoppingDistance + 2.0f}");
+        if (distanceToEnemy < agent.stoppingDistance + 2f)
         {
+            agent.speed = 0f;
+            smartAgentNavigator.StopAgent();
             creatureNetworkAnimator.SetTrigger(DriftwoodSmashAnimation);
             canSmash = false;
             StartCoroutine(SmashCooldown());
@@ -719,11 +721,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         if (collidedEnemy == targetEnemy)
         {
             SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SmashingPrey);
-            if (!IsServer)
-                return;
-
-            agent.speed = 0f;
-            smartAgentNavigator.StopAgent();
         }
     }
 
