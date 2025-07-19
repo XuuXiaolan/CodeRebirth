@@ -108,6 +108,7 @@ public class DestructibleObject : NetworkBehaviour, IHittable
         {
             RiseFromGroundOnSpawn riseFromGroundOnSpawn = this.GetComponent<RiseFromGroundOnSpawn>();
             riseFromGroundOnSpawn.enabled = true;
+            riseFromGroundOnSpawn._riseFromDifferentGroundType.onGroundStart.Invoke();
             yield return new WaitForSeconds(riseFromGroundOnSpawn._timeToTake);
         }
         if (!IsServer)

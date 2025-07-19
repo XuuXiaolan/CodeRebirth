@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 [RequireComponent(typeof(SmartAgentNavigator))]
 public class GalAI : NetworkBehaviour, IHittable
 {
@@ -34,25 +35,25 @@ public class GalAI : NetworkBehaviour, IHittable
     public Renderer[] renderersToHideIn = [];
     public SmartAgentNavigator smartAgentNavigator = null!;
 
-    [HideInInspector] public static List<GalAI> Instances = new();
-    [HideInInspector] public bool boomboxPlaying = false;
-    [HideInInspector] public float staringTimer = 0f;
-    [HideInInspector] public const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
-    [HideInInspector] public const float STARE_DOT_THRESHOLD = 0.8f;
-    [HideInInspector] public const float STARE_ROTATION_SPEED = 2f;
-    [HideInInspector] public EnemyAI? targetEnemy;
-    [HideInInspector] public PlayerControllerB? ownerPlayer;
-    [HideInInspector] public HashSet<EnemyType> enemyTargetBlacklist = new();
-    [HideInInspector] public int chargeCount = 10;
-    [HideInInspector] public int maxChargeCount;
-    [HideInInspector] public bool currentlyAttacking = false;
-    [HideInInspector] public float boomboxTimer = 0f;
-    [HideInInspector] public bool physicsEnabled = true;
-    [HideInInspector] public float idleNeededTimer = 10f;
-    [HideInInspector] public float idleTimer = 0f;
-    [HideInInspector] public System.Random galRandom = new();
-    [HideInInspector] public bool inActive = true;
-    [HideInInspector] public bool doneOnce = false;
+    internal static List<GalAI> Instances = new();
+    internal bool boomboxPlaying = false;
+    internal float staringTimer = 0f;
+    internal const float stareThreshold = 2f; // Set the threshold to 2 seconds, or adjust as needed
+    internal const float STARE_DOT_THRESHOLD = 0.8f;
+    internal const float STARE_ROTATION_SPEED = 2f;
+    internal EnemyAI? targetEnemy;
+    internal PlayerControllerB? ownerPlayer;
+    internal HashSet<EnemyType> enemyTargetBlacklist = new();
+    internal int chargeCount = 10;
+    internal int maxChargeCount;
+    internal bool currentlyAttacking = false;
+    internal float boomboxTimer = 0f;
+    internal bool physicsEnabled = true;
+    internal float idleNeededTimer = 10f;
+    internal float idleTimer = 0f;
+    internal System.Random galRandom = new();
+    internal bool inActive = true;
+    internal bool doneOnce = false;
 
     public override void OnNetworkSpawn()
     {

@@ -25,12 +25,12 @@ public class RiseFromGroundOnSpawn : MonoBehaviour
     [SerializeField]
     private RiseFromDifferentGroundTypes[] _riseFromDifferentGroundTypes = [];
 
-    private RiseFromDifferentGroundTypes _riseFromDifferentGroundType;
+    internal RiseFromDifferentGroundTypes _riseFromDifferentGroundType = new();
     internal float _timeToTake = 0f;
     private Vector3 _originalPosition = Vector3.zero;
     public void Start()
     {
-        string tagName = string.Empty;
+        string tagName;
         if (Physics.Raycast(this.transform.position + this.transform.up * 0.1f, -this.transform.up, out RaycastHit hit, 2f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             tagName = hit.collider.gameObject.tag;
@@ -50,6 +50,7 @@ public class RiseFromGroundOnSpawn : MonoBehaviour
             break;
         }
 
+        _riseFromDifferentGroundType.onRiseStart.Invoke();
         _originalPosition = this.transform.position;
         this.transform.position = this.transform.position + transform.up * -_riseFromDifferentGroundType.depthToRaise;
         if (_riseFromDifferentGroundType.raiseSpeed > 0)
