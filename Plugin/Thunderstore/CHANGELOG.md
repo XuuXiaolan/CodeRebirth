@@ -1,4 +1,9 @@
-# v1.1.8
+# v1.1.9
+
+- Fixed a desync where peacekeeper might not hurt clients.
+- Switched to the new pathfinding system.
+
+## v1.1.8
 
 - Fixed issues with enemies getting stuck in pipes on oxyde.
 - Fixed Driftwood issues with targetting other enemies and stutter moving and letting go of the player randomly.

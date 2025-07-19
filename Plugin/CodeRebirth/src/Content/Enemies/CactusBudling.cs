@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.MapObjects;
+using CodeRebirthLib.Util.Pathfinding;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -327,9 +327,9 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         smartAgentNavigator.CheckPaths(possiblePositions, FoundNextRootPosition);
     }
 
-    private void FoundNextRootPosition(List<(Vector3 rootPosition, float distances)> args)
+    private void FoundNextRootPosition(List<GenericPath<Vector3>> args)
     {
-        SyncRootPositionServerRpc(args[UnityEngine.Random.Range(0, args.Count)].rootPosition);
+        SyncRootPositionServerRpc(args[UnityEngine.Random.Range(0, args.Count)].Generic);
     }
 
     [ServerRpc(RequireOwnership = false)]

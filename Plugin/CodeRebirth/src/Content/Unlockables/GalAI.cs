@@ -51,7 +51,6 @@ public class GalAI : NetworkBehaviour, IHittable
     [HideInInspector] public float idleNeededTimer = 10f;
     [HideInInspector] public float idleTimer = 0f;
     [HideInInspector] public System.Random galRandom = new();
-    [HideInInspector] public bool isInHangarShipRoom = true;
     [HideInInspector] public bool inActive = true;
     [HideInInspector] public bool doneOnce = false;
 
@@ -124,12 +123,6 @@ public class GalAI : NetworkBehaviour, IHittable
         GalVoice.pitch = galRandom.NextFloat(0.9f, 1.1f);
     }
 
-    private void ShipRoomUpdate()
-    {
-        isInHangarShipRoom = StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(transform.position);
-        if (isInHangarShipRoom) smartAgentNavigator.isOutside = true;
-    }
-
     private void OwnerPlayerUpdate()
     {
         if (ownerPlayer != null && ownerPlayer.isPlayerDead)
@@ -144,7 +137,6 @@ public class GalAI : NetworkBehaviour, IHittable
         InActiveUpdate();
         BoomboxUpdate();
         IdleUpdate();
-        ShipRoomUpdate();
         OwnerPlayerUpdate();
     }
 

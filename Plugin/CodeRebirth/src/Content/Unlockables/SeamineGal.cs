@@ -278,7 +278,9 @@ public class SeamineGalAI : GalAI
             GalCharger.ActivateGirlServerRpc(-1);
             return;
         }
-        if (Agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
+        if (Agent.enabled)
+            smartAgentNavigator.AdjustSpeedBasedOnDistance(0, 40, 0, 10, GetCurrentSpeedMultiplier());
+
         Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 2);
         switch (galState)
         {
@@ -380,7 +382,7 @@ public class SeamineGalAI : GalAI
             }
         }
         float distanceToTarget = Vector3.Distance(transform.position, targetEnemy.transform.position);
-        if (distanceToTarget <= (Agent.stoppingDistance + 4 + (targetEnemy is CentipedeAI || smartAgentNavigator.isOutside ? 5 : 0)) && !currentlyAttacking)
+        if (distanceToTarget <= (Agent.stoppingDistance + 4 + (targetEnemy is CentipedeAI || smartAgentNavigator.IsAgentOutside() ? 5 : 0)) && !currentlyAttacking)
         {
             Vector3 targetPosition = targetEnemy.transform.position;
             Vector3 direction = (targetPosition - this.transform.position).normalized;
@@ -391,7 +393,7 @@ public class SeamineGalAI : GalAI
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
             }
-            if (distanceToTarget <= (Agent.stoppingDistance + (targetEnemy is CentipedeAI || smartAgentNavigator.isOutside ? 5 : 0)))
+            if (distanceToTarget <= (Agent.stoppingDistance + (targetEnemy is CentipedeAI || smartAgentNavigator.IsAgentOutside() ? 5 : 0)))
             {
                 currentlyAttacking = true;
                 NetworkAnimator.SetTrigger(startExplodeAnimation);
@@ -517,7 +519,7 @@ public class SeamineGalAI : GalAI
         {
             yield return delay;
 
-            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory))
+            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.IsAgentOutside() && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.IsAgentOutside() && ownerPlayer.isInsideFactory))
                 continue;
 
             int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide);

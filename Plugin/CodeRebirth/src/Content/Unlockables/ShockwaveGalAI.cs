@@ -287,7 +287,9 @@ public class ShockwaveGalAI : GalAI
             GalCharger.ActivateGirlServerRpc(-1);
             return;
         }
-        if (Agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
+        if (Agent.enabled)
+            smartAgentNavigator.AdjustSpeedBasedOnDistance(0, 40, 0, 10, GetCurrentSpeedMultiplier());
+
         Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 3);
         switch (galState)
         {
@@ -463,7 +465,7 @@ public class ShockwaveGalAI : GalAI
         {
             yield return delay;
 
-            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || !smartAgentNavigator.isOutside && !ownerPlayer.isInsideFactory || smartAgentNavigator.isOutside && ownerPlayer.isInsideFactory) continue;
+            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || !smartAgentNavigator.IsAgentOutside() && !ownerPlayer.isInsideFactory || smartAgentNavigator.IsAgentOutside() && ownerPlayer.isInsideFactory) continue;
 
             int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide);
 

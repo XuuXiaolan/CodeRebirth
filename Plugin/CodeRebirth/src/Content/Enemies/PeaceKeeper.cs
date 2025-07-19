@@ -54,6 +54,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     private bool _killedByPlayer = false;
     private float _damageInterval = 0f;
     private Coroutine? _bitchSlappingRoutine = null;
+    private Coroutine? _rotatingToHitter = null;
     private Collider[] _cachedColliders = new Collider[30];
     private static readonly int ShootingAnimation = Animator.StringToHash("shooting"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
@@ -183,11 +184,11 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         }
         _lastPosition = this.transform.position;
 
-        if (!IsServer)
-            return;
-
-        if (_bitchSlappingRoutine != null)
+        if (_bitchSlappingRoutine != null && _rotatingToHitter == null)
         {
+            if (!IsServer)
+                return;
+
             RotateTowardsNearestPlayer();
             return;
         }
@@ -275,7 +276,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     {
         if (targetPlayer == null || targetPlayer.isPlayerDead)
         {
-            _isShooting = false;
+            SetShootingServerRpc(false);
             creatureAnimator.SetBool(ShootingAnimation, false);
             HandleSwitchingToIdle();
             return;
@@ -289,23 +290,25 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
             {
                 if (_isShooting)
                 {
-                    _isShooting = false;
+                    SetShootingServerRpc(false);
                     agent.speed = _chasingSpeed;
                     creatureAnimator.SetBool(ShootingAnimation, false);
                 }
                 return;
             }
+
             if (_isShooting)
                 return;
+
             agent.speed = _shootingSpeed;
-            _isShooting = true;
+            SetShootingServerRpc(true);
             creatureAnimator.SetBool(ShootingAnimation, true);
             return;
         }
 
         if (_isShooting)
         {
-            _isShooting = false;
+            SetShootingServerRpc(false);
             agent.speed = _chasingSpeed;
             creatureAnimator.SetBool(ShootingAnimation, false);
         }
@@ -318,6 +321,30 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     #endregion
 
     #region Misc Functions
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetShootingServerRpc(bool isShooting)
+    {
+        SetShootingClientRpc(isShooting);
+    }
+
+    [ClientRpc]
+    private void SetShootingClientRpc(bool isShooting)
+    {
+        _isShooting = isShooting;
+    }
+
+    private IEnumerator RotateToTargetPlayer(PlayerControllerB player)
+    {
+        float timeElapsed = 0f;
+        while (timeElapsed < 0.25f)
+        {
+            RotateToPlayer(player);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        _rotatingToHitter = null;
+    }
 
     public void RotateTowardsNearestPlayer()
     {
@@ -338,7 +365,12 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         if (nearestPlayer == null)
             return;
 
-        Vector3 direction = nearestPlayer.transform.position - transform.position;
+        RotateToPlayer(nearestPlayer);
+    }
+
+    private void RotateToPlayer(PlayerControllerB player)
+    {
+        Vector3 direction = player.transform.position - transform.position;
         direction.y = 0;
 
         Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
@@ -385,15 +417,12 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         _damageInterval = 0f;
 
         if (!IsServer) return;
-        // Use a HashSet to avoid applying damage twice to the same target
         HashSet<IHittable> damagedTargets = new HashSet<IHittable>();
 
-        // Process both minigun heads
         Transform[] gunTransforms = new Transform[] { _leftGunStartTransform, _rightGunStartTransform };
 
         foreach (var gunTransform in gunTransforms)
         {
-            // Define the capsule area starting at the gun head and extending forward by _minigunRange.
             Vector3 capsuleStart = gunTransform.position;
             Vector3 capsuleEnd = gunTransform.position + gunTransform.forward * _minigunRange;
 
@@ -405,7 +434,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
                 if (!collider.TryGetComponent(out IHittable hittable))
                     continue;
 
-                // Skip if already processed this target this tick.
                 if (damagedTargets.Contains(hittable))
                     continue;
 
@@ -416,20 +444,24 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
                     continue;
                 }
 
-                // Apply damage based on the target type.
                 if (hittable is PlayerControllerB player)
                 {
-                    // Calculate a direction vector (for potential knockback effects).
                     Vector3 damageDirection = (player.transform.position - gunTransform.position).normalized;
                     player.DamagePlayer(_minigunDamage, true, true, CauseOfDeath.Gunshots, 0, false, damageDirection * 10f);
                     player.externalForceAutoFade += damageDirection * 2f;
                 }
                 else if (hittable is EnemyAICollisionDetect enemy)
                 {
+                    if (!IsServer)
+                        continue;
+
                     enemy.mainScript.HitEnemyOnLocalClient(_minigunDamage, gunTransform.position, null, true, -1);
                 }
                 else
                 {
+                    if (!IsServer)
+                        continue;
+
                     hittable.Hit(_minigunDamage, gunTransform.position, null, true, -1);
                 }
             }
@@ -480,10 +512,22 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
 
         if (playerWhoHit != null)
         {
-            targetPlayer = playerWhoHit;
-            smartAgentNavigator.StopSearchRoutine();
-            agent.speed = _chasingSpeed;
-            SwitchToBehaviourStateOnLocalClient((int)PeaceKeeperState.AttackingPlayer);
+            if (currentBehaviourStateIndex != (int)PeaceKeeperState.AttackingPlayer)
+            {
+                targetPlayer = playerWhoHit;
+                smartAgentNavigator.StopSearchRoutine();
+                agent.speed = _chasingSpeed;
+                SwitchToBehaviourStateOnLocalClient((int)PeaceKeeperState.AttackingPlayer);
+            }
+            else if (Vector3.Distance(playerWhoHit.transform.position, this.transform.position) <= 4f && _rotatingToHitter == null)
+            {
+                smartAgentNavigator.DoPathingToDestination(playerWhoHit.transform.position);
+                _rotatingToHitter = StartCoroutine(RotateToTargetPlayer(playerWhoHit));
+                if (IsServer)
+                {
+                    creatureNetworkAnimator.SetTrigger(BitchSlapAnimation);
+                }
+            }
         }
         else if (IsServer)
         {
@@ -551,7 +595,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
 
     public void BitchSlapAnimationEvent()
     {
-        if (!IsServer) return;
         int numHits = Physics.OverlapCapsuleNonAlloc(_gunStartTransform.position, _gunEndTransform.position, 2f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
@@ -568,6 +611,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
             }
             else if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
             {
+                if (!IsServer)
+                    continue;
+
                 if (enemyAICollisionDetect.mainScript.gameObject == gameObject)
                     continue;
 
@@ -575,6 +621,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
             }
             else
             {
+                if (!IsServer)
+                    continue;
+
                 iHittable.Hit(2, this.transform.position, null, true, -1);
             }
         }

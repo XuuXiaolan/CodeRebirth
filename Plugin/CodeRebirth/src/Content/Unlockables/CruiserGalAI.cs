@@ -4,6 +4,7 @@ using System.Linq;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.Pathfinding;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -218,7 +219,7 @@ public class CruiserGalAI : GalAI
         NetworkAnimator.SetTrigger(pullLeverAnimation);
     }
 
-    private void CheckIfCanPathToEntrances(List<(EntranceTeleport entranceTeleport, float distanceToTeleport)> args)
+    private void CheckIfCanPathToEntrances(List<GenericPath<EntranceTeleport>> args)
     {
         smartAgentNavigator.cantMove = false;
         Plugin.ExtendedLogging($"Pathable entrances: {args.Count}");
@@ -228,7 +229,7 @@ public class CruiserGalAI : GalAI
             // todo: Maybe play a sound that she can't route to any exit?
             return;
         }
-        entranceToGoTo = args[UnityEngine.Random.Range(0, args.Count)].entranceTeleport;
+        entranceToGoTo = args[UnityEngine.Random.Range(0, args.Count)].Generic;
         HandleStateAnimationSpeedChangesServerRpc((int)State.DeliveringPlayer);
     }
 
@@ -401,7 +402,9 @@ public class CruiserGalAI : GalAI
             GalCharger.ActivateGirlServerRpc(-1);
             return;
         }
-        if (Agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
+        if (Agent.enabled)
+            smartAgentNavigator.AdjustSpeedBasedOnDistance(0, 40, 0, 10, GetCurrentSpeedMultiplier());
+
         Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 3);
         switch (galState)
         {
@@ -706,7 +709,7 @@ public class CruiserGalAI : GalAI
             smartAgentNavigator.cantMove = true;
             List<(EntranceTeleport obj, Vector3 position)> candidateObjects = new();
             List<EntranceTeleport> potentiallyPathableTeleports = CodeRebirthLibNetworker.EntrancePoints
-                .Where(x => (x.isEntranceToBuilding && smartAgentNavigator.isOutside) || (!smartAgentNavigator.isOutside && !x.isEntranceToBuilding))
+                .Where(x => (x.isEntranceToBuilding && smartAgentNavigator.IsAgentOutside()) || (!smartAgentNavigator.IsAgentOutside() && !x.isEntranceToBuilding))
                 .ToList();
 
             candidateObjects = potentiallyPathableTeleports

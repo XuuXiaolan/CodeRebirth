@@ -378,7 +378,9 @@ public class TerminalGalAI : GalAI
             GalCharger.ActivateGirlServerRpc(-1);
             return;
         }
-        if (Agent.enabled) smartAgentNavigator.AdjustSpeedBasedOnDistance(GetCurrentSpeedMultiplier());
+        if (Agent.enabled)
+            smartAgentNavigator.AdjustSpeedBasedOnDistance(0, 40, 0, 10, GetCurrentSpeedMultiplier());
+
         Animator.SetFloat(runSpeedFloat, Agent.velocity.magnitude / 2);
         switch (galState)
         {
