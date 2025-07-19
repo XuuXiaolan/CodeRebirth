@@ -299,7 +299,13 @@ Over 30+ lore documents, regular scrap and other references.
 
 ### Diverse Flora
 
-![F](https://i.postimg.cc/8C8k191j/image.png)
+![F1](https://i.postimg.cc/59LC6nKQ/Screenshot-2025-07-19-170642.png)
+
+![F2](https://i.postimg.cc/m2S1Shsb/Screenshot-2025-07-19-170759.png)
+
+![F3](https://i.postimg.cc/zXNRWK4t/Screenshot-2025-07-19-171007.png)
+
+Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 
 </details>
 
