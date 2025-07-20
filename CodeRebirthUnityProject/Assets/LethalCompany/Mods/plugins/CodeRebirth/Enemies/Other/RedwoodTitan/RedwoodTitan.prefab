@@ -46823,7 +46823,7 @@ MonoBehaviour:
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   _nodeRemovalPrecision: 5
-  _allowedLinks: 15
+  _allowedLinks: 1
 --- !u!114 &3948119710304685680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46844,6 +46844,7 @@ MonoBehaviour:
       - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
       - {fileID: 2100000, guid: 83ebd022765c0eb47af87dc5bf1e84b0, type: 2}
       renderer: {fileID: 488740101449591505}
+    <Weight>k__BackingField: 1
   - materialsWithRenderer:
       materials:
       - {fileID: 2100000, guid: cee9c60ebf07c7b44ae356c3fb4c21dc, type: 2}
@@ -46851,6 +46852,7 @@ MonoBehaviour:
       - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
       - {fileID: 2100000, guid: 86f2a6b4d082d8a4ba15258b0790d5c9, type: 2}
       renderer: {fileID: 488740101449591505}
+    <Weight>k__BackingField: 1
   _applyOnSpawn: 1
 --- !u!1 &6862261050158760410
 GameObject:

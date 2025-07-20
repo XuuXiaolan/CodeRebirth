@@ -1168,9 +1168,6 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 8632879953552201403}
   smartAgentNavigator: {fileID: 7949557366426040061}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: f6119d59aa7dd42429460bd7601da4f6, type: 3}
@@ -1180,7 +1177,7 @@ MonoBehaviour:
     maxTime: 40
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: 35e8442df067b144ebf91be8cce5823b, type: 3}
-  _idleTimer: 1
+  _variantMaterials: []
   grabArea: {fileID: 871222241650744888}
   spawnAnimation: {fileID: 7400000, guid: c429b20fc02aae04ba544ecf169edac7, type: 2}
   chestBangingAnimation: {fileID: 7400000, guid: 8382db4155bde974f9c780571a214dfe,
@@ -1264,21 +1261,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 3
 --- !u!1 &3161862691732673129
 GameObject:
   m_ObjectHideFlags: 0

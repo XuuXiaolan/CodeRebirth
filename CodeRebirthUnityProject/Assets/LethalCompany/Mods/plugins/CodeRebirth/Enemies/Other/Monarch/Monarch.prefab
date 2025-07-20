@@ -1524,9 +1524,6 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 3489037866509937600}
   smartAgentNavigator: {fileID: 5572793871451428965}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: 0d0b694500eb65040ad0fccf269823ca, type: 3}
@@ -1542,7 +1539,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fe1f9ab50bb26a74a800189dd14bf400, type: 3}
   - {fileID: 8300000, guid: 26c603e9e915ff24ba4410a386a96951, type: 3}
   spawnSound: {fileID: 8300000, guid: eee13037b9c1dd14895190ecaf2a86c1, type: 3}
-  _idleTimer: 1
+  _variantMaterials: []
   BeamController: {fileID: 6331020970013911093}
   UltraCreatureVoice: {fileID: 3196441772831089106}
   _biteSounds:
@@ -1644,10 +1641,8 @@ MonoBehaviour:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 3
 --- !u!1 &3372090020525325477
 GameObject:
   m_ObjectHideFlags: 0
@@ -6461,7 +6456,7 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: -4.2052913, y: -5.15944, z: 5.743002}
+      - m_Value: {x: -4.2052913, y: 2.597274, z: 4.7769012}
         m_Name: BeamStart
         m_Overridden: 1
       - m_Value: {x: -4.2053003, y: -0.63, z: 11.370703}

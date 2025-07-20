@@ -478,9 +478,6 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 1471202553139122210}
   smartAgentNavigator: {fileID: 3135059767831087649}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: b7beca64239e4074f9465d802687c889, type: 3}
@@ -488,7 +485,7 @@ MonoBehaviour:
     maxTime: 20
   _hitBodySounds: []
   spawnSound: {fileID: 0}
-  _idleTimer: 1
+  _variantMaterials: []
   engineAndIdleSounds:
   - {fileID: 8300000, guid: 8fcb9a72420f2e541aaf3ebf56eb84b0, type: 3}
   - {fileID: 8300000, guid: 4494c21a4e3b8734baea2b94da444e3b, type: 3}
@@ -541,10 +538,8 @@ MonoBehaviour:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: -1
 --- !u!1 &528938990867653846
 GameObject:
   m_ObjectHideFlags: 0

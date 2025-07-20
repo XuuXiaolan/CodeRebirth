@@ -7257,9 +7257,6 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 290345020657837124}
   smartAgentNavigator: {fileID: 9038374897764814506}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: 02712a9abb14dd941ad729c3c63bed0b, type: 3}
@@ -7271,7 +7268,7 @@ MonoBehaviour:
     maxTime: 15
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: a00f33af26d31814ba6dbc7ebda35732, type: 3}
-  _idleTimer: 1
+  _variantMaterials: []
   _gunStartTransform: {fileID: 6310224351839325153}
   _gunEndTransform: {fileID: 5888558220192546133}
   _walkingSpeed: 2
@@ -7325,21 +7322,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 7
 --- !u!1 &6761455667277072204
 GameObject:
   m_ObjectHideFlags: 0

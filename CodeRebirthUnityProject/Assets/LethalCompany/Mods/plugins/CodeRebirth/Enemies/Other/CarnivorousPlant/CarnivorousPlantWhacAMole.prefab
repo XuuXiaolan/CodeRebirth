@@ -2174,16 +2174,13 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 577517964605079600}
   smartAgentNavigator: {fileID: 4650589277197013289}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips: []
     minTime: 0
     maxTime: 0
   _hitBodySounds: []
   spawnSound: {fileID: 0}
-  _idleTimer: 1
+  _variantMaterials: []
   eyes:
   - {fileID: 1292584987158040788}
   - {fileID: 2697936339120152967}
@@ -2393,10 +2390,8 @@ MonoBehaviour:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 0
 --- !u!1 &8945839021943058437
 GameObject:
   m_ObjectHideFlags: 0

@@ -464,9 +464,6 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 5861152159745177237}
   smartAgentNavigator: {fileID: 5031116663094599004}
-  _hasVariants: 1
-  _usesTemperature: 1
-  _specialRenderer: {fileID: 6177123933367798727}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: 0c683a03269ebc14fb5105852420f620, type: 3}
@@ -481,49 +478,16 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1738a016b4e2aeb41aa6fe43bb3f84a0, type: 3}
   - {fileID: 8300000, guid: 417b6623a695fc24fb61e099eaa24d66, type: 3}
   spawnSound: {fileID: 0}
-  _idleTimer: 1
+  _variantMaterials: []
   propScript: {fileID: 4180001964916081428}
-  randomizedNames:
-  - Florpus
-  - Gnarp
-  - Plink
-  - Greedy
-  - Gaycob
-  - Webley
-  - Baldi
-  - Swayer
-  - Rodigo
-  - Xuwu
-  - St1nky
-  - Snowy
-  - Funo
-  - Lizzie
-  - Pacho
-  - And now, time for the real deal, Solid Stone
-  - Fren
-  - 'Beanie :SnailCatGreed:'
-  - No
-  - Dalice
-  - Smxres
-  - Narpy (Immersion breaking name)
-  - Fluff Father
-  - Planet Annihilator
-  - Wiwiwii
-  - Mu
-  - Jimothy
-  - GOLB
-  - Salted Beef
-  - Soup
-  - Evil SnailCat
-  - Testy
   scanNodeProperties: {fileID: 2181669798328249144}
-  hitSounds: []
   enemyDetectSound: {fileID: 8300000, guid: be67c13828194f144918ffc5744be20d, type: 3}
   wiwiwiiiSound:
   - {fileID: 8300000, guid: 501dd0624b38d8148998aed253d5ab02, type: 3}
   - {fileID: 8300000, guid: 99139c9555744b54f936e78661190010, type: 3}
   - {fileID: 8300000, guid: 4896327b7d9d5c848b1d9e27607345de, type: 3}
   - {fileID: 8300000, guid: afbfdfece397a6f41a64ff80268df836, type: 3}
+  _specialRenderer: {fileID: 6177123933367798727}
 --- !u!82 &6361777462172498345
 AudioSource:
   m_ObjectHideFlags: 0
@@ -684,21 +648,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: -1
 --- !u!1 &361247180470767358
 GameObject:
   m_ObjectHideFlags: 0
