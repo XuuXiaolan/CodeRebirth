@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Linq;
 using Unity.Netcode.Components;
 using CodeRebirth.src.Util.Extensions;
-using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirthLib.Util.Pathfinding;
 using CodeRebirthLib.Util.INetworkSerializables;

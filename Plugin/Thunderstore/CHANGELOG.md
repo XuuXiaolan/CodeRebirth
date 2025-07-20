@@ -1,4 +1,8 @@
-# v1.1.9
+# v1.1.10
+
+- Rereleased just incase of something.
+
+## v1.1.9
 
 - Fixed a desync where peacekeeper might not hurt clients.
 - Switched to the new pathfinding system.
@@ -6,6 +10,7 @@
 - Fixed Driftwood not killing small enemies and stuttering around them.
 - Redid crate config, let me know of any issues.
 - Fixed a potential issue with flora invalid config.
+- Switched to a new pathfinding thingiemajig, let me know if any problems arise (or you crash, but hopefully you don't).
 
 ## v1.1.8
 
