@@ -2,6 +2,10 @@
 
 - Fixed a desync where peacekeeper might not hurt clients.
 - Switched to the new pathfinding system.
+- Fixed edge case enemies not being killed by crane.
+- Fixed Driftwood not killing small enemies and stuttering around them.
+- Redid crate config, let me know of any issues.
+- Fixed a potential issue with flora invalid config.
 
 ## v1.1.8
 

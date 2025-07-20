@@ -4,6 +4,7 @@ using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib;
 using CodeRebirthLib.AssetManagement;
 using CodeRebirthLib.ContentManagement.MapObjects;
+using CodeRebirthLib.Exceptions;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
@@ -172,13 +173,20 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public void RegisterFlora(GameObject prefab, FloraTag tag, string configString)
     {
-        MapObjectSpawnMechanics floraMapObjectSpawnMechanics = new MapObjectSpawnMechanics(configString);
-
-        RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora()
+        try
         {
-            prefab = prefab,
-            floraTag = tag,
-            spawnCurveFunction = floraMapObjectSpawnMechanics.CurveFunction,
-        });
+            MapObjectSpawnMechanics floraMapObjectSpawnMechanics = new MapObjectSpawnMechanics(configString);
+
+            RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora()
+            {
+                prefab = prefab,
+                floraTag = tag,
+                spawnCurveFunction = floraMapObjectSpawnMechanics.CurveFunction,
+            });
+        }
+        catch (MalformedAnimationCurveConfigException exception)
+        {
+            exception.LogNicely(Plugin.Logger);
+        }
     }
 }
