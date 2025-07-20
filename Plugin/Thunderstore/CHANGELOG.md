@@ -1,4 +1,8 @@
-# v1.1.10
+# v1.1.11
+
+- Fixed Scrap-E's material and model being invisible lol.
+
+## v1.1.10
 
 - Rereleased just incase of something.
 
