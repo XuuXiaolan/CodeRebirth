@@ -9,7 +9,6 @@ using CodeRebirth.src.MiscScripts;
 namespace CodeRebirth.src.Content.Enemies;
 public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 {
-    public Material[] AlbinoMaterials = null!;
     public Collider[] DeathColliders = null!;
     public Collider CollisionFootR = null!;
     public Collider CollisionFootL = null!;
@@ -116,11 +115,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.Start();
         instanceNumbers++;
-
-        if (enemyRandom.Next(2) == 0)
-        {
-            skinnedMeshRenderers[0].SetMaterials(AlbinoMaterials.ToList());
-        }
 
         walkingSpeed = Plugin.ModConfig.ConfigRedwoodSpeed.Value;
         distanceFromShip = Plugin.ModConfig.ConfigRedwoodShipPadding.Value;

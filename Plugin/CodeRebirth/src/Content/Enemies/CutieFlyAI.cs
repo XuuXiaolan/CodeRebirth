@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Linq;
 using CodeRebirthLib.ContentManagement.Enemies;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -7,8 +6,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class CutieFlyAI : CodeRebirthEnemyAI
 {
-    public Material[] variantMaterials = [];
-
     private static readonly int IsDeadAnimation = Animator.StringToHash("doDeath");
     private float oldSpeed = 0f;
 
@@ -17,17 +14,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         base.Start();
         oldSpeed = agent.speed;
 
-        // Apply material variant
-        ApplyMaterialVariant();
         if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
-    }
-
-    private void ApplyMaterialVariant()
-    {
-        Material variantMaterial = variantMaterials[enemyRandom.Next(variantMaterials.Length)];
-        Material[] currentMaterials = skinnedMeshRenderers[0].sharedMaterials;
-        currentMaterials[0] = variantMaterial;
-        skinnedMeshRenderers[0].SetMaterials(currentMaterials.ToList());
     }
 
     public override void OnCollideWithPlayer(Collider other)

@@ -46419,6 +46419,7 @@ GameObject:
   - component: {fileID: 7240510479046683112}
   - component: {fileID: 410828306200048651}
   - component: {fileID: 7822534254777382931}
+  - component: {fileID: 3948119710304685680}
   m_Layer: 19
   m_Name: RedwoodTitan
   m_TagString: Enemy
@@ -46610,16 +46611,13 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 6190392053031910777}
   smartAgentNavigator: {fileID: 7822534254777382931}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips: []
     minTime: 0
     maxTime: 0
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: eaef63b734a1bc347b1f624d85966587, type: 3}
-  _idleTimer: 1
+  _variantMaterials: []
   AlbinoMaterials:
   - {fileID: 2100000, guid: b2f4cfae3f887b645b9bc3d5040ef296, type: 2}
   - {fileID: 2100000, guid: ecbba3b3c81707549abd5460f942000c, type: 2}
@@ -46650,8 +46648,6 @@ MonoBehaviour:
   eatingArea: {fileID: 8502562699440387874}
   eating: {fileID: 7400000, guid: bde4b014909da4d4ab48f5e78949ad7c, type: 2}
   kickAnimation: {fileID: 7400000, guid: 210fe676fc89119429b58c36a07c3603, type: 2}
-  kickingOut: 0
-  jumping: 0
 --- !u!65 &8260936454864110043
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46707,33 +46703,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
   - IsCrossFadeExit: 0
-    Layer: 1
-    OriginatingState: -542986255
-    DestinationState: -380624004
-    TransitionDuration: 1.0651171
-    TriggerNameHash: -1608089
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 1
-    OriginatingState: -542986255
-    DestinationState: -1489130674
-    TransitionDuration: 1.025834
-    TriggerNameHash: -1468029814
+    Layer: 0
+    OriginatingState: -1701686356
+    DestinationState: -1441185410
+    TransitionDuration: 0.69164944
+    TriggerNameHash: 439290163
     TransitionIndex: 1
   - IsCrossFadeExit: 0
-    Layer: 1
-    OriginatingState: -542986255
-    DestinationState: -1326707811
-    TransitionDuration: 0.4957142
-    TriggerNameHash: 1182904180
+    Layer: 0
+    OriginatingState: -1701686356
+    DestinationState: -1489130674
+    TransitionDuration: 0.5950918
+    TriggerNameHash: -1468029814
     TransitionIndex: 2
   - IsCrossFadeExit: 0
-    Layer: 1
-    OriginatingState: -542986255
-    DestinationState: -1441185410
-    TransitionDuration: 0.25
-    TriggerNameHash: 439290163
+    Layer: 0
+    OriginatingState: -1701686356
+    DestinationState: -1326707811
+    TransitionDuration: 0.4099064
+    TriggerNameHash: 1182904180
     TransitionIndex: 3
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1701686356
+    DestinationState: -380624004
+    TransitionDuration: 0.40579128
+    TriggerNameHash: -1608089
+    TransitionIndex: 4
   m_Animator: {fileID: 111922345862184124}
 --- !u!114 &6280165044034835773
 MonoBehaviour:
@@ -46815,21 +46811,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 15
+--- !u!114 &3948119710304685680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6657914976785946626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2057537292, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _materialsWithRendererWithWeight:
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: b2f4cfae3f887b645b9bc3d5040ef296, type: 2}
+      - {fileID: 2100000, guid: ecbba3b3c81707549abd5460f942000c, type: 2}
+      - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
+      - {fileID: 2100000, guid: 83ebd022765c0eb47af87dc5bf1e84b0, type: 2}
+      renderer: {fileID: 488740101449591505}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: cee9c60ebf07c7b44ae356c3fb4c21dc, type: 2}
+      - {fileID: 2100000, guid: 47795f3a9b2492245a77b699787b2b5e, type: 2}
+      - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
+      - {fileID: 2100000, guid: 86f2a6b4d082d8a4ba15258b0790d5c9, type: 2}
+      renderer: {fileID: 488740101449591505}
+  _applyOnSpawn: 1
 --- !u!1 &6862261050158760410
 GameObject:
   m_ObjectHideFlags: 0

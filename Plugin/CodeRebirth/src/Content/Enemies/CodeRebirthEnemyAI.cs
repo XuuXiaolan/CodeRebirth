@@ -34,8 +34,6 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     private AudioClip[] _hitBodySounds = [];
     [SerializeField]
     internal AudioClip spawnSound = null!;
-    [SerializeField]
-    private Material[] _variantMaterials = [];
 
     internal float _idleTimer = 1f;
     internal System.Random enemyRandom = new();
@@ -44,11 +42,6 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     {
         base.Start();
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 6699 + CodeRebirthUtils.Instance.CRRandom.Next(100000));
-
-        if (_variantMaterials.Length > 0)
-        {
-            ApplyMaterialVariant();
-        }
 
         if (spawnSound != null)
             creatureVoice.PlayOneShot(spawnSound);
@@ -61,14 +54,6 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
         if (Plugin.ModConfig.ConfigExtendedLogging.Value)
             GrabEnemyRarity(enemyType.enemyName);
-    }
-
-    private void ApplyMaterialVariant()
-    {
-        Material variantMaterial = _variantMaterials[enemyRandom.Next(_variantMaterials.Length)];
-        Material[] currentMaterials = skinnedMeshRenderers[0].sharedMaterials;
-        currentMaterials[1] = variantMaterial;
-        skinnedMeshRenderers[0].SetSharedMaterials(currentMaterials.ToList());
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)

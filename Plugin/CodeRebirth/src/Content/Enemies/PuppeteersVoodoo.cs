@@ -83,9 +83,9 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         smartAgentNavigator.SetAllValues(puppeteerCreatedBy.isOutside);
         puppetRandom = new System.Random(StartOfRound.Instance.randomMapSeed + puppeteerList.Count);
 
-        if (puppetRandom.Next(10) == 0)
+        if (puppetRandom.Next(5) == 0)
         {
-            renderer.SetMaterial(materialVariants[puppetRandom.Next(materialVariants.Length)]);
+            renderer.sharedMaterial = materialVariants[puppetRandom.Next(materialVariants.Length)];
         }
     }
 

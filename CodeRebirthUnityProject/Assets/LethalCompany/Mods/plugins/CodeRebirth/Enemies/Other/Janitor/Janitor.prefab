@@ -1767,6 +1767,7 @@ GameObject:
   - component: {fileID: 8021487793128385277}
   - component: {fileID: 6002066471921815620}
   - component: {fileID: 4596584288279080972}
+  - component: {fileID: 1956663531283641586}
   m_Layer: 19
   m_Name: Janitor
   m_TagString: Enemy
@@ -2070,9 +2071,6 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 578410016872127959}
   smartAgentNavigator: {fileID: 4596584288279080972}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: 8c5c9b810a20c9742b0eb23bcbabc208, type: 3}
@@ -2091,7 +2089,7 @@ MonoBehaviour:
     maxTime: 15
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: 5d8444c48a058b44cae4a43f45d9301f, type: 3}
-  _idleTimer: 1
+  _variantMaterials: []
   sirenLights: {fileID: 6317738535433509279}
   handTransform: {fileID: 5815964725433825710}
   playerBoneTransform: {fileID: 3904122950325406940}
@@ -2180,10 +2178,42 @@ MonoBehaviour:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 15
+--- !u!114 &1956663531283641586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3591052539947343789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2057537292, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _materialsWithRendererWithWeight:
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: a8ce0116c9e738643a05491e9213e5dc, type: 2}
+      renderer: {fileID: 1507594337315776553}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: 6621cbd52c30eba43b0ff10423488f7f, type: 2}
+      renderer: {fileID: 1507594337315776553}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: b5b978aeeebe81f4ba81e8249069cd1d, type: 2}
+      renderer: {fileID: 1507594337315776553}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: 91e02efcd90a95047a4766066c8d8215, type: 2}
+      renderer: {fileID: 1507594337315776553}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: 74404c411bb9572498c77e357a499fd6, type: 2}
+      renderer: {fileID: 1507594337315776553}
+  _applyOnSpawn: 1
 --- !u!1 &3763124428522132940
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,7 +28,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     public AudioClip[] detectItemDroppedSounds = [];
     public AudioClip[] grabPlayerSounds = [];
     public AudioClip[] throwPlayerSounds = [];
-    public Material[] variantMaterials = [];
 
     private Collider[] _hitColliders = new Collider[12];
 
@@ -146,7 +145,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        ApplyMaterialVariant();
         SwitchToBehaviourStateOnLocalClient((int)JanitorStates.Idle);
 
         if (!IsServer)
@@ -690,14 +688,6 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     #endregion
 
     #region Misc Methods
-    private void ApplyMaterialVariant()
-    {
-        Material variantMaterial = variantMaterials[enemyRandom.Next(variantMaterials.Length)];
-        Material[] currentMaterials = skinnedMeshRenderers[0].sharedMaterials;
-        currentMaterials[1] = variantMaterial;
-        skinnedMeshRenderers[0].SetMaterials(currentMaterials.ToList());
-    }
-
     private void HandleIdleSoundTimer()
     {
         _idleTimer -= Time.deltaTime;

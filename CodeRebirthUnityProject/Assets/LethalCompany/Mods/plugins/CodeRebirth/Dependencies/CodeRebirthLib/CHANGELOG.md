@@ -1,4 +1,33 @@
-# v0.9.0
+# v0.9.5
+
+- Networked the chance script so each client gets it at the same time.
+- Added a new PathfindingLib Impl.
+- Got rid of unneeded fatal logs lol.
+- Added new misc script, `ApplyRendererVariants`.
+- Slightly reorganized the generation of configs
+  - Purely cosemetic, no config information (should) be lost
+
+## v0.9.4
+
+- Was accidently checking if there was more than 1 Mod Information incorrectly, never caused any issues but would push a warning.
+
+## v0.9.3
+
+- Added Compatibility support with GoodItemScan not allowing custom items to have custom scanNode colours.
+
+## v0.9.2
+
+- Fixed a tiny rare bug with SmartAgentNavigator.
+- Changed order of config generation.
+- Fixed LethalQuantities compatibility.
+- Fixed a bug with outside spawn weights not seeing moon names properly.
+
+## v0.9.1
+
+- Implemented saving to the AssetBundlePath and BuildOutputPath to the `Mod Information` ZIP Building stuff.
+- Made sure some key NetworkBehaviours were NetcodePatched.
+
+## v0.9.0
 
 - Implemented ZIP building for no-code mods.
 

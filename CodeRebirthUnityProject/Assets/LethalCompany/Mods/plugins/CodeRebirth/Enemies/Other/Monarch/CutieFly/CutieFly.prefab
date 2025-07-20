@@ -3442,6 +3442,7 @@ GameObject:
   - component: {fileID: 944425438071910137}
   - component: {fileID: 8402524520908088191}
   - component: {fileID: 192519686547840233}
+  - component: {fileID: 8936022889705833288}
   m_Layer: 19
   m_Name: CutieFly
   m_TagString: Enemy
@@ -3547,21 +3548,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantMove: 0
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
+  OnUseEntranceTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
   OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
-  OnUseEntranceTeleport:
-    m_PersistentCalls:
-      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 15
 --- !u!114 &8953742048132873015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3701,16 +3700,13 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 8953742048132873015}
   smartAgentNavigator: {fileID: 1180008600302926976}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips: []
     minTime: 0
     maxTime: 0
   _hitBodySounds: []
   spawnSound: {fileID: 0}
-  _idleTimer: 1
+  _variantMaterials: []
   variantMaterials:
   - {fileID: 2100000, guid: 7eed73b9efdcb1340ba771dd9a5dda26, type: 2}
   - {fileID: 2100000, guid: 7c764a5e0f05d0146828729eeec44a69, type: 2}
@@ -3752,3 +3748,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioSourcesWithClips: []
+--- !u!114 &8936022889705833288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8976022966261238567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2057537292, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _materialsWithRendererWithWeight:
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: 7eed73b9efdcb1340ba771dd9a5dda26, type: 2}
+      renderer: {fileID: 2691229703377825362}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: 7c764a5e0f05d0146828729eeec44a69, type: 2}
+      renderer: {fileID: 2691229703377825362}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: 3591cff8b54d4ce409d7c61d6311ea45, type: 2}
+      renderer: {fileID: 2691229703377825362}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: 79a1be9f5cd925c45865742677249aac, type: 2}
+      renderer: {fileID: 2691229703377825362}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: 82773d05ab08cd74fa4456d2d7c5e0cb, type: 2}
+      renderer: {fileID: 2691229703377825362}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: ee57e16eab6902a4986d33bebcc440da, type: 2}
+      renderer: {fileID: 2691229703377825362}
+  - materialsWithRenderer:
+      materials:
+      - {fileID: 2100000, guid: f8aa759e03360c849941ddaf9a3934ec, type: 2}
+      renderer: {fileID: 2691229703377825362}
+  _applyOnSpawn: 1
