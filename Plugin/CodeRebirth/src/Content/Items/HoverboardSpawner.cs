@@ -1,3 +1,5 @@
+using CodeRebirth.src.Content.Unlockables;
+
 namespace CodeRebirth.src.Content.Items;
 
 public class HoverboardSpawner : GrabbableObject

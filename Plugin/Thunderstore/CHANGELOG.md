@@ -1,4 +1,11 @@
-# v1.1.11
+# v1.2.0
+
+- Added all the plushies.
+- Added Achievements.
+- Reworked hoverboard.
+- 
+
+## v1.1.11
 
 - Fixed Scrap-E's material and model being invisible lol.
 

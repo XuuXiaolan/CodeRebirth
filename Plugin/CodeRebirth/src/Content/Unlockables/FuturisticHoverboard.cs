@@ -7,7 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace CodeRebirth.src.Content.Items;
+namespace CodeRebirth.src.Content.Unlockables;
 public enum HoverboardTypes
 {
     Regular,
