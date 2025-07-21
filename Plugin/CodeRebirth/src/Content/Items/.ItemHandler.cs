@@ -52,6 +52,10 @@ public class ItemHandler : ContentHandler<ItemHandler>
     {
     }
 
+    public class CodeRebirthPlushiesAssets(CRMod mod, string filePath) : AssetBundleLoader<CodeRebirthPlushiesAssets>(mod, filePath)
+    {
+    }
+
     public MoonUnlockerAssets? MoonUnlocker = null;
     public OxydeLoreAssets? OxydeLore = null;
     public XuAndRigoAssets? XuAndRigo = null;
@@ -63,6 +67,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
     public MarrowSplitterAssets? MarrowSplitter = null;
     public SwatterAssets? Swatter = null;
     public TomaHopAssets? TomaHop = null;
+    public CodeRebirthPlushiesAssets? CRPlushies = null;
 
     public ItemHandler(CRMod mod) : base(mod)
     {
@@ -87,5 +92,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
         // RegisterContent("swatterassets", out Swatter);
 
         RegisterContent("tomahopassets", out TomaHop);
+
+        RegisterContent("coderebirthplushiesassets", out CRPlushies);
     }
 }

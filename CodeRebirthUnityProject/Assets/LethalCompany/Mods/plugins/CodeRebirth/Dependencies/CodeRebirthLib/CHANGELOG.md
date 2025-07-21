@@ -1,4 +1,25 @@
-# v0.9.5
+# v0.9.9
+
+- Touched up code all over a bit more, achievements are mostly finished in practise with only UI left.
+- Added a component that allows you to run events based on trying to complete achievements, an event on completing an achievement, and incrementing achievement progress.
+
+## v0.9.8
+
+- More null checks with navigators on a company moon.
+
+## v0.9.7
+
+- Polished achievements a bit more.
+- Fixed an issue where navigators are on a company moon.
+
+## v0.9.6
+
+- Fixed some possible networking issues with ChanceScript and ApplyRendererVariants.
+- Added a rough implementation of something new I'm working on, Achievements, because I don't really wanna wait for this AchievementsLib that's been 99% done for who knows how long.
+- Achievements are per player and they are global only (making save-file only achievements doesn't quite make much sense).
+- No UI done for achievements yet but soon.
+
+## v0.9.5
 
 - Networked the chance script so each client gets it at the same time.
 - Added a new PathfindingLib Impl.

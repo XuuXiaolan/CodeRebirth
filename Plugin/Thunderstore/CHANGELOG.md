@@ -3,7 +3,7 @@
 - Added all the plushies.
 - Added Achievements.
 - Reworked hoverboard.
-- 
+- Added Jacobian's terrible horrifying death monitor into the cabin.
 
 ## v1.1.11
 
