@@ -246,6 +246,7 @@ GameObject:
   - component: {fileID: 5111356683705370356}
   - component: {fileID: 9049991542844813295}
   - component: {fileID: 7756545479553538942}
+  - component: {fileID: 5945945994623682060}
   m_Layer: 6
   m_Name: MistressPlush
   m_TagString: PhysicsProp
@@ -343,7 +344,7 @@ MonoBehaviour:
   isInElevator: 0
   isInShipRoom: 0
   isInFactory: 1
-  useCooldown: 5
+  useCooldown: 6
   currentUseCooldown: 0
   itemProperties: {fileID: 11400000, guid: 37b590ff3e7648144b60c959b62e9a2e, type: 2}
   insertedBattery:
@@ -368,6 +369,35 @@ MonoBehaviour:
   _onUseEvent:
     m_PersistentCalls:
       m_Calls: []
+  _onAnimationEnd:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5945945994623682060}
+        m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.WaitForTimeBeforeEvent,
+          CodeRebirth
+        m_MethodName: WaitAndDoEvent
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7756545479553538942}
+        m_TargetAssemblyTypeName: CodeRebirth.src.MiscScripts.WaitForTimeBeforeEvent,
+          CodeRebirth
+        m_MethodName: WaitAndDoEvent
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 3
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _audioSource: {fileID: 9049991542844813295}
   _useSound: {fileID: 0}
 --- !u!114 &5111356683705370356
@@ -524,6 +554,45 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+--- !u!114 &5945945994623682060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2436537617996899370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1907281941, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _afterWaitingEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 437660797788252595}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1367200131608205201}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &4357889996997673217
 GameObject:

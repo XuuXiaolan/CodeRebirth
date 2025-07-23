@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class DetectLightInSurroundings : MonoBehaviour
 {
     [HideInInspector] public float lightValueOnThisObject = 0f;
@@ -29,12 +30,18 @@ public class DetectLightInSurroundings : MonoBehaviour
         roundLightData.AddRange(CodeRebirthUtils.currentRoundLightData);
         foreach ((Light light, HDAdditionalLightData hdLightData) in roundLightData)
         {
-            if (light == null || hdLightData == null || !light.enabled) continue;
-            if (GameNetworkManager.Instance.localPlayerController.nightVision == light) continue;
+            if (light == null || hdLightData == null || !light.enabled || transform == null)
+                continue;
+
+            if (GameNetworkManager.Instance.localPlayerController.nightVision == light)
+                continue;
+
             Vector3 nodePosition = transform.position;
 
             float attenuation = CalculateAttenuation(light, nodePosition);
-            if (attenuation == 0) continue;
+            if (attenuation == 0)
+                continue;
+
             float contribution = light.intensity * attenuation;
             lightValueOnThisObject += contribution;
             // Plugin.ExtendedLogging($"influencing light: {light.name} with contribution: {contribution}");
@@ -79,5 +86,10 @@ public class DetectLightInSurroundings : MonoBehaviour
         // Example using inverse square law with range consideration
         float attenuation = 1f / (distance * distance);
         return attenuation;
+    }
+
+    public void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 }

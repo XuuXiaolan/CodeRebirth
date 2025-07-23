@@ -15,11 +15,16 @@ public class MistressPlushie : PlushieItem
         if (distanceToLocalPlayer > 20)
             return;
 
-        if (Physics.Raycast(GameNetworkManager.Instance.localPlayerController.gameplayCamera.transform.position, this.transform.position - GameNetworkManager.Instance.localPlayerController.gameplayCamera.transform.position, distanceToLocalPlayer, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        float dot = Vector3.Dot(this.transform.forward, GameNetworkManager.Instance.localPlayerController.gameplayCamera.transform.forward);
+        if (dot > 0f)
         {
             return;
         }
 
-        this.transform.LookAt(GameNetworkManager.Instance.localPlayerController.transform);
+        Vector3 toTarget = GameNetworkManager.Instance.localPlayerController.transform.position - this.transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(toTarget);
+        targetRotation.y = 0;
+       float sharpness = 0.1f;
+       this.transform.rotation = Quaternion.Lerp(this.transform.rotation, targetRotation, Time.deltaTime * sharpness);
     }
 }

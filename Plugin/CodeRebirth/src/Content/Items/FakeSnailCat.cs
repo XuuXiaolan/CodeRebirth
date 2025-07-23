@@ -58,6 +58,9 @@ public class FakeSnailCat : GrabbableObject
         PlayerControllerB closestPlayer = StartOfRound.Instance.allPlayerScripts[0];
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
+            if (player.isPlayerDead || !player.isPlayerControlled)
+                continue;
+
             float distance = Vector3.Distance(transform.position, player.transform.position);
             if (distance < closestDistance)
             {

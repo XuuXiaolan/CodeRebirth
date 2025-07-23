@@ -16,6 +16,8 @@ public class PlushieItem : GrabbableObject
     private bool _dropOnUse = false;
     [SerializeField]
     private UnityEvent _onUseEvent = null!;
+    [SerializeField]
+    private UnityEvent _onAnimationEnd = null!;
 
     [Space(10)]
     [Header("Audio")]
@@ -39,5 +41,10 @@ public class PlushieItem : GrabbableObject
         {
             playerHeldBy.StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
         }
+    }
+
+    public void OnAnimationEndAnimEvent()
+    {
+        _onAnimationEnd.Invoke();
     }
 }
