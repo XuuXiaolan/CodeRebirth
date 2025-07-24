@@ -82,14 +82,11 @@ public class SnailCatAI : CodeRebirthEnemyAI
                 this.transform.localScale *= 0.1f;
             }
             propScript.originalScale = this.transform.localScale;
+            fakeLocalScale = this.transform.localScale;
             isWiWiWiii = currentName == "Wiwiwii";
+            shiftHash = ApplyVariants(_specialRenderer);
         }
-        if (playerHolding != null)
-        {
-            SyncNewSnailCatServerRpc(fakeLocalScale, currentName, shiftHash, playerHolding);
-            return;
-        }
-        SyncNewSnailCatServerRpc(fakeLocalScale, currentName, shiftHash, null);
+        SyncNewSnailCatServerRpc(fakeLocalScale, currentName, shiftHash, playerHolding);
     }
 
 
@@ -102,18 +99,15 @@ public class SnailCatAI : CodeRebirthEnemyAI
     [ClientRpc]
     private void SyncNewSnailCatClientRpc(Vector3 scale, string name, float magicalHashNumber, PlayerControllerReference playerControllerReference)
     {
-        InitaliseRealSnailCat(scale, name, magicalHashNumber, playerControllerReference);
-    }
-
-    private void InitaliseRealSnailCat(Vector3 scale, string name, float magicalHashNumber, PlayerControllerB? playerController)
-    {
         this.transform.localScale = scale;
         propScript.originalScale = scale;
         currentName = name;
         scanNodeProperties.headerText = currentName;
         isWiWiWiii = currentName == "Wiwiwii";
         _specialRenderer!.materials[0].SetFloat(ShiftHash, magicalHashNumber);
-        playerHolding = playerController;
+        detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
+        detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
+        playerHolding = playerControllerReference;
         if (playerHolding != null && playerHolding.IsLocalPlayer())
         {
             CRUtilities.MakePlayerGrabObject(playerHolding, this.propScript);
@@ -125,15 +119,12 @@ public class SnailCatAI : CodeRebirthEnemyAI
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
         if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
-        ApplyVariants(_specialRenderer);
     }
 
-    private void ApplyVariants(Renderer renderer)
+    private float ApplyVariants(Renderer renderer)
     {
         float number = enemyRandom.NextFloat(0f, 1f);
-        renderer.GetMaterial().SetFloat(ShiftHash, number);
-        detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
-        detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
+        return number;
     }
 
     public virtual void OnLightValueChange(float lightValue)
