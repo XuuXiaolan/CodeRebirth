@@ -22,6 +22,7 @@ namespace CodeRebirth.src;
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(MoreCompany.PluginInformation.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(MoreShipUpgrades.Misc.Metadata.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
 {
     internal new static ManualLogSource Logger = null!;

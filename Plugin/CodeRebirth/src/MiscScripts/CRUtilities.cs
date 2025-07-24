@@ -1,4 +1,5 @@
-﻿using CodeRebirth.src.Util.Extensions;
+﻿using CodeRebirth.src.ModCompats;
+using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using System.Collections;
@@ -264,7 +265,7 @@ public class CRUtilities
             player.cursorIcon.enabled = false;
             player.cursorTip.text = "";
             player.twoHanded = player.currentlyGrabbingObject.itemProperties.twoHanded;
-            player.carryWeight = Mathf.Clamp(player.carryWeight + (player.currentlyGrabbingObject.itemProperties.weight - 1f), 1f, 10f);
+            player.carryWeight = Mathf.Clamp(player.carryWeight + (LateGameUpgradesCompat.TryGetItemWeight(player.currentlyGrabbingObject.itemProperties.weight)), 1f, 10f);
             if (player.currentlyGrabbingObject.itemProperties.grabAnimationTime > 0f)
             {
                 player.grabObjectAnimationTime = player.currentlyGrabbingObject.itemProperties.grabAnimationTime;
