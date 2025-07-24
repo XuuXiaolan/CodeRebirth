@@ -1,5 +1,6 @@
 # v1.2.0
 
+- Fixed SnailCat names being desynced apparently, host now controls all the names.
 - Added all the plushies.
 - Added Achievements.
 - Reworked hoverboard.

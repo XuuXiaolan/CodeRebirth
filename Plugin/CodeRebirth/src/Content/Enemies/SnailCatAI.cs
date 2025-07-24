@@ -8,6 +8,7 @@ using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -24,15 +25,14 @@ public class SnailCatAI : CodeRebirthEnemyAI
     [SerializeField]
     internal Renderer _specialRenderer = null!;
 
-    private string currentName = "";
+    internal string currentName = "";
     private bool holdingBaby = false;
     private Coroutine? dropBabyCoroutine = null;
-    private PlayerControllerB? playerHolding = null;
+    internal PlayerControllerB? playerHolding = null;
     private float specialActionTimer = 1f;
     private float detectEnemyInterval = 0f;
     private bool isWiWiWiii = false;
-    internal Vector3 localScale = Vector3.one;
-    internal string snailCatName = "Mu";
+    internal Vector3 fakeLocalScale = Vector3.one;
     internal float shiftHash = 0;
     internal bool wasFake = false;
 
@@ -53,41 +53,77 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (!IsServer || !wasFake)
+        if (!IsServer)
             return;
 
-        StartCoroutine(DelayForBit());
+        DelayForBit();
     }
 
-    private IEnumerator DelayForBit()
+    private void DelayForBit()
     {
-        yield return new WaitForSeconds(0.1f);
-        SyncNewSnailCatServerRpc(localScale, snailCatName, shiftHash);
+        if (!wasFake)
+        {
+            List<string> randomizedNames = new();
+            if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Real Enemy SnailCat", out CREnemyDefinition? CREnemyDefinition))
+            {
+                randomizedNames = CREnemyDefinition.GetGeneralConfig<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
+            }
+
+            if (randomizedNames.Count == 0)
+                randomizedNames.Add("Mu");
+
+            string randomName = randomizedNames[enemyRandom.Next(randomizedNames.Count)];
+            float randomScale = enemyRandom.NextFloat(0.75f, 1.25f);
+            this.transform.localScale *= randomScale;
+            currentName = randomName;
+            scanNodeProperties.headerText = currentName;
+            if (currentName == "Mu")
+            {
+                this.transform.localScale *= 0.1f;
+            }
+            propScript.originalScale = this.transform.localScale;
+            isWiWiWiii = currentName == "Wiwiwii";
+        }
+        if (playerHolding != null)
+        {
+            SyncNewSnailCatServerRpc(fakeLocalScale, currentName, shiftHash, playerHolding);
+            return;
+        }
+        SyncNewSnailCatServerRpc(fakeLocalScale, currentName, shiftHash, null);
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncNewSnailCatServerRpc(Vector3 scale, string name, float magicalHashNumber, PlayerControllerReference playerControllerReference)
+    {
+        SyncNewSnailCatClientRpc(scale, name, magicalHashNumber, playerControllerReference);
+    }
+
+    [ClientRpc]
+    private void SyncNewSnailCatClientRpc(Vector3 scale, string name, float magicalHashNumber, PlayerControllerReference playerControllerReference)
+    {
+        InitaliseRealSnailCat(scale, name, magicalHashNumber, playerControllerReference);
+    }
+
+    private void InitaliseRealSnailCat(Vector3 scale, string name, float magicalHashNumber, PlayerControllerB? playerController)
+    {
+        this.transform.localScale = scale;
+        propScript.originalScale = scale;
+        currentName = name;
+        scanNodeProperties.headerText = currentName;
+        isWiWiWiii = currentName == "Wiwiwii";
+        _specialRenderer!.materials[0].SetFloat(ShiftHash, magicalHashNumber);
+        playerHolding = playerController;
+        if (playerHolding != null && playerHolding.IsLocalPlayer())
+        {
+            CRUtilities.MakePlayerGrabObject(playerHolding, this.propScript);
+        }
     }
 
     public override void Start()
     {
         base.Start();
         QualitySettings.skinWeights = SkinWeights.FourBones;
-        List<string> randomizedNames = new();
-        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Real Enemy SnailCat", out CREnemyDefinition? CREnemyDefinition))
-        {
-            randomizedNames = CREnemyDefinition.GetGeneralConfig<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
-        }
-        if (randomizedNames.Count == 0)
-            randomizedNames.Add("Mu");
-
-        string randomName = randomizedNames[enemyRandom.Next(randomizedNames.Count)];
-        float randomScale = enemyRandom.NextFloat(0.75f, 1.25f);
-        this.transform.localScale *= randomScale;
-        currentName = randomName;
-        scanNodeProperties.headerText = currentName;
-        if (currentName == "Mu")
-        {
-            this.transform.localScale *= 0.1f;
-        }
-        propScript.originalScale = this.transform.localScale;
-        isWiWiWiii = currentName == "Wiwiwii";
         if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
         ApplyVariants(_specialRenderer);
     }
@@ -381,28 +417,5 @@ public class SnailCatAI : CodeRebirthEnemyAI
             fakeSnailCat.shiftHash = _specialRenderer!.materials[0].GetFloat(ShiftHash);
         }
         // CRUtilities.CreateExplosion(this.transform.position, true, 99999, 0, 15, 999, null, null, 1000f);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void SyncNewSnailCatServerRpc(Vector3 scale, string name, float magicalHashNumber)
-    {
-        SyncNewSnailCatClientRpc(scale, name, magicalHashNumber);
-    }
-
-    [ClientRpc]
-    private void SyncNewSnailCatClientRpc(Vector3 scale, string name, float magicalHashNumber)
-    {
-        StartCoroutine(InitaliseRealSnailCat(scale, name, magicalHashNumber));
-    }
-
-    private IEnumerator InitaliseRealSnailCat(Vector3 scale, string name, float magicalHashNumber)
-    {
-        yield return new WaitUntil(() => detectLightInSurroundings != null);
-        this.transform.localScale = scale;
-        propScript.originalScale = scale;
-        currentName = name;
-        scanNodeProperties.headerText = currentName;
-        isWiWiWiii = currentName == "Wiwiwii";
-        _specialRenderer!.materials[0].SetFloat(ShiftHash, magicalHashNumber);
     }
 }

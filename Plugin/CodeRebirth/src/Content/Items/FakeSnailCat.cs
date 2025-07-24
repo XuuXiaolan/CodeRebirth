@@ -19,6 +19,7 @@ public class FakeSnailCat : GrabbableObject
     [SerializeField]
     private Renderer _renderer = null!;
 
+    internal PlayerControllerB lastOwner = null!;
     internal Vector3 localScale = Vector3.one;
     internal string snailCatName = "Mu";
     internal float shiftHash = 0;
@@ -29,12 +30,11 @@ public class FakeSnailCat : GrabbableObject
         if (!IsServer)
             return;
 
-        StartCoroutine(DelayForBit());
+        DelayForBit();
     }
 
-    private IEnumerator DelayForBit()
+    private void DelayForBit()
     {
-        yield return new WaitForSeconds(0.1f);
         InitaliseFakeSnailCatServerRpc();
     }
 
@@ -54,23 +54,9 @@ public class FakeSnailCat : GrabbableObject
     {
         this.transform.position = StartOfRound.Instance.shipInnerRoomBounds.bounds.center;
         GameNetworkManager.Instance.localPlayerController.SetItemInElevator(true, true, this);
-        float closestDistance = float.MaxValue;
-        PlayerControllerB closestPlayer = StartOfRound.Instance.allPlayerScripts[0];
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
-        {
-            if (player.isPlayerDead || !player.isPlayerControlled)
-                continue;
 
-            float distance = Vector3.Distance(transform.position, player.transform.position);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                closestPlayer = player;
-            }
-        }
-
-        if (closestPlayer.IsLocalPlayer())
-            CRUtilities.MakePlayerGrabObject(closestPlayer, this);
+        if (lastOwner.IsLocalPlayer())
+            CRUtilities.MakePlayerGrabObject(lastOwner, this);
 
         this.transform.localScale = scale;
         originalScale = scale;
@@ -102,16 +88,16 @@ public class FakeSnailCat : GrabbableObject
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
             return;
 
-        if (isHeld || isPocketed)
-            return;
-
         if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Real Enemy SnailCat", out CREnemyDefinition? realEnemySnailCatEnemyDefinition))
         {
             NetworkObjectReference netObjRef = RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, realEnemySnailCatEnemyDefinition.EnemyType);
             SnailCatAI snailCatAI = ((NetworkObject)netObjRef).GetComponent<SnailCatAI>();
             snailCatAI.wasFake = true;
-            snailCatAI.localScale = this.transform.localScale;
-            snailCatAI.snailCatName = snailCatName;
+            if (isHeld && playerHeldBy != null)
+                snailCatAI.playerHolding = playerHeldBy;
+
+            snailCatAI.fakeLocalScale = this.transform.localScale;
+            snailCatAI.currentName = snailCatName;
             snailCatAI.shiftHash = _renderer.GetMaterial().GetFloat(SnailCatAI.ShiftHash);
             this.NetworkObject.Despawn();
         }
