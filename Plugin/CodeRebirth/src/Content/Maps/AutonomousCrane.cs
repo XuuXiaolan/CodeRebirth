@@ -5,6 +5,7 @@ using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -348,9 +349,6 @@ public class AutonomousCrane : NetworkBehaviour
                 if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || _playerKillList.Contains(player))
                     continue;
 
-                if (Physics.Linecast(magnetTargetPosition, collider.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-                    continue;
-
                 _playerKillList.Add(player);
                 if (IsServer && Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
                 {
@@ -360,8 +358,6 @@ public class AutonomousCrane : NetworkBehaviour
                         flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName = player;
                     }
                 }
-
-                Plugin.ExtendedLogging($"Killing player through crane");
             }
             else if (hittable is EnemyAICollisionDetect enemy)
             {
@@ -375,15 +371,27 @@ public class AutonomousCrane : NetworkBehaviour
                 hittable.Hit(99, magnetTargetPosition, null, true, -1);
             }
         }
+
+        
         foreach (PlayerControllerB player in _playerKillList)
         {
-            CodeRebirthUtils.Instance.KillPlayerOnOwnerClientRpc(player, false, 0, 0, Vector3.zero);
+            HandlePlayerDeathClientRpc(magnetTargetPosition, player);
         }
         foreach (EnemyAI enemy in _enemyKillList)
         {
             CodeRebirthUtils.Instance.KillEnemyOnOwnerClientRpc(new NetworkBehaviourReference(enemy), false);
         }
         CraneHitBottomResultsClientRpc(magnetTargetPosition);
+    }
+
+    [ClientRpc]
+    private void HandlePlayerDeathClientRpc(Vector3 magnetTargetPosition, PlayerControllerReference playerToDie)
+    {
+        PlayerControllerB player = playerToDie;
+        if (Physics.Linecast(magnetTargetPosition, player.transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            return;
+
+        player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
     }
 
     private List<PlayerControllerB> _playerKillList = new();
