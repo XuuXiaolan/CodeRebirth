@@ -462,6 +462,8 @@ The 4 Instrument models and music are from the game "Zort" by Londer Software. (
 
 ## Credits - Misc Online Assets
 
+"Mu Posters" (<https://skfb.ly/oLzIp>) by Estelaris.
+
 "Carnivorous Plant" (<https://skfb.ly/oLzIp>) by mike69420 is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
 
 "Various Sound Effects" (<https://pixabay.com>)
