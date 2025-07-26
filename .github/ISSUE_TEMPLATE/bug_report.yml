@@ -52,10 +52,9 @@ body:
       label: Version
       description: What version of the game are you running?
       options:
+        - v72
         - v69
         - v64
-        - v55
-        - v50
       default: 0
     validations:
       required: true
