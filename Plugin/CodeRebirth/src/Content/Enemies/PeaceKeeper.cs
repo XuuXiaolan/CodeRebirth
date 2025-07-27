@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src;
-using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Items;
@@ -11,6 +9,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
+namespace CodeRebirth.src.Content.Enemies;
 public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
 {
     [SerializeField]
@@ -113,15 +112,15 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         return 0.75f;
     }
 
-	bool IVisibleThreat.IsThreatDead()
-	{
-		return isEnemyDead;
-	}
+    bool IVisibleThreat.IsThreatDead()
+    {
+        return isEnemyDead;
+    }
 
-	GrabbableObject? IVisibleThreat.GetHeldObject()
-	{
-		return null;
-	}
+    GrabbableObject? IVisibleThreat.GetHeldObject()
+    {
+        return null;
+    }
     #endregion
     public static List<PeaceKeeper> Instances = new();
     public enum PeaceKeeperState

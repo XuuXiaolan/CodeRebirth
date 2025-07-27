@@ -2,9 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src;
-using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.Util;
@@ -12,6 +9,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
+namespace CodeRebirth.src.Content.Enemies;
 public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
 {
     [Header("Audio")]
@@ -91,15 +89,15 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         return 0.75f;
     }
 
-	bool IVisibleThreat.IsThreatDead()
-	{
-		return isEnemyDead;
-	}
+    bool IVisibleThreat.IsThreatDead()
+    {
+        return isEnemyDead;
+    }
 
-	GrabbableObject? IVisibleThreat.GetHeldObject()
-	{
-		return null;
-	}
+    GrabbableObject? IVisibleThreat.GetHeldObject()
+    {
+        return null;
+    }
     #endregion
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float

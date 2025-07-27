@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src;
-using CodeRebirth.src.MiscScripts;
 using Unity.Netcode;
 using UnityEngine;
 
+namespace CodeRebirth.src.MiscScripts;
 public class EnemyLevelSpawner : MonoBehaviour
 {
     [Header("Misc")]
