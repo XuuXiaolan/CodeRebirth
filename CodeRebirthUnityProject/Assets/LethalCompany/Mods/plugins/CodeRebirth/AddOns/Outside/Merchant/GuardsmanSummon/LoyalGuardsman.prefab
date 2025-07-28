@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!114 &829157513929409681
@@ -7557,6 +7557,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d700dc2fa3fb73c46aa3bab425b0aa1d, type: 3}
   - {fileID: 8300000, guid: f76b454c34ce6644fbd02005f7fb47d6, type: 3}
   - {fileID: 8300000, guid: 2fe8b12aa947f1b4987b8275e37d66b7, type: 3}
+  GuardsmanOwner: {fileID: 3800677268668138247}
   targetEnemy: {fileID: 0}
 --- !u!1 &1270410153748060764
 GameObject:
@@ -7627,7 +7628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!1 &1672063856328519791
@@ -10387,7 +10388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!114 &316347894893263758
@@ -12815,7 +12816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!1 &2908654290712783086
@@ -12864,7 +12865,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!65 &3155494919054670052
@@ -13282,7 +13283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!65 &7045253205351901866
@@ -13576,7 +13577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!65 &2104253789530139947
@@ -16124,7 +16125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!1 &5366065137981631391
@@ -18635,8 +18636,10 @@ MonoBehaviour:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
+  isOutside: 1
+  exitPoints: []
+  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
-  _allowedLinks: -1
 --- !u!114 &2349619241804805547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18718,9 +18721,120 @@ MonoBehaviour:
   m_GameObject: {fileID: 5698399756435311656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1600088844, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1291295492, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: {fileID: 11400000, guid: a8f01c1864e6e264395b7d4435a4f168, type: 2}
+  skinnedMeshRenderers:
+  - {fileID: 6437086525931007476}
+  meshRenderers: []
+  creatureAnimator: {fileID: 4177383988010323407}
+  creatureVoice: {fileID: 7755287703675077195}
+  creatureSFX: {fileID: 632953977152319603}
+  eye: {fileID: 4614258564591903143}
+  dieSFX: {fileID: 0}
+  enemyBehaviourStates: []
+  currentBehaviourState:
+    name: 
+    VoiceClip: {fileID: 0}
+    playOneShotVoice: 0
+    SFXClip: {fileID: 0}
+    playOneShotSFX: 0
+    IsAnimTrigger: 0
+    parameterString: 
+    boolValue: 0
+  currentBehaviourStateIndex: 0
+  previousBehaviourStateIndex: 0
+  currentOwnershipOnThisClient: -1
+  isInsidePlayerShip: 0
+  AIIntervalTime: 0.2
+  inSpecialAnimation: 0
+  inSpecialAnimationWithPlayer: {fileID: 0}
+  serverPosition: {x: 0, y: 0, z: 0}
+  serverRotation: {x: 0, y: 0, z: 0}
+  agent: {fileID: 5236496018670464815}
+  allAINodes: []
+  targetNode: {fileID: 0}
+  favoriteSpot: {fileID: 0}
+  tempDist: 0
+  mostOptimalDistance: 0
+  pathDistance: 0
+  thisNetworkObject: {fileID: 0}
+  thisEnemyIndex: 0
+  isClientCalculatingAI: 0
+  updatePositionThreshold: 99999
+  targetPlayer: {fileID: 0}
+  movingTowardsTargetPlayer: 0
+  moveTowardsDestination: 0
+  destination: {x: 0, y: 0, z: 0}
+  addPlayerVelocityToDestination: 0
+  syncMovementSpeed: 0
+  timeSinceSpawn: 0
+  exitVentAnimationTime: 1
+  ventAnimationFinished: 0
+  isEnemyDead: 0
+  daytimeEnemyLeaving: 0
+  enemyHP: 999
+  nodesTempArray: []
+  openDoorSpeedMultiplier: 0
+  useSecondaryAudiosOnAnimatedObjects: 0
+  currentSearch:
+    unsearchedNodes: []
+    currentTargetNode: {fileID: 0}
+    nextTargetNode: {fileID: 0}
+    waitingForTargetNode: 0
+    choseTargetNode: 0
+    currentSearchStartPosition: {x: 0, y: 0, z: 0}
+    loopSearch: 1
+    timesFinishingSearch: 0
+    nodesEliminatedInCurrentSearch: 0
+    inProgress: 0
+    calculatingNodeInSearch: 0
+    startedSearchAtSelf: 0
+    searchWidth: 200
+    searchPrecision: 5
+    randomized: 0
+    onlySearchNodesInLOS: 0
+  DebugEnemy: 0
+  stunnedIndefinitely: 0
+  stunNormalizedTimer: 0
+  postStunInvincibilityTimer: 0
+  stunnedByPlayer: {fileID: 0}
+  debugEnemyAI: 0
+  removedPowerLevel: 0
+  isOutside: 1
+  hitsPhysicsObjects: 0
+  gotFarthestNodeAsync: 0
+  creatureNetworkAnimator: {fileID: 2349619241804805547}
+  smartAgentNavigator: {fileID: 2426049210476254518}
+  _hasVariants: 0
+  _usesTemperature: 0
+  _specialRenderer: {fileID: 0}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: f3ccf0485bbde024a8a3edfc1afbbfb9, type: 3}
+    - {fileID: 8300000, guid: a6c2f4fc8ba221447b4755c3621bc9d4, type: 3}
+    - {fileID: 8300000, guid: ad0c069591d3d71409f1126875b72d42, type: 3}
+    - {fileID: 8300000, guid: df2d835a74b0c2940b54011482f34f74, type: 3}
+    - {fileID: 8300000, guid: db5411887a6988b42a6f93f2e256c977, type: 3}
+    - {fileID: 8300000, guid: 9fa43e44c930d164dbb6aa2865fd3dc1, type: 3}
+    minTime: 10
+    maxTime: 15
+  _hitBodySounds: []
+  spawnSound: {fileID: 8300000, guid: b174819cbda63e543ae19de345dc8d8e, type: 3}
+  _idleTimer: 1
+  _slamAudioClip: {fileID: 8300000, guid: be9baa5bea1540d49aad45c2717c9781, type: 3}
+  _ripApartAudioClip: {fileID: 8300000, guid: aa446bc60d040114c9e193b2a0c3a586, type: 3}
+  _enemySpottedAudioClips:
+  - {fileID: 8300000, guid: 26f74b4e2cd85b54496c5794bc45b4fc, type: 3}
+  - {fileID: 8300000, guid: 35db5b70422d41a46a685b99f861d5b7, type: 3}
+  _enemyHoldingPoints:
+  - {fileID: 8565382373057596078}
+  - {fileID: 5292036373717274597}
+  _spotlightHead: {fileID: 7220987923014140000}
+  _enemySizeThreshold: 35
+  _dustLandDecal: {fileID: 7910498483126340510}
+  _dustParticleSystem: {fileID: 871313460824519449}
 --- !u!114 &7093993988679924568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26469,7 +26583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!1 &7141932930623717130
@@ -26761,7 +26875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!1 &7910498483126340510
@@ -26876,7 +26990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!65 &8872764132493517605
@@ -27091,7 +27205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!65 &957636632788851944
@@ -27187,7 +27301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!1 &8469340881918393074
@@ -27243,6 +27357,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d700dc2fa3fb73c46aa3bab425b0aa1d, type: 3}
   - {fileID: 8300000, guid: f76b454c34ce6644fbd02005f7fb47d6, type: 3}
   - {fileID: 8300000, guid: 2fe8b12aa947f1b4987b8275e37d66b7, type: 3}
+  GuardsmanOwner: {fileID: 3800677268668138247}
   targetEnemy: {fileID: 0}
 --- !u!1 &8545091737671561056
 GameObject:
@@ -27343,7 +27458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0
 --- !u!1 &8916466845111092488
@@ -27413,6 +27528,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7127b8f98ca8ec9896b384a71d39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+  mainScript: {fileID: 3800677268668138247}
   canCollideWithEnemies: 0
   onlyCollideWhenGrounded: 0

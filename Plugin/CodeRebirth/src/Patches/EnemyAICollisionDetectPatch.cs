@@ -1,3 +1,4 @@
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Weapons;
 using GameNetcodeStuff;
 using UnityEngine;
