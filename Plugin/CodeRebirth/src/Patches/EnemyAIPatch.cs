@@ -2,6 +2,7 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using GameNetcodeStuff;
@@ -30,7 +31,21 @@ static class EnemyAIPatch
         orig(self, destroy);
 
         CREnemyAdditionalData additionalEnemyData = CREnemyAdditionalData.CreateOrGet(self);
-        if (self.isEnemyDead && CodeRebirthUtils.Instance.enemyCoinDropRate.TryGetValue(self.enemyType, out float coinDropChance) && additionalEnemyData.KilledByPlayer)
+        if (!self.isEnemyDead)
+            return;
+
+        if (!additionalEnemyData.KilledByPlayer)
+            return;
+
+        if (additionalEnemyData.PlayerThatLastHit!.IsLocalPlayer())
+        {
+            if (self is RedwoodTitanAI && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Timber!", out CRAchievementBaseDefinition? TimberAchievementDefinition))
+            {
+                ((CRInstantAchievement)TimberAchievementDefinition).TriggerAchievement();
+            }
+        }
+
+        if (CodeRebirthUtils.Instance.enemyCoinDropRate.TryGetValue(self.enemyType, out float coinDropChance))
         {
             float coinChance = coinDropChance;
             Plugin.ExtendedLogging($"Rolling to drop coin {coinChance}");
