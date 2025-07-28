@@ -60,7 +60,8 @@ MonoBehaviour:
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
-    Description: Timer for how long opening the metal crate takes.
+    Description: Blacklist of items that can spawn from Wooden Crate (comma separated,
+      recommend leaving empty).
   - settingName: Wooden Crate | Blacklist Or Whitelist
     DynamicConfigType: 3
     defaultString: 
