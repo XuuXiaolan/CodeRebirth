@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -99,6 +100,17 @@ public class KamikazeJimothy : NetworkBehaviour
         {
             renderer.enabled = false;
         }
+
+        if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 30f)
+        {
+            if (Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Banzai!", out CRAchievementBaseDefinition? BanzaiAchievementDefinition))
+            {
+                ((CRInstantAchievement)BanzaiAchievementDefinition).TriggerAchievement();
+            }
+        }
+
+        if (!IsServer)
+            yield break;
 
         foreach (var grabbableObjectValue in _grabbablesValues)
         {

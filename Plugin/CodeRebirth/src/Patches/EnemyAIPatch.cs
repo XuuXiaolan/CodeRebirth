@@ -43,6 +43,10 @@ static class EnemyAIPatch
             {
                 ((CRInstantAchievement)TimberAchievementDefinition).TriggerAchievement();
             }
+            else if (self is DriftwoodMenaceAI && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Bushwacked", out CRAchievementBaseDefinition? BushwackedAchievmentDefinition))
+            {
+                ((CRInstantAchievement)BushwackedAchievmentDefinition).TriggerAchievement();
+            }
         }
 
         if (CodeRebirthUtils.Instance.enemyCoinDropRate.TryGetValue(self.enemyType, out float coinDropChance))
