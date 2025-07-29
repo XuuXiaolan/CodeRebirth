@@ -6,6 +6,7 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.MiscScriptManagement;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -100,14 +101,24 @@ public class Merchant : NetworkBehaviour
             isActive.Value = true;
         }
         walletTrigger.interactable = GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Wayfarer's Wallet";
-        foreach (KeyValuePair<GrabbableObject, int> item in itemsSpawned.ToArray())
+        foreach (KeyValuePair<GrabbableObject, int> item in itemsSpawned)
         {
-            if (item.Value == -1) continue;
+            if (item.Value == -1)
+                continue;
+
             if (item.Key.isHeld && item.Key.playerHeldBy != null && !targetPlayers.Contains(item.Key.playerHeldBy))
             {
                 if (EnoughMoneySlotted(item.Value, item.Key))
                 {
+                    if (item.Key.playerHeldBy.IsLocalPlayer() && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Capitalism", out CRAchievementBaseDefinition? CapitalismAchievementDefinition))
+                    {
+                        ((CRInstantAchievement)CapitalismAchievementDefinition).TriggerAchievement();
+                    }
                     itemsSpawned[item.Key] = -1;
+                    if (itemsSpawned.Values.All(x => x == -1) && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Out Of Stock", out CRAchievementBaseDefinition? OutOfStockAchievementDefinition))
+                    {
+                        ((CRInstantAchievement)OutOfStockAchievementDefinition).TriggerAchievement();
+                    }
                     continue;
                 }
                 playersWhoStoleKilled = false;
@@ -131,6 +142,10 @@ public class Merchant : NetworkBehaviour
 
     private IEnumerator DestroyShip()
     {
+        if (Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Mayday Mayday!", out CRAchievementBaseDefinition? MaydayMaydayAchievementDefinition))
+        {
+            ((CRInstantAchievement)MaydayMaydayAchievementDefinition).TriggerAchievement();
+        }
         HUDManager.Instance.DisplayTip("Warning", "The Merchant never forgets thieves...\nPrepare for fire", true);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
@@ -148,14 +163,14 @@ public class Merchant : NetworkBehaviour
     private IEnumerator StealAllCoins(GrabbableObject itemTaken, int itemCost)
     {
         canTarget = false;
-        foreach (var items in itemsSpawned.ToArray())
+        foreach (var items in itemsSpawned)
         {
             if (items.Key == itemTaken) continue;
             items.Key.grabbable = false;
         }
         if (IsServer) networkAnimator.SetTrigger(TakeCoinsAnimation);
         yield return new WaitForSeconds(10f);
-        foreach (var items in itemsSpawned.ToArray())
+        foreach (var items in itemsSpawned)
         {
             if (items.Key == itemTaken) continue;
             items.Key.grabbable = true;
