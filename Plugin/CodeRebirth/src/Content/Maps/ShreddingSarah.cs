@@ -1,6 +1,8 @@
 using System.Collections;
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
@@ -42,6 +44,11 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
 
         int value = 0;
         bool isDeadBody = false;
+        if (player.currentlyHeldObjectServer is SnailCatPhysicsProp && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("You Monster", out CRAchievementBaseDefinition? MonsterAchievementDefinition))
+        {
+            ((CRInstantAchievement)MonsterAchievementDefinition).TriggerAchievement();
+        }
+
         if (player.currentlyHeldObjectServer is RagdollGrabbableObject)
         {
             isDeadBody = true;

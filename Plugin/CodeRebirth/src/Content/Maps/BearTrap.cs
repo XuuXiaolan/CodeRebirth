@@ -21,7 +21,7 @@ public class BearTrap : CodeRebirthHazard
     public AudioClip poppingTireSound = null!;
 
     private Vector3 caughtPosition = Vector3.zero;
-    private PlayerControllerB? playerCaught = null;
+    internal PlayerControllerB? playerCaught = null;
     private EnemyAI? enemyCaught = null;
     private bool isTriggered = false;
     private bool canTrigger = true;

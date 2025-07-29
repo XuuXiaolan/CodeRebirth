@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.Util;
 using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
@@ -564,24 +565,27 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     {
         creatureVoice.PlayOneShot(throwPlayerSounds[enemyRandom.Next(throwPlayerSounds.Length)]);
 
-        PlayerControllerB previousTargetPlayer = targetPlayer;
-        if (previousTargetPlayer == null)
+        if (targetPlayer == null)
         {
             currentlyThrowingPlayer = false;
             return;
         }
 
-        Vector3 forceDirection = (_targetTrashCan != null) ? (_targetTrashCan.transform.position - previousTargetPlayer.transform.position).normalized : transform.forward;
 
-        previousTargetPlayer.externalForceAutoFade = Vector3.up * 25f + forceDirection * 25f;
+        Vector3 forceDirection = (_targetTrashCan != null) ? (_targetTrashCan.transform.position - targetPlayer.transform.position).normalized : transform.forward;
+        targetPlayer.externalForceAutoFade = Vector3.up * 25f + forceDirection * 25f;
 
         // Reset states
         _targetTrashCan = null;
-        targetPlayer = null;
-        previousTargetPlayer.disableMoveInput = false;
         currentlyThrowingPlayer = false;
-        previousTargetPlayer.inAnimationWithEnemy = null;
-        previousTargetPlayer.DamagePlayer(15, true, true, CauseOfDeath.Gravity, 0, false, default);
+        targetPlayer.disableMoveInput = false;
+        targetPlayer.inAnimationWithEnemy = null;
+        targetPlayer.DamagePlayer(15, true, true, CauseOfDeath.Gravity, 0, false, default);
+        if (targetPlayer.IsLocalPlayer() && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Trash Trash Trash", out CRAchievementBaseDefinition? TrashAchievementDefinition))
+        {
+            ((CRInstantAchievement)TrashAchievementDefinition).TriggerAchievement();
+        }
+        targetPlayer = null;
 
         if (!IsServer)
             return;
