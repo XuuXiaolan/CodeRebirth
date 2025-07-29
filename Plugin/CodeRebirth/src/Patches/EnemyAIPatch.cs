@@ -47,6 +47,18 @@ static class EnemyAIPatch
             {
                 ((CRInstantAchievement)BushwackedAchievmentDefinition).TriggerAchievement();
             }
+            else if (self is Puppeteer && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Night of Betrayal", out CRAchievementBaseDefinition? BetrayalNightAchievmentDefinition))
+            {
+                ((CRInstantAchievement)BetrayalNightAchievmentDefinition).TriggerAchievement();
+            }
+            else if (self is PeaceKeeper && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Peace Kept", out CRAchievementBaseDefinition? PeaceKeptAchievmentDefinition))
+            {
+                ((CRInstantAchievement)PeaceKeptAchievmentDefinition).TriggerAchievement();
+            }
+            else if (self is CactusBudling && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Wild West", out CRAchievementBaseDefinition? WildWestAchievmentDefinition))
+            {
+                ((CRInstantAchievement)WildWestAchievmentDefinition).TriggerAchievement();
+            }
         }
 
         if (CodeRebirthUtils.Instance.enemyCoinDropRate.TryGetValue(self.enemyType, out float coinDropChance))
