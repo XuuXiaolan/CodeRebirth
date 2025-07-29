@@ -12,6 +12,7 @@ using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using CodeRebirthLib.Data;
+using CodeRebirthLib.ContentManagement.Achievements;
 
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable
@@ -412,6 +413,10 @@ public class ItemCrate : CRHittable
     {
         if (opened && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
+            if (Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Safe And Sound", out CRAchievementBaseDefinition? SafeAndSoundAchievementDefinition))
+            {
+                ((CRInstantAchievement)SafeAndSoundAchievementDefinition).TriggerAchievement();
+            }
             opened = false;
             CloseCrateOnPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }

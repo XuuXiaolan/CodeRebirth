@@ -1,6 +1,7 @@
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.Util;
 using Unity.Netcode;
 using UnityEngine;
@@ -48,9 +49,11 @@ public class Wallet : GrabbableObject
             if (coin != null)
             {
                 audioPlayer.Play();
-                if (IsServer) coinsStored.Value += coin.value;
-                scanNode.subText = $"Coins Stored: {coinsStored.Value}";
-                if (IsServer) coin.NetworkObject.Despawn();
+                if (Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Oh A Penny!", out CRAchievementBaseDefinition? OhAPennyAchievementDefinition))
+                {
+                    ((CRInstantAchievement)OhAPennyAchievementDefinition).TriggerAchievement();
+                }
+                AddCoinsServerRpc(new NetworkObjectReference(coin.NetworkObject), coin.value);
             }
             else if (IsServer)
             {
@@ -58,6 +61,24 @@ public class Wallet : GrabbableObject
                 coinsStored.Value -= coins;
             }
         }
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddCoinsServerRpc(NetworkObjectReference networkObjectReference, int amount)
+    {
+        coinsStored.Value += amount;
+        if (networkObjectReference.TryGet(out NetworkObject netObj))
+        {
+            netObj.Despawn();
+        }
+        UpdateScanNodeClientRpc();
+    }
+
+    [ClientRpc]
+    public void UpdateScanNodeClientRpc()
+    {
+        scanNode.subText = $"Coins Stored: {coinsStored.Value}";
     }
 
     [ServerRpc(RequireOwnership = false)]
