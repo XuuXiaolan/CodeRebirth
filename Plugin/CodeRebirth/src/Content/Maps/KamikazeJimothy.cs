@@ -103,10 +103,7 @@ public class KamikazeJimothy : NetworkBehaviour
 
         if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 30f)
         {
-            if (Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Banzai!", out CRAchievementBaseDefinition? BanzaiAchievementDefinition))
-            {
-                ((CRInstantAchievement)BanzaiAchievementDefinition).TriggerAchievement();
-            }
+            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Banzai!");
         }
 
         if (!IsServer)

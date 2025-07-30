@@ -110,14 +110,14 @@ public class Merchant : NetworkBehaviour
             {
                 if (EnoughMoneySlotted(item.Value, item.Key))
                 {
-                    if (item.Key.playerHeldBy.IsLocalPlayer() && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Capitalism", out CRAchievementBaseDefinition? CapitalismAchievementDefinition))
+                    if (item.Key.playerHeldBy.IsLocalPlayer())
                     {
-                        ((CRInstantAchievement)CapitalismAchievementDefinition).TriggerAchievement();
+                        Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Capitalism");
                     }
                     itemsSpawned[item.Key] = -1;
-                    if (itemsSpawned.Values.All(x => x == -1) && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Out Of Stock", out CRAchievementBaseDefinition? OutOfStockAchievementDefinition))
+                    if (itemsSpawned.Values.All(x => x == -1))
                     {
-                        ((CRInstantAchievement)OutOfStockAchievementDefinition).TriggerAchievement();
+                        Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Out Of Stock");
                     }
                     continue;
                 }
@@ -142,10 +142,7 @@ public class Merchant : NetworkBehaviour
 
     private IEnumerator DestroyShip()
     {
-        if (Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Mayday Mayday!", out CRAchievementBaseDefinition? MaydayMaydayAchievementDefinition))
-        {
-            ((CRInstantAchievement)MaydayMaydayAchievementDefinition).TriggerAchievement();
-        }
+        Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Mayday Mayday!");
         HUDManager.Instance.DisplayTip("Warning", "The Merchant never forgets thieves...\nPrepare for fire", true);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);

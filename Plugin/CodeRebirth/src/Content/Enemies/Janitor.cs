@@ -581,9 +581,9 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         targetPlayer.disableMoveInput = false;
         targetPlayer.inAnimationWithEnemy = null;
         targetPlayer.DamagePlayer(15, true, true, CauseOfDeath.Gravity, 0, false, default);
-        if (targetPlayer.IsLocalPlayer() && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Trash Trash Trash", out CRAchievementBaseDefinition? TrashAchievementDefinition))
+        if (targetPlayer.IsLocalPlayer())
         {
-            ((CRInstantAchievement)TrashAchievementDefinition).TriggerAchievement();
+            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Trash Trash Trash");
         }
         targetPlayer = null;
 

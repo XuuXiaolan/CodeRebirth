@@ -39,25 +39,25 @@ static class EnemyAIPatch
 
         if (additionalEnemyData.PlayerThatLastHit!.IsLocalPlayer())
         {
-            if (self is RedwoodTitanAI && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Timber!", out CRAchievementBaseDefinition? TimberAchievementDefinition))
+            if (self is RedwoodTitanAI)
             {
-                ((CRInstantAchievement)TimberAchievementDefinition).TriggerAchievement();
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Timber!");
             }
-            else if (self is DriftwoodMenaceAI && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Bushwacked", out CRAchievementBaseDefinition? BushwackedAchievmentDefinition))
+            else if (self is DriftwoodMenaceAI)
             {
-                ((CRInstantAchievement)BushwackedAchievmentDefinition).TriggerAchievement();
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Bushwacked");
             }
-            else if (self is Puppeteer && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Night of Betrayal", out CRAchievementBaseDefinition? BetrayalNightAchievmentDefinition))
+            else if (self is Puppeteer)
             {
-                ((CRInstantAchievement)BetrayalNightAchievmentDefinition).TriggerAchievement();
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Night of Betrayal");
             }
-            else if (self is PeaceKeeper && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Peace Kept", out CRAchievementBaseDefinition? PeaceKeptAchievmentDefinition))
+            else if (self is PeaceKeeper)
             {
-                ((CRInstantAchievement)PeaceKeptAchievmentDefinition).TriggerAchievement();
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Peace Kept");
             }
-            else if (self is CactusBudling && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Wild West", out CRAchievementBaseDefinition? WildWestAchievmentDefinition))
+            else if (self is CactusBudling)
             {
-                ((CRInstantAchievement)WildWestAchievmentDefinition).TriggerAchievement();
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Wild West");
             }
         }
 

@@ -1,7 +1,7 @@
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
-using CodeRebirth.src.Util;
 using CodeRebirthLib.ContentManagement.Achievements;
+using CodeRebirthLib.Extensions;
 using CodeRebirthLib.Util;
 using Unity.Netcode;
 using UnityEngine;
@@ -48,11 +48,11 @@ public class Wallet : GrabbableObject
 
             if (coin != null)
             {
+                if (!playerHeldBy.IsLocalPlayer())
+                    continue;
+
                 audioPlayer.Play();
-                if (Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Oh A Penny!", out CRAchievementBaseDefinition? OhAPennyAchievementDefinition))
-                {
-                    ((CRInstantAchievement)OhAPennyAchievementDefinition).TriggerAchievement();
-                }
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Oh A Penny!");
                 AddCoinsServerRpc(new NetworkObjectReference(coin.NetworkObject), coin.value);
             }
             else if (IsServer)

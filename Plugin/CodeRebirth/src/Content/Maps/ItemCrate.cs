@@ -413,10 +413,7 @@ public class ItemCrate : CRHittable
     {
         if (opened && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
-            if (Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("Safe And Sound", out CRAchievementBaseDefinition? SafeAndSoundAchievementDefinition))
-            {
-                ((CRInstantAchievement)SafeAndSoundAchievementDefinition).TriggerAchievement();
-            }
+            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Safe And Sound");
             opened = false;
             CloseCrateOnPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }

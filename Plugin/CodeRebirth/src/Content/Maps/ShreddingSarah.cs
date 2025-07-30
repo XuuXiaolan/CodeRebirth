@@ -44,9 +44,9 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
 
         int value = 0;
         bool isDeadBody = false;
-        if (player.currentlyHeldObjectServer is SnailCatPhysicsProp && Plugin.Mod.AchievementRegistry().TryGetFromAchievementName("You Monster", out CRAchievementBaseDefinition? MonsterAchievementDefinition))
+        if (player.currentlyHeldObjectServer is SnailCatPhysicsProp)
         {
-            ((CRInstantAchievement)MonsterAchievementDefinition).TriggerAchievement();
+            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("You Monster");
         }
 
         if (player.currentlyHeldObjectServer is RagdollGrabbableObject)
