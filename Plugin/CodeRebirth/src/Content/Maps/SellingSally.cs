@@ -215,6 +215,7 @@ public class SellingSally : NetworkBehaviour
             HUDManager.Instance.DisplayTip("Warning!", "Rampant underground activity detected, evacuation recommended.", true);
         }
 
+        Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Internship");
         if (WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant().Trim() == "night shift")
         {
             Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Graveyard Shift");

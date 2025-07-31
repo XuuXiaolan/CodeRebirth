@@ -1,5 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Content.Maps;
+using CodeRebirthLib.ContentManagement.Achievements;
+using CodeRebirthLib.Extensions;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -8,7 +10,7 @@ public class GrabAndLaunchPlayer : MonoBehaviour
 {
     public Transform pullTransform = null!;
     private Coroutine? pullRoutine = null;
-    private PlayerControllerB? player = null;
+    private PlayerControllerB? playerToLaunch = null;
     public AudioSource audioSource = null!;
     public AudioClip[] launchSounds = [];
 
@@ -23,24 +25,39 @@ public class GrabAndLaunchPlayer : MonoBehaviour
     {
         audioSource.PlayOneShot(launchSounds[Random.Range(0, launchSounds.Length)]);
         player.disableMoveInput = true;
-        this.player = player;
+        playerToLaunch = player;
         ItemCrate crate = this.transform.parent.GetComponent<ItemCrate>();
         yield return new WaitForSeconds(1.375f);
-        this.player = null;
+        playerToLaunch = null;
         player.disableMoveInput = false;
         player.externalForceAutoFade += crate.transform.up * 1000f;
         yield return new WaitForSeconds(0.916f / 2);
         crate.ResetWoodenCrate();
         yield return new WaitForSeconds(0.916f / 2);
+        StartCoroutine(CheckIfPlayerIsDead(player));
         pullRoutine = null;
         this.enabled = false;
     }
 
+    private IEnumerator CheckIfPlayerIsDead(PlayerControllerB player)
+    {
+        if (!player.IsLocalPlayer())
+            yield break;
+
+        yield return new WaitUntil(() => player.isPlayerDead || player.thisController.isGrounded);
+        if (player.isPlayerDead)
+        {
+            yield break;
+        }
+
+        Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Crate-apult");
+    }
+
     public void Update()
     {
-        if (pullRoutine != null && player != null)
+        if (pullRoutine != null && playerToLaunch != null)
         {
-            player.transform.position = pullTransform.position;
+            playerToLaunch.transform.position = pullTransform.position;
         }
     }
 }

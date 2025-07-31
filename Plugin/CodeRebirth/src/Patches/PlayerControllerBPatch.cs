@@ -75,6 +75,12 @@ static class PlayerControllerBPatch
         Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Happy Family", gObject.itemProperties.itemName);
         Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("The Uprooted", gObject.itemProperties.itemName);
         Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Hoarding Bug", gObject.itemProperties.itemName);
+        RoundManagerPatch.plushiesCollectedToday++;
+        if (RoundManagerPatch.plushiesCollectedToday >= 3)
+        {
+            RoundManagerPatch.plushiesCollectedToday = 0;
+            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Scalper");
+        }
     }
 
     private static void PlayerControllerB_Interact_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Interact_performed orig, PlayerControllerB self, InputAction.CallbackContext context)

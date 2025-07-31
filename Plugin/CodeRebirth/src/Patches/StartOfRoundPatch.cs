@@ -8,7 +8,6 @@ using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirth.src.MiscScripts;
 using LethalLevelLoader;
 using System.Linq;
 using CodeRebirthLib.ContentManagement.Weathers;
