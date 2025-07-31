@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Achievements;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -193,6 +194,7 @@ public class SellingSally : NetworkBehaviour
         }
         foreach (var sellableScrap in _sellableScraps)
         {
+            sellableScrap.SetScrapValue(sellableScrap.scrapValue * 3);
             scrapValueToMake += sellableScrap.scrapValue;
         }
 
@@ -205,14 +207,18 @@ public class SellingSally : NetworkBehaviour
         {
             foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
             {
-                enemyLevelSpawner.spawnTimerMin /= 4f;
-                enemyLevelSpawner.spawnTimerMax /= 4f;
+                enemyLevelSpawner.spawnTimerMin /= 8f;
+                enemyLevelSpawner.spawnTimerMax /= 8f;
             }
             OxydeLightsManager.oxydeLightsManager.IncrementLights();
             _usedOnce = true;
             HUDManager.Instance.DisplayTip("Warning!", "Rampant underground activity detected, evacuation recommended.", true);
         }
-        profit *= 3;
+
+        if (WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant().Trim() == "night shift")
+        {
+            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Graveyard Shift");
+        }
         terminal.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;
         TimeOfDay.Instance.quotaFulfilled += profit;

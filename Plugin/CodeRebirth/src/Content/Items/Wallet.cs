@@ -9,11 +9,11 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Items;
 public class Wallet : GrabbableObject
 {
-    [HideInInspector] public NetworkVariable<int> coinsStored = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public AudioSource audioPlayer = null!;
     public ScanNodeProperties scanNode = null!;
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
 
+    [HideInInspector] public NetworkVariable<int> coinsStored = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public override int GetItemDataToSave()
     {
         base.GetItemDataToSave();
@@ -53,6 +53,7 @@ public class Wallet : GrabbableObject
 
                 audioPlayer.Play();
                 Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Oh A Penny!");
+                Plugin.Mod.AchievementRegistry().TryIncrementAchievement("Fat Wallet", 1f);
                 AddCoinsServerRpc(new NetworkObjectReference(coin.NetworkObject), coin.value);
             }
             else if (IsServer)

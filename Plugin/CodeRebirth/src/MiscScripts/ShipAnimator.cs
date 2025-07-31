@@ -1,6 +1,7 @@
 
 using System.Collections;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Achievements;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -48,6 +49,11 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             // turn off animator
             yield return new WaitUntil(() => StartOfRound.Instance.shipIsLeaving);
             StartOfRound.Instance.shipAnimator.enabled = true;
+            int playersDead = StartOfRound.Instance.connectedPlayersAmount + 1 - StartOfRound.Instance.livingPlayers;
+            if (playersDead == 0)
+            {
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Greatest Asset");
+            }
             // re-enable animator
             yield return new WaitUntil(() => RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase);
             StartCoroutine(UnReplaceAnimationClip());
