@@ -1,3 +1,4 @@
+using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Achievements;
 using UnityEngine;
@@ -28,15 +29,6 @@ public class PlushieItem : GrabbableObject
     private AudioClip? _useSound = null;
 
     private static readonly int DoPlushieAnimation = Animator.StringToHash("DoPlushieAnimation");
-
-    public override void EquipItem()
-    {
-        base.EquipItem();
-        if (playerHeldBy != null && isInShipRoom)
-        {
-            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Hoarding Bug", this.itemProperties.itemName);
-        }
-    }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {

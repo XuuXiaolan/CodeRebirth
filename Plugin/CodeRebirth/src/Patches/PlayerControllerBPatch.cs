@@ -5,6 +5,7 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Achievements;
 using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -55,6 +56,7 @@ static class PlayerControllerBPatch
     {
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
+        On.GameNetcodeStuff.PlayerControllerB.SetItemInElevator += PlayerControllerB_SetItemInElevator;
         On.GameNetcodeStuff.PlayerControllerB.Update += PlayerControllerB_Update;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
         On.GameNetcodeStuff.PlayerControllerB.IHittable_Hit += PlayerControllerB_IHittable_Hit;
@@ -62,6 +64,17 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.Jump_performed += PlayerControllerB_Jump_performed;
         On.GameNetcodeStuff.PlayerControllerB.Interact_performed += PlayerControllerB_Interact_performed;
         // On.GameNetcodeStuff.PlayerControllerB.NearOtherPlayers += PlayerControllerB_NearOtherPlayers;
+    }
+
+    private static void PlayerControllerB_SetItemInElevator(On.GameNetcodeStuff.PlayerControllerB.orig_SetItemInElevator orig, PlayerControllerB self, bool droppedInShipRoom, bool droppedInElevator, GrabbableObject gObject)
+    {
+        orig(self, droppedInElevator, droppedInElevator, gObject);
+        if (gObject is not PlushieItem && gObject is not Xui && gObject is not GoldRigo)
+            return;
+
+        Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Happy Family", gObject.itemProperties.itemName);
+        Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("The Uprooted", gObject.itemProperties.itemName);
+        Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Hoarding Bug", gObject.itemProperties.itemName);
     }
 
     private static void PlayerControllerB_Interact_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Interact_performed orig, PlayerControllerB self, InputAction.CallbackContext context)

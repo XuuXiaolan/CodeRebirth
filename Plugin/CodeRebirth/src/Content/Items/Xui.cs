@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.Extensions;
 using GameNetcodeStuff;

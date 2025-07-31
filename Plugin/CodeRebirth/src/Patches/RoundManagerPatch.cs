@@ -12,6 +12,7 @@ static class RoundManagerPatch
 {
     internal static List<RegisteredCRMapObject> registeredMapObjects = [];
     internal static List<SpawnableFlora> spawnableFlora = [];
+    internal static int plushiesCollectedToday = 0;
 
     [HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPrefix]
     private static void SpawnOutsideMapObjects()
@@ -113,6 +114,7 @@ static class RoundManagerPatch
     [HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
     private static void ReturnToOrbitMiscPatch()
     {
+        plushiesCollectedToday = 0;
         PiggyBank.Instance?.RepairOrBreakPiggyBankServerRpc(false);
         foreach (GalAI gal in GalAI.Instances)
         {

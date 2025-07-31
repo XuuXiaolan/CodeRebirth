@@ -3,7 +3,9 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.Extensions;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -109,6 +111,10 @@ public class FunctionalMicrowave : CodeRebirthHazard
         if (scrapSpawned != null && (scrapSpawned.isHeld || scrapSpawned.playerHeldBy != null))
         {
             scrapSpawned.grabbable = true;
+            if (scrapSpawned.playerHeldBy != null && scrapSpawned.playerHeldBy.IsLocalPlayer())
+            {
+                Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Lunch is Served", scrapSpawned.itemProperties.itemName);
+            }
             damageAmount = originalDamageAmount;
             scrapSpawned = null;
         }

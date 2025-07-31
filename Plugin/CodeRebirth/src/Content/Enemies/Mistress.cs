@@ -5,6 +5,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -60,6 +61,10 @@ public class Mistress : CodeRebirthEnemyAI
 
         if (killTimer >= killCooldown)
         {
+            if (targetPlayer.IsLocalPlayer())
+            {
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("I got a headache");
+            }
             killTimer = 0f;
             playerToKill = targetPlayer;
             playerToKill.inSpecialInteractAnimation = false;
