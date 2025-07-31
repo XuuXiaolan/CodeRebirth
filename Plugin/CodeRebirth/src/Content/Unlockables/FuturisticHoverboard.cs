@@ -1,5 +1,3 @@
-using System.Linq;
-using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;

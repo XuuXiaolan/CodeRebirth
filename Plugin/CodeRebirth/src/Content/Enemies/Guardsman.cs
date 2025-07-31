@@ -37,7 +37,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     private List<IHittable> _iHittableList = new();
     private List<EnemyAI> _enemyAIList = new();
     private Collider[] _cachedHits = new Collider[24];
-    internal HashSet<EnemyType> _internalEnemyBlacklist = new();
+    internal HashSet<string> _internalEnemyBlacklist = new();
 
     #region IVisibleThreat
     public ThreatType type => ThreatType.RadMech;
@@ -113,7 +113,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
             var enemyBlacklistArray = CREnemyDefinition.GetGeneralConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklistArray.ToList())
             {
-                _internalEnemyBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)));
+                _internalEnemyBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
             }
         }
 
@@ -192,7 +192,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
             if (enemy == null || enemy.isEnemyDead || enemy is Guardsman || enemy is SandWormAI)
                 continue;
 
-            if (_internalEnemyBlacklist.Contains(enemy.enemyType))
+            if (_internalEnemyBlacklist.Contains(enemy.enemyType.enemyName))
                 continue;
 
             if (Vector3.Distance(transform.position, enemy.transform.position) > 45f)

@@ -30,7 +30,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     private bool currentlyGrabbed = false;
     private bool canSmash = true;
     private EnemyAI? ScaryThing = null;
-    private HashSet<EnemyType> _enemyTargetBlacklist = new();
+    private HashSet<string> _enemyTargetBlacklist = new();
 
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
     int IVisibleThreat.SendSpecialBehaviour(int id)
@@ -120,13 +120,13 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             var enemyBlacklist = driftwoodEnemyDefinition.GetGeneralConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklist.ToList())
             {
-                _enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+                _enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
             }
         }
 
         foreach (var enemy in _enemyTargetBlacklist)
         {
-            Plugin.ExtendedLogging($"Enemy Blacklist: {enemy.enemyName}");
+            Plugin.ExtendedLogging($"Enemy Blacklist: {enemy}");
         }
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Spawn);
         StartCoroutine(SpawnAnimationCooldown());
@@ -656,7 +656,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
             if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0 || enemy is DriftwoodMenaceAI) continue;
-            if (_enemyTargetBlacklist.Contains(enemy.enemyType))
+            if (_enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
                 continue;
 
             if (EnemyHasLineOfSightToPosition(enemy.transform.position, 75f, range))

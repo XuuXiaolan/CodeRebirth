@@ -43,7 +43,7 @@ public class GalAI : NetworkBehaviour, IHittable
     internal const float STARE_ROTATION_SPEED = 2f;
     internal EnemyAI? targetEnemy;
     internal PlayerControllerB? ownerPlayer;
-    internal HashSet<EnemyType> enemyTargetBlacklist = new();
+    internal HashSet<string> enemyTargetBlacklist = new();
     internal int chargeCount = 10;
     internal int maxChargeCount;
     internal bool currentlyAttacking = false;
