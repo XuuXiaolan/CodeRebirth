@@ -239,7 +239,7 @@ public class SeamineGalAI : GalAI
                 var enemyBlacklist = seamineUnlockableDefinition.GetGeneralConfig<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
                 foreach (var nameEntry in enemyBlacklist)
                 {
-                    enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+                    enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
                 }
             }
             StartUpDelay();
@@ -535,7 +535,7 @@ public class SeamineGalAI : GalAI
 
                 EnemyAI enemy = enemyCollisionDetect.mainScript;
 
-                if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType) || enemy is Transporter)
+                if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName) || enemy is Transporter)
                     continue;
 
                 // First, do a simple direction check to see if the enemy is in front of the player

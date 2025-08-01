@@ -242,7 +242,7 @@ public class ShockwaveGalAI : GalAI
                 var enemyBlacklist = seamineUnlockableDefinition.GetGeneralConfig<string>("Shockwave Bot | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
                 foreach (var nameEntry in enemyBlacklist)
                 {
-                    enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)));
+                    enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
                 }
             }
             StartUpDelay();
@@ -482,7 +482,7 @@ public class ShockwaveGalAI : GalAI
                     enemy = enemy2;
                 }
 
-                if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType))
+                if (enemy == null || enemy.isEnemyDead || !enemy.enemyType.canDie || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
                     continue;
 
                 if (!Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, collider.transform.position, out RaycastHit hit, MoreLayerMasks.CollidersAndRoomMaskAndDefaultAndEnemies, QueryTriggerInteraction.Collide))

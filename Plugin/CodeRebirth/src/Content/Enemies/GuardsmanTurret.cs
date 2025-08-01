@@ -93,7 +93,7 @@ public class GuardsmanTurret : MonoBehaviour
             if (GuardsmanOwner.targetEnemy == enemy)
                 continue;
 
-            if (GuardsmanOwner._internalEnemyBlacklist.Contains(enemy.enemyType))
+            if (GuardsmanOwner._internalEnemyBlacklist.Contains(enemy.enemyType.enemyName))
                 continue;
 
             Vector3 direction = (enemy.transform.position - transform.position).normalized;
