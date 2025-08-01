@@ -4,7 +4,10 @@
 - Added all the plushies.
 - Added Achievements.
 - Reworked hoverboard.
+- Fixed some ACUnit and Gunslinger Greg targetting issues.
+- Rewrote how some stuff targets entities so driftwood etc shouldnt see any more false positives because of other mods being stupid.
 - Added Jacobian's terrible horrifying death monitor into the cabin.
+- Fixed crane not killing clients sometimes.
 
 ## v1.1.11
 
