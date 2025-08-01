@@ -115,7 +115,7 @@ public class GunslingerGreg : CodeRebirthHazard
     private void FindAndAimAtTarget()
     {
         bool lockedOntoATransform = false;
-        if (lastTransformTargetted != null)
+        if (lastTransformTargetted != null && !IsTransformNearGround(lastTransformTargetted) && !TransformInSafeBounds(lastTransformTargetted))
         {
             HandleTargettingToTransform(lastTransformTargetted, ref lockedOntoATransform);
         }
