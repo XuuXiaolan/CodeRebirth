@@ -88,7 +88,7 @@ public class AirControlUnit : CodeRebirthHazard
     private void FindAndAimAtTarget()
     {
         bool lockedOntoAPlayer = false;
-        if (lastPlayerTargetted != null)
+        if (lastPlayerTargetted != null && !StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(lastPlayerTargetted.transform.position) && !IsPlayerNearGround(lastPlayerTargetted) && !TransformInSafeBounds(lastPlayerTargetted.transform))
         {
             HandleTargettingToPlayer(lastPlayerTargetted, ref lockedOntoAPlayer);
         }
@@ -186,7 +186,7 @@ public class AirControlUnit : CodeRebirthHazard
         {
             GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
             NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
-            networkObject?.Spawn();
+            networkObject.Spawn();
             AirUnitProjectile projectileComponent = projectile.GetComponent<AirUnitProjectile>();
             projectileComponent.Initialize(Plugin.ModConfig.ConfigAirControlUnitDamage.Value, currentAngle, lastPlayerTargetted);
 
