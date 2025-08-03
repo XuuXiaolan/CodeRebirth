@@ -28,9 +28,9 @@ public class GunslingerMissile : MonoBehaviour
 
     public void FixedUpdate() // this is kinda terrible
     {
-        if (_targetTransform == null)
+        if (_targetTransform == null || mainTransform == null)
         {
-            if (transform.parent == null)
+            if (transform.parent == null && mainTransform != null)
             {
                 this.transform.SetParent(_oldParent, true);
                 this.transform.SetPositionAndRotation(mainTransform.position, mainTransform.rotation);
