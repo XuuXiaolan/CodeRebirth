@@ -16,6 +16,13 @@ public class WrittenDocument : GrabbableObject
     private AudioClip[] _pageFlipSounds = [];
 
     private int activePage = 0;
+
+    public override void EquipItem()
+    {
+        base.EquipItem();
+
+    }
+
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);

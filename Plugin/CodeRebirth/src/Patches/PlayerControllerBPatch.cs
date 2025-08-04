@@ -69,17 +69,25 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_SetItemInElevator(On.GameNetcodeStuff.PlayerControllerB.orig_SetItemInElevator orig, PlayerControllerB self, bool droppedInShipRoom, bool droppedInElevator, GrabbableObject gObject)
     {
         orig(self, droppedInElevator, droppedInElevator, gObject);
-        if (gObject is not PlushieItem && gObject is not Xui && gObject is not GoldRigo)
-            return;
-
-        Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Happy Family", gObject.itemProperties.itemName);
-        Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("The Uprooted", gObject.itemProperties.itemName);
-        Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Hoarding Bug", gObject.itemProperties.itemName);
-        RoundManagerPatch.plushiesCollectedToday++;
-        if (RoundManagerPatch.plushiesCollectedToday >= 3)
+        if (gObject is WrittenDocument)
         {
-            RoundManagerPatch.plushiesCollectedToday = 0;
-            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Scalper");
+            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Mu Miaolan", gObject.itemProperties.itemName);
+            return;
+        }
+
+        if (gObject is PlushieItem || gObject is Xui || gObject is GoldRigo)
+        {
+            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Happy Family", gObject.itemProperties.itemName);
+            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("The Uprooted", gObject.itemProperties.itemName);
+            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Hoarding Bug", gObject.itemProperties.itemName);
+
+            RoundManagerPatch.plushiesCollectedToday++;
+            if (RoundManagerPatch.plushiesCollectedToday >= 3)
+            {
+                RoundManagerPatch.plushiesCollectedToday = 0;
+                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Scalper");
+            }
+            return;
         }
     }
 
