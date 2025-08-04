@@ -129,7 +129,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
             if (crContentDefinition is not CRMapObjectDefinition crMapObjectDefinition)
                 continue;
 
-            if (crMapObjectDefinition.EntityNameReference.Contains("Cactus", StringComparison.OrdinalIgnoreCase))
+            if (crMapObjectDefinition.MapObjectName.Contains("Cactus", StringComparison.OrdinalIgnoreCase))
                 _budlingCacti.Add(crMapObjectDefinition.GameObject);
         }
 

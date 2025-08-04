@@ -13,8 +13,21 @@ MonoBehaviour:
   m_Name: LaserTurretMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Laser Turret
   <GameObject>k__BackingField: {fileID: 6338716961936137050, guid: f8ba8bbe787c9b048b04d0ff97690270,
     type: 3}
-  <ObjectName>k__BackingField: Laser Turret
+  <MapObjectName>k__BackingField: Laser Turret
   <AlignWithTerrain>k__BackingField: 0
+  <InsideMapObjectSettings>k__BackingField:
+    prefabToSpawn: {fileID: 0}
+    spawnFacingAwayFromWall: 0
+    spawnFacingWall: 0
+    spawnWithBackToWall: 0
+    spawnWithBackFlushAgainstWall: 0
+    requireDistanceBetweenSpawns: 0
+    disallowSpawningNearEntrances: 0
+    numberToSpawn:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

@@ -13,8 +13,21 @@ MonoBehaviour:
   m_Name: KamikazeJimothyMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Kamikaze Jimothy
   <GameObject>k__BackingField: {fileID: 6150662511227584478, guid: 699f2b0f9cc01d944830cb3090dc97e9,
     type: 3}
-  <ObjectName>k__BackingField: Kamikaze Jimothy
+  <MapObjectName>k__BackingField: Kamikaze Jimothy
   <AlignWithTerrain>k__BackingField: 0
+  <InsideMapObjectSettings>k__BackingField:
+    prefabToSpawn: {fileID: 0}
+    spawnFacingAwayFromWall: 0
+    spawnFacingWall: 0
+    spawnWithBackToWall: 0
+    spawnWithBackFlushAgainstWall: 0
+    requireDistanceBetweenSpawns: 0
+    disallowSpawningNearEntrances: 0
+    numberToSpawn:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

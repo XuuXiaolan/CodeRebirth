@@ -95,8 +95,21 @@ MonoBehaviour:
       m_RotationOrder: 0
     Description: Whether Metal Safe's blacklist config is a blacklist (ticked) or
       whitelist (unticked).
-  <EntityNameReference>k__BackingField: Normal Metal Crate
   <GameObject>k__BackingField: {fileID: 2083264772084459009, guid: 1f50dff2d9fa99043aaee09390b48219,
     type: 3}
-  <ObjectName>k__BackingField: Normal Metal Crate
+  <MapObjectName>k__BackingField: Normal Metal Crate
   <AlignWithTerrain>k__BackingField: 1
+  <InsideMapObjectSettings>k__BackingField:
+    prefabToSpawn: {fileID: 0}
+    spawnFacingAwayFromWall: 0
+    spawnFacingWall: 0
+    spawnWithBackToWall: 0
+    spawnWithBackFlushAgainstWall: 0
+    requireDistanceBetweenSpawns: 0
+    disallowSpawningNearEntrances: 0
+    numberToSpawn:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

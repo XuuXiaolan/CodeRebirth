@@ -13,8 +13,21 @@ MonoBehaviour:
   m_Name: BugZapperMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Bug Zapper
   <GameObject>k__BackingField: {fileID: 1893357372967312910, guid: 618cebe9d177f9d41856ea311121e81f,
     type: 3}
-  <ObjectName>k__BackingField: Bug Zapper
+  <MapObjectName>k__BackingField: Bug Zapper
   <AlignWithTerrain>k__BackingField: 0
+  <InsideMapObjectSettings>k__BackingField:
+    prefabToSpawn: {fileID: 0}
+    spawnFacingAwayFromWall: 0
+    spawnFacingWall: 0
+    spawnWithBackToWall: 0
+    spawnWithBackFlushAgainstWall: 0
+    requireDistanceBetweenSpawns: 0
+    disallowSpawningNearEntrances: 0
+    numberToSpawn:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

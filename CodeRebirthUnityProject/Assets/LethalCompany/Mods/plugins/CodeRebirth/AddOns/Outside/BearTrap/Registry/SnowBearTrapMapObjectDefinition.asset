@@ -13,8 +13,21 @@ MonoBehaviour:
   m_Name: SnowBearTrapMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Snow Bear Trap
   <GameObject>k__BackingField: {fileID: 3309400641202517407, guid: 9324d535ffc54634e831f75ec7ea333f,
     type: 3}
-  <ObjectName>k__BackingField: Snow Bear Trap
+  <MapObjectName>k__BackingField: Snow Bear Trap
   <AlignWithTerrain>k__BackingField: 1
+  <InsideMapObjectSettings>k__BackingField:
+    prefabToSpawn: {fileID: 0}
+    spawnFacingAwayFromWall: 0
+    spawnFacingWall: 0
+    spawnWithBackToWall: 0
+    spawnWithBackFlushAgainstWall: 0
+    requireDistanceBetweenSpawns: 0
+    disallowSpawningNearEntrances: 0
+    numberToSpawn:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

@@ -13,8 +13,21 @@ MonoBehaviour:
   m_Name: CrashingShipMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Oxyde Crashed Ship
   <GameObject>k__BackingField: {fileID: 11954729248175358, guid: 88b0bc004d62cf9478409c6132eb7d8b,
     type: 3}
-  <ObjectName>k__BackingField: Oxyde Crashed Ship
+  <MapObjectName>k__BackingField: Oxyde Crashed Ship
   <AlignWithTerrain>k__BackingField: 1
+  <InsideMapObjectSettings>k__BackingField:
+    prefabToSpawn: {fileID: 0}
+    spawnFacingAwayFromWall: 0
+    spawnFacingWall: 0
+    spawnWithBackToWall: 0
+    spawnWithBackFlushAgainstWall: 0
+    requireDistanceBetweenSpawns: 0
+    disallowSpawningNearEntrances: 0
+    numberToSpawn:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
