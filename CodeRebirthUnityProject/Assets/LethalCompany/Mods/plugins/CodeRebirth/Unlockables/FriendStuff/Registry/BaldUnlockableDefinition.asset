@@ -13,7 +13,27 @@ MonoBehaviour:
   m_Name: BaldUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Bald
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: d1e995b76d439a8408dc7c30998dc632,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: BALD
+    prefabObject: {fileID: 9222517241196682573, guid: 23fda5e56062c414aa9ac53b6b4e4010,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: -100
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 0}

@@ -113,7 +113,7 @@ public class InteractiveEffectMask : MonoBehaviour
 
     private void Update()
     {
-        if(!HasMaskPreview && UsePreview)
+        if (!HasMaskPreview && UsePreview)
         {
             UpdatePreview();
         }

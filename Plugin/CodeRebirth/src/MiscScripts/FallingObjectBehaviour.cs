@@ -27,7 +27,7 @@ public class FallingObjectBehaviour : NetworkBehaviour
     public AnimationCurve animationCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
     [SerializeField]
-    private UnityEvent _onImpact;
+    private UnityEvent _onImpact = new();
 
     public Vector3 CalculateRandomSkyOrigin(Direction direction, Vector3 target, System.Random random)
     {

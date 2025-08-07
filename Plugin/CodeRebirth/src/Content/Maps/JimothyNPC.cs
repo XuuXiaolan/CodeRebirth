@@ -51,7 +51,7 @@ public class JimothyNPC : NetworkBehaviour
         {
             if (player == null || player.isPlayerDead || !player.isPlayerControlled)
                 continue;
-            
+
             if (Vector3.Distance(transform.position, player.transform.position) > 5)
             {
                 continue;

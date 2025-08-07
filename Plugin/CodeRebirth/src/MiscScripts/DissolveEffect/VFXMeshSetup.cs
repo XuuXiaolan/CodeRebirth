@@ -13,7 +13,7 @@ public static class VFXMeshSetup
     public static void SetupPropertyBinder(VFXPropertyBinder propertyBinder, Transform transform)
     {
         var lossScaleBinders = propertyBinder.GetPropertyBinders<VFXLossyTransformBinder>();
-        
+
         VFXLossyTransformBinder lossyTransformBinder;
 
         if (lossScaleBinders.Count() == 0)

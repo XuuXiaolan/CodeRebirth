@@ -13,7 +13,27 @@ MonoBehaviour:
   m_Name: JaneFoggUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Jane Fogg
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: 98a23fe825a85ee4ab5d3da92779b341,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: CLEANER
+    prefabObject: {fileID: 8640331156731437576, guid: d96a427b7d89854439c390929d581a45,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.025
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 0}

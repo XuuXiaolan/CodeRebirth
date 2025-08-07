@@ -92,14 +92,14 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
         return 0.75f;
     }
-	bool IVisibleThreat.IsThreatDead()
-	{
-		return this.isEnemyDead;
-	}
-	GrabbableObject? IVisibleThreat.GetHeldObject()
-	{
-		return null;
-	}
+    bool IVisibleThreat.IsThreatDead()
+    {
+        return this.isEnemyDead;
+    }
+    GrabbableObject? IVisibleThreat.GetHeldObject()
+    {
+        return null;
+    }
 
     #endregion
     enum State

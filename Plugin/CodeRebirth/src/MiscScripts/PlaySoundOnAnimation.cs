@@ -44,7 +44,7 @@ public class PlaySoundOnAnimation : MonoBehaviour
         audioSourceWithClips.nearAudioSource.PlayOneShot(clip);
         Plugin.ExtendedLogging($"Playing near audio clip: {clip.name}");
     }
-    
+
     private void PlayFarAudioClip(AudioSourceWithClips audioSourceWithClips)
     {
         int randomIndex = Random.Range(0, audioSourceWithClips.farClips.Length);

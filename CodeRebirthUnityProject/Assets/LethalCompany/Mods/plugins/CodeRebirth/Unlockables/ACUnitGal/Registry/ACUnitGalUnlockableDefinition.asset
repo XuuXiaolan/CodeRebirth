@@ -13,7 +13,27 @@ MonoBehaviour:
   m_Name: ACUnitGalUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: ACUnit Gal
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: 8c1027a1425766e4c90661bf68fd618d,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: AIRCONTROL
+    prefabObject: {fileID: 687819012288308677, guid: 79aa70ac93f339a4ab573c6426538e8f,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.02
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 0}

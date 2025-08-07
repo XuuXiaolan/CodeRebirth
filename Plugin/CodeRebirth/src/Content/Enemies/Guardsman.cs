@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.ContentManagement.Enemies;
 using CodeRebirthLib.Util;
 using Unity.Netcode;
@@ -113,7 +114,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
             var enemyBlacklistArray = CREnemyDefinition.GetGeneralConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklistArray.ToList())
             {
-                _internalEnemyBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
+                _internalEnemyBlacklist.UnionWith(LethalContent.Enemies.All.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
             }
         }
 

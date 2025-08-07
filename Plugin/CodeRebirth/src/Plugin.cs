@@ -30,7 +30,7 @@ public class Plugin : BaseUnityPlugin
     internal static IngameKeybinds InputActionsInstance = null!;
     public static ConfigFile configFile { get; private set; } = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
-	public static CRMod Mod { get; private set; }
+    public static CRMod Mod { get; private set; }
     internal class MainAssets(AssetBundle bundle) : AssetBundleLoader<MainAssets>(bundle)
     {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
@@ -89,7 +89,7 @@ public class Plugin : BaseUnityPlugin
         AssetBundle mainBundle = CRLib.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
         Assets = new MainAssets(mainBundle);
         Mod = CRLib.RegisterMod(this, mainBundle);
-		Mod.RegisterContentHandlers();
+        Mod.RegisterContentHandlers();
 
         ModConfig.InitCodeRebirthConfig(configFile);
 
@@ -131,10 +131,10 @@ public class Plugin : BaseUnityPlugin
             foreach (var method in methods)
             {
                 var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-				if (attributes.Length <= 0)
-					continue;
+                if (attributes.Length <= 0)
+                    continue;
 
-				method.Invoke(null, null);
+                method.Invoke(null, null);
             }
         }
     }

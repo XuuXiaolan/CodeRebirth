@@ -9,6 +9,7 @@ using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.Util;
 using CodeRebirthLib.ContentManagement.Enemies;
 using System.Collections.Generic;
+using CodeRebirthLib.ContentManagement;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -80,15 +81,15 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         return 0.75f;
     }
 
-	bool IVisibleThreat.IsThreatDead()
-	{
-		return this.isEnemyDead;
-	}
+    bool IVisibleThreat.IsThreatDead()
+    {
+        return this.isEnemyDead;
+    }
 
-	GrabbableObject? IVisibleThreat.GetHeldObject()
-	{
-		return null;
-	}
+    GrabbableObject? IVisibleThreat.GetHeldObject()
+    {
+        return null;
+    }
 
     internal static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     internal static readonly int GrabPlayerAnimation = Animator.StringToHash("GrabPlayer"); // Trigger
@@ -120,7 +121,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             var enemyBlacklist = driftwoodEnemyDefinition.GetGeneralConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklist.ToList())
             {
-                _enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
+                _enemyTargetBlacklist.UnionWith(LethalContent.Enemies.All.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
             }
         }
 

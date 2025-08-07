@@ -120,15 +120,15 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         return 0.75f;
     }
 
-	bool IVisibleThreat.IsThreatDead()
-	{
-		return isEnemyDead;
-	}
+    bool IVisibleThreat.IsThreatDead()
+    {
+        return isEnemyDead;
+    }
 
-	GrabbableObject? IVisibleThreat.GetHeldObject()
-	{
-		return _lastScrapGrabbed;
-	}
+    GrabbableObject? IVisibleThreat.GetHeldObject()
+    {
+        return _lastScrapGrabbed;
+    }
     #endregion
     #region Unity Lifecycle
     public override void OnNetworkSpawn()

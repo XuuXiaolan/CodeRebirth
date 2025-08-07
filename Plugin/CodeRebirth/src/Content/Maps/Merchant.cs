@@ -254,7 +254,7 @@ public class Merchant : NetworkBehaviour
 
             itemsByName.Add(item.itemName.ToLowerInvariant().Trim(), item);
         }
-        
+
         foreach (var barrel in merchantBarrels)
         {
             barrel.validItemsWithRarityAndColor.Clear();

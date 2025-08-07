@@ -31,8 +31,28 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Description: Enemy name Blacklist for what the seamine gal won't attack.
-  <EntityNameReference>k__BackingField: Seamine Tink
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: 52432d5583c2619498378543cad8d387,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: SEA-M1
+    prefabObject: {fileID: 6475414710699504993, guid: c3b1f1a7620354c41be0a96add62f988,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.03
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 11400000, guid: ab203db041821a94e8df63f31b58f98e,
     type: 2}

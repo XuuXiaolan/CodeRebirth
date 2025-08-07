@@ -13,8 +13,28 @@ MonoBehaviour:
   m_Name: TerminalGalUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Terminal Bot
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: a23dcfbe05ebd8845bca95ad526a1721,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: DAISY
+    prefabObject: {fileID: 4536215619622419527, guid: bef379804c8e6824aa6ae88dc4ae1e1c,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.01
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 11400000, guid: 4a02ff678531c5746b7b2188f1181941,
     type: 2}

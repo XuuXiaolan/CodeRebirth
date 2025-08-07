@@ -42,7 +42,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
     {
         foreach (var player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player == null) 
+            if (player == null)
                 continue;
 
             bool inTargets = _mainScript._targetablePlayers.Contains(player);
@@ -83,7 +83,7 @@ public class AutonomousCraneTrigger : MonoBehaviour
 
         float dx = lp.x - localCenter.x;
         float dz = lp.z - localCenter.z;
-        if (dx*dx / (localRadii.x*localRadii.x) + dz*dz / (localRadii.y*localRadii.y) > 1f)
+        if (dx * dx / (localRadii.x * localRadii.x) + dz * dz / (localRadii.y * localRadii.y) > 1f)
             return false;
 
         float dy = lp.y - localCenter.y;

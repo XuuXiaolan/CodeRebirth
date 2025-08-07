@@ -59,7 +59,7 @@ public class CodeRebirthPlayerManager : NetworkSingleton<CodeRebirthPlayerManage
 
     public static void RevivePlayer(PlayerControllerB player, Vector3 position)
     {
-        if(!player.isPlayerDead) return;
+        if (!player.isPlayerDead) return;
 
         if (Instance.IsHost)
         {
@@ -70,7 +70,7 @@ public class CodeRebirthPlayerManager : NetworkSingleton<CodeRebirthPlayerManage
             Instance.RevivePlayerServerRPC(player, position);
         }
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     void RevivePlayerServerRPC(PlayerControllerReference playerRef, Vector3 position)
     {

@@ -100,15 +100,15 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         return 0.75f;
     }
 
-	bool IVisibleThreat.IsThreatDead()
-	{
-		return this.isEnemyDead;
-	}
+    bool IVisibleThreat.IsThreatDead()
+    {
+        return this.isEnemyDead;
+    }
 
-	GrabbableObject? IVisibleThreat.GetHeldObject()
-	{
-		return null;
-	}
+    GrabbableObject? IVisibleThreat.GetHeldObject()
+    {
+        return null;
+    }
     #endregion
 
     public enum CactusBudlingState

@@ -372,7 +372,7 @@ public class AutonomousCrane : NetworkBehaviour
             }
         }
 
-        
+
         foreach (PlayerControllerB player in _playerKillList)
         {
             HandlePlayerDeathClientRpc(magnetTargetPosition, player);

@@ -24,7 +24,7 @@ public class MistressPlushie : PlushieItem
         Vector3 toTarget = GameNetworkManager.Instance.localPlayerController.transform.position - this.transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(toTarget);
         targetRotation.y = 0;
-       float sharpness = 0.1f;
-       this.transform.rotation = Quaternion.Lerp(this.transform.rotation, targetRotation, Time.deltaTime * sharpness);
+        float sharpness = 0.1f;
+        this.transform.rotation = Quaternion.Lerp(this.transform.rotation, targetRotation, Time.deltaTime * sharpness);
     }
 }

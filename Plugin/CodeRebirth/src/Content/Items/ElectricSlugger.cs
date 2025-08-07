@@ -143,7 +143,7 @@ public class ElectricSlugger : GrabbableObject
         if (playerHeldBy.IsLocalPlayer()) HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * (pumpCount + 1) * 5f * (playerHeldBy.isCrouching ? 0.25f : 1f);
         float intensity = (pumpCount + 1) * 2;
-        StartCoroutine(CRUtilities.ForcePlayerLookup(playerHeldBy, intensity/5f));
+        StartCoroutine(CRUtilities.ForcePlayerLookup(playerHeldBy, intensity / 5f));
         pumpCount = 0;
     }
 }

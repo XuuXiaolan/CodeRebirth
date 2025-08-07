@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.Patches;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib.Extensions;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -75,14 +73,14 @@ public class Xui : GrabbableObject
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        
+
         if (!IsServer) return;
-        
+
         int randomNumber = xuiRandom.Next(100);
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");
         if (randomNumber <= 35)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, VanillaEnemies.MaskedPlayerEnemy);
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies.MaskedPlayerEnemy);
             return;
         }
         List<PlayerControllerB> deadPlayers = new();
@@ -102,7 +100,7 @@ public class Xui : GrabbableObject
         }
         else if (randomNumber <= 70)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, VanillaEnemies.MaskedPlayerEnemy);
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies.MaskedPlayerEnemy);
         }
     }
 }

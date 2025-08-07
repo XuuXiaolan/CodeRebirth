@@ -43623,9 +43623,6 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 2919410584223474381}
   smartAgentNavigator: {fileID: 4583551478409341992}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips: []
     minTime: 0
@@ -43634,7 +43631,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6c0db1e1e6176724084b00dd61c2087e, type: 3}
   - {fileID: 8300000, guid: b88bbef8a6208dd4ba64358acdadc419, type: 3}
   spawnSound: {fileID: 0}
-  _idleTimer: 1
   puppetDamageDealer: {fileID: 2167556560943370418}
   playerStabPosition: {fileID: 2078151550481931162}
   interactiveEffects:
@@ -43686,10 +43682,8 @@ MonoBehaviour:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: -1
 --- !u!1 &6926373206089999037
 GameObject:
   m_ObjectHideFlags: 0

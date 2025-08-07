@@ -13,7 +13,27 @@ MonoBehaviour:
   m_Name: PlantPotUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Plant Pot
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: 74b2f24be81f224419486e4858aaff80,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: PlantPot
+    prefabObject: {fileID: 526838554895150858, guid: 1571d13e5610fc34fb6801979e8254e1,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.03
+    inStorage: 0
+    canBeStored: 0
+    maxNumber: 10
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 0}

@@ -13,7 +13,27 @@ MonoBehaviour:
   m_Name: BearTrapGalUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: BearTrap Gal
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: 8b4de0ed42e9b3644aa68a28220f485d,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: BEARTRAP
+    prefabObject: {fileID: 706327916581166548, guid: 090784cfc1f0e264e815824e321019e3,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.02
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 0}

@@ -94,15 +94,15 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         return 0.75f;
     }
 
-	bool IVisibleThreat.IsThreatDead()
-	{
-		return isEnemyDead;
-	}
+    bool IVisibleThreat.IsThreatDead()
+    {
+        return isEnemyDead;
+    }
 
-	GrabbableObject? IVisibleThreat.GetHeldObject()
-	{
-		return null;
-	}
+    GrabbableObject? IVisibleThreat.GetHeldObject()
+    {
+        return null;
+    }
     #endregion
     public override void OnNetworkSpawn()
     {

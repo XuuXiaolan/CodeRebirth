@@ -13,7 +13,27 @@ MonoBehaviour:
   m_Name: ShrimpDispenserUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Shrimp Dispenser
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: 9723ddff5cc6d7c498e653db0bf9a283,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: SHRIMP
+    prefabObject: {fileID: 7745458317024478992, guid: ae9fa0a37c3700b4bbfc90c2f91ec581,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.01
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 0}

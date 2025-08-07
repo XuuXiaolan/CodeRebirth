@@ -156,7 +156,7 @@ public class CodeRebirthConfig
                                             "MoonName - CurveSpawnWeight for Snowy flora (moon tags also work).");
         #endregion
     }
-    
+
     public void InitCodeRebirthConfig(ConfigFile configFile)
     {
         #region Janitor

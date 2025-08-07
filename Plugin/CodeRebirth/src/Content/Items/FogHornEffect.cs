@@ -5,7 +5,7 @@ namespace CodeRebirth.src.Content.Items;
 public class FogHornEffect : MonoBehaviour
 {
     [SerializeField]
-    private VisualEffect _fogEffect;
+    private VisualEffect _fogEffect = null!;
 
     private static readonly int _objectForwardHash = Shader.PropertyToID("ObjectForward");
     private static readonly int _objectUpHash = Shader.PropertyToID("ObjectUp");

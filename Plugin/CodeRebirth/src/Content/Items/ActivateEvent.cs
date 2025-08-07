@@ -6,7 +6,7 @@ namespace CodeRebirth.src.Content.Items;
 public class ActivateEvent : GrabbableObject
 {
     [SerializeField]
-    private UnityEvent _onActivate;
+    private UnityEvent _onActivate = new();
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {

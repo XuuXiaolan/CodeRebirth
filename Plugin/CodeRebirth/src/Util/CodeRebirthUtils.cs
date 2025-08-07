@@ -17,7 +17,7 @@ using CodeRebirthLib.ContentManagement.Items;
 using CodeRebirthLib.ContentManagement.MapObjects;
 using CodeRebirthLib.ContentManagement.Weathers;
 using CodeRebirthLib.Util.INetworkSerializables;
-using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.ContentManagement;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -119,7 +119,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         foreach (var enemyWithRarity in enemyWithRarityDropRate)
         {
             var split = enemyWithRarity.Split(':');
-            EnemyType? enemyType = VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            EnemyType? enemyType = LethalContent.Enemies.All.Where(et => et.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (enemyType == null)
             {
                 Plugin.Logger.LogWarning($"Couldn't find enemy of name '{split[0]}' for the money drop rate config!");

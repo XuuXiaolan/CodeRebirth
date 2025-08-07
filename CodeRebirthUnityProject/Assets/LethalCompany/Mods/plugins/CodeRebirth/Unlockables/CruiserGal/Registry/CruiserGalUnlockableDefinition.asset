@@ -13,8 +13,28 @@ MonoBehaviour:
   m_Name: CruiserGalUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: CruiserGal Assembly Parts
-  <UnlockableItemDef>k__BackingField: {fileID: 11400000, guid: 3b73d334ea629c140a9bda6d43f4b7f9,
-    type: 2}
+  <UnlockableItem>k__BackingField:
+    unlockableName: MISS CRUISER
+    prefabObject: {fileID: 3632346896036407525, guid: 187ae79187eb6c546af56a8525e608aa,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.01
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   <ProgressiveDenyNode>k__BackingField: {fileID: 11400000, guid: 71b24fec94c6f19428e5d262ad5488a7,
     type: 2}
