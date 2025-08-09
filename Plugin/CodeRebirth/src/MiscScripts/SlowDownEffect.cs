@@ -10,6 +10,8 @@ public static class SlowDownEffect
     public static AudioSource[] audioSourcesToAffect = []; // Patch AudioSource.Awake or find Audio Listener.
     public static void DoSlowdownEffect(float timeLength, float timeScale)
     {
+        // todo: interaction speed, patch play and playoneshot
+        
         isSlowDownEffectActive = true;
         // CodeRebirthUtils.Instance.TimeSlowVolume.weight = 1f;
         audioSourcesToAffect = Resources.FindObjectsOfTypeAll<AudioSource>();

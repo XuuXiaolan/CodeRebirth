@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
@@ -52,6 +53,23 @@ static class PlayerControllerBPatch
         __instance.AddCRPlayerData();
     }
 
+    [HarmonyPatch(nameof(PlayerControllerB.PlayerJump), MethodType.Enumerator), HarmonyTranspiler]
+    public static IEnumerable<CodeInstruction> RemoveJumpDelay(IEnumerable<CodeInstruction> instructions)
+    {
+        CodeMatcher matcher = new CodeMatcher(instructions);
+        while (matcher.IsValid)
+        {
+            matcher.MatchForward(false,
+                new CodeMatch(System.Reflection.Emit.OpCodes.Ldarg_0),
+                new CodeMatch(System.Reflection.Emit.OpCodes.Ldc_R4),
+                new CodeMatch(System.Reflection.Emit.OpCodes.Newobj, typeof(WaitForSeconds).GetConstructor([typeof(float)]))
+            );
+            matcher.Advance(1);
+            matcher.SetOperandAndAdvance(0f);
+        }
+        return matcher.InstructionEnumeration();
+    }
+    
     public static void Init()
     {
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
