@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Achievements;
@@ -65,9 +67,24 @@ static class PlayerControllerBPatch
                 new CodeMatch(System.Reflection.Emit.OpCodes.Newobj, typeof(WaitForSeconds).GetConstructor([typeof(float)]))
             );
             matcher.Advance(1);
-            matcher.SetOperandAndAdvance(0f);
+            matcher.Set(System.Reflection.Emit.OpCodes.Nop, null);
+            matcher.Insert(
+                new CodeInstruction(System.Reflection.Emit.OpCodes.Call, typeof(PlayerControllerBPatch).GetMethod(nameof(JumpDelay), BindingFlags.Static | BindingFlags.NonPublic))
+            );
         }
         return matcher.InstructionEnumeration();
+    }
+
+    static float JumpDelay()
+    {
+        if (SlowDownEffect.isSlowDownEffectActive)
+        {
+            return 0;
+        }
+        else
+        {
+            return 0.15f;
+        }
     }
     
     public static void Init()
