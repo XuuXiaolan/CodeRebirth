@@ -58,7 +58,7 @@ static class PlayerControllerBPatch
     [HarmonyPatch(nameof(PlayerControllerB.PlayerJump), MethodType.Enumerator), HarmonyTranspiler]
     public static IEnumerable<CodeInstruction> RemoveJumpDelay(IEnumerable<CodeInstruction> instructions)
     {
-        CodeMatcher matcher = new CodeMatcher(instructions);
+        CodeMatcher matcher = new(instructions);
         while (matcher.IsValid)
         {
             matcher.MatchForward(false,
@@ -66,6 +66,8 @@ static class PlayerControllerBPatch
                 new CodeMatch(System.Reflection.Emit.OpCodes.Ldc_R4),
                 new CodeMatch(System.Reflection.Emit.OpCodes.Newobj, typeof(WaitForSeconds).GetConstructor([typeof(float)]))
             );
+            if (matcher.IsInvalid)
+                break;
             matcher.Advance(1);
             matcher.Set(System.Reflection.Emit.OpCodes.Nop, null);
             matcher.Insert(
@@ -90,7 +92,6 @@ static class PlayerControllerBPatch
     public static void Init()
     {
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
-        // IL.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.SetItemInElevator += PlayerControllerB_SetItemInElevator;
         On.GameNetcodeStuff.PlayerControllerB.Update += PlayerControllerB_Update;
         On.GameNetcodeStuff.PlayerControllerB.LateUpdate += PlayerControllerB_LateUpdate;
@@ -98,7 +99,7 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.DiscardHeldObject += PlayerControllerB_DiscardHeldObject;
         On.GameNetcodeStuff.PlayerControllerB.Jump_performed += PlayerControllerB_Jump_performed;
         On.GameNetcodeStuff.PlayerControllerB.Interact_performed += PlayerControllerB_Interact_performed;
-        // On.GameNetcodeStuff.PlayerControllerB.NearOtherPlayers += PlayerControllerB_NearOtherPlayers;
+        On.GameNetcodeStuff.PlayerControllerB.StopHoldInteractionOnTrigger += PlayerControllerB_StopHoldInteractionOnTrigger;
     }
 
     private static void PlayerControllerB_SetItemInElevator(On.GameNetcodeStuff.PlayerControllerB.orig_SetItemInElevator orig, PlayerControllerB self, bool droppedInShipRoom, bool droppedInElevator, GrabbableObject gObject)
@@ -152,6 +153,21 @@ static class PlayerControllerBPatch
         {
             // Plugin.ExtendedLogging($"Setting player layer to 0.");
             self.gameObject.layer = 0;
+        }
+
+        orig(self);
+        SlowDownEffect.SlowTrigger(self.hoveringOverTrigger);
+    }
+
+    private static void PlayerControllerB_StopHoldInteractionOnTrigger(On.GameNetcodeStuff.PlayerControllerB.orig_StopHoldInteractionOnTrigger orig, PlayerControllerB self)
+    {
+        if (SlowDownEffect.isSlowDownEffectActive)
+        {
+            if(self.previousHoveringOverTrigger != null)
+                SlowDownEffect.ResetSlowTrigger(self.previousHoveringOverTrigger);
+
+            if (self.hoveringOverTrigger != null)
+                SlowDownEffect.ResetSlowTrigger(self.hoveringOverTrigger);
         }
         orig(self);
     }
@@ -248,67 +264,4 @@ static class PlayerControllerBPatch
             return isGrounded || self.HasEffectActive(CodeRebirthStatusEffects.Water);
         });
     }
-
-    /// <summary>
-    /// Modifies item dropping code to attempt to find a NetworkObject from collided object's parents
-    /// in case the collided object itself doesn't have a NetworkObject, if the following is true:<br/>
-    /// - The collided GameObject's name ends with <c>"_RedirectToRootNetworkObject"</c><br/>
-    /// <br/>
-    /// This is necessary for parenting items to enemies, because the raycast that collides with an object
-    /// ignores the enemies layer.
-    /// </summary>
-    /*private static void ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject(ILContext il)
-    {
-        ILCursor c = new(il);
-
-        if (!c.TryGotoNext(MoveType.Before,
-            x => x.MatchLdloc(0),                                   // load transform to stack
-            x => x.MatchCallvirt<Component>(nameof(Component.GetComponent)), // var component = transform.GetComponent<NetworkObject>();
-            x => x.MatchStloc(3)
-            // Context:
-            // x => x.MatchLdloc(3),                                // if (component != null)
-            // x => x.MatchLdnull(),
-            // x => x.MatchCall<UnityEngine.Object>("op_Inequality"),
-            // x => x.MatchBrfalse(out _)
-        ))
-        {
-            // Couldn't match, let's figure out if we should worry
-            if (c.TryGotoNext(MoveType.Before,
-                x => x.MatchLdloc(0),
-                x => x.MatchLdcI4(out _),   // Matching against EmitDelegate
-                x => x.MatchCall("MonoMod.Cil.RuntimeILReferenceBag/InnerBag`1<System.Func`2<UnityEngine.Transform,UnityEngine.Transform>>", "Get"), // There exists some bug probably that typeof doesn't work here because of generics?
-                x => x.MatchCall(typeof(RuntimeILReferenceBag.FastDelegateInvokers), "Invoke"),
-                x => x.MatchCallvirt<Component>(nameof(Component.GetComponent)),
-                x => x.MatchStloc(3)
-            ))
-                Plugin.Logger.LogInfo($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] This ILHook has most likely already been applied by another mod.");
-            else
-                Plugin.Logger.LogError($"[{nameof(ILHookAllowParentingOnEnemy_PlayerControllerB_DiscardHeldObject)}] Could not match IL!!");
-            return;
-        }
-
-        c.Index += 1;
-        c.EmitDelegate<Func<Transform, Transform>>(transform =>
-        {
-            if (!transform.name.EndsWith("_RedirectToRootNetworkObject"))
-                return transform;
-
-            return TryFindRoot(transform) ?? transform;
-        });
-
-    }
-    public static Transform? TryFindRoot(Transform child)
-    {
-        // iterate upwards until we find a NetworkObject
-        Transform current = child;
-        while (current != null)
-        {
-            if (current.GetComponent<NetworkObject>() != null)
-            {
-                return current;
-            }
-            current = current.transform.parent;
-        }
-        return null;
-    }*/
 }
