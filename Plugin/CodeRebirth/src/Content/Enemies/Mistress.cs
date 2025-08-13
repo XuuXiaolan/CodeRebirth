@@ -7,6 +7,7 @@ using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Achievements;
 using CodeRebirthLib.Util;
+using CodeRebirthLib.Util.INetworkSerializables;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -49,32 +50,100 @@ public class Mistress : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (currentBehaviourStateIndex != (int)State.Attack || targetPlayer == null) return;
-
-        killTimer += Time.deltaTime;
-        PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (localPlayer == targetPlayer && playerToKill == null)
+        if (currentBehaviourStateIndex == (int)State.Attack)
         {
-            localPlayer.JumpToFearLevel(0.7f);
-            CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer / killCooldown);
-        }
-
-        if (killTimer >= killCooldown)
-        {
-            if (targetPlayer.IsLocalPlayer())
+            if (targetPlayer == null)
             {
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("I got a headache");
+                return;
             }
-            killTimer = 0f;
-            playerToKill = targetPlayer;
-            playerToKill.inSpecialInteractAnimation = false;
-            playerToKill.shockingTarget = null;
-            playerToKill.inShockingMinigame = false;
-            playerToKill.disableLookInput = false;
-            Plugin.ExtendedLogging($"Executing player so please work please please {playerToKill}");
-            StartCoroutine(ResetVolumeWeightTo0(playerToKill));
-            StartCoroutine(InitiateKillingSequence(playerToKill));
-            SwitchToBehaviourStateOnLocalClient((int)State.Execution);
+
+            killTimer += Time.deltaTime;
+            PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
+            if (localPlayer == targetPlayer && playerToKill == null)
+            {
+                localPlayer.JumpToFearLevel(0.7f);
+                CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer / killCooldown);
+            }
+
+            if (killTimer >= killCooldown)
+            {
+                if (targetPlayer.IsLocalPlayer())
+                {
+                    Plugin.Mod.AchievementRegistry().TryTriggerAchievement("I got a headache");
+                }
+                killTimer = 0f;
+                playerToKill = targetPlayer;
+                playerToKill.inSpecialInteractAnimation = false;
+                playerToKill.shockingTarget = null;
+                playerToKill.inShockingMinigame = false;
+                playerToKill.disableLookInput = false;
+                Plugin.ExtendedLogging($"Executing player so please work please please {playerToKill}");
+                StartCoroutine(ResetVolumeWeightTo0(playerToKill));
+                StartCoroutine(InitiateKillingSequence(playerToKill));
+                SwitchToBehaviourStateOnLocalClient((int)State.Execution);
+            }
+        }
+        else if (currentBehaviourStateIndex == (int)State.Stalking)
+        {
+            teleporterTimer -= Time.deltaTime;
+            timeSpentInState -= Time.deltaTime;
+            if (teleporterTimer <= 0)
+            {
+                teleporterTimer = enemyRandom.NextFloat(teleportCooldown - 5, teleportCooldown + 5);
+                if (!IsServer)
+                    return;
+
+                TeleportRoutine();
+                return;
+            }
+
+            bool LookedAt = PlayerLookingAtEnemy();
+            if (LookedAt)
+            {
+                _seeingCount++;
+            }
+            else
+            {
+                _seeingCount = 0;
+            }
+            // Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
+            if (_seeingCount < 10)
+                return;
+
+            _seeingCount = 0;
+            if (timeSpentInState <= 0)
+            {
+                timeSpentInState = UnityEngine.Random.Range(50f, 80f);
+                TemporarilyCripplePlayerServerRpc(targetPlayer, true);
+                StartCoroutine(UpdatePlayerLossVision());
+                SwitchToBehaviourServerRpc((int)State.Attack);
+            }
+            else
+            {
+                teleporterTimer = 0f;
+            }
+        }
+        else if (currentBehaviourStateIndex == (int)State.Attack)
+        {
+            if (targetPlayer == null || !targetPlayer.IsLocalPlayer())
+                return;
+
+            bool LookedAt = PlayerLookingAtEnemy();
+            // Plugin.ExtendedLogging($"LookedAt in attack phase: {LookedAt}");
+            if (LookedAt)
+            {
+                _seeingCount = 0;
+            }
+            else
+            {
+                _seeingCount++;
+            }
+
+            if (_seeingCount < 10) // variable name is really not great here since i'm doing hte direct opposite of it really
+                return;
+
+            _seeingCount = 0;
+            ResetMistressStalkingServerRpc(targetPlayer);
         }
     }
 
@@ -119,61 +188,10 @@ public class Mistress : CodeRebirthEnemyAI
 
     private void DoStalking()
     {
-        if (teleporterTimer > 500) return;
-        teleporterTimer -= AIIntervalTime;
-        timeSpentInState -= AIIntervalTime;
-        if (teleporterTimer <= 0)
-        {
-            StartCoroutine(TeleportRoutine());
-            teleporterTimer = 99999;
-            return;
-        }
-
-        bool LookedAt = PlayerLookingAtEnemy();
-        if (LookedAt)
-        {
-            _seeingCount++;
-        }
-        else
-        {
-            _seeingCount = 0;
-        }
-        // Plugin.ExtendedLogging($"LookedAt in stalking phase: {LookedAt}");
-        if (!LookedAt || _seeingCount < 3)
-            return;
-
-        _seeingCount = 0;
-        if (timeSpentInState <= 0)
-        {
-            timeSpentInState = UnityEngine.Random.Range(50f, 80f);
-            TemporarilyCripplePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), true);
-            StartCoroutine(UpdatePlayerLossVision());
-            SwitchToBehaviourServerRpc((int)State.Attack);
-        }
-        else
-        {
-            teleporterTimer = 0f;
-        }
     }
 
     private void DoAttack()
     {
-        bool LookedAt = PlayerLookingAtEnemy();
-        // Plugin.ExtendedLogging($"LookedAt in attack phase: {LookedAt}");
-        if (LookedAt)
-        {
-            _seeingCount = 0;
-        }
-        else
-        {
-            _seeingCount++;
-        }
-
-        if (_seeingCount < 3) // variable name is really not great here since i'm doing hte direct opposite of it really
-            return;
-
-        _seeingCount = 0;
-        StartCoroutine(ResetMistressToStalking(targetPlayer));
     }
 
     private void DoExecution()
@@ -217,6 +235,18 @@ public class Mistress : CodeRebirthEnemyAI
         // todo: Find Valid spot to spawn guillotine.
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void ResetMistressStalkingServerRpc(PlayerControllerReference playerControllerReference)
+    {
+        ResetMistressStalkingClientRpc(playerControllerReference);
+    }
+
+    [ClientRpc]
+    private void ResetMistressStalkingClientRpc(PlayerControllerReference playerControllerReference)
+    {
+        StartCoroutine(ResetMistressToStalking(playerControllerReference));
+    }
+
     private IEnumerator ResetMistressToStalking(PlayerControllerB? lastTargetPlayer)
     {
         Plugin.ExtendedLogging($"Resetting mistress to stalking phase!");
@@ -232,7 +262,7 @@ public class Mistress : CodeRebirthEnemyAI
         yield return new WaitForSeconds(1f);
         if (lastTargetPlayer != null)
         {
-            TemporarilyCripplePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, lastTargetPlayer), false);
+            TemporarilyCripplePlayerServerRpc(lastTargetPlayer, false);
         }
         else if (currentBehaviourStateIndex != 0)
         {
@@ -246,20 +276,18 @@ public class Mistress : CodeRebirthEnemyAI
         PickATargetPlayer();
     }
 
-    public IEnumerator TeleportRoutine()
+    public void TeleportRoutine()
     {
-        yield return new WaitForSeconds(0.5f);
         SyncRendererMistressServerRpc();
-        teleporterTimer = enemyRandom.NextFloat(teleportCooldown - 5, teleportCooldown + 5);
         Vector3 teleportPoint = ChooseNewTeleportPoint();
         if (teleportPoint == Vector3.zero)
         {
             Plugin.Logger.LogError("Could not find a good teleport position");
             teleporterTimer = 0f;
-            yield break;
+            return;
         }
         Plugin.ExtendedLogging($"Teleporting to: {teleportPoint}");
-        creatureAnimator.SetInteger(IdleIntAnimation, enemyRandom.Next(3));
+        creatureAnimator.SetInteger(IdleIntAnimation, UnityEngine.Random.Range(0, 3));
         agent.Warp(teleportPoint);
     }
 
@@ -268,18 +296,7 @@ public class Mistress : CodeRebirthEnemyAI
         if (cantLosePlayer)
             return true;
 
-        float dot = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (HeadTransform.position - targetPlayer.gameplayCamera.transform.position).normalized);
-        if (dot <= 0.45f)
-            return false;
-
-        float distanceToPlayer = Vector3.Distance(targetPlayer.gameplayCamera.transform.position, HeadTransform.position);
-        if (distanceToPlayer > 50f)
-            return false;
-
-        if (Physics.Raycast(targetPlayer.gameplayCamera.transform.position, targetPlayer.gameplayCamera.transform.position - HeadTransform.position, distanceToPlayer, MoreLayerMasks.CollidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore))
-            return false;
-
-        return true;
+        return targetPlayer.HasLineOfSightToPosition(HeadTransform.position, 45f, 50, -1);
     }
 
     private void PickATargetPlayer()
@@ -326,23 +343,19 @@ public class Mistress : CodeRebirthEnemyAI
 
     private Vector3 ChooseNewTeleportPoint()
     {
-        const float MIN_DISTANCE = 10f;
-        const float MAX_DISTANCE = 30f;
-
-        // Try a few times to find a valid point
         for (int i = 0; i < 10; i++)
         {
-            Vector3 randomDirection = new Vector3(enemyRandom.NextFloat(-1f, 1f), 0f, enemyRandom.NextFloat(-1f, 1f));
+            Vector3 randomDirection = new(UnityEngine.Random.Range(-1f, 1f), 0f, UnityEngine.Random.Range(-1f, 1f));
             if (randomDirection.sqrMagnitude < 0.001f)
             {
                 continue;
             }
             randomDirection.Normalize();
 
-            float distance = enemyRandom.NextFloat(MIN_DISTANCE, MAX_DISTANCE);
+            float distance = UnityEngine.Random.Range(10f, 30f);
             Vector3 candidatePos = targetPlayer.transform.position + randomDirection * distance;
 
-            candidatePos.y += enemyRandom.NextFloat(-3f, 3f);
+            candidatePos.y += UnityEngine.Random.Range(-3f, 3f);
 
             if (NavMesh.SamplePosition(candidatePos, out NavMeshHit hit, 10f, NavMesh.AllAreas))
             {
@@ -389,20 +402,20 @@ public class Mistress : CodeRebirthEnemyAI
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void TemporarilyCripplePlayerServerRpc(int playerToCripple, bool cripple)
+    private void TemporarilyCripplePlayerServerRpc(PlayerControllerReference playerReference, bool cripple)
     {
-        TemporarilyCripplePlayerClientRpc(playerToCripple, cripple);
+        TemporarilyCripplePlayerClientRpc(playerReference, cripple);
     }
 
     [ClientRpc]
-    private void TemporarilyCripplePlayerClientRpc(int playerToCrippleIndex, bool cripple)
+    private void TemporarilyCripplePlayerClientRpc(PlayerControllerReference playerReference, bool cripple)
     {
-        PlayerControllerB playerToCripple = StartOfRound.Instance.allPlayerScripts[playerToCrippleIndex];
+        PlayerControllerB playerToCripple = playerReference;
         if (cripple)
         {
             if (playerToCripple.IsLocalPlayer())
             {
-                creatureVoice.PlayOneShot(AttackSounds[enemyRandom.Next(AttackSounds.Length)]);
+                creatureVoice.PlayOneShot(AttackSounds[UnityEngine.Random.Range(0, AttackSounds.Length)]);
             }
             playerToCripple.inAnimationWithEnemy = this;
             inSpecialAnimationWithPlayer = playerToCripple;

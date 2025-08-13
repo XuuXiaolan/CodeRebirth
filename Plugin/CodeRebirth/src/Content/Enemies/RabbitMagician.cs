@@ -70,15 +70,53 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (targetPlayer == null || !targetPlayer.IsLocalPlayer())
-            return;
+        if (targetPlayer != null && targetPlayer.IsLocalPlayer())
+        {
+            _idleTimer -= Time.deltaTime;
+            if (_idleTimer <= 0)
+            {
+                _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+                creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(0, _idleAudioClips.audioClips.Length)]);
+            }
+        }
 
-        _idleTimer -= Time.deltaTime;
-        if (_idleTimer > 0)
-            return;
+        PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
+        if (currentBehaviourStateIndex == (int)RabbitMagicianState.Idle)
+        {
+            if (targetPlayer != null || _attachRoutine != null)
+                return;
 
-        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
-        creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(0, _idleAudioClips.audioClips.Length)]);
+            if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.IsPseudoDead())
+                return;
+
+            if (!localPlayer.HasLineOfSightToPosition(transform.position + Vector3.up * 0.5f, 30f, 50, -1))
+                return;
+
+            SpottedSoundServerRpc(localPlayer, true);
+            _attachRoutine = StartCoroutine(AttachToPlayer(localPlayer, null));
+        }
+        else if (currentBehaviourStateIndex == (int)RabbitMagicianState.Attached)
+        {
+            if (targetPlayer == null || targetPlayer.isPlayerDead || targetPlayer.IsPseudoDead())
+                return;
+
+            if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.IsPseudoDead())
+                return;
+
+            if (localPlayer == targetPlayer)
+                return;
+
+            if (_killRoutine != null)
+                return;
+
+            if (!PlayerLookingAtEnemy(localPlayer, 0.2f))
+                return;
+
+            if (Vector3.Dot(localPlayer.gameplayCamera.transform.forward, targetPlayer.gameplayCamera.transform.forward) <= 0.45f)
+                return;
+
+            _killRoutine = StartCoroutine(KillPlayerAndSwitchTarget(localPlayer));
+        }
     }
 
     public void LateUpdate()
@@ -133,18 +171,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
             return;
 
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
-        {
-            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
-                continue;
-
-            if (!PlayerLookingAtEnemy(player, 0.2f))
-                continue;
-
-            SpottedSoundServerRpc(player, true);
-            _attachRoutine = StartCoroutine(AttachToPlayer(player, null));
-            return;
-        }
     }
 
     public void DoAttached()
@@ -159,22 +185,6 @@ public class RabbitMagician : CodeRebirthEnemyAI
 
             _idleRoutine = StartCoroutine(SwitchToIdle());
             return;
-        }
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
-        {
-            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
-                continue;
-
-            if (player == targetPlayer)
-                continue;
-
-            if (!PlayerLookingAtEnemy(player, 0.2f))
-                continue;
-
-            if (Vector3.Dot(player.gameplayCamera.transform.forward, targetPlayer.gameplayCamera.transform.forward) <= 0.45f)
-                continue;
-
-            _killRoutine = StartCoroutine(KillPlayerAndSwitchTarget(player));
         }
     }
 
