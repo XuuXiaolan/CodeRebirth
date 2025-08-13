@@ -445,7 +445,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         playerPuppetMap.Clear();
-        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Pin Needle", out CRItemDefinition? pinNeedleItemDefinition))
+        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Pin Needle", out CRItemDefinition? pinNeedleItemDefinition)) // TODO, fix this
             return;
 
         CodeRebirthUtils.Instance.SpawnScrapServerRpc(pinNeedleItemDefinition.Item.itemName, transform.position);
