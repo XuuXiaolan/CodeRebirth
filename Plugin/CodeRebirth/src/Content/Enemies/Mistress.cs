@@ -81,6 +81,7 @@ public class Mistress : CodeRebirthEnemyAI
                 StartCoroutine(ResetVolumeWeightTo0(playerToKill));
                 StartCoroutine(InitiateKillingSequence(playerToKill));
                 SwitchToBehaviourStateOnLocalClient((int)State.Execution);
+                return;
             }
         }
         else if (currentBehaviourStateIndex == (int)State.Stalking)
@@ -123,9 +124,10 @@ public class Mistress : CodeRebirthEnemyAI
                 teleporterTimer = 0f;
             }
         }
-        else if (currentBehaviourStateIndex == (int)State.Attack)
+
+        if (currentBehaviourStateIndex == (int)State.Attack)
         {
-            if (targetPlayer == null || !targetPlayer.IsLocalPlayer())
+            if (!targetPlayer.IsLocalPlayer())
                 return;
 
             bool LookedAt = PlayerLookingAtEnemy();
