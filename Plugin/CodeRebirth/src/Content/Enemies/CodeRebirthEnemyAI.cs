@@ -180,9 +180,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         if (Vector3.Dot(player.gameplayCamera.transform.forward, directionToEnemy) < dotProductThreshold)
             return false;
 
-        if (Physics.Linecast(player.gameplayCamera.transform.position, transform.position, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (Physics.Linecast(player.gameplayCamera.transform.position, transform.position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        {
+            Plugin.ExtendedLogging($"hit: {hit.transform.name}");
             return false;
-
+        }
         return true;
     }
 

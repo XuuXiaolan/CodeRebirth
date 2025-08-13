@@ -1,5 +1,5 @@
 namespace CodeRebirth.src.ModCompats;
-public static class NavmeshInCompanyCompat
+internal static class NavmeshInCompanyCompat
 {
-    public static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("dev.kittenji.NavMeshInCompany"); } }
+    internal static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("dev.kittenji.NavMeshInCompany"); } }
 }

@@ -5,12 +5,12 @@ using OpenBodyCams;
 
 namespace CodeRebirth.src.ModCompats;
 
-public static class OpenBodyCamCompatibilityChecker
+internal static class OpenBodyCamCompatibilityChecker
 {
-    public static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Zaggy1024.OpenBodyCams"); } }
+    internal static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("Zaggy1024.OpenBodyCams"); } }
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    public static void Init()
+    internal static void Init()
     {
         Plugin.ExtendedLogging("No way openbodycams is on?!");
         InitializeImpl();

@@ -7,7 +7,7 @@ internal static class LateGameUpgradesCompat
     private static bool LateGameUpgradesExists = Chainloader.PluginInfos.ContainsKey("com.malco.lethalcompany.moreshipupgrades");
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    public static float TryGetItemWeight(float currentItemWeight)
+    internal static float TryGetItemWeight(float currentItemWeight)
     {
         if (LateGameUpgradesExists)
         {
@@ -18,7 +18,7 @@ internal static class LateGameUpgradesCompat
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    internal static float GetItemWeight(float currentItemWeight)
+    private static float GetItemWeight(float currentItemWeight)
     {
         Plugin.ExtendedLogging($"New item weight: {MoreShipUpgrades.UpgradeComponents.TierUpgrades.AttributeUpgrades.BackMuscles.DecreasePossibleWeight(currentItemWeight - 1)}");
         return MoreShipUpgrades.UpgradeComponents.TierUpgrades.AttributeUpgrades.BackMuscles.DecreasePossibleWeight(currentItemWeight - 1);

@@ -10,7 +10,7 @@ internal static class CullFactorySoftCompat
     private static bool CullFactoryDynamicObjectsAPIExists = Chainloader.PluginInfos.TryGetValue("com.fumiko.CullFactory", out var info) && info.Metadata.Version >= new Version(1, 5, 0);
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    public static void TryRefreshDynamicLight(Light light)
+    internal static void TryRefreshDynamicLight(Light light)
     {
         if (CullFactoryDynamicObjectsAPIExists)
         {
@@ -19,7 +19,7 @@ internal static class CullFactorySoftCompat
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    internal static void RefreshDynamicLight(Light light)
+    private static void RefreshDynamicLight(Light light)
     {
         DynamicObjectsAPI.RefreshLightPosition(light);
     }

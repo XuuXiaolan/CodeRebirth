@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.Util.Extensions;
 using CodeRebirthLib.ContentManagement.Achievements;
@@ -203,6 +204,7 @@ public class SellingSally : NetworkBehaviour
 
     private void SellAndDisplayItemProfits(int profit, Terminal terminal)
     {
+        TooManyEmotesCompat.AddCredits(profit);
         if (!_usedOnce)
         {
             foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
