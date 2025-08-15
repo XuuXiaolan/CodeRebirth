@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using CodeRebirthLib.MiscScriptManagement;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;

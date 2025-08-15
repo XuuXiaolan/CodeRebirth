@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.Util;
-using CodeRebirthLib.Util.Pathfinding;
+using CodeRebirthLib.Internal;
+using CodeRebirthLib.Utils;
+
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -221,7 +222,7 @@ public class CruiserGalAI : GalAI
 
     private void CheckIfCanPathToEntrances(List<GenericPath<EntranceTeleport>> args)
     {
-        smartAgentNavigator.cantMove = false;
+        smartAgentNavigator.DisableMovement(false);
         Plugin.ExtendedLogging($"Pathable entrances: {args.Count}");
         if (args.Count <= 0)
         {
@@ -501,9 +502,9 @@ public class CruiserGalAI : GalAI
 
     private IEnumerator FlyAnimationDelay()
     {
-        smartAgentNavigator.cantMove = true;
+        smartAgentNavigator.DisableMovement(true);
         yield return new WaitForSeconds(0.5f);
-        smartAgentNavigator.cantMove = false;
+        smartAgentNavigator.DisableMovement(false);
     }
 
     private void StopFlyingAnimEvent()
@@ -706,7 +707,7 @@ public class CruiserGalAI : GalAI
             ownerPlayer.disableMoveInput = false;
             ownerPlayer.inSpecialInteractAnimation = false;
             ownerPlayer.transform.position = galContainer.position;
-            smartAgentNavigator.cantMove = true;
+            smartAgentNavigator.DisableMovement(true);
             List<(EntranceTeleport obj, Vector3 position)> candidateObjects = new();
             List<EntranceTeleport> potentiallyPathableTeleports = CodeRebirthLibNetworker.EntrancePoints
                 .Where(x => (x.isEntranceToBuilding && smartAgentNavigator.IsAgentOutside()) || (!smartAgentNavigator.IsAgentOutside() && !x.isEntranceToBuilding))

@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.Util;
-using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Internal;
+using CodeRebirthLib.Utils;
+
+
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -69,7 +72,7 @@ public class Mistress : CodeRebirthEnemyAI
             {
                 if (targetPlayer.IsLocalPlayer())
                 {
-                    Plugin.Mod.AchievementRegistry().TryTriggerAchievement("I got a headache");
+                    CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "i_got_a_headache"));
                 }
                 killTimer = 0f;
                 playerToKill = targetPlayer;

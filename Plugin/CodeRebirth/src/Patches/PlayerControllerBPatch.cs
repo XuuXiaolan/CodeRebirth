@@ -7,8 +7,10 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Achievements;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -88,7 +90,7 @@ static class PlayerControllerBPatch
             return 0.15f;
         }
     }
-    
+
     public static void Init()
     {
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
@@ -107,21 +109,21 @@ static class PlayerControllerBPatch
         orig(self, droppedInElevator, droppedInElevator, gObject);
         if (gObject is WrittenDocument)
         {
-            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Mu Miaolan", gObject.itemProperties.itemName);
+            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "mu_miaolan"), gObject.itemProperties.itemName);
             return;
         }
 
         if (gObject is PlushieItem || gObject is Xui || gObject is GoldRigo)
         {
-            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Happy Family", gObject.itemProperties.itemName);
-            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("The Uprooted", gObject.itemProperties.itemName);
-            Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Hoarding Bug", gObject.itemProperties.itemName);
+            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "happy_family"), gObject.itemProperties.itemName);
+            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "the_uprooted"), gObject.itemProperties.itemName);
+            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "hoarding_bug"), gObject.itemProperties.itemName);
 
             RoundManagerPatch.plushiesCollectedToday++;
             if (RoundManagerPatch.plushiesCollectedToday >= 3)
             {
                 RoundManagerPatch.plushiesCollectedToday = 0;
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Scalper");
+                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "scalper"));
             }
             return;
         }
@@ -163,7 +165,7 @@ static class PlayerControllerBPatch
     {
         if (SlowDownEffect.isSlowDownEffectActive)
         {
-            if(self.previousHoveringOverTrigger != null)
+            if (self.previousHoveringOverTrigger != null)
                 SlowDownEffect.ResetSlowTrigger(self.previousHoveringOverTrigger);
 
             if (self.hoveringOverTrigger != null)

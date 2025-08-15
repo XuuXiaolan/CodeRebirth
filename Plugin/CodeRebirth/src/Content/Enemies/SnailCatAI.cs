@@ -5,10 +5,9 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Enemies;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -64,10 +63,9 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!wasFake)
         {
             List<string> randomizedNames = new();
-            if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Real Enemy SnailCat", out CREnemyDefinition? CREnemyDefinition))
-            {
-                randomizedNames = CREnemyDefinition.GetGeneralConfig<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
-            }
+            var enemyKey = NamespacedKey<CREnemyInfo>.From("code_rebirth", "snailcat");
+
+            randomizedNames = EnemyHandler.Instance.SnailCat.GetConfig<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
 
             if (randomizedNames.Count == 0)
                 randomizedNames.Add("Mu");
@@ -399,14 +397,11 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(this.transform.position))
             return;
 
-        if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Fake SnailCat", out CRItemDefinition? fakeSnailCatItemDefinition))
-        {
-            NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(fakeSnailCatItemDefinition.Item, this.transform.position, false, true, 0);
-            FakeSnailCat fakeSnailCat = ((NetworkObject)netObjRef).GetComponent<FakeSnailCat>();
-            fakeSnailCat.localScale = propScript.originalScale;
-            fakeSnailCat.snailCatName = currentName;
-            fakeSnailCat.shiftHash = _specialRenderer!.materials[0].GetFloat(ShiftHash);
-        }
+        NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "fake_snail_cat")].Item, this.transform.position, false, true, 0);
+        FakeSnailCat fakeSnailCat = ((NetworkObject)netObjRef).GetComponent<FakeSnailCat>();
+        fakeSnailCat.localScale = propScript.originalScale;
+        fakeSnailCat.snailCatName = currentName;
+        fakeSnailCat.shiftHash = _specialRenderer!.materials[0].GetFloat(ShiftHash);
         // CRUtilities.CreateExplosion(this.transform.position, true, 99999, 0, 15, 999, null, null, 1000f);
     }
 }

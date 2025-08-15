@@ -3,13 +3,15 @@ using UnityEngine;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using Unity.Netcode;
 using BepInEx.Configuration;
 using CodeRebirthLib;
-using CodeRebirthLib.AssetManagement;
+using CodeRebirthLib.CRMod;
+
+
 /*
 Big todo
 Give the configs some sort of listener for lethal config so i can detect runtime changes.
@@ -18,7 +20,7 @@ namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("mrov.WeatherRegistry")]
 [BepInDependency("com.rune580.LethalCompanyInputUtils")]
-[BepInDependency(CodeRebirthLib.MyPluginInfo.PLUGIN_GUID)]
+[BepInDependency(CRLib.PLUGIN_GUID)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(MoreCompany.PluginInformation.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
@@ -30,7 +32,8 @@ public class Plugin : BaseUnityPlugin
     internal static IngameKeybinds InputActionsInstance = null!;
     public static ConfigFile configFile { get; private set; } = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
-    public static CRMod Mod { get; private set; }
+    public static CRMod Mod { get; private set; } = null!;
+
     internal class MainAssets(AssetBundle bundle) : AssetBundleLoader<MainAssets>(bundle)
     {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
@@ -86,9 +89,9 @@ public class Plugin : BaseUnityPlugin
 
         ModConfig.InitMainCodeRebirthConfig(configFile);
 
-        AssetBundle mainBundle = CRLib.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
+        AssetBundle mainBundle = AssetBundleUtils.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
         Assets = new MainAssets(mainBundle);
-        Mod = CRLib.RegisterMod(this, mainBundle);
+        Mod = CRMod.RegisterMod(this, mainBundle);
         Mod.RegisterContentHandlers();
 
         ModConfig.InitCodeRebirthConfig(configFile);

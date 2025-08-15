@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.Util.Pathfinding;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -147,14 +147,8 @@ public class GalAI : NetworkBehaviour, IHittable
         DoGalRadarAction(true);
         GalVoice.PlayOneShot(ActivateSound);
         smartAgentNavigator.SetAllValues(true);
-        smartAgentNavigator.OnEnterOrExitElevator.AddListener(OnEnterOrExitElevator);
         smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         smartAgentNavigator.OnEnableOrDisableAgent.AddListener(OnEnableOrDisableAgent);
-    }
-
-    public virtual void OnEnterOrExitElevator(bool enteredElevator)
-    {
-        Plugin.ExtendedLogging($"Entered Elevator: {enteredElevator}");
     }
 
     public virtual void OnEnableOrDisableAgent(bool agentEnabled)
@@ -173,7 +167,6 @@ public class GalAI : NetworkBehaviour, IHittable
         ownerPlayer = null;
         DoGalRadarAction(false);
         GalVoice.PlayOneShot(DeactivateSound);
-        smartAgentNavigator.OnEnterOrExitElevator.RemoveListener(OnEnterOrExitElevator);
         smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnUseEntranceTeleport);
         smartAgentNavigator.OnEnableOrDisableAgent.RemoveListener(OnEnableOrDisableAgent);
     }
@@ -299,7 +292,6 @@ public class GalAI : NetworkBehaviour, IHittable
         Instances.Remove(this);
         if (inActive) return;
         DoGalRadarAction(false);
-        smartAgentNavigator.OnEnterOrExitElevator.RemoveListener(OnEnterOrExitElevator);
         smartAgentNavigator.OnUseEntranceTeleport.RemoveListener(OnUseEntranceTeleport);
         smartAgentNavigator.OnEnableOrDisableAgent.RemoveListener(OnEnableOrDisableAgent);
     }

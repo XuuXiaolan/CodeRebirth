@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using BepInEx.Configuration;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement;
-using CodeRebirthLib.ContentManagement.Enemies;
-using CodeRebirthLib.Util;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+
+
+
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -116,24 +117,19 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             return;
 
         int randomNumberToSpawn = UnityEngine.Random.Range(2, 5);
-        if (!Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Cutiefly", out CREnemyDefinition? cutieflyEnemyDefinition))
-            return;
 
         for (int i = 0; i <= randomNumberToSpawn; i++)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, cutieflyEnemyDefinition.EnemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.From("code_rebirth", "cutiefly")].EnemyType);
         }
     }
 
     public override void Start()
     {
         base.Start();
-        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Monarch", out CREnemyDefinition? monarchEnemyDefinition))
-        {
-            _parallaxWingConfig = monarchEnemyDefinition.GetGeneralConfig<bool>("Monarch | Parallax Wing Effect");
-            wasParallaxOnLastFrame = _parallaxWingConfig.Value;
-            skinnedMeshRenderers[0].sharedMaterials[0].SetInt(ParallaxSwitch, wasParallaxOnLastFrame ? 1 : 0);
-        }
+        _parallaxWingConfig = EnemyHandler.Instance.Monarch.GetConfig<bool>("Monarch | Parallax Wing Effect");
+        wasParallaxOnLastFrame = _parallaxWingConfig.Value;
+        skinnedMeshRenderers[0].sharedMaterials[0].SetInt(ParallaxSwitch, wasParallaxOnLastFrame ? 1 : 0);
 
         BeamController._monarchParticle.transform.SetParent(null);
         BeamController._monarchParticle.transform.position = Vector3.zero;

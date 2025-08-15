@@ -6,10 +6,11 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.DissolveEffect;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement;
-using CodeRebirthLib.ContentManagement.Enemies;
-using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+
+
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -377,21 +378,21 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             if (randomNumber < 1)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies.Jester);
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("jester")].EnemyType);
             }
             else if (randomNumber < 20)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies.Nutcracker);
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("nutcracker")].EnemyType);
             }
             else if (randomNumber < 30)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies.Butler);
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("butler")].EnemyType);
             }
             else
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies.MaskedPlayerEnemy);
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("masked")].EnemyType);
             }
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies.MaskedPlayerEnemy);
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("masked")].EnemyType);
         }
         yield return new WaitForSeconds(delay);
         if (state == PuppeteerState.Attacking) smartAgentNavigator.StopSearchRoutine();
@@ -445,10 +446,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         playerPuppetMap.Clear();
-        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Pin Needle", out CRItemDefinition? pinNeedleItemDefinition)) // TODO, fix this
-            return;
-
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(pinNeedleItemDefinition.Item.itemName, transform.position);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(NamespacedKey<CRItemInfo>.From("code_rebirth", "puppeteers_needle"), transform.position);
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

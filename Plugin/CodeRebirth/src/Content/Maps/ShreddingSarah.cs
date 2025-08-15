@@ -1,10 +1,10 @@
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.Util;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -46,7 +46,7 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
         bool isDeadBody = false;
         if (player.currentlyHeldObjectServer is SnailCatPhysicsProp)
         {
-            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("You Monster");
+            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "you_monster"));
         }
 
         if (player.currentlyHeldObjectServer is RagdollGrabbableObject)
@@ -69,17 +69,13 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
         NetworkObjectReference netObjRef;
         if (playerDeath)
         {
-            if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Bloody Shredded Scraps", out CRItemDefinition? bloodyItemDefinition))
-                return;
-
-            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(bloodyItemDefinition.Item, shootPoint.position, false, true, valueOfItem);
+            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "bloody_shredded_scraps");
+            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[itemKey].Item, shootPoint.position, false, true, valueOfItem);
         }
         else
         {
-            if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Normal Shredded Scraps", out CRItemDefinition? normalItemDefinition))
-                return;
-
-            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(normalItemDefinition.Item, shootPoint.position, false, true, valueOfItem);
+            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "normal_shredded_scraps");
+            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[itemKey].Item, shootPoint.position, false, true, valueOfItem);
         }
         ShootItemForwards(netObjRef);
     }

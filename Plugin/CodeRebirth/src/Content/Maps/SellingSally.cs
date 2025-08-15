@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Achievements;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -217,10 +219,10 @@ public class SellingSally : NetworkBehaviour
             HUDManager.Instance.DisplayTip("Warning!", "Rampant underground activity detected, evacuation recommended.", true);
         }
 
-        Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Internship");
+        CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "internship"));
         if (WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant().Trim() == "night shift")
         {
-            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Graveyard Shift");
+            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "graveyard_shift"));
         }
         terminal.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;

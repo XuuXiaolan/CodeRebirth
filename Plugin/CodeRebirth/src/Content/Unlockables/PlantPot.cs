@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -135,7 +135,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         switch (fruitType)
         {
             case (int)FruitType.Tomato:
-                if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Nomrmal Tomato", out CRItemDefinition? tomatoItemDefinition))
+                /*if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Nomrmal Tomato", out CRItemDefinition? tomatoItemDefinition))
                     return;
 
                 itemToSpawn = tomatoItemDefinition.Item;
@@ -144,7 +144,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
                 if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Golden Tomato", out CRItemDefinition? goldenTomatoItemDefinition))
                     return;
 
-                itemToSpawn = goldenTomatoItemDefinition.Item;
+                itemToSpawn = goldenTomatoItemDefinition.Item;*/
                 break;
         }
         if (itemToSpawn == null)

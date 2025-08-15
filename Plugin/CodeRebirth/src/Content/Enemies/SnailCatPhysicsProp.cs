@@ -1,4 +1,4 @@
-using CodeRebirthLib.MiscScriptManagement;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

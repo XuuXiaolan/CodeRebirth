@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

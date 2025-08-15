@@ -3,14 +3,15 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
 using LethalLevelLoader;
+using CodeRebirthLib;
 using System.Linq;
-using CodeRebirthLib.ContentManagement.Weathers;
+using UnityEngine.InputSystem.Utilities;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -124,9 +125,7 @@ static class StartOfRoundPatch
         if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && weatherName != "none")
             return;
 
-        if (!Plugin.Mod.WeatherRegistry().TryGetFromWeatherName("night shift", out CRWeatherDefinition? nightShiftWeatherDefinition))
-            return;
-
-        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, nightShiftWeatherDefinition.Weather);
+        var weatherKey = NamespacedKey<CRWeatherInfo>.From("code_rebirth", "night_shift");
+        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[weatherKey].WeatherEffect));
     }
 }

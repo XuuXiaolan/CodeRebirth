@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.Util;
-using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
+
+
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -445,7 +447,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             creatureNetworkAnimator.SetTrigger(BreakMovementAnimation);
         }
 
-        smartAgentNavigator.cantMove = true;
+        smartAgentNavigator.DisableMovement(true);
         agent.velocity = Vector3.zero;
         agent.isStopped = true;
 
@@ -513,7 +515,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     {
         _isRotating = false;
         agent.isStopped = false;
-        smartAgentNavigator.cantMove = false;
+        smartAgentNavigator.DisableMovement(false);
 
         if (_currentCornerIndex < _pathCorners.Length - 1)
         {
@@ -583,7 +585,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         targetPlayer.DamagePlayer(15, true, true, CauseOfDeath.Gravity, 0, false, default);
         if (targetPlayer.IsLocalPlayer())
         {
-            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Trash Trash Trash");
+            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "trash_trash_trash"));
         }
         targetPlayer = null;
 

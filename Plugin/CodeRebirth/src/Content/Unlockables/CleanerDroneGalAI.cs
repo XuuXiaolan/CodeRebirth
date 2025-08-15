@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;

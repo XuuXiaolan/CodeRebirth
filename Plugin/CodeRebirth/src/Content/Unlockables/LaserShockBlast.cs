@@ -5,7 +5,8 @@ using GameNetcodeStuff;
 using System;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Utils;
+
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class LaserShockBlast : NetworkBehaviour

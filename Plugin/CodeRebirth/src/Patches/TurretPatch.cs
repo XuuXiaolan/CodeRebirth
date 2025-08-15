@@ -1,5 +1,5 @@
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 

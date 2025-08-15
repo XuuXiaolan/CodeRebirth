@@ -1,6 +1,6 @@
 using System.Collections;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;

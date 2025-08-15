@@ -1,5 +1,5 @@
 using CodeRebirth.src.Util;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Utils;
 using Unity.Netcode;
 using UnityEngine;
 

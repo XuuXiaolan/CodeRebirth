@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement;
-using CodeRebirthLib.ContentManagement.Enemies;
-using CodeRebirthLib.Util;
+using CodeRebirth.src.Content.Maps;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+
+
+
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -109,13 +111,10 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Guardsman", out CREnemyDefinition? CREnemyDefinition))
+        var enemyBlacklistArray = MapObjectHandler.Instance.Merchant.GetConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+        foreach (var nameEntry in enemyBlacklistArray.ToList())
         {
-            var enemyBlacklistArray = CREnemyDefinition.GetGeneralConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
-            foreach (var nameEntry in enemyBlacklistArray.ToList())
-            {
-                _internalEnemyBlacklist.UnionWith(LethalContent.Enemies.All.Where(et => et.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
-            }
+            _internalEnemyBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
         }
 
         foreach (var nameEntry in _internalEnemyBlacklist)
@@ -219,7 +218,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         {
             // force enemies to stop moving
             _bufferTimer = 7.5f;
-            smartAgentNavigator.cantMove = true;
+            smartAgentNavigator.DisableMovement(true);
             smartAgentNavigator.StopAgent();
             MiscSoundsClientRpc(1);
             creatureNetworkAnimator.SetTrigger(KillLargeAnimation);
@@ -227,7 +226,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         else
         {
             _bufferTimer = 7.5f;
-            smartAgentNavigator.cantMove = true;
+            smartAgentNavigator.DisableMovement(true);
             smartAgentNavigator.StopAgent();
             MiscSoundsClientRpc(0);
             creatureNetworkAnimator.SetTrigger(KillSmallAnimation);
@@ -286,11 +285,11 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
 
     private IEnumerator StartDelay()
     {
-        smartAgentNavigator.cantMove = true;
+        smartAgentNavigator.DisableMovement(true);
         smartAgentNavigator.StopAgent();
         yield return new WaitForSeconds(10f);
         skinnedMeshRenderers[0].updateWhenOffscreen = false;
-        smartAgentNavigator.cantMove = false;
+        smartAgentNavigator.DisableMovement(false);
         smartAgentNavigator.StartSearchRoutine(100f);
     }
 
@@ -315,7 +314,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     private IEnumerator StartSearchRoutineWithDelay()
     {
         yield return new WaitForSeconds(3f);
-        smartAgentNavigator.cantMove = false;
+        smartAgentNavigator.DisableMovement(false);
         smartAgentNavigator.StopAgent();
 
         if (targetEnemy != null)

@@ -1,4 +1,4 @@
-using CodeRebirthLib.MiscScriptManagement;
+using CodeRebirthLib.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;

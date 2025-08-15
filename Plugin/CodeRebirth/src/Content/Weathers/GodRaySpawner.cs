@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;

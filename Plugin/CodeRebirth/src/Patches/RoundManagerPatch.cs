@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.AI;

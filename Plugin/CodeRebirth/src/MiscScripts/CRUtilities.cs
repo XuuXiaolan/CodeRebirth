@@ -1,6 +1,6 @@
 ﻿using CodeRebirth.src.ModCompats;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;

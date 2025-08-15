@@ -1,7 +1,8 @@
 
 using System.Collections;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ContentManagement.Achievements;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -52,7 +53,8 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             int playersDead = StartOfRound.Instance.connectedPlayersAmount + 1 - StartOfRound.Instance.livingPlayers;
             if (playersDead == 0)
             {
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Greatest Asset");
+                var achievementKey = NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "greatest_asset");
+                CRModContent.Achievements.TryTriggerAchievement(achievementKey);
             }
             // re-enable animator
             yield return new WaitUntil(() => RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase);

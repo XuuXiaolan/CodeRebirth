@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.Util.Pathfinding;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

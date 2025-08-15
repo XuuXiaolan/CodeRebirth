@@ -741,7 +741,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
                 player.DamagePlayer(10, causeOfDeath: CauseOfDeath.Crushing);
             }
         }
-        var enemiesList = RoundManager.Instance.SpawnedEnemies; //todo: change this to a spherecast
+        var enemiesList = RoundManager.Instance.SpawnedEnemies;
         for (int i = enemiesList.Count - 1; i >= 0; i--)
         {
             if (enemiesList[i] == null || enemiesList[i].isEnemyDead || enemiesList[i] is RedwoodTitanAI) continue;
@@ -757,7 +757,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         if (Plugin.ModConfig.ConfigRedwoodHeartEnabled.Value && IsHost)
         {
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc("RedwoodHeart", position);
+            // CodeRebirthUtils.Instance.SpawnScrapServerRpc("RedwoodHeart", position);
         }
     }
 }

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.Extensions;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -79,26 +78,25 @@ public class FunctionalMicrowave : CodeRebirthHazard
     private Item? ChooseRandomMicrowaveScrap()
     {
         int result = microwaveRandom.Next(5);
-        var itemRegistry = Plugin.Mod.ItemRegistry();
         if (result == 0)
         {
-            itemRegistry.TryGetFromItemName("Spork", out CRItemDefinition? sporkItemDefinition);
-            return sporkItemDefinition?.Item;
+            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "charred_spork");
+            return LethalContent.Items[itemKey].Item;
         }
         else if (result == 1)
         {
-            itemRegistry.TryGetFromItemName("Fork", out CRItemDefinition? forkItemDefinition);
-            return forkItemDefinition?.Item;
+            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "charred_fork");
+            return LethalContent.Items[itemKey].Item;
         }
         else if (result == 2)
         {
-            itemRegistry.TryGetFromItemName("Baby", out CRItemDefinition? charredItemDefinition);
-            return charredItemDefinition?.Item;
+            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "charred_knife");
+            return LethalContent.Items[itemKey].Item;
         }
         else if (result == 3)
         {
-            itemRegistry.TryGetFromItemName("Sapsucker Omelette", out CRItemDefinition? normalItemDefinition);
-            return normalItemDefinition?.Item;
+            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "sapsucker_omelette");
+            return LethalContent.Items[itemKey].Item;
         }
         return null;
     }
@@ -113,7 +111,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
             scrapSpawned.grabbable = true;
             if (scrapSpawned.playerHeldBy != null && scrapSpawned.playerHeldBy.IsLocalPlayer())
             {
-                Plugin.Mod.AchievementRegistry().TryDiscoverMoreProgressAchievement("Lunch is Served", scrapSpawned.itemProperties.itemName);
+                CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "lunch_is_served"), scrapSpawned.itemProperties.itemName);
             }
             damageAmount = originalDamageAmount;
             scrapSpawned = null;

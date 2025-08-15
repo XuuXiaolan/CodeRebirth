@@ -1,4 +1,4 @@
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using System.Collections;
 using TMPro;

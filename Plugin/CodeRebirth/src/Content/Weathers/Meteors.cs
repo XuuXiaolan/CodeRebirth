@@ -4,7 +4,8 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Events;
-using CodeRebirthLib.ContentManagement.Items;
+using CodeRebirthLib;
+
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Meteors : FallingObjectBehaviour
@@ -92,20 +93,14 @@ public class Meteors : FallingObjectBehaviour
 
         if (IsServer && UnityEngine.Random.Range(0, 100) < chanceToSpawnScrap)
         {
-            Plugin.Mod.ItemRegistry().TryGetFromItemName("Amethyst", out CRItemDefinition? amethystItemDefinition);
-            Plugin.Mod.ItemRegistry().TryGetFromItemName("Sapphire", out CRItemDefinition? sapphireItemDefinition);
-            Plugin.Mod.ItemRegistry().TryGetFromItemName("Emerald", out CRItemDefinition? emeraldItemDefinition);
-            Plugin.Mod.ItemRegistry().TryGetFromItemName("Quartz", out CRItemDefinition? quartzItemDefinition);
-            Plugin.Mod.ItemRegistry().TryGetFromItemName("Ruby", out CRItemDefinition? rubyItemDefinition);
-            Plugin.Mod.ItemRegistry().TryGetFromItemName("Topaz", out CRItemDefinition? topazItemDefinition);
             Item[] meteorites =
             [
-                amethystItemDefinition!.Item,
-                sapphireItemDefinition!.Item,
-                emeraldItemDefinition!.Item,
-                quartzItemDefinition!.Item,
-                rubyItemDefinition!.Item,
-                topazItemDefinition!.Item
+                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "amethyst_crystal")].Item,
+                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "sapphire_crystal")].Item,
+                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "emerald_crystal")].Item,
+                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "quartz_crystal")].Item,
+                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "ruby_crystal")].Item,
+                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "topaz_crystal")].Item
             ];
             int randomNumber = UnityEngine.Random.Range(0, meteorites.Length);
             CodeRebirthUtils.Instance.SpawnScrap(meteorites[randomNumber], _target, false, true, 0);

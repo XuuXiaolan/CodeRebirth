@@ -5,11 +5,11 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using System;
 using static CodeRebirth.src.Util.PlayerControllerBExtensions;
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirthLib.Util;
+
 
 namespace CodeRebirth.src.Content.Weathers;
 public class Tornados : CodeRebirthEnemyAI

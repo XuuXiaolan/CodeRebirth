@@ -1,10 +1,7 @@
 ﻿using CodeRebirth.src.Patches;
 using UnityEngine;
-using CodeRebirthLib.ContentManagement;
 using CodeRebirthLib;
-using CodeRebirthLib.AssetManagement;
-using CodeRebirthLib.ContentManagement.MapObjects;
-using CodeRebirthLib.Exceptions;
+using CodeRebirthLib.CRMod;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>

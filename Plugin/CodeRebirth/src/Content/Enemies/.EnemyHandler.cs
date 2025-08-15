@@ -1,6 +1,4 @@
-﻿using CodeRebirthLib;
-using CodeRebirthLib.AssetManagement;
-using CodeRebirthLib.ContentManagement;
+﻿using CodeRebirthLib.CRMod;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;

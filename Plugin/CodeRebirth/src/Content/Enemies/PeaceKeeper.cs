@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.Util;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -586,10 +587,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         if (!IsServer)
             return;
 
-        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName("Ceasefire", out CRItemDefinition? ceasefireItemDefinition))
-            return;
-
-        CodeRebirthUtils.Instance.SpawnScrap(ceasefireItemDefinition.Item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.rotation);
+        CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "ceasefire")].Item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.rotation);
     }
 
     public void BitchSlapAnimationEvent()

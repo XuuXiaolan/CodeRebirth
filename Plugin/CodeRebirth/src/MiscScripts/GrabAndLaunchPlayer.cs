@@ -1,7 +1,8 @@
 using System.Collections;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.Extensions;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -50,7 +51,7 @@ public class GrabAndLaunchPlayer : MonoBehaviour
             yield break;
         }
 
-        Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Crate-apult");
+        CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "crateapult"));
     }
 
     public void Update()

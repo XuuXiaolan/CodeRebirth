@@ -1,11 +1,11 @@
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.Util;
+
 
 namespace CodeRebirth.src.Content.Maps;
 public class BiomeManager : CodeRebirthHazard

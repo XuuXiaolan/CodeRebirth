@@ -1,10 +1,12 @@
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.ContentManagement.Enemies;
-using CodeRebirthLib.ContentManagement.MapObjects;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
+
+
+
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,23 +43,23 @@ static class EnemyAIPatch
         {
             if (self is RedwoodTitanAI)
             {
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Timber!");
+                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "timber"));
             }
             else if (self is DriftwoodMenaceAI)
             {
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Bushwacked");
+                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "bushwacked"));
             }
             else if (self is Puppeteer)
             {
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Night of Betrayal");
+                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "night_of_betrayal"));
             }
             else if (self is PeaceKeeper)
             {
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Peace Kept");
+                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "peace_kept"));
             }
             else if (self is CactusBudling)
             {
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Wild West");
+                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "wild_west"));
             }
         }
 
@@ -72,10 +74,11 @@ static class EnemyAIPatch
             if (UnityEngine.Random.Range(0f, 100f) >= coinChance)
                 return;
 
-            if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Money", out CRMapObjectDefinition? moneyMapObjectDefinition))
+            var mapObjectKey = NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "money");
+            if (!LethalContent.MapObjects.TryGetValue(mapObjectKey, out CRMapObjectInfo mapObjectInfo))
                 return;
 
-            GameObject coin = UnityEngine.Object.Instantiate(moneyMapObjectDefinition.GameObject, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            GameObject coin = UnityEngine.Object.Instantiate(mapObjectInfo.MapObject, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             coin.GetComponent<NetworkObject>().Spawn(true);
         }
     }

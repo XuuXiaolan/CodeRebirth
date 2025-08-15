@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.Util;
-using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -350,9 +349,10 @@ public class AutonomousCrane : NetworkBehaviour
                     continue;
 
                 _playerKillList.Add(player);
-                if (IsServer && Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition))
+                if (IsServer)
                 {
-                    NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition.Item, player.transform.position, false, true, 0);
+                    var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "flattened_body");
+                    NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[itemKey].Item, player.transform.position, false, true, 0);
                     if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
                     {
                         flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName = player;

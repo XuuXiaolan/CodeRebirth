@@ -1,7 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

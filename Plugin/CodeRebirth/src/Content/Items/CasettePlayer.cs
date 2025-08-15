@@ -1,7 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ContentManagement;
-using CodeRebirthLib.ContentManagement.Items;
+
+
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Video;
@@ -35,7 +35,7 @@ public class CasettePlayer : MonoBehaviour
 
         _videoPlayer.Stop();
         _playing = true;
-        string itemName = casetteTapeUsed.itemProperties.itemName;
+        Item casetteItem = casetteTapeUsed.itemProperties;
         if (casetteTapeUsed.playerHeldBy != null && casetteTapeUsed.isHeld && casetteTapeUsed.playerHeldBy.currentlyHeldObjectServer == casetteTapeUsed)
         {
             casetteTapeUsed.playerHeldBy.DespawnHeldObject();
@@ -53,13 +53,10 @@ public class CasettePlayer : MonoBehaviour
         _generalAudioSource.PlayOneShot(_tapeEjectSound);
         yield return new WaitForSeconds(_tapeEjectSound.length);
         _playing = false;
+
         if (!NetworkManager.Singleton.IsServer)
             yield break;
 
-        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName(itemName, out CRItemDefinition? casetteItemDefinition))
-            yield break;
-
-        Item item = casetteItemDefinition.Item;
-        CodeRebirthUtils.Instance.SpawnScrap(item, _tapeRespawnTransform.position, false, true, 0);
+        CodeRebirthUtils.Instance.SpawnScrap(casetteItem, _tapeRespawnTransform.position, false, true, 0);
     }
 }

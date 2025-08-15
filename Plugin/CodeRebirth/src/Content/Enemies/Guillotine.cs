@@ -2,9 +2,9 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -92,9 +92,9 @@ public class Guillotine : NetworkBehaviour
             HUDManager.Instance.HideHUD(true);
             StartOfRound.Instance.allowLocalPlayerDeath = false;
         }
-        if (IsServer && Plugin.Mod.ItemRegistry().TryGetFromItemName("Talking Head", out CRItemDefinition? talkingHeadItemDef))
+        if (IsServer)
         {
-            GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(talkingHeadItemDef.Item, scrapSpawnTransform.position, false, true, 0);
+            GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "talking_head")].Item, scrapSpawnTransform.position, false, true, 0);
             TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();
             talkingHeadScript.player = playerToKill;
             talkingHeadScript.mistress = mistress;

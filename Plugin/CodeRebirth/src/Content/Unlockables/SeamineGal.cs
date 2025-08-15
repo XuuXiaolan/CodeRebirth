@@ -7,10 +7,11 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Enemies;
-using CodeRebirthLib.ContentManagement.Unlockables;
-using CodeRebirthLib.Util;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+
+
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -234,13 +235,10 @@ public class SeamineGalAI : GalAI
             maxChargeCount = chargeCount;
             Agent.enabled = false;
 
-            if (Plugin.Mod.UnlockableRegistry().TryGetFromUnlockableName("SEA", out CRUnlockableDefinition? seamineUnlockableDefinition))
+            var enemyBlacklist = UnlockableHandler.Instance.SeamineTink.GetConfig<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+            foreach (var nameEntry in enemyBlacklist)
             {
-                var enemyBlacklist = seamineUnlockableDefinition.GetGeneralConfig<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
-                foreach (var nameEntry in enemyBlacklist)
-                {
-                    enemyTargetBlacklist.UnionWith(VanillaEnemies.AllEnemyTypes.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
-                }
+                enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
             }
             StartUpDelay();
         }
@@ -623,9 +621,9 @@ public class SeamineGalAI : GalAI
 
     private IEnumerator FlyAnimationDelay()
     {
-        smartAgentNavigator.cantMove = true;
+        smartAgentNavigator.DisableMovement(true);
         yield return new WaitForSeconds(1.5f);
-        smartAgentNavigator.cantMove = false;
+        smartAgentNavigator.DisableMovement(false);
     }
 
     private void StopRidingBruceAnimEvent()
@@ -767,12 +765,6 @@ public class SeamineGalAI : GalAI
     {
         base.OnUseEntranceTeleport(setOutside);
         CullFactorySoftCompat.TryRefreshDynamicLight(light);
-    }
-
-    public override void OnEnterOrExitElevator(bool enteredElevator)
-    {
-        base.OnEnterOrExitElevator(enteredElevator);
-        Animator.SetBool(inElevatorAnimation, enteredElevator);
     }
 
     public static IEnumerator DoCustomPassThing(ParticleSystem particleSystem, CustomPassManager.CustomPassType customPassType, float scanRange)

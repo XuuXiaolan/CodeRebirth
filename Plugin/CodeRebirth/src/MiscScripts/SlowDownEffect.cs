@@ -33,7 +33,7 @@ public static class SlowDownEffect
 
     public static void ResetSlowTrigger(InteractTrigger trigger)
     {
-        if(!isSlowDownEffectActive)
+        if (!isSlowDownEffectActive)
             return;
 
         if (trigger != CurrentlyEditedTrigger)
@@ -139,7 +139,7 @@ public static class SlowDownEffect
         {
             ResetLowPassFilterValue(filter, oldCutOffFrequency);
         }
-        
+
         float timeElapsed = 1f;
         while (timeElapsed > 0)
         {

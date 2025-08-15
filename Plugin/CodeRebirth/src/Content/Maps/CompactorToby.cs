@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -179,8 +180,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
         StartOrStopCompactingClientRpc(false, false);
         if (deadPlayer != null)
         {
-            Plugin.Mod.ItemRegistry().TryGetFromItemName("Flattened Body", out CRItemDefinition? flattedBodyItemDefinition);
-            NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(flattedBodyItemDefinition?.Item, randomPosition, false, true, value);
+            NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "flattened_body")].Item, randomPosition, false, true, value);
             if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
             {
                 PlayerControllerB player = deadPlayer;
@@ -189,8 +189,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
             yield break;
         }
 
-        Plugin.Mod.ItemRegistry().TryGetFromItemName("Sally Cube", out CRItemDefinition? sallyCubesItemDefinition);
-        CodeRebirthUtils.Instance.SpawnScrap(sallyCubesItemDefinition?.Item, randomPosition, false, true, value);
+        CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "sally_cubes")].Item, randomPosition, false, true, value);
     }
 
     private IEnumerator PlaySourceWithDelay(float delay)

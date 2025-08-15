@@ -1,6 +1,6 @@
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;

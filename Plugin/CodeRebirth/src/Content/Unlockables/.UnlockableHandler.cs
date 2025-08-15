@@ -1,8 +1,6 @@
+using CodeRebirthLib.CRMod;
 using LethalLib.Extras;
 using UnityEngine;
-using CodeRebirthLib.ContentManagement;
-using CodeRebirthLib.AssetManagement;
-using CodeRebirthLib;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockableHandler : ContentHandler<UnlockableHandler>

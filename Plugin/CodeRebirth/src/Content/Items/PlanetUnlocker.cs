@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Linq;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using LethalLevelLoader;
 using UnityEngine;
 

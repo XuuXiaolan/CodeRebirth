@@ -1,6 +1,6 @@
 using System.Collections;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.ContentManagement.MapObjects;
+using CodeRebirthLib;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -106,12 +106,11 @@ public class PiggyBank : NetworkBehaviour, IHittable
         _audioSource.PlayOneShot(_breakBankSound);
         if (IsServer)
         {
-            if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Money", out CRMapObjectDefinition? moneyMapObjectDefinition))
-                return;
+            var mapObjectKey = NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "money");
 
             for (int i = 0; i < _coinsStored.Value; i++)
             {
-                var coin = GameObject.Instantiate(moneyMapObjectDefinition.GameObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
+                var coin = GameObject.Instantiate(LethalContent.MapObjects[mapObjectKey].MapObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
                 coin.GetComponent<NetworkObject>().Spawn(true);
             }
             _coinsStored.Value = 0;

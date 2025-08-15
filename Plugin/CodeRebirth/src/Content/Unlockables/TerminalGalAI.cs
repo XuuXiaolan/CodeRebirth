@@ -6,8 +6,8 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.Util;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.Util;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -550,9 +550,9 @@ public class TerminalGalAI : GalAI
 
     private IEnumerator FlyAnimationDelay()
     {
-        smartAgentNavigator.cantMove = true;
+        smartAgentNavigator.DisableMovement(true);
         yield return new WaitForSeconds(1.5f);
-        smartAgentNavigator.cantMove = false;
+        smartAgentNavigator.DisableMovement(false);
     }
 
     private void StopFlyingAnimEvent()
@@ -683,11 +683,6 @@ public class TerminalGalAI : GalAI
     public override void OnUseEntranceTeleport(bool setOutside)
     {
         base.OnUseEntranceTeleport(setOutside);
-    }
-
-    public override void OnEnterOrExitElevator(bool enteredElevator)
-    {
-        base.OnEnterOrExitElevator(enteredElevator);
     }
 
     public IEnumerator DoCustomPassThing(ParticleSystem particleSystem, CustomPassManager.CustomPassType customPassType)

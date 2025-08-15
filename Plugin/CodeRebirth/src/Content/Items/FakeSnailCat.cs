@@ -1,9 +1,7 @@
-using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Enemies;
-using CodeRebirthLib.MiscScriptManagement;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -88,18 +86,17 @@ public class FakeSnailCat : GrabbableObject
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
             return;
 
-        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Real Enemy SnailCat", out CREnemyDefinition? realEnemySnailCatEnemyDefinition))
-        {
-            NetworkObjectReference netObjRef = RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, realEnemySnailCatEnemyDefinition.EnemyType);
-            SnailCatAI snailCatAI = ((NetworkObject)netObjRef).GetComponent<SnailCatAI>();
-            snailCatAI.wasFake = true;
-            if (isHeld && playerHeldBy != null)
-                snailCatAI.playerHolding = playerHeldBy;
+        var snailcatKey = NamespacedKey<CREnemyInfo>.From("code_rebirth", "real_enemy_snailcat");
+        var enemyType = LethalContent.Enemies[snailcatKey].EnemyType;
+        NetworkObjectReference netObjRef = RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, enemyType);
+        SnailCatAI snailCatAI = ((NetworkObject)netObjRef).GetComponent<SnailCatAI>();
+        snailCatAI.wasFake = true;
+        if (isHeld && playerHeldBy != null)
+            snailCatAI.playerHolding = playerHeldBy;
 
-            snailCatAI.fakeLocalScale = this.transform.localScale;
-            snailCatAI.currentName = snailCatName;
-            snailCatAI.shiftHash = _renderer.GetMaterial().GetFloat(SnailCatAI.ShiftHash);
-            this.NetworkObject.Despawn();
-        }
+        snailCatAI.fakeLocalScale = this.transform.localScale;
+        snailCatAI.currentName = snailCatName;
+        snailCatAI.shiftHash = _renderer.GetMaterial().GetFloat(SnailCatAI.ShiftHash);
+        this.NetworkObject.Despawn();
     }
 }

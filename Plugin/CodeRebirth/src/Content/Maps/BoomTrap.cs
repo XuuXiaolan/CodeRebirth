@@ -1,7 +1,8 @@
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.Extensions;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ public class BoomTrap : BearTrap
         yield return new WaitForSeconds(explosionSound.length);
         if (playerCaught == null && playerSnapped != null && !playerSnapped.isPlayerDead && playerSnapped.IsLocalPlayer())
         {
-            Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Short Fuse");
+            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "short_fuse"));
         }
 
         DoReleaseTrap();

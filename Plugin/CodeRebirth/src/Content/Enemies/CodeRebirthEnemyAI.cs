@@ -3,10 +3,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 using System.Linq;
 using Unity.Netcode.Components;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirth.src.MiscScripts;
-using CodeRebirthLib.Util.Pathfinding;
-using CodeRebirthLib.Util.INetworkSerializables;
+using CodeRebirthLib.Utils;
 using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Enemies;

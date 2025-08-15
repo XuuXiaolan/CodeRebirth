@@ -5,11 +5,12 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using System.Linq;
 using Unity.Netcode;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.Util;
-using CodeRebirthLib.ContentManagement.Enemies;
+using CodeRebirthLib.Utils;
+
+
 using System.Collections.Generic;
-using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib;
+
 
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -116,13 +117,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        if (Plugin.Mod.EnemyRegistry().TryGetFromEnemyName("Driftwood", out CREnemyDefinition? driftwoodEnemyDefinition))
+        var enemyBlacklist = EnemyHandler.Instance.DriftwoodMenace.GetConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+        foreach (var nameEntry in enemyBlacklist.ToList())
         {
-            var enemyBlacklist = driftwoodEnemyDefinition.GetGeneralConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
-            foreach (var nameEntry in enemyBlacklist.ToList())
-            {
-                _enemyTargetBlacklist.UnionWith(LethalContent.Enemies.All.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
-            }
+            _enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
         }
 
         foreach (var enemy in _enemyTargetBlacklist)

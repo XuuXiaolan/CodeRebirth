@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.MapObjects;
-using CodeRebirthLib.Util.Pathfinding;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -126,7 +126,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         base.Start();
         foreach (var crContentDefinition in EnemyHandler.Instance.CactusBudling!.Content)
         {
-            if (crContentDefinition is not CRMapObjectDefinition crMapObjectDefinition)
+            if (crContentDefinition is not CRMMapObjectDefinition crMapObjectDefinition)
                 continue;
 
             if (crMapObjectDefinition.MapObjectName.Contains("Cactus", StringComparison.OrdinalIgnoreCase))

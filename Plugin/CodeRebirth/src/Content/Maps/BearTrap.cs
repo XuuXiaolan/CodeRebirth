@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.MapObjects;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
+
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -48,39 +49,32 @@ public class BearTrap : CodeRebirthHazard
 
             Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
 
-            if (hit.collider == null) continue;
-            if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Gravel", out CRMapObjectDefinition? gravelMapObjectDefinition))
-                return;
+            if (hit.collider == null)
+                continue;
 
-            GameObject beartrap = gravelMapObjectDefinition.GameObject;
+            var mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "gravel_bear_trap")];
+            GameObject beartrap = mapObjectInfo.MapObject;
+
             if (hit.collider.CompareTag("Grass"))
             {
-                if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Grass", out CRMapObjectDefinition? grassMapObjectDefinition))
-                    return;
-
-                beartrap = grassMapObjectDefinition.GameObject; ;
+                mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "grass_bear_trap")];
+                beartrap = mapObjectInfo.MapObject;
             }
             else if (hit.collider.CompareTag("Snow"))
             {
-                if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Snow", out CRMapObjectDefinition? snowMapObjectDefinition))
-                    return;
-
-                beartrap = snowMapObjectDefinition.GameObject; ;
+                mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "snow_bear_trap")];
+                beartrap = mapObjectInfo.MapObject;
             }
 
             if (this is BoomTrap)
             {
-                if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Boom", out CRMapObjectDefinition? boomMapObjectDefinition))
-                    return;
-
-                beartrap = boomMapObjectDefinition.GameObject;
+                mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "boom_trap")];
+                beartrap = mapObjectInfo.MapObject;
             }
             else if (UnityEngine.Random.Range(0, 100) < 5)
             {
-                if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Boom", out CRMapObjectDefinition? boomMapObjectDefinition))
-                    return;
-
-                beartrap = boomMapObjectDefinition.GameObject;
+                mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "boom_trap")];
+                beartrap = mapObjectInfo.MapObject;
             }
             GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedTrap.GetComponent<BearTrap>().byProduct = true;

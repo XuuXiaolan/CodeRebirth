@@ -8,9 +8,10 @@ using UnityEngine.InputSystem;
 using System.Linq;
 using CodeRebirth.src.Util;
 using System.Collections.Generic;
-using CodeRebirthLib.ContentManagement.Enemies;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirth.src.Util.Extensions;
+
+
+using CodeRebirthLib.Utils;
+using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Content.Items;
 public class Hoverboard : GrabbableObject, IHittable
@@ -94,11 +95,8 @@ public class Hoverboard : GrabbableObject, IHittable
 
     private void ConfigureHoverboard()
     {
-        if (Plugin.Mod.ItemRegistry().TryGetFromItemName("Hoverboard", out CRItemDefinition? hoverboardItemDefinition))
-        {
-            _speedMultiplier = hoverboardItemDefinition.GetGeneralConfig<float>("Hoverboard | Speed Multiplier").Value;
-            _chargeIncreaseMultiplier = hoverboardItemDefinition.GetGeneralConfig<float>("Hoverboard | Charge Increase Multiplier").Value;
-        }
+        _speedMultiplier = ItemHandler.Instance.Hoverboard.GetConfig<float>("Hoverboard | Speed Multiplier").Value;
+        _chargeIncreaseMultiplier = ItemHandler.Instance.Hoverboard.GetConfig<float>("Hoverboard | Charge Increase Multiplier").Value;
     }
 
     public void OnInteract(PlayerControllerB player)

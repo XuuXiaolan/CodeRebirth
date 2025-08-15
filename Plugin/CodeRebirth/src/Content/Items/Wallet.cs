@@ -1,8 +1,8 @@
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
-using CodeRebirthLib.ContentManagement.Achievements;
-using CodeRebirthLib.Extensions;
-using CodeRebirthLib.Util;
+using CodeRebirthLib;
+using CodeRebirthLib.CRMod;
+using CodeRebirthLib.Utils;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -52,8 +52,10 @@ public class Wallet : GrabbableObject
                     continue;
 
                 audioPlayer.Play();
-                Plugin.Mod.AchievementRegistry().TryTriggerAchievement("Oh A Penny!");
-                Plugin.Mod.AchievementRegistry().TryIncrementAchievement("Fat Wallet", 1f);
+                var ohapennyKey = NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "oh_a_penny");
+                CRModContent.Achievements.TryTriggerAchievement(ohapennyKey);
+                var walletSizeKey = NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "fat_wallet");
+                CRModContent.Achievements.TryIncrementAchievement(walletSizeKey, 1f);
                 AddCoinsServerRpc(new NetworkObjectReference(coin.NetworkObject), coin.value);
             }
             else if (IsServer)

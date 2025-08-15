@@ -1,4 +1,4 @@
-﻿using CodeRebirth.src.Util.Extensions;
+﻿using CodeRebirthLib.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;

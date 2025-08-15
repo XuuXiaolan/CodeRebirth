@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement;
-using CodeRebirthLib.ContentManagement.Unlockables;
-using CodeRebirthLib.Util;
+using CodeRebirthLib;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -236,13 +234,11 @@ public class ShockwaveGalAI : GalAI
             Agent.enabled = false;
             FlySource.volume = 0f;
 
-            if (Plugin.Mod.UnlockableRegistry().TryGetFromUnlockableName("SWRD", out CRUnlockableDefinition? seamineUnlockableDefinition))
+            var unlockableKey = NamespacedKey<CRUnlockableItemInfo>.From("code_rebirth", "shockwave_gal");
+            var enemyBlacklist = UnlockableHandler.Instance.ShockwaveBot.GetConfig<string>("Shockwave Bot | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+            foreach (var nameEntry in enemyBlacklist)
             {
-                var enemyBlacklist = seamineUnlockableDefinition.GetGeneralConfig<string>("Shockwave Bot | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
-                foreach (var nameEntry in enemyBlacklist)
-                {
-                    enemyTargetBlacklist.UnionWith(LethalContent.Enemies.All.Where(et => et.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.enemyName));
-                }
+                enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
             }
             StartUpDelay();
         }
@@ -541,9 +537,9 @@ public class ShockwaveGalAI : GalAI
 
     private IEnumerator FlyAnimationDelay()
     {
-        smartAgentNavigator.cantMove = true;
+        smartAgentNavigator.DisableMovement(true);
         yield return new WaitForSeconds(0.5f);
-        smartAgentNavigator.cantMove = false;
+        smartAgentNavigator.DisableMovement(false);
     }
 
     private void StopFlyingAnimEvent()

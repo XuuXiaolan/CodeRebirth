@@ -1,6 +1,6 @@
 using CodeRebirth.src.Patches;
-using CodeRebirth.src.Util.Extensions;
-using CodeRebirthLib.ContentManagement.Achievements;
+using CodeRebirthLib.Utils;
+
 using UnityEngine;
 using UnityEngine.Events;
 

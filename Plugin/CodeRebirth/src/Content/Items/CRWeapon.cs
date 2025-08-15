@@ -7,8 +7,8 @@ using System.Collections;
 using UnityEngine.Events;
 using CodeRebirth.src.Util;
 using System;
-using CodeRebirthLib.Util;
-using CodeRebirth.src.Util.Extensions;
+
+using CodeRebirthLib.Utils;
 
 namespace CodeRebirth.src.Content.Items;
 public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's JMeleeWeapon

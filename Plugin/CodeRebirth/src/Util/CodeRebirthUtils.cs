@@ -8,16 +8,15 @@ using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
 using UnityEngine.Rendering.HighDefinition;
 using CodeRebirth.src.Content.Items;
-using CodeRebirth.src.Util.Extensions;
+using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using CodeRebirth.src.Content.Maps;
 using System.Collections;
 using LethalLevelLoader;
-using CodeRebirthLib.ContentManagement.Items;
-using CodeRebirthLib.ContentManagement.MapObjects;
-using CodeRebirthLib.ContentManagement.Weathers;
-using CodeRebirthLib.Util.INetworkSerializables;
-using CodeRebirthLib.ContentManagement;
+using CodeRebirthLib;
+using CodeRebirth.src.Content.Weathers;
+using UnityEngine.InputSystem.Utilities;
+using WeatherRegistry;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -76,10 +75,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && WeatherRegistry.WeatherManager.GetCurrentWeather(oxydeExtendedLevel.SelectableLevel).name.ToLowerInvariant().Trim() != "none")
             yield break;
 
-        if (!Plugin.Mod.WeatherRegistry().TryGetFromWeatherName("night shift", out CRWeatherDefinition? nightShiftWeatherDefinition))
-            yield break;
-
-        WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, nightShiftWeatherDefinition.Weather);
+        var weatherKey = NamespacedKey<CRWeatherInfo>.From("code_rebirth", "night_shift");
+        WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[weatherKey].WeatherEffect));
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -112,14 +109,11 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (MapObjectHandler.Instance.Merchant == null)
             return;
 
-        if (!Plugin.Mod.MapObjectRegistry().TryGetFromMapObjectName("Money", out CRMapObjectDefinition? moneyMapObjectDefinition))
-            return;
-
-        var enemyWithRarityDropRate = moneyMapObjectDefinition.GetGeneralConfig<string>("Money | Enemy Drop Rates").Value.Split(',').Select(s => s.Trim());
+        var enemyWithRarityDropRate = MapObjectHandler.Instance.Merchant.GetConfig<string>("Money | Enemy Drop Rates").Value.Split(',').Select(s => s.Trim());
         foreach (var enemyWithRarity in enemyWithRarityDropRate)
         {
             var split = enemyWithRarity.Split(':');
-            EnemyType? enemyType = LethalContent.Enemies.All.Where(et => et.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            EnemyType? enemyType = LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault().EnemyType;
             if (enemyType == null)
             {
                 Plugin.Logger.LogWarning($"Couldn't find enemy of name '{split[0]}' for the money drop rate config!");
@@ -234,8 +228,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
             return;
         }
 
-        List<CRMapObjectDefinition> mapObjectDefinitions = Plugin.Mod.MapObjectRegistry().ToList();
-        GameObject hazardToSpawn = mapObjectDefinitions[_indexToSpawn].GameObject;
+        List<CRMapObjectInfo> mapObjectInfos = LethalContent.MapObjects.Values.ToList();
+        GameObject hazardToSpawn = mapObjectInfos[_indexToSpawn].MapObject;
         if (hazardToSpawn != null)
         {
             var go = GameObject.Instantiate(hazardToSpawn, position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
@@ -250,27 +244,20 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
 
         _indexToSpawn++;
-        if (_indexToSpawn >= mapObjectDefinitions.Count - 1)
+        if (_indexToSpawn >= mapObjectInfos.Count - 1)
             _indexToSpawn = 0;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnScrapServerRpc(string? itemName, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
+    public void SpawnScrapServerRpc(NamespacedKey<CRItemInfo> itemKey, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
     {
-        if (itemName == string.Empty || itemName == null)
-        {
-            return;
-        }
-        if (!Plugin.Mod.ItemRegistry().TryGetFromItemName(itemName, out CRItemDefinition? itemDefinition))
-            return;
-
-        if (itemDefinition.Item == null)
+        if (LethalContent.Items.TryGetValue(itemKey, out var itemInfo))
         {
             // throw for stacktrace
-            Plugin.Logger.LogError($"'{itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
+            Plugin.Logger.LogError($"'{itemInfo.Item.itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
             return;
         }
-        SpawnScrap(itemDefinition.Item, position, isQuest, defaultRotation, valueIncrease);
+        SpawnScrap(itemInfo.Item, position, isQuest, defaultRotation, valueIncrease);
     }
 
     public NetworkObjectReference SpawnScrap(Item? item, Vector3 position, bool isQuest, bool defaultRotation, int valueIncrease, Quaternion rotation = default)
