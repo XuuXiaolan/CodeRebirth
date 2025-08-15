@@ -1,5 +1,4 @@
 using CodeRebirthLib.CRMod;
-using LethalLib.Extras;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
@@ -52,14 +51,10 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
     public class FriendAssets(CRMod mod, string filePath) : AssetBundleLoader<FriendAssets>(mod, filePath)
     {
-        [LoadFromBundle("GlitchedPlushieUnlockable.asset")]
-        public UnlockableItemDef GlitchedPlushieUnlockable { get; private set; } = null!;
     }
 
     public class CleanerDroneGalAssets(CRMod mod, string filePath) : AssetBundleLoader<CleanerDroneGalAssets>(mod, filePath)
     {
-        [LoadFromBundle("JaneFogUnlockable.asset")]
-        public UnlockableItemDef CleanerDroneGalUnlockable { get; private set; } = null!;
     }
 
     public class CruiserGalAssets(CRMod mod, string filePath) : AssetBundleLoader<CruiserGalAssets>(mod, filePath)

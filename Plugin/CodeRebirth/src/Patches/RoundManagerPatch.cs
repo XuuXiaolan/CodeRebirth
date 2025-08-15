@@ -10,7 +10,6 @@ namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
 static class RoundManagerPatch
 {
-    internal static List<RegisteredCRMapObject> registeredMapObjects = [];
     internal static List<SpawnableFlora> spawnableFlora = [];
     internal static int plushiesCollectedToday = 0;
 
