@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: GrapeItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Grape
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: 
   <Item>k__BackingField: {fileID: 11400000, guid: aaaac723f8aa3a446a3c198ad0ef7a92,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

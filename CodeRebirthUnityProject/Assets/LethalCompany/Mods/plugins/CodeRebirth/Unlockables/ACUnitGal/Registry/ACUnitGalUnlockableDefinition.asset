@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: ACUnitGalUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: 
   <UnlockableItem>k__BackingField:
     unlockableName: AIRCONTROL
     prefabObject: {fileID: 687819012288308677, guid: 79aa70ac93f339a4ab573c6426538e8f,
@@ -36,4 +39,4 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  <ProgressiveDenyNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}
