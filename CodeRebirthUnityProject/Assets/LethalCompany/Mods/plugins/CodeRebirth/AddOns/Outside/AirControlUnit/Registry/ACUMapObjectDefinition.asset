@@ -13,21 +13,18 @@ MonoBehaviour:
   m_Name: ACUMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: air_control_unit
   <GameObject>k__BackingField: {fileID: 500121934879029742, guid: 34d1f635669431540a3dc9fbaf6c8b8c,
     type: 3}
   <MapObjectName>k__BackingField: Air Control Unit
-  <AlignWithTerrain>k__BackingField: 1
   <InsideMapObjectSettings>k__BackingField:
-    prefabToSpawn: {fileID: 0}
     spawnFacingAwayFromWall: 0
     spawnFacingWall: 0
     spawnWithBackToWall: 0
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
-    numberToSpawn:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  <OutsideMapObjectSettings>k__BackingField:
+    AlignWithTerrain: 0

@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: CutieflyEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Cutiefly
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: cutiefly
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 62ad438fb38ff3145bbde33e3e310233,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}

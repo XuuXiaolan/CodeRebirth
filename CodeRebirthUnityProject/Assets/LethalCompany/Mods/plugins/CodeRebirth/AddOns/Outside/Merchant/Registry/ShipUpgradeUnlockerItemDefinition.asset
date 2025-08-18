@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: ShipUpgradeUnlockerItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Ship Upgrade Unlocker
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: ship_upgrade_unlocker
   <Item>k__BackingField: {fileID: 11400000, guid: 235d3ccbbb2b3ac45a71ab5b40f3d207,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: SnowGlobeItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Snow Globe
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: snow_globe
   <Item>k__BackingField: {fileID: 11400000, guid: 1fd8ddf795f419540b945d94a4346535,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

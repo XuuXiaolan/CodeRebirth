@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: MonarchPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Monarch Plushie
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: monarch_plushie
   <Item>k__BackingField: {fileID: 11400000, guid: ae671ddccb8553045a88cf7a9adc4cc1,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

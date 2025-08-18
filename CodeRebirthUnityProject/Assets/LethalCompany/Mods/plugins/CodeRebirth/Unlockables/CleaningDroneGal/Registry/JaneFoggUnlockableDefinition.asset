@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: JaneFoggUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: cleaner
   <UnlockableItem>k__BackingField:
     unlockableName: CLEANER
     prefabObject: {fileID: 8640331156731437576, guid: d96a427b7d89854439c390929d581a45,
@@ -36,4 +39,4 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  <ProgressiveDenyNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

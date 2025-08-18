@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: FakeSnailCatItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Fake SnailCat
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: fake_snailcat
   <Item>k__BackingField: {fileID: 11400000, guid: 126dd934f7bfa7d40bf280f927cd653f,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

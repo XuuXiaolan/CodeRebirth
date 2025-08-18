@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: TheUprootedDiscoveryAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: The Uprooted
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: the_uprooted
   <AchievementIcon>k__BackingField: {fileID: 0}
   <AchievementName>k__BackingField: The Uprooted
   <AchievementDescription>k__BackingField: Collect all Nature CR Plushies
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 0
-  <ContributesToPlatinumAchievement>k__BackingField: 0
   <PopupTime>k__BackingField: 5
   <UniqueStringIDs>k__BackingField:
   - Cactus Budling Plushie

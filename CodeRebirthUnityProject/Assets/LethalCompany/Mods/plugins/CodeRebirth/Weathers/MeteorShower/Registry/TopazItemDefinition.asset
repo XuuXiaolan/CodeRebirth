@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: TopazItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Topaz Crystal
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: topaz_crystal
   <Item>k__BackingField: {fileID: 11400000, guid: e58efdf2b3597ac48b2939d7b9dc05e0,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: HaemoglobinMoonUnlockerItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Haemoglobin Tablet
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: haemoglobin_tablet
   <Item>k__BackingField: {fileID: 11400000, guid: 190cd49f711d3e0409e43676cf0be4c2,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

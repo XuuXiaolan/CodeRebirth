@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: FlatBodyItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Flattened Body
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: flattened_body
   <Item>k__BackingField: {fileID: 11400000, guid: 590c0c29aa3b7ab42b8a9bec0acf3cce,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

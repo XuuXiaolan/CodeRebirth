@@ -125,7 +125,7 @@ static class StartOfRoundPatch
         if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && weatherName != "none")
             return;
 
-        var weatherKey = NamespacedKey<CRWeatherInfo>.From("code_rebirth", "night_shift");
+        var weatherKey = NamespacedKey<CRWeatherEffectInfo>.From("code_rebirth", "night_shift");
         WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[weatherKey].WeatherEffect));
     }
 }

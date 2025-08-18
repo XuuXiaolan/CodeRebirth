@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: TransporterPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Transporter Plushie
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: transporter_plushie
   <Item>k__BackingField: {fileID: 11400000, guid: 45067ba4a0bb55644a2525348ca749be,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

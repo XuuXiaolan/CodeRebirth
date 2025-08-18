@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: MistressLoreItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Mistress Lore
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: mistressdocument
   <Item>k__BackingField: {fileID: 11400000, guid: e83f6d99ef3b4ff45be6867e72002777,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

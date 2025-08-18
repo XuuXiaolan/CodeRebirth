@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: GuitarItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Guitar
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: guitar
   <Item>k__BackingField: {fileID: 11400000, guid: 8c738c84b969f5a4b8d4273bedb931f0,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

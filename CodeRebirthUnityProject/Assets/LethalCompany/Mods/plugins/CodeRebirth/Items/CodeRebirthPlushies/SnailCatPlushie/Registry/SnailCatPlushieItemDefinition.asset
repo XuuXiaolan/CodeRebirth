@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: SnailCatPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Snail Cat Plushie
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: snail_cat_plushie
   <Item>k__BackingField: {fileID: 11400000, guid: 0436e188fd1ab6c4981533e872c088f5,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

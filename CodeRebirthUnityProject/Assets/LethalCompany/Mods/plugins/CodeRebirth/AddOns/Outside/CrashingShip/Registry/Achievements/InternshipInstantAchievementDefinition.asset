@@ -13,10 +13,16 @@ MonoBehaviour:
   m_Name: InternshipInstantAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Internship
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: internship
   <AchievementIcon>k__BackingField: {fileID: 21300000, guid: d88eb7ffbe2b92b4f80aede8a8a16db1,
     type: 3}
   <AchievementName>k__BackingField: Internship
   <AchievementDescription>k__BackingField: Complete your first sell on oxyde.
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 0
+  <PopupTime>k__BackingField: 5

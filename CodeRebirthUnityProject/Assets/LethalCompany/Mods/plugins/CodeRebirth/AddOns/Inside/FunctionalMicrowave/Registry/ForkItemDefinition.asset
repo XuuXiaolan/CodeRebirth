@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: ForkItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Charred Fork
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: charred_fork
   <Item>k__BackingField: {fileID: 11400000, guid: 63cd6758860e60c448c31f5ff44b9841,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

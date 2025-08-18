@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: MagicianLoreItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Rabbit Magician Lore
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: magiciandocument
   <Item>k__BackingField: {fileID: 11400000, guid: 9ed4b7b4cc1117b4eacb4a6ae69e4568,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

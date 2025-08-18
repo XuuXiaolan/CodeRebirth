@@ -13,21 +13,18 @@ MonoBehaviour:
   m_Name: MimicWoodenCrateMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: mimic_wooden_crate
   <GameObject>k__BackingField: {fileID: 7952619480326014836, guid: 5e0e4cd52efd1a040831516d30400fb9,
     type: 3}
   <MapObjectName>k__BackingField: Mimic Wooden Crate
-  <AlignWithTerrain>k__BackingField: 1
   <InsideMapObjectSettings>k__BackingField:
-    prefabToSpawn: {fileID: 0}
     spawnFacingAwayFromWall: 0
     spawnFacingWall: 0
     spawnWithBackToWall: 0
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
-    numberToSpawn:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  <OutsideMapObjectSettings>k__BackingField:
+    AlignWithTerrain: 0

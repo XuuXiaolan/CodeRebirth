@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: CreditPad100ItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Credit Pad 100cc
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: credit_pad_100cc
   <Item>k__BackingField: {fileID: 11400000, guid: 59ec56bd37e6ad042bc46f04f1c4b7e0,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

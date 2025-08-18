@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: TornadoEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Tornado
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: tornado
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 53478bb5b2c95904f941c84280122cdb,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}

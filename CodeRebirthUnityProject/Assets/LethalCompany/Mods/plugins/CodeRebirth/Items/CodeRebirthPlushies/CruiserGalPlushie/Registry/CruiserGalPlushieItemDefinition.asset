@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: CruiserGalPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Cruiser Gal Plushie
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: cruiser_gal_plushie
   <Item>k__BackingField: {fileID: 11400000, guid: 5150d7b190fb7e64f9a6968f8725bbfe,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: sWATTerItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: sWATTer
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: swatter
   <Item>k__BackingField: {fileID: 11400000, guid: c9f0edab7621c6147a227683dc6151be,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

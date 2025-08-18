@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: CapitalismInstantAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Capitalism
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: capitalism
   <AchievementIcon>k__BackingField: {fileID: 0}
   <AchievementName>k__BackingField: Capitalism
   <AchievementDescription>k__BackingField: Complete a deal with the merchant.
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 0
+  <PopupTime>k__BackingField: 5

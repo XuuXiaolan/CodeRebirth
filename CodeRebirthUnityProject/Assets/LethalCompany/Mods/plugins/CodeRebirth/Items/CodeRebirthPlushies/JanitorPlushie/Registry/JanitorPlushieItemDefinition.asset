@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: JanitorPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Janitor Plushie
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: janitor_plushie
   <Item>k__BackingField: {fileID: 11400000, guid: 2b983cdb56e8ae74abebd47854293a62,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

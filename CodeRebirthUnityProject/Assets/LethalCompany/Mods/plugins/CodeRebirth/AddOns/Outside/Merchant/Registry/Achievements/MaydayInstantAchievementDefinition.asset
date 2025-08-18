@@ -13,10 +13,16 @@ MonoBehaviour:
   m_Name: MaydayInstantAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Mayday Mayday!
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: mayday_mayday!
   <AchievementIcon>k__BackingField: {fileID: 0}
   <AchievementName>k__BackingField: Mayday Mayday!
   <AchievementDescription>k__BackingField: '"Successfully" steal from the Merchant
     and escape.'
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 0
+  <PopupTime>k__BackingField: 5

@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: SapphireItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Sapphire Crystal
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: sapphire_crystal
   <Item>k__BackingField: {fileID: 11400000, guid: 3002b134102b1fd43be90ce529d9b8d6,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

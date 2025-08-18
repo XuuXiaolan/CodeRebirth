@@ -33,21 +33,18 @@ MonoBehaviour:
       m_RotationOrder: 4
     Description: EnemyName:DropRate for the chance of an enemy dropping a coin on
       death via player damage.
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: money
   <GameObject>k__BackingField: {fileID: 5513136484485908551, guid: fdb53623495f3d44c9c0c650decfc810,
     type: 3}
   <MapObjectName>k__BackingField: Money
-  <AlignWithTerrain>k__BackingField: 1
   <InsideMapObjectSettings>k__BackingField:
-    prefabToSpawn: {fileID: 0}
     spawnFacingAwayFromWall: 0
     spawnFacingWall: 0
     spawnWithBackToWall: 0
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
-    numberToSpawn:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  <OutsideMapObjectSettings>k__BackingField:
+    AlignWithTerrain: 0

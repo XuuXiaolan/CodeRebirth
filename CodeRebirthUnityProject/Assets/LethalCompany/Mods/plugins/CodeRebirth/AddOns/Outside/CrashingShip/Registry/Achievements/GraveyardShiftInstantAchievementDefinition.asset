@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: GraveyardShiftInstantAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Graveyard Shift
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: graveyard_shift
   <AchievementIcon>k__BackingField: {fileID: 0}
   <AchievementName>k__BackingField: Graveyard Shift
   <AchievementDescription>k__BackingField: Complete a full sell on oxyde during nightshift.
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 0
+  <PopupTime>k__BackingField: 5

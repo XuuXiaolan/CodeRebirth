@@ -95,21 +95,18 @@ MonoBehaviour:
       m_PostInfinity: 0
       m_RotationOrder: 0
     Description: The range amount of Scrap that the Wooden Crate is allowed to spawn.
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: normal_wooden_crate
   <GameObject>k__BackingField: {fileID: 7952619480326014836, guid: 19586e5766c295043b07cfa9e2d1937b,
     type: 3}
   <MapObjectName>k__BackingField: Normal Wooden Crate
-  <AlignWithTerrain>k__BackingField: 1
   <InsideMapObjectSettings>k__BackingField:
-    prefabToSpawn: {fileID: 0}
     spawnFacingAwayFromWall: 0
     spawnFacingWall: 0
     spawnWithBackToWall: 0
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
-    numberToSpawn:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  <OutsideMapObjectSettings>k__BackingField:
+    AlignWithTerrain: 0

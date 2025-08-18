@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: ShrimpDispenserUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: shrimp
   <UnlockableItem>k__BackingField:
     unlockableName: SHRIMP
     prefabObject: {fileID: 7745458317024478992, guid: ae9fa0a37c3700b4bbfc90c2f91ec581,
@@ -36,4 +39,4 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  <ProgressiveDenyNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

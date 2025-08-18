@@ -31,9 +31,12 @@ MonoBehaviour:
     Description: Turn on some really cool wings, unfortunately I also found literally
       one person who's pc is so bad they couldn't run this, so disabled by default,
       can be changed on runtime.
-  <EntityNameReference>k__BackingField: Monarch
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: monarch
   <EnemyType>k__BackingField: {fileID: 11400000, guid: b4eadd75cb1361040a7fc4f821ef81ab,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 11400000, guid: 28c3cdf4baa556d44bcc80854b38fcbb,
     type: 2}
   <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: f6cd14fae2d88b249b5fdc0a004a953a,

@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: SafeAndSoundInstantAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Safe And Sound
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: safe_and_sound
   <AchievementIcon>k__BackingField: {fileID: 0}
   <AchievementName>k__BackingField: Safe And Sound
   <AchievementDescription>k__BackingField: Get trapped in a safe.
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 0
+  <PopupTime>k__BackingField: 5

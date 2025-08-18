@@ -13,21 +13,18 @@ MonoBehaviour:
   m_Name: BiomesMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: biome
   <GameObject>k__BackingField: {fileID: 4942495264829204112, guid: 7b2813836eecb7048b3a3ca533bf142c,
     type: 3}
   <MapObjectName>k__BackingField: Biome
-  <AlignWithTerrain>k__BackingField: 0
   <InsideMapObjectSettings>k__BackingField:
-    prefabToSpawn: {fileID: 0}
     spawnFacingAwayFromWall: 0
     spawnFacingWall: 0
     spawnWithBackToWall: 0
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
-    numberToSpawn:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  <OutsideMapObjectSettings>k__BackingField:
+    AlignWithTerrain: 0

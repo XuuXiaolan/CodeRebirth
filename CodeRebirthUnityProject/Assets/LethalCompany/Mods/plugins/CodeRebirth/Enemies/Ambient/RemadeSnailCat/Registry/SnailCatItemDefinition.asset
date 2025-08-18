@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: SnailCatItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Real Item SnailCat
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: snailcat
   <Item>k__BackingField: {fileID: 11400000, guid: dc785b4da1f5c66448d3dc97fc584a81,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

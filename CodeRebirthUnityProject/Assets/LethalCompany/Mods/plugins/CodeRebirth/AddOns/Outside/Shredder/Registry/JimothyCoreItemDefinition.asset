@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: JimothyCoreItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Jimothy Core
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: jimothy_core
   <Item>k__BackingField: {fileID: 11400000, guid: e5c547d707c120341b6fbe68baaf963c,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

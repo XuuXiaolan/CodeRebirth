@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: SCP999GalUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: liz-zie
   <UnlockableItem>k__BackingField:
     unlockableName: LIZ-ZIE
     prefabObject: {fileID: 6524623529936813394, guid: 4e3b1c3587de580409b7ac5a09c4dceb,
@@ -36,5 +39,4 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  <ProgressiveDenyNode>k__BackingField: {fileID: 11400000, guid: 3ccac6beec6902640bc23af59d8fca3c,
-    type: 2}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: PiggyBankUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: piggy
   <UnlockableItem>k__BackingField:
     unlockableName: PIGGY
     prefabObject: {fileID: 3567497631516016859, guid: ceee6307480c7d84cbabf5f7bdae2f92,
@@ -36,4 +39,4 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  <ProgressiveDenyNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

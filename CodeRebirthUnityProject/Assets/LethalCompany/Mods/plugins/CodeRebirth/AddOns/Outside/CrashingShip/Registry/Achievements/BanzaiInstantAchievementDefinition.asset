@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: BanzaiInstantAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Banzai!
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: banzai!
   <AchievementIcon>k__BackingField: {fileID: 0}
   <AchievementName>k__BackingField: Banzai!
   <AchievementDescription>k__BackingField: Fix up kamikaze jim and watch him end
     it all.
-  <FinishedAchievementNameAndDescColors>k__BackingField:
-  - {r: 0.072496295, g: 1, b: 0, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 1, b: 0.73867464, a: 1}
-  - {r: 1, g: 0, b: 0.5016885, a: 1}
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 1
   <PopupTime>k__BackingField: 5

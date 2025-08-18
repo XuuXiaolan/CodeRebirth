@@ -13,21 +13,18 @@ MonoBehaviour:
   m_Name: GrassBearTrapMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: grass_bear_trap
   <GameObject>k__BackingField: {fileID: 2600753275211172565, guid: e29e50437a0ba564780676e8ee2d5eb1,
     type: 3}
   <MapObjectName>k__BackingField: Grass Bear Trap
-  <AlignWithTerrain>k__BackingField: 1
   <InsideMapObjectSettings>k__BackingField:
-    prefabToSpawn: {fileID: 0}
     spawnFacingAwayFromWall: 0
     spawnFacingWall: 0
     spawnWithBackToWall: 0
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
-    numberToSpawn:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  <OutsideMapObjectSettings>k__BackingField:
+    AlignWithTerrain: 0

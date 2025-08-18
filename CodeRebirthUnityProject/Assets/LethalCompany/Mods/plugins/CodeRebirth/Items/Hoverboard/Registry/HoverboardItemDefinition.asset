@@ -46,7 +46,13 @@ MonoBehaviour:
       m_RotationOrder: 4
     Description: Battery Increase Multiplier for how much battery the hoverboard
       regains each second.
-  <EntityNameReference>k__BackingField: Hoverboard
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: hoverboard
   <Item>k__BackingField: {fileID: 11400000, guid: 2333ed25d0741c74b95f03f8a466329c,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

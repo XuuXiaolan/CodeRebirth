@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: OxydeMoonUnlockerItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Oxyde Tablet
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: oxyde_tablet
   <Item>k__BackingField: {fileID: 11400000, guid: f3899e87b4c9ad44a8a9ddf7bac30cf0,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

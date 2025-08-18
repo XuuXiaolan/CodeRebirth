@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: ShockwaveBotPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Shockwave Bot Plushie
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: shockwave_bot_plushie
   <Item>k__BackingField: {fileID: 11400000, guid: b7113abce5f92a1468387cf7efbb2bb0,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

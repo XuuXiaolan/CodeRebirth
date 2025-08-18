@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: KittenTapeItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Comfort Tape
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: comfort_tape
   <Item>k__BackingField: {fileID: 11400000, guid: d9b6a2c5abbec0c468666cd939c0a7d4,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

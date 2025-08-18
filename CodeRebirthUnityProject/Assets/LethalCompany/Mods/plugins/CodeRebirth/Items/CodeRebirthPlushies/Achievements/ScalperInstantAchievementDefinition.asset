@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: ScalperInstantAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Scalper
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: scalper
   <AchievementIcon>k__BackingField: {fileID: 0}
   <AchievementName>k__BackingField: Scalper
   <AchievementDescription>k__BackingField: Collect 3 or more CR Plushies in one round
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 0}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 0
+  <PopupTime>k__BackingField: 5

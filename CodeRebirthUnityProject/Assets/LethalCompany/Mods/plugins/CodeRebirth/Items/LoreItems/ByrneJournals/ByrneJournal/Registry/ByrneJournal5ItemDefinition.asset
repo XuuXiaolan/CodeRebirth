@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: ByrneJournal5ItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Byrne Journal 5
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: byrne_journal_5
   <Item>k__BackingField: {fileID: 11400000, guid: 3578174ee4ab0034c93e25cdba2d3778,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

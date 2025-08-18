@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: MetalShredsItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Normal Shredded Scrap
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: normal_shredded_scraps
   <Item>k__BackingField: {fileID: 11400000, guid: ab340b2a4d640964a88f4ebe0ceb224f,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

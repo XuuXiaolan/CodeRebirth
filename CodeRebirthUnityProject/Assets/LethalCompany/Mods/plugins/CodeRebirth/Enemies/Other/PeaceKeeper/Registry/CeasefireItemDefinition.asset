@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: CeasefireItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Ceasefire
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: ceasefire
   <Item>k__BackingField: {fileID: 11400000, guid: dfd39fbdb47c05b4faddf1974e25b746,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

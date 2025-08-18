@@ -13,21 +13,18 @@ MonoBehaviour:
   m_Name: IndustrialFanMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: industrial_fan
   <GameObject>k__BackingField: {fileID: 5429102615241829864, guid: 39228b506e255764ab36deafa8304b28,
     type: 3}
   <MapObjectName>k__BackingField: Industrial Fan
-  <AlignWithTerrain>k__BackingField: 0
   <InsideMapObjectSettings>k__BackingField:
-    prefabToSpawn: {fileID: 0}
     spawnFacingAwayFromWall: 0
     spawnFacingWall: 0
     spawnWithBackToWall: 0
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
-    numberToSpawn:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  <OutsideMapObjectSettings>k__BackingField:
+    AlignWithTerrain: 0

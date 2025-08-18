@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: CactusBudlingPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Cactus Budling Plushie
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: cactus_budling_plushie
   <Item>k__BackingField: {fileID: 11400000, guid: b2e5beabb6ed7464795ead184e8ecf48,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

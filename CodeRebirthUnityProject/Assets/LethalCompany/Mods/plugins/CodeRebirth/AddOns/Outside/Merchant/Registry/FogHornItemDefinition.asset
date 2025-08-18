@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: FogHornItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Fog Horn
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: foghorn
   <Item>k__BackingField: {fileID: 11400000, guid: 4f2b51d68f8e4b94d8c59e42e1715103,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

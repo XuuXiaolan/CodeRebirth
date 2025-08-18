@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: BloodyShredsItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Bloody Shredded Scrap
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: bloody_shredded_scraps
   <Item>k__BackingField: {fileID: 11400000, guid: a13bb53b199048246bd5e2e6ff48cf05,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: Diary3ItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Director Diary 3
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: director_diary_3
   <Item>k__BackingField: {fileID: 11400000, guid: e9a6766e4114773439c1131a2833a266,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

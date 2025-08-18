@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: TransporterLoreItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Transporter Lore
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: transporterdocument
   <Item>k__BackingField: {fileID: 11400000, guid: e2df34ffefce2014299f4d9bc660b851,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

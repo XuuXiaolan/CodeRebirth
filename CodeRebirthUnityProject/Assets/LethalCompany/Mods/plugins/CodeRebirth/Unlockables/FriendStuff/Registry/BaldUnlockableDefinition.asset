@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: BaldUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: bald
   <UnlockableItem>k__BackingField:
     unlockableName: BALD
     prefabObject: {fileID: 9222517241196682573, guid: 23fda5e56062c414aa9ac53b6b4e4010,
@@ -36,4 +39,4 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  <ProgressiveDenyNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

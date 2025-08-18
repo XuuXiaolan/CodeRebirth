@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: NancyEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Nancy
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: nancy
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 8dca1c945c2c96345981efb41059f5ae,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}

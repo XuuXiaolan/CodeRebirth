@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: OmeletteKiwiItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Sapsucker Omelette
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: sapsucker_omelette
   <Item>k__BackingField: {fileID: 11400000, guid: d50a6b487c1676d42805df7f2235e11b,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

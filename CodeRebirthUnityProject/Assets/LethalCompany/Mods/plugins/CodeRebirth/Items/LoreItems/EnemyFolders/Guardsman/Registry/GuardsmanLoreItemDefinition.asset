@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: GuardsmanLoreItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Guardsman Lore
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: guardsmandocument
   <Item>k__BackingField: {fileID: 11400000, guid: 59b346020353e72439b1aba0f49977f0,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

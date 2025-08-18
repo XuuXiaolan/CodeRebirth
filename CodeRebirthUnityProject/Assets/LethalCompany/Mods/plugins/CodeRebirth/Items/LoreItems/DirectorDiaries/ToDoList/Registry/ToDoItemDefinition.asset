@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: ToDoItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: To-Do List
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: to-do_list
   <Item>k__BackingField: {fileID: 11400000, guid: cb8b512a6d3b5e840b3c59e452b3697f,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

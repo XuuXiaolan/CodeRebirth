@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: OxidizerItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Oxidizer
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: oxidizer
   <Item>k__BackingField: {fileID: 11400000, guid: c879c8fe5ad4d1a4196f3222a41e2a6d,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

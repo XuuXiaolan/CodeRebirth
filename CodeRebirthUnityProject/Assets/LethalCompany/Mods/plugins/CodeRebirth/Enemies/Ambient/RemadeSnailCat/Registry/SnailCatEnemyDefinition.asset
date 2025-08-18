@@ -34,8 +34,11 @@ MonoBehaviour:
       m_RotationOrder: 0
     Description: The different possible names that snailcat can spawn with, please
       don't empty it, semi-colon separated list. ListSeparator=;
-  <EntityNameReference>k__BackingField: Real Enemy SnailCat
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: real_enemy_snailcat
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 8550551a5aa69c748aba1f22aa43ecb2,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}

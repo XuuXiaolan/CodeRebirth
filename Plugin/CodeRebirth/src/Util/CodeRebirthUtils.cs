@@ -75,7 +75,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && WeatherRegistry.WeatherManager.GetCurrentWeather(oxydeExtendedLevel.SelectableLevel).name.ToLowerInvariant().Trim() != "none")
             yield break;
 
-        var weatherKey = NamespacedKey<CRWeatherInfo>.From("code_rebirth", "night_shift");
+        var weatherKey = NamespacedKey<CRWeatherEffectInfo>.From("code_rebirth", "night_shift");
         WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[weatherKey].WeatherEffect));
     }
 

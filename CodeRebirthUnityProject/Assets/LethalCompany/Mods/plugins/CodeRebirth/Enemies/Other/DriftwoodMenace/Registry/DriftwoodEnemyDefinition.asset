@@ -30,8 +30,11 @@ MonoBehaviour:
       m_PostInfinity: 0
       m_RotationOrder: 0
     Description: Enemy name Blacklist for what the Driftwood won't attack.
-  <EntityNameReference>k__BackingField: Driftwood Menace
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: driftwood_menace
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 560802ac9add3a544bc2b1cebb1fcf88,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}

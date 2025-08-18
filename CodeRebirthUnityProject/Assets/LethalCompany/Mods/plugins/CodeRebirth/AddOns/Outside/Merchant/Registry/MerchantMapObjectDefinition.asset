@@ -13,21 +13,18 @@ MonoBehaviour:
   m_Name: MerchantMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: merchant
   <GameObject>k__BackingField: {fileID: 680574876329626848, guid: 6eb5ab5d093a97c41a6eddf1b2db5b47,
     type: 3}
   <MapObjectName>k__BackingField: Merchant
-  <AlignWithTerrain>k__BackingField: 0
   <InsideMapObjectSettings>k__BackingField:
-    prefabToSpawn: {fileID: 0}
     spawnFacingAwayFromWall: 0
     spawnFacingWall: 0
     spawnWithBackToWall: 0
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
-    numberToSpawn:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  <OutsideMapObjectSettings>k__BackingField:
+    AlignWithTerrain: 0

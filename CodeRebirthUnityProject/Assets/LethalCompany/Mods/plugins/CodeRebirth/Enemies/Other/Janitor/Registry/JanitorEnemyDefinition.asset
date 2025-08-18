@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: JanitorEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Janitor
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: janitor
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 00c443ea757f8274ab52e6a49f647569,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 11400000, guid: ee760fcd7b6f5d246b15eed77232da9d,
     type: 2}
   <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: 8e6f9294c3234314a9e8d6ae6b36aba6,

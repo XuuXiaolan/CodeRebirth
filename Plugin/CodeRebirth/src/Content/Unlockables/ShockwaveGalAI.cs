@@ -234,7 +234,6 @@ public class ShockwaveGalAI : GalAI
             Agent.enabled = false;
             FlySource.volume = 0f;
 
-            var unlockableKey = NamespacedKey<CRUnlockableItemInfo>.From("code_rebirth", "shockwave_gal");
             var enemyBlacklist = UnlockableHandler.Instance.ShockwaveBot.GetConfig<string>("Shockwave Bot | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklist)
             {

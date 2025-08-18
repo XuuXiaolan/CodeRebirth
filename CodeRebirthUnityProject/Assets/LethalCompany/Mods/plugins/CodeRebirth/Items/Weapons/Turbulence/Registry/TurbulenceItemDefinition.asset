@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: TurbulenceItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Turbulence
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: turbulence
   <Item>k__BackingField: {fileID: 11400000, guid: 64cf06f95ffa77e4b9fa1c4a1e4c5b46,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

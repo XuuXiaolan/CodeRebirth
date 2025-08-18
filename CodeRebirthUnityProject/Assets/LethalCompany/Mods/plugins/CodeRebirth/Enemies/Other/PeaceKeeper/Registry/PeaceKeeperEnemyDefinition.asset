@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: PeaceKeeperEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: PeaceKeeper
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: peace_keeper
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 308493fe883a78949a369fc7665989be,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}

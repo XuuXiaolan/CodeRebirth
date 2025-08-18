@@ -31,8 +31,11 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Description: Enemy Name blacklist for what the Guardsman will not attack.
-  <EntityNameReference>k__BackingField: Guardsman
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: guardsman
   <EnemyType>k__BackingField: {fileID: 11400000, guid: a8f01c1864e6e264395b7d4435a4f168,
     type: 2}
+  <SpawnTable>k__BackingField: 0
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}

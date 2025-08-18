@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: BluesShrimpItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Blue Shrimp
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: blue_shrimp
   <Item>k__BackingField: {fileID: 11400000, guid: f0f5553e56937ba488cb85423ed03130,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}

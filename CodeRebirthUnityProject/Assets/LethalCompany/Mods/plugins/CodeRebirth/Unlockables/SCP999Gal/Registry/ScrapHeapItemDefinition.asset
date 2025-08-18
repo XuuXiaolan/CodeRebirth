@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: ScrapHeapItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  <EntityNameReference>k__BackingField: Jar of 999
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: jar_of_999
   <Item>k__BackingField: {fileID: 11400000, guid: d0d5c3a34234acd4eb14987dfc289ad2,
     type: 2}
-  <TerminalNode>k__BackingField: {fileID: 0}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <ProgressiveObject>k__BackingField: {fileID: 0}
