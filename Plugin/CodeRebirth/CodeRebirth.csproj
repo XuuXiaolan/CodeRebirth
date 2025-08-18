@@ -37,10 +37,16 @@
     <PackageReference Include="IAmBatby.LethalLevelLoader" Publicize="true" Version="1.4.*" />
     <PackageReference Include="mrov.WeatherRegistry" Publicize="true" Version="*" />
     <PackageReference Include="XuXiaolan.CodeRebirthLib" Version="0.10.0" />
+    <PackageReference Include="XuXiaolan.CodeRebirthLib.SourceGen" Version="0.10.0" />
     <PackageReference Include="FlipMods-TooManyEmotes" Publicize="true" Version="2.3.10" />
     <PackageReference Include="malco-Lategame_Upgrades" Publicize="true" Version="3.12.3" />
     <!-- <PackageReference Include="Zaggy1024-OpenBodyCams" Version="3.0.0" />
     <PackageReference Include="BunyaPineTree-ModelReplacementAPI" Version="2.4.11" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="res\namespaced_keys.json" />
+    <AdditionalFiles Include="res\namespaced_keys.json" />
   </ItemGroup>
 
   <ItemGroup>
