@@ -351,8 +351,7 @@ public class AutonomousCrane : NetworkBehaviour
                 _playerKillList.Add(player);
                 if (IsServer)
                 {
-                    var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "flattened_body");
-                    NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[itemKey].Item, player.transform.position, false, true, 0);
+                    NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.FlattenedBody].Item, player.transform.position, false, true, 0);
                     if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
                     {
                         flattenedBodyNetObj.GetComponent<FlattenedBody>()._flattenedBodyName = player;

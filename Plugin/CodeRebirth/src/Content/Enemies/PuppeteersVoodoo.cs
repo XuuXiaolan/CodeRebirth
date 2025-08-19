@@ -190,20 +190,17 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         PlayMiscSoundsServerRpc(0);
         animator.SetBool(IsDeadAnimation, true);
         yield return new WaitForSeconds(4f);
-        var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "puppeteer_voodoo");
         if (playerControlled != null && !playerControlled.isPlayerDead)
         {
-            CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[itemKey].Item, transform.position, false, true, 0);
+            CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.PuppeteersVoodoo].Item, transform.position, false, true, 0);
         }
         NetworkObject.Despawn();
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
-        // Transfer damage to the bound player
         OnDollDamaged(force, CauseOfDeath.Bludgeoning);
 
-        // If a player is the cause, also "kick" this doll
         if (playerWhoHit != null)
         {
             Vector3 fromPosition = playerWhoHit.transform.position + Vector3.up;

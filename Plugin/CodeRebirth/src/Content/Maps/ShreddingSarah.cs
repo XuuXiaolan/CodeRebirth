@@ -4,7 +4,6 @@ using CodeRebirth.src.Util;
 using CodeRebirthLib;
 using CodeRebirthLib.CRMod;
 using CodeRebirthLib.Utils;
-using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -46,7 +45,7 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
         bool isDeadBody = false;
         if (player.currentlyHeldObjectServer is SnailCatPhysicsProp)
         {
-            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "you_monster"));
+            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.YouMonster);
         }
 
         if (player.currentlyHeldObjectServer is RagdollGrabbableObject)
@@ -69,13 +68,11 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
         NetworkObjectReference netObjRef;
         if (playerDeath)
         {
-            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "bloody_shredded_scraps");
-            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[itemKey].Item, shootPoint.position, false, true, valueOfItem);
+            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.BloodyShreddedScraps].Item, shootPoint.position, false, true, valueOfItem);
         }
         else
         {
-            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "normal_shredded_scraps");
-            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[itemKey].Item, shootPoint.position, false, true, valueOfItem);
+            netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.NormalShreddedScraps].Item, shootPoint.position, false, true, valueOfItem);
         }
         ShootItemForwards(netObjRef);
     }

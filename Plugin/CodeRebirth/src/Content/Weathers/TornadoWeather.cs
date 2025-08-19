@@ -44,8 +44,7 @@ public class TornadoWeather : CodeRebirthWeathers
 
     private void SpawnTornado(Vector3 target)
     {
-        var enemyKey = NamespacedKey<CREnemyInfo>.From("code_rebirth", "tornado");
-        var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, LethalContent.Enemies[enemyKey].EnemyType);
+        var tornado = RoundManager.Instance.SpawnEnemyGameObject(target, -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.Tornado].EnemyType);
         spawnedTornados.Add(((GameObject)tornado).GetComponent<Tornados>());
     }
 }

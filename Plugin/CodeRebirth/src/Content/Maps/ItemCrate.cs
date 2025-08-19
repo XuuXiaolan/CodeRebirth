@@ -402,7 +402,7 @@ public class ItemCrate : CRHittable
     {
         if (opened && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
-            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "safe_and_sound"));
+            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.SafeAndSound);
             opened = false;
             CloseCrateOnPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }

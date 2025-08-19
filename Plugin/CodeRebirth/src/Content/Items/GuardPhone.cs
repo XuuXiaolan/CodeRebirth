@@ -35,6 +35,6 @@ public class GuardPhone : GrabbableObject
         _callSource.PlayOneShot(_callSound);
         yield return new WaitForSeconds(_callSound.length);
         yield return new WaitForSeconds(3f);
-        RoundManager.Instance.SpawnEnemyGameObject(position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.From("code_rebirth", "guardsman")].EnemyType);
+        RoundManager.Instance.SpawnEnemyGameObject(position, -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.Guardsman].EnemyType);
     }
 }

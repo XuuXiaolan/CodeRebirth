@@ -378,21 +378,21 @@ public class Puppeteer : CodeRebirthEnemyAI
         {
             if (randomNumber < 1)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("jester")].EnemyType);
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[EnemyKeys.Jester].EnemyType);
             }
             else if (randomNumber < 20)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("nutcracker")].EnemyType);
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[EnemyKeys.Nutcracker].EnemyType);
             }
             else if (randomNumber < 30)
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("butler")].EnemyType);
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[EnemyKeys.Butler].EnemyType);
             }
             else
             {
-                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("masked")].EnemyType);
+                RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[EnemyKeys.Masked].EnemyType);
             }
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.Vanilla("masked")].EnemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[EnemyKeys.Masked].EnemyType);
         }
         yield return new WaitForSeconds(delay);
         if (state == PuppeteerState.Attacking) smartAgentNavigator.StopSearchRoutine();

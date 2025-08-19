@@ -95,12 +95,12 @@ public class Meteors : FallingObjectBehaviour
         {
             Item[] meteorites =
             [
-                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "amethyst_crystal")].Item,
-                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "sapphire_crystal")].Item,
-                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "emerald_crystal")].Item,
-                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "quartz_crystal")].Item,
-                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "ruby_crystal")].Item,
-                LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "topaz_crystal")].Item
+                LethalContent.Items[CodeRebirthItemKeys.AmethystCrystal].Item,
+                LethalContent.Items[CodeRebirthItemKeys.SapphireCrystal].Item,
+                LethalContent.Items[CodeRebirthItemKeys.EmeraldCrystal].Item,
+                LethalContent.Items[CodeRebirthItemKeys.QuartzCrystal].Item,
+                LethalContent.Items[CodeRebirthItemKeys.RubyCrystal].Item,
+                LethalContent.Items[CodeRebirthItemKeys.TopazCrystal].Item
             ];
             int randomNumber = UnityEngine.Random.Range(0, meteorites.Length);
             CodeRebirthUtils.Instance.SpawnScrap(meteorites[randomNumber], _target, false, true, 0);

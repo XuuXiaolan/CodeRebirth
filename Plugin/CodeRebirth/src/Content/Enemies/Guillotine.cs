@@ -94,7 +94,7 @@ public class Guillotine : NetworkBehaviour
         }
         if (IsServer)
         {
-            GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "talking_head")].Item, scrapSpawnTransform.position, false, true, 0);
+            GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.TalkingHead].Item, scrapSpawnTransform.position, false, true, 0);
             TalkingHead talkingHeadScript = talkingHead.GetComponent<TalkingHead>();
             talkingHeadScript.player = playerToKill;
             talkingHeadScript.mistress = mistress;

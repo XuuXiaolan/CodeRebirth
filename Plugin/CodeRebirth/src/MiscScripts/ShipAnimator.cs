@@ -53,8 +53,7 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             int playersDead = StartOfRound.Instance.connectedPlayersAmount + 1 - StartOfRound.Instance.livingPlayers;
             if (playersDead == 0)
             {
-                var achievementKey = NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "greatest_asset");
-                CRModContent.Achievements.TryTriggerAchievement(achievementKey);
+                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.GreatestAsset);
             }
             // re-enable animator
             yield return new WaitUntil(() => RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase);

@@ -115,9 +115,9 @@ static class PlayerControllerBPatch
 
         if (gObject is PlushieItem || gObject is Xui || gObject is GoldRigo)
         {
-            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "happy_family"), gObject.itemProperties.itemName);
-            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "the_uprooted"), gObject.itemProperties.itemName);
-            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "hoarding_bug"), gObject.itemProperties.itemName);
+            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.HappyFamily, gObject.itemProperties.itemName);
+            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.TheUprooted, gObject.itemProperties.itemName);
+            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.HoardingBug, gObject.itemProperties.itemName);
 
             RoundManagerPatch.plushiesCollectedToday++;
             if (RoundManagerPatch.plushiesCollectedToday >= 3)

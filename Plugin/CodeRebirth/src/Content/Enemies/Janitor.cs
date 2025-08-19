@@ -585,7 +585,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         targetPlayer.DamagePlayer(15, true, true, CauseOfDeath.Gravity, 0, false, default);
         if (targetPlayer.IsLocalPlayer())
         {
-            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "trash_trash_trash"));
+            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.TrashTrashTrash);
         }
         targetPlayer = null;
 

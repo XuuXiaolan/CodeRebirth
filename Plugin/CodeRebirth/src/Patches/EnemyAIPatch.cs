@@ -43,23 +43,23 @@ static class EnemyAIPatch
         {
             if (self is RedwoodTitanAI)
             {
-                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "timber"));
+                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Timber);
             }
             else if (self is DriftwoodMenaceAI)
             {
-                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "bushwacked"));
+                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Bushwacked);
             }
             else if (self is Puppeteer)
             {
-                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "night_of_betrayal"));
+                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.NightofBetrayal);
             }
             else if (self is PeaceKeeper)
             {
-                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "peace_kept"));
+                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.PeaceKept);
             }
             else if (self is CactusBudling)
             {
-                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "wild_west"));
+                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.WildWest);
             }
         }
 
@@ -74,8 +74,7 @@ static class EnemyAIPatch
             if (UnityEngine.Random.Range(0f, 100f) >= coinChance)
                 return;
 
-            var mapObjectKey = NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "money");
-            if (!LethalContent.MapObjects.TryGetValue(mapObjectKey, out CRMapObjectInfo mapObjectInfo))
+            if (!LethalContent.MapObjects.TryGetValue(CodeRebirthMapObjectKeys.Money, out CRMapObjectInfo mapObjectInfo))
                 return;
 
             GameObject coin = UnityEngine.Object.Instantiate(mapObjectInfo.MapObject, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);

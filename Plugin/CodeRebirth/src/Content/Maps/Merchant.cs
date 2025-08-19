@@ -111,12 +111,12 @@ public class Merchant : NetworkBehaviour
                 {
                     if (item.Key.playerHeldBy.IsLocalPlayer())
                     {
-                        CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "capitalism"));
+                        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Capitalism);
                     }
                     itemsSpawned[item.Key] = -1;
                     if (itemsSpawned.Values.All(x => x == -1))
                     {
-                        CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "out_of_stock"));
+                        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.OutOfStock);
                     }
                     continue;
                 }
@@ -141,7 +141,7 @@ public class Merchant : NetworkBehaviour
 
     private IEnumerator DestroyShip()
     {
-        CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "mayday_mayday"));
+        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.MaydayMayday);
         HUDManager.Instance.DisplayTip("Warning", "The Merchant never forgets thieves...\nPrepare for fire", true);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);

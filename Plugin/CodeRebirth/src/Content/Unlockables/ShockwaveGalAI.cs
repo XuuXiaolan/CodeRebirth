@@ -517,7 +517,7 @@ public class ShockwaveGalAI : GalAI
     {
         currentlyAttacking = false;
         chargeCount--;
-        if (chargeCount <= 0 && ownerPlayer.IsLocalPlayer())
+        if (chargeCount <= 0 && ownerPlayer != null && ownerPlayer.IsLocalPlayer())
         {
             HUDManager.Instance.DisplayTip("WARNING", "DELILAH ATTACK CHARGES EXHAUSTED", true);
         }

@@ -26,7 +26,7 @@ public class ShrimpDispenser : NetworkBehaviour
     public void Start()
     {
         shrimpRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
-        itemToSpawn = LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "blue_shrimp")].Item;
+        itemToSpawn = LethalContent.Items[CodeRebirthItemKeys.BlueShrimp].Item;
         dispenserTrigger.onInteract.AddListener(OnDispenserInteract);
     }
 

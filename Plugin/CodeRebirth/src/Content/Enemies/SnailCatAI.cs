@@ -7,7 +7,6 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using CodeRebirthLib;
 using CodeRebirthLib.Utils;
-using CodeRebirthLib.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -397,7 +396,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(this.transform.position))
             return;
 
-        NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "fake_snail_cat")].Item, this.transform.position, false, true, 0);
+        NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.FakeSnailCat].Item, this.transform.position, false, true, 0);
         FakeSnailCat fakeSnailCat = ((NetworkObject)netObjRef).GetComponent<FakeSnailCat>();
         fakeSnailCat.localScale = propScript.originalScale;
         fakeSnailCat.snailCatName = currentName;

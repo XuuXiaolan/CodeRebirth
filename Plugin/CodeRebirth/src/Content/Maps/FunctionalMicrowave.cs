@@ -80,23 +80,19 @@ public class FunctionalMicrowave : CodeRebirthHazard
         int result = microwaveRandom.Next(5);
         if (result == 0)
         {
-            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "charred_spork");
-            return LethalContent.Items[itemKey].Item;
+            return LethalContent.Items[CodeRebirthItemKeys.CharredBaby].Item;
         }
         else if (result == 1)
         {
-            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "charred_fork");
-            return LethalContent.Items[itemKey].Item;
+            return LethalContent.Items[CodeRebirthItemKeys.CharredFork].Item;
         }
         else if (result == 2)
         {
-            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "charred_knife");
-            return LethalContent.Items[itemKey].Item;
+            return LethalContent.Items[CodeRebirthItemKeys.CharredBaby].Item;
         }
         else if (result == 3)
         {
-            var itemKey = NamespacedKey<CRItemInfo>.From("code_rebirth", "sapsucker_omelette");
-            return LethalContent.Items[itemKey].Item;
+            return LethalContent.Items[CodeRebirthItemKeys.SapsuckerOmelette].Item;
         }
         return null;
     }
@@ -111,7 +107,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
             scrapSpawned.grabbable = true;
             if (scrapSpawned.playerHeldBy != null && scrapSpawned.playerHeldBy.IsLocalPlayer())
             {
-                CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "lunch_is_served"), scrapSpawned.itemProperties.itemName);
+                CRModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.LunchisServed, scrapSpawned.itemProperties.itemName);
             }
             damageAmount = originalDamageAmount;
             scrapSpawned = null;

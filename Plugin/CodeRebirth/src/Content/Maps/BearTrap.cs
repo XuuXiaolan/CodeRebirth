@@ -52,28 +52,28 @@ public class BearTrap : CodeRebirthHazard
             if (hit.collider == null)
                 continue;
 
-            var mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "gravel_bear_trap")];
+            var mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.GravelBearTrap];
             GameObject beartrap = mapObjectInfo.MapObject;
 
             if (hit.collider.CompareTag("Grass"))
             {
-                mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "grass_bear_trap")];
+                mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.GrassBearTrap];
                 beartrap = mapObjectInfo.MapObject;
             }
             else if (hit.collider.CompareTag("Snow"))
             {
-                mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "snow_bear_trap")];
+                mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.SnowBearTrap];
                 beartrap = mapObjectInfo.MapObject;
             }
 
             if (this is BoomTrap)
             {
-                mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "boom_trap")];
+                mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.BoomTrap];
                 beartrap = mapObjectInfo.MapObject;
             }
             else if (UnityEngine.Random.Range(0, 100) < 5)
             {
-                mapObjectInfo = LethalContent.MapObjects[NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "boom_trap")];
+                mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.BoomTrap];
                 beartrap = mapObjectInfo.MapObject;
             }
             GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);

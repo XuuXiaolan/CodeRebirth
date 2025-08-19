@@ -219,10 +219,10 @@ public class SellingSally : NetworkBehaviour
             HUDManager.Instance.DisplayTip("Warning!", "Rampant underground activity detected, evacuation recommended.", true);
         }
 
-        CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "internship"));
+        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Internship);
         if (WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant().Trim() == "night shift")
         {
-            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "graveyard_shift"));
+            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.GraveyardShift);
         }
         terminal.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;

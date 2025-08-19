@@ -86,8 +86,7 @@ public class FakeSnailCat : GrabbableObject
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
             return;
 
-        var snailcatKey = NamespacedKey<CREnemyInfo>.From("code_rebirth", "real_enemy_snailcat");
-        var enemyType = LethalContent.Enemies[snailcatKey].EnemyType;
+        var enemyType = LethalContent.Enemies[CodeRebirthEnemyKeys.RealEnemySnailCat].EnemyType;
         NetworkObjectReference netObjRef = RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, enemyType);
         SnailCatAI snailCatAI = ((NetworkObject)netObjRef).GetComponent<SnailCatAI>();
         snailCatAI.wasFake = true;

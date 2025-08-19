@@ -69,8 +69,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
                 if (UnityEngine.Random.Range(0, 100) < 50) yield break;
             }
 
-            var MonarchKey = NamespacedKey<CREnemyInfo>.From("code_rebirth", "monarch");
-            var enemyType = LethalContent.Enemies[MonarchKey].EnemyType;
+            var enemyType = LethalContent.Enemies[CodeRebirthEnemyKeys.Monarch].EnemyType;
             RoundManager.Instance.SpawnEnemyGameObject(transform.position, -1, -1, enemyType);
         }
         HUDManager.Instance.DisplayTip("WARNING", "SEISMIC ACTIVITY DETECTED", true);

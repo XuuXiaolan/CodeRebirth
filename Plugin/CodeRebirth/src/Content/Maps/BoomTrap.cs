@@ -32,7 +32,7 @@ public class BoomTrap : BearTrap
         yield return new WaitForSeconds(explosionSound.length);
         if (playerCaught == null && playerSnapped != null && !playerSnapped.isPlayerDead && playerSnapped.IsLocalPlayer())
         {
-            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "short_fuse"));
+            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.ShortFuse);
         }
 
         DoReleaseTrap();

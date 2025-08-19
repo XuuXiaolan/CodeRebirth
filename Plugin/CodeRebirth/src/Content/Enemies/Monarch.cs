@@ -120,7 +120,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
 
         for (int i = 0; i <= randomNumberToSpawn; i++)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, LethalContent.Enemies[NamespacedKey<CREnemyInfo>.From("code_rebirth", "cutiefly")].EnemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.CutieFly].EnemyType);
         }
     }
 

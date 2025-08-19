@@ -80,8 +80,7 @@ public class Xui : GrabbableObject
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");
         if (randomNumber <= 35)
         {
-            var enemyKey = NamespacedKey<CREnemyInfo>.Vanilla("masked");
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[enemyKey].EnemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[EnemyKeys.Masked].EnemyType);
             return;
         }
         List<PlayerControllerB> deadPlayers = new();
@@ -101,8 +100,7 @@ public class Xui : GrabbableObject
         }
         else if (randomNumber <= 70)
         {
-            var enemyKey = NamespacedKey<CREnemyInfo>.Vanilla("masked");
-            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[enemyKey].EnemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[EnemyKeys.Masked].EnemyType);
         }
     }
 }

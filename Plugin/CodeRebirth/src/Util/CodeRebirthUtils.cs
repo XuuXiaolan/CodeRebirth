@@ -75,8 +75,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && WeatherRegistry.WeatherManager.GetCurrentWeather(oxydeExtendedLevel.SelectableLevel).name.ToLowerInvariant().Trim() != "none")
             yield break;
 
-        var weatherKey = NamespacedKey<CRWeatherEffectInfo>.From("code_rebirth", "night_shift");
-        WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[weatherKey].WeatherEffect));
+        WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -113,7 +112,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         foreach (var enemyWithRarity in enemyWithRarityDropRate)
         {
             var split = enemyWithRarity.Split(':');
-            EnemyType? enemyType = LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault().EnemyType;
+            EnemyType? enemyType = LethalContent.Enemies.Values.Where(et => et.EnemyType != null && !string.IsNullOrEmpty(et.EnemyType.enemyName) && et.EnemyType.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.EnemyType;
             if (enemyType == null)
             {
                 Plugin.Logger.LogWarning($"Couldn't find enemy of name '{split[0]}' for the money drop rate config!");

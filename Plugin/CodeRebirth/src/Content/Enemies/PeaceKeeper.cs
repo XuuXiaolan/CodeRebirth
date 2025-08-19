@@ -587,7 +587,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         if (!IsServer)
             return;
 
-        CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "ceasefire")].Item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.rotation);
+        CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.Ceasefire].Item, _fakeGunGO.transform.position, false, false, 0, _fakeGunGO.transform.rotation);
     }
 
     public void BitchSlapAnimationEvent()

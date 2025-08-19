@@ -51,7 +51,7 @@ public class GrabAndLaunchPlayer : MonoBehaviour
             yield break;
         }
 
-        CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "crateapult"));
+        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Crateapult);
     }
 
     public void Update()

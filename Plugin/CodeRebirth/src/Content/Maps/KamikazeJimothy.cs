@@ -105,7 +105,7 @@ public class KamikazeJimothy : NetworkBehaviour
 
         if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 30f)
         {
-            CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "banzai"));
+            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Banzai);
         }
 
         if (!IsServer)

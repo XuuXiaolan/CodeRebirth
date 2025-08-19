@@ -180,7 +180,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
         StartOrStopCompactingClientRpc(false, false);
         if (deadPlayer != null)
         {
-            NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "flattened_body")].Item, randomPosition, false, true, value);
+            NetworkObjectReference flattenedBodyNetObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.FlattenedBody].Item, randomPosition, false, true, value);
             if (flattenedBodyNetObjRef.TryGet(out NetworkObject flattenedBodyNetObj))
             {
                 PlayerControllerB player = deadPlayer;
@@ -189,7 +189,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
             yield break;
         }
 
-        CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[NamespacedKey<CRItemInfo>.From("code_rebirth", "sally_cubes")].Item, randomPosition, false, true, value);
+        CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.SallyCube].Item, randomPosition, false, true, value);
     }
 
     private IEnumerator PlaySourceWithDelay(float delay)

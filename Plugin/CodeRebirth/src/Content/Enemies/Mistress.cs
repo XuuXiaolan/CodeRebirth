@@ -72,7 +72,7 @@ public class Mistress : CodeRebirthEnemyAI
             {
                 if (targetPlayer.IsLocalPlayer())
                 {
-                    CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "i_got_a_headache"));
+                    CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Igotaheadache);
                 }
                 killTimer = 0f;
                 playerToKill = targetPlayer;

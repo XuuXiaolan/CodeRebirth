@@ -52,10 +52,8 @@ public class Wallet : GrabbableObject
                     continue;
 
                 audioPlayer.Play();
-                var ohapennyKey = NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "oh_a_penny");
-                CRModContent.Achievements.TryTriggerAchievement(ohapennyKey);
-                var walletSizeKey = NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "fat_wallet");
-                CRModContent.Achievements.TryIncrementAchievement(walletSizeKey, 1f);
+                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.OhAPenny);
+                CRModContent.Achievements.TryIncrementAchievement(CodeRebirthAchievementKeys.FatWallet, 1f);
                 AddCoinsServerRpc(new NetworkObjectReference(coin.NetworkObject), coin.value);
             }
             else if (IsServer)

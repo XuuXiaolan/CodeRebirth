@@ -106,11 +106,9 @@ public class PiggyBank : NetworkBehaviour, IHittable
         _audioSource.PlayOneShot(_breakBankSound);
         if (IsServer)
         {
-            var mapObjectKey = NamespacedKey<CRMapObjectInfo>.From("code_rebirth", "money");
-
             for (int i = 0; i < _coinsStored.Value; i++)
             {
-                var coin = GameObject.Instantiate(LethalContent.MapObjects[mapObjectKey].MapObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
+                var coin = GameObject.Instantiate(LethalContent.MapObjects[CodeRebirthMapObjectKeys.Money].MapObject, this.transform.position, this.transform.rotation, this.transform); // todo: check this parenting stuff, especially when breaking open piggy banks.
                 coin.GetComponent<NetworkObject>().Spawn(true);
             }
             _coinsStored.Value = 0;
