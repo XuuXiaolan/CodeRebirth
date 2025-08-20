@@ -256,13 +256,17 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
+  rotateObject: 0
   _animator: {fileID: 8711646089184453707}
   _dropOnUse: 0
   _onUseEvent:
     m_PersistentCalls:
       m_Calls: []
+  _onAnimationEnd:
+    m_PersistentCalls:
+      m_Calls: []
   _audioSource: {fileID: 8526672868155536987}
-  _useSound: {fileID: 0}
+  _useSound: {fileID: 8300000, guid: 13c14267b3dedfc4984bf14889b6413f, type: 3}
 --- !u!114 &237015378768719276
 MonoBehaviour:
   m_ObjectHideFlags: 0
