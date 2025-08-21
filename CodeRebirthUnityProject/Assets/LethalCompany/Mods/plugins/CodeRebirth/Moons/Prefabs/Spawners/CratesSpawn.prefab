@@ -48,13 +48,21 @@ MonoBehaviour:
   chanceOfSpawningAny: 10
   automaticallyAlignWithTerrain: 1
   objectTypesWithRarity:
-  - CRLibObjectName: Normal Wooden Crate
+  - NamespacedMapObjectKey:
+      _namespace: code_rebirth
+      _key: normal_wooden_crate
     Rarity: 30
-  - CRLibObjectName: Normal Metal Crate
+  - NamespacedMapObjectKey:
+      _namespace: code_rebirth
+      _key: normal_metal_crate
     Rarity: 15
-  - CRLibObjectName: Mimic Wooden Crate
+  - NamespacedMapObjectKey:
+      _namespace: code_rebirth
+      _key: mimic_metal_crate
     Rarity: 5
-  - CRLibObjectName: Mimic Metal Crate
+  - NamespacedMapObjectKey:
+      _namespace: code_rebirth
+      _key: mimic_wooden_crate
     Rarity: 5
 --- !u!114 &2576193278008148040
 MonoBehaviour:

@@ -29,7 +29,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    achievements: []
     dungeons: []
   - assetBundleName: aircontrolunitassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -54,7 +53,6 @@ MonoBehaviour:
         ; 1.00, 0.10
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: autonomouscraneassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -79,7 +77,6 @@ MonoBehaviour:
         ; 1.00, 0.10
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: beartrapassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -157,7 +154,6 @@ MonoBehaviour:
         ; 0.56,1.03 ; 0.67,0.99 ; 0.78,1.05 ; 0.89,1.32 ; 1.00,2.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: beartrapgalassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -175,7 +171,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    achievements: []
     dungeons: []
   - assetBundleName: bellcrabgalassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -193,7 +188,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    achievements: []
     dungeons: []
   - assetBundleName: biomeassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -217,7 +211,6 @@ MonoBehaviour:
         ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: cactusbudlingassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -279,7 +272,6 @@ MonoBehaviour:
         ; 1.00,30.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: carnivorousplantassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -302,7 +294,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: coderebirthplushiesassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -612,7 +603,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: cleanerdronegalassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -630,58 +620,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    achievements: []
-    dungeons: []
-  - assetBundleName: compactortobyassets
-    <AlwaysKeepLoaded>k__BackingField: 0
-    configName: Compactor Toby
-    weathers: []
-    enemies: []
-    items:
-    - entityName: Flattened Body
-      _reference:
-        rid: 7053776505763267158
-      spawnWeights: 
-      moonSpawnWeights: 
-      interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      isProgressive: 0
-      generateProgressiveConfig: 0
-      cost: 0
-    - entityName: Sally Cubes
-      _reference:
-        rid: 7053776480755777691
-      spawnWeights: 
-      moonSpawnWeights: 
-      interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
-      isScrap: 1
-      generateScrapConfig: 0
-      isShopItem: 0
-      generateShopItemConfig: 0
-      isProgressive: 0
-      generateProgressiveConfig: 0
-      cost: 0
-    mapObjects:
-    - entityName: Compactor Toby
-      _reference:
-        rid: 7053776505763267159
-      isInsideHazard: 0
-      createInsideHazardConfig: 0
-      defaultInsideCurveSpawnWeights: 
-      createInsideCurveSpawnWeightsConfig: 0
-      isOutsideHazard: 1
-      createOutsideHazardConfig: 0
-      defaultOutsideCurveSpawnWeights: 
-      createOutsideCurveSpawnWeightsConfig: 0
-    unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: crateassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -751,7 +689,56 @@ MonoBehaviour:
         ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    achievements: []
+    dungeons: []
+  - assetBundleName: compactortobyassets
+    <AlwaysKeepLoaded>k__BackingField: 0
+    configName: Compactor Toby
+    weathers: []
+    enemies: []
+    items:
+    - entityName: Flattened Body
+      _reference:
+        rid: 7053776505763267158
+      spawnWeights: 
+      moonSpawnWeights: 
+      interiorSpawnWeights: 
+      weatherSpawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      isProgressive: 0
+      generateProgressiveConfig: 0
+      cost: 0
+    - entityName: Sally Cubes
+      _reference:
+        rid: 7053776480755777691
+      spawnWeights: 
+      moonSpawnWeights: 
+      interiorSpawnWeights: 
+      weatherSpawnWeights: 
+      generateSpawnWeightsConfig: 0
+      isScrap: 1
+      generateScrapConfig: 0
+      isShopItem: 0
+      generateShopItemConfig: 0
+      isProgressive: 0
+      generateProgressiveConfig: 0
+      cost: 0
+    mapObjects:
+    - entityName: Compactor Toby
+      _reference:
+        rid: 7053776505763267159
+      isInsideHazard: 0
+      createInsideHazardConfig: 0
+      defaultInsideCurveSpawnWeights: 
+      createInsideCurveSpawnWeightsConfig: 0
+      isOutsideHazard: 1
+      createOutsideHazardConfig: 0
+      defaultOutsideCurveSpawnWeights: 
+      createOutsideCurveSpawnWeightsConfig: 0
+    unlockables: []
     dungeons: []
   - assetBundleName: cruisergalassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -784,7 +771,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    achievements: []
     dungeons: []
   - assetBundleName: driftwoodmenaceassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -807,7 +793,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: ducksongassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -860,7 +845,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: fishdispenserassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -893,7 +877,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    achievements: []
     dungeons: []
   - assetBundleName: flashturretassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -917,7 +900,6 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: functionalmicrowaveassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1001,7 +983,6 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: friendassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1019,7 +1000,6 @@ MonoBehaviour:
       isDecor: 1
       isProgressive: 0
       createProgressiveConfig: 0
-    achievements: []
     dungeons: []
   - assetBundleName: glowinggemassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1043,7 +1023,6 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: gunslingergregassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1068,7 +1047,6 @@ MonoBehaviour:
         ; 1.00,0.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: hoverboardassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1093,7 +1071,6 @@ MonoBehaviour:
       cost: 350
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: industrialfanassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1117,7 +1094,6 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: janitorassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1154,7 +1130,6 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: manorlordassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1207,7 +1182,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: marrowsplitterassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1232,7 +1206,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: merchantassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1558,7 +1531,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    achievements: []
     dungeons: []
   - assetBundleName: meteorshowerassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1667,7 +1639,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: mistressassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1705,7 +1676,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: monarchassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1741,7 +1711,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: moonunlockerassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1781,7 +1750,6 @@ MonoBehaviour:
       cost: 999
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: mountaineerassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1806,7 +1774,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: nancyassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1829,7 +1796,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: nightshiftassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1848,7 +1814,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: oxydecrashshipassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -1870,7 +1835,6 @@ MonoBehaviour:
         0.33,0.06 ; 0.44,0.13 ; 0.56,0.16 ; 0.67,0.40 ; 0.78,0.60 ; 0.89,0.60 ; 1.00,1.00
       createOutsideCurveSpawnWeightsConfig: 1
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: oxydeloreassets
     <AlwaysKeepLoaded>k__BackingField: 1
@@ -2390,7 +2354,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: peacekeeperassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2428,7 +2391,6 @@ MonoBehaviour:
       cost: 2000
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: plantpotassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2491,7 +2453,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 0
       createProgressiveConfig: 0
-    achievements: []
     dungeons: []
   - assetBundleName: rabbitmagicianassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2514,7 +2475,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: redwoodtitanassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2537,7 +2497,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: scp999galassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2570,7 +2529,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    achievements: []
     dungeons: []
   - assetBundleName: seaminetinkassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2603,7 +2561,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    achievements: []
     dungeons: []
   - assetBundleName: shockwavebotassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2636,7 +2593,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    achievements: []
     dungeons: []
   - assetBundleName: shreddersarahassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2713,7 +2669,6 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: snailcatassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2766,7 +2721,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: snowglobeassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2791,7 +2745,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: swatterassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2816,7 +2769,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: terminalbotassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2849,7 +2801,6 @@ MonoBehaviour:
       isDecor: 0
       isProgressive: 1
       createProgressiveConfig: 1
-    achievements: []
     dungeons: []
   - assetBundleName: teslashockassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2873,7 +2824,6 @@ MonoBehaviour:
       defaultOutsideCurveSpawnWeights: 
       createOutsideCurveSpawnWeightsConfig: 0
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: tomahopassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2898,7 +2848,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: tornadoassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2930,7 +2879,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: transporterassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2953,7 +2901,6 @@ MonoBehaviour:
     items: []
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: turbulenceassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -2978,7 +2925,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: xuandrigoassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -3033,7 +2979,6 @@ MonoBehaviour:
       cost: 0
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   - assetBundleName: zortassets
     <AlwaysKeepLoaded>k__BackingField: 0
@@ -3103,7 +3048,6 @@ MonoBehaviour:
       cost: 150
     mapObjects: []
     unlockables: []
-    achievements: []
     dungeons: []
   references:
     version: 2
