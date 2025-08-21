@@ -222,11 +222,11 @@ MonoBehaviour:
         rid: 7053776505763267133
       spawnWeights: 
       weatherMultipliers: 
-      moonSpawnWeights: Vanilla:10,Custom:10,Valley:5,Canyon:35,Tundra:-999,Marsh:15,Military:0,Rocky:10,Amythest:0,Experimentation:1,Assurance:50,Vow:3,Offense:40,March:5,Adamance:1,Rend:-999,Dine:-999,Titan:0,Artifice:10,Embrion:0,Oxyde:25
-      interiorSpawnWeights: None:*1,DustClouds:*1,Rainy:*0.8,Stormy:*0.8,Foggy:*1.4,Flooded:*0.5,Eclipsed:*1,Meteor
+      moonSpawnWeights: Vanilla:+10,Custom:+10,Valley:+5,Canyon:+35,Tundra:-999,Marsh:+15,Military:+0,Rocky:+10,Amythest:+0,Experimentation:+1,Assurance:+50,Vow:+3,Offense:+40,March:+5,Adamance:+1,Rend:-999,Dine:-999,Titan:+0,Artifice:+10,Embrion:+0,Oxyde:+25
+      interiorSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*0.8,Stormy:*0.8,Foggy:*1.4,Flooded:*0.5,Eclipsed:*1,Meteor
         Shower:*0.5,Tornado:*0.8,Night Shift:*0.1,Snowfall:*0,Blizzard:*0,Heatwave:*1.5,Solar
         Flare:*1.5,Toxic Smog:*1,Cloudy:*1.2,Blackout:*0.5
-      weatherSpawnWeights: 
       generateSpawnWeightsConfig: 0
       powerLevel: 2
       maxSpawnCount: 3
@@ -281,13 +281,13 @@ MonoBehaviour:
     - entityName: Carnivorous Plant
       _reference:
         rid: 7053776505763267137
-      spawnWeights: Vanilla:10,Custom:10,Valley:35,Canyon:0,Tundra:0,Marsh:15,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:40,Offense:0,March:25,Adamance:25,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
-      weatherMultipliers: None:1,DustClouds:1.25,Rainy:1.4,Stormy:1.4,Foggy:1.25,Flooded:0.3,Eclipsed:0.3,Meteor
-        Shower:0,Tornado:0.6,Night Shift:0,Snowfall:0,Blizzard:0,Heatwave:1.3,Solar
-        Flare:1.3,Toxic Smog:0,Cloudy:1.25,Blackout:0
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:10,Custom:10,Valley:35,Canyon:0,Tundra:*0,Marsh:15,Military:0,Rocky:*0,Amythest:*0,Experimentation:0,Assurance:*0,Vow:40,Offense:*0,March:25,Adamance:25,Rend:*0,Dine:*0,Titan:*0,Artifice:0,Embrion:*0,Oxyde:*0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1.25,Rainy:*1.4,Stormy:*1.4,Foggy:*1.25,Flooded:*0.3,Eclipsed:*0.3,Meteor
+        Shower:*0,Tornado:*0.6,Night Shift:*0,Snowfall:*0,Blizzard:*0,Heatwave:*1.3,Solar
+        Flare:*1.3,Toxic Smog:*0,Cloudy:*1.25,Blackout:*0
       generateSpawnWeightsConfig: 0
       powerLevel: 1
       maxSpawnCount: 3
@@ -304,10 +304,12 @@ MonoBehaviour:
     - entityName: 999 Plushie
       _reference:
         rid: 7053776505763267009
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: 'None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1 '
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -319,10 +321,12 @@ MonoBehaviour:
     - entityName: ACUnit Gal Plushie
       _reference:
         rid: 7053776505763267138
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: 'None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1 '
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -334,10 +338,12 @@ MonoBehaviour:
     - entityName: Cactus Budling Plushie
       _reference:
         rid: 7053776505763267139
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -349,10 +355,12 @@ MonoBehaviour:
     - entityName: Cruiser Gal Plushie
       _reference:
         rid: 7053776505763267140
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -364,10 +372,12 @@ MonoBehaviour:
     - entityName: Driftwood Menace Plushie
       _reference:
         rid: 7053776505763267141
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -379,10 +389,12 @@ MonoBehaviour:
     - entityName: Duck Plushie
       _reference:
         rid: 7053776505763267142
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -394,10 +406,12 @@ MonoBehaviour:
     - entityName: Guardsman Plushie
       _reference:
         rid: 7053776505763267143
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -409,10 +423,12 @@ MonoBehaviour:
     - entityName: Janitor Plushie
       _reference:
         rid: 7053776505763267144
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -424,10 +440,12 @@ MonoBehaviour:
     - entityName: ManorLord Plushie
       _reference:
         rid: 7053776505763267145
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -439,10 +457,12 @@ MonoBehaviour:
     - entityName: Mistress Plushie
       _reference:
         rid: 7053776505763267146
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -454,10 +474,12 @@ MonoBehaviour:
     - entityName: Monarch Plushie
       _reference:
         rid: 7053776505763267147
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -469,10 +491,12 @@ MonoBehaviour:
     - entityName: Nancy Plushie
       _reference:
         rid: 7053776505763267148
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -484,10 +508,12 @@ MonoBehaviour:
     - entityName: PeaceKeeper Plushie
       _reference:
         rid: 7053776505763267149
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -499,10 +525,12 @@ MonoBehaviour:
     - entityName: Rabbit Magician Plushie
       _reference:
         rid: 7053776505763267150
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -514,10 +542,12 @@ MonoBehaviour:
     - entityName: Redwood Titan Plushie
       _reference:
         rid: 7053776505763267151
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -529,10 +559,12 @@ MonoBehaviour:
     - entityName: Seamine Tink Plushie
       _reference:
         rid: 7053776505763267152
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -544,10 +576,12 @@ MonoBehaviour:
     - entityName: Shockwave Bot Plushie
       _reference:
         rid: 7053776505763267153
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -559,10 +593,12 @@ MonoBehaviour:
     - entityName: Snail Cat Plushie
       _reference:
         rid: 7053776505763267154
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -574,10 +610,12 @@ MonoBehaviour:
     - entityName: Terminal Bot Plushie
       _reference:
         rid: 7053776505763267155
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -589,10 +627,12 @@ MonoBehaviour:
     - entityName: Transporter Plushie
       _reference:
         rid: 7053776505763267156
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
       generateSpawnWeightsConfig: 1
       isScrap: 1
       generateScrapConfig: 0
@@ -749,8 +789,8 @@ MonoBehaviour:
     - entityName: CruiserGal Assembly Parts
       _reference:
         rid: 7053776505763267164
-      spawnWeights: All:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
