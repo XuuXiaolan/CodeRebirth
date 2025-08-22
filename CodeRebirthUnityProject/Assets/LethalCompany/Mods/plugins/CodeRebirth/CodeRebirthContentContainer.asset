@@ -227,7 +227,7 @@ MonoBehaviour:
       weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*0.8,Stormy:*0.8,Foggy:*1.4,Flooded:*0.5,Eclipsed:*1,Meteor
         Shower:*0.5,Tornado:*0.8,Night Shift:*0.1,Snowfall:*0,Blizzard:*0,Heatwave:*1.5,Solar
         Flare:*1.5,Toxic Smog:*1,Cloudy:*1.2,Blackout:*0.5
-      generateSpawnWeightsConfig: 0
+      generateSpawnWeightsConfig: 1
       powerLevel: 2
       maxSpawnCount: 3
     items: []
@@ -288,7 +288,7 @@ MonoBehaviour:
       weatherSpawnWeights: None:*1,DustClouds:*1.25,Rainy:*1.4,Stormy:*1.4,Foggy:*1.25,Flooded:*0.3,Eclipsed:*0.3,Meteor
         Shower:*0,Tornado:*0.6,Night Shift:*0,Snowfall:*0,Blizzard:*0,Heatwave:*1.3,Solar
         Flare:*1.3,Toxic Smog:*0,Cloudy:*1.25,Blackout:*0
-      generateSpawnWeightsConfig: 0
+      generateSpawnWeightsConfig: 1
       powerLevel: 1
       maxSpawnCount: 3
     items: []
@@ -820,14 +820,14 @@ MonoBehaviour:
     - entityName: Driftwood Menace
       _reference:
         rid: 7053776505763267166
-      spawnWeights: Vanilla:10,Custom:10,Valley:30,Canyon:5,Tundra:0,Marsh:40,Military:0,Rocky:0,Amythest:0,Experimentation:1,Assurance:5,Vow:45,Offense:3,March:35,Adamance:40,Rend:0,Dine:0,Titan:0,Artifice:10,Embrion:0,Oxyde:40
-      weatherMultipliers: None:1,DustClouds:1,Rainy:1.4,Stormy:1.4,Foggy:1,Flooded:0.75,Eclipsed:1,Meteor
-        Shower:0.5,Tornado:0.7,Night Shift:0.7,Snowfall:0,Blizzard:0,Heatwave:0.5,Solar
-        Flare:0.5,Toxic Smog:1,Cloudy:1,Blackout:0.5
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+10,Custom:+10,Valley:+30,Canyon:+5,Tundra:-999,Marsh:+40,Military:-20,Rocky:-50,Amythest:-90,Experimentation:+1,Assurance:+5,Vow:+45,Offense:+3,March:+35,Adamance:+40,Rend:-999,Dine:-999,Titan:-999,Artifice:+10,Embrion:-100,Oxyde:+40
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1.4,Stormy:*1.4,Foggy:*1,Flooded:*0.75,Eclipsed:*1,Meteor
+        Shower:*0.5,Tornado:*0.7,Night Shift:*0.7,Snowfall:*0,Blizzard:*0,Heatwave:*0.5,Solar
+        Flare:*0.5,Toxic Smog:*1,Cloudy:*1,Blackout:*0.5
+      generateSpawnWeightsConfig: 1
       powerLevel: 2
       maxSpawnCount: 2
     items: []
@@ -842,14 +842,14 @@ MonoBehaviour:
     - entityName: Duck
       _reference:
         rid: 7053776493545259206
-      spawnWeights: Vanilla:2,Custom:2,Valley:2,Canyon:2,Tundra:2,Marsh:2,Military:2,Rocky:2,Amythest:2,Experimentation:20,Assurance:20,Vow:20,Offense:20,March:20,Adamance:20,Rend:1,Dine:1,Titan:1,Artifice:1,Embrion:1,Oxyde:0
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar Flare:1,Toxic
-        Smog:1,Cloudy:1,Blackout:1 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+2,Custom:+2,Valley:+2,Canyon:+2,Tundra:+2,Marsh:+2,Military:+2,Rocky:+2,Amythest:+2,Experimentation:+20,Assurance:+20,Vow:+20,Offense:+20,March:+20,Adamance:+20,Rend:+1,Dine:+1,Titan:+1,Artifice:+1,Embrion:+1,Oxyde:-999
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
+      generateSpawnWeightsConfig: 1
       powerLevel: 2
       maxSpawnCount: 1
     items:
@@ -1143,13 +1143,13 @@ MonoBehaviour:
     - entityName: Janitor
       _reference:
         rid: 7053776505763267182
-      spawnWeights: Vanilla:10,Custom:10,Valley:20,Canyon:20,Tundra:10,Marsh:10,Military:40,Rocky:20,Amythest:25,Experimentation:5,Assurance:10,Vow:20,Offense:15,March:25,Adamance:30,Rend:5,Dine:2,Titan:20,Artifice:15,Embrion:2,Oxyde:50
-      weatherMultipliers: None:1,DustClouds:1,Rainy:0.75,Stormy:0.75,Foggy:1,Flooded:0.5,Eclipsed:1,Meteor
-        Shower:0.8,Tornado:1,Night Shift:2,Snowfall:1,Blizzard:1,Heatwave:0.75,Solar
-        Flare:0.75,Toxic Smog:1,Cloudy:1,Blackout:2
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+10,Custom:+10,Valley:+20,Canyon:+20,Tundra:+10,Marsh:+10,Military:+40,Rocky:+20,Amythest:+25,Experimentation:+5,Assurance:+10,Vow:+20,Offense:+15,March:+25,Adamance:+30,Rend:+5,Dine:+2,Titan:+20,Artifice:+15,Embrion:+2,Oxyde:+50
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*0.75,Stormy:*0.75,Foggy:*1,Flooded:*0.5,Eclipsed:*1,Meteor
+        Shower:*0.8,Tornado:*1,Night Shift:*2,Snowfall:*1,Blizzard:*1,Heatwave:*0.75,Solar
+        Flare:*0.75,Toxic Smog:*1,Cloudy:*1,Blackout:*2
       generateSpawnWeightsConfig: 0
       powerLevel: 1
       maxSpawnCount: 3
@@ -1179,14 +1179,14 @@ MonoBehaviour:
     - entityName: Manor Lord
       _reference:
         rid: 7053776480755777851
-      spawnWeights: Vanilla:10,Custom:10,Valley:10,Canyon:5,Tundra:30,Marsh:3,Military:5,Rocky:5,Amythest:5,Experimentation:1,Assurance:3,Vow:30,Offense:3,March:3,Adamance:7,Rend:50,Dine:20,Titan:4,Artifice:40,Embrion:0,Oxyde:5
-      weatherMultipliers: None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1.25,Flooded:1.25,Eclipsed:1,Meteor
-        Shower:0.75,Tornado:1.25,Night Shift:100,Snowfall:1.4,Blizzard:1.4,Heatwave:0.75,Solar
-        Flare:0.75,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+10,Custom:+10,Valley:+10,Canyon:+5,Tundra:+30,Marsh:+3,Military:+5,Rocky:+5,Amythest:+5,Experimentation:+1,Assurance:+3,Vow:+30,Offense:+3,March:+3,Adamance:+7,Rend:+50,Dine:+20,Titan:+4,Artifice:+40,Embrion:+0,Oxyde:+5
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1.25,Flooded:*1.25,Eclipsed:*1,Meteor
+        Shower:*0.75,Tornado:*1.25,Night Shift:*100,Snowfall:*1.4,Blizzard:*1.4,Heatwave:*0.75,Solar
+        Flare:*0.75,Toxic Smog:*1,Cloudy:*1.25,Blackout:*1.5
+      generateSpawnWeightsConfig: 1
       powerLevel: 2
       maxSpawnCount: 1
     items:
@@ -1232,7 +1232,7 @@ MonoBehaviour:
     - entityName: Marrow Splitter
       _reference:
         rid: 7053776505763267185
-      spawnWeights: Vanilla:2,Custom:3
+      spawnWeights: Vanilla:+2,Custom:+3
       moonSpawnWeights: 
       interiorSpawnWeights: 
       weatherSpawnWeights: 
@@ -1255,14 +1255,14 @@ MonoBehaviour:
     - entityName: Guardsman
       _reference:
         rid: 7053776505763266776
-      spawnWeights: Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:1,Rocky:0,Amythest:1,Experimentation:1,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:1,Artifice:1,Embrion:1,Oxyde:1
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:0.5,Tornado:0,Night Shift:0,Snowfall:1,Blizzard:1,Heatwave:1,Solar
-        Flare:1,Toxic Smog:1,Cloudy:1,Blackout:1 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+1,Rocky:+0,Amythest:+1,Experimentation:+1,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+1,Artifice:+1,Embrion:+1,Oxyde:+1
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*0.5,Tornado:*0,Night Shift:*0,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
+      generateSpawnWeightsConfig: 1
       powerLevel: 0
       maxSpawnCount: 1
     items:
@@ -1374,8 +1374,8 @@ MonoBehaviour:
     - entityName: Mole Digger
       _reference:
         rid: 7053776505763266782
-      spawnWeights: Rocky:5,Canyon:2,Amethyst:5
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Rocky:+5,Canyon:+2,Amethyst:+5
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -1389,8 +1389,8 @@ MonoBehaviour:
     - entityName: Nitroglycerin Crate
       _reference:
         rid: 7053776505763266783
-      spawnWeights: Rocky:5,Canyon:5,Amethyst:5
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Rocky:+5,Canyon:+5,Amethyst:+5
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -1434,8 +1434,8 @@ MonoBehaviour:
     - entityName: Remote Detonator
       _reference:
         rid: 7053776505763266786
-      spawnWeights: Rocky:5,Canyon:5,Amethyst:5
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Rocky:+5,Canyon:+5,Amethyst:+5
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -1449,7 +1449,7 @@ MonoBehaviour:
     - entityName: Rocky
       _reference:
         rid: 7053776505763266787
-      spawnWeights: 
+      spawnWeights: Experimentation:+1
       moonSpawnWeights: 
       interiorSpawnWeights: 
       weatherSpawnWeights: 
@@ -1464,7 +1464,7 @@ MonoBehaviour:
     - entityName: Ship Upgrade Unlocker
       _reference:
         rid: 7053776505763266788
-      spawnWeights: Rocky:1
+      spawnWeights: Rocky:+1
       moonSpawnWeights: 
       interiorSpawnWeights: 
       weatherSpawnWeights: 
@@ -1546,7 +1546,7 @@ MonoBehaviour:
         ; 0.33,4.96 ; 0.44,5.10 ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82 ;
         1.00,8.00 | Custom - 0.00,3.00 ; 0.11,3.72 ; 0.22,4.44 ; 0.33,4.96 ; 0.44,5.10
         ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82 ; 1.00,8.00
-      createInsideCurveSpawnWeightsConfig: 0
+      createInsideCurveSpawnWeightsConfig: 1
       isOutsideHazard: 0
       createOutsideHazardConfig: 0
       defaultOutsideCurveSpawnWeights: 
@@ -1688,14 +1688,14 @@ MonoBehaviour:
     - entityName: Mistress
       _reference:
         rid: 7053776505763267193
-      spawnWeights: Vanilla:2,Custom:2,Valley:1,Canyon:2,Tundra:5,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:10,Offense:0,March:1,Adamance:3,Rend:20,Dine:5,Titan:0,Artifice:10,Embrion:0,Oxyde:1
-      weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:1.4,Foggy:1.2,Flooded:0.5,Eclipsed:0.5,Meteor
-        Shower:0.5,Tornado:0.5,Night Shift:100,Snowfall:1.4,Blizzard:1.4,Heatwave:1.2,Solar
-        Flare:1,Toxic Smog:1,Cloudy:1.25,Blackout:1.5
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+2,Custom:+2,Valley:+1,Canyon:+2,Tundra:+5,Marsh:+1,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+10,Offense:+0,March:+1,Adamance:+3,Rend:+20,Dine:+5,Titan:+0,Artifice:+10,Embrion:+0,Oxyde:+1
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*1.2,Rainy:*1.4,Stormy:*1.4,Foggy:*1.2,Flooded:*0.5,Eclipsed:*0.5,Meteor
+        Shower:*0.5,Tornado:*0.5,Night Shift:*100,Snowfall:*1.4,Blizzard:*1.4,Heatwave:*1.2,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1.25,Blackout:*1.5
+      generateSpawnWeightsConfig: 1
       powerLevel: 2
       maxSpawnCount: 1
     items:
@@ -1725,26 +1725,26 @@ MonoBehaviour:
     - entityName: Monarch
       _reference:
         rid: 7053776505763267195
-      spawnWeights: Vanilla:0,Custom:0,Valley:1,Canyon:1,Tundra:0,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:1,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:0,Stormy:0,Foggy:0,Flooded:0,Eclipsed:1.5,Meteor
-        Shower:0,Tornado:0,Night Shift:0,Snowfall:0,Blizzard:0,Heatwave:2,Solar Flare:0,Toxic
-        Smog:0,Cloudy:0,Blackout:0 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+0,Custom:+0,Valley:+1,Canyon:+1,Tundra:+0,Marsh:+1,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+1,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*1,Rainy:*0,Stormy:*0,Foggy:*0,Flooded:*0,Eclipsed:*1.5,Meteor
+        Shower:*0,Tornado:*0,Night Shift:*0,Snowfall:*0,Blizzard:*0,Heatwave:*2,Solar
+        Flare:*0,Toxic Smog:*0,Cloudy:*0,Blackout:*0
+      generateSpawnWeightsConfig: 1
       powerLevel: 3
       maxSpawnCount: 1
     - entityName: Cutiefly
       _reference:
         rid: 7053776505763267196
-      spawnWeights: Vanilla:20,Custom:20,Valley:40,Canyon:1,Tundra:0,Marsh:10,Military:0,Rocky:0,Amythest:0,Experimentation:1,Assurance:5,Vow:30,Offense:5,March:45,Adamance:55,Rend:0,Dine:0,Titan:0,Artifice:10,Embrion:0,Oxyde:15
-      weatherMultipliers: None:1.5,DustClouds:1.2,Rainy:0.5,Stormy:0.5,Foggy:1.25,Flooded:0,Eclipsed:0,Meteor
-        Shower:0,Tornado:0,Night Shift:0,Snowfall:0,Blizzard:0,Heatwave:1.5,Solar
-        Flare:1.5,Toxic Smog:0,Cloudy:1.25,Blackout:0
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+20,Custom:+20,Valley:+40,Canyon:+1,Tundra:+0,Marsh:+10,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+1,Assurance:+5,Vow:+30,Offense:+5,March:+45,Adamance:+55,Rend:+0,Dine:+0,Titan:+0,Artifice:+10,Embrion:+0,Oxyde:+15
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
+      weatherSpawnWeights: None:*1.5,DustClouds:*1.2,Rainy:*0.5,Stormy:*0.5,Foggy:*1.25,Flooded:*0,Eclipsed:*0,Meteor
+        Shower:*0,Tornado:*0,Night Shift:*0,Snowfall:*0,Blizzard:*0,Heatwave:*1.5,Solar
+        Flare:*1.5,Toxic Smog:*0,Cloudy:*1.25,Blackout:*0
       generateSpawnWeightsConfig: 0
       powerLevel: 0.5
       maxSpawnCount: 6
@@ -1761,7 +1761,7 @@ MonoBehaviour:
     - entityName: Oxyde Tablet
       _reference:
         rid: 7053776505763267197
-      spawnWeights: All:1
+      spawnWeights: All:+1
       moonSpawnWeights: 
       interiorSpawnWeights: 
       weatherSpawnWeights: 
@@ -1776,7 +1776,7 @@ MonoBehaviour:
     - entityName: Haemoglobin Tablet
       _reference:
         rid: 7053776505763267198
-      spawnWeights: All:1
+      spawnWeights: All:+1
       moonSpawnWeights: 
       interiorSpawnWeights: 
       weatherSpawnWeights: 
@@ -1800,7 +1800,7 @@ MonoBehaviour:
     - entityName: Brrreaker
       _reference:
         rid: 7053776505763267199
-      spawnWeights: All:1,Tundra:5
+      spawnWeights: All:+1,Tundra:+5
       moonSpawnWeights: 
       interiorSpawnWeights: 
       weatherSpawnWeights: 
@@ -1823,14 +1823,14 @@ MonoBehaviour:
     - entityName: Nancy
       _reference:
         rid: 7053776505763267200
-      spawnWeights: Vanilla:10,Custom:10,Valley:15,Canyon:15,Tundra:10,Marsh:5,Military:20,Rocky:10,Amythest:3,Experimentation:1,Assurance:20,Vow:20,Offense:10,March:10,Adamance:25,Rend:6,Dine:3,Titan:30,Artifice:25,Embrion:1,Oxyde:3
-      weatherMultipliers: None:1,DustClouds:0.9,Rainy:0.75,Stormy:0.75,Foggy:0.9,Flooded:0.25,Eclipsed:1,Meteor
-        Shower:1,Tornado:1,Night Shift:1.25,Snowfall:0.5,Blizzard:0.5,Heatwave:0.75,Solar
-        Flare:0.75,Toxic Smog:1,Cloudy:0.9,Blackout:1.25
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+10,Custom:+10,Valley:+15,Canyon:+15,Tundra:+10,Marsh:+5,Military:+20,Rocky:+10,Amythest:+3,Experimentation:+1,Assurance:+20,Vow:+20,Offense:+10,March:+10,Adamance:+25,Rend:+6,Dine:+3,Titan:+30,Artifice:+25,Embrion:+1,Oxyde:+3
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*0.9,Rainy:*0.75,Stormy:*0.75,Foggy:*0.9,Flooded:*0.25,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*1.25,Snowfall:*0.5,Blizzard:*0.5,Heatwave:*0.75,Solar
+        Flare:*0.75,Toxic Smog:*1,Cloudy:*0.9,Blackout:*1.25
+      generateSpawnWeightsConfig: 1
       powerLevel: 1
       maxSpawnCount: 1
     items: []
@@ -2403,14 +2403,14 @@ MonoBehaviour:
     - entityName: PeaceKeeper
       _reference:
         rid: 7053776480755777849
-      spawnWeights: Vanilla:8,Custom:10,Valley:5,Canyon:7,Tundra:10,Marsh:2,Military:40,Rocky:10,Amythest:5,Experimentation:0,Assurance:1,Vow:1,Offense:1,March:3,Adamance:15,Rend:20,Dine:8,Titan:30,Artifice:40,Embrion:20,Oxyde:10
-      weatherMultipliers: None:1,DustClouds:0.6,Rainy:0.4,Stormy:0.35,Foggy:0.6,Flooded:0.1,Eclipsed:2,Meteor
-        Shower:1,Tornado:1,Night Shift:100,Snowfall:1,Blizzard:1,Heatwave:1,Solar
-        Flare:1,Toxic Smog:1,Cloudy:1,Blackout:0.7
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+8,Custom:+10,Valley:+5,Canyon:+7,Tundra:+10,Marsh:+2,Military:+40,Rocky:+10,Amythest:+5,Experimentation:+0,Assurance:+1,Vow:+1,Offense:+1,March:+3,Adamance:+15,Rend:+20,Dine:+8,Titan:+30,Artifice:+40,Embrion:+20,Oxyde:+10
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*0.6,Rainy:*0.4,Stormy:*0.35,Foggy:*0.6,Flooded:*0.1,Eclipsed:*2,Meteor
+        Shower:*1,Tornado:*1,Night Shift:*100,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*0.7
+      generateSpawnWeightsConfig: 1
       powerLevel: 2
       maxSpawnCount: 1
     items:
@@ -2502,14 +2502,14 @@ MonoBehaviour:
     - entityName: Rabbit Magician
       _reference:
         rid: 7053776505763267226
-      spawnWeights: Vanilla:3,Custom:3,Valley:3,Canyon:1,Tundra:8,Marsh:1,Military:5,Rocky:1,Amythest:1,Experimentation:1,Assurance:1,Vow:12,Offense:1,March:1,Adamance:1,Rend:30,Dine:15,Titan:10,Artifice:30,Embrion:1,Oxyde:0
-      weatherMultipliers: None:1,DustClouds:1.2,Rainy:1.4,Stormy:2,Foggy:1.2,Flooded:0.5,Eclipsed:2,Meteor
-        Shower:0.5,Tornado:0.5,Night Shift:1.5,Snowfall:1.5,Blizzard:1.5,Heatwave:0.5,Solar
-        Flare:1,Toxic Smog:1,Cloudy:1,Blackout:2
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+3,Custom:+3,Valley:+3,Canyon:+1,Tundra:+8,Marsh:+1,Military:+5,Rocky:+1,Amythest:+1,Experimentation:+1,Assurance:+1,Vow:+12,Offense:+1,March:+1,Adamance:+1,Rend:+30,Dine:+15,Titan:+10,Artifice:+30,Embrion:+1,Oxyde:+0
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*1.2,Rainy:*1.4,Stormy:*2,Foggy:*1.2,Flooded:*0.5,Eclipsed:*2,Meteor
+        Shower:*0.5,Tornado:*0.5,Night Shift:*1.5,Snowfall:*1.5,Blizzard:*1.5,Heatwave:*0.5,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*2
+      generateSpawnWeightsConfig: 1
       powerLevel: 3
       maxSpawnCount: 1
     items: []
@@ -2524,14 +2524,14 @@ MonoBehaviour:
     - entityName: Redwood Titan
       _reference:
         rid: 7053776505763267227
-      spawnWeights: Vanilla:15,Custom:15,Valley:20,Canyon:1,Tundra:1,Marsh:10,Military:10,Rocky:0,Amythest:0,Experimentation:1,Assurance:1,Vow:20,Offense:1,March:30,Adamance:10,Rend:0,Dine:0,Titan:0,Artifice:20,Embrion:30,Oxyde:25
-      weatherMultipliers: None:1,DustClouds:0.75,Rainy:1.25,Stormy:0.75,Foggy:0.75,Flooded:0.25,Eclipsed:1.2,Meteor
-        Shower:0.25,Tornado:0.651415926535,Night Shift:0.3,Snowfall:0.1,Blizzard:0.1,Heatwave:1.2,Solar
-        Flare:1.2,Toxic Smog:1,Cloudy:0.8,Blackout:0.3
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+15,Custom:+15,Valley:+20,Canyon:+1,Tundra:+1,Marsh:+10,Military:+10,Rocky:+0,Amythest:+0,Experimentation:+1,Assurance:+1,Vow:+20,Offense:+1,March:+30,Adamance:+10,Rend:+0,Dine:+0,Titan:+0,Artifice:+20,Embrion:+30,Oxyde:+25
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1,DustClouds:*0.75,Rainy:*1.25,Stormy:*0.75,Foggy:*0.75,Flooded:*0.25,Eclipsed:*1.2,Meteor
+        Shower:*0.25,Tornado:*0.651415926535,Night Shift:*0.3,Snowfall:*0.1,Blizzard:*0.1,Heatwave:*1.2,Solar
+        Flare:*1.2,Toxic Smog:*1,Cloudy:*0.8,Blackout:*0.3
+      generateSpawnWeightsConfig: 1
       powerLevel: 1.5
       maxSpawnCount: 1
     items: []
@@ -2547,8 +2547,8 @@ MonoBehaviour:
     - entityName: Jar of 999
       _reference:
         rid: 7053776505763267228
-      spawnWeights: All:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -2579,8 +2579,8 @@ MonoBehaviour:
     - entityName: SeamineGal Assembly Parts
       _reference:
         rid: 7053776505763267230
-      spawnWeights: All:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -2611,8 +2611,8 @@ MonoBehaviour:
     - entityName: ShockwaveGal Assembly Parts
       _reference:
         rid: 7053776505763267232
-      spawnWeights: All:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -2674,7 +2674,7 @@ MonoBehaviour:
       _reference:
         rid: 7053776505763267234
       spawnWeights: 
-      moonSpawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 0
@@ -2718,14 +2718,14 @@ MonoBehaviour:
     - entityName: Real Enemy SnailCat
       _reference:
         rid: 7053776505763267237
-      spawnWeights: Vanilla:20,Custom:20,Valley:40,Canyon:5,Tundra:0,Marsh:1,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:20,Offense:0,March:30,Adamance:45,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:1
-      weatherMultipliers: None:1.5,DustClouds:0.5,Rainy:0.5,Stormy:0.2,Foggy:0.2,Flooded:0.1,Eclipsed:0,Meteor
-        Shower:0,Tornado:0.1,Night Shift:0,Snowfall:0,Blizzard:0,Heatwave:0.7,Solar
-        Flare:0.7,Toxic Smog:0,Cloudy:0.8,Blackout:0
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+20,Custom:+20,Valley:+40,Canyon:+5,Tundra:+0,Marsh:+1,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+20,Offense:+0,March:+30,Adamance:+45,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+1
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1.5,DustClouds:*0.5,Rainy:*0.5,Stormy:*0.2,Foggy:*0.2,Flooded:*0.1,Eclipsed:*0,Meteor
+        Shower:*0,Tornado:*0.1,Night Shift:*0,Snowfall:*0,Blizzard:*0,Heatwave:*0.7,Solar
+        Flare:*0.7,Toxic Smog:*0,Cloudy:*0.8,Blackout:*0
+      generateSpawnWeightsConfig: 1
       powerLevel: 0.5
       maxSpawnCount: 6
     items:
@@ -2771,8 +2771,8 @@ MonoBehaviour:
     - entityName: Snow Globe
       _reference:
         rid: 7053776505763267240
-      spawnWeights: Vanilla:5,Custom:5
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+5,Custom:+5
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -2795,8 +2795,8 @@ MonoBehaviour:
     - entityName: sWATTer
       _reference:
         rid: 7053776505763267241
-      spawnWeights: Vanilla:1,Custom:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -2819,8 +2819,8 @@ MonoBehaviour:
     - entityName: TerminalGal Assembly Parts
       _reference:
         rid: 7053776505763267242
-      spawnWeights: All:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -2874,8 +2874,8 @@ MonoBehaviour:
     - entityName: TomaHop
       _reference:
         rid: 7053776480755777845
-      spawnWeights: Vanilla:2,Custom:2
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+2
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -2906,14 +2906,14 @@ MonoBehaviour:
     - entityName: Tornado
       _reference:
         rid: 7053776505763267246
-      spawnWeights: 'Vanilla:0,Custom:0,Valley:0,Canyon:0,Tundra:0,Marsh:0,Military:0,Rocky:0,Amythest:0,Experimentation:0,Assurance:0,Vow:0,Offense:0,March:0,Adamance:0,Rend:0,Dine:0,Titan:0,Artifice:0,Embrion:0,Oxyde:0 '
-      weatherMultipliers: 'None:1,DustClouds:1,Rainy:1,Stormy:1,Foggy:1,Flooded:1,Eclipsed:1,Meteor
-        Shower:1,Tornado:999,Night Shift:1,Snowfall:1,Blizzard:1,Heatwave:1,Solar
-        Flare:1,Toxic Smog:1,Cloudy:1,Blackout:1 '
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: 'Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0 '
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: 'None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+        Shower:*1,Tornado:*999,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+        Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1 '
+      generateSpawnWeightsConfig: 1
       powerLevel: 0
       maxSpawnCount: 1
     items: []
@@ -2928,14 +2928,14 @@ MonoBehaviour:
     - entityName: Transporter
       _reference:
         rid: 7053776505763267247
-      spawnWeights: Vanilla:20,Custom:20,Valley:20,Canyon:20,Tundra:10,Marsh:20,Military:15,Rocky:10,Amythest:1,Experimentation:1,Assurance:10,Vow:15,Offense:25,March:15,Adamance:10,Rend:5,Dine:5,Titan:25,Artifice:30,Embrion:5,Oxyde:75
-      weatherMultipliers: None:1.5,DustClouds:0.9,Rainy:0.9,Stormy:0.8,Foggy:0.9,Flooded:0.25,Eclipsed:1.5,Meteor
-        Shower:1.5,Tornado:0.8,Night Shift:2,Snowfall:1.4,Blizzard:1.4,Heatwave:0.6,Solar
-        Flare:0.6,Toxic Smog:0,Cloudy:0.9,Blackout:2
-      moonSpawnWeights: 
+      spawnWeights: 
+      weatherMultipliers: 
+      moonSpawnWeights: Vanilla:+20,Custom:+20,Valley:+20,Canyon:+20,Tundra:+10,Marsh:+20,Military:+15,Rocky:+10,Amythest:+1,Experimentation:+1,Assurance:+10,Vow:+15,Offense:+25,March:+15,Adamance:+10,Rend:+5,Dine:+5,Titan:+25,Artifice:+30,Embrion:+5,Oxyde:+75
       interiorSpawnWeights: 
-      weatherSpawnWeights: 
-      generateSpawnWeightsConfig: 0
+      weatherSpawnWeights: None:*1.5,DustClouds:*0.9,Rainy:*0.9,Stormy:*0.8,Foggy:*0.9,Flooded:*0.25,Eclipsed:*1.5,Meteor
+        Shower:*1.5,Tornado:*0.8,Night Shift:*2,Snowfall:*1.4,Blizzard:*1.4,Heatwave:*0.6,Solar
+        Flare:*0.6,Toxic Smog:*0,Cloudy:*0.9,Blackout:*2
+      generateSpawnWeightsConfig: 1
       powerLevel: 1
       maxSpawnCount: 3
     items: []
@@ -2951,8 +2951,8 @@ MonoBehaviour:
     - entityName: Turbulence
       _reference:
         rid: 7053776505763267248
-      spawnWeights: Military:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Military:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 0
@@ -2975,8 +2975,8 @@ MonoBehaviour:
     - entityName: Xui.
       _reference:
         rid: 7053776505763267249
-      spawnWeights: All:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -2990,8 +2990,8 @@ MonoBehaviour:
     - entityName: KingRigo
       _reference:
         rid: 7053776505763267250
-      spawnWeights: All:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -3005,8 +3005,8 @@ MonoBehaviour:
     - entityName: Fumolanie Blade of Melicious
       _reference:
         rid: 7053776480755777844
-      spawnWeights: All:1
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: All:+1
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -3029,8 +3029,8 @@ MonoBehaviour:
     - entityName: Violin
       _reference:
         rid: 7053776505763266859
-      spawnWeights: Vanilla:20,Custom:20
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+20,Custom:+20
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -3044,8 +3044,8 @@ MonoBehaviour:
     - entityName: Guitar
       _reference:
         rid: 7053776505763266860
-      spawnWeights: Vanilla:20,Custom:20
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+20,Custom:+20
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -3059,8 +3059,8 @@ MonoBehaviour:
     - entityName: Accordion
       _reference:
         rid: 7053776505763266992
-      spawnWeights: Vanilla:20,Custom:20
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+20,Custom:+20
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
@@ -3074,8 +3074,8 @@ MonoBehaviour:
     - entityName: Recorder
       _reference:
         rid: 7053776505763266993
-      spawnWeights: Vanilla:20,Custom:20
-      moonSpawnWeights: 
+      spawnWeights: 
+      moonSpawnWeights: Vanilla:+20,Custom:+20
       interiorSpawnWeights: 
       weatherSpawnWeights: 
       generateSpawnWeightsConfig: 1
