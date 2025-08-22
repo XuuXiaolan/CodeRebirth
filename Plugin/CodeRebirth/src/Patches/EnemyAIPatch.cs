@@ -4,9 +4,6 @@ using CodeRebirth.src.Util;
 using CodeRebirthLib;
 using CodeRebirthLib.CRMod;
 using CodeRebirthLib.Utils;
-
-
-
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;
