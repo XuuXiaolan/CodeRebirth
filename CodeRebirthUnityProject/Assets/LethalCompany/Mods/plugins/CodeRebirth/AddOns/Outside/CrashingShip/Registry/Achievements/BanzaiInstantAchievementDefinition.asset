@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: BanzaiInstantAchievementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: 
   _typedKey:
     _namespace: code_rebirth
     _key: banzai
@@ -25,4 +28,5 @@ MonoBehaviour:
   <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
   <AchievementRequirement>k__BackingField: Placeholder
   <IsHidden>k__BackingField: 1
+  <CanBeUnhidden>k__BackingField: 0
   <PopupTime>k__BackingField: 5
