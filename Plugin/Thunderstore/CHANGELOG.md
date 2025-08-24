@@ -3,7 +3,6 @@
 - Fixed SnailCat names being desynced apparently, host now controls all the names.
 - Added all the plushies.
 - Added Achievements.
-- Reworked hoverboard.
 - Fixed some ACUnit and Gunslinger Greg targetting issues.
 - Rewrote how some stuff targets entities so driftwood etc shouldnt see any more false positives because of other mods being stupid.
 - Added Jacobian's terrible horrifying death monitor into the cabin.
