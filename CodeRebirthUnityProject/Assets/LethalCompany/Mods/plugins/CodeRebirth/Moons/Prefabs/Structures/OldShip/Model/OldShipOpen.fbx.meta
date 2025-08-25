@@ -3,7 +3,17 @@ guid: ce4a9bb3bef82da4e803febb52c0f323
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SarcophagusInside
+    second: {fileID: 2100000, guid: 5b621e2239f95aa4685f7254000f6184, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SarcophagusOutside
+    second: {fileID: 2100000, guid: 1a23be5786305ba4d80bca0409f09aeb, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
