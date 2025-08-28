@@ -54,7 +54,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         shipAnimator.shipNormalLeaveAnimation = ModifiedShipLeaveAnimation;
 
         LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
-        Plugin.ExtendedLogging($"Extended level: {extendedLevel?.SelectableLevel}");
         if (extendedLevel == null)
             return;
 
@@ -75,6 +74,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && WeatherRegistry.WeatherManager.GetCurrentWeather(oxydeExtendedLevel.SelectableLevel).name.ToLowerInvariant().Trim() != "none")
             yield break;
 
+        Plugin.ExtendedLogging($"Switch weather to: {LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect.name}");
+        Plugin.ExtendedLogging($"LevelweatherType: {(LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect)}");
         WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
     }
 
@@ -83,7 +84,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         if (extendedLevelNetworkReference.TryGet(out ExtendedLevel? extendedLevel) && extendedLevel != null)
         {
-            Plugin.ExtendedLogging($"Extended level is real: {extendedLevel.SelectableLevel}");
             if (Plugin.ModConfig.ConfigOxydeEnabledFromStart.Value)
             {
                 extendedLevel.IsRouteHidden = false;
