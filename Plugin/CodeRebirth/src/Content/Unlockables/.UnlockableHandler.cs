@@ -1,10 +1,10 @@
-using CodeRebirthLib.CRMod;
+using Dawn.Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
 public class UnlockableHandler : ContentHandler<UnlockableHandler>
 {
-    public class ShockwaveBotAssets(CRMod mod, string filePath) : AssetBundleLoader<ShockwaveBotAssets>(mod, filePath)
+    public class ShockwaveBotAssets(DuskMod mod, string filePath) : AssetBundleLoader<ShockwaveBotAssets>(mod, filePath)
     {
         [LoadFromBundle("LaserShockBlast.prefab")]
         public GameObject LasetShockBlast { get; private set; } = null!;
@@ -13,51 +13,51 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
         public GameObject ShockWaveDronePrefab { get; private set; } = null!;
     }
 
-    public class PlantPotAssets(CRMod mod, string filePath) : AssetBundleLoader<PlantPotAssets>(mod, filePath)
+    public class PlantPotAssets(DuskMod mod, string filePath) : AssetBundleLoader<PlantPotAssets>(mod, filePath)
     {
     }
 
-    public class SeamineTinkAssets(CRMod mod, string filePath) : AssetBundleLoader<SeamineTinkAssets>(mod, filePath)
+    public class SeamineTinkAssets(DuskMod mod, string filePath) : AssetBundleLoader<SeamineTinkAssets>(mod, filePath)
     {
         [LoadFromBundle("SeamineGal.prefab")]
         public GameObject SeamineGalPrefab { get; private set; } = null!;
     }
 
-    public class TerminalBotAssets(CRMod mod, string filePath) : AssetBundleLoader<TerminalBotAssets>(mod, filePath)
+    public class TerminalBotAssets(DuskMod mod, string filePath) : AssetBundleLoader<TerminalBotAssets>(mod, filePath)
     {
         [LoadFromBundle("TerminalGalDaisy.prefab")]
         public GameObject TerminalGalPrefab { get; private set; } = null!;
     }
 
-    public class BellCrabAssets(CRMod mod, string filePath) : AssetBundleLoader<BellCrabAssets>(mod, filePath)
+    public class BellCrabAssets(DuskMod mod, string filePath) : AssetBundleLoader<BellCrabAssets>(mod, filePath)
     {
     }
 
-    public class ACUnitGalAssets(CRMod mod, string filePath) : AssetBundleLoader<ACUnitGalAssets>(mod, filePath)
+    public class ACUnitGalAssets(DuskMod mod, string filePath) : AssetBundleLoader<ACUnitGalAssets>(mod, filePath)
     {
     }
 
-    public class BearTrapGalAssets(CRMod mod, string filePath) : AssetBundleLoader<BearTrapGalAssets>(mod, filePath)
+    public class BearTrapGalAssets(DuskMod mod, string filePath) : AssetBundleLoader<BearTrapGalAssets>(mod, filePath)
     {
     }
 
-    public class SCP999Assets(CRMod mod, string filePath) : AssetBundleLoader<SCP999Assets>(mod, filePath)
+    public class SCP999Assets(DuskMod mod, string filePath) : AssetBundleLoader<SCP999Assets>(mod, filePath)
     {
     }
 
-    public class Fishdispenserassets(CRMod mod, string filePath) : AssetBundleLoader<Fishdispenserassets>(mod, filePath)
+    public class Fishdispenserassets(DuskMod mod, string filePath) : AssetBundleLoader<Fishdispenserassets>(mod, filePath)
     {
     }
 
-    public class FriendAssets(CRMod mod, string filePath) : AssetBundleLoader<FriendAssets>(mod, filePath)
+    public class FriendAssets(DuskMod mod, string filePath) : AssetBundleLoader<FriendAssets>(mod, filePath)
     {
     }
 
-    public class CleanerDroneGalAssets(CRMod mod, string filePath) : AssetBundleLoader<CleanerDroneGalAssets>(mod, filePath)
+    public class CleanerDroneGalAssets(DuskMod mod, string filePath) : AssetBundleLoader<CleanerDroneGalAssets>(mod, filePath)
     {
     }
 
-    public class CruiserGalAssets(CRMod mod, string filePath) : AssetBundleLoader<CruiserGalAssets>(mod, filePath)
+    public class CruiserGalAssets(DuskMod mod, string filePath) : AssetBundleLoader<CruiserGalAssets>(mod, filePath)
     {
         [LoadFromBundle("CruiserGal.prefab")]
         public GameObject CruiserGalPrefab { get; private set; } = null!;
@@ -76,7 +76,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
     public CleanerDroneGalAssets? CleanerDroneGal = null;
     public CruiserGalAssets? CruiserGal = null;
 
-    public UnlockableHandler(CRMod mod) : base(mod)
+    public UnlockableHandler(DuskMod mod) : base(mod)
     {
         RegisterContent("shockwavebotassets", out ShockwaveBot);
 

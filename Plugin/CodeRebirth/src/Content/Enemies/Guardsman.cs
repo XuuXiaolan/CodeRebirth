@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirthLib;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Utils;
 
 
 

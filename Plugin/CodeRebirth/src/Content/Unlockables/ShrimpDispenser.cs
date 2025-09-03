@@ -1,7 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
+using Dawn;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

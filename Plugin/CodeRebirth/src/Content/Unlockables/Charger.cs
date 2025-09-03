@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.ModCompats;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

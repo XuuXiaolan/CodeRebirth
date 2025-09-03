@@ -1,8 +1,8 @@
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -32,7 +32,7 @@ public class BoomTrap : BearTrap
         yield return new WaitForSeconds(explosionSound.length);
         if (playerCaught == null && playerSnapped != null && !playerSnapped.isPlayerDead && playerSnapped.IsLocalPlayer())
         {
-            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.ShortFuse);
+            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.ShortFuse);
         }
 
         DoReleaseTrap();

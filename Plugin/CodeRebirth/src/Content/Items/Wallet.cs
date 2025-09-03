@@ -1,8 +1,8 @@
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -52,8 +52,8 @@ public class Wallet : GrabbableObject
                     continue;
 
                 audioPlayer.Play();
-                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.OhAPenny);
-                CRModContent.Achievements.TryIncrementAchievement(CodeRebirthAchievementKeys.FatWallet, 1f);
+                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.OhAPenny);
+                DuskModContent.Achievements.TryIncrementAchievement(CodeRebirthAchievementKeys.FatWallet, 1f);
                 AddCoinsServerRpc(new NetworkObjectReference(coin.NetworkObject), coin.value);
             }
             else if (IsServer)

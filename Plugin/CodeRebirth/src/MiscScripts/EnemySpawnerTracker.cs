@@ -1,6 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
+using Dawn;
+using Dawn.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -56,7 +57,7 @@ public class EnemySpawnerTracker : MonoBehaviour
             enemyAI.creatureSFX.enabled = false;
         }
 
-        CREnemyAdditionalData enemyAdditionalData = CREnemyAdditionalData.CreateOrGet(enemyAI);
+        DawnEnemyAdditionalData enemyAdditionalData = DawnEnemyAdditionalData.CreateOrGet(enemyAI);
         foreach (var enemyAICollisionDetect in enemyAdditionalData.EnemyAICollisionDetects)
         {
             Destroy(enemyAICollisionDetect);

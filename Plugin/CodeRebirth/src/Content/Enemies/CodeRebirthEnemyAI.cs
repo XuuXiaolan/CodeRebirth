@@ -3,7 +3,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 using System.Linq;
 using Unity.Netcode.Components;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Enemies;

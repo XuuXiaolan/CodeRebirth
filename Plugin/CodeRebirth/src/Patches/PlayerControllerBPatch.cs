@@ -7,9 +7,9 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 
 using GameNetcodeStuff;
 using HarmonyLib;
@@ -109,21 +109,21 @@ static class PlayerControllerBPatch
         orig(self, droppedInElevator, droppedInElevator, gObject);
         if (gObject is WrittenDocument)
         {
-            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "mu_miaolan"), gObject.itemProperties.itemName);
+            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<DuskAchievementDefinition>.From("code_rebirth", "mu_miaolan"), gObject.itemProperties.itemName);
             return;
         }
 
         if (gObject is PlushieItem || gObject is Xui || gObject is GoldRigo)
         {
-            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.HappyFamily, gObject.itemProperties.itemName);
-            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.TheUprooted, gObject.itemProperties.itemName);
-            CRModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.HoardingBug, gObject.itemProperties.itemName);
+            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.HappyFamily, gObject.itemProperties.itemName);
+            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.TheUprooted, gObject.itemProperties.itemName);
+            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.HoardingBug, gObject.itemProperties.itemName);
 
             RoundManagerPatch.plushiesCollectedToday++;
             if (RoundManagerPatch.plushiesCollectedToday >= 3)
             {
                 RoundManagerPatch.plushiesCollectedToday = 0;
-                CRModContent.Achievements.TryTriggerAchievement(NamespacedKey<CRMAchievementDefinition>.From("code_rebirth", "scalper"));
+                DuskModContent.Achievements.TryTriggerAchievement(NamespacedKey<DuskAchievementDefinition>.From("code_rebirth", "scalper"));
             }
             return;
         }

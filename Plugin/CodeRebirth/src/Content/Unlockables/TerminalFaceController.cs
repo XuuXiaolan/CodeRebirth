@@ -1,5 +1,5 @@
 using System.Collections;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using UnityEngine;
 using static CodeRebirth.src.Content.Unlockables.TerminalGalAI;
 

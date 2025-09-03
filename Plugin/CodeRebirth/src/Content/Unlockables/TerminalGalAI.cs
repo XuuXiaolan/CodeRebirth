@@ -6,7 +6,7 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 
 using GameNetcodeStuff;
 using Unity.Netcode;

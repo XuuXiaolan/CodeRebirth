@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Internal;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Internal;
+using Dawn.Utils;
 
 
 
@@ -72,7 +72,7 @@ public class Mistress : CodeRebirthEnemyAI
             {
                 if (targetPlayer.IsLocalPlayer())
                 {
-                    CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Igotaheadache);
+                    DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Igotaheadache);
                 }
                 killTimer = 0f;
                 playerToKill = targetPlayer;
@@ -222,7 +222,7 @@ public class Mistress : CodeRebirthEnemyAI
         Physics.Raycast(Vector3.zero + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
         if (playerToExecute.isInsideFactory && playerToExecute.IsLocalPlayer())
         {
-            var entrance = CodeRebirthLibNetworker.EntrancePoints.Where(entrance => !entrance.isEntranceToBuilding).FirstOrDefault();
+            var entrance = DawnNetworker.EntrancePoints.Where(entrance => !entrance.isEntranceToBuilding).FirstOrDefault();
             entrance?.TeleportPlayer();
         }
         playerToExecute.DropAllHeldItems();

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Utils;
 
 
 using GameNetcodeStuff;

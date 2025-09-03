@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 
 
 using GameNetcodeStuff;
@@ -105,7 +105,7 @@ public class KamikazeJimothy : NetworkBehaviour
 
         if (Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, this.transform.position) <= 30f)
         {
-            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Banzai);
+            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Banzai);
         }
 
         if (!IsServer)

@@ -2,7 +2,7 @@
 using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using CodeRebirth.src.Util;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -10,9 +10,8 @@ using UnityEngine;
 using System;
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib;
-using BepInEx.Configuration;
+using Dawn;
+using Dawn.Dusk;
 
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable
@@ -402,7 +401,7 @@ public class ItemCrate : CRHittable
     {
         if (opened && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
-            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.SafeAndSound);
+            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.SafeAndSound);
             opened = false;
             CloseCrateOnPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }

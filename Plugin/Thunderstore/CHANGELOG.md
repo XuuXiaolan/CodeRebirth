@@ -88,7 +88,7 @@
 - Renamed Wallet to something else for compatibility reasons.
 - Fixed host with oxyde crane animation not working properly.
 - Fixed Oxyde config in terms of not unlocking.
-- Fixed spawn weight configs on CodeRebirthLib's end.
+- Fixed spawn weight configs on DawnLib's end.
 - Fixed snailcat not being able to be brought into orbit.
 - Fixed Xui desync issues in latejoin between players.
 - Edited some scannodes and some Oxyde layout stuff.

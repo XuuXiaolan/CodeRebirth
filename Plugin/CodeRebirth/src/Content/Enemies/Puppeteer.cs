@@ -6,8 +6,8 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.DissolveEffect;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Utils;
 
 
 
@@ -423,7 +423,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         if (timeSinceLastTakenDamage < 0.5f) return;
         if (currentBehaviourStateIndex == (int)PuppeteerState.DefensiveMask)
         {
-            CREnemyAdditionalData enemyAdditionalData = CREnemyAdditionalData.CreateOrGet(this);
+            DawnEnemyAdditionalData enemyAdditionalData = DawnEnemyAdditionalData.CreateOrGet(this);
             enemyAdditionalData.PlayerThatLastHit?.KillPlayer(enemyAdditionalData.PlayerThatLastHit.velocityLastFrame, true, CauseOfDeath.Burning, 6, default);
             return;
         }
@@ -446,7 +446,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         playerPuppetMap.Clear();
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(NamespacedKey<CRItemInfo>.From("code_rebirth", "puppeteers_needle"), transform.position);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(NamespacedKey<DawnItemInfo>.From("code_rebirth", "puppeteers_needle"), transform.position);
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

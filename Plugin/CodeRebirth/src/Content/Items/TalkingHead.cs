@@ -3,8 +3,8 @@ using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.Internal;
-using CodeRebirthLib.Utils;
+using Dawn.Internal;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -44,7 +44,7 @@ public class TalkingHead : GrabbableObject
         if (isInFactory != wasInFactoryLastFrame && GameNetworkManager.Instance.localPlayerController == player && RoundManager.Instance.currentLevel.planetHasTime)
         {
             Plugin.ExtendedLogging("Teleporting player.");
-            var entranceTeleport = CodeRebirthLibNetworker.EntrancePoints.Where(p => p.isEntranceToBuilding == !wasInFactoryLastFrame).FirstOrDefault();
+            var entranceTeleport = DawnNetworker.EntrancePoints.Where(p => p.isEntranceToBuilding == !wasInFactoryLastFrame).FirstOrDefault();
             entranceTeleport?.TeleportPlayer();
         }
         wasInFactoryLastFrame = this.isInFactory;

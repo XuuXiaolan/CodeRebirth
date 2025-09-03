@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -107,7 +106,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
             scrapSpawned.grabbable = true;
             if (scrapSpawned.playerHeldBy != null && scrapSpawned.playerHeldBy.IsLocalPlayer())
             {
-                CRModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.LunchisServed, scrapSpawned.itemProperties.itemName);
+                DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.LunchisServed, scrapSpawned.itemProperties.itemName);
             }
             damageAmount = originalDamageAmount;
             scrapSpawned = null;

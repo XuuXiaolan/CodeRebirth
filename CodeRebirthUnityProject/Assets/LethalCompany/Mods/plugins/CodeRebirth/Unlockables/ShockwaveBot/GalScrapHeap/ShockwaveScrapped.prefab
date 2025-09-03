@@ -170,7 +170,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3670779095161665079}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -570307796, guid: ae32b7224d86a7247a75d2c3e565d55a, type: 3}
+  m_Script: {fileID: -412155602, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: 1
@@ -210,7 +210,19 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
-  unlockableItemDef: {fileID: 11400000, guid: ac526f56cd55d0948a5ad569988cea1c, type: 2}
+  rotateObject: 0
+  <UnlockableReference>k__BackingField:
+    rid: 5241054253856325636
+  references:
+    version: 2
+    RefIds:
+    - rid: 5241054253856325636
+      type: {class: DuskUnlockableReference, ns: Dawn.Dusk, asm: com.github.teamxiaolan.dawnlib}
+      data:
+        assetGUID: 421e431d4ab6807459c3d2c4c13e27d6
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: swrdone
 --- !u!82 &-5346746547395673884
 AudioSource:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirthLib;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

@@ -1,8 +1,8 @@
 using System.Collections;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -51,7 +51,7 @@ public class GrabAndLaunchPlayer : MonoBehaviour
             yield break;
         }
 
-        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Crateapult);
+        DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Crateapult);
     }
 
     public void Update()

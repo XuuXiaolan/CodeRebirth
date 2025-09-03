@@ -1,5 +1,5 @@
 ﻿using CodeRebirth.src.ModCompats;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 
 using GameNetcodeStuff;
 using System.Collections;

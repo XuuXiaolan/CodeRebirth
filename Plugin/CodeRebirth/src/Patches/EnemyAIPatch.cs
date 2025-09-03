@@ -1,9 +1,9 @@
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ static class EnemyAIPatch
     {
         orig(self, destroy);
 
-        CREnemyAdditionalData additionalEnemyData = CREnemyAdditionalData.CreateOrGet(self);
+        DawnEnemyAdditionalData additionalEnemyData = DawnEnemyAdditionalData.CreateOrGet(self);
         if (!self.isEnemyDead)
             return;
 
@@ -40,23 +40,23 @@ static class EnemyAIPatch
         {
             if (self is RedwoodTitanAI)
             {
-                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Timber);
+                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Timber);
             }
             else if (self is DriftwoodMenaceAI)
             {
-                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Bushwacked);
+                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Bushwacked);
             }
             else if (self is Puppeteer)
             {
-                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.NightofBetrayal);
+                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.NightofBetrayal);
             }
             else if (self is PeaceKeeper)
             {
-                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.PeaceKept);
+                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.PeaceKept);
             }
             else if (self is CactusBudling)
             {
-                CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.WildWest);
+                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.WildWest);
             }
         }
 
@@ -71,7 +71,7 @@ static class EnemyAIPatch
             if (UnityEngine.Random.Range(0f, 100f) >= coinChance)
                 return;
 
-            if (!LethalContent.MapObjects.TryGetValue(CodeRebirthMapObjectKeys.Money, out CRMapObjectInfo mapObjectInfo))
+            if (!LethalContent.MapObjects.TryGetValue(CodeRebirthMapObjectKeys.Money, out DawnMapObjectInfo mapObjectInfo))
                 return;
 
             GameObject coin = UnityEngine.Object.Instantiate(mapObjectInfo.MapObject, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);

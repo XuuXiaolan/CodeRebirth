@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
-using CodeRebirthLib;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Utils;
 
 using GameNetcodeStuff;
 using Unity.Netcode;

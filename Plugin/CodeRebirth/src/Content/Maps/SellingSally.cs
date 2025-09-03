@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -219,10 +219,10 @@ public class SellingSally : NetworkBehaviour
             HUDManager.Instance.DisplayTip("Warning!", "Rampant underground activity detected, evacuation recommended.", true);
         }
 
-        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Internship);
+        DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Internship);
         if (WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant().Trim() == "night shift")
         {
-            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.GraveyardShift);
+            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.GraveyardShift);
         }
         terminal.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;

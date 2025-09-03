@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Linq;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using UnityEngine;
 using static CodeRebirth.src.Content.Unlockables.ShockwaveGalAI;
 

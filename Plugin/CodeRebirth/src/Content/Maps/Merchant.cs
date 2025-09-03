@@ -5,9 +5,9 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -111,12 +111,12 @@ public class Merchant : NetworkBehaviour
                 {
                     if (item.Key.playerHeldBy.IsLocalPlayer())
                     {
-                        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Capitalism);
+                        DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Capitalism);
                     }
                     itemsSpawned[item.Key] = -1;
                     if (itemsSpawned.Values.All(x => x == -1))
                     {
-                        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.OutOfStock);
+                        DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.OutOfStock);
                     }
                     continue;
                 }
@@ -141,7 +141,7 @@ public class Merchant : NetworkBehaviour
 
     private IEnumerator DestroyShip()
     {
-        CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.MaydayMayday);
+        DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.MaydayMayday);
         HUDManager.Instance.DisplayTip("Warning", "The Merchant never forgets thieves...\nPrepare for fire", true);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);

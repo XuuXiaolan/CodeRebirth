@@ -1,56 +1,56 @@
-﻿using CodeRebirthLib.CRMod;
+﻿using Dawn.Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 public class ItemHandler : ContentHandler<ItemHandler>
 {
-    public class HoverboardAssets(CRMod mod, string filePath) : AssetBundleLoader<HoverboardAssets>(mod, filePath)
+    public class HoverboardAssets(DuskMod mod, string filePath) : AssetBundleLoader<HoverboardAssets>(mod, filePath)
     {
     }
 
-    public class BrrreakerAssets(CRMod mod, string filePath) : AssetBundleLoader<BrrreakerAssets>(mod, filePath)
+    public class BrrreakerAssets(DuskMod mod, string filePath) : AssetBundleLoader<BrrreakerAssets>(mod, filePath)
     {
     }
 
-    public class TurbulenceAssets(CRMod mod, string filePath) : AssetBundleLoader<TurbulenceAssets>(mod, filePath)
+    public class TurbulenceAssets(DuskMod mod, string filePath) : AssetBundleLoader<TurbulenceAssets>(mod, filePath)
     {
     }
 
-    public class MarrowSplitterAssets(CRMod mod, string filePath) : AssetBundleLoader<MarrowSplitterAssets>(mod, filePath)
+    public class MarrowSplitterAssets(DuskMod mod, string filePath) : AssetBundleLoader<MarrowSplitterAssets>(mod, filePath)
     {
     }
 
-    public class SwatterAssets(CRMod mod, string filePath) : AssetBundleLoader<SwatterAssets>(mod, filePath)
+    public class SwatterAssets(DuskMod mod, string filePath) : AssetBundleLoader<SwatterAssets>(mod, filePath)
     {
     }
 
-    public class TomaHopAssets(CRMod mod, string filePath) : AssetBundleLoader<TomaHopAssets>(mod, filePath)
+    public class TomaHopAssets(DuskMod mod, string filePath) : AssetBundleLoader<TomaHopAssets>(mod, filePath)
     {
     }
 
-    public class SnowGlobeAssets(CRMod mod, string filePath) : AssetBundleLoader<SnowGlobeAssets>(mod, filePath)
+    public class SnowGlobeAssets(DuskMod mod, string filePath) : AssetBundleLoader<SnowGlobeAssets>(mod, filePath)
     {
     }
 
-    public class ZortAssets(CRMod mod, string filePath) : AssetBundleLoader<ZortAssets>(mod, filePath)
+    public class ZortAssets(DuskMod mod, string filePath) : AssetBundleLoader<ZortAssets>(mod, filePath)
     {
     }
 
-    public class XuAndRigoAssets(CRMod mod, string filePath) : AssetBundleLoader<XuAndRigoAssets>(mod, filePath)
+    public class XuAndRigoAssets(DuskMod mod, string filePath) : AssetBundleLoader<XuAndRigoAssets>(mod, filePath)
     {
         [LoadFromBundle("RodFollower.prefab")]
         public GameObject SmallRigoPrefab { get; private set; } = null!;
     }
 
-    public class MoonUnlockerAssets(CRMod mod, string filePath) : AssetBundleLoader<MoonUnlockerAssets>(mod, filePath)
+    public class MoonUnlockerAssets(DuskMod mod, string filePath) : AssetBundleLoader<MoonUnlockerAssets>(mod, filePath)
     {
     }
 
-    public class OxydeLoreAssets(CRMod mod, string filePath) : AssetBundleLoader<OxydeLoreAssets>(mod, filePath)
+    public class OxydeLoreAssets(DuskMod mod, string filePath) : AssetBundleLoader<OxydeLoreAssets>(mod, filePath)
     {
     }
 
-    public class CodeRebirthPlushiesAssets(CRMod mod, string filePath) : AssetBundleLoader<CodeRebirthPlushiesAssets>(mod, filePath)
+    public class CodeRebirthPlushiesAssets(DuskMod mod, string filePath) : AssetBundleLoader<CodeRebirthPlushiesAssets>(mod, filePath)
     {
     }
 
@@ -67,7 +67,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
     public TomaHopAssets? TomaHop = null;
     public CodeRebirthPlushiesAssets? CRPlushies = null;
 
-    public ItemHandler(CRMod mod) : base(mod)
+    public ItemHandler(DuskMod mod) : base(mod)
     {
         RegisterContent("oxydeloreassets", out OxydeLore, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 

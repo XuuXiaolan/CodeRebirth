@@ -1,9 +1,9 @@
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -45,7 +45,7 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
         bool isDeadBody = false;
         if (player.currentlyHeldObjectServer is SnailCatPhysicsProp)
         {
-            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.YouMonster);
+            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.YouMonster);
         }
 
         if (player.currentlyHeldObjectServer is RagdollGrabbableObject)

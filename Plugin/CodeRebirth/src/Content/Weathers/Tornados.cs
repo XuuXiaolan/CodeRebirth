@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using System;
 using static CodeRebirth.src.Util.PlayerControllerBExtensions;
 using CodeRebirth.src.Content.Enemies;

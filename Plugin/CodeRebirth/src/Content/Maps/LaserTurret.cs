@@ -1,5 +1,5 @@
 using CodeRebirth.src.Util;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.VFX;

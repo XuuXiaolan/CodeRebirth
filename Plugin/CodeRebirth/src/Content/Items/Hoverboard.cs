@@ -10,7 +10,7 @@ using CodeRebirth.src.Util;
 using System.Collections.Generic;
 
 
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Content.Items;

@@ -1,5 +1,5 @@
 using BepInEx.Bootstrap;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using MoreCompany.Cosmetics;
 using System;

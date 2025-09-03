@@ -2,8 +2,8 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Utils;
 
 using GameNetcodeStuff;
 using Unity.Netcode;

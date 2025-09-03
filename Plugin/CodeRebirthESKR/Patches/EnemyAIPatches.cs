@@ -1,5 +1,5 @@
 using AntlerShed.SkinRegistry;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 
 namespace CodeRebirthESKR.Patches;
 public static class EnemyAIPatches

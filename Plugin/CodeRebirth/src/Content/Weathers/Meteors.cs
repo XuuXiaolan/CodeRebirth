@@ -4,7 +4,7 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Events;
-using CodeRebirthLib;
+using Dawn;
 
 
 namespace CodeRebirth.src.Content.Weathers;

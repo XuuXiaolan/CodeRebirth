@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
+using Dawn;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,7 +17,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     public float questTimer = 120f;
     [Tooltip("List of items' names the player needs to collect to complete the quest")]
     [SerializeField]
-    public NamespacedKey<CRItemInfo>[] questItems; // TODO fix this in editor for duck
+    public NamespacedKey<DawnItemInfo>[] questItems; // TODO fix this in editor for duck
     [Tooltip("Name of the given quest")]
     [SerializeField]
     public string questName;
@@ -236,7 +236,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         SetDuckUIItemUIPlayerClientRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer));
         yield return new WaitForSeconds(delay / 5);
-        if (!LethalContent.Items.TryGetValue(questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)], out CRItemInfo? itemInfo))
+        if (!LethalContent.Items.TryGetValue(questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)], out DawnItemInfo? itemInfo))
             yield break;
 
         NetworkObjectReference item = CodeRebirthUtils.Instance.SpawnScrap(itemInfo.Item, randomSpawnPosition, true, true, 0);

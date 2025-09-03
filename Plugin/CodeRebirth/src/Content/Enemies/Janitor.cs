@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Dusk;
+using Dawn.Utils;
 
 
 
@@ -585,7 +584,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         targetPlayer.DamagePlayer(15, true, true, CauseOfDeath.Gravity, 0, false, default);
         if (targetPlayer.IsLocalPlayer())
         {
-            CRModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.TrashTrashTrash);
+            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.TrashTrashTrash);
         }
         targetPlayer = null;
 

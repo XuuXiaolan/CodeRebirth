@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;

@@ -1,7 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirthLib;
+using Dawn;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;

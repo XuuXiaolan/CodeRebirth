@@ -5,8 +5,8 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using CodeRebirthLib;
-using CodeRebirthLib.Utils;
+using Dawn;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -62,7 +62,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!wasFake)
         {
             List<string> randomizedNames = new();
-            var enemyKey = NamespacedKey<CREnemyInfo>.From("code_rebirth", "snailcat");
+            var enemyKey = NamespacedKey<DawnEnemyInfo>.From("code_rebirth", "snailcat");
 
             randomizedNames = EnemyHandler.Instance.SnailCat.GetConfig<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
 

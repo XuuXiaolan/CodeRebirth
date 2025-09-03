@@ -1,74 +1,74 @@
 ﻿using CodeRebirth.src.Patches;
 using UnityEngine;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
+using Dawn;
+using Dawn.Dusk;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
 {
-    public class CompactorTobyAssets(CRMod mod, string filePath) : AssetBundleLoader<CompactorTobyAssets>(mod, filePath)
+    public class CompactorTobyAssets(DuskMod mod, string filePath) : AssetBundleLoader<CompactorTobyAssets>(mod, filePath)
     {
     }
 
-    public class ShredderSarahAssets(CRMod mod, string filePath) : AssetBundleLoader<ShredderSarahAssets>(mod, filePath)
+    public class ShredderSarahAssets(DuskMod mod, string filePath) : AssetBundleLoader<ShredderSarahAssets>(mod, filePath)
     {
     }
 
-    public class CrateAssets(CRMod mod, string filePath) : AssetBundleLoader<CrateAssets>(mod, filePath)
+    public class CrateAssets(DuskMod mod, string filePath) : AssetBundleLoader<CrateAssets>(mod, filePath)
     {
     }
 
-    public class FloraAssets(CRMod mod, string filePath) : AssetBundleLoader<FloraAssets>(mod, filePath)
+    public class FloraAssets(DuskMod mod, string filePath) : AssetBundleLoader<FloraAssets>(mod, filePath)
     {
         [LoadFromBundle("AllFlora.prefab")]
         public GameObject AllFloraPrefab { get; private set; } = null!;
     }
 
-    public class BiomeAssets(CRMod mod, string filePath) : AssetBundleLoader<BiomeAssets>(mod, filePath)
+    public class BiomeAssets(DuskMod mod, string filePath) : AssetBundleLoader<BiomeAssets>(mod, filePath)
     {
     }
 
-    public class BearTrapAssets(CRMod mod, string filePath) : AssetBundleLoader<BearTrapAssets>(mod, filePath)
+    public class BearTrapAssets(DuskMod mod, string filePath) : AssetBundleLoader<BearTrapAssets>(mod, filePath)
     {
     }
 
-    public class GlowingGemAssets(CRMod mod, string filePath) : AssetBundleLoader<GlowingGemAssets>(mod, filePath)
+    public class GlowingGemAssets(DuskMod mod, string filePath) : AssetBundleLoader<GlowingGemAssets>(mod, filePath)
     {
     }
 
-    public class IndustrialFanAssets(CRMod mod, string filePath) : AssetBundleLoader<IndustrialFanAssets>(mod, filePath)
+    public class IndustrialFanAssets(DuskMod mod, string filePath) : AssetBundleLoader<IndustrialFanAssets>(mod, filePath)
     {
     }
 
-    public class FlashTurretAssets(CRMod mod, string filePath) : AssetBundleLoader<FlashTurretAssets>(mod, filePath)
+    public class FlashTurretAssets(DuskMod mod, string filePath) : AssetBundleLoader<FlashTurretAssets>(mod, filePath)
     {
         [LoadFromBundle("FlashTurretUpdated.prefab")]
         public GameObject FlashTurretPrefab { get; private set; } = null!;
     }
 
-    public class TeslaShockAssets(CRMod mod, string filePath) : AssetBundleLoader<TeslaShockAssets>(mod, filePath)
+    public class TeslaShockAssets(DuskMod mod, string filePath) : AssetBundleLoader<TeslaShockAssets>(mod, filePath)
     {
         [LoadFromBundle("ChainLightning.prefab")]
         public GameObject ChainLightningPrefab { get; private set; } = null!;
     }
 
-    public class AirControlUnitAssets(CRMod mod, string filePath) : AssetBundleLoader<AirControlUnitAssets>(mod, filePath)
+    public class AirControlUnitAssets(DuskMod mod, string filePath) : AssetBundleLoader<AirControlUnitAssets>(mod, filePath)
     {
         [LoadFromBundle("AirControlUnitProjectile.prefab")]
         public GameObject ProjectilePrefab { get; private set; } = null!;
     }
 
-    public class FunctionalMicrowaveAssets(CRMod mod, string filePath) : AssetBundleLoader<FunctionalMicrowaveAssets>(mod, filePath)
+    public class FunctionalMicrowaveAssets(DuskMod mod, string filePath) : AssetBundleLoader<FunctionalMicrowaveAssets>(mod, filePath)
     {
     }
 
-    public class MerchantAssets(CRMod mod, string filePath) : AssetBundleLoader<MerchantAssets>(mod, filePath)
+    public class MerchantAssets(DuskMod mod, string filePath) : AssetBundleLoader<MerchantAssets>(mod, filePath)
     {
         [LoadFromBundle("GuardsmanProjectile.prefab")]
         public GameObject ProjectilePrefab { get; private set; } = null!;
     }
 
-    public class GunslingerGregAssets(CRMod mod, string filePath) : AssetBundleLoader<GunslingerGregAssets>(mod, filePath)
+    public class GunslingerGregAssets(DuskMod mod, string filePath) : AssetBundleLoader<GunslingerGregAssets>(mod, filePath)
     {
         [LoadFromBundle("GregMissile.prefab")]
         public GameObject MissilePrefab { get; private set; } = null!;
@@ -77,11 +77,11 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         public GameObject OldBirdExplosionPrefab { get; private set; } = null!;
     }
 
-    public class OxydeCrashShipAssets(CRMod mod, string filePath) : AssetBundleLoader<OxydeCrashShipAssets>(mod, filePath)
+    public class OxydeCrashShipAssets(DuskMod mod, string filePath) : AssetBundleLoader<OxydeCrashShipAssets>(mod, filePath)
     {
     }
 
-    public class AutonomousCraneAssets(CRMod mod, string filePath) : AssetBundleLoader<AutonomousCraneAssets>(mod, filePath)
+    public class AutonomousCraneAssets(DuskMod mod, string filePath) : AssetBundleLoader<AutonomousCraneAssets>(mod, filePath)
     {
     }
 
@@ -102,7 +102,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     public FunctionalMicrowaveAssets? FunctionalMicrowave = null;
     public AutonomousCraneAssets? AutonomousCrane = null;
 
-    public MapObjectHandler(CRMod mod) : base(mod)
+    public MapObjectHandler(DuskMod mod) : base(mod)
     {
         RegisterContent("oxydecrashshipassets", out OxydeCrashShip, Plugin.ModConfig.ConfigOxydeEnabled.Value);
 
@@ -143,7 +143,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
             RegisterOutsideFlora(mod);
     }
 
-    public void RegisterOutsideFlora(CRMod mod)
+    public void RegisterOutsideFlora(DuskMod mod)
     {
         Flora = new FloraAssets(mod, "floraassets");
         Flora floraStuff = Flora.AllFloraPrefab.GetComponent<Flora>();

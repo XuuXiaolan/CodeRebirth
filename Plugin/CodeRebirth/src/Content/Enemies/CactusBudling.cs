@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
-using CodeRebirthLib.CRMod;
-using CodeRebirthLib.Utils;
+using Dawn.Dusk;
+using Dawn.Utils;
 
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -126,11 +126,11 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         base.Start();
         foreach (var crContentDefinition in EnemyHandler.Instance.CactusBudling!.Content)
         {
-            if (crContentDefinition is not CRMMapObjectDefinition crMapObjectDefinition)
+            if (crContentDefinition is not DuskMapObjectDefinition duskMapObjectDefinition)
                 continue;
 
-            if (crMapObjectDefinition.MapObjectName.Contains("Cactus", StringComparison.OrdinalIgnoreCase))
-                _budlingCacti.Add(crMapObjectDefinition.GameObject);
+            if (duskMapObjectDefinition.MapObjectName.Contains("Cactus", StringComparison.OrdinalIgnoreCase))
+                _budlingCacti.Add(duskMapObjectDefinition.GameObject);
         }
 
         if (!IsServer)

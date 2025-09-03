@@ -8,15 +8,13 @@ using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
 using UnityEngine.Rendering.HighDefinition;
 using CodeRebirth.src.Content.Items;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using CodeRebirth.src.Content.Maps;
 using System.Collections;
 using LethalLevelLoader;
-using CodeRebirthLib;
-using CodeRebirth.src.Content.Weathers;
+using Dawn;
 using UnityEngine.InputSystem.Utilities;
-using WeatherRegistry;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -227,7 +225,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             return;
         }
 
-        List<CRMapObjectInfo> mapObjectInfos = LethalContent.MapObjects.Values.ToList();
+        List<DawnMapObjectInfo> mapObjectInfos = LethalContent.MapObjects.Values.ToList();
         GameObject hazardToSpawn = mapObjectInfos[_indexToSpawn].MapObject;
         if (hazardToSpawn != null)
         {
@@ -248,7 +246,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnScrapServerRpc(NamespacedKey<CRItemInfo> itemKey, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
+    public void SpawnScrapServerRpc(NamespacedKey<DawnItemInfo> itemKey, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
     {
         if (LethalContent.Items.TryGetValue(itemKey, out var itemInfo))
         {

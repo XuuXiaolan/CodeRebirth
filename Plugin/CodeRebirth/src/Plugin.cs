@@ -3,13 +3,13 @@ using UnityEngine;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using CodeRebirthLib.Utils;
+using Dawn.Utils;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using Unity.Netcode;
 using BepInEx.Configuration;
-using CodeRebirthLib;
-using CodeRebirthLib.CRMod;
+using Dawn.Dusk;
+using Dawn;
 
 
 /*
@@ -20,7 +20,7 @@ namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("mrov.WeatherRegistry")]
 [BepInDependency("com.rune580.LethalCompanyInputUtils")]
-[BepInDependency(CRLib.PLUGIN_GUID)]
+[BepInDependency(DawnLib.PLUGIN_GUID)]
 [BepInDependency(LethalLevelLoader.Plugin.ModGUID)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency(MoreCompany.PluginInformation.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
@@ -32,7 +32,7 @@ public class Plugin : BaseUnityPlugin
     internal static IngameKeybinds InputActionsInstance = null!;
     public static ConfigFile configFile { get; private set; } = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
-    public static CRMod Mod { get; private set; } = null!;
+    public static DuskMod Mod { get; private set; } = null!;
 
     internal class MainAssets(AssetBundle bundle) : AssetBundleLoader<MainAssets>(bundle)
     {
@@ -91,7 +91,7 @@ public class Plugin : BaseUnityPlugin
 
         AssetBundle mainBundle = AssetBundleUtils.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
         Assets = new MainAssets(mainBundle);
-        Mod = CRMod.RegisterMod(this, mainBundle);
+        Mod = DuskMod.RegisterMod(this, mainBundle);
         Mod.RegisterContentHandlers();
 
         ModConfig.InitCodeRebirthConfig(configFile);
