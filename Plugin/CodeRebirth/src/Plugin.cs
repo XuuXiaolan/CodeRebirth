@@ -11,11 +11,6 @@ using BepInEx.Configuration;
 using Dawn.Dusk;
 using Dawn;
 
-
-/*
-Big todo
-Give the configs some sort of listener for lethal config so i can detect runtime changes.
-*/
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("mrov.WeatherRegistry")]
