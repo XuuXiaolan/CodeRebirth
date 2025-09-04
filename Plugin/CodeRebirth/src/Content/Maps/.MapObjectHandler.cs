@@ -1,7 +1,7 @@
 ﻿using CodeRebirth.src.Patches;
 using UnityEngine;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>

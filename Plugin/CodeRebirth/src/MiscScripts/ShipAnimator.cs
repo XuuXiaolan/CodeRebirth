@@ -2,7 +2,7 @@
 using System.Collections;
 using CodeRebirth.src.Util;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;

@@ -5,7 +5,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 using Dawn.Internal;
 using Dawn.Utils;
 

@@ -11,7 +11,7 @@ using System;
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable

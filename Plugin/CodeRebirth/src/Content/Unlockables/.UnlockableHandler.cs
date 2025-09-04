@@ -1,4 +1,4 @@
-using Dawn.Dusk;
+using Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
@@ -7,7 +7,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
     public class ShockwaveBotAssets(DuskMod mod, string filePath) : AssetBundleLoader<ShockwaveBotAssets>(mod, filePath)
     {
         [LoadFromBundle("LaserShockBlast.prefab")]
-        public GameObject LasetShockBlast { get; private set; } = null!;
+        public GameObject LaserShockBlast { get; private set; } = null!;
 
         [LoadFromBundle("ShockWaveDrone.prefab")]
         public GameObject ShockWaveDronePrefab { get; private set; } = null!;

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;

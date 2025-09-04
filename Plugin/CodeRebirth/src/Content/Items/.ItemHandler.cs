@@ -1,4 +1,4 @@
-﻿using Dawn.Dusk;
+﻿using Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;

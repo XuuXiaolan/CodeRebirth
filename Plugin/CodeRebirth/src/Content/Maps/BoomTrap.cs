@@ -1,7 +1,7 @@
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;

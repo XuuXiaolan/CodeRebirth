@@ -1,7 +1,7 @@
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 using Dawn.Utils;
 using Unity.Netcode;
 using UnityEngine;

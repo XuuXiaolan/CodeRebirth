@@ -2,7 +2,7 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using System.Collections;

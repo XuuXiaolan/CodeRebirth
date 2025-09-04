@@ -500,7 +500,7 @@ public class ShockwaveGalAI : GalAI
         // Instantiate the laser beam on the server
         if (IsServer)
         {
-            GameObject laserPrefab = UnlockableHandler.Instance.ShockwaveBot!.LasetShockBlast;
+            GameObject laserPrefab = UnlockableHandler.Instance.ShockwaveBot!.LaserShockBlast;
             GameObject laserInstance = Instantiate(laserPrefab, LaserOrigin.position, LaserOrigin.rotation);
             LaserShockBlast laserShockBlack = laserInstance.GetComponent<LaserShockBlast>();
 

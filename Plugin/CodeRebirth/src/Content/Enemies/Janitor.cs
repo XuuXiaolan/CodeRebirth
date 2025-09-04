@@ -2,12 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
-using Dawn;
-using Dawn.Dusk;
+using Dusk;
 using Dawn.Utils;
-
-
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -478,7 +474,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         creatureAnimator.SetFloat(RightTreadFloat, turningRight ? -1f : 1f);
         creatureSFX.volume = 1f;
 
-        if (Mathf.Abs(signedAngle) <= 2.5f)
+        if (Mathf.Abs(signedAngle) <= 10f)
         {
             StopRotating();
         }

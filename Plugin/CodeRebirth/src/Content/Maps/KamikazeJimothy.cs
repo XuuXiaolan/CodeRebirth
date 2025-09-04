@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Items;
 using Dawn;
-using Dawn.Dusk;
+using Dusk;
 using Dawn.Utils;
 
 

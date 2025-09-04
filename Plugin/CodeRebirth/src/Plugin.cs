@@ -8,7 +8,7 @@ using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
 using Unity.Netcode;
 using BepInEx.Configuration;
-using Dawn.Dusk;
+using Dusk;
 using Dawn;
 
 namespace CodeRebirth.src;
