@@ -1,4 +1,5 @@
 ﻿using System;
+using Dawn;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -15,5 +16,5 @@ public class SpawnableFlora
 {
     public GameObject prefab = null!;
     public FloraTag floraTag;
-    public Func<SelectableLevel, AnimationCurve> spawnCurveFunction;
+    public Func<DawnMoonInfo, AnimationCurve> spawnCurveFunction;
 }
