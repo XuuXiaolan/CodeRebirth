@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.Util;
-
 
 namespace CodeRebirth.src.Content.Maps;
 public class BiomeManager : CodeRebirthHazard
@@ -20,7 +18,7 @@ public class BiomeManager : CodeRebirthHazard
     private static int foliageLayer = 0;
     private static int terrainLayer = 0;
     private List<Collider> foliageOrTreeColliderList = new();
-    private Collider[] cachedColliders = new Collider[10];
+    private Collider[] _cachedColliders = new Collider[10];
 
     public static List<BiomeManager> Instances = new();
     public static bool Active => Instances.Count > 0;
@@ -85,15 +83,15 @@ public class BiomeManager : CodeRebirthHazard
         //Stopwatch timer = new Stopwatch();
         //timer.Start();
         // Perform sphere cast
-        int numHit = Physics.OverlapSphereNonAlloc(activeProjector.transform.position, activeProjector.size.y / 3.5f, cachedColliders, MoreLayerMasks.TerrainAndFoliageMask);
+        int numHit = Physics.OverlapSphereNonAlloc(activeProjector.transform.position, activeProjector.size.y / 3.5f, _cachedColliders, MoreLayerMasks.TerrainAndFoliageMask);
         int foliageOrTreeCount = 0;
         for (int i = numHit - 1; i >= 0; i--)
         {
-            if (foliageOrTreeColliderList.Contains(cachedColliders[i]))
+            if (foliageOrTreeColliderList.Contains(_cachedColliders[i]))
             {
                 foliageOrTreeCount++;
-                foliageOrTreeColliderList.Remove(cachedColliders[i]);
-                DestroyColliderObject(cachedColliders[i], foliageOrTreeCount);
+                foliageOrTreeColliderList.Remove(_cachedColliders[i]);
+                DestroyColliderObject(_cachedColliders[i], foliageOrTreeCount);
             }
         }
 
